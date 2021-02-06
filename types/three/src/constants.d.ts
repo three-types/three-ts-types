@@ -1,4 +1,4 @@
-export const REVISION: string;
+export const REVISION: 'test';
 
 // https://developer.mozilla.org/en-US/docs/Web/API/MouseEvent.button
 export enum MOUSE {
