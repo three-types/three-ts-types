@@ -16,19 +16,20 @@ assignees: ''
 
 -->
 
-- `three` version:
-- `node` version:
-- `npm` (or `yarn`) version:
+-   `three` version:
+-   `node` version:
+-   `npm` (or `yarn`) version:
 
 ### Problem description:
 
 <!-- Please describe why the current behaviour is a problem -->
 
 ### Relevant code:
+
 <!-- feel free to input the code in the space below -->
 
 ```ts
-let your = (code, tell) => `the ${story}`
+let your = (code, tell) => `the ${story}`;
 ```
 
 ### Suggested solution:
@@ -37,4 +38,3 @@ let your = (code, tell) => `the ${story}`
 It's ok if you don't have a suggested solution, but it really helps if you could
 do a little digging to come up with some suggestion of how to improve things.
 -->
-
