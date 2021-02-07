@@ -32,6 +32,10 @@ select the added contribution type.
 Please make sure to run the tests before you commit your changes. You can do so by running
 `npm test`.
 
+## Creating a PR
+
+We have two core branches that mirror the `three` repo. If your PR is for the current release of `three` it should be based off `master` and aimed at merging back into `master`. If you're PR is for the next release of `three` then it should be based off `dev` and therefore aimed at merging back into `dev`.
+
 ## Help needed
 
 Please check out the
