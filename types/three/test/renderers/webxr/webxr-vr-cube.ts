@@ -24,7 +24,9 @@ async function onSessionStarted(session: THREE.XRSession): Promise<void> {
 }
 
 function onSessionEnded(): void {
-    if (currentSession == null) { return; }
+    if (currentSession == null) {
+        return;
+    }
 
     currentSession.removeEventListener('end', onSessionEnded);
     vrButton.innerText = 'Enter VR';
@@ -68,7 +70,7 @@ function init(): void {
     directionalLight.position.set(1, 1, 1).normalize();
     scene.add(directionalLight);
 
-    checkVRSupport().then((xr) => {
+    checkVRSupport().then(xr => {
         if (xr) {
             vrButton.innerText = 'Enter VR';
 
