@@ -21,8 +21,8 @@ export class WebXRManager extends EventDispatcher {
     getHand(id: number): Group;
     setFramebufferScaleFactor(value: number): void;
     setReferenceSpaceType(value: XRReferenceSpaceType): void;
-    getReferenceSpace(): XRReferenceSpace;
-    getSession(): XRSession;
+    getReferenceSpace(): XRReferenceSpace | null;
+    getSession(): XRSession | null;
     setSession(value: XRSession): void;
     getCamera(camera: Camera): Camera;
     setAnimationLoop(callback: XRFrameRequestCallback): void;
