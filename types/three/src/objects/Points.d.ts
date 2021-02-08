@@ -7,12 +7,15 @@ import { Intersection } from '../core/Raycaster';
 /**
  * A class for displaying points. The points are rendered by the WebGLRenderer using gl.POINTS.
  */
-export class Points extends Object3D {
+export class Points<
+    Geom extends BufferGeometry = BufferGeometry,
+    Mat extends Material | Material[] = Material
+> extends Object3D {
     /**
      * @param geometry An instance of BufferGeometry.
      * @param material An instance of Material (optional).
      */
-    constructor(geometry?: BufferGeometry, material?: Material | Material[]);
+    constructor(geometry?: Geom, material?: Mat);
 
     type: 'Points';
     morphTargetInfluences?: number[];
@@ -22,12 +25,12 @@ export class Points extends Object3D {
     /**
      * An instance of BufferGeometry, where each vertex designates the position of a particle in the system.
      */
-    geometry: BufferGeometry;
+    geometry: Geom;
 
     /**
      * An instance of Material, defining the object's appearance. Default is a PointsMaterial with randomised colour.
      */
-    material: Material | Material[];
+    material: Mat;
 
     raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     updateMorphTargets(): void;

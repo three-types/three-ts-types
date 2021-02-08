@@ -11,8 +11,11 @@ export const LineStrip: number;
  */
 export const LinePieces: number;
 
-export class LineSegments extends Line {
-    constructor(geometry?: BufferGeometry, material?: Material | Material[]);
+export class LineSegments<
+    Geom extends BufferGeometry = BufferGeometry,
+    Mat extends Material | Material[] = Material
+> extends Line {
+    constructor(geometry?: Geom, material?: Mat);
 
     /**
      * @default 'LineSegments'
