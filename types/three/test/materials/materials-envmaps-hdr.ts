@@ -100,7 +100,7 @@ function init() {
     planeMesh.rotation.x = -Math.PI * 0.5;
     scene.add(planeMesh);
 
-    THREE.DefaultLoadingManager.onLoad = function () {
+    THREE.DefaultLoadingManager.onLoad = () => {
         pmremGenerator.dispose();
     };
 
@@ -108,7 +108,7 @@ function init() {
     hdrCubeMap = new HDRCubeTextureLoader()
         .setPath('./textures/cube/pisaHDR/')
         .setDataType(THREE.UnsignedByteType)
-        .load(hdrUrls, function () {
+        .load(hdrUrls, () => {
             hdrCubeRenderTarget = pmremGenerator.fromCubemap(hdrCubeMap);
 
             hdrCubeMap.magFilter = THREE.LinearFilter;
@@ -116,14 +116,14 @@ function init() {
         });
 
     const ldrUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-    ldrCubeMap = new THREE.CubeTextureLoader().setPath('./textures/cube/pisa/').load(ldrUrls, function () {
+    ldrCubeMap = new THREE.CubeTextureLoader().setPath('./textures/cube/pisa/').load(ldrUrls, () => {
         ldrCubeMap.encoding = THREE.sRGBEncoding;
 
         ldrCubeRenderTarget = pmremGenerator.fromCubemap(ldrCubeMap);
     });
 
     const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-    rgbmCubeMap = new RGBMLoader().setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls, function () {
+    rgbmCubeMap = new RGBMLoader().setPath('./textures/cube/pisaRGBM16/').loadCubemap(rgbmUrls, () => {
         rgbmCubeMap.encoding = THREE.RGBM16Encoding;
 
         rgbmCubeRenderTarget = pmremGenerator.fromCubemap(rgbmCubeMap);
@@ -139,7 +139,6 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    //renderer.toneMapping = ReinhardToneMapping;
     renderer.outputEncoding = THREE.sRGBEncoding;
 
     controls = new OrbitControls(camera, renderer.domElement);
@@ -169,7 +168,8 @@ function render() {
     torusMesh.material.roughness = params.roughness;
     torusMesh.material.metalness = params.metalness;
 
-    let renderTarget, cubeMap;
+    let renderTarget;
+    let cubeMap;
 
     switch (params.envMap) {
         case 'Generated':
