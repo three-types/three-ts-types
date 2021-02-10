@@ -6,10 +6,10 @@ import { Matrix4 } from './../math/Matrix4';
 import { Color } from './../math/Color';
 
 export class InstancedMesh<
-    Geom extends BufferGeometry = BufferGeometry,
-    Mat extends Material | Material[] = Material
-> extends Mesh {
-    constructor(geometry: Geom, material: Mat, count: number);
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[]
+> extends Mesh<TGeometry, TMaterial> {
+    constructor(geometry: TGeometry, material: TMaterial, count: number);
 
     count: number;
     instanceColor: null | BufferAttribute;

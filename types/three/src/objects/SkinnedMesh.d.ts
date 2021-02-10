@@ -5,10 +5,10 @@ import { Mesh } from './Mesh';
 import { BufferGeometry } from '../core/BufferGeometry';
 
 export class SkinnedMesh<
-    Geom extends BufferGeometry = BufferGeometry,
-    Mat extends Material | Material[] = Material
-> extends Mesh {
-    constructor(geometry?: Geom, material?: Mat, useVertexTexture?: boolean);
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[]
+> extends Mesh<TGeometry, TMaterial> {
+    constructor(geometry?: TGeometry, material?: TMaterial, useVertexTexture?: boolean);
 
     bindMode: string;
     bindMatrix: Matrix4;

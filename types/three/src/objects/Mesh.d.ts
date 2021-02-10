@@ -5,13 +5,13 @@ import { BufferGeometry } from '../core/BufferGeometry';
 import { Intersection } from '../core/Raycaster';
 
 export class Mesh<
-    Geom extends BufferGeometry = BufferGeometry,
-    Mat extends Material | Material[] = Material
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[]
 > extends Object3D {
-    constructor(geometry?: Geom, material?: Mat);
+    constructor(geometry?: TGeometry, material?: TMaterial);
 
-    geometry: Geom;
-    material: Mat;
+    geometry: TGeometry;
+    material: TMaterial;
     morphTargetInfluences?: number[];
     morphTargetDictionary?: { [key: string]: number };
     readonly isMesh: true;
