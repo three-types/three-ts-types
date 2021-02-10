@@ -78,6 +78,8 @@ export class GLTFParser {
 }
 
 export interface GLTFLoaderPlugin {
+    beforeRoot?: () => Promise<void> | null;
+    afterRoot?: (result: GLTF) => Promise<void> | null;
     loadMesh?: (meshIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null;
     loadBufferView?: (bufferViewIndex: number) => Promise<ArrayBuffer> | null;
     loadMaterial?: (materialIndex: number) => Promise<Material> | null;
