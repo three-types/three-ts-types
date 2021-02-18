@@ -10,6 +10,8 @@ export class XRHandModelFactory {
     constructor();
     path: string;
 
+    setPath(path: string): XRHandModelFactory;
+
     createHandModel(
         controller: Group,
         profile?: 'spheres' | 'boxes' | 'oculus',
