@@ -9,6 +9,8 @@ export class XRHandModel extends Object3D {
 export class XRHandModelFactory {
     constructor();
     path: string;
+    
+    setPath( path: string ): XRHandModelFactory;
 
     createHandModel(
         controller: Group,
