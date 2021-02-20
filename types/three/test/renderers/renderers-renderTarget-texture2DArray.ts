@@ -65,7 +65,7 @@ const fragmentShader = /* glsl */ `
 	}
 `;
 
-if (WEBGL.isWebGL2Available() === false) {
+if (!WEBGL.isWebGL2Available()) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage());
 }
 
@@ -115,7 +115,7 @@ let renderer: THREE.WebGLRenderer;
 init();
 
 function init() {
-    var container = document.createElement('div');
+    const container = document.createElement('div');
     document.body.appendChild(container);
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
@@ -143,14 +143,14 @@ function init() {
     // width 256, height 256, depth 109, 8-bit, zip archived raw data
 
     new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', data => {
-        var zip = unzipSync(new Uint8Array(data as ArrayBuffer));
+        const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
         const array = new Uint8Array(zip['head256x256x109'].buffer);
 
         const texture = new THREE.DataTexture2DArray(array, DIMENSIONS.width, DIMENSIONS.height, DIMENSIONS.depth);
         texture.format = THREE.RedFormat;
         texture.type = THREE.UnsignedByteType;
 
-        var material = new THREE.ShaderMaterial({
+        const material = new THREE.ShaderMaterial({
             uniforms: {
                 diffuse: { value: renderTarget.texture },
                 depth: { value: 55 },
@@ -160,7 +160,7 @@ function init() {
             fragmentShader,
         });
 
-        var geometry = new THREE.PlaneBufferGeometry(planeWidth, planeHeight);
+        const geometry = new THREE.PlaneBufferGeometry(planeWidth, planeHeight);
 
         mesh = new THREE.Mesh(geometry, material);
 
@@ -205,7 +205,7 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
 
-    var value = (mesh.material as THREE.ShaderMaterial).uniforms['depth'].value;
+    let value = (mesh.material as THREE.ShaderMaterial).uniforms['depth'].value;
 
     value += depthStep;
 

@@ -47,26 +47,26 @@ export interface GzipOptions extends DeflateOptions {
 /**
  * Options for compressing data into a Zlib format
  */
-export interface ZlibOptions extends DeflateOptions {}
+export type ZlibOptions = DeflateOptions;
 /**
  * Handler for data (de)compression streams
  * @param data The data output from the stream processor
  * @param final Whether this is the final block
  */
-export declare type FlateStreamHandler = (data: Uint8Array, final: boolean) => void;
+export type FlateStreamHandler = (data: Uint8Array, final: boolean) => void;
 /**
  * Handler for asynchronous data (de)compression streams
  * @param err Any error that occurred
  * @param data The data output from the stream processor
  * @param final Whether this is the final block
  */
-export declare type AsyncFlateStreamHandler = (err: Error, data: Uint8Array, final: boolean) => void;
+export type AsyncFlateStreamHandler = (err: Error, data: Uint8Array, final: boolean) => void;
 /**
  * Callback for asynchronous (de)compression methods
  * @param err Any error that occurred
  * @param data The resulting data. Only present if `err` is null
  */
-export declare type FlateCallback = (err: Error | string, data: Uint8Array) => void;
+export type FlateCallback = (err: Error | string, data: Uint8Array) => void;
 interface AsyncOptions {
     /**
      * Whether or not to "consume" the source data. This will make the typed array/buffer you pass in
@@ -96,7 +96,7 @@ export interface AsyncGzipOptions extends GzipOptions, AsyncOptions {}
 /**
  * Options for decompressing GZIP data asynchronously
  */
-export interface AsyncGunzipOptions extends AsyncOptions {}
+export type AsyncGunzipOptions = AsyncOptions;
 /**
  * Options for compressing data asynchronously into a Zlib format
  */
@@ -104,7 +104,7 @@ export interface AsyncZlibOptions extends ZlibOptions, AsyncOptions {}
 /**
  * Options for decompressing Zlib data asynchronously
  */
-export interface AsyncUnzlibOptions extends AsyncInflateOptions {}
+export type AsyncUnzlibOptions = AsyncInflateOptions;
 /**
  * A terminable compression/decompression process
  */
@@ -117,7 +117,7 @@ export interface AsyncTerminable {
 /**
  * Streaming DEFLATE compression
  */
-export declare class Deflate {
+export class Deflate {
     /**
      * Creates a DEFLATE stream
      * @param opts The compression options
@@ -142,7 +142,7 @@ export declare class Deflate {
 /**
  * Asynchronous streaming DEFLATE compression
  */
-export declare class AsyncDeflate {
+export class AsyncDeflate {
     /**
      * The handler to call whenever data is available
      */
@@ -177,24 +177,24 @@ export declare class AsyncDeflate {
  * @param cb The function to be called upon compression completion
  * @returns A function that can be used to immediately terminate the compression
  */
-export declare function deflate(data: Uint8Array, opts: AsyncDeflateOptions, cb: FlateCallback): AsyncTerminable;
+export function deflate(data: Uint8Array, opts: AsyncDeflateOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously compresses data with DEFLATE without any wrapper
  * @param data The data to compress
  * @param cb The function to be called upon compression completion
  */
-export declare function deflate(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function deflate(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Compresses data with DEFLATE without any wrapper
  * @param data The data to compress
  * @param opts The compression options
  * @returns The deflated version of the data
  */
-export declare function deflateSync(data: Uint8Array, opts?: DeflateOptions): Uint8Array;
+export function deflateSync(data: Uint8Array, opts?: DeflateOptions): Uint8Array;
 /**
  * Streaming DEFLATE decompression
  */
-export declare class Inflate {
+export class Inflate {
     /**
      * Creates an inflation stream
      * @param cb The callback to call whenever data is inflated
@@ -220,7 +220,7 @@ export declare class Inflate {
 /**
  * Asynchronous streaming DEFLATE decompression
  */
-export declare class AsyncInflate {
+export class AsyncInflate {
     /**
      * The handler to call whenever data is available
      */
@@ -249,25 +249,25 @@ export declare class AsyncInflate {
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function inflate(data: Uint8Array, opts: AsyncInflateOptions, cb: FlateCallback): AsyncTerminable;
+export function inflate(data: Uint8Array, opts: AsyncInflateOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously expands DEFLATE data with no wrapper
  * @param data The data to decompress
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function inflate(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function inflate(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Expands DEFLATE data with no wrapper
  * @param data The data to decompress
  * @param out Where to write the data. Saves memory if you know the decompressed size and provide an output buffer of that length.
  * @returns The decompressed version of the data
  */
-export declare function inflateSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
+export function inflateSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
 /**
  * Streaming GZIP compression
  */
-export declare class Gzip {
+export class Gzip {
     private c;
     private l;
     private v;
@@ -298,7 +298,7 @@ export declare class Gzip {
 /**
  * Asynchronous streaming GZIP compression
  */
-export declare class AsyncGzip {
+export class AsyncGzip {
     /**
      * The handler to call whenever data is available
      */
@@ -333,25 +333,25 @@ export declare class AsyncGzip {
  * @param cb The function to be called upon compression completion
  * @returns A function that can be used to immediately terminate the compression
  */
-export declare function gzip(data: Uint8Array, opts: AsyncGzipOptions, cb: FlateCallback): AsyncTerminable;
+export function gzip(data: Uint8Array, opts: AsyncGzipOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously compresses data with GZIP
  * @param data The data to compress
  * @param cb The function to be called upon compression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function gzip(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function gzip(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Compresses data with GZIP
  * @param data The data to compress
  * @param opts The compression options
  * @returns The gzipped version of the data
  */
-export declare function gzipSync(data: Uint8Array, opts?: GzipOptions): Uint8Array;
+export function gzipSync(data: Uint8Array, opts?: GzipOptions): Uint8Array;
 /**
  * Streaming GZIP decompression
  */
-export declare class Gunzip {
+export class Gunzip {
     private v;
     private p;
     /**
@@ -373,7 +373,7 @@ export declare class Gunzip {
 /**
  * Asynchronous streaming GZIP decompression
  */
-export declare class AsyncGunzip {
+export class AsyncGunzip {
     /**
      * The handler to call whenever data is available
      */
@@ -402,25 +402,25 @@ export declare class AsyncGunzip {
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function gunzip(data: Uint8Array, opts: AsyncGunzipOptions, cb: FlateCallback): AsyncTerminable;
+export function gunzip(data: Uint8Array, opts: AsyncGunzipOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously expands GZIP data
  * @param data The data to decompress
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function gunzip(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function gunzip(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Expands GZIP data
  * @param data The data to decompress
  * @param out Where to write the data. GZIP already encodes the output size, so providing this doesn't save memory.
  * @returns The decompressed version of the data
  */
-export declare function gunzipSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
+export function gunzipSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
 /**
  * Streaming Zlib compression
  */
-export declare class Zlib {
+export class Zlib {
     private c;
     private v;
     private o;
@@ -450,7 +450,7 @@ export declare class Zlib {
 /**
  * Asynchronous streaming Zlib compression
  */
-export declare class AsyncZlib {
+export class AsyncZlib {
     /**
      * The handler to call whenever data is available
      */
@@ -484,25 +484,25 @@ export declare class AsyncZlib {
  * @param opts The compression options
  * @param cb The function to be called upon compression completion
  */
-export declare function zlib(data: Uint8Array, opts: AsyncZlibOptions, cb: FlateCallback): AsyncTerminable;
+export function zlib(data: Uint8Array, opts: AsyncZlibOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously compresses data with Zlib
  * @param data The data to compress
  * @param cb The function to be called upon compression completion
  * @returns A function that can be used to immediately terminate the compression
  */
-export declare function zlib(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function zlib(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Compress data with Zlib
  * @param data The data to compress
  * @param opts The compression options
  * @returns The zlib-compressed version of the data
  */
-export declare function zlibSync(data: Uint8Array, opts: ZlibOptions): Uint8Array;
+export function zlibSync(data: Uint8Array, opts: ZlibOptions): Uint8Array;
 /**
  * Streaming Zlib decompression
  */
-export declare class Unzlib {
+export class Unzlib {
     private v;
     private p;
     /**
@@ -524,7 +524,7 @@ export declare class Unzlib {
 /**
  * Asynchronous streaming Zlib decompression
  */
-export declare class AsyncUnzlib {
+export class AsyncUnzlib {
     /**
      * The handler to call whenever data is available
      */
@@ -553,27 +553,27 @@ export declare class AsyncUnzlib {
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function unzlib(data: Uint8Array, opts: AsyncGunzipOptions, cb: FlateCallback): AsyncTerminable;
+export function unzlib(data: Uint8Array, opts: AsyncGunzipOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously expands Zlib data
  * @param data The data to decompress
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function unzlib(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function unzlib(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Expands Zlib data
  * @param data The data to decompress
  * @param out Where to write the data. Saves memory if you know the decompressed size and provide an output buffer of that length.
  * @returns The decompressed version of the data
  */
-export declare function unzlibSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
+export function unzlibSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
 export { gzip as compress, AsyncGzip as AsyncCompress };
 export { gzipSync as compressSync, Gzip as Compress };
 /**
  * Streaming GZIP, Zlib, or raw DEFLATE decompression
  */
-export declare class Decompress {
+export class Decompress {
     private G;
     private I;
     private Z;
@@ -598,7 +598,7 @@ export declare class Decompress {
 /**
  * Asynchronous streaming GZIP, Zlib, or raw DEFLATE decompression
  */
-export declare class AsyncDecompress {
+export class AsyncDecompress {
     private G;
     private I;
     private Z;
@@ -625,21 +625,21 @@ export declare class AsyncDecompress {
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function decompress(data: Uint8Array, opts: AsyncInflateOptions, cb: FlateCallback): AsyncTerminable;
+export function decompress(data: Uint8Array, opts: AsyncInflateOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchrononously expands compressed GZIP, Zlib, or raw DEFLATE data, automatically detecting the format
  * @param data The data to decompress
  * @param cb The function to be called upon decompression completion
  * @returns A function that can be used to immediately terminate the decompression
  */
-export declare function decompress(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
+export function decompress(data: Uint8Array, cb: FlateCallback): AsyncTerminable;
 /**
  * Expands compressed GZIP, Zlib, or raw DEFLATE data, automatically detecting the format
  * @param data The data to decompress
  * @param out Where to write the data. Saves memory if you know the decompressed size and provide an output buffer of that length.
  * @returns The decompressed version of the data
  */
-export declare function decompressSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
+export function decompressSync(data: Uint8Array, out?: Uint8Array): Uint8Array;
 /**
  * Attributes for files added to a ZIP archive object
  */
@@ -701,15 +701,15 @@ export interface AsyncZipOptions extends AsyncDeflateOptions, ZipAttributes {}
 /**
  * Options for asynchronously expanding a ZIP archive
  */
-export interface AsyncUnzipOptions extends AsyncOptions {}
+export type AsyncUnzipOptions = AsyncOptions;
 /**
  * A file that can be used to create a ZIP archive
  */
-export declare type ZippableFile = Uint8Array | [Uint8Array, ZipOptions];
+export type ZippableFile = Uint8Array | [Uint8Array, ZipOptions];
 /**
  * A file that can be used to asynchronously create a ZIP archive
  */
-export declare type AsyncZippableFile = Uint8Array | [Uint8Array, AsyncZipOptions];
+export type AsyncZippableFile = Uint8Array | [Uint8Array, AsyncZipOptions];
 /**
  * The complete directory structure of a ZIPpable archive
  */
@@ -734,22 +734,22 @@ export interface Unzipped {
  * @param data The string output from the stream processor
  * @param final Whether this is the final block
  */
-export declare type StringStreamHandler = (data: string, final: boolean) => void;
+export type StringStreamHandler = (data: string, final: boolean) => void;
 /**
  * Callback for asynchronous ZIP decompression
  * @param err Any error that occurred
  * @param data The decompressed ZIP archive
  */
-export declare type UnzipCallback = (err: Error | string, data: Unzipped) => void;
+export type UnzipCallback = (err: Error | string, data: Unzipped) => void;
 /**
  * Handler for streaming ZIP decompression
  * @param file The file that was found in the archive
  */
-export declare type UnzipFileHandler = (file: UnzipFile) => void;
+export type UnzipFileHandler = (file: UnzipFile) => void;
 /**
  * Streaming UTF-8 decoding
  */
-export declare class DecodeUTF8 {
+export class DecodeUTF8 {
     private p;
     private t;
     /**
@@ -771,7 +771,7 @@ export declare class DecodeUTF8 {
 /**
  * Streaming UTF-8 encoding
  */
-export declare class EncodeUTF8 {
+export class EncodeUTF8 {
     /**
      * Creates a UTF-8 decoding stream
      * @param cb The callback to call whenever data is encoded
@@ -795,7 +795,7 @@ export declare class EncodeUTF8 {
  *               not need to be true unless decoding a binary string.
  * @returns The string encoded in UTF-8/Latin-1 binary
  */
-export declare function strToU8(str: string, latin1?: boolean): Uint8Array;
+export function strToU8(str: string, latin1?: boolean): Uint8Array;
 /**
  * Converts a Uint8Array to a string
  * @param dat The data to decode to string
@@ -803,7 +803,7 @@ export declare function strToU8(str: string, latin1?: boolean): Uint8Array;
  *               not need to be true unless encoding to binary string.
  * @returns The original UTF-8/Latin-1 string
  */
-export declare function strFromU8(dat: Uint8Array, latin1?: boolean): string;
+export function strFromU8(dat: Uint8Array, latin1?: boolean): string;
 /**
  * A stream that can be used to create a file in a ZIP archive
  */
@@ -871,7 +871,7 @@ export interface ZipInputFile extends ZipAttributes {
 /**
  * A pass-through stream to keep data uncompressed in a ZIP archive.
  */
-export declare class ZipPassThrough implements ZipInputFile {
+export class ZipPassThrough implements ZipInputFile {
     filename: string;
     crc: number;
     size: number;
@@ -910,7 +910,7 @@ export declare class ZipPassThrough implements ZipInputFile {
  * Streaming DEFLATE compression for ZIP archives. Prefer using AsyncZipDeflate
  * for better performance
  */
-export declare class ZipDeflate implements ZipInputFile {
+export class ZipDeflate implements ZipInputFile {
     filename: string;
     crc: number;
     size: number;
@@ -940,7 +940,7 @@ export declare class ZipDeflate implements ZipInputFile {
 /**
  * Asynchronous streaming DEFLATE compression for ZIP archives
  */
-export declare class AsyncZipDeflate implements ZipInputFile {
+export class AsyncZipDeflate implements ZipInputFile {
     filename: string;
     crc: number;
     size: number;
@@ -971,7 +971,7 @@ export declare class AsyncZipDeflate implements ZipInputFile {
 /**
  * A zippable archive to which files can incrementally be added
  */
-export declare class Zip {
+export class Zip {
     private u;
     private d;
     /**
@@ -1009,14 +1009,14 @@ export declare class Zip {
  * @param cb The callback to call with the generated ZIP archive
  * @returns A function that can be used to immediately terminate the compression
  */
-export declare function zip(data: AsyncZippable, opts: AsyncZipOptions, cb: FlateCallback): AsyncTerminable;
+export function zip(data: AsyncZippable, opts: AsyncZipOptions, cb: FlateCallback): AsyncTerminable;
 /**
  * Asynchronously creates a ZIP file
  * @param data The directory structure for the ZIP archive
  * @param cb The callback to call with the generated ZIP archive
  * @returns A function that can be used to immediately terminate the compression
  */
-export declare function zip(data: AsyncZippable, cb: FlateCallback): AsyncTerminable;
+export function zip(data: AsyncZippable, cb: FlateCallback): AsyncTerminable;
 /**
  * Synchronously creates a ZIP file. Prefer using `zip` for better performance
  * with more than one file.
@@ -1024,7 +1024,7 @@ export declare function zip(data: AsyncZippable, cb: FlateCallback): AsyncTermin
  * @param opts The main options, merged with per-file options
  * @returns The generated ZIP archive
  */
-export declare function zipSync(data: Zippable, opts?: ZipOptions): Uint8Array;
+export function zipSync(data: Zippable, opts?: ZipOptions): Uint8Array;
 /**
  * A decoder for files in ZIP streams
  */
@@ -1105,7 +1105,7 @@ export interface UnzipFile {
 /**
  * Streaming pass-through decompression for ZIP archives
  */
-export declare class UnzipPassThrough implements UnzipDecoder {
+export class UnzipPassThrough implements UnzipDecoder {
     static compression: number;
     ondata: AsyncFlateStreamHandler;
     push(data: Uint8Array, final: boolean): void;
@@ -1114,7 +1114,7 @@ export declare class UnzipPassThrough implements UnzipDecoder {
  * Streaming DEFLATE decompression for ZIP archives. Prefer AsyncZipInflate for
  * better performance.
  */
-export declare class UnzipInflate implements UnzipDecoder {
+export class UnzipInflate implements UnzipDecoder {
     static compression: number;
     private i;
     ondata: AsyncFlateStreamHandler;
@@ -1127,7 +1127,7 @@ export declare class UnzipInflate implements UnzipDecoder {
 /**
  * Asynchronous streaming DEFLATE decompression for ZIP archives
  */
-export declare class AsyncUnzipInflate implements UnzipDecoder {
+export class AsyncUnzipInflate implements UnzipDecoder {
     static compression: number;
     private i;
     ondata: AsyncFlateStreamHandler;
@@ -1141,7 +1141,7 @@ export declare class AsyncUnzipInflate implements UnzipDecoder {
 /**
  * A ZIP archive decompression stream that emits files as they are discovered
  */
-export declare class Unzip {
+export class Unzip {
     private d;
     private c;
     private p;
@@ -1175,11 +1175,11 @@ export declare class Unzip {
  * @param cb The callback to call with the decompressed files
  * @returns A function that can be used to immediately terminate the unzipping
  */
-export declare function unzip(data: Uint8Array, cb: UnzipCallback): AsyncTerminable;
+export function unzip(data: Uint8Array, cb: UnzipCallback): AsyncTerminable;
 /**
  * Synchronously decompresses a ZIP archive. Prefer using `unzip` for better
  * performance with more than one file.
  * @param data The raw compressed ZIP file
  * @returns The decompressed files
  */
-export declare function unzipSync(data: Uint8Array): Unzipped;
+export function unzipSync(data: Uint8Array): Unzipped;
