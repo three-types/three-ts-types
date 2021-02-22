@@ -1,4 +1,4 @@
-export class NodeUniform<TNode extends Node = Node> {
+export default class NodeUniform<TNode extends Node = Node> {
     name: string;
     type: string;
     node: TNode;
@@ -12,5 +12,3 @@ export class NodeUniform<TNode extends Node = Node> {
 
     set value(val: any);
 }
-
-export default NodeUniform;

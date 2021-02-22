@@ -1,4 +1,4 @@
-export class NodeAttribute {
+export default class NodeAttribute {
     name: string;
     type: string;
 
@@ -6,5 +6,3 @@ export class NodeAttribute {
 
     constructor(name: string, type: string);
 }
-
-export default NodeAttribute;

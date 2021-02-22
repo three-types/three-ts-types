@@ -1,6 +1,6 @@
 import { Material, Renderer, Camera, Object3D } from './../../../../../src/Three';
 
-export class NodeFrame<
+export default class NodeFrame<
     TMaterial extends Material = Material,
     TRenderer extends Renderer = Renderer,
     TCamera extends Camera = Camera,
@@ -26,5 +26,3 @@ export class NodeFrame<
 
     update: () => void;
 }
-
-export default NodeFrame;

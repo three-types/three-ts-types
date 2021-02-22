@@ -8,7 +8,7 @@ import NodeSlot from './NodeSlot';
 
 type Defines = { vertex: { [key: string]: any }; fragment: { [key: string]: any } };
 
-export class NodeBuilder<TMaterial extends Material = Material, TRenderer extends Renderer = Renderer> {
+export default class NodeBuilder<TMaterial extends Material = Material, TRenderer extends Renderer = Renderer> {
     material: TMaterial;
     renderer: TRenderer;
 
@@ -82,5 +82,3 @@ export class NodeBuilder<TMaterial extends Material = Material, TRenderer extend
 
     format: (snippet: string, fromType: string, toType: string) => string;
 }
-
-export default NodeBuilder;

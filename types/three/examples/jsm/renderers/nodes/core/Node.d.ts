@@ -1,14 +1,14 @@
 import NodeBuilder from './NodeBuilder';
 import NodeFrame from './NodeFrame';
 
-export class Node {
+export default class Node {
     type: string;
     updateType: string;
     isNode: boolean;
 
     constructor(type: string);
 
-    getUpdateType: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder) => string;
+    getUpdateType: () => string;
 
     getType: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder) => string;
 
@@ -24,5 +24,3 @@ export class Node {
 
     build: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder, output: string) => void;
 }
-
-export default Node;

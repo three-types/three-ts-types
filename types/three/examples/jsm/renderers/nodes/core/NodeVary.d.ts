@@ -1,4 +1,4 @@
-export class NodeVary {
+export default class NodeVary {
     name: string;
     type: string;
     snippet: string;
@@ -7,5 +7,3 @@ export class NodeVary {
 
     constructor(name: string, type: string, snippet: string);
 }
-
-export default NodeVary;
