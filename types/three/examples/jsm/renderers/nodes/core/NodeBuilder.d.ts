@@ -52,7 +52,7 @@ export class NodeBuilder<TMaterial extends Material = Material, TRenderer extend
 
     getVectorType: (type: string) => string;
 
-    getTypeFromLength: (type: string) => string | number;
+    getTypeFromLength: (type: number) => string | number;
 
     getTypeLength: (type: string) => number;
 

@@ -8,13 +8,13 @@ export class Node {
 
     constructor(type: string);
 
-    getUpdateType: <TBuilder extends NodeBuilder = NodeBuilder>(builder?: TBuilder) => string;
+    getUpdateType: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder) => string;
 
-    getType: <TBuilder extends NodeBuilder = NodeBuilder>(builder?: TBuilder) => string;
+    getType: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder) => string;
 
-    update: <TFrame extends NodeFrame = NodeFrame>(frame?: TFrame) => void;
+    update: <TFrame extends NodeFrame = NodeFrame>(frame: TFrame) => void;
 
-    generate: <TBuilder extends NodeBuilder = NodeBuilder>(builder?: TBuilder, output?: string) => void | string;
+    generate: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder, output: string) => void | string;
 
     buildStage: <TBuilder extends NodeBuilder = NodeBuilder>(
         builder: TBuilder,
@@ -22,7 +22,7 @@ export class Node {
         output?: string,
     ) => void;
 
-    build: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder, output?: string) => void;
+    build: <TBuilder extends NodeBuilder = NodeBuilder>(builder: TBuilder, output: string) => void;
 }
 
 export default Node;
