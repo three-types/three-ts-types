@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import { VOXLoader, VOXDataTexture3D } from 'three/examples/jsm/loaders/VOXLoader.js';
+import { VOXLoader, VOXDataTexture3D } from 'three/examples/jsm/loaders/VOXLoader';
 
-import { WEBGL } from 'three/examples/jsm/WebGL.js';
+import { WEBGL } from 'three/examples/jsm/WebGL';
 
 if (!WEBGL.isWebGL2Available()) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage());
