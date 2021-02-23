@@ -16,7 +16,6 @@ import {
 } from '../../../src/Three';
 
 import { DRACOLoader } from './DRACOLoader';
-import { DDSLoader } from './DDSLoader';
 import { KTX2Loader } from './KTX2Loader';
 
 export interface GLTF {
@@ -39,6 +38,7 @@ export interface GLTF {
 export class GLTFLoader extends Loader {
     constructor(manager?: LoadingManager);
     dracoLoader: DRACOLoader | null;
+    requestHeader: { [header: string]: string };
 
     load(
         url: string,
