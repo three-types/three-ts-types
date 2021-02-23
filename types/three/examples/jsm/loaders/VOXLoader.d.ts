@@ -1,4 +1,4 @@
-import { Loader, LoadingManager } from '../../../src/Three';
+import { DataTexture3D, Mesh, Loader, LoadingManager } from '../../../src/Three';
 
 export class VOXLoader extends Loader {
     constructor(manager?: LoadingManager);
@@ -11,4 +11,12 @@ export class VOXLoader extends Loader {
     ): void;
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<object[]>;
     parse(data: ArrayBuffer): object[];
+}
+
+export class VOXMesh extends Mesh {
+    constructor(chunk: object);
+}
+
+export class VOXDataTexture3D extends DataTexture3D {
+    constructor(chunk: object);
 }
