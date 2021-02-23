@@ -22,7 +22,7 @@ export class Texture extends EventDispatcher {
      * @param [format=THREE.RGBAFormat]
      * @param [type=THREE.UnsignedByteType]
      * @param [anisotropy=1]
-     * @param [encoding=THREE.LinearEncoding]
+     * @param [encoding]
      */
     constructor(
         image?: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
@@ -148,9 +148,6 @@ export class Texture extends EventDispatcher {
      */
     unpackAlignment: number;
 
-    /**
-     * @default THREE.LinearEncoding
-     */
     encoding: TextureEncoding;
 
     /**
