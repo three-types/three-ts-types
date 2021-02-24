@@ -9,7 +9,7 @@ interface Hand extends THREE.Group {
     joints: { [key: string]: any };
 }
 
-let container = document.createElement('div');
+const container = document.createElement('div');
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
@@ -192,8 +192,7 @@ function onPinchStartLeft(event: THREE.Event) {
 }
 
 function collideObject(indexTip: THREE.Group) {
-    for (let i = 0; i < spheres.length; i++) {
-        const sphere = spheres[i];
+    for (const sphere of spheres) {
         const distance = indexTip.getWorldPosition(tmpVector1).distanceTo(sphere.getWorldPosition(tmpVector2));
 
         if (sphere.geometry.boundingSphere && distance < sphere.geometry.boundingSphere.radius * sphere.scale.x) {
