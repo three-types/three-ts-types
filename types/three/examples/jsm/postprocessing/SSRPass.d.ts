@@ -15,7 +15,7 @@ import { Pass } from '../postprocessing/Pass';
 import { SSRShader } from '../shaders/SSRShader';
 import { Reflector } from '../objects/ReflectorForSSRPass';
 
-interface SSRPassParams {
+export interface SSRPassParams {
     renderer: WebGLRenderer;
     scene: Scene;
     camera: Camera;
@@ -94,25 +94,25 @@ export class SSRPass extends Pass {
 
     dispose: () => void;
 
-    renderPass: <TMaterial extends Material = Material>(
+    renderPass: (
         renderer: WebGLRenderer,
-        passMaterial: TMaterial,
+        passMaterial: Material,
         renderTarget: WebGLRenderTarget,
         clearColor: Color | string | number,
         clearAlpha: Color | string | number,
     ) => void;
 
-    renderOverride: <TMaterial extends Material = Material>(
+    renderOverride: (
         renderer: WebGLRenderer,
-        passMaterial: TMaterial,
+        passMaterial: Material,
         renderTarget: WebGLRenderTarget,
         clearColor: Color | string | number,
         clearAlpha: Color | string | number,
     ) => void;
 
-    renderMetalness: <TMaterial extends Material = Material>(
+    renderMetalness: (
         renderer: WebGLRenderer,
-        passMaterial: TMaterial,
+        passMaterial: Material,
         renderTarget: WebGLRenderTarget,
         clearColor: Color | string | number,
         clearAlpha: Color | string | number,

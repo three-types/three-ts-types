@@ -48,7 +48,7 @@ export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extend
 
     constructor(geometry: TGeometry, options: ReflectorOptions);
 
-    doRender: <TCamera extends Camera = Camera>(renderer: WebGLRenderer, scene: Scene, camera: TCamera) => void;
+    doRender: (renderer: WebGLRenderer, scene: Scene, camera: Camera) => void;
 
     getRenderTarget: () => WebGLRenderTarget;
 }

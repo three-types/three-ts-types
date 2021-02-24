@@ -8,7 +8,7 @@ import { Reflector } from 'three/examples/jsm/objects/ReflectorForSSRPass';
 
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
-let params = {
+const params = {
     enableSSR: true,
     autoRotate: true,
     isOtherMeshes: true,
@@ -16,14 +16,14 @@ let params = {
 };
 let composer: EffectComposer;
 let ssrPass: SSRPass;
-let isPerspectiveCamera = true;
+const isPerspectiveCamera = true;
 let controls: OrbitControls;
 let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
-let otherMeshes: THREE.Mesh[] = [];
+const otherMeshes: THREE.Mesh[] = [];
 let groundReflector: Reflector;
-let selects: THREE.Mesh[] = [];
+const selects: THREE.Mesh[] = [];
 
 const container = document.querySelector('#container') as Element;
 
@@ -64,7 +64,7 @@ function init() {
     spotLight.position.set(-1, 1, 1);
     scene.add(spotLight);
 
-    dracoLoader.load('models/draco/bunny.drc', function (geometry) {
+    dracoLoader.load('models/draco/bunny.drc', geometry => {
         geometry.computeVertexNormals();
 
         const material = new THREE.MeshStandardMaterial({ color: 0x606060 });
@@ -151,7 +151,7 @@ function init() {
         width: innerWidth,
         height: innerHeight,
         encoding: THREE.sRGBEncoding,
-        isPerspectiveCamera: isPerspectiveCamera,
+        isPerspectiveCamera,
         groundReflector: params.isGroundReflector ? groundReflector : null,
         selects: params.isGroundReflector ? selects : null,
         // morphTargets: true,
@@ -163,12 +163,7 @@ function init() {
     groundReflector.maxDistance = ssrPass.maxDistance;
     ssrPass.opacity = 1;
     groundReflector.opacity = ssrPass.opacity;
-
-    if (isPerspectiveCamera) {
-        ssrPass.surfDist = 0.0015;
-    } else {
-        ssrPass.surfDist = 2;
-    }
+    ssrPass.surfDist = 0.0015;
 }
 
 function onWindowResize() {
@@ -199,8 +194,6 @@ function render() {
     }
 
     if (params.enableSSR) {
-        ///todo: groundReflector has full ground info, need use it to solve reflection gaps problem on objects when camera near ground.
-        ///todo: the normal info where groundReflector reflected need to be changed.
         composer.render();
     } else {
         renderer.render(scene, camera);
