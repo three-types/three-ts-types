@@ -26,7 +26,7 @@ export interface ReflectorOptions {
     textureHeight: number;
     color: number;
     useDepthTexture: boolean;
-    shader: ReflectorShader;
+    shader?: ReflectorShader;
 }
 
 export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extends Mesh {
@@ -49,4 +49,6 @@ export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extend
     constructor(geometry: TGeometry, options: ReflectorOptions);
 
     doRender: <TCamera extends Camera = Camera>(renderer: WebGLRenderer, scene: Scene, camera: TCamera) => void;
+
+    getRenderTarget: () => WebGLRenderTarget;
 }
