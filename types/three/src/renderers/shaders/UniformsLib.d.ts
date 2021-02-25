@@ -1,10 +1,6 @@
-export interface UniformBuilder<TValue> {
-    value: TValue;
-}
-
 // tslint:disable-next-line:interface-name
-export interface IUniform {
-    value: any;
+export interface IUniform<TValue = unknown> {
+    value: TValue;
 }
 
 export let UniformsLib: {

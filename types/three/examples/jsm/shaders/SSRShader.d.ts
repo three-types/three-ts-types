@@ -1,4 +1,4 @@
-import { Matrix4, Vector2, Texture, UniformBuilder, Uniform } from '../../../src/Three';
+import { Matrix4, Vector2, Texture, IUniform } from '../../../src/Three';
 /**
  * References:
  * https://lettier.github.io/3d-game-shaders-for-beginners/screen-space-reflection.html
@@ -15,20 +15,20 @@ export interface SSRShader {
         isSelective: boolean;
     };
     uniforms: {
-        tDiffuse: UniformBuilder<Texture | null>;
-        tNormal: UniformBuilder<Texture | null>;
-        tMetalness: UniformBuilder<Texture | null>;
-        tDepth: UniformBuilder<Texture | null>;
-        cameraNear: UniformBuilder<number>;
-        cameraFar: UniformBuilder<number>;
-        resolution: UniformBuilder<Vector2>;
-        cameraProjectionMatrix: UniformBuilder<Matrix4>;
-        cameraInverseProjectionMatrix: UniformBuilder<Matrix4>;
-        opacity: UniformBuilder<number>;
-        maxDistance: UniformBuilder<number>;
-        cameraRange: UniformBuilder<number>;
-        surfDist: UniformBuilder<number>;
-        thickTolerance: UniformBuilder<number>;
+        tDiffuse: IUniform<Texture | null>;
+        tNormal: IUniform<Texture | null>;
+        tMetalness: IUniform<Texture | null>;
+        tDepth: IUniform<Texture | null>;
+        cameraNear: IUniform<number>;
+        cameraFar: IUniform<number>;
+        resolution: IUniform<Vector2>;
+        cameraProjectionMatrix: IUniform<Matrix4>;
+        cameraInverseProjectionMatrix: IUniform<Matrix4>;
+        opacity: IUniform<number>;
+        maxDistance: IUniform<number>;
+        cameraRange: IUniform<number>;
+        surfDist: IUniform<number>;
+        thickTolerance: IUniform<number>;
     };
     vertexShader: string;
     fragmentShader: string;
@@ -40,9 +40,9 @@ export interface SSRDepthShader {
         PERSPECTIVE_CAMERA: number;
     };
     uniforms: {
-        tDepth: UniformBuilder<Texture | null>;
-        cameraNear: UniformBuilder<number>;
-        cameraFar: UniformBuilder<number>;
+        tDepth: IUniform<Texture | null>;
+        cameraNear: IUniform<number>;
+        cameraFar: IUniform<number>;
     };
     vertexShader: string;
     fragmentShader: string;
@@ -51,9 +51,9 @@ export interface SSRDepthShader {
 export const SSRBlurShader: SSRBlurShader;
 export interface SSRBlurShader {
     uniforms: {
-        tDiffuse: UniformBuilder<Texture | null>;
-        resolution: UniformBuilder<Vector2>;
-        opacity: UniformBuilder<number>;
+        tDiffuse: IUniform<Texture | null>;
+        resolution: IUniform<Vector2>;
+        opacity: IUniform<number>;
     };
     vertexShader: string;
     fragmentShader: string;

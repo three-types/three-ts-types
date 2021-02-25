@@ -6,7 +6,7 @@ import {
     WebGLRenderer,
     Scene,
     Camera,
-    UniformBuilder,
+    IUniform,
 } from '../../../src/Three';
 
 export interface ReflectorShader {
@@ -14,7 +14,9 @@ export interface ReflectorShader {
         isDistanceAttenuation: boolean;
         isFresnel: boolean;
     };
-    uniforms: UniformBuilder<unknown>;
+    uniforms: {
+        [key: string]: IUniform;
+    };
     vertexShader: string;
     fragmentShader: string;
 }
