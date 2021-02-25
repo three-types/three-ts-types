@@ -223,5 +223,7 @@ export class MeshStandardMaterial extends Material {
      */
     flatShading: boolean;
 
+    isMeshStandardMaterial: boolean;
+
     setValues(parameters: MeshStandardMaterialParameters): void;
 }
