@@ -5,7 +5,7 @@ import { HandModelOptions, XRHandModel } from './XRHandModelFactory';
 export class XRHandOculusMeshModel {
     controller: Group;
     handModel: XRHandModel;
-    bones: Object3D[];
+    bones: Array<Object3D | null>;
 
     constructor(handModel: XRHandModel, controller: Group, path: string, handedness: any, options: HandModelOptions);
 
