@@ -11,10 +11,10 @@ export class VOXLoader extends Loader {
 
     load(
         url: string,
-        onLoad: (chunks: object[]) => void,
+        onLoad: (chunks: Chunk[]) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void,
-    ): Chunk[];
+    ): void;
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<object[]>;
     parse(data: ArrayBuffer): object[];
 }
