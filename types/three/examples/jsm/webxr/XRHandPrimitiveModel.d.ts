@@ -1,6 +1,10 @@
 import { Group, Texture } from '../../../src/Three';
 
-import { HandModelOptions, XRHandModel } from './XRHandModelFactory';
+import { XRHandModel } from './XRHandModelFactory';
+
+export interface XRHandPrimitiveModelOptions {
+    primitive?: 'sphere' | 'box';
+}
 
 export class XRHandPrimitiveModel {
     controller: Group;
@@ -8,7 +12,13 @@ export class XRHandPrimitiveModel {
     envMap: Texture | null;
     handMesh: Group;
 
-    constructor(handModel: XRHandModel, controller: Group, path: string, handedness: any, options: HandModelOptions);
+    constructor(
+        handModel: XRHandModel,
+        controller: Group,
+        path: string,
+        handedness: 'left' | 'right',
+        options: XRHandPrimitiveModelOptions,
+    );
 
     updateMesh: () => void;
 }

@@ -1,7 +1,7 @@
 import { DirectionalLight, Group, LightProbe, XRFrame, WebGLRenderer, Texture } from '../../../src/Three';
 
-export class SessionLightProbe<TLight extends THREE.Group = THREE.Group> {
-    xrLight: TLight;
+export class SessionLightProbe {
+    xrLight: XREstimatedLight;
     renderer: WebGLRenderer;
     lightProbe: unknown;
     xrWebGLBinding: unknown | null;
@@ -9,7 +9,7 @@ export class SessionLightProbe<TLight extends THREE.Group = THREE.Group> {
     frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
 
     constructor(
-        xrLight: TLight,
+        xrLight: XREstimatedLight,
         renderer: WebGLRenderer,
         lightProbe: unknown,
         environmentEstimation: boolean,
