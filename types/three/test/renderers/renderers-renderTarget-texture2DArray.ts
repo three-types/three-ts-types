@@ -88,9 +88,8 @@ const renderTargetTexture = new THREE.DataTexture2DArray();
 renderTargetTexture.format = THREE.RedFormat;
 renderTargetTexture.type = THREE.UnsignedByteType;
 
-const renderTarget = new THREE.WebGLRenderTarget();
+const renderTarget = new THREE.WebGLRenderTarget(DIMENSIONS.width, DIMENSIONS.height);
 renderTarget.setTexture(renderTargetTexture);
-renderTarget.setSize(DIMENSIONS.width, DIMENSIONS.height, DIMENSIONS.depth);
 
 const postProcessMaterial = new THREE.ShaderMaterial({
     uniforms: {
