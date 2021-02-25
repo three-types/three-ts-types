@@ -36,7 +36,7 @@ export class SSRPass extends Pass {
     renderer: WebGLRenderer;
     scene: Scene;
     camera: Camera;
-    groundReflector: Reflector;
+    groundReflector: Reflector | null;
     opacity: SSRShader['uniforms']['opacity']['value'];
     output: number;
     maxDistance: SSRShader['uniforms']['maxDistance']['value'];
