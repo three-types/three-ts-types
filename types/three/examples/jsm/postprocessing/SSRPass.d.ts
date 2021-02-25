@@ -12,7 +12,6 @@ import {
     Material,
 } from '../../../src/Three';
 import { Pass } from '../postprocessing/Pass';
-import { SSRShader } from '../shaders/SSRShader';
 import { Reflector } from '../objects/ReflectorForSSRPass';
 
 export interface SSRPassParams {
@@ -37,21 +36,29 @@ export class SSRPass extends Pass {
     scene: Scene;
     camera: Camera;
     groundReflector: Reflector | null;
-    opacity: SSRShader['uniforms']['opacity']['value'];
+    opacity: number;
     output: number;
-    maxDistance: SSRShader['uniforms']['maxDistance']['value'];
-    surfDist: SSRShader['uniforms']['surfDist']['value'];
+    maxDistance: number;
+    surfDist: number;
     encoding: TextureEncoding;
     tempColor: Color;
 
-    _selects: Mesh[] | null;
+    get selects(): Mesh[] | null;
+    set selects(val: Mesh[] | null);
     isSelective: boolean;
-    _isBouncing: boolean;
+    get isBouncing(): boolean;
+    set isBouncing(val: boolean);
+
     isBlur: boolean;
-    _isDistanceAttenuation: SSRShader['defines']['isDistanceAttenuation'];
-    _isFresnel: SSRShader['defines']['isFresnel'];
-    _isInfiniteThick: SSRShader['defines']['isInfiniteThick'];
-    thickTolerance: SSRShader['uniforms']['thickTolerance']['value'];
+
+    get isDistanceAttenuation(): boolean;
+    set isDistanceAttenuation(val: boolean);
+    get isFresnel(): boolean;
+    set isFresnel(val: boolean);
+    get isInfiniteThick(): boolean;
+    set isInfiniteThick(val: boolean);
+
+    thickTolerance: number;
 
     beautyRenderTarget: WebGLRenderTarget;
     prevRenderTarget: WebGLRenderTarget;
@@ -81,7 +88,7 @@ export class SSRPass extends Pass {
 
     originalClearColor: Color;
 
-    OUTPUT: {
+    static OUTPUT: {
         Default: 0;
         SSR: 1;
         Beauty: 3;

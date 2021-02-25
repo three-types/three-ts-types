@@ -1,4 +1,8 @@
 // tslint:disable-next-line:interface-name
+export interface UniformBuilder<TValue> {
+    value: TValue;
+}
+
 export interface IUniform {
     value: any;
 }

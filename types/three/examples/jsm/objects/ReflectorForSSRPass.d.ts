@@ -6,6 +6,7 @@ import {
     WebGLRenderer,
     Scene,
     Camera,
+    UniformBuilder,
 } from '../../../src/Three';
 
 export interface ReflectorShader {
@@ -13,34 +14,34 @@ export interface ReflectorShader {
         isDistanceAttenuation: boolean;
         isFresnel: boolean;
     };
-    uniforms: {
-        [key: string]: any;
-    };
+    uniforms: UniformBuilder<unknown>;
     vertexShader: string;
     fragmentShader: string;
 }
 
 export interface ReflectorOptions {
-    clipBias: number;
-    textureWidth: number;
-    textureHeight: number;
-    color: number;
-    useDepthTexture: boolean;
+    clipBias?: number;
+    textureWidth?: number;
+    textureHeight?: number;
+    color?: number;
+    useDepthTexture?: boolean;
     shader?: ReflectorShader;
 }
 
-export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extends Mesh {
-    type: string;
-    options: object;
+export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extends Mesh<TGeometry> {
+    type: 'Reflector';
+    options: ReflectorOptions;
 
-    ReflectorShader: ReflectorShader;
+    static ReflectorShader: ReflectorShader;
 
     needsUpdate: boolean;
     maxDistance: number;
     opacity: number;
 
-    _isDistanceAttenuation: boolean;
-    _isFresnel: boolean;
+    get isDistanceAttenuation(): boolean;
+    set isDistanceAttenuation(val: boolean);
+    get isFresnel(): boolean;
+    set isFresnel(val: boolean);
 
     material: ShaderMaterial;
 
