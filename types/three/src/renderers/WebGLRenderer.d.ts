@@ -22,6 +22,7 @@ import { DataTexture3D } from '../textures/DataTexture3D';
 import { XRAnimationLoopCallback } from './webxr/WebXR';
 import { Vector3 } from '../math/Vector3';
 import { Box3 } from '../math/Box3';
+import { DataTexture2DArray } from '../textures/DataTexture2DArray';
 
 export interface Renderer {
     domElement: HTMLCanvasElement;
@@ -445,7 +446,7 @@ export class WebGLRenderer implements Renderer {
         sourceBox: Box3,
         position: Vector3,
         srcTexture: Texture,
-        dstTexture: Texture,
+        dstTexture: DataTexture3D | DataTexture2DArray,
         level?: number,
     ): void;
 
