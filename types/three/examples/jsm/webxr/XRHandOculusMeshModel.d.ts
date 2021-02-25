@@ -1,6 +1,6 @@
 import { Group, Object3D } from './../../../src/Three';
 
-import { XRHandModel } from './XRHandModelFactory';
+import { XRHandModel, XRHandModelHandedness } from './XRHandModelFactory';
 
 export interface XRHandOculusMeshModelOptions {
     model: 'lowpoly';
@@ -15,7 +15,7 @@ export class XRHandOculusMeshModel {
         handModel: XRHandModel,
         controller: Group,
         path: string,
-        handedness: 'left' | 'right',
+        handedness: XRHandModelHandedness,
         options: XRHandOculusMeshModelOptions,
     );
 

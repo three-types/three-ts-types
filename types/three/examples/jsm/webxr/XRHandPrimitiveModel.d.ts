@@ -1,6 +1,6 @@
 import { Group, Texture } from '../../../src/Three';
 
-import { XRHandModel } from './XRHandModelFactory';
+import { XRHandModel, XRHandModelHandedness } from './XRHandModelFactory';
 
 export interface XRHandPrimitiveModelOptions {
     primitive?: 'sphere' | 'box';
@@ -16,7 +16,7 @@ export class XRHandPrimitiveModel {
         handModel: XRHandModel,
         controller: Group,
         path: string,
-        handedness: 'left' | 'right',
+        handedness: XRHandModelHandedness,
         options: XRHandPrimitiveModelOptions,
     );
 
