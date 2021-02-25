@@ -38,7 +38,6 @@ export interface GLTF {
 export class GLTFLoader extends Loader {
     constructor(manager?: LoadingManager);
     dracoLoader: DRACOLoader | null;
-    requestHeader: { [header: string]: string };
 
     load(
         url: string,
