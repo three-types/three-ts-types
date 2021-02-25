@@ -6,7 +6,7 @@ export class SessionLightProbe<TLight extends THREE.Group = THREE.Group> {
     lightProbe: unknown;
     xrWebGLBinding: unknown | null;
     estimationStartCallback: () => void;
-    frameCallback: (time: number, xrFrame: XRFrame) => void;
+    frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
 
     constructor(
         xrLight: TLight,
