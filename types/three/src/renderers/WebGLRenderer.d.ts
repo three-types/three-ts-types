@@ -433,11 +433,19 @@ export class WebGLRenderer implements Renderer {
      */
     copyTextureToTexture(position: Vector2, srcTexture: Texture, dstTexture: Texture, level?: number): void;
 
+    /**
+     * Copies the pixels of a texture in the bounds sourceBox in the desination texture starting from the given position.
+     * @param sourceBox Specifies the bounds
+     * @param position Specifies the pixel offset into the dstTexture where the copy will occur.
+     * @param srcTexture Specifies the source texture.
+     * @param dstTexture Specifies the destination texture.
+     * @param level Specifies the destination mipmap level of the texture.
+     */
     copyTextureToTexture3D(
         sourceBox: Box3,
         position: Vector3,
         srcTexture: Texture,
-        dstTexture: DataTexture3D,
+        dstTexture: Texture,
         level?: number,
     ): void;
 
