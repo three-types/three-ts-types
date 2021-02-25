@@ -16,7 +16,6 @@ import {
 } from '../../../src/Three';
 
 import { DRACOLoader } from './DRACOLoader';
-import { DDSLoader } from './DDSLoader';
 import { KTX2Loader } from './KTX2Loader';
 
 export interface GLTF {
@@ -39,7 +38,6 @@ export interface GLTF {
 export class GLTFLoader extends Loader {
     constructor(manager?: LoadingManager);
     dracoLoader: DRACOLoader | null;
-    ddsLoader: DDSLoader | null;
 
     load(
         url: string,
@@ -50,7 +48,6 @@ export class GLTFLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<GLTF>;
 
     setDRACOLoader(dracoLoader: DRACOLoader): GLTFLoader;
-    setDDSLoader(ddsLoader: DDSLoader): GLTFLoader;
 
     register(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
     unregister(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
