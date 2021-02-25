@@ -1,5 +1,5 @@
 // tslint:disable-next-line:interface-name
-export interface IUniform<TValue = unknown> {
+export interface IUniform<TValue = any> {
     value: TValue;
 }
 
