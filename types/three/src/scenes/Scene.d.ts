@@ -5,7 +5,6 @@ import { Color } from '../math/Color';
 import { Texture } from '../textures/Texture';
 import { WebGLRenderer } from '../renderers/WebGLRenderer';
 import { Camera } from '../cameras/Camera';
-import { WebGLRenderTarget } from '../renderers/WebGLRenderTarget';
 
 // Scenes /////////////////////////////////////////////////////////////////////
 
