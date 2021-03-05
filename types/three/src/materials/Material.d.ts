@@ -68,7 +68,7 @@ export class Material extends EventDispatcher {
      * @default 0
      */
     alphaTest: number;
-    
+
     /**
      * Enables alpha to coverage. Can only be used with MSAA-enabled rendering contexts.
      * @default false
