@@ -33,8 +33,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/CodyJasonBennett"><img src="https://avatars.githubusercontent.com/u/23324155?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Cody Bennett</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=CodyJasonBennett" title="Code">💻</a></td>
     <td align="center"><a href="http://fms-cat.github.io/"><img src="https://avatars.githubusercontent.com/u/7824814?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yutaka "FMS_Cat" Obuchi</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=FMS-Cat" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=FMS-Cat" title="Tests">⚠️</a></td>
     <td align="center"><a href="https://stackoverflow.com/users/2608515/marquizzo"><img src="https://avatars.githubusercontent.com/u/7864858?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Marquizzo</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=marquizzo" title="Code">💻</a></td>
-    <td align="center"><a href="http://sparklinlabs.com/"><img src="https://avatars.githubusercontent.com/u/446986?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Elisée Maurer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=elisee" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/khum08"><img src="https://avatars.githubusercontent.com/u/32336026?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Yuanzk</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=khum08" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="http://sparklinlabs.com/"><img src="https://avatars.githubusercontent.com/u/446986?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Elisée Maurer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=elisee" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/soadzoor"><img src="https://avatars.githubusercontent.com/u/10392261?v=4?s=100" width="100px;" alt=""/><br /><sub><b>soadzoor</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=soadzoor" title="Code">💻</a></td>
   </tr>
 </table>
 
