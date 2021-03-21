@@ -5,7 +5,7 @@ export class TGALoader extends DataTextureLoader {
 
     load(
         url: string,
-        onLoad: (texture: DataTexture) => void,
+        onLoad?: (texture: DataTexture) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void,
     ): DataTexture;
