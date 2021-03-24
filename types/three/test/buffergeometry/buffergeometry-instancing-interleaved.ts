@@ -295,7 +295,10 @@ function init() {
     const offset = new THREE.Vector3();
     const orientation = new THREE.Quaternion();
     const scale = new THREE.Vector3(1, 1, 1);
-    let x, y, z, w;
+    let x;
+    let y;
+    let z;
+    let w;
 
     mesh = new THREE.InstancedMesh(geometry, material, instances);
 
