@@ -96,9 +96,9 @@ export class BufferGeometry extends EventDispatcher {
         name: BuiltinShaderAttributeName | (string & {}),
         attribute: BufferAttribute | InterleavedBufferAttribute,
     ): BufferGeometry;
-    getAttribute(name: string): BufferAttribute | InterleavedBufferAttribute;
-    deleteAttribute(name: string): BufferGeometry;
-    hasAttribute(name: string): boolean;
+    getAttribute(name: BuiltinShaderAttributeName | (string & {})): BufferAttribute | InterleavedBufferAttribute;
+    deleteAttribute(name: BuiltinShaderAttributeName | (string & {})): BufferGeometry;
+    hasAttribute(name: BuiltinShaderAttributeName | (string & {})): boolean;
 
     addGroup(start: number, count: number, materialIndex?: number): void;
     clearGroups(): void;
