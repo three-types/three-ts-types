@@ -19,13 +19,21 @@ function init() {
         ...[0.0, 1.0, 1.0], //
     ]);
     geometry.setAttribute('position', new THREE.BufferAttribute(verticles, 3));
-    geometry.getAttribute('position');
-    geometry.deleteAttribute('position');
+    const posAtt = geometry.getAttribute('position');
+
+    if (posAtt.name === 'position') {
+        geometry.deleteAttribute('position');
+    }
+
     geometry.setAttribute('position', new THREE.BufferAttribute(verticles, 3));
 
     geometry.setAttribute('customAttribute', new THREE.BufferAttribute(new Float32Array([0]), 1));
-    geometry.getAttribute('customAttribute');
-    geometry.deleteAttribute('customAttribute');
+    const customAtt = geometry.getAttribute('customAttribute');
+
+    if (customAtt.name === 'customAttribute') {
+        geometry.deleteAttribute('customAttribute');
+    }
+
     const material = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
 
     mesh = new THREE.Mesh(geometry, material);
