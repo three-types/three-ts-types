@@ -38,6 +38,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="http://sparklinlabs.com/"><img src="https://avatars.githubusercontent.com/u/446986?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Elisée Maurer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=elisee" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/soadzoor"><img src="https://avatars.githubusercontent.com/u/10392261?v=4?s=100" width="100px;" alt=""/><br /><sub><b>soadzoor</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=soadzoor" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/rinsuki"><img src="https://avatars.githubusercontent.com/u/6533808?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rinsuki</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=rinsuki" title="Code">💻</a></td>
   </tr>
 </table>
 
