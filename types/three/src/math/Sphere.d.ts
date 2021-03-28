@@ -18,7 +18,7 @@ export class Sphere {
 
     set(center: Vector3, radius: number): Sphere;
     setFromPoints(points: Vector3[], optionalCenter?: Vector3): Sphere;
-    clone(): Sphere;
+    clone(): this;
     copy(sphere: Sphere): this;
     isEmpty(): boolean;
     makeEmpty(): this;
