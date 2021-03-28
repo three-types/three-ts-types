@@ -49,7 +49,7 @@ export class Quaternion {
     /**
      * Clones this quaternion.
      */
-    clone(): Quaternion;
+    clone(): this;
 
     /**
      * Copies values of q to this quaternion.

@@ -30,7 +30,7 @@ select the added contribution type.
 ## Committing and Pushing changes
 
 Please make sure to run the tests before you commit your changes. You can do so by running
-`npm test`.
+`npm test three`.
 
 ## Creating a PR
 
