@@ -27,7 +27,7 @@ import { Pass } from './Pass';
 import { SSRrShader, SSRrDepthShader } from '../shaders/SSRrShader';
 import { CopyShader } from '../shaders/CopyShader';
 
-type SSRrPassParams = {
+export interface SSRrPassParams {
     renderer: WebGLRenderer;
     scene: Scene;
     camera: Camera;
@@ -36,7 +36,7 @@ type SSRrPassParams = {
     selects: Mesh[] | null;
     encoding: TextureEncoding;
     morphTargets?: boolean;
-};
+}
 
 export class SSRrPass extends Pass {
     width: number;

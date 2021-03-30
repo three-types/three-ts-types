@@ -42,7 +42,7 @@ function init() {
     scene.fog = new THREE.Fog(0x443333, 1, 4);
 
     // Ground
-    let map = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
+    const map = new THREE.TextureLoader().load('./textures/uv_grid_opengl.jpg');
     map.wrapS = THREE.RepeatWrapping;
     map.wrapT = THREE.RepeatWrapping;
     map.repeat.set(20, 20);
@@ -73,7 +73,7 @@ function init() {
     spotLight.position.set(-1, 1, 1);
     scene.add(spotLight);
 
-    dracoLoader.load('models/draco/bunny.drc', function (geometry) {
+    dracoLoader.load('models/draco/bunny.drc', geometry => {
         geometry.computeVertexNormals();
 
         const material = new THREE.MeshStandardMaterial({ color: 0x606060 });
@@ -88,7 +88,9 @@ function init() {
         dracoLoader.dispose();
     });
 
-    let geometry, material, mesh;
+    let geometry;
+    let material;
+    let mesh;
 
     geometry = new THREE.BoxBufferGeometry(0.05, 0.05, 0.05);
     material = new THREE.MeshStandardMaterial({ color: 'green' });
@@ -146,7 +148,7 @@ function init() {
         width: innerWidth,
         height: innerHeight,
         encoding: THREE.sRGBEncoding,
-        selects: selects,
+        selects,
     });
 
     composer.addPass(ssrrPass);
@@ -172,7 +174,7 @@ function onPointerUp(event: PointerEvent) {
     raycaster.setFromCamera(mouse, camera);
     const intersect = raycaster.intersectObjects(objects)[0];
     if (intersect) {
-        let index = selects.indexOf(intersect.object as THREE.Mesh);
+        const index = selects.indexOf(intersect.object as THREE.Mesh);
         if (index >= 0) {
             selects.splice(index, 1);
         } else {
