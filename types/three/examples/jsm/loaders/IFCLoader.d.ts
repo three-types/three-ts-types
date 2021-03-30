@@ -1,6 +1,7 @@
 import { Loader, LoadingManager, Object3D } from '../../../src/Three';
 
-interface IFC extends Object3D {
+// tslint:disable-next-line:interface-name
+export interface IFC extends Object3D {
     [key: string]: any;
 }
 
