@@ -41,6 +41,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/rinsuki"><img src="https://avatars.githubusercontent.com/u/6533808?v=4?s=100" width="100px;" alt=""/><br /><sub><b>rinsuki</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=rinsuki" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/efokschaner"><img src="https://avatars.githubusercontent.com/u/1409112?v=4?s=100" width="100px;" alt=""/><br /><sub><b>efokschaner</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=efokschaner" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Jhuni0123"><img src="https://avatars.githubusercontent.com/u/16764073?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jonghun Park</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Jhuni0123" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/sjpt"><img src="https://avatars.githubusercontent.com/u/4954988?v=4?s=100" width="100px;" alt=""/><br /><sub><b>sjpt</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=sjpt" title="Code">💻</a></td>
   </tr>
 </table>
 
