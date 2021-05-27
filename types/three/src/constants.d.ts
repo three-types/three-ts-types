@@ -7,7 +7,7 @@ export enum MOUSE {
     RIGHT = 2,
     ROTATE = 0,
     DOLLY = 1,
-    PAN = 3,
+    PAN = 2,
 }
 
 export enum TOUCH {
