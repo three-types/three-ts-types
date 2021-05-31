@@ -52,10 +52,7 @@ export class WebGLRenderList {
         z: number,
         group: Group | null,
     ): void;
-    sort(
-        opaqueSort: <TItem1, TItem2>(a: TItem1, b: TItem2) => number,
-        transparentSort: <TItem1, TItem2>(a: TItem1, b: TItem2) => number,
-    ): void;
+    sort(opaqueSort: (a: any, b: any) => number, transparentSort: (a: any, b: any) => number): void;
     finish(): void;
 }
 
