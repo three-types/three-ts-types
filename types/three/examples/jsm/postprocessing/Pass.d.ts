@@ -25,4 +25,3 @@ export class FullScreenQuad {
 
     material: Material;
 }
-
