@@ -20,7 +20,7 @@ export class IFCLoader extends Loader {
         onLoad: (ifc: IFC) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void,
-    ): IFC;
+    ): void;
 
     parse(data: ArrayBuffer | string): void;
     /**
