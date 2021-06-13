@@ -1,4 +1,4 @@
-import { BufferGeometry, Intersection, Loader, Mesh, Scene, LoadingManager, Object3D } from 'three';
+import { BufferGeometry, Intersection, Loader, Mesh, Scene, LoadingManager, Object3D } from '../../../src/Three';
 
 export interface Display {
     r: number;
@@ -63,7 +63,11 @@ export class IFCLoader extends Loader {
      * Sets the RGB color and transparency of the specified items.
      * @ids The items whose visibility to change.
      * @mesh The mesh of the IFC model.
-     * @state The state of view to apply. This is an object of type `Display`, which has the properties `r`, `g` and `b`(red, green and blue), which can have a value between 0 (pure black) and 1 (pure color); `a` (alfa), which can have a value between 0 * (transparent) and 1 (opaque), and `h` (highlighted), which can be either 0 (not highlighted) * or 1 (highlighted). Only highlighted elements will display the specified color + transparency.
+     * @state The state of view to apply. This is an object of type `Display`, which has the
+     * properties `r`, `g` and `b`(red, green and blue), which can have a value between 0 (pure black)
+     * and 1 (pure color); `a` (alfa), which can have a value between 0 * (transparent) and 1 (opaque),
+     * and `h` (highlighted), which can be either 0 (not highlighted) * or 1 (highlighted).
+     * Only highlighted elements will display the specified color + transparency.
      * @scene The current Three scene.
      */
     setItemsDisplay(ids: number[], mesh: Mesh, state: Display, scene: Scene): void;
