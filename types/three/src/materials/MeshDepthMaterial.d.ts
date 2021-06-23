@@ -11,6 +11,7 @@ export interface MeshDepthMaterialParameters extends MaterialParameters {
     displacementBias?: number;
     wireframe?: boolean;
     wireframeLinewidth?: number;
+    morphTargets?: boolean;
 }
 
 export class MeshDepthMaterial extends Material {
@@ -65,6 +66,11 @@ export class MeshDepthMaterial extends Material {
      * @default false
      */
     fog: boolean;
+
+    /**
+     * @default false
+     */
+    morphTargets: boolean;
 
     setValues(parameters: MeshDepthMaterialParameters): void;
 }
