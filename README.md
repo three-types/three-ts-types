@@ -48,6 +48,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://puxiao.com"><img src="https://avatars.githubusercontent.com/u/3401635?v=4?s=100" width="100px;" alt=""/><br /><sub><b>puxiao</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=puxiao" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/ycw"><img src="https://avatars.githubusercontent.com/u/1063018?v=4?s=100" width="100px;" alt=""/><br /><sub><b>ycw</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=ycw" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Jazcash"><img src="https://avatars.githubusercontent.com/u/1434248?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Jazcash</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Jazcash" title="Code">💻</a></td>
+    <td align="center"><a href="https://bjornstar.com/"><img src="https://avatars.githubusercontent.com/u/20630?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Bjorn Stromberg</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=bjornstar" title="Code">💻</a></td>
   </tr>
 </table>
 
