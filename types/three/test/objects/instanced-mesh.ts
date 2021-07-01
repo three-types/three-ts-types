@@ -1,26 +1,49 @@
-import { InstancedMesh, PerspectiveCamera, Scene, WebGLRenderer } from 'three'
+import { Color, HemisphereLight, InstancedMesh, MathUtils, Matrix4, MeshLambertMaterial, PerspectiveCamera, Scene, SphereBufferGeometry, WebGLRenderer } from 'three';
 
-const camera = new PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 2500);
-const renderer = new WebGLRenderer({ antialias: true });
+const { randFloatSpread } = MathUtils;
+
+const camera = new PerspectiveCamera();
+const renderer = new WebGLRenderer();
 const scene = new Scene();
 
-const container = document.createElement('div');
-
 function init() {
-  document.body.appendChild(container);
+  const color = new Color();
+  const matrix = new Matrix4();
+
+  const count = 1000;
+
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  scene.add(new HemisphereLight(0x45Af23, 0x0000AF, 0.7));
+
+  const spheres = new InstancedMesh(undefined, undefined, count);
+  spheres.geometry = new SphereBufferGeometry(0.1, 32, 32);
+  spheres.material = new MeshLambertMaterial();
+
+  scene.add(spheres);
+
+  for (let index = 0; index < count; index += 1) {
+    matrix.setPosition(randFloatSpread(10), randFloatSpread(10), randFloatSpread(10));
+    spheres.setMatrixAt(index, matrix);
+
+    color.setHex(0xffffff * Math.random());
+    spheres.setColorAt(index, color);
+  }
+
+  return spheres;
 }
+
+init();
 
 function render() {
   camera.lookAt(scene.position);
-
   renderer.render(scene, camera);
 }
 
 function animate() {
   requestAnimationFrame(animate);
-
   render();
 }
 
-init();
 animate();
