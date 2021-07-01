@@ -1,4 +1,15 @@
-import { Color, HemisphereLight, InstancedMesh, MathUtils, Matrix4, MeshLambertMaterial, PerspectiveCamera, Scene, SphereBufferGeometry, WebGLRenderer } from 'three';
+import {
+    Color,
+    HemisphereLight,
+    InstancedMesh,
+    MathUtils,
+    Matrix4,
+    MeshLambertMaterial,
+    PerspectiveCamera,
+    Scene,
+    SphereBufferGeometry,
+    WebGLRenderer,
+} from 'three';
 
 const { randFloatSpread } = MathUtils;
 
@@ -7,43 +18,43 @@ const renderer = new WebGLRenderer();
 const scene = new Scene();
 
 function init() {
-  const color = new Color();
-  const matrix = new Matrix4();
+    const color = new Color();
+    const matrix = new Matrix4();
 
-  const count = 1000;
+    const count = 1000;
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  document.body.appendChild(renderer.domElement);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
 
-  scene.add(new HemisphereLight(0x45Af23, 0x0000AF, 0.7));
+    scene.add(new HemisphereLight(0x45af23, 0x0000af, 0.7));
 
-  const spheres = new InstancedMesh(undefined, undefined, count);
-  spheres.geometry = new SphereBufferGeometry(0.1, 32, 32);
-  spheres.material = new MeshLambertMaterial();
+    const spheres = new InstancedMesh(undefined, undefined, count);
+    spheres.geometry = new SphereBufferGeometry(0.1, 32, 32);
+    spheres.material = new MeshLambertMaterial();
 
-  scene.add(spheres);
+    scene.add(spheres);
 
-  for (let index = 0; index < count; index += 1) {
-    matrix.setPosition(randFloatSpread(10), randFloatSpread(10), randFloatSpread(10));
-    spheres.setMatrixAt(index, matrix);
+    for (let index = 0; index < count; index += 1) {
+        matrix.setPosition(randFloatSpread(10), randFloatSpread(10), randFloatSpread(10));
+        spheres.setMatrixAt(index, matrix);
 
-    color.setHex(0xffffff * Math.random());
-    spheres.setColorAt(index, color);
-  }
+        color.setHex(0xffffff * Math.random());
+        spheres.setColorAt(index, color);
+    }
 
-  return spheres;
+    return spheres;
 }
 
 init();
 
 function render() {
-  camera.lookAt(scene.position);
-  renderer.render(scene, camera);
+    camera.lookAt(scene.position);
+    renderer.render(scene, camera);
 }
 
 function animate() {
-  requestAnimationFrame(animate);
-  render();
+    requestAnimationFrame(animate);
+    render();
 }
 
 animate();
