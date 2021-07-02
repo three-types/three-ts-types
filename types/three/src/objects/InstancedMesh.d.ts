@@ -7,7 +7,7 @@ import { Color } from './../math/Color';
 
 export class InstancedMesh<
     TGeometry extends BufferGeometry = BufferGeometry,
-    TMaterial extends Material | Material[] = Material | Material[]
+    TMaterial extends Material | Material[] = Material | Material[],
 > extends Mesh<TGeometry, TMaterial> {
     constructor(geometry: TGeometry, material: TMaterial, count: number);
 
