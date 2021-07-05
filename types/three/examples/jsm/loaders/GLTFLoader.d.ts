@@ -111,9 +111,7 @@ export class GLTFParser {
     ) => Promise<BufferGeometry[]>;
     loadMesh: (meshIndex: number) => Promise<Group | Mesh | SkinnedMesh>;
     loadCamera: (cameraIndex: number) => Promise<Camera>;
-    loadSkin: (
-        skinIndex: number,
-    ) => Promise<{
+    loadSkin: (skinIndex: number) => Promise<{
         joints: number[];
         inverseBindMatrices?: BufferAttribute | InterleavedBufferAttribute;
     }>;
