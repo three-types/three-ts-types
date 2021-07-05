@@ -4,6 +4,8 @@ import { Object3D } from './../core/Object3D';
 import { Texture } from './../textures/Texture';
 import { Material } from './../materials/Material';
 import { AnimationClip } from './../animation/AnimationClip';
+import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry';
+import { BufferGeometry } from '../core/BufferGeometry';
 
 export class ObjectLoader extends Loader {
     constructor(manager?: LoadingManager);
@@ -24,7 +26,7 @@ export class ObjectLoader extends Loader {
     parse<T extends Object3D>(json: any, onLoad?: (object: Object3D) => void): T;
     // tslint:disable-next-line:no-unnecessary-generics
     parseAsync<T extends Object3D>(json: any): Promise<T>;
-    parseGeometries(json: any): any[]; // Array of BufferGeometry or Geometry or Geometry2.
+    parseGeometries(json: any): { [key: string]: InstancedBufferGeometry | BufferGeometry }; // Array of BufferGeometry or Geometry or Geometry2.
     parseMaterials(json: any, textures: Texture[]): Material[]; // Array of Classes that inherits from Matrial.
     parseAnimations(json: any): AnimationClip[];
     parseImages(json: any, onLoad: () => void): { [key: string]: HTMLImageElement };
