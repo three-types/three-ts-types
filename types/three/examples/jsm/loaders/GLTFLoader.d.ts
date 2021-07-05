@@ -130,6 +130,8 @@ export interface GLTFLoaderPlugin {
     loadMaterial?: ((materialIndex: number) => Promise<Material> | null) | undefined;
     loadTexture?: ((textureIndex: number) => Promise<Texture> | null) | undefined;
     getMaterialType?: ((materialIndex: number) => typeof Material | null) | undefined;
-    extendMaterialParams?: ((materialIndex: number, materialParams: { [key: string]: any }) => Promise<any> | null) | undefined;
+    extendMaterialParams?:
+        | ((materialIndex: number, materialParams: { [key: string]: any }) => Promise<any> | null)
+        | undefined;
     createNodeAttachment?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
 }

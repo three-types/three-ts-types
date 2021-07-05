@@ -21,7 +21,9 @@ export class Shape extends Path {
 
     getPointsHoles(divisions: number): Vector2[][];
 
-    extractPoints(divisions: number): {
+    extractPoints(
+        divisions: number,
+    ): {
         shape: Vector2[];
         holes: Vector2[][];
     };
