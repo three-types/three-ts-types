@@ -1,4 +1,4 @@
-import { BufferGeometry, Intersection, Loader, Mesh, Scene, LoadingManager, Object3D } from '../../../src/Three';
+import { BufferGeometry, Material, Group, Loader, Mesh, Scene, LoadingManager, Object3D } from '../../../src/Three';
 
 export interface Display {
     r: number;
@@ -14,15 +14,31 @@ export interface IFC extends Object3D {
 }
 
 export class IFCLoader extends Loader {
+
+    ifcManager: IFCManager;
+
     constructor(manager?: LoadingManager);
+
     load(
         url: string,
-        onLoad: (ifc: IFC) => void,
+        onLoad: (ifc: IFCModel) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void,
     ): void;
 
-    parse(data: ArrayBuffer | string): void;
+    parse(buffer: ArrayBuffer): Promise<IFCModel>;
+}
+
+/**
+ * Represents an IFC model. This object is returned by the `IFCLoader` after loading an IFC.
+ * @mesh the `THREE.Mesh` that contains the geometry of the IFC.
+ * @modelID the ID of the IFC model.
+ */
+ export declare class IFCModel extends Group {
+    mesh: Mesh;
+    private ifc;
+    modelID: number;
+    constructor(mesh: Mesh, ifc: IFCManager);
     /**
      * Sets the relative path of web-ifc.wasm file in the project.
      * Beware: you **must** serve this file in your page; this means
@@ -41,36 +57,30 @@ export class IFCLoader extends Loader {
      */
     setWasmPath(path: string): void;
     /**
+     * Closes the specified model and deletes it from the scene
+     * @scene The scene where the model is (if it's located in a scene).
+     */
+    close(scene?: Scene): void;
+    /**
      * Gets the **Express ID** to which the given face belongs.
      * This ID uniquely identifies this entity within this IFC file.
+     * @geometry The geometry of the IFC model.
      * @faceIndex The index of the face of a geometry.You can easily get this index using the [Raycaster](https://threejs.org/docs/#api/en/core/Raycaster).
      */
-    getExpressId(faceIndex: number): number;
+    getExpressId(geometry: BufferGeometry, faceIndex: number): number | undefined;
     /**
-     * Returns the first visible or transparent Intersection of the given array.
-     * If you you use the
-     * [Raycaster](https://threejs.org/docs/#api/en/core/Raycaster), you will
-     * get an array of Intersections, and you probably want to get the closest
-     * intersection to the camera. This is complex because due to the geometry
-     * optimizations of IFC.js. Use this method to get it right away.
-     * @items The items you get with [raycaster.intersectObjects()](https://threejs.org/docs/#api/en/core/Raycaster.intersectObjects).
-     * @geometry The geometry of the IFC model.
-     * @all If true, it picks the translucent items as well.
+     * Returns all items of the specified type. You can import
+     * the types from *web-ifc*.
      *
+     * Example to get all the standard walls of a project:
+     * ```js
+     * import { IFCWALLSTANDARDCASE } from 'web-ifc';
+     * const walls = ifcLoader.getAllItemsOfType(IFCWALLSTANDARDCASE);
+     * ```
+     * @type The type of IFC items to get.
+     * @verbose If false (default), this only gets IDs. If true, this also gets the native properties of all the fetched items.
      */
-    pickItem(items: Intersection[], geometry: BufferGeometry, transparent?: boolean): Intersection | null | undefined;
-    /**
-     * Sets the RGB color and transparency of the specified items.
-     * @ids The items whose visibility to change.
-     * @mesh The mesh of the IFC model.
-     * @state The state of view to apply. This is an object of type `Display`, which has the
-     * properties `r`, `g` and `b`(red, green and blue), which can have a value between 0 (pure black)
-     * and 1 (pure color); `a` (alfa), which can have a value between 0 * (transparent) and 1 (opaque),
-     * and `h` (highlighted), which can be either 0 (not highlighted) * or 1 (highlighted).
-     * Only highlighted elements will display the specified color + transparency.
-     * @scene The current Three scene.
-     */
-    setItemsDisplay(ids: number[], mesh: Mesh, state: Display, scene: Scene): void;
+    getAllItemsOfType(type: number, verbose: boolean): any[];
     /**
      * Gets the native properties of the given element.
      * @id The express ID of the element.
@@ -81,7 +91,7 @@ export class IFCLoader extends Loader {
      * Gets the [property sets](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifckernel/lexical/ifcpropertyset.htm)
      * assigned to the given element.
      * @id The express ID of the element.
-     * @recursive Wether you want to get the information of the referenced elements recursively.
+     * @recursive If true, this gets the native properties of the referenced elements recursively.
      */
     getPropertySets(id: number, recursive?: boolean): any[];
     /**
@@ -89,9 +99,14 @@ export class IFCLoader extends Loader {
      * For example, if applied to a wall (IfcWall), this would get back the information
      * contained in the IfcWallType assigned to it, if any.
      * @id The express ID of the element.
-     * @recursive Wether you want to get the information of the referenced elements recursively.
+     * @recursive If true, this gets the native properties of the referenced elements recursively.
      */
     getTypeProperties(id: number, recursive?: boolean): any[];
+    /**
+     * Gets the ifc type of the specified item.
+     * @id The express ID of the element.
+     */
+    getIfcType(id: number): string;
     /**
      * Gets the spatial structure of the project. The
      * [spatial structure](https://standards.buildingsmart.org/IFC/DEV/IFC4_2/FINAL/HTML/schema/ifcproductextension/lexical/ifcspatialstructureelement.htm)
@@ -101,5 +116,67 @@ export class IFCLoader extends Loader {
      * IfcBuildings, that contain one or more IfcBuildingStoreys, that contain
      * one or more IfcSpaces.
      */
-    getSpatialStructure(): any;
+    getSpatialStructure(): {
+        expressID: number;
+        type: string;
+        children: never[];
+    };
+    /**
+     * Gets the mesh of the specified subset.
+     * @material The material assigned to the subset, if any.
+     */
+    getSubset(material?: Material): Mesh<BufferGeometry, Material | Material[]> | null;
+    /**
+     * Removes the specified subset.
+     * @scene The scene where the subset is.
+     * @material The material assigned to the subset, if any.
+     */
+    removeSubset(scene?: Scene, material?: Material): void;
+    /**
+     * Creates a new geometric subset.
+     * @config A configuration object with the following options:
+     * - **scene**: the scene where the model is located.
+     * - **modelID**: the ID of the model.
+     * - **ids**: the IDs of the items of the model that will conform the subset.
+     * - **removePrevious**: wether to remove the previous subset of this model with this material.
+     * - **material**: (optional) wether to apply a material to the subset
+     */
+    createSubset(config: HighlightConfig): void | Mesh<BufferGeometry, Material | Material[]>;
+}
+
+export declare class IFCManager {
+    private state;
+    private parser;
+    private subsets;
+    private properties;
+    private types;
+    parse(buffer: ArrayBuffer): Promise<IFCModel>;
+    setWasmPath(path: string): void;
+    setupThreeMeshBVH(computeBoundsTree: any, disposeBoundsTree: any, acceleratedRaycast: any): void;
+    close(modelID: number, scene?: Scene): void;
+    getExpressId(geometry: BufferGeometry, faceIndex: number): number | undefined;
+    getAllItemsOfType(modelID: number, type: number, verbose: boolean): any[];
+    getItemProperties(modelID: number, id: number, recursive?: boolean): any;
+    getPropertySets(modelID: number, id: number, recursive?: boolean): any[];
+    getTypeProperties(modelID: number, id: number, recursive?: boolean): any[];
+    getIfcType(modelID: number, id: number): string;
+    getSpatialStructure(modelID: number): {
+        expressID: number;
+        type: string;
+        children: never[];
+    };
+    getSubset(modelID: number, material?: Material): import("three").Mesh<BufferGeometry, Material | Material[]> | null;
+    removeSubset(modelID: number, scene?: Scene, material?: Material): void;
+    createSubset(config: HighlightConfigOfModel): void | import("three").Mesh<BufferGeometry, Material | Material[]>;
+}
+
+export interface HighlightConfigOfModel extends HighlightConfig {
+    modelID: number;
+}
+
+export interface HighlightConfig {
+    scene: Scene;
+    ids: number[];
+    removePrevious: boolean;
+    material?: Material;
 }
