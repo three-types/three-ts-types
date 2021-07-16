@@ -9,6 +9,8 @@ export interface MeshBasicMaterialParameters extends MaterialParameters {
     color?: Color | string | number | undefined;
     opacity?: number | undefined;
     map?: Texture | null | undefined;
+    lightMap?: Texture | null;
+    lightMapIntensity?: number | undefined;
     aoMap?: Texture | null | undefined;
     aoMapIntensity?: number | undefined;
     specularMap?: Texture | null | undefined;
@@ -41,6 +43,16 @@ export class MeshBasicMaterial extends Material {
      * @default null
      */
     map: Texture | null;
+
+    /**
+     * @default null
+     */
+    lightMap: Texture | null;
+
+    /**
+     * @default 1
+     */
+    lightMapIntensity: number;
 
     /**
      * @default null
