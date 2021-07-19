@@ -10,6 +10,7 @@ import {
     TextureEncoding,
     Mesh,
     Material,
+    CapsulatedColor,
 } from '../../../src/Three';
 import { Pass, FullScreenQuad } from '../postprocessing/Pass';
 import { Reflector } from '../objects/ReflectorForSSRPass';
@@ -105,23 +106,23 @@ export class SSRPass extends Pass {
         renderer: WebGLRenderer,
         passMaterial: Material,
         renderTarget: WebGLRenderTarget,
-        clearColor: Color | string | number,
-        clearAlpha: Color | string | number,
+        clearColor: CapsulatedColor,
+        clearAlpha: CapsulatedColor,
     ) => void;
 
     renderOverride: (
         renderer: WebGLRenderer,
         passMaterial: Material,
         renderTarget: WebGLRenderTarget,
-        clearColor: Color | string | number,
-        clearAlpha: Color | string | number,
+        clearColor: CapsulatedColor,
+        clearAlpha: CapsulatedColor,
     ) => void;
 
     renderMetalness: (
         renderer: WebGLRenderer,
         passMaterial: Material,
         renderTarget: WebGLRenderTarget,
-        clearColor: Color | string | number,
-        clearAlpha: Color | string | number,
+        clearColor: CapsulatedColor,
+        clearAlpha: CapsulatedColor,
     ) => void;
 }

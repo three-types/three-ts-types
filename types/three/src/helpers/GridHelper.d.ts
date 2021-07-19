@@ -1,4 +1,4 @@
-import { Color } from './../math/Color';
+import { CapsulatedColor } from '../utils';
 import { LineSegments } from './../objects/LineSegments';
 
 export class GridHelper extends LineSegments {
@@ -8,7 +8,7 @@ export class GridHelper extends LineSegments {
      * @param [color1=0x444444]
      * @param [color2=0x888888]
      */
-    constructor(size?: number, divisions?: number, color1?: Color | string | number, color2?: Color | string | number);
+    constructor(size?: number, divisions?: number, color1?: CapsulatedColor, color2?: CapsulatedColor);
 
     /**
      * @default 'GridHelper'
@@ -18,5 +18,5 @@ export class GridHelper extends LineSegments {
     /**
      * @deprecated Colors should be specified in the constructor.
      */
-    setColors(color1?: Color | string | number, color2?: Color | string | number): void;
+    setColors(color1?: CapsulatedColor, color2?: CapsulatedColor): void;
 }

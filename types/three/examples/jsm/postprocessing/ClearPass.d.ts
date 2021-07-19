@@ -1,9 +1,9 @@
-import { Color } from '../../../src/Three';
+import { CapsulatedColor } from '../../../src/Three';
 
 import { Pass } from './Pass';
 
 export class ClearPass extends Pass {
-    constructor(clearColor?: Color | string | number, clearAlpha?: number);
-    clearColor: Color | string | number;
+    constructor(clearColor?: CapsulatedColor, clearAlpha?: number);
+    clearColor: CapsulatedColor;
     clearAlpha: number;
 }

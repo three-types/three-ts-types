@@ -3,13 +3,14 @@ import { Vector3 } from '../math/Vector3';
 import { Object3D } from './../core/Object3D';
 import { SpotLightShadow } from './SpotLightShadow';
 import { Light } from './Light';
+import { CapsulatedColor } from '../utils';
 
 /**
  * A point light that can cast shadow in one direction.
  */
 export class SpotLight extends Light {
     constructor(
-        color?: Color | string | number,
+        color?: CapsulatedColor,
         intensity?: number,
         distance?: number,
         angle?: number,

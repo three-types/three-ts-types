@@ -1,8 +1,9 @@
+import { CapsulatedColor } from '../utils';
 import { Color } from './../math/Color';
 import { MaterialParameters, Material } from './Material';
 
 export interface ShadowMaterialParameters extends MaterialParameters {
-    color?: Color | string | number | undefined;
+    color?: CapsulatedColor | undefined;
 }
 
 export class ShadowMaterial extends Material {

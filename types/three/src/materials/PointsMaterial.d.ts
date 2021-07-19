@@ -1,9 +1,10 @@
 import { Material, MaterialParameters } from './Material';
 import { Color } from './../math/Color';
 import { Texture } from './../textures/Texture';
+import { CapsulatedColor } from '../utils';
 
 export interface PointsMaterialParameters extends MaterialParameters {
-    color?: Color | string | number | undefined;
+    color?: CapsulatedColor | undefined;
     map?: Texture | null | undefined;
     alphaMap?: Texture | null | undefined;
     size?: number | undefined;
