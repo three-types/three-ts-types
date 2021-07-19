@@ -1,5 +1,5 @@
 import { LineSegments } from '../objects/LineSegments';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export class PolarGridHelper extends LineSegments {
     /**
@@ -15,8 +15,8 @@ export class PolarGridHelper extends LineSegments {
         radials?: number,
         circles?: number,
         divisions?: number,
-        color1?: CapsulatedColor,
-        color2?: CapsulatedColor,
+        color1?: ColorRepresentation,
+        color2?: ColorRepresentation,
     );
 
     /**

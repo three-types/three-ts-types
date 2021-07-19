@@ -3,10 +3,10 @@ import { Texture } from './../textures/Texture';
 import { Vector2 } from './../math/Vector2';
 import { MaterialParameters, Material } from './Material';
 import { NormalMapTypes } from '../constants';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export interface MeshStandardMaterialParameters extends MaterialParameters {
-    color?: CapsulatedColor | undefined;
+    color?: ColorRepresentation | undefined;
     roughness?: number | undefined;
     metalness?: number | undefined;
     map?: Texture | null | undefined;
@@ -14,7 +14,7 @@ export interface MeshStandardMaterialParameters extends MaterialParameters {
     lightMapIntensity?: number | undefined;
     aoMap?: Texture | null | undefined;
     aoMapIntensity?: number | undefined;
-    emissive?: CapsulatedColor | undefined;
+    emissive?: ColorRepresentation | undefined;
     emissiveIntensity?: number | undefined;
     emissiveMap?: Texture | null | undefined;
     bumpMap?: Texture | null | undefined;

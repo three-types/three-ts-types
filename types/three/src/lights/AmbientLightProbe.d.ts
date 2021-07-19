@@ -1,8 +1,8 @@
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 import { LightProbe } from './LightProbe';
 
 export class AmbientLightProbe extends LightProbe {
-    constructor(color?: CapsulatedColor, intensity?: number);
+    constructor(color?: ColorRepresentation, intensity?: number);
 
     readonly isAmbientLightProbe: true;
 }

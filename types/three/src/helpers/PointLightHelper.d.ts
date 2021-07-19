@@ -1,10 +1,10 @@
 import { PointLight } from './../lights/PointLight';
 import { Matrix4 } from './../math/Matrix4';
 import { Object3D } from './../core/Object3D';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export class PointLightHelper extends Object3D {
-    constructor(light: PointLight, sphereSize?: number, color?: CapsulatedColor);
+    constructor(light: PointLight, sphereSize?: number, color?: ColorRepresentation);
 
     /**
      * @default 'PointLightHelper'
@@ -12,7 +12,7 @@ export class PointLightHelper extends Object3D {
     type: string;
 
     light: PointLight;
-    color: CapsulatedColor | undefined;
+    color: ColorRepresentation | undefined;
     matrix: Matrix4;
 
     /**

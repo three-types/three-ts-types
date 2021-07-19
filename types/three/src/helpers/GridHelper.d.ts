@@ -1,4 +1,4 @@
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 import { LineSegments } from './../objects/LineSegments';
 
 export class GridHelper extends LineSegments {
@@ -8,7 +8,7 @@ export class GridHelper extends LineSegments {
      * @param [color1=0x444444]
      * @param [color2=0x888888]
      */
-    constructor(size?: number, divisions?: number, color1?: CapsulatedColor, color2?: CapsulatedColor);
+    constructor(size?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
 
     /**
      * @default 'GridHelper'
@@ -18,5 +18,5 @@ export class GridHelper extends LineSegments {
     /**
      * @deprecated Colors should be specified in the constructor.
      */
-    setColors(color1?: CapsulatedColor, color2?: CapsulatedColor): void;
+    setColors(color1?: ColorRepresentation, color2?: ColorRepresentation): void;
 }

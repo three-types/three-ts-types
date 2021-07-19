@@ -1,4 +1,4 @@
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 import { Light } from './Light';
 
 /**
@@ -12,7 +12,7 @@ export class AmbientLight extends Light {
      * @param color Numeric value of the RGB component of the color or a Color instance.
      * @param [intensity=1]
      */
-    constructor(color?: CapsulatedColor, intensity?: number);
+    constructor(color?: ColorRepresentation, intensity?: number);
 
     /**
      * @default 'AmbientLight'

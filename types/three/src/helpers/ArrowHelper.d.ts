@@ -2,7 +2,7 @@ import { Vector3 } from './../math/Vector3';
 import { Line } from './../objects/Line';
 import { Mesh } from './../objects/Mesh';
 import { Object3D } from './../core/Object3D';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 // Extras / Helpers /////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ export class ArrowHelper extends Object3D {
         dir?: Vector3,
         origin?: Vector3,
         length?: number,
-        color?: CapsulatedColor,
+        color?: ColorRepresentation,
         headLength?: number,
         headWidth?: number,
     );
@@ -54,5 +54,5 @@ export class ArrowHelper extends Object3D {
     /**
      * @param color The desired color.
      */
-    setColor(color: CapsulatedColor): void;
+    setColor(color: ColorRepresentation): void;
 }

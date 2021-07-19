@@ -1,14 +1,14 @@
-import { Scene, Camera, CapsulatedColor, ShaderMaterial, WebGLRenderTarget } from '../../../src/Three';
+import { Scene, Camera, ColorRepresentation, ShaderMaterial, WebGLRenderTarget } from '../../../src/Three';
 
 import { Pass } from './Pass';
 
 export class SSAARenderPass extends Pass {
-    constructor(scene: Scene, camera: Camera, clearColor: CapsulatedColor, clearAlpha: number);
+    constructor(scene: Scene, camera: Camera, clearColor: ColorRepresentation, clearAlpha: number);
     scene: Scene;
     camera: Camera;
     sampleLevel: number;
     unbiased: boolean;
-    clearColor: CapsulatedColor;
+    clearColor: ColorRepresentation;
     clearAlpha: number;
     copyUniforms: object;
     copyMaterial: ShaderMaterial;

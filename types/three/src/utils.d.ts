@@ -1,3 +1,3 @@
 import { Color } from './math/Color';
 
-export type CapsulatedColor = Color | string | number;
+export type ColorRepresentation = Color | string | number;

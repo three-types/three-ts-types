@@ -23,7 +23,7 @@ import { XRAnimationLoopCallback } from './webxr/WebXR';
 import { Vector3 } from '../math/Vector3';
 import { Box3 } from '../math/Box3';
 import { DataTexture2DArray } from '../textures/DataTexture2DArray';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export interface Renderer {
     domElement: HTMLCanvasElement;
@@ -292,7 +292,7 @@ export class WebGLRenderer implements Renderer {
     /**
      * Sets the clear color, using color for the color and alpha for the opacity.
      */
-    setClearColor(color: CapsulatedColor, alpha?: number): void;
+    setClearColor(color: ColorRepresentation, alpha?: number): void;
 
     /**
      * Returns a float with the current clear alpha. Ranges from 0 to 1.

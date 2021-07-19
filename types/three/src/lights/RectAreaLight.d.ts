@@ -1,8 +1,8 @@
 import { Light } from './Light';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export class RectAreaLight extends Light {
-    constructor(color?: CapsulatedColor, intensity?: number, width?: number, height?: number);
+    constructor(color?: ColorRepresentation, intensity?: number, width?: number, height?: number);
 
     /**
      * @default 'RectAreaLight'

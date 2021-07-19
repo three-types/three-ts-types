@@ -2,10 +2,10 @@ import { Light } from './../lights/Light';
 import { Matrix4 } from './../math/Matrix4';
 import { Object3D } from './../core/Object3D';
 import { LineSegments } from '../objects/LineSegments';
-import { CapsulatedColor } from '../utils';
+import { ColorRepresentation } from '../utils';
 
 export class SpotLightHelper extends Object3D {
-    constructor(light: Light, color?: CapsulatedColor);
+    constructor(light: Light, color?: ColorRepresentation);
 
     light: Light;
     matrix: Matrix4;
@@ -14,7 +14,7 @@ export class SpotLightHelper extends Object3D {
      * @default false
      */
     matrixAutoUpdate: boolean;
-    color: CapsulatedColor | undefined;
+    color: ColorRepresentation | undefined;
     cone: LineSegments;
 
     dispose(): void;
