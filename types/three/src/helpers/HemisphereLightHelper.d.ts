@@ -6,7 +6,7 @@ import { Object3D } from './../core/Object3D';
 import { CapsulatedColor } from '../utils';
 
 export class HemisphereLightHelper extends Object3D {
-    constructor(light: HemisphereLight, size: number, color?: Color | number | string);
+    constructor(light: HemisphereLight, size: number, color?: CapsulatedColor);
 
     light: HemisphereLight;
     matrix: Matrix4;
