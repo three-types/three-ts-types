@@ -77,14 +77,6 @@ export class MeshNormalMaterial extends Material {
     wireframeLinewidth: number;
 
     /**
-     * @default false
-     */
-
-    /**
-     * @default false
-     */
-
-    /**
      * Define whether the material is rendered with flat shading. Default is false.
      * @default false
      */

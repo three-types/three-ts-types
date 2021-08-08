@@ -129,13 +129,5 @@ export class MeshLambertMaterial extends Material {
      */
     wireframeLinejoin: string;
 
-    /**
-     * @default false
-     */
-
-    /**
-     * @default false
-     */
-
     setValues(parameters: MeshLambertMaterialParameters): void;
 }

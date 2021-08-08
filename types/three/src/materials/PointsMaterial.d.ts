@@ -44,9 +44,5 @@ export class PointsMaterial extends Material {
      */
     sizeAttenuation: boolean;
 
-    /**
-     * @default false
-     */
-
     setValues(parameters: PointsMaterialParameters): void;
 }

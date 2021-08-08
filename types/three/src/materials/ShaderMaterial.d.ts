@@ -74,14 +74,6 @@ export class ShaderMaterial extends Material {
     clipping: boolean;
 
     /**
-     * @default false
-     */
-
-    /**
-     * @default false
-     */
-
-    /**
      * @deprecated Use {@link ShaderMaterial#extensions.derivatives extensions.derivatives} instead.
      */
     derivatives: any;

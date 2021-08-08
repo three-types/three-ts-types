@@ -37,9 +37,5 @@ export class LineBasicMaterial extends Material {
      */
     linejoin: string;
 
-    /**
-     * @default false
-     */
-
     setValues(parameters: LineBasicMaterialParameters): void;
 }

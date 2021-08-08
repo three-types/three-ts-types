@@ -161,13 +161,5 @@ export class MeshToonMaterial extends Material {
      */
     wireframeLinejoin: string;
 
-    /**
-     * @default false
-     */
-
-    /**
-     * @default false
-     */
-
     setValues(parameters: MeshToonMaterialParameters): void;
 }

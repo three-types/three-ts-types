@@ -114,9 +114,5 @@ export class MeshBasicMaterial extends Material {
      */
     wireframeLinejoin: string;
 
-    /**
-     * @default false
-     */
-
     setValues(parameters: MeshBasicMaterialParameters): void;
 }

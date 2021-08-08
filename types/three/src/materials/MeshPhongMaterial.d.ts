@@ -195,14 +195,6 @@ export class MeshPhongMaterial extends Material {
     wireframeLinejoin: string;
 
     /**
-     * @default false
-     */
-
-    /**
-     * @default false
-     */
-
-    /**
      * Define whether the material is rendered with flat shading. Default is false.
      * @default false
      */

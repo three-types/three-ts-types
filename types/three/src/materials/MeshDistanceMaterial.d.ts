@@ -64,10 +64,6 @@ export class MeshDistanceMaterial extends Material {
     /**
      * @default false
      */
-
-    /**
-     * @default false
-     */
     fog: boolean;
 
     setValues(parameters: MeshDistanceMaterialParameters): void;
