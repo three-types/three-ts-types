@@ -19,7 +19,6 @@ export interface MeshMatcapMaterialParameters extends MaterialParameters {
     displacementBias?: number | undefined;
     alphaMap?: Texture | null | undefined;
 
-    morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
 
@@ -103,7 +102,6 @@ export class MeshMatcapMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
 
     /**
      * Define whether the material is rendered with flat shading. Default is false.

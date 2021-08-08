@@ -31,8 +31,6 @@ export interface MeshToonMaterialParameters extends MaterialParameters {
     wireframeLinewidth?: number | undefined;
     wireframeLinecap?: string | undefined;
     wireframeLinejoin?: string | undefined;
-
-    morphNormals?: boolean | undefined;
 }
 
 export class MeshToonMaterial extends Material {
@@ -170,7 +168,6 @@ export class MeshToonMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
 
     setValues(parameters: MeshToonMaterialParameters): void;
 }

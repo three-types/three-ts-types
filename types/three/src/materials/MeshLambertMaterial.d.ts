@@ -24,8 +24,6 @@ export interface MeshLambertMaterialParameters extends MaterialParameters {
     wireframeLinewidth?: number | undefined;
     wireframeLinecap?: string | undefined;
     wireframeLinejoin?: string | undefined;
-
-    morphNormals?: boolean | undefined;
 }
 
 export class MeshLambertMaterial extends Material {
@@ -138,7 +136,6 @@ export class MeshLambertMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
 
     setValues(parameters: MeshLambertMaterialParameters): void;
 }

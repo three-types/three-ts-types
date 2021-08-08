@@ -38,7 +38,6 @@ export interface MeshPhongMaterialParameters extends MaterialParameters {
     wireframeLinecap?: string | undefined;
     wireframeLinejoin?: string | undefined;
 
-    morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
 
@@ -202,7 +201,6 @@ export class MeshPhongMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
 
     /**
      * Define whether the material is rendered with flat shading. Default is false.

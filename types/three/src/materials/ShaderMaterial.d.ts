@@ -12,7 +12,6 @@ export interface ShaderMaterialParameters extends MaterialParameters {
     lights?: boolean | undefined;
     clipping?: boolean | undefined;
 
-    morphNormals?: boolean | undefined;
     extensions?:
         | {
               derivatives?: boolean | undefined;
@@ -81,7 +80,7 @@ export class ShaderMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
+
     /**
      * @deprecated Use {@link ShaderMaterial#extensions.derivatives extensions.derivatives} instead.
      */

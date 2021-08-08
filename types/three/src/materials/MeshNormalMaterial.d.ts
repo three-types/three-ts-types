@@ -15,7 +15,6 @@ export interface MeshNormalMaterialParameters extends MaterialParameters {
     wireframe?: boolean | undefined;
     wireframeLinewidth?: number | undefined;
 
-    morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
 
@@ -84,7 +83,6 @@ export class MeshNormalMaterial extends Material {
     /**
      * @default false
      */
-    morphNormals: boolean;
 
     /**
      * Define whether the material is rendered with flat shading. Default is false.

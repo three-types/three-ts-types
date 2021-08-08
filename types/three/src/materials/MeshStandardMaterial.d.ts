@@ -33,9 +33,7 @@ export interface MeshStandardMaterialParameters extends MaterialParameters {
     refractionRatio?: number | undefined;
     wireframe?: boolean | undefined;
     wireframeLinewidth?: number | undefined;
-    vertexTangents?: boolean | undefined;
 
-    morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
 
@@ -200,16 +198,10 @@ export class MeshStandardMaterial extends Material {
     /**
      * @default false
      */
-    vertexTangents: boolean;
 
     /**
      * @default false
      */
-
-    /**
-     * @default false
-     */
-    morphNormals: boolean;
 
     /**
      * Define whether the material is rendered with flat shading. Default is false.
