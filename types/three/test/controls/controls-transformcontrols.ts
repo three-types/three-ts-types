@@ -50,7 +50,7 @@ function init() {
     control = new TransformControls(currentCamera, renderer.domElement);
     control.addEventListener('change', render);
 
-    control.addEventListener('dragging-changed', function (event) {
+    control.addEventListener('dragging-changed', event => {
         orbit.enabled = !event.value;
     });
 
@@ -62,7 +62,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    window.addEventListener('keydown', function (event) {
+    window.addEventListener('keydown', event => {
         switch (event.keyCode) {
             case 81: // Q
                 control.setSpace(control.space === 'local' ? 'world' : 'local');
@@ -142,7 +142,7 @@ function init() {
         }
     });
 
-    window.addEventListener('keyup', function (event) {
+    window.addEventListener('keyup', event => {
         switch (event.keyCode) {
             case 16: // Shift
                 control.setTranslationSnap(null);
