@@ -37,7 +37,7 @@ export interface MeshPhongMaterialParameters extends MaterialParameters {
     wireframeLinewidth?: number | undefined;
     wireframeLinecap?: string | undefined;
     wireframeLinejoin?: string | undefined;
-    morphTargets?: boolean | undefined;
+
     morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
@@ -198,7 +198,6 @@ export class MeshPhongMaterial extends Material {
     /**
      * @default false
      */
-    morphTargets: boolean;
 
     /**
      * @default false

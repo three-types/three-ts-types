@@ -9,7 +9,6 @@ export interface PointsMaterialParameters extends MaterialParameters {
     alphaMap?: Texture | null | undefined;
     size?: number | undefined;
     sizeAttenuation?: boolean | undefined;
-    morphTargets?: boolean | undefined;
 }
 
 export class PointsMaterial extends Material {
@@ -48,7 +47,6 @@ export class PointsMaterial extends Material {
     /**
      * @default false
      */
-    morphTargets: boolean;
 
     setValues(parameters: PointsMaterialParameters): void;
 }

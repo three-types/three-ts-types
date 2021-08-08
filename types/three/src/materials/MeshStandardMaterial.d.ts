@@ -34,7 +34,7 @@ export interface MeshStandardMaterialParameters extends MaterialParameters {
     wireframe?: boolean | undefined;
     wireframeLinewidth?: number | undefined;
     vertexTangents?: boolean | undefined;
-    morphTargets?: boolean | undefined;
+
     morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
@@ -205,7 +205,6 @@ export class MeshStandardMaterial extends Material {
     /**
      * @default false
      */
-    morphTargets: boolean;
 
     /**
      * @default false

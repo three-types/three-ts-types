@@ -14,7 +14,7 @@ export interface MeshNormalMaterialParameters extends MaterialParameters {
     displacementBias?: number | undefined;
     wireframe?: boolean | undefined;
     wireframeLinewidth?: number | undefined;
-    morphTargets?: boolean | undefined;
+
     morphNormals?: boolean | undefined;
     flatShading?: boolean | undefined;
 }
@@ -80,7 +80,6 @@ export class MeshNormalMaterial extends Material {
     /**
      * @default false
      */
-    morphTargets: boolean;
 
     /**
      * @default false

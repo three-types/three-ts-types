@@ -11,7 +11,7 @@ export interface ShaderMaterialParameters extends MaterialParameters {
     wireframeLinewidth?: number | undefined;
     lights?: boolean | undefined;
     clipping?: boolean | undefined;
-    morphTargets?: boolean | undefined;
+
     morphNormals?: boolean | undefined;
     extensions?:
         | {
@@ -77,7 +77,6 @@ export class ShaderMaterial extends Material {
     /**
      * @default false
      */
-    morphTargets: boolean;
 
     /**
      * @default false
