@@ -18,6 +18,8 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
 
     transmission?: number | undefined;
     transmissionMap?: Texture | null | undefined;
+    attenuationDistance?: number | undefined;
+    attenuationTint?: Color | undefined;
 
     specularIntensity?: number | undefined;
     specularTint?: Color | undefined;
