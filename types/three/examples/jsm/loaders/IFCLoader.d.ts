@@ -1,4 +1,13 @@
-import { Loader, LoadingManager, Scene, BufferGeometry, Material, Object3D, Mesh, BufferAttribute } from '../../../src/Three';
+import {
+    Loader,
+    LoadingManager,
+    Scene,
+    BufferGeometry,
+    Material,
+    Object3D,
+    Mesh,
+    BufferAttribute,
+} from '../../../src/Three';
 
 declare class IFCLoader extends Loader {
     ifcManager: IFCManager;
