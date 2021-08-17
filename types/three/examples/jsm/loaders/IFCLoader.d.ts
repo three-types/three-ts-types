@@ -5,7 +5,12 @@ declare class IFCLoader extends Loader {
 
     constructor(manager?: LoadingManager);
 
-    load(url: any, onLoad: (ifc: IFCModel) => void, onProgress?: (event: ProgressEvent) => void, onError?: (event: ErrorEvent) => void): void;
+    load(
+        url: any,
+        onLoad: (ifc: IFCModel) => void,
+        onProgress?: (event: ProgressEvent) => void,
+        onError?: (event: ErrorEvent) => void,
+    ): void;
 
     parse(buffer: ArrayBuffer): Promise<IFCModel>;
 }
@@ -63,9 +68,12 @@ export declare class IFCManager {
      * @modelID ID of the IFC model.
      * @data: data as an object where the keys are the expressIDs and the values the properties.
      */
-    addModelJSONData(modelID: number, data: {
-        [id: number]: JSONObject;
-    }): void;
+    addModelJSONData(
+        modelID: number,
+        data: {
+            [id: number]: JSONObject;
+        },
+    ): void;
 
     /**
      * Completely releases the WASM memory, thus drastically decreasing the memory use of the app.
