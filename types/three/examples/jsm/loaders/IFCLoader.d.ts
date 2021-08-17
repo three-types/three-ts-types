@@ -23,7 +23,7 @@ export interface LoaderSettings {
     CIRCLE_SEGMENTS_HIGH?: number;
 }
 
-export declare class IFCManager {
+export class IFCManager {
     private state;
     private BVH;
     private parser;
@@ -115,7 +115,7 @@ export declare class IFCManager {
      * const walls = ifcLoader.getAllItemsOfType(IFCWALLSTANDARDCASE);
      * ```
      * @modelID ID of the IFC model.
-     * @type type of IFC items to get.
+     * @ifcType type of IFC items to get.
      * @verbose If false (default), this only gets IDs. If true, this also gets the native properties of all the fetched items.
      */
     getAllItemsOfType(modelID: number, type: number, verbose: boolean): any[];
@@ -184,7 +184,7 @@ export declare class IFCManager {
      * @modelID ID of the IFC model.
      * @material Material assigned to the subset (if any).
      */
-    getSubset(modelID: number, material?: Material): import('three').Mesh | null;
+    getSubset(modelID: number, material?: Material): Mesh | null;
 
     /**
      * Removes the specified subset.
@@ -203,7 +203,7 @@ export declare class IFCManager {
      * - **removePrevious**: wether to remove the previous subset of this model with this material.
      * - **material**: (optional) wether to apply a material to the subset
      */
-    createSubset(config: HighlightConfigOfModel): void | import('three').Mesh;
+    createSubset(config: HighlightConfigOfModel): void | Mesh;
 
     /**
      * Hides the selected items in the specified model
@@ -238,7 +238,7 @@ export declare class IFCManager {
  * @materials `THREE.Material[]`, see Three.js documentation.
  * @manager contains all the logic to work with IFC.
  */
-export declare class IFCModel extends Mesh {
+export class IFCModel extends Mesh {
     modelID: number;
     ifcManager: IFCManager | null;
     /**
@@ -295,7 +295,7 @@ export declare class IFCModel extends Mesh {
      * import { IFCWALLSTANDARDCASE } from 'web-ifc';
      * const walls = ifcLoader.getAllItemsOfType(IFCWALLSTANDARDCASE);
      * ```
-     * @type The type of IFC items to get.
+     * @ifcType The type of IFC items to get.
      * @verbose If false (default), this only gets IDs. If true, this also gets the native properties of all the fetched items.
      */
     getAllItemsOfType(type: number, verbose: boolean): any[];
@@ -416,16 +416,16 @@ export declare class IFCModel extends Mesh {
     showAllItems(): void;
 }
 
-export declare const IdAttrName = 'expressID';
-export declare type IdAttributeByMaterial = {
+export const IdAttrName = 'expressID';
+export interface IdAttributeByMaterial {
     [id: number]: number;
-};
-export declare type IdAttributesByMaterials = {
+}
+export interface IdAttributesByMaterials {
     [materialID: string]: IdAttributeByMaterial;
-};
-export declare const merge: (geoms: BufferGeometry[], createGroups?: boolean) => BufferGeometry;
-export declare const newFloatAttr: (data: any[], size: number) => BufferAttribute;
-export declare const newIntAttr: (data: any[], size: number) => BufferAttribute;
+}
+export function merge(geoms: BufferGeometry[], createGroups?: boolean): BufferGeometry;
+export function newFloatAttr(data: any[], size: number): BufferAttribute;
+export function newIntAttr(data: any[], size: number): BufferAttribute;
 
 export interface HighlightConfig {
     scene: Object3D;
@@ -438,23 +438,23 @@ export interface HighlightConfigOfModel extends HighlightConfig {
     modelID: number;
 }
 
-export declare const DEFAULT = 'default';
-export declare type SelectedItems = {
+export const DEFAULT = 'default';
+export interface SelectedItems {
     [matID: string]: {
         ids: Set<number>;
         mesh: Mesh;
     };
-};
-export declare type MapFaceindexID = {
+}
+export interface MapFaceindexID {
     [key: number]: number;
-};
-export declare type IdGeometries = {
+}
+export declare interface IdGeometries {
     [expressID: number]: BufferGeometry;
-};
-export declare type GeometriesByMaterial = {
+}
+export interface GeometriesByMaterial {
     material: Material;
     geometries: IdGeometries;
-};
+}
 
 export interface GeometriesByMaterials {
     [materialID: string]: GeometriesByMaterial;
@@ -507,7 +507,7 @@ export interface pName {
     key: string;
 }
 
-export declare const PropsNames: {
+export const PropsNames: {
     aggregates: {
         name: number;
         relating: string;
@@ -570,7 +570,7 @@ export interface FlatMesh {
 export interface PlacedGeometry {
     color: Color;
     geometryExpressID: number;
-    flatTransformation: Array<number>;
+    flatTransformation: number[];
 }
 
 export interface Color {
@@ -580,9 +580,9 @@ export interface Color {
     w: number;
 }
 
-export declare class IfcAPI {
-    wasmModule: undefined | any;
-    fs: undefined | any;
+export class IfcAPI {
+    wasmModule: any;
+    fs: any;
 
     /**
      * Initializes the WASM module (WebIFCWasm), required before using any other functionality
@@ -623,9 +623,9 @@ export declare class IfcAPI {
 
     GetLineIDsWithType(modelID: number, type: number): Vector<number>;
 
-    GetAllLines(modelID: Number): Vector<number>;
+    GetAllLines(modelID: number): Vector<number>;
 
-    SetGeometryTransformation(modelID: number, transformationMatrix: Array<number>): void;
+    SetGeometryTransformation(modelID: number, transformationMatrix: number[]): void;
 
     GetVertexArray(ptr: number, size: number): Float32Array;
 
