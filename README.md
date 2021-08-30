@@ -53,6 +53,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://studio.did0es.me/"><img src="https://avatars.githubusercontent.com/u/38882716?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Shuta Hirai</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=shuta13" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/servinlp"><img src="https://avatars.githubusercontent.com/u/7222029?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Servin Nissen</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=servinlp" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://benpigchu.com/"><img src="https://avatars.githubusercontent.com/u/9023067?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ben "Pig" Chu</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=benpigchu" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
