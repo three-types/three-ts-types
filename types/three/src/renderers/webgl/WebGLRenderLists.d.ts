@@ -35,6 +35,11 @@ export class WebGLRenderList {
      */
     transparent: RenderItem[];
 
+    /**
+     * @default []
+     */
+    transmissive: RenderItem[];
+
     init(): void;
     push(
         object: Object3D,
