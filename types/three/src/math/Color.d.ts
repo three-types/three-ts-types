@@ -39,6 +39,8 @@ export class Color {
      */
     b: number;
 
+    isBlack(): boolean;
+
     set(color: ColorRepresentation): Color;
     setScalar(scalar: number): Color;
     setHex(hex: number): Color;
