@@ -11,6 +11,7 @@ import {
     Side,
     StencilFunc,
     StencilOp,
+    PixelFormat,
 } from '../constants';
 import { ColorRepresentation } from '../utils';
 import { Color } from '../math/Color';
@@ -178,6 +179,11 @@ export class Material extends EventDispatcher {
      * @default fog
      */
     fog: boolean;
+
+    /**
+     * @default RGBAFormat;
+     */
+    format: PixelFormat;
 
     /**
      * Unique number of this material instance.
