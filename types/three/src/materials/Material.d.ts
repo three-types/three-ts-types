@@ -182,7 +182,8 @@ export class Material extends EventDispatcher {
     fog: boolean;
 
     /**
-     * @default RGBAFormat;
+     * When this property is set to THREE.RGBFormat, the material is considered to be opaque and alpha values are ignored.
+     * @default THREE.RGBAFormat
      */
     format: PixelFormat;
 
@@ -355,12 +356,6 @@ export class Material extends EventDispatcher {
      * @default true
      */
     visible: boolean;
-
-    /**
-     * When this property is set to THREE.RGBFormat, the material is considered to be opaque and alpha values are ignored.
-     * @default THREE.RGBAFormat
-     */
-    format: PixelFormat;
 
     /**
      * An object that can be used to store custom data about the Material. It should not hold references to functions as these will not be cloned.
