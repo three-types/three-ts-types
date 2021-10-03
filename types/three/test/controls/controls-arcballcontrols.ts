@@ -14,11 +14,11 @@ let renderer: THREE.WebGLRenderer;
 const arcballGui = {
     gizmoVisible: true,
 
-    setArcballControls: function () {
+    setArcballControls: () => {
         controls = new ArcballControls(camera, renderer.domElement, scene);
         controls.addEventListener('change', render);
 
-        this.gizmoVisible = true;
+        arcballGui.gizmoVisible = true;
     },
 };
 
@@ -48,7 +48,7 @@ function init() {
 
     const material = new THREE.MeshStandardMaterial();
 
-    new OBJLoader().setPath('models/obj/cerberus/').load('Cerberus.obj', function (group) {
+    new OBJLoader().setPath('models/obj/cerberus/').load('Cerberus.obj', group => {
         const textureLoader = new THREE.TextureLoader().setPath('models/obj/cerberus/');
 
         material.roughness = 1;
@@ -66,7 +66,7 @@ function init() {
         material.metalnessMap.wrapS = THREE.RepeatWrapping;
         material.normalMap.wrapS = THREE.RepeatWrapping;
 
-        group.traverse(function (child) {
+        group.traverse(child => {
             if ((child as THREE.Mesh).isMesh) {
                 (child as THREE.Mesh).material = material;
             }
@@ -80,7 +80,7 @@ function init() {
         new RGBELoader()
             .setDataType(THREE.UnsignedByteType)
             .setPath('textures/equirectangular/')
-            .load('venice_sunset_1k.hdr', function (hdrEquirect) {
+            .load('venice_sunset_1k.hdr', hdrEquirect => {
                 hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
 
                 scene.environment = hdrEquirect;
@@ -94,18 +94,6 @@ function init() {
 
         render();
     });
-}
-
-function makeOrthographicCamera() {
-    const halfFovV = THREE.MathUtils.DEG2RAD * 45 * 0.5;
-    const halfFovH = Math.atan((window.innerWidth / window.innerHeight) * Math.tan(halfFovV));
-
-    const halfW = perspectiveDistance * Math.tan(halfFovH);
-    const halfH = perspectiveDistance * Math.tan(halfFovV);
-    const near = 0.01;
-    const far = 2000;
-    const newCamera = new THREE.OrthographicCamera(-halfW, halfW, halfH, -halfH, near, far);
-    return newCamera;
 }
 
 function makePerspectiveCamera() {

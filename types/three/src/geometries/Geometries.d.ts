@@ -15,7 +15,6 @@ export * from './RingGeometry';
 export * from './ShapeGeometry';
 export * from './SphereGeometry';
 export * from './TetrahedronGeometry';
-export * from './TextGeometry';
 export * from './TorusGeometry';
 export * from './TorusKnotGeometry';
 export * from './TubeGeometry';

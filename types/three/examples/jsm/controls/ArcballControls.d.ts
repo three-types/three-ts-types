@@ -53,22 +53,22 @@ export class ArcballControls extends Object3D {
     /**
      * @default 20
      */
-    wMax: number; //maximum angular velocity allowed
+    wMax: number; // maximum angular velocity allowed
 
     /**
      * @default true
      */
-    enableAnimations: boolean; //if animations should be performed
+    enableAnimations: boolean; // if animations should be performed
 
     /**
      * @default false
      */
-    enableGrid: boolean; //if grid should be showed during pan operation
+    enableGrid: boolean; // if grid should be showed during pan operation
 
     /**
      * @default false
      */
-    cursorZoom: boolean; //if wheel zoom should be cursor centered
+    cursorZoom: boolean; // if wheel zoom should be cursor centered
 
     /**
      * @default 5
