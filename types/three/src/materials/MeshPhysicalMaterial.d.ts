@@ -125,7 +125,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     /**
      * @default Color( 1, 1, 1 )
      */
-    attenuationColor: Color;
+    attenuationTint: Color;
 
     /**
      * @default 1.0
