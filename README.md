@@ -10,7 +10,7 @@ We are using this repository as a home for the types instead of DefinitelyTyped 
 
 The highest priority is making sure that there are no inaccurate types (or types for things that have been removed).
 
-It is a goal is to have complete types for all of the code in the `src` directory.
+It is a goal to have complete types for all of the code in the `src` directory.
 
 It is not a goal for the `examples/jsm` directory to have complete declaration files for every examples module due to the number of example modules and how quickly they are modified. If you would like to use an examples module that is missing types then create a PR to add the types or create an issue to request that we add the missing types for that module.
 
@@ -58,6 +58,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/woo-cie"><img src="https://avatars.githubusercontent.com/u/24642989?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Makoto Yamada</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=woo-cie" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/schwyzl"><img src="https://avatars.githubusercontent.com/u/1556979?v=4?s=100" width="100px;" alt=""/><br /><sub><b>schwyzl</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=schwyzl" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Degubi"><img src="https://avatars.githubusercontent.com/u/13366932?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Degubi</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Degubi" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/WCWedin"><img src="https://avatars.githubusercontent.com/u/110730?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ibby Wedin</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=WCWedin" title="Code">💻</a></td>
   </tr>
 </table>
 

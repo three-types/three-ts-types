@@ -81,9 +81,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     ior: number;
 
     /**
-     * @default null
+     * @default Color( 0, 0, 0 )
      */
-    sheenTint: Color | null;
+    sheenTint: Color;
 
     /**
      * @default 0
@@ -113,7 +113,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     /**
      * @default Color( 1, 1, 1 )
      */
-    attenuationColor: Color;
+    attenuationTint: Color;
 
     /**
      * @default 1.0
