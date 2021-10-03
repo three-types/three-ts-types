@@ -8,7 +8,6 @@ export * from './ExtrudeGeometry';
 export * from './IcosahedronGeometry';
 export * from './LatheGeometry';
 export * from './OctahedronGeometry';
-export * from './ParametricGeometry';
 export * from './PlaneGeometry';
 export * from './PolyhedronGeometry';
 export * from './RingGeometry';
