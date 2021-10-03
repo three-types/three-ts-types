@@ -1,6 +1,6 @@
 import { BufferGeometry } from './../core/BufferGeometry';
 
-export class WireframeGeometry<TBufferGeometry extends BufferGeometry> extends BufferGeometry {
+export class WireframeGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     constructor(geometry?: TBufferGeometry);
 
     /**

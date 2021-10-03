@@ -1,6 +1,6 @@
 import { BufferGeometry } from '../core/BufferGeometry';
 
-export class EdgesGeometry<TBufferGeometry extends BufferGeometry> extends BufferGeometry {
+export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**
      * @param geometry
      * @param [thresholdAngle=1]
