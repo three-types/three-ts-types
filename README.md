@@ -59,6 +59,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/schwyzl"><img src="https://avatars.githubusercontent.com/u/1556979?v=4?s=100" width="100px;" alt=""/><br /><sub><b>schwyzl</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=schwyzl" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Degubi"><img src="https://avatars.githubusercontent.com/u/13366932?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Degubi</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Degubi" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/WCWedin"><img src="https://avatars.githubusercontent.com/u/110730?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Ibby Wedin</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=WCWedin" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/dbuck"><img src="https://avatars.githubusercontent.com/u/983807?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Dave Buchhofer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=dbuck" title="Code">💻</a></td>
   </tr>
 </table>
 
