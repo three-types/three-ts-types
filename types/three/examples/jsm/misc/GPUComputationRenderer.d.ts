@@ -8,6 +8,7 @@ import {
     Wrapping,
     TextureFilter,
     TextureDataType,
+    IUniform,
 } from '../../../src/Three';
 
 export interface Variable {
@@ -36,6 +37,7 @@ export class GPUComputationRenderer {
     getCurrentRenderTarget(variable: Variable): RenderTarget;
     getAlternateRenderTarget(variable: Variable): RenderTarget;
     addResolutionDefine(materialShader: ShaderMaterial): void;
+    createShaderMaterial(computeFragmentShader: string, uniforms?: { [uniform: string]: IUniform }): ShaderMaterial;
     createRenderTarget(
         sizeXTexture: number,
         sizeYTexture: number,
