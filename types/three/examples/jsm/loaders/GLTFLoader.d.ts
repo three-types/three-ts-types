@@ -151,6 +151,6 @@ export interface GLTFLoaderPlugin {
     extendMaterialParams?:
         | ((materialIndex: number, materialParams: { [key: string]: any }) => Promise<any> | null)
         | undefined;
-    createNodeMesh?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
+    createNodeMesh?: ((nodeIndex: number) => Promise<Group | Mesh | SkinnedMesh> | null) | undefined;
     createNodeAttachment?: ((nodeIndex: number) => Promise<Object3D> | null) | undefined;
 }
