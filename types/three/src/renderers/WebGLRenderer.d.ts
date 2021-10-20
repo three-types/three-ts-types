@@ -12,6 +12,7 @@ import { Vector2 } from './../math/Vector2';
 import { Vector4 } from './../math/Vector4';
 import { Color } from './../math/Color';
 import { WebGLRenderTarget } from './WebGLRenderTarget';
+import { WebGLMultipleRenderTargets } from './WebGLMultipleRenderTargets';
 import { Object3D } from './../core/Object3D';
 import { Material } from './../materials/Material';
 import { ToneMapping, ShadowMapType, CullFace, TextureEncoding } from '../constants';
@@ -389,10 +390,14 @@ export class WebGLRenderer implements Renderer {
      * @param activeCubeFace Specifies the active cube side (PX 0, NX 1, PY 2, NY 3, PZ 4, NZ 5) of {@link WebGLCubeRenderTarget}.
      * @param activeMipmapLevel Specifies the active mipmap level.
      */
-    setRenderTarget(renderTarget: WebGLRenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
+    setRenderTarget(
+        renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets | null,
+        activeCubeFace?: number,
+        activeMipmapLevel?: number,
+    ): void;
 
     readRenderTargetPixels(
-        renderTarget: WebGLRenderTarget,
+        renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets,
         x: number,
         y: number,
         width: number,
