@@ -322,8 +322,6 @@ export class WebGLRenderer implements Renderer {
     resetGLState(): void;
     dispose(): void;
 
-    renderBufferImmediate(object: Object3D, program: WebGLProgram): void;
-
     renderBufferDirect(
         camera: Camera,
         scene: Scene,
