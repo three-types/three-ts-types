@@ -7,10 +7,11 @@ export enum CMSMode {
     custom = 'custom',
 }
 
-interface CMSParameters {
+export interface CMSParameters {
     camera?: Camera;
     parent?: Object3D;
     cascades?: number;
+    maxFar?: number;
     mode?: CMSMode;
     shadowMapSize?: number;
     shadowBias?: number;
@@ -49,7 +50,7 @@ export class CSM {
     getBreaks(): void;
     update(): void;
     injectInclude(): void;
-    setupMaterial<TMaterial extends Material = Material>(material: TMaterial): void;
+    setupMaterial(material: Material): void;
     updateUniforms(): void;
     getExtendedBreaks(target: Vector2[]): void;
     updateFrustums(): void;

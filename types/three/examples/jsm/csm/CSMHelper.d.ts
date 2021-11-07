@@ -19,7 +19,7 @@ export class CSMHelper<TCSM extends CSM = CSM> extends Group {
     displayShadowBounds: boolean;
     frustumLines: LineSegments<BufferGeometry, LineBasicMaterial>;
     cascadeLines: Box3Helper[];
-    cascadePlanes: Mesh<PlaneGeometry, MeshBasicMaterial>[];
+    cascadePlanes: Array<Mesh<PlaneGeometry, MeshBasicMaterial>>;
     shadowLines: Box3Helper[];
     updateVisibility(): void;
     update(): void;
