@@ -93,9 +93,19 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     sheenTint: Color;
 
     /**
+     * @default null
+     */
+    sheenTintMap: Texture | null;
+
+    /**
      * @default 1.0
      */
     sheenRoughness: number;
+
+    /**
+     * @default null
+     */
+    sheenRoughnessMap: Texture | null;
 
     /**
      * @default 0
