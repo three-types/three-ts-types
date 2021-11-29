@@ -1,14 +1,21 @@
-import { AvoidNullUniforms, ExtractUniforms, ShaderMaterial, TUniforms } from '../../../src/Three';
+import {
+    AvoidNullUniforms,
+    ExtractUniforms,
+    ShaderMaterial,
+    ShaderMaterialParameters,
+    TUniforms,
+} from '../../../src/Three';
 
 import { FullScreenQuad, Pass } from './Pass';
 
-export type TShader<Uniforms extends TUniforms> =
-    | ShaderMaterial<Uniforms>
-    | (Required<Pick<ShaderMaterial<Uniforms>, 'fragmentShader'>> &
-          Partial<Pick<ShaderMaterial<Uniforms>, 'vertexShader' | 'uniforms' | 'defines'>>);
+export type ShaderLike<Uniforms extends TUniforms> = {
+    fragmentShader: ShaderMaterial['fragmentShader'];
+    vertexShader?: ShaderMaterial['vertexShader'];
+    defines?: ShaderMaterial['defines'];
+} & (Exclude<keyof Uniforms, string> extends never ? { uniforms: Uniforms } : { uniforms?: Uniforms });
 
 export class ShaderPass<T extends {} = TUniforms, Uniforms extends TUniforms = ExtractUniforms<T>> extends Pass {
-    constructor(shader: TShader<Uniforms>, textureID?: string);
+    constructor(shader: ShaderLike<Uniforms>, textureID?: string);
     textureID: string;
     uniforms: AvoidNullUniforms<Uniforms>;
     material: ShaderMaterial<Uniforms>;
