@@ -320,7 +320,6 @@ export const RGBEEncoding: TextureEncoding;
 export const LogLuvEncoding: TextureEncoding;
 export const RGBM7Encoding: TextureEncoding;
 export const RGBM16Encoding: TextureEncoding;
-export const RGBDEncoding: TextureEncoding;
 
 // Depth packing strategies
 export enum DepthPackingStrategies {}
