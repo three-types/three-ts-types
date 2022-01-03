@@ -314,7 +314,6 @@ export const TriangleFanDrawMode: TrianglesDrawModes;
 export enum TextureEncoding {}
 export const LinearEncoding: TextureEncoding;
 export const sRGBEncoding: TextureEncoding;
-export const GammaEncoding: TextureEncoding;
 export const LogLuvEncoding: TextureEncoding;
 export const RGBM7Encoding: TextureEncoding;
 export const RGBM16Encoding: TextureEncoding;
