@@ -37,7 +37,7 @@ export class Euler {
     reorder(newOrder: string): Euler;
     equals(euler: Euler): boolean;
     fromArray(xyzo: any[]): Euler;
-    toArray(array?: number[], offset?: number): number[];
+    toArray(array?: any[], offset?: number): any[];
     toVector3(optionalResult?: Vector3): Vector3;
     _onChange(callback: () => void): this;
 
