@@ -1,5 +1,13 @@
-import { ShaderMaterialParameters, ShaderMaterial } from './ShaderMaterial';
+import { ShaderMaterialParameters, ShaderMaterial, TUniforms, ExtractUniforms } from './ShaderMaterial';
 
-export class RawShaderMaterial extends ShaderMaterial {
-    constructor(parameters?: ShaderMaterialParameters);
+export type RawShaderMaterialParameters<Uniforms extends TUniforms> = ShaderMaterialParameters<Uniforms> & {
+    vertexShader: string;
+    fragmentShader: string;
+};
+
+export class RawShaderMaterial<
+    T extends {} = TUniforms,
+    Uniforms extends TUniforms = ExtractUniforms<T>,
+> extends ShaderMaterial<T, Uniforms> {
+    constructor(parameters?: RawShaderMaterialParameters<Uniforms>);
 }

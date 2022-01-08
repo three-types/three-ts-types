@@ -64,6 +64,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://xk.io/"><img src="https://avatars.githubusercontent.com/u/1046448?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Max Kaye</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=XertroV" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://zeokku.com/"><img src="https://avatars.githubusercontent.com/u/22231294?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lutymane</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Lutymane" title="Code">💻</a></td>
   </tr>
 </table>
 

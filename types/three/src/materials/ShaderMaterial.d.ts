@@ -2,29 +2,56 @@ import { IUniform } from '../renderers/shaders/UniformsLib';
 import { MaterialParameters, Material } from './Material';
 import { GLSLVersion } from '../constants';
 
-export interface ShaderMaterialParameters extends MaterialParameters {
-    uniforms?: { [uniform: string]: IUniform } | undefined;
-    vertexShader?: string | undefined;
-    fragmentShader?: string | undefined;
-    linewidth?: number | undefined;
-    wireframe?: boolean | undefined;
-    wireframeLinewidth?: number | undefined;
-    lights?: boolean | undefined;
-    clipping?: boolean | undefined;
-
-    extensions?:
-        | {
-              derivatives?: boolean | undefined;
-              fragDepth?: boolean | undefined;
-              drawBuffers?: boolean | undefined;
-              shaderTextureLOD?: boolean | undefined;
-          }
-        | undefined;
-    glslVersion?: GLSLVersion | undefined;
+export interface TUniforms {
+    [uniform: string]: IUniform;
 }
 
-export class ShaderMaterial extends Material {
-    constructor(parameters?: ShaderMaterialParameters);
+// transform { uniform1: type1, uniform2: type2 } to { uniform1: { value: type1 }, ...}
+export type WrapUniforms<T extends { [uniform: string]: any }> = {
+    [U in keyof T]: T[U] extends IUniform ? T[U] : IUniform<T[U]>;
+};
+
+// replace null types by any (typically used by textures)
+export type AvoidNullUniforms<T extends TUniforms> = {
+    [U in keyof T]: IUniform<T[U]['value'] extends null ? any : T[U]['value']>;
+};
+
+export type ExtractUniforms<T> = AvoidNullUniforms<
+    WrapUniforms<T extends ShaderMaterialParametersLike<infer U> ? U : T>
+>;
+
+export interface ShaderMaterialParametersLike<Uniforms extends TUniforms> {
+    uniforms: Uniforms;
+}
+
+export type ShaderMaterialParameters<Uniforms extends TUniforms> = MaterialParameters &
+    // if we have uniforms type defined in var declaration then this paramater is required
+    // keyof { [string] } will result in string | number, since uniform names can't be numbers we can safely determine the type
+    // check for extends never instead of extends number because never always extends everything
+    // uniforms: Type | undefined !== uniforms?: Type
+    (Exclude<keyof Uniforms, string> extends never ? { uniforms: Uniforms } : { uniforms?: Uniforms }) & {
+        vertexShader?: string;
+        fragmentShader?: string;
+        linewidth?: number;
+        wireframe?: boolean;
+        wireframeLinewidth?: number;
+        lights?: boolean;
+        clipping?: boolean;
+
+        extensions?: {
+            derivatives?: boolean;
+            fragDepth?: boolean;
+            drawBuffers?: boolean;
+            shaderTextureLOD?: boolean;
+        };
+        glslVersion?: GLSLVersion;
+    };
+
+export class ShaderMaterial<
+    T extends {} = TUniforms,
+    Uniforms extends TUniforms = ExtractUniforms<T>,
+> extends Material {
+    constructor(parameters?: ShaderMaterialParameters<Uniforms>);
 
     /**
      * @default 'ShaderMaterial'
@@ -39,7 +66,10 @@ export class ShaderMaterial extends Material {
     /**
      * @default {}
      */
-    uniforms: { [uniform: string]: IUniform };
+    uniforms: AvoidNullUniforms<Uniforms>;
+    // uniforms: Exclude<keyof Uniforms, string> extends never
+    //     ? AvoidNullUniforms<Uniforms>
+    //     : Partial<AvoidNullUniforms<Uniforms>>;
     vertexShader: string;
     fragmentShader: string;
 
@@ -96,7 +126,7 @@ export class ShaderMaterial extends Material {
     /**
      * @default undefined
      */
-    index0AttributeName: string | undefined;
+    index0AttributeName?: string;
 
     /**
      * @default false
@@ -110,6 +140,6 @@ export class ShaderMaterial extends Material {
 
     isShaderMaterial: boolean;
 
-    setValues(parameters: ShaderMaterialParameters): void;
+    setValues(parameters: ShaderMaterialParameters<Uniforms>): void;
     toJSON(meta: any): any;
 }
