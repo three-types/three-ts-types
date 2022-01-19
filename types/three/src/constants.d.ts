@@ -226,6 +226,7 @@ export type PixelFormatGPU =
     | 'RGB10_A2'
     | 'RGB10_A2UI'
     | 'SRGB8_ALPHA8'
+    | 'SRGB8'
     | 'DEPTH_COMPONENT16'
     | 'DEPTH_COMPONENT24'
     | 'DEPTH_COMPONENT32F'
