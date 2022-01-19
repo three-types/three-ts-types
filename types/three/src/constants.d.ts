@@ -166,6 +166,8 @@ export const RGFormat: PixelFormat;
 export const RGIntegerFormat: PixelFormat;
 export const RGBIntegerFormat: PixelFormat;
 export const RGBAIntegerFormat: PixelFormat;
+export const _SRGBFormat: PixelFormat; // fallback for WebGL 1
+export const _SRGBAFormat: PixelFormat; // fallback for WebGL 1
 
 // Internal Pixel Formats
 export type PixelFormatGPU =
