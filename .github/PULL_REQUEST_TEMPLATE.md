@@ -25,6 +25,7 @@ To check an item, place an "x" in the box like so: "- [x] Documentation"
 Remove items that are irrelevant to your changes.
 -->
 
+-   [ ] Checked the target branch (current goes `master`, next goes `dev`)
 -   [ ] Added myself to contributors table
 -   [ ] Ready to be merged
 
