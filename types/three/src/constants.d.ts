@@ -148,7 +148,6 @@ export const FloatType: TextureDataType;
 export const HalfFloatType: TextureDataType;
 export const UnsignedShort4444Type: TextureDataType;
 export const UnsignedShort5551Type: TextureDataType;
-export const UnsignedShort565Type: TextureDataType;
 export const UnsignedInt248Type: TextureDataType;
 
 // Pixel formats
