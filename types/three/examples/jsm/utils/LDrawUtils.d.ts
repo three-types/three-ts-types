@@ -1,5 +1,5 @@
-import { Group, Object3D } from 'three';
+import { Group, Object3D } from '../../../src/Three';
 
-export class LDrawUtils {
-    static mergeObject(object: Object3D): Group;
+export namespace LDrawUtils {
+    function mergeObject(object: Object3D): Group;
 }

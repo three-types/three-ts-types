@@ -98,7 +98,7 @@ function reloadObject(resetCamera: boolean) {
     const lDrawLoader = new LDrawLoader();
     lDrawLoader.setPath(ldrawPath).load(
         '',
-        function (group2) {
+        group2 => {
             if (model) {
                 scene.remove(model);
             }
@@ -151,7 +151,7 @@ function onProgress(xhr: ProgressEvent<EventTarget>) {
     if (xhr.lengthComputable) {
         updateProgressBar(xhr.loaded / xhr.total);
 
-        console.log(Math.round((xhr.loaded / xhr.total) * 100) + '% downloaded');
+        console.log(`${Math.round((xhr.loaded / xhr.total) * 100)}% downloaded`);
     }
 }
 
@@ -171,5 +171,5 @@ function hideProgressBar() {
 }
 
 function updateProgressBar(fraction: number) {
-    progressBarDiv.innerText = 'Loading... ' + Math.round(fraction * 100) + '%';
+    progressBarDiv.innerText = `Loading... ${Math.round(fraction * 100)}%`;
 }

@@ -20,7 +20,7 @@ function init() {
 
     scene = new THREE.Scene();
 
-    new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function (texture) {
+    new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', texture => {
         texture.mapping = THREE.EquirectangularReflectionMapping;
 
         scene.background = texture;
@@ -31,7 +31,7 @@ function init() {
         // model
 
         const loader = new GLTFLoader().setPath('models/gltf/DamagedHelmet/glTF/');
-        loader.load('DamagedHelmet.gltf', function (gltf) {
+        loader.load('DamagedHelmet.gltf', gltf => {
             scene.add(gltf.scene);
 
             render();
