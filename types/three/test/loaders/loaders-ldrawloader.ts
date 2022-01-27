@@ -147,7 +147,7 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function onProgress(xhr: ProgressEvent<EventTarget>) {
+function onProgress(xhr: ProgressEvent) {
     if (xhr.lengthComputable) {
         updateProgressBar(xhr.loaded / xhr.total);
 
