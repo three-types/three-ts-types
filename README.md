@@ -65,6 +65,8 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://xk.io/"><img src="https://avatars.githubusercontent.com/u/1046448?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Max Kaye</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=XertroV" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/LauferAlex"><img src="https://avatars.githubusercontent.com/u/86115165?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alejandro Laufer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3ALauferAlex" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=LauferAlex" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.joemo.co.uk"><img src="https://avatars.githubusercontent.com/u/39060404?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Joe Tipping</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Gallahron" title="Code">💻</a></td>
+  </tr>
   </tr>
 </table>
 
