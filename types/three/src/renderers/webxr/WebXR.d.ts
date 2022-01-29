@@ -1,3 +1,7 @@
+import { Vector4 } from '../../math/Vector4';
+import { PerspectiveCamera } from '../../cameras/PerspectiveCamera';
+import { ArrayCamera } from '../../cameras/ArrayCamera';
+
 export type XRSessionMode = 'inline' | 'immersive-vr' | 'immersive-ar';
 
 export type XRReferenceSpaceType = 'viewer' | 'local' | 'local-floor' | 'bounded-floor' | 'unbounded';
@@ -25,6 +29,10 @@ export type XREventType =
 export type XRAnimationLoopCallback = (time: number, frame?: XRFrame) => void;
 
 export type XRFrameRequestCallback = (time: number, frame: XRFrame) => void;
+
+export type XRCameraL = PerspectiveCamera & { viewport: Vector4 };
+export type XRCameraR = PerspectiveCamera & { viewport: Vector4 };
+export type XRCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [XRCameraL, XRCameraR] };
 
 export interface XR extends EventTarget {
     requestSession(mode: XRSessionMode, options?: XRSessionInit): Promise<XRSession>;
