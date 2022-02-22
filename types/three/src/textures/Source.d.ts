@@ -1,6 +1,11 @@
 import { DataTexture } from './DataTexture';
 
-export type SourceData = HTMLImageElement | HTMLCanvasElement | ImageBitmap | (HTMLImageElement | DataTexture)[];
+export type SourceData =
+    | HTMLImageElement
+    | HTMLCanvasElement
+    | ImageBitmap
+    | ImageData
+    | (HTMLImageElement | DataTexture)[];
 
 /**
  * Represents the data source of a texture.
