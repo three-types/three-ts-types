@@ -1,12 +1,3 @@
-import { DataTexture } from './DataTexture';
-
-export type SourceData =
-    | HTMLImageElement
-    | HTMLCanvasElement
-    | ImageBitmap
-    | ImageData
-    | (HTMLImageElement | DataTexture)[];
-
 /**
  * Represents the data source of a texture.
  */
@@ -14,12 +5,12 @@ export class Source {
     /**
      * @param [data] The data definition of a texture. default is **null**.
      */
-    constructor(data: SourceData);
+    constructor(data: any);
 
     /**
      * The actual data of a texture. The type of this property depends on the texture that uses this instance.
      */
-    data: SourceData;
+    data: any;
 
     /**
      * Set this to **true** to trigger a data upload to the GPU next time the source is used.

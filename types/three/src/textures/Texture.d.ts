@@ -1,6 +1,6 @@
 import { Vector2 } from './../math/Vector2';
 import { Matrix3 } from './../math/Matrix3';
-import { Source, SourceData } from './Source';
+import { Source } from './Source';
 import { EventDispatcher } from './../core/EventDispatcher';
 import {
     Mapping,
@@ -61,7 +61,7 @@ export class Texture extends EventDispatcher {
      * video element as a source for your texture image and continuously update this texture
      * as long as video is playing - the {@link VideoTexture} class handles this automatically.
      */
-    get image(): SourceData | HTMLVideoElement;
+    get image(): any;
 
     /**
      * An image object, typically created using the {@link TextureLoader.load} method.
@@ -71,7 +71,7 @@ export class Texture extends EventDispatcher {
      * video element as a source for your texture image and continuously update this texture
      * as long as video is playing - the {@link VideoTexture} class handles this automatically.
      */
-    set image(data: SourceData | HTMLVideoElement);
+    set image(data: any);
 
     /**
      * @default []
