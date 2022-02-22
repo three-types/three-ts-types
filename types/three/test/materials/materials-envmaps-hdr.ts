@@ -123,7 +123,8 @@ function init() {
     });
 
     const rgbmUrls = ['px.png', 'nx.png', 'py.png', 'ny.png', 'pz.png', 'nz.png'];
-    rgbmCubeMap = new RGBMLoader().setMaxRange( 16 )
+    rgbmCubeMap = new RGBMLoader()
+        .setMaxRange(16)
         .setPath('./textures/cube/pisaRGBM16/')
         .loadCubemap(rgbmUrls, () => {
             rgbmCubeRenderTarget = pmremGenerator.fromCubemap(rgbmCubeMap);
