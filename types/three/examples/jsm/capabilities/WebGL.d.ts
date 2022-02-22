@@ -1,4 +1,4 @@
-export namespace WEBGL {
+export namespace WebGL {
     function isWebGLAvailable(): boolean;
     function isWebGL2Available(): boolean;
     function getWebGLErrorMessage(): HTMLElement;
