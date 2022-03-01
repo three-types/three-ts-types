@@ -84,7 +84,7 @@ const App = {
 const postProcessScene = new THREE.Scene();
 const postProcessCamera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-const renderTargetTexture = new THREE.DataTexture2DArray();
+const renderTargetTexture = new THREE.DataArrayTexture();
 renderTargetTexture.format = THREE.RedFormat;
 renderTargetTexture.type = THREE.UnsignedByteType;
 
@@ -145,7 +145,7 @@ function init() {
         const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
         const array = new Uint8Array(zip['head256x256x109'].buffer);
 
-        const texture = new THREE.DataTexture2DArray(array, DIMENSIONS.width, DIMENSIONS.height, DIMENSIONS.depth);
+        const texture = new THREE.DataArrayTexture(array, DIMENSIONS.width, DIMENSIONS.height, DIMENSIONS.depth);
         texture.format = THREE.RedFormat;
         texture.type = THREE.UnsignedByteType;
 
@@ -223,7 +223,7 @@ function animate() {
 /**
  * Renders the 2D array into the render target `renderTarget`.
  */
-function renderTo2DArray() {
+function renderToArrayTexture() {
     const layer = Math.floor((mesh.material as THREE.ShaderMaterial).uniforms['depth'].value);
     postProcessMaterial.uniforms.uDepth.value = layer;
     renderer.setRenderTarget(renderTarget, layer);
@@ -232,9 +232,9 @@ function renderTo2DArray() {
 }
 
 function render() {
-    // Step 1 - Render the input DataTexture2DArray into a
-    // DataTexture2DArray render target.
-    renderTo2DArray();
+    // Step 1 - Render the input DataArrayTexture into a
+    // DataArrayTexture render target.
+    renderToArrayTexture();
 
     // Step 2 - Renders the scene containing the plane with a material
     // sampling the render target texture.
