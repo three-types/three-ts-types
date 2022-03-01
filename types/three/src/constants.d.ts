@@ -153,6 +153,7 @@ export const UnsignedInt248Type: TextureDataType;
 // Pixel formats
 export enum PixelFormat {}
 export const AlphaFormat: PixelFormat;
+export const RGBFormat: PixelFormat;
 export const RGBAFormat: PixelFormat;
 export const LuminanceFormat: PixelFormat;
 export const LuminanceAlphaFormat: PixelFormat;
