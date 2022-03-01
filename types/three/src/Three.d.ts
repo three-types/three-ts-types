@@ -225,4 +225,5 @@ export * from './textures/CubeTexture';
 export * from './textures/CanvasTexture';
 export * from './textures/DepthTexture';
 export * from './textures/FramebufferTexture';
+export * from './textures/Source';
 export * from './textures/Texture';
