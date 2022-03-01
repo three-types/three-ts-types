@@ -107,9 +107,10 @@ export class GLTFParser {
          * GLTF.Image
          * See: https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/schema/image.schema.json
          */
-        source: { [key: string]: any },
+        sourceIndex: number,
         loader: Loader,
     ) => Promise<Texture>;
+    loadImageSource: (sourceIndex: number, loader: Loader) => Promise<Texture>;
     assignTexture: (
         materialParams: { [key: string]: any },
         mapName: string,
