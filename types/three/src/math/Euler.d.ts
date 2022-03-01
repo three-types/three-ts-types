@@ -38,7 +38,12 @@ export class Euler {
     equals(euler: Euler): boolean;
     fromArray(xyzo: any[]): Euler;
     toArray(array?: number[], offset?: number): number[];
+
+    /**
+     * @deprecated .toVector3() has been removed. Use {@link Vector3.setFromEuler Vector3.setFromEuler()} instead
+     */
     toVector3(optionalResult?: Vector3): Vector3;
+
     _onChange(callback: () => void): this;
 
     static RotationOrders: string[];
