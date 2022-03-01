@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { VOXLoader, VOXData3DTexture } from 'three/examples/jsm/loaders/VOXLoader';
 
-import { WEBGL } from 'three/examples/jsm/WebGL';
+import WEBGL from 'three/examples/jsm/capabilities/WebGL';
 
 if (!WEBGL.isWebGL2Available()) {
     document.body.appendChild(WEBGL.getWebGL2ErrorMessage());
