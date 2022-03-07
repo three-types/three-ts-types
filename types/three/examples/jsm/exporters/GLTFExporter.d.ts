@@ -1,4 +1,4 @@
-import { Object3D, AnimationClip } from '../../../src/Three';
+import { Object3D, AnimationClip, Texture, Material, Mesh } from '../../../src/Three';
 
 export interface GLTFExporterOptions {
     /**
@@ -50,6 +50,9 @@ export interface GLTFExporterOptions {
 export class GLTFExporter {
     constructor();
 
+    register(callback: (writer: GLTFWriter) => GLTFExporterPlugin): this;
+    unregister(callback: (writer: GLTFWriter) => GLTFExporterPlugin): this;
+
     /**
      * Generates a .gltf (JSON) or .glb (binary) output from the input (Scenes or Objects)
      *
@@ -92,4 +95,32 @@ export class GLTFExporter {
         input: Object3D | Object3D[],
         options?: GLTFExporterOptions,
     ): Promise<ArrayBuffer | { [key: string]: any }>;
+}
+
+export class GLTFWriter {
+    constructor();
+
+    setPlugins(plugins: GLTFExporterPlugin[]);
+
+    /**
+     * Parse scenes and generate GLTF output
+     *
+     * @param input Scene or Array of THREE.Scenes
+     * @param onDone Callback on completed
+     * @param options options
+     */
+    write(
+        input: Object3D | Object3D[],
+        onDone: (gltf: ArrayBuffer | { [key: string]: any }) => void,
+        options?: GLTFExporterOptions,
+    ): Promise<void>;
+}
+
+export interface GLTFExporterPlugin {
+    writeTexture?: (map: Texture, textureDef: { [key: string]: any }) => void;
+    writeMaterial?: (material: Material, materialDef: { [key: string]: any }) => void;
+    writeMesh?: (mesh: Mesh, meshDef: { [key: string]: any }) => void;
+    writeNode?: (object: Object3D, nodeDef: { [key: string]: any }) => void;
+    beforeParse?: (input: Object3D | Object3D[]) => void;
+    afterParse?: (input: Object3D | Object3D[]) => void;
 }
