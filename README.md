@@ -10,7 +10,7 @@ We are using this repository as a home for the types instead of DefinitelyTyped 
 
 The highest priority is making sure that there are no inaccurate types (or types for things that have been removed).
 
-It is a goal to have complete types for all of the code in the `src` directory.
+It is a goal to have complete public facing API types for all of the code in the `src` directory.
 
 It is not a goal for the `examples/jsm` directory to have complete declaration files for every examples module due to the number of example modules and how quickly they are modified. If you would like to use an examples module that is missing types then create a PR to add the types or create an issue to request that we add the missing types for that module.
 
