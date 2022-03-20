@@ -314,6 +314,11 @@ export enum NormalMapTypes {}
 export const TangentSpaceNormalMap: NormalMapTypes;
 export const ObjectSpaceNormalMap: NormalMapTypes;
 
+export type ColorSpace = NoColorSpace | SRGBColorSpace | LinearSRGBColorSpace;
+export type NoColorSpace = '';
+export type SRGBColorSpace = 'srgb';
+export type LinearSRGBColorSpace = 'srgb-linear';
+
 // Stencil Op types
 export enum StencilOp {}
 export const ZeroStencilOp: StencilOp;
