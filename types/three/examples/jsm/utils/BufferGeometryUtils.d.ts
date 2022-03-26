@@ -16,3 +16,4 @@ export function mergeVertices(geometry: BufferGeometry, tolerance?: number): Buf
 export function toTrianglesDrawMode(geometry: BufferGeometry, drawMode: TrianglesDrawModes): BufferGeometry;
 export function computeMorphedAttributes(object: Mesh | Line | Points): object;
 export function computeTangents(geometry: BufferGeometry, negateSign?: boolean): BufferGeometry;
+export function mergeGroups(geometry: BufferGeometry): BufferGeometry;
