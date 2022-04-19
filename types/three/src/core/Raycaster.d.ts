@@ -99,7 +99,7 @@ export class Raycaster {
      * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0;).
      */
     intersectObject<TIntersected extends Object3D>(
-        object: Object3D,
+        object: TIntersected,
         recursive?: boolean,
         optionalTarget?: Array<Intersection<TIntersected>>,
     ): Array<Intersection<TIntersected>>;
@@ -113,7 +113,7 @@ export class Raycaster {
      * @param optionalTarget (optional) target to set the result. Otherwise a new Array is instantiated. If set, you must clear this array prior to each call (i.e., array.length = 0;).
      */
     intersectObjects<TIntersected extends Object3D>(
-        objects: Object3D[],
+        objects: TIntersected[],
         recursive?: boolean,
         optionalTarget?: Array<Intersection<TIntersected>>,
     ): Array<Intersection<TIntersected>>;
