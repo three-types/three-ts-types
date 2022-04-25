@@ -1,4 +1,6 @@
 import { Group } from '../../objects/Group';
+import { Vector4 } from '../../math/Vector4';
+import { ArrayCamera } from '../../cameras/ArrayCamera';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera';
 import { EventDispatcher } from '../../core/EventDispatcher';
 import {
@@ -7,11 +9,13 @@ import {
     XRReferenceSpaceType,
     XRSession,
     XRFrame,
-    XRCamera,
     XRWebGLLayer,
     // XRProjectionLayer,
     // XRWebGLBinding
 } from './WebXR';
+
+export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
+export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
 
 export class WebXRManager extends EventDispatcher {
     constructor(renderer: any, gl: WebGLRenderingContext);
@@ -42,7 +46,7 @@ export class WebXRManager extends EventDispatcher {
     getFrame(): XRFrame
     getSession(): XRSession | null;
     setSession(value: XRSession): Promise<void>;
-    getCamera(): XRCamera;
+    getCamera(): WebXRArrayCamera;
     updateCamera(camera: PerspectiveCamera): void;
     setAnimationLoop(callback: XRFrameRequestCallback | null): void;
     getFoveation(): number | undefined;
