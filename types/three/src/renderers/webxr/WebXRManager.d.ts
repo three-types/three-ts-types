@@ -41,9 +41,9 @@ export class WebXRManager extends EventDispatcher {
     setFramebufferScaleFactor(value: number): void;
     setReferenceSpaceType(value: XRReferenceSpaceType): void;
     getReferenceSpace(): XRReferenceSpace | null;
-    getBaseLayer(): XRWebGLLayer | any // XRProjectionLayer
-    getBinding(): any // XRWebGLBinding
-    getFrame(): XRFrame
+    getBaseLayer(): XRWebGLLayer | any; // XRProjectionLayer
+    getBinding(): any; // XRWebGLBinding
+    getFrame(): XRFrame;
     getSession(): XRSession | null;
     setSession(value: XRSession): Promise<void>;
     getCamera(): WebXRArrayCamera;
