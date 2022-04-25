@@ -82,15 +82,6 @@ export class GLTFExporter {
         options?: GLTFExporterOptions,
     ): void;
 
-    /**
-     * @deprecated parse() expects options as the fourth argument now.
-     */
-    parse(
-        input: Object3D | Object3D[],
-        onDone: (gltf: { [key: string]: any }) => void,
-        options?: GLTFExporterOptions,
-    ): void;
-
     parseAsync(
         input: Object3D | Object3D[],
         options?: GLTFExporterOptions,
