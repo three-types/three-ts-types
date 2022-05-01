@@ -9,3 +9,14 @@ export class NURBSCurve extends Curve<Vector3> {
         endKnot: number,
     );
 }
+
+export interface NURBSCurveConstructor {
+    new (
+        degree: number,
+        knots: number[],
+        controlPoints: Vector2[] | Vector3[] | Vector4[],
+        startKnot: number,
+        endKnot: number,
+    ): NURBSCurve;
+    prototype: NURBSCurve;
+}

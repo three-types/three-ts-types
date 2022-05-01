@@ -55,6 +55,11 @@ export class MTLLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<MTLLoader.MaterialCreator>;
 }
 
+export interface MTLLoaderConstructor {
+    new (manager?: LoadingManager): MTLLoader;
+    prototype: MTLLoader;
+}
+
 export interface MaterialInfo {
     ks?: number[] | undefined;
     kd?: number[] | undefined;

@@ -50,3 +50,8 @@ export class Path extends CurvePath<Vector2> {
         aRotation: number,
     ): this;
 }
+
+export interface PathConstructor {
+    new (points?: Vector2[]): Path;
+    prototype: Path;
+}

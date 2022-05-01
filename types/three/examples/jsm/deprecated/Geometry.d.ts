@@ -271,6 +271,11 @@ export class Geometry extends EventDispatcher {
     animations: AnimationClip[];
 }
 
+export interface GeometryConstructor {
+    new (): Geometry;
+    prototype: Geometry;
+}
+
 /**
  * Triangle face.
  */
@@ -339,4 +344,16 @@ export class Face3 {
 
     clone(): this;
     copy(source: Face3): this;
+}
+
+export interface Face3Constructor {
+    new (
+        a: number,
+        b: number,
+        c: number,
+        normal?: Vector3 | Vector3[],
+        color?: Color | Color[],
+        materialIndex?: number,
+    ): Face3;
+    prototype: Face3;
 }

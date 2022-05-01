@@ -25,3 +25,8 @@ export class HemisphereLight extends Light {
 
     readonly isHemisphereLight: true;
 }
+
+export interface HemisphereLightConstructor {
+    new (skyColor?: ColorRepresentation, groundColor?: ColorRepresentation, intensity?: number): HemisphereLight;
+    prototype: HemisphereLight;
+}

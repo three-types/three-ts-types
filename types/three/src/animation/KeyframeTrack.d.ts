@@ -43,3 +43,13 @@ export class KeyframeTrack {
 
     static toJSON(track: KeyframeTrack): any;
 }
+
+export interface KeyframeTrackConstructor {
+    new (
+        name: string,
+        times: ArrayLike<any>,
+        values: ArrayLike<any>,
+        interpolation?: InterpolationModes,
+    ): KeyframeTrack;
+    prototype: KeyframeTrack;
+}

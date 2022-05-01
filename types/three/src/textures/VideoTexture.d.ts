@@ -32,3 +32,18 @@ export class VideoTexture extends Texture {
      */
     generateMipmaps: boolean;
 }
+
+export interface VideoTextureConstructor {
+    new (
+        video: HTMLVideoElement,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
+        anisotropy?: number,
+    ): VideoTexture;
+    prototype: VideoTexture;
+}

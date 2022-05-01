@@ -106,3 +106,8 @@ export class LightningStrike {
     copy(source: LightningStrike): LightningStrike;
     clone(): this;
 }
+
+export interface LightningStrikeConstructor {
+    new (rayParameters?: RayParameters): LightningStrike;
+    prototype: LightningStrike;
+}

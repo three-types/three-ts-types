@@ -31,6 +31,11 @@ export class PropertyBinding {
     static findNode(root: any, nodeName: string): any;
 }
 
+export interface PropertyBindingConstructor {
+    new (rootNode: any, path: string, parsedPath?: any): PropertyBinding;
+    prototype: PropertyBinding;
+}
+
 export namespace PropertyBinding {
     class Composite {
         constructor(targetGroup: any, path: any, parsedPath?: any);

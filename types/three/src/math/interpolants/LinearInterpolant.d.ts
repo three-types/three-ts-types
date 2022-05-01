@@ -5,3 +5,8 @@ export class LinearInterpolant extends Interpolant {
 
     interpolate_(i1: number, t0: number, t: number, t1: number): any;
 }
+
+export interface LinearInterpolantConstructor {
+    new (parameterPositions: any, samplesValues: any, sampleSize: number, resultBuffer?: any): LinearInterpolant;
+    prototype: LinearInterpolant;
+}

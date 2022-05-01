@@ -9,3 +9,8 @@ export class ShaderPass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface ShaderPassConstructor {
+    new (shader: object, textureID?: string): ShaderPass;
+    prototype: ShaderPass;
+}

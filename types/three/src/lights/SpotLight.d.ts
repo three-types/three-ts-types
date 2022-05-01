@@ -70,3 +70,15 @@ export class SpotLight extends Light {
 
     readonly isSpotLight: true;
 }
+
+export interface SpotLightConstructor {
+    new (
+        color?: ColorRepresentation,
+        intensity?: number,
+        distance?: number,
+        angle?: number,
+        penumbra?: number,
+        decay?: number,
+    ): SpotLight;
+    prototype: SpotLight;
+}

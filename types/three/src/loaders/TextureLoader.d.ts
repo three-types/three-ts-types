@@ -18,3 +18,8 @@ export class TextureLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Texture>;
 }
+
+export interface TextureLoaderConstructor {
+    new (manager?: LoadingManager): TextureLoader;
+    prototype: TextureLoader;
+}

@@ -23,3 +23,11 @@ export class LineSegments<
     type: 'LineSegments' | string;
     readonly isLineSegments: true;
 }
+
+export interface LineSegmentsConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry?: TGeometry, material?: TMaterial): LineSegments<TGeometry, TMaterial>;
+    prototype: LineSegments<TGeometry, TMaterial>;
+}

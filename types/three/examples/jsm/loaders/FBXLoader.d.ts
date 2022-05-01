@@ -12,3 +12,8 @@ export class FBXLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Group>;
     parse(FBXBuffer: ArrayBuffer | string, path: string): Group;
 }
+
+export interface FBXLoaderConstructor {
+    new (manager?: LoadingManager): FBXLoader;
+    prototype: FBXLoader;
+}

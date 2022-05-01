@@ -19,3 +19,8 @@ export class LineCurve3 extends Curve<Vector3> {
      */
     v2: Vector3;
 }
+
+export interface LineCurve3Constructor {
+    new (v1: Vector3, v2: Vector3): LineCurve3;
+    prototype: LineCurve3;
+}

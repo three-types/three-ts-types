@@ -40,3 +40,18 @@ export class DepthTexture extends Texture {
 
     readonly isDepthTexture: true;
 }
+
+export interface DepthTextureConstructor {
+    new (
+        width: number,
+        height: number,
+        type?: TextureDataType,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        anisotropy?: number,
+    ): DepthTexture;
+    prototype: DepthTexture;
+}

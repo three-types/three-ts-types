@@ -24,3 +24,15 @@ export class PolarGridHelper extends LineSegments {
      */
     type: string;
 }
+
+export interface PolarGridHelperConstructor {
+    new (
+        radius?: number,
+        radials?: number,
+        circles?: number,
+        divisions?: number,
+        color1?: ColorRepresentation,
+        color2?: ColorRepresentation,
+    ): PolarGridHelper;
+    prototype: PolarGridHelper;
+}

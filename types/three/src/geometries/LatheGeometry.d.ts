@@ -25,4 +25,9 @@ export class LatheGeometry extends BufferGeometry {
     static fromJSON(data: any): LatheGeometry;
 }
 
+export interface LatheGeometryConstructor {
+    new (points?: Vector2[], segments?: number, phiStart?: number, phiLength?: number): LatheGeometry;
+    prototype: LatheGeometry;
+}
+
 export { LatheGeometry as LatheBufferGeometry };

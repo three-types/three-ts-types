@@ -163,3 +163,8 @@ export class MeshToonMaterial extends Material {
 
     setValues(parameters: MeshToonMaterialParameters): void;
 }
+
+export interface MeshToonMaterialConstructor {
+    new (parameters?: MeshToonMaterialParameters): MeshToonMaterial;
+    prototype: MeshToonMaterial;
+}

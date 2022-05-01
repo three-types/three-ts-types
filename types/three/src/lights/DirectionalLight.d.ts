@@ -44,3 +44,8 @@ export class DirectionalLight extends Light {
     shadow: DirectionalLightShadow;
     readonly isDirectionalLight: true;
 }
+
+export interface DirectionalLightConstructor {
+    new (color?: ColorRepresentation, intensity?: number): DirectionalLight;
+    prototype: DirectionalLight;
+}

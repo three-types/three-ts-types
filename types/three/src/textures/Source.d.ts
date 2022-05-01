@@ -37,3 +37,8 @@ export class Source {
 
     readonly isTexture: true;
 }
+
+export interface SourceConstructor {
+    new (data: any): Source;
+    prototype: Source;
+}

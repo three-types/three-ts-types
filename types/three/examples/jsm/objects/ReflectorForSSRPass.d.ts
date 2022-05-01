@@ -55,3 +55,8 @@ export class Reflector<TGeometry extends BufferGeometry = BufferGeometry> extend
 
     getRenderTarget: () => WebGLRenderTarget;
 }
+
+export interface ReflectorConstructor<TGeometry extends BufferGeometry = BufferGeometry> {
+    new (geometry: TGeometry, options: ReflectorOptions): Reflector<TGeometry>;
+    prototype: Reflector<TGeometry>;
+}

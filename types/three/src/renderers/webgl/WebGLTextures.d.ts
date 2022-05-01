@@ -28,3 +28,16 @@ export class WebGLTextures {
     safeSetTexture2D(texture: any, slot: number): void;
     safeSetTextureCube(texture: any, slot: number): void;
 }
+
+export interface WebGLTexturesConstructor {
+    new (
+        gl: WebGLRenderingContext,
+        extensions: WebGLExtensions,
+        state: WebGLState,
+        properties: WebGLProperties,
+        capabilities: WebGLCapabilities,
+        utils: WebGLUtils,
+        info: WebGLInfo,
+    ): WebGLTextures;
+    prototype: WebGLTextures;
+}

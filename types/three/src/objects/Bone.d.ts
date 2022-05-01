@@ -7,3 +7,8 @@ export class Bone extends Object3D {
     readonly isBone: true;
     type: 'Bone';
 }
+
+export interface BoneConstructor {
+    new (): Bone;
+    prototype: Bone;
+}

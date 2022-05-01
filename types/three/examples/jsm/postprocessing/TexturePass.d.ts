@@ -10,3 +10,8 @@ export class TexturePass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface TexturePassConstructor {
+    new (map: Texture, opacity?: number): TexturePass;
+    prototype: TexturePass;
+}

@@ -30,3 +30,8 @@ export class LightningStorm {
     copy(source: LightningStorm): LightningStorm;
     clone(): this;
 }
+
+export interface LightningStormConstructor {
+    new (stormParams?: StormParams): LightningStorm;
+    prototype: LightningStorm;
+}

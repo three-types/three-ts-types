@@ -16,3 +16,8 @@ export class DragControls extends EventDispatcher {
     getObjects(): Object3D[];
     getRaycaster(): Raycaster;
 }
+
+export interface DragControlsConstructor {
+    new (objects: Object3D[], camera: Camera, domElement?: HTMLElement): DragControls;
+    prototype: DragControls;
+}

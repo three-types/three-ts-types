@@ -113,3 +113,8 @@ export class ShaderMaterial extends Material {
     setValues(parameters: ShaderMaterialParameters): void;
     toJSON(meta: any): any;
 }
+
+export interface ShaderMaterialConstructor {
+    new (parameters?: ShaderMaterialParameters): ShaderMaterial;
+    prototype: ShaderMaterial;
+}

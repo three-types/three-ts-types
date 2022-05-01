@@ -27,3 +27,8 @@ export class Line3 {
     applyMatrix4(matrix: Matrix4): Line3;
     equals(line: Line3): boolean;
 }
+
+export interface Line3Constructor {
+    new (start?: Vector3, end?: Vector3): Line3;
+    prototype: Line3;
+}

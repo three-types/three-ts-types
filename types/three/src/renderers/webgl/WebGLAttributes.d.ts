@@ -16,3 +16,8 @@ export class WebGLAttributes {
 
     update(attribute: BufferAttribute | InterleavedBufferAttribute, bufferType: number): void;
 }
+
+export interface WebGLAttributesConstructor {
+    new (gl: WebGLRenderingContext | WebGL2RenderingContext, capabilities: WebGLCapabilities): WebGLAttributes;
+    prototype: WebGLAttributes;
+}

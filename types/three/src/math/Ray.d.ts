@@ -58,3 +58,8 @@ export class Ray {
      */
     isIntersectionSphere(s: any): any;
 }
+
+export interface RayConstructor {
+    new (origin?: Vector3, direction?: Vector3): Ray;
+    prototype: Ray;
+}

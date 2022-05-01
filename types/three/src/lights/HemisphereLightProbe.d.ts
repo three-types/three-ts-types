@@ -6,3 +6,8 @@ export class HemisphereLightProbe extends LightProbe {
 
     readonly isHemisphereLightProbe: true;
 }
+
+export interface HemisphereLightProbeConstructor {
+    new (skyColor?: ColorRepresentation, groundColor?: ColorRepresentation, intensity?: number): HemisphereLightProbe;
+    prototype: HemisphereLightProbe;
+}

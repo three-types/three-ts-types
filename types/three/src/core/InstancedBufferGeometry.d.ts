@@ -18,3 +18,8 @@ export class InstancedBufferGeometry extends BufferGeometry {
      */
     instanceCount: number;
 }
+
+export interface InstancedBufferGeometryConstructor {
+    new (): InstancedBufferGeometry;
+    prototype: InstancedBufferGeometry;
+}

@@ -23,3 +23,11 @@ export class SkinnedMesh<
     updateMatrixWorld(force?: boolean): void;
     boneTransform(index: number, target: Vector3): Vector3;
 }
+
+export interface SkinnedMeshConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry?: TGeometry, material?: TMaterial, useVertexTexture?: boolean): SkinnedMesh<TGeometry, TMaterial>;
+    prototype: SkinnedMesh<TGeometry, TMaterial>;
+}

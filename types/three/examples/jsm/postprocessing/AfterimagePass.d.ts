@@ -12,3 +12,8 @@ export class AfterimagePass extends Pass {
     compFsQuad: object;
     copyFsQuad: object;
 }
+
+export interface AfterimagePassConstructor {
+    new (damp?: number): AfterimagePass;
+    prototype: AfterimagePass;
+}

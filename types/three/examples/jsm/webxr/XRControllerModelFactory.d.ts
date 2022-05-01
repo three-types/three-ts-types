@@ -10,10 +10,20 @@ export class XRControllerModel extends Object3D {
     setEnvironmentMap(envMap: Texture): XRControllerModel;
 }
 
+export interface XRControllerModelConstructor {
+    new (): XRControllerModel;
+    prototype: XRControllerModel;
+}
+
 export class XRControllerModelFactory {
     constructor(gltfLoader?: GLTFLoader);
     gltfLoader: GLTFLoader | null;
     path: string;
 
     createControllerModel(controller: Group): XRControllerModel;
+}
+
+export interface XRControllerModelFactoryConstructor {
+    new (gltfLoader?: GLTFLoader): XRControllerModelFactory;
+    prototype: XRControllerModelFactory;
 }

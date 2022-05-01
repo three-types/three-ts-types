@@ -23,3 +23,11 @@ export class Line<
     raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     updateMorphTargets(): void;
 }
+
+export interface LineConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry?: TGeometry, material?: TMaterial): Line<TGeometry, TMaterial>;
+    prototype: Line<TGeometry, TMaterial>;
+}

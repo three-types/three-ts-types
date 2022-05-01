@@ -12,3 +12,8 @@ export class WireframeGeometry<TBufferGeometry extends BufferGeometry = BufferGe
         geometry: TBufferGeometry;
     };
 }
+
+export interface WireframeGeometryConstructor<TBufferGeometry extends BufferGeometry = BufferGeometry> {
+    new (geometry?: TBufferGeometry): WireframeGeometry<TBufferGeometry>;
+    prototype: WireframeGeometry<TBufferGeometry>;
+}

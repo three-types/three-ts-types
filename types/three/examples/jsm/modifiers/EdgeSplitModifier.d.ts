@@ -17,3 +17,8 @@ export class EdgeSplitModifier {
      */
     modify(geometry: BufferGeometry, cutOffPoint: number, tryKeepNormals: boolean): BufferGeometry;
 }
+
+export interface EdgeSplitModifierConstructor {
+    new (): EdgeSplitModifier;
+    prototype: EdgeSplitModifier;
+}

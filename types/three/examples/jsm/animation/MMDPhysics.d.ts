@@ -29,6 +29,16 @@ export class MMDPhysics {
     createHelper(): MMDPhysicsHelper;
 }
 
+export interface MMDPhysicsConstructor {
+    new (
+        mesh: SkinnedMesh,
+        rigidBodyParams: object[],
+        constraintParams?: object[],
+        params?: MMDPhysicsParameter,
+    ): MMDPhysics;
+    prototype: MMDPhysics;
+}
+
 export class ResourceManager {
     constructor();
     threeVector3s: Vector3[];
@@ -79,6 +89,11 @@ export class ResourceManager {
     matrix3ToQuaternion(m: object): object;
 }
 
+export interface ResourceManagerConstructor {
+    new (): ResourceManager;
+    prototype: ResourceManager;
+}
+
 export class RigidBody {
     constructor(mesh: SkinnedMesh, world: object, params: object, manager: ResourceManager);
     mesh: SkinnedMesh;
@@ -94,6 +109,11 @@ export class RigidBody {
     reset(): this;
     updateFromBone(): this;
     updateBone(): this;
+}
+
+export interface RigidBodyConstructor {
+    new (mesh: SkinnedMesh, world: object, params: object, manager: ResourceManager): RigidBody;
+    prototype: RigidBody;
 }
 
 export class Constraint {
@@ -114,6 +134,23 @@ export class Constraint {
     manager: ResourceManager;
 }
 
+export interface ConstraintConstructor {
+    new (
+        mesh: SkinnedMesh,
+        world: object,
+        bodyA: RigidBody,
+        bodyB: RigidBody,
+        params: object,
+        manager: ResourceManager,
+    ): Constraint;
+    prototype: Constraint;
+}
+
 export class MMDPhysicsHelper extends Object3D {
     constructor();
+}
+
+export interface MMDPhysicsHelperConstructor {
+    new (): MMDPhysicsHelper;
+    prototype: MMDPhysicsHelper;
 }

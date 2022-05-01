@@ -58,4 +58,9 @@ export class CSM {
     dispose(): void;
 }
 
+export interface CSMConstructor {
+    new (data?: CMSParameters): CSM;
+    prototype: CSM;
+}
+
 import CSMFrustrum from './CSMFrustum.js';

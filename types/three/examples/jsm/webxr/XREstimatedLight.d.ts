@@ -23,10 +23,26 @@ export class SessionLightProbe {
     dispose: () => void;
 }
 
+export interface SessionLightProbeConstructor {
+    new (
+        xrLight: XREstimatedLight,
+        renderer: WebGLRenderer,
+        lightProbe: unknown,
+        environmentEstimation: boolean,
+        estimationStartCallback: () => void,
+    ): SessionLightProbe;
+    prototype: SessionLightProbe;
+}
+
 export class XREstimatedLight extends Group {
     lightProbe: LightProbe;
     directionalLight: DirectionalLight;
     environment: Texture;
 
     constructor(renderer: WebGLRenderer, environmentEstimation?: boolean);
+}
+
+export interface XREstimatedLightConstructor {
+    new (renderer: WebGLRenderer, environmentEstimation?: boolean): XREstimatedLight;
+    prototype: XREstimatedLight;
 }

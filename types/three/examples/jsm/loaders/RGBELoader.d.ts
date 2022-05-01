@@ -18,3 +18,8 @@ export class RGBELoader extends DataTextureLoader {
     parse(buffer: ArrayBuffer): RGBE;
     setDataType(type: TextureDataType): this;
 }
+
+export interface RGBELoaderConstructor {
+    new (manager?: LoadingManager): RGBELoader;
+    prototype: RGBELoader;
+}

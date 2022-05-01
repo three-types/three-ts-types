@@ -7,3 +7,8 @@ export class WebGLExtensions {
     init(capabilities: WebGLCapabilities): void;
     get(name: string): any;
 }
+
+export interface WebGLExtensionsConstructor {
+    new (gl: WebGLRenderingContext): WebGLExtensions;
+    prototype: WebGLExtensions;
+}

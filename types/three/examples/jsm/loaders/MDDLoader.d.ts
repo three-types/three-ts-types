@@ -17,3 +17,8 @@ export class MDDLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<MDD>;
     parse(data: ArrayBuffer): MDD;
 }
+
+export interface MDDLoaderConstructor {
+    new (manager?: LoadingManager): MDDLoader;
+    prototype: MDDLoader;
+}

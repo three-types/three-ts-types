@@ -104,3 +104,8 @@ export class Audio<NodeType extends AudioNode = GainNode> extends Object3D {
      */
     load(file: string): Audio;
 }
+
+export interface AudioConstructor<NodeType extends AudioNode = GainNode> {
+    new (listener: AudioListener): Audio<NodeType>;
+    prototype: Audio<NodeType>;
+}

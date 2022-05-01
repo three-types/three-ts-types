@@ -24,3 +24,8 @@ export class CurvePath<T extends Vector> extends Curve<T> {
     getPoint(t: number, optionalTarget?: T): T;
     getCurveLengths(): number[];
 }
+
+export interface CurvePathConstructor<T extends Vector> {
+    new (): CurvePath<T>;
+    prototype: CurvePath<T>;
+}

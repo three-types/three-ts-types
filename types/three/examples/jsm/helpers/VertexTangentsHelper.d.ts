@@ -8,3 +8,8 @@ export class VertexTangentsHelper extends LineSegments {
 
     update(): void;
 }
+
+export interface VertexTangentsHelperConstructor {
+    new (object: Object3D, size?: number, hex?: number): VertexTangentsHelper;
+    prototype: VertexTangentsHelper;
+}

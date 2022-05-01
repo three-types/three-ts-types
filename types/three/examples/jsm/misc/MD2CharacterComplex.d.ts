@@ -45,3 +45,8 @@ export class MD2CharacterComplex {
     updateBehaviors(): void;
     updateMovementModel(delta: number): void;
 }
+
+export interface MD2CharacterComplexConstructor {
+    new (): MD2CharacterComplex;
+    prototype: MD2CharacterComplex;
+}

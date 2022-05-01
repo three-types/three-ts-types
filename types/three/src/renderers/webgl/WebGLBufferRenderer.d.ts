@@ -15,3 +15,13 @@ export class WebGLBufferRenderer {
     render(start: any, count: number): void;
     renderInstances(start: any, count: number, primcount: number): void;
 }
+
+export interface WebGLBufferRendererConstructor {
+    new (
+        gl: WebGLRenderingContext,
+        extensions: WebGLExtensions,
+        info: WebGLInfo,
+        capabilities: WebGLCapabilities,
+    ): WebGLBufferRenderer;
+    prototype: WebGLBufferRenderer;
+}

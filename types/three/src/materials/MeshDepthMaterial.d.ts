@@ -68,3 +68,8 @@ export class MeshDepthMaterial extends Material {
 
     setValues(parameters: MeshDepthMaterialParameters): void;
 }
+
+export interface MeshDepthMaterialConstructor {
+    new (parameters?: MeshDepthMaterialParameters): MeshDepthMaterial;
+    prototype: MeshDepthMaterial;
+}

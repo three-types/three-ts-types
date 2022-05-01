@@ -22,3 +22,8 @@ export class WebGLClipping {
     endShadows(): void;
     setState(material: Material, camera: Camera, useCache: boolean): void;
 }
+
+export interface WebGLClippingConstructor {
+    new (properties: WebGLProperties): WebGLClipping;
+    prototype: WebGLClipping;
+}

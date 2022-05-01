@@ -24,3 +24,8 @@ export class ShadowMaterial extends Material {
      */
     transparent: boolean;
 }
+
+export interface ShadowMaterialConstructor {
+    new (parameters?: ShadowMaterialParameters): ShadowMaterial;
+    prototype: ShadowMaterial;
+}

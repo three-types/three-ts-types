@@ -13,3 +13,8 @@ export class SelectionBox {
     updateFrustum(startPoint: Vector3, endPoint: Vector3): void;
     searchChildInFrustum(frustum: Frustum, object: Object3D): void;
 }
+
+export interface SelectionBoxConstructor {
+    new (camera: Camera, scene: Scene, deep?: number): SelectionBox;
+    prototype: SelectionBox;
+}

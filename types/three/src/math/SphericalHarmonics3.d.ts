@@ -48,3 +48,8 @@ export class SphericalHarmonics3 {
 
     static getBasisAt(normal: Vector3, shBasis: number[]): void;
 }
+
+export interface SphericalHarmonics3Constructor {
+    new (): SphericalHarmonics3;
+    prototype: SphericalHarmonics3;
+}

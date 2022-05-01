@@ -46,3 +46,8 @@ export class PointsMaterial extends Material {
 
     setValues(parameters: PointsMaterialParameters): void;
 }
+
+export interface PointsMaterialConstructor {
+    new (parameters?: PointsMaterialParameters): PointsMaterial;
+    prototype: PointsMaterial;
+}

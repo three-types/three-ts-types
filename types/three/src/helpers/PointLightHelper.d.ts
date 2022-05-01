@@ -23,3 +23,8 @@ export class PointLightHelper extends Object3D {
     dispose(): void;
     update(): void;
 }
+
+export interface PointLightHelperConstructor {
+    new (light: PointLight, sphereSize?: number, color?: ColorRepresentation): PointLightHelper;
+    prototype: PointLightHelper;
+}

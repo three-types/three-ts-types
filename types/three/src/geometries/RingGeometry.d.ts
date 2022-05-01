@@ -35,4 +35,16 @@ export class RingGeometry extends BufferGeometry {
     static fromJSON(data: any): RingGeometry;
 }
 
+export interface RingGeometryConstructor {
+    new (
+        innerRadius?: number,
+        outerRadius?: number,
+        thetaSegments?: number,
+        phiSegments?: number,
+        thetaStart?: number,
+        thetaLength?: number,
+    ): RingGeometry;
+    prototype: RingGeometry;
+}
+
 export { RingGeometry as RingBufferGeometry };

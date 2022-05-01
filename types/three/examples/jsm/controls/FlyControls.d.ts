@@ -14,3 +14,8 @@ export class FlyControls extends EventDispatcher {
     update(delta: number): void;
     dispose(): void;
 }
+
+export interface FlyControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): FlyControls;
+    prototype: FlyControls;
+}

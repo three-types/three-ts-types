@@ -27,3 +27,8 @@ export class WebGLMultipleRenderTargets extends EventDispatcher {
     // This is an available method, however it will break the code see https://github.com/mrdoob/three.js/issues/21930
     setTexture(texture: Texture): void;
 }
+
+export interface WebGLMultipleRenderTargetsConstructor {
+    new (width: number, height: number, count: number, options?: WebGLRenderTargetOptions): WebGLMultipleRenderTargets;
+    prototype: WebGLMultipleRenderTargets;
+}

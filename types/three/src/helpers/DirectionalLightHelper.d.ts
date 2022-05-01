@@ -30,3 +30,8 @@ export class DirectionalLightHelper extends Object3D {
     dispose(): void;
     update(): void;
 }
+
+export interface DirectionalLightHelperConstructor {
+    new (light: DirectionalLight, size?: number, color?: ColorRepresentation): DirectionalLightHelper;
+    prototype: DirectionalLightHelper;
+}

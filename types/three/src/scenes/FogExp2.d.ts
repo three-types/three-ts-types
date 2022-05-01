@@ -24,3 +24,8 @@ export class FogExp2 implements FogBase {
     clone(): FogExp2;
     toJSON(): any;
 }
+
+export interface FogExp2Constructor {
+    new (hex: number | string, density?: number): FogExp2;
+    prototype: FogExp2;
+}

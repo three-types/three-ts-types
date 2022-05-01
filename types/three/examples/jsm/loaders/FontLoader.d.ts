@@ -13,6 +13,11 @@ export class FontLoader extends Loader {
     parse(json: any): Font;
 }
 
+export interface FontLoaderConstructor {
+    new (manager?: LoadingManager): FontLoader;
+    prototype: FontLoader;
+}
+
 export class Font {
     constructor(jsondata: any);
 
@@ -24,4 +29,9 @@ export class Font {
     data: string;
 
     generateShapes(text: string, size: number): Shape[];
+}
+
+export interface FontConstructor {
+    new (jsondata: any): Font;
+    prototype: Font;
 }

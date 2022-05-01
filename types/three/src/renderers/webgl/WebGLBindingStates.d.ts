@@ -31,3 +31,13 @@ export class WebGLBindingStates {
     enableAttribute(attribute: number): void;
     disableUnusedAttributes(): void;
 }
+
+export interface WebGLBindingStatesConstructor {
+    new (
+        gl: WebGLRenderingContext,
+        extensions: WebGLExtensions,
+        attributes: WebGLAttributes,
+        capabilities: WebGLCapabilities,
+    ): WebGLBindingStates;
+    prototype: WebGLBindingStates;
+}

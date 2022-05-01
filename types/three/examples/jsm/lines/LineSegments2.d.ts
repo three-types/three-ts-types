@@ -12,3 +12,8 @@ export class LineSegments2 extends Mesh {
 
     computeLineDistances(): this;
 }
+
+export interface LineSegments2Constructor {
+    new (geometry?: LineSegmentsGeometry, material?: LineMaterial): LineSegments2;
+    prototype: LineSegments2;
+}

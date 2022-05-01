@@ -20,3 +20,8 @@ export class SpotLightHelper extends Object3D {
     dispose(): void;
     update(): void;
 }
+
+export interface SpotLightHelperConstructor {
+    new (light: Light, color?: ColorRepresentation): SpotLightHelper;
+    prototype: SpotLightHelper;
+}

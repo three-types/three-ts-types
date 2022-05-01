@@ -24,3 +24,8 @@ export class LOD extends Object3D {
      */
     objects: any[];
 }
+
+export interface LODConstructor {
+    new (): LOD;
+    prototype: LOD;
+}

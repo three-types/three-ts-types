@@ -9,3 +9,8 @@ export class Wireframe extends Mesh {
 
     computeLineDistances(): this;
 }
+
+export interface WireframeConstructor {
+    new (geometry?: LineSegmentsGeometry, material?: LineMaterial): Wireframe;
+    prototype: Wireframe;
+}

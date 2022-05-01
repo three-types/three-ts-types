@@ -6,3 +6,8 @@ export class WebGLCubeUVMaps {
     get<T>(texture: T): T extends Texture ? Texture : T;
     dispose(): void;
 }
+
+export interface WebGLCubeUVMapsConstructor {
+    new (renderer: WebGLRenderer): WebGLCubeUVMaps;
+    prototype: WebGLCubeUVMaps;
+}

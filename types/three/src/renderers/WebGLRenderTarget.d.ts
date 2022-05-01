@@ -103,3 +103,8 @@ export class WebGLRenderTarget extends EventDispatcher {
     copy(source: WebGLRenderTarget): this;
     dispose(): void;
 }
+
+export interface WebGLRenderTargetConstructor {
+    new (width: number, height: number, options?: WebGLRenderTargetOptions): WebGLRenderTarget;
+    prototype: WebGLRenderTarget;
+}

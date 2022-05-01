@@ -139,6 +139,12 @@ export class Deflate {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface DeflateConstructor {
+    new (opts: DeflateOptions, cb?: FlateStreamHandler): Deflate;
+    new (cb?: FlateStreamHandler): Deflate;
+    prototype: Deflate;
+}
 /**
  * Asynchronous streaming DEFLATE compression
  */
@@ -169,6 +175,12 @@ export class AsyncDeflate {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncDeflateConstructor {
+    new (opts: DeflateOptions, cb?: AsyncFlateStreamHandler): AsyncDeflate;
+    new (cb?: AsyncFlateStreamHandler): AsyncDeflate;
+    prototype: AsyncDeflate;
 }
 /**
  * Asynchronously compresses data with DEFLATE without any wrapper
@@ -217,6 +229,11 @@ export class Inflate {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface InflateConstructor {
+    new (cb?: FlateStreamHandler): Inflate;
+    prototype: Inflate;
+}
 /**
  * Asynchronous streaming DEFLATE decompression
  */
@@ -241,6 +258,11 @@ export class AsyncInflate {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncInflateConstructor {
+    new (cb?: AsyncFlateStreamHandler): AsyncInflate;
+    prototype: AsyncInflate;
 }
 /**
  * Asynchronously expands DEFLATE data with no wrapper
@@ -295,6 +317,12 @@ export class Gzip {
     push(chunk: Uint8Array, final?: boolean): void;
     private p;
 }
+
+export interface GzipConstructor {
+    new (opts: GzipOptions, cb?: FlateStreamHandler): Gzip;
+    new (cb?: FlateStreamHandler): Gzip;
+    prototype: Gzip;
+}
 /**
  * Asynchronous streaming GZIP compression
  */
@@ -325,6 +353,12 @@ export class AsyncGzip {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncGzipConstructor {
+    new (opts: GzipOptions, cb?: AsyncFlateStreamHandler): AsyncGzip;
+    new (cb?: AsyncFlateStreamHandler): AsyncGzip;
+    prototype: AsyncGzip;
 }
 /**
  * Asynchronously compresses data with GZIP
@@ -370,6 +404,11 @@ export class Gunzip {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface GunzipConstructor {
+    new (cb?: FlateStreamHandler): Gunzip;
+    prototype: Gunzip;
+}
 /**
  * Asynchronous streaming GZIP decompression
  */
@@ -394,6 +433,11 @@ export class AsyncGunzip {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncGunzipConstructor {
+    new (cb: AsyncFlateStreamHandler): AsyncGunzip;
+    prototype: AsyncGunzip;
 }
 /**
  * Asynchronously expands GZIP data
@@ -447,6 +491,12 @@ export class Zlib {
     push(chunk: Uint8Array, final?: boolean): void;
     private p;
 }
+
+export interface ZlibConstructor {
+    new (opts: ZlibOptions, cb?: FlateStreamHandler): Zlib;
+    new (cb?: FlateStreamHandler): Zlib;
+    prototype: Zlib;
+}
 /**
  * Asynchronous streaming Zlib compression
  */
@@ -477,6 +527,12 @@ export class AsyncZlib {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncZlibConstructor {
+    new (opts: ZlibOptions, cb?: AsyncFlateStreamHandler): AsyncZlib;
+    new (cb?: AsyncFlateStreamHandler): AsyncZlib;
+    prototype: AsyncZlib;
 }
 /**
  * Asynchronously compresses data with Zlib
@@ -521,6 +577,11 @@ export class Unzlib {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface UnzlibConstructor {
+    new (cb?: FlateStreamHandler): Unzlib;
+    prototype: Unzlib;
+}
 /**
  * Asynchronous streaming Zlib decompression
  */
@@ -545,6 +606,11 @@ export class AsyncUnzlib {
      * push() will silently fail.
      */
     terminate: AsyncTerminable;
+}
+
+export interface AsyncUnzlibConstructor {
+    new (cb?: AsyncFlateStreamHandler): AsyncUnzlib;
+    prototype: AsyncUnzlib;
 }
 /**
  * Asynchronously expands Zlib data
@@ -595,6 +661,11 @@ export class Decompress {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface DecompressConstructor {
+    new (cb?: FlateStreamHandler): Decompress;
+    prototype: Decompress;
+}
 /**
  * Asynchronous streaming GZIP, Zlib, or raw DEFLATE decompression
  */
@@ -617,6 +688,11 @@ export class AsyncDecompress {
      * @param final Whether this is the last chunk
      */
     push(chunk: Uint8Array, final?: boolean): void;
+}
+
+export interface AsyncDecompressConstructor {
+    new (cb?: AsyncFlateStreamHandler): AsyncDecompress;
+    prototype: AsyncDecompress;
 }
 /**
  * Asynchrononously expands compressed GZIP, Zlib, or raw DEFLATE data, automatically detecting the format
@@ -768,6 +844,11 @@ export class DecodeUTF8 {
      */
     ondata: StringStreamHandler;
 }
+
+export interface DecodeUTF8Constructor {
+    new (cb?: StringStreamHandler): DecodeUTF8;
+    prototype: DecodeUTF8;
+}
 /**
  * Streaming UTF-8 encoding
  */
@@ -787,6 +868,11 @@ export class EncodeUTF8 {
      * The handler to call whenever data is available
      */
     ondata: FlateStreamHandler;
+}
+
+export interface EncodeUTF8Constructor {
+    new (cb?: FlateStreamHandler): EncodeUTF8;
+    prototype: EncodeUTF8;
 }
 /**
  * Converts a string into a Uint8Array for use with compression/decompression methods
@@ -906,6 +992,11 @@ export class ZipPassThrough implements ZipInputFile {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface ZipPassThroughConstructor {
+    new (filename: string): ZipPassThrough;
+    prototype: ZipPassThrough;
+}
 /**
  * Streaming DEFLATE compression for ZIP archives. Prefer using AsyncZipDeflate
  * for better performance
@@ -937,6 +1028,11 @@ export class ZipDeflate implements ZipInputFile {
      */
     push(chunk: Uint8Array, final?: boolean): void;
 }
+
+export interface ZipDeflateConstructor {
+    new (filename: string, opts?: DeflateOptions): ZipDeflate;
+    prototype: ZipDeflate;
+}
 /**
  * Asynchronous streaming DEFLATE compression for ZIP archives
  */
@@ -967,6 +1063,11 @@ export class AsyncZipDeflate implements ZipInputFile {
      * @param final Whether this is the last chunk
      */
     push(chunk: Uint8Array, final?: boolean): void;
+}
+
+export interface AsyncZipDeflateConstructor {
+    new (filename: string, opts?: DeflateOptions): AsyncZipDeflate;
+    prototype: AsyncZipDeflate;
 }
 /**
  * A zippable archive to which files can incrementally be added
@@ -1001,6 +1102,11 @@ export class Zip {
      * The handler to call whenever data is available
      */
     ondata: AsyncFlateStreamHandler;
+}
+
+export interface ZipConstructor {
+    new (cb?: AsyncFlateStreamHandler): Zip;
+    prototype: Zip;
 }
 /**
  * Asynchronously creates a ZIP file
@@ -1124,6 +1230,11 @@ export class UnzipInflate implements UnzipDecoder {
     constructor();
     push(data: Uint8Array, final: boolean): void;
 }
+
+export interface UnzipInflateConstructor {
+    new (): UnzipInflate;
+    prototype: UnzipInflate;
+}
 /**
  * Asynchronous streaming DEFLATE decompression for ZIP archives
  */
@@ -1137,6 +1248,11 @@ export class AsyncUnzipInflate implements UnzipDecoder {
      */
     constructor(_: string, sz?: number);
     push(data: Uint8Array, final: boolean): void;
+}
+
+export interface AsyncUnzipInflateConstructor {
+    new (_: string, sz?: number): AsyncUnzipInflate;
+    prototype: AsyncUnzipInflate;
 }
 /**
  * A ZIP archive decompression stream that emits files as they are discovered
@@ -1168,6 +1284,11 @@ export class Unzip {
      * The handler to call whenever a file is discovered
      */
     onfile: UnzipFileHandler;
+}
+
+export interface UnzipConstructor {
+    new (cb?: UnzipFileHandler): Unzip;
+    prototype: Unzip;
 }
 /**
  * Asynchronously decompresses a ZIP archive

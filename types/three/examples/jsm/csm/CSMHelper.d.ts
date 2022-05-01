@@ -24,3 +24,8 @@ export class CSMHelper<TCSM extends CSM = CSM> extends Group {
     updateVisibility(): void;
     update(): void;
 }
+
+export interface CSMHelperConstructor<TCSM extends CSM = CSM> {
+    new (csm: TCSM): CSMHelper<TCSM>;
+    prototype: CSMHelper<TCSM>;
+}

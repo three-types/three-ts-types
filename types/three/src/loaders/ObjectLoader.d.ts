@@ -40,3 +40,8 @@ export class ObjectLoader extends Loader {
     ): // tslint:disable-next-line:no-unnecessary-generics
     T;
 }
+
+export interface ObjectLoaderConstructor {
+    new (manager?: LoadingManager): ObjectLoader;
+    prototype: ObjectLoader;
+}

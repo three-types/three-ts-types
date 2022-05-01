@@ -14,3 +14,8 @@ export class SplineCurve extends Curve<Vector2> {
      */
     points: Vector2[];
 }
+
+export interface SplineCurveConstructor {
+    new (points?: Vector2[]): SplineCurve;
+    prototype: SplineCurve;
+}

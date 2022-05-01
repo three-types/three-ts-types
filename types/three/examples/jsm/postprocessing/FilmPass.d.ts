@@ -8,3 +8,8 @@ export class FilmPass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface FilmPassConstructor {
+    new (noiseIntensity?: number, scanlinesIntensity?: number, scanlinesCount?: number, grayscale?: number): FilmPass;
+    prototype: FilmPass;
+}

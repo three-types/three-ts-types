@@ -14,3 +14,8 @@ export class KTXLoader extends CompressedTextureLoader {
 
     parse(buffer: ArrayBuffer, loadMipmaps: boolean): KTX;
 }
+
+export interface KTXLoaderConstructor {
+    new (manager?: LoadingManager): KTXLoader;
+    prototype: KTXLoader;
+}

@@ -12,3 +12,8 @@ export class STLLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<BufferGeometry>;
     parse(data: ArrayBuffer | string): BufferGeometry;
 }
+
+export interface STLLoaderConstructor {
+    new (manager?: LoadingManager): STLLoader;
+    prototype: STLLoader;
+}

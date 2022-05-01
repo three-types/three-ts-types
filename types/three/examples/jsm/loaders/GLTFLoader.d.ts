@@ -68,6 +68,11 @@ export class GLTFLoader extends Loader {
     parseAsync(data: ArrayBuffer | string, path: string): Promise<void>;
 }
 
+export interface GLTFLoaderConstructor {
+    new (manager?: LoadingManager): GLTFLoader;
+    prototype: GLTFLoader;
+}
+
 export type GLTFReferenceType = 'materials' | 'nodes' | 'textures' | 'meshes';
 
 export interface GLTFReference {

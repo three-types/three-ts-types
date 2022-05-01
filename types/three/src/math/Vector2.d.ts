@@ -444,3 +444,8 @@ export class Vector2 implements Vector {
      */
     random(): this;
 }
+
+export interface Vector2Constructor {
+    new (x?: number, y?: number): Vector2;
+    prototype: Vector2;
+}

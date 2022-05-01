@@ -15,3 +15,8 @@ export class Rhino3dmLoader extends Loader {
     setWorkerLimit(workerLimit: number): Rhino3dmLoader;
     dispose(): Rhino3dmLoader;
 }
+
+export interface Rhino3dmLoaderConstructor {
+    new (manager?: LoadingManager): Rhino3dmLoader;
+    prototype: Rhino3dmLoader;
+}

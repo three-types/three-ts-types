@@ -18,3 +18,8 @@ export class BoxHelper extends LineSegments {
 
     setFromObject(object: Object3D): this;
 }
+
+export interface BoxHelperConstructor {
+    new (object: Object3D, color?: ColorRepresentation): BoxHelper;
+    prototype: BoxHelper;
+}

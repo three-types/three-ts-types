@@ -132,3 +132,8 @@ export class PerspectiveCamera extends Camera {
      */
     setLens(focalLength: number, frameHeight?: number): void;
 }
+
+export interface PerspectiveCameraConstructor {
+    new (fov?: number, aspect?: number, near?: number, far?: number): PerspectiveCamera;
+    prototype: PerspectiveCamera;
+}

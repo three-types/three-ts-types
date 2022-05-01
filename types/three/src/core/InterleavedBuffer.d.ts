@@ -46,3 +46,8 @@ export class InterleavedBuffer {
         stride: number;
     };
 }
+
+export interface InterleavedBufferConstructor {
+    new (array: ArrayLike<number>, stride: number): InterleavedBuffer;
+    prototype: InterleavedBuffer;
+}

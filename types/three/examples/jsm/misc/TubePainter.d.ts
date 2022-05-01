@@ -8,3 +8,8 @@ export class TubePainter {
     stroke(position1: Vector3, position2: Vector3, matrix1: Matrix4, matrix2: Matrix4): void;
     updateGeometry(start: number, end: number): void;
 }
+
+export interface TubePainterConstructor {
+    new (): TubePainter;
+    prototype: TubePainter;
+}

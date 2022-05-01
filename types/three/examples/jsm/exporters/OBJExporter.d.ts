@@ -5,3 +5,8 @@ export class OBJExporter {
 
     parse(object: Object3D): string;
 }
+
+export interface OBJExporterConstructor {
+    new (): OBJExporter;
+    prototype: OBJExporter;
+}

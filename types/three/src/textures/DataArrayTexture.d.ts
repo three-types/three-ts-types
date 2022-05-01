@@ -31,3 +31,8 @@ export class DataArrayTexture extends Texture {
 
     readonly isDataArrayTexture: true;
 }
+
+export interface DataArrayTextureConstructor {
+    new (data?: BufferSource, width?: number, height?: number, depth?: number): DataArrayTexture;
+    prototype: DataArrayTexture;
+}

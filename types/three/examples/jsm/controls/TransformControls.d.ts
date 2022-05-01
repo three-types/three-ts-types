@@ -40,3 +40,8 @@ export class TransformControls extends Object3D {
     reset(): void;
     dispose(): void;
 }
+
+export interface TransformControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): TransformControls;
+    prototype: TransformControls;
+}

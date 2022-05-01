@@ -157,3 +157,8 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      */
     specularColorMap: Texture | null;
 }
+
+export interface MeshPhysicalMaterialConstructor {
+    new (parameters?: MeshPhysicalMaterialParameters): MeshPhysicalMaterial;
+    prototype: MeshPhysicalMaterial;
+}

@@ -40,3 +40,8 @@ export class Sphere {
      */
     empty(): any;
 }
+
+export interface SphereConstructor {
+    new (center?: Vector3, radius?: number): Sphere;
+    prototype: Sphere;
+}

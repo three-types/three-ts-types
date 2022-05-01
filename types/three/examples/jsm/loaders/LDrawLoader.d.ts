@@ -24,3 +24,8 @@ export class LDrawLoader extends Loader {
     addMaterial(material: Material): void;
     getMaterial(colourCode: string): Material | null;
 }
+
+export interface LDrawLoaderConstructor {
+    new (manager?: LoadingManager): LDrawLoader;
+    prototype: LDrawLoader;
+}

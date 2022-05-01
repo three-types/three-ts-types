@@ -41,3 +41,8 @@ export class WebGLLights {
     setup(lights: any): void;
     setupView(lights: any, camera: any): void;
 }
+
+export interface WebGLLightsConstructor {
+    new (extensions: WebGLExtensions, capabilities: WebGLCapabilities): WebGLLights;
+    prototype: WebGLLights;
+}

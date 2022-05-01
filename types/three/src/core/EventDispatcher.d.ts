@@ -49,3 +49,8 @@ export class EventDispatcher<E extends BaseEvent = Event> {
      */
     dispatchEvent(event: E): void;
 }
+
+export interface EventDispatcherConstructor<E extends BaseEvent = Event> {
+    new (): EventDispatcher<E>;
+    prototype: EventDispatcher<E>;
+}

@@ -122,3 +122,8 @@ export class SSRPass extends Pass {
         clearAlpha: ColorRepresentation,
     ) => void;
 }
+
+export interface SSRPassConstructor {
+    new (params: SSRPassParams): SSRPass;
+    prototype: SSRPass;
+}

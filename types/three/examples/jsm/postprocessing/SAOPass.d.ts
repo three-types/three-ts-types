@@ -77,3 +77,8 @@ export class SAOPass extends Pass {
         clearAlpha?: number,
     ): void;
 }
+
+export interface SAOPassConstructor {
+    new (scene: Scene, camera: Camera, depthTexture?: boolean, useNormals?: boolean, resolution?: Vector2): SAOPass;
+    prototype: SAOPass;
+}

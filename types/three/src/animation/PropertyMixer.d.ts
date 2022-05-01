@@ -15,3 +15,8 @@ export class PropertyMixer {
     saveOriginalState(): void;
     restoreOriginalState(): void;
 }
+
+export interface PropertyMixerConstructor {
+    new (binding: any, typeName: string, valueSize: number): PropertyMixer;
+    prototype: PropertyMixer;
+}

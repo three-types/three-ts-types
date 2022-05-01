@@ -21,3 +21,8 @@ export class StereoCamera extends Camera {
 
     update(camera: PerspectiveCamera): void;
 }
+
+export interface StereoCameraConstructor {
+    new (): StereoCamera;
+    prototype: StereoCamera;
+}

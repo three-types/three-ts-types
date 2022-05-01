@@ -28,4 +28,17 @@ export class ConeGeometry extends CylinderGeometry {
     static fromJSON(data: any): ConeGeometry;
 }
 
+export interface ConeGeometryConstructor {
+    new (
+        radius?: number,
+        height?: number,
+        radialSegments?: number,
+        heightSegments?: number,
+        openEnded?: boolean,
+        thetaStart?: number,
+        thetaLength?: number,
+    ): ConeGeometry;
+    prototype: ConeGeometry;
+}
+
 export { ConeGeometry as ConeBufferGeometry };

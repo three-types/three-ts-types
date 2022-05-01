@@ -23,3 +23,8 @@ export class PlaneHelper extends LineSegments {
 
     updateMatrixWorld(force?: boolean): void;
 }
+
+export interface PlaneHelperConstructor {
+    new (plane: Plane, size?: number, hex?: number): PlaneHelper;
+    prototype: PlaneHelper;
+}

@@ -36,3 +36,19 @@ export class CubeTexture extends Texture {
 
     readonly isCubeTexture: true;
 }
+
+export interface CubeTextureConstructor {
+    new (
+        images?: any[], // HTMLImageElement or HTMLCanvasElement
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
+        anisotropy?: number,
+        encoding?: TextureEncoding,
+    ): CubeTexture;
+    prototype: CubeTexture;
+}

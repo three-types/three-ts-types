@@ -12,3 +12,8 @@ export class WebGLCubeRenderTarget extends WebGLRenderTarget {
 
     clear(renderer: WebGLRenderer, color: boolean, depth: boolean, stencil: boolean): void;
 }
+
+export interface WebGLCubeRenderTargetConstructor {
+    new (size: number, options?: WebGLRenderTargetOptions): WebGLCubeRenderTarget;
+    prototype: WebGLCubeRenderTarget;
+}

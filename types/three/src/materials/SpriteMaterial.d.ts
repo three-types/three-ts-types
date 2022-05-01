@@ -53,3 +53,8 @@ export class SpriteMaterial extends Material {
     setValues(parameters: SpriteMaterialParameters): void;
     copy(source: SpriteMaterial): this;
 }
+
+export interface SpriteMaterialConstructor {
+    new (parameters?: SpriteMaterialParameters): SpriteMaterial;
+    prototype: SpriteMaterial;
+}

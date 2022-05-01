@@ -62,3 +62,8 @@ export class Clock {
      */
     getDelta(): number;
 }
+
+export interface ClockConstructor {
+    new (autoStart?: boolean): Clock;
+    prototype: Clock;
+}

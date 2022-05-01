@@ -17,3 +17,8 @@ export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeomet
         thresholdAngle: number;
     };
 }
+
+export interface EdgesGeometryConstructor<TBufferGeometry extends BufferGeometry = BufferGeometry> {
+    new (geometry?: TBufferGeometry, thresholdAngle?: number): EdgesGeometry<TBufferGeometry>;
+    prototype: EdgesGeometry<TBufferGeometry>;
+}

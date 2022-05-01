@@ -7,3 +7,8 @@ export class TessellateModifier {
 
     modify<TGeometry extends BufferGeometry>(geometry: TGeometry): TGeometry;
 }
+
+export interface TessellateModifierConstructor {
+    new (maxEdgeLength?: number, maxIterations?: number): TessellateModifier;
+    prototype: TessellateModifier;
+}

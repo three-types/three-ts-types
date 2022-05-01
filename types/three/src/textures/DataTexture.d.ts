@@ -56,3 +56,21 @@ export class DataTexture extends Texture {
 
     readonly isDataTexture: true;
 }
+
+export interface DataTextureConstructor {
+    new (
+        data?: BufferSource | null,
+        width?: number,
+        height?: number,
+        format?: PixelFormat,
+        type?: TextureDataType,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        anisotropy?: number,
+        encoding?: TextureEncoding,
+    ): DataTexture;
+    prototype: DataTexture;
+}

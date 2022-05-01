@@ -24,4 +24,9 @@ export class CapsuleGeometry extends BufferGeometry {
     static fromJSON(data: any): CapsuleGeometry;
 }
 
+export interface CapsuleGeometryConstructor {
+    new (radius?: number, length?: number, capSegments?: number, radialSegments?: number): CapsuleGeometry;
+    prototype: CapsuleGeometry;
+}
+
 export { CapsuleGeometry as CapsuleBufferGeometry };

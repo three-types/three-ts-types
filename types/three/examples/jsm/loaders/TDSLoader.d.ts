@@ -40,3 +40,8 @@ export class TDSLoader extends Loader {
     readWord(data: DataView): number;
     resetPosition(): void;
 }
+
+export interface TDSLoaderConstructor {
+    new (manager?: LoadingManager): TDSLoader;
+    prototype: TDSLoader;
+}

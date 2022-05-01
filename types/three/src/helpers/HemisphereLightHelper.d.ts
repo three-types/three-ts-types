@@ -18,3 +18,8 @@ export class HemisphereLightHelper extends Object3D {
     dispose(): void;
     update(): void;
 }
+
+export interface HemisphereLightHelperConstructor {
+    new (light: HemisphereLight, size: number, color?: ColorRepresentation): HemisphereLightHelper;
+    prototype: HemisphereLightHelper;
+}

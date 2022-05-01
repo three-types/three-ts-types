@@ -62,3 +62,8 @@ export class OutlinePass extends Pass {
     getSeperableBlurMaterial(): ShaderMaterial;
     getOverlayMaterial(): ShaderMaterial;
 }
+
+export interface OutlinePassConstructor {
+    new (resolution: Vector2, scene: Scene, camera: Camera, selectedObjects?: Object3D[]): OutlinePass;
+    prototype: OutlinePass;
+}

@@ -24,3 +24,8 @@ export class QuadraticBezierCurve3 extends Curve<Vector3> {
      */
     v2: Vector3;
 }
+
+export interface QuadraticBezierCurve3Constructor {
+    new (v0: Vector3, v1: Vector3, v2: Vector3): QuadraticBezierCurve3;
+    prototype: QuadraticBezierCurve3;
+}

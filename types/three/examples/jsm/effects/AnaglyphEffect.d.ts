@@ -9,3 +9,8 @@ export class AnaglyphEffect {
     render(scene: Scene, camera: Camera): void;
     setSize(width: number, height: number): void;
 }
+
+export interface AnaglyphEffectConstructor {
+    new (renderer: WebGLRenderer, width?: number, height?: number): AnaglyphEffect;
+    prototype: AnaglyphEffect;
+}

@@ -61,3 +61,8 @@ export class MMDLoader extends Loader {
     ): void;
     setAnimationPath(animationPath: string): this;
 }
+
+export interface MMDLoaderConstructor {
+    new (manager?: LoadingManager): MMDLoader;
+    prototype: MMDLoader;
+}

@@ -6,3 +6,8 @@ export class TAARenderPass extends SSAARenderPass {
     constructor(scene: Scene, camera: Camera, clearColor: ColorRepresentation, clearAlpha: number);
     accumulate: boolean;
 }
+
+export interface TAARenderPassConstructor {
+    new (scene: Scene, camera: Camera, clearColor: ColorRepresentation, clearAlpha: number): TAARenderPass;
+    prototype: TAARenderPass;
+}

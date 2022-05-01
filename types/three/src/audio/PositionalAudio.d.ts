@@ -18,3 +18,8 @@ export class PositionalAudio extends Audio<PannerNode> {
     setDirectionalCone(coneInnerAngle: number, coneOuterAngle: number, coneOuterGain: number): this;
     updateMatrixWorld(force?: boolean): void;
 }
+
+export interface PositionalAudioConstructor {
+    new (listener: AudioListener): PositionalAudio;
+    prototype: PositionalAudio;
+}

@@ -18,3 +18,8 @@ export class AudioAnalyser {
      */
     getData(file: any): any;
 }
+
+export interface AudioAnalyserConstructor {
+    new (audio: Audio<AudioNode>, fftSize?: number): AudioAnalyser;
+    prototype: AudioAnalyser;
+}

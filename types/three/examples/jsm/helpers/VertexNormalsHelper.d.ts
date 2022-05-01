@@ -8,3 +8,8 @@ export class VertexNormalsHelper extends LineSegments {
 
     update(): void;
 }
+
+export interface VertexNormalsHelperConstructor {
+    new (object: Object3D, size?: number, hex?: number): VertexNormalsHelper;
+    prototype: VertexNormalsHelper;
+}

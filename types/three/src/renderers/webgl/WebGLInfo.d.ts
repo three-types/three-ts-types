@@ -37,3 +37,8 @@ export class WebGLInfo {
     update(count: number, mode: number, instanceCount: number): void;
     reset(): void;
 }
+
+export interface WebGLInfoConstructor {
+    new (gl: WebGLRenderingContext): WebGLInfo;
+    prototype: WebGLInfo;
+}

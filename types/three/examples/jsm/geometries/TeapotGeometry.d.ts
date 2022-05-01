@@ -11,3 +11,16 @@ export class TeapotGeometry extends BufferGeometry {
         blinn?: number,
     );
 }
+
+export interface TeapotGeometryConstructor {
+    new (
+        size?: number,
+        segments?: number,
+        bottom?: boolean,
+        lid?: boolean,
+        body?: boolean,
+        fitLid?: boolean,
+        blinn?: number,
+    ): TeapotGeometry;
+    prototype: TeapotGeometry;
+}

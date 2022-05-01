@@ -44,3 +44,8 @@ export class TrackballControls extends EventDispatcher {
 
     handleResize(): void;
 }
+
+export interface TrackballControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): TrackballControls;
+    prototype: TrackballControls;
+}

@@ -7,3 +7,8 @@ export class SimplexNoise {
     noise3d(xin: number, yin: number, zin: number): number;
     noise4d(x: number, y: number, z: number, w: number): number;
 }
+
+export interface SimplexNoiseConstructor {
+    new (r?: object): SimplexNoise;
+    prototype: SimplexNoise;
+}

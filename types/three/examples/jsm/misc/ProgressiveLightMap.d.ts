@@ -59,3 +59,8 @@ export class ProgressiveLightMap {
 
     private _initializeBlurPlane(res: number, lightMap?: Texture | null): void;
 }
+
+export interface ProgressiveLightMapConstructor {
+    new (renderer: WebGLRenderer, res?: number): ProgressiveLightMap;
+    prototype: ProgressiveLightMap;
+}

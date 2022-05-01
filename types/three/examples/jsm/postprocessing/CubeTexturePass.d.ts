@@ -12,3 +12,8 @@ export class CubeTexturePass extends Pass {
     cubeScene: Scene;
     cubeCamera: PerspectiveCamera;
 }
+
+export interface CubeTexturePassConstructor {
+    new (camera: PerspectiveCamera, envMap?: CubeTexture, opacity?: number): CubeTexturePass;
+    prototype: CubeTexturePass;
+}

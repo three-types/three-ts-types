@@ -30,3 +30,8 @@ export class BasisTextureLoader extends Loader {
     setWorkerLimit(workerLimit: number): this;
     dispose(): void;
 }
+
+export interface BasisTextureLoaderConstructor {
+    new (manager?: LoadingManager): BasisTextureLoader;
+    prototype: BasisTextureLoader;
+}

@@ -405,3 +405,8 @@ export class Material extends EventDispatcher {
      */
     toJSON(meta?: any): any;
 }
+
+export interface MaterialConstructor {
+    new (): Material;
+    prototype: Material;
+}

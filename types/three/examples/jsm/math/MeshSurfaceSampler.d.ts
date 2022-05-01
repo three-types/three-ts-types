@@ -13,3 +13,8 @@ export class MeshSurfaceSampler {
     sampleFace(faceIndex: number, targetPosition: Vector3, targetNormal?: Vector3, targetColor?: Color): this;
     setWeightAttribute(name: string | null): this;
 }
+
+export interface MeshSurfaceSamplerConstructor {
+    new (mesh: Mesh): MeshSurfaceSampler;
+    prototype: MeshSurfaceSampler;
+}

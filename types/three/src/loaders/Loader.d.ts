@@ -45,3 +45,8 @@ export class Loader {
     setResourcePath(resourcePath: string): this;
     setRequestHeader(requestHeader: { [header: string]: string }): this;
 }
+
+export interface LoaderConstructor {
+    new (manager?: LoadingManager): Loader;
+    prototype: Loader;
+}

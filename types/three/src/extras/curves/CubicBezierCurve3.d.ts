@@ -29,3 +29,8 @@ export class CubicBezierCurve3 extends Curve<Vector3> {
      */
     v3: Vector3;
 }
+
+export interface CubicBezierCurve3Constructor {
+    new (v0: Vector3, v1: Vector3, v2: Vector3, v3: Vector3): CubicBezierCurve3;
+    prototype: CubicBezierCurve3;
+}

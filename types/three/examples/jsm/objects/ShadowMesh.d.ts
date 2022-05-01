@@ -5,3 +5,8 @@ export class ShadowMesh extends Mesh {
 
     update(plane: Plane, lightPosition4D: Vector4): void;
 }
+
+export interface ShadowMeshConstructor {
+    new (): ShadowMesh;
+    prototype: ShadowMesh;
+}

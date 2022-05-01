@@ -8,3 +8,8 @@ export class DotScreenPass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface DotScreenPassConstructor {
+    new (center?: Vector2, angle?: number, scale?: number): DotScreenPass;
+    prototype: DotScreenPass;
+}

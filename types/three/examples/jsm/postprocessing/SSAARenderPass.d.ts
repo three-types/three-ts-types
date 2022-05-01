@@ -15,3 +15,8 @@ export class SSAARenderPass extends Pass {
     fsQuad: object;
     sampleRenderTarget: undefined | WebGLRenderTarget;
 }
+
+export interface SSAARenderPassConstructor {
+    new (scene: Scene, camera: Camera, clearColor?: ColorRepresentation, clearAlpha?: number): SSAARenderPass;
+    prototype: SSAARenderPass;
+}

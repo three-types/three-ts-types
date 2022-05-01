@@ -30,3 +30,8 @@ export class RGBMLoader extends DataTextureLoader {
 
     setMaxRange(value: number): this;
 }
+
+export interface RGBMLoaderConstructor {
+    new (manager?: LoadingManager): RGBMLoader;
+    prototype: RGBMLoader;
+}

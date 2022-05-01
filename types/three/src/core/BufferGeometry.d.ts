@@ -194,3 +194,8 @@ export class BufferGeometry extends EventDispatcher {
      */
     removeAttribute(name: string): BufferGeometry;
 }
+
+export interface BufferGeometryConstructor {
+    new (): BufferGeometry;
+    prototype: BufferGeometry;
+}

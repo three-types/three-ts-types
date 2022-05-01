@@ -13,3 +13,8 @@ export class PMREMGenerator {
     compileEquirectangularShader(): void;
     dispose(): void;
 }
+
+export interface PMREMGeneratorConstructor {
+    new (renderer: WebGLRenderer): PMREMGenerator;
+    prototype: PMREMGenerator;
+}

@@ -13,3 +13,8 @@ export class TTFLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<object>;
     parse(arraybuffer: ArrayBuffer): object;
 }
+
+export interface TTFLoaderConstructor {
+    new (manager?: LoadingManager): TTFLoader;
+    prototype: TTFLoader;
+}

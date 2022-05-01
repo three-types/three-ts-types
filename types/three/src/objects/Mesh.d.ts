@@ -20,3 +20,11 @@ export class Mesh<
     updateMorphTargets(): void;
     raycast(raycaster: Raycaster, intersects: Intersection[]): void;
 }
+
+export interface MeshConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry?: TGeometry, material?: TMaterial): Mesh<TGeometry, TMaterial>;
+    prototype: Mesh<TGeometry, TMaterial>;
+}

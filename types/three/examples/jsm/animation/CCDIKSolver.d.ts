@@ -20,6 +20,16 @@ export class CCDIKSolver {
     createHelper(): CCDIKHelper;
 }
 
+export interface CCDIKSolverConstructor {
+    new (mesh: SkinnedMesh, iks: IKS[]): CCDIKSolver;
+    prototype: CCDIKSolver;
+}
+
 export class CCDIKHelper extends Object3D {
     constructor(mesh: SkinnedMesh, iks: IKS[]);
+}
+
+export interface CCDIKHelperConstructor {
+    new (mesh: SkinnedMesh, iks: IKS[]): CCDIKHelper;
+    prototype: CCDIKHelper;
 }

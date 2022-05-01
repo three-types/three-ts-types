@@ -13,3 +13,8 @@ export class LottieLoader extends Loader {
 
     setQuality(value: number): void;
 }
+
+export interface LottieLoaderConstructor {
+    new (manager?: LoadingManager): LottieLoader;
+    prototype: LottieLoader;
+}

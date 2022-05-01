@@ -295,3 +295,8 @@ export class Vector3 implements Vector {
 
     randomDirection(): this;
 }
+
+export interface Vector3Constructor {
+    new (x?: number, y?: number, z?: number): Vector3;
+    prototype: Vector3;
+}

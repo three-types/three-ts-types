@@ -12,3 +12,8 @@ export class TiltLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Group>;
     parse(data: ArrayBuffer): Group;
 }
+
+export interface TiltLoaderConstructor {
+    new (manager?: LoadingManager): TiltLoader;
+    prototype: TiltLoader;
+}

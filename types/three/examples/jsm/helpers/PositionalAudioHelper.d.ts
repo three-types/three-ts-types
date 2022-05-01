@@ -11,3 +11,13 @@ export class PositionalAudioHelper extends Line {
     dispose(): void;
     update(): void;
 }
+
+export interface PositionalAudioHelperConstructor {
+    new (
+        audio: PositionalAudio,
+        range?: number,
+        divisionsInnerAngle?: number,
+        divisionsOuterAngle?: number,
+    ): PositionalAudioHelper;
+    prototype: PositionalAudioHelper;
+}

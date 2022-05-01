@@ -20,3 +20,8 @@ export class ColladaExporter {
         options: ColladaExporterOptions,
     ): ColladaExporterResult | null;
 }
+
+export interface ColladaExporterConstructor {
+    new (): ColladaExporter;
+    prototype: ColladaExporter;
+}

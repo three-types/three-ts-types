@@ -16,3 +16,8 @@ export class AxesHelper extends LineSegments {
 
     dispose(): void;
 }
+
+export interface AxesHelperConstructor {
+    new (size?: number): AxesHelper;
+    prototype: AxesHelper;
+}

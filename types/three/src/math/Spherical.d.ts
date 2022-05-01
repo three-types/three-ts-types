@@ -25,3 +25,8 @@ export class Spherical {
     setFromVector3(v: Vector3): this;
     setFromCartesianCoords(x: number, y: number, z: number): this;
 }
+
+export interface SphericalConstructor {
+    new (radius?: number, phi?: number, theta?: number): Spherical;
+    prototype: Spherical;
+}

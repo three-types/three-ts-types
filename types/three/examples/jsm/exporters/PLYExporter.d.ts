@@ -11,3 +11,8 @@ export class PLYExporter {
 
     parse(object: Object3D, onDone: (res: string) => void, options: PLYExporterOptions): string | null;
 }
+
+export interface PLYExporterConstructor {
+    new (): PLYExporter;
+    prototype: PLYExporter;
+}

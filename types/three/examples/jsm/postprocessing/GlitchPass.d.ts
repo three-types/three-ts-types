@@ -14,3 +14,8 @@ export class GlitchPass extends Pass {
     generateTrigger(): void;
     generateHeightmap(dt_size: number): DataTexture;
 }
+
+export interface GlitchPassConstructor {
+    new (dt_size?: number): GlitchPass;
+    prototype: GlitchPass;
+}

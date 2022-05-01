@@ -18,3 +18,8 @@ export class BufferGeometryLoader extends Loader {
     ): Promise<InstancedBufferGeometry | BufferGeometry>;
     parse(json: any): InstancedBufferGeometry | BufferGeometry;
 }
+
+export interface BufferGeometryLoaderConstructor {
+    new (manager?: LoadingManager): BufferGeometryLoader;
+    prototype: BufferGeometryLoader;
+}

@@ -35,6 +35,11 @@ export class Flow {
     moveAlongCurve(amount: number): void;
 }
 
+export interface FlowConstructor {
+    new (mesh: Mesh, numberOfCurves?: number): Flow;
+    prototype: Flow;
+}
+
 export class InstancedFlow extends Flow {
     constructor(count: number, curveCount: number, geometry: BufferGeometry, material: Material);
     object3D: InstancedMesh;
@@ -43,4 +48,9 @@ export class InstancedFlow extends Flow {
 
     moveIndividualAlongCurve(index: number, offset: number): void;
     setCurve(index: number, curveNo: number): void;
+}
+
+export interface InstancedFlowConstructor {
+    new (count: number, curveCount: number, geometry: BufferGeometry, material: Material): InstancedFlow;
+    prototype: InstancedFlow;
 }

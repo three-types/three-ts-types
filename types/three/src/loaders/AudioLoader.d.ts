@@ -13,3 +13,8 @@ export class AudioLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<AudioBuffer>;
 }
+
+export interface AudioLoaderConstructor {
+    new (manager?: LoadingManager): AudioLoader;
+    prototype: AudioLoader;
+}

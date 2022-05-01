@@ -19,3 +19,8 @@ export class SMAAPass extends Pass {
     getAreaTexture(): string;
     getSearchTexture(): string;
 }
+
+export interface SMAAPassConstructor {
+    new (width: number, height: number): SMAAPass;
+    prototype: SMAAPass;
+}

@@ -15,3 +15,8 @@ export class SelectionHelper {
     onSelectMove(event: Event): void;
     onSelectOver(event: Event): void;
 }
+
+export interface SelectionHelperConstructor {
+    new (selectionBox: SelectionBox, renderer: WebGLRenderer, cssClassName: string): SelectionHelper;
+    prototype: SelectionHelper;
+}

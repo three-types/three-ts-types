@@ -35,3 +35,13 @@ export class InstancedBufferAttribute extends BufferAttribute {
      */
     meshPerAttribute: number;
 }
+
+export interface InstancedBufferAttributeConstructor {
+    new (
+        array: ArrayLike<number>,
+        itemSize: number,
+        normalized?: boolean,
+        meshPerAttribute?: number,
+    ): InstancedBufferAttribute;
+    prototype: InstancedBufferAttribute;
+}

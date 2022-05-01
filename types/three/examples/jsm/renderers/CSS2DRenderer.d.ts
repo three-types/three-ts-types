@@ -8,6 +8,11 @@ export class CSS2DObject extends Object3D {
     onAfterRender: (renderer: unknown, scene: Scene, camera: Camera) => void;
 }
 
+export interface CSS2DObjectConstructor {
+    new (element: HTMLElement): CSS2DObject;
+    prototype: CSS2DObject;
+}
+
 export type CSS2DParameters = {
     element?: HTMLElement;
 };
@@ -19,4 +24,9 @@ export class CSS2DRenderer {
     getSize(): { width: number; height: number };
     setSize(width: number, height: number): void;
     render(scene: Scene, camera: Camera): void;
+}
+
+export interface CSS2DRendererConstructor {
+    new (parameters?: CSS2DParameters): CSS2DRenderer;
+    prototype: CSS2DRenderer;
 }

@@ -17,3 +17,8 @@ export class Reflector extends Mesh {
 
     dispose(): void;
 }
+
+export interface ReflectorConstructor {
+    new (geometry?: BufferGeometry, options?: ReflectorOptions): Reflector;
+    prototype: Reflector;
+}

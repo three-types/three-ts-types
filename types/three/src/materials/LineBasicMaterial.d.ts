@@ -39,3 +39,8 @@ export class LineBasicMaterial extends Material {
 
     setValues(parameters: LineBasicMaterialParameters): void;
 }
+
+export interface LineBasicMaterialConstructor {
+    new (parameters?: LineBasicMaterialParameters): LineBasicMaterial;
+    prototype: LineBasicMaterial;
+}

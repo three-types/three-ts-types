@@ -58,9 +58,19 @@ export class WebGLRenderList {
     finish(): void;
 }
 
+export interface WebGLRenderListConstructor {
+    new (properties: WebGLProperties): WebGLRenderList;
+    prototype: WebGLRenderList;
+}
+
 export class WebGLRenderLists {
     constructor(properties: WebGLProperties);
 
     dispose(): void;
     get(scene: Scene, renderCallDepth: number): WebGLRenderList;
+}
+
+export interface WebGLRenderListsConstructor {
+    new (properties: WebGLProperties): WebGLRenderLists;
+    prototype: WebGLRenderLists;
 }

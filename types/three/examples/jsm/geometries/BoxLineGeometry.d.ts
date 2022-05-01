@@ -10,3 +10,15 @@ export class BoxLineGeometry extends BufferGeometry {
         depthSegments?: number,
     );
 }
+
+export interface BoxLineGeometryConstructor {
+    new (
+        width?: number,
+        height?: number,
+        depth?: number,
+        widthSegments?: number,
+        heightSegments?: number,
+        depthSegments?: number,
+    ): BoxLineGeometry;
+    prototype: BoxLineGeometry;
+}

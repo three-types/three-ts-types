@@ -14,3 +14,8 @@ export class KMZLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Collada>;
     parse(data: ArrayBuffer): Collada;
 }
+
+export interface KMZLoaderConstructor {
+    new (manager?: LoadingManager): KMZLoader;
+    prototype: KMZLoader;
+}

@@ -162,3 +162,8 @@ export class Matrix3 implements Matrix {
      */
     flattenToArrayOffset(array: number[], offset: number): number[];
 }
+
+export interface Matrix3Constructor {
+    new (): Matrix3;
+    prototype: Matrix3;
+}

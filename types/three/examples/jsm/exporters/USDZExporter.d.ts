@@ -5,3 +5,8 @@ export class USDZExporter {
 
     parse(scene: Object3D): Promise<Uint8Array>;
 }
+
+export interface USDZExporterConstructor {
+    new (): USDZExporter;
+    prototype: USDZExporter;
+}

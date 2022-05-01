@@ -35,4 +35,9 @@ export class TextGeometry extends ExtrudeGeometry {
     };
 }
 
+export interface TextGeometryConstructor {
+    new (text: string, parameters: TextGeometryParameters): TextGeometry;
+    prototype: TextGeometry;
+}
+
 export { TextGeometry as TextBufferGeometry };

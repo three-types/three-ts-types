@@ -17,3 +17,8 @@ export class Refractor extends Mesh {
 
     dispose(): void;
 }
+
+export interface RefractorConstructor {
+    new (geometry?: BufferGeometry, options?: RefractorOptions): Refractor;
+    prototype: Refractor;
+}

@@ -26,3 +26,8 @@ export class WebGLArrayRenderTarget extends WebGLRenderTarget {
 
     readonly isWebGLArrayRenderTarget: true;
 }
+
+export interface WebGLArrayRenderTargetConstructor {
+    new (width: number, height: number, depth: number): WebGLArrayRenderTarget;
+    prototype: WebGLArrayRenderTarget;
+}

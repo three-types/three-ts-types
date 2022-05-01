@@ -26,3 +26,15 @@ export class WebGLPrograms {
     acquireProgram(parameters: any, cacheKey: string): WebGLProgram;
     releaseProgram(program: WebGLProgram): void;
 }
+
+export interface WebGLProgramsConstructor {
+    new (
+        renderer: WebGLRenderer,
+        cubemaps: WebGLCubeMaps,
+        extensions: WebGLExtensions,
+        capabilities: WebGLCapabilities,
+        bindingStates: WebGLBindingStates,
+        clipping: WebGLClipping,
+    ): WebGLPrograms;
+    prototype: WebGLPrograms;
+}

@@ -15,4 +15,9 @@ export class ParametricGeometry extends BufferGeometry {
     };
 }
 
+export interface ParametricGeometryConstructor {
+    new (func?: (u: number, v: number, target: Vector3) => void, slices?: number, stacks?: number): ParametricGeometry;
+    prototype: ParametricGeometry;
+}
+
 export { ParametricGeometry as ParametricBufferGeometry };

@@ -12,3 +12,8 @@ export class CubeCamera extends Object3D {
 
     update(renderer: WebGLRenderer, scene: Scene): void;
 }
+
+export interface CubeCameraConstructor {
+    new (near: number, far: number, renderTarget: WebGLCubeRenderTarget): CubeCamera;
+    prototype: CubeCamera;
+}

@@ -58,3 +58,17 @@ export class EllipseCurve extends Curve<Vector2> {
      */
     aRotation: number;
 }
+
+export interface EllipseCurveConstructor {
+    new (
+        aX: number,
+        aY: number,
+        xRadius: number,
+        yRadius: number,
+        aStartAngle: number,
+        aEndAngle: number,
+        aClockwise: boolean,
+        aRotation: number,
+    ): EllipseCurve;
+    prototype: EllipseCurve;
+}

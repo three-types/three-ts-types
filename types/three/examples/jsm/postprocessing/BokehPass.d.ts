@@ -23,3 +23,8 @@ export class BokehPass extends Pass {
     fsQuad: object;
     oldClearColor: Color;
 }
+
+export interface BokehPassConstructor {
+    new (scene: Scene, camera: Camera, params: BokehPassParamters): BokehPass;
+    prototype: BokehPass;
+}

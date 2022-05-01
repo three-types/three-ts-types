@@ -67,6 +67,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/LauferAlex"><img src="https://avatars.githubusercontent.com/u/86115165?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alejandro Laufer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3ALauferAlex" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=LauferAlex" title="Code">💻</a></td>
     <td align="center"><a href="https://twitter.com/ggsimm"><img src="https://avatars.githubusercontent.com/u/1862172?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Gianmarco</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=gsimone" title="Code">💻</a></td>
     <td align="center"><a href="https://davidpeicho.github.io/"><img src="https://avatars.githubusercontent.com/u/8783766?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Peicho</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=DavidPeicho" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.seanmcbeth.com/"><img src="https://avatars.githubusercontent.com/u/298046?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sean T. McBeth</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=capnmidnight" title="Code">💻</a></td>
   </tr>
 </table>
 

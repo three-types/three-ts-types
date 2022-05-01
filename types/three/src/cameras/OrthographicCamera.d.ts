@@ -93,3 +93,8 @@ export class OrthographicCamera extends Camera {
     clearViewOffset(): void;
     toJSON(meta?: any): any;
 }
+
+export interface OrthographicCameraConstructor {
+    new (left?: number, right?: number, top?: number, bottom?: number, near?: number, far?: number): OrthographicCamera;
+    prototype: OrthographicCamera;
+}

@@ -58,3 +58,8 @@ export class Projector {
 
     projectScene(scene: Scene, camera: Camera, sortObjects: boolean, sortElements: boolean): any;
 }
+
+export interface ProjectorConstructor {
+    new (): Projector;
+    prototype: Projector;
+}

@@ -24,3 +24,8 @@ export class WebGLCapabilities {
     getMaxAnisotropy(): number;
     getMaxPrecision(precision: string): string;
 }
+
+export interface WebGLCapabilitiesConstructor {
+    new (gl: WebGLRenderingContext, extensions: any, parameters: WebGLCapabilitiesParameters): WebGLCapabilities;
+    prototype: WebGLCapabilities;
+}

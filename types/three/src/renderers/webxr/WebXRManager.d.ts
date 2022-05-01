@@ -30,3 +30,8 @@ export class WebXRManager extends EventDispatcher {
     setFoveation(foveation: number): void;
     dispose(): void;
 }
+
+export interface WebXRManagerConstructor {
+    new (renderer: any, gl: WebGLRenderingContext): WebXRManager;
+    prototype: WebXRManager;
+}

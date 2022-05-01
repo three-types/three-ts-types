@@ -12,3 +12,8 @@ export class MD2Loader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<BufferGeometry>;
     parse(data: ArrayBuffer): BufferGeometry;
 }
+
+export interface MD2LoaderConstructor {
+    new (manager?: LoadingManager): MD2Loader;
+    prototype: MD2Loader;
+}

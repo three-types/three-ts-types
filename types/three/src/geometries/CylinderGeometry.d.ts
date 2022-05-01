@@ -41,4 +41,18 @@ export class CylinderGeometry extends BufferGeometry {
     static fromJSON(data: any): CylinderGeometry;
 }
 
+export interface CylinderGeometryConstructor {
+    new (
+        radiusTop?: number,
+        radiusBottom?: number,
+        height?: number,
+        radialSegments?: number,
+        heightSegments?: number,
+        openEnded?: boolean,
+        thetaStart?: number,
+        thetaLength?: number,
+    ): CylinderGeometry;
+    prototype: CylinderGeometry;
+}
+
 export { CylinderGeometry as CylinderBufferGeometry };

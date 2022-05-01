@@ -69,3 +69,8 @@ export class LightShadow {
     getFrameExtents(): Vector2;
     dispose(): void;
 }
+
+export interface LightShadowConstructor {
+    new (camera: Camera): LightShadow;
+    prototype: LightShadow;
+}

@@ -5,3 +5,8 @@ export class MMDExporter {
 
     parseVpd(skin: Object3D, outputShiftJis: boolean, useOriginalBones: boolean): [] | Uint8Array;
 }
+
+export interface MMDExporterConstructor {
+    new (): MMDExporter;
+    prototype: MMDExporter;
+}

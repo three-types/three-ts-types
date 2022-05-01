@@ -12,3 +12,8 @@ export class VRMLLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Scene>;
     parse(data: string, path: string): Scene;
 }
+
+export interface VRMLLoaderConstructor {
+    new (manager?: LoadingManager): VRMLLoader;
+    prototype: VRMLLoader;
+}

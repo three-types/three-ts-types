@@ -21,3 +21,8 @@ export class LUTCubeLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<LUTCubeResult>;
     parse(data: string): LUTCubeResult;
 }
+
+export interface LUTCubeLoaderConstructor {
+    new (manager?: LoadingManager): LUTCubeLoader;
+    prototype: LUTCubeLoader;
+}

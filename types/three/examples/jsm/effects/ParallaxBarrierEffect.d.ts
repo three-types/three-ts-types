@@ -6,3 +6,8 @@ export class ParallaxBarrierEffect {
     render(scene: Scene, camera: Camera): void;
     setSize(width: number, height: number): void;
 }
+
+export interface ParallaxBarrierEffectConstructor {
+    new (renderer: WebGLRenderer): ParallaxBarrierEffect;
+    prototype: ParallaxBarrierEffect;
+}

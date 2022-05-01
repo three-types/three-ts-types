@@ -7,3 +7,8 @@ export class StereoEffect {
     render(scene: Scene, camera: Camera): void;
     setSize(width: number, height: number): void;
 }
+
+export interface StereoEffectConstructor {
+    new (renderer: WebGLRenderer): StereoEffect;
+    prototype: StereoEffect;
+}

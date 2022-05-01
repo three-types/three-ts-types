@@ -22,3 +22,8 @@ export class Octree {
     rayIntersect(ray: Ray): any;
     fromGraphNode(group: Object3D): this;
 }
+
+export interface OctreeConstructor {
+    new (box?: Box3): Octree;
+    prototype: Octree;
+}

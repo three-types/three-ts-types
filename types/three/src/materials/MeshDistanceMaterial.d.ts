@@ -68,3 +68,8 @@ export class MeshDistanceMaterial extends Material {
 
     setValues(parameters: MeshDistanceMaterialParameters): void;
 }
+
+export interface MeshDistanceMaterialConstructor {
+    new (parameters?: MeshDistanceMaterialParameters): MeshDistanceMaterial;
+    prototype: MeshDistanceMaterial;
+}

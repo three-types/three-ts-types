@@ -199,3 +199,8 @@ export class MeshStandardMaterial extends Material {
 
     setValues(parameters: MeshStandardMaterialParameters): void;
 }
+
+export interface MeshStandardMaterialConstructor {
+    new (parameters?: MeshStandardMaterialParameters): MeshStandardMaterial;
+    prototype: MeshStandardMaterial;
+}

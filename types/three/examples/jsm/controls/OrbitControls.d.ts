@@ -76,6 +76,16 @@ export class OrbitControls {
     dispatchEvent(event: { type: string; target: any }): void;
 }
 
+export interface OrbitControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): OrbitControls;
+    prototype: OrbitControls;
+}
+
 export class MapControls extends OrbitControls {
     constructor(object: Camera, domElement?: HTMLElement);
+}
+
+export interface MapControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): MapControls;
+    prototype: MapControls;
 }

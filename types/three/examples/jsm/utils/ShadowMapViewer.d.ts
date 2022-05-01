@@ -22,3 +22,8 @@ export class ShadowMapViewer {
     updateForWindowResize(): void;
     update(): void;
 }
+
+export interface ShadowMapViewerConstructor {
+    new (light: Light): ShadowMapViewer;
+    prototype: ShadowMapViewer;
+}

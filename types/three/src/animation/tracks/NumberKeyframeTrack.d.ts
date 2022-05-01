@@ -9,3 +9,8 @@ export class NumberKeyframeTrack extends KeyframeTrack {
      */
     ValueTypeName: string;
 }
+
+export interface NumberKeyframeTrackConstructor {
+    new (name: string, times: any[], values: any[], interpolation?: InterpolationModes): NumberKeyframeTrack;
+    prototype: NumberKeyframeTrack;
+}

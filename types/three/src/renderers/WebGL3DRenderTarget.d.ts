@@ -26,3 +26,8 @@ export class WebGL3DRenderTarget extends WebGLRenderTarget {
 
     readonly isWebGL3DRenderTarget: true;
 }
+
+export interface WebGL3DRenderTargetConstructor {
+    new (width: number, height: number, depth: number): WebGL3DRenderTarget;
+    prototype: WebGL3DRenderTarget;
+}

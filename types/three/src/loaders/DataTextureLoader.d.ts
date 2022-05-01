@@ -14,3 +14,8 @@ export class DataTextureLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<DataTexture>;
 }
+
+export interface DataTextureLoaderConstructor {
+    new (manager?: LoadingManager): DataTextureLoader;
+    prototype: DataTextureLoader;
+}

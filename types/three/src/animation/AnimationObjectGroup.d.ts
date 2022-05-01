@@ -15,3 +15,8 @@ export class AnimationObjectGroup {
     remove(...args: any[]): void;
     uncache(...args: any[]): void;
 }
+
+export interface AnimationObjectGroupConstructor {
+    new (...args: any[]): AnimationObjectGroup;
+    prototype: AnimationObjectGroup;
+}

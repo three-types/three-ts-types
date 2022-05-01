@@ -6,3 +6,8 @@ export class FramebufferTexture extends Texture {
 
     constructor(width: number, height: number, format: PixelFormat);
 }
+
+export interface FramebufferTextureConstructor {
+    new (width: number, height: number, format: PixelFormat): FramebufferTexture;
+    prototype: FramebufferTexture;
+}

@@ -180,3 +180,9 @@ export class Color {
      */
     static NAMES: Record<string, number>;
 }
+
+export interface ColorConstructor {
+    new (color?: ColorRepresentation): Color;
+    new (r: number, g: number, b: number): Color;
+    prototype: Color;
+}

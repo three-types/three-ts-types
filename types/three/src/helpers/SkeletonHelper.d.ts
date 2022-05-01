@@ -26,3 +26,8 @@ export class SkeletonHelper extends LineSegments {
     getBoneList(object: Object3D): Bone[];
     update(): void;
 }
+
+export interface SkeletonHelperConstructor {
+    new (object: Object3D): SkeletonHelper;
+    prototype: SkeletonHelper;
+}

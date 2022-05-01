@@ -21,3 +21,8 @@ export class AmbientLight extends Light {
 
     readonly isAmbientLight: true;
 }
+
+export interface AmbientLightConstructor {
+    new (color?: ColorRepresentation, intensity?: number): AmbientLight;
+    prototype: AmbientLight;
+}

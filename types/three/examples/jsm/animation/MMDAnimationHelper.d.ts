@@ -76,6 +76,11 @@ export class MMDAnimationHelper {
     createGrantSolver(mesh: SkinnedMesh): GrantSolver;
 }
 
+export interface MMDAnimationHelperConstructor {
+    new (params?: MMDAnimationHelperParameter): MMDAnimationHelper;
+    prototype: MMDAnimationHelper;
+}
+
 export interface AudioManagerParameter {
     delayTime?: number | undefined;
 }
@@ -92,6 +97,11 @@ export class AudioManager {
     control(delta: number): this;
 }
 
+export interface AudioManagerConstructor {
+    new (audio: Audio, params?: AudioManagerParameter): AudioManager;
+    prototype: AudioManager;
+}
+
 export class GrantSolver {
     constructor(mesh: SkinnedMesh, grants: object[]);
     mesh: SkinnedMesh;
@@ -100,4 +110,9 @@ export class GrantSolver {
     update(): this;
     updateOne(gran: object[]): this;
     addGrantRotation(bone: Bone, q: Quaternion, ratio: number): this;
+}
+
+export interface GrantSolverConstructor {
+    new (mesh: SkinnedMesh, grants: object[]): GrantSolver;
+    prototype: GrantSolver;
 }

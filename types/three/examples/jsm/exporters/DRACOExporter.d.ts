@@ -15,3 +15,8 @@ export class DRACOExporter {
 
     parse(object: Mesh | Points, options: DRACOExporterOptions): Int8Array;
 }
+
+export interface DRACOExporterConstructor {
+    new (): DRACOExporter;
+    prototype: DRACOExporter;
+}

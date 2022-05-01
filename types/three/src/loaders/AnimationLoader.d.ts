@@ -14,3 +14,8 @@ export class AnimationLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<AnimationClip[]>;
     parse(json: any): AnimationClip[];
 }
+
+export interface AnimationLoaderConstructor {
+    new (manager?: LoadingManager): AnimationLoader;
+    prototype: AnimationLoader;
+}

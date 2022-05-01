@@ -32,3 +32,8 @@ export class LineDashedMaterial extends LineBasicMaterial {
 
     setValues(parameters: LineDashedMaterialParameters): void;
 }
+
+export interface LineDashedMaterialConstructor {
+    new (parameters?: LineDashedMaterialParameters): LineDashedMaterial;
+    prototype: LineDashedMaterial;
+}

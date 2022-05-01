@@ -13,3 +13,8 @@ export class PCDLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Points>;
     parse(data: ArrayBuffer | string, url: string): Points;
 }
+
+export interface PCDLoaderConstructor {
+    new (manager?: LoadingManager): PCDLoader;
+    prototype: PCDLoader;
+}

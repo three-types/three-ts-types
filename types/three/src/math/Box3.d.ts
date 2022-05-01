@@ -64,3 +64,8 @@ export class Box3 {
      */
     isIntersectionSphere(s: any): any;
 }
+
+export interface Box3Constructor {
+    new (min?: Vector3, max?: Vector3): Box3;
+    prototype: Box3;
+}

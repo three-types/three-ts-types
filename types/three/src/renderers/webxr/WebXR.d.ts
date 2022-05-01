@@ -181,6 +181,11 @@ export class XRWebGLLayer {
     getViewport(view: XRView): XRViewport;
 }
 
+export interface XRWebGLLayerConstructor {
+    new (session: XRSession, gl: WebGLRenderingContext | undefined, options?: XRWebGLLayerInit): XRWebGLLayer;
+    prototype: XRWebGLLayer;
+}
+
 export interface DOMPointInit {
     w?: number | undefined;
     x?: number | undefined;
@@ -194,6 +199,11 @@ export class XRRigidTransform {
     orientation: DOMPointReadOnly;
     matrix: Float32Array;
     inverse: XRRigidTransform;
+}
+
+export interface XRRigidTransformConstructor {
+    new (matrix: Float32Array | DOMPointInit, direction?: DOMPointInit): XRRigidTransform;
+    prototype: XRRigidTransform;
 }
 
 export interface XRView {
@@ -216,6 +226,11 @@ export class XRRay {
     matrix: Float32Array;
 
     constructor(transformOrOrigin: XRRigidTransform | DOMPointInit, direction?: XRRayDirectionInit);
+}
+
+export interface XRRayConstructor {
+    new (transformOrOrigin: XRRigidTransform | DOMPointInit, direction?: XRRayDirectionInit): XRRay;
+    prototype: XRRay;
 }
 
 export enum XRHitTestTrackableType {

@@ -11,6 +11,11 @@ export class XRHandModel extends Object3D {
     motionController: XRHandPrimitiveModel | XRHandMeshModel;
 }
 
+export interface XRHandModelConstructor {
+    new (): XRHandModel;
+    prototype: XRHandModel;
+}
+
 export class XRHandModelFactory {
     constructor();
     path: string;
@@ -22,4 +27,9 @@ export class XRHandModelFactory {
         profile?: 'spheres' | 'boxes' | 'oculus',
         options?: XRHandPrimitiveModelOptions,
     ): XRHandModel;
+}
+
+export interface XRHandModelFactoryConstructor {
+    new (): XRHandModelFactory;
+    prototype: XRHandModelFactory;
 }

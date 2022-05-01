@@ -12,3 +12,8 @@ export class XYZLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<BufferGeometry>;
     parse(data: string, onLoad: (geometry: BufferGeometry) => void): object;
 }
+
+export interface XYZLoaderConstructor {
+    new (manager?: LoadingManager): XYZLoader;
+    prototype: XYZLoader;
+}

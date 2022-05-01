@@ -23,3 +23,14 @@ export class InstancedMesh<
     setMatrixAt(index: number, matrix: Matrix4): void;
     dispose(): void;
 }
+
+export interface InstancedMeshConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry: TGeometry | undefined, material: TMaterial | undefined, count: number): InstancedMesh<
+        TGeometry,
+        TMaterial
+    >;
+    prototype: InstancedMesh<TGeometry, TMaterial>;
+}

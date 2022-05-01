@@ -24,3 +24,8 @@ export class LWOLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<LWO>;
     parse(data: ArrayBuffer, path: string, modelName: string): LWO;
 }
+
+export interface LWOLoaderConstructor {
+    new (manager?: LoadingManager, parameters?: LWOLoaderParameters): LWOLoader;
+    prototype: LWOLoader;
+}

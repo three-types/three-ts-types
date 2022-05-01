@@ -56,3 +56,15 @@ export class ArrowHelper extends Object3D {
      */
     setColor(color: ColorRepresentation): void;
 }
+
+export interface ArrowHelperConstructor {
+    new (
+        dir?: Vector3,
+        origin?: Vector3,
+        length?: number,
+        color?: ColorRepresentation,
+        headLength?: number,
+        headWidth?: number,
+    ): ArrowHelper;
+    prototype: ArrowHelper;
+}

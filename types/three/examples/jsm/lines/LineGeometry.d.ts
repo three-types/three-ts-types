@@ -8,3 +8,8 @@ export class LineGeometry extends LineSegmentsGeometry {
 
     fromLine(line: Line): this;
 }
+
+export interface LineGeometryConstructor {
+    new (): LineGeometry;
+    prototype: LineGeometry;
+}

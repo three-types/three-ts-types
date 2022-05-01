@@ -31,3 +31,8 @@ export class MD2Character {
     syncWeaponAnimation(): void;
     update(delta: number): void;
 }
+
+export interface MD2CharacterConstructor {
+    new (): MD2Character;
+    prototype: MD2Character;
+}

@@ -27,3 +27,8 @@ export class AdaptiveToneMappingPass extends Pass {
     setMiddleGrey(middleGrey: number): void;
     dispose(): void;
 }
+
+export interface AdaptiveToneMappingPassConstructor {
+    new (adaptive?: boolean, resolution?: number): AdaptiveToneMappingPass;
+    prototype: AdaptiveToneMappingPass;
+}

@@ -16,3 +16,8 @@ export class Box3Helper extends LineSegments {
 
     box: Box3;
 }
+
+export interface Box3HelperConstructor {
+    new (box: Box3, color?: Color): Box3Helper;
+    prototype: Box3Helper;
+}

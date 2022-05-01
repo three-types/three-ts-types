@@ -16,3 +16,8 @@ export class CameraHelper extends LineSegments {
 
     dispose(): void;
 }
+
+export interface CameraHelperConstructor {
+    new (camera: Camera): CameraHelper;
+    prototype: CameraHelper;
+}

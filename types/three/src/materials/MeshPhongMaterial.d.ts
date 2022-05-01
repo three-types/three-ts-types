@@ -207,3 +207,8 @@ export class MeshPhongMaterial extends Material {
 
     setValues(parameters: MeshPhongMaterialParameters): void;
 }
+
+export interface MeshPhongMaterialConstructor {
+    new (parameters?: MeshPhongMaterialParameters): MeshPhongMaterial;
+    prototype: MeshPhongMaterial;
+}

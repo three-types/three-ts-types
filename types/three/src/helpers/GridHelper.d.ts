@@ -20,3 +20,8 @@ export class GridHelper extends LineSegments {
      */
     setColors(color1?: ColorRepresentation, color2?: ColorRepresentation): void;
 }
+
+export interface GridHelperConstructor {
+    new (size?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation): GridHelper;
+    prototype: GridHelper;
+}

@@ -61,3 +61,8 @@ export class Triangle {
     ): Vector2;
     static isFrontFacing(a: Vector3, b: Vector3, c: Vector3, direction: Vector3): boolean;
 }
+
+export interface TriangleConstructor {
+    new (a?: Vector3, b?: Vector3, c?: Vector3): Triangle;
+    prototype: Triangle;
+}

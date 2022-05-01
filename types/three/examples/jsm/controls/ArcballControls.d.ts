@@ -156,3 +156,8 @@ export class ArcballControls extends EventDispatcher {
 
     dispose(): void;
 }
+
+export interface ArcballControlsConstructor {
+    new (camera: Camera, domElement: HTMLElement, scene?: Scene | null): ArcballControls;
+    prototype: ArcballControls;
+}

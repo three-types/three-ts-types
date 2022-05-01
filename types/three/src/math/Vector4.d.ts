@@ -221,3 +221,8 @@ export class Vector4 implements Vector {
      */
     random(): this;
 }
+
+export interface Vector4Constructor {
+    new (x?: number, y?: number, z?: number, w?: number): Vector4;
+    prototype: Vector4;
+}

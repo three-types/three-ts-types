@@ -9,6 +9,16 @@ export class MaskPass extends Pass {
     inverse: boolean;
 }
 
+export interface MaskPassConstructor {
+    new (scene: Scene, camera: Camera): MaskPass;
+    prototype: MaskPass;
+}
+
 export class ClearMaskPass extends Pass {
     constructor();
+}
+
+export interface ClearMaskPassConstructor {
+    new (): ClearMaskPass;
+    prototype: ClearMaskPass;
 }

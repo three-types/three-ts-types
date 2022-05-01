@@ -19,6 +19,11 @@ export class Lut {
     updateCanvas(canvas: HTMLCanvasElement): HTMLCanvasElement;
 }
 
+export interface LutConstructor {
+    new (colormap?: string, numberofcolors?: number): Lut;
+    prototype: Lut;
+}
+
 export interface ColorMapKeywords {
     rainbow: number[][];
     cooltowarm: number[][];

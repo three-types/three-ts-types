@@ -14,3 +14,8 @@ export class ThreeMFLoader extends Loader {
     parse(data: ArrayBuffer): Group;
     addExtension(extension: object): void;
 }
+
+export interface ThreeMFLoaderConstructor {
+    new (manager?: LoadingManager): ThreeMFLoader;
+    prototype: ThreeMFLoader;
+}

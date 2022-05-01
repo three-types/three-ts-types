@@ -11,3 +11,14 @@ export class RenderPass extends Pass {
     clearAlpha: number;
     clearDepth: boolean;
 }
+
+export interface RenderPassConstructor {
+    new (
+        scene: Scene,
+        camera: Camera,
+        overrideMaterial?: Material,
+        clearColor?: Color,
+        clearAlpha?: number,
+    ): RenderPass;
+    prototype: RenderPass;
+}

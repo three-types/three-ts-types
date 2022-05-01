@@ -5,3 +5,13 @@ export class QuaternionLinearInterpolant extends Interpolant {
 
     interpolate_(i1: number, t0: number, t: number, t1: number): any;
 }
+
+export interface QuaternionLinearInterpolantConstructor {
+    new (
+        parameterPositions: any,
+        samplesValues: any,
+        sampleSize: number,
+        resultBuffer?: any,
+    ): QuaternionLinearInterpolant;
+    prototype: QuaternionLinearInterpolant;
+}

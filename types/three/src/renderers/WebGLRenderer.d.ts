@@ -517,3 +517,8 @@ export class WebGLRenderer implements Renderer {
      */
     enableScissorTest(boolean: any): any;
 }
+
+export interface WebGLRendererConstructor {
+    new (parameters?: WebGLRendererParameters): WebGLRenderer;
+    prototype: WebGLRenderer;
+}

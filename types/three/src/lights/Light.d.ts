@@ -67,3 +67,8 @@ export class Light extends Object3D {
 
     dispose(): void;
 }
+
+export interface LightConstructor {
+    new (hex?: number | string, intensity?: number): Light;
+    prototype: Light;
+}

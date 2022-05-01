@@ -18,3 +18,8 @@ export class ColladaLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Collada>;
     parse(text: string, path: string): Collada;
 }
+
+export interface ColladaLoaderConstructor {
+    new (manager?: LoadingManager): ColladaLoader;
+    prototype: ColladaLoader;
+}

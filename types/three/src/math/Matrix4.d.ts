@@ -289,3 +289,8 @@ export class Matrix4 implements Matrix {
      */
     getInverse(matrix: Matrix): Matrix;
 }
+
+export interface Matrix4Constructor {
+    new (): Matrix4;
+    prototype: Matrix4;
+}

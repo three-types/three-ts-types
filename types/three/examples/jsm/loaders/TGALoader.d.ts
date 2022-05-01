@@ -12,3 +12,8 @@ export class TGALoader extends DataTextureLoader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<DataTexture>;
     parse(data: ArrayBuffer): DataTexture;
 }
+
+export interface TGALoaderConstructor {
+    new (manager?: LoadingManager): TGALoader;
+    prototype: TGALoader;
+}

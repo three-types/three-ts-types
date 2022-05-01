@@ -28,3 +28,18 @@ export class CanvasTexture extends Texture {
 
     readonly isCanvasTexture: true;
 }
+
+export interface CanvasTextureConstructor {
+    new (
+        canvas: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement | ImageBitmap,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
+        anisotropy?: number,
+    ): CanvasTexture;
+    prototype: CanvasTexture;
+}

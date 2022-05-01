@@ -5,6 +5,11 @@ export class SVGObject extends Object3D {
     node: SVGElement;
 }
 
+export interface SVGObjectConstructor {
+    new (node: SVGElement): SVGObject;
+    prototype: SVGObject;
+}
+
 export class SVGRenderer {
     constructor();
     domElement: SVGElement;
@@ -22,4 +27,9 @@ export class SVGRenderer {
     setPrecision(precision: number): void;
     clear(): void;
     render(scene: Scene, camera: Camera): void;
+}
+
+export interface SVGRendererConstructor {
+    new (): SVGRenderer;
+    prototype: SVGRenderer;
 }

@@ -21,3 +21,8 @@ export class MaterialLoader extends Loader {
     setTextures(textures: { [key: string]: Texture }): this;
     parse(json: any): Material;
 }
+
+export interface MaterialLoaderConstructor {
+    new (manager?: LoadingManager): MaterialLoader;
+    prototype: MaterialLoader;
+}

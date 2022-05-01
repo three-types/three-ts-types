@@ -8,3 +8,8 @@ export class PeppersGhostEffect {
     render(scene: Scene, camera: Camera): void;
     setSize(width: number, height: number): void;
 }
+
+export interface PeppersGhostEffectConstructor {
+    new (renderer: WebGLRenderer): PeppersGhostEffect;
+    prototype: PeppersGhostEffect;
+}

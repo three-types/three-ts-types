@@ -35,4 +35,16 @@ export class BoxGeometry extends BufferGeometry {
     static fromJSON(data: any): BoxGeometry;
 }
 
+export interface BoxGeometryConstructor {
+    new (
+        width?: number,
+        height?: number,
+        depth?: number,
+        widthSegments?: number,
+        heightSegments?: number,
+        depthSegments?: number,
+    ): BoxGeometry;
+    prototype: BoxGeometry;
+}
+
 export { BoxGeometry as BoxBufferGeometry };

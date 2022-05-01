@@ -35,3 +35,11 @@ export class Points<
     raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     updateMorphTargets(): void;
 }
+
+export interface PointsConstructor<
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> {
+    new (geometry?: TGeometry, material?: TMaterial): Points<TGeometry, TMaterial>;
+    prototype: Points<TGeometry, TMaterial>;
+}

@@ -43,3 +43,8 @@ export class Euler {
     static RotationOrders: string[];
     static DefaultOrder: string;
 }
+
+export interface EulerConstructor {
+    new (x?: number, y?: number, z?: number, order?: string): Euler;
+    prototype: Euler;
+}

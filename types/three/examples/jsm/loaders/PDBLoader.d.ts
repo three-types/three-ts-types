@@ -20,3 +20,8 @@ export class PDBLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<PDB>;
     parse(text: string): PDB;
 }
+
+export interface PDBLoaderConstructor {
+    new (manager?: LoadingManager): PDBLoader;
+    prototype: PDBLoader;
+}

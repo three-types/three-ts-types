@@ -103,3 +103,8 @@ export class MeshMatcapMaterial extends Material {
 
     setValues(parameters: MeshMatcapMaterialParameters): void;
 }
+
+export interface MeshMatcapMaterialConstructor {
+    new (parameters?: MeshMatcapMaterialParameters): MeshMatcapMaterial;
+    prototype: MeshMatcapMaterial;
+}

@@ -19,3 +19,8 @@ export class BVHLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<BVH>;
     parse(text: string): BVH;
 }
+
+export interface BVHLoaderConstructor {
+    new (manager?: LoadingManager): BVHLoader;
+    prototype: BVHLoader;
+}

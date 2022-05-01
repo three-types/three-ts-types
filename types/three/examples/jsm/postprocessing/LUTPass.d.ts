@@ -11,3 +11,8 @@ export class LUTPass extends ShaderPass {
     intensity?: number;
     constructor(params: LUTPassParameters);
 }
+
+export interface LUTPassConstructor {
+    new (params: LUTPassParameters): LUTPass;
+    prototype: LUTPass;
+}

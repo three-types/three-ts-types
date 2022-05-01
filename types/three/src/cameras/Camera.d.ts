@@ -37,3 +37,8 @@ export class Camera extends Object3D {
 
     updateMatrixWorld(force?: boolean): void;
 }
+
+export interface CameraConstructor {
+    new (): Camera;
+    prototype: Camera;
+}

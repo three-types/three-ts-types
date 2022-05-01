@@ -15,3 +15,8 @@ export class OBJLoader extends Loader {
     parse(data: string): Group;
     setMaterials(materials: MTLLoader.MaterialCreator): this;
 }
+
+export interface OBJLoaderConstructor {
+    new (manager?: LoadingManager): OBJLoader;
+    prototype: OBJLoader;
+}

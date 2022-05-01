@@ -28,3 +28,8 @@ export class EffectComposer {
     setSize(width: number, height: number): void;
     setPixelRatio(pixelRatio: number): void;
 }
+
+export interface EffectComposerConstructor {
+    new (renderer: WebGLRenderer, renderTarget?: WebGLRenderTarget): EffectComposer;
+    prototype: EffectComposer;
+}

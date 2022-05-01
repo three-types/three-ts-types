@@ -24,4 +24,9 @@ export class PolyhedronGeometry extends BufferGeometry {
     static fromJSON(data: any): PolyhedronGeometry;
 }
 
+export interface PolyhedronGeometryConstructor {
+    new (vertices?: number[], indices?: number[], radius?: number, detail?: number): PolyhedronGeometry;
+    prototype: PolyhedronGeometry;
+}
+
 export { PolyhedronGeometry as PolyhedronBufferGeometry };

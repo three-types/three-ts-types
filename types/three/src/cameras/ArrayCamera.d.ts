@@ -9,3 +9,8 @@ export class ArrayCamera extends PerspectiveCamera {
     cameras: PerspectiveCamera[];
     readonly isArrayCamera: true;
 }
+
+export interface ArrayCameraConstructor {
+    new (cameras?: PerspectiveCamera[]): ArrayCamera;
+    prototype: ArrayCamera;
+}

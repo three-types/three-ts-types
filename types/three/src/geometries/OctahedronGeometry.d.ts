@@ -15,4 +15,9 @@ export class OctahedronGeometry extends PolyhedronGeometry {
     static fromJSON(data: any): OctahedronGeometry;
 }
 
+export interface OctahedronGeometryConstructor {
+    new (radius?: number, detail?: number): OctahedronGeometry;
+    prototype: OctahedronGeometry;
+}
+
 export { OctahedronGeometry as OctahedronBufferGeometry };

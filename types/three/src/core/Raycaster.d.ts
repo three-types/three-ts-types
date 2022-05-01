@@ -118,3 +118,8 @@ export class Raycaster {
         optionalTarget?: Array<Intersection<TIntersected>>,
     ): Array<Intersection<TIntersected>>;
 }
+
+export interface RaycasterConstructor {
+    new (origin?: Vector3, direction?: Vector3, near?: number, far?: number): Raycaster;
+    prototype: Raycaster;
+}

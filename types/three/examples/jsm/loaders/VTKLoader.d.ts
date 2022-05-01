@@ -12,3 +12,8 @@ export class VTKLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<BufferGeometry>;
     parse(data: ArrayBuffer | string, path: string): BufferGeometry;
 }
+
+export interface VTKLoaderConstructor {
+    new (manager?: LoadingManager): VTKLoader;
+    prototype: VTKLoader;
+}

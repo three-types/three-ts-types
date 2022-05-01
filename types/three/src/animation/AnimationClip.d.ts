@@ -49,3 +49,8 @@ export class AnimationClip {
     static parseAnimation(animation: any, bones: Bone[]): AnimationClip;
     static toJSON(clip: AnimationClip): any;
 }
+
+export interface AnimationClipConstructor {
+    new (name?: string, duration?: number, tracks?: KeyframeTrack[], blendMode?: AnimationBlendMode): AnimationClip;
+    prototype: AnimationClip;
+}

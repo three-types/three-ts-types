@@ -8,3 +8,8 @@ export class BooleanKeyframeTrack extends KeyframeTrack {
      */
     ValueTypeName: string;
 }
+
+export interface BooleanKeyframeTrackConstructor {
+    new (name: string, times: any[], values: any[]): BooleanKeyframeTrack;
+    prototype: BooleanKeyframeTrack;
+}

@@ -17,3 +17,8 @@ export class OculusHandModel extends Object3D {
 
     checkButton(button: Object3D): void;
 }
+
+export interface OculusHandModelConstructor {
+    new (controller: Object3D): OculusHandModel;
+    prototype: OculusHandModel;
+}

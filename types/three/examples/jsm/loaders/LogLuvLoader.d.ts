@@ -17,3 +17,8 @@ export class LogLuvLoader extends DataTextureLoader {
 
     setDataType(value: TextureDataType): this;
 }
+
+export interface LogLuvLoaderConstructor {
+    new (manager: LoadingManager): LogLuvLoader;
+    prototype: LogLuvLoader;
+}

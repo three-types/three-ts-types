@@ -22,3 +22,14 @@ export class XRHandPrimitiveModel {
 
     updateMesh: () => void;
 }
+
+export interface XRHandPrimitiveModelConstructor {
+    new (
+        handModel: XRHandModel,
+        controller: Group,
+        path: string,
+        handedness: XRHandModelHandedness,
+        options: XRHandPrimitiveModelOptions,
+    ): XRHandPrimitiveModel;
+    prototype: XRHandPrimitiveModel;
+}

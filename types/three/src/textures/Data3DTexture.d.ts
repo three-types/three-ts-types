@@ -31,3 +31,8 @@ export class Data3DTexture extends Texture {
 
     readonly isData3DTexture: true;
 }
+
+export interface Data3DTextureConstructor {
+    new (data: BufferSource, width: number, height: number, depth: number): Data3DTexture;
+    prototype: Data3DTexture;
+}

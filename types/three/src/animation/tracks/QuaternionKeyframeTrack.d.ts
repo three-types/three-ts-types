@@ -9,3 +9,8 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
      */
     ValueTypeName: string;
 }
+
+export interface QuaternionKeyframeTrackConstructor {
+    new (name: string, times: any[], values: any[], interpolation?: InterpolationModes): QuaternionKeyframeTrack;
+    prototype: QuaternionKeyframeTrack;
+}

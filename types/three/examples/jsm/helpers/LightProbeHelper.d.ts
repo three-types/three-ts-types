@@ -8,3 +8,8 @@ export class LightProbeHelper extends Mesh {
 
     dispose(): void;
 }
+
+export interface LightProbeHelperConstructor {
+    new (lightProbe: LightProbe, size: number): LightProbeHelper;
+    prototype: LightProbeHelper;
+}

@@ -14,3 +14,8 @@ export class PRWMLoader extends Loader {
 
     static isBigEndianPlatform(): boolean;
 }
+
+export interface PRWMLoaderConstructor {
+    new (manager?: LoadingManager): PRWMLoader;
+    prototype: PRWMLoader;
+}

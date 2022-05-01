@@ -99,3 +99,8 @@ export class Curve<T extends Vector> {
      */
     static create(constructorFunc: () => void, getPointFunc: () => void): () => void;
 }
+
+export interface CurveConstructor<T extends Vector> {
+    new (): Curve<T>;
+    prototype: Curve<T>;
+}

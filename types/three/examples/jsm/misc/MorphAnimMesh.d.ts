@@ -11,3 +11,8 @@ export class MorphAnimMesh extends Mesh {
     updateAnimation(delta: number): void;
     copy(source: MorphAnimMesh): this;
 }
+
+export interface MorphAnimMeshConstructor {
+    new (geometry: BufferGeometry, material: Material): MorphAnimMesh;
+    prototype: MorphAnimMesh;
+}

@@ -16,6 +16,11 @@ export class Face {
     getEdge(i: number): HalfEdge;
 }
 
+export interface FaceConstructor {
+    new (): Face;
+    prototype: Face;
+}
+
 export class HalfEdge {
     constructor(vertex: VertexNode, face: Face);
     vertex: VertexNode;
@@ -31,12 +36,22 @@ export class HalfEdge {
     tail(): VertexNode;
 }
 
+export interface HalfEdgeConstructor {
+    new (vertex: VertexNode, face: Face): HalfEdge;
+    prototype: HalfEdge;
+}
+
 export class VertexNode {
     constructor(point: Vector3);
     point: Vector3;
     prev: VertexNode;
     next: VertexNode;
     face: Face;
+}
+
+export interface VertexNodeConstructor {
+    new (point: Vector3): VertexNode;
+    prototype: VertexNode;
 }
 
 export class VertexList {
@@ -54,6 +69,11 @@ export class VertexList {
     last(): VertexNode;
     remove(vertex: VertexNode): this;
     removeSubList(a: VertexNode, b: VertexNode): this;
+}
+
+export interface VertexListConstructor {
+    new (): VertexList;
+    prototype: VertexList;
 }
 
 export class ConvexHull {
@@ -86,4 +106,9 @@ export class ConvexHull {
     resolveUnassignedPoints(newFaces: Face[]): this;
     setFromPoints(points: Vector3[]): this;
     setFromObject(object: Object3D): this;
+}
+
+export interface ConvexHullConstructor {
+    new (): ConvexHull;
+    prototype: ConvexHull;
 }

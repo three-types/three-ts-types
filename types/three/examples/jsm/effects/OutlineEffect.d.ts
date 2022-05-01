@@ -26,3 +26,8 @@ export class OutlineEffect {
     setSize(width: number, height: number, updateStyle?: boolean): void;
     setViewport(x: Vector4 | number, y?: number, width?: number, height?: number): void;
 }
+
+export interface OutlineEffectConstructor {
+    new (renderer: WebGLRenderer, parameters?: OutlineEffectParameters): OutlineEffect;
+    prototype: OutlineEffect;
+}

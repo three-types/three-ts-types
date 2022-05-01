@@ -84,3 +84,13 @@ export class AnimationAction {
     getClip(): AnimationClip;
     getRoot(): Object3D;
 }
+
+export interface AnimationActionConstructor {
+    new (
+        mixer: AnimationMixer,
+        clip: AnimationClip,
+        localRoot?: Object3D,
+        blendMode?: AnimationBlendMode,
+    ): AnimationAction;
+    prototype: AnimationAction;
+}

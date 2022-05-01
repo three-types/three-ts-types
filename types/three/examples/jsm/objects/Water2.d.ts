@@ -28,3 +28,8 @@ export class Water extends Mesh {
     material: ShaderMaterial;
     constructor(geometry: BufferGeometry, options: Water2Options);
 }
+
+export interface WaterConstructor {
+    new (geometry: BufferGeometry, options: Water2Options): Water;
+    prototype: Water;
+}

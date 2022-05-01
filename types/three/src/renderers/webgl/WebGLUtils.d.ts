@@ -5,3 +5,8 @@ export class WebGLUtils {
 
     convert(p: PixelFormat | CompressedPixelFormat | TextureDataType, encoding?: TextureEncoding | null): number | null;
 }
+
+export interface WebGLUtilsConstructor {
+    new (gl: WebGLRenderingContext | WebGL2RenderingContext, extensions: any, capabilities: any): WebGLUtils;
+    prototype: WebGLUtils;
+}

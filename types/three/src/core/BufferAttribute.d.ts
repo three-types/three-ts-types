@@ -79,11 +79,21 @@ export class BufferAttribute {
     };
 }
 
+export interface BufferAttributeConstructor {
+    new (array: ArrayLike<number>, itemSize: number, normalized?: boolean): BufferAttribute;
+    prototype: BufferAttribute;
+}
+
 /**
  * @deprecated THREE.Int8Attribute has been removed. Use new THREE.Int8BufferAttribute() instead.
  */
 export class Int8Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
+}
+
+export interface Int8AttributeConstructor {
+    new (array: any, itemSize: number): Int8Attribute;
+    prototype: Int8Attribute;
 }
 
 /**
@@ -93,11 +103,21 @@ export class Uint8Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
 }
 
+export interface Uint8AttributeConstructor {
+    new (array: any, itemSize: number): Uint8Attribute;
+    prototype: Uint8Attribute;
+}
+
 /**
  * @deprecated THREE.Uint8ClampedAttribute has been removed. Use new THREE.Uint8ClampedBufferAttribute() instead.
  */
 export class Uint8ClampedAttribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
+}
+
+export interface Uint8ClampedAttributeConstructor {
+    new (array: any, itemSize: number): Uint8ClampedAttribute;
+    prototype: Uint8ClampedAttribute;
 }
 
 /**
@@ -107,11 +127,21 @@ export class Int16Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
 }
 
+export interface Int16AttributeConstructor {
+    new (array: any, itemSize: number): Int16Attribute;
+    prototype: Int16Attribute;
+}
+
 /**
  * @deprecated THREE.Uint16Attribute has been removed. Use new THREE.Uint16BufferAttribute() instead.
  */
 export class Uint16Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
+}
+
+export interface Uint16AttributeConstructor {
+    new (array: any, itemSize: number): Uint16Attribute;
+    prototype: Uint16Attribute;
 }
 
 /**
@@ -121,11 +151,21 @@ export class Int32Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
 }
 
+export interface Int32AttributeConstructor {
+    new (array: any, itemSize: number): Int32Attribute;
+    prototype: Int32Attribute;
+}
+
 /**
  * @deprecated THREE.Uint32Attribute has been removed. Use new THREE.Uint32BufferAttribute() instead.
  */
 export class Uint32Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
+}
+
+export interface Uint32AttributeConstructor {
+    new (array: any, itemSize: number): Uint32Attribute;
+    prototype: Uint32Attribute;
 }
 
 /**
@@ -135,11 +175,21 @@ export class Float32Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
 }
 
+export interface Float32AttributeConstructor {
+    new (array: any, itemSize: number): Float32Attribute;
+    prototype: Float32Attribute;
+}
+
 /**
  * @deprecated THREE.Float64Attribute has been removed. Use new THREE.Float64BufferAttribute() instead.
  */
 export class Float64Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
+}
+
+export interface Float64AttributeConstructor {
+    new (array: any, itemSize: number): Float64Attribute;
+    prototype: Float64Attribute;
 }
 
 export class Int8BufferAttribute extends BufferAttribute {
@@ -150,12 +200,30 @@ export class Int8BufferAttribute extends BufferAttribute {
     );
 }
 
+export interface Int8BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Int8BufferAttribute;
+    prototype: Int8BufferAttribute;
+}
+
 export class Uint8BufferAttribute extends BufferAttribute {
     constructor(
         array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
         itemSize: number,
         normalized?: boolean,
     );
+}
+
+export interface Uint8BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Uint8BufferAttribute;
+    prototype: Uint8BufferAttribute;
 }
 
 export class Uint8ClampedBufferAttribute extends BufferAttribute {
@@ -166,12 +234,30 @@ export class Uint8ClampedBufferAttribute extends BufferAttribute {
     );
 }
 
+export interface Uint8ClampedBufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Uint8ClampedBufferAttribute;
+    prototype: Uint8ClampedBufferAttribute;
+}
+
 export class Int16BufferAttribute extends BufferAttribute {
     constructor(
         array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
         itemSize: number,
         normalized?: boolean,
     );
+}
+
+export interface Int16BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Int16BufferAttribute;
+    prototype: Int16BufferAttribute;
 }
 
 export class Uint16BufferAttribute extends BufferAttribute {
@@ -182,12 +268,30 @@ export class Uint16BufferAttribute extends BufferAttribute {
     );
 }
 
+export interface Uint16BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Uint16BufferAttribute;
+    prototype: Uint16BufferAttribute;
+}
+
 export class Int32BufferAttribute extends BufferAttribute {
     constructor(
         array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
         itemSize: number,
         normalized?: boolean,
     );
+}
+
+export interface Int32BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Int32BufferAttribute;
+    prototype: Int32BufferAttribute;
 }
 
 export class Uint32BufferAttribute extends BufferAttribute {
@@ -198,12 +302,30 @@ export class Uint32BufferAttribute extends BufferAttribute {
     );
 }
 
+export interface Uint32BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Uint32BufferAttribute;
+    prototype: Uint32BufferAttribute;
+}
+
 export class Float16BufferAttribute extends BufferAttribute {
     constructor(
         array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
         itemSize: number,
         normalized?: boolean,
     );
+}
+
+export interface Float16BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Float16BufferAttribute;
+    prototype: Float16BufferAttribute;
 }
 
 export class Float32BufferAttribute extends BufferAttribute {
@@ -214,10 +336,28 @@ export class Float32BufferAttribute extends BufferAttribute {
     );
 }
 
+export interface Float32BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Float32BufferAttribute;
+    prototype: Float32BufferAttribute;
+}
+
 export class Float64BufferAttribute extends BufferAttribute {
     constructor(
         array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
         itemSize: number,
         normalized?: boolean,
     );
+}
+
+export interface Float64BufferAttributeConstructor {
+    new (
+        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
+        itemSize: number,
+        normalized?: boolean,
+    ): Float64BufferAttribute;
+    prototype: Float64BufferAttribute;
 }

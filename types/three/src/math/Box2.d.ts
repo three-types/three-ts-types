@@ -46,3 +46,8 @@ export class Box2 {
      */
     isIntersectionBox(b: any): any;
 }
+
+export interface Box2Constructor {
+    new (min?: Vector2, max?: Vector2): Box2;
+    prototype: Box2;
+}

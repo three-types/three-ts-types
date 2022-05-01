@@ -70,4 +70,9 @@ export class ExtrudeGeometry extends BufferGeometry {
     static fromJSON(data: any): ExtrudeGeometry;
 }
 
+export interface ExtrudeGeometryConstructor {
+    new (shapes?: Shape | Shape[], options?: ExtrudeGeometryOptions): ExtrudeGeometry;
+    prototype: ExtrudeGeometry;
+}
+
 export { ExtrudeGeometry as ExtrudeBufferGeometry };

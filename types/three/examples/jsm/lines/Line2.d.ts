@@ -9,3 +9,8 @@ export class Line2 extends LineSegments2 {
     constructor(geometry?: LineGeometry, material?: LineMaterial);
     readonly isLine2: true;
 }
+
+export interface Line2Constructor {
+    new (geometry?: LineGeometry, material?: LineMaterial): Line2;
+    prototype: Line2;
+}

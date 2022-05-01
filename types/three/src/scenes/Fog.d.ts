@@ -41,3 +41,8 @@ export class Fog implements FogBase {
     clone(): Fog;
     toJSON(): any;
 }
+
+export interface FogConstructor {
+    new (color: ColorRepresentation, near?: number, far?: number): Fog;
+    prototype: Fog;
+}

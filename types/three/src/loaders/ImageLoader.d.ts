@@ -17,3 +17,8 @@ export class ImageLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<HTMLImageElement>;
 }
+
+export interface ImageLoaderConstructor {
+    new (manager?: LoadingManager): ImageLoader;
+    prototype: ImageLoader;
+}

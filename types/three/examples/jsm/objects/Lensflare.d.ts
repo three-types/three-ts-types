@@ -8,10 +8,20 @@ export class LensflareElement {
     color: Color;
 }
 
+export interface LensflareElementConstructor {
+    new (texture: Texture, size?: number, distance?: number, color?: Color): LensflareElement;
+    prototype: LensflareElement;
+}
+
 export class Lensflare extends Mesh {
     constructor();
     readonly isLensflare: true;
 
     addElement(element: LensflareElement): void;
     dispose(): void;
+}
+
+export interface LensflareConstructor {
+    new (): Lensflare;
+    prototype: Lensflare;
 }

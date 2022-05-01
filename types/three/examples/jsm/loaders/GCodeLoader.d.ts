@@ -13,3 +13,8 @@ export class GCodeLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Group>;
     parse(data: string): Group;
 }
+
+export interface GCodeLoaderConstructor {
+    new (manager?: LoadingManager): GCodeLoader;
+    prototype: GCodeLoader;
+}

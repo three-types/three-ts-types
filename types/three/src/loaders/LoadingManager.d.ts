@@ -67,3 +67,12 @@ export class LoadingManager {
     removeHandler(regex: RegExp): this;
     getHandler(file: string): Loader | null;
 }
+
+export interface LoadingManagerConstructor {
+    new (
+        onLoad?: () => void,
+        onProgress?: (url: string, loaded: number, total: number) => void,
+        onError?: (url: string) => void,
+    ): LoadingManager;
+    prototype: LoadingManager;
+}

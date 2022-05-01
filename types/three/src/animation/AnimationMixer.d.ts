@@ -32,3 +32,8 @@ export class AnimationMixer extends EventDispatcher {
     uncacheRoot(root: Object3D | AnimationObjectGroup): void;
     uncacheAction(clip: AnimationClip, root?: Object3D | AnimationObjectGroup): void;
 }
+
+export interface AnimationMixerConstructor {
+    new (root: Object3D | AnimationObjectGroup): AnimationMixer;
+    prototype: AnimationMixer;
+}

@@ -209,3 +209,19 @@ export class Texture extends EventDispatcher {
     transformUv(uv: Vector2): Vector2;
     updateMatrix(): void;
 }
+
+export interface TextureConstructor {
+    new (
+        image?: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        format?: PixelFormat,
+        type?: TextureDataType,
+        anisotropy?: number,
+        encoding?: TextureEncoding,
+    ): Texture;
+    prototype: Texture;
+}

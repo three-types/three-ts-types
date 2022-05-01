@@ -21,3 +21,8 @@ export class GLBufferAttribute {
     setItemSize(itemSize: number): this;
     setCount(count: number): this;
 }
+
+export interface GLBufferAttributeConstructor {
+    new (buffer: WebGLBuffer, type: number, itemSize: number, elementSize: 1 | 2 | 4, count: number): GLBufferAttribute;
+    prototype: GLBufferAttribute;
+}

@@ -17,3 +17,8 @@ export class FileLoader extends Loader {
     setMimeType(mimeType: MimeType): FileLoader;
     setResponseType(responseType: string): FileLoader;
 }
+
+export interface FileLoaderConstructor {
+    new (manager?: LoadingManager): FileLoader;
+    prototype: FileLoader;
+}

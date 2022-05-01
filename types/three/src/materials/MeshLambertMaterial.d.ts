@@ -131,3 +131,8 @@ export class MeshLambertMaterial extends Material {
 
     setValues(parameters: MeshLambertMaterialParameters): void;
 }
+
+export interface MeshLambertMaterialConstructor {
+    new (parameters?: MeshLambertMaterialParameters): MeshLambertMaterial;
+    prototype: MeshLambertMaterial;
+}

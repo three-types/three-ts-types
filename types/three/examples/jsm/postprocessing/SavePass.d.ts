@@ -10,3 +10,8 @@ export class SavePass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface SavePassConstructor {
+    new (renderTarget: WebGLRenderTarget): SavePass;
+    prototype: SavePass;
+}

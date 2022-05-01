@@ -35,4 +35,16 @@ export class TorusKnotGeometry extends BufferGeometry {
     static fromJSON(data: any): TorusKnotGeometry;
 }
 
+export interface TorusKnotGeometryConstructor {
+    new (
+        radius?: number,
+        tube?: number,
+        tubularSegments?: number,
+        radialSegments?: number,
+        p?: number,
+        q?: number,
+    ): TorusKnotGeometry;
+    prototype: TorusKnotGeometry;
+}
+
 export { TorusKnotGeometry as TorusKnotBufferGeometry };

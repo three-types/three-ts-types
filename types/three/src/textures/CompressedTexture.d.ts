@@ -55,3 +55,21 @@ export class CompressedTexture extends Texture {
 
     readonly isCompressedTexture: true;
 }
+
+export interface CompressedTextureConstructor {
+    new (
+        mipmaps: ImageData[],
+        width: number,
+        height: number,
+        format?: CompressedPixelFormat,
+        type?: TextureDataType,
+        mapping?: Mapping,
+        wrapS?: Wrapping,
+        wrapT?: Wrapping,
+        magFilter?: TextureFilter,
+        minFilter?: TextureFilter,
+        anisotropy?: number,
+        encoding?: TextureEncoding,
+    ): CompressedTexture;
+    prototype: CompressedTexture;
+}

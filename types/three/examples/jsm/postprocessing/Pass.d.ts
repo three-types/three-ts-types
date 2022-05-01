@@ -17,6 +17,11 @@ export class Pass {
     ): void;
 }
 
+export interface PassConstructor {
+    new (): Pass;
+    prototype: Pass;
+}
+
 export class FullScreenQuad {
     constructor(material?: Material);
 
@@ -24,4 +29,9 @@ export class FullScreenQuad {
     dispose(): void;
 
     material: Material;
+}
+
+export interface FullScreenQuadConstructor {
+    new (material?: Material): FullScreenQuad;
+    prototype: FullScreenQuad;
 }

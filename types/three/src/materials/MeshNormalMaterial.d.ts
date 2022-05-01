@@ -84,3 +84,8 @@ export class MeshNormalMaterial extends Material {
 
     setValues(parameters: MeshNormalMaterialParameters): void;
 }
+
+export interface MeshNormalMaterialConstructor {
+    new (parameters?: MeshNormalMaterialParameters): MeshNormalMaterial;
+    prototype: MeshNormalMaterial;
+}

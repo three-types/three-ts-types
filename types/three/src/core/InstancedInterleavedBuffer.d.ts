@@ -11,3 +11,8 @@ export class InstancedInterleavedBuffer extends InterleavedBuffer {
      */
     meshPerAttribute: number;
 }
+
+export interface InstancedInterleavedBufferConstructor {
+    new (array: ArrayLike<number>, stride: number, meshPerAttribute?: number): InstancedInterleavedBuffer;
+    prototype: InstancedInterleavedBuffer;
+}

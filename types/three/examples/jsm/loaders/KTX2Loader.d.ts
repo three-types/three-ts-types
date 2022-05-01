@@ -14,3 +14,8 @@ export class KTX2Loader extends CompressedTextureLoader {
         onError?: (event: ErrorEvent) => void,
     ): KTX2Loader;
 }
+
+export interface KTX2LoaderConstructor {
+    new (manager?: LoadingManager): KTX2Loader;
+    prototype: KTX2Loader;
+}

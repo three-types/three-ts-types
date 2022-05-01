@@ -15,3 +15,8 @@ export class Layers {
     test(layers: Layers): boolean;
     isEnabled(channel: number): boolean;
 }
+
+export interface LayersConstructor {
+    new (): Layers;
+    prototype: Layers;
+}

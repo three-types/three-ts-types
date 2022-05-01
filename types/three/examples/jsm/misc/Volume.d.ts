@@ -35,3 +35,8 @@ export class Volume {
     repaintAllSlices(): this;
     computeMinMax(): number[];
 }
+
+export interface VolumeConstructor {
+    new (xLength?: number, yLength?: number, zLength?: number, type?: string, arrayBuffer?: ArrayLike<number>): Volume;
+    prototype: Volume;
+}

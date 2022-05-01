@@ -12,3 +12,8 @@ export class AMFLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<Group>;
     parse(data: ArrayBuffer): Group;
 }
+
+export interface AMFLoaderConstructor {
+    new (manager?: LoadingManager): AMFLoader;
+    prototype: AMFLoader;
+}

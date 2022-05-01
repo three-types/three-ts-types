@@ -25,3 +25,8 @@ export class Capsule {
     intersectsBox(box: Box3): boolean;
     lineLineMinimumPoints(line1: Line3, line2: Line3): Vector3[];
 }
+
+export interface CapsuleConstructor {
+    new (start?: Vector3, end?: Vector3, radius?: number): Capsule;
+    prototype: Capsule;
+}

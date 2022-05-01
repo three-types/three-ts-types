@@ -14,3 +14,8 @@ export class CompressedTextureLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<CompressedTexture>;
 }
+
+export interface CompressedTextureLoaderConstructor {
+    new (manager?: LoadingManager): CompressedTextureLoader;
+    prototype: CompressedTextureLoader;
+}

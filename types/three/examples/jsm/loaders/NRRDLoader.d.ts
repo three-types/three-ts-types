@@ -19,3 +19,8 @@ export class NRRDLoader {
     parseChars(array: number[], start?: number, end?: number): string;
     setPath(value: string): this;
 }
+
+export interface NRRDLoaderConstructor {
+    new (manager?: LoadingManager): NRRDLoader;
+    prototype: NRRDLoader;
+}

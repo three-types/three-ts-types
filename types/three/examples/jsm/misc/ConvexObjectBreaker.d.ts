@@ -23,3 +23,8 @@ export class ConvexObjectBreaker {
     ): Object3D[];
     cutByPlane(object: Object3D, plane: Plane, output: CutByPlaneOutput): number;
 }
+
+export interface ConvexObjectBreakerConstructor {
+    new (minSizeForBreak?: number, smallDelta?: number): ConvexObjectBreaker;
+    prototype: ConvexObjectBreaker;
+}

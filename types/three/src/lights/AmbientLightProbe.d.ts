@@ -6,3 +6,8 @@ export class AmbientLightProbe extends LightProbe {
 
     readonly isAmbientLightProbe: true;
 }
+
+export interface AmbientLightProbeConstructor {
+    new (color?: ColorRepresentation, intensity?: number): AmbientLightProbe;
+    prototype: AmbientLightProbe;
+}

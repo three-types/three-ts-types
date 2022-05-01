@@ -12,3 +12,8 @@ export class OctreeHelper extends LineSegments {
      */
     type: 'OctreeHelper' | string;
 }
+
+export interface OctreeHelperConstructor {
+    new (octree: Octree, color: ColorRepresentation): OctreeHelper;
+    prototype: OctreeHelper;
+}

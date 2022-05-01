@@ -20,6 +20,11 @@ export class WebGLColorBuffer {
     reset(): void;
 }
 
+export interface WebGLColorBufferConstructor {
+    new (): WebGLColorBuffer;
+    prototype: WebGLColorBuffer;
+}
+
 export class WebGLDepthBuffer {
     constructor();
 
@@ -29,6 +34,11 @@ export class WebGLDepthBuffer {
     setLocked(lock: boolean): void;
     setClear(depth: number): void;
     reset(): void;
+}
+
+export interface WebGLDepthBufferConstructor {
+    new (): WebGLDepthBuffer;
+    prototype: WebGLDepthBuffer;
 }
 
 export class WebGLStencilBuffer {
@@ -41,6 +51,11 @@ export class WebGLStencilBuffer {
     setLocked(lock: boolean): void;
     setClear(stencil: number): void;
     reset(): void;
+}
+
+export interface WebGLStencilBufferConstructor {
+    new (): WebGLStencilBuffer;
+    prototype: WebGLStencilBuffer;
 }
 
 export class WebGLState {
@@ -126,4 +141,9 @@ export class WebGLState {
     scissor(scissor: Vector4): void;
     viewport(viewport: Vector4): void;
     reset(): void;
+}
+
+export interface WebGLStateConstructor {
+    new (gl: WebGLRenderingContext, extensions: WebGLExtensions, capabilities: WebGLCapabilities): WebGLState;
+    prototype: WebGLState;
 }

@@ -406,3 +406,8 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      */
     copy(source: this, recursive?: boolean): this;
 }
+
+export interface Object3DConstructor<E extends BaseEvent = Event> {
+    new (): Object3D<E>;
+    prototype: Object3D<E>;
+}

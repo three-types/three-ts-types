@@ -50,3 +50,13 @@ export class InterleavedBufferAttribute {
     applyNormalMatrix(matrix: Matrix): this;
     transformDirection(matrix: Matrix): this;
 }
+
+export interface InterleavedBufferAttributeConstructor {
+    new (
+        interleavedBuffer: InterleavedBuffer,
+        itemSize: number,
+        offset: number,
+        normalized?: boolean,
+    ): InterleavedBufferAttribute;
+    prototype: InterleavedBufferAttribute;
+}

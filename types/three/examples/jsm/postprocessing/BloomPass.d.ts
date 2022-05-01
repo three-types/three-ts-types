@@ -12,3 +12,8 @@ export class BloomPass extends Pass {
     materialConvolution: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface BloomPassConstructor {
+    new (strength?: number, kernelSize?: number, sigma?: number, resolution?: number): BloomPass;
+    prototype: BloomPass;
+}

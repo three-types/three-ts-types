@@ -61,3 +61,8 @@ export class SVGLoader extends Loader {
     ): number;
     static createShapes(shapePath: ShapePath): Shape[];
 }
+
+export interface SVGLoaderConstructor {
+    new (manager?: LoadingManager): SVGLoader;
+    prototype: SVGLoader;
+}

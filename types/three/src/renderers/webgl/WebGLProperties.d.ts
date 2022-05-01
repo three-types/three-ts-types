@@ -6,3 +6,8 @@ export class WebGLProperties {
     update(object: any, key: any, value: any): any;
     dispose(): void;
 }
+
+export interface WebGLPropertiesConstructor {
+    new (): WebGLProperties;
+    prototype: WebGLProperties;
+}

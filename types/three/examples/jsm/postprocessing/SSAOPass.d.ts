@@ -69,3 +69,8 @@ export class SSAOPass extends Pass {
         clearAlpha?: number,
     ): void;
 }
+
+export interface SSAOPassConstructor {
+    new (scene: Scene, camera: Camera, width?: number, height?: number): SSAOPass;
+    prototype: SSAOPass;
+}

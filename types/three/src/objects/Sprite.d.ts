@@ -18,3 +18,8 @@ export class Sprite extends Object3D {
     raycast(raycaster: Raycaster, intersects: Intersection[]): void;
     copy(source: this): this;
 }
+
+export interface SpriteConstructor {
+    new (material?: SpriteMaterial): Sprite;
+    prototype: Sprite;
+}

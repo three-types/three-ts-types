@@ -32,3 +32,8 @@ export class ShapePath {
     splineThru(pts: Vector2[]): this;
     toShapes(isCCW: boolean, noHoles?: boolean): Shape[];
 }
+
+export interface ShapePathConstructor {
+    new (): ShapePath;
+    prototype: ShapePath;
+}

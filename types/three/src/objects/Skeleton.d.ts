@@ -27,3 +27,8 @@ export class Skeleton {
      */
     useVertexTexture: boolean;
 }
+
+export interface SkeletonConstructor {
+    new (bones: Bone[], boneInverses?: Matrix4[]): Skeleton;
+    prototype: Skeleton;
+}

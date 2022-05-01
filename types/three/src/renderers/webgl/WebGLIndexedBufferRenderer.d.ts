@@ -6,3 +6,8 @@ export class WebGLIndexedBufferRenderer {
     render(start: any, count: number): void;
     renderInstances(start: any, count: number, primcount: number): void;
 }
+
+export interface WebGLIndexedBufferRendererConstructor {
+    new (gl: WebGLRenderingContext, extensions: any, info: any, capabilities: any): WebGLIndexedBufferRenderer;
+    prototype: WebGLIndexedBufferRenderer;
+}

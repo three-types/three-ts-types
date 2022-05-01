@@ -16,3 +16,8 @@ export class DRACOLoader extends Loader {
     preload(): DRACOLoader;
     dispose(): DRACOLoader;
 }
+
+export interface DRACOLoaderConstructor {
+    new (manager?: LoadingManager): DRACOLoader;
+    prototype: DRACOLoader;
+}

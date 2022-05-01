@@ -29,3 +29,8 @@ export class LineMaterial extends ShaderMaterial {
     alphaToCoverage: boolean;
     worldUnits: boolean;
 }
+
+export interface LineMaterialConstructor {
+    new (parameters?: LineMaterialParameters): LineMaterial;
+    prototype: LineMaterial;
+}

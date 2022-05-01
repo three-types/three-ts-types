@@ -21,3 +21,8 @@ export class HalftonePass extends Pass {
     material: ShaderMaterial;
     fsQuad: object;
 }
+
+export interface HalftonePassConstructor {
+    new (width: number, height: number, params: HalftonePassParameters): HalftonePass;
+    prototype: HalftonePass;
+}

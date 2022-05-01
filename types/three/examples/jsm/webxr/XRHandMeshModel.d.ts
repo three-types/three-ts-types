@@ -9,3 +9,8 @@ export class XRHandMeshModel {
 
     updateMesh(): void;
 }
+
+export interface XRHandMeshModelConstructor {
+    new (handModel: Object3D, controller: Object3D, path: string, handedness: string): XRHandMeshModel;
+    prototype: XRHandMeshModel;
+}

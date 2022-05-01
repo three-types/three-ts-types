@@ -19,10 +19,25 @@ export class VOXLoader extends Loader {
     parse(data: ArrayBuffer): object[];
 }
 
+export interface VOXLoaderConstructor {
+    new (manager?: LoadingManager): VOXLoader;
+    prototype: VOXLoader;
+}
+
 export class VOXMesh extends Mesh {
     constructor(chunk: Chunk);
 }
 
+export interface VOXMeshConstructor {
+    new (chunk: Chunk): VOXMesh;
+    prototype: VOXMesh;
+}
+
 export class VOXData3DTexture extends Data3DTexture {
     constructor(chunk: Chunk);
+}
+
+export interface VOXData3DTextureConstructor {
+    new (chunk: Chunk): VOXData3DTexture;
+    prototype: VOXData3DTexture;
 }

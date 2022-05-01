@@ -26,3 +26,8 @@ export class Shape extends Path {
         holes: Vector2[][];
     };
 }
+
+export interface ShapeConstructor {
+    new (points?: Vector2[]): Shape;
+    prototype: Shape;
+}

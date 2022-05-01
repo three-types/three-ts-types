@@ -47,3 +47,8 @@ export class Scene extends Object3D {
 
     toJSON(meta?: any): any;
 }
+
+export interface SceneConstructor {
+    new (): Scene;
+    prototype: Scene;
+}

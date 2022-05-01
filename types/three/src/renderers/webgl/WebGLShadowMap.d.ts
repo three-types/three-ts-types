@@ -36,3 +36,8 @@ export class WebGLShadowMap {
      */
     cullFace: any;
 }
+
+export interface WebGLShadowMapConstructor {
+    new (_renderer: WebGLRenderer, _objects: WebGLObjects, _capabilities: WebGLCapabilities): WebGLShadowMap;
+    prototype: WebGLShadowMap;
+}

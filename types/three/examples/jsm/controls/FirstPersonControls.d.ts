@@ -26,3 +26,8 @@ export class FirstPersonControls {
     update(delta: number): this;
     dispose(): void;
 }
+
+export interface FirstPersonControlsConstructor {
+    new (object: Camera, domElement?: HTMLElement): FirstPersonControls;
+    prototype: FirstPersonControls;
+}

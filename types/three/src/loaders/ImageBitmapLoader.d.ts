@@ -21,3 +21,8 @@ export class ImageBitmapLoader extends Loader {
 
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<ImageBitmap>;
 }
+
+export interface ImageBitmapLoaderConstructor {
+    new (manager?: LoadingManager): ImageBitmapLoader;
+    prototype: ImageBitmapLoader;
+}

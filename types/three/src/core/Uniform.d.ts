@@ -19,3 +19,9 @@ export class Uniform {
      */
     onUpdate(callback: () => void): Uniform;
 }
+
+export interface UniformConstructor {
+    new (value: any): Uniform;
+    new (type: string, value: any): Uniform;
+    prototype: Uniform;
+}

@@ -9,3 +9,8 @@ export class STLExporter {
 
     parse(scene: Object3D, options?: STLExporterOptions): string;
 }
+
+export interface STLExporterConstructor {
+    new (): STLExporter;
+    prototype: STLExporter;
+}

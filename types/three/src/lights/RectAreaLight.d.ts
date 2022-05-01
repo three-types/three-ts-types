@@ -28,3 +28,8 @@ export class RectAreaLight extends Light {
 
     readonly isRectAreaLight: true;
 }
+
+export interface RectAreaLightConstructor {
+    new (color?: ColorRepresentation, intensity?: number, width?: number, height?: number): RectAreaLight;
+    prototype: RectAreaLight;
+}

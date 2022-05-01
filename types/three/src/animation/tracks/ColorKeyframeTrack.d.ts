@@ -9,3 +9,8 @@ export class ColorKeyframeTrack extends KeyframeTrack {
      */
     ValueTypeName: string;
 }
+
+export interface ColorKeyframeTrackConstructor {
+    new (name: string, times: any[], values: any[], interpolation?: InterpolationModes): ColorKeyframeTrack;
+    prototype: ColorKeyframeTrack;
+}

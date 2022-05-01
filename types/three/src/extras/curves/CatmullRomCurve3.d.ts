@@ -28,3 +28,8 @@ export class CatmullRomCurve3 extends Curve<Vector3> {
      */
     points: Vector3[];
 }
+
+export interface CatmullRomCurve3Constructor {
+    new (points?: Vector3[], closed?: boolean, curveType?: string, tension?: number): CatmullRomCurve3;
+    prototype: CatmullRomCurve3;
+}

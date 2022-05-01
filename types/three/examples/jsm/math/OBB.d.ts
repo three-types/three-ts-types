@@ -22,3 +22,8 @@ export class OBB {
     equals(obb: OBB): boolean;
     applyMatrix4(matrix: Matrix4): this;
 }
+
+export interface OBBConstructor {
+    new (center?: Vector3, halfSize?: Vector3, rotation?: Matrix3): OBB;
+    prototype: OBB;
+}

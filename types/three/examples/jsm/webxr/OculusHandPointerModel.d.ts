@@ -61,3 +61,8 @@ export class OculusHandPointerModel extends Object3D {
 
     public setCursor(distance: number): void;
 }
+
+export interface OculusHandPointerModelConstructor {
+    new (hand: Object3D, controller: Object3D): OculusHandPointerModel;
+    prototype: OculusHandPointerModel;
+}

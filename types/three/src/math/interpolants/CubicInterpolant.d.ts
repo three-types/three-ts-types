@@ -5,3 +5,8 @@ export class CubicInterpolant extends Interpolant {
 
     interpolate_(i1: number, t0: number, t: number, t1: number): any;
 }
+
+export interface CubicInterpolantConstructor {
+    new (parameterPositions: any, samplesValues: any, sampleSize: number, resultBuffer?: any): CubicInterpolant;
+    prototype: CubicInterpolant;
+}

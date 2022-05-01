@@ -18,3 +18,8 @@ export class LightProbe extends Light {
 
     fromJSON(json: object): LightProbe;
 }
+
+export interface LightProbeConstructor {
+    new (sh?: SphericalHarmonics3, intensity?: number): LightProbe;
+    prototype: LightProbe;
+}

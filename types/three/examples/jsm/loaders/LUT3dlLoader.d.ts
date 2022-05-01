@@ -18,3 +18,8 @@ export class LUT3dlLoader extends Loader {
     loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<LUT3dlResult>;
     parse(data: string): LUT3dlResult;
 }
+
+export interface LUT3dlLoaderConstructor {
+    new (manager?: LoadingManager): LUT3dlLoader;
+    prototype: LUT3dlLoader;
+}

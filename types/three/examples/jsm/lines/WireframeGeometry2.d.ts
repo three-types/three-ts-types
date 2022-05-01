@@ -6,3 +6,8 @@ export class WireframeGeometry2 extends LineSegmentsGeometry {
     constructor(geometry: BufferGeometry);
     readonly sWireframeGeometry2: boolean;
 }
+
+export interface WireframeGeometry2Constructor {
+    new (geometry: BufferGeometry): WireframeGeometry2;
+    prototype: WireframeGeometry2;
+}

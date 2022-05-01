@@ -7,3 +7,8 @@ export class ClearPass extends Pass {
     clearColor: ColorRepresentation;
     clearAlpha: number;
 }
+
+export interface ClearPassConstructor {
+    new (clearColor?: ColorRepresentation, clearAlpha?: number): ClearPass;
+    prototype: ClearPass;
+}

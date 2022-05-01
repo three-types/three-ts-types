@@ -10,3 +10,8 @@ export class WebGLUniforms {
     static upload(gl: WebGLRenderingContext, seq: any, values: any[], textures: WebGLTextures): void;
     static seqWithValue(seq: any, values: any[]): any[];
 }
+
+export interface WebGLUniformsConstructor {
+    new (gl: WebGLRenderingContext, program: WebGLProgram): WebGLUniforms;
+    prototype: WebGLUniforms;
+}

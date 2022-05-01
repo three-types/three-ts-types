@@ -12,3 +12,8 @@ export class WebXRController {
     disconnect(inputSource: XRInputSource): this;
     update(inputSource: XRInputSource, frame: XRFrame, referenceSpace: XRReferenceSpace): this;
 }
+
+export interface WebXRControllerConstructor {
+    new (): WebXRController;
+    prototype: WebXRController;
+}

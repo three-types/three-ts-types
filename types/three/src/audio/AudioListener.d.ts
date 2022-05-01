@@ -26,3 +26,8 @@ export class AudioListener extends Object3D {
     getMasterVolume(): number;
     updateMatrixWorld(force?: boolean): void;
 }
+
+export interface AudioListenerConstructor {
+    new (): AudioListener;
+    prototype: AudioListener;
+}

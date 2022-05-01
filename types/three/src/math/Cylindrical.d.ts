@@ -24,3 +24,8 @@ export class Cylindrical {
     setFromVector3(vec3: Vector3): this;
     setFromCartesianCoords(x: number, y: number, z: number): this;
 }
+
+export interface CylindricalConstructor {
+    new (radius?: number, theta?: number, y?: number): Cylindrical;
+    prototype: Cylindrical;
+}

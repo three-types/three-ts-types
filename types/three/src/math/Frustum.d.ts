@@ -27,3 +27,8 @@ export class Frustum {
     intersectsBox(box: Box3): boolean;
     containsPoint(point: Vector3): boolean;
 }
+
+export interface FrustumConstructor {
+    new (p0?: Plane, p1?: Plane, p2?: Plane, p3?: Plane, p4?: Plane, p5?: Plane): Frustum;
+    prototype: Frustum;
+}

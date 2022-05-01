@@ -22,3 +22,8 @@ export class PointerLockControls extends EventDispatcher {
     lock(): void;
     unlock(): void;
 }
+
+export interface PointerLockControlsConstructor {
+    new (camera: Camera, domElement?: HTMLElement): PointerLockControls;
+    prototype: PointerLockControls;
+}

@@ -39,3 +39,8 @@ export class CinematicCamera extends PerspectiveCamera {
     renderCinematic(scene: Scene, renderer: WebGLRenderer): void;
     setLens(focalLength: number, frameHeight?: number, fNumber?: number, coc?: number): void;
 }
+
+export interface CinematicCameraConstructor {
+    new (fov: number, aspect: number, near: number, far: number): CinematicCamera;
+    prototype: CinematicCamera;
+}

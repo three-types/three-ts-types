@@ -8,3 +8,8 @@ export class Sky extends Mesh {
 
     static SkyShader: object;
 }
+
+export interface SkyConstructor {
+    new (): Sky;
+    prototype: Sky;
+}

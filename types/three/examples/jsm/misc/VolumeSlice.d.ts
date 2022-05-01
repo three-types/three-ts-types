@@ -26,3 +26,8 @@ export class VolumeSlice {
     repaint(): void;
     updateGeometry(): void;
 }
+
+export interface VolumeSliceConstructor {
+    new (volume: Volume, index?: number, axis?: string): VolumeSlice;
+    prototype: VolumeSlice;
+}

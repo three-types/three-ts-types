@@ -14,3 +14,8 @@ export class PLYLoader extends Loader {
     setPropertyNameMapping(mapping: object): void;
     parse(data: ArrayBuffer | string): BufferGeometry;
 }
+
+export interface PLYLoaderConstructor {
+    new (manager?: LoadingManager): PLYLoader;
+    prototype: PLYLoader;
+}

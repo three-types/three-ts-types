@@ -24,4 +24,9 @@ export class CircleGeometry extends BufferGeometry {
     static fromJSON(data: any): CircleGeometry;
 }
 
+export interface CircleGeometryConstructor {
+    new (radius?: number, segments?: number, thetaStart?: number, thetaLength?: number): CircleGeometry;
+    prototype: CircleGeometry;
+}
+
 export { CircleGeometry as CircleBufferGeometry };

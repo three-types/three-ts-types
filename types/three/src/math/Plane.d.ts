@@ -45,3 +45,8 @@ export class Plane {
      */
     isIntersectionLine(l: any): any;
 }
+
+export interface PlaneConstructor {
+    new (normal?: Vector3, constant?: number): Plane;
+    prototype: Plane;
+}

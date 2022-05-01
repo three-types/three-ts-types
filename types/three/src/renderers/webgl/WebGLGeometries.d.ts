@@ -11,3 +11,8 @@ export class WebGLGeometries {
     update(geometry: BufferGeometry): void;
     getWireframeAttribute(geometry: BufferGeometry): BufferAttribute;
 }
+
+export interface WebGLGeometriesConstructor {
+    new (gl: WebGLRenderingContext, attributes: WebGLAttributes, info: WebGLInfo): WebGLGeometries;
+    prototype: WebGLGeometries;
+}

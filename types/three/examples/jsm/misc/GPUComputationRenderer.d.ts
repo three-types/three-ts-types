@@ -50,3 +50,8 @@ export class GPUComputationRenderer {
     renderTexture(input: Texture, output: Texture): void;
     doRenderTarget(material: Material, output: WebGLRenderTarget): void;
 }
+
+export interface GPUComputationRendererConstructor {
+    new (sizeX: number, sizeY: number, renderer: WebGLRenderer): GPUComputationRenderer;
+    prototype: GPUComputationRenderer;
+}

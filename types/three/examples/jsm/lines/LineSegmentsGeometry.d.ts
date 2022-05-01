@@ -21,3 +21,8 @@ export class LineSegmentsGeometry extends InstancedBufferGeometry {
     setColors(array: number[] | Float32Array): this;
     setPositions(array: number[] | Float32Array): this;
 }
+
+export interface LineSegmentsGeometryConstructor {
+    new (): LineSegmentsGeometry;
+    prototype: LineSegmentsGeometry;
+}

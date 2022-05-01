@@ -38,4 +38,17 @@ export class SphereGeometry extends BufferGeometry {
     static fromJSON(data: any): SphereGeometry;
 }
 
+export interface SphereGeometryConstructor {
+    new (
+        radius?: number,
+        widthSegments?: number,
+        heightSegments?: number,
+        phiStart?: number,
+        phiLength?: number,
+        thetaStart?: number,
+        thetaLength?: number,
+    ): SphereGeometry;
+    prototype: SphereGeometry;
+}
+
 export { SphereGeometry as SphereBufferGeometry };

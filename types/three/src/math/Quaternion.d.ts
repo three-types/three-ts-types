@@ -175,3 +175,8 @@ export class Quaternion {
 
     random(): Quaternion;
 }
+
+export interface QuaternionConstructor {
+    new (x?: number, y?: number, z?: number, w?: number): Quaternion;
+    prototype: Quaternion;
+}

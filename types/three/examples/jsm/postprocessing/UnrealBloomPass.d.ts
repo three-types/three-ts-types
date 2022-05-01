@@ -29,3 +29,8 @@ export class UnrealBloomPass extends Pass {
     getSeperableBlurMaterial(): ShaderMaterial;
     getCompositeMaterial(): ShaderMaterial;
 }
+
+export interface UnrealBloomPassConstructor {
+    new (resolution: Vector2, strength: number, radius: number, threshold: number): UnrealBloomPass;
+    prototype: UnrealBloomPass;
+}

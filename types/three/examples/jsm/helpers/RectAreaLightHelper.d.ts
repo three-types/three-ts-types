@@ -8,3 +8,8 @@ export class RectAreaLightHelper extends Line {
 
     dispose(): void;
 }
+
+export interface RectAreaLightHelperConstructor {
+    new (light: RectAreaLight, color?: ColorRepresentation): RectAreaLightHelper;
+    prototype: RectAreaLightHelper;
+}

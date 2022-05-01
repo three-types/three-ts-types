@@ -29,3 +29,8 @@ export class WebGLProgram {
     getAttributes(): any;
     destroy(): void;
 }
+
+export interface WebGLProgramConstructor {
+    new (renderer: WebGLRenderer, cacheKey: string, parameters: object): WebGLProgram;
+    prototype: WebGLProgram;
+}

@@ -15,4 +15,9 @@ export class TetrahedronGeometry extends PolyhedronGeometry {
     static fromJSON(data: any): TetrahedronGeometry;
 }
 
+export interface TetrahedronGeometryConstructor {
+    new (radius?: number, detail?: number): TetrahedronGeometry;
+    prototype: TetrahedronGeometry;
+}
+
 export { TetrahedronGeometry as TetrahedronBufferGeometry };

@@ -19,3 +19,8 @@ export class MorphBlendMesh extends Mesh {
     stopAnimation(name: string): void;
     update(delta: number): void;
 }
+
+export interface MorphBlendMeshConstructor {
+    new (geometry: BufferGeometry, material: Material): MorphBlendMesh;
+    prototype: MorphBlendMesh;
+}

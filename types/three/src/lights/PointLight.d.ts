@@ -40,3 +40,8 @@ export class PointLight extends Light {
 
     power: number;
 }
+
+export interface PointLightConstructor {
+    new (color?: ColorRepresentation, intensity?: number, distance?: number, decay?: number): PointLight;
+    prototype: PointLight;
+}
