@@ -21,3 +21,5 @@ export function computeMikkTSpaceTangents(
     negateSign?: boolean,
 ): BufferGeometry;
 export function mergeGroups(geometry: BufferGeometry): BufferGeometry;
+export function deinterleaveAttribute(geometry: BufferGeometry): void;
+export function deinterleaveGeometry(geometry: BufferGeometry): void;
