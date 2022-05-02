@@ -175,5 +175,5 @@ export class Quaternion {
 
     random(): Quaternion;
 
-    [Symbol.iterator](): Generator<number, void, unknown>;
+    [Symbol.iterator](): Generator<number, void>;
 }

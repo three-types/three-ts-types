@@ -43,5 +43,5 @@ export class Euler {
     static RotationOrders: string[];
     static DefaultOrder: string;
 
-    [Symbol.iterator](): Generator<string | number, void, unknown>;
+    [Symbol.iterator](): Generator<string | number, void>;
 }
