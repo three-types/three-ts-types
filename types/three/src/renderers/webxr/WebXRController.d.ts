@@ -8,7 +8,7 @@ export type XRHandJoints = { [key in keyof typeof XRHandJoint]: number };
 export type XRHandInputState = { pinching: boolean };
 
 export class XRHandSpace extends Group {
-    joints: Partial<XRHandJoints>;
+    readonly joints: Partial<XRHandJoints>;
     readonly inputState: XRHandInputState;
 }
 
