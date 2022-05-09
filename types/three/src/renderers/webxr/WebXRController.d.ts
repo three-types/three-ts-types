@@ -5,7 +5,10 @@ import { XREventType, XRHandJoint, XRFrame, XRInputSource, XRReferenceSpace } fr
 export type XRControllerEventType = XREventType | 'disconnected' | 'connected';
 
 export type XRHandJoints = { [key in keyof typeof XRHandJoint]: number };
-export type XRHandInputState = { pinching: boolean };
+
+export interface XRHandInputState {
+    pinching: boolean;
+}
 
 export class XRHandSpace extends Group {
     readonly joints: Partial<XRHandJoints>;

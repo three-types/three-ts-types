@@ -76,18 +76,19 @@ export type XRAnchorSet = Set<XRAnchor>;
 
 export type XREventHandler = (callback: any) => void;
 
+// tslint:disable-next-line no-empty-interface
 export interface XRLayer extends EventTarget {}
 
-export type XRDOMOverlayInit = {
+export interface XRDOMOverlayInit {
     /**
      * The root attribute specifies the overlay element that will be displayed to the user as the content of the DOM overlay. This is a required attribute, there is no default.
      */
     root: Element;
-};
+}
 
-export type XRLightProbeInit = {
+export interface XRLightProbeInit {
     reflectionFormat: XRReflectionFormat;
-};
+}
 
 export interface XRSessionInit {
     optionalFeatures?: string[];
@@ -202,6 +203,7 @@ export interface XRWebGLSubImage extends XRSubImage {
     textureHeight: number;
 }
 
+// tslint:disable-next-line no-empty-interface
 export interface XRSpace extends EventTarget {}
 
 export interface XRRenderState {
@@ -295,12 +297,12 @@ export interface XREyeTrackingSourceEvent extends Event {
 
 export type XRInputSourceArray = XRInputSource[];
 
-export type XRDOMOverlayState = {
+export interface XRDOMOverlayState {
     /**
      * set if supported, or is null if the feature is not supported
      */
     type: XRDOMOverlayType | null;
-};
+}
 
 export interface XRLightProbe extends EventTarget {
     readonly probeSpace: XRSpace;
