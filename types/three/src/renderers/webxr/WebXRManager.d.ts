@@ -1,18 +1,19 @@
-import { Group } from '../../objects/Group';
 import { Vector4 } from '../../math/Vector4';
 import { ArrayCamera } from '../../cameras/ArrayCamera';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera';
 import { EventDispatcher } from '../../core/EventDispatcher';
 import {
-    XRFrameRequestCallback,
-    XRReferenceSpace,
     XRReferenceSpaceType,
-    XRSession,
-    XRFrame,
+    XRBoundedReferenceSpaceType,
+    XRReferenceSpace,
     XRWebGLLayer,
-    // XRProjectionLayer,
-    // XRWebGLBinding
+    XRProjectionLayer,
+    XRWebGLBinding,
+    XRFrame,
+    XRSession,
+    XRFrameRequestCallback,
 } from './WebXR';
+import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
@@ -35,15 +36,15 @@ export class WebXRManager extends EventDispatcher {
      */
     cameraAutoUpdate: boolean;
 
-    getController(index: number): Group;
-    getControllerGrip(index: number): Group;
-    getHand(index: number): Group;
+    getController(index: number): XRTargetRaySpace;
+    getControllerGrip(index: number): XRGripSpace;
+    getHand(index: number): XRHandSpace;
     setFramebufferScaleFactor(value: number): void;
-    setReferenceSpaceType(value: XRReferenceSpaceType): void;
+    setReferenceSpaceType(value: XRReferenceSpaceType | XRBoundedReferenceSpaceType): void;
     getReferenceSpace(): XRReferenceSpace | null;
     setReferenceSpace(value: XRReferenceSpace): void;
-    getBaseLayer(): XRWebGLLayer; // | XRProjectionLayer
-    getBinding(): any; // XRWebGLBinding
+    getBaseLayer(): XRWebGLLayer | XRProjectionLayer;
+    getBinding(): XRWebGLBinding;
     getFrame(): XRFrame;
     getSession(): XRSession | null;
     setSession(value: XRSession): Promise<void>;
