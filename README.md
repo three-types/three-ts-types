@@ -10,7 +10,7 @@ We are using this repository as a home for the types instead of DefinitelyTyped 
 
 The highest priority is making sure that there are no inaccurate types (or types for things that have been removed).
 
-It is a goal to have complete types for all of the code in the `src` directory.
+It is a goal to have complete public facing API types for all of the code in the `src` directory.
 
 It is not a goal for the `examples/jsm` directory to have complete declaration files for every examples module due to the number of example modules and how quickly they are modified. If you would like to use an examples module that is missing types then create a PR to add the types or create an issue to request that we add the missing types for that module.
 
@@ -65,8 +65,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://xk.io/"><img src="https://avatars.githubusercontent.com/u/1046448?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Max Kaye</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=XertroV" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/LauferAlex"><img src="https://avatars.githubusercontent.com/u/86115165?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alejandro Laufer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3ALauferAlex" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=LauferAlex" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.joemo.co.uk"><img src="https://avatars.githubusercontent.com/u/39060404?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Joe Tipping</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Gallahron" title="Code">💻</a></td>
-  </tr>
+    <td align="center"><a href="https://twitter.com/ggsimm"><img src="https://avatars.githubusercontent.com/u/1862172?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Gianmarco</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=gsimone" title="Code">💻</a></td>
+    <td align="center"><a href="https://davidpeicho.github.io/"><img src="https://avatars.githubusercontent.com/u/8783766?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Peicho</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=DavidPeicho" title="Code">💻</a></td>
+    <td align="center"><a href="https://subho57.github.io"><img src="https://avatars.githubusercontent.com/u/98544661?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Subhankar Pal</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=subhankar-trisetra" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=subhankar-trisetra" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://synphonyte.com"><img src="https://avatars.githubusercontent.com/u/380881?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Maccesch</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=maccesch" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=maccesch" title="Tests">⚠️</a></td>
   </tr>
 </table>
 
