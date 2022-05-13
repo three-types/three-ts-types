@@ -3,7 +3,7 @@ import { DirectionalLight, Group, LightProbe, XRFrame, WebGLRenderer, Texture } 
 export class SessionLightProbe {
     xrLight: XREstimatedLight;
     renderer: WebGLRenderer;
-    lightProbe: unknown;
+    lightProbe: LightProbe;
     xrWebGLBinding: unknown | null;
     estimationStartCallback: () => void;
     frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
@@ -11,7 +11,7 @@ export class SessionLightProbe {
     constructor(
         xrLight: XREstimatedLight,
         renderer: WebGLRenderer,
-        lightProbe: unknown,
+        lightProbe: LightProbe,
         environmentEstimation: boolean,
         estimationStartCallback: () => void,
     );
