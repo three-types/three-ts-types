@@ -1,4 +1,4 @@
-import { WebGLRenderer, XRSessionInit } from '../../../src/Three';
+import { WebGLRenderer } from '../../../src/Three';
 
 export interface ARButtonSessionInit extends XRSessionInit {
     domOverlay: { root: HTMLElement };

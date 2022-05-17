@@ -1,10 +1,10 @@
-import { DirectionalLight, Group, LightProbe, XRFrame, WebGLRenderer, Texture } from '../../../src/Three';
+import { DirectionalLight, Group, LightProbe, Texture, WebGLRenderer } from '../../../src/Three';
 
 export class SessionLightProbe {
     xrLight: XREstimatedLight;
     renderer: WebGLRenderer;
     lightProbe: LightProbe;
-    xrWebGLBinding: unknown | null;
+    xrWebGLBinding: XRWebGLBinding | null;
     estimationStartCallback: () => void;
     frameCallback: (this: SessionLightProbe, time: number, xrFrame: XRFrame) => void;
 
@@ -18,7 +18,7 @@ export class SessionLightProbe {
 
     updateReflection: () => void;
 
-    onXRFrame: (time: number, xrFrame: XRFrame) => void;
+    onXRFrame: XRFrameRequestCallback;
 
     dispose: () => void;
 }
