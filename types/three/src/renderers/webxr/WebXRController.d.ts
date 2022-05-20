@@ -1,7 +1,6 @@
 import { Group } from '../../objects/Group';
-import { XREventType, XRFrame, XRInputSource, XRReferenceSpace } from './WebXR';
 
-export type XRControllerEventType = XREventType | 'disconnected' | 'connected';
+export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
 export class WebXRController {
     constructor();
