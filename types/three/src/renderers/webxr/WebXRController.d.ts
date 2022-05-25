@@ -10,7 +10,7 @@ export interface XRHandInputState {
 }
 
 export class XRHandSpace extends Group {
-    readonly joints: XRHandJoints>;
+    readonly joints: XRHandJoints;
     readonly inputState: XRHandInputState;
 }
 
