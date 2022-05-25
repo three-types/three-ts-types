@@ -4,7 +4,7 @@ import { Vector3 } from '../../math/Vector3';
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
 export interface XRHandJoints {
-  [name: XRHandJoint]: number;
+    [name: XRHandJoint]: number;
 }
 
 export interface XRHandInputState {
