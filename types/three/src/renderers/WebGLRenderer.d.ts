@@ -19,7 +19,6 @@ import { WebXRManager } from '../renderers/webxr/WebXRManager';
 import { BufferGeometry } from './../core/BufferGeometry';
 import { Texture } from '../textures/Texture';
 import { Data3DTexture } from '../textures/Data3DTexture';
-import { XRFrameRequestCallback } from './webxr/WebXR';
 import { Vector3 } from '../math/Vector3';
 import { Box3 } from '../math/Box3';
 import { DataArrayTexture } from '../textures/DataArrayTexture';

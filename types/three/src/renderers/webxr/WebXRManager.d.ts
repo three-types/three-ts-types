@@ -2,17 +2,6 @@ import { Vector4 } from '../../math/Vector4';
 import { ArrayCamera } from '../../cameras/ArrayCamera';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera';
 import { EventDispatcher } from '../../core/EventDispatcher';
-import {
-    XRReferenceSpaceType,
-    XRBoundedReferenceSpaceType,
-    XRReferenceSpace,
-    XRWebGLLayer,
-    XRProjectionLayer,
-    XRWebGLBinding,
-    XRFrame,
-    XRSession,
-    XRFrameRequestCallback,
-} from './WebXR';
 import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
@@ -40,7 +29,7 @@ export class WebXRManager extends EventDispatcher {
     getControllerGrip(index: number): XRGripSpace;
     getHand(index: number): XRHandSpace;
     setFramebufferScaleFactor(value: number): void;
-    setReferenceSpaceType(value: XRReferenceSpaceType | XRBoundedReferenceSpaceType): void;
+    setReferenceSpaceType(value: XRReferenceSpaceType): void;
     getReferenceSpace(): XRReferenceSpace | null;
     setReferenceSpace(value: XRReferenceSpace): void;
     getBaseLayer(): XRWebGLLayer | XRProjectionLayer;
