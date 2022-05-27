@@ -170,7 +170,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     /**
      * @default [100, 400]
      */
-    iridescenceThicknessRange: [min: number, max: number];
+    iridescenceThicknessRange: number[];
 
     /**
      * @default null
