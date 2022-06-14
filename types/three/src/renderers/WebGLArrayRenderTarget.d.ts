@@ -1,10 +1,11 @@
 import { DataArrayTexture } from '../textures/DataArrayTexture';
+import { DataDimensions3D } from '../textures/Texture';
 import { WebGLRenderTarget } from './WebGLRenderTarget';
 
 /**
  * This type of render target represents an array of textures.
  */
-export class WebGLArrayRenderTarget extends WebGLRenderTarget {
+export class WebGLArrayRenderTarget extends WebGLRenderTarget<DataDimensions3D, DataDimensions3D, DataArrayTexture> {
     /**
      * Creates a new WebGLArrayRenderTarget.
      *
@@ -18,11 +19,6 @@ export class WebGLArrayRenderTarget extends WebGLRenderTarget {
      * The depth of the render target.
      */
     depth: number;
-
-    /**
-     * The texture property is overwritten with an instance of {@link DataArrayTexture}.
-     */
-    texture: DataArrayTexture;
 
     readonly isWebGLArrayRenderTarget: true;
 }

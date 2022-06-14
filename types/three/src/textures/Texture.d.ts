@@ -11,8 +11,32 @@ import {
     TextureDataType,
     TextureEncoding,
 } from '../constants';
+import { CubeTexture } from './CubeTexture';
+import { OffscreenCanvas } from '../renderers/WebGLRenderer';
 
-export class Texture extends EventDispatcher {
+export interface Dimensions2D {
+    width: number;
+    height: number;
+}
+
+export interface DataDimensions3D extends ImageData {
+    depth: number;
+}
+
+export type BaseTextureImageType = TexImageSource | OffscreenCanvas | DataDimensions3D | Dimensions2D;
+
+export type TextureImageTypes = BaseTextureImageType | BaseTextureImageType[];
+
+export interface ManualMipMapType<ImageSource extends TexImageSource = TexImageSource> extends Dimensions2D {
+    data: ImageSource;
+}
+
+export type MipMapType = ImageData | ManualMipMapType | CubeTexture;
+
+export class Texture<
+    ImageT extends TextureImageTypes = TextureImageTypes,
+    MipMapT extends MipMapType = MipMapType,
+> extends EventDispatcher {
     /**
      * @param [image]
      * @param [mapping=THREE.Texture.DEFAULT_MAPPING]
@@ -26,7 +50,7 @@ export class Texture extends EventDispatcher {
      * @param [encoding=THREE.LinearEncoding]
      */
     constructor(
-        image?: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement,
+        image?: ImageT,
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
@@ -61,7 +85,7 @@ export class Texture extends EventDispatcher {
      * video element as a source for your texture image and continuously update this texture
      * as long as video is playing - the {@link VideoTexture} class handles this automatically.
      */
-    get image(): any;
+    get image(): ImageT;
 
     /**
      * An image object, typically created using the {@link TextureLoader.load} method.
@@ -71,12 +95,12 @@ export class Texture extends EventDispatcher {
      * video element as a source for your texture image and continuously update this texture
      * as long as video is playing - the {@link VideoTexture} class handles this automatically.
      */
-    set image(data: any);
+    set image(data: ImageT);
 
     /**
      * @default []
      */
-    mipmaps: any[]; // ImageData[] for 2D textures and CubeTexture[] for cube textures;
+    mipmaps: MipMapT[]; // ImageData[] for 2D textures and CubeTexture[] for cube textures;
 
     /**
      * @default THREE.Texture.DEFAULT_MAPPING

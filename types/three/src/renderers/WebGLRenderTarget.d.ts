@@ -1,5 +1,5 @@
 import { Vector4 } from './../math/Vector4';
-import { Texture } from './../textures/Texture';
+import { MipMapType, Texture, TextureImageTypes } from './../textures/Texture';
 import { DepthTexture } from './../textures/DepthTexture';
 import { EventDispatcher } from './../core/EventDispatcher';
 import { Wrapping, TextureFilter, TextureDataType, TextureEncoding } from '../constants';
@@ -25,7 +25,11 @@ export interface WebGLRenderTargetOptions {
     samples?: number;
 }
 
-export class WebGLRenderTarget extends EventDispatcher {
+export class WebGLRenderTarget<
+    ImageT extends TextureImageTypes = TextureImageTypes,
+    MipMapT extends MipMapType = MipMapType,
+    TextureT extends Texture<ImageT, MipMapT> = Texture<ImageT, MipMapT>,
+> extends EventDispatcher {
     constructor(width: number, height: number, options?: WebGLRenderTargetOptions);
 
     width: number;
@@ -38,7 +42,7 @@ export class WebGLRenderTarget extends EventDispatcher {
      */
     scissorTest: boolean;
     viewport: Vector4;
-    texture: Texture;
+    texture: TextureT;
 
     /**
      * @default true

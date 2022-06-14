@@ -1,7 +1,7 @@
-import { Texture } from './Texture';
+import { BaseTextureImageType, Texture } from './Texture';
 import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType, TextureEncoding } from '../constants';
 
-export class CubeTexture extends Texture {
+export class CubeTexture extends Texture<BaseTextureImageType[], CubeTexture> {
     /**
      * @param [images=[]]
      * @param [mapping=THREE.CubeReflectionMapping]
@@ -15,7 +15,7 @@ export class CubeTexture extends Texture {
      * @param [encoding=THREE.LinearEncoding]
      */
     constructor(
-        images?: any[], // HTMLImageElement or HTMLCanvasElement
+        images?: BaseTextureImageType[],
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,

@@ -1,7 +1,7 @@
 import { LoadingManager, CompressedTextureLoader, CompressedPixelFormat } from '../../../src/Three';
 
 export interface PVR {
-    mipmaps: object[];
+    mipmaps: ImageData[];
     width: number;
     height: number;
     format: CompressedPixelFormat;

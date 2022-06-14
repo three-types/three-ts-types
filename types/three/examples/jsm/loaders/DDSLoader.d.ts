@@ -1,7 +1,7 @@
 import { LoadingManager, CompressedTextureLoader, PixelFormat, CompressedPixelFormat } from '../../../src/Three';
 
 export interface DDS {
-    mipmaps: object[];
+    mipmaps: ImageData[];
     width: number;
     height: number;
     format: PixelFormat | CompressedPixelFormat;
