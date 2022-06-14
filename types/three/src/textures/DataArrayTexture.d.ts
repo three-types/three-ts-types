@@ -1,7 +1,7 @@
-import { Texture } from './Texture';
+import { DataDimensions3D, Texture } from './Texture';
 import { TextureFilter } from '../constants';
 
-export class DataArrayTexture extends Texture {
+export class DataArrayTexture extends Texture<DataDimensions3D, DataDimensions3D> {
     constructor(data?: BufferSource, width?: number, height?: number, depth?: number);
 
     /**

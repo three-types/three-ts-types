@@ -1,7 +1,7 @@
-import { Texture } from './Texture';
+import { Dimensions2D, Texture } from './Texture';
 import { Mapping, Wrapping, TextureFilter, TextureDataType } from '../constants';
 
-export class DepthTexture extends Texture {
+export class DepthTexture extends Texture<Dimensions2D> {
     /**
      * @param width
      * @param height
@@ -24,9 +24,6 @@ export class DepthTexture extends Texture {
         minFilter?: TextureFilter,
         anisotropy?: number,
     );
-
-    get image(): { width: number; height: number };
-    set image(value: { width: number; height: number });
 
     /**
      * @default false

@@ -1,7 +1,7 @@
 import { Texture } from './Texture';
 import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType } from '../constants';
 
-export class VideoTexture extends Texture {
+export class VideoTexture extends Texture<HTMLVideoElement> {
     /**
      * @param video
      * @param [mapping=THREE.Texture.DEFAULT_MAPPING]
