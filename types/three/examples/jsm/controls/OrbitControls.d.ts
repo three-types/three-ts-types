@@ -42,9 +42,9 @@ export class OrbitControls {
     autoRotate: boolean;
     autoRotateSpeed: number;
 
-    keys: { LEFT: string; UP: string; RIGHT: string; BOTTOM: string };
-    mouseButtons: { LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE };
-    touches: { ONE: TOUCH; TWO: TOUCH };
+    keys: { LEFT: string | null; UP: string | null; RIGHT: string | null; BOTTOM: string | null };
+    mouseButtons: { LEFT: MOUSE | null; MIDDLE: MOUSE | null; RIGHT: MOUSE | null };
+    touches: { ONE: TOUCH | null; TWO: TOUCH | null };
 
     target0: Vector3;
     position0: Vector3;
