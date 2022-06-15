@@ -4,7 +4,7 @@ export class OrbitControls {
     constructor(object: Camera, domElement?: HTMLElement);
 
     object: Camera;
-    domElement: HTMLElement | HTMLDocument;
+    domElement: HTMLElement | Document;
 
     // API
     enabled: boolean;
