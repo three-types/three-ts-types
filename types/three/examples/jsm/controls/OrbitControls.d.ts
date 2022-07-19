@@ -43,8 +43,8 @@ export class OrbitControls {
     autoRotateSpeed: number;
 
     keys: { LEFT: string; UP: string; RIGHT: string; BOTTOM: string };
-    mouseButtons: { LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE };
-    touches: { ONE: TOUCH; TWO: TOUCH };
+    mouseButtons: Partial<{ LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE }>;
+    touches: Partial<{ ONE: TOUCH; TWO: TOUCH }>;
 
     target0: Vector3;
     position0: Vector3;
