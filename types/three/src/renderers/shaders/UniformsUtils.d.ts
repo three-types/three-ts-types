@@ -1,8 +1,8 @@
 import { Uniform } from '../../core/Uniform';
 import { UniformsGroup } from '../../core/UniformsGroup';
 
-export function cloneUniforms(uniforms_src: Uniform): Uniform;
-export function mergeUniforms(uniforms: Uniform[]): Uniform;
+export function cloneUniforms(uniforms_src: any): any;
+export function mergeUniforms(uniforms: any): any;
 
 export function cloneUniformsGroups(src: UniformsGroup[]): UniformsGroup[];
 
