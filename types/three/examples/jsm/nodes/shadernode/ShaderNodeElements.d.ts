@@ -1,3 +1,4 @@
+import Node from '../core/Node';
 import { RangeModeBound } from '../geometry/RangeNode';
 import { NodeRepresentation, Swizzable } from './ShaderNode';
 import {

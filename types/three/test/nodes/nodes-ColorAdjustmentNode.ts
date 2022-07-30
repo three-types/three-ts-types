@@ -1,3 +1,10 @@
+/**
+ * A copy of ColorAdjustmentNode.js coverted to typescript
+ *
+ * It was chosen because it is short and nicely shows interaction
+ * between ShaderNode a normal node.
+ */
+
 import {
     dot,
     mix,
@@ -14,6 +21,8 @@ import {
     sqrt,
     cos,
     sin,
+    TempNode,
+    float,
 } from 'three/examples/jsm/nodes/Nodes';
 
 const luminanceNode = new ShaderNode<{ color: Node }>(({ color }) => {
@@ -48,3 +57,42 @@ const hueNode = new ShaderNode<{ color: Node; adjustment: Node }>(({ color, adju
 
     return mul(YIQtoRGB, vec3(yiq.x, mul(chroma, cos(hue)), mul(chroma, sin(hue))));
 });
+
+class TestNode extends TempNode {
+    static SATURATION = 'saturation';
+    static VIBRANCE = 'vibrance';
+    static HUE = 'hue';
+    method: string;
+    colorNode: Node;
+    adjustmentNode: Node;
+
+    constructor(method: string, colorNode: Node, adjustmentNode = float(1)) {
+        super('vec3');
+
+        this.method = method;
+
+        this.colorNode = colorNode;
+        this.adjustmentNode = adjustmentNode;
+    }
+
+    construct() {
+        const { method, colorNode, adjustmentNode } = this;
+
+        const callParams = { color: colorNode, adjustment: adjustmentNode };
+
+        let outputNode = null;
+
+        switch (method) {
+            case TestNode.SATURATION:
+                outputNode = saturationNode.call(callParams);
+            case TestNode.VIBRANCE:
+                outputNode = vibranceNode.call(callParams);
+            case TestNode.HUE:
+                outputNode = hueNode.call(callParams);
+            default:
+                console.error(`${this.type}: Method "${this.method}" not supported!`);
+        }
+
+        return outputNode;
+    }
+}

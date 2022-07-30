@@ -1,6 +1,6 @@
 import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
-import { Texture, TextureEncoding, Renderer, Object3D } from 'three';
-import Node from 'three/examples/jsm/nodes/core/Node.js';
+import { Texture, TextureEncoding, Renderer, Object3D } from '../../../../../src/Three';
+import Node from '../../../nodes/core/Node.js';
 import SlotNode from './SlotNode.js';
 
 export class WebGLNodeBuilder extends NodeBuilder {

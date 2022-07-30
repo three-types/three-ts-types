@@ -1,4 +1,5 @@
 import TextureNode from '../accessors/TextureNode';
+import Node from '../core/Node';
 
 // shader node utils
 import {

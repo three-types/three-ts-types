@@ -1,5 +1,5 @@
 import AnalyticLightNode from './AnalyticLightNode';
-
+import Node from '../core/Node';
 import { PointLight, SpotLight } from '../../../../src/Three';
 
 export type PunctualLight = PointLight | SpotLight;

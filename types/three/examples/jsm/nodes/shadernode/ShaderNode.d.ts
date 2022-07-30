@@ -1,9 +1,10 @@
-import { MathNode, Node, NodeBuilder, NodeTypeOption, OperatorNode, SwizzleOption } from '../Nodes';
+import { Node, NodeBuilder, NodeTypeOption, SwizzleOption } from '../Nodes';
 // lot of private typescript magic here
 export {};
-export type Swizzable = {
-    [key in SwizzleOption]: Swizzable;
-};
+export type Swizzable = Node &
+    {
+        [key in SwizzleOption | number]: Swizzable;
+    };
 
 /** anything that can be passed to {@link nodeObject} and returns a proxy */
 export type NodeRepresentation = number | boolean | Node | Swizzable;
@@ -108,8 +109,7 @@ type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? Node
 export type NodeOrType = Node | NodeTypeOption;
 
 export function getConstNodeType(value: NodeOrType): NodeTypeOption | null;
-// tslint:disable-next-line:no-unnecessary-generics
-export function nodeObject<T extends NodeObjectOption>(obj: NodeObjectOption): NodeObject<T>;
+export function nodeObject<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
 export function nodeArray<T extends NodeObjectOption[]>(obj: readonly [...T]): NodeArray<T>;
@@ -132,7 +132,7 @@ export function nodeImmutable<T>(nodeClass: T, ...params: MakeObjectOptions<GetC
 export class ShaderNode<T> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
     call: (
-        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Node | Swizzable : T[key] },
+        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Swizzable | Node : T[key] },
         builder?: NodeBuilder,
     ) => Node;
 }

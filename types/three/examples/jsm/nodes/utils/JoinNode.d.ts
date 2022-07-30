@@ -1,3 +1,4 @@
+import Node from '../core/Node';
 import { TempNode } from '../Nodes';
 
 /**

@@ -1,3 +1,7 @@
+/**
+ * Various tests of ShaderNode and related type inference
+ */
+
 import {
     Node,
     MaterialNode,

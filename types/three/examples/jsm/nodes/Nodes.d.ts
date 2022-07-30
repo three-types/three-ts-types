@@ -35,7 +35,7 @@ import MaterialReferenceNode from './accessors/MaterialReferenceNode';
 import ModelNode from './accessors/ModelNode';
 import ModelViewProjectionNode from './accessors/ModelViewProjectionNode';
 import NormalNode, { NormalNodeScope } from './accessors/NormalNode';
-import Object3DNode, { OObject3DNodeScope } from './accessors/Object3DNode';
+import Object3DNode, { Object3DNodeScope } from './accessors/Object3DNode';
 import PointUVNode from './accessors/PointUVNode';
 import PositionNode, { PositionNodeScope } from './accessors/PositionNode';
 import ReferenceNode from './accessors/ReferenceNode';
@@ -152,7 +152,7 @@ export {
     NormalNode,
     NormalNodeScope,
     Object3DNode,
-    OObject3DNodeScope,
+    Object3DNodeScope as OObject3DNodeScope,
     PointUVNode,
     PositionNode,
     PositionNodeScope,

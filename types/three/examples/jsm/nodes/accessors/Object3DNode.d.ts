@@ -1,7 +1,7 @@
 import { Object3D } from '../../../../src/Three';
 import Node from '../core/Node';
 
-export type OObject3DNodeScope =
+export type Object3DNodeScope =
     | typeof Object3DNode.VIEW_MATRIX
     | typeof Object3DNode.NORMAL_MATRIX
     | typeof Object3DNode.WORLD_MATRIX
@@ -15,8 +15,8 @@ export default class Object3DNode extends Node {
     static POSITION: 'position';
     static VIEW_POSITION: 'viewPosition';
 
-    scope: OObject3DNodeScope;
+    scope: Object3DNodeScope;
     object3d: Object3D | null;
 
-    constructor(scope?: OObject3DNodeScope, object3d?: Object3D);
+    constructor(scope?: Object3DNodeScope, object3d?: Object3D);
 }
