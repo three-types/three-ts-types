@@ -74,6 +74,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/atulrnt"><img src="https://avatars.githubusercontent.com/u/894203?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Arthur LAURENT</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=atulrnt" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/cosformula"><img src="https://avatars.githubusercontent.com/u/18232501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cosformula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=cosformula" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/miko3k"><img src="https://avatars.githubusercontent.com/u/8658482?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Peter Hanula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=miko3k" title="Code">💻</a></td>
   </tr>
 </table>
 
