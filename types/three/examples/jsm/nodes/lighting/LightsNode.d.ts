@@ -12,5 +12,8 @@ export default class LightsNode extends Node {
 
     fromLights(lights: Light[]): this;
 
-    static setReference(lightClass: any, lightNodeClass: any): void;
+    static setReference<T extends Light>(
+        lightClass: { new (): T },
+        lightNodeClass: { new (light: T): LightingNode },
+    ): void;
 }

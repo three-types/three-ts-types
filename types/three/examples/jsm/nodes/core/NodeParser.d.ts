@@ -1,5 +1,5 @@
 import Node from './Node';
 
-export default class NodeParser {
-    parseFunction(source: string): Node;
+export default abstract class NodeParser {
+    abstract parseFunction(source: string): Node;
 }

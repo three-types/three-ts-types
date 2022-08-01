@@ -14,6 +14,7 @@ import {
     nodeImmutable,
     nodeProxy,
     ShaderNode,
+    ConstNode,
 } from 'three/examples/jsm/nodes/Nodes';
 
 import { ConvertType, Swizzable } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
@@ -48,12 +49,12 @@ assertSwizzable(cos(s));
 export const oscSine0 = nodeProxy(OscNode, OscNode.SAWTOOTH, 1);
 assertSwizzable(oscSine0());
 export const mix0 = nodeProxy(MathNode, MathNode.MIX, 1);
-assertSwizzable(mix0(s, new Node()));
+assertSwizzable(mix0(s, new ConstNode(1)));
 
 export const sub = nodeProxy(OperatorNode, '-');
-assertSwizzable(sub(s, new Node(), new Node(), new Node(), new Node()));
+assertSwizzable(sub(s, new ConstNode(1), new ConstNode(1), new ConstNode(1), new ConstNode(1)));
 export const remainder = nodeProxy(OperatorNode, '%');
-assertSwizzable(remainder(s, new Node(), new Node(), new Node(), new Node()));
+assertSwizzable(remainder(s, new ConstNode(1), new ConstNode(1), new ConstNode(1), new ConstNode(1)));
 
 assertSwizzable(nodeImmutable(MaterialNode, MaterialNode.ROTATION));
 assertSwizzable(nodeImmutable(PropertyNode, 'DiffuseColor', 'vec4'));
@@ -65,4 +66,4 @@ assertSwizzable(shiftRight(s, s, s, s));
 const shader = new ShaderNode<{ a: Node; b: Node }>(params => {
     return params.a;
 });
-assertNode(shader.call({ a: s, b: new Node() }));
+assertNode(shader.call({ a: s, b: new ConstNode(1) }));

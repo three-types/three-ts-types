@@ -100,7 +100,7 @@ type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
 export type ConvertType = (...params: any[]) => Swizzable;
 
 export const ConvertType: {
-    new (type: NodeTypeOption, cacheMap?: any): ConvertType;
+    new (type: NodeTypeOption, cacheMap?: { [key: string]: any }): ConvertType;
 };
 
 type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
@@ -129,7 +129,7 @@ export function nodeProxy<T, S extends GetPossibleScopes<T>>(
 
 export function nodeImmutable<T>(nodeClass: T, ...params: MakeObjectOptions<GetConstructors<T>>): Swizzable;
 
-export class ShaderNode<T> {
+export class ShaderNode<T = {}> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
     call: (
         inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Swizzable | Node : T[key] },

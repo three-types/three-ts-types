@@ -7,7 +7,6 @@ export default class NodeFrame {
     deltaTime: number;
     frameId: number;
     startTime: null | number;
-    updateMap: WeakMap<Node, number>;
     renderer: null | Renderer;
     material: null | Material;
     camera: null | Camera;

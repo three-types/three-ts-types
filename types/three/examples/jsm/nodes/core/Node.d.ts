@@ -2,11 +2,11 @@ import { NodeTypeOption, NodeUpdateTypeOption } from './constants';
 import NodeBuilder from './NodeBuilder';
 import NodeFrame from './NodeFrame';
 
-export default class Node {
+export default abstract class Node {
     uuid: string;
     type: string;
     isNode: true;
-    nodeType: NodeTypeOption;
+    nodeType: NodeTypeOption | null;
     updateType: NodeUpdateTypeOption;
     id: number;
 
@@ -21,6 +21,7 @@ export default class Node {
     construct(builder: NodeBuilder): Node | null;
     analyze(builder: NodeBuilder): void;
     generate(builder: NodeBuilder, output?: string | null): string;
+    /** This method must be overriden when {@link updateType} !== 'none' */
     update(frame: NodeFrame): void;
     build(builder: NodeBuilder, output?: string | null): string;
     serialize(json: any): void;

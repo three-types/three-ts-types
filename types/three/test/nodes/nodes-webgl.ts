@@ -8,7 +8,7 @@ import * as NodeUtils from 'three/examples/jsm/nodes/core/NodeUtils';
 import SlotNode from 'three/examples/jsm/renderers/webgl/nodes/SlotNode';
 import { WebGLNodeBuilder } from 'three/examples/jsm/renderers/webgl/nodes/WebGLNodeBuilder';
 import { nodeFrame } from 'three/examples/jsm/renderers/webgl/nodes/WebGLNodes';
-import { Object3D, WebGLRenderer } from 'three/src/Three';
+import { HemisphereLight, Object3D, PointLight, WebGLRenderer } from 'three/src/Three';
 import WebGLPhysicalContextNode from 'three/examples/jsm/renderers/webgl/nodes/WebGLPhysicalContextNode';
 
 nodeFrame.update();
@@ -20,3 +20,6 @@ NodeUtils.getNodesKeys(new Nodes.ConstNode(1));
 NodeUtils.getValueType(1);
 NodeUtils.getValueFromType('color');
 new WebGLPhysicalContextNode(WebGLPhysicalContextNode.RADIANCE, new Nodes.ConstNode(true));
+
+Nodes.LightsNode.setReference(PointLight, Nodes.PunctualLightNode);
+Nodes.LightsNode.setReference(HemisphereLight, Nodes.HemisphereLightNode);

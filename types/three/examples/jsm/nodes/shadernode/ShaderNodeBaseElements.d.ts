@@ -16,6 +16,7 @@ import {
 } from './ShaderNode';
 import { Material, Texture } from '../../../../src/Three';
 import { NodeTypeOption } from '../core/constants';
+import { NodeBuilderContext } from '../core/NodeBuilder';
 
 // shader node base
 
@@ -62,7 +63,7 @@ export function property(name: string, nodeOrType: Node | NodeTypeOption): Swizz
 
 export function bypass(returnNode: NodeRepresentation, callNode: NodeRepresentation): Swizzable;
 export function code(code: string, nodeType?: NodeTypeOption): Swizzable;
-export function context(node: NodeRepresentation, context: any): Swizzable;
+export function context(node: NodeRepresentation, context: NodeBuilderContext): Swizzable;
 export function expression(snipped?: string, nodeType?: NodeTypeOption): Swizzable;
 
 export function call(functionNode?: NodeRepresentation, parameters?: { [name: string]: Node }): Swizzable;
@@ -97,9 +98,9 @@ export const metalness: Swizzable;
 export const alphaTest: Swizzable;
 export const specularColor: Swizzable;
 
-export function reference(name: string, nodeOrType: NodeOrType, object: any): Swizzable;
+export function reference(name: string, nodeOrType: NodeOrType, object: unknown): Swizzable;
 export function materialReference(name: string, nodeOrType: NodeOrType, material: Material): Swizzable;
-export function userData(name: string, inputType: NodeTypeOption, userData?: any): Swizzable;
+export function userData(name: string, inputType: NodeTypeOption, userData?: { [key: string]: any }): Swizzable;
 
 export function modelViewProjection(position?: NodeRepresentation): Swizzable;
 

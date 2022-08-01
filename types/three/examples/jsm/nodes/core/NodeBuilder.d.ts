@@ -24,7 +24,17 @@ export interface FlowData {
     code: string;
 }
 
-export default class NodeBuilder {
+export interface NodeData {
+    vertex: { [key: string]: any };
+    fragment: { [key: string]: any };
+    compute: { [key: string]: any };
+}
+
+export interface NodeBuilderContext {
+    [key: string]: any;
+}
+
+export default abstract class NodeBuilder {
     object: Object3D;
     material: Material;
     geometry: BufferGeometry;
@@ -57,23 +67,23 @@ export default class NodeBuilder {
 
     addFlow(shaderStage: NodeShaderStageOption, node: Node): Node;
 
-    setContext(context: any): void;
-    getContext(): any;
+    setContext(context: NodeBuilderContext): void;
+    getContext(): NodeBuilderContext;
     isAvailable(name: string): boolean;
 
-    getInstanceIndex(): number;
+    abstract getInstanceIndex(): string;
 
-    getFrontFacing(): string;
+    abstract getFrontFacing(): string;
 
-    getTexture(textureProperty: string, uvSnippet: string): string;
+    abstract getTexture(textureProperty: string, uvSnippet: string): string;
 
-    getTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
+    abstract getTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
 
-    getCubeTexture(textureProperty: string, uvSnippet: string): string;
-    getCubeTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
+    abstract getCubeTexture(textureProperty: string, uvSnippet: string): string;
+    abstract getCubeTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
 
     // @TODO: rename to .generateConst()
-    getConst(type: NodeTypeOption, value: any): Node;
+    getConst(type: NodeTypeOption, value: unknown): Node;
     getType(type: NodeTypeOption): NodeTypeOption;
 
     generateMethod(method: string): string;
@@ -92,8 +102,8 @@ export default class NodeBuilder {
     getTypeFromLength(length: number): NodeTypeOption;
     getTypeLength(type: NodeTypeOption): number;
     getVectorFromMatrix(type: NodeTypeOption): NodeTypeOption;
-    getDataFromNode(node: Node, shaderStage?: NodeShaderStageOption): any;
-    getNodeProperties(node: Node, shaderStage?: NodeShaderStageOption): any;
+    getDataFromNode(node: Node, shaderStage?: NodeShaderStageOption): NodeData;
+    getNodeProperties(node: Node, shaderStage?: NodeShaderStageOption): { [key: string]: any };
     getUniformFromNode(node: Node, shaderStage: NodeShaderStageOption, type: NodeTypeOption): NodeUniform;
     getVarFromNode(node: Node, type: NodeTypeOption, shaderStage?: NodeShaderStageOption): NodeVar;
     getVaryFromNode(node: Node, type: NodeTypeOption): NodeVary;
@@ -108,17 +118,17 @@ export default class NodeBuilder {
         output?: string | null,
         propertyName?: string,
     ): FlowData;
-    getAttributes(shaderStage: NodeShaderStageOption): string;
-    getVarys(shaderStage: NodeShaderStageOption): string;
+    abstract getAttributes(shaderStage: NodeShaderStageOption): string;
+    abstract getVarys(shaderStage: NodeShaderStageOption): string;
     getVars(shaderStage: NodeShaderStageOption): string;
-    getUniforms(stage: NodeShaderStageOption): string;
+    abstract getUniforms(stage: NodeShaderStageOption): string;
     getCodes(shaderStage: NodeShaderStageOption): string;
     getHash(): string;
     setShaderStage(shaderStage: NodeShaderStageOption): void;
     getShaderStage(): NodeShaderStageOption;
     setBuildStage(buildStage: BuildStageOption): void;
     getBuildStage(): BuildStageOption;
-    buildCode(): void;
+    abstract buildCode(): void;
     build(): this;
     format(snippet: string, fromType: NodeTypeOption, toType: NodeTypeOption): string;
     getSignature(): string;

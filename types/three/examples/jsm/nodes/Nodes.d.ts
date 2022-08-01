@@ -2,7 +2,7 @@
 import ArrayUniformNode from './core/ArrayUniformNode';
 import AttributeNode from './core/AttributeNode';
 import BypassNode from './core/BypassNode';
-import CodeNode from './core/CodeNode';
+import CodeNode, { CodeNodeInclude } from './core/CodeNode';
 import ConstNode from './core/ConstNode';
 import ContextNode from './core/ContextNode';
 import ExpressionNode from './core/ExpressionNode';
@@ -112,6 +112,7 @@ export {
     AttributeNode,
     BypassNode,
     CodeNode,
+    CodeNodeInclude,
     ContextNode,
     ConstNode,
     ExpressionNode,

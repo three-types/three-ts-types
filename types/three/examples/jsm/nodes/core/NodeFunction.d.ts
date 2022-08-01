@@ -1,6 +1,6 @@
 import NodeFunctionInput from './NodeFunctionInput';
 
-export default class NodeFunction {
+export default abstract class NodeFunction {
     isNodeFunction: true;
     type: string;
     inputs: NodeFunctionInput[];
@@ -9,5 +9,5 @@ export default class NodeFunction {
 
     constructor(type: string, inputs: NodeFunctionInput[], name?: string, presicion?: string);
 
-    getCode(name?: string): string;
+    abstract getCode(name?: string): string;
 }

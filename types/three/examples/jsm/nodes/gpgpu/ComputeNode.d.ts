@@ -1,4 +1,5 @@
 import Node from '../core/Node';
+import { NodeFrame } from '../Nodes';
 
 export default class ComputeNode extends Node {
     isComputeNode: true;
