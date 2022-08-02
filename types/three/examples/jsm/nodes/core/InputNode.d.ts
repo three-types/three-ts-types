@@ -6,7 +6,7 @@ export default abstract class InputNode extends Node {
     isInputNode: true;
     value: NodeValueOption;
 
-    constructor(value: NodeValueOption, nodeType?: NodeTypeOption);
+    constructor(value: NodeValueOption, nodeType?: NodeTypeOption | null);
 
     getInputType(builder: NodeBuilder): string | null;
 }

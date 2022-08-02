@@ -4,7 +4,7 @@ import NodeBuilder from './NodeBuilder';
 
 export default class ConstNode extends InputNode {
     isConstNode: true;
-    constructor(value: NodeValueOption, nodeType?: NodeTypeOption);
+    constructor(value: NodeValueOption, nodeType?: NodeTypeOption | null);
 
     generateConst(builder: NodeBuilder): string;
 }

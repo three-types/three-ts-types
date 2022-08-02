@@ -5,6 +5,6 @@ import NodeBuilder from './NodeBuilder';
 export default class UniformNode extends InputNode {
     isUniformNode: true;
 
-    constructor(value: NodeValueOption, nodeType?: NodeTypeOption);
+    constructor(value: NodeValueOption, nodeType?: NodeTypeOption | null);
     getUniformHash(builder: NodeBuilder): string;
 }

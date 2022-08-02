@@ -10,7 +10,8 @@ import {
 } from '../../../../src/Three';
 import FogNode from '../fog/FogNode';
 import LightsNode from '../lighting/LightsNode';
-import { NodeShaderStageOption, NodeTypeOption } from './constants';
+import { nodeObject } from '../Nodes';
+import { AnyObject, NodeShaderStageOption, NodeTypeOption } from './constants';
 import Node from './Node';
 import NodeAttribute from './NodeAttribute';
 import NodeParser from './NodeParser';
@@ -25,14 +26,12 @@ export interface FlowData {
 }
 
 export interface NodeData {
-    vertex: { [key: string]: any };
-    fragment: { [key: string]: any };
-    compute: { [key: string]: any };
+    vertex: AnyObject;
+    fragment: AnyObject;
+    compute: AnyObject;
 }
 
-export interface NodeBuilderContext {
-    [key: string]: any;
-}
+export type NodeBuilderContext = AnyObject;
 
 export default abstract class NodeBuilder {
     object: Object3D;
@@ -103,7 +102,7 @@ export default abstract class NodeBuilder {
     getTypeLength(type: NodeTypeOption): number;
     getVectorFromMatrix(type: NodeTypeOption): NodeTypeOption;
     getDataFromNode(node: Node, shaderStage?: NodeShaderStageOption): NodeData;
-    getNodeProperties(node: Node, shaderStage?: NodeShaderStageOption): { [key: string]: any };
+    getNodeProperties(node: Node, shaderStage?: NodeShaderStageOption): AnyObject;
     getUniformFromNode(node: Node, shaderStage: NodeShaderStageOption, type: NodeTypeOption): NodeUniform;
     getVarFromNode(node: Node, type: NodeTypeOption, shaderStage?: NodeShaderStageOption): NodeVar;
     getVaryFromNode(node: Node, type: NodeTypeOption): NodeVary;

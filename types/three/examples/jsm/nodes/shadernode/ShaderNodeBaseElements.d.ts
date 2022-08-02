@@ -15,8 +15,9 @@ import {
     NodeOrType,
 } from './ShaderNode';
 import { Material, Texture } from '../../../../src/Three';
-import { NodeTypeOption } from '../core/constants';
+import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants';
 import { NodeBuilderContext } from '../core/NodeBuilder';
+import { FunctionCallNode, FunctionNode, PointUVNode, ReferenceNode, UVNode } from '../Nodes';
 
 // shader node base
 
@@ -54,9 +55,9 @@ export const imat4: ConvertType;
 export const umat4: ConvertType;
 export const bmat4: ConvertType;
 
-export function func(code: string): ShaderNode<any>;
+export function func(code: string): ShaderNode<FunctionNode>;
 
-export function uniform(nodeOrType: any): Swizzable;
+export function uniform(nodeOrType: Node | Swizzable | NodeValueOption): Swizzable;
 
 export function attribute(attributeName: string, nodeType: NodeTypeOption): Swizzable;
 export function property(name: string, nodeOrType: Node | NodeTypeOption): Swizzable;
@@ -98,9 +99,9 @@ export const metalness: Swizzable;
 export const alphaTest: Swizzable;
 export const specularColor: Swizzable;
 
-export function reference(name: string, nodeOrType: NodeOrType, object: unknown): Swizzable;
+export function reference<T>(name: string, nodeOrType: NodeOrType, object: T): Swizzable<ReferenceNode<T>>;
 export function materialReference(name: string, nodeOrType: NodeOrType, material: Material): Swizzable;
-export function userData(name: string, inputType: NodeTypeOption, userData?: { [key: string]: any }): Swizzable;
+export function userData(name: string, inputType: NodeTypeOption, userData?: NodeUserData): Swizzable;
 
 export function modelViewProjection(position?: NodeRepresentation): Swizzable;
 
@@ -122,14 +123,18 @@ export const positionWorld: Swizzable;
 export const positionView: Swizzable;
 export const positionViewDirection: Swizzable;
 
-export function texture(value: Texture, uvNode?: NodeRepresentation, levelNode?: NodeRepresentation): Swizzable;
+export function texture(
+    value: Texture,
+    uvNode?: NodeRepresentation,
+    levelNode?: NodeRepresentation,
+): Swizzable<TextureNode>;
 export function sampler(texture: Texture | TextureNode): Swizzable;
-export function uv(index?: number): Swizzable;
-export const pointUV: Swizzable;
+export function uv(index?: number): Swizzable<UVNode>;
+export const pointUV: Swizzable<PointUVNode>;
 
 // gpgpu
 
-export function compute(node: NodeRepresentation, count: number, workgroupSize: number): Swizzable;
+export function compute(node: NodeRepresentation, count: number, workgroupSize: number[]): Swizzable;
 
 // math
 

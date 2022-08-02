@@ -7,7 +7,7 @@ export default class ReferenceNode<T> extends Node {
     uniformType: string;
     node: Node | null;
 
-    constructor(property: string, uniformType: NodeTypeOption, object?: T);
+    constructor(property: string, uniformType: NodeTypeOption, object?: T | null);
 
     setNodeType(uniformType: NodeTypeOption): void;
 }

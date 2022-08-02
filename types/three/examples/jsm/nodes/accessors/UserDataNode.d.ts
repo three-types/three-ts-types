@@ -1,7 +1,7 @@
-import { NodeTypeOption } from '../core/constants';
+import { NodeTypeOption, NodeUserData } from '../core/constants';
 import ReferenceNode from './ReferenceNode';
 
-export default class UserDataNode extends ReferenceNode<{ [key: string]: any }> {
-    userData: { [key: string]: any } | null;
-    constructor(property: string, inputType: NodeTypeOption, userData?: { [key: string]: any });
+export default class UserDataNode extends ReferenceNode<NodeUserData> {
+    userData: NodeUserData | null;
+    constructor(property: string, inputType: NodeTypeOption, userData?: NodeUserData | null);
 }

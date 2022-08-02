@@ -8,5 +8,5 @@ export default class TextureNode extends UniformNode {
     uvNode: Node | null;
     levelNode: Node | null;
 
-    constructor(value: Texture, uvNode?: Node, levelNode?: Node);
+    constructor(value: Texture, uvNode?: Node, levelNode?: Node | null);
 }

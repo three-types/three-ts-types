@@ -10,5 +10,5 @@ export default class ToneMappingNode extends TempNode {
     exposureNode: Node;
     colorNode: Node | null;
 
-    constructor(toneMapping: ToneMapping, exposureNode?: Node, colorNode?: Node);
+    constructor(toneMapping: ToneMapping, exposureNode?: Node, colorNode?: Node | null);
 }

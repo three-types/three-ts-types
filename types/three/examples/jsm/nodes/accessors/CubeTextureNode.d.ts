@@ -7,5 +7,5 @@ export default class CubeTextureNode extends TextureNode {
     uvNode: Node | null;
     levelNode: Node | null;
 
-    constructor(value: CubeTexture, uvNode?: Node, levelNode?: Node);
+    constructor(value: CubeTexture, uvNode?: Node | null, levelNode?: Node | null);
 }

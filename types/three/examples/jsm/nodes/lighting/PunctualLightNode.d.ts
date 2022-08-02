@@ -8,5 +8,5 @@ export default class PunctualLightNode extends AnalyticLightNode<PunctualLight> 
     cutoffDistanceNode: Node;
     decayExponentNode: Node;
 
-    constructor(light?: PunctualLight);
+    constructor(light?: PunctualLight | null);
 }

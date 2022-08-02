@@ -9,5 +9,7 @@ export interface LightingContextModel {
 }
 
 export default class LightingContextNode extends ContextNode {
-    constructor(node: Node, lightingModelNode?: LightingContextModel);
+    lightingModelNode: LightingContextModel | null;
+
+    constructor(node: Node, lightingModelNode?: LightingContextModel | null);
 }

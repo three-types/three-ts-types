@@ -9,5 +9,5 @@ export default class HemisphereLightNode extends AnalyticLightNode<HemisphereLig
 
     groundColorNode: Node;
 
-    constructor(light?: HemisphereLight);
+    constructor(light?: HemisphereLight | null);
 }

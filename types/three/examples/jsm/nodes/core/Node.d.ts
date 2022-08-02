@@ -1,4 +1,4 @@
-import { NodeTypeOption, NodeUpdateTypeOption } from './constants';
+import { AnyJson, NodeTypeOption, NodeUpdateTypeOption } from './constants';
 import NodeBuilder from './NodeBuilder';
 import NodeFrame from './NodeFrame';
 
@@ -10,7 +10,7 @@ export default abstract class Node {
     updateType: NodeUpdateTypeOption;
     id: number;
 
-    constructor(nodeType?: NodeTypeOption);
+    constructor(nodeType?: NodeTypeOption | null);
 
     getChildren(): Node[];
     getHash(builder: NodeBuilder): string;
@@ -24,7 +24,7 @@ export default abstract class Node {
     /** This method must be overriden when {@link updateType} !== 'none' */
     update(frame: NodeFrame): void;
     build(builder: NodeBuilder, output?: string | null): string;
-    serialize(json: any): void;
-    deserialize(json: any): void;
-    toJSON(meta?: string | { textures: {}; images: {}; nodes: {} }): any;
+    serialize(json: AnyJson): void;
+    deserialize(json: AnyJson): void;
+    toJSON(meta?: string | { textures: {}; images: {}; nodes: {} }): AnyJson;
 }

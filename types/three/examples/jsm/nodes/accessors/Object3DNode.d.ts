@@ -18,5 +18,5 @@ export default class Object3DNode extends Node {
     scope: Object3DNodeScope;
     object3d: Object3D | null;
 
-    constructor(scope?: Object3DNodeScope, object3d?: Object3D);
+    constructor(scope?: Object3DNodeScope, object3d?: Object3D | null);
 }

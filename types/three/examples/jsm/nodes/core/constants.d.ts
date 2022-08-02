@@ -52,6 +52,19 @@ export type NodeTypeOption =
 // can be defined with string template type in Typescript 4.1
 export type SwizzleOption = string;
 
+/** Should be the same type as Object3D.userData */
+export interface NodeUserData {
+    [key: string]: any;
+}
+
+/** generic key value type,curretly used by nodes  */
+export interface AnyObject {
+    [key: string]: any;
+}
+
+/** a generic JSON type, used by nodes only */
+export type AnyJson = any;
+
 export const NodeType: {
     Boolean: 'bool';
     Integer: 'int';

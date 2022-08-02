@@ -5,7 +5,7 @@ export default class VarNode extends Node {
     node: Node;
     name: string | null;
 
-    constructor(node: Node, name?: string);
+    constructor(node: Node, name?: string | null);
 
     op(op: OperatorNodeOp, ...params: Node[]): this;
     assign(...params: Node[]): this;

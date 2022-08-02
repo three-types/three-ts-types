@@ -1,5 +1,5 @@
 import { Loader, LoadingManager, Texture } from '../../../../src/Three';
-import { Node } from '../Nodes';
+import { Node, AnyJson } from '../Nodes';
 
 export interface NodeLoaderResult {
     [hash: string]: Node;
@@ -15,7 +15,7 @@ export default class NodeLoader extends Loader {
         onError?: (event: ErrorEvent) => void,
     ): void;
 
-    parseNodes(json: any): NodeLoaderResult;
-    parse(json: any): Node;
+    parseNodes(json: AnyJson): NodeLoaderResult;
+    parse(json: AnyJson): Node;
     setTextures(textures: { [key: string]: Texture }): this;
 }
