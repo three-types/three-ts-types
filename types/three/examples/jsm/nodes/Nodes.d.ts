@@ -67,7 +67,7 @@ import CondNode from './math/CondNode';
 import PunctualLightNode from './lighting/PunctualLightNode';
 import LightsNode from './lighting/LightsNode';
 import LightingNode from './lighting/LightingNode';
-import LightingContextNode from './lighting/LightingContextNode';
+import LightingContextNode, { LightingModelNode } from './lighting/LightingContextNode';
 import HemisphereLightNode from './lighting/HemisphereLightNode';
 import EnvironmentNode from './lighting/EnvironmentNode';
 import AONode from './lighting/AONode';
@@ -185,6 +185,7 @@ export {
     LightsNode,
     LightingNode,
     LightingContextNode,
+    LightingModelNode,
     HemisphereLightNode,
     EnvironmentNode,
     AONode,

@@ -10,7 +10,7 @@ import {
     TextureEncoding,
     ToneMapping,
 } from '../../../../src/Three';
-import { LightingContextModel } from '../lighting/LightingContextNode';
+import { LightingModelNode } from '../lighting/LightingContextNode';
 
 //
 // Node Material Shader Syntax
@@ -56,7 +56,7 @@ export function toneMapping(mapping: ToneMapping, exposure: NodeRepresentation, 
 // lighting
 
 export function lights(lights: Light[]): Swizzable;
-export function lightingContext(node: Node, lightingModelNode?: LightingContextModel): Swizzable;
+export function lightingContext(node: Node, lightingModelNode?: LightingModelNode): Swizzable;
 
 // utils
 

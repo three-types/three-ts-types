@@ -1,6 +1,7 @@
 import { Material, ShaderMaterial } from '../../../../src/Three';
 import NodeBuilder from '../core/NodeBuilder';
 import Node from '../core/Node';
+import { LightingModelNode } from '../lighting/LightingContextNode';
 
 export default class NodeMaterial extends ShaderMaterial {
     isNodeMaterial: true;
@@ -14,15 +15,8 @@ export default class NodeMaterial extends ShaderMaterial {
     generateDiffuseColor(builder: NodeBuilder): void;
     generateLight(
         builder: NodeBuilder,
-        {
-            diffuseColorNode,
-            lightingModelNode,
-            lightsNode,
-        }: { diffuseColorNode: Node; lightingModelNode: Node; lightsNode?: Node },
+        lights: { diffuseColorNode: Node; lightingModelNode: LightingModelNode; lightsNode?: Node },
     ): void;
-    generateOutput(
-        builder: NodeBuilder,
-        { diffuseColorNode, outgoingLightNode }: { diffuseColorNode: Node; outgoingLightNode: Node },
-    ): void;
+    generateOutput(builder: NodeBuilder, lights: { diffuseColorNode: Node; outgoingLightNode: Node }): void;
     static fromMaterial(m: Material): NodeMaterial;
 }
