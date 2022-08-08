@@ -109,6 +109,7 @@ export const ConvertType: {
 
 type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
 type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
+type ConstructedNode<T> = T extends new (...args: any[]) => infer R ? (R extends Node ? R : never) : never;
 
 export type NodeOrType = Node | NodeTypeOption;
 
@@ -118,20 +119,25 @@ export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
 export function nodeArray<T extends NodeObjectOption[]>(obj: readonly [...T]): NodeArray<T>;
 
-export function nodeProxy<T>(nodeClass: T): (...params: MakeObjectOptions<GetConstructors<T>>) => Swizzable;
+export function nodeProxy<T>(
+    nodeClass: T,
+): (...params: MakeObjectOptions<GetConstructors<T>>) => Swizzable<ConstructedNode<T>>;
 
 export function nodeProxy<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
-): (...params: MakeObjectOptions<RemoveTail<GetConstructorsByScope<T, S>>>) => Swizzable;
+): (...params: MakeObjectOptions<RemoveTail<GetConstructorsByScope<T, S>>>) => Swizzable<ConstructedNode<T>>;
 
 export function nodeProxy<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
     factor: NodeObjectOption,
-): (...params: MakeObjectOptions<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => Swizzable;
+): (...params: MakeObjectOptions<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => Swizzable<ConstructedNode<T>>;
 
-export function nodeImmutable<T>(nodeClass: T, ...params: MakeObjectOptions<GetConstructors<T>>): Swizzable;
+export function nodeImmutable<T>(
+    nodeClass: T,
+    ...params: MakeObjectOptions<GetConstructors<T>>
+): Swizzable<ConstructedNode<T>>;
 
 export class ShaderNode<T = {}> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);

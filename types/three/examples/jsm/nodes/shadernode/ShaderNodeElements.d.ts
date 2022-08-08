@@ -1,5 +1,5 @@
 import Node from '../core/Node';
-import { RangeModeBound } from '../geometry/RangeNode';
+import RangeNode, { RangeModeBound } from '../geometry/RangeNode';
 import { NodeRepresentation, Swizzable } from './ShaderNode';
 import {
     CubeTexture,
@@ -10,7 +10,27 @@ import {
     TextureEncoding,
     ToneMapping,
 } from '../../../../src/Three';
-import { LightingModelNode } from '../lighting/LightingContextNode';
+import LightingContextNode, { LightingModelNode } from '../lighting/LightingContextNode';
+import {
+    CheckerNode,
+    ColorAdjustmentNode,
+    ColorSpaceNode,
+    CubeTextureNode,
+    FogNode,
+    FogRangeNode,
+    InstanceNode,
+    LightsNode,
+    MatcapUVNode,
+    MaxMipLevelNode,
+    NormalMapNode,
+    OscNode,
+    ReflectVectorNode,
+    RotateUVNode,
+    SkinningNode,
+    SpriteSheetUVNode,
+    TimerNode,
+    ToneMappingNode,
+} from '../Nodes';
 
 //
 // Node Material Shader Syntax
@@ -38,57 +58,71 @@ export { default as PhysicalLightingModel } from '../functions/PhysicalLightingM
 
 // accessors
 
-export function cubeTexture(value: CubeTexture, uvNode?: NodeRepresentation, levelNode?: NodeRepresentation): Swizzable;
-export function instance(instanceMesh: InstancedMesh): Swizzable;
-export const reflectVector: Swizzable;
-export function skinning(skinnedMesh: SkinnedMesh): Swizzable;
+export function cubeTexture(
+    value: CubeTexture,
+    uvNode?: NodeRepresentation,
+    levelNode?: NodeRepresentation,
+): Swizzable<CubeTextureNode>;
+export function instance(instanceMesh: InstancedMesh): Swizzable<InstanceNode>;
+export const reflectVector: Swizzable<ReflectVectorNode>;
+export function skinning(skinnedMesh: SkinnedMesh): Swizzable<SkinningNode>;
 
 // display
 
-export function saturation(colorNode: NodeRepresentation, adjustmentNode?: NodeRepresentation): Swizzable;
-export function vibrance(colorNode: NodeRepresentation, adjustmentNode?: NodeRepresentation): Swizzable;
-export function hue(colorNode: NodeRepresentation, adjustmentNode?: NodeRepresentation): Swizzable;
+export function saturation(
+    colorNode: NodeRepresentation,
+    adjustmentNode?: NodeRepresentation,
+): Swizzable<ColorAdjustmentNode>;
+export function vibrance(
+    colorNode: NodeRepresentation,
+    adjustmentNode?: NodeRepresentation,
+): Swizzable<ColorAdjustmentNode>;
+export function hue(colorNode: NodeRepresentation, adjustmentNode?: NodeRepresentation): Swizzable<ColorAdjustmentNode>;
 
-export function colorSpace(node: NodeRepresentation, encoding: TextureEncoding): Swizzable;
-export function normalMap(node: Node, scaleNode?: Node): Swizzable;
-export function toneMapping(mapping: ToneMapping, exposure: NodeRepresentation, color: NodeRepresentation): Swizzable;
+export function colorSpace(node: NodeRepresentation, encoding: TextureEncoding): Swizzable<ColorSpaceNode>;
+export function normalMap(node: Node, scaleNode?: Node): Swizzable<NormalMapNode>;
+export function toneMapping(
+    mapping: ToneMapping,
+    exposure: NodeRepresentation,
+    color: NodeRepresentation,
+): Swizzable<ToneMappingNode>;
 
 // lighting
 
-export function lights(lights: Light[]): Swizzable;
-export function lightingContext(node: Node, lightingModelNode?: LightingModelNode): Swizzable;
+export function lights(lights: Light[]): Swizzable<LightsNode>;
+export function lightingContext(node: Node, lightingModelNode?: LightingModelNode): Swizzable<LightingContextNode>;
 
 // utils
 
-export const matcapUV: Swizzable;
-export function maxMipLevel(texture: Texture): Swizzable;
+export const matcapUV: Swizzable<MatcapUVNode>;
+export function maxMipLevel(texture: Texture): Swizzable<MaxMipLevelNode>;
 
-export function oscSine(timeNode?: NodeRepresentation): Swizzable;
-export function oscSquare(timeNode?: NodeRepresentation): Swizzable;
-export function oscTriangle(timeNode?: NodeRepresentation): Swizzable;
-export function oscSawtooth(timeNode?: NodeRepresentation): Swizzable;
+export function oscSine(timeNode?: NodeRepresentation): Swizzable<OscNode>;
+export function oscSquare(timeNode?: NodeRepresentation): Swizzable<OscNode>;
+export function oscTriangle(timeNode?: NodeRepresentation): Swizzable<OscNode>;
+export function oscSawtooth(timeNode?: NodeRepresentation): Swizzable<OscNode>;
 
-export function rotateUV(uvNode: Node, rotationNode: Node, centerNode?: Node): Swizzable;
+export function rotateUV(uvNode: Node, rotationNode: Node, centerNode?: Node): Swizzable<RotateUVNode>;
 
 export function spritesheetUV(
     countNode: NodeRepresentation,
     uvNode?: NodeRepresentation,
     frameNode?: NodeRepresentation,
-): Swizzable;
+): Swizzable<SpriteSheetUVNode>;
 
-export function timerLocal(timeScale: number, value?: number): Swizzable;
-export function timerGlobal(timeScale: number, value?: number): Swizzable;
-export function timerDelta(timeScale: number, value?: number): Swizzable;
+export function timerLocal(timeScale: number, value?: number): Swizzable<TimerNode>;
+export function timerGlobal(timeScale: number, value?: number): Swizzable<TimerNode>;
+export function timerDelta(timeScale: number, value?: number): Swizzable<TimerNode>;
 
 // geometry
 
-export function range(min: RangeModeBound, max: RangeModeBound): Swizzable;
+export function range(min: RangeModeBound, max: RangeModeBound): Swizzable<RangeNode>;
 
 // procedural
 
-export function checker(uvNode?: NodeRepresentation): Swizzable;
+export function checker(uvNode?: NodeRepresentation): Swizzable<CheckerNode>;
 
 // fog
 
-export function fog(colorNode: NodeRepresentation, factorNode: NodeRepresentation): Swizzable;
-export function rangeFog(colorNode: Node, nearNode: Node, farNode: Node): Swizzable;
+export function fog(colorNode: NodeRepresentation, factorNode: NodeRepresentation): Swizzable<FogNode>;
+export function rangeFog(colorNode: Node, nearNode: Node, farNode: Node): Swizzable<FogRangeNode>;

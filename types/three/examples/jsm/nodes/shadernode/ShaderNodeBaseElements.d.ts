@@ -17,7 +17,35 @@ import {
 import { Material, Texture } from '../../../../src/Three';
 import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants';
 import { NodeBuilderContext } from '../core/NodeBuilder';
-import { FunctionCallNode, FunctionNode, PointUVNode, ReferenceNode, UVNode } from '../Nodes';
+import {
+    BufferNode,
+    BypassNode,
+    CameraNode,
+    CodeNode,
+    ComputeNode,
+    ContextNode,
+    ConvertNode,
+    ExpressionNode,
+    FrontFacingNode,
+    FunctionCallNode,
+    FunctionNode,
+    InstanceIndexNode,
+    MaterialNode,
+    MaterialReferenceNode,
+    MathNode,
+    ModelNode,
+    ModelViewProjectionNode,
+    NormalNode,
+    PointUVNode,
+    PositionNode,
+    PropertyNode,
+    ReferenceNode,
+    UserDataNode,
+    UVNode,
+    VarNode,
+    VaryNode,
+} from '../Nodes';
+import StorageBufferNode from '../accessors/StorageBufferNode';
 
 // shader node base
 
@@ -62,66 +90,73 @@ export function uniform(nodeOrType: Node | Swizzable | NodeValueOption): Swizzab
 export function attribute(attributeName: string, nodeType: NodeTypeOption): Swizzable;
 export function property(name: string, nodeOrType: Node | NodeTypeOption): Swizzable;
 
-export function bypass(returnNode: NodeRepresentation, callNode: NodeRepresentation): Swizzable;
-export function code(code: string, nodeType?: NodeTypeOption): Swizzable;
-export function context(node: NodeRepresentation, context: NodeBuilderContext): Swizzable;
-export function expression(snipped?: string, nodeType?: NodeTypeOption): Swizzable;
+export function bypass(returnNode: NodeRepresentation, callNode: NodeRepresentation): Swizzable<BypassNode>;
+export function code(code: string, nodeType?: NodeTypeOption): Swizzable<CodeNode>;
+export function context(node: NodeRepresentation, context: NodeBuilderContext): Swizzable<ContextNode>;
+export function expression(snipped?: string, nodeType?: NodeTypeOption): Swizzable<ExpressionNode>;
 
-export function call(functionNode?: NodeRepresentation, parameters?: { [name: string]: Node }): Swizzable;
+export function call(
+    functionNode?: NodeRepresentation,
+    parameters?: { [name: string]: Node },
+): Swizzable<FunctionCallNode>;
 
-export const instanceIndex: Swizzable;
-export function label(node: NodeRepresentation, name?: string): Swizzable;
-export function temp(node: NodeRepresentation, name?: string): Swizzable;
-export function vary(node: NodeRepresentation, name?: string): Swizzable;
+export const instanceIndex: Swizzable<InstanceIndexNode>;
+export function label(node: NodeRepresentation, name?: string): Swizzable<VarNode>;
+export function temp(node: NodeRepresentation, name?: string): Swizzable<VarNode>;
+export function vary(node: NodeRepresentation, name?: string): Swizzable<VaryNode>;
 
 // accesors
 
-export function buffer(value: ArrayLike<number>, nodeOrType: NodeOrType, count: number): Swizzable;
-export function storage(value: ArrayLike<number>, nodeOrType: NodeOrType, count: number): Swizzable;
+export function buffer(value: ArrayLike<number>, nodeOrType: NodeOrType, count: number): Swizzable<BufferNode>;
+export function storage(value: ArrayLike<number>, nodeOrType: NodeOrType, count: number): Swizzable<StorageBufferNode>;
 
-export const cameraProjectionMatrix: Swizzable;
-export const cameraViewMatrix: Swizzable;
-export const cameraNormalMatrix: Swizzable;
-export const cameraWorldMatrix: Swizzable;
-export const cameraPosition: Swizzable;
+export const cameraProjectionMatrix: Swizzable<CameraNode>;
+export const cameraViewMatrix: Swizzable<CameraNode>;
+export const cameraNormalMatrix: Swizzable<CameraNode>;
+export const cameraWorldMatrix: Swizzable<CameraNode>;
+export const cameraPosition: Swizzable<CameraNode>;
 
-export const materialAlphaTest: Swizzable;
-export const materialColor: Swizzable;
-export const materialEmissive: Swizzable;
-export const materialOpacity: Swizzable;
-export const materialRoughness: Swizzable;
-export const materialMetalness: Swizzable;
-export const materialRotation: Swizzable;
+export const materialAlphaTest: Swizzable<MaterialNode>;
+export const materialColor: Swizzable<MaterialNode>;
+export const materialEmissive: Swizzable<MaterialNode>;
+export const materialOpacity: Swizzable<MaterialNode>;
+export const materialRoughness: Swizzable<MaterialNode>;
+export const materialMetalness: Swizzable<MaterialNode>;
+export const materialRotation: Swizzable<MaterialNode>;
 
-export const diffuseColor: Swizzable;
-export const roughness: Swizzable;
-export const metalness: Swizzable;
-export const alphaTest: Swizzable;
-export const specularColor: Swizzable;
+export const diffuseColor: Swizzable<PropertyNode>;
+export const roughness: Swizzable<PropertyNode>;
+export const metalness: Swizzable<PropertyNode>;
+export const alphaTest: Swizzable<PropertyNode>;
+export const specularColor: Swizzable<PropertyNode>;
 
 export function reference<T>(name: string, nodeOrType: NodeOrType, object: T): Swizzable<ReferenceNode<T>>;
-export function materialReference(name: string, nodeOrType: NodeOrType, material: Material): Swizzable;
-export function userData(name: string, inputType: NodeTypeOption, userData?: NodeUserData): Swizzable;
+export function materialReference(
+    name: string,
+    nodeOrType: NodeOrType,
+    material: Material,
+): Swizzable<MaterialReferenceNode>;
+export function userData(name: string, inputType: NodeTypeOption, userData?: NodeUserData): Swizzable<UserDataNode>;
 
-export function modelViewProjection(position?: NodeRepresentation): Swizzable;
+export function modelViewProjection(position?: NodeRepresentation): Swizzable<ModelViewProjectionNode>;
 
-export const normalGeometry: Swizzable;
-export const normalLocal: Swizzable;
-export const normalWorld: Swizzable;
-export const normalView: Swizzable;
-export const transformedNormalView: Swizzable;
+export const normalGeometry: Swizzable<NormalNode>;
+export const normalLocal: Swizzable<NormalNode>;
+export const normalWorld: Swizzable<NormalNode>;
+export const normalView: Swizzable<NormalNode>;
+export const transformedNormalView: Swizzable<VarNode>;
 
-export const modelViewMatrix: Swizzable;
-export const modelNormalMatrix: Swizzable;
-export const modelWorldMatrix: Swizzable;
-export const modelPosition: Swizzable;
-export const modelViewPosition: Swizzable;
+export const modelViewMatrix: Swizzable<ModelNode>;
+export const modelNormalMatrix: Swizzable<ModelNode>;
+export const modelWorldMatrix: Swizzable<ModelNode>;
+export const modelPosition: Swizzable<ModelNode>;
+export const modelViewPosition: Swizzable<ModelNode>;
 
-export const positionGeometry: Swizzable;
-export const positionLocal: Swizzable;
-export const positionWorld: Swizzable;
-export const positionView: Swizzable;
-export const positionViewDirection: Swizzable;
+export const positionGeometry: Swizzable<PositionNode>;
+export const positionLocal: Swizzable<PositionNode>;
+export const positionWorld: Swizzable<PositionNode>;
+export const positionView: Swizzable<PositionNode>;
+export const positionViewDirection: Swizzable<PositionNode>;
 
 export function texture(
     value: Texture,
@@ -134,7 +169,7 @@ export const pointUV: Swizzable<PointUVNode>;
 
 // gpgpu
 
-export function compute(node: NodeRepresentation, count: number, workgroupSize: number[]): Swizzable;
+export function compute(node: NodeRepresentation, count: number, workgroupSize: number[]): Swizzable<ComputeNode>;
 
 // math
 
@@ -144,9 +179,9 @@ export const INFINITY: Swizzable;
 export function cond(condNode: NodeRepresentation, ifNode: NodeRepresentation, elseNode: NodeRepresentation): Swizzable;
 
 type Operator = (a: NodeRepresentation, b: NodeRepresentation, ...others: NodeRepresentation[]) => Swizzable;
-type Unary = (a: NodeRepresentation) => Swizzable;
-type Binary = (a: NodeRepresentation, b: NodeRepresentation) => Swizzable;
-type Ternary = (a: NodeRepresentation, b: NodeRepresentation, c: NodeRepresentation) => Swizzable;
+type Unary = (a: NodeRepresentation) => Swizzable<MathNode>;
+type Binary = (a: NodeRepresentation, b: NodeRepresentation) => Swizzable<MathNode>;
+type Ternary = (a: NodeRepresentation, b: NodeRepresentation, c: NodeRepresentation) => Swizzable<MathNode>;
 
 export const add: Operator;
 export const sub: Operator;
@@ -219,7 +254,7 @@ export const faceforward: Ternary;
 
 // display
 
-export const frontFacing: Swizzable;
+export const frontFacing: Swizzable<FrontFacingNode>;
 export const faceDirection: Swizzable;
 
 // lighting
@@ -228,5 +263,5 @@ export const faceDirection: Swizzable;
 export function element(node: NodeRepresentation, indexNode: NodeRepresentation): Swizzable;
 
 // miscellaneous
-export const dotNV: Swizzable;
-export const transformedNormalWorld: Swizzable;
+export const dotNV: Swizzable<MathNode>;
+export const transformedNormalWorld: Swizzable<MathNode>;
