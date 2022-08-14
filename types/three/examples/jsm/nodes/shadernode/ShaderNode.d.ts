@@ -139,12 +139,12 @@ export function nodeImmutable<T>(
     ...params: MakeObjectOptions<GetConstructors<T>>
 ): Swizzable<ConstructedNode<T>>;
 
-export class ShaderNode<T = {}> {
+export class ShaderNode<T = {}, R extends Node = Node> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
     call: (
         inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Swizzable | Node : T[key] },
         builder?: NodeBuilder,
-    ) => Node;
+    ) => Swizzable<R>;
 }
 
 export const cacheMaps: {

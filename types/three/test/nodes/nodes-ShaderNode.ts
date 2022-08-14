@@ -21,7 +21,7 @@ import { ConvertType, Swizzable } from 'three/examples/jsm/nodes/shadernode/Shad
 
 // just to type check
 // tslint:disable-next-line:no-unnecessary-generics
-function assertSwizzable<T extends Node = Node>(_s: Swizzable<T>) {}
+function assertSwizzable<T extends Node>(_s: Swizzable<T>) {}
 function assertNode(_s: Node) {}
 
 export const color = new ConvertType('color');
@@ -68,4 +68,4 @@ assertSwizzable<OperatorNode>(shiftRight(s, s, s, s));
 const shader = new ShaderNode<{ a: Node; b: Node }>(params => {
     return params.a;
 });
-assertNode(shader.call({ a: s, b: new ConstNode(1) }));
+assertSwizzable<Node>(shader.call({ a: s, b: new ConstNode(1) }));
