@@ -16,17 +16,17 @@ let material: THREE.MeshPhongMaterial;
 let firstLetter = true;
 
 let text = 'three';
-const height = 20,
-    size = 70,
-    hover = 30,
-    curveSegments = 4,
-    bevelThickness = 2,
-    bevelSize = 1.5;
+const height = 20;
+const size = 70;
+const hover = 30;
+const curveSegments = 4;
+const bevelThickness = 2;
+const bevelSize = 1.5;
 
 let font: Font | null = null;
 const mirror = true;
 
-let targetRotation = 0;
+const targetRotation = 0;
 
 init();
 animate();
@@ -68,7 +68,7 @@ function init() {
 
     const loader = new TTFLoader();
 
-    loader.load('fonts/ttf/kenpixel.ttf', function (json) {
+    loader.load('fonts/ttf/kenpixel.ttf', json => {
         font = new Font(json);
         createText();
     });
@@ -143,13 +143,11 @@ function onDocumentKeyPress(event: KeyboardEvent) {
 function createText() {
     textGeo = new TextGeometry(text, {
         font: font!,
-
-        size: size,
-        height: height,
-        curveSegments: curveSegments,
-
-        bevelThickness: bevelThickness,
-        bevelSize: bevelSize,
+        size,
+        height,
+        curveSegments,
+        bevelThickness,
+        bevelSize,
         bevelEnabled: true,
     });
 

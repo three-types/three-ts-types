@@ -23,7 +23,7 @@ let scene: THREE.Scene;
 let camera: THREE.PerspectiveCamera;
 let controls: OrbitControls;
 
-init().catch(function (err) {
+init().catch(err => {
     console.error(err);
 });
 

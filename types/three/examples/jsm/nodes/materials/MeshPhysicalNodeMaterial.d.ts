@@ -5,8 +5,8 @@ import MeshStandardNodeMaterial from './MeshStandardNodeMaterial';
 
 export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     iridescenceNode: null | Swizzable<CheckerNode>;
-    iridescenceIORNode: null | Swizzable<Node>;
-    iridescenceThicknessNode: null | Swizzable<Node>;
+    iridescenceIORNode: null | Swizzable;
+    iridescenceThicknessNode: null | Swizzable;
 
     constructor(parameters: ShaderMaterialParameters);
 

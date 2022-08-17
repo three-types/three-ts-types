@@ -5,7 +5,7 @@
  *
  */
 
-import { ShaderMaterial, ShaderMaterialParameters } from 'three';
+import { ShaderMaterial, ShaderMaterialParameters } from '../../../src/Three';
 
 export class MeshGouraudMaterial extends ShaderMaterial {
     isMeshGouraudMaterial: true;
