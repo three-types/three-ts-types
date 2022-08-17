@@ -10,7 +10,7 @@ export interface TIFFResult {
 }
 
 export class TIFFLoader extends DataTextureLoader {
-    constructor(manager: LoadingManager);
+    constructor(manager?: LoadingManager);
 
     parse(buffer: Iterable<number>): TIFFResult;
 }
