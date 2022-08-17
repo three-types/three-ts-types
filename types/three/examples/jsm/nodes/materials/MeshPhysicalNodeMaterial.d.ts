@@ -8,6 +8,14 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     iridescenceIORNode: null | Swizzable;
     iridescenceThicknessNode: null | Swizzable;
 
+    specularIntensityNode: Node | null;
+    specularColorNode: Node | null;
+
+    transmissionNode: Node | null;
+    thicknessNode: Node | null;
+    attenuationDistanceNode: Node | null;
+    attenuationColorNode: Node | null;
+
     constructor(parameters: ShaderMaterialParameters);
 
     copy(source: MeshPhysicalNodeMaterial): this;

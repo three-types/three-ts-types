@@ -39,7 +39,7 @@ export class WebGLNodeBuilder extends NodeBuilder {
 
     getVarys(shaderStage: string): string;
 
-    addCodeAfterSnippet(shaderStage: string, snippet: string, code: string): string;
+    addCodeAfterCode(shaderStage: string, snippet: string, code: string): string;
     addCodeAfterInclude(shaderStage: string, snippet: string, code: string): string;
 
     replaceCode(shaderStage: string, source: string, target: string): void;
