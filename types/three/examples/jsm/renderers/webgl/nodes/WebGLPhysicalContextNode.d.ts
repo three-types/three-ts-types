@@ -1,4 +1,4 @@
-import ContextNode from '../../../nodes/core/ContextNode.js';
+import ContextNode from '../../../nodes/core/ContextNode';
 import Node from '../../../nodes/core/Node';
 
 export type WebGLPhysicalContextScope =
