@@ -9,6 +9,17 @@ import { EventDispatcher } from './EventDispatcher';
 import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
 import { BuiltinShaderAttributeName } from '../constants';
 
+// TODO make the exhaustive
+type TypedArray = Uint8Array | Uint16Array | Int8Array | Int16Array | Float32Array | Float64Array | Uint8ClampedArray;
+interface BufferGeometryAttributeMap {
+    [attributeName: string]: TypedArray,
+}
+
+type AttributesFor<AttrTypeMap extends BufferGeometryAttributeMap> = {
+    // TODO make InterleavedBufferAttribute generic
+    [attributeName in keyof AttrTypeMap]: BufferAttribute<AttrTypeMap[attributeName]> | InterleavedBufferAttribute //<AttrTypeMap[attributeName]>
+}
+
 /**
  * This is a superefficent class for geometries because it saves all data in buffers.
  * It reduces memory costs and cpu cycles. But it is not as easy to work with because of all the necessary buffer calculations.
@@ -16,7 +27,7 @@ import { BuiltinShaderAttributeName } from '../constants';
  *
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js|src/core/BufferGeometry.js}
  */
-export class BufferGeometry extends EventDispatcher {
+export class BufferGeometry<AttrTypeMap extends BufferGeometryAttributeMap = Record<BuiltinShaderAttributeName | string, TypedArray>> extends EventDispatcher {
     /**
      * This creates a new BufferGeometry. It also sets several properties to an default value.
      */
@@ -46,9 +57,7 @@ export class BufferGeometry extends EventDispatcher {
     /**
      * @default {}
      */
-    attributes: {
-        [name: string]: BufferAttribute | InterleavedBufferAttribute;
-    };
+    attributes: AttributesFor<AttrTypeMap>;
 
     /**
      * @default {}
@@ -88,13 +97,14 @@ export class BufferGeometry extends EventDispatcher {
     userData: { [key: string]: any };
     readonly isBufferGeometry: true;
 
+    // TODO provide index type
     getIndex(): BufferAttribute | null;
     setIndex(index: BufferAttribute | number[] | null): BufferGeometry;
 
-    setAttribute(
+    setAttribute<AttributeName extends string, T extends TypedArray>(
         name: BuiltinShaderAttributeName | (string & {}),
-        attribute: BufferAttribute | InterleavedBufferAttribute,
-    ): BufferGeometry;
+        attribute: BufferAttribute<T> | InterleavedBufferAttribute,
+    ): BufferGeometry<AttrTypeMap & { [k in AttributeName]: T }>;
     getAttribute(name: BuiltinShaderAttributeName | (string & {})): BufferAttribute | InterleavedBufferAttribute;
     deleteAttribute(name: BuiltinShaderAttributeName | (string & {})): BufferGeometry;
     hasAttribute(name: BuiltinShaderAttributeName | (string & {})): boolean;

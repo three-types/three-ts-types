@@ -5,14 +5,14 @@ import { Matrix4 } from './../math/Matrix4';
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js|src/core/BufferAttribute.js}
  */
-export class BufferAttribute {
-    constructor(array: ArrayLike<number>, itemSize: number, normalized?: boolean); // array parameter should be TypedArray.
+export class BufferAttribute<ArrayType extends ArrayLike<number> = ArrayLike<number>> {
+    constructor(array: ArrayType, itemSize: number, normalized?: boolean); // array parameter should be TypedArray.
 
     /**
      * @default ''
      */
     name: string;
-    array: ArrayLike<number>;
+    array: ArrayType;
     itemSize: number;
 
     /**
@@ -48,9 +48,9 @@ export class BufferAttribute {
     onUpload(callback: () => void): this;
     setUsage(usage: Usage): this;
     clone(): this;
-    copy(source: BufferAttribute): this;
-    copyAt(index1: number, attribute: BufferAttribute, index2: number): this;
-    copyArray(array: ArrayLike<number>): this;
+    copy(source: BufferAttribute<ArrayType>): this;
+    copyAt(index1: number, attribute: BufferAttribute<ArrayType>, index2: number): this;
+    copyArray(array: ArrayType): this;
     copyColorsArray(colors: Array<{ r: number; g: number; b: number }>): this;
     copyVector2sArray(vectors: Array<{ x: number; y: number }>): this;
     copyVector3sArray(vectors: Array<{ x: number; y: number; z: number }>): this;
@@ -59,7 +59,7 @@ export class BufferAttribute {
     applyMatrix4(m: Matrix4): this;
     applyNormalMatrix(m: Matrix3): this;
     transformDirection(m: Matrix4): this;
-    set(value: ArrayLike<number> | ArrayBufferView, offset?: number): this;
+    set(value: ArrayType | ArrayBufferView, offset?: number): this;
     getX(index: number): number;
     setX(index: number, x: number): this;
     getY(index: number): number;
@@ -142,82 +142,23 @@ export class Float64Attribute extends BufferAttribute {
     constructor(array: any, itemSize: number);
 }
 
-export class Int8BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Int8BufferAttribute extends BufferAttribute<Int8Array> {}
 
-export class Uint8BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Uint8BufferAttribute extends BufferAttribute<Uint8Array> {}
 
-export class Uint8ClampedBufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Uint8ClampedBufferAttribute extends BufferAttribute<Uint8ClampedArray> {}
 
-export class Int16BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Int16BufferAttribute extends BufferAttribute<Int16Array> {}
 
-export class Uint16BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Uint16BufferAttribute extends BufferAttribute<Uint16Array> {}
 
-export class Int32BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Int32BufferAttribute extends BufferAttribute<Int32Array> {}
 
-export class Uint32BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Uint32BufferAttribute extends BufferAttribute<Uint32Array> {}
 
-export class Float16BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+// Float 16 arrays don't exist, what to do
+export class Float16BufferAttribute extends BufferAttribute {}
 
-export class Float32BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Float32BufferAttribute extends BufferAttribute<Float32Array> {}
 
-export class Float64BufferAttribute extends BufferAttribute {
-    constructor(
-        array: Iterable<number> | ArrayLike<number> | ArrayBuffer | number,
-        itemSize: number,
-        normalized?: boolean,
-    );
-}
+export class Float64BufferAttribute extends BufferAttribute<Float64Array> {}
