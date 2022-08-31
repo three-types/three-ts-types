@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer';
 import { SSRPass } from 'three/examples/jsm/postprocessing/SSRPass';
-import { Reflector } from 'three/examples/jsm/objects/ReflectorForSSRPass';
+import { ReflectorForSSRPass } from 'three/examples/jsm/objects/ReflectorForSSRPass';
 
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader';
 
@@ -22,7 +22,7 @@ let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 const otherMeshes: THREE.Mesh[] = [];
-let groundReflector: Reflector;
+let groundReflector: ReflectorForSSRPass;
 const selects: THREE.Mesh[] = [];
 
 const container = document.querySelector('#container') as Element;
@@ -107,7 +107,7 @@ function init() {
     }
     {
         const geometry = new THREE.PlaneGeometry(8, 8);
-        groundReflector = new Reflector(geometry, {
+        groundReflector = new ReflectorForSSRPass(geometry, {
             clipBias: 0.003,
             textureWidth: window.innerWidth,
             textureHeight: window.innerHeight,
