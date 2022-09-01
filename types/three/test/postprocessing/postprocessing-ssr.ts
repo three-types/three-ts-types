@@ -79,7 +79,7 @@ function init() {
     });
 
     {
-        const geometry = new THREE.BoxBufferGeometry(0.05, 0.05, 0.05);
+        const geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
         const material = new THREE.MeshStandardMaterial({ color: 'green' });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(-0.12, plane.position.y + 0.025, 0.015);
@@ -88,7 +88,7 @@ function init() {
         selects.push(mesh);
     }
     {
-        const geometry = new THREE.IcosahedronBufferGeometry(0.025, 4);
+        const geometry = new THREE.IcosahedronGeometry(0.025, 4);
         const material = new THREE.MeshStandardMaterial({ color: 'cyan' });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(-0.05, plane.position.y + 0.025, 0.08);
@@ -97,7 +97,7 @@ function init() {
         selects.push(mesh);
     }
     {
-        const geometry = new THREE.ConeBufferGeometry(0.025, 0.05, 64);
+        const geometry = new THREE.ConeGeometry(0.025, 0.05, 64);
         const material = new THREE.MeshStandardMaterial({ color: 'yellow' });
         const mesh = new THREE.Mesh(geometry, material);
         mesh.position.set(-0.05, plane.position.y + 0.025, -0.055);
@@ -106,7 +106,7 @@ function init() {
         selects.push(mesh);
     }
     {
-        const geometry = new THREE.PlaneBufferGeometry(8, 8);
+        const geometry = new THREE.PlaneGeometry(8, 8);
         groundReflector = new ReflectorForSSRPass(geometry, {
             clipBias: 0.003,
             textureWidth: window.innerWidth,
