@@ -9,12 +9,12 @@ export namespace ColorManagement {
     /**
      * @default true
      */
-    const legacyMode: boolean;
+    let legacyMode: boolean;
 
     /**
      * @default LinearSRGBColorSpace
      */
-    const workingColorSpace: ColorSpace;
+    let workingColorSpace: ColorSpace;
 
     function convert(
         color: Color,
