@@ -29,6 +29,7 @@ export class Scene extends Object3D {
     overrideMaterial: Material | null;
 
     /**
+     * @deprecated Use {@link THREE.Object3D.matrixWorldAutoUpdate} instead.
      * @default true
      */
     autoUpdate: boolean;
