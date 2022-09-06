@@ -6,7 +6,7 @@ Thanks for wanting to make a contribution and wanting to improve this library fo
 
 1.  Fork and clone the repo
 2.  Run `yarn install` to install dependencies
-3.  Create a branch for your PR with `git checkout -b pr-type/issue-number-your-branch-name beta
+3.  Create a branch for your PR with `git checkout -b pr-type/issue-number-your-branch-name`
 4.  Let's get cooking! 👨🏻‍🍳🥓
 
 ## Commit Guidelines
@@ -30,11 +30,11 @@ select the added contribution type.
 ## Committing and Pushing changes
 
 Please make sure to run the tests before you commit your changes. You can do so by running
-`npm test three`.
+`npm test`.
 
 ## Creating a PR
 
-We have two core branches that mirror the `three` repo. If your PR is for the current release of `three` it should be based off `master` and aimed at merging back into `master`. If you're PR is for the next release of `three` then it should be based off `dev` and therefore aimed at merging back into `dev`.
+We have two core branches that mirror the `three` repo. If your PR is for the current release of `three` it should be based off `master` and aimed at merging back into `master`. If your PR is for the next release of `three` then it should be based off `dev` and therefore aimed at merging back into `dev`.
 
 ## Help needed
 
