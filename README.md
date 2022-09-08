@@ -10,7 +10,7 @@ We are using this repository as a home for the types instead of DefinitelyTyped 
 
 The highest priority is making sure that there are no inaccurate types (or types for things that have been removed).
 
-It is a goal to have complete types for all of the code in the `src` directory.
+It is a goal to have complete public facing API types for all of the code in the `src` directory.
 
 It is not a goal for the `examples/jsm` directory to have complete declaration files for every examples module due to the number of example modules and how quickly they are modified. If you would like to use an examples module that is missing types then create a PR to add the types or create an issue to request that we add the missing types for that module.
 
@@ -64,6 +64,19 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://xk.io/"><img src="https://avatars.githubusercontent.com/u/1046448?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Max Kaye</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=XertroV" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/LauferAlex"><img src="https://avatars.githubusercontent.com/u/86115165?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alejandro Laufer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3ALauferAlex" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=LauferAlex" title="Code">💻</a></td>
+    <td align="center"><a href="https://twitter.com/ggsimm"><img src="https://avatars.githubusercontent.com/u/1862172?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Gianmarco</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=gsimone" title="Code">💻</a></td>
+    <td align="center"><a href="https://davidpeicho.github.io/"><img src="https://avatars.githubusercontent.com/u/8783766?v=4?s=100" width="100px;" alt=""/><br /><sub><b>David Peicho</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=DavidPeicho" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/trusktr"><img src="https://avatars.githubusercontent.com/u/297678?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Joe Pea</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=trusktr" title="Code">💻</a></td>
+    <td align="center"><a href="https://subho57.github.io"><img src="https://avatars.githubusercontent.com/u/98544661?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Subhankar Pal</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=subhankar-trisetra" title="Code">💻</a></td>
+    <td align="center"><a href="http://www.seanmcbeth.com/"><img src="https://avatars.githubusercontent.com/u/298046?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sean T. McBeth</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=capnmidnight" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/atulrnt"><img src="https://avatars.githubusercontent.com/u/894203?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Arthur LAURENT</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=atulrnt" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/serenayl"><img src="https://avatars.githubusercontent.com/u/12814119?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Serena Li</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=serenayl" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/cosformula"><img src="https://avatars.githubusercontent.com/u/18232501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cosformula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=cosformula" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/miko3k"><img src="https://avatars.githubusercontent.com/u/8658482?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Peter Hanula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=miko3k" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/MysteryBlokHed"><img src="https://avatars.githubusercontent.com/u/13910387?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adam Thompson-Sharpe</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=MysteryBlokHed" title="Code">💻</a></td>
     <td align="center"><a href="https://www.youtube.com/c/noname0310"><img src="https://avatars.githubusercontent.com/u/48761044?v=4?s=100" width="100px;" alt=""/><br /><sub><b>noname</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=noname0310" title="Code">💻</a></td>
   </tr>
 </table>

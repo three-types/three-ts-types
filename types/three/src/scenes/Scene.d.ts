@@ -29,11 +29,6 @@ export class Scene extends Object3D {
     overrideMaterial: Material | null;
 
     /**
-     * @default true
-     */
-    autoUpdate: boolean;
-
-    /**
      * @default null
      */
     background: null | Color | Texture;
@@ -44,21 +39,6 @@ export class Scene extends Object3D {
     environment: null | Texture;
 
     readonly isScene: true;
-
-    /**
-     * Calls before rendering scene
-     */
-    onBeforeRender: (
-        renderer: WebGLRenderer,
-        scene: Scene,
-        camera: Camera,
-        renderTarget: any, // any required for Object3D.onBeforeRender compatibility
-    ) => void;
-
-    /**
-     * Calls after rendering scene
-     */
-    onAfterRender: (renderer: WebGLRenderer, scene: Scene, camera: Camera) => void;
 
     toJSON(meta?: any): any;
 }

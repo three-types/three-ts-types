@@ -40,9 +40,10 @@ export class Euler {
     equals(euler: Euler): boolean;
     fromArray(xyzo: [number, number, number, EulerOrder?, ...any[]]): Euler;
     toArray(array?: any[], offset?: number): any[];
-    toVector3(optionalResult?: Vector3): Vector3;
     _onChange(callback: () => void): this;
 
     static RotationOrders: EulerOrder[];
     static DefaultOrder: 'XYZ';
+
+    [Symbol.iterator](): Generator<string | number, void>;
 }
