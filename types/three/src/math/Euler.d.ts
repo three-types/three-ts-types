@@ -39,7 +39,7 @@ export class Euler {
     reorder(newOrder: EulerOrder): Euler;
     equals(euler: Euler): boolean;
     fromArray(xyzo: [number, number, number, EulerOrder?, ...any[]]): Euler;
-    toArray(array?: any[], offset?: number): any[];
+    toArray(array?: Array<number | string | undefined>, offset?: number): Array<number | string | undefined>;
     _onChange(callback: () => void): this;
 
     static RotationOrders: EulerOrder[];
