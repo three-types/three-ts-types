@@ -147,7 +147,7 @@ export class Quaternion {
         src1: number[],
         stcOffset1: number,
         t: number,
-    ): Quaternion;
+    ): void;
 
     static multiplyQuaternionsFlat(
         dst: number[],
