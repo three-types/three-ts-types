@@ -77,6 +77,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/cosformula"><img src="https://avatars.githubusercontent.com/u/18232501?v=4?s=100" width="100px;" alt=""/><br /><sub><b>cosformula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=cosformula" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/miko3k"><img src="https://avatars.githubusercontent.com/u/8658482?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Peter Hanula</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=miko3k" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/MysteryBlokHed"><img src="https://avatars.githubusercontent.com/u/13910387?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adam Thompson-Sharpe</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=MysteryBlokHed" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.youtube.com/c/noname0310"><img src="https://avatars.githubusercontent.com/u/48761044?v=4?s=100" width="100px;" alt=""/><br /><sub><b>noname</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=noname0310" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/grschafer"><img src="https://avatars.githubusercontent.com/u/694225?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Greg Schafer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=grschafer" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/SuperSodaSea"><img src="https://avatars.githubusercontent.com/u/8724868?v=4?s=100" width="100px;" alt=""/><br /><sub><b>SuperSodaSea</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=SuperSodaSea" title="Code">💻</a></td>
   </tr>
 </table>
 
