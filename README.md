@@ -83,6 +83,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/SuperSodaSea"><img src="https://avatars.githubusercontent.com/u/8724868?v=4?s=100" width="100px;" alt=""/><br /><sub><b>SuperSodaSea</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=SuperSodaSea" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mattrossman"><img src="https://avatars.githubusercontent.com/u/22670878?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matt Rossman</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mattrossman" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/imbateam-gg/titan-reactor"><img src="https://avatars.githubusercontent.com/u/586716?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Pineda</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3Aalexpineda" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=alexpineda" title="Code">💻</a> <a href="#ideas-alexpineda" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
