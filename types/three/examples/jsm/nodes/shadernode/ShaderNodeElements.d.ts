@@ -113,6 +113,7 @@ export function spritesheetUV(
 export function timerLocal(timeScale: number, value?: number): Swizzable<TimerNode>;
 export function timerGlobal(timeScale: number, value?: number): Swizzable<TimerNode>;
 export function timerDelta(timeScale: number, value?: number): Swizzable<TimerNode>;
+export const frameId: Swizzable<TimerNode>;
 
 // geometry
 
