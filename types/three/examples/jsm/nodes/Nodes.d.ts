@@ -18,7 +18,7 @@ import NodeFunctionInput from './core/NodeFunctionInput';
 import NodeKeywords from './core/NodeKeywords';
 import NodeUniform from './core/NodeUniform';
 import NodeVar from './core/NodeVar';
-import NodeVary from './core/NodeVary';
+import NodeVarying from './core/NodeVarying';
 import PropertyNode from './core/PropertyNode';
 import TempNode from './core/TempNode';
 import UniformNode from './core/UniformNode';
@@ -135,7 +135,7 @@ export {
     NodeKeywords,
     NodeUniform,
     NodeVar,
-    NodeVary,
+    NodeVarying,
     PropertyNode,
     TempNode,
     UniformNode,
