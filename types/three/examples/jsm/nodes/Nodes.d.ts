@@ -81,6 +81,7 @@ import AnalyticLightNode from './lighting/AnalyticLightNode';
 
 import ArrayElementNode from './utils/ArrayElementNode';
 import ConvertNode from './utils/ConvertNode';
+import EquirectUVNode from './utils/EquirectUVNode';
 import JoinNode from './utils/JoinNode';
 import MatcapUVNode from './utils/MatcapUVNode';
 import MaxMipLevelNode from './utils/MaxMipLevelNode';
@@ -207,6 +208,7 @@ export {
     // utils
     ArrayElementNode,
     ConvertNode,
+    EquirectUVNode,
     JoinNode,
     MatcapUVNode,
     MaxMipLevelNode,

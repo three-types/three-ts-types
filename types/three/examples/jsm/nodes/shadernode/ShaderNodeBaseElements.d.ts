@@ -191,6 +191,7 @@ export const modelViewPosition: Swizzable<ModelNode>;
 export const positionGeometry: Swizzable<PositionNode>;
 export const positionLocal: Swizzable<PositionNode>;
 export const positionWorld: Swizzable<PositionNode>;
+export const positionWorldDirection: Swizzable<PositionNode>;
 export const positionView: Swizzable<PositionNode>;
 export const positionViewDirection: Swizzable<PositionNode>;
 
