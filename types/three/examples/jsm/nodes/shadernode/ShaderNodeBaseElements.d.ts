@@ -93,6 +93,8 @@ export function uniform(nodeOrType: Node | Swizzable | NodeValueOption): Swizzab
 export function attribute(attributeName: string, nodeType: NodeTypeOption): Swizzable;
 export function property(name: string, nodeOrType: Node | NodeTypeOption): Swizzable;
 
+export function convert(node: NodeRepresentation, types: NodeTypeOption): Swizzable;
+
 export function bypass(returnNode: NodeRepresentation, callNode: NodeRepresentation): Swizzable<BypassNode>;
 export function code(code: string, nodeType?: NodeTypeOption): Swizzable<CodeNode>;
 export function context(node: NodeRepresentation, context: NodeBuilderContext): Swizzable<ContextNode>;
