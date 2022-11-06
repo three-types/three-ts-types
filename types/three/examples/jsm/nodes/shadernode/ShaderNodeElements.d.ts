@@ -32,6 +32,7 @@ import {
     SpriteSheetUVNode,
     TimerNode,
     ToneMappingNode,
+    TriplanarTexturesNode,
 } from '../Nodes';
 
 //
@@ -124,6 +125,18 @@ export function timerLocal(timeScale: number, value?: number): Swizzable<TimerNo
 export function timerGlobal(timeScale: number, value?: number): Swizzable<TimerNode>;
 export function timerDelta(timeScale: number, value?: number): Swizzable<TimerNode>;
 export const frameId: Swizzable<TimerNode>;
+export function triplanarTextures(
+    textureXNode: NodeRepresentation,
+    textureYNode?: NodeRepresentation,
+    textureZNode?: NodeRepresentation,
+    scaleNode?: NodeRepresentation,
+    positionNode?: NodeRepresentation,
+    normalNode?: NodeRepresentation,
+): Swizzable<TriplanarTexturesNode>;
+export function triplanarTexture(
+    texture: NodeRepresentation,
+    ...params: NodeRepresentation[]
+): Swizzable<TriplanarTexturesNode>;
 
 // geometry
 

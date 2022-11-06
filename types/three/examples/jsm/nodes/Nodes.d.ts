@@ -26,7 +26,7 @@ import VarNode from './core/VarNode';
 import VaryNode from './core/VaryNode';
 
 // accessors
-import BitangentNode from './accessors/BitangentNode';
+import BitangentNode, { BitangentNodeScope } from './accessors/BitangentNode';
 import BufferNode from './accessors/BufferNode';
 import CameraNode, { CameraNodeScope } from './accessors/CameraNode';
 import CubeTextureNode from './accessors/CubeTextureNode';
@@ -42,7 +42,7 @@ import PositionNode, { PositionNodeScope } from './accessors/PositionNode';
 import ReferenceNode from './accessors/ReferenceNode';
 import ReflectVectorNode from './accessors/ReflectVectorNode';
 import SkinningNode from './accessors/SkinningNode';
-import TangentNode from './accessors/TangentNode';
+import TangentNode, { TangentNodeScope } from './accessors/TangentNode';
 import TextureNode from './accessors/TextureNode';
 import UVNode from './accessors/UVNode';
 import UserDataNode from './accessors/UserDataNode';
@@ -89,6 +89,7 @@ import RotateUVNode from './utils/RotateUVNode';
 import SplitNode from './utils/SplitNode';
 import SpriteSheetUVNode from './utils/SpriteSheetUVNode';
 import TimerNode, { TimerNodeScope } from './utils/TimerNode';
+import TriplanarTexturesNode from './utils/TriplanarTexturesNode';
 
 // loaders
 import NodeLoader from './loaders/NodeLoader';
@@ -146,6 +147,7 @@ export {
     ComputeNode,
     // accessors
     BitangentNode,
+    BitangentNodeScope,
     BufferNode,
     CameraNode,
     CameraNodeScope,
@@ -167,6 +169,7 @@ export {
     ReflectVectorNode,
     SkinningNode,
     TangentNode,
+    TangentNodeScope,
     TextureNode,
     UVNode,
     UserDataNode,
@@ -213,6 +216,7 @@ export {
     SpriteSheetUVNode,
     TimerNode,
     TimerNodeScope,
+    TriplanarTexturesNode,
     // procedural
     CheckerNode,
     // fog
