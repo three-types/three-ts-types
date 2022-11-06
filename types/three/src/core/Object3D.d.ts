@@ -372,7 +372,7 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      */
     getObjectByName(name: string): Object3D | undefined;
 
-    getObjectByProperty(name: string, value: string): Object3D | undefined;
+    getObjectByProperty(name: string, value: any): Object3D | undefined;
 
     getWorldPosition(target: Vector3): Vector3;
     getWorldQuaternion(target: Quaternion): Quaternion;
