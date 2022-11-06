@@ -296,6 +296,8 @@ export const faceDirection: Swizzable;
 export function element(node: NodeRepresentation, indexNode: NodeRepresentation): Swizzable;
 
 // miscellaneous
-export const difference: Swizzable<MathNode>;
+export const lumaCoeffs: Swizzable<MathNode>;
+export const luminance: Binary;
+export const difference: Binary;
 export const dotNV: Swizzable<MathNode>;
 export const TBNViewMatrix: Swizzable<MathNode>;
