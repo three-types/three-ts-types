@@ -12,3 +12,5 @@ export function detach(child: Object3D, parent: Object3D, scene: Scene): void;
 export function attach(child: Object3D, scene: Scene, parent: Object3D): void;
 
 export function createMeshesFromMultiMaterialMesh(mesh: Mesh): Group;
+
+export function sortInstancedMesh(mesh: InstancedMesh, compareFn: (a: number, b: number) => number): void;
