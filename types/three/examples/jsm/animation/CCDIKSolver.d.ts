@@ -22,4 +22,5 @@ export class CCDIKSolver {
 
 export class CCDIKHelper extends Object3D {
     constructor(mesh: SkinnedMesh, iks: IKS[]);
+    dispose(): void;
 }
