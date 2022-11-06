@@ -15,6 +15,7 @@ import {
     NodeOrType,
     ProxiedObject,
     ProxiedTuple,
+    NodeObject,
 } from './ShaderNode';
 import { Material, Texture } from '../../../../src/Three';
 import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants';
@@ -246,7 +247,6 @@ export const negate: Unary;
 export const invert: Unary;
 export const dFdx: Unary;
 export const dFdy: Unary;
-export const saturate: Unary;
 export const round: Unary;
 
 export const atan2: Binary;
