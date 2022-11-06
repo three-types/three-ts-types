@@ -54,12 +54,13 @@ import RangeNode, { RangeModeBound } from './geometry/RangeNode';
 import ComputeNode from './gpgpu/ComputeNode';
 
 // display
+import BlendModeNode, { BlendMode } from './display/BlendModeNode';
 import ColorAdjustmentNode, { ColorAdjustmentMethod } from './display/ColorAdjustmentNode';
 import ColorSpaceNode, { ColorSpaceNodeMethod } from './display/ColorSpaceNode';
 import FrontFacingNode from './display/FrontFacingNode';
 import NormalMapNode from './display/NormalMapNode';
+import PosterizeNode from './display/PosterizeNode';
 import ToneMappingNode from './display/ToneMappingNode';
-import BlendModeNode, { BlendMode } from './display/BlendModeNode';
 
 // math
 import MathNode, { MathNodeMethod1, MathNodeMethod2, MathNodeMethod3, MathNodeMethod } from './math/MathNode';
@@ -182,6 +183,7 @@ export {
     ColorSpaceNodeMethod,
     FrontFacingNode,
     NormalMapNode,
+    PosterizeNode,
     ToneMappingNode,
     // math
     MathNode,

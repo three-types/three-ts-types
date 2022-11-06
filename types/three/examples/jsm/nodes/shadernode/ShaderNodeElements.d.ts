@@ -25,6 +25,7 @@ import {
     MaxMipLevelNode,
     NormalMapNode,
     OscNode,
+    PosterizeNode,
     RemapNode,
     ReflectVectorNode,
     RotateUVNode,
@@ -94,6 +95,8 @@ export function toneMapping(
     exposure: NodeRepresentation,
     color: NodeRepresentation,
 ): Swizzable<ToneMappingNode>;
+
+export function posterize(sourceNode: NodeRepresentation, stepsNode: NodeRepresentation): Swizzable<PosterizeNode>;
 
 // lighting
 
