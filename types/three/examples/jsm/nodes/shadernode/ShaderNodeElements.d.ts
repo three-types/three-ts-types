@@ -12,6 +12,7 @@ import {
 } from '../../../../src/Three';
 import LightingContextNode, { LightingModelNode } from '../lighting/LightingContextNode';
 import {
+    BlendModeNode,
     CheckerNode,
     ColorAdjustmentNode,
     ColorSpaceNode,
@@ -24,6 +25,7 @@ import {
     MaxMipLevelNode,
     NormalMapNode,
     OscNode,
+    RemapNode,
     ReflectVectorNode,
     RotateUVNode,
     SkinningNode,
@@ -69,6 +71,11 @@ export function skinning(skinnedMesh: SkinnedMesh): Swizzable<SkinningNode>;
 
 // display
 
+export function burn(baseNode: NodeRepresentation, blendNode?: NodeRepresentation): Swizzable<BlendModeNode>;
+export function dodge(baseNode: NodeRepresentation, blendNode?: NodeRepresentation): Swizzable<BlendModeNode>;
+export function overlay(baseNode: NodeRepresentation, blendNode?: NodeRepresentation): Swizzable<BlendModeNode>;
+export function screen(baseNode: NodeRepresentation, blendNode?: NodeRepresentation): Swizzable<BlendModeNode>;
+
 export function saturation(
     colorNode: NodeRepresentation,
     adjustmentNode?: NodeRepresentation,
@@ -101,6 +108,9 @@ export function oscSine(timeNode?: NodeRepresentation): Swizzable<OscNode>;
 export function oscSquare(timeNode?: NodeRepresentation): Swizzable<OscNode>;
 export function oscTriangle(timeNode?: NodeRepresentation): Swizzable<OscNode>;
 export function oscSawtooth(timeNode?: NodeRepresentation): Swizzable<OscNode>;
+
+export function remap(node: Node, inLowNode: Node): Swizzable<RemapNode>;
+export function remapClamp(node: Node, inLowNode: Node): Swizzable<RemapNode>;
 
 export function rotateUV(uvNode: Node, rotationNode: Node, centerNode?: Node): Swizzable<RotateUVNode>;
 

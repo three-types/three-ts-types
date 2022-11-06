@@ -281,5 +281,6 @@ export const faceDirection: Swizzable;
 export function element(node: NodeRepresentation, indexNode: NodeRepresentation): Swizzable;
 
 // miscellaneous
+export const difference: Swizzable<MathNode>;
 export const dotNV: Swizzable<MathNode>;
 export const transformedNormalWorld: Swizzable<MathNode>;

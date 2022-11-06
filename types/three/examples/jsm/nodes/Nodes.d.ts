@@ -57,6 +57,7 @@ import ColorSpaceNode, { ColorSpaceNodeMethod } from './display/ColorSpaceNode';
 import FrontFacingNode from './display/FrontFacingNode';
 import NormalMapNode from './display/NormalMapNode';
 import ToneMappingNode from './display/ToneMappingNode';
+import BlendModeNode, { BlendMode } from './display/BlendModeNode';
 
 // math
 import MathNode, { MathNodeMethod1, MathNodeMethod2, MathNodeMethod3, MathNodeMethod } from './math/MathNode';
@@ -81,6 +82,7 @@ import JoinNode from './utils/JoinNode';
 import MatcapUVNode from './utils/MatcapUVNode';
 import MaxMipLevelNode from './utils/MaxMipLevelNode';
 import OscNode, { OscNodeMethod } from './utils/OscNode';
+import RemapNode from './utils/RemapNode';
 import RotateUVNode from './utils/RotateUVNode';
 import SplitNode from './utils/SplitNode';
 import SpriteSheetUVNode from './utils/SpriteSheetUVNode';
@@ -165,6 +167,8 @@ export {
     UVNode,
     UserDataNode,
     // display
+    BlendModeNode,
+    BlendMode,
     ColorAdjustmentNode,
     ColorAdjustmentMethod,
     ColorSpaceNode,
@@ -199,6 +203,7 @@ export {
     MaxMipLevelNode,
     OscNode,
     OscNodeMethod,
+    RemapNode,
     RotateUVNode,
     SplitNode,
     SpriteSheetUVNode,
