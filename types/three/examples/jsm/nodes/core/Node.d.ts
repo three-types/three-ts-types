@@ -15,13 +15,10 @@ export default abstract class Node {
     getChildren(): Node[];
     getHash(builder: NodeBuilder): string;
     getUpdateType(builder: NodeBuilder): NodeUpdateTypeOption;
-    getNodeType<TNodeTypeOption extends NodeTypeOption = NodeTypeOption>(
-        builder: NodeBuilder,
-        output?: string | null,
-    ): TNodeTypeOption | null;
+    getNodeType(builder: NodeBuilder, output?: string | null): NodeTypeOption | null;
     getConstructHash(builder: NodeBuilder): string;
     getReference(builder: NodeBuilder): Node;
-    construct<TNode extends Node = Node>(builder: NodeBuilder): TNode | null;
+    construct(builder: NodeBuilder): Node | null;
     analyze(builder: NodeBuilder): void;
     generate(builder: NodeBuilder, output?: string | null): string;
     /** This method must be overriden when {@link updateType} !== 'none' */

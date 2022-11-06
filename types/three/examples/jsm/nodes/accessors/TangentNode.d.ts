@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 
-type TangentScope =
+export type TangentScope =
     | typeof TangentNode.LOCAL
     | typeof TangentNode.VIEW
     | typeof TangentNode.WORLD

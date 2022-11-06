@@ -1,6 +1,6 @@
 import Node from '../core/Node';
 
-type BitangentScope =
+export type BitangentScope =
     | typeof BitangentNode.LOCAL
     | typeof BitangentNode.VIEW
     | typeof BitangentNode.WORLD
