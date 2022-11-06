@@ -15,12 +15,12 @@ import {
     NodeOrType,
     ProxiedObject,
     ProxiedTuple,
-    NodeObject,
 } from './ShaderNode';
 import { Material, Texture } from '../../../../src/Three';
 import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants';
 import { NodeBuilderContext } from '../core/NodeBuilder';
 import {
+    BitangentNode,
     BufferNode,
     BypassNode,
     CameraNode,
@@ -44,6 +44,7 @@ import {
     PositionNode,
     PropertyNode,
     ReferenceNode,
+    TangentNode,
     UserDataNode,
     UVNode,
     VarNode,
@@ -165,6 +166,20 @@ export const normalWorld: Swizzable<NormalNode>;
 export const normalView: Swizzable<NormalNode>;
 export const transformedNormalView: Swizzable<VarNode>;
 
+export const tangentGeometry: Swizzable<TangentNode>;
+export const tangentLocal: Swizzable<TangentNode>;
+export const tangentView: Swizzable<TangentNode>;
+export const tangentWorld: Swizzable<TangentNode>;
+export const transformedTangentView: Swizzable<MathNode>;
+export const transformedTangentWorld: Swizzable<MathNode>;
+
+export const bitangentGeometry: Swizzable<BitangentNode>;
+export const bitangentLocal: Swizzable<BitangentNode>;
+export const bitangentView: Swizzable<BitangentNode>;
+export const bitangentWorld: Swizzable<BitangentNode>;
+export const transformedBitangentView: Swizzable<MathNode>;
+export const transformedBitangentWorld: Swizzable<MathNode>;
+
 export const modelViewMatrix: Swizzable<ModelNode>;
 export const modelNormalMatrix: Swizzable<ModelNode>;
 export const modelWorldMatrix: Swizzable<ModelNode>;
@@ -283,4 +298,4 @@ export function element(node: NodeRepresentation, indexNode: NodeRepresentation)
 // miscellaneous
 export const difference: Swizzable<MathNode>;
 export const dotNV: Swizzable<MathNode>;
-export const transformedNormalWorld: Swizzable<MathNode>;
+export const TBNViewMatrix: Swizzable<MathNode>;

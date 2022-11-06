@@ -26,6 +26,7 @@ import VarNode from './core/VarNode';
 import VaryNode from './core/VaryNode';
 
 // accessors
+import BitangentNode from './accessors/BitangentNode';
 import BufferNode from './accessors/BufferNode';
 import CameraNode, { CameraNodeScope } from './accessors/CameraNode';
 import CubeTextureNode from './accessors/CubeTextureNode';
@@ -41,6 +42,7 @@ import PositionNode, { PositionNodeScope } from './accessors/PositionNode';
 import ReferenceNode from './accessors/ReferenceNode';
 import ReflectVectorNode from './accessors/ReflectVectorNode';
 import SkinningNode from './accessors/SkinningNode';
+import TangentNode from './accessors/TangentNode';
 import TextureNode from './accessors/TextureNode';
 import UVNode from './accessors/UVNode';
 import UserDataNode from './accessors/UserDataNode';
@@ -143,6 +145,7 @@ export {
     // gpgpu
     ComputeNode,
     // accessors
+    BitangentNode,
     BufferNode,
     CameraNode,
     CameraNodeScope,
@@ -163,6 +166,7 @@ export {
     ReferenceNode,
     ReflectVectorNode,
     SkinningNode,
+    TangentNode,
     TextureNode,
     UVNode,
     UserDataNode,
