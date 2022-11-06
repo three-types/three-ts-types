@@ -1,8 +1,8 @@
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/audio/AudioContext.js|src/audio/AudioContext.js}
  */
-export namespace AudioContext {
-    function getContext(): AudioContext;
+export class AudioContext {
+    static getContext(): AudioContext;
 
-    function setContext(context: AudioContext): void;
+    static setContext(context: AudioContext): void;
 }
