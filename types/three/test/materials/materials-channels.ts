@@ -114,16 +114,14 @@ function init() {
         metalness: 0.5,
         roughness: 0.6,
 
-        displacementMap: displacementMap,
+        displacementMap,
         displacementScale: SCALE,
         displacementBias: BIAS,
 
-        aoMap: aoMap,
+        aoMap,
 
-        normalMap: normalMap,
+        normalMap,
         normalScale: new THREE.Vector2(1, -1),
-
-        //flatShading: true,
 
         side: THREE.DoubleSide,
     });
@@ -131,7 +129,7 @@ function init() {
     materialDepthBasic = new THREE.MeshDepthMaterial({
         depthPacking: THREE.BasicDepthPacking,
 
-        displacementMap: displacementMap,
+        displacementMap,
         displacementScale: SCALE,
         displacementBias: BIAS,
 
@@ -141,7 +139,7 @@ function init() {
     materialDepthRGBA = new THREE.MeshDepthMaterial({
         depthPacking: THREE.RGBADepthPacking,
 
-        displacementMap: displacementMap,
+        displacementMap,
         displacementScale: SCALE,
         displacementBias: BIAS,
 
@@ -149,14 +147,12 @@ function init() {
     });
 
     materialNormal = new THREE.MeshNormalMaterial({
-        displacementMap: displacementMap,
+        displacementMap,
         displacementScale: SCALE,
         displacementBias: BIAS,
 
-        normalMap: normalMap,
+        normalMap,
         normalScale: new THREE.Vector2(1, -1),
-
-        //flatShading: true,
 
         side: THREE.DoubleSide,
     });
