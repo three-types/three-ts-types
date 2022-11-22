@@ -86,6 +86,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center"><a href="https://github.com/mattrossman"><img src="https://avatars.githubusercontent.com/u/22670878?v=4?s=100" width="100px;" alt="Matt Rossman"/><br /><sub><b>Matt Rossman</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mattrossman" title="Code">💻</a></td>
       <td align="center"><a href="https://github.com/imbateam-gg/titan-reactor"><img src="https://avatars.githubusercontent.com/u/586716?v=4?s=100" width="100px;" alt="Alex Pineda"/><br /><sub><b>Alex Pineda</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=alexpineda" title="Code">💻</a></td>
       <td align="center"><a href="https://github.com/Draichi"><img src="https://avatars.githubusercontent.com/u/19378148?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Draichi" title="Documentation">📖</a></td>
+      <td align="center"><a href="https://github.com/mz8i"><img src="https://avatars.githubusercontent.com/u/36160844?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Maciej Ziarkowski</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mz8i" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
