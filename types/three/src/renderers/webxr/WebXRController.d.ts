@@ -3,7 +3,11 @@ import { Vector3 } from '../../math/Vector3';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
-export type XRHandJoints = Record<XRHandJoint, number>;
+export class XRJointSpace extends Group {
+    readonly jointRadius: number | undefined;
+}
+
+export type XRHandJoints = Record<XRHandJoint, XRJointSpace>;
 
 export interface XRHandInputState {
     pinching: boolean;
