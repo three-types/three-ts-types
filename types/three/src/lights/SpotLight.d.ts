@@ -72,7 +72,7 @@ export class SpotLight extends Light {
     /**
      * @default null
      */
-    map: Texture | null;
+         map: Texture | null;
 
     readonly isSpotLight: true;
 }
