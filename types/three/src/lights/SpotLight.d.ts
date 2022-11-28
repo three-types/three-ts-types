@@ -4,6 +4,7 @@ import { Object3D } from './../core/Object3D';
 import { SpotLightShadow } from './SpotLightShadow';
 import { Light } from './Light';
 import { ColorRepresentation } from '../utils';
+import { Texture } from '../textures/Texture';
 
 /**
  * A point light that can cast shadow in one direction.
@@ -67,6 +68,11 @@ export class SpotLight extends Light {
      * @default 0
      */
     penumbra: number;
+
+    /**
+     * @default null
+     */
+         map: Texture | null;
 
     readonly isSpotLight: true;
 }
