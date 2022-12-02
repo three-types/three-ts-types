@@ -87,6 +87,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://draichiboard.vercel.app/"><img src="https://avatars.githubusercontent.com/u/19378148?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Draichi" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/mz8i"><img src="https://avatars.githubusercontent.com/u/36160844?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Maciej Ziarkowski</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mz8i" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/Suprhimp"><img src="https://avatars.githubusercontent.com/u/73486185?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Suprhimp</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Suprhimp" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.stephenli.ca/"><img src="https://avatars.githubusercontent.com/u/458691?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stephen Li</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Trinovantes" title="Code">💻</a></td>
   </tr>
 </table>
 
