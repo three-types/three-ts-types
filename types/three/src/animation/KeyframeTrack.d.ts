@@ -1,6 +1,7 @@
 import { DiscreteInterpolant } from './../math/interpolants/DiscreteInterpolant';
 import { LinearInterpolant } from './../math/interpolants/LinearInterpolant';
 import { CubicInterpolant } from './../math/interpolants/CubicInterpolant';
+import { Interpolant } from '../math/Interpolant';
 import { InterpolationModes } from '../constants';
 
 export class KeyframeTrack {
@@ -31,6 +32,7 @@ export class KeyframeTrack {
 
     setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
     getInterpolation(): InterpolationModes;
+    createInterpolant(): Interpolant;
 
     getValueSize(): number;
 
