@@ -406,12 +406,12 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
 
     toJSON(meta?: { geometries: any; materials: any; textures: any; images: any }): any;
 
-    clone(recursive?: boolean): this;
+    clone(recursive?: boolean): Object3D;
 
     /**
      *
      * @param object
      * @param recursive
      */
-    copy(source: this, recursive?: boolean): this;
+    copy(source: Object3D, recursive?: boolean): this;
 }
