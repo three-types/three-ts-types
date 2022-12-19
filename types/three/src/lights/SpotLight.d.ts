@@ -37,7 +37,7 @@ export class SpotLight extends Light {
 
     /**
      * Light's intensity.
-     * @default 1
+     * @default 2
      */
     intensity: number;
 
