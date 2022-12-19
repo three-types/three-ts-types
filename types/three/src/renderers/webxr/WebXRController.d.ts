@@ -39,6 +39,7 @@ export class WebXRController {
     getTargetRaySpace(): XRTargetRaySpace;
     getGripSpace(): XRGripSpace;
     dispatchEvent(event: { type: XRControllerEventType; data?: XRInputSource }): this;
+    connect(inputSource: XRInputSource): this;
     disconnect(inputSource: XRInputSource): this;
     update(inputSource: XRInputSource, frame: XRFrame, referenceSpace: XRReferenceSpace): this;
 }
