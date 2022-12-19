@@ -38,6 +38,7 @@ export class LOD extends Object3D {
     update(camera: Camera): void;
     toJSON(meta: any): any;
 
+    // TODO: Remove this
     /**
      * @deprecated Use {@link LOD#levels .levels} instead.
      */
