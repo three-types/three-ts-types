@@ -1,6 +1,6 @@
 import { Scene, Camera, ShaderMaterial, Vector2, MeshNormalMaterial, WebGLRenderTarget } from '../../../src/Three';
 
-import { Pass } from './Pass';
+import { Pass, FullScreenQuad } from './Pass';
 
 export interface RenderPixelatedPassParameters {
     normalEdgeStrength?: number;
@@ -16,7 +16,7 @@ export class RenderPixelatedPass extends Pass {
     pixelatedMaterial: ShaderMaterial;
     normalMaterial: MeshNormalMaterial;
 
-    fsQuad: object;
+    fsQuad: FullScreenQuad;
     scene: Scene;
     camera: Camera;
 
