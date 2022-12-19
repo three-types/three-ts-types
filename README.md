@@ -89,6 +89,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/Suprhimp"><img src="https://avatars.githubusercontent.com/u/73486185?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Suprhimp</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Suprhimp" title="Code">💻</a></td>
     <td align="center"><a href="https://www.stephenli.ca/"><img src="https://avatars.githubusercontent.com/u/458691?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stephen Li</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Trinovantes" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/autonomobil"><img src="https://avatars.githubusercontent.com/u/31781343?s=96&v=4?s=100" width="100px;" alt=""/><br /><sub><b>Moritz Cremer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=autonomobil" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/LuchoTurtle"><img src="https://avatars.githubusercontent.com/u/17494745?v=4?s=100" width="100px;" alt=""/><br /><sub><b>LuchoTurtle</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=LuchoTurtle" title="Code">💻</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-restore -->
