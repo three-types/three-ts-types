@@ -146,6 +146,12 @@ export class Matrix3 implements Matrix {
 
     translate(tx: number, ty: number): Matrix3;
 
+    makeTranslation(x: number, y: number): Matrix3;
+
+    makeRotation(theta: number): Matrix3;
+
+    makeScale(x: number, y: number): Matrix3;
+
     equals(matrix: Matrix3): boolean;
 
     /**
