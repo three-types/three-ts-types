@@ -10,7 +10,7 @@ export class KeyframeTrack {
      * @param values
      * @param [interpolation=THREE.InterpolateLinear]
      */
-    constructor(name: string, times: ArrayLike<any>, values: ArrayLike<any>, interpolation?: InterpolationModes);
+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<any>, interpolation?: InterpolationModes);
 
     name: string;
     times: Float32Array;
