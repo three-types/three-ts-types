@@ -23,7 +23,6 @@ import {
     InstanceNode,
     LightsNode,
     MatcapUVNode,
-    MaxMipLevelNode,
     NormalMapNode,
     OscNode,
     PosterizeNode,
@@ -35,6 +34,7 @@ import {
     TimerNode,
     ToneMappingNode,
     TriplanarTexturesNode,
+    SpecularMIPLevelNode,
 } from '../Nodes';
 
 //
@@ -109,7 +109,7 @@ export function lightingContext(node: Node, lightingModelNode?: LightingModelNod
 export const matcapUV: Swizzable<MatcapUVNode>;
 export const equirectUV: Swizzable<EquirectUVNode>;
 
-export function maxMipLevel(texture: Texture): Swizzable<MaxMipLevelNode>;
+export function specularMIPLevel(): Swizzable<SpecularMIPLevelNode>;
 
 export function oscSine(timeNode?: NodeRepresentation): Swizzable<OscNode>;
 export function oscSquare(timeNode?: NodeRepresentation): Swizzable<OscNode>;

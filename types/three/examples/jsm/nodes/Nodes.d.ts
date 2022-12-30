@@ -2,6 +2,7 @@
 import ArrayUniformNode from './core/ArrayUniformNode';
 import AttributeNode from './core/AttributeNode';
 import BypassNode from './core/BypassNode';
+import CacheNode from './core/CacheNode';
 import CodeNode, { CodeNodeInclude } from './core/CodeNode';
 import ConstNode from './core/ConstNode';
 import ContextNode from './core/ContextNode';
@@ -12,6 +13,7 @@ import InstanceIndexNode from './core/InstanceIndexNode';
 import Node from './core/Node';
 import NodeAttribute from './core/NodeAttribute';
 import NodeBuilder from './core/NodeBuilder';
+import NodeCache from './core/NodeCache';
 import NodeCode from './core/NodeCode';
 import NodeFrame from './core/NodeFrame';
 import NodeFunctionInput from './core/NodeFunctionInput';
@@ -20,6 +22,7 @@ import NodeUniform from './core/NodeUniform';
 import NodeVar from './core/NodeVar';
 import NodeVarying from './core/NodeVarying';
 import PropertyNode from './core/PropertyNode';
+import StackNode from './core/StackNode';
 import TempNode from './core/TempNode';
 import UniformNode from './core/UniformNode';
 import VarNode from './core/VarNode';
@@ -88,6 +91,7 @@ import MaxMipLevelNode from './utils/MaxMipLevelNode';
 import OscNode, { OscNodeMethod } from './utils/OscNode';
 import RemapNode from './utils/RemapNode';
 import RotateUVNode from './utils/RotateUVNode';
+import SpecularMIPLevelNode from './utils/SpecularMIPLevelNode';
 import SplitNode from './utils/SplitNode';
 import SpriteSheetUVNode from './utils/SpriteSheetUVNode';
 import TimerNode, { TimerNodeScope } from './utils/TimerNode';
@@ -118,6 +122,7 @@ export {
     ArrayUniformNode,
     AttributeNode,
     BypassNode,
+    CacheNode,
     CodeNode,
     CodeNodeInclude,
     ContextNode,
@@ -130,6 +135,7 @@ export {
     Node,
     NodeAttribute,
     NodeBuilder,
+    NodeCache,
     NodeCode,
     NodeFrame,
     NodeFunctionInput,
@@ -138,6 +144,7 @@ export {
     NodeVar,
     NodeVarying,
     PropertyNode,
+    StackNode,
     TempNode,
     UniformNode,
     VarNode,
@@ -216,6 +223,7 @@ export {
     OscNodeMethod,
     RemapNode,
     RotateUVNode,
+    SpecularMIPLevelNode,
     SplitNode,
     SpriteSheetUVNode,
     TimerNode,
