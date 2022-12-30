@@ -20,6 +20,7 @@ import {
     EquirectUVNode,
     FogNode,
     FogRangeNode,
+    FogExp2Node,
     InstanceNode,
     LightsNode,
     MatcapUVNode,
@@ -156,3 +157,4 @@ export function checker(uvNode?: NodeRepresentation): Swizzable<CheckerNode>;
 
 export function fog(colorNode: NodeRepresentation, factorNode: NodeRepresentation): Swizzable<FogNode>;
 export function rangeFog(colorNode: Node, nearNode: Node, farNode: Node): Swizzable<FogRangeNode>;
+export function exp2Fog(colorNode: Node, densityNode: Node): Swizzable<FogExp2Node>;

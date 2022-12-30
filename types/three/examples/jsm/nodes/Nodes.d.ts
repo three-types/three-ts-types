@@ -107,6 +107,7 @@ import CheckerNode from './procedural/CheckerNode';
 // fog
 import FogNode from './fog/FogNode';
 import FogRangeNode from './fog/FogRangeNode';
+import FogExp2Node from './fog/FogExp2Node';
 
 // core
 export * from './core/constants';
@@ -234,6 +235,7 @@ export {
     // fog
     FogNode,
     FogRangeNode,
+    FogExp2Node,
     // loaders
     NodeLoader,
     NodeObjectLoader,
