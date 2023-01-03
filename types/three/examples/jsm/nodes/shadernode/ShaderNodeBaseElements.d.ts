@@ -23,6 +23,7 @@ import {
     BitangentNode,
     BufferNode,
     BypassNode,
+    CacheNode,
     CameraNode,
     CodeNode,
     CodeNodeInclude,
@@ -37,6 +38,7 @@ import {
     MaterialNode,
     MaterialReferenceNode,
     MathNode,
+    MaxMipLevelNode,
     ModelNode,
     ModelViewProjectionNode,
     NormalNode,
@@ -51,6 +53,7 @@ import {
     VaryNode,
 } from '../Nodes';
 import StorageBufferNode from '../accessors/StorageBufferNode';
+import NodeCache from '../core/NodeCache';
 
 // shader node base
 
@@ -94,8 +97,10 @@ export function attribute(attributeName: string, nodeType: NodeTypeOption): Swiz
 export function property(name: string, nodeOrType: Node | NodeTypeOption): Swizzable;
 
 export function convert(node: NodeRepresentation, types: NodeTypeOption): Swizzable;
+export function maxMipLevel(texture: Texture): Swizzable<MaxMipLevelNode>;
 
 export function bypass(returnNode: NodeRepresentation, callNode: NodeRepresentation): Swizzable<BypassNode>;
+export function cache(node: Node, cache?: NodeCache): Swizzable<CacheNode>;
 export function code(code: string, nodeType?: NodeTypeOption): Swizzable<CodeNode>;
 export function context(node: NodeRepresentation, context: NodeBuilderContext): Swizzable<ContextNode>;
 export function expression(snipped?: string, nodeType?: NodeTypeOption): Swizzable<ExpressionNode>;
