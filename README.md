@@ -83,6 +83,16 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/SuperSodaSea"><img src="https://avatars.githubusercontent.com/u/8724868?v=4?s=100" width="100px;" alt=""/><br /><sub><b>SuperSodaSea</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=SuperSodaSea" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mattrossman"><img src="https://avatars.githubusercontent.com/u/22670878?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Matt Rossman</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mattrossman" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/imbateam-gg/titan-reactor"><img src="https://avatars.githubusercontent.com/u/586716?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Alex Pineda</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=alexpineda" title="Code">💻</a></td>
+    <td align="center"><a href="https://draichiboard.vercel.app/"><img src="https://avatars.githubusercontent.com/u/19378148?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Lucas</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Draichi" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/mz8i"><img src="https://avatars.githubusercontent.com/u/36160844?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Maciej Ziarkowski</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mz8i" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/Suprhimp"><img src="https://avatars.githubusercontent.com/u/73486185?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Suprhimp</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Suprhimp" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.stephenli.ca/"><img src="https://avatars.githubusercontent.com/u/458691?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Stephen Li</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Trinovantes" title="Code">💻</a></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/autonomobil"><img src="https://avatars.githubusercontent.com/u/31781343?s=96&v=4?s=100" width="100px;" alt=""/><br /><sub><b>Moritz Cremer</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=autonomobil" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/LuchoTurtle"><img src="https://avatars.githubusercontent.com/u/17494745?v=4?s=100" width="100px;" alt=""/><br /><sub><b>LuchoTurtle</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=LuchoTurtle" title="Code">💻</a></td> 
+    <td align="center"><a href="https://github.com/marwie"><img src="https://avatars.githubusercontent.com/u/5083203?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Marcel Wiessler</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=marwie" title="Code">💻</a></td>
   </tr>
 </table>
 
