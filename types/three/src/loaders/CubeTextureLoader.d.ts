@@ -12,5 +12,5 @@ export class CubeTextureLoader extends Loader {
         onError?: (event: ErrorEvent) => void,
     ): CubeTexture;
 
-    loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<CubeTexture>;
+    loadAsync(url: string[], onProgress?: (event: ProgressEvent) => void): Promise<CubeTexture>;
 }
