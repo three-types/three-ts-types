@@ -95,6 +95,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/LuchoTurtle"><img src="https://avatars.githubusercontent.com/u/17494745?v=4?s=100" width="100px;" alt="LuchoTurtle"/><br /><sub><b>LuchoTurtle</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=LuchoTurtle" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.needle.tools"><img src="https://avatars.githubusercontent.com/u/5083203?v=4?s=100" width="100px;" alt="Marcel Wiessler"/><br /><sub><b>Marcel Wiessler</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=marwie" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/JoshStern"><img src="https://avatars.githubusercontent.com/u/10948202?v=4?s=100" width="100px;" alt="Josh Stern"/><br /><sub><b>Josh Stern</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=JoshStern" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rotu"><img src="https://avatars.githubusercontent.com/u/119948?v=4?s=100" width="100px;" alt="Dan Rose"/><br /><sub><b>Dan Rose</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=rotu" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
