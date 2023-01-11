@@ -94,6 +94,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/LuchoTurtle"><img src="https://avatars.githubusercontent.com/u/17494745?v=4?s=100" width="100px;" alt=""/><br /><sub><b>LuchoTurtle</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=LuchoTurtle" title="Code">💻</a></td>
     <td align="center"><a href="https://www.needle.tools"><img src="https://avatars.githubusercontent.com/u/5083203?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Marcel Wiessler</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=marwie" title="Code">💻</a></td>
     <td align="center"><a href="https://s2n.tech/"><img src="https://avatars.githubusercontent.com/u/37236438?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Shuntaro Nishizawa</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3Ashun-shobon" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=shun-shobon" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/mikkom"><img src="https://avatars.githubusercontent.com/u/77391?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Mikko Matilainen</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mikkom" title="Code">💻</a></td>
   </tr>
 </table>
 
