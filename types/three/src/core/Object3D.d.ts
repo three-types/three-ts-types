@@ -112,8 +112,9 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
     matrixAutoUpdate: boolean;
 
     /**
-     * Default is true. If set, then the renderer checks every frame if the object and its children need matrix updates.
+     * If set, then the renderer checks every frame if the object and its children need matrix updates.
      * When it isn't, then you have to maintain all matrices in the object and its children yourself.
+     * Default is {@link Object3D.DEFAULT_MATRIX_WORLD_AUTO_UPDATE} (true).
      */
     matrixWorldAutoUpdate: boolean;
 
@@ -229,6 +230,9 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      */
     static DEFAULT_MATRIX_AUTO_UPDATE: boolean;
 
+    /**
+     * The default setting for {@link matrixWorldAutoUpdate} for newly created Object3Ds.
+     */
     static DEFAULT_MATRIX_WORLD_AUTO_UPDATE: boolean;
 
     /**
