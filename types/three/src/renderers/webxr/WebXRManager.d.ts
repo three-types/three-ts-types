@@ -45,7 +45,7 @@ export class WebXRManager extends EventDispatcher {
     updateCamera(camera: PerspectiveCamera): void;
     setAnimationLoop(callback: XRFrameRequestCallback | null): void;
     getFoveation(): number | undefined;
-    setFoveation(foveation: number): void;
+    setFoveation(value: number): void;
 
     /**
      * Returns the set of planes detected by WebXR's plane detection API.
