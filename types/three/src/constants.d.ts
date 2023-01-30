@@ -36,15 +36,12 @@ export const VSMShadowMap: ShadowMapType;
 // side
 /**
  * Defines which side of faces will be rendered - front, back or both.
- * Default is FrontSide.
- *
- * TwoPassDoubleSide will renderer double-sided transparent materials in two passes in back-front order to mitigate transparency artifacts.
+ * Default is {@link FrontSide}.
  */
 export enum Side {}
 export const FrontSide: Side;
 export const BackSide: Side;
 export const DoubleSide: Side;
-export const TwoPassDoubleSide: Side;
 
 // blending modes
 export enum Blending {}
