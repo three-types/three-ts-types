@@ -1,6 +1,6 @@
-import { Plane } from 'three/src/math/Plane';
 import { Camera } from './../../cameras/Camera';
 import { Material } from './../../materials/Material';
+import { Plane } from '../../math/Plane';
 import { WebGLProperties } from './WebGLProperties';
 
 export class WebGLClipping {
