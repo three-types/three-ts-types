@@ -1,3 +1,4 @@
+import { Plane } from 'three/src/math/Plane';
 import { Camera } from './../../cameras/Camera';
 import { Material } from './../../materials/Material';
 import { WebGLProperties } from './WebGLProperties';
@@ -17,8 +18,9 @@ export class WebGLClipping {
      */
     numIntersection: number;
 
-    init(planes: any[], enableLocalClipping: boolean, camera: Camera): boolean;
+    init(planes: any[], enableLocalClipping: boolean): boolean;
     beginShadows(): void;
     endShadows(): void;
+    setGlobalState(planes: Plane[], camera: Camera): void;
     setState(material: Material, camera: Camera, useCache: boolean): void;
 }
