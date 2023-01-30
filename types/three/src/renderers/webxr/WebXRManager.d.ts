@@ -40,7 +40,7 @@ export class WebXRManager extends EventDispatcher {
     getBinding(): XRWebGLBinding;
     getFrame(): XRFrame;
     getSession(): XRSession | null;
-    setSession(value: XRSession): Promise<void>;
+    setSession(value: XRSession | null): Promise<void>;
     getCamera(): WebXRArrayCamera;
     updateCamera(camera: PerspectiveCamera): void;
     setAnimationLoop(callback: XRFrameRequestCallback | null): void;

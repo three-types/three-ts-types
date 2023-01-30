@@ -117,6 +117,9 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/willstott101"><img src="https://avatars.githubusercontent.com/u/335152?v=4?s=100" width="100px;" alt="Will Stott"/><br /><sub><b>Will Stott</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=willstott101" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/demike"><img src="https://avatars.githubusercontent.com/u/1626922?v=4?s=100" width="100px;" alt="demike"/><br /><sub><b>demike</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=demike" title="Code">💻</a></td>
     </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/saitonakamura"><img src="https://avatars.githubusercontent.com/u/1552189?v=4?s=100" width="100px;" alt="Michael サイトー 中村 Bashurov"/><br /><sub><b>Michael サイトー 中村 Bashurov</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=saitonakamura" title="Code">💻</a></td>
+    </tr>
   </tbody>
 </table>
 
