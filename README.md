@@ -119,6 +119,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/saitonakamura"><img src="https://avatars.githubusercontent.com/u/1552189?v=4?s=100" width="100px;" alt="Michael サイトー 中村 Bashurov"/><br /><sub><b>Michael サイトー 中村 Bashurov</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=saitonakamura" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jackbonaguro"><img src="https://avatars.githubusercontent.com/u/15988128?v=4?s=100" width="100px;" alt="Jack Bonaguro"/><br /><sub><b>Jack Bonaguro</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=jackbonaguro" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
