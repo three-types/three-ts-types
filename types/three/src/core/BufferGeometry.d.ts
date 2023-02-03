@@ -10,7 +10,7 @@ import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
 import { BuiltinShaderAttributeName } from '../constants';
 
 /**
- * This is a superefficent class for geometries because it saves all data in buffers.
+ * This is a super efficient class for geometries because it saves all data in buffers.
  * It reduces memory costs and cpu cycles. But it is not as easy to work with because of all the necessary buffer calculations.
  * It is mainly interesting when working with static objects.
  *
@@ -23,7 +23,7 @@ export class BufferGeometry extends EventDispatcher {
     constructor();
 
     /**
-     * Unique number of this buffergeometry instance
+     * Unique number of this BufferGeometry instance
      */
     id: number;
     uuid: string;
