@@ -156,40 +156,4 @@ export class BufferGeometry extends EventDispatcher {
      * You need to call this when you want the bufferGeometry removed while the application is running.
      */
     dispose(): void;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#groups .groups} instead.
-     */
-    drawcalls: any;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#groups .groups} instead.
-     */
-    offsets: any;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#setIndex .setIndex()} instead.
-     */
-    addIndex(index: any): void;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#addGroup .addGroup()} instead.
-     */
-    addDrawCall(start: any, count: any, indexOffset?: any): void;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#clearGroups .clearGroups()} instead.
-     */
-    clearDrawCalls(): void;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#setAttribute .setAttribute()} instead.
-     */
-    addAttribute(name: string, attribute: BufferAttribute | InterleavedBufferAttribute): BufferGeometry;
-    addAttribute(name: any, array: any, itemSize: any): any;
-
-    /**
-     * @deprecated Use {@link BufferGeometry#deleteAttribute .deleteAttribute()} instead.
-     */
-    removeAttribute(name: string): BufferGeometry;
 }
