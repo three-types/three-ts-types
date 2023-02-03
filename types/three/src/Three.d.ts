@@ -179,7 +179,6 @@ export * from './objects/Group';
 /**
  * Renderers
  */
-export * from './renderers/WebGLMultisampleRenderTarget';
 export * from './renderers/WebGLCubeRenderTarget';
 export * from './renderers/WebGLMultipleRenderTargets';
 export * from './renderers/WebGLRenderTarget';
@@ -226,8 +225,6 @@ export * from './scenes/Scene';
 export * from './textures/VideoTexture';
 export * from './textures/CompressedArrayTexture';
 export * from './textures/DataTexture';
-export * from './textures/DataTexture2DArray';
-export * from './textures/DataTexture3D';
 export * from './textures/CompressedTexture';
 export * from './textures/CubeTexture';
 export * from './textures/Data3DTexture';
