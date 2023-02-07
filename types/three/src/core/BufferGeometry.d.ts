@@ -11,14 +11,13 @@ import { EventDispatcher } from './EventDispatcher';
 import { BuiltinShaderAttributeName } from '../constants';
 
 /**
- * A representation of mesh, line, or point geometry. 
- * Includes vertex positions, face indices, normals, colors, UVs, and custom attributes within buffers, 
+ * A representation of mesh, line, or point geometry.
+ * Includes vertex positions, face indices, normals, colors, UVs, and custom attributes within buffers,
  * reducing the cost of passing all this data to the GPU.
  * *
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js}
  */
 export class BufferGeometry extends EventDispatcher {
-
     /**
      * This creates a new BufferGeometry. It also sets several properties to a default value.
      */
@@ -47,9 +46,9 @@ export class BufferGeometry extends EventDispatcher {
     type: string;
 
     /**
-     * Allows for vertices to be re-used across multiple triangles; this is called using "indexed triangles". 
-     * Each triangle is associated with the indices of three vertices. This attribute therefore stores the index of each vertex for each triangular face. 
-     * If this attribute is not set, the renderer assumes that each three contiguous positions represent a single triangle. 
+     * Allows for vertices to be re-used across multiple triangles; this is called using "indexed triangles".
+     * Each triangle is associated with the indices of three vertices. This attribute therefore stores the index of each vertex for each triangular face.
+     * If this attribute is not set, the renderer assumes that each three contiguous positions represent a single triangle.
      * @default null
      */
     index: BufferAttribute | null;
@@ -91,7 +90,7 @@ export class BufferGeometry extends EventDispatcher {
     boundingBox: Box3 | null;
 
     /**
-     * Bounding sphere for the bufferGeometry, which can be calculated with .computeBoundingSphere(). 
+     * Bounding sphere for the bufferGeometry, which can be calculated with .computeBoundingSphere().
      * @default null
      */
     boundingSphere: Sphere | null;
@@ -177,13 +176,13 @@ export class BufferGeometry extends EventDispatcher {
     applyQuaternion(q: Quaternion): BufferGeometry;
 
     /**
-     * Rotate the geometry about the X axis. This is typically done as a one time operation, and not during a loop. 
+     * Rotate the geometry about the X axis. This is typically done as a one time operation, and not during a loop.
      * @remarks Use Object3D.rotation for typical real-time mesh rotation.
      */
     rotateX(angle: number): BufferGeometry;
 
     /**
-     * Rotate the geometry about the Y axis. This is typically done as a one time operation, and not during a loop. 
+     * Rotate the geometry about the Y axis. This is typically done as a one time operation, and not during a loop.
      * @remarks Use Object3D.rotation for typical real-time mesh rotation.
      */
     rotateY(angle: number): BufferGeometry;
@@ -195,13 +194,13 @@ export class BufferGeometry extends EventDispatcher {
     rotateZ(angle: number): BufferGeometry;
 
     /**
-     * Translate the geometry. This is typically done as a one time operation, and not during a loop. 
+     * Translate the geometry. This is typically done as a one time operation, and not during a loop.
      * @remarks Use Object3D.position for typical real-time mesh translation.
      */
     translate(x: number, y: number, z: number): BufferGeometry;
 
     /**
-     * Scale the geometry data. This is typically done as a one time operation, and not during a loop. 
+     * Scale the geometry data. This is typically done as a one time operation, and not during a loop.
      * @remarks Use Object3D.scale for typical real-time mesh scaling.
      */
     scale(x: number, y: number, z: number): BufferGeometry;
@@ -236,7 +235,7 @@ export class BufferGeometry extends EventDispatcher {
 
     /**
      * Calculates and adds a tangent attribute to this geometry.
-     * The computation is only supported for indexed geometries and if position, normal, and uv attributes are defined. 
+     * The computation is only supported for indexed geometries and if position, normal, and uv attributes are defined.
      * @remarks When using a tangent space normal map, prefer the MikkTSpace algorithm provided by BufferGeometryUtils.computeMikkTSpaceTangents instead.
      */
     computeTangents(): void;
@@ -265,14 +264,14 @@ export class BufferGeometry extends EventDispatcher {
      * Creates a clone of this BufferGeometry
      */
     clone(): BufferGeometry;
-    
+
     /**
      * Copies another BufferGeometry to this BufferGeometry.
      */
     copy(source: BufferGeometry): this;
 
     /**
-     * Frees the GPU-related resources allocated by this instance. 
+     * Frees the GPU-related resources allocated by this instance.
      * Call this method whenever this instance is no longer used in your app.
      */
     dispose(): void;
