@@ -1,3 +1,3 @@
-import { Color } from './math/Color';
+import { Color, ColorKeyword } from './math/Color';
 
-export type ColorRepresentation = Color | string | number;
+export type ColorRepresentation = Color | ColorKeyword | number;
