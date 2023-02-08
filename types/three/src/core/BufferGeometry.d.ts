@@ -30,7 +30,6 @@ export class BufferGeometry extends EventDispatcher {
 
     /**
      * UUID of this object instance. This gets automatically assigned and shouldn't be edited.
-     * @readonly
      */
     uuid: string;
 
@@ -111,7 +110,6 @@ export class BufferGeometry extends EventDispatcher {
     /**
      * Read-only flag to check if a given object is of type BufferGeometry.
      * @default true
-     * @readonly
      */
     readonly isBufferGeometry: true;
 
