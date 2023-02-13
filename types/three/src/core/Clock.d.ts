@@ -7,7 +7,7 @@
  */
 export class Clock {
     /**
-     * Create a new instance of Clock
+     * Create a new instance of {@link THREE.Clock | Clock}
      * @param autoStart - Whether to automatically start the clock when {@link Clock.getDelta | .getDelta}() is called for the first time. Default `true`
      */
     constructor(autoStart?: boolean);
