@@ -27,13 +27,13 @@ export class Layers {
      * Set membership to `layer`, and remove membership all other layers.
      * @param layer An integer from 0 to 31.
      */
-    set(channel: number): void;
+    set(layer: number): void;
 
     /**
      * Add membership of this `layer`.
      * @param layer An integer from 0 to 31.
      */
-    enable(channel: number): void;
+    enable(layer: number): void;
 
     /**
      * Add membership to all layers.
@@ -44,13 +44,13 @@ export class Layers {
      * Toggle membership of `layer`.
      * @param layer An integer from 0 to 31.
      */
-    toggle(channel: number): void;
+    toggle(layer: number): void;
 
     /**
      * Remove membership of this `layer`.
      * @param layer An integer from 0 to 31.
      */
-    disable(channel: number): void;
+    disable(layer: number): void;
 
     /**
      * Remove membership from all layers.
@@ -67,5 +67,5 @@ export class Layers {
      * Returns true if the given layer is enabled.
      * @param layer An integer from 0 to 31.
      */
-    isEnabled(channel: number): boolean;
+    isEnabled(layer: number): boolean;
 }
