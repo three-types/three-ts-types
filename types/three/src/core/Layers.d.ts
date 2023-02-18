@@ -19,7 +19,7 @@ export class Layers {
     /**
      * A bit mask storing which of the 32 layers this layers object is currently a member of.
      * @defaultValue `1 | 0`
-     * @returns Expects a `Integer`
+     * @remarks Expects a `Integer`
      */
     mask: number;
 
