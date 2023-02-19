@@ -110,7 +110,7 @@ export class BufferAttribute {
     set needsUpdate(value: boolean);
 
     /**
-     * Flag to check if a given object is of type {@link BufferAttribute}.
+     * Read-only flag to check if a given object is of type {@link BufferAttribute}.
      * @remarks This is a _constant_ value
      * @defaultValue `true`
      */
