@@ -1,6 +1,6 @@
 /**
  * This buffer attribute class does not construct a VBO
- * Instead, it uses whatever VBO is passed in constructor and can later be altered via the {@link GLBufferAttribute.buffer | buffer} property.
+ * Instead, it uses whatever VBO is passed in constructor and can later be altered via the {@link buffer | .buffer} property.
  * @remarks
  * It is required to pass additional params alongside the VBO
  * Those are: the GL context, the GL data type, the number of components per vertex, the number of bytes per component, and the number of vertices.
@@ -13,11 +13,11 @@
 export class GLBufferAttribute {
     /**
      * This creates a new GLBufferAttribute object.
-     * @param buffer Must be a {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLBuffer | WebGLBuffer}. See {@link GLBufferAttribute.buffer | buffer}
-     * @param type One of {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants#Data_types | WebGL Data Types}. See {@link GLBufferAttribute.type | type}
-     * @param itemSize How many values make up each item (vertex). See {@link GLBufferAttribute.itemSize | itemSize}
-     * @param elementSize `1`, `2` or `4`. The corresponding size (in bytes) for the given {@link type} param. See {@link GLBufferAttribute.elementSize | elementSize}
-     * @param count The expected number of vertices in VBO. See {@link GLBufferAttribute.count | count}
+     * @param buffer Must be a {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLBuffer | WebGLBuffer}. See {@link GLBufferAttribute.buffer | .buffer}
+     * @param type One of {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Constants#Data_types | WebGL Data Types}. See {@link GLBufferAttribute.type | .type}
+     * @param itemSize How many values make up each item (vertex). See {@link GLBufferAttribute.itemSize | .itemSize}
+     * @param elementSize `1`, `2` or `4`. The corresponding size (in bytes) for the given {@link type} param. See {@link GLBufferAttribute.elementSize | .elementSize}
+     * @param count The expected number of vertices in VBO. See {@link GLBufferAttribute.count | .count}
      */
     constructor(buffer: WebGLBuffer, type: GLenum, itemSize: number, elementSize: 1 | 2 | 4, count: number);
 
@@ -49,7 +49,7 @@ export class GLBufferAttribute {
      * - gl.INT: 0x1404
      * - gl.UNSIGNED_INT: 0x1405
      * - gl.FLOAT: 0x1406
-     * @remarks Set this property together with {@link GLBufferAttribute.elementSize | elementSize}. The recommended way is using the {@link GLBufferAttribute.setType | setType} method.
+     * @remarks Set this property together with {@link elementSize | .elementSize}. The recommended way is using the {@link setType | .setType()} method.
      * @remarks Expects a `DataType` `GLenum` _possible values:_ `0x1400` `0x1401` `0x1402` `0x1403` `0x1404` `0x1405` `0x1406`
      */
     type: GLenum;
@@ -63,7 +63,7 @@ export class GLBufferAttribute {
     itemSize: number;
 
     /**
-     * Stores the corresponding size in bytes for the current {@link GLBufferAttribute.type | type} property value.
+     * Stores the corresponding size in bytes for the current {@link type | .type} property value.
      *
      * The corresponding size (_in bytes_) for the given "type" param.
      * #### WebGL Data Type (`GLenum`)
@@ -74,8 +74,8 @@ export class GLBufferAttribute {
      * - gl.INT: 4
      * - gl.UNSIGNED_INT: 4
      * - gl.FLOAT: 4
-     * @remarks Set this property together with {@link GLBufferAttribute.type | type}. The recommended way is using the {@link GLBufferAttribute.setType | setType} method.
-     * @see Above (constructor) for a list of known type sizes.
+     * @remarks Set this property together with {@link type | .type}. The recommended way is using the {@link setType | .setType} method.
+     * @see `constructor`` for a list of known type sizes.
      * @remarks Expects a `1`, `2` or `4`
      */
     elementSize: 1 | 2 | 4;
@@ -93,13 +93,13 @@ export class GLBufferAttribute {
     version: number;
 
     /**
-     * Setting this to true increments {@link GLBufferAttribute.version | version}.
+     * Setting this to true increments {@link version | .version}.
      * @remarks _set-only property_.
      */
     set needsUpdate(value: boolean);
 
     /**
-     * Sets the {@link GLBufferAttribute.buffer | buffer} property.
+     * Sets the {@link buffer | .buffer} property.
      */
     setBuffer(buffer: WebGLBuffer): this;
 
