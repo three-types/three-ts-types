@@ -21,7 +21,7 @@ export class InstancedBufferGeometry extends BufferGeometry {
      * @remarks This is a _constant_ value
      * @defaultValue `true`
      */
-    isInstancedBufferGeometry: boolean;
+    readonly isInstancedBufferGeometry: true;
 
     /**
      *
