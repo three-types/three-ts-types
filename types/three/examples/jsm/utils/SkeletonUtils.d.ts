@@ -1,4 +1,4 @@
-import { AnimationClip, Bone, Matrix4, Object3D, Skeleton, SkeletonHelper } from '../../../src/Three';
+import { AnimationClip, Bone, Matrix4, Object3D, Skeleton, SkeletonHelper } from '../../../src/Three.js';
 
 export function retarget(target: Object3D | Skeleton, source: Object3D | Skeleton, options: {}): void;
 

@@ -1,5 +1,5 @@
-import { Vector2 } from './../../math/Vector2';
-import { Path } from './Path';
+import { Vector2 } from './../../math/Vector2.js';
+import { Path } from './Path.js';
 
 /**
  * Defines a 2d shape plane using paths.

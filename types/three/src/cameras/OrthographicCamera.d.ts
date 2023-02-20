@@ -1,4 +1,4 @@
-import { Camera } from './Camera';
+import { Camera } from './Camera.js';
 
 /**
  * Camera with orthographic projection

@@ -1,5 +1,5 @@
-import { BufferGeometry } from './BufferGeometry';
-import { BufferAttribute } from './BufferAttribute';
+import { BufferGeometry } from './BufferGeometry.js';
+import { BufferAttribute } from './BufferAttribute.js';
 
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/examples/jsm/utils/BufferGeometryUtils.js|examples/jsm/utils/BufferGeometryUtils.js}

@@ -1,6 +1,6 @@
-import { Material } from './../materials/Material';
-import { Line } from './Line';
-import { BufferGeometry } from '../core/BufferGeometry';
+import { Material } from './../materials/Material.js';
+import { Line } from './Line.js';
+import { BufferGeometry } from '../core/BufferGeometry.js';
 
 /**
  * @deprecated

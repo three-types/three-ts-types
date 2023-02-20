@@ -1,5 +1,5 @@
-import { Texture } from './Texture';
-import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType } from '../constants';
+import { Texture } from './Texture.js';
+import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType } from '../constants.js';
 
 export class VideoTexture extends Texture {
     /**

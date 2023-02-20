@@ -1,4 +1,4 @@
-import { InterleavedBuffer } from './InterleavedBuffer';
+import { InterleavedBuffer } from './InterleavedBuffer.js';
 
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InstancedInterleavedBuffer.js|src/core/InstancedInterleavedBuffer.js}

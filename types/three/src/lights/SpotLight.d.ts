@@ -1,10 +1,10 @@
-import { Color } from './../math/Color';
-import { Vector3 } from '../math/Vector3';
-import { Object3D } from './../core/Object3D';
-import { SpotLightShadow } from './SpotLightShadow';
-import { Light } from './Light';
-import { ColorRepresentation } from '../utils';
-import { Texture } from '../textures/Texture';
+import { Color } from './../math/Color.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from './../core/Object3D.js';
+import { SpotLightShadow } from './SpotLightShadow.js';
+import { Light } from './Light.js';
+import { ColorRepresentation } from '../utils.js';
+import { Texture } from '../textures/Texture.js';
 
 /**
  * A point light that can cast shadow in one direction.

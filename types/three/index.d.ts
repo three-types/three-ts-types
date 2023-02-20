@@ -10,6 +10,6 @@
 // Periodically, the updates from the repository are pushed to DefinitelyTyped
 // and released in the @types/three npm package.
 
-export * from './src/Three';
+export * from './src/Three.js';
 
 export as namespace THREE;

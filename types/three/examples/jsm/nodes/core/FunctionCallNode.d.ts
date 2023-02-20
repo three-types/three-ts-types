@@ -1,6 +1,6 @@
-import FunctionNode from './FunctionNode';
-import TempNode from './TempNode';
-import Node from './Node';
+import FunctionNode from './FunctionNode.js';
+import TempNode from './TempNode.js';
+import Node from './Node.js';
 
 export default class FunctionCallNode<P extends Node[] | { [name: string]: Node }> extends TempNode {
     functionNode: FunctionNode<P>;

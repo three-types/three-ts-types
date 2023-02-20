@@ -1,5 +1,5 @@
-import { AudioListener } from './AudioListener';
-import { Audio } from './Audio';
+import { AudioListener } from './AudioListener.js';
+import { Audio } from './Audio.js';
 
 export class PositionalAudio extends Audio<PannerNode> {
     constructor(listener: AudioListener);

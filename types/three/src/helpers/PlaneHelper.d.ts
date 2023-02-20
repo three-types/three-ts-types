@@ -1,5 +1,5 @@
-import { Plane } from './../math/Plane';
-import { LineSegments } from './../objects/LineSegments';
+import { Plane } from './../math/Plane.js';
+import { LineSegments } from './../objects/LineSegments.js';
 
 export class PlaneHelper extends LineSegments {
     /**

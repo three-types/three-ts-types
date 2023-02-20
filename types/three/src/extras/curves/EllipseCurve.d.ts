@@ -1,5 +1,5 @@
-import { Curve } from './../core/Curve';
-import { Vector2 } from '../../math/Vector2';
+import { Curve } from './../core/Curve.js';
+import { Vector2 } from '../../math/Vector2.js';
 
 export class EllipseCurve extends Curve<Vector2> {
     constructor(

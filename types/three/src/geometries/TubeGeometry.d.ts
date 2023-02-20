@@ -1,6 +1,6 @@
-import { Curve } from './../extras/core/Curve';
-import { Vector3 } from './../math/Vector3';
-import { BufferGeometry } from './../core/BufferGeometry';
+import { Curve } from './../extras/core/Curve.js';
+import { Vector3 } from './../math/Vector3.js';
+import { BufferGeometry } from './../core/BufferGeometry.js';
 
 export class TubeGeometry extends BufferGeometry {
     /**

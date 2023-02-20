@@ -1,7 +1,7 @@
-import { Color } from './../math/Color';
-import { Vector3 } from '../math/Vector3';
-import { Light } from './Light';
-import { ColorRepresentation } from '../utils';
+import { Color } from './../math/Color.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Light } from './Light.js';
+import { ColorRepresentation } from '../utils.js';
 
 export class HemisphereLight extends Light {
     /**

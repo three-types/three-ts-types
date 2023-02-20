@@ -1,5 +1,5 @@
-import { NodeValueOption } from './constants';
-import Node from './Node';
+import { NodeValueOption } from './constants.js';
+import Node from './Node.js';
 
 export function getNodesKeys(object: Node): string[];
 export function getValueType(value: NodeValueOption): string | null;

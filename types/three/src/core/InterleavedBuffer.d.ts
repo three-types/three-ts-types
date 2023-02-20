@@ -1,5 +1,5 @@
-import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
-import { Usage } from '../constants';
+import { InterleavedBufferAttribute } from './InterleavedBufferAttribute.js';
+import { Usage } from '../constants.js';
 
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InterleavedBuffer.js|src/core/InterleavedBuffer.js}

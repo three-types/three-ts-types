@@ -1,6 +1,6 @@
-import { Material, Object3D, Vector3 } from '../../../src/Three';
+import { Material, Object3D, Vector3 } from '../../../src/Three.js';
 
-import { LightningStrike, RayParameters } from '../geometries/LightningStrike';
+import { LightningStrike, RayParameters } from '../geometries/LightningStrike.js';
 
 export interface StormParams {
     size?: number;

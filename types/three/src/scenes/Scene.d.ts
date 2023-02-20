@@ -1,12 +1,12 @@
 // https://threejs.org/docs/?q=scene#api/en/scenes/Scene
 
-import { FogBase } from './Fog';
-import { Material } from './../materials/Material';
-import { Object3D } from './../core/Object3D';
-import { Color } from '../math/Color';
-import { Texture } from '../textures/Texture';
-import { WebGLRenderer } from '../renderers/WebGLRenderer';
-import { Camera } from '../cameras/Camera';
+import { FogBase } from './Fog.js';
+import { Material } from './../materials/Material.js';
+import { Object3D } from './../core/Object3D.js';
+import { Color } from '../math/Color.js';
+import { Texture } from '../textures/Texture.js';
+import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
+import { Camera } from '../cameras/Camera.js';
 
 // Scenes /////////////////////////////////////////////////////////////////////
 

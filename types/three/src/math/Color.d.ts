@@ -1,9 +1,9 @@
-import { ColorSpace } from '../constants';
-import { ColorRepresentation } from '../utils';
+import { ColorSpace } from '../constants.js';
+import { ColorRepresentation } from '../utils.js';
 
-import { BufferAttribute } from './../core/BufferAttribute';
+import { BufferAttribute } from './../core/BufferAttribute.js';
 
-export { SRGBToLinear } from './ColorManagement';
+export { SRGBToLinear } from './ColorManagement.js';
 
 declare const _colorKeywords: {
     aliceblue: 0xf0f8ff;

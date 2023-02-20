@@ -1,9 +1,9 @@
-import CodeNode, { CodeNodeInclude } from './CodeNode';
-import FunctionCallNode from './FunctionCallNode';
-import NodeBuilder from './NodeBuilder';
-import NodeFunction from './NodeFunction';
-import NodeFunctionInput from './NodeFunctionInput';
-import Node from './Node';
+import CodeNode, { CodeNodeInclude } from './CodeNode.js';
+import FunctionCallNode from './FunctionCallNode.js';
+import NodeBuilder from './NodeBuilder.js';
+import NodeFunction from './NodeFunction.js';
+import NodeFunctionInput from './NodeFunctionInput.js';
+import Node from './Node.js';
 
 export type FunctionNodeArguments = Node[] | { [name: string]: Node };
 

@@ -1,7 +1,7 @@
-import { PointLight } from './../lights/PointLight';
-import { Matrix4 } from './../math/Matrix4';
-import { Object3D } from './../core/Object3D';
-import { ColorRepresentation } from '../utils';
+import { PointLight } from './../lights/PointLight.js';
+import { Matrix4 } from './../math/Matrix4.js';
+import { Object3D } from './../core/Object3D.js';
+import { ColorRepresentation } from '../utils.js';
 
 export class PointLightHelper extends Object3D {
     constructor(light: PointLight, sphereSize?: number, color?: ColorRepresentation);

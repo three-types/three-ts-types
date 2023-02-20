@@ -1,4 +1,4 @@
-import { BufferGeometry } from '../core/BufferGeometry';
+import { BufferGeometry } from '../core/BufferGeometry.js';
 
 export class EdgesGeometry<TBufferGeometry extends BufferGeometry = BufferGeometry> extends BufferGeometry {
     /**

@@ -1,5 +1,5 @@
-import { Texture } from './Texture';
-import { TextureFilter, Wrapping } from '../constants';
+import { Texture } from './Texture.js';
+import { TextureFilter, Wrapping } from '../constants.js';
 
 export class Data3DTexture extends Texture {
     constructor(data: BufferSource, width: number, height: number, depth: number);

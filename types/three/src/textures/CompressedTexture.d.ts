@@ -1,4 +1,4 @@
-import { Texture } from './Texture';
+import { Texture } from './Texture.js';
 import {
     Mapping,
     Wrapping,
@@ -6,7 +6,7 @@ import {
     CompressedPixelFormat,
     TextureDataType,
     TextureEncoding,
-} from '../constants';
+} from '../constants.js';
 
 export class CompressedTexture extends Texture {
     /**

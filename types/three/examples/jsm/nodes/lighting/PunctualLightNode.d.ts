@@ -1,6 +1,6 @@
-import AnalyticLightNode from './AnalyticLightNode';
-import Node from '../core/Node';
-import { PointLight, SpotLight } from '../../../../src/Three';
+import AnalyticLightNode from './AnalyticLightNode.js';
+import Node from '../core/Node.js';
+import { PointLight, SpotLight } from '../../../../src/Three.js';
 
 export type PunctualLight = PointLight | SpotLight;
 

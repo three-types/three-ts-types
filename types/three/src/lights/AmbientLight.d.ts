@@ -1,5 +1,5 @@
-import { ColorRepresentation } from '../utils';
-import { Light } from './Light';
+import { ColorRepresentation } from '../utils.js';
+import { Light } from './Light.js';
 
 /**
  * This light's color gets applied to all the objects in the scene globally.

@@ -1,4 +1,4 @@
-import { Audio } from './Audio';
+import { Audio } from './Audio.js';
 
 export class AudioAnalyser {
     /**

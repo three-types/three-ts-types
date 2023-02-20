@@ -1,6 +1,6 @@
-import { Vector2 } from './../../math/Vector2';
-import { Shape } from './Shape';
-import { Color } from '../../math/Color';
+import { Vector2 } from './../../math/Vector2.js';
+import { Shape } from './Shape.js';
+import { Color } from '../../math/Color.js';
 
 export class ShapePath {
     constructor();

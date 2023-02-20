@@ -1,5 +1,5 @@
-import { Texture } from './Texture';
-import { TextureFilter } from '../constants';
+import { Texture } from './Texture.js';
+import { TextureFilter } from '../constants.js';
 
 export class DataArrayTexture extends Texture {
     constructor(data?: BufferSource, width?: number, height?: number, depth?: number);

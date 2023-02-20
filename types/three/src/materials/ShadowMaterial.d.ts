@@ -1,6 +1,6 @@
-import { ColorRepresentation } from '../utils';
-import { Color } from './../math/Color';
-import { MaterialParameters, Material } from './Material';
+import { ColorRepresentation } from '../utils.js';
+import { Color } from './../math/Color.js';
+import { MaterialParameters, Material } from './Material.js';
 
 export interface ShadowMaterialParameters extends MaterialParameters {
     color?: ColorRepresentation | undefined;

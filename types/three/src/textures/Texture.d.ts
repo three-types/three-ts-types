@@ -1,9 +1,9 @@
 // https://threejs.org/docs/?q=texture#api/en/textures/Texture
 
-import { Vector2 } from './../math/Vector2';
-import { Matrix3 } from './../math/Matrix3';
-import { Source } from './Source';
-import { EventDispatcher } from './../core/EventDispatcher';
+import { Vector2 } from './../math/Vector2.js';
+import { Matrix3 } from './../math/Matrix3.js';
+import { Source } from './Source.js';
+import { EventDispatcher } from './../core/EventDispatcher.js';
 import {
     Mapping,
     Wrapping,
@@ -12,7 +12,7 @@ import {
     PixelFormatGPU,
     TextureDataType,
     TextureEncoding,
-} from '../constants';
+} from '../constants.js';
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface

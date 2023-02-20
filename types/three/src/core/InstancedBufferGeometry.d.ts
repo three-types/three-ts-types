@@ -1,4 +1,4 @@
-import { BufferGeometry } from './BufferGeometry';
+import { BufferGeometry } from './BufferGeometry.js';
 
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InstancedBufferGeometry.js|src/core/InstancedBufferGeometry.js}

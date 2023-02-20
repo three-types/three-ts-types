@@ -1,5 +1,5 @@
-import { Color } from './../math/Color';
-import { FogBase } from './Fog';
+import { Color } from './../math/Color.js';
+import { FogBase } from './Fog.js';
 /**
  * This class contains the parameters that define linear fog, i.e., that grows exponentially denser with the distance.
  */

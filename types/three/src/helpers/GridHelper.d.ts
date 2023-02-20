@@ -1,5 +1,5 @@
-import { ColorRepresentation } from '../utils';
-import { LineSegments } from './../objects/LineSegments';
+import { ColorRepresentation } from '../utils.js';
+import { LineSegments } from './../objects/LineSegments.js';
 
 export class GridHelper extends LineSegments {
     /**

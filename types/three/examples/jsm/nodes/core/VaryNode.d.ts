@@ -1,4 +1,4 @@
-import Node from './Node';
+import Node from './Node.js';
 
 export default class VaryNode extends Node {
     node: Node;

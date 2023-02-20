@@ -1,5 +1,5 @@
-import { Shape } from './../extras/core/Shape';
-import { BufferGeometry } from './../core/BufferGeometry';
+import { Shape } from './../extras/core/Shape.js';
+import { BufferGeometry } from './../core/BufferGeometry.js';
 
 export class ShapeGeometry extends BufferGeometry {
     /**

@@ -1,5 +1,5 @@
-import { Vector } from './../../math/Vector2';
-import { Vector3 } from './../../math/Vector3';
+import { Vector } from './../../math/Vector2.js';
+import { Vector3 } from './../../math/Vector3.js';
 
 // Extras / Core /////////////////////////////////////////////////////////////////////
 

@@ -1,5 +1,5 @@
-import { ColorRepresentation } from '../utils';
-import { Color } from './../math/Color';
+import { ColorRepresentation } from '../utils.js';
+import { Color } from './../math/Color.js';
 
 export interface FogBase {
     name: string;

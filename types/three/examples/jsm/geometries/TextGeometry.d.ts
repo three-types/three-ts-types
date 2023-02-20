@@ -1,6 +1,6 @@
-import { ExtrudeGeometry } from '../../../src/Three';
+import { ExtrudeGeometry } from '../../../src/Three.js';
 
-import { Font } from '../loaders/FontLoader';
+import { Font } from '../loaders/FontLoader.js';
 
 export interface TextGeometryParameters {
     font: Font;

@@ -1,6 +1,6 @@
-import { ColorRepresentation } from '../utils';
-import { Object3D } from './../core/Object3D';
-import { LineSegments } from './../objects/LineSegments';
+import { ColorRepresentation } from '../utils.js';
+import { Object3D } from './../core/Object3D.js';
+import { LineSegments } from './../objects/LineSegments.js';
 
 export class BoxHelper extends LineSegments {
     /**

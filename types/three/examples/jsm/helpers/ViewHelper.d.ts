@@ -1,5 +1,5 @@
-import { Object3D, Vector3, WebGLRenderer } from '../../../src/Three';
-import { Octree } from '../math/Octree';
+import { Object3D, Vector3, WebGLRenderer } from '../../../src/Three.js';
+import { Octree } from '../math/Octree.js';
 
 export class ViewHelper extends Object3D {
     animating: boolean;

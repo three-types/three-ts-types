@@ -1,6 +1,6 @@
-import { NodeTypeOption } from './constants';
-import Node from './Node';
-import NodeBuilder from './NodeBuilder';
+import { NodeTypeOption } from './constants.js';
+import Node from './Node.js';
+import NodeBuilder from './NodeBuilder.js';
 
 export interface CodeNodeInclude {
     build(builder: NodeBuilder): void;

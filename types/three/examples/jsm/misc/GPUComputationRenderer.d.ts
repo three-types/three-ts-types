@@ -9,7 +9,7 @@ import {
     TextureFilter,
     TextureDataType,
     IUniform,
-} from '../../../src/Three';
+} from '../../../src/Three.js';
 
 export interface Variable {
     name: string;

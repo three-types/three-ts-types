@@ -1,9 +1,9 @@
-import { Color } from './../math/Color';
-import { Texture } from './../textures/Texture';
-import { Vector2 } from './../math/Vector2';
-import { MaterialParameters, Material } from './Material';
-import { Combine, NormalMapTypes } from '../constants';
-import { ColorRepresentation } from '../utils';
+import { Color } from './../math/Color.js';
+import { Texture } from './../textures/Texture.js';
+import { Vector2 } from './../math/Vector2.js';
+import { MaterialParameters, Material } from './Material.js';
+import { Combine, NormalMapTypes } from '../constants.js';
+import { ColorRepresentation } from '../utils.js';
 
 export interface MeshPhongMaterialParameters extends MaterialParameters {
     /** geometry color in hexadecimal. Default is 0xffffff. */

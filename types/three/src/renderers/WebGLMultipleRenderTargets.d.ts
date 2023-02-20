@@ -1,6 +1,6 @@
-import { EventDispatcher } from '../core/EventDispatcher';
-import { Texture } from '../textures/Texture';
-import { WebGLRenderTargetOptions } from './WebGLRenderTarget';
+import { EventDispatcher } from '../core/EventDispatcher.js';
+import { Texture } from '../textures/Texture.js';
+import { WebGLRenderTargetOptions } from './WebGLRenderTarget.js';
 
 /**
  * This class originall extended WebGLMultipleRenderTarget

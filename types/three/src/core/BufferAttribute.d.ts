@@ -1,6 +1,6 @@
-import { Usage } from '../constants';
-import { Matrix3 } from './../math/Matrix3';
-import { Matrix4 } from './../math/Matrix4';
+import { Usage } from '../constants.js';
+import { Matrix3 } from './../math/Matrix3.js';
+import { Matrix4 } from './../math/Matrix4.js';
 
 /**
  * see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js|src/core/BufferAttribute.js}

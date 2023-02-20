@@ -1,8 +1,8 @@
-import { Light } from './../lights/Light';
-import { Matrix4 } from './../math/Matrix4';
-import { Object3D } from './../core/Object3D';
-import { LineSegments } from '../objects/LineSegments';
-import { ColorRepresentation } from '../utils';
+import { Light } from './../lights/Light.js';
+import { Matrix4 } from './../math/Matrix4.js';
+import { Object3D } from './../core/Object3D.js';
+import { LineSegments } from '../objects/LineSegments.js';
+import { ColorRepresentation } from '../utils.js';
 
 export class SpotLightHelper extends Object3D {
     constructor(light: Light, color?: ColorRepresentation);

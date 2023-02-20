@@ -1,6 +1,6 @@
-import NodeMaterial from './NodeMaterial';
-import Node from '../core/Node';
-import { ShaderMaterialParameters } from '../../../../src/Three';
+import NodeMaterial from './NodeMaterial.js';
+import Node from '../core/Node.js';
+import { ShaderMaterialParameters } from '../../../../src/Three.js';
 
 export default class MeshBasicNodeMaterial extends NodeMaterial {
     isMeshBasicNodeMaterial: true;

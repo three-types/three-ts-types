@@ -1,6 +1,6 @@
-import { ColorRepresentation } from '../utils';
-import { Light } from './Light';
-import { PointLightShadow } from './PointLightShadow';
+import { ColorRepresentation } from '../utils.js';
+import { Light } from './Light.js';
+import { PointLightShadow } from './PointLightShadow.js';
 
 /**
  * @example

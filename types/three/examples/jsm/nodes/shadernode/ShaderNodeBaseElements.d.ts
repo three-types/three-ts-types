@@ -1,5 +1,5 @@
-import TextureNode from '../accessors/TextureNode';
-import Node from '../core/Node';
+import TextureNode from '../accessors/TextureNode.js';
+import Node from '../core/Node.js';
 
 // shader node utils
 import {
@@ -15,10 +15,10 @@ import {
     NodeOrType,
     ProxiedObject,
     ProxiedTuple,
-} from './ShaderNode';
-import { Material, Texture } from '../../../../src/Three';
-import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants';
-import { NodeBuilderContext } from '../core/NodeBuilder';
+} from './ShaderNode.js';
+import { Material, Texture } from '../../../../src/Three.js';
+import { NodeTypeOption, NodeUserData, NodeValueOption } from '../core/constants.js';
+import { NodeBuilderContext } from '../core/NodeBuilder.js';
 import {
     BitangentNode,
     BufferNode,
@@ -51,9 +51,9 @@ import {
     UVNode,
     VarNode,
     VaryNode,
-} from '../Nodes';
-import StorageBufferNode from '../accessors/StorageBufferNode';
-import NodeCache from '../core/NodeCache';
+} from '../Nodes.js';
+import StorageBufferNode from '../accessors/StorageBufferNode.js';
+import NodeCache from '../core/NodeCache.js';
 
 // shader node base
 

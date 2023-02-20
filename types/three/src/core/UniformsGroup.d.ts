@@ -1,7 +1,7 @@
-import { EventDispatcher } from './EventDispatcher';
-import { Uniform } from './Uniform';
+import { EventDispatcher } from './EventDispatcher.js';
+import { Uniform } from './Uniform.js';
 
-import { Usage } from '../constants';
+import { Usage } from '../constants.js';
 
 export class UniformsGroup extends EventDispatcher {
     isUniformsGroup: true;

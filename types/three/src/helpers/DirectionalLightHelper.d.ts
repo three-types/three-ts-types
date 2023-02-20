@@ -1,8 +1,8 @@
-import { DirectionalLight } from './../lights/DirectionalLight';
-import { Line } from './../objects/Line';
-import { Matrix4 } from './../math/Matrix4';
-import { Object3D } from './../core/Object3D';
-import { ColorRepresentation } from '../utils';
+import { DirectionalLight } from './../lights/DirectionalLight.js';
+import { Line } from './../objects/Line.js';
+import { Matrix4 } from './../math/Matrix4.js';
+import { Object3D } from './../core/Object3D.js';
+import { ColorRepresentation } from '../utils.js';
 
 export class DirectionalLightHelper extends Object3D {
     /**
