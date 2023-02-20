@@ -22,6 +22,7 @@ export class GLBufferAttribute {
     constructor(buffer: WebGLBuffer, type: GLenum, itemSize: number, elementSize: 1 | 2 | 4, count: number);
 
     /**
+     * Read-only flag to check if a given object is of type {@link GLBufferAttribute}.
      * @remarks This is a _constant_ value
      * @defaultValue `true`
      */
