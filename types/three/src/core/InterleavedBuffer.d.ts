@@ -77,6 +77,15 @@ export class InterleavedBuffer {
      * @remarks This gets automatically assigned and shouldn't be edited.
      */
     uuid: string;
+    
+    /**
+     * Calls {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set}( {@link value}, {@link offset} )
+     * on the {@link BufferAttribute.array | array}.
+     * @param value The source `TypedArray`.
+     * @param offset index of the {@link BufferAttribute.array | array} at which to start copying. Expects a `Integer`. Default `0`.
+     * @throws `RangeError` When {@link offset} is negative or is too large.
+     */
+    set(value: ArrayLike<number>, offset: number): this;
 
     /**
      * Set {@link BufferAttribute.usage | usage}
@@ -88,12 +97,6 @@ export class InterleavedBuffer {
      * {@link https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/bufferData | WebGLRenderingContext.bufferData}.
      */
     setUsage(value: Usage): this;
-
-    /**
-     * Creates a clone of this {@link InterleavedBuffer}.
-     * @param data This object holds shared array buffers required for properly cloning geometries with interleaved attributes.
-     */
-    clone(data: {}): InterleavedBuffer;
 
     /**
      * Copies another {@link InterleavedBuffer} to this {@link InterleavedBuffer} instance.
@@ -108,15 +111,12 @@ export class InterleavedBuffer {
      * @param index2
      */
     copyAt(index1: number, attribute: InterleavedBufferAttribute, index2: number): this;
-
+    
     /**
-     * Calls {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set}( {@link value}, {@link offset} )
-     * on the {@link BufferAttribute.array | array}.
-     * @param value The source `TypedArray`.
-     * @param offset index of the {@link BufferAttribute.array | array} at which to start copying. Expects a `Integer`. Default `0`.
-     * @throws `RangeError` When {@link offset} is negative or is too large.
+     * Creates a clone of this {@link InterleavedBuffer}.
+     * @param data This object holds shared array buffers required for properly cloning geometries with interleaved attributes.
      */
-    set(value: ArrayLike<number>, offset: number): this;
+    clone(data: {}): InterleavedBuffer;
 
     /**
      * Serializes this {@link InterleavedBuffer}.
