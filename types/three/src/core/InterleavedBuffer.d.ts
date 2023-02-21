@@ -77,7 +77,7 @@ export class InterleavedBuffer {
      * @remarks This gets automatically assigned and shouldn't be edited.
      */
     uuid: string;
-    
+
     /**
      * Calls {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray/set | TypedArray.set}( {@link value}, {@link offset} )
      * on the {@link BufferAttribute.array | array}.
@@ -106,12 +106,12 @@ export class InterleavedBuffer {
 
     /**
      * Copies data from {@link attribute}[{@link index2}] to {@link InterleavedBuffer.array | array}[{@link index1}].
-     * @param index1
+     * @param index1 Expects a `Integer`
      * @param attribute
-     * @param index2
+     * @param index2 Expects a `Integer`
      */
     copyAt(index1: number, attribute: InterleavedBufferAttribute, index2: number): this;
-    
+
     /**
      * Creates a clone of this {@link InterleavedBuffer}.
      * @param data This object holds shared array buffers required for properly cloning geometries with interleaved attributes.

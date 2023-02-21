@@ -102,7 +102,7 @@ export class InterleavedBufferAttribute {
     /**
      * Sets the x component of the item at the given index.
      * @param index Expects a `Integer`
-     * @param x
+     * @param x Expects a `Float`
      */
     setX(index: number, x: number): this;
 
@@ -115,7 +115,7 @@ export class InterleavedBufferAttribute {
     /**
      * Sets the y component of the item at the given index.
      * @param index Expects a `Integer`
-     * @param y
+     * @param y Expects a `Float`
      */
     setY(index: number, y: number): this;
 
@@ -128,7 +128,7 @@ export class InterleavedBufferAttribute {
     /**
      * Sets the z component of the item at the given index.
      * @param index Expects a `Integer`
-     * @param z
+     * @param z Expects a `Float`
      */
     setZ(index: number, z: number): this;
 
@@ -141,33 +141,33 @@ export class InterleavedBufferAttribute {
     /**
      * Sets the w component of the item at the given index.
      * @param index Expects a `Integer`
-     * @param w
+     * @param w Expects a `Float`
      */
     setW(index: number, z: number): this;
 
     /**
      * Sets the x and y components of the item at the given index.
      * @param index Expects a `Integer`
-     * @param x
-     * @param y
+     * @param x Expects a `Float`
+     * @param y Expects a `Float`
      */
     setXY(index: number, x: number, y: number): this;
     /**
      * Sets the x, y and z components of the item at the given index.
      * @param index Expects a `Integer`
-     * @param x
-     * @param y
-     * @param z
+     * @param x Expects a `Float`
+     * @param y Expects a `Float`
+     * @param z Expects a `Float`
      */
     setXYZ(index: number, x: number, y: number, z: number): this;
 
     /**
      * Sets the x, y, z and w components of the item at the given index.
      * @param index Expects a `Integer`
-     * @param x
-     * @param y
-     * @param z
-     * @param w
+     * @param x Expects a `Float`
+     * @param y Expects a `Float`
+     * @param z Expects a `Float`
+     * @param w Expects a `Float`
      */
     setXYZW(index: number, x: number, y: number, z: number, w: number): this;
 
