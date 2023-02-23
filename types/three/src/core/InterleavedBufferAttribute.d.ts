@@ -4,7 +4,7 @@ import { Matrix4 } from './../math/Matrix4';
 import { Matrix } from './../math/Matrix3';
 
 /**
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/InterleavedBufferAttribute | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/InterleavedBufferAttribute | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InterleavedBufferAttribute.js | Source}
  */
 export class InterleavedBufferAttribute {

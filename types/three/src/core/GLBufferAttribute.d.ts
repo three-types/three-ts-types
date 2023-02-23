@@ -7,7 +7,7 @@
  * @remarks
  * The most common use case for this class is when some kind of GPGPU calculation interferes or even produces the VBOs in question.
  * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry_glbufferattribute | WebGL / buffergeometry / glbufferattribute}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/GLBufferAttribute | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/GLBufferAttribute | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/GLBufferAttribute.js | Source}
  */
 export class GLBufferAttribute {

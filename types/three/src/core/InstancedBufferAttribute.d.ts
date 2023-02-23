@@ -3,7 +3,7 @@ import { BufferAttribute } from './BufferAttribute';
 
 /**
  * An instanced version of {@link THREE.InstancedBufferAttributeBufferAttribute | BufferAttribute}.
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/InstancedBufferAttribute | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/InstancedBufferAttribute | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InstancedBufferAttribute.js | Source}
  */
 export class InstancedBufferAttribute extends BufferAttribute {

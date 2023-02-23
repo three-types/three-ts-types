@@ -18,7 +18,7 @@ import { AnimationClip } from '../animation/AnimationClip';
  * This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.
  * @remarks Note that this can be used for grouping objects via the {@link THREE.Object3D.add | .add()} method which adds the object as a child,
  * however it is better to use {@link THREE.Group | Group} for this.
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/Object3D | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/Object3D | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js | Source}
  */
 export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {

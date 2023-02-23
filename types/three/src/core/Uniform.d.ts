@@ -13,7 +13,7 @@
  * ```
  * @see Example: {@link https://threejs.org/examples/#webgl_nodes_materials_instance_uniform | WebGL2 / nodes / materials / instance / uniform}
  * @see Example: {@link https://threejs.org/examples/#webgpu_instance_uniform| WebGPU / instance / uniform}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/Uniform | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/Uniform | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Uniform.js | Source}
  */
 export class Uniform<T = any> {

@@ -2,7 +2,7 @@ import { BufferGeometry } from './BufferGeometry';
 
 /**
  * An instanced version of {@link THREE.BufferGeometry | BufferGeometry}.
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/InstancedBufferGeometry | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/InstancedBufferGeometry | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InstancedBufferGeometry.js | Source}
  */
 export class InstancedBufferGeometry extends BufferGeometry {

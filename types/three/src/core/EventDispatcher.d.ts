@@ -29,7 +29,7 @@ export type EventListener<E, T, U> = (event: E & { type: T } & { target: U }) =>
  * car.start();
  * ```
  * @see {@link https://github.com/mrdoob/eventdispatcher.js | mrdoob EventDispatcher on GitHub}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/EventDispatcher | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/EventDispatcher | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/EventDispatcher.js | Source}
  */
 export class EventDispatcher<E extends BaseEvent = Event> {

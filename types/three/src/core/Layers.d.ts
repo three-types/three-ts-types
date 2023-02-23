@@ -8,7 +8,7 @@
  * All classes that inherit from {@link THREE.Object3D | Object3D} have an {@link THREE.Object3D.layers | Object3D.layers} property which is an instance of this class.
  * @see Example: {@link https://threejs.org/examples/#webgl_layers | WebGL / layers}
  * @see Example: {@link https://threejs.org/examples/#webxr_vr_layers | Webxr / vr / layers}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/Layers | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/Layers | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Layers.js | Source}
  */
 export class Layers {

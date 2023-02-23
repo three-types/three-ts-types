@@ -77,7 +77,7 @@ export interface RaycasterParameters {
  * @see Example: {@link https://threejs.org/examples/#webgl_geometry_terrain_raycast | Terrain raycasting}
  * @see Example: {@link https://threejs.org/examples/#webgl_interactive_voxelpainter | Raycasting to paint voxels}
  * @see Example: {@link https://threejs.org/examples/#webgl_raycaster_texture | Raycast to a Texture}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/Raycaster | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/Raycaster | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Raycaster.js | Source}
  */
 export class Raycaster {
