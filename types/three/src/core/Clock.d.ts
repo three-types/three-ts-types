@@ -44,7 +44,7 @@ export class Clock {
     running: boolean;
 
     /**
-     * Starts clock
+     * Starts clock.
      * @remarks
      * Also sets the {@link startTime | .startTime} and {@link oldTime | .oldTime} to the current time,
      * sets {@link elapsedTime | .elapsedTime} to `0` and {@link running | .running} to `true`.
