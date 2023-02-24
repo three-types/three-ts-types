@@ -40,7 +40,7 @@ import * as BufferGeometryUtils from '../../examples/jsm/utils/BufferGeometryUti
  * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry_lines_indexed | Indexed Lines}
  * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry_custom_attributes_particles | Particles}
  * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry_rawshader | Raw Shaders}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/BufferGeometry | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferGeometry | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js | Source}
  */
 export class BufferGeometry extends EventDispatcher {

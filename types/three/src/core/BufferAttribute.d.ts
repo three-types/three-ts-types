@@ -13,7 +13,7 @@ import { Matrix4 } from './../math/Matrix4';
  * {@link THREE.Color.fromBufferAttribute | Color} classes may be helpful.
  * @see {@link THREE.BufferGeometry | BufferGeometry} for details and a usage examples.
  * @see Example: {@link https://threejs.org/examples/#webgl_buffergeometry | WebGL / BufferGeometry - Clean up Memory}
- * @see {@link https://threejs.org/docs/index.html#/api/en/core/BufferAttribute | Official Documentation}
+ * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferAttribute | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
  */
 export class BufferAttribute {
