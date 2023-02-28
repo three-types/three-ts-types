@@ -9,7 +9,7 @@ import { Matrix } from './../math/Matrix3';
  */
 export class InterleavedBufferAttribute {
     /**
-     * Create a new instance of {@link THREE.InterleavedBufferAttribute | InterleavedBufferAttribute}
+     * Create a new instance of {@link THREE.InterleavedBufferAttribute | InterleavedBufferAttribute}.
      * @param interleavedBuffer
      * @param itemSize
      * @param offset
@@ -18,8 +18,7 @@ export class InterleavedBufferAttribute {
     constructor(interleavedBuffer: InterleavedBuffer, itemSize: number, offset: number, normalized?: boolean);
 
     /**
-     * The offset in the underlying array buffer where an item starts.
-     * @remarks Expects a `Integer`
+     * Optional name for this attribute instance.
      * @defaultValue `''`
      */
     name: string;
