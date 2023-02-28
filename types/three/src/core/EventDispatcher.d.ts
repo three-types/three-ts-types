@@ -35,9 +35,6 @@ export type EventListener<E, T, U> = (event: E & { type: T } & { target: U }) =>
 export class EventDispatcher<E extends BaseEvent = Event> {
     /**
      * Creates {@link THREE.EventDispatcher | EventDispatcher} object.
-     * @remarks
-     * It needs to be call with {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/call | Function.prototype.call()}
-     * to add the functionality to an object.
      */
     constructor();
 
