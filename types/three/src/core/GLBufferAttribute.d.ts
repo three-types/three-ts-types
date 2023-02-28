@@ -1,5 +1,5 @@
 /**
- * This buffer attribute class does not construct a VBO
+ * This buffer attribute class does not construct a VBO.
  * Instead, it uses whatever VBO is passed in constructor and can later be altered via the {@link buffer | .buffer} property.
  * @remarks
  * It is required to pass additional params alongside the VBO
