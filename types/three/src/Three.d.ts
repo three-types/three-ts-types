@@ -67,7 +67,6 @@ export * from './extras/core/ShapePath.js';
 export * from './extras/core/CurvePath.js';
 export * from './extras/core/Curve.js';
 export * as DataUtils from './extras/DataUtils.js';
-export * from './extras/Earcut.js';
 export * from './extras/ImageUtils.js';
 export * from './extras/ShapeUtils.js';
 export * from './extras/PMREMGenerator.js';
