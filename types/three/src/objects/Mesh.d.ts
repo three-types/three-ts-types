@@ -1,6 +1,6 @@
 import { Material } from './../materials/Material';
 import { Raycaster } from './../core/Raycaster';
-import { Object3D } from './../core/Object3D';
+import { Object3D, Object3DEventMap } from './../core/Object3D';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Intersection } from '../core/Raycaster';
 import { Vector3 } from '../math/Vector3';
@@ -8,7 +8,8 @@ import { Vector3 } from '../math/Vector3';
 export class Mesh<
     TGeometry extends BufferGeometry = BufferGeometry,
     TMaterial extends Material | Material[] = Material | Material[],
-> extends Object3D {
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Object3D<TEventMap> {
     constructor(geometry?: TGeometry, material?: TMaterial);
 
     geometry: TGeometry;

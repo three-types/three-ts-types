@@ -1,5 +1,6 @@
 import { Group } from '../../objects/Group';
 import { Vector3 } from '../../math/Vector3';
+import { EmptyEvent, Object3DEventMap } from '../../Three';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
@@ -13,19 +14,36 @@ export interface XRHandInputState {
     pinching: boolean;
 }
 
-export class XRHandSpace extends Group {
+export interface WebXRSpaceEventMap extends Object3DEventMap {
+    select: { data: XRInputSource };
+    selectstart: { data: XRInputSource };
+    selectend: { data: XRInputSource };
+    squeeze: { data: XRInputSource };
+    squeezestart: { data: XRInputSource };
+    squeezeend: { data: XRInputSource };
+
+    connected: { data: XRInputSource };
+    disconnected: { data: XRInputSource };
+
+    pinchend: { handedness: XRHandedness; target: WebXRController }; // This Event break the THREE.EventDispatcher contract, replacing the target to the wrong instance.
+    pinchstart: { handedness: XRHandedness; target: WebXRController }; // This Event break the THREE.EventDispatcher contract, replacing the target to the wrong instance.
+
+    move: EmptyEvent;
+}
+
+export class XRHandSpace extends Group<WebXRSpaceEventMap> {
     readonly joints: Partial<XRHandJoints>;
     readonly inputState: XRHandInputState;
 }
 
-export class XRTargetRaySpace extends Group {
+export class XRTargetRaySpace extends Group<WebXRSpaceEventMap> {
     hasLinearVelocity: boolean;
     readonly linearVelocity: Vector3;
     hasAngularVelocity: boolean;
     readonly angularVelocity: Vector3;
 }
 
-export class XRGripSpace extends Group {
+export class XRGripSpace extends Group<WebXRSpaceEventMap> {
     hasLinearVelocity: boolean;
     readonly linearVelocity: Vector3;
     hasAngularVelocity: boolean;

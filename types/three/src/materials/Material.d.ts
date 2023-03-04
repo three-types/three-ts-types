@@ -13,6 +13,7 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants';
+import { Disposable, DisposableEventMap } from '../types';
 
 export interface MaterialParameters {
     alphaTest?: number | undefined;
@@ -62,7 +63,7 @@ export interface MaterialParameters {
 /**
  * Materials describe the appearance of objects. They are defined in a (mostly) renderer-independent way, so you don't have to rewrite materials if you decide to use a different renderer.
  */
-export class Material extends EventDispatcher {
+export class Material extends EventDispatcher<DisposableEventMap> implements Disposable {
     constructor();
 
     /**

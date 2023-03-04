@@ -1,6 +1,12 @@
-import { Camera, EventDispatcher, MOUSE, MouseButton, Vector3 } from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher, MouseButton, Vector3 } from '../../../src/Three';
 
-export class TrackballControls extends EventDispatcher {
+interface TrackballControlsEventMap {
+    change: EmptyEvent;
+    start: EmptyEvent;
+    end: EmptyEvent;
+}
+
+export class TrackballControls extends EventDispatcher<TrackballControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
     object: Camera;
@@ -44,3 +50,5 @@ export class TrackballControls extends EventDispatcher {
 
     handleResize(): void;
 }
+
+export {};

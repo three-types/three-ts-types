@@ -10,9 +10,14 @@ import { Camera } from './../cameras/Camera';
 import { Material } from './../materials/Material';
 import { Group } from './../objects/Group';
 import { Intersection, Raycaster } from './Raycaster';
-import { EventDispatcher, BaseEvent, Event } from './EventDispatcher';
+import { EmptyEvent, EventDispatcher } from './EventDispatcher';
 import { BufferGeometry } from './BufferGeometry';
 import { AnimationClip } from '../animation/AnimationClip';
+
+export interface Object3DEventMap {
+    added: EmptyEvent;
+    removed: EmptyEvent;
+}
 
 /**
  * This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.
@@ -21,7 +26,7 @@ import { AnimationClip } from '../animation/AnimationClip';
  * @see {@link https://threejs.org/docs/index.html#api/en/core/Object3D | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js | Source}
  */
-export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
+export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> extends EventDispatcher<TEventMap> {
     /**
      * This creates a new {@link Object3D} object.
      */

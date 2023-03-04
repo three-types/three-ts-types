@@ -1,4 +1,4 @@
-import { EventDispatcher, Camera, Scene, Vector3, Raycaster } from '../../../src/Three';
+import { EventDispatcher, Camera, Scene, Vector3, Raycaster, EmptyEvent } from '../../../src/Three';
 
 export enum ArcballControlsMouseActionOperations {
     PAN = 'PAN',
@@ -14,7 +14,13 @@ export enum ArcballControlsMouseActionKeys {
     CTRL = 'CTRL',
 }
 
-export class ArcballControls extends EventDispatcher {
+interface ArcballControlsEventMap {
+    change: EmptyEvent;
+    start: EmptyEvent;
+    end: EmptyEvent;
+}
+
+export class ArcballControls extends EventDispatcher<ArcballControlsEventMap> {
     camera: Camera | null;
     domElement: HTMLElement;
     scene?: Scene | null | undefined;
@@ -156,3 +162,5 @@ export class ArcballControls extends EventDispatcher {
 
     dispose(): void;
 }
+
+export {};

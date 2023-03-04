@@ -5,13 +5,22 @@
 import { Vector4 } from '../../math/Vector4';
 import { ArrayCamera } from '../../cameras/ArrayCamera';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera';
-import { EventDispatcher } from '../../core/EventDispatcher';
+import { EmptyEvent, EventDispatcher } from '../../core/EventDispatcher';
 import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
 
-export class WebXRManager extends EventDispatcher {
+interface WebXRManagerEventMap {
+    sessionstart: EmptyEvent;
+    sessionend: EmptyEvent;
+    planeadded: { data: XRPlane };
+    planeremoved: { data: XRPlane };
+    planechanged: { data: XRPlane };
+    planesdetected: { data: XRPlaneSet };
+}
+
+export class WebXRManager extends EventDispatcher<WebXRManagerEventMap> {
     constructor(renderer: any, gl: WebGLRenderingContext);
 
     /**
@@ -54,3 +63,5 @@ export class WebXRManager extends EventDispatcher {
 
     dispose(): void;
 }
+
+export {};

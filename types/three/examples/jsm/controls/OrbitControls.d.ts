@@ -1,4 +1,19 @@
-import { Camera, MOUSE, MouseButton, TOUCH, TouchCount, Vector3 } from '../../../src/Three';
+import {
+    Camera,
+    EmptyEvent,
+    EventDispatcher,
+    MOUSE,
+    MouseButton,
+    TOUCH,
+    TouchCount,
+    Vector3,
+} from '../../../src/Three';
+
+interface OrbitControlsEventMap {
+    change: EmptyEvent;
+    start: EmptyEvent;
+    end: EmptyEvent;
+}
 
 /**
  * Orbit controls allow the camera to orbit around a target.
@@ -7,7 +22,7 @@ import { Camera, MOUSE, MouseButton, TOUCH, TouchCount, Vector3 } from '../../..
  * @param domElement - The HTML element used for
  * event listeners.
  */
-export class OrbitControls {
+export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
     /**
@@ -261,17 +276,10 @@ export class OrbitControls {
      * Returns the distance from the camera to the target.
      */
     getDistance(): number;
-
-    // EventDispatcher mixins
-    addEventListener(type: string, listener: (event: any) => void): void;
-
-    hasEventListener(type: string, listener: (event: any) => void): boolean;
-
-    removeEventListener(type: string, listener: (event: any) => void): void;
-
-    dispatchEvent(event: { type: string; target: any }): void;
 }
 
 export class MapControls extends OrbitControls {
     constructor(object: Camera, domElement?: HTMLElement);
 }
+
+export {};

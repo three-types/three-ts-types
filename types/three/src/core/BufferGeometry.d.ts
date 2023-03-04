@@ -10,6 +10,7 @@ import { Vector3 } from './../math/Vector3';
 import { EventDispatcher } from './EventDispatcher';
 import { BuiltinShaderAttributeName } from '../constants';
 import * as BufferGeometryUtils from '../../examples/jsm/utils/BufferGeometryUtils';
+import { Disposable, DisposableEventMap } from '../types';
 
 /**
  * A representation of mesh, line, or point geometry
@@ -43,7 +44,7 @@ import * as BufferGeometryUtils from '../../examples/jsm/utils/BufferGeometryUti
  * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferGeometry | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js | Source}
  */
-export class BufferGeometry extends EventDispatcher {
+export class BufferGeometry extends EventDispatcher<DisposableEventMap> implements Disposable {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */

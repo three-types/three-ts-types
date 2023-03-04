@@ -1,6 +1,10 @@
-import { Camera, EventDispatcher } from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher } from '../../../src/Three';
 
-export class FlyControls extends EventDispatcher {
+interface FlyControlsEventMap {
+    change: EmptyEvent;
+}
+
+export class FlyControls extends EventDispatcher<FlyControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
     object: Camera;
@@ -14,3 +18,5 @@ export class FlyControls extends EventDispatcher {
     update(delta: number): void;
     dispose(): void;
 }
+
+export {};

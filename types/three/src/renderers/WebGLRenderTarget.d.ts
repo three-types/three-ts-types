@@ -3,6 +3,7 @@ import { Texture } from './../textures/Texture';
 import { DepthTexture } from './../textures/DepthTexture';
 import { EventDispatcher } from './../core/EventDispatcher';
 import { Wrapping, TextureFilter, TextureDataType, TextureEncoding } from '../constants';
+import { DisposableEventMap, Disposable } from '../types';
 
 export interface WebGLRenderTargetOptions {
     wrapS?: Wrapping | undefined;
@@ -25,7 +26,7 @@ export interface WebGLRenderTargetOptions {
     samples?: number;
 }
 
-export class WebGLRenderTarget extends EventDispatcher {
+export class WebGLRenderTarget extends EventDispatcher<DisposableEventMap> implements Disposable {
     constructor(width?: number, height?: number, options?: WebGLRenderTargetOptions);
 
     width: number;

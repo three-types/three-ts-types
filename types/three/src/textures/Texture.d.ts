@@ -13,12 +13,13 @@ import {
     TextureDataType,
     TextureEncoding,
 } from '../constants';
+import { DisposableEventMap, Disposable } from '../types';
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface
 export interface OffscreenCanvas extends EventTarget {}
 
-export class Texture extends EventDispatcher {
+export class Texture extends EventDispatcher<DisposableEventMap> implements Disposable {
     /**
      * @param [image]
      * @param [mapping=THREE.Texture.DEFAULT_MAPPING]

@@ -1,6 +1,59 @@
-import { Object3D, Camera, MOUSE, Raycaster, Mesh, Vector3, Quaternion, MouseButton } from '../../../src/Three';
+import {
+    Object3D,
+    Camera,
+    MOUSE,
+    Raycaster,
+    Mesh,
+    Vector3,
+    Quaternion,
+    Object3DEventMap,
+    MouseButton,
+    EmptyEvent,
+} from '../../../src/Three';
 
-export class TransformControls extends Object3D {
+declare enum TransformControlsPropertiesWithEventsChanged {
+    'camera',
+    'object',
+    'enabled',
+    'axis',
+    'mode',
+    'translationSnap',
+    'rotationSnap',
+    'scaleSnap',
+    'space',
+    'size',
+    'dragging',
+    'showX',
+    'showY',
+    'showZ',
+    'worldPosition',
+    'worldPositionStart',
+    'worldQuaternion',
+    'worldQuaternionStart',
+    'cameraPosition',
+    'cameraQuaternion',
+    'pointStart',
+    'pointEnd',
+    'rotationAxis',
+    'rotationAngle',
+    'eye',
+}
+
+type EnumToEventNamesHelper<T> = {
+    [K in keyof T & string as `${K}-changed`]: { value: unknown };
+};
+type TransformControlsPropertiesChangedEventMap = EnumToEventNamesHelper<
+    typeof TransformControlsPropertiesWithEventsChanged
+>;
+
+interface TransformControlsEventMap extends Object3DEventMap, TransformControlsPropertiesChangedEventMap {
+    change: EmptyEvent;
+    mouseDown: EmptyEvent;
+    mouseUp: EmptyEvent;
+    objectChange: EmptyEvent;
+}
+
+export class TransformControls extends Object3D<TransformControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
     domElement: HTMLElement;
@@ -20,6 +73,7 @@ export class TransformControls extends Object3D {
     showX: boolean;
     showY: boolean;
     showZ: boolean;
+
     readonly isTransformControls: true;
     mouseButtons: {
         LEFT: MouseButton;
@@ -80,3 +134,5 @@ export class TransformControlsPlane extends Mesh {
     worldPosition: Vector3;
     worldQuaternion: Quaternion;
 }
+
+export {};
