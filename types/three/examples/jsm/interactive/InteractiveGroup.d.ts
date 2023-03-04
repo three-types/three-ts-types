@@ -1,8 +1,6 @@
 import { WebGLRenderer, Camera, Group } from 'three';
 import { Object3D, Object3DEventMap, Vector2 } from '../../../src/Three';
 
-// TODO This Sent Customs Events to children's Object3D.
-
 interface InteractiveObject3DEventMap extends Object3DEventMap {
     hoveron: { data: Vector2 };
     pointerdown: { data: Vector2 };
