@@ -30,7 +30,7 @@ export class FogExp2 implements FogBase {
     readonly isFogExp2: true;
 
     /**
-     * Optional name of the object 
+     * Optional name of the object
      * @remarks _(doesn't need to be unique)_.
      * @defaultValue ``
      */

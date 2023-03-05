@@ -3,7 +3,7 @@ import { Color } from './../math/Color';
 
 export interface FogBase {
     /**
-     * Optional name of the `Fog` object 
+     * Optional name of the `Fog` object
      * @remarks _(doesn't need to be unique)_.
      * @defaultValue ``
      */
@@ -55,7 +55,7 @@ export class Fog implements FogBase {
     readonly isFog: true;
 
     /**
-     * Optional name of the object 
+     * Optional name of the object
      * @remarks _(doesn't need to be unique)_.
      * @defaultValue ``
      */
