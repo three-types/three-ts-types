@@ -330,7 +330,7 @@ export const RGBAFormat: 1023;
  * {@link LuminanceFormat} reads each element as a single luminance component.
  * This is then converted to a floating point, clamped to the range `[0,1]`, and then assembled into an RGBA element by
  * placing the luminance value in the red, green and blue channels, and attaching `1.0` to the alpha channel.
- * */
+ */
 export const LuminanceFormat: 1024;
 
 /**
@@ -630,7 +630,8 @@ export type GLSLVersion = typeof GLSL1 | typeof GLSL3;
  * @remark Note that the texture must have the correct {@link THREE.Texture.type} set, as well as the correct {@link THREE.Texture.format}.
  * @see {@link WebGLRenderingContext.texImage2D} and {@link WebGLRenderingContext.texImage3D} for more details regarding the possible combination
  * of {@link THREE.Texture.format}, {@link THREE.Texture.internalFormat}, and {@link THREE.Texture.type}.
- * @see {@link https://registry.khronos.org/webgl/specs/latest/2.0/ | WebGL2 Specification} and {@link https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf | OpenGL ES 3.0 Specification} For more in-depth information regarding internal formats.
+ * @see {@link https://registry.khronos.org/webgl/specs/latest/2.0/ | WebGL2 Specification} and
+ * {@link https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf | OpenGL ES 3.0 Specification} For more in-depth information regarding internal formats.
  */
 export type PixelFormatGPU =
     | 'ALPHA'
