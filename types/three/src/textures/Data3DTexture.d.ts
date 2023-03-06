@@ -1,5 +1,5 @@
 import { Texture } from './Texture';
-import { TextureFilter, Wrapping } from '../constants';
+import { MagnificationTextureFilter, MinificationTextureFilter, Wrapping } from '../constants';
 
 export class Data3DTexture extends Texture {
     constructor(data: BufferSource, width: number, height: number, depth: number);
@@ -7,12 +7,12 @@ export class Data3DTexture extends Texture {
     /**
      * @default THREE.NearestFilter
      */
-    magFilter: TextureFilter;
+    magFilter: MagnificationTextureFilter;
 
     /**
      * @default THREE.NearestFilter
      */
-    minFilter: TextureFilter;
+    minFilter: MinificationTextureFilter;
 
     /**
      * @default THREE.ClampToEdgeWrapping
