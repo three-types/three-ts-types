@@ -5,7 +5,7 @@ export interface FogBase {
     /**
      * Optional name of the `Fog` object
      * @remarks _(doesn't need to be unique)_.
-     * @defaultValue ``
+     * @defaultValue `""`
      */
     name: string;
 
@@ -57,7 +57,7 @@ export class Fog implements FogBase {
     /**
      * Optional name of the object
      * @remarks _(doesn't need to be unique)_.
-     * @defaultValue ``
+     * @defaultValue `""`
      */
     name: string;
 

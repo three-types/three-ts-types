@@ -32,7 +32,7 @@ export class FogExp2 implements FogBase {
     /**
      * Optional name of the object
      * @remarks _(doesn't need to be unique)_.
-     * @defaultValue ``
+     * @defaultValue `""`
      */
     name: string;
 
