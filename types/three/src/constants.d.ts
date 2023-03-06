@@ -146,13 +146,25 @@ export type ToneMapping =
     | typeof ACESFilmicToneMapping
     | typeof CustomToneMapping;
 
+///////////////////////////////////////////////////////////////////////////////
 // Mapping modes
+
+/**
+ * Maps the texture using the mesh's UV coordinates.
+ * @remarks This is the _default_ value and behaver for Texture Mapping.
+ */
 export const UVMapping: 300;
 export const CubeReflectionMapping: 301;
 export const CubeRefractionMapping: 302;
 export const EquirectangularReflectionMapping: 303;
 export const EquirectangularRefractionMapping: 304;
 export const CubeUVReflectionMapping: 306;
+
+/**
+ * Texture Mapping Modes
+ * @remarks {@link UVMapping} is the _default_ value and behaver for Texture Mapping.
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
 export type Mapping =
     | typeof UVMapping
     | typeof CubeReflectionMapping
@@ -161,24 +173,105 @@ export type Mapping =
     | typeof EquirectangularRefractionMapping
     | typeof CubeUVReflectionMapping;
 
+///////////////////////////////////////////////////////////////////////////////
 // Wrapping modes
+
+/** With {@link RepeatWrapping} the texture will simply repeat to infinity. */
 export const RepeatWrapping: 1000;
+/**
+ * With {@link ClampToEdgeWrapping} the last pixel of the texture stretches to the edge of the mesh.
+ * @remarks This is the _default_ value and behaver for Wrapping Mapping.
+ */
 export const ClampToEdgeWrapping: 1001;
+/** With {@link MirroredRepeatWrapping} the texture will repeats to infinity, mirroring on each repeat. */
 export const MirroredRepeatWrapping: 1002;
+
+/**
+ * Texture Wrapping Modes
+ * @remarks {@link ClampToEdgeWrapping} is the _default_ value and behaver for Wrapping Mapping.
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
 export type Wrapping = typeof RepeatWrapping | typeof ClampToEdgeWrapping | typeof MirroredRepeatWrapping;
 
+///////////////////////////////////////////////////////////////////////////////
 // Filters
+
+/** {@link NearestFilter} returns the value of the texture element that is nearest (in Manhattan distance) to the specified texture coordinates. */
 export const NearestFilter: 1003;
+
+/**
+ * {@link NearestMipmapNearestFilter} chooses the mipmap that most closely matches the size of the pixel being textured
+ * and uses the {@link NearestFilter} criterion (the texel nearest to the center of the pixel) to produce a texture value.
+ */
 export const NearestMipmapNearestFilter: 1004;
+/**
+ * {@link NearestMipmapNearestFilter} chooses the mipmap that most closely matches the size of the pixel being textured
+ * and uses the {@link NearestFilter} criterion (the texel nearest to the center of the pixel) to produce a texture value.
+ */
 export const NearestMipMapNearestFilter: 1004;
+
+/**
+ * {@link NearestMipmapLinearFilter} chooses the two mipmaps that most closely match the size of the pixel being textured
+ * and uses the {@link NearestFilter} criterion to produce a texture value from each mipmap.
+ * The final texture value is a weighted average of those two values.
+ */
 export const NearestMipmapLinearFilter: 1005;
+/**
+ * {@link NearestMipMapLinearFilter} chooses the two mipmaps that most closely match the size of the pixel being textured
+ * and uses the {@link NearestFilter} criterion to produce a texture value from each mipmap.
+ * The final texture value is a weighted average of those two values.
+ */
 export const NearestMipMapLinearFilter: 1005;
+
+/**
+ * {@link LinearFilter} returns the weighted average of the four texture elements that are closest to the specified texture coordinates,
+ * and can include items wrapped or repeated from other parts of a texture,
+ * depending on the values of {@link THREE.Texture.wrapS | wrapS} and {@link THREE.Texture.wrapT | wrapT}, and on the exact mapping.
+ */
 export const LinearFilter: 1006;
+
+/**
+ * {@link LinearMipmapNearestFilter} chooses the mipmap that most closely matches the size of the pixel being textured and
+ * uses the {@link LinearFilter} criterion (a weighted average of the four texels that are closest to the center of the pixel) to produce a texture value.
+ */
 export const LinearMipmapNearestFilter: 1007;
+/**
+ * {@link LinearMipMapNearestFilter} chooses the mipmap that most closely matches the size of the pixel being textured and
+ * uses the {@link LinearFilter} criterion (a weighted average of the four texels that are closest to the center of the pixel) to produce a texture value.
+ */
 export const LinearMipMapNearestFilter: 1007;
+
+/**
+ * {@link LinearMipmapLinearFilter} is the default and chooses the two mipmaps that most closely match the size of the pixel being textured and
+ * uses the {@link LinearFilter} criterion to produce a texture value from each mipmap.
+ * The final texture value is a weighted average of those two values.
+ */
 export const LinearMipmapLinearFilter: 1008;
+
+/**
+ * {@link LinearMipMapLinearFilter} is the default and chooses the two mipmaps that most closely match the size of the pixel being textured and
+ * uses the {@link LinearFilter} criterion to produce a texture value from each mipmap.
+ * The final texture value is a weighted average of those two values.
+ */
 export const LinearMipMapLinearFilter: 1008;
-export type TextureFilter =
+
+/**
+ * Texture Magnification Filter Modes.
+ * For use with a texture's {@link THREE.Texture.magFilter | magFilter} property,
+ * these define the texture magnification function to be used when the pixel being textured maps to an area less than or equal to one texture element (texel).
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ * @see {@link https://sbcode.net/threejs/mipmaps/ | Texture Mipmaps (non-official)}
+ */
+export type MagnificationTextureFilter = typeof NearestFilter | typeof LinearFilter;
+
+/**
+ * Texture Minification Filter Modes.
+ * For use with a texture's {@link THREE.Texture.minFilter | minFilter} property,
+ * these define the texture minifying function that is used whenever the pixel being textured maps to an area greater than one texture element (texel).
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ * @see {@link https://sbcode.net/threejs/mipmaps/ | Texture Mipmaps (non-official)}
+ */
+export type MinificationTextureFilter =
     | typeof NearestFilter
     | typeof NearestMipmapNearestFilter
     | typeof NearestMipMapNearestFilter
@@ -190,6 +283,15 @@ export type TextureFilter =
     | typeof LinearMipmapLinearFilter
     | typeof LinearMipMapLinearFilter;
 
+/**
+ * Texture all Magnification and Minification Filter Modes.
+ * @see {@link MagnificationTextureFilter} and {@link MinificationTextureFilter}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ * @see {@link https://sbcode.net/threejs/mipmaps/ | Texture Mipmaps (non-official)}
+ */
+export type TextureFilter = MagnificationTextureFilter | MinificationTextureFilter;
+
+///////////////////////////////////////////////////////////////////////////////
 // Data types
 export const UnsignedByteType: 1009;
 export const ByteType: 1010;
@@ -215,19 +317,101 @@ export type TextureDataType =
     | typeof UnsignedShort5551Type
     | typeof UnsignedInt248Type;
 
+///////////////////////////////////////////////////////////////////////////////
 // Pixel formats
+
+/** {@link AlphaFormat} discards the red, green and blue components and reads just the alpha component. */
 export const AlphaFormat: 1021;
+
+/** {@link RGBAFormat} discards the green and blue components and reads just the red component. (Can only be used with a WebGL 2 rendering context). */
 export const RGBAFormat: 1023;
+
+/**
+ * {@link LuminanceFormat} reads each element as a single luminance component.
+ * This is then converted to a floating point, clamped to the range `[0,1]`, and then assembled into an RGBA element by
+ * placing the luminance value in the red, green and blue channels, and attaching `1.0` to the alpha channel.
+ * */
 export const LuminanceFormat: 1024;
+
+/**
+ * {@link LuminanceAlphaFormat} reads each element as a luminance/alpha double.
+ * The same process occurs as for the {@link LuminanceFormat}, except that the alpha channel may have values other than `1.0`.
+ */
 export const LuminanceAlphaFormat: 1025;
+
+/**
+ * {@link DepthFormat} reads each element as a single depth value, converts it to floating point, and clamps to the range `[0,1]`.
+ * @remarks This is the default for {@link THREE.DepthTexture}.
+ */
 export const DepthFormat: 1026;
+
+/**
+ * {@link DepthStencilFormat} reads each element is a pair of depth and stencil values.
+ * The depth component of the pair is interpreted as in {@link DepthFormat}.
+ * The stencil component is interpreted based on the depth + stencil internal format.
+ */
 export const DepthStencilFormat: 1027;
+
+/**
+ * {@link RedFormat} discards the green and blue components and reads just the red component.
+ * @remarks Can only be used with a WebGL 2 rendering context.
+ */
 export const RedFormat: 1028;
+
+/**
+ * {@link RedIntegerFormat} discards the green and blue components and reads just the red component.
+ * The texels are read as integers instead of floating point.
+ * @remarks Can only be used with a WebGL 2 rendering context.
+ */
 export const RedIntegerFormat: 1029;
+
+/**
+ * {@link RGFormat} discards the alpha, and blue components and reads the red, and green components.
+ * @remarks Can only be used with a WebGL 2 rendering context.
+ */
 export const RGFormat: 1030;
+
+/**
+ * {@link RGIntegerFormat} discards the alpha, and blue components and reads the red, and green components.
+ * The texels are read as integers instead of floating point.
+ * @remarks Can only be used with a WebGL 2 rendering context.
+ */
 export const RGIntegerFormat: 1031;
+
+/**
+ * {@link RGBAIntegerFormat} reads the red, green, blue and alpha component
+ * @remarks This is the default for {@link THREE.Texture}.
+ */
 export const RGBAIntegerFormat: 1033;
-export type PixelFormat =
+
+export const _SRGBAFormat = 1035; // fallback for WebGL 1
+
+/**
+ * Texture Pixel Formats Modes. Compatible only with {@link WebGLRenderingContext | WebGL 1 Rendering Context}.
+ * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
+ * @see {@link WebGLRenderingContext.texImage2D} for details.
+ * @see {@link WebGL2PixelFormat} and {@link PixelFormat}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type WebGL1PixelFormat =
+    | typeof AlphaFormat
+    | typeof LuminanceFormat
+    | typeof LuminanceAlphaFormat
+    | typeof DepthFormat
+    | typeof DepthStencilFormat
+    | typeof RedFormat
+    | typeof RedIntegerFormat
+    | typeof RGFormat
+    | typeof _SRGBAFormat;
+
+/**
+ * Texture Pixel Formats Modes. Compatible only with {@link WebGL2RenderingContext | WebGL 2 Rendering Context}.
+ * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
+ * @see {@link WebGLRenderingContext.texImage2D} for details.
+ * @see {@link WebGL2PixelFormat} and {@link PixelFormat}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type WebGL2PixelFormat =
     | typeof AlphaFormat
     | typeof RGBAFormat
     | typeof LuminanceFormat
@@ -241,6 +425,16 @@ export type PixelFormat =
     | typeof RGBAIntegerFormat
     | typeof _SRGBAFormat;
 
+/**
+ * All Texture Pixel Formats Modes.
+ * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
+ * @see {@link WebGLRenderingContext.texImage2D} for details.
+ * @see {@link WebGL1PixelFormat} and {@link WebGL2PixelFormat}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type PixelFormat = WebGL1PixelFormat | WebGL2PixelFormat;
+
+///////////////////////////////////////////////////////////////////////////////
 // Compressed texture formats
 // DDS / ST3C Compressed texture formats
 export const RGB_S3TC_DXT1_Format: 33776;
@@ -428,9 +622,16 @@ export const GLSL1: '100';
 export const GLSL3: '300 es';
 export type GLSLVersion = typeof GLSL1 | typeof GLSL3;
 
-export const _SRGBAFormat = 1035; // fallback for WebGL 1
+///////////////////////////////////////////////////////////////////////////////
+// Texture - Internal Pixel Formats
 
-// Internal Pixel Formats
+/**
+ * For use with a texture's {@link THREE.Texture.internalFormat} property, these define how elements of a {@link THREE.Texture}, or texels, are stored on the GPU.
+ * @remark Note that the texture must have the correct {@link THREE.Texture.type} set, as well as the correct {@link THREE.Texture.format}.
+ * @see {@link WebGLRenderingContext.texImage2D} and {@link WebGLRenderingContext.texImage3D} for more details regarding the possible combination
+ * of {@link THREE.Texture.format}, {@link THREE.Texture.internalFormat}, and {@link THREE.Texture.type}.
+ * @see {@link https://registry.khronos.org/webgl/specs/latest/2.0/ | WebGL2 Specification} and {@link https://registry.khronos.org/OpenGL/specs/es/3.0/es_spec_3.0.pdf | OpenGL ES 3.0 Specification} For more in-depth information regarding internal formats.
+ */
 export type PixelFormatGPU =
     | 'ALPHA'
     | 'RGB'
@@ -493,6 +694,8 @@ export type PixelFormatGPU =
     | 'DEPTH_COMPONENT32F'
     | 'DEPTH24_STENCIL8'
     | 'DEPTH32F_STENCIL8';
+
+///////////////////////////////////////////////////////////////////////////////
 
 export type BuiltinShaderAttributeName =
     | 'position'
