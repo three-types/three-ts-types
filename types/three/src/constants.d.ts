@@ -293,6 +293,7 @@ export type TextureFilter = MagnificationTextureFilter | MinificationTextureFilt
 
 ///////////////////////////////////////////////////////////////////////////////
 // Data types
+
 export const UnsignedByteType: 1009;
 export const ByteType: 1010;
 export const ShortType: 1011;
@@ -304,6 +305,13 @@ export const HalfFloatType: 1016;
 export const UnsignedShort4444Type: 1017;
 export const UnsignedShort5551Type: 1018;
 export const UnsignedInt248Type: 1020;
+
+/**
+ * Texture Types.
+ * @remarks Must correspond to the correct {@link PixelFormat | format}.
+ * @see {@link THREE.Texture.type}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
 export type TextureDataType =
     | typeof UnsignedByteType
     | typeof ByteType
@@ -539,16 +547,25 @@ export const TriangleStripDrawMode: 1;
 export const TriangleFanDrawMode: 2;
 export type TrianglesDrawModes = typeof TrianglesDrawMode | typeof TriangleStripDrawMode | typeof TriangleFanDrawMode;
 
+///////////////////////////////////////////////////////////////////////////////
 // Texture Encodings
+
 export const LinearEncoding: 3000;
 export const sRGBEncoding: 3001;
+
+/**
+ * Texture Encodings.
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
 export type TextureEncoding = typeof LinearEncoding | typeof sRGBEncoding;
 
+///////////////////////////////////////////////////////////////////////////////
 // Depth packing strategies
 export const BasicDepthPacking: 3200;
 export const RGBADepthPacking: 3201;
 export type DepthPackingStrategies = typeof BasicDepthPacking | typeof RGBADepthPacking;
 
+///////////////////////////////////////////////////////////////////////////////
 // Normal Map types
 export const TangentSpaceNormalMap: 0;
 export const ObjectSpaceNormalMap: 1;
