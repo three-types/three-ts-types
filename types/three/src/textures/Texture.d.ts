@@ -408,7 +408,7 @@ export class Texture extends EventDispatcher {
      * Convert the texture to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
-    toJSON(meta: any): any;
+    toJSON(meta?: string | {}): {};
 
     /**
      * Frees the GPU-related resources allocated by this instance
