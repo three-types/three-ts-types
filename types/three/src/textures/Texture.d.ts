@@ -7,7 +7,6 @@ import { EventDispatcher } from './../core/EventDispatcher';
 import {
     Mapping,
     Wrapping,
-    TextureFilter,
     PixelFormat,
     PixelFormatGPU,
     TextureDataType,
@@ -40,24 +39,25 @@ export interface OffscreenCanvas extends EventTarget {}
  */
 export class Texture extends EventDispatcher {
     /**
-     * @param [image]
-     * @param [mapping=THREE.Texture.DEFAULT_MAPPING]
-     * @param [wrapS=THREE.ClampToEdgeWrapping]
-     * @param [wrapT=THREE.ClampToEdgeWrapping]
-     * @param [magFilter=THREE.LinearFilter]
-     * @param [minFilter=THREE.LinearMipmapLinearFilter]
-     * @param [format=THREE.RGBAFormat]
-     * @param [type=THREE.UnsignedByteType]
-     * @param [anisotropy=THREE.Texture.DEFAULT_ANISOTROPY]
-     * @param [encoding=THREE.LinearEncoding]
+     * This creates a new {@link THREE.Texture | Texture} object.
+     * @param image See {@link Texture.image | .image}. Default {@link THREE.Texture.DEFAULT_IMAGE}
+     * @param mapping See {@link Texture.mapping | .mapping}. Default {@link THREE.Texture.DEFAULT_MAPPING}
+     * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
+     * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
+     * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.LinearFilter}
+     * @param minFilter See {@link Texture.minFilter | .minFilter}. Default {@link THREE.LinearMipmapLinearFilter}
+     * @param format See {@link Texture.format | .format}. Default {@link THREE.RGBAFormat}
+     * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
+     * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
+     * @param encoding See {@link Texture.encoding | .encoding}. Default {@link THREE.LinearEncoding}
      */
     constructor(
         image?: TexImageSource | OffscreenCanvas,
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,
@@ -179,7 +179,7 @@ export class Texture extends EventDispatcher {
      * @remarks A higher value gives a less blurry result than a basic mipmap, at the cost of more {@link Texture} samples being used.
      * @remarks Use {@link THREE.WebGLCapabilities.getMaxAnisotropy() | renderer.capabilities.getMaxAnisotropy()} to find the maximum valid anisotropy value for the GPU;
      * @remarks This value is usually a power of 2.
-     * @default 1
+     * @default _value of_ {@link THREE.Texture.DEFAULT_ANISOTROPY}. That is normally `1`.
      */
     anisotropy: number;
 
@@ -341,26 +341,78 @@ export class Texture extends EventDispatcher {
     /**
      * This starts at `0` and counts how many times {@link needsUpdate | .needsUpdate} is set to `true`.
      * @remarks Expects a `Integer`
-     * @defaultValue `0``
+     * @defaultValue `0`
      */
     version: number;
 
     /**
-     * Set this to `true` to trigger an update next time the {@link Texture} is used. Particularly important for setting the wrap mode.
+     * Set this to `true` to trigger an update next time the texture is used. Particularly important for setting the wrap mode.
      */
     set needsUpdate(value: boolean);
 
+    /**
+     * The Global default value for {@link anisotropy | .anisotropy}.
+     * @defaultValue `1`.
+     */
     static DEFAULT_ANISOTROPY: number;
+
+    /**
+     * The Global default value for {@link Texture.image | .image}.
+     * @defaultValue `null`.
+     */
     static DEFAULT_IMAGE: any;
+
+    /**
+     * The Global default value for {@link mapping | .mapping}.
+     * @defaultValue {@link THREE.UVMapping}
+     */
     static DEFAULT_MAPPING: Mapping;
 
+    /**
+     * A callback function, called when the texture is updated _(e.g., when needsUpdate has been set to true and then the texture is used)_.
+     */
     onUpdate: () => void;
 
-    clone(): this;
-    copy(source: Texture): this;
-    toJSON(meta: any): any;
+    /**
+     * Transform the **UV** based on the value of this texture's
+     * {@link offset | .offset},
+     * {@link repeat | .repeat},
+     * {@link wrapS | .wrapS},
+     * {@link wrapT | .wrapT} and
+     * {@link flipY | .flipY} properties.
+     * @param uv
+     */
     transformUv(uv: Vector2): Vector2;
+
+    /**
+     * Update the texture's **UV-transform** {@link matrix | .matrix} from the texture properties
+     * {@link offset | .offset},
+     * {@link repeat | .repeat},
+     * {@link rotation | .rotation} and
+     * {@link center | .center}.
+     */
     updateMatrix(): void;
 
+    /**
+     * Make copy of the texture
+     * @remarks Note this is not a **"deep copy"**, the image is shared
+     * @remarks
+     * Besides, cloning a texture does not automatically mark it for a texture upload
+     * You have to set {@link needsUpdate | .needsUpdate} to `true` as soon as it's image property (the data source) is fully loaded or ready.
+     */
+    clone(): this;
+
+    copy(source: Texture): this;
+
+    /**
+     * Convert the texture to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
+     * @param meta Optional object containing metadata.
+     */
+    toJSON(meta: any): any;
+
+    /**
+     * Frees the GPU-related resources allocated by this instance
+     * @remarks Call this method whenever this instance is no longer used in your app.
+     */
     dispose(): void;
 }
