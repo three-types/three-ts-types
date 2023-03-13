@@ -34,11 +34,11 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
     specularIntensityMap?: Texture | null | undefined;
     specularColorMap?: Texture | null | undefined;
 
-    iridescenceMap?: Texture | null;
-    iridescenceIOR?: number;
-    iridescence?: number;
-    iridescenceThicknessRange?: number[];
-    iridescenceThicknessMap?: Texture | null;
+    iridescenceMap?: Texture | null | undefined;
+    iridescenceIOR?: number | undefined;
+    iridescence?: number | undefined;
+    iridescenceThicknessRange?: [number,number] | undefined;
+    iridescenceThicknessMap?: Texture | null |  undefined;
 }
 
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
@@ -187,7 +187,7 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
     /**
      * @default [100, 400]
      */
-    iridescenceThicknessRange: number[];
+    iridescenceThicknessRange: [number, number];
 
     /**
      * @default null
