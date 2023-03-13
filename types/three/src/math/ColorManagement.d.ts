@@ -7,9 +7,9 @@ export function LinearToSRGB(c: number): number;
 
 export namespace ColorManagement {
     /**
-     * @default true
+     * @default false
      */
-    let legacyMode: boolean;
+    let enabled: boolean;
 
     /**
      * @default LinearSRGBColorSpace
