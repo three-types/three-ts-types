@@ -37,8 +37,8 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
     iridescenceMap?: Texture | null | undefined;
     iridescenceIOR?: number | undefined;
     iridescence?: number | undefined;
-    iridescenceThicknessRange?: [number,number] | undefined;
-    iridescenceThicknessMap?: Texture | null |  undefined;
+    iridescenceThicknessRange?: [number, number] | undefined;
+    iridescenceThicknessMap?: Texture | null | undefined;
 }
 
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
