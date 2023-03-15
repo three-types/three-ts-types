@@ -1,5 +1,14 @@
 import { Texture } from './Texture';
-import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType, TextureEncoding, MagnificationTextureFilter, MinificationTextureFilter } from '../constants';
+import {
+    Mapping,
+    Wrapping,
+    TextureFilter,
+    PixelFormat,
+    TextureDataType,
+    TextureEncoding,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
+} from '../constants';
 import { TextureImageData } from './types';
 
 /**
@@ -70,7 +79,7 @@ export class DataTexture extends Texture {
      * Overridden with a record type holding data, width and height and depth.
      * @override
      */
-    get image(): TextureImageData
+    get image(): TextureImageData;
     set image(value: TextureImageData);
 
     /**
