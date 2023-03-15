@@ -45,7 +45,7 @@ export class Texture extends EventDispatcher {
      * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
      * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
      * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.LinearFilter}
-     * @param minFilter See {@link Texture.minFilter | .minFilter}. Default {@link THREE.LinearMipmapLinearFilter}
+     * @param minFilter  See {@link Texture.minFilter | .minFilter}. Default {@link THREE.LinearMipmapLinearFilter}
      * @param format See {@link Texture.format | .format}. Default {@link THREE.RGBAFormat}
      * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
      * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
@@ -100,21 +100,12 @@ export class Texture extends EventDispatcher {
 
     /**
      * An image object, typically created using the {@link THREE.TextureLoader.load | TextureLoader.load()} method.
-     * This can be any image (e.g., PNG, JPG, GIF, DDS) or video (e.g., MP4, OGG/OGV) type supported by three.js.
+     * @remarks This can be any image (e.g., PNG, JPG, GIF, DDS) or video (e.g., MP4, OGG/OGV) type supported by three.js.
      * @remarks To use video as a {@link Texture} you need to have a playing HTML5 video element as a source
      * for your {@link Texture} image and continuously update this {@link Texture}
      * as long as video is playing - the {@link THREE.VideoTexture | VideoTexture} class handles this automatically.
      */
     get image(): any;
-
-    /**
-     * An image object, typically created using the {@link THREE.TextureLoader.load | TextureLoader.load()} method.
-     * This can be any image (e.g., PNG, JPG, GIF, DDS) or video (e.g., MP4, OGG/OGV) type supported by three.js.
-     * @remarks To use video as a {@link Texture} you need to have a playing HTML5 video element as a source
-     * for your {@link Texture} image and continuously update this {@link Texture}
-     * as long as video is playing - the {@link THREE.VideoTexture | VideoTexture} class handles this automatically.
-     * @param data
-     */
     set image(data: any);
 
     /**
@@ -302,7 +293,7 @@ export class Texture extends EventDispatcher {
      *  - `4` (word-alignment)
      *  - `8` (rows start on double-word boundaries).
      * @see {@link http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml | glPixelStorei} for more information.
-     * @defaultValue 4
+     * @defaultValue `4`
      */
     unpackAlignment: number;
 
