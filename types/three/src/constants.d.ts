@@ -442,6 +442,13 @@ export type WebGL2PixelFormat =
  */
 export type PixelFormat = WebGL1PixelFormat | WebGL2PixelFormat;
 
+/**
+ * All Texture Pixel Formats Modes for {@link THREE.DeepTexture}.
+ * @see {@link WebGLRenderingContext.texImage2D} for details.
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type DeepTexturePixelFormat = typeof DepthFormat | typeof DepthStencilFormat;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Compressed texture formats
 // DDS / ST3C Compressed texture formats
