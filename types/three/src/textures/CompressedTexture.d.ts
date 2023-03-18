@@ -17,7 +17,8 @@ import {
 export class CompressedTexture extends Texture<CompressedPixelFormat> {
     /**
      * This creates a new {@link THREE.CompressedTexture | CompressedTexture} object.
-     * @param mipmaps The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct {@link format} and {@link type}.
+     * @param mipmaps The mipmaps array should contain objects with data, width and height.
+     * The mipmaps should be of the correct {@link format} and {@link type}. See {@link THREE.mipmaps}.
      * @param width The width of the biggest mipmap.
      * @param height The height of the biggest mipmap.
      * @param format The format used in the mipmaps. See {@link THREE.CompressedPixelFormat}.
@@ -58,6 +59,9 @@ export class CompressedTexture extends Texture<CompressedPixelFormat> {
     get image(): { width: number; height: number };
     set image(value: { width: number; height: number });
 
+    /**
+     *  The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct {@link format} and {@link type}.
+     */
     mipmaps: ImageData[];
 
     /**

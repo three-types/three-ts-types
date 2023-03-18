@@ -34,7 +34,7 @@ export interface OffscreenCanvas extends EventTarget {}
  * @see Example: {@link https://threejs.org/examples/#webgl_materials_texture_filters | webgl materials texture filters}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/Texture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/Texture.js | Source}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Texture.js | Source}
  * @typeParam TPixelFormat - Used for better support for SubTypes of Texture. Instances of {@link Texture} should use the default {@link THREE.PixelFormat}.
  */
 export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends EventDispatcher {
