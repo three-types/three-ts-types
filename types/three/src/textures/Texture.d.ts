@@ -225,8 +225,29 @@ export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends 
     matrixAutoUpdate: boolean;
 
     /**
-     *
-     * @default new THREE.Vector2( 0, 0 )
+     * How much a single repetition of the texture is offset from the beginning, in each direction **U** and **V**.
+     * @remarks Typical range is `0.0` to `1.0`.
+     * @remarks
+     * The below texture types share the `first` uv channel in the engine.
+     * The offset (and repeat) setting is evaluated according to the following priorities and then shared by those textures:
+     *  - color map
+     *  - specular map
+     *  - displacement map
+     *  - normal map
+     *  - bump map
+     *  - roughness map
+     *  - metalness map
+     *  - alpha map
+     *  - emissive map
+     *  - clearcoat map
+     *  - clearcoat normal map
+     *  - clearcoat roughnessMap map
+     * @remarks
+     * The below {@link Texture} types share the `second` uv channel in the engine.
+     * The offset (and repeat) setting is evaluated according to the following priorities and then shared by those textures:
+     *  - ao map
+     *  - light map
+     * @defaultValue `new THREE.Vector2(0, 0)`
      */
     offset: Vector2;
 
