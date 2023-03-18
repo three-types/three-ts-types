@@ -1,5 +1,3 @@
-// https://threejs.org/docs/?q=texture#api/en/textures/Texture
-
 import { Vector2 } from './../math/Vector2';
 import { Matrix3 } from './../math/Matrix3';
 import { Source } from './Source';
@@ -13,6 +11,7 @@ import {
     TextureEncoding,
     MagnificationTextureFilter,
     MinificationTextureFilter,
+    AnyPixelFormat,
 } from '../constants';
 
 /** Shim for OffscreenCanvas. */
@@ -34,10 +33,11 @@ export interface OffscreenCanvas extends EventTarget {}
  * ```
  * @see Example: {@link https://threejs.org/examples/#webgl_materials_texture_filters | webgl materials texture filters}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/Texture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Texture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/Texture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/Texture.js | Source}
+ * @typeParam TPixelFormat - Used for better support for SubTypes of Texture. Instances of {@link Texture} should use the default {@link THREE.PixelFormat}.
  */
-export class Texture extends EventDispatcher {
+export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends EventDispatcher {
     /**
      * This creates a new {@link THREE.Texture | Texture} object.
      * @param image See {@link Texture.image | .image}. Default {@link THREE.Texture.DEFAULT_IMAGE}
@@ -180,7 +180,7 @@ export class Texture extends EventDispatcher {
      * @see {@link THREE.PixelFormat}
      * @defaultValue {@link THREE.RGBAFormat}.
      */
-    format: PixelFormat;
+    format: TPixelFormat;
 
     /**
      * This must correspond to the {@link Texture.format | .format}.
@@ -295,7 +295,7 @@ export class Texture extends EventDispatcher {
      * @see {@link http://www.khronos.org/opengles/sdk/docs/man/xhtml/glPixelStorei.xml | glPixelStorei} for more information.
      * @defaultValue `4`
      */
-    unpackAlignment: number;
+    unpackAlignment: number; // TODO Fix typing to only allow the expected values.
 
     /**
      * The {@link Textures | {@link Texture} constants} page for details of other formats.

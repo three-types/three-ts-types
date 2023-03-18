@@ -5,5 +5,5 @@ export interface TextureImageData {
 }
 
 export interface Texture3DImageData extends TextureImageData {
-    depth: number;
+    readonly depth: number;
 }

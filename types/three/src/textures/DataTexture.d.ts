@@ -35,8 +35,8 @@ import { TextureImageData } from './types';
  * const texture = new THREE.DataTexture(data, width, height);
  * texture.needsUpdate = true;
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/DataTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/DataTexture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/DataTexture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/DataTexture.js | Source}
  */
 export class DataTexture extends Texture {
     /**

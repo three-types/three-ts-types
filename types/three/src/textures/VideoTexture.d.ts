@@ -25,8 +25,8 @@ import {
  * @see Example: {@link https://threejs.org/examples/#webgl_video_kinect | video / kinect}
  * @see Example: {@link https://threejs.org/examples/#webgl_video_panorama_equirectangular | video / panorama / equirectangular}
  * @see Example: {@link https://threejs.org/examples/#webxr_vr_video | vr / video}
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/VideoTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/VideoTexture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/VideoTexture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/VideoTexture.js | Source}
  */
 export class VideoTexture extends Texture {
     /**

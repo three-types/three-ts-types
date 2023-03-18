@@ -4,7 +4,6 @@ import {
     Wrapping,
     TextureFilter,
     TextureDataType,
-    PixelFormat,
     DeepTexturePixelFormat,
     MagnificationTextureFilter,
     MinificationTextureFilter,
@@ -16,10 +15,10 @@ import {
  * When using a **WebGL1** rendering context, {@link DepthTexture} requires support for the
  * {@link https://www.khronos.org/registry/webgl/extensions/WEBGL_depth_texture/ | WEBGL_depth_texture} extension.
  * @see Example: {@link https://threejs.org/examples/#webgl_depth_texture | depth / texture}
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/DepthTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/DepthTexture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/DepthTexture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/DepthTexture.js | Source}
  */
-export class DepthTexture extends Texture {
+export class DepthTexture extends Texture<DeepTexturePixelFormat> {
     /**
      * Create a new instance of {@link DepthTexture}
      * @param width Width of the texture.
@@ -31,7 +30,7 @@ export class DepthTexture extends Texture {
      * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.NearestFilter}
      * @param minFilter  See {@link Texture.minFilter | .minFilter}. Default {@link THREE.NearestFilter}
      * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
-     * @param format See {@link DepthTexture.format | .format}. Default {@link THREE.RGBAFormat}
+     * @param format See {@link DepthTexture.format | .format}. Default {@link THREE.DepthFormat}
      */
     constructor(
         width: number,

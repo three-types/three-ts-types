@@ -30,8 +30,8 @@ import { Texture3DImageData } from './types';
  * @see Example: {@link https://threejs.org/examples/#webgl2_materials_texture3d_partialupdate | WebGL2 / materials / texture3d / partialupdate}
  * @see Example: {@link https://threejs.org/examples/#webgl2_volume_cloud | WebGL2 / volume / cloud}
  * @see Example: {@link https://threejs.org/examples/#webgl2_volume_perlin | WebGL2 / volume / perlin}
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/Data3DTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Data3DTexture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/Data3DTexture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/Data3DTexture.js | Source}
  */
 export class Data3DTexture extends Texture {
     /**

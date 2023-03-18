@@ -17,8 +17,8 @@ import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType, Texture
  *     envMap: textureCube
  * });
  * ```
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/CubeTexture | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/CubeTexture.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/CubeTexture | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/CubeTexture.js | Source}
  */
 export class CubeTexture extends Texture {
     /**

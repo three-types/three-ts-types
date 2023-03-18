@@ -524,7 +524,18 @@ export type CompressedPixelFormat =
     | typeof SIGNED_RED_RGTC1_Format
     | typeof RED_GREEN_RGTC2_Format
     | typeof SIGNED_RED_GREEN_RGTC2_Format;
+///////////////////////////////////////////////////////////////////////////////
 
+/**
+ * All Possible Texture Pixel Formats Modes. For any Type or SubType of Textures.
+ * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in {@link TextureDataType}.
+ * @see {@link WebGLRenderingContext.texImage2D} for details.
+ * @see {@link PixelFormat} and {@link DeepTexturePixelFormat} and {@link CompressedPixelFormat}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type AnyPixelFormat = PixelFormat | DeepTexturePixelFormat | CompressedPixelFormat;
+
+///////////////////////////////////////////////////////////////////////////////
 // Loop styles for AnimationAction
 export const LoopOnce: 2200;
 export const LoopRepeat: 2201;

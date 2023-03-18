@@ -1,7 +1,7 @@
 /**
  * Represents the data {@link Source} of a texture.
- * @see {@link https://threejs.org/docs/index.html#api/en/Textures/Source | Official Documentation}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Source.js | Source}
+ * @see {@link https://threejs.org/docs/index.html#api/en/textures/Source | Official Documentation}
+ * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/Source.js | Source}
  */
 export class Source {
     /**
