@@ -147,6 +147,8 @@ export type ToneMapping =
     | typeof CustomToneMapping;
 
 ///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 // Mapping modes
 
 /**
@@ -154,11 +156,13 @@ export type ToneMapping =
  * @remarks This is the _default_ value and behaver for Texture Mapping.
  */
 export const UVMapping: 300;
+
 export const CubeReflectionMapping: 301;
 export const CubeRefractionMapping: 302;
+export const CubeUVReflectionMapping: 306;
+
 export const EquirectangularReflectionMapping: 303;
 export const EquirectangularRefractionMapping: 304;
-export const CubeUVReflectionMapping: 306;
 
 /**
  * Texture Mapping Modes
@@ -169,9 +173,11 @@ export type Mapping =
     | typeof UVMapping
     | typeof CubeReflectionMapping
     | typeof CubeRefractionMapping
+    | typeof CubeUVReflectionMapping
     | typeof EquirectangularReflectionMapping
-    | typeof EquirectangularRefractionMapping
-    | typeof CubeUVReflectionMapping;
+    | typeof EquirectangularRefractionMapping;
+
+export type CubeTextureMapping = typeof CubeReflectionMapping | typeof CubeRefractionMapping;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Wrapping modes
@@ -570,7 +576,6 @@ export type TrianglesDrawModes = typeof TrianglesDrawMode | typeof TriangleStrip
 
 export const LinearEncoding: 3000;
 export const sRGBEncoding: 3001;
-
 /**
  * Texture Encodings.
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
@@ -579,12 +584,14 @@ export type TextureEncoding = typeof LinearEncoding | typeof sRGBEncoding;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Depth packing strategies
+
 export const BasicDepthPacking: 3200;
 export const RGBADepthPacking: 3201;
 export type DepthPackingStrategies = typeof BasicDepthPacking | typeof RGBADepthPacking;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Normal Map types
+
 export const TangentSpaceNormalMap: 0;
 export const ObjectSpaceNormalMap: 1;
 export type NormalMapTypes = typeof TangentSpaceNormalMap | typeof ObjectSpaceNormalMap;

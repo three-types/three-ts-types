@@ -2,7 +2,6 @@ import { Texture } from './Texture';
 import {
     Mapping,
     Wrapping,
-    TextureFilter,
     PixelFormat,
     TextureDataType,
     MagnificationTextureFilter,
@@ -46,8 +45,8 @@ export class VideoTexture extends Texture {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,

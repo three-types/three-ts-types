@@ -2,7 +2,6 @@ import { Texture } from './Texture';
 import {
     Mapping,
     Wrapping,
-    TextureFilter,
     PixelFormat,
     TextureDataType,
     TextureEncoding,
@@ -62,8 +61,8 @@ export class DataTexture extends Texture {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         anisotropy?: number,
         encoding?: TextureEncoding,
     );

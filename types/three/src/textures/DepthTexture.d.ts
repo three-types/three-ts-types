@@ -2,7 +2,6 @@ import { Texture } from './Texture';
 import {
     Mapping,
     Wrapping,
-    TextureFilter,
     TextureDataType,
     DeepTexturePixelFormat,
     MagnificationTextureFilter,
@@ -39,8 +38,8 @@ export class DepthTexture extends Texture<DeepTexturePixelFormat> {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         anisotropy?: number,
         format?: DeepTexturePixelFormat,
     );

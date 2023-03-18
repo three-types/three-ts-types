@@ -1,5 +1,12 @@
 import { OffscreenCanvas, Texture } from './Texture';
-import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType } from '../constants';
+import {
+    Mapping,
+    Wrapping,
+    PixelFormat,
+    TextureDataType,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
+} from '../constants';
 
 /**
  * Creates a texture from a {@link https://developer.mozilla.org/en-US/docs/Web/HTML/Element/canvas | canvas element}.
@@ -29,8 +36,8 @@ export class CanvasTexture extends Texture {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,

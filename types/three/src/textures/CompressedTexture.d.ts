@@ -2,10 +2,11 @@ import { Texture } from './Texture';
 import {
     Mapping,
     Wrapping,
-    TextureFilter,
     CompressedPixelFormat,
     TextureDataType,
     TextureEncoding,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
 } from '../constants';
 
 /**
@@ -39,8 +40,8 @@ export class CompressedTexture extends Texture<CompressedPixelFormat> {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         anisotropy?: number,
         encoding?: TextureEncoding,
     );

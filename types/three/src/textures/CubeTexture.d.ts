@@ -1,5 +1,13 @@
 import { Texture } from './Texture';
-import { Mapping, Wrapping, TextureFilter, PixelFormat, TextureDataType, TextureEncoding } from '../constants';
+import {
+    Mapping,
+    Wrapping,
+    PixelFormat,
+    TextureDataType,
+    TextureEncoding,
+    MagnificationTextureFilter,
+    MinificationTextureFilter,
+} from '../constants';
 
 /**
  * Creates a cube texture made up of six images.
@@ -39,8 +47,8 @@ export class CubeTexture extends Texture {
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
-        magFilter?: TextureFilter,
-        minFilter?: TextureFilter,
+        magFilter?: MagnificationTextureFilter,
+        minFilter?: MinificationTextureFilter,
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,
