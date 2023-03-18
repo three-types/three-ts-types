@@ -17,7 +17,7 @@ import {
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/DepthTexture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/DepthTexture.js | Source}
  */
-export class DepthTexture extends Texture<DeepTexturePixelFormat> {
+export class DepthTexture extends Texture {
     /**
      * Create a new instance of {@link DepthTexture}
      * @param width Width of the texture.

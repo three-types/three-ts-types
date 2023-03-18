@@ -12,6 +12,7 @@ import {
     MagnificationTextureFilter,
     MinificationTextureFilter,
     AnyPixelFormat,
+    AnyMapping,
 } from '../constants';
 
 /** Shim for OffscreenCanvas. */
@@ -35,9 +36,8 @@ export interface OffscreenCanvas extends EventTarget {}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/Texture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Texture.js | Source}
- * @typeParam TPixelFormat - Used for better support for SubTypes of Texture. Instances of {@link Texture} should use the default {@link THREE.PixelFormat}.
  */
-export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends EventDispatcher {
+export class Texture extends EventDispatcher {
     /**
      * This creates a new {@link THREE.Texture | Texture} object.
      * @param image See {@link Texture.image | .image}. Default {@link THREE.Texture.DEFAULT_IMAGE}
@@ -119,7 +119,7 @@ export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends 
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @defaultValue _value of_ {@link THREE.Texture.DEFAULT_MAPPING}
      */
-    mapping: Mapping;
+    mapping: AnyMapping;
 
     /**
      * This defines how the {@link Texture} is wrapped *horizontally* and corresponds to **U** in UV mapping.
@@ -180,7 +180,7 @@ export class Texture<TPixelFormat extends AnyPixelFormat = PixelFormat> extends 
      * @see {@link THREE.PixelFormat}
      * @defaultValue {@link THREE.RGBAFormat}.
      */
-    format: TPixelFormat;
+    format: AnyPixelFormat;
 
     /**
      * This must correspond to the {@link Texture.format | .format}.

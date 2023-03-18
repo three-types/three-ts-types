@@ -157,6 +157,9 @@ export type ToneMapping =
  */
 export const UVMapping: 300;
 
+/**
+ * @remarks This is the _default_ value and behaver for Cube Texture Mapping.
+ */
 export const CubeReflectionMapping: 301;
 export const CubeRefractionMapping: 302;
 export const CubeUVReflectionMapping: 306;
@@ -165,19 +168,31 @@ export const EquirectangularReflectionMapping: 303;
 export const EquirectangularRefractionMapping: 304;
 
 /**
- * Texture Mapping Modes
+ * Texture Mapping Modes for non-cube Textures
  * @remarks {@link UVMapping} is the _default_ value and behaver for Texture Mapping.
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  */
 export type Mapping =
     | typeof UVMapping
-    | typeof CubeReflectionMapping
-    | typeof CubeRefractionMapping
-    | typeof CubeUVReflectionMapping
     | typeof EquirectangularReflectionMapping
     | typeof EquirectangularRefractionMapping;
 
-export type CubeTextureMapping = typeof CubeReflectionMapping | typeof CubeRefractionMapping;
+/**
+ * Texture Mapping Modes for cube Textures
+ * @remarks {@link CubeReflectionMapping} is the _default_ value and behaver for Cube Texture Mapping.
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type CubeTextureMapping =
+    | typeof CubeReflectionMapping
+    | typeof CubeRefractionMapping
+    | typeof CubeUVReflectionMapping;
+
+/**
+ * Texture Mapping Modes for any type of  Textures
+ * @see {@link Mapping} and {@link CubeTextureMapping}
+ * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+ */
+export type AnyMapping = Mapping | CubeTextureMapping;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Wrapping modes

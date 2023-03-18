@@ -7,6 +7,7 @@ import {
     TextureEncoding,
     MagnificationTextureFilter,
     MinificationTextureFilter,
+    CubeTextureMapping,
 } from '../constants';
 
 /**
@@ -32,7 +33,7 @@ export class CubeTexture extends Texture {
     /**
      * This creates a new {@link THREE.CubeTexture | CubeTexture} object.
      * @param images
-     * @param mapping See {@link Texture.mapping | .mapping}. Default {@link THREE.CubeReflectionMapping}
+     * @param mapping See {@link CubeTexture.mapping | .mapping}. Default {@link THREE.CubeReflectionMapping}
      * @param wrapS See {@link Texture.wrapS | .wrapS}. Default {@link THREE.ClampToEdgeWrapping}
      * @param wrapT See {@link Texture.wrapT | .wrapT}. Default {@link THREE.ClampToEdgeWrapping}
      * @param magFilter See {@link Texture.magFilter | .magFilter}. Default {@link THREE.LinearFilter}
@@ -44,7 +45,7 @@ export class CubeTexture extends Texture {
      */
     constructor(
         images?: any[], // HTMLImageElement or HTMLCanvasElement
-        mapping?: Mapping,
+        mapping?: CubeTextureMapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
         magFilter?: MagnificationTextureFilter,
@@ -80,7 +81,7 @@ export class CubeTexture extends Texture {
      * @inheritDoc
      * @defaultValue {@link THREE.CubeReflectionMapping}
      */
-    mapping: Mapping;
+    mapping: CubeTextureMapping;
 
     /**
      * @inheritDoc

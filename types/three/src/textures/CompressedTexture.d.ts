@@ -15,7 +15,7 @@ import {
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/CompressedTexture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/CompressedTexture.js | Source}
  */
-export class CompressedTexture extends Texture<CompressedPixelFormat> {
+export class CompressedTexture extends Texture {
     /**
      * This creates a new {@link THREE.CompressedTexture | CompressedTexture} object.
      * @param mipmaps The mipmaps array should contain objects with data, width and height.
