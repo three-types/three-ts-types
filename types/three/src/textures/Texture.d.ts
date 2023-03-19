@@ -116,6 +116,8 @@ export class Texture extends EventDispatcher {
 
     /**
      * How the image is applied to the object.
+     * @remarks All {@link Texture} types except {@link THREE.CubeTexture} expect the _values_ be {@link THREE.Mapping}
+     * @remarks {@link CubeTexture} expect the _values_ be {@link THREE.CubeTextureMapping}
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @defaultValue _value of_ {@link THREE.Texture.DEFAULT_MAPPING}
      */
@@ -176,6 +178,9 @@ export class Texture extends EventDispatcher {
 
     /**
      * These define how elements of a 2D texture, or texels, are read by shaders.
+     * @remarks All {@link Texture} types except {@link THREE.DeepTexture} and {@link THREE.CompressedPixelFormat} expect the _values_ be {@link THREE.PixelFormat}
+     * @remarks {@link DeepTexture} expect the _values_ be {@link THREE.CubeTextureMapping}
+     * @remarks {@link CompressedPixelFormat} expect the _values_ be {@link THREE.CubeTextureMapping}
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @see {@link THREE.PixelFormat}
      * @defaultValue {@link THREE.RGBAFormat}.
