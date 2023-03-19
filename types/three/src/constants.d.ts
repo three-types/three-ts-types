@@ -188,7 +188,7 @@ export type CubeTextureMapping =
     | typeof CubeUVReflectionMapping;
 
 /**
- * Texture Mapping Modes for any type of  Textures
+ * Texture Mapping Modes for any type of Textures
  * @see {@link Mapping} and {@link CubeTextureMapping}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  */
