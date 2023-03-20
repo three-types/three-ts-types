@@ -40,6 +40,15 @@ export class Sprite extends Object3D {
      */
     override readonly type: string | 'Sprite';
 
+    /**
+     * Whether the object gets rendered into shadow map.
+     * No effect in {@link Sprite}.
+     * @ignore
+     * @hidden
+     * @defaultValue `false`
+     */
+    override castShadow: false;
+
     geometry: BufferGeometry;
 
     /**
