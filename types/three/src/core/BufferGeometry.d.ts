@@ -131,7 +131,7 @@ export class BufferGeometry extends EventDispatcher {
     }>;
 
     /**
-     * Bounding box for the bufferGeometry, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
+     * Bounding box for the {@link THREE.BufferGeometry | BufferGeometry}, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
      * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
      * @defaultValue `null`
      */
