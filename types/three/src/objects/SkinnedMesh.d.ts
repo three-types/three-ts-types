@@ -110,16 +110,35 @@ export class SkinnedMesh<
      */
     normalizeSkinWeights(): void;
 
+    /////////////////////////////////////////////////
+    // FUTURE - r151
+    /////////////////////////////////////////////////
+    // /**
+    //  * Applies the bone transform associated with the given index to the given position vector
+    //  * @remarks Returns the updated vector.
+    //  * @param index Expects a `Integer`
+    //  * @param vector
+    //  */
+    // applyBoneTransform(index: number, vector: Vector3): Vector3;
+
+    // /**
+    //  * @deprecated {@link THREE.SkinnedMesh}: {@link boneTransform | .boneTransform()} was renamed to {@link applyBoneTransform | .applyBoneTransform()} in **r151**.
+    //  */
+    // boneTransform(index: number, target: Vector3): Vector3;
+    /////////////////////////////////////////////////
+
     /**
-     * Applies the bone transform associated with the given index to the given position vector
+     * Applies the bone transform associated with the given index to the given position vector.
+     * Calculates the position of the vertex at the given index relative to the current bone transformations.
+     * Target vector must be initialized with the vertex coordinates prior to the transformation:
+     * ```typescript
+     * const target = new THREE.Vector3();
+     * target.fromBufferAttribute( mesh.geometry.attributes.position, index );
+     * mesh.boneTransform( index, target );
+     * ```
      * @remarks Returns the updated vector.
      * @param index Expects a `Integer`
      * @param vector
-     */
-    applyBoneTransform(index: number, vector: Vector3): Vector3;
-
-    /**
-     * @deprecated {@link THREE.SkinnedMesh}: {@link boneTransform | .boneTransform()} was renamed to {@link applyBoneTransform | .applyBoneTransform()} in **r151**.
      */
     boneTransform(index: number, target: Vector3): Vector3;
 }

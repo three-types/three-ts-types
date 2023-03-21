@@ -39,19 +39,23 @@ export class InstancedMesh<
      */
     readonly isInstancedMesh: true;
 
-    /**
-     * This bounding box encloses all instances of the {@link InstancedMesh},, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
-     * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
-     * @defaultValue `null`
-     */
-    boundingBox: Box3 | null;
+    /////////////////////////////////////////////////
+    // FUTURE - r151
+    /////////////////////////////////////////////////
+    // /**
+    //  * This bounding box encloses all instances of the {@link InstancedMesh},, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
+    //  * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+    //  * @defaultValue `null`
+    //  */
+    // boundingBox: Box3 | null;
 
-    /**
-     * This bounding sphere encloses all instances of the {@link InstancedMesh}, which can be calculated with {@link computeBoundingSphere | .computeBoundingSphere()}.
-     * @remarks bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
-     * @defaultValue `null`
-     */
-    boundingSphere: Sphere | null;
+    // /**
+    //  * This bounding sphere encloses all instances of the {@link InstancedMesh}, which can be calculated with {@link computeBoundingSphere | .computeBoundingSphere()}.
+    //  * @remarks bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+    //  * @defaultValue `null`
+    //  */
+    // boundingSphere: Sphere | null;
+    /////////////////////////////////////////////////
 
     /**
      * The number of instances.
@@ -76,17 +80,21 @@ export class InstancedMesh<
      */
     instanceMatrix: InstancedBufferAttribute;
 
-    /**
-     * Computes bounding box of the all instances, updating {@link boundingBox | .boundingBox} attribute.
-     * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
-     */
-    computeBoundingBox(): void;
+    /////////////////////////////////////////////////
+    // FUTURE - r151
+    /////////////////////////////////////////////////
+    // /**
+    //  * Computes bounding box of the all instances, updating {@link boundingBox | .boundingBox} attribute.
+    //  * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+    //  */
+    // computeBoundingBox(): void;
 
-    /**
-     * Computes bounding sphere of the all instances, updating {@link boundingSphere | .boundingSphere} attribute.
-     * @remarks bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
-     */
-    computeBoundingSphere(): void;
+    // /**
+    //  * Computes bounding sphere of the all instances, updating {@link boundingSphere | .boundingSphere} attribute.
+    //  * @remarks bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+    //  */
+    // computeBoundingSphere(): void;
+    /////////////////////////////////////////////////
 
     /**
      * Get the color of the defined instance.
