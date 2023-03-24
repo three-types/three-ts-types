@@ -18,11 +18,17 @@ export namespace ColorManagement {
 
     function convert(
         color: Color,
-        sourceColorSpace: SRGBColorSpace | LinearSRGBColorSpace | DisplayP3ColorSpace,
-        targetColorSpace: SRGBColorSpace | LinearSRGBColorSpace | DisplayP3ColorSpace,
+        sourceColorSpace: typeof SRGBColorSpace | typeof LinearSRGBColorSpace | typeof DisplayP3ColorSpace,
+        targetColorSpace: typeof SRGBColorSpace | typeof LinearSRGBColorSpace | typeof DisplayP3ColorSpace,
     ): Color;
 
-    function fromWorkingColorSpace(color: Color, targetColorSpace: SRGBColorSpace | LinearSRGBColorSpace): Color;
+    function fromWorkingColorSpace(
+        color: Color,
+        targetColorSpace: typeof SRGBColorSpace | typeof LinearSRGBColorSpace,
+    ): Color;
 
-    function toWorkingColorSpace(color: Color, sourceColorSpace: SRGBColorSpace | LinearSRGBColorSpace): Color;
+    function toWorkingColorSpace(
+        color: Color,
+        sourceColorSpace: typeof SRGBColorSpace | typeof LinearSRGBColorSpace,
+    ): Color;
 }
