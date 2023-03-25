@@ -8,20 +8,20 @@ export interface BaseEvent {
 /**
  * The minimal expected contract of a fired Event that was dispatched by a {@link EventDispatcher<>}.
  */
-export interface Event<TSource = unknown, TEventType extends string = string> {
+export interface Event<TEventType extends string = string, TTarget = unknown> {
     readonly type: TEventType;
-    readonly target: TSource;
+    readonly target: TTarget;
 }
+
+export type EventListener<TEventData, TEventType extends string, TTarget> = (
+    event: TEventData & Event<TEventType, TTarget>,
+) => void;
 
 // tslint:disable-next-line:interface-over-type-literal - Type Aliases to add better readability.
 export type EmptyEvent = {};
 
 type EventMap = Record<string, {}>;
 type EventKey<T extends EventMap> = string & keyof T;
-
-type EventReceiver<TSource, TEventType extends string, TEventData> = (
-    event: TEventData & Event<TSource, TEventType>,
-) => void;
 
 type EventTypeValidator<TEvent extends BaseEvent, TEventMap extends {}> = TEvent extends {
     type: infer TEventType;
@@ -65,24 +65,24 @@ export class EventDispatcher<TEventMap extends {} = {}> {
      * @param type The type of event to listen to.
      * @param listener The function that gets called when the event is fired.
      */
-    addEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventReceiver<this, E, TEventMap[E]>): void;
-    addEventListener<E extends string>(type: E, listener: EventReceiver<this, E, Event<this, E>>): void;
+    addEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventListener<TEventMap[E], E, this>): void;
+    addEventListener<E extends string>(type: E, listener: EventListener<Event<E, this>, E, this>): void;
 
     /**
      * Checks if listener is added to an event type.
      * @param type The type of event to listen to.
      * @param listener The function that gets called when the event is fired.
      */
-    hasEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventReceiver<this, E, TEventMap[E]>): boolean;
-    hasEventListener<E extends string>(type: E, listener: EventReceiver<this, E, Event<this, E>>): boolean;
+    hasEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventListener<TEventMap[E], E, this>): boolean;
+    hasEventListener<E extends string>(type: E, listener: EventListener<Event<E, this>, E, this>): boolean;
 
     /**
      * Removes a listener from an event type.
      * @param type The type of the listener that gets removed.
      * @param listener The listener function that gets removed.
      */
-    removeEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventReceiver<this, E, TEventMap[E]>): void;
-    removeEventListener<E extends string>(type: E, listener: EventReceiver<this, E, Event<this, E>>): void;
+    removeEventListener<E extends EventKey<TEventMap>>(type: E, listener: EventListener<TEventMap[E], E, this>): void;
+    removeEventListener<E extends string>(type: E, listener: EventListener<Event<E, this>, E, this>): void;
 
     /**
      * Fire an event type.
