@@ -363,7 +363,12 @@ export type NormalMapTypes = typeof TangentSpaceNormalMap | typeof ObjectSpaceNo
 export const NoColorSpace: '';
 export const SRGBColorSpace: 'srgb';
 export const LinearSRGBColorSpace: 'srgb-linear';
-export type ColorSpace = typeof NoColorSpace | typeof SRGBColorSpace | typeof LinearSRGBColorSpace;
+export const DisplayP3ColorSpace = 'display-p3';
+export type ColorSpace =
+    | typeof NoColorSpace
+    | typeof SRGBColorSpace
+    | typeof LinearSRGBColorSpace
+    | typeof DisplayP3ColorSpace;
 
 // Stencil Op types
 export const ZeroStencilOp: 0;
