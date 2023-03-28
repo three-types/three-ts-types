@@ -1,4 +1,4 @@
-import { Camera, EmptyEvent, EventDispatcher, MouseButton, Vector3 } from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher, MOUSE, Vector3 } from '../../../src/Three';
 
 interface TrackballControlsEventMap {
     change: EmptyEvent;
@@ -27,7 +27,7 @@ export class TrackballControls extends EventDispatcher<TrackballControlsEventMap
     minDistance: number;
     maxDistance: number;
     keys: string[];
-    mouseButtons: { LEFT: MouseButton; MIDDLE: MouseButton; RIGHT: MouseButton };
+    mouseButtons: { LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE };
 
     target: Vector3;
     position0: Vector3;

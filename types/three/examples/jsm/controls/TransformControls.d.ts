@@ -7,7 +7,6 @@ import {
     Vector3,
     Quaternion,
     Object3DEventMap,
-    MouseButton,
     EmptyEvent,
 } from '../../../src/Three';
 
@@ -75,11 +74,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     showZ: boolean;
 
     readonly isTransformControls: true;
-    mouseButtons: {
-        LEFT: MouseButton;
-        MIDDLE: MouseButton;
-        RIGHT: MouseButton;
-    };
+    mouseButtons: { LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE };
 
     attach(object: Object3D): this;
     detach(): this;

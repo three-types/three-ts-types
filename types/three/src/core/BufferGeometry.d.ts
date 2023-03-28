@@ -69,9 +69,11 @@ export class BufferGeometry extends EventDispatcher<DisposableEventMap> implemen
     name: string;
 
     /**
+     * A Read-only _string_ to check if `this` object type.
+     * @remarks Sub-classes will update this value.
      * @defaultValue `BufferGeometry`
      */
-    type: string; // TODO Replace for "BufferGeometry" // TODO add readonly
+    readonly type: string | 'BufferGeometry';
 
     /**
      * Allows for vertices to be re-used across multiple triangles; this is called using "indexed triangles".
@@ -132,7 +134,7 @@ export class BufferGeometry extends EventDispatcher<DisposableEventMap> implemen
     }>;
 
     /**
-     * Bounding box for the bufferGeometry, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
+     * Bounding box for the {@link THREE.BufferGeometry | BufferGeometry}, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
      * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
      * @defaultValue `null`
      */
@@ -351,7 +353,7 @@ export class BufferGeometry extends EventDispatcher<DisposableEventMap> implemen
     /**
      * Creates a clone of this BufferGeometry
      */
-    clone(): BufferGeometry;
+    clone(): this;
 
     /**
      * Copies another BufferGeometry to this BufferGeometry.

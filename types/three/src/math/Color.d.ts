@@ -2,6 +2,7 @@ import { ColorSpace } from '../constants';
 import { ColorRepresentation } from '../utils';
 
 import { BufferAttribute } from './../core/BufferAttribute';
+import { InterleavedBufferAttribute } from './../core/InterleavedBufferAttribute';
 
 export { SRGBToLinear } from './ColorManagement';
 
@@ -326,7 +327,7 @@ export class Color {
      */
     toArray(xyz: ArrayLike<number>, offset?: number): ArrayLike<number>;
 
-    fromBufferAttribute(attribute: BufferAttribute, index: number): this;
+    fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
 
     [Symbol.iterator](): Generator<number, void>;
 
