@@ -28,7 +28,14 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
     constructor();
 
     /**
-     * Unique number for this object instance.
+     * Flag to check if a given object is of type {@link Object3D}.
+     * @remarks This is a _constant_ value
+     * @defaultValue `true`
+     */
+    readonly isObject3D: true;
+
+    /**
+     * Unique number for this {@link Object3D} instance.
      * @remarks Note that ids are assigned in chronological order: 1, 2, 3, ..., incrementing by one for each new object.
      * @remarks Expects a `Integer`
      */
@@ -41,8 +48,9 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
     uuid: string;
 
     /**
-     * Optional name of the object (doesn't need to be unique).
-     * @defaultValue `''`
+     * Optional name of the object
+     * @remarks _(doesn't need to be unique)_.
+     * @defaultValue `""`
      */
     name: string;
 
@@ -208,13 +216,6 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      * @defaultValue `undefined`
      */
     customDistanceMaterial?: Material | undefined;
-
-    /**
-     * Flag to check if a given object is of type {@link Object3D}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
-     */
-    readonly isObject3D: true;
 
     /**
      * An optional callback that is executed immediately before a 3D object is rendered.
