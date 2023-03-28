@@ -1,11 +1,4 @@
-import {
-    Camera,
-    EmptyEvent,
-    EventDispatcher,
-    MOUSE,
-    TOUCH,
-    Vector3,
-} from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three';
 
 interface OrbitControlsEventMap {
     change: EmptyEvent;
