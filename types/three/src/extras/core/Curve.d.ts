@@ -25,11 +25,8 @@ import { Vector3 } from './../../math/Vector3';
  * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Curve | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Curve.js | Source}
  */
-export class Curve<T extends Vector> {
-    /**
-     * This constructor creates a new Curve.
-     */
-    constructor();
+export abstract class Curve<T extends Vector> {
+    protected constructor();
 
     /**
      * A Read-only _string_ to check if `this` object type.
@@ -50,14 +47,14 @@ export class Curve<T extends Vector> {
     /**
      * Returns a vector for a given position on the curve.
      * @param t A position on the curve. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created.
+     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created. Default `new T`.
      */
     getPoint(t: number, optionalTarget?: T): T;
 
     /**
      * Returns a vector for a given position on the {@link Curve} according to the arc length.
      * @param u A position on the {@link Curve} according to the arc length. Must be in the range `[ 0, 1 ]`. Expects a `Float`
-     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created.
+     * @param optionalTarget If specified, the result will be copied into this Vector, otherwise a new Vector will be created. Default `new T`.
      */
     getPointAt(u: number, optionalTarget?: T): T;
 
