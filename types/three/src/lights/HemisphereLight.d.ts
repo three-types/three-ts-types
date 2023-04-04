@@ -19,7 +19,7 @@ import { ColorRepresentation } from '../utils';
  * @see {@link https://threejs.org/docs/index.html#api/en/lights/HemisphereLight | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/lights/HemisphereLight.js | Source}
  */
-export class HemisphereLight extends Light {
+export class HemisphereLight extends Light<undefined> {
     /**
      * Creates a new {@link HemisphereLight}.
      * @param skyColor Hexadecimal color of the sky. Expects a `Integer`. Default `0xffffff` _(white)_.
