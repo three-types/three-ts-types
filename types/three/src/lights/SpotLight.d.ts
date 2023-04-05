@@ -68,11 +68,21 @@ export class SpotLight extends Light<SpotLightShadow> {
 
     /**
      * The {@link SpotLight} points from its {@link SpotLight.position | position} to target.position.
-     * @remarks **Note**: For the target's position to be changed to anything other than the default, it must be added to the {@link Scene | scene} using
-     * <code> scene.add( light.target ); </code>
+     * @remarks
+     * **Note**: For the target's position to be changed to anything other than the default,
+     * it must be added to the {@link Scene | scene} using
+     *
+     * ```typescript
+     * scene.add( light.target );
+     * ```
+     *
      * This is so that the target's {@link Object3D.matrixWorld | matrixWorld} gets automatically updated each frame.
-     * It is also possible to set the target to be another object in the scene (anything with a {@link Object3D.position | position} property), like so:
-     * <code> const targetObject = new THREE.Object3D(); scene.add(targetObject); light.target = targetObject; </code>
+     * It is also possible to set the target to be another object in the scene (anything with a {@link THREE.Object3D.position | position} property), like so:
+     * ```typescript
+     * const targetObject = new THREE.Object3D();
+     * scene.add(targetObject);
+     * light.target = targetObject;
+     * ```
      * The {@link SpotLight} will now track the target object.
      * @defaultValue `new THREE.Object3D()` _The default position of the target is *(0, 0, 0)*._
      */
@@ -147,9 +157,9 @@ export class SpotLight extends Light<SpotLightShadow> {
 
     /**
      * A {@link THREE.Texture | Texture} used to modulate the color of the light.
-     * The spot light color is mixed with the RGB value of this texture, with a ratio corresponding to its alpha value.
+     * The spot light color is mixed with the _RGB_ value of this texture, with a ratio corresponding to its alpha value.
      * The cookie-like masking effect is reproduced using pixel values (0, 0, 0, 1-cookie_value).
-     * *Warning*: map: {@link SpotLight} is disabled if castShadow: {@link SpotLight} is *false*.
+     * @remarks **Warning**: {@link SpotLight.map} is disabled if {@link SpotLight.castShadow} is `false`.
      */
     map: Texture | null;
 }

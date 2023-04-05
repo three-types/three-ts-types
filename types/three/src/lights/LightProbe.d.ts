@@ -9,7 +9,8 @@ import { Light } from './Light';
  * Instead they store information about light passing through 3D space
  * During rendering, the light that hits a 3D object is approximated by using the data from the light probe.
  * Light probes are usually created from (radiance) environment maps
- * The class {@link THREE.LightProbeGenerator | LightProbeGenerator} can be used to create light probes from instances of {@link THREE.CubeTexture | CubeTexture} or {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}
+ * The class {@link THREE.LightProbeGenerator | LightProbeGenerator} can be used to create light probes from
+ * instances of {@link THREE.CubeTexture | CubeTexture} or {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}
  * However, light estimation data could also be provided in other forms e.g
  * by WebXR
  * This enables the rendering of augmented reality content that reacts to real world lighting.

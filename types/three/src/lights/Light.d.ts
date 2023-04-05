@@ -47,7 +47,7 @@ export abstract class Light<TShadowSupport extends LightShadow | undefined = Lig
 
     /**
      * A {@link THREE.LightShadow | LightShadow} used to calculate shadows for this light.
-     * Available only on Light's that support shadows.
+     * @remarks Available only on Light's that support shadows.
      */
     shadow: TShadowSupport;
 
