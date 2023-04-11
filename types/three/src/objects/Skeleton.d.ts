@@ -114,4 +114,6 @@ export class Skeleton {
     dispose(): void;
     
     toJSON(): any;
+    
+    fromJson(json: any, bones: Record<string, Bone>): void;
 }
