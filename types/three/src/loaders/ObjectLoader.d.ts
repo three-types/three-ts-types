@@ -26,17 +26,18 @@ export class ObjectLoader extends Loader {
     parse<T extends Object3D>(json: any, onLoad?: (object: Object3D) => void): T;
     // tslint:disable-next-line:no-unnecessary-generics
     parseAsync<T extends Object3D>(json: any): Promise<T>;
-    parseGeometries(json: any): { [key: string]: InstancedBufferGeometry | BufferGeometry }; // Array of BufferGeometry or Geometry or Geometry2.
-    parseMaterials(json: any, textures: { [key: string]: Texture }): Material[]; // Array of Classes that inherits from Matrial.
-    parseAnimations(json: any): AnimationClip[];
-    parseImages(json: any, onLoad?: () => void): { [key: string]: Source };
-    parseImagesAsync(json: any): Promise<{ [key: string]: Source }>;
-    parseTextures(json: any, images: any): Texture[];
+    parseGeometries(json: Record<string, any>): { [key: string]: InstancedBufferGeometry | BufferGeometry }; // Array of BufferGeometry or Geometry or Geometry2.
+    parseMaterials(json: Record<string, any>, textures: { [key: string]: Texture }): Material[]; // Array of Classes that inherits from Matrial.
+    parseAnimations(json: Record<string, any>): Record<string, AnimationClip>;
+    parseImages(json: Record<string, any>, onLoad?: () => void): { [key: string]: Source };
+    parseImagesAsync(json: Record<string, any>): Promise<{ [key: string]: Source }>;
+    parseTextures(json: Record<string, any>, images: any): Record<string, Texture>;
     parseObject<T extends Object3D>(
         data: any,
-        geometries: any[],
-        materials: Material[],
-        animations: AnimationClip[],
+        geometries: Record<string, InstancedBufferGeometry | BufferGeometry>,
+        materials: Record<string, Material>,
+        textures: Record<string, Texture>,
+        animations: Record<string, AnimationClip>,
     ): // tslint:disable-next-line:no-unnecessary-generics
     T;
 }
