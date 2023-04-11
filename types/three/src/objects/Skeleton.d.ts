@@ -32,7 +32,7 @@ export class Skeleton {
      * @param bones The array of {@link THREE.Bone | bones}. Default `[]`.
      * @param boneInverses An array of {@link THREE.Matrix4 | Matrix4s}. Default `[]`.
      */
-    constructor(bones: Bone[], boneInverses?: Matrix4[]);
+    constructor(bones?: Bone[], boneInverses?: Matrix4[]);
 
     /**
      * {@link http://en.wikipedia.org/wiki/Universally_unique_identifier | UUID} of this object instance.
