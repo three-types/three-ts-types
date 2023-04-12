@@ -115,5 +115,5 @@ export class Skeleton {
     
     toJSON(): any;
     
-    fromJson(json: any, bones: Record<string, Bone>): void;
+    fromJSON(json: any, bones: Record<string, Bone>): void;
 }
