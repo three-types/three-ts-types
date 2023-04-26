@@ -1,6 +1,18 @@
 import { Bone } from './Bone';
-import { Matrix4 } from './../math/Matrix4';
+import { Matrix4, Matrix4Tuple } from './../math/Matrix4';
 import { DataTexture } from './../textures/DataTexture';
+import { Meta } from "../Meta";
+
+export interface SkeletonJSON {
+
+    readonly metadata: Meta<"Skeleton", "Skeleton.toJSON">;
+
+    readonly uuid: string;
+
+    bones: string[];
+
+    boneInverses: Matrix4Tuple[];
+}
 
 /**
  * Use an array of {@link Bone | bones} to create a {@link Skeleton} that can be used by a {@link THREE.SkinnedMesh | SkinnedMesh}.
@@ -113,7 +125,7 @@ export class Skeleton {
      */
     dispose(): void;
 
-    toJSON(): unknown;
+    toJSON(): SkeletonJSON;
 
-    fromJSON(json: unknown, bones: Record<string, Bone>): void;
+    fromJSON(json: SkeletonJSON, bones: Record<string, Bone>): void;
 }
