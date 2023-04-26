@@ -3,7 +3,11 @@
 import { Matrix4 } from './Matrix4';
 import { Vector3 } from './Vector3';
 
-export type Matrix3Tuple = [number, number, number, number, number, number, number, number, number];
+export type Matrix3Tuple = [
+    n11: number, n12: number, n13: number,
+    n21: number, n22: number, n23: number,
+    n31: number, n32: number, n33: number
+]
 
 /**
  * ( interface Matrix<T> )
