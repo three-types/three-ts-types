@@ -1,7 +1,7 @@
 import { Curve, CurveJSON } from './Curve';
 import { Vector } from './../../math/Vector2';
 
-export interface CurvePathJSON extends CurveJSON<"CurvePath"> {
+export interface CurvePathJSON<Type extends string = "CurvePath"> extends CurveJSON<Type> {
 
     autoClose: boolean;
 

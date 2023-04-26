@@ -1,5 +1,11 @@
-import { Vector2 } from './../../math/Vector2';
-import { CurvePath } from './CurvePath';
+import { Vector2, Vector2Tuple } from './../../math/Vector2';
+import { CurvePath, CurvePathJSON } from './CurvePath';
+
+
+export interface PathJSON extends CurvePathJSON<"Path"> {
+
+    currentPoint: Vector2Tuple
+}
 
 /**
  * a 2d path representation, comprising of points, lines, and cubes, similar to the html5 2d canvas api. It extends CurvePath.
