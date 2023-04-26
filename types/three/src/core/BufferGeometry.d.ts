@@ -1,4 +1,4 @@
-import { BufferAttribute } from './BufferAttribute';
+import { BufferAttribute, BufferAttributeJSON } from './BufferAttribute';
 import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
 import { GLBufferAttribute } from './GLBufferAttribute';
 import { Box3 } from './../math/Box3';
@@ -6,10 +6,41 @@ import { Sphere } from './../math/Sphere';
 import { Matrix4 } from './../math/Matrix4';
 import { Quaternion } from './../math/Quaternion';
 import { Vector2 } from './../math/Vector2';
-import { Vector3 } from './../math/Vector3';
+import { Vector3, Vector3Tuple } from './../math/Vector3';
 import { EventDispatcher } from './EventDispatcher';
 import { BuiltinShaderAttributeName } from '../constants';
 import * as BufferGeometryUtils from '../../examples/jsm/utils/BufferGeometryUtils';
+import { Meta } from '../Meta';
+
+export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
+
+    readonly metadata: Meta<"BufferGeometry", "BufferGeometry.toJSON">;
+
+    readonly type: Type;
+
+    readonly uuid: string;
+
+    name: string;
+
+    userData: Record<string, string | number>;
+
+    parameters: Record<string, unknown>;
+
+    data: {
+
+        attributes: Record<string, BufferAttributeJSON<number>>
+
+        index?: BufferAttributeJSON<number>
+
+        morphAttributes?: Record<string, BufferAttributeJSON<number>[]>;
+
+        morphTargetsRelative?: boolean;
+
+        groups?: Array<{ start: number, count: number, materialIndex?: number }>;
+
+        boundingSphere?: { center: Vector3Tuple, radius: number };
+    };
+}
 
 /**
  * A representation of mesh, line, or point geometry
@@ -347,7 +378,7 @@ export class BufferGeometry extends EventDispatcher {
     /**
      * Convert the buffer geometry to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      */
-    toJSON(): {};
+    toJSON(): BufferGeometryJSON;
 
     /**
      * Creates a clone of this BufferGeometry
