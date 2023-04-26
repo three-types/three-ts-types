@@ -14,11 +14,10 @@ import {
     AnyPixelFormat,
     AnyMapping,
 } from '../constants';
-import { Meta } from "../Meta";
+import { Meta } from '../Meta';
 
-export interface TextureJSON<Type extends string = "Texture"> {
-
-    readonly metadata: Meta<"Texture", "Texture.toJSON">;
+export interface TextureJSON<Type extends string = 'Texture'> {
+    readonly metadata: Meta<'Texture', 'Texture.toJSON'>;
 
     readonly type: Type;
 
@@ -28,32 +27,20 @@ export interface TextureJSON<Type extends string = "Texture"> {
 
     userData: Record<string, string | number>;
 
-    image: SourceJSON["uuid"];
+    image: SourceJSON['uuid'];
 
     mapping: number;
     cannel: number;
 
-    repeat: [
-        x: number,
-        y: number
-    ]
+    repeat: [x: number, y: number];
 
-    offset: [
-        x: number,
-        y: number
-    ]
+    offset: [x: number, y: number];
 
-    center: [
-        x: number,
-        y: number
-    ]
+    center: [x: number, y: number];
 
-    rotation: number
+    rotation: number;
 
-    wrap: [
-        wrapS: number,
-        wrapT: number
-    ]
+    wrap: [wrapS: number, wrapT: number];
 
     format: number;
     internalFormat: number;
@@ -74,7 +61,7 @@ export interface TextureJSON<Type extends string = "Texture"> {
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface
-export interface OffscreenCanvas extends EventTarget { }
+export interface OffscreenCanvas extends EventTarget {}
 
 /**
  * Create a {@link Texture} to apply to a surface or as a reflection or refraction map.

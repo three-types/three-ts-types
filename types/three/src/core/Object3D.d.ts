@@ -15,17 +15,16 @@ import { BufferGeometry } from './BufferGeometry';
 import { AnimationClip, AnimationClipJSON } from '../animation/AnimationClip';
 import { Meta } from '../Meta';
 
-export interface Object3DJSON<Type extends string = "Object3D"> {
-
-    readonly metadata: Meta<"Object3D", "Object3D.toJSON">;
+export interface Object3DJSON<Type extends string = 'Object3D'> {
+    readonly metadata: Meta<'Object3D', 'Object3D.toJSON'>;
 
     readonly type: Type;
 
     readonly uuid: string;
 
-    material?: Material["uuid"] | Material["uuid"][]
+    material?: Material['uuid'] | Array<Material['uuid']>;
 
-    animations?: AnimationClipJSON["uuid"][];
+    animations?: Array<AnimationClipJSON['uuid']>;
 
     children: Object3D[];
 
@@ -49,7 +48,6 @@ export interface Object3DJSON<Type extends string = "Object3D"> {
 
     matrixAutoUpdate?: boolean;
 }
-
 
 /**
  * This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.

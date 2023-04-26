@@ -2,8 +2,7 @@ import { Usage } from '../constants';
 import { Matrix3 } from './../math/Matrix3';
 import { Matrix4 } from './../math/Matrix4';
 
-export interface BufferAttributeJSON<Value, Type extends string = "BufferAttribute"> {
-
+export interface BufferAttributeJSON<Value, Type extends string = 'BufferAttribute'> {
     readonly type: Type;
 
     itemSize: number;
@@ -19,7 +18,7 @@ export interface BufferAttributeJSON<Value, Type extends string = "BufferAttribu
     updateRage: {
         offset: number;
         count: number;
-    }
+    };
 }
 
 /**

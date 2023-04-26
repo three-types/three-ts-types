@@ -234,6 +234,6 @@ export * from './textures/Source';
 export * from './textures/Texture';
 
 /**
- * JSON 
+ * JSON
  */
-export * from "./Meta"
+export * from './Meta';

@@ -1,10 +1,8 @@
 import { Vector2, Vector2Tuple } from './../../math/Vector2';
 import { CurvePath, CurvePathJSON } from './CurvePath';
 
-
-export interface PathJSON extends CurvePathJSON<"Path"> {
-
-    currentPoint: Vector2Tuple
+export interface PathJSON extends CurvePathJSON<'Path'> {
+    currentPoint: Vector2Tuple;
 }
 
 /**

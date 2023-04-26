@@ -1,12 +1,13 @@
-export type SourceData<Type extends string = string> = string | {
-    data: number[],
-    width: number,
-    height: number,
-    type: Type
-}
+export type SourceData<Type extends string = string> =
+    | string
+    | {
+          data: number[];
+          width: number;
+          height: number;
+          type: Type;
+      };
 
 export class SourceJSON {
-
     readonly uuid: string;
 
     url: SourceData | SourceData[];
@@ -59,5 +60,5 @@ export class Source {
      * Convert the data {@link Source} to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
-    toJSON(meta?: string | {}): SourceJSON
+    toJSON(meta?: string | {}): SourceJSON;
 }

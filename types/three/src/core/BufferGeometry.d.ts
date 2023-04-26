@@ -12,9 +12,8 @@ import { BuiltinShaderAttributeName } from '../constants';
 import * as BufferGeometryUtils from '../../examples/jsm/utils/BufferGeometryUtils';
 import { Meta } from '../Meta';
 
-export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
-
-    readonly metadata: Meta<"BufferGeometry", "BufferGeometry.toJSON">;
+export interface BufferGeometryJSON<Type extends string = 'BufferGeometry'> {
+    readonly metadata: Meta<'BufferGeometry', 'BufferGeometry.toJSON'>;
 
     readonly type: Type;
 
@@ -27,18 +26,17 @@ export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
     parameters: Record<string, unknown>;
 
     data: {
+        attributes: Record<string, BufferAttributeJSON<number>>;
 
-        attributes: Record<string, BufferAttributeJSON<number>>
+        index?: BufferAttributeJSON<number>;
 
-        index?: BufferAttributeJSON<number>
-
-        morphAttributes?: Record<string, BufferAttributeJSON<number>[]>;
+        morphAttributes?: Record<string, Array<BufferAttributeJSON<number>>>;
 
         morphTargetsRelative?: boolean;
 
-        groups?: Array<{ start: number, count: number, materialIndex?: number }>;
+        groups?: Array<{ start: number; count: number; materialIndex?: number }>;
 
-        boundingSphere?: { center: Vector3Tuple, radius: number };
+        boundingSphere?: { center: Vector3Tuple; radius: number };
     };
 }
 

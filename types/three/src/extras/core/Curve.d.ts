@@ -3,11 +3,10 @@ import { Vector3 } from './../../math/Vector3';
 
 // Extras / Core /////////////////////////////////////////////////////////////////////
 
-import { Meta } from "../../Meta";
+import { Meta } from '../../Meta';
 
-export class CurveJSON<Type extends string = "Curve",> {
-
-    readonly metadata: Meta<"Curve", "Curve.toJSON">;
+export class CurveJSON<Type extends string = 'Curve'> {
+    readonly metadata: Meta<'Curve', 'Curve.toJSON'>;
 
     readonly type: Type;
 

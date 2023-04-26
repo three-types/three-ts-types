@@ -4,15 +4,14 @@ import { CubicInterpolant } from './../math/interpolants/CubicInterpolant';
 import { Interpolant } from '../math/Interpolant';
 import { InterpolationModes } from '../constants';
 
-export interface KeyframeTrackJSON<Type extends string = "KeyframeTrack"> {
-
+export interface KeyframeTrackJSON<Type extends string = 'KeyframeTrack'> {
     type: Type;
 
     name: string;
 
-    times: ArrayLike<number>
+    times: ArrayLike<number>;
 
-    valus: ArrayLike<number>
+    valus: ArrayLike<number>;
 
     interpolation: number;
 }

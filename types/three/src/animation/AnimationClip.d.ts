@@ -4,7 +4,6 @@ import { Bone } from './../objects/Bone';
 import { AnimationBlendMode } from '../constants';
 
 export interface AnimationClipJSON {
-
     readonly uuid: string;
 
     name: string;

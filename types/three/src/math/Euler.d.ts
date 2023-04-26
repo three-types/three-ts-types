@@ -4,12 +4,7 @@ import { Vector3 } from './Vector3';
 
 export type EulerOrder = 'XYZ' | 'YXZ' | 'ZXY' | 'ZYX' | 'YZX' | 'XZY';
 
-export type EulerTuple = [
-    x: number,
-    y: number,
-    z: number,
-    order?: EulerOrder
-]
+export type EulerTuple = [x: number, y: number, z: number, order?: EulerOrder];
 
 export class Euler {
     constructor(x?: number, y?: number, z?: number, order?: EulerOrder);

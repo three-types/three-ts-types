@@ -4,12 +4,7 @@ import { Matrix4 } from './Matrix4';
 import { BufferAttribute } from '../core/BufferAttribute';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute';
 
-export type QuaternionTuple = [
-    x: number,
-    y: number,
-    z: number,
-    w: number
-]
+export type QuaternionTuple = [x: number, y: number, z: number, w: number];
 
 /**
  * Implementation of a quaternion. This is used for rotating things without incurring in the dreaded gimbal lock issue, amongst other advantages.
