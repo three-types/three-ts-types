@@ -2,6 +2,26 @@ import { Usage } from '../constants';
 import { Matrix3 } from './../math/Matrix3';
 import { Matrix4 } from './../math/Matrix4';
 
+export interface BufferAttributeJSON<Value, Type extends string = "BufferAttribute"> {
+
+    readonly type: Type;
+
+    itemSize: number;
+
+    array: ArrayLike<Value>;
+
+    normalized: boolean;
+
+    name: string;
+
+    usage: number;
+
+    updateRage: {
+        offset: number;
+        count: number;
+    }
+}
+
 /**
  * This class stores data for an attribute (such as vertex positions, face indices, normals, colors, UVs, and any custom attributes )
  * associated with a {@link THREE.BufferGeometry | BufferGeometry}, which allows for more efficient passing of data to the GPU
@@ -280,12 +300,7 @@ export class BufferAttribute {
     /**
      * Convert this object to three.js to the `data.attributes` part of {@link https://github.com/mrdoob/three.js/wiki/JSON-Geometry-format-4 | JSON Geometry format v4},
      */
-    toJSON(): {
-        itemSize: number;
-        type: string;
-        array: number[];
-        normalized: boolean;
-    };
+    toJSON(): BufferAttributeJSON<number>;
 }
 
 /**
