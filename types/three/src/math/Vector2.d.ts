@@ -1,7 +1,7 @@
 import { Matrix3 } from './Matrix3';
 import { BufferAttribute } from './../core/BufferAttribute';
 
-export type Vector2Tuple = [number, number];
+export type Vector2Tuple = [x: number, y: number];
 
 /**
  * ( interface Vector<T> )
