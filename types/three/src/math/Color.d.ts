@@ -326,6 +326,12 @@ export class Color {
      */
     toArray(xyz: ArrayLike<number>, offset?: number): ArrayLike<number>;
 
+    /**
+     * This method defines the serialization result of Color.
+     * @return The color as a hexadecimal value.
+     */
+    toJSON(): number;
+
     fromBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, index: number): this;
 
     [Symbol.iterator](): Generator<number, void>;
