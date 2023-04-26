@@ -1,7 +1,20 @@
-import { KeyframeTrack } from './KeyframeTrack';
+import { KeyframeTrack, KeyframeTrackJSON } from './KeyframeTrack';
 import { Vector3 } from './../math/Vector3';
 import { Bone } from './../objects/Bone';
 import { AnimationBlendMode } from '../constants';
+
+export interface AnimationClipJSON {
+
+    readonly uuid: string;
+
+    name: string;
+
+    duration: number;
+
+    blendMode: number;
+
+    tracks: KeyframeTrackJSON[];
+}
 
 export interface MorphTarget {
     name: string;
@@ -45,7 +58,7 @@ export class AnimationClip {
         fps: number,
         noLoop: boolean,
     ): AnimationClip[];
-    static parse(json: any): AnimationClip;
-    static parseAnimation(animation: any, bones: Bone[]): AnimationClip;
-    static toJSON(clip: AnimationClip): any;
+    static parse(json: AnimationClipJSON): AnimationClip;
+    static parseAnimation(animation: AnimationClipJSON, bones: Bone[]): AnimationClip;
+    static toJSON(clip: AnimationClip): AnimationClipJSON;
 }
