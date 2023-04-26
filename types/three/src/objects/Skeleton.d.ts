@@ -113,7 +113,7 @@ export class Skeleton {
      */
     dispose(): void;
     
-    toJSON(): any;
+    toJSON(): unknown;
     
-    fromJSON(json: any, bones: Record<string, Bone>): void;
+    fromJSON(json: unknown, bones: Record<string, Bone>): void;
 }
