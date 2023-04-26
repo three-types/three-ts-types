@@ -1,7 +1,7 @@
-import { Vector3 } from './../math/Vector3';
+import { Vector3, Vector3Tuple } from './../math/Vector3';
 import { Euler } from './../math/Euler';
 import { Quaternion } from './../math/Quaternion';
-import { Matrix4 } from './../math/Matrix4';
+import { Matrix4, Matrix4Tuple } from './../math/Matrix4';
 import { Matrix3 } from './../math/Matrix3';
 import { Layers } from './Layers';
 import { WebGLRenderer } from './../renderers/WebGLRenderer';
@@ -12,7 +12,44 @@ import { Group } from './../objects/Group';
 import { Intersection, Raycaster } from './Raycaster';
 import { EventDispatcher, BaseEvent, Event } from './EventDispatcher';
 import { BufferGeometry } from './BufferGeometry';
-import { AnimationClip } from '../animation/AnimationClip';
+import { AnimationClip, AnimationClipJSON } from '../animation/AnimationClip';
+import { Meta } from '../Meta';
+
+export interface Object3DJSON<Type extends string = "Object3D"> {
+
+    readonly metadata: Meta<"Object3D", "Object3D.toJSON">;
+
+    readonly type: Type;
+
+    readonly uuid: string;
+
+    material?: Material["uuid"] | Material["uuid"][]
+
+    animations?: AnimationClipJSON["uuid"][];
+
+    children: Object3D[];
+
+    name: string;
+
+    castShadow?: boolean;
+
+    receiveShadow?: boolean;
+
+    frustumCulled?: boolean;
+
+    renderOrder?: number;
+
+    userData: Record<string, string | number>;
+
+    layers?: number;
+
+    matrix: Matrix4Tuple;
+
+    up?: Vector3Tuple;
+
+    matrixAutoUpdate?: boolean;
+}
+
 
 /**
  * This is the base class for most objects in three.js and provides a set of properties and methods for manipulating objects in 3D space.
@@ -552,7 +589,7 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      * Convert the object to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Object containing metadata such as materials, textures or images for the object.
      */
-    toJSON(meta?: { geometries: any; materials: any; textures: any; images: any }): any;
+    toJSON(meta?: { geometries: any; materials: any; textures: any; images: any }): Object3DJSON;
 
     /**
      * Returns a clone of `this` object and optionally all descendants.
