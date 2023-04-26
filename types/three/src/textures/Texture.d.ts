@@ -1,6 +1,6 @@
 import { Vector2 } from './../math/Vector2';
 import { Matrix3 } from './../math/Matrix3';
-import { Source } from './Source';
+import { Source, SourceJSON } from './Source';
 import { EventDispatcher } from './../core/EventDispatcher';
 import {
     Mapping,
@@ -14,10 +14,67 @@ import {
     AnyPixelFormat,
     AnyMapping,
 } from '../constants';
+import { Meta } from "../Meta";
+
+export interface TextureJSON<Type extends string = "Texture"> {
+
+    readonly metadata: Meta<"Texture", "Texture.toJSON">;
+
+    readonly type: Type;
+
+    readonly uuid: string;
+
+    name: string;
+
+    userData: Record<string, string | number>;
+
+    image: SourceJSON["uuid"];
+
+    mapping: number;
+    cannel: number;
+
+    repeat: [
+        x: number,
+        y: number
+    ]
+
+    offset: [
+        x: number,
+        y: number
+    ]
+
+    center: [
+        x: number,
+        y: number
+    ]
+
+    rotation: number
+
+    wrap: [
+        wrapS: number,
+        wrapT: number
+    ]
+
+    format: number;
+    internalFormat: number;
+
+    encoding: number;
+
+    minFilter: number;
+    magFilter: number;
+    anisotropy: number;
+
+    flipY: boolean;
+
+    generateMipmaps: boolean;
+    premultiplyAlpha: boolean;
+
+    unpackAlignment: number;
+}
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface
-export interface OffscreenCanvas extends EventTarget {}
+export interface OffscreenCanvas extends EventTarget { }
 
 /**
  * Create a {@link Texture} to apply to a surface or as a reflection or refraction map.
@@ -425,7 +482,7 @@ export class Texture extends EventDispatcher {
      * Convert the texture to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
-    toJSON(meta?: string | {}): {};
+    toJSON(meta?: string | {}): TextureJSON;
 
     /**
      * Frees the GPU-related resources allocated by this instance
