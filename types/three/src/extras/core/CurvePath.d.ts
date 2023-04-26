@@ -1,5 +1,12 @@
-import { Curve } from './Curve';
+import { Curve, CurveJSON } from './Curve';
 import { Vector } from './../../math/Vector2';
+
+export interface CurvePathJSON extends CurveJSON<"CurvePath"> {
+
+    autoClose: boolean;
+
+    curves: CurveJSON[];
+}
 
 export class CurvePath<T extends Vector> extends Curve<T> {
     constructor();
