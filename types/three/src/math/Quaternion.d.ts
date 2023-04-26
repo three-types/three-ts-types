@@ -4,6 +4,13 @@ import { Matrix4 } from './Matrix4';
 import { BufferAttribute } from '../core/BufferAttribute';
 import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute';
 
+export type QuaternionTuple = [
+    x: number,
+    y: number,
+    z: number,
+    w: number
+]
+
 /**
  * Implementation of a quaternion. This is used for rotating things without incurring in the dreaded gimbal lock issue, amongst other advantages.
  *
@@ -120,7 +127,7 @@ export class Quaternion {
      * @param array the source array or array-like.
      * @param offset (optional) offset into the array. Default is 0.
      */
-    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
+    fromArray(array: QuaternionTuple, offset?: number): this;
 
     /**
      * Returns an array [x, y, z, w], or copies x, y, z and w into the provided array.
@@ -128,7 +135,7 @@ export class Quaternion {
      * @param offset (optional) optional offset into the array.
      * @return The created or provided array.
      */
-    toArray(array?: number[], offset?: number): number[];
+    toArray(array?: number[], offset?: number): QuaternionTuple;
 
     /**
      * Copies x, y, z and w into the provided array-like.
@@ -136,7 +143,7 @@ export class Quaternion {
      * @param offset (optional) optional offset into the array.
      * @return The provided array-like.
      */
-    toArray(array: ArrayLike<number>, offset?: number): ArrayLike<number>;
+    toArray(array: ArrayLike<number>, offset?: number): QuaternionTuple;
 
     /**
      * Sets x, y, z, w properties of this quaternion from the attribute.
