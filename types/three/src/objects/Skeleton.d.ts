@@ -112,8 +112,8 @@ export class Skeleton {
      * Call this method whenever this instance is no longer used in your app.
      */
     dispose(): void;
-    
+
     toJSON(): unknown;
-    
+
     fromJSON(json: unknown, bones: Record<string, Bone>): void;
 }
