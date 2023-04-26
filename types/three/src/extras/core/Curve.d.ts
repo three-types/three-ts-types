@@ -3,6 +3,17 @@ import { Vector3 } from './../../math/Vector3';
 
 // Extras / Core /////////////////////////////////////////////////////////////////////
 
+import { Meta } from "../Meta";
+
+export class CurveJSON<Type extends string = "Curve"> {
+
+    readonly metadata: Meta<"Curve", "Curve.toJSON">;
+
+    readonly type: Type;
+
+    arcLengthDivisions: number;
+}
+
 /**
  * An extensible curve object which contains methods for interpolation
  * class Curve<T extends Vector>
@@ -91,8 +102,8 @@ export class Curve<T extends Vector> {
 
     clone(): this;
     copy(source: Curve<T>): this;
-    toJSON(): object;
-    fromJSON(json: object): this;
+    toJSON(): CurveJSON;
+    fromJSON(json: CurveJSON): this;
 
     /**
      * @deprecated since r84.
