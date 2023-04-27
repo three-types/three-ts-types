@@ -214,7 +214,7 @@ export class OrbitControls {
     /**
      * Used internally by the .saveState and .reset methods.
      */
-    zoomO: number;
+    zoom0: number;
 
     /**
      * Update the controls. Must be called after any manual changes
