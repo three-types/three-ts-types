@@ -7,11 +7,10 @@ import { Color } from './../math/Color';
 import { Matrix4Tuple } from '../math/Matrix4';
 import { BufferAttributeJSON } from './../core/BufferAttribute';
 
-export interface InstancedMeshJSON<Type extends string = "InstancedMesh"> extends MeshJSON<Type> {
-
+export interface InstancedMeshJSON<Type extends string = 'InstancedMesh'> extends MeshJSON<Type> {
     count: number;
 
-    instanceMatrix: Matrix4Tuple
+    instanceMatrix: Matrix4Tuple;
 
     instanceColor: BufferAttributeJSON<number>;
 }

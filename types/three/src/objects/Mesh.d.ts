@@ -3,9 +3,8 @@ import { Object3D, Object3DJSON } from './../core/Object3D';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Vector3 } from '../math/Vector3';
 
-export interface MeshJSON<Type extends string = "Mesh"> extends Object3DJSON<Type> {
-
-    geometry: BufferGeometry["uuid"];
+export interface MeshJSON<Type extends string = 'Mesh'> extends Object3DJSON<Type> {
+    geometry: BufferGeometry['uuid'];
 }
 
 /**

@@ -5,15 +5,12 @@ import { Skeleton } from './Skeleton';
 import { Mesh, MeshJSON } from './Mesh';
 import { BufferGeometry } from '../core/BufferGeometry';
 
-export interface SkinnedMeshJSON<Type extends string = "SkinnedMesh"> extends MeshJSON<Type> {
-
+export interface SkinnedMeshJSON<Type extends string = 'SkinnedMesh'> extends MeshJSON<Type> {
     bindMode: string;
 
     bindMatrix: Matrix4Tuple;
 
-    skeleton?: Skeleton["uuid"];
-
-
+    skeleton?: Skeleton['uuid'];
 }
 
 /**
