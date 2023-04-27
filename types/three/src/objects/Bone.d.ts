@@ -1,4 +1,6 @@
-import { Object3D } from './../core/Object3D';
+import { Object3D, Object3DJSON } from './../core/Object3D';
+
+export interface BoneJSON<Type extends string = 'Bone'> extends Object3DJSON<Type> {}
 
 /**
  * A {@link Bone} which is part of a {@link THREE.Skeleton | Skeleton}
