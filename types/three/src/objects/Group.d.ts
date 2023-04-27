@@ -1,4 +1,6 @@
-import { Object3D } from './../core/Object3D';
+import { Object3D, Object3DJSON } from './../core/Object3D';
+
+export interface GroupJSON<Type extends string = "Group"> extends Object3DJSON<Type> { }
 
 /**
  * Its purpose is to make working with groups of objects syntactically clearer.
