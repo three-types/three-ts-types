@@ -1,9 +1,20 @@
 import { Material } from './../materials/Material';
-import { Matrix4 } from './../math/Matrix4';
+import { Matrix4, Matrix4Tuple } from './../math/Matrix4';
 import { Vector3 } from './../math/Vector3';
 import { Skeleton } from './Skeleton';
-import { Mesh } from './Mesh';
+import { Mesh, MeshJSON } from './Mesh';
 import { BufferGeometry } from '../core/BufferGeometry';
+
+export interface SkinnedMeshJSON<Type extends string = "SkinnedMesh"> extends MeshJSON<Type> {
+
+    bindMode: string;
+
+    bindMatrix: Matrix4Tuple;
+
+    skeleton?: Skeleton["uuid"];
+
+
+}
 
 /**
  * A mesh that has a {@link THREE.Skeleton | Skeleton} with {@link Bone | bones} that can then be used to animate the vertices of the geometry.
