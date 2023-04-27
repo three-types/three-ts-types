@@ -1,9 +1,12 @@
 import { Material } from './../materials/Material';
-import { Raycaster } from './../core/Raycaster';
-import { Object3D } from './../core/Object3D';
+import { Object3D, Object3DJSON } from './../core/Object3D';
 import { BufferGeometry } from '../core/BufferGeometry';
-import { Intersection } from '../core/Raycaster';
 import { Vector3 } from '../math/Vector3';
+
+export interface MeshJSON<Type extends string = "Mesh"> extends Object3DJSON<Type> {
+
+    geometry: BufferGeometry["uuid"];
+}
 
 /**
  * Class representing triangular {@link https://en.wikipedia.org/wiki/Polygon_mesh | polygon mesh} based objects.

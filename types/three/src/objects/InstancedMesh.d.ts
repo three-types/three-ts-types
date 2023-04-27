@@ -1,11 +1,20 @@
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Material } from './../materials/Material';
-import { BufferAttribute } from './../core/BufferAttribute';
 import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute';
-import { Mesh } from './Mesh';
+import { Mesh, MeshJSON } from './Mesh';
 import { Matrix4 } from './../math/Matrix4';
 import { Color } from './../math/Color';
-import { Box3, Sphere } from '../Three';
+import { Matrix4Tuple } from '../math/Matrix4';
+import { BufferAttributeJSON } from './../core/BufferAttribute';
+
+export interface InstancedMeshJSON<Type extends string = "InstancedMesh"> extends MeshJSON<Type> {
+
+    count: number;
+
+    instanceMatrix: Matrix4Tuple
+
+    instanceColor: BufferAttributeJSON<number>;
+}
 
 /**
  * A special version of {@link THREE.Mesh | Mesh} with instanced rendering support
