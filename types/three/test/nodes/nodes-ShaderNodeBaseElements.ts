@@ -9,16 +9,16 @@
 // core
 import AttributeNode from 'three/examples/jsm/nodes/core/AttributeNode';
 import BypassNode from 'three/examples/jsm/nodes/core/BypassNode';
-import CodeNode from 'three/examples/jsm/nodes/core/CodeNode';
+import CodeNode from 'three/examples/jsm/nodes/code/CodeNode';
 import ContextNode from 'three/examples/jsm/nodes/core/ContextNode';
-import ExpressionNode from 'three/examples/jsm/nodes/core/ExpressionNode';
-import FunctionCallNode from 'three/examples/jsm/nodes/core/FunctionCallNode';
-import FunctionNode from 'three/examples/jsm/nodes/core/FunctionNode';
+import ExpressionNode from 'three/examples/jsm/nodes/code/ExpressionNode';
+import FunctionCallNode from 'three/examples/jsm/nodes/code/FunctionCallNode';
+import FunctionNode from 'three/examples/jsm/nodes/code/FunctionNode';
 import InstanceIndexNode from 'three/examples/jsm/nodes/core/InstanceIndexNode';
 import PropertyNode from 'three/examples/jsm/nodes/core/PropertyNode';
 import UniformNode from 'three/examples/jsm/nodes/core/UniformNode';
 import VarNode from 'three/examples/jsm/nodes/core/VarNode';
-import VaryNode from 'three/examples/jsm/nodes/core/VaryNode';
+import VaryNode from 'three/examples/jsm/nodes/core/VaryingNode';
 
 // accessors
 import BufferNode from 'three/examples/jsm/nodes/accessors/BufferNode';
