@@ -6,12 +6,8 @@ export { default as ArrayUniformNode } from './core/ArrayUniformNode';
 export { default as AttributeNode } from './core/AttributeNode';
 export { default as BypassNode } from './core/BypassNode';
 export { default as CacheNode } from './core/CacheNode';
-export { default as CodeNode, CodeNodeInclude } from './core/CodeNode';
 export { default as ConstNode } from './core/ConstNode';
 export { default as ContextNode } from './core/ContextNode';
-export { default as ExpressionNode } from './core/ExpressionNode';
-export { default as FunctionCallNode } from './core/FunctionCallNode';
-export { default as FunctionNode, FunctionNodeArguments } from './core/FunctionNode';
 export { default as InstanceIndexNode } from './core/InstanceIndexNode';
 export { default as Node } from './core/Node';
 export { default as NodeAttribute } from './core/NodeAttribute';
@@ -94,6 +90,12 @@ export { default as NormalMapNode } from './display/NormalMapNode';
 export { default as PosterizeNode } from './display/PosterizeNode';
 export { default as ToneMappingNode } from './display/ToneMappingNode';
 export { default as ViewportNode } from './display/ViewportNode';
+
+// code
+export { default as ExpressionNode } from './code/ExpressionNode';
+export { default as CodeNode, CodeNodeInclude } from './code/CodeNode';
+export { default as FunctionCallNode } from './code/FunctionCallNode';
+export { default as FunctionNode, FunctionNodeArguments } from './code/FunctionNode';
 
 // fog
 export { default as FogNode } from './fog/FogNode';
