@@ -1,5 +1,5 @@
 import { Light } from './Light';
-import { ColorRepresentation } from '../utils';
+import { ColorRepresentation } from '../math/Color';
 
 /**
  * {@link RectAreaLight} emits light uniformly across the face a rectangular plane

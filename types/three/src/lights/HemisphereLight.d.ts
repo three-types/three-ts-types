@@ -1,7 +1,6 @@
-import { Color } from './../math/Color';
+import { Color, ColorRepresentation } from './../math/Color';
 import { Vector3 } from '../math/Vector3';
 import { Light } from './Light';
-import { ColorRepresentation } from '../utils';
 
 /**
  * A light source positioned directly above the scene, with color fading from the sky color to the ground color.
@@ -46,7 +45,7 @@ export class HemisphereLight extends Light<undefined> {
      * This is set equal to {@link THREE.Object3D.DEFAULT_UP}, so that the light shines from the top down.
      * @defaultValue {@link Object3D.DEFAULT_UP} _(0, 1, 0)_
      */
-    override position: Vector3;
+    override readonly position: Vector3;
 
     /**
      * The light's sky color, as passed in the constructor.

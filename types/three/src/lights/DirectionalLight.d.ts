@@ -2,7 +2,7 @@ import { Object3D } from './../core/Object3D';
 import { DirectionalLightShadow } from './DirectionalLightShadow';
 import { Light } from './Light';
 import { Vector3 } from '../math/Vector3';
-import { ColorRepresentation } from '../utils';
+import { ColorRepresentation } from '../math/Color';
 
 /**
  * A light that gets emitted in a specific direction
