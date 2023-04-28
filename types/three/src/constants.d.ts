@@ -901,26 +901,3 @@ export type PixelFormatGPU =
     | 'DEPTH_COMPONENT32F'
     | 'DEPTH24_STENCIL8'
     | 'DEPTH32F_STENCIL8';
-
-///////////////////////////////////////////////////////////////////////////////
-
-export type BuiltinShaderAttributeName =
-    | 'position'
-    | 'normal'
-    | 'uv'
-    | 'color'
-    | 'skinIndex'
-    | 'skinWeight'
-    | 'instanceMatrix'
-    | 'morphTarget0'
-    | 'morphTarget1'
-    | 'morphTarget2'
-    | 'morphTarget3'
-    | 'morphTarget4'
-    | 'morphTarget5'
-    | 'morphTarget6'
-    | 'morphTarget7'
-    | 'morphNormal0'
-    | 'morphNormal1'
-    | 'morphNormal2'
-    | 'morphNormal3';
