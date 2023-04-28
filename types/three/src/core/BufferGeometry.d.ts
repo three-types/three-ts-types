@@ -47,7 +47,9 @@ export type NormalOrGLBufferAttributes = Record<
  * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferGeometry | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js | Source}
  */
-export class BufferGeometry<Attributes extends object = NormalBufferAttributes> extends EventDispatcher {
+export class BufferGeometry<
+    Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
+> extends EventDispatcher {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */
