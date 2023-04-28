@@ -1,4 +1,4 @@
-import { Camera, MOUSE, MouseButton, TOUCH, TouchCount, Vector3 } from '../../../src/Three';
+import { Camera, MOUSE, TOUCH, Vector3 } from '../../../src/Three';
 
 /**
  * Orbit controls allow the camera to orbit around a target.
@@ -193,13 +193,13 @@ export class OrbitControls {
      * This object contains references to the mouse actions used
      * by the controls.
      */
-    mouseButtons: Partial<{ LEFT: MouseButton; MIDDLE: MouseButton; RIGHT: MouseButton }>;
+    mouseButtons: Partial<{ LEFT: MOUSE; MIDDLE: MOUSE; RIGHT: MOUSE }>;
 
     /**
      * This object contains references to the touch actions used by
      * the controls.
      */
-    touches: Partial<{ ONE: TouchCount; TWO: TouchCount }>;
+    touches: Partial<{ ONE: TOUCH; TWO: TOUCH }>;
 
     /**
      * Used internally by the .saveState and .reset methods.
@@ -214,7 +214,7 @@ export class OrbitControls {
     /**
      * Used internally by the .saveState and .reset methods.
      */
-    zoomO: number;
+    zoom0: number;
 
     /**
      * Update the controls. Must be called after any manual changes
@@ -229,6 +229,11 @@ export class OrbitControls {
      * @param domElement
      */
     listenToKeyEvents(domElement: HTMLElement | Window): void;
+
+    /**
+     * Removes the key event listener previously defined with {@link listenToKeyEvents}.
+     */
+    stopListenToKeyEvents(): void;
 
     /**
      * Save the current state of the controls. This can later be
