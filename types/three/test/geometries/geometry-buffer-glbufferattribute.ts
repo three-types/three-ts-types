@@ -9,11 +9,7 @@ let camera: THREE.PerspectiveCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
 
-let points: THREE.Points<
-    THREE.BufferGeometry<
-        Record<string, THREE.BufferAttribute | THREE.InterleavedBufferAttribute | THREE.GLBufferAttribute>
-    >
->;
+let points: THREE.Points<THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>>;
 
 const particles = 300000;
 let drawCount = 10000;
@@ -43,9 +39,7 @@ function init() {
 
     //
 
-    const geometry = new THREE.BufferGeometry<
-        Record<string, THREE.BufferAttribute | THREE.InterleavedBufferAttribute | THREE.GLBufferAttribute>
-    >();
+    const geometry = new THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>();
 
     const positions = [];
     const positions2 = [];

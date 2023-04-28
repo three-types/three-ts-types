@@ -7,6 +7,13 @@ import { Quaternion } from '../math/Quaternion';
 import { Vector2 } from '../math/Vector2';
 import { Vector3 } from '../math/Vector3';
 import { EventDispatcher } from './EventDispatcher';
+import { GLBufferAttribute } from './GLBufferAttribute';
+
+export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
+export type NormalOrGLBufferAttributes = Record<
+    string,
+    BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute
+>;
 
 /**
  * A representation of mesh, line, or point geometry
@@ -40,9 +47,7 @@ import { EventDispatcher } from './EventDispatcher';
  * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferGeometry | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferGeometry.js | Source}
  */
-export class BufferGeometry<
-    Attributes extends object = Record<string, BufferAttribute | InterleavedBufferAttribute>,
-> extends EventDispatcher {
+export class BufferGeometry<Attributes extends object = NormalBufferAttributes> extends EventDispatcher {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */
@@ -194,7 +199,7 @@ export class BufferGeometry<
      * Deletes the  {@link attributes | attribute} with the specified name.
      * @param name
      */
-    deleteAttribute(name: keyof Attributes): BufferGeometry;
+    deleteAttribute(name: keyof Attributes): this;
 
     /**
      * Returns true if the {@link attributes | attribute} with the specified name exists.
