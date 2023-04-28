@@ -276,7 +276,3 @@ export class OrbitControls {
 
     dispatchEvent(event: { type: string; target: any }): void;
 }
-
-export class MapControls extends OrbitControls {
-    constructor(object: Camera, domElement?: HTMLElement);
-}
