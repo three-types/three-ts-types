@@ -136,6 +136,10 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/HEOJUNFO"><img src="https://avatars.githubusercontent.com/u/100739943?v=4?s=100" width="100px;" alt="HEOJUNFO"/><br /><sub><b>HEOJUNFO</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=HEOJUNFO" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.oletus.fi/"><img src="https://avatars.githubusercontent.com/u/453050?v=4?s=100" width="100px;" alt="Olli Etuaho"/><br /><sub><b>Olli Etuaho</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Oletus" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/k2d222"><img src="https://avatars.githubusercontent.com/u/16296136?v=4?s=100" width="100px;" alt="Mathis Brossier"/><br /><sub><b>Mathis Brossier</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=k2d222" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oetherington"><img src="https://avatars.githubusercontent.com/u/5075628?v=4?s=100" width="100px;" alt="Ollie Etherington"/><br /><sub><b>Ollie Etherington</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=oetherington" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/issues?q=author%3Aoetherington" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mik-pe"><img src="https://avatars.githubusercontent.com/u/5653426?v=4?s=100" width="100px;" alt="Mikael Pettersson"/><br /><sub><b>Mikael Pettersson</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Mik-pe" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
