@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import TWEEN from 'three/examples/jsm/libs/tween.module';
 import { CSS3DObject, CSS3DRenderer } from 'three/examples/jsm/renderers/CSS3DRenderer';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
+declare const camera: THREE.PerspectiveCamera;
+declare const scene: THREE.Scene;
+declare const renderer: CSS3DRenderer;
 
 const objects: CSS3DObject[] = [];
 
