@@ -13,6 +13,7 @@ import {
     MinificationTextureFilter,
     AnyPixelFormat,
     AnyMapping,
+    ColorSpace,
 } from '../constants';
 
 /** Shim for OffscreenCanvas. */
@@ -50,6 +51,7 @@ export class Texture extends EventDispatcher {
      * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
      * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
      * @param encoding See {@link Texture.encoding | .encoding}. Default {@link THREE.LinearEncoding}
+     * @param colorSpace See {@link Texture.colorSpace | .colorSpace}. Default {@link THREE.NoColorSpace}
      */
     constructor(
         image?: TexImageSource | OffscreenCanvas,
@@ -61,7 +63,7 @@ export class Texture extends EventDispatcher {
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,
-        encoding?: TextureEncoding,
+        colorSpace?: ColorSpace | TextureEncoding,
     );
 
     /**
@@ -315,8 +317,23 @@ export class Texture extends EventDispatcher {
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @see {@link THREE.TextureDataType}
      * @defaultValue {@link THREE.LinearEncoding}
+     * @deprecated Use {@link Texture.colorSpace .colorSpace} in three.js r152+.
      */
     encoding: TextureEncoding;
+
+    /**
+     * The {@link Textures | {@link Texture} constants} page for details of other color spaces.
+     * @remarks
+     * Textures containing color data (such as .map) should typically use {@link THREE.SRGBColorSpace},
+     * while textures containing non-color data (such as .normalMap) should use {@link THREE.NoColorSpace}.
+     * @remarks
+     * Note that if this value is changed on a texture after the material has been used, it is necessary to trigger a {@link THREE.Material.needsUpdate} for this value to be realized in the shader.
+     * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+     * @see {@link THREE.TextureDataType}
+     * @defaultValue {@link THREE.NoColorSpace}
+     * @deprecated Use {@link Texture.colorSpace .colorSpace} in three.js r152+.
+     */
+    colorSpace: ColorSpace;
 
     /**
      * Indicates whether a texture belongs to a render target or not
