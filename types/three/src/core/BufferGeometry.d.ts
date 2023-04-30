@@ -328,7 +328,9 @@ export class BufferGeometry<
     computeTangents(): void;
 
     /**
-     * Computes vertex normals by averaging face normals.
+     * Computes vertex normals for the given vertex data. For indexed geometries, the method sets each vertex normal to
+     * be the average of the face normals of the faces that share that vertex. For non-indexed geometries, vertices are
+     * not shared, and the method sets each vertex normal to be the same as the face normal.
      */
     computeVertexNormals(): void;
 
