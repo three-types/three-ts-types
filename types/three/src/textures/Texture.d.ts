@@ -324,14 +324,11 @@ export class Texture extends EventDispatcher {
     /**
      * The {@link Textures | {@link Texture} constants} page for details of other color spaces.
      * @remarks
-     * Textures containing color data (such as .map) should typically use {@link THREE.SRGBColorSpace},
-     * while textures containing non-color data (such as .normalMap) should use {@link THREE.NoColorSpace}.
-     * @remarks
-     * Note that if this value is changed on a texture after the material has been used, it is necessary to trigger a {@link THREE.Material.needsUpdate} for this value to be realized in the shader.
+     * Textures containing color data should be annotated with {@link SRGBColorSpace THREE.SRGBColorSpace} or
+     * {@link LinearSRGBColorSpace THREE.LinearSRGBColorSpace}.
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @see {@link THREE.TextureDataType}
      * @defaultValue {@link THREE.NoColorSpace}
-     * @deprecated Use {@link Texture.colorSpace .colorSpace} in three.js r152+.
      */
     colorSpace: ColorSpace;
 
