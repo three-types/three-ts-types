@@ -126,7 +126,8 @@ export class Texture extends EventDispatcher {
     mapping: AnyMapping;
 
     /**
-     * Lets you select the uv attribute to map the texture to. `0` for `uv` and `1` for `uv2`.
+     * Lets you select the uv attribute to map the texture to. `0` for `uv`, `1` for `uv1`, `2` for `uv2` and `3` for
+     * `uv3`.
      */
     channel: number;
 
