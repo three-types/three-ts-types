@@ -45,7 +45,6 @@ export default abstract class NodeBuilder {
     updateNodes: Node[];
     hashNodes: { [hash: string]: Node };
 
-    scene: Scene;
     lightsNode: LightsNode;
     fogNode: FogNode;
 
