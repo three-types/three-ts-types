@@ -84,13 +84,6 @@ export default abstract class NodeBuilder {
 
     isFlipY(): boolean;
 
-    abstract getTexture(textureProperty: string, uvSnippet: string): string;
-
-    abstract getTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
-
-    abstract getCubeTexture(textureProperty: string, uvSnippet: string): string;
-    abstract getCubeTextureLevel(textureProperty: string, uvSnippet: string, levelSnippet: string): string;
-
     // @TODO: rename to .generateConst()
     getConst(type: NodeTypeOption, value?: unknown): Node;
     getType(type: NodeTypeOption): NodeTypeOption;
