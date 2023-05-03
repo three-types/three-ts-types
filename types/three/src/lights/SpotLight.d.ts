@@ -63,7 +63,7 @@ export class SpotLight extends Light<SpotLightShadow> {
      * This is set equal to {@link THREE.Object3D.DEFAULT_UP | Object3D.DEFAULT_UP} (0, 1, 0), so that the light shines from the top down.
      * @defaultValue `{@link Object3D.DEFAULT_UP}`
      */
-    position: Vector3;
+    readonly position: Vector3;
 
     /**
      * The {@link SpotLight} points from its {@link SpotLight.position | position} to target.position.
