@@ -1,14 +1,25 @@
-import { Object3D } from '../../../src/Three';
+import { Object3D, Texture } from '../../../src/Three';
 
 export interface ColladaExporterOptions {
+    version?: string;
     author?: string;
     textureDirectory?: string;
-    version?: string;
+    upAxis?: 'Y_UP' | 'Z_UP' | 'X_UP';
+    unitName?: string;
+    unitMeter?: number;
+}
+
+export interface ColladaTexture {
+    directory: string;
+    name: string;
+    ext: string;
+    data: Uint8Array;
+    original: Texture;
 }
 
 export interface ColladaExporterResult {
     data: string;
-    textures: object[];
+    textures: ColladaTexture[];
 }
 
 export class ColladaExporter {
@@ -16,7 +27,7 @@ export class ColladaExporter {
 
     parse(
         object: Object3D,
-        onDone: (res: ColladaExporterResult) => void,
+        onDone: ((res: ColladaExporterResult) => void) | undefined,
         options: ColladaExporterOptions,
     ): ColladaExporterResult | null;
 }
