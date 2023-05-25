@@ -13,6 +13,10 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants';
+import {Scene} from '../scenes/Scene'
+import {Camera} from '../cameras/Camera'
+import {BufferGeometry} from '../core/BufferGeometry'
+import {Object3D} from '../core/Object3D'
 
 export interface MaterialParameters {
     alphaTest?: number | undefined;
@@ -384,6 +388,8 @@ export class Material extends EventDispatcher {
      * @param renderer WebGLRenderer Context that is initializing the material
      */
     onBeforeCompile(shader: Shader, renderer: WebGLRenderer): void;
+
+    onBeforeRender(renderer: WebGLRenderer, scene: Scene, camera: Camera, geometry: BufferGeometry, object: Object3D): void
 
     /**
      * In case onBeforeCompile is used, this callback can be used to identify values of settings used in onBeforeCompile, so three.js can reuse a cached shader or recompile the shader as needed.

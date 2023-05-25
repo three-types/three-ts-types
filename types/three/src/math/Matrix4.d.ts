@@ -43,6 +43,8 @@ export type Matrix4Tuple = [
 export class Matrix4 implements Matrix {
     constructor();
 
+    readonly isMatrix4: true;
+
     /**
      * Array with matrix values.
      * @default [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]

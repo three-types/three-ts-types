@@ -56,6 +56,8 @@ export class Matrix3 implements Matrix {
      */
     constructor();
 
+    readonly isMatrix3: true;
+
     /**
      * Array with matrix values.
      * @default [1, 0, 0, 0, 1, 0, 0, 0, 1]
