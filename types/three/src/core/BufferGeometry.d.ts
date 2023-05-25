@@ -6,7 +6,7 @@ import { Matrix4 } from '../math/Matrix4';
 import { Quaternion } from '../math/Quaternion';
 import { Vector2 } from '../math/Vector2';
 import { Vector3 } from '../math/Vector3';
-import { EventDispatcher } from './EventDispatcher';
+import { BaseEvent, EventDispatcher } from './EventDispatcher';
 import { GLBufferAttribute } from './GLBufferAttribute';
 
 export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
@@ -75,7 +75,8 @@ export type NormalOrGLBufferAttributes = Record<
  */
 export class BufferGeometry<
     Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
-> extends EventDispatcher {
+    E extends BaseEvent = Event, ET = string
+> extends EventDispatcher<E, ET> {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */

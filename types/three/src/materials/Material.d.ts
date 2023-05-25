@@ -1,5 +1,5 @@
 import { Plane } from './../math/Plane';
-import { EventDispatcher } from './../core/EventDispatcher';
+import { Event, EventDispatcher } from './../core/EventDispatcher';
 import { WebGLRenderer } from './../renderers/WebGLRenderer';
 import { Shader } from './../renderers/shaders/ShaderLib';
 import {
@@ -13,17 +13,21 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants';
+import {Scene} from '../scenes/Scene'
+import {Camera} from '../cameras/Camera'
+import {BufferGeometry} from '../core/BufferGeometry'
+import {Object3D} from '../core/Object3D'
 
 export interface MaterialParameters {
     alphaTest?: number | undefined;
     alphaToCoverage?: boolean | undefined;
     blendDst?: BlendingDstFactor | undefined;
-    blendDstAlpha?: number | undefined;
+    blendDstAlpha?: number | undefined | null;
     blendEquation?: BlendingEquation | undefined;
-    blendEquationAlpha?: number | undefined;
+    blendEquationAlpha?: number | undefined | null;
     blending?: Blending | undefined;
     blendSrc?: BlendingSrcFactor | BlendingDstFactor | undefined;
-    blendSrcAlpha?: number | undefined;
+    blendSrcAlpha?: number | undefined | null;
     clipIntersection?: boolean | undefined;
     clippingPlanes?: Plane[] | undefined;
     clipShadows?: boolean | undefined;
@@ -42,7 +46,7 @@ export interface MaterialParameters {
     forceSinglePass?: boolean | undefined;
     dithering?: boolean | undefined;
     side?: Side | undefined;
-    shadowSide?: Side | undefined;
+    shadowSide?: Side | undefined | null;
     toneMapped?: boolean | undefined;
     transparent?: boolean | undefined;
     vertexColors?: boolean | undefined;
@@ -62,7 +66,7 @@ export interface MaterialParameters {
 /**
  * Materials describe the appearance of objects. They are defined in a (mostly) renderer-independent way, so you don't have to rewrite materials if you decide to use a different renderer.
  */
-export class Material extends EventDispatcher {
+export class Material<E extends Event = Event, TEvents = string> extends EventDispatcher<E, TEvents | 'dispose'> {
     constructor();
 
     /**

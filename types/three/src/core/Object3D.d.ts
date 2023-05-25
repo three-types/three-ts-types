@@ -21,7 +21,7 @@ import { AnimationClip } from '../animation/AnimationClip';
  * @see {@link https://threejs.org/docs/index.html#api/en/core/Object3D | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js | Source}
  */
-export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
+export class Object3D<E extends BaseEvent = Event, ET = string> extends EventDispatcher<E, ET> {
     /**
      * This creates a new {@link Object3D} object.
      */
@@ -45,7 +45,7 @@ export class Object3D<E extends BaseEvent = Event> extends EventDispatcher<E> {
      * {@link http://en.wikipedia.org/wiki/Universally_unique_identifier | UUID} of this object instance.
      * @remarks This gets automatically assigned and shouldn't be edited.
      */
-    uuid: string;
+    readonly uuid: string;
 
     /**
      * Optional name of the object

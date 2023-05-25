@@ -32,7 +32,7 @@ export type EventListener<E, T, U> = (event: E & { type: T } & { target: U }) =>
  * @see {@link https://threejs.org/docs/index.html#api/en/core/EventDispatcher | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/EventDispatcher.js | Source}
  */
-export class EventDispatcher<E extends BaseEvent = Event> {
+export class EventDispatcher<E extends BaseEvent = Event, ET = string> {
     /**
      * Creates {@link THREE.EventDispatcher | EventDispatcher} object.
      */
@@ -43,25 +43,25 @@ export class EventDispatcher<E extends BaseEvent = Event> {
      * @param type The type of event to listen to.
      * @param listener The function that gets called when the event is fired.
      */
-    addEventListener<T extends E['type']>(type: T, listener: EventListener<E, T, this>): void;
+    addEventListener<T extends E['type'] & ET>(type: T, listener: EventListener<E, T, this>): void;
 
     /**
      * Checks if listener is added to an event type.
      * @param type The type of event to listen to.
      * @param listener The function that gets called when the event is fired.
      */
-    hasEventListener<T extends E['type']>(type: T, listener: EventListener<E, T, this>): boolean;
+    hasEventListener<T extends E['type'] & ET>(type: T, listener: EventListener<E, T, this>): boolean;
 
     /**
      * Removes a listener from an event type.
      * @param type The type of the listener that gets removed.
      * @param listener The listener function that gets removed.
      */
-    removeEventListener<T extends E['type']>(type: T, listener: EventListener<E, T, this>): void;
+    removeEventListener<T extends E['type'] & ET>(type: T, listener: EventListener<E, T, this>): void;
 
     /**
      * Fire an event type.
      * @param event The event that gets fired.
      */
-    dispatchEvent(event: E): void;
+    dispatchEvent(event: E & {type: ET, [a: string]: any}): void;
 }

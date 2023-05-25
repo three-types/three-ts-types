@@ -2,6 +2,7 @@ import { Matrix4 } from './../math/Matrix4';
 import { Vector3 } from './../math/Vector3';
 import { Object3D } from './../core/Object3D';
 import { Layers } from '../Three';
+import { BaseEvent, Event } from '../core/EventDispatcher'
 
 /**
  * Abstract base class for cameras
@@ -10,7 +11,7 @@ import { Layers } from '../Three';
  * @see {@link https://threejs.org/docs/index.html#api/en/cameras/Camera | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/cameras/Camera.js | Source}
  */
-export abstract class Camera extends Object3D {
+export abstract class Camera<E extends BaseEvent = Event, ET = string> extends Object3D<E, ET> {
     /**
      * @remarks
      * Note that this class is not intended to be called directly; you probably want a

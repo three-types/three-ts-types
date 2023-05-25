@@ -3,6 +3,7 @@ import { Texture } from './../textures/Texture';
 import { Vector2 } from './../math/Vector2';
 import { MaterialParameters, Material } from './Material';
 import { NormalMapTypes } from '../constants';
+import { Event } from '../core/EventDispatcher'
 
 export interface MeshStandardMaterialParameters extends MaterialParameters {
     color?: ColorRepresentation | undefined;
@@ -35,7 +36,7 @@ export interface MeshStandardMaterialParameters extends MaterialParameters {
     flatShading?: boolean | undefined;
 }
 
-export class MeshStandardMaterial extends Material {
+export class MeshStandardMaterial<E extends Event = Event, TEvents = ''> extends Material<E, TEvents> {
     constructor(parameters?: MeshStandardMaterialParameters);
 
     /**

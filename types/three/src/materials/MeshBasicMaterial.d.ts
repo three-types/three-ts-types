@@ -2,6 +2,7 @@ import { Color, ColorRepresentation } from './../math/Color';
 import { Texture } from './../textures/Texture';
 import { MaterialParameters, Material } from './Material';
 import { Combine } from '../constants';
+import { Event } from '../core/EventDispatcher'
 /**
  * parameters is an object with one or more properties defining the material's appearance.
  */
@@ -26,7 +27,7 @@ export interface MeshBasicMaterialParameters extends MaterialParameters {
     wireframeLinejoin?: string | undefined;
 }
 
-export class MeshBasicMaterial extends Material {
+export class MeshBasicMaterial<E extends Event = Event, TEvents = ''> extends Material<E, TEvents> {
     constructor(parameters?: MeshBasicMaterialParameters);
 
     /**

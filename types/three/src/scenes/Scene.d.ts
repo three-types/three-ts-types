@@ -4,6 +4,7 @@ import { Object3D } from './../core/Object3D';
 import { Color } from '../math/Color';
 import { Texture } from '../textures/Texture';
 import { CubeTexture } from '../Three';
+import { BaseEvent, Event } from '../core/EventDispatcher'
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js
@@ -14,7 +15,7 @@ import { CubeTexture } from '../Three';
  * @see {@link https://threejs.org/docs/index.html#api/en/scenes/Scene | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/scenes/Scene.js | Source}
  */
-export class Scene extends Object3D {
+export class Scene<E extends BaseEvent = Event, ET = string> extends Object3D<E, ET> {
     /**
      * Create a new {@link Scene} object.
      */
