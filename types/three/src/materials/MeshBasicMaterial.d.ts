@@ -2,7 +2,7 @@ import { Color, ColorRepresentation } from './../math/Color';
 import { Texture } from './../textures/Texture';
 import { MaterialParameters, Material } from './Material';
 import { Combine } from '../constants';
-import { Event } from '../core/EventDispatcher'
+import { Event } from '../core/EventDispatcher';
 /**
  * parameters is an object with one or more properties defining the material's appearance.
  */

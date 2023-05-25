@@ -63,5 +63,5 @@ export class EventDispatcher<E extends BaseEvent = Event, ET = string> {
      * Fire an event type.
      * @param event The event that gets fired.
      */
-    dispatchEvent(event: E & {type: ET, [a: string]: any}): void;
+    dispatchEvent(event: E & { type: ET; [a: string]: any }): void;
 }

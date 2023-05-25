@@ -4,7 +4,7 @@ import { Object3D } from './../core/Object3D';
 import { Color } from '../math/Color';
 import { Texture } from '../textures/Texture';
 import { CubeTexture } from '../Three';
-import { BaseEvent, Event } from '../core/EventDispatcher'
+import { BaseEvent, Event } from '../core/EventDispatcher';
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js

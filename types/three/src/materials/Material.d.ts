@@ -13,10 +13,6 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants';
-import {Scene} from '../scenes/Scene'
-import {Camera} from '../cameras/Camera'
-import {BufferGeometry} from '../core/BufferGeometry'
-import {Object3D} from '../core/Object3D'
 
 export interface MaterialParameters {
     alphaTest?: number | undefined;

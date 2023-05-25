@@ -2,7 +2,7 @@ import { Texture } from './../textures/Texture';
 import { Vector2 } from './../math/Vector2';
 import { MeshStandardMaterialParameters, MeshStandardMaterial } from './MeshStandardMaterial';
 import { Color } from './../math/Color';
-import { Event } from '../core/EventDispatcher'
+import { Event } from '../core/EventDispatcher';
 
 export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialParameters {
     clearcoat?: number | undefined;
@@ -42,7 +42,7 @@ export interface MeshPhysicalMaterialParameters extends MeshStandardMaterialPara
     iridescenceThicknessMap?: Texture | null | undefined;
 }
 
-export class MeshPhysicalMaterial<E extends Event = Event, TEvents = ''> extends MeshStandardMaterial<E, TEvents>  {
+export class MeshPhysicalMaterial<E extends Event = Event, TEvents = ''> extends MeshStandardMaterial<E, TEvents> {
     constructor(parameters?: MeshPhysicalMaterialParameters);
 
     /**

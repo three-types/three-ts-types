@@ -1,7 +1,7 @@
 import { IUniform } from '../renderers/shaders/UniformsLib';
 import { MaterialParameters, Material } from './Material';
 import { GLSLVersion } from '../constants';
-import { Event } from '../core/EventDispatcher'
+import { Event } from '../core/EventDispatcher';
 
 export interface ShaderMaterialParameters extends MaterialParameters {
     uniforms?: { [uniform: string]: IUniform } | undefined;

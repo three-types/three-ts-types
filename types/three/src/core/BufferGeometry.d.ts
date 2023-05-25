@@ -75,7 +75,8 @@ export type NormalOrGLBufferAttributes = Record<
  */
 export class BufferGeometry<
     Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
-    E extends BaseEvent = Event, ET = string
+    E extends BaseEvent = Event,
+    ET = string,
 > extends EventDispatcher<E, ET> {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
