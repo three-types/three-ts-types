@@ -8,7 +8,7 @@ import { AnimationClip } from './../animation/AnimationClip';
 import { InstancedBufferGeometry } from '../core/InstancedBufferGeometry';
 import { BufferGeometry } from '../core/BufferGeometry';
 import { Source } from '../textures/Source';
-import { Skeleton } from '../objects/Skeleton'
+import { Skeleton } from '../objects/Skeleton';
 
 export class ObjectLoader extends Loader {
     constructor(manager?: LoadingManager);

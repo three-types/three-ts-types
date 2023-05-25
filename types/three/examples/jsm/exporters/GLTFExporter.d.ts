@@ -1,4 +1,4 @@
-import {Object3D, AnimationClip, Texture, Material, Mesh, BufferGeometry, PixelFormat} from '../../../src/Three';
+import { Object3D, AnimationClip, Texture, Material, Mesh, BufferGeometry, PixelFormat } from '../../../src/Three';
 
 export interface GLTFExporterOptions {
     /**
@@ -89,7 +89,7 @@ export class GLTFExporter {
 
     static Utils: {
         GLTFWriter: typeof GLTFWriter;
-    }
+    };
 }
 
 declare class GLTFWriter {
@@ -110,16 +110,16 @@ declare class GLTFWriter {
         options?: GLTFExporterOptions,
     ): Promise<void>;
 
-    serializeUserData( object: Object3D | Material | BufferGeometry, objectDef: { [key: string]: any } ): void;
+    serializeUserData(object: Object3D | Material | BufferGeometry, objectDef: { [key: string]: any }): void;
 
     processObjects(objects: Object3D[]): void;
     processScene(scene: Object3D): void;
-    processMaterial(material: Material): number|null;
-    processImage(image: any, format: PixelFormat, flipY: boolean, mimeType?: string ): number;
-    processBufferViewImage( blob: Blob ): Promise<number>;
+    processMaterial(material: Material): number | null;
+    processImage(image: any, format: PixelFormat, flipY: boolean, mimeType?: string): number;
+    processBufferViewImage(blob: Blob): Promise<number>;
     processSampler(map: Texture): number;
     processTexture(map: Texture): number;
-    applyTextureTransform( mapDef: {[key: string]: any}, texture: Texture): void;
+    applyTextureTransform(mapDef: { [key: string]: any }, texture: Texture): void;
     cache: {
         textures: Map<Texture, number>;
         materials: Map<Material, number>;
@@ -127,7 +127,7 @@ declare class GLTFWriter {
         attributes: Map<BufferGeometry, { [key: string]: number }>;
         attributesNormalized: Map<BufferGeometry, { [key: string]: boolean }>;
         images: Map<any, any>;
-    }
+    };
     json: {
         asset: { [key: string]: any };
         scenes: { [key: string]: any }[];
@@ -147,14 +147,14 @@ declare class GLTFWriter {
         extensions: { [key: string]: any };
         extensionsUsed: string[];
         extensionsRequired: string[];
-    }
+    };
     options: any;
     pending: Promise<any>[];
     plugins: GLTFExporterPlugin[];
     extensionsUsed: { [key: string]: boolean };
-    processBufferViewImageBuffer( buffer: ArrayBuffer ): number;
+    processBufferViewImageBuffer(buffer: ArrayBuffer): number;
 
-    _invokeAll( func: (plugin: GLTFExporterPlugin)=>void ): void;
+    _invokeAll(func: (plugin: GLTFExporterPlugin) => void): void;
 }
 
 export interface GLTFExporterPlugin {

@@ -266,5 +266,4 @@ export class OrbitControls extends EventDispatcher {
      * Returns the distance from the camera to the target.
      */
     getDistance(): number;
-
 }
