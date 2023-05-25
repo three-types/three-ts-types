@@ -19,6 +19,7 @@ init().then(() => {
 
 class ExamplePlugin implements GLTFLoaderPlugin {
     parser: GLTFParser;
+    name = 'ExamplePlugin';
 
     constructor(parser: GLTFParser) {
         this.parser = parser;
