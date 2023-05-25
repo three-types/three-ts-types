@@ -22,7 +22,7 @@ type TestEvent = { type: 'foo'; foo: number } | { type: 'bar'; bar: string };
 const eveDisForTestEvent = new THREE.EventDispatcher<TestEvent>();
 eveDisForTestEvent.addEventListener('foo', e => {
     e.type; // $ExpectType "foo"
-    e.target; // $ExpectType EventDispatcher<TestEvent>
+    e.target; // $ExpectType EventDispatcher<TestEvent, string>
 
     // NOTE: Error in ts lower than 3.9. The minimum typescript version cannot be raised from 3.6 because of the dependency from aframe.
     // e.foo; // $ExpectType number
