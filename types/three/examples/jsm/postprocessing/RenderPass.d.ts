@@ -1,4 +1,12 @@
-import {Scene, Camera, Material, Color, WebGLMultipleRenderTargets, WebGLRenderTarget, WebGLRenderer} from '../../../src/Three';
+import {
+    Scene,
+    Camera,
+    Material,
+    Color,
+    WebGLMultipleRenderTargets,
+    WebGLRenderTarget,
+    WebGLRenderer,
+} from '../../../src/Three';
 import { Pass, FullScreenQuad } from './Pass';
 
 export class RenderPass extends Pass {
@@ -15,6 +23,6 @@ export class RenderPass extends Pass {
         _: WebGLMultipleRenderTargets | WebGLRenderTarget | null,
         writeBuffer?: WebGLMultipleRenderTargets | WebGLRenderTarget,
         deltaTime?: number,
-        maskActive?: boolean
+        maskActive?: boolean,
     ): void;
 }
