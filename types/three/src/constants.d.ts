@@ -323,6 +323,8 @@ export const UnsignedShort4444Type: 1017;
 export const UnsignedShort5551Type: 1018;
 export const UnsignedInt248Type: 1020;
 
+export type AttributeGPUType = typeof FloatType | typeof IntType;
+
 /**
  * Texture Types.
  * @remarks Must correspond to the correct {@link PixelFormat | format}.
