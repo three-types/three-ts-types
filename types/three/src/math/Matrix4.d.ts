@@ -200,14 +200,9 @@ export class Matrix4 implements Matrix {
     decompose(translation: Vector3, rotation: Quaternion, scale: Vector3): Matrix4;
 
     /**
-     * Creates a frustum matrix.
-     */
-    makePerspective(left: number, right: number, bottom: number, top: number, near: number, far: number): Matrix4;
-
-    /**
      * Creates a perspective projection matrix.
      */
-    makePerspective(fov: number, aspect: number, near: number, far: number): Matrix4;
+    makePerspective(left: number, right: number, top: number, bottom: number, near: number, far: number): Matrix4;
 
     /**
      * Creates an orthographic projection matrix.
