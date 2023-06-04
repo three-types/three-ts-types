@@ -69,7 +69,8 @@ export class BufferAttribute {
     /**
      * Configures the bound GPU type for use in shaders. Either {@link FloatType} or {@link IntType}, default is {@link FloatType}.
      *
-     * Note: this only has an effect for integer arrays and is not configurable for float arrays. For lower precision float types, see https://threejs.org/docs/#api/en/core/bufferAttributeTypes/BufferAttributeTypes.
+     * Note: this only has an effect for integer arrays and is not configurable for float arrays. For lower precision
+     * float types, see https://threejs.org/docs/#api/en/core/bufferAttributeTypes/BufferAttributeTypes.
      */
     gpuType: AttributeGPUType;
 
