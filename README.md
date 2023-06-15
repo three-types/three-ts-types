@@ -67,7 +67,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/servinlp"><img src="https://avatars.githubusercontent.com/u/7222029?v=4?s=100" width="100px;" alt="Servin Nissen"/><br /><sub><b>Servin Nissen</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=servinlp" title="Code">💻</a></td>
     </tr>
     <tr>
-      <td align="center" valign="top" width="14.28%"><a href="https://benpigchu.com/"><img src="https://avatars.githubusercontent.com/u/9023067?v=4?s=100" width="100px;" alt="Ben "Pig" Chu"/><br /><sub><b>Ben "Pig" Chu</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=benpigchu" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://benpigchu.com/"><img src="https://avatars.githubusercontent.com/u/9023067?v=4?s=100" width="100px;" alt="Ben &quot;Pig&quot; Chu"/><br /><sub><b>Ben &quot;Pig&quot; Chu</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=benpigchu" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/woo-cie"><img src="https://avatars.githubusercontent.com/u/24642989?v=4?s=100" width="100px;" alt="Makoto Yamada"/><br /><sub><b>Makoto Yamada</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=woo-cie" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/schwyzl"><img src="https://avatars.githubusercontent.com/u/1556979?v=4?s=100" width="100px;" alt="schwyzl"/><br /><sub><b>schwyzl</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=schwyzl" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Degubi"><img src="https://avatars.githubusercontent.com/u/13366932?v=4?s=100" width="100px;" alt="Degubi"/><br /><sub><b>Degubi</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Degubi" title="Code">💻</a></td>
@@ -140,6 +140,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mik-pe"><img src="https://avatars.githubusercontent.com/u/5653426?v=4?s=100" width="100px;" alt="Mikael Pettersson"/><br /><sub><b>Mikael Pettersson</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Mik-pe" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/OndrejSpanel"><img src="https://avatars.githubusercontent.com/u/6927223?v=4?s=100" width="100px;" alt="Ondřej Španěl"/><br /><sub><b>Ondřej Španěl</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3AOndrejSpanel" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=OndrejSpanel" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=OndrejSpanel" title="Documentation">📖</a> <a href="#maintenance-OndrejSpanel" title="Maintenance">🚧</a></td>
     </tr>
   </tbody>
 </table>
