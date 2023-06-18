@@ -220,7 +220,7 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
     /**
      * Used internally by the .saveState and .reset methods.
      */
-    zoomO: number;
+    zoom0: number;
 
     /**
      * Update the controls. Must be called after any manual changes
@@ -272,10 +272,6 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
      * Returns the distance from the camera to the target.
      */
     getDistance(): number;
-}
-
-export class MapControls extends OrbitControls {
-    constructor(object: Camera, domElement?: HTMLElement);
 }
 
 export {};

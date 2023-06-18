@@ -15,22 +15,17 @@ Be sure your commit messages follow this specification: https://www.conventional
 
 ## Add yourself as a contributor
 
-This project follows the [all contributors](https://github.com/kentcdodds/all-contributors)
-specification. To add yourself to the table of contributors on the `README.md`, please use the
-automated script as part of your PR:
+This project follows the [all contributors](https://github.com/kentcdodds/all-contributors) specification. To add yourself to the table of contributors on the `README.md`, please use the automated script as part of your PR:
 
 ```console
 yarn contributors:add
 ```
 
-Follow the prompt and commit `.all-contributorsrc` and `README.md` in the PR. If you've already
-added yourself to the list and are making a new type of contribution, you can run it again and
-select the added contribution type.
+Follow the prompt and commit `.all-contributorsrc` and `README.md` in the PR. If you've already added yourself to the list and are making a new type of contribution, you can run it again and select the added contribution type.
 
-## Committing and Pushing changes
+## Testing
 
-Please make sure to run the tests before you commit your changes. You can do so by running
-`npm test`.
+Consider [adding a test](README.md#testing) along with your changes to make sure they are correct and to avoid regressions. Regardless of whether you've added a test, make sure to run the tests before you create a PR. You can do so by running `npm test`.
 
 ## Creating a PR
 
@@ -38,7 +33,6 @@ We have two core branches that mirror the `three` repo. If your PR is for the cu
 
 ## Help needed
 
-Please check out the
-[the open issues](https://github.com/three-types/three-ts-types/issues).
+Please check out the [the open issues](https://github.com/three-types/three-ts-types/issues).
 
 Also, please watch the repo and respond to questions/bug reports/feature requests! Thanks!

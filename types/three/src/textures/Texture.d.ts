@@ -13,6 +13,7 @@ import {
     MinificationTextureFilter,
     AnyPixelFormat,
     AnyMapping,
+    ColorSpace,
 } from '../constants';
 import { DisposableEventMap, Disposable } from '../types';
 
@@ -50,7 +51,7 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
      * @param format See {@link Texture.format | .format}. Default {@link THREE.RGBAFormat}
      * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
      * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
-     * @param encoding See {@link Texture.encoding | .encoding}. Default {@link THREE.LinearEncoding}
+     * @param colorSpace See {@link Texture.colorSpace | .colorSpace}. Default {@link THREE.NoColorSpace}
      */
     constructor(
         image?: TexImageSource | OffscreenCanvas,
@@ -62,7 +63,23 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,
-        encoding?: TextureEncoding,
+        colorSpace?: ColorSpace,
+    );
+
+    /**
+     * @deprecated
+     */
+    constructor(
+        image: TexImageSource | OffscreenCanvas,
+        mapping: Mapping,
+        wrapS: Wrapping,
+        wrapT: Wrapping,
+        magFilter: MagnificationTextureFilter,
+        minFilter: MinificationTextureFilter,
+        format: PixelFormat,
+        type: TextureDataType,
+        anisotropy: number,
+        encoding: TextureEncoding,
     );
 
     /**
@@ -123,6 +140,12 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
      * @defaultValue _value of_ {@link THREE.Texture.DEFAULT_MAPPING}
      */
     mapping: AnyMapping;
+
+    /**
+     * Lets you select the uv attribute to map the texture to. `0` for `uv`, `1` for `uv1`, `2` for `uv2` and `3` for
+     * `uv3`.
+     */
+    channel: number;
 
     /**
      * This defines how the {@link Texture} is wrapped *horizontally* and corresponds to **U** in UV mapping.
@@ -233,26 +256,6 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
     /**
      * How much a single repetition of the texture is offset from the beginning, in each direction **U** and **V**.
      * @remarks Typical range is `0.0` to `1.0`.
-     * @remarks
-     * The below texture types share the `first` uv channel in the engine.
-     * The offset (and repeat) setting is evaluated according to the following priorities and then shared by those textures:
-     *  - color map
-     *  - specular map
-     *  - displacement map
-     *  - normal map
-     *  - bump map
-     *  - roughness map
-     *  - metalness map
-     *  - alpha map
-     *  - emissive map
-     *  - clearcoat map
-     *  - clearcoat normal map
-     *  - clearcoat roughnessMap map
-     * @remarks
-     * The below {@link Texture} types share the `second` uv channel in the engine.
-     * The offset (and repeat) setting is evaluated according to the following priorities and then shared by those textures:
-     *  - ao map
-     *  - light map
      * @defaultValue `new THREE.Vector2(0, 0)`
      */
     offset: Vector2;
@@ -262,8 +265,6 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
      * @remarks
      * If repeat is set greater than `1` in either direction, the corresponding *Wrap* parameter should
      * also be set to {@link THREE.RepeatWrapping} or {@link THREE.MirroredRepeatWrapping} to achieve the desired tiling effect.
-     * @remarks
-     * Setting different repeat values for textures is restricted in the same way like {@link .offset | .offset}.
      * @see {@link wrapS}
      * @see {@link wrapT}
      * @defaultValue `new THREE.Vector2( 1, 1 )`
@@ -333,8 +334,20 @@ export class Texture extends EventDispatcher<DisposableEventMap> implements Disp
      * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
      * @see {@link THREE.TextureDataType}
      * @defaultValue {@link THREE.LinearEncoding}
+     * @deprecated Use {@link Texture.colorSpace .colorSpace} in three.js r152+.
      */
     encoding: TextureEncoding;
+
+    /**
+     * The {@link Textures | {@link Texture} constants} page for details of other color spaces.
+     * @remarks
+     * Textures containing color data should be annotated with {@link SRGBColorSpace THREE.SRGBColorSpace} or
+     * {@link LinearSRGBColorSpace THREE.LinearSRGBColorSpace}.
+     * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
+     * @see {@link THREE.TextureDataType}
+     * @defaultValue {@link THREE.NoColorSpace}
+     */
+    colorSpace: ColorSpace;
 
     /**
      * Indicates whether a texture belongs to a render target or not

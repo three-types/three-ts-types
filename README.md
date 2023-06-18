@@ -14,6 +14,18 @@ It is a goal to have complete public facing API types for all of the code in the
 
 It is not a goal for the `examples/jsm` directory to have complete declaration files for every examples module due to the number of example modules and how quickly they are modified. If you would like to use an examples module that is missing types then create a PR to add the types or create an issue to request that we add the missing types for that module.
 
+## Testing
+
+The tests are split into two directories: `types/three/test/integration` and `types/three/test/unit`.
+
+### Integration tests
+
+The integration tests are usually runnable three.js code that has just been translated to TypeScript to make sure the types work. The `three-examples` is a special directory that holds the examples from the three.js repository with matching file names. If you want to add a integration test, you can just create a new file in the `integration` directory.
+
+### Unit tests
+
+The unit tests are more fine-grained tests that focus on testing the types for a single file from the source code (either from the three.js core or the JSM addons). The directory structure of the unit tests matches the directory structure of the source code. These tests often contain type assertions as well to test the result of calling a method or to verify that the types produce an error in certain situations.
+
 ## Contributing
 
 Please see our [Contributing Guidelines](https://github.com/three-types/three-ts-types/blob/master/CONTRIBUTING.md) to help you get started. One of the most important things is choosing a branch to start your work on. If the code you want to contribute is for the current release of `three` it should be based off `master`. If it is for the next release of `three` it should be based off `dev`. You should then aim your merge into the branch you based off.
@@ -123,6 +135,11 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rafaelsc"><img src="https://avatars.githubusercontent.com/u/502282?v=4?s=100" width="100px;" alt="Rafael Sliveira Cordeiro"/><br /><sub><b>Rafael Sliveira Cordeiro</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=rafaelsc" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=rafaelsc" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/HEOJUNFO"><img src="https://avatars.githubusercontent.com/u/100739943?v=4?s=100" width="100px;" alt="HEOJUNFO"/><br /><sub><b>HEOJUNFO</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=HEOJUNFO" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="http://www.oletus.fi/"><img src="https://avatars.githubusercontent.com/u/453050?v=4?s=100" width="100px;" alt="Olli Etuaho"/><br /><sub><b>Olli Etuaho</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Oletus" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/k2d222"><img src="https://avatars.githubusercontent.com/u/16296136?v=4?s=100" width="100px;" alt="Mathis Brossier"/><br /><sub><b>Mathis Brossier</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=k2d222" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/oetherington"><img src="https://avatars.githubusercontent.com/u/5075628?v=4?s=100" width="100px;" alt="Ollie Etherington"/><br /><sub><b>Ollie Etherington</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=oetherington" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/issues?q=author%3Aoetherington" title="Bug reports">🐛</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mik-pe"><img src="https://avatars.githubusercontent.com/u/5653426?v=4?s=100" width="100px;" alt="Mikael Pettersson"/><br /><sub><b>Mikael Pettersson</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Mik-pe" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
