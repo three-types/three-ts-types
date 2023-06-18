@@ -77,7 +77,7 @@ export type NormalOrGLBufferAttributes = Record<
  */
 export class BufferGeometry<
     Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
-> extends EventDispatcher<DisposableEventMap>  {
+> extends EventDispatcher<DisposableEventMap> {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */
