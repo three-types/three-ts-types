@@ -147,6 +147,7 @@ export class Matrix4 implements Matrix {
     /**
      * Sets this matrix as translation transform.
      */
+    makeTranslation(v: Vector3): Matrix4;
     makeTranslation(x: number, y: number, z: number): Matrix4;
 
     /**
