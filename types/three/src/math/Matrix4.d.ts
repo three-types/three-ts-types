@@ -41,7 +41,31 @@ export type Matrix4Tuple = [
  * m.multiply( m3 );
  */
 export class Matrix4 implements Matrix {
+    /**
+     * Creates an identity matrix.
+     */
     constructor();
+    /**
+     * Creates a 4x4 matrix with the given arguments in row-major order.
+     */
+    constructor(
+        n11: number,
+        n12: number,
+        n13: number,
+        n14: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n24: number,
+        n31: number,
+        n32: number,
+        n33: number,
+        n34: number,
+        n41: number,
+        n42: number,
+        n43: number,
+        n44: number,
+    );
 
     /**
      * Array with matrix values.
