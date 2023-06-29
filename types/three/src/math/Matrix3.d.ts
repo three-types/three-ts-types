@@ -1,6 +1,7 @@
 // https://threejs.org/docs/#api/en/math/Matrix3
 
 import { Matrix4 } from './Matrix4';
+import { Vector2 } from './Vector2';
 import { Vector3 } from './Vector3';
 
 export type Matrix3Tuple = [number, number, number, number, number, number, number, number, number];
@@ -113,7 +114,7 @@ export class Matrix3 implements Matrix {
      * @param x the amount to translate in the X axis.
      * @param y the amount to translate in the Y axis.
      */
-    makeTranslation(x: number, y: number): this;
+    makeTranslation(v: Vector2): Matrix3;
     makeTranslation(x: number, y: number): Matrix3;
 
     /**
