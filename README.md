@@ -140,6 +140,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Mik-pe"><img src="https://avatars.githubusercontent.com/u/5653426?v=4?s=100" width="100px;" alt="Mikael Pettersson"/><br /><sub><b>Mikael Pettersson</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Mik-pe" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/magnostherobot"><img src="https://avatars.githubusercontent.com/u/24718981?v=4?s=100" width="100px;" alt="Tom Harley"/><br /><sub><b>Tom Harley</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Mik-pe" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/OndrejSpanel"><img src="https://avatars.githubusercontent.com/u/6927223?v=4?s=100" width="100px;" alt="Ondřej Španěl"/><br /><sub><b>Ondřej Španěl</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/issues?q=author%3AOndrejSpanel" title="Bug reports">🐛</a> <a href="https://github.com/three-types/three-ts-types/commits?author=OndrejSpanel" title="Code">💻</a> <a href="https://github.com/three-types/three-ts-types/commits?author=OndrejSpanel" title="Documentation">📖</a> <a href="#maintenance-OndrejSpanel" title="Maintenance">🚧</a></td>
     </tr>
   </tbody>
