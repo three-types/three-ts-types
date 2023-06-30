@@ -47,10 +47,5 @@ export class WebXRManager extends EventDispatcher {
     getFoveation(): number | undefined;
     setFoveation(value: number): void;
 
-    /**
-     * Returns the set of planes detected by WebXR's plane detection API.
-     */
-    getPlanes(): Set<XRPlane>;
-
     dispose(): void;
 }
