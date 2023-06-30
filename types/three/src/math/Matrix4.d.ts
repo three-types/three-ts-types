@@ -147,7 +147,8 @@ export class Matrix4 implements Matrix {
     /**
      * Sets this matrix as translation transform.
      */
-    makeTranslation(x: number, y: number, z: number): Matrix4;
+    makeTranslation(v: Vector3): this;
+    makeTranslation(x: number, y: number, z: number): this;
 
     /**
      * Sets this matrix as rotation transform around x axis by theta radians.
