@@ -756,6 +756,24 @@ export type StencilFunc =
     | typeof GreaterEqualStencilFunc
     | typeof AlwaysStencilFunc;
 
+export const NeverCompare: 512;
+export const LessCompare: 513;
+export const EqualCompare: 514;
+export const LessEqualCompare: 515;
+export const GreaterCompare: 516;
+export const NotEqualCompare: 517;
+export const GreaterEqualCompare: 518;
+export const AlwaysCompare: 519;
+export type TextureComparisonFunction =
+    | typeof NeverCompare
+    | typeof LessCompare
+    | typeof EqualCompare
+    | typeof LessEqualCompare
+    | typeof GreaterCompare
+    | typeof NotEqualCompare
+    | typeof GreaterEqualCompare
+    | typeof AlwaysCompare;
+
 // usage types
 export const StaticDrawUsage: 35044;
 export const DynamicDrawUsage: 35048;
