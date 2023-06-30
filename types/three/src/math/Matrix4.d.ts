@@ -2,6 +2,7 @@ import { Vector3 } from './Vector3';
 import { Euler } from './Euler';
 import { Quaternion } from './Quaternion';
 import { Matrix, Matrix3 } from './Matrix3';
+import { CoordinateSystem } from '../constants';
 
 export type Matrix4Tuple = [
     number,
@@ -227,12 +228,28 @@ export class Matrix4 implements Matrix {
     /**
      * Creates a perspective projection matrix.
      */
-    makePerspective(left: number, right: number, top: number, bottom: number, near: number, far: number): Matrix4;
+    makePerspective(
+        left: number,
+        right: number,
+        top: number,
+        bottom: number,
+        near: number,
+        far: number,
+        coordinateSystem?: CoordinateSystem,
+    ): Matrix4;
 
     /**
      * Creates an orthographic projection matrix.
      */
-    makeOrthographic(left: number, right: number, top: number, bottom: number, near: number, far: number): Matrix4;
+    makeOrthographic(
+        left: number,
+        right: number,
+        top: number,
+        bottom: number,
+        near: number,
+        far: number,
+        coordinateSystem?: CoordinateSystem,
+    ): Matrix4;
     equals(matrix: Matrix4): boolean;
 
     /**

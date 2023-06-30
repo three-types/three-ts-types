@@ -799,6 +799,10 @@ export const GLSL1: '100';
 export const GLSL3: '300 es';
 export type GLSLVersion = typeof GLSL1 | typeof GLSL3;
 
+export const WebGLCoordinateSystem: 2000;
+export const WebGPUCoordinateSystem: 2001;
+export type CoordinateSystem = typeof WebGLCoordinateSystem | typeof WebGPUCoordinateSystem;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Texture - Internal Pixel Formats
 
