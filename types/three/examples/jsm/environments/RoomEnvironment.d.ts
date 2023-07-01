@@ -1,6 +1,6 @@
-import { Scene } from '../../../src/Three';
+import { Scene, WebGLRenderer } from '../../../src/Three';
 
 export class RoomEnvironment extends Scene {
-    constructor();
+    constructor(renderer?: WebGLRenderer);
     dispose(): void;
 }
