@@ -34,7 +34,6 @@ import {
     FunctionCallNode,
     FunctionNode,
     FunctionNodeArguments,
-    InstanceIndexNode,
     MaterialNode,
     MaterialReferenceNode,
     MathNode,
@@ -127,7 +126,6 @@ export function fn<P extends FunctionNodeArguments>(
     // eslint-disable-next-line no-unnecessary-generics
 ): (...params: Fn<P>) => Swizzable;
 
-export const instanceIndex: Swizzable<InstanceIndexNode>;
 export function label(node: NodeRepresentation, name?: string): Swizzable<VarNode>;
 export function temp(node: NodeRepresentation, name?: string): Swizzable<VarNode>;
 export function vary(node: NodeRepresentation, name?: string): Swizzable<VaryingNode>;
