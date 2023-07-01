@@ -15,6 +15,7 @@ import {
 } from '../constants';
 
 export interface MaterialParameters {
+    alphaHash?: boolean | undefined;
     alphaTest?: number | undefined;
     alphaToCoverage?: boolean | undefined;
     blendDst?: BlendingDstFactor | undefined;
@@ -64,6 +65,8 @@ export interface MaterialParameters {
  */
 export class Material extends EventDispatcher {
     constructor();
+
+    alphaHash: boolean;
 
     /**
      * Sets the alpha value to be used when running an alpha test. Default is 0.
