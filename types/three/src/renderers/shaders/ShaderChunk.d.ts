@@ -26,8 +26,8 @@ export const ShaderChunk: {
     displacementmap_vertex: string;
     emissivemap_fragment: string;
     emissivemap_pars_fragment: string;
-    encodings_fragment: string;
-    encodings_pars_fragment: string;
+    colorspace_fragment: string;
+    colorspace_pars_fragment: string;
     envmap_fragment: string;
     envmap_common_pars_fragment: string;
     envmap_pars_fragment: string;
