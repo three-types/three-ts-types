@@ -8,7 +8,6 @@ export { default as BypassNode } from './core/BypassNode';
 export { default as CacheNode } from './core/CacheNode';
 export { default as ConstNode } from './core/ConstNode';
 export { default as ContextNode } from './core/ContextNode';
-export { default as InstanceIndexNode } from './core/InstanceIndexNode';
 export { default as Node } from './core/Node';
 export { default as NodeAttribute } from './core/NodeAttribute';
 export { default as NodeBuilder } from './core/NodeBuilder';
