@@ -124,6 +124,11 @@ export class ArcballControls extends EventDispatcher {
      */
     radiusFactor: number;
 
+    /**
+     * @default 1
+     */
+    rotateSpeed: number;
+
     constructor(camera: Camera, domElement: HTMLElement, scene?: Scene | null);
 
     getRaycaster(): Raycaster;
