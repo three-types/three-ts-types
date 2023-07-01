@@ -26,7 +26,6 @@ export class WebXRManager extends EventDispatcher {
 
     /**
      * @default true
-     * @deprecated
      */
     cameraAutoUpdate: boolean;
 
@@ -54,14 +53,9 @@ export class WebXRManager extends EventDispatcher {
 
     setSession(value: XRSession | null): Promise<void>;
 
-    /**
-     * @deprecated
-     */
     getCamera(): WebXRArrayCamera;
 
-    setUserCamera(camera: PerspectiveCamera): void;
-
-    updateCameraXR(camera: PerspectiveCamera): void;
+    updateCamera(camera: PerspectiveCamera): void;
 
     setAnimationLoop(callback: XRFrameRequestCallback | null): void;
 
