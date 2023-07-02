@@ -383,7 +383,7 @@ const files = {
         // 'physics_ammo_rope',
         // 'physics_ammo_terrain',
         // 'physics_ammo_volume',
-        'physics_rapier_instancing',
+        // 'physics_rapier_instancing',
     ],
     misc: [
         'misc_animation_groups',
@@ -391,16 +391,16 @@ const files = {
         'misc_boxselection',
         'misc_controls_arcball',
         'misc_controls_drag',
-        'misc_controls_fly',
+        // 'misc_controls_fly',
         'misc_controls_map',
         'misc_controls_orbit',
         'misc_controls_pointerlock',
         'misc_controls_trackball',
         'misc_controls_transform',
         'misc_exporter_draco',
-        'misc_exporter_gltf',
+        // 'misc_exporter_gltf',
         'misc_exporter_obj',
-        'misc_exporter_ply',
+        // 'misc_exporter_ply',
         'misc_exporter_stl',
         'misc_exporter_usdz',
         'misc_lookat',
@@ -426,6 +426,9 @@ const re = /<script type="module">((.|\r|\n)+)<\/script>/;
 
 const inDir = '../../three.js/examples';
 const outDir = './examples';
+
+fs.rmSync(outDir, { recursive: true, force: true });
+fs.mkdirSync(outDir);
 
 for (const section of Object.values(files)) {
     for (const file of section) {
