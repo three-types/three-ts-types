@@ -1,7 +1,7 @@
 import { Texture } from '../textures/Texture';
 import { WebGLRenderTarget, WebGLRenderTargetOptions } from './WebGLRenderTarget';
 
-export class WebGLMultipleRenderTargets extends WebGLRenderTarget {
+export class WebGLMultipleRenderTargets extends WebGLRenderTarget<Texture[]> {
     /**
      * @param width The width of the render target.
      * @param height The height of the render target.

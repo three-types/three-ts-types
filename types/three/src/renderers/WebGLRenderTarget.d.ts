@@ -33,7 +33,7 @@ export interface WebGLRenderTargetOptions {
     encoding?: TextureEncoding | undefined;
 }
 
-export class WebGLRenderTarget extends EventDispatcher {
+export class WebGLRenderTarget<TTexture extends Texture | Texture[] = Texture> extends EventDispatcher {
     constructor(width?: number, height?: number, options?: WebGLRenderTargetOptions);
 
     readonly isWebGLRenderTarget: true;
@@ -47,7 +47,7 @@ export class WebGLRenderTarget extends EventDispatcher {
      */
     scissorTest: boolean;
     viewport: Vector4;
-    texture: Texture | Texture[];
+    texture: TTexture;
 
     /**
      * @default true
