@@ -1,21 +1,21 @@
 # Update patch
 
--   `git apply --directory=examples-testing changes.patch`
+-   `git apply changes.patch`
 -   Make changes
 -   `yarn run type-check`
 -   `git diff > ../changes.patch`
 -   Reset changes
--   Copy patch file
+-   Move patch file
 
 # Update sources
 
 -   Delete all examples
 -   `node index.js`
 -   Commit changes
--   `git apply --directory=examples-testing --reject changes.patch`
+-   `git apply --reject changes.patch`
 -   Fix conflicts
 -   `yarn run type-check`
 -   `git diff > ../changes.patch`
 -   Reset changes
--   Copy patch file
+-   Move patch file
 -   Commit changes
