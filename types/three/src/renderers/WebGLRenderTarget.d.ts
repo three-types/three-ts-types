@@ -1,7 +1,7 @@
-import { Vector4 } from './../math/Vector4';
-import { Texture } from './../textures/Texture';
-import { DepthTexture } from './../textures/DepthTexture';
-import { EventDispatcher } from './../core/EventDispatcher';
+import { Vector4 } from '../math/Vector4';
+import { Texture } from '../textures/Texture';
+import { DepthTexture } from '../textures/DepthTexture';
+import { EventDispatcher } from '../core/EventDispatcher';
 import {
     Wrapping,
     TextureDataType,
@@ -16,30 +16,30 @@ export interface WebGLRenderTargetOptions {
     wrapT?: Wrapping | undefined;
     magFilter?: MagnificationTextureFilter | undefined;
     minFilter?: MinificationTextureFilter | undefined;
+    generateMipmaps?: boolean | undefined; // true;
     format?: number | undefined; // RGBAFormat;
     type?: TextureDataType | undefined; // UnsignedByteType;
     anisotropy?: number | undefined; // 1;
+    colorSpace?: ColorSpace | undefined;
     depthBuffer?: boolean | undefined; // true;
     stencilBuffer?: boolean | undefined; // false;
-    generateMipmaps?: boolean | undefined; // true;
     depthTexture?: DepthTexture | undefined;
-    /** @deprecated Use 'colorSpace' in three.js r152+. */
-    encoding?: TextureEncoding | undefined;
-    colorSpace?: ColorSpace | undefined;
-
     /**
      * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
      * @default 0
      */
     samples?: number;
+    /** @deprecated Use 'colorSpace' in three.js r152+. */
+    encoding?: TextureEncoding | undefined;
 }
 
 export class WebGLRenderTarget extends EventDispatcher {
     constructor(width?: number, height?: number, options?: WebGLRenderTargetOptions);
 
+    readonly isWebGLRenderTarget: true;
+
     width: number;
     height: number;
-    depth: number;
 
     scissor: Vector4;
     /**
@@ -47,7 +47,7 @@ export class WebGLRenderTarget extends EventDispatcher {
      */
     scissorTest: boolean;
     viewport: Vector4;
-    texture: Texture;
+    texture: Texture | Texture[];
 
     /**
      * @default true
@@ -69,49 +69,6 @@ export class WebGLRenderTarget extends EventDispatcher {
      * @default 0
      */
     samples: number;
-
-    readonly isWebGLRenderTarget: true;
-
-    /**
-     * @deprecated Use {@link Texture#wrapS texture.wrapS} instead.
-     */
-    wrapS: any;
-    /**
-     * @deprecated Use {@link Texture#wrapT texture.wrapT} instead.
-     */
-    wrapT: any;
-    /**
-     * @deprecated Use {@link Texture#magFilter texture.magFilter} instead.
-     */
-    magFilter: any;
-    /**
-     * @deprecated Use {@link Texture#minFilter texture.minFilter} instead.
-     */
-    minFilter: any;
-    /**
-     * @deprecated Use {@link Texture#anisotropy texture.anisotropy} instead.
-     */
-    anisotropy: any;
-    /**
-     * @deprecated Use {@link Texture#offset texture.offset} instead.
-     */
-    offset: any;
-    /**
-     * @deprecated Use {@link Texture#repeat texture.repeat} instead.
-     */
-    repeat: any;
-    /**
-     * @deprecated Use {@link Texture#format texture.format} instead.
-     */
-    format: any;
-    /**
-     * @deprecated Use {@link Texture#type texture.type} instead.
-     */
-    type: any;
-    /**
-     * @deprecated Use {@link Texture#generateMipmaps texture.generateMipmaps} instead.
-     */
-    generateMipmaps: any;
 
     setSize(width: number, height: number, depth?: number): void;
     clone(): this;
