@@ -40,6 +40,7 @@ export class WebGLRenderTarget<TTexture extends Texture | Texture[] = Texture> e
 
     width: number;
     height: number;
+    depth: number;
 
     scissor: Vector4;
     /**
