@@ -1,6 +1,6 @@
 # Update patch
 
--   `git apply changes.patch`
+-   `git apply --directory=examples-testing changes.patch`
 -   Make changes
 -   `yarn run type-check`
 -   `git diff > ../changes.patch`
@@ -12,7 +12,7 @@
 -   Delete all examples
 -   `node index.js`
 -   Commit changes
--   `git apply --reject changes.patch`
+-   `git apply --directory=examples-testing --reject changes.patch`
 -   Fix conflicts
 -   `yarn run type-check`
 -   `git diff > ../changes.patch`
