@@ -10,9 +10,9 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'yarn'
-            - run: yarn install
-            - run: yarn run test-all
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run test-all
     check-fomatting:
         runs-on: ubuntu-latest
         steps:
@@ -20,9 +20,9 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'yarn'
-            - run: yarn install
-            - run: yarn run prettier:check
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run prettier:check
     test-examples:
         runs-on: ubuntu-latest
         steps:
@@ -30,7 +30,7 @@ jobs:
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'yarn'
-            - run: yarn install
+                  cache: 'npm'
+            - run: npm ci
             - run: git apply changes.patch
             - run: npm run type-check
