@@ -12,6 +12,4 @@ export class WebGLMultipleRenderTargets extends WebGLRenderTarget<Texture[]> {
     constructor(width?: number, height?: number, count?: number, options?: WebGLRenderTargetOptions);
 
     readonly isWebGLMultipleRenderTargets: true;
-
-    texture: Texture[];
 }
