@@ -26,4 +26,10 @@ export class WebGLMultipleRenderTargets extends EventDispatcher {
     dispose(): void;
     // This is an available method, however it will break the code see https://github.com/mrdoob/three.js/issues/21930
     setTexture(texture: Texture): void;
+
+    /**
+     * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
+     * @default 0
+     */
+    samples: number;
 }

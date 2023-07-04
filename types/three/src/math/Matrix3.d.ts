@@ -71,6 +71,8 @@ export class Matrix3 implements Matrix {
         n33: number,
     );
 
+    readonly isMatrix3: true;
+
     /**
      * Array with matrix values.
      * @default [1, 0, 0, 0, 1, 0, 0, 0, 1]
