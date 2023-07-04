@@ -376,7 +376,7 @@ const files = {
         // 'physics_ammo_rope',
         // 'physics_ammo_terrain',
         // 'physics_ammo_volume',
-        // 'physics_rapier_instancing',
+        'physics_rapier_instancing',
     ],
     misc: [
         'misc_animation_groups',
