@@ -395,7 +395,7 @@ const files = {
         'misc_exporter_obj',
         // 'misc_exporter_ply',
         'misc_exporter_stl',
-        // 'misc_exporter_usdz',
+        'misc_exporter_usdz',
         'misc_lookat',
     ],
     css2d: ['css2d_label'],
