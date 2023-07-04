@@ -1384,6 +1384,43 @@ index 02ad9072..efb71b1d 100644
      save(new Blob([text], { type: 'text/plain' }), filename);
  }
  
+diff --git a/examples-testing/examples/misc_exporter_ply.ts b/examples-testing/examples/misc_exporter_ply.ts
+index b6a334dd..a0e6691a 100644
+--- a/examples-testing/examples/misc_exporter_ply.ts
++++ b/examples-testing/examples/misc_exporter_ply.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: PLYExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     exportASCII: exportASCII,
+@@ -142,16 +146,16 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
 diff --git a/examples-testing/examples/misc_exporter_stl.ts b/examples-testing/examples/misc_exporter_stl.ts
 index 673bad13..71e65414 100644
 --- a/examples-testing/examples/misc_exporter_stl.ts
