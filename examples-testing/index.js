@@ -409,7 +409,7 @@ const files = {
     ],
     svg: ['svg_lines', 'svg_sandbox'],
     tests: [
-        // 'webgl_furnace_test',
+        'webgl_furnace_test',
         // 'webgl_pmrem_test',
         'misc_uv_tests',
     ],
