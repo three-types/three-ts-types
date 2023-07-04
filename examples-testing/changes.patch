@@ -1339,6 +1339,60 @@ index ce1e6967..f8b4b868 100644
 +function saveArrayBuffer(buffer: BufferSource, filename: string) {
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
+diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
+index c9d94333..c57b22f0 100644
+--- a/examples-testing/examples/misc_exporter_gltf.ts
++++ b/examples-testing/examples/misc_exporter_gltf.ts
+@@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-function exportGLTF(input) {
++function exportGLTF(input: THREE.Object3D | THREE.Object3D[]) {
+     const gltfExporter = new GLTFExporter();
+ 
+     const options = {
+@@ -37,7 +37,7 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link); // Firefox workaround, see #6594
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+@@ -45,18 +45,25 @@ function save(blob, filename) {
+     // URL.revokeObjectURL( url ); breaks Firefox...
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+ 
+-let container;
+-
+-let camera, object, object2, material, geometry, scene1, scene2, renderer;
+-let gridHelper, sphere, model, coffeemat;
++let container: HTMLDivElement;
++
++let camera: THREE.PerspectiveCamera,
++    object: THREE.Object3D,
++    object2: THREE.Mesh,
++    material: THREE.MeshBasicMaterial | THREE.MeshStandardMaterial,
++    geometry: THREE.BufferGeometry,
++    scene1: THREE.Scene,
++    scene2: THREE.Scene,
++    renderer: THREE.WebGLRenderer;
++let gridHelper: THREE.GridHelper, sphere: THREE.Mesh, model: THREE.Group, coffeemat: THREE.Group;
+ 
+ const params = {
+     trs: false,
 diff --git a/examples-testing/examples/misc_exporter_obj.ts b/examples-testing/examples/misc_exporter_obj.ts
 index 02ad9072..efb71b1d 100644
 --- a/examples-testing/examples/misc_exporter_obj.ts
