@@ -408,11 +408,7 @@ const files = {
         'css3d_youtube',
     ],
     svg: ['svg_lines', 'svg_sandbox'],
-    tests: [
-        'webgl_furnace_test',
-        // 'webgl_pmrem_test',
-        'misc_uv_tests',
-    ],
+    tests: ['webgl_furnace_test', 'webgl_pmrem_test', 'misc_uv_tests'],
 };
 
 const re = /<script type="module">((.|\r|\n)+)<\/script>/;
