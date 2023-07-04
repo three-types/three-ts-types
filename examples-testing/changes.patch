@@ -1815,3 +1815,33 @@ index a819541..46230b4 100644
          });
  
          render();
+diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
+index c2a8058..c3fbbfc 100644
+--- a/examples-testing/examples/webgl_pmrem_test.ts
++++ b/examples-testing/examples/webgl_pmrem_test.ts
+@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, controls, renderer;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGLRenderer;
+ 
+ function init() {
+     const width = window.innerWidth;
+@@ -65,12 +65,13 @@ function init() {
+     const gui = new GUI();
+     gui.add({ enabled: true }, 'enabled')
+         .name('PMREM')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             directionalLight.intensity = value ? 0 : 1;
+ 
+             scene.traverse(function (child) {
+-                if (child.isMesh) {
+-                    child.material.envMapIntensity = 1 - directionalLight.intensity;
++                if ((child as THREE.Mesh).isMesh) {
++                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).envMapIntensity =
++                        1 - directionalLight.intensity;
+                 }
+             });
+ 
