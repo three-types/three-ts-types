@@ -1,0 +1,1652 @@
+diff --git a/examples-testing/examples/css2d_label.ts b/examples-testing/examples/css2d_label.ts
+index cf61d1e0..693b1e2b 100644
+--- a/examples-testing/examples/css2d_label.ts
++++ b/examples-testing/examples/css2d_label.ts
+@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ let gui;
+ 
+-let camera, scene, renderer, labelRenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, labelRenderer: CSS2DRenderer;
+ 
+ const layers = {
+     'Toggle Name': function () {
+@@ -28,7 +28,7 @@ const layers = {
+ const clock = new THREE.Clock();
+ const textureLoader = new THREE.TextureLoader();
+ 
+-let moon;
++let moon: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -63,7 +63,7 @@ function init() {
+         normalMap: textureLoader.load('textures/planets/earth_normal_2048.jpg'),
+         normalScale: new THREE.Vector2(0.85, 0.85),
+     });
+-    earthMaterial.map.colorSpace = THREE.SRGBColorSpace;
++    earthMaterial.map!.colorSpace = THREE.SRGBColorSpace;
+     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+     scene.add(earth);
+ 
+@@ -72,7 +72,7 @@ function init() {
+         shininess: 5,
+         map: textureLoader.load('textures/planets/moon_1024.jpg'),
+     });
+-    moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
++    moonMaterial.map!.colorSpace = THREE.SRGBColorSpace;
+     moon = new THREE.Mesh(moonGeometry, moonMaterial);
+     scene.add(moon);
+ 
+diff --git a/examples-testing/examples/css3d_molecules.ts b/examples-testing/examples/css3d_molecules.ts
+index 53847260..f08bb34a 100644
+--- a/examples-testing/examples/css3d_molecules.ts
++++ b/examples-testing/examples/css3d_molecules.ts
+@@ -5,11 +5,11 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
+ import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let controls;
+-let root;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
++let root: THREE.Object3D;
+ 
+-const objects = [];
++const objects: Array<CSS3DObject | CSS3DSprite> = [];
+ const tmpVec1 = new THREE.Vector3();
+ const tmpVec2 = new THREE.Vector3();
+ const tmpVec3 = new THREE.Vector3();
+@@ -49,7 +49,7 @@ const params = {
+ };
+ 
+ const loader = new PDBLoader();
+-const colorSpriteMap = {};
++const colorSpriteMap: { [element: string]: string | undefined } = {};
+ const baseSprite = document.createElement('img');
+ 
+ init();
+@@ -68,7 +68,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -96,7 +96,7 @@ function init() {
+     gui.open();
+ }
+ 
+-function changeVizType(value) {
++function changeVizType(value: number) {
+     if (value === 0) showAtoms();
+     else if (value === 1) showBonds();
+     else showAtomsBonds();
+@@ -148,7 +148,7 @@ function showAtomsBonds() {
+ 
+ //
+ 
+-function colorify(ctx, width, height, color) {
++function colorify(ctx: CanvasRenderingContext2D, width: number, height: number, color: THREE.Color) {
+     const r = color.r,
+         g = color.g,
+         b = color.b;
+@@ -165,7 +165,7 @@ function colorify(ctx, width, height, color) {
+     ctx.putImageData(imageData, 0, 0);
+ }
+ 
+-function imageToCanvas(image) {
++function imageToCanvas(image: HTMLImageElement) {
+     const width = image.width;
+     const height = image.height;
+ 
+@@ -174,7 +174,7 @@ function imageToCanvas(image) {
+     canvas.width = width;
+     canvas.height = height;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     context.drawImage(image, 0, 0, width, height);
+ 
+     return canvas;
+@@ -182,12 +182,12 @@ function imageToCanvas(image) {
+ 
+ //
+ 
+-function loadMolecule(model) {
++function loadMolecule(model: string) {
+     const url = 'models/pdb/' + model;
+ 
+     for (let i = 0; i < objects.length; i++) {
+         const object = objects[i];
+-        object.parent.remove(object);
++        object.parent!.remove(object);
+     }
+ 
+     objects.length = 0;
+@@ -198,7 +198,7 @@ function loadMolecule(model) {
+         const json = pdb.json;
+ 
+         geometryAtoms.computeBoundingBox();
+-        geometryAtoms.boundingBox.getCenter(offset).negate();
++        geometryAtoms.boundingBox!.getCenter(offset).negate();
+ 
+         geometryAtoms.translate(offset.x, offset.y, offset.z);
+         geometryBonds.translate(offset.x, offset.y, offset.z);
+@@ -218,7 +218,7 @@ function loadMolecule(model) {
+ 
+             if (!colorSpriteMap[element]) {
+                 const canvas = imageToCanvas(baseSprite);
+-                const context = canvas.getContext('2d');
++                const context = canvas.getContext('2d')!;
+ 
+                 colorify(context, canvas.width, canvas.height, color);
+ 
+@@ -227,7 +227,7 @@ function loadMolecule(model) {
+                 colorSpriteMap[element] = dataUrl;
+             }
+ 
+-            const colorSprite = colorSpriteMap[element];
++            const colorSprite = colorSpriteMap[element]!;
+ 
+             const atom = document.createElement('img');
+             atom.src = colorSprite;
+diff --git a/examples-testing/examples/css3d_orthographic.ts b/examples-testing/examples/css3d_orthographic.ts
+index 4aabbed0..5488635e 100644
+--- a/examples-testing/examples/css3d_orthographic.ts
++++ b/examples-testing/examples/css3d_orthographic.ts
+@@ -3,10 +3,11 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
++import { Controller } from 'lil-gui';
+ 
+-let camera, scene, renderer;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let scene2, renderer2;
++let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+ 
+ const frustumSize = 500;
+ 
+@@ -75,18 +76,18 @@ function init() {
+     renderer2 = new CSS3DRenderer();
+     renderer2.setSize(window.innerWidth, window.innerHeight);
+     renderer2.domElement.style.position = 'absolute';
+-    renderer2.domElement.style.top = 0;
++    renderer2.domElement.style.top = '0';
+     document.body.appendChild(renderer2.domElement);
+ 
+     const controls = new OrbitControls(camera, renderer2.domElement);
+     controls.minZoom = 0.5;
+     controls.maxZoom = 2;
+ 
+-    function createPlane(width, height, cssColor, pos, rot) {
++    function createPlane(width: number, height: number, cssColor: string, pos: THREE.Vector3, rot: THREE.Euler) {
+         const element = document.createElement('div');
+         element.style.width = width + 'px';
+         element.style.height = height + 'px';
+-        element.style.opacity = 0.75;
++        element.style.opacity = '0.75';
+         element.style.background = cssColor;
+ 
+         const object = new CSS3DObject(element);
+@@ -133,12 +134,12 @@ function createPanel() {
+ 
+     const settings = {
+         setViewOffset() {
+-            folder1.children[1].enable().setValue(window.innerWidth);
+-            folder1.children[2].enable().setValue(window.innerHeight);
+-            folder1.children[3].enable().setValue(0);
+-            folder1.children[4].enable().setValue(0);
+-            folder1.children[5].enable().setValue(window.innerWidth);
+-            folder1.children[6].enable().setValue(window.innerHeight);
++            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
++            (folder1.children[3] as Controller).enable().setValue(0);
++            (folder1.children[4] as Controller).enable().setValue(0);
++            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+         },
+         fullWidth: 0,
+         fullHeight: 0,
+@@ -147,12 +148,12 @@ function createPanel() {
+         width: 0,
+         height: 0,
+         clearViewOffset() {
+-            folder1.children[1].setValue(0).disable();
+-            folder1.children[2].setValue(0).disable();
+-            folder1.children[3].setValue(0).disable();
+-            folder1.children[4].setValue(0).disable();
+-            folder1.children[5].setValue(0).disable();
+-            folder1.children[6].setValue(0).disable();
++            (folder1.children[1] as Controller).setValue(0).disable();
++            (folder1.children[2] as Controller).setValue(0).disable();
++            (folder1.children[3] as Controller).setValue(0).disable();
++            (folder1.children[4] as Controller).setValue(0).disable();
++            (folder1.children[5] as Controller).setValue(0).disable();
++            (folder1.children[6] as Controller).setValue(0).disable();
+             camera.clearViewOffset();
+         },
+     };
+@@ -160,32 +161,46 @@ function createPanel() {
+     folder1.add(settings, 'setViewOffset');
+     folder1
+         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
+         .disable();
+     folder1
+         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetX', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ x: val }))
++        .onChange((val: number) => updateCameraViewOffset({ x: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetY', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ y: val }))
++        .onChange((val: number) => updateCameraViewOffset({ y: val }))
+         .disable();
+     folder1
+         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ width: val }))
++        .onChange((val: number) => updateCameraViewOffset({ width: val }))
+         .disable();
+     folder1
+         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ height: val }))
++        .onChange((val: number) => updateCameraViewOffset({ height: val }))
+         .disable();
+     folder1.add(settings, 'clearViewOffset');
+ }
+ 
+-function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
++function updateCameraViewOffset({
++    fullWidth,
++    fullHeight,
++    x,
++    y,
++    width,
++    height,
++}: {
++    fullWidth?: number;
++    fullHeight?: number;
++    x?: number;
++    y?: number;
++    width?: number;
++    height?: number;
++}) {
+     if (!camera.view) {
+         camera.setViewOffset(
+             fullWidth || window.innerWidth,
+diff --git a/examples-testing/examples/css3d_periodictable.ts b/examples-testing/examples/css3d_periodictable.ts
+index e3a33f79..516df464 100644
+--- a/examples-testing/examples/css3d_periodictable.ts
++++ b/examples-testing/examples/css3d_periodictable.ts
+@@ -597,11 +597,16 @@ const table = [
+     7,
+ ];
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+-const objects = [];
+-const targets = { table: [], sphere: [], helix: [], grid: [] };
++const objects: CSS3DObject[] = [];
++const targets: {
++    table: THREE.Object3D[];
++    sphere: THREE.Object3D[];
++    helix: THREE.Object3D[];
++    grid: THREE.Object3D[];
++} = { table: [], sphere: [], helix: [], grid: [] };
+ 
+ init();
+ animate();
+@@ -621,12 +626,12 @@ function init() {
+ 
+         const number = document.createElement('div');
+         number.className = 'number';
+-        number.textContent = i / 5 + 1;
++        number.textContent = `${i / 5 + 1}`;
+         element.appendChild(number);
+ 
+         const symbol = document.createElement('div');
+         symbol.className = 'symbol';
+-        symbol.textContent = table[i];
++        symbol.textContent = table[i] as string;
+         element.appendChild(symbol);
+ 
+         const details = document.createElement('div');
+@@ -645,8 +650,8 @@ function init() {
+         //
+ 
+         const object = new THREE.Object3D();
+-        object.position.x = table[i + 3] * 140 - 1330;
+-        object.position.y = -(table[i + 4] * 180) + 990;
++        object.position.x = (table[i + 3] as number) * 140 - 1330;
++        object.position.y = -((table[i + 4] as number) * 180) + 990;
+ 
+         targets.table.push(object);
+     }
+@@ -705,7 +710,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -714,22 +719,22 @@ function init() {
+     controls.maxDistance = 6000;
+     controls.addEventListener('change', render);
+ 
+-    const buttonTable = document.getElementById('table');
++    const buttonTable = document.getElementById('table')!;
+     buttonTable.addEventListener('click', function () {
+         transform(targets.table, 2000);
+     });
+ 
+-    const buttonSphere = document.getElementById('sphere');
++    const buttonSphere = document.getElementById('sphere')!;
+     buttonSphere.addEventListener('click', function () {
+         transform(targets.sphere, 2000);
+     });
+ 
+-    const buttonHelix = document.getElementById('helix');
++    const buttonHelix = document.getElementById('helix')!;
+     buttonHelix.addEventListener('click', function () {
+         transform(targets.helix, 2000);
+     });
+ 
+-    const buttonGrid = document.getElementById('grid');
++    const buttonGrid = document.getElementById('grid')!;
+     buttonGrid.addEventListener('click', function () {
+         transform(targets.grid, 2000);
+     });
+@@ -741,7 +746,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function transform(targets, duration) {
++function transform(targets: THREE.Object3D[], duration: number) {
+     TWEEN.removeAll();
+ 
+     for (let i = 0; i < objects.length; i++) {
+@@ -765,7 +770,7 @@ function transform(targets, duration) {
+             .start();
+     }
+ 
+-    new TWEEN.Tween(this)
++    new TWEEN.Tween({})
+         .to({}, duration * 2)
+         .onUpdate(render)
+         .start();
+diff --git a/examples-testing/examples/css3d_sandbox.ts b/examples-testing/examples/css3d_sandbox.ts
+index 1088b84b..b910c1f0 100644
+--- a/examples-testing/examples/css3d_sandbox.ts
++++ b/examples-testing/examples/css3d_sandbox.ts
+@@ -2,13 +2,13 @@ import * as THREE from 'three';
+ 
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
++import { Controller, GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let scene2, renderer2;
++let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+ 
+-let controls;
++let controls: TrackballControls;
+ 
+ init();
+ animate();
+@@ -35,7 +35,7 @@ function init() {
+         const element = document.createElement('div');
+         element.style.width = '100px';
+         element.style.height = '100px';
+-        element.style.opacity = i < 5 ? 0.5 : 1;
++        element.style.opacity = `${i < 5 ? 0.5 : 1}`;
+         element.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
+ 
+         const object = new CSS3DObject(element);
+@@ -67,7 +67,7 @@ function init() {
+     renderer2 = new CSS3DRenderer();
+     renderer2.setSize(window.innerWidth, window.innerHeight);
+     renderer2.domElement.style.position = 'absolute';
+-    renderer2.domElement.style.top = 0;
++    renderer2.domElement.style.top = '0';
+     document.body.appendChild(renderer2.domElement);
+ 
+     controls = new TrackballControls(camera, renderer2.domElement);
+@@ -101,12 +101,12 @@ function createPanel() {
+ 
+     const settings = {
+         setViewOffset() {
+-            folder1.children[1].enable().setValue(window.innerWidth);
+-            folder1.children[2].enable().setValue(window.innerHeight);
+-            folder1.children[3].enable().setValue(0);
+-            folder1.children[4].enable().setValue(0);
+-            folder1.children[5].enable().setValue(window.innerWidth);
+-            folder1.children[6].enable().setValue(window.innerHeight);
++            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
++            (folder1.children[3] as Controller).enable().setValue(0);
++            (folder1.children[4] as Controller).enable().setValue(0);
++            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+         },
+         fullWidth: 0,
+         fullHeight: 0,
+@@ -115,12 +115,12 @@ function createPanel() {
+         width: 0,
+         height: 0,
+         clearViewOffset() {
+-            folder1.children[1].setValue(0).disable();
+-            folder1.children[2].setValue(0).disable();
+-            folder1.children[3].setValue(0).disable();
+-            folder1.children[4].setValue(0).disable();
+-            folder1.children[5].setValue(0).disable();
+-            folder1.children[6].setValue(0).disable();
++            (folder1.children[1] as Controller).setValue(0).disable();
++            (folder1.children[2] as Controller).setValue(0).disable();
++            (folder1.children[3] as Controller).setValue(0).disable();
++            (folder1.children[4] as Controller).setValue(0).disable();
++            (folder1.children[5] as Controller).setValue(0).disable();
++            (folder1.children[6] as Controller).setValue(0).disable();
+             camera.clearViewOffset();
+         },
+     };
+@@ -128,32 +128,46 @@ function createPanel() {
+     folder1.add(settings, 'setViewOffset');
+     folder1
+         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
+         .disable();
+     folder1
+         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetX', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ x: val }))
++        .onChange((val: number) => updateCameraViewOffset({ x: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetY', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ y: val }))
++        .onChange((val: number) => updateCameraViewOffset({ y: val }))
+         .disable();
+     folder1
+         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ width: val }))
++        .onChange((val: number) => updateCameraViewOffset({ width: val }))
+         .disable();
+     folder1
+         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ height: val }))
++        .onChange((val: number) => updateCameraViewOffset({ height: val }))
+         .disable();
+     folder1.add(settings, 'clearViewOffset');
+ }
+ 
+-function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
++function updateCameraViewOffset({
++    fullWidth,
++    fullHeight,
++    x,
++    y,
++    width,
++    height,
++}: {
++    fullWidth?: number;
++    fullHeight?: number;
++    x?: number;
++    y?: number;
++    width?: number;
++    height?: number;
++}) {
+     if (!camera.view) {
+         camera.setViewOffset(
+             fullWidth || window.innerWidth,
+diff --git a/examples-testing/examples/css3d_sprites.ts b/examples-testing/examples/css3d_sprites.ts
+index dfe24e79..93f2c07b 100644
+--- a/examples-testing/examples/css3d_sprites.ts
++++ b/examples-testing/examples/css3d_sprites.ts
+@@ -4,12 +4,12 @@ import TWEEN from 'three/addons/libs/tween.module.js';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+ const particlesTotal = 512;
+-const positions = [];
+-const objects = [];
++const positions: number[] = [];
++const objects: CSS3DSprite[] = [];
+ let current = 0;
+ 
+ init();
+@@ -25,7 +25,7 @@ function init() {
+     const image = document.createElement('img');
+     image.addEventListener('load', function () {
+         for (let i = 0; i < particlesTotal; i++) {
+-            const object = new CSS3DSprite(image.cloneNode());
++            const object = new CSS3DSprite(image.cloneNode() as typeof image);
+             (object.position.x = Math.random() * 4000 - 2000),
+                 (object.position.y = Math.random() * 4000 - 2000),
+                 (object.position.z = Math.random() * 4000 - 2000);
+@@ -93,7 +93,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -131,7 +131,7 @@ function transition() {
+             .start();
+     }
+ 
+-    new TWEEN.Tween(this)
++    new TWEEN.Tween({})
+         .to({}, duration * 3)
+         .onComplete(transition)
+         .start();
+diff --git a/examples-testing/examples/css3d_youtube.ts b/examples-testing/examples/css3d_youtube.ts
+index 62652f87..3dcc2f12 100644
+--- a/examples-testing/examples/css3d_youtube.ts
++++ b/examples-testing/examples/css3d_youtube.ts
+@@ -3,10 +3,10 @@ import * as THREE from 'three';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+-function Element(id, x, y, z, ry) {
++function Element(id: string, x: number, y: number, z: number, ry: number) {
+     const div = document.createElement('div');
+     div.style.width = '480px';
+     div.style.height = '360px';
+@@ -30,7 +30,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
+     camera.position.set(500, 350, 750);
+@@ -42,10 +42,10 @@ function init() {
+     container.appendChild(renderer.domElement);
+ 
+     const group = new THREE.Group();
+-    group.add(new Element('SJOz3qjfQXU', 0, 0, 240, 0));
+-    group.add(new Element('Y2-xZ-1HE-Q', 240, 0, 0, Math.PI / 2));
+-    group.add(new Element('IrydklNpcFI', 0, 0, -240, Math.PI));
+-    group.add(new Element('9ubytEsCaS0', -240, 0, 0, -Math.PI / 2));
++    group.add(Element('SJOz3qjfQXU', 0, 0, 240, 0));
++    group.add(Element('Y2-xZ-1HE-Q', 240, 0, 0, Math.PI / 2));
++    group.add(Element('IrydklNpcFI', 0, 0, -240, Math.PI));
++    group.add(Element('9ubytEsCaS0', -240, 0, 0, -Math.PI / 2));
+     scene.add(group);
+ 
+     controls = new TrackballControls(camera, renderer.domElement);
+@@ -55,7 +55,7 @@ function init() {
+ 
+     // Block iframe events when dragging camera
+ 
+-    const blocker = document.getElementById('blocker');
++    const blocker = document.getElementById('blocker')!;
+     blocker.style.display = 'none';
+ 
+     controls.addEventListener('start', function () {
+diff --git a/examples-testing/examples/games_fps.ts b/examples-testing/examples/games_fps.ts
+index 49dd6f39..911a1493 100644
+--- a/examples-testing/examples/games_fps.ts
++++ b/examples-testing/examples/games_fps.ts
+@@ -39,7 +39,7 @@ directionalLight.shadow.radius = 4;
+ directionalLight.shadow.bias = -0.00006;
+ scene.add(directionalLight);
+ 
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+ const renderer = new THREE.WebGLRenderer({ antialias: true });
+ renderer.setPixelRatio(window.devicePixelRatio);
+@@ -50,9 +50,9 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
+ container.appendChild(renderer.domElement);
+ 
+ const stats = new Stats();
+-stats.domElement.style.position = 'absolute';
+-stats.domElement.style.top = '0px';
+-container.appendChild(stats.domElement);
++stats.dom.style.position = 'absolute';
++stats.dom.style.top = '0px';
++container.appendChild(stats.dom);
+ 
+ const GRAVITY = 30;
+ 
+@@ -64,7 +64,13 @@ const STEPS_PER_FRAME = 5;
+ const sphereGeometry = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 5);
+ const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xdede8d });
+ 
+-const spheres = [];
++interface Sphere {
++    mesh: THREE.Mesh;
++    collider: THREE.Sphere;
++    velocity: THREE.Vector3;
++}
++
++const spheres: Sphere[] = [];
+ let sphereIdx = 0;
+ 
+ for (let i = 0; i < NUM_SPHERES; i++) {
+@@ -91,7 +97,7 @@ const playerDirection = new THREE.Vector3();
+ let playerOnFloor = false;
+ let mouseTime = 0;
+ 
+-const keyStates = {};
++const keyStates: { [eventCode: string]: boolean | undefined } = {};
+ 
+ const vector1 = new THREE.Vector3();
+ const vector2 = new THREE.Vector3();
+@@ -164,7 +170,7 @@ function playerCollisions() {
+     }
+ }
+ 
+-function updatePlayer(deltaTime) {
++function updatePlayer(deltaTime: number) {
+     let damping = Math.exp(-4 * deltaTime) - 1;
+ 
+     if (!playerOnFloor) {
+@@ -184,7 +190,7 @@ function updatePlayer(deltaTime) {
+     camera.position.copy(playerCollider.end);
+ }
+ 
+-function playerSphereCollision(sphere) {
++function playerSphereCollision(sphere: Sphere) {
+     const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
+ 
+     const sphere_center = sphere.collider.center;
+@@ -239,7 +245,7 @@ function spheresCollisions() {
+     }
+ }
+ 
+-function updateSpheres(deltaTime) {
++function updateSpheres(deltaTime: number) {
+     spheres.forEach(sphere => {
+         sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
+ 
+@@ -282,7 +288,7 @@ function getSideVector() {
+     return playerDirection;
+ }
+ 
+-function controls(deltaTime) {
++function controls(deltaTime: number) {
+     // gives a bit of air control
+     const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
+ 
+@@ -317,12 +323,12 @@ loader.load('collision-world.glb', gltf => {
+     worldOctree.fromGraphNode(gltf.scene);
+ 
+     gltf.scene.traverse(child => {
+-        if (child.isMesh) {
++        if ((child as THREE.Mesh).isMesh) {
+             child.castShadow = true;
+             child.receiveShadow = true;
+ 
+-            if (child.material.map) {
+-                child.material.map.anisotropy = 4;
++            if (((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map) {
++                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map!.anisotropy = 4;
+             }
+         }
+     });
+@@ -332,7 +338,7 @@ loader.load('collision-world.glb', gltf => {
+     scene.add(helper);
+ 
+     const gui = new GUI({ width: 200 });
+-    gui.add({ debug: false }, 'debug').onChange(function (value) {
++    gui.add({ debug: false }, 'debug').onChange(function (value: boolean) {
+         helper.visible = value;
+     });
+ 
+diff --git a/examples-testing/examples/misc_animation_groups.ts b/examples-testing/examples/misc_animation_groups.ts
+index 19d263f4..f8d0bed3 100644
+--- a/examples-testing/examples/misc_animation_groups.ts
++++ b/examples-testing/examples/misc_animation_groups.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats, clock;
+-let scene, camera, renderer, mixer;
++let stats: Stats, clock: THREE.Clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/misc_animation_keys.ts b/examples-testing/examples/misc_animation_keys.ts
+index 4a808987..d2613d02 100644
+--- a/examples-testing/examples/misc_animation_keys.ts
++++ b/examples-testing/examples/misc_animation_keys.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats, clock;
+-let scene, camera, renderer, mixer;
++let stats: Stats, clock: THREE.Clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+@@ -25,7 +25,10 @@ function init() {
+     //
+ 
+     const geometry = new THREE.BoxGeometry(5, 5, 5);
+-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
++    const material = new THREE.MeshBasicMaterial({
++        color: 0xffffff,
++        transparent: true,
++    });
+     const mesh = new THREE.Mesh(geometry, material);
+     scene.add(mesh);
+ 
+diff --git a/examples-testing/examples/misc_boxselection.ts b/examples-testing/examples/misc_boxselection.ts
+index a78c71b3..44337ff5 100644
+--- a/examples-testing/examples/misc_boxselection.ts
++++ b/examples-testing/examples/misc_boxselection.ts
+@@ -5,73 +5,70 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { SelectionBox } from 'three/addons/interactive/SelectionBox.js';
+ import { SelectionHelper } from 'three/addons/interactive/SelectionHelper.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-init();
+-animate();
++container = document.createElement('div');
++document.body.appendChild(container);
+ 
+-function init() {
+-    container = document.createElement('div');
+-    document.body.appendChild(container);
++camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
++camera.position.z = 1000;
+ 
+-    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
+-    camera.position.z = 1000;
++scene = new THREE.Scene();
++scene.background = new THREE.Color(0xf0f0f0);
+ 
+-    scene = new THREE.Scene();
+-    scene.background = new THREE.Color(0xf0f0f0);
++scene.add(new THREE.AmbientLight(0x505050));
+ 
+-    scene.add(new THREE.AmbientLight(0x505050));
++const light = new THREE.SpotLight(0xffffff, 1.5);
++light.position.set(0, 500, 2000);
++light.angle = Math.PI / 9;
+ 
+-    const light = new THREE.SpotLight(0xffffff, 1.5);
+-    light.position.set(0, 500, 2000);
+-    light.angle = Math.PI / 9;
++light.castShadow = true;
++light.shadow.camera.near = 1000;
++light.shadow.camera.far = 4000;
++light.shadow.mapSize.width = 1024;
++light.shadow.mapSize.height = 1024;
+ 
+-    light.castShadow = true;
+-    light.shadow.camera.near = 1000;
+-    light.shadow.camera.far = 4000;
+-    light.shadow.mapSize.width = 1024;
+-    light.shadow.mapSize.height = 1024;
++scene.add(light);
+ 
+-    scene.add(light);
++const geometry = new THREE.BoxGeometry(20, 20, 20);
+ 
+-    const geometry = new THREE.BoxGeometry(20, 20, 20);
++for (let i = 0; i < 200; i++) {
++    const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
+ 
+-    for (let i = 0; i < 200; i++) {
+-        const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
++    object.position.x = Math.random() * 1600 - 800;
++    object.position.y = Math.random() * 900 - 450;
++    object.position.z = Math.random() * 900 - 500;
+ 
+-        object.position.x = Math.random() * 1600 - 800;
+-        object.position.y = Math.random() * 900 - 450;
+-        object.position.z = Math.random() * 900 - 500;
++    object.rotation.x = Math.random() * 2 * Math.PI;
++    object.rotation.y = Math.random() * 2 * Math.PI;
++    object.rotation.z = Math.random() * 2 * Math.PI;
+ 
+-        object.rotation.x = Math.random() * 2 * Math.PI;
+-        object.rotation.y = Math.random() * 2 * Math.PI;
+-        object.rotation.z = Math.random() * 2 * Math.PI;
++    object.scale.x = Math.random() * 2 + 1;
++    object.scale.y = Math.random() * 2 + 1;
++    object.scale.z = Math.random() * 2 + 1;
+ 
+-        object.scale.x = Math.random() * 2 + 1;
+-        object.scale.y = Math.random() * 2 + 1;
+-        object.scale.z = Math.random() * 2 + 1;
++    object.castShadow = true;
++    object.receiveShadow = true;
+ 
+-        object.castShadow = true;
+-        object.receiveShadow = true;
++    scene.add(object);
++}
+ 
+-        scene.add(object);
+-    }
++renderer = new THREE.WebGLRenderer({ antialias: true });
++renderer.setPixelRatio(window.devicePixelRatio);
++renderer.setSize(window.innerWidth, window.innerHeight);
+ 
+-    renderer = new THREE.WebGLRenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
++renderer.shadowMap.enabled = true;
++renderer.shadowMap.type = THREE.PCFShadowMap;
+ 
+-    renderer.shadowMap.enabled = true;
+-    renderer.shadowMap.type = THREE.PCFShadowMap;
++container.appendChild(renderer.domElement);
+ 
+-    container.appendChild(renderer.domElement);
++stats = new Stats();
++container.appendChild(stats.dom);
+ 
+-    stats = new Stats();
+-    container.appendChild(stats.dom);
++window.addEventListener('resize', onWindowResize);
+ 
+-    window.addEventListener('resize', onWindowResize);
+-}
++animate();
+ 
+ function onWindowResize() {
+     camera.aspect = window.innerWidth / window.innerHeight;
+@@ -98,7 +95,7 @@ const helper = new SelectionHelper(renderer, 'selectBox');
+ 
+ document.addEventListener('pointerdown', function (event) {
+     for (const item of selectionBox.collection) {
+-        item.material.emissive.set(0x000000);
++        (item.material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+     }
+ 
+     selectionBox.startPoint.set(
+@@ -111,7 +108,7 @@ document.addEventListener('pointerdown', function (event) {
+ document.addEventListener('pointermove', function (event) {
+     if (helper.isDown) {
+         for (let i = 0; i < selectionBox.collection.length; i++) {
+-            selectionBox.collection[i].material.emissive.set(0x000000);
++            (selectionBox.collection[i].material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+         }
+ 
+         selectionBox.endPoint.set(
+@@ -123,7 +120,7 @@ document.addEventListener('pointermove', function (event) {
+         const allSelected = selectionBox.select();
+ 
+         for (let i = 0; i < allSelected.length; i++) {
+-            allSelected[i].material.emissive.set(0xffffff);
++            (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
+         }
+     }
+ });
+@@ -138,6 +135,6 @@ document.addEventListener('pointerup', function (event) {
+     const allSelected = selectionBox.select();
+ 
+     for (let i = 0; i < allSelected.length; i++) {
+-        allSelected[i].material.emissive.set(0xffffff);
++        (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
+     }
+ });
+diff --git a/examples-testing/examples/misc_controls_arcball.ts b/examples-testing/examples/misc_controls_arcball.ts
+index f7ea233d..64a2143a 100644
+--- a/examples-testing/examples/misc_controls_arcball.ts
++++ b/examples-testing/examples/misc_controls_arcball.ts
+@@ -12,8 +12,12 @@ const cameraType = { type: 'Perspective' };
+ 
+ const perspectiveDistance = 2.5;
+ const orthographicDistance = 120;
+-let camera, controls, scene, renderer, gui;
+-let folderOptions, folderAnimations;
++let camera: THREE.OrthographicCamera | THREE.PerspectiveCamera,
++    controls: ArcballControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    gui: GUI;
++let folderOptions: GUI, folderAnimations: GUI;
+ 
+ const arcballGui = {
+     gizmoVisible: true,
+@@ -99,8 +103,8 @@ function init() {
+         material.normalMap.wrapS = THREE.RepeatWrapping;
+ 
+         group.traverse(function (child) {
+-            if (child.isMesh) {
+-                child.material = material;
++            if ((child as THREE.Mesh).isMesh) {
++                (child as THREE.Mesh).material = material;
+             }
+         });
+ 
+@@ -166,12 +170,12 @@ function onWindowResize() {
+ 
+         const halfW = perspectiveDistance * Math.tan(halfFovH);
+         const halfH = perspectiveDistance * Math.tan(halfFovV);
+-        camera.left = -halfW;
+-        camera.right = halfW;
+-        camera.top = halfH;
+-        camera.bottom = -halfH;
++        (camera as THREE.OrthographicCamera).left = -halfW;
++        (camera as THREE.OrthographicCamera).right = halfW;
++        (camera as THREE.OrthographicCamera).top = halfH;
++        (camera as THREE.OrthographicCamera).bottom = -halfH;
+     } else if (camera.type == 'PerspectiveCamera') {
+-        camera.aspect = window.innerWidth / window.innerHeight;
++        (camera as THREE.PerspectiveCamera).aspect = window.innerWidth / window.innerHeight;
+     }
+ 
+     camera.updateProjectionMatrix();
+@@ -185,7 +189,7 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     if (event.key === 'c') {
+         if (event.ctrlKey || event.metaKey) {
+             controls.copyState();
+@@ -197,7 +201,7 @@ function onKeyDown(event) {
+     }
+ }
+ 
+-function setCamera(type) {
++function setCamera(type: string) {
+     if (type == 'Orthographic') {
+         camera = makeOrthographicCamera();
+         camera.position.set(0, 0, orthographicDistance);
+diff --git a/examples-testing/examples/misc_controls_drag.ts b/examples-testing/examples/misc_controls_drag.ts
+index da4bd243..ec63df35 100644
+--- a/examples-testing/examples/misc_controls_drag.ts
++++ b/examples-testing/examples/misc_controls_drag.ts
+@@ -2,12 +2,12 @@ import * as THREE from 'three';
+ 
+ import { DragControls } from 'three/addons/controls/DragControls.js';
+ 
+-let container;
+-let camera, scene, renderer;
+-let controls, group;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controls: DragControls, group: THREE.Group;
+ let enableSelection = false;
+ 
+-const objects = [];
++const objects: THREE.Object3D[] = [];
+ 
+ const mouse = new THREE.Vector2(),
+     raycaster = new THREE.Raycaster();
+@@ -98,7 +98,7 @@ function onWindowResize() {
+     render();
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     enableSelection = event.keyCode === 16 ? true : false;
+ }
+ 
+@@ -106,7 +106,7 @@ function onKeyUp() {
+     enableSelection = false;
+ }
+ 
+-function onClick(event) {
++function onClick(event: MouseEvent) {
+     event.preventDefault();
+ 
+     if (enableSelection === true) {
+@@ -124,10 +124,10 @@ function onClick(event) {
+             const object = intersections[0].object;
+ 
+             if (group.children.includes(object) === true) {
+-                object.material.emissive.set(0x000000);
++                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+                 scene.attach(object);
+             } else {
+-                object.material.emissive.set(0xaaaaaa);
++                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0xaaaaaa);
+                 group.attach(object);
+             }
+ 
+diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
+index 2dd77ec7..7c184f44 100644
+--- a/examples-testing/examples/misc_controls_fly.ts
++++ b/examples-testing/examples/misc_controls_fly.ts
+@@ -20,11 +20,15 @@ const MARGIN = 0;
+ let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
+ let SCREEN_WIDTH = window.innerWidth;
+ 
+-let camera, controls, scene, renderer, stats;
+-let geometry, meshPlanet, meshClouds, meshMoon;
+-let dirLight;
++let camera: THREE.PerspectiveCamera,
++    controls: FlyControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats;
++let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
++let dirLight: THREE.DirectionalLight;
+ 
+-let composer;
++let composer: EffectComposer;
+ 
+ const textureLoader = new THREE.TextureLoader();
+ 
+@@ -57,7 +61,7 @@ function init() {
+         // y scale is negated to compensate for normal map handedness.
+         normalScale: new THREE.Vector2(0.85, -0.85),
+     });
+-    materialNormalMap.map.colorSpace = THREE.SRGBColorSpace;
++    materialNormalMap.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     // planet
+ 
+@@ -74,7 +78,7 @@ function init() {
+         map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
+         transparent: true,
+     });
+-    materialClouds.map.colorSpace = THREE.SRGBColorSpace;
++    materialClouds.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     meshClouds = new THREE.Mesh(geometry, materialClouds);
+     meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
+@@ -86,7 +90,7 @@ function init() {
+     const materialMoon = new THREE.MeshPhongMaterial({
+         map: textureLoader.load('textures/planets/moon_1024.jpg'),
+     });
+-    materialMoon.map.colorSpace = THREE.SRGBColorSpace;
++    materialMoon.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     meshMoon = new THREE.Mesh(geometry, materialMoon);
+     meshMoon.position.set(radius * 5, 0, 0);
+diff --git a/examples-testing/examples/misc_controls_map.ts b/examples-testing/examples/misc_controls_map.ts
+index 35e03d2c..698e57ab 100644
+--- a/examples-testing/examples/misc_controls_map.ts
++++ b/examples-testing/examples/misc_controls_map.ts
+@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { MapControls } from 'three/addons/controls/MapControls.js';
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: MapControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ //render(); // remove when using next line for animation loop (requestAnimationFrame)
+@@ -43,7 +43,10 @@ function init() {
+ 
+     const geometry = new THREE.BoxGeometry(1, 1, 1);
+     geometry.translate(0, 0.5, 0);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xeeeeee, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xeeeeee,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/misc_controls_orbit.ts b/examples-testing/examples/misc_controls_orbit.ts
+index 28bc3c01..a13dc532 100644
+--- a/examples-testing/examples/misc_controls_orbit.ts
++++ b/examples-testing/examples/misc_controls_orbit.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ //render(); // remove when using next line for animation loop (requestAnimationFrame)
+@@ -41,7 +41,10 @@ function init() {
+     // world
+ 
+     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xffffff,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/misc_controls_pointerlock.ts b/examples-testing/examples/misc_controls_pointerlock.ts
+index d29ffaff..7859eadb 100644
+--- a/examples-testing/examples/misc_controls_pointerlock.ts
++++ b/examples-testing/examples/misc_controls_pointerlock.ts
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
+ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: PointerLockControls;
+ 
+-const objects = [];
++const objects: THREE.Mesh[] = [];
+ 
+-let raycaster;
++let raycaster: THREE.Raycaster;
+ 
+ let moveForward = false;
+ let moveBackward = false;
+@@ -37,8 +37,8 @@ function init() {
+ 
+     controls = new PointerLockControls(camera, document.body);
+ 
+-    const blocker = document.getElementById('blocker');
+-    const instructions = document.getElementById('instructions');
++    const blocker = document.getElementById('blocker')!;
++    const instructions = document.getElementById('instructions')!;
+ 
+     instructions.addEventListener('click', function () {
+         controls.lock();
+@@ -56,7 +56,7 @@ function init() {
+ 
+     scene.add(controls.getObject());
+ 
+-    const onKeyDown = function (event) {
++    const onKeyDown = function (event: KeyboardEvent) {
+         switch (event.code) {
+             case 'ArrowUp':
+             case 'KeyW':
+@@ -85,7 +85,7 @@ function init() {
+         }
+     };
+ 
+-    const onKeyUp = function (event) {
++    const onKeyUp = function (event: KeyboardEvent) {
+         switch (event.code) {
+             case 'ArrowUp':
+             case 'KeyW':
+@@ -116,7 +116,7 @@ function init() {
+ 
+     // floor
+ 
+-    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
++    let floorGeometry: THREE.BufferGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
+     floorGeometry.rotateX(-Math.PI / 2);
+ 
+     // vertex displacement
+@@ -165,7 +165,11 @@ function init() {
+     boxGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsBox, 3));
+ 
+     for (let i = 0; i < 500; i++) {
+-        const boxMaterial = new THREE.MeshPhongMaterial({ specular: 0xffffff, flatShading: true, vertexColors: true });
++        const boxMaterial = new THREE.MeshPhongMaterial({
++            specular: 0xffffff,
++            flatShading: true,
++            vertexColors: true,
++        });
+         boxMaterial.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace);
+ 
+         const box = new THREE.Mesh(boxGeometry, boxMaterial);
+diff --git a/examples-testing/examples/misc_controls_trackball.ts b/examples-testing/examples/misc_controls_trackball.ts
+index 19c42c6a..1b7f21ad 100644
+--- a/examples-testing/examples/misc_controls_trackball.ts
++++ b/examples-testing/examples/misc_controls_trackball.ts
+@@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ 
+-let perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
++let perspectiveCamera: THREE.PerspectiveCamera,
++    orthographicCamera: THREE.OrthographicCamera,
++    controls: TrackballControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats;
+ 
+ const params = {
+     orthographicCamera: false,
+@@ -39,7 +44,10 @@ function init() {
+     scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+ 
+     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xffffff,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+@@ -79,7 +87,7 @@ function init() {
+     const gui = new GUI();
+     gui.add(params, 'orthographicCamera')
+         .name('use orthographic')
+-        .onChange(function (value) {
++        .onChange(function (value: boolean) {
+             controls.dispose();
+ 
+             createControls(value ? orthographicCamera : perspectiveCamera);
+@@ -92,7 +100,7 @@ function init() {
+     createControls(perspectiveCamera);
+ }
+ 
+-function createControls(camera) {
++function createControls(camera: THREE.Camera) {
+     controls = new TrackballControls(camera, renderer.domElement);
+ 
+     controls.rotateSpeed = 1.0;
+diff --git a/examples-testing/examples/misc_controls_transform.ts b/examples-testing/examples/misc_controls_transform.ts
+index aa4de6f3..7c08981b 100644
+--- a/examples-testing/examples/misc_controls_transform.ts
++++ b/examples-testing/examples/misc_controls_transform.ts
+@@ -3,8 +3,8 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { TransformControls } from 'three/addons/controls/TransformControls.js';
+ 
+-let cameraPersp, cameraOrtho, currentCamera;
+-let scene, renderer, control, orbit;
++let cameraPersp: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera, currentCamera: THREE.Camera;
++let scene: THREE.Scene, renderer: THREE.WebGLRenderer, control: TransformControls, orbit: OrbitControls;
+ 
+ init();
+ render();
+@@ -36,7 +36,10 @@ function init() {
+     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+ 
+     const geometry = new THREE.BoxGeometry(200, 200, 200);
+-    const material = new THREE.MeshLambertMaterial({ map: texture, transparent: true });
++    const material = new THREE.MeshLambertMaterial({
++        map: texture,
++        transparent: true,
++    });
+ 
+     orbit = new OrbitControls(currentCamera, renderer.domElement);
+     orbit.update();
+@@ -84,7 +87,9 @@ function init() {
+             case 67: // C
+                 const position = currentCamera.position.clone();
+ 
+-                currentCamera = currentCamera.isPerspectiveCamera ? cameraOrtho : cameraPersp;
++                currentCamera = (currentCamera as THREE.PerspectiveCamera).isPerspectiveCamera
++                    ? cameraOrtho
++                    : cameraPersp;
+                 currentCamera.position.copy(position);
+ 
+                 orbit.object = currentCamera;
+diff --git a/examples-testing/examples/misc_exporter_draco.ts b/examples-testing/examples/misc_exporter_draco.ts
+index ce1e6967..f8b4b868 100644
+--- a/examples-testing/examples/misc_exporter_draco.ts
++++ b/examples-testing/examples/misc_exporter_draco.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { DRACOExporter } from 'three/addons/exporters/DRACOExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: DRACOExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     export: exportFile,
+@@ -109,12 +113,12 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+diff --git a/examples-testing/examples/misc_exporter_obj.ts b/examples-testing/examples/misc_exporter_obj.ts
+index 02ad9072..efb71b1d 100644
+--- a/examples-testing/examples/misc_exporter_obj.ts
++++ b/examples-testing/examples/misc_exporter_obj.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ const params = {
+     addTriangle: addTriangle,
+@@ -66,12 +66,12 @@ function exportToObj() {
+     saveString(result, 'object.obj');
+ }
+ 
+-function addGeometry(type) {
++function addGeometry(type: number) {
+     for (let i = 0; i < scene.children.length; i++) {
+         const child = scene.children[i];
+ 
+-        if (child.isMesh || child.isPoints) {
+-            child.geometry.dispose();
++        if ((child as THREE.Mesh).isMesh || (child as THREE.Points).isPoints) {
++            (child as THREE.Mesh | THREE.Points).geometry.dispose();
+             scene.remove(child);
+             i--;
+         }
+@@ -156,13 +156,13 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+diff --git a/examples-testing/examples/misc_exporter_stl.ts b/examples-testing/examples/misc_exporter_stl.ts
+index 673bad13..71e65414 100644
+--- a/examples-testing/examples/misc_exporter_stl.ts
++++ b/examples-testing/examples/misc_exporter_stl.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: STLExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     exportASCII: exportASCII,
+@@ -115,16 +119,16 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
+index 9117411b..e6c6e854 100644
+--- a/examples-testing/examples/misc_exporter_usdz.ts
++++ b/examples-testing/examples/misc_exporter_usdz.ts
+@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+@@ -45,7 +45,7 @@ function init() {
+         const arraybuffer = await exporter.parse(gltf.scene);
+         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
+ 
+-        const link = document.getElementById('link');
++        const link = document.getElementById('link') as HTMLAnchorElement;
+         link.href = URL.createObjectURL(blob);
+     });
+ 
+@@ -64,7 +64,7 @@ function createSpotShadowMesh() {
+     canvas.width = 128;
+     canvas.height = 128;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createRadialGradient(
+         canvas.width / 2,
+         canvas.height / 2,
+diff --git a/examples-testing/examples/misc_lookat.ts b/examples-testing/examples/misc_lookat.ts
+index f6241b9e..93e83400 100644
+--- a/examples-testing/examples/misc_lookat.ts
++++ b/examples-testing/examples/misc_lookat.ts
+@@ -2,9 +2,9 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+-let sphere;
++let sphere: THREE.Mesh;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -64,7 +64,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) * 10;
+     mouseY = (event.clientY - windowHalfY) * 10;
+ }
+diff --git a/examples-testing/examples/misc_uv_tests.ts b/examples-testing/examples/misc_uv_tests.ts
+index 4f782d45..0759cfca 100644
+--- a/examples-testing/examples/misc_uv_tests.ts
++++ b/examples-testing/examples/misc_uv_tests.ts
+@@ -7,7 +7,7 @@ import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
+  * as well as allow a new user to visualize what UVs are about.
+  */
+ 
+-function test(name, geometry) {
++function test(name: string, geometry: THREE.BufferGeometry) {
+     const d = document.createElement('div');
+ 
+     d.innerHTML = '<h3>' + name + '</h3>';
+diff --git a/examples-testing/examples/svg_lines.ts b/examples-testing/examples/svg_lines.ts
+index 99b74c40..65aaf28d 100644
+--- a/examples-testing/examples/svg_lines.ts
++++ b/examples-testing/examples/svg_lines.ts
+@@ -4,7 +4,7 @@ import { SVGRenderer } from 'three/addons/renderers/SVGRenderer.js';
+ 
+ THREE.ColorManagement.enabled = false;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/svg_sandbox.ts b/examples-testing/examples/svg_sandbox.ts
+index e6be8386..faea9a7a 100644
+--- a/examples-testing/examples/svg_sandbox.ts
++++ b/examples-testing/examples/svg_sandbox.ts
+@@ -6,9 +6,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
+ 
+ THREE.ColorManagement.enabled = false;
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer, stats: Stats;
+ 
+-let group;
++let group: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -33,9 +33,13 @@ function init() {
+ 
+     const boxGeometry = new THREE.BoxGeometry(100, 100, 100);
+ 
+-    let mesh = new THREE.Mesh(
++    let mesh: THREE.Mesh = new THREE.Mesh(
+         boxGeometry,
+-        new THREE.MeshBasicMaterial({ color: 0x0000ff, opacity: 0.5, transparent: true }),
++        new THREE.MeshBasicMaterial({
++            color: 0x0000ff,
++            opacity: 0.5,
++            transparent: true,
++        }),
+     );
+     mesh.position.x = 500;
+     mesh.rotation.x = Math.random();
+@@ -55,7 +59,10 @@ function init() {
+ 
+     mesh = new THREE.Mesh(
+         new THREE.PlaneGeometry(100, 100),
+-        new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide }),
++        new THREE.MeshBasicMaterial({
++            color: Math.random() * 0xffffff,
++            side: THREE.DoubleSide,
++        }),
+     );
+     mesh.position.y = -500;
+     mesh.scale.x = mesh.scale.y = mesh.scale.z = 2;
+@@ -75,7 +82,10 @@ function init() {
+     // POLYFIELD
+ 
+     const geometry = new THREE.BufferGeometry();
+-    const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
++    const material = new THREE.MeshBasicMaterial({
++        vertexColors: true,
++        side: THREE.DoubleSide,
++    });
+ 
+     const v = new THREE.Vector3();
+     const v0 = new THREE.Vector3();
+@@ -122,7 +132,9 @@ function init() {
+     // SPRITES
+ 
+     for (let i = 0; i < 50; i++) {
+-        const material = new THREE.SpriteMaterial({ color: Math.random() * 0xffffff });
++        const material = new THREE.SpriteMaterial({
++            color: Math.random() * 0xffffff,
++        });
+         const sprite = new THREE.Sprite(material);
+         sprite.position.x = Math.random() * 1000 - 500;
+         sprite.position.y = Math.random() * 1000 - 500;
+@@ -139,7 +151,7 @@ function init() {
+     node.setAttribute('r', '40');
+ 
+     for (let i = 0; i < 50; i++) {
+-        const object = new SVGObject(node.cloneNode());
++        const object = new SVGObject(node.cloneNode() as SVGCircleElement);
+         object.position.x = Math.random() * 1000 - 500;
+         object.position.y = Math.random() * 1000 - 500;
+         object.position.z = Math.random() * 1000 - 500;
+@@ -152,7 +164,7 @@ function init() {
+     fileLoader.load('models/svg/hexagon.svg', function (svg) {
+         const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+         const parser = new DOMParser();
+-        const doc = parser.parseFromString(svg, 'image/svg+xml');
++        const doc = parser.parseFromString(svg as string, 'image/svg+xml');
+ 
+         node.appendChild(doc.documentElement);
+ 
+diff --git a/examples-testing/examples/webaudio_orientation.ts b/examples-testing/examples/webaudio_orientation.ts
+index 8a74c418..7258ed10 100644
+--- a/examples-testing/examples/webaudio_orientation.ts
++++ b/examples-testing/examples/webaudio_orientation.ts
+@@ -4,16 +4,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let scene, camera, renderer;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -65,7 +65,7 @@ function init() {
+     const listener = new THREE.AudioListener();
+     camera.add(listener);
+ 
+-    const audioElement = document.getElementById('music');
++    const audioElement = document.getElementById('music') as HTMLAudioElement;
+     audioElement.play();
+ 
+     const positionalAudio = new THREE.PositionalAudio(listener);
+@@ -85,10 +85,10 @@ function init() {
+         boomBox.scale.set(20, 20, 20);
+ 
+         boomBox.traverse(function (object) {
+-            if (object.isMesh) {
+-                object.material.envMap = reflectionCube;
+-                object.geometry.rotateY(-Math.PI);
+-                object.castShadow = true;
++            if ((object as THREE.Mesh).isMesh) {
++                ((object as THREE.Mesh).material as THREE.MeshStandardMaterial).envMap = reflectionCube;
++                (object as THREE.Mesh).geometry.rotateY(-Math.PI);
++                (object as THREE.Mesh).castShadow = true;
+             }
+         });
+ 
+@@ -100,7 +100,11 @@ function init() {
+     // sound is damped behind this wall
+ 
+     const wallGeometry = new THREE.BoxGeometry(2, 1, 0.1);
+-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
++    const wallMaterial = new THREE.MeshBasicMaterial({
++        color: 0xff0000,
++        transparent: true,
++        opacity: 0.5,
++    });
+ 
+     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+     wall.position.set(0, 0.5, -0.5);
