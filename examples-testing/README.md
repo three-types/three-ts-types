@@ -1,5 +1,7 @@
 # Update patch
 
+-   `npm run create-examples`
+-   Commit changes
 -   `git apply changes.patch`
 -   Make changes
 -   `yarn run type-check`
@@ -9,8 +11,7 @@
 
 # Update sources
 
--   Delete all examples
--   `node index.js`
+-   `npm run create-examples`
 -   Commit changes
 -   `git apply --reject changes.patch`
 -   Fix conflicts
