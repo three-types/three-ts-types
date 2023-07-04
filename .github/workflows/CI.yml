@@ -32,6 +32,8 @@ jobs:
                   node-version: 'lts/*'
                   cache: 'npm'
             - run: npm ci
+            - run: npm run create-examples
+              working-directory: examples-testing
             - run: git apply changes.patch
               working-directory: examples-testing
             - run: npm run type-check
