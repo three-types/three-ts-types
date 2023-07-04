@@ -25,11 +25,11 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.rotation.order = "YXZ";
 
-const fillLight1 = new THREE.HemisphereLight(0x8dc1de, 0x00668d, 1.5);
+const fillLight1 = new THREE.HemisphereLight(0x8dc1de, 0x00668d, 0.5);
 fillLight1.position.set(2, 1, 1);
 scene.add(fillLight1);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 2.5);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(-5, 25, -1);
 directionalLight.castShadow = true;
 directionalLight.shadow.camera.near = 0.01;
@@ -52,7 +52,6 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.VSMShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.useLegacyLights = false;
 container.appendChild(renderer.domElement);
 
 const stats = new Stats();

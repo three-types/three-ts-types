@@ -10,10 +10,9 @@ init();
 render();
 
 function init() {
-  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.useLegacyLights = false;
   document.body.appendChild(renderer.domElement);
 
   const aspect = window.innerWidth / window.innerHeight;
@@ -29,15 +28,13 @@ function init() {
   );
   currentCamera = cameraPersp;
 
-  currentCamera.position.set(5, 2.5, 5);
+  currentCamera.position.set(1000, 500, 1000);
+  currentCamera.lookAt(0, 200, 0);
 
   scene = new THREE.Scene();
-  scene.add(new THREE.GridHelper(5, 10, 0x888888, 0x444444));
+  scene.add(new THREE.GridHelper(1000, 10, 0x888888, 0x444444));
 
-  const ambientLight = new THREE.AmbientLight(0xffffff);
-  scene.add(ambientLight);
-
-  const light = new THREE.DirectionalLight(0xffffff, 4);
+  const light = new THREE.DirectionalLight(0xffffff, 2);
   light.position.set(1, 1, 1);
   scene.add(light);
 
@@ -45,8 +42,11 @@ function init() {
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
-  const geometry = new THREE.BoxGeometry();
-  const material = new THREE.MeshLambertMaterial({ map: texture });
+  const geometry = new THREE.BoxGeometry(200, 200, 200);
+  const material = new THREE.MeshLambertMaterial({
+    map: texture,
+    transparent: true,
+  });
 
   orbit = new OrbitControls(currentCamera, renderer.domElement);
   orbit.update();
