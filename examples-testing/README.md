@@ -16,6 +16,6 @@
 -   Fix conflicts
 -   `yarn run type-check`
 -   `git diff > ../changes.patch`
--   Reset changes
+-   Reset example changes
 -   Move patch file
 -   Commit changes

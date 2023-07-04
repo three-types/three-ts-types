@@ -35,11 +35,11 @@ function init() {
 
   //
 
-  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 3);
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0x8d8d8d);
   hemiLight.position.set(0, 20, 0);
   scene.add(hemiLight);
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 3);
+  const dirLight = new THREE.DirectionalLight(0xffffff);
   dirLight.position.set(5, 5, 0);
   dirLight.castShadow = true;
   dirLight.shadow.camera.top = 1;
@@ -118,10 +118,9 @@ function init() {
   //
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
   renderer.shadowMap.enabled = true;
-  renderer.useLegacyLights = false;
   container.appendChild(renderer.domElement);
 
   //

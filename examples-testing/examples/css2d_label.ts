@@ -51,7 +51,7 @@ function init() {
 
   scene = new THREE.Scene();
 
-  const dirLight = new THREE.DirectionalLight(0xffffff, 3);
+  const dirLight = new THREE.DirectionalLight(0xffffff, 1);
   dirLight.position.set(0, 0, 1);
   dirLight.layers.enableAll();
   scene.add(dirLight);
@@ -138,7 +138,6 @@ function init() {
   renderer = new THREE.WebGLRenderer();
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.useLegacyLights = false;
   document.body.appendChild(renderer.domElement);
 
   labelRenderer = new CSS2DRenderer();
