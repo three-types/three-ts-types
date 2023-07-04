@@ -417,7 +417,7 @@ const files = {
 
 const re = /<script type="module">((.|\r|\n)+)<\/script>/;
 
-const inDir = '../../three.js/examples';
+const inDir = '../three.js/examples';
 const outDir = './examples';
 
 fs.rmSync(outDir, { recursive: true, force: true });
