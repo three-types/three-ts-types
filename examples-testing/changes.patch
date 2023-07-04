@@ -1421,6 +1421,37 @@ index 673bad13..71e65414 100644
 +function saveArrayBuffer(buffer: BufferSource, filename: string) {
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
+diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
+index 9117411b..e6c6e854 100644
+--- a/examples-testing/examples/misc_exporter_usdz.ts
++++ b/examples-testing/examples/misc_exporter_usdz.ts
+@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+@@ -45,7 +45,7 @@ function init() {
+         const arraybuffer = await exporter.parse(gltf.scene);
+         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
+ 
+-        const link = document.getElementById('link');
++        const link = document.getElementById('link') as HTMLAnchorElement;
+         link.href = URL.createObjectURL(blob);
+     });
+ 
+@@ -64,7 +64,7 @@ function createSpotShadowMesh() {
+     canvas.width = 128;
+     canvas.height = 128;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createRadialGradient(
+         canvas.width / 2,
+         canvas.height / 2,
 diff --git a/examples-testing/examples/misc_lookat.ts b/examples-testing/examples/misc_lookat.ts
 index f6241b9e..93e83400 100644
 --- a/examples-testing/examples/misc_lookat.ts
