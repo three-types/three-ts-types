@@ -1,15 +1,15 @@
-import * as THREE from "three";
+import * as THREE from 'three';
 
-import Stats from "three/addons/libs/stats.module.js";
+import Stats from 'three/addons/libs/stats.module.js';
 
-import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-import { Octree } from "three/addons/math/Octree.js";
-import { OctreeHelper } from "three/addons/helpers/OctreeHelper.js";
+import { Octree } from 'three/addons/math/Octree.js';
+import { OctreeHelper } from 'three/addons/helpers/OctreeHelper.js';
 
-import { Capsule } from "three/addons/math/Capsule.js";
+import { Capsule } from 'three/addons/math/Capsule.js';
 
-import { GUI } from "three/addons/libs/lil-gui.module.min.js";
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 const clock = new THREE.Clock();
 
@@ -17,13 +17,8 @@ const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x88ccee);
 scene.fog = new THREE.Fog(0x88ccee, 0, 50);
 
-const camera = new THREE.PerspectiveCamera(
-  70,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-camera.rotation.order = "YXZ";
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.rotation.order = 'YXZ';
 
 const fillLight1 = new THREE.HemisphereLight(0x8dc1de, 0x00668d, 0.5);
 fillLight1.position.set(2, 1, 1);
@@ -44,7 +39,7 @@ directionalLight.shadow.radius = 4;
 directionalLight.shadow.bias = -0.00006;
 scene.add(directionalLight);
 
-const container = document.getElementById("container");
+const container = document.getElementById('container');
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -55,8 +50,8 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 container.appendChild(renderer.domElement);
 
 const stats = new Stats();
-stats.domElement.style.position = "absolute";
-stats.domElement.style.top = "0px";
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
 container.appendChild(stats.domElement);
 
 const GRAVITY = 30;
@@ -73,26 +68,22 @@ const spheres = [];
 let sphereIdx = 0;
 
 for (let i = 0; i < NUM_SPHERES; i++) {
-  const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-  sphere.castShadow = true;
-  sphere.receiveShadow = true;
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.castShadow = true;
+    sphere.receiveShadow = true;
 
-  scene.add(sphere);
+    scene.add(sphere);
 
-  spheres.push({
-    mesh: sphere,
-    collider: new THREE.Sphere(new THREE.Vector3(0, -100, 0), SPHERE_RADIUS),
-    velocity: new THREE.Vector3(),
-  });
+    spheres.push({
+        mesh: sphere,
+        collider: new THREE.Sphere(new THREE.Vector3(0, -100, 0), SPHERE_RADIUS),
+        velocity: new THREE.Vector3(),
+    });
 }
 
 const worldOctree = new Octree();
 
-const playerCollider = new Capsule(
-  new THREE.Vector3(0, 0.35, 0),
-  new THREE.Vector3(0, 1, 0),
-  0.35
-);
+const playerCollider = new Capsule(new THREE.Vector3(0, 0.35, 0), new THREE.Vector3(0, 1, 0), 0.35);
 
 const playerVelocity = new THREE.Vector3();
 const playerDirection = new THREE.Vector3();
@@ -106,294 +97,277 @@ const vector1 = new THREE.Vector3();
 const vector2 = new THREE.Vector3();
 const vector3 = new THREE.Vector3();
 
-document.addEventListener("keydown", (event) => {
-  keyStates[event.code] = true;
+document.addEventListener('keydown', event => {
+    keyStates[event.code] = true;
 });
 
-document.addEventListener("keyup", (event) => {
-  keyStates[event.code] = false;
+document.addEventListener('keyup', event => {
+    keyStates[event.code] = false;
 });
 
-container.addEventListener("mousedown", () => {
-  document.body.requestPointerLock();
+container.addEventListener('mousedown', () => {
+    document.body.requestPointerLock();
 
-  mouseTime = performance.now();
+    mouseTime = performance.now();
 });
 
-document.addEventListener("mouseup", () => {
-  if (document.pointerLockElement !== null) throwBall();
+document.addEventListener('mouseup', () => {
+    if (document.pointerLockElement !== null) throwBall();
 });
 
-document.body.addEventListener("mousemove", (event) => {
-  if (document.pointerLockElement === document.body) {
-    camera.rotation.y -= event.movementX / 500;
-    camera.rotation.x -= event.movementY / 500;
-  }
+document.body.addEventListener('mousemove', event => {
+    if (document.pointerLockElement === document.body) {
+        camera.rotation.y -= event.movementX / 500;
+        camera.rotation.x -= event.movementY / 500;
+    }
 });
 
-window.addEventListener("resize", onWindowResize);
+window.addEventListener('resize', onWindowResize);
 
 function onWindowResize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
-  camera.updateProjectionMatrix();
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
 
-  renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 function throwBall() {
-  const sphere = spheres[sphereIdx];
+    const sphere = spheres[sphereIdx];
 
-  camera.getWorldDirection(playerDirection);
+    camera.getWorldDirection(playerDirection);
 
-  sphere.collider.center
-    .copy(playerCollider.end)
-    .addScaledVector(playerDirection, playerCollider.radius * 1.5);
+    sphere.collider.center.copy(playerCollider.end).addScaledVector(playerDirection, playerCollider.radius * 1.5);
 
-  // throw the ball with more force if we hold the button longer, and if we move forward
+    // throw the ball with more force if we hold the button longer, and if we move forward
 
-  const impulse =
-    15 + 30 * (1 - Math.exp((mouseTime - performance.now()) * 0.001));
+    const impulse = 15 + 30 * (1 - Math.exp((mouseTime - performance.now()) * 0.001));
 
-  sphere.velocity.copy(playerDirection).multiplyScalar(impulse);
-  sphere.velocity.addScaledVector(playerVelocity, 2);
+    sphere.velocity.copy(playerDirection).multiplyScalar(impulse);
+    sphere.velocity.addScaledVector(playerVelocity, 2);
 
-  sphereIdx = (sphereIdx + 1) % spheres.length;
+    sphereIdx = (sphereIdx + 1) % spheres.length;
 }
 
 function playerCollisions() {
-  const result = worldOctree.capsuleIntersect(playerCollider);
+    const result = worldOctree.capsuleIntersect(playerCollider);
 
-  playerOnFloor = false;
+    playerOnFloor = false;
 
-  if (result) {
-    playerOnFloor = result.normal.y > 0;
+    if (result) {
+        playerOnFloor = result.normal.y > 0;
 
-    if (!playerOnFloor) {
-      playerVelocity.addScaledVector(
-        result.normal,
-        -result.normal.dot(playerVelocity)
-      );
+        if (!playerOnFloor) {
+            playerVelocity.addScaledVector(result.normal, -result.normal.dot(playerVelocity));
+        }
+
+        playerCollider.translate(result.normal.multiplyScalar(result.depth));
     }
-
-    playerCollider.translate(result.normal.multiplyScalar(result.depth));
-  }
 }
 
 function updatePlayer(deltaTime) {
-  let damping = Math.exp(-4 * deltaTime) - 1;
+    let damping = Math.exp(-4 * deltaTime) - 1;
 
-  if (!playerOnFloor) {
-    playerVelocity.y -= GRAVITY * deltaTime;
+    if (!playerOnFloor) {
+        playerVelocity.y -= GRAVITY * deltaTime;
 
-    // small air resistance
-    damping *= 0.1;
-  }
+        // small air resistance
+        damping *= 0.1;
+    }
 
-  playerVelocity.addScaledVector(playerVelocity, damping);
+    playerVelocity.addScaledVector(playerVelocity, damping);
 
-  const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
-  playerCollider.translate(deltaPosition);
+    const deltaPosition = playerVelocity.clone().multiplyScalar(deltaTime);
+    playerCollider.translate(deltaPosition);
 
-  playerCollisions();
+    playerCollisions();
 
-  camera.position.copy(playerCollider.end);
+    camera.position.copy(playerCollider.end);
 }
 
 function playerSphereCollision(sphere) {
-  const center = vector1
-    .addVectors(playerCollider.start, playerCollider.end)
-    .multiplyScalar(0.5);
+    const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
 
-  const sphere_center = sphere.collider.center;
+    const sphere_center = sphere.collider.center;
 
-  const r = playerCollider.radius + sphere.collider.radius;
-  const r2 = r * r;
+    const r = playerCollider.radius + sphere.collider.radius;
+    const r2 = r * r;
 
-  // approximation: player = 3 spheres
+    // approximation: player = 3 spheres
 
-  for (const point of [playerCollider.start, playerCollider.end, center]) {
-    const d2 = point.distanceToSquared(sphere_center);
+    for (const point of [playerCollider.start, playerCollider.end, center]) {
+        const d2 = point.distanceToSquared(sphere_center);
 
-    if (d2 < r2) {
-      const normal = vector1.subVectors(point, sphere_center).normalize();
-      const v1 = vector2
-        .copy(normal)
-        .multiplyScalar(normal.dot(playerVelocity));
-      const v2 = vector3
-        .copy(normal)
-        .multiplyScalar(normal.dot(sphere.velocity));
+        if (d2 < r2) {
+            const normal = vector1.subVectors(point, sphere_center).normalize();
+            const v1 = vector2.copy(normal).multiplyScalar(normal.dot(playerVelocity));
+            const v2 = vector3.copy(normal).multiplyScalar(normal.dot(sphere.velocity));
 
-      playerVelocity.add(v2).sub(v1);
-      sphere.velocity.add(v1).sub(v2);
+            playerVelocity.add(v2).sub(v1);
+            sphere.velocity.add(v1).sub(v2);
 
-      const d = (r - Math.sqrt(d2)) / 2;
-      sphere_center.addScaledVector(normal, -d);
+            const d = (r - Math.sqrt(d2)) / 2;
+            sphere_center.addScaledVector(normal, -d);
+        }
     }
-  }
 }
 
 function spheresCollisions() {
-  for (let i = 0, length = spheres.length; i < length; i++) {
-    const s1 = spheres[i];
+    for (let i = 0, length = spheres.length; i < length; i++) {
+        const s1 = spheres[i];
 
-    for (let j = i + 1; j < length; j++) {
-      const s2 = spheres[j];
+        for (let j = i + 1; j < length; j++) {
+            const s2 = spheres[j];
 
-      const d2 = s1.collider.center.distanceToSquared(s2.collider.center);
-      const r = s1.collider.radius + s2.collider.radius;
-      const r2 = r * r;
+            const d2 = s1.collider.center.distanceToSquared(s2.collider.center);
+            const r = s1.collider.radius + s2.collider.radius;
+            const r2 = r * r;
 
-      if (d2 < r2) {
-        const normal = vector1
-          .subVectors(s1.collider.center, s2.collider.center)
-          .normalize();
-        const v1 = vector2.copy(normal).multiplyScalar(normal.dot(s1.velocity));
-        const v2 = vector3.copy(normal).multiplyScalar(normal.dot(s2.velocity));
+            if (d2 < r2) {
+                const normal = vector1.subVectors(s1.collider.center, s2.collider.center).normalize();
+                const v1 = vector2.copy(normal).multiplyScalar(normal.dot(s1.velocity));
+                const v2 = vector3.copy(normal).multiplyScalar(normal.dot(s2.velocity));
 
-        s1.velocity.add(v2).sub(v1);
-        s2.velocity.add(v1).sub(v2);
+                s1.velocity.add(v2).sub(v1);
+                s2.velocity.add(v1).sub(v2);
 
-        const d = (r - Math.sqrt(d2)) / 2;
+                const d = (r - Math.sqrt(d2)) / 2;
 
-        s1.collider.center.addScaledVector(normal, d);
-        s2.collider.center.addScaledVector(normal, -d);
-      }
+                s1.collider.center.addScaledVector(normal, d);
+                s2.collider.center.addScaledVector(normal, -d);
+            }
+        }
     }
-  }
 }
 
 function updateSpheres(deltaTime) {
-  spheres.forEach((sphere) => {
-    sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
+    spheres.forEach(sphere => {
+        sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
 
-    const result = worldOctree.sphereIntersect(sphere.collider);
+        const result = worldOctree.sphereIntersect(sphere.collider);
 
-    if (result) {
-      sphere.velocity.addScaledVector(
-        result.normal,
-        -result.normal.dot(sphere.velocity) * 1.5
-      );
-      sphere.collider.center.add(result.normal.multiplyScalar(result.depth));
-    } else {
-      sphere.velocity.y -= GRAVITY * deltaTime;
+        if (result) {
+            sphere.velocity.addScaledVector(result.normal, -result.normal.dot(sphere.velocity) * 1.5);
+            sphere.collider.center.add(result.normal.multiplyScalar(result.depth));
+        } else {
+            sphere.velocity.y -= GRAVITY * deltaTime;
+        }
+
+        const damping = Math.exp(-1.5 * deltaTime) - 1;
+        sphere.velocity.addScaledVector(sphere.velocity, damping);
+
+        playerSphereCollision(sphere);
+    });
+
+    spheresCollisions();
+
+    for (const sphere of spheres) {
+        sphere.mesh.position.copy(sphere.collider.center);
     }
-
-    const damping = Math.exp(-1.5 * deltaTime) - 1;
-    sphere.velocity.addScaledVector(sphere.velocity, damping);
-
-    playerSphereCollision(sphere);
-  });
-
-  spheresCollisions();
-
-  for (const sphere of spheres) {
-    sphere.mesh.position.copy(sphere.collider.center);
-  }
 }
 
 function getForwardVector() {
-  camera.getWorldDirection(playerDirection);
-  playerDirection.y = 0;
-  playerDirection.normalize();
+    camera.getWorldDirection(playerDirection);
+    playerDirection.y = 0;
+    playerDirection.normalize();
 
-  return playerDirection;
+    return playerDirection;
 }
 
 function getSideVector() {
-  camera.getWorldDirection(playerDirection);
-  playerDirection.y = 0;
-  playerDirection.normalize();
-  playerDirection.cross(camera.up);
+    camera.getWorldDirection(playerDirection);
+    playerDirection.y = 0;
+    playerDirection.normalize();
+    playerDirection.cross(camera.up);
 
-  return playerDirection;
+    return playerDirection;
 }
 
 function controls(deltaTime) {
-  // gives a bit of air control
-  const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
+    // gives a bit of air control
+    const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
 
-  if (keyStates["KeyW"]) {
-    playerVelocity.add(getForwardVector().multiplyScalar(speedDelta));
-  }
-
-  if (keyStates["KeyS"]) {
-    playerVelocity.add(getForwardVector().multiplyScalar(-speedDelta));
-  }
-
-  if (keyStates["KeyA"]) {
-    playerVelocity.add(getSideVector().multiplyScalar(-speedDelta));
-  }
-
-  if (keyStates["KeyD"]) {
-    playerVelocity.add(getSideVector().multiplyScalar(speedDelta));
-  }
-
-  if (playerOnFloor) {
-    if (keyStates["Space"]) {
-      playerVelocity.y = 15;
+    if (keyStates['KeyW']) {
+        playerVelocity.add(getForwardVector().multiplyScalar(speedDelta));
     }
-  }
+
+    if (keyStates['KeyS']) {
+        playerVelocity.add(getForwardVector().multiplyScalar(-speedDelta));
+    }
+
+    if (keyStates['KeyA']) {
+        playerVelocity.add(getSideVector().multiplyScalar(-speedDelta));
+    }
+
+    if (keyStates['KeyD']) {
+        playerVelocity.add(getSideVector().multiplyScalar(speedDelta));
+    }
+
+    if (playerOnFloor) {
+        if (keyStates['Space']) {
+            playerVelocity.y = 15;
+        }
+    }
 }
 
-const loader = new GLTFLoader().setPath("./models/gltf/");
+const loader = new GLTFLoader().setPath('./models/gltf/');
 
-loader.load("collision-world.glb", (gltf) => {
-  scene.add(gltf.scene);
+loader.load('collision-world.glb', gltf => {
+    scene.add(gltf.scene);
 
-  worldOctree.fromGraphNode(gltf.scene);
+    worldOctree.fromGraphNode(gltf.scene);
 
-  gltf.scene.traverse((child) => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
+    gltf.scene.traverse(child => {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
 
-      if (child.material.map) {
-        child.material.map.anisotropy = 4;
-      }
-    }
-  });
+            if (child.material.map) {
+                child.material.map.anisotropy = 4;
+            }
+        }
+    });
 
-  const helper = new OctreeHelper(worldOctree);
-  helper.visible = false;
-  scene.add(helper);
+    const helper = new OctreeHelper(worldOctree);
+    helper.visible = false;
+    scene.add(helper);
 
-  const gui = new GUI({ width: 200 });
-  gui.add({ debug: false }, "debug").onChange(function (value) {
-    helper.visible = value;
-  });
+    const gui = new GUI({ width: 200 });
+    gui.add({ debug: false }, 'debug').onChange(function (value) {
+        helper.visible = value;
+    });
 
-  animate();
+    animate();
 });
 
 function teleportPlayerIfOob() {
-  if (camera.position.y <= -25) {
-    playerCollider.start.set(0, 0.35, 0);
-    playerCollider.end.set(0, 1, 0);
-    playerCollider.radius = 0.35;
-    camera.position.copy(playerCollider.end);
-    camera.rotation.set(0, 0, 0);
-  }
+    if (camera.position.y <= -25) {
+        playerCollider.start.set(0, 0.35, 0);
+        playerCollider.end.set(0, 1, 0);
+        playerCollider.radius = 0.35;
+        camera.position.copy(playerCollider.end);
+        camera.rotation.set(0, 0, 0);
+    }
 }
 
 function animate() {
-  const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
+    const deltaTime = Math.min(0.05, clock.getDelta()) / STEPS_PER_FRAME;
 
-  // we look for collisions in substeps to mitigate the risk of
-  // an object traversing another too quickly for detection.
+    // we look for collisions in substeps to mitigate the risk of
+    // an object traversing another too quickly for detection.
 
-  for (let i = 0; i < STEPS_PER_FRAME; i++) {
-    controls(deltaTime);
+    for (let i = 0; i < STEPS_PER_FRAME; i++) {
+        controls(deltaTime);
 
-    updatePlayer(deltaTime);
+        updatePlayer(deltaTime);
 
-    updateSpheres(deltaTime);
+        updateSpheres(deltaTime);
 
-    teleportPlayerIfOob();
-  }
+        teleportPlayerIfOob();
+    }
 
-  renderer.render(scene, camera);
+    renderer.render(scene, camera);
 
-  stats.update();
+    stats.update();
 
-  requestAnimationFrame(animate);
+    requestAnimationFrame(animate);
 }
