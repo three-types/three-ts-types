@@ -340,7 +340,7 @@ const files = {
     webaudio: [
         'webaudio_orientation',
         'webaudio_sandbox',
-        // 'webaudio_timing',
+        'webaudio_timing',
         // 'webaudio_visualizer',
     ],
     webxr: [
