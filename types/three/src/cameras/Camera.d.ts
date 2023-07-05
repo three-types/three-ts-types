@@ -1,8 +1,8 @@
-import { Matrix4 } from '../math/Matrix4';
-import { Vector3 } from '../math/Vector3';
-import { Object3D } from '../core/Object3D';
-import { Layers } from '../core/Layers';
-import { CoordinateSystem } from '../constants';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Vector3 } from '../math/Vector3.js';
+import { Object3D } from '../core/Object3D.js';
+import { Layers } from '../core/Layers.js';
+import { CoordinateSystem } from '../constants.js';
 
 /**
  * Abstract base class for cameras

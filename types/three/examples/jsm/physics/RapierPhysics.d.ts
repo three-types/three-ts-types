@@ -1,4 +1,4 @@
-import { Mesh } from '../../../src/Three';
+import { Mesh } from '../../../src/Three.js';
 
 type Vector = { x: number; y: number; z: number };
 

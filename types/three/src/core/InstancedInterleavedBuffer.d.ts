@@ -1,5 +1,5 @@
-import { InterleavedBuffer } from './InterleavedBuffer';
-import { TypedArray } from './BufferAttribute';
+import { InterleavedBuffer } from './InterleavedBuffer.js';
+import { TypedArray } from './BufferAttribute.js';
 
 /**
  * An instanced version of {@link THREE.InterleavedBuffer | InterleavedBuffer}.

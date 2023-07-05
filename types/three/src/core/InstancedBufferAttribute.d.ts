@@ -1,4 +1,4 @@
-import { BufferAttribute, TypedArray } from './BufferAttribute';
+import { BufferAttribute, TypedArray } from './BufferAttribute.js';
 
 /**
  * An instanced version of {@link THREE.BufferAttribute | BufferAttribute}.
