@@ -337,12 +337,7 @@ const files = {
         // 'webgpu_skinning_points',
         // 'webgpu_sprites',
     ],
-    webaudio: [
-        'webaudio_orientation',
-        'webaudio_sandbox',
-        'webaudio_timing',
-        // 'webaudio_visualizer',
-    ],
+    webaudio: ['webaudio_orientation', 'webaudio_sandbox', 'webaudio_timing', 'webaudio_visualizer'],
     webxr: [
         // 'webxr_ar_cones',
         // 'webxr_ar_hittest',
