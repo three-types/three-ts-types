@@ -1895,6 +1895,47 @@ index 8b40d14..780877b 100644
      controls.lookVertical = false;
  
      //
+diff --git a/examples-testing/examples/webaudio_timing.ts b/examples-testing/examples/webaudio_timing.ts
+index 7504966..acac149 100644
+--- a/examples-testing/examples/webaudio_timing.ts
++++ b/examples-testing/examples/webaudio_timing.ts
+@@ -2,22 +2,22 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let scene, camera, renderer, clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+-const objects = [];
++const objects: THREE.Mesh[] = [];
+ 
+ const speed = 2.5;
+ const height = 3;
+ const offset = 0.5;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+ 
+@@ -148,7 +148,7 @@ function render() {
+             if (ball.userData.down === true) {
+                 // ball changed direction from down to up
+ 
+-                const audio = ball.children[0];
++                const audio = ball.children[0] as THREE.Audio;
+                 audio.play(); // play audio with perfect timing when ball hits the surface
+                 ball.userData.down = false;
+             }
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
