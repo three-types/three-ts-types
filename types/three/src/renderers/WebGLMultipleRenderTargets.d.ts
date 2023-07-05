@@ -1,5 +1,5 @@
-import { Texture } from '../textures/Texture';
-import { WebGLRenderTarget, WebGLRenderTargetOptions } from './WebGLRenderTarget';
+import { Texture } from '../textures/Texture.js';
+import { WebGLRenderTarget, WebGLRenderTargetOptions } from './WebGLRenderTarget.js';
 
 export class WebGLMultipleRenderTargets extends WebGLRenderTarget<Texture[]> {
     /**

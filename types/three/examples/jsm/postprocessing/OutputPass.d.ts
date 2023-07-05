@@ -1,7 +1,7 @@
-import { ShaderMaterial } from '../../../src/Three';
-import { ToneMapping } from '../../../src/constants';
+import { ShaderMaterial } from '../../../src/Three.js';
+import { ToneMapping } from '../../../src/constants.js';
 
-import { Pass, FullScreenQuad } from './Pass';
+import { Pass, FullScreenQuad } from './Pass.js';
 
 export class OutputPass extends Pass {
     constructor(toneMapping?: ToneMapping, toneMappingExposure?: number);

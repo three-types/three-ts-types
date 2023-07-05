@@ -1,4 +1,4 @@
-import { Mesh, Vector3 } from '../../../src/Three';
+import { Mesh, Vector3 } from '../../../src/Three.js';
 
 export interface AmmoPhysicsObject {
     addMesh: (mesh: Mesh, mass?: number) => void;

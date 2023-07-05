@@ -1,6 +1,6 @@
-import { InterleavedBufferAttribute } from './InterleavedBufferAttribute';
-import { Usage } from '../constants';
-import { TypedArray } from './BufferAttribute';
+import { InterleavedBufferAttribute } from './InterleavedBufferAttribute.js';
+import { Usage } from '../constants.js';
+import { TypedArray } from './BufferAttribute.js';
 
 /**
  * **"Interleaved"** means that multiple attributes, possibly of different types, (e.g., _position, normal, uv, color_) are packed into a single array buffer.

@@ -1,7 +1,7 @@
-import { Vector4 } from '../math/Vector4';
-import { Texture } from '../textures/Texture';
-import { DepthTexture } from '../textures/DepthTexture';
-import { EventDispatcher } from '../core/EventDispatcher';
+import { Vector4 } from '../math/Vector4.js';
+import { Texture } from '../textures/Texture.js';
+import { DepthTexture } from '../textures/DepthTexture.js';
+import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
     Wrapping,
     TextureDataType,
@@ -9,7 +9,7 @@ import {
     MinificationTextureFilter,
     MagnificationTextureFilter,
     ColorSpace,
-} from '../constants';
+} from '../constants.js';
 
 export interface WebGLRenderTargetOptions {
     wrapS?: Wrapping | undefined;
