@@ -295,7 +295,7 @@ const files = {
         // 'webgl_worker_offscreencanvas',
     ],
     webgl2: [
-        // 'webgl2_buffergeometry_attributes_integer',
+        'webgl2_buffergeometry_attributes_integer',
         // 'webgl2_buffergeometry_attributes_none',
         // 'webgl2_materials_texture2darray',
         // 'webgl2_materials_texture3d',
