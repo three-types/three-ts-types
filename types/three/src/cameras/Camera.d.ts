@@ -11,7 +11,7 @@ import { CoordinateSystem } from '../constants';
  * @see {@link https://threejs.org/docs/index.html#api/en/cameras/Camera | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/cameras/Camera.js | Source}
  */
-export abstract class Camera extends Object3D {
+export class Camera extends Object3D {
     /**
      * @remarks
      * Note that this class is not intended to be called directly; you probably want a
