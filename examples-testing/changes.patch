@@ -1936,6 +1936,52 @@ index 7504966..acac149 100644
                  audio.play(); // play audio with perfect timing when ball hits the surface
                  ball.userData.down = false;
              }
+diff --git a/examples-testing/examples/webaudio_visualizer.ts b/examples-testing/examples/webaudio_visualizer.ts
+index 545694e..4aba18c 100644
+--- a/examples-testing/examples/webaudio_visualizer.ts
++++ b/examples-testing/examples/webaudio_visualizer.ts
+@@ -1,8 +1,13 @@
+ import * as THREE from 'three';
++import { IUniform } from 'three';
+ 
+-let scene, camera, renderer, analyser, uniforms;
++let scene: THREE.Scene,
++    camera: THREE.Camera,
++    renderer: THREE.WebGLRenderer,
++    analyser: THREE.AudioAnalyser,
++    uniforms: { [uniform: string]: IUniform };
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+@@ -10,12 +15,12 @@ function init() {
+ 
+     //
+ 
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+     //
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+     renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -59,8 +64,8 @@ function init() {
+ 
+     const material = new THREE.ShaderMaterial({
+         uniforms: uniforms,
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+     });
+ 
+     const geometry = new THREE.PlaneGeometry(1, 1);
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
