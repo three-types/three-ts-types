@@ -19,7 +19,7 @@ export class UnrealBloomPass extends Pass {
     compositeMaterial: ShaderMaterial;
     bloomTintColors: Vector3[];
     copyUniforms: object;
-    materialCopy: ShaderMaterial;
+    blendMaterial: ShaderMaterial;
     oldClearColor: Color;
     oldClearAlpha: number;
     basic: MeshBasicMaterial;
