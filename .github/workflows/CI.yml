@@ -5,17 +5,39 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
-
         steps:
             - uses: actions/checkout@v3
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'yarn'
-
-            # Get local dependencies
-            - run: yarn install
-
-            # Run tests
-            - run: yarn run prettier:check
-            - run: yarn run test-all
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run test-all
+    check-fomatting:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run format-check
+    test-examples:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  submodules: true
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: 'lts/*'
+                  cache: 'npm'
+            - run: npm ci
+            - run: npm run create-examples
+              working-directory: examples-testing
+            - run: git apply changes.patch
+              working-directory: examples-testing
+            - run: npm run type-check
+              working-directory: examples-testing
+            - run: npm run format-check
