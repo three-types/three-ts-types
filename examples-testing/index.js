@@ -307,7 +307,7 @@ const files = {
         'webgl2_ubo',
         'webgl2_volume_cloud',
         'webgl2_volume_instancing',
-        // 'webgl2_volume_perlin',
+        'webgl2_volume_perlin',
     ],
     webgpu: [
         // 'webgpu_audio_processing',
