@@ -2117,6 +2117,56 @@ index 0268130..bfbb917 100644
  
          prevTime = time;
  
+diff --git a/examples-testing/examples/webgl2_multiple_rendertargets.ts b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+index cc10827..217ec13 100644
+--- a/examples-testing/examples/webgl2_multiple_rendertargets.ts
++++ b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+@@ -4,9 +4,9 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, controls;
+-let renderTarget;
+-let postScene, postCamera;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let renderTarget: THREE.WebGLMultipleRenderTargets;
++let postScene: THREE.Scene, postCamera: THREE.OrthographicCamera;
+ 
+ const parameters = {
+     samples: 4,
+@@ -68,8 +68,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.TorusKnotGeometry(1, 0.3, 128, 32),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#gbuffer-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#gbuffer-frag').textContent.trim(),
++                vertexShader: document.querySelector('#gbuffer-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#gbuffer-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: diffuse },
+                     repeat: { value: new THREE.Vector2(5, 0.5) },
+@@ -88,8 +88,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.PlaneGeometry(2, 2),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#render-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#render-frag').textContent.trim(),
++                vertexShader: document.querySelector('#render-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#render-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: renderTarget.texture[0] },
+                     tNormal: { value: renderTarget.texture[1] },
+@@ -124,8 +124,8 @@ function render() {
+     renderTarget.samples = parameters.samples;
+ 
+     scene.traverse(function (child) {
+-        if (child.material !== undefined) {
+-            child.material.wireframe = parameters.wireframe;
++        if ((child as THREE.Mesh).material !== undefined) {
++            ((child as THREE.Mesh).material as THREE.RawShaderMaterial).wireframe = parameters.wireframe;
+         }
+     });
+ 
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
