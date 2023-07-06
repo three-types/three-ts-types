@@ -1,0 +1,2292 @@
+diff --git a/examples-testing/examples/css2d_label.ts b/examples-testing/examples/css2d_label.ts
+index cf61d1e..693b1e2 100644
+--- a/examples-testing/examples/css2d_label.ts
++++ b/examples-testing/examples/css2d_label.ts
+@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ let gui;
+ 
+-let camera, scene, renderer, labelRenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, labelRenderer: CSS2DRenderer;
+ 
+ const layers = {
+     'Toggle Name': function () {
+@@ -28,7 +28,7 @@ const layers = {
+ const clock = new THREE.Clock();
+ const textureLoader = new THREE.TextureLoader();
+ 
+-let moon;
++let moon: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -63,7 +63,7 @@ function init() {
+         normalMap: textureLoader.load('textures/planets/earth_normal_2048.jpg'),
+         normalScale: new THREE.Vector2(0.85, 0.85),
+     });
+-    earthMaterial.map.colorSpace = THREE.SRGBColorSpace;
++    earthMaterial.map!.colorSpace = THREE.SRGBColorSpace;
+     const earth = new THREE.Mesh(earthGeometry, earthMaterial);
+     scene.add(earth);
+ 
+@@ -72,7 +72,7 @@ function init() {
+         shininess: 5,
+         map: textureLoader.load('textures/planets/moon_1024.jpg'),
+     });
+-    moonMaterial.map.colorSpace = THREE.SRGBColorSpace;
++    moonMaterial.map!.colorSpace = THREE.SRGBColorSpace;
+     moon = new THREE.Mesh(moonGeometry, moonMaterial);
+     scene.add(moon);
+ 
+diff --git a/examples-testing/examples/css3d_molecules.ts b/examples-testing/examples/css3d_molecules.ts
+index 5384726..f08bb34 100644
+--- a/examples-testing/examples/css3d_molecules.ts
++++ b/examples-testing/examples/css3d_molecules.ts
+@@ -5,11 +5,11 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
+ import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let controls;
+-let root;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
++let root: THREE.Object3D;
+ 
+-const objects = [];
++const objects: Array<CSS3DObject | CSS3DSprite> = [];
+ const tmpVec1 = new THREE.Vector3();
+ const tmpVec2 = new THREE.Vector3();
+ const tmpVec3 = new THREE.Vector3();
+@@ -49,7 +49,7 @@ const params = {
+ };
+ 
+ const loader = new PDBLoader();
+-const colorSpriteMap = {};
++const colorSpriteMap: { [element: string]: string | undefined } = {};
+ const baseSprite = document.createElement('img');
+ 
+ init();
+@@ -68,7 +68,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -96,7 +96,7 @@ function init() {
+     gui.open();
+ }
+ 
+-function changeVizType(value) {
++function changeVizType(value: number) {
+     if (value === 0) showAtoms();
+     else if (value === 1) showBonds();
+     else showAtomsBonds();
+@@ -148,7 +148,7 @@ function showAtomsBonds() {
+ 
+ //
+ 
+-function colorify(ctx, width, height, color) {
++function colorify(ctx: CanvasRenderingContext2D, width: number, height: number, color: THREE.Color) {
+     const r = color.r,
+         g = color.g,
+         b = color.b;
+@@ -165,7 +165,7 @@ function colorify(ctx, width, height, color) {
+     ctx.putImageData(imageData, 0, 0);
+ }
+ 
+-function imageToCanvas(image) {
++function imageToCanvas(image: HTMLImageElement) {
+     const width = image.width;
+     const height = image.height;
+ 
+@@ -174,7 +174,7 @@ function imageToCanvas(image) {
+     canvas.width = width;
+     canvas.height = height;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     context.drawImage(image, 0, 0, width, height);
+ 
+     return canvas;
+@@ -182,12 +182,12 @@ function imageToCanvas(image) {
+ 
+ //
+ 
+-function loadMolecule(model) {
++function loadMolecule(model: string) {
+     const url = 'models/pdb/' + model;
+ 
+     for (let i = 0; i < objects.length; i++) {
+         const object = objects[i];
+-        object.parent.remove(object);
++        object.parent!.remove(object);
+     }
+ 
+     objects.length = 0;
+@@ -198,7 +198,7 @@ function loadMolecule(model) {
+         const json = pdb.json;
+ 
+         geometryAtoms.computeBoundingBox();
+-        geometryAtoms.boundingBox.getCenter(offset).negate();
++        geometryAtoms.boundingBox!.getCenter(offset).negate();
+ 
+         geometryAtoms.translate(offset.x, offset.y, offset.z);
+         geometryBonds.translate(offset.x, offset.y, offset.z);
+@@ -218,7 +218,7 @@ function loadMolecule(model) {
+ 
+             if (!colorSpriteMap[element]) {
+                 const canvas = imageToCanvas(baseSprite);
+-                const context = canvas.getContext('2d');
++                const context = canvas.getContext('2d')!;
+ 
+                 colorify(context, canvas.width, canvas.height, color);
+ 
+@@ -227,7 +227,7 @@ function loadMolecule(model) {
+                 colorSpriteMap[element] = dataUrl;
+             }
+ 
+-            const colorSprite = colorSpriteMap[element];
++            const colorSprite = colorSpriteMap[element]!;
+ 
+             const atom = document.createElement('img');
+             atom.src = colorSprite;
+diff --git a/examples-testing/examples/css3d_orthographic.ts b/examples-testing/examples/css3d_orthographic.ts
+index 4aabbed..5488635 100644
+--- a/examples-testing/examples/css3d_orthographic.ts
++++ b/examples-testing/examples/css3d_orthographic.ts
+@@ -3,10 +3,11 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
++import { Controller } from 'lil-gui';
+ 
+-let camera, scene, renderer;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let scene2, renderer2;
++let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+ 
+ const frustumSize = 500;
+ 
+@@ -75,18 +76,18 @@ function init() {
+     renderer2 = new CSS3DRenderer();
+     renderer2.setSize(window.innerWidth, window.innerHeight);
+     renderer2.domElement.style.position = 'absolute';
+-    renderer2.domElement.style.top = 0;
++    renderer2.domElement.style.top = '0';
+     document.body.appendChild(renderer2.domElement);
+ 
+     const controls = new OrbitControls(camera, renderer2.domElement);
+     controls.minZoom = 0.5;
+     controls.maxZoom = 2;
+ 
+-    function createPlane(width, height, cssColor, pos, rot) {
++    function createPlane(width: number, height: number, cssColor: string, pos: THREE.Vector3, rot: THREE.Euler) {
+         const element = document.createElement('div');
+         element.style.width = width + 'px';
+         element.style.height = height + 'px';
+-        element.style.opacity = 0.75;
++        element.style.opacity = '0.75';
+         element.style.background = cssColor;
+ 
+         const object = new CSS3DObject(element);
+@@ -133,12 +134,12 @@ function createPanel() {
+ 
+     const settings = {
+         setViewOffset() {
+-            folder1.children[1].enable().setValue(window.innerWidth);
+-            folder1.children[2].enable().setValue(window.innerHeight);
+-            folder1.children[3].enable().setValue(0);
+-            folder1.children[4].enable().setValue(0);
+-            folder1.children[5].enable().setValue(window.innerWidth);
+-            folder1.children[6].enable().setValue(window.innerHeight);
++            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
++            (folder1.children[3] as Controller).enable().setValue(0);
++            (folder1.children[4] as Controller).enable().setValue(0);
++            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+         },
+         fullWidth: 0,
+         fullHeight: 0,
+@@ -147,12 +148,12 @@ function createPanel() {
+         width: 0,
+         height: 0,
+         clearViewOffset() {
+-            folder1.children[1].setValue(0).disable();
+-            folder1.children[2].setValue(0).disable();
+-            folder1.children[3].setValue(0).disable();
+-            folder1.children[4].setValue(0).disable();
+-            folder1.children[5].setValue(0).disable();
+-            folder1.children[6].setValue(0).disable();
++            (folder1.children[1] as Controller).setValue(0).disable();
++            (folder1.children[2] as Controller).setValue(0).disable();
++            (folder1.children[3] as Controller).setValue(0).disable();
++            (folder1.children[4] as Controller).setValue(0).disable();
++            (folder1.children[5] as Controller).setValue(0).disable();
++            (folder1.children[6] as Controller).setValue(0).disable();
+             camera.clearViewOffset();
+         },
+     };
+@@ -160,32 +161,46 @@ function createPanel() {
+     folder1.add(settings, 'setViewOffset');
+     folder1
+         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
+         .disable();
+     folder1
+         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetX', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ x: val }))
++        .onChange((val: number) => updateCameraViewOffset({ x: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetY', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ y: val }))
++        .onChange((val: number) => updateCameraViewOffset({ y: val }))
+         .disable();
+     folder1
+         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ width: val }))
++        .onChange((val: number) => updateCameraViewOffset({ width: val }))
+         .disable();
+     folder1
+         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ height: val }))
++        .onChange((val: number) => updateCameraViewOffset({ height: val }))
+         .disable();
+     folder1.add(settings, 'clearViewOffset');
+ }
+ 
+-function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
++function updateCameraViewOffset({
++    fullWidth,
++    fullHeight,
++    x,
++    y,
++    width,
++    height,
++}: {
++    fullWidth?: number;
++    fullHeight?: number;
++    x?: number;
++    y?: number;
++    width?: number;
++    height?: number;
++}) {
+     if (!camera.view) {
+         camera.setViewOffset(
+             fullWidth || window.innerWidth,
+diff --git a/examples-testing/examples/css3d_periodictable.ts b/examples-testing/examples/css3d_periodictable.ts
+index e3a33f7..516df46 100644
+--- a/examples-testing/examples/css3d_periodictable.ts
++++ b/examples-testing/examples/css3d_periodictable.ts
+@@ -597,11 +597,16 @@ const table = [
+     7,
+ ];
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+-const objects = [];
+-const targets = { table: [], sphere: [], helix: [], grid: [] };
++const objects: CSS3DObject[] = [];
++const targets: {
++    table: THREE.Object3D[];
++    sphere: THREE.Object3D[];
++    helix: THREE.Object3D[];
++    grid: THREE.Object3D[];
++} = { table: [], sphere: [], helix: [], grid: [] };
+ 
+ init();
+ animate();
+@@ -621,12 +626,12 @@ function init() {
+ 
+         const number = document.createElement('div');
+         number.className = 'number';
+-        number.textContent = i / 5 + 1;
++        number.textContent = `${i / 5 + 1}`;
+         element.appendChild(number);
+ 
+         const symbol = document.createElement('div');
+         symbol.className = 'symbol';
+-        symbol.textContent = table[i];
++        symbol.textContent = table[i] as string;
+         element.appendChild(symbol);
+ 
+         const details = document.createElement('div');
+@@ -645,8 +650,8 @@ function init() {
+         //
+ 
+         const object = new THREE.Object3D();
+-        object.position.x = table[i + 3] * 140 - 1330;
+-        object.position.y = -(table[i + 4] * 180) + 990;
++        object.position.x = (table[i + 3] as number) * 140 - 1330;
++        object.position.y = -((table[i + 4] as number) * 180) + 990;
+ 
+         targets.table.push(object);
+     }
+@@ -705,7 +710,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -714,22 +719,22 @@ function init() {
+     controls.maxDistance = 6000;
+     controls.addEventListener('change', render);
+ 
+-    const buttonTable = document.getElementById('table');
++    const buttonTable = document.getElementById('table')!;
+     buttonTable.addEventListener('click', function () {
+         transform(targets.table, 2000);
+     });
+ 
+-    const buttonSphere = document.getElementById('sphere');
++    const buttonSphere = document.getElementById('sphere')!;
+     buttonSphere.addEventListener('click', function () {
+         transform(targets.sphere, 2000);
+     });
+ 
+-    const buttonHelix = document.getElementById('helix');
++    const buttonHelix = document.getElementById('helix')!;
+     buttonHelix.addEventListener('click', function () {
+         transform(targets.helix, 2000);
+     });
+ 
+-    const buttonGrid = document.getElementById('grid');
++    const buttonGrid = document.getElementById('grid')!;
+     buttonGrid.addEventListener('click', function () {
+         transform(targets.grid, 2000);
+     });
+@@ -741,7 +746,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function transform(targets, duration) {
++function transform(targets: THREE.Object3D[], duration: number) {
+     TWEEN.removeAll();
+ 
+     for (let i = 0; i < objects.length; i++) {
+@@ -765,7 +770,7 @@ function transform(targets, duration) {
+             .start();
+     }
+ 
+-    new TWEEN.Tween(this)
++    new TWEEN.Tween({})
+         .to({}, duration * 2)
+         .onUpdate(render)
+         .start();
+diff --git a/examples-testing/examples/css3d_sandbox.ts b/examples-testing/examples/css3d_sandbox.ts
+index 1088b84..b910c1f 100644
+--- a/examples-testing/examples/css3d_sandbox.ts
++++ b/examples-testing/examples/css3d_sandbox.ts
+@@ -2,13 +2,13 @@ import * as THREE from 'three';
+ 
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
++import { Controller, GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let scene2, renderer2;
++let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+ 
+-let controls;
++let controls: TrackballControls;
+ 
+ init();
+ animate();
+@@ -35,7 +35,7 @@ function init() {
+         const element = document.createElement('div');
+         element.style.width = '100px';
+         element.style.height = '100px';
+-        element.style.opacity = i < 5 ? 0.5 : 1;
++        element.style.opacity = `${i < 5 ? 0.5 : 1}`;
+         element.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
+ 
+         const object = new CSS3DObject(element);
+@@ -67,7 +67,7 @@ function init() {
+     renderer2 = new CSS3DRenderer();
+     renderer2.setSize(window.innerWidth, window.innerHeight);
+     renderer2.domElement.style.position = 'absolute';
+-    renderer2.domElement.style.top = 0;
++    renderer2.domElement.style.top = '0';
+     document.body.appendChild(renderer2.domElement);
+ 
+     controls = new TrackballControls(camera, renderer2.domElement);
+@@ -101,12 +101,12 @@ function createPanel() {
+ 
+     const settings = {
+         setViewOffset() {
+-            folder1.children[1].enable().setValue(window.innerWidth);
+-            folder1.children[2].enable().setValue(window.innerHeight);
+-            folder1.children[3].enable().setValue(0);
+-            folder1.children[4].enable().setValue(0);
+-            folder1.children[5].enable().setValue(window.innerWidth);
+-            folder1.children[6].enable().setValue(window.innerHeight);
++            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
++            (folder1.children[3] as Controller).enable().setValue(0);
++            (folder1.children[4] as Controller).enable().setValue(0);
++            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
++            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+         },
+         fullWidth: 0,
+         fullHeight: 0,
+@@ -115,12 +115,12 @@ function createPanel() {
+         width: 0,
+         height: 0,
+         clearViewOffset() {
+-            folder1.children[1].setValue(0).disable();
+-            folder1.children[2].setValue(0).disable();
+-            folder1.children[3].setValue(0).disable();
+-            folder1.children[4].setValue(0).disable();
+-            folder1.children[5].setValue(0).disable();
+-            folder1.children[6].setValue(0).disable();
++            (folder1.children[1] as Controller).setValue(0).disable();
++            (folder1.children[2] as Controller).setValue(0).disable();
++            (folder1.children[3] as Controller).setValue(0).disable();
++            (folder1.children[4] as Controller).setValue(0).disable();
++            (folder1.children[5] as Controller).setValue(0).disable();
++            (folder1.children[6] as Controller).setValue(0).disable();
+             camera.clearViewOffset();
+         },
+     };
+@@ -128,32 +128,46 @@ function createPanel() {
+     folder1.add(settings, 'setViewOffset');
+     folder1
+         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
+         .disable();
+     folder1
+         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
++        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetX', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ x: val }))
++        .onChange((val: number) => updateCameraViewOffset({ x: val }))
+         .disable();
+     folder1
+         .add(settings, 'offsetY', 0, 256, 1)
+-        .onChange(val => updateCameraViewOffset({ y: val }))
++        .onChange((val: number) => updateCameraViewOffset({ y: val }))
+         .disable();
+     folder1
+         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ width: val }))
++        .onChange((val: number) => updateCameraViewOffset({ width: val }))
+         .disable();
+     folder1
+         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
+-        .onChange(val => updateCameraViewOffset({ height: val }))
++        .onChange((val: number) => updateCameraViewOffset({ height: val }))
+         .disable();
+     folder1.add(settings, 'clearViewOffset');
+ }
+ 
+-function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
++function updateCameraViewOffset({
++    fullWidth,
++    fullHeight,
++    x,
++    y,
++    width,
++    height,
++}: {
++    fullWidth?: number;
++    fullHeight?: number;
++    x?: number;
++    y?: number;
++    width?: number;
++    height?: number;
++}) {
+     if (!camera.view) {
+         camera.setViewOffset(
+             fullWidth || window.innerWidth,
+diff --git a/examples-testing/examples/css3d_sprites.ts b/examples-testing/examples/css3d_sprites.ts
+index dfe24e7..93f2c07 100644
+--- a/examples-testing/examples/css3d_sprites.ts
++++ b/examples-testing/examples/css3d_sprites.ts
+@@ -4,12 +4,12 @@ import TWEEN from 'three/addons/libs/tween.module.js';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+ const particlesTotal = 512;
+-const positions = [];
+-const objects = [];
++const positions: number[] = [];
++const objects: CSS3DSprite[] = [];
+ let current = 0;
+ 
+ init();
+@@ -25,7 +25,7 @@ function init() {
+     const image = document.createElement('img');
+     image.addEventListener('load', function () {
+         for (let i = 0; i < particlesTotal; i++) {
+-            const object = new CSS3DSprite(image.cloneNode());
++            const object = new CSS3DSprite(image.cloneNode() as typeof image);
+             (object.position.x = Math.random() * 4000 - 2000),
+                 (object.position.y = Math.random() * 4000 - 2000),
+                 (object.position.z = Math.random() * 4000 - 2000);
+@@ -93,7 +93,7 @@ function init() {
+ 
+     renderer = new CSS3DRenderer();
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     //
+ 
+@@ -131,7 +131,7 @@ function transition() {
+             .start();
+     }
+ 
+-    new TWEEN.Tween(this)
++    new TWEEN.Tween({})
+         .to({}, duration * 3)
+         .onComplete(transition)
+         .start();
+diff --git a/examples-testing/examples/css3d_youtube.ts b/examples-testing/examples/css3d_youtube.ts
+index 62652f8..3dcc2f1 100644
+--- a/examples-testing/examples/css3d_youtube.ts
++++ b/examples-testing/examples/css3d_youtube.ts
+@@ -3,10 +3,10 @@ import * as THREE from 'three';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
++let controls: TrackballControls;
+ 
+-function Element(id, x, y, z, ry) {
++function Element(id: string, x: number, y: number, z: number, ry: number) {
+     const div = document.createElement('div');
+     div.style.width = '480px';
+     div.style.height = '360px';
+@@ -30,7 +30,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
+     camera.position.set(500, 350, 750);
+@@ -42,10 +42,10 @@ function init() {
+     container.appendChild(renderer.domElement);
+ 
+     const group = new THREE.Group();
+-    group.add(new Element('SJOz3qjfQXU', 0, 0, 240, 0));
+-    group.add(new Element('Y2-xZ-1HE-Q', 240, 0, 0, Math.PI / 2));
+-    group.add(new Element('IrydklNpcFI', 0, 0, -240, Math.PI));
+-    group.add(new Element('9ubytEsCaS0', -240, 0, 0, -Math.PI / 2));
++    group.add(Element('SJOz3qjfQXU', 0, 0, 240, 0));
++    group.add(Element('Y2-xZ-1HE-Q', 240, 0, 0, Math.PI / 2));
++    group.add(Element('IrydklNpcFI', 0, 0, -240, Math.PI));
++    group.add(Element('9ubytEsCaS0', -240, 0, 0, -Math.PI / 2));
+     scene.add(group);
+ 
+     controls = new TrackballControls(camera, renderer.domElement);
+@@ -55,7 +55,7 @@ function init() {
+ 
+     // Block iframe events when dragging camera
+ 
+-    const blocker = document.getElementById('blocker');
++    const blocker = document.getElementById('blocker')!;
+     blocker.style.display = 'none';
+ 
+     controls.addEventListener('start', function () {
+diff --git a/examples-testing/examples/games_fps.ts b/examples-testing/examples/games_fps.ts
+index 49dd6f3..911a149 100644
+--- a/examples-testing/examples/games_fps.ts
++++ b/examples-testing/examples/games_fps.ts
+@@ -39,7 +39,7 @@ directionalLight.shadow.radius = 4;
+ directionalLight.shadow.bias = -0.00006;
+ scene.add(directionalLight);
+ 
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+ const renderer = new THREE.WebGLRenderer({ antialias: true });
+ renderer.setPixelRatio(window.devicePixelRatio);
+@@ -50,9 +50,9 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
+ container.appendChild(renderer.domElement);
+ 
+ const stats = new Stats();
+-stats.domElement.style.position = 'absolute';
+-stats.domElement.style.top = '0px';
+-container.appendChild(stats.domElement);
++stats.dom.style.position = 'absolute';
++stats.dom.style.top = '0px';
++container.appendChild(stats.dom);
+ 
+ const GRAVITY = 30;
+ 
+@@ -64,7 +64,13 @@ const STEPS_PER_FRAME = 5;
+ const sphereGeometry = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 5);
+ const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xdede8d });
+ 
+-const spheres = [];
++interface Sphere {
++    mesh: THREE.Mesh;
++    collider: THREE.Sphere;
++    velocity: THREE.Vector3;
++}
++
++const spheres: Sphere[] = [];
+ let sphereIdx = 0;
+ 
+ for (let i = 0; i < NUM_SPHERES; i++) {
+@@ -91,7 +97,7 @@ const playerDirection = new THREE.Vector3();
+ let playerOnFloor = false;
+ let mouseTime = 0;
+ 
+-const keyStates = {};
++const keyStates: { [eventCode: string]: boolean | undefined } = {};
+ 
+ const vector1 = new THREE.Vector3();
+ const vector2 = new THREE.Vector3();
+@@ -164,7 +170,7 @@ function playerCollisions() {
+     }
+ }
+ 
+-function updatePlayer(deltaTime) {
++function updatePlayer(deltaTime: number) {
+     let damping = Math.exp(-4 * deltaTime) - 1;
+ 
+     if (!playerOnFloor) {
+@@ -184,7 +190,7 @@ function updatePlayer(deltaTime) {
+     camera.position.copy(playerCollider.end);
+ }
+ 
+-function playerSphereCollision(sphere) {
++function playerSphereCollision(sphere: Sphere) {
+     const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
+ 
+     const sphere_center = sphere.collider.center;
+@@ -239,7 +245,7 @@ function spheresCollisions() {
+     }
+ }
+ 
+-function updateSpheres(deltaTime) {
++function updateSpheres(deltaTime: number) {
+     spheres.forEach(sphere => {
+         sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
+ 
+@@ -282,7 +288,7 @@ function getSideVector() {
+     return playerDirection;
+ }
+ 
+-function controls(deltaTime) {
++function controls(deltaTime: number) {
+     // gives a bit of air control
+     const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
+ 
+@@ -317,12 +323,12 @@ loader.load('collision-world.glb', gltf => {
+     worldOctree.fromGraphNode(gltf.scene);
+ 
+     gltf.scene.traverse(child => {
+-        if (child.isMesh) {
++        if ((child as THREE.Mesh).isMesh) {
+             child.castShadow = true;
+             child.receiveShadow = true;
+ 
+-            if (child.material.map) {
+-                child.material.map.anisotropy = 4;
++            if (((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map) {
++                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map!.anisotropy = 4;
+             }
+         }
+     });
+@@ -332,7 +338,7 @@ loader.load('collision-world.glb', gltf => {
+     scene.add(helper);
+ 
+     const gui = new GUI({ width: 200 });
+-    gui.add({ debug: false }, 'debug').onChange(function (value) {
++    gui.add({ debug: false }, 'debug').onChange(function (value: boolean) {
+         helper.visible = value;
+     });
+ 
+diff --git a/examples-testing/examples/misc_animation_groups.ts b/examples-testing/examples/misc_animation_groups.ts
+index 19d263f..f8d0bed 100644
+--- a/examples-testing/examples/misc_animation_groups.ts
++++ b/examples-testing/examples/misc_animation_groups.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats, clock;
+-let scene, camera, renderer, mixer;
++let stats: Stats, clock: THREE.Clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/misc_animation_keys.ts b/examples-testing/examples/misc_animation_keys.ts
+index 4a80898..d2613d0 100644
+--- a/examples-testing/examples/misc_animation_keys.ts
++++ b/examples-testing/examples/misc_animation_keys.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats, clock;
+-let scene, camera, renderer, mixer;
++let stats: Stats, clock: THREE.Clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+@@ -25,7 +25,10 @@ function init() {
+     //
+ 
+     const geometry = new THREE.BoxGeometry(5, 5, 5);
+-    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
++    const material = new THREE.MeshBasicMaterial({
++        color: 0xffffff,
++        transparent: true,
++    });
+     const mesh = new THREE.Mesh(geometry, material);
+     scene.add(mesh);
+ 
+diff --git a/examples-testing/examples/misc_boxselection.ts b/examples-testing/examples/misc_boxselection.ts
+index a78c71b..0ecae0f 100644
+--- a/examples-testing/examples/misc_boxselection.ts
++++ b/examples-testing/examples/misc_boxselection.ts
+@@ -5,8 +5,8 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { SelectionBox } from 'three/addons/interactive/SelectionBox.js';
+ import { SelectionHelper } from 'three/addons/interactive/SelectionHelper.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+@@ -93,12 +93,12 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-const selectionBox = new SelectionBox(camera, scene);
+-const helper = new SelectionHelper(renderer, 'selectBox');
++const selectionBox = new SelectionBox(camera!, scene!);
++const helper = new SelectionHelper(renderer!, 'selectBox');
+ 
+ document.addEventListener('pointerdown', function (event) {
+     for (const item of selectionBox.collection) {
+-        item.material.emissive.set(0x000000);
++        (item.material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+     }
+ 
+     selectionBox.startPoint.set(
+@@ -111,7 +111,7 @@ document.addEventListener('pointerdown', function (event) {
+ document.addEventListener('pointermove', function (event) {
+     if (helper.isDown) {
+         for (let i = 0; i < selectionBox.collection.length; i++) {
+-            selectionBox.collection[i].material.emissive.set(0x000000);
++            (selectionBox.collection[i].material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+         }
+ 
+         selectionBox.endPoint.set(
+@@ -123,7 +123,7 @@ document.addEventListener('pointermove', function (event) {
+         const allSelected = selectionBox.select();
+ 
+         for (let i = 0; i < allSelected.length; i++) {
+-            allSelected[i].material.emissive.set(0xffffff);
++            (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
+         }
+     }
+ });
+@@ -138,6 +138,6 @@ document.addEventListener('pointerup', function (event) {
+     const allSelected = selectionBox.select();
+ 
+     for (let i = 0; i < allSelected.length; i++) {
+-        allSelected[i].material.emissive.set(0xffffff);
++        (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
+     }
+ });
+diff --git a/examples-testing/examples/misc_controls_arcball.ts b/examples-testing/examples/misc_controls_arcball.ts
+index f7ea233..64a2143 100644
+--- a/examples-testing/examples/misc_controls_arcball.ts
++++ b/examples-testing/examples/misc_controls_arcball.ts
+@@ -12,8 +12,12 @@ const cameraType = { type: 'Perspective' };
+ 
+ const perspectiveDistance = 2.5;
+ const orthographicDistance = 120;
+-let camera, controls, scene, renderer, gui;
+-let folderOptions, folderAnimations;
++let camera: THREE.OrthographicCamera | THREE.PerspectiveCamera,
++    controls: ArcballControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    gui: GUI;
++let folderOptions: GUI, folderAnimations: GUI;
+ 
+ const arcballGui = {
+     gizmoVisible: true,
+@@ -99,8 +103,8 @@ function init() {
+         material.normalMap.wrapS = THREE.RepeatWrapping;
+ 
+         group.traverse(function (child) {
+-            if (child.isMesh) {
+-                child.material = material;
++            if ((child as THREE.Mesh).isMesh) {
++                (child as THREE.Mesh).material = material;
+             }
+         });
+ 
+@@ -166,12 +170,12 @@ function onWindowResize() {
+ 
+         const halfW = perspectiveDistance * Math.tan(halfFovH);
+         const halfH = perspectiveDistance * Math.tan(halfFovV);
+-        camera.left = -halfW;
+-        camera.right = halfW;
+-        camera.top = halfH;
+-        camera.bottom = -halfH;
++        (camera as THREE.OrthographicCamera).left = -halfW;
++        (camera as THREE.OrthographicCamera).right = halfW;
++        (camera as THREE.OrthographicCamera).top = halfH;
++        (camera as THREE.OrthographicCamera).bottom = -halfH;
+     } else if (camera.type == 'PerspectiveCamera') {
+-        camera.aspect = window.innerWidth / window.innerHeight;
++        (camera as THREE.PerspectiveCamera).aspect = window.innerWidth / window.innerHeight;
+     }
+ 
+     camera.updateProjectionMatrix();
+@@ -185,7 +189,7 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     if (event.key === 'c') {
+         if (event.ctrlKey || event.metaKey) {
+             controls.copyState();
+@@ -197,7 +201,7 @@ function onKeyDown(event) {
+     }
+ }
+ 
+-function setCamera(type) {
++function setCamera(type: string) {
+     if (type == 'Orthographic') {
+         camera = makeOrthographicCamera();
+         camera.position.set(0, 0, orthographicDistance);
+diff --git a/examples-testing/examples/misc_controls_drag.ts b/examples-testing/examples/misc_controls_drag.ts
+index da4bd24..ec63df3 100644
+--- a/examples-testing/examples/misc_controls_drag.ts
++++ b/examples-testing/examples/misc_controls_drag.ts
+@@ -2,12 +2,12 @@ import * as THREE from 'three';
+ 
+ import { DragControls } from 'three/addons/controls/DragControls.js';
+ 
+-let container;
+-let camera, scene, renderer;
+-let controls, group;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controls: DragControls, group: THREE.Group;
+ let enableSelection = false;
+ 
+-const objects = [];
++const objects: THREE.Object3D[] = [];
+ 
+ const mouse = new THREE.Vector2(),
+     raycaster = new THREE.Raycaster();
+@@ -98,7 +98,7 @@ function onWindowResize() {
+     render();
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     enableSelection = event.keyCode === 16 ? true : false;
+ }
+ 
+@@ -106,7 +106,7 @@ function onKeyUp() {
+     enableSelection = false;
+ }
+ 
+-function onClick(event) {
++function onClick(event: MouseEvent) {
+     event.preventDefault();
+ 
+     if (enableSelection === true) {
+@@ -124,10 +124,10 @@ function onClick(event) {
+             const object = intersections[0].object;
+ 
+             if (group.children.includes(object) === true) {
+-                object.material.emissive.set(0x000000);
++                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+                 scene.attach(object);
+             } else {
+-                object.material.emissive.set(0xaaaaaa);
++                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0xaaaaaa);
+                 group.attach(object);
+             }
+ 
+diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
+index 2dd77ec..7c184f4 100644
+--- a/examples-testing/examples/misc_controls_fly.ts
++++ b/examples-testing/examples/misc_controls_fly.ts
+@@ -20,11 +20,15 @@ const MARGIN = 0;
+ let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
+ let SCREEN_WIDTH = window.innerWidth;
+ 
+-let camera, controls, scene, renderer, stats;
+-let geometry, meshPlanet, meshClouds, meshMoon;
+-let dirLight;
++let camera: THREE.PerspectiveCamera,
++    controls: FlyControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats;
++let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
++let dirLight: THREE.DirectionalLight;
+ 
+-let composer;
++let composer: EffectComposer;
+ 
+ const textureLoader = new THREE.TextureLoader();
+ 
+@@ -57,7 +61,7 @@ function init() {
+         // y scale is negated to compensate for normal map handedness.
+         normalScale: new THREE.Vector2(0.85, -0.85),
+     });
+-    materialNormalMap.map.colorSpace = THREE.SRGBColorSpace;
++    materialNormalMap.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     // planet
+ 
+@@ -74,7 +78,7 @@ function init() {
+         map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
+         transparent: true,
+     });
+-    materialClouds.map.colorSpace = THREE.SRGBColorSpace;
++    materialClouds.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     meshClouds = new THREE.Mesh(geometry, materialClouds);
+     meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
+@@ -86,7 +90,7 @@ function init() {
+     const materialMoon = new THREE.MeshPhongMaterial({
+         map: textureLoader.load('textures/planets/moon_1024.jpg'),
+     });
+-    materialMoon.map.colorSpace = THREE.SRGBColorSpace;
++    materialMoon.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+     meshMoon = new THREE.Mesh(geometry, materialMoon);
+     meshMoon.position.set(radius * 5, 0, 0);
+diff --git a/examples-testing/examples/misc_controls_map.ts b/examples-testing/examples/misc_controls_map.ts
+index 35e03d2..698e57a 100644
+--- a/examples-testing/examples/misc_controls_map.ts
++++ b/examples-testing/examples/misc_controls_map.ts
+@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { MapControls } from 'three/addons/controls/MapControls.js';
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: MapControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ //render(); // remove when using next line for animation loop (requestAnimationFrame)
+@@ -43,7 +43,10 @@ function init() {
+ 
+     const geometry = new THREE.BoxGeometry(1, 1, 1);
+     geometry.translate(0, 0.5, 0);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xeeeeee, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xeeeeee,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/misc_controls_orbit.ts b/examples-testing/examples/misc_controls_orbit.ts
+index 28bc3c0..a13dc53 100644
+--- a/examples-testing/examples/misc_controls_orbit.ts
++++ b/examples-testing/examples/misc_controls_orbit.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ //render(); // remove when using next line for animation loop (requestAnimationFrame)
+@@ -41,7 +41,10 @@ function init() {
+     // world
+ 
+     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xffffff,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/misc_controls_pointerlock.ts b/examples-testing/examples/misc_controls_pointerlock.ts
+index d29ffaf..7859ead 100644
+--- a/examples-testing/examples/misc_controls_pointerlock.ts
++++ b/examples-testing/examples/misc_controls_pointerlock.ts
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
+ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: PointerLockControls;
+ 
+-const objects = [];
++const objects: THREE.Mesh[] = [];
+ 
+-let raycaster;
++let raycaster: THREE.Raycaster;
+ 
+ let moveForward = false;
+ let moveBackward = false;
+@@ -37,8 +37,8 @@ function init() {
+ 
+     controls = new PointerLockControls(camera, document.body);
+ 
+-    const blocker = document.getElementById('blocker');
+-    const instructions = document.getElementById('instructions');
++    const blocker = document.getElementById('blocker')!;
++    const instructions = document.getElementById('instructions')!;
+ 
+     instructions.addEventListener('click', function () {
+         controls.lock();
+@@ -56,7 +56,7 @@ function init() {
+ 
+     scene.add(controls.getObject());
+ 
+-    const onKeyDown = function (event) {
++    const onKeyDown = function (event: KeyboardEvent) {
+         switch (event.code) {
+             case 'ArrowUp':
+             case 'KeyW':
+@@ -85,7 +85,7 @@ function init() {
+         }
+     };
+ 
+-    const onKeyUp = function (event) {
++    const onKeyUp = function (event: KeyboardEvent) {
+         switch (event.code) {
+             case 'ArrowUp':
+             case 'KeyW':
+@@ -116,7 +116,7 @@ function init() {
+ 
+     // floor
+ 
+-    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
++    let floorGeometry: THREE.BufferGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
+     floorGeometry.rotateX(-Math.PI / 2);
+ 
+     // vertex displacement
+@@ -165,7 +165,11 @@ function init() {
+     boxGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsBox, 3));
+ 
+     for (let i = 0; i < 500; i++) {
+-        const boxMaterial = new THREE.MeshPhongMaterial({ specular: 0xffffff, flatShading: true, vertexColors: true });
++        const boxMaterial = new THREE.MeshPhongMaterial({
++            specular: 0xffffff,
++            flatShading: true,
++            vertexColors: true,
++        });
+         boxMaterial.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace);
+ 
+         const box = new THREE.Mesh(boxGeometry, boxMaterial);
+diff --git a/examples-testing/examples/misc_controls_trackball.ts b/examples-testing/examples/misc_controls_trackball.ts
+index 19c42c6..1b7f21a 100644
+--- a/examples-testing/examples/misc_controls_trackball.ts
++++ b/examples-testing/examples/misc_controls_trackball.ts
+@@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ 
+-let perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
++let perspectiveCamera: THREE.PerspectiveCamera,
++    orthographicCamera: THREE.OrthographicCamera,
++    controls: TrackballControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats;
+ 
+ const params = {
+     orthographicCamera: false,
+@@ -39,7 +44,10 @@ function init() {
+     scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
+ 
+     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
+-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
++    const material = new THREE.MeshPhongMaterial({
++        color: 0xffffff,
++        flatShading: true,
++    });
+ 
+     for (let i = 0; i < 500; i++) {
+         const mesh = new THREE.Mesh(geometry, material);
+@@ -79,7 +87,7 @@ function init() {
+     const gui = new GUI();
+     gui.add(params, 'orthographicCamera')
+         .name('use orthographic')
+-        .onChange(function (value) {
++        .onChange(function (value: boolean) {
+             controls.dispose();
+ 
+             createControls(value ? orthographicCamera : perspectiveCamera);
+@@ -92,7 +100,7 @@ function init() {
+     createControls(perspectiveCamera);
+ }
+ 
+-function createControls(camera) {
++function createControls(camera: THREE.Camera) {
+     controls = new TrackballControls(camera, renderer.domElement);
+ 
+     controls.rotateSpeed = 1.0;
+diff --git a/examples-testing/examples/misc_controls_transform.ts b/examples-testing/examples/misc_controls_transform.ts
+index aa4de6f..7c08981 100644
+--- a/examples-testing/examples/misc_controls_transform.ts
++++ b/examples-testing/examples/misc_controls_transform.ts
+@@ -3,8 +3,8 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { TransformControls } from 'three/addons/controls/TransformControls.js';
+ 
+-let cameraPersp, cameraOrtho, currentCamera;
+-let scene, renderer, control, orbit;
++let cameraPersp: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera, currentCamera: THREE.Camera;
++let scene: THREE.Scene, renderer: THREE.WebGLRenderer, control: TransformControls, orbit: OrbitControls;
+ 
+ init();
+ render();
+@@ -36,7 +36,10 @@ function init() {
+     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+ 
+     const geometry = new THREE.BoxGeometry(200, 200, 200);
+-    const material = new THREE.MeshLambertMaterial({ map: texture, transparent: true });
++    const material = new THREE.MeshLambertMaterial({
++        map: texture,
++        transparent: true,
++    });
+ 
+     orbit = new OrbitControls(currentCamera, renderer.domElement);
+     orbit.update();
+@@ -84,7 +87,9 @@ function init() {
+             case 67: // C
+                 const position = currentCamera.position.clone();
+ 
+-                currentCamera = currentCamera.isPerspectiveCamera ? cameraOrtho : cameraPersp;
++                currentCamera = (currentCamera as THREE.PerspectiveCamera).isPerspectiveCamera
++                    ? cameraOrtho
++                    : cameraPersp;
+                 currentCamera.position.copy(position);
+ 
+                 orbit.object = currentCamera;
+diff --git a/examples-testing/examples/misc_exporter_draco.ts b/examples-testing/examples/misc_exporter_draco.ts
+index ce1e696..f8b4b86 100644
+--- a/examples-testing/examples/misc_exporter_draco.ts
++++ b/examples-testing/examples/misc_exporter_draco.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { DRACOExporter } from 'three/addons/exporters/DRACOExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: DRACOExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     export: exportFile,
+@@ -109,12 +113,12 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
+index c9d9433..c57b22f 100644
+--- a/examples-testing/examples/misc_exporter_gltf.ts
++++ b/examples-testing/examples/misc_exporter_gltf.ts
+@@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-function exportGLTF(input) {
++function exportGLTF(input: THREE.Object3D | THREE.Object3D[]) {
+     const gltfExporter = new GLTFExporter();
+ 
+     const options = {
+@@ -37,7 +37,7 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link); // Firefox workaround, see #6594
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+@@ -45,18 +45,25 @@ function save(blob, filename) {
+     // URL.revokeObjectURL( url ); breaks Firefox...
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+ 
+-let container;
+-
+-let camera, object, object2, material, geometry, scene1, scene2, renderer;
+-let gridHelper, sphere, model, coffeemat;
++let container: HTMLDivElement;
++
++let camera: THREE.PerspectiveCamera,
++    object: THREE.Object3D,
++    object2: THREE.Mesh,
++    material: THREE.MeshBasicMaterial | THREE.MeshStandardMaterial,
++    geometry: THREE.BufferGeometry,
++    scene1: THREE.Scene,
++    scene2: THREE.Scene,
++    renderer: THREE.WebGLRenderer;
++let gridHelper: THREE.GridHelper, sphere: THREE.Mesh, model: THREE.Group, coffeemat: THREE.Group;
+ 
+ const params = {
+     trs: false,
+diff --git a/examples-testing/examples/misc_exporter_obj.ts b/examples-testing/examples/misc_exporter_obj.ts
+index 02ad907..efb71b1 100644
+--- a/examples-testing/examples/misc_exporter_obj.ts
++++ b/examples-testing/examples/misc_exporter_obj.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ const params = {
+     addTriangle: addTriangle,
+@@ -66,12 +66,12 @@ function exportToObj() {
+     saveString(result, 'object.obj');
+ }
+ 
+-function addGeometry(type) {
++function addGeometry(type: number) {
+     for (let i = 0; i < scene.children.length; i++) {
+         const child = scene.children[i];
+ 
+-        if (child.isMesh || child.isPoints) {
+-            child.geometry.dispose();
++        if ((child as THREE.Mesh).isMesh || (child as THREE.Points).isPoints) {
++            (child as THREE.Mesh | THREE.Points).geometry.dispose();
+             scene.remove(child);
+             i--;
+         }
+@@ -156,13 +156,13 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+diff --git a/examples-testing/examples/misc_exporter_ply.ts b/examples-testing/examples/misc_exporter_ply.ts
+index b6a334d..a0e6691 100644
+--- a/examples-testing/examples/misc_exporter_ply.ts
++++ b/examples-testing/examples/misc_exporter_ply.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: PLYExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     exportASCII: exportASCII,
+@@ -142,16 +146,16 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+diff --git a/examples-testing/examples/misc_exporter_stl.ts b/examples-testing/examples/misc_exporter_stl.ts
+index 673bad1..71e6541 100644
+--- a/examples-testing/examples/misc_exporter_stl.ts
++++ b/examples-testing/examples/misc_exporter_stl.ts
+@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { STLExporter } from 'three/addons/exporters/STLExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: STLExporter,
++    mesh: THREE.Mesh;
+ 
+ const params = {
+     exportASCII: exportASCII,
+@@ -115,16 +119,16 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link);
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: BufferSource, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
+diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
+index 9117411..e6c6e85 100644
+--- a/examples-testing/examples/misc_exporter_usdz.ts
++++ b/examples-testing/examples/misc_exporter_usdz.ts
+@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+@@ -45,7 +45,7 @@ function init() {
+         const arraybuffer = await exporter.parse(gltf.scene);
+         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
+ 
+-        const link = document.getElementById('link');
++        const link = document.getElementById('link') as HTMLAnchorElement;
+         link.href = URL.createObjectURL(blob);
+     });
+ 
+@@ -64,7 +64,7 @@ function createSpotShadowMesh() {
+     canvas.width = 128;
+     canvas.height = 128;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createRadialGradient(
+         canvas.width / 2,
+         canvas.height / 2,
+diff --git a/examples-testing/examples/misc_lookat.ts b/examples-testing/examples/misc_lookat.ts
+index f6241b9..93e8340 100644
+--- a/examples-testing/examples/misc_lookat.ts
++++ b/examples-testing/examples/misc_lookat.ts
+@@ -2,9 +2,9 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+-let sphere;
++let sphere: THREE.Mesh;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -64,7 +64,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) * 10;
+     mouseY = (event.clientY - windowHalfY) * 10;
+ }
+diff --git a/examples-testing/examples/misc_uv_tests.ts b/examples-testing/examples/misc_uv_tests.ts
+index 4f782d4..0759cfc 100644
+--- a/examples-testing/examples/misc_uv_tests.ts
++++ b/examples-testing/examples/misc_uv_tests.ts
+@@ -7,7 +7,7 @@ import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
+  * as well as allow a new user to visualize what UVs are about.
+  */
+ 
+-function test(name, geometry) {
++function test(name: string, geometry: THREE.BufferGeometry) {
+     const d = document.createElement('div');
+ 
+     d.innerHTML = '<h3>' + name + '</h3>';
+diff --git a/examples-testing/examples/physics_ammo_instancing.ts b/examples-testing/examples/physics_ammo_instancing.ts
+index eb33424..aed0936 100644
+--- a/examples-testing/examples/physics_ammo_instancing.ts
++++ b/examples-testing/examples/physics_ammo_instancing.ts
+@@ -1,12 +1,12 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { AmmoPhysics } from 'three/addons/physics/AmmoPhysics.js';
++import { AmmoPhysics, AmmoPhysicsObject } from 'three/addons/physics/AmmoPhysics.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, position;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: AmmoPhysicsObject, position: THREE.Vector3;
+ 
+-let boxes, spheres;
++let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/physics_rapier_instancing.ts b/examples-testing/examples/physics_rapier_instancing.ts
+index 8f1bdda..67d3517 100644
+--- a/examples-testing/examples/physics_rapier_instancing.ts
++++ b/examples-testing/examples/physics_rapier_instancing.ts
+@@ -1,12 +1,12 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, position;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: RapierPhysicsObject, position: THREE.Vector3;
+ 
+-let boxes, spheres;
++let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/svg_lines.ts b/examples-testing/examples/svg_lines.ts
+index 99b74c4..65aaf28 100644
+--- a/examples-testing/examples/svg_lines.ts
++++ b/examples-testing/examples/svg_lines.ts
+@@ -4,7 +4,7 @@ import { SVGRenderer } from 'three/addons/renderers/SVGRenderer.js';
+ 
+ THREE.ColorManagement.enabled = false;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/svg_sandbox.ts b/examples-testing/examples/svg_sandbox.ts
+index e6be838..faea9a7 100644
+--- a/examples-testing/examples/svg_sandbox.ts
++++ b/examples-testing/examples/svg_sandbox.ts
+@@ -6,9 +6,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
+ 
+ THREE.ColorManagement.enabled = false;
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer, stats: Stats;
+ 
+-let group;
++let group: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -33,9 +33,13 @@ function init() {
+ 
+     const boxGeometry = new THREE.BoxGeometry(100, 100, 100);
+ 
+-    let mesh = new THREE.Mesh(
++    let mesh: THREE.Mesh = new THREE.Mesh(
+         boxGeometry,
+-        new THREE.MeshBasicMaterial({ color: 0x0000ff, opacity: 0.5, transparent: true }),
++        new THREE.MeshBasicMaterial({
++            color: 0x0000ff,
++            opacity: 0.5,
++            transparent: true,
++        }),
+     );
+     mesh.position.x = 500;
+     mesh.rotation.x = Math.random();
+@@ -55,7 +59,10 @@ function init() {
+ 
+     mesh = new THREE.Mesh(
+         new THREE.PlaneGeometry(100, 100),
+-        new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide }),
++        new THREE.MeshBasicMaterial({
++            color: Math.random() * 0xffffff,
++            side: THREE.DoubleSide,
++        }),
+     );
+     mesh.position.y = -500;
+     mesh.scale.x = mesh.scale.y = mesh.scale.z = 2;
+@@ -75,7 +82,10 @@ function init() {
+     // POLYFIELD
+ 
+     const geometry = new THREE.BufferGeometry();
+-    const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
++    const material = new THREE.MeshBasicMaterial({
++        vertexColors: true,
++        side: THREE.DoubleSide,
++    });
+ 
+     const v = new THREE.Vector3();
+     const v0 = new THREE.Vector3();
+@@ -122,7 +132,9 @@ function init() {
+     // SPRITES
+ 
+     for (let i = 0; i < 50; i++) {
+-        const material = new THREE.SpriteMaterial({ color: Math.random() * 0xffffff });
++        const material = new THREE.SpriteMaterial({
++            color: Math.random() * 0xffffff,
++        });
+         const sprite = new THREE.Sprite(material);
+         sprite.position.x = Math.random() * 1000 - 500;
+         sprite.position.y = Math.random() * 1000 - 500;
+@@ -139,7 +151,7 @@ function init() {
+     node.setAttribute('r', '40');
+ 
+     for (let i = 0; i < 50; i++) {
+-        const object = new SVGObject(node.cloneNode());
++        const object = new SVGObject(node.cloneNode() as SVGCircleElement);
+         object.position.x = Math.random() * 1000 - 500;
+         object.position.y = Math.random() * 1000 - 500;
+         object.position.z = Math.random() * 1000 - 500;
+@@ -152,7 +164,7 @@ function init() {
+     fileLoader.load('models/svg/hexagon.svg', function (svg) {
+         const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+         const parser = new DOMParser();
+-        const doc = parser.parseFromString(svg, 'image/svg+xml');
++        const doc = parser.parseFromString(svg as string, 'image/svg+xml');
+ 
+         node.appendChild(doc.documentElement);
+ 
+diff --git a/examples-testing/examples/webaudio_orientation.ts b/examples-testing/examples/webaudio_orientation.ts
+index 8a74c41..7258ed1 100644
+--- a/examples-testing/examples/webaudio_orientation.ts
++++ b/examples-testing/examples/webaudio_orientation.ts
+@@ -4,16 +4,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PositionalAudioHelper } from 'three/addons/helpers/PositionalAudioHelper.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let scene, camera, renderer;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -65,7 +65,7 @@ function init() {
+     const listener = new THREE.AudioListener();
+     camera.add(listener);
+ 
+-    const audioElement = document.getElementById('music');
++    const audioElement = document.getElementById('music') as HTMLAudioElement;
+     audioElement.play();
+ 
+     const positionalAudio = new THREE.PositionalAudio(listener);
+@@ -85,10 +85,10 @@ function init() {
+         boomBox.scale.set(20, 20, 20);
+ 
+         boomBox.traverse(function (object) {
+-            if (object.isMesh) {
+-                object.material.envMap = reflectionCube;
+-                object.geometry.rotateY(-Math.PI);
+-                object.castShadow = true;
++            if ((object as THREE.Mesh).isMesh) {
++                ((object as THREE.Mesh).material as THREE.MeshStandardMaterial).envMap = reflectionCube;
++                (object as THREE.Mesh).geometry.rotateY(-Math.PI);
++                (object as THREE.Mesh).castShadow = true;
+             }
+         });
+ 
+@@ -100,7 +100,11 @@ function init() {
+     // sound is damped behind this wall
+ 
+     const wallGeometry = new THREE.BoxGeometry(2, 1, 0.1);
+-    const wallMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
++    const wallMaterial = new THREE.MeshBasicMaterial({
++        color: 0xff0000,
++        transparent: true,
++        opacity: 0.5,
++    });
+ 
+     const wall = new THREE.Mesh(wallGeometry, wallMaterial);
+     wall.position.set(0, 0.5, -0.5);
+diff --git a/examples-testing/examples/webaudio_sandbox.ts b/examples-testing/examples/webaudio_sandbox.ts
+index 8b40d14..780877b 100644
+--- a/examples-testing/examples/webaudio_sandbox.ts
++++ b/examples-testing/examples/webaudio_sandbox.ts
+@@ -4,19 +4,23 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+ 
+-let camera, controls, scene, renderer, light;
++let camera: THREE.PerspectiveCamera,
++    controls: FirstPersonControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    light: THREE.DirectionalLight;
+ 
+-let material1, material2, material3;
++let material1: THREE.MeshPhongMaterial, material2: THREE.MeshPhongMaterial, material3: THREE.MeshPhongMaterial;
+ 
+-let analyser1, analyser2, analyser3;
++let analyser1: THREE.AudioAnalyser, analyser2: THREE.AudioAnalyser, analyser3: THREE.AudioAnalyser;
+ 
+ const clock = new THREE.Clock();
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+@@ -45,7 +49,7 @@ function init() {
+     scene.add(mesh1);
+ 
+     const sound1 = new THREE.PositionalAudio(listener);
+-    const songElement = document.getElementById('song');
++    const songElement = document.getElementById('song') as HTMLAudioElement;
+     sound1.setMediaElementSource(songElement);
+     sound1.setRefDistance(20);
+     songElement.play();
+@@ -58,7 +62,7 @@ function init() {
+     scene.add(mesh2);
+ 
+     const sound2 = new THREE.PositionalAudio(listener);
+-    const skullbeatzElement = document.getElementById('skullbeatz');
++    const skullbeatzElement = document.getElementById('skullbeatz') as HTMLAudioElement;
+     sound2.setMediaElementSource(skullbeatzElement);
+     sound2.setRefDistance(20);
+     skullbeatzElement.play();
+@@ -89,7 +93,7 @@ function init() {
+     // global ambient audio
+ 
+     const sound4 = new THREE.Audio(listener);
+-    const utopiaElement = document.getElementById('utopia');
++    const utopiaElement = document.getElementById('utopia') as HTMLAudioElement;
+     sound4.setMediaElementSource(utopiaElement);
+     sound4.setVolume(0.5);
+     utopiaElement.play();
+@@ -102,18 +106,31 @@ function init() {
+ 
+     //
+ 
+-    const SoundControls = function () {
+-        this.master = listener.getMasterVolume();
+-        this.firstSphere = sound1.getVolume();
+-        this.secondSphere = sound2.getVolume();
+-        this.thirdSphere = sound3.getVolume();
+-        this.Ambient = sound4.getVolume();
+-    };
+-
+-    const GeneratorControls = function () {
+-        this.frequency = oscillator.frequency.value;
+-        this.wavetype = oscillator.type;
+-    };
++    class SoundControls {
++        master: number;
++        firstSphere: number;
++        secondSphere: number;
++        thirdSphere: number;
++        Ambient: number;
++
++        constructor() {
++            this.master = listener.getMasterVolume();
++            this.firstSphere = sound1.getVolume();
++            this.secondSphere = sound2.getVolume();
++            this.thirdSphere = sound3.getVolume();
++            this.Ambient = sound4.getVolume();
++        }
++    }
++
++    class GeneratorControls {
++        frequency: number;
++        wavetype: OscillatorType;
++
++        constructor() {
++            this.frequency = oscillator.frequency.value;
++            this.wavetype = oscillator.type;
++        }
++    }
+ 
+     const gui = new GUI();
+     const soundControls = new SoundControls();
+@@ -192,7 +209,6 @@ function init() {
+ 
+     controls.movementSpeed = 70;
+     controls.lookSpeed = 0.05;
+-    controls.noFly = true;
+     controls.lookVertical = false;
+ 
+     //
+diff --git a/examples-testing/examples/webaudio_timing.ts b/examples-testing/examples/webaudio_timing.ts
+index 7504966..acac149 100644
+--- a/examples-testing/examples/webaudio_timing.ts
++++ b/examples-testing/examples/webaudio_timing.ts
+@@ -2,22 +2,22 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let scene, camera, renderer, clock;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+-const objects = [];
++const objects: THREE.Mesh[] = [];
+ 
+ const speed = 2.5;
+ const height = 3;
+ const offset = 0.5;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+ 
+@@ -148,7 +148,7 @@ function render() {
+             if (ball.userData.down === true) {
+                 // ball changed direction from down to up
+ 
+-                const audio = ball.children[0];
++                const audio = ball.children[0] as THREE.Audio;
+                 audio.play(); // play audio with perfect timing when ball hits the surface
+                 ball.userData.down = false;
+             }
+diff --git a/examples-testing/examples/webaudio_visualizer.ts b/examples-testing/examples/webaudio_visualizer.ts
+index 545694e..4aba18c 100644
+--- a/examples-testing/examples/webaudio_visualizer.ts
++++ b/examples-testing/examples/webaudio_visualizer.ts
+@@ -1,8 +1,13 @@
+ import * as THREE from 'three';
++import { IUniform } from 'three';
+ 
+-let scene, camera, renderer, analyser, uniforms;
++let scene: THREE.Scene,
++    camera: THREE.Camera,
++    renderer: THREE.WebGLRenderer,
++    analyser: THREE.AudioAnalyser,
++    uniforms: { [uniform: string]: IUniform };
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ function init() {
+@@ -10,12 +15,12 @@ function init() {
+ 
+     //
+ 
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+     //
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+     renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -59,8 +64,8 @@ function init() {
+ 
+     const material = new THREE.ShaderMaterial({
+         uniforms: uniforms,
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+     });
+ 
+     const geometry = new THREE.PlaneGeometry(1, 1);
+diff --git a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts b/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
+index 848814c..ca05c89 100644
+--- a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
++++ b/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
+@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, renderer, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -72,7 +72,7 @@ function init() {
+     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+     geometry.setAttribute('textureIndex', new THREE.Int16BufferAttribute(textureIndices, 1));
+-    geometry.attributes.textureIndex.gpuType = THREE.IntType;
++    (geometry.attributes.textureIndex as THREE.BufferAttribute).gpuType = THREE.IntType;
+ 
+     geometry.computeBoundingSphere();
+ 
+@@ -90,8 +90,8 @@ function init() {
+                 value: [map1, map2, map3],
+             },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         glslVersion: THREE.GLSL3,
+     });
+diff --git a/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts b/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
+index a77b973..d24a458 100644
+--- a/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
++++ b/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
+@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, renderer, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -34,8 +34,8 @@ function init() {
+         uniforms: {
+             seed: { value: 42 },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         glslVersion: THREE.GLSL3,
+     });
+@@ -54,11 +54,11 @@ function init() {
+     document.body.appendChild(renderer.domElement);
+ }
+ 
+-function animate(time) {
++function animate(time?: number) {
+     requestAnimationFrame(animate);
+ 
+-    mesh.rotation.x = (time / 1000.0) * 0.25;
+-    mesh.rotation.y = (time / 1000.0) * 0.5;
++    mesh.rotation.x = time != null ? (time / 1000.0) * 0.25 : NaN;
++    mesh.rotation.y = time != null ? (time / 1000.0) * 0.5 : NaN;
+ 
+     renderer.render(scene, camera);
+ }
+diff --git a/examples-testing/examples/webgl2_materials_texture3d.ts b/examples-testing/examples/webgl2_materials_texture3d.ts
+index b746daf..e3cdd9b 100644
+--- a/examples-testing/examples/webgl2_materials_texture3d.ts
++++ b/examples-testing/examples/webgl2_materials_texture3d.ts
+@@ -10,7 +10,15 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera, controls, material, volconfig, cmtextures;
++type ColorMap = 'gray' | 'viridis';
++
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.OrthographicCamera,
++    controls: OrbitControls,
++    material: THREE.ShaderMaterial,
++    volconfig: { clim1: number; clim2: number; renderstyle: string; isothreshold: number; colormap: ColorMap },
++    cmtextures: { [K in ColorMap]: THREE.Texture };
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
+index 0268130..bfbb917 100644
+--- a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
++++ b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
+@@ -11,15 +11,15 @@ if (WebGL.isWebGL2Available() === false) {
+ 
+ const INITIAL_CLOUD_SIZE = 128;
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ let prevTime = performance.now();
+-let cloudTexture = null;
++let cloudTexture: THREE.Data3DTexture | null = null;
+ 
+ init();
+ animate();
+ 
+-function generateCloudTexture(size, scaleFactor = 1.0) {
++function generateCloudTexture(size: number, scaleFactor = 1.0) {
+     const data = new Uint8Array(size * size * size);
+     const scale = (scaleFactor * 10.0) / size;
+ 
+@@ -65,7 +65,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
+@@ -317,7 +317,7 @@ function animate() {
+         const scaleFactor = (Math.random() + 0.5) * 0.5;
+         const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
+ 
+-        renderer.copyTextureToTexture3D(box, position, source, cloudTexture);
++        renderer.copyTextureToTexture3D(box, position, source, cloudTexture!);
+ 
+         prevTime = time;
+ 
+diff --git a/examples-testing/examples/webgl2_multiple_rendertargets.ts b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+index cc10827..217ec13 100644
+--- a/examples-testing/examples/webgl2_multiple_rendertargets.ts
++++ b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+@@ -4,9 +4,9 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, controls;
+-let renderTarget;
+-let postScene, postCamera;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let renderTarget: THREE.WebGLMultipleRenderTargets;
++let postScene: THREE.Scene, postCamera: THREE.OrthographicCamera;
+ 
+ const parameters = {
+     samples: 4,
+@@ -68,8 +68,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.TorusKnotGeometry(1, 0.3, 128, 32),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#gbuffer-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#gbuffer-frag').textContent.trim(),
++                vertexShader: document.querySelector('#gbuffer-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#gbuffer-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: diffuse },
+                     repeat: { value: new THREE.Vector2(5, 0.5) },
+@@ -88,8 +88,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.PlaneGeometry(2, 2),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#render-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#render-frag').textContent.trim(),
++                vertexShader: document.querySelector('#render-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#render-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: renderTarget.texture[0] },
+                     tNormal: { value: renderTarget.texture[1] },
+@@ -124,8 +124,8 @@ function render() {
+     renderTarget.samples = parameters.samples;
+ 
+     scene.traverse(function (child) {
+-        if (child.material !== undefined) {
+-            child.material.wireframe = parameters.wireframe;
++        if ((child as THREE.Mesh).material !== undefined) {
++            ((child as THREE.Mesh).material as THREE.RawShaderMaterial).wireframe = parameters.wireframe;
+         }
+     });
+ 
+diff --git a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+index 18cf29d..a1a050a 100644
+--- a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
++++ b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+@@ -7,9 +7,9 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, renderer, group, container;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, group: THREE.Group, container: HTMLElement;
+ 
+-let composer1, composer2;
++let composer1: EffectComposer, composer2: EffectComposer;
+ 
+ const params = {
+     animate: true,
+@@ -23,7 +23,7 @@ function init() {
+         return;
+     }
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 10, 2000);
+     camera.position.z = 500;
+diff --git a/examples-testing/examples/webgl2_texture2darray_compressed.ts b/examples-testing/examples/webgl2_texture2darray_compressed.ts
+index bf86320..5294a1f 100644
+--- a/examples-testing/examples/webgl2_texture2darray_compressed.ts
++++ b/examples-testing/examples/webgl2_texture2darray_compressed.ts
+@@ -9,7 +9,12 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, mesh, renderer, stats, clock;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    clock: THREE.Clock;
+ 
+ const planeWidth = 50;
+ const planeHeight = 25;
+@@ -49,8 +54,8 @@ function init() {
+                 depth: { value: 55 },
+                 size: { value: new THREE.Vector2(planeWidth, planeHeight) },
+             },
+-            vertexShader: document.getElementById('vs').textContent.trim(),
+-            fragmentShader: document.getElementById('fs').textContent.trim(),
++            vertexShader: document.getElementById('vs')!.textContent!.trim(),
++            fragmentShader: document.getElementById('fs')!.textContent!.trim(),
+             glslVersion: THREE.GLSL3,
+         });
+ 
+diff --git a/examples-testing/examples/webgl2_ubo.ts b/examples-testing/examples/webgl2_ubo.ts
+index e296fdc..527b9a7 100644
+--- a/examples-testing/examples/webgl2_ubo.ts
++++ b/examples-testing/examples/webgl2_ubo.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+ init();
+ animate();
+@@ -13,7 +13,7 @@ function init() {
+         return;
+     }
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+     camera.position.set(0, 0, 25);
+@@ -59,8 +59,8 @@ function init() {
+             normalMatrix: { value: null },
+             color: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader1').textContent,
+-        fragmentShader: document.getElementById('fragmentShader1').textContent,
++        vertexShader: document.getElementById('vertexShader1')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader1')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -69,8 +69,8 @@ function init() {
+             modelMatrix: { value: null },
+             diffuseMap: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader2').textContent,
+-        fragmentShader: document.getElementById('fragmentShader2').textContent,
++        vertexShader: document.getElementById('vertexShader2')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader2')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -136,7 +136,7 @@ function animate() {
+     const delta = clock.getDelta();
+ 
+     scene.traverse(function (child) {
+-        if (child.isMesh) {
++        if ((child as THREE.Mesh).isMesh) {
+             child.rotation.x += delta * 0.5;
+             child.rotation.y += delta * 0.3;
+         }
+diff --git a/examples-testing/examples/webgl2_volume_cloud.ts b/examples-testing/examples/webgl2_volume_cloud.ts
+index bc54732..2ebf428 100644
+--- a/examples-testing/examples/webgl2_volume_cloud.ts
++++ b/examples-testing/examples/webgl2_volume_cloud.ts
+@@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ 
+ init();
+ animate();
+@@ -34,7 +34,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
+diff --git a/examples-testing/examples/webgl2_volume_instancing.ts b/examples-testing/examples/webgl2_volume_instancing.ts
+index 8932869..54fe148 100644
+--- a/examples-testing/examples/webgl2_volume_instancing.ts
++++ b/examples-testing/examples/webgl2_volume_instancing.ts
+@@ -8,8 +8,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let controls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let controls: OrbitControls;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl2_volume_perlin.ts b/examples-testing/examples/webgl2_volume_perlin.ts
+index a75328f..cdd9549 100644
+--- a/examples-testing/examples/webgl2_volume_perlin.ts
++++ b/examples-testing/examples/webgl2_volume_perlin.ts
+@@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
+index a819541..46230b4 100644
+--- a/examples-testing/examples/webgl_furnace_test.ts
++++ b/examples-testing/examples/webgl_furnace_test.ts
+@@ -1,6 +1,6 @@
+ import * as THREE from 'three';
+ 
+-let scene, camera, renderer, radianceMap;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, radianceMap: THREE.Texture;
+ 
+ const COLOR = 0xcccccc;
+ 
+@@ -20,7 +20,8 @@ function init() {
+ 
+     document.body.addEventListener('mouseover', function () {
+         scene.traverse(function (child) {
+-            if (child.isMesh) child.material.color.setHex(0xffffff);
++            if ((child as THREE.Mesh).isMesh)
++                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xffffff);
+         });
+ 
+         render();
+@@ -28,7 +29,8 @@ function init() {
+ 
+     document.body.addEventListener('mouseout', function () {
+         scene.traverse(function (child) {
+-            if (child.isMesh) child.material.color.setHex(0xccccff); // tinted for visibility
++            if ((child as THREE.Mesh).isMesh)
++                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xccccff); // tinted for visibility
+         });
+ 
+         render();
+diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
+index c2a8058..c3fbbfc 100644
+--- a/examples-testing/examples/webgl_pmrem_test.ts
++++ b/examples-testing/examples/webgl_pmrem_test.ts
+@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, controls, renderer;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGLRenderer;
+ 
+ function init() {
+     const width = window.innerWidth;
+@@ -65,12 +65,13 @@ function init() {
+     const gui = new GUI();
+     gui.add({ enabled: true }, 'enabled')
+         .name('PMREM')
+-        .onChange(value => {
++        .onChange((value: boolean) => {
+             directionalLight.intensity = value ? 0 : 1;
+ 
+             scene.traverse(function (child) {
+-                if (child.isMesh) {
+-                    child.material.envMapIntensity = 1 - directionalLight.intensity;
++                if ((child as THREE.Mesh).isMesh) {
++                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).envMapIntensity =
++                        1 - directionalLight.intensity;
+                 }
+             });
+ 
