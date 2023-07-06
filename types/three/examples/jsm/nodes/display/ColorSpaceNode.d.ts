@@ -1,6 +1,6 @@
-import { TextureEncoding } from '../../../../src/Three';
-import TempNode from '../core/TempNode';
-import Node from '../core/Node';
+import { TextureEncoding } from '../../../../src/Three.js';
+import TempNode from '../core/TempNode.js';
+import Node from '../core/Node.js';
 export type ColorSpaceNodeMethod = typeof ColorSpaceNode.LINEAR_TO_LINEAR | typeof ColorSpaceNode.LINEAR_TO_SRGB;
 
 export default class ColorSpaceNode extends TempNode {
