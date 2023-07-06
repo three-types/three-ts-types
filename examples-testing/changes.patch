@@ -2167,6 +2167,31 @@ index cc10827..217ec13 100644
          }
      });
  
+diff --git a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+index 18cf29d..a1a050a 100644
+--- a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
++++ b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+@@ -7,9 +7,9 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, renderer, group, container;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, group: THREE.Group, container: HTMLElement;
+ 
+-let composer1, composer2;
++let composer1: EffectComposer, composer2: EffectComposer;
+ 
+ const params = {
+     animate: true,
+@@ -23,7 +23,7 @@ function init() {
+         return;
+     }
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 10, 2000);
+     camera.position.z = 500;
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
