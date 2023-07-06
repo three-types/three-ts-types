@@ -2121,6 +2121,59 @@ index bf86320..5294a1f 100644
              glslVersion: THREE.GLSL3,
          });
  
+diff --git a/examples-testing/examples/webgl2_ubo.ts b/examples-testing/examples/webgl2_ubo.ts
+index e296fdc..527b9a7 100644
+--- a/examples-testing/examples/webgl2_ubo.ts
++++ b/examples-testing/examples/webgl2_ubo.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+ init();
+ animate();
+@@ -13,7 +13,7 @@ function init() {
+         return;
+     }
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+     camera.position.set(0, 0, 25);
+@@ -59,8 +59,8 @@ function init() {
+             normalMatrix: { value: null },
+             color: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader1').textContent,
+-        fragmentShader: document.getElementById('fragmentShader1').textContent,
++        vertexShader: document.getElementById('vertexShader1')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader1')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -69,8 +69,8 @@ function init() {
+             modelMatrix: { value: null },
+             diffuseMap: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader2').textContent,
+-        fragmentShader: document.getElementById('fragmentShader2').textContent,
++        vertexShader: document.getElementById('vertexShader2')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader2')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -136,7 +136,7 @@ function animate() {
+     const delta = clock.getDelta();
+ 
+     scene.traverse(function (child) {
+-        if (child.isMesh) {
++        if ((child as THREE.Mesh).isMesh) {
+             child.rotation.x += delta * 0.5;
+             child.rotation.y += delta * 0.3;
+         }
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
