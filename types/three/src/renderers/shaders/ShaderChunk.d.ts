@@ -79,7 +79,7 @@ export const ShaderChunk: {
     clearcoat_normal_fragment_maps: string;
     clearcoat_pars_fragment: string;
     iridescence_pars_fragment: string;
-    output_fragment: string;
+    opaque_fragment: string;
     packing: string;
     premultiplied_alpha_fragment: string;
     project_vertex: string;
