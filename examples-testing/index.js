@@ -305,7 +305,7 @@ const files = {
         // 'webgl2_rendertarget_texture2darray',
         'webgl2_texture2darray_compressed',
         'webgl2_ubo',
-        // 'webgl2_volume_cloud',
+        'webgl2_volume_cloud',
         // 'webgl2_volume_instancing',
         // 'webgl2_volume_perlin',
     ],
