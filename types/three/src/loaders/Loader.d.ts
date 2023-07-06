@@ -43,4 +43,6 @@ export class Loader {
     setPath(path: string): this;
     setResourcePath(resourcePath: string): this;
     setRequestHeader(requestHeader: { [header: string]: string }): this;
+
+    static DEFAULT_MATERIAL_NAME: string;
 }
