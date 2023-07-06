@@ -776,128 +776,28 @@ index 4a80898..d2613d0 100644
      scene.add(mesh);
  
 diff --git a/examples-testing/examples/misc_boxselection.ts b/examples-testing/examples/misc_boxselection.ts
-index a78c71b..44337ff 100644
+index a78c71b..0ecae0f 100644
 --- a/examples-testing/examples/misc_boxselection.ts
 +++ b/examples-testing/examples/misc_boxselection.ts
-@@ -5,73 +5,70 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -5,8 +5,8 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { SelectionBox } from 'three/addons/interactive/SelectionBox.js';
  import { SelectionHelper } from 'three/addons/interactive/SelectionHelper.js';
  
 -let container, stats;
 -let camera, scene, renderer;
-+let container: HTMLDivElement, stats: Stats;
++let container: HTMLElement, stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
--init();
--animate();
-+container = document.createElement('div');
-+document.body.appendChild(container);
+ init();
+ animate();
+@@ -93,12 +93,12 @@ function render() {
+     renderer.render(scene, camera);
+ }
  
--function init() {
--    container = document.createElement('div');
--    document.body.appendChild(container);
-+camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
-+camera.position.z = 1000;
- 
--    camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 5000);
--    camera.position.z = 1000;
-+scene = new THREE.Scene();
-+scene.background = new THREE.Color(0xf0f0f0);
- 
--    scene = new THREE.Scene();
--    scene.background = new THREE.Color(0xf0f0f0);
-+scene.add(new THREE.AmbientLight(0x505050));
- 
--    scene.add(new THREE.AmbientLight(0x505050));
-+const light = new THREE.SpotLight(0xffffff, 1.5);
-+light.position.set(0, 500, 2000);
-+light.angle = Math.PI / 9;
- 
--    const light = new THREE.SpotLight(0xffffff, 1.5);
--    light.position.set(0, 500, 2000);
--    light.angle = Math.PI / 9;
-+light.castShadow = true;
-+light.shadow.camera.near = 1000;
-+light.shadow.camera.far = 4000;
-+light.shadow.mapSize.width = 1024;
-+light.shadow.mapSize.height = 1024;
- 
--    light.castShadow = true;
--    light.shadow.camera.near = 1000;
--    light.shadow.camera.far = 4000;
--    light.shadow.mapSize.width = 1024;
--    light.shadow.mapSize.height = 1024;
-+scene.add(light);
- 
--    scene.add(light);
-+const geometry = new THREE.BoxGeometry(20, 20, 20);
- 
--    const geometry = new THREE.BoxGeometry(20, 20, 20);
-+for (let i = 0; i < 200; i++) {
-+    const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
- 
--    for (let i = 0; i < 200; i++) {
--        const object = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: Math.random() * 0xffffff }));
-+    object.position.x = Math.random() * 1600 - 800;
-+    object.position.y = Math.random() * 900 - 450;
-+    object.position.z = Math.random() * 900 - 500;
- 
--        object.position.x = Math.random() * 1600 - 800;
--        object.position.y = Math.random() * 900 - 450;
--        object.position.z = Math.random() * 900 - 500;
-+    object.rotation.x = Math.random() * 2 * Math.PI;
-+    object.rotation.y = Math.random() * 2 * Math.PI;
-+    object.rotation.z = Math.random() * 2 * Math.PI;
- 
--        object.rotation.x = Math.random() * 2 * Math.PI;
--        object.rotation.y = Math.random() * 2 * Math.PI;
--        object.rotation.z = Math.random() * 2 * Math.PI;
-+    object.scale.x = Math.random() * 2 + 1;
-+    object.scale.y = Math.random() * 2 + 1;
-+    object.scale.z = Math.random() * 2 + 1;
- 
--        object.scale.x = Math.random() * 2 + 1;
--        object.scale.y = Math.random() * 2 + 1;
--        object.scale.z = Math.random() * 2 + 1;
-+    object.castShadow = true;
-+    object.receiveShadow = true;
- 
--        object.castShadow = true;
--        object.receiveShadow = true;
-+    scene.add(object);
-+}
- 
--        scene.add(object);
--    }
-+renderer = new THREE.WebGLRenderer({ antialias: true });
-+renderer.setPixelRatio(window.devicePixelRatio);
-+renderer.setSize(window.innerWidth, window.innerHeight);
- 
--    renderer = new THREE.WebGLRenderer({ antialias: true });
--    renderer.setPixelRatio(window.devicePixelRatio);
--    renderer.setSize(window.innerWidth, window.innerHeight);
-+renderer.shadowMap.enabled = true;
-+renderer.shadowMap.type = THREE.PCFShadowMap;
- 
--    renderer.shadowMap.enabled = true;
--    renderer.shadowMap.type = THREE.PCFShadowMap;
-+container.appendChild(renderer.domElement);
- 
--    container.appendChild(renderer.domElement);
-+stats = new Stats();
-+container.appendChild(stats.dom);
- 
--    stats = new Stats();
--    container.appendChild(stats.dom);
-+window.addEventListener('resize', onWindowResize);
- 
--    window.addEventListener('resize', onWindowResize);
--}
-+animate();
- 
- function onWindowResize() {
-     camera.aspect = window.innerWidth / window.innerHeight;
-@@ -98,7 +95,7 @@ const helper = new SelectionHelper(renderer, 'selectBox');
+-const selectionBox = new SelectionBox(camera, scene);
+-const helper = new SelectionHelper(renderer, 'selectBox');
++const selectionBox = new SelectionBox(camera!, scene!);
++const helper = new SelectionHelper(renderer!, 'selectBox');
  
  document.addEventListener('pointerdown', function (event) {
      for (const item of selectionBox.collection) {
@@ -906,7 +806,7 @@ index a78c71b..44337ff 100644
      }
  
      selectionBox.startPoint.set(
-@@ -111,7 +108,7 @@ document.addEventListener('pointerdown', function (event) {
+@@ -111,7 +111,7 @@ document.addEventListener('pointerdown', function (event) {
  document.addEventListener('pointermove', function (event) {
      if (helper.isDown) {
          for (let i = 0; i < selectionBox.collection.length; i++) {
@@ -915,7 +815,7 @@ index a78c71b..44337ff 100644
          }
  
          selectionBox.endPoint.set(
-@@ -123,7 +120,7 @@ document.addEventListener('pointermove', function (event) {
+@@ -123,7 +123,7 @@ document.addEventListener('pointermove', function (event) {
          const allSelected = selectionBox.select();
  
          for (let i = 0; i < allSelected.length; i++) {
@@ -924,7 +824,7 @@ index a78c71b..44337ff 100644
          }
      }
  });
-@@ -138,6 +135,6 @@ document.addEventListener('pointerup', function (event) {
+@@ -138,6 +138,6 @@ document.addEventListener('pointerup', function (event) {
      const allSelected = selectionBox.select();
  
      for (let i = 0; i < allSelected.length; i++) {
@@ -1982,6 +1882,352 @@ index 545694e..4aba18c 100644
      });
  
      const geometry = new THREE.PlaneGeometry(1, 1);
+diff --git a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts b/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
+index 848814c..ca05c89 100644
+--- a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
++++ b/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
+@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, renderer, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -72,7 +72,7 @@ function init() {
+     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+     geometry.setAttribute('textureIndex', new THREE.Int16BufferAttribute(textureIndices, 1));
+-    geometry.attributes.textureIndex.gpuType = THREE.IntType;
++    (geometry.attributes.textureIndex as THREE.BufferAttribute).gpuType = THREE.IntType;
+ 
+     geometry.computeBoundingSphere();
+ 
+@@ -90,8 +90,8 @@ function init() {
+                 value: [map1, map2, map3],
+             },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         glslVersion: THREE.GLSL3,
+     });
+diff --git a/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts b/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
+index a77b973..d24a458 100644
+--- a/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
++++ b/examples-testing/examples/webgl2_buffergeometry_attributes_none.ts
+@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, renderer, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+@@ -34,8 +34,8 @@ function init() {
+         uniforms: {
+             seed: { value: 42 },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         glslVersion: THREE.GLSL3,
+     });
+@@ -54,11 +54,11 @@ function init() {
+     document.body.appendChild(renderer.domElement);
+ }
+ 
+-function animate(time) {
++function animate(time?: number) {
+     requestAnimationFrame(animate);
+ 
+-    mesh.rotation.x = (time / 1000.0) * 0.25;
+-    mesh.rotation.y = (time / 1000.0) * 0.5;
++    mesh.rotation.x = time != null ? (time / 1000.0) * 0.25 : NaN;
++    mesh.rotation.y = time != null ? (time / 1000.0) * 0.5 : NaN;
+ 
+     renderer.render(scene, camera);
+ }
+diff --git a/examples-testing/examples/webgl2_materials_texture3d.ts b/examples-testing/examples/webgl2_materials_texture3d.ts
+index b746daf..e3cdd9b 100644
+--- a/examples-testing/examples/webgl2_materials_texture3d.ts
++++ b/examples-testing/examples/webgl2_materials_texture3d.ts
+@@ -10,7 +10,15 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera, controls, material, volconfig, cmtextures;
++type ColorMap = 'gray' | 'viridis';
++
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.OrthographicCamera,
++    controls: OrbitControls,
++    material: THREE.ShaderMaterial,
++    volconfig: { clim1: number; clim2: number; renderstyle: string; isothreshold: number; colormap: ColorMap },
++    cmtextures: { [K in ColorMap]: THREE.Texture };
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
+index 0268130..bfbb917 100644
+--- a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
++++ b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
+@@ -11,15 +11,15 @@ if (WebGL.isWebGL2Available() === false) {
+ 
+ const INITIAL_CLOUD_SIZE = 128;
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ let prevTime = performance.now();
+-let cloudTexture = null;
++let cloudTexture: THREE.Data3DTexture | null = null;
+ 
+ init();
+ animate();
+ 
+-function generateCloudTexture(size, scaleFactor = 1.0) {
++function generateCloudTexture(size: number, scaleFactor = 1.0) {
+     const data = new Uint8Array(size * size * size);
+     const scale = (scaleFactor * 10.0) / size;
+ 
+@@ -65,7 +65,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
+@@ -317,7 +317,7 @@ function animate() {
+         const scaleFactor = (Math.random() + 0.5) * 0.5;
+         const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
+ 
+-        renderer.copyTextureToTexture3D(box, position, source, cloudTexture);
++        renderer.copyTextureToTexture3D(box, position, source, cloudTexture!);
+ 
+         prevTime = time;
+ 
+diff --git a/examples-testing/examples/webgl2_multiple_rendertargets.ts b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+index cc10827..217ec13 100644
+--- a/examples-testing/examples/webgl2_multiple_rendertargets.ts
++++ b/examples-testing/examples/webgl2_multiple_rendertargets.ts
+@@ -4,9 +4,9 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, controls;
+-let renderTarget;
+-let postScene, postCamera;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let renderTarget: THREE.WebGLMultipleRenderTargets;
++let postScene: THREE.Scene, postCamera: THREE.OrthographicCamera;
+ 
+ const parameters = {
+     samples: 4,
+@@ -68,8 +68,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.TorusKnotGeometry(1, 0.3, 128, 32),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#gbuffer-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#gbuffer-frag').textContent.trim(),
++                vertexShader: document.querySelector('#gbuffer-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#gbuffer-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: diffuse },
+                     repeat: { value: new THREE.Vector2(5, 0.5) },
+@@ -88,8 +88,8 @@ function init() {
+         new THREE.Mesh(
+             new THREE.PlaneGeometry(2, 2),
+             new THREE.RawShaderMaterial({
+-                vertexShader: document.querySelector('#render-vert').textContent.trim(),
+-                fragmentShader: document.querySelector('#render-frag').textContent.trim(),
++                vertexShader: document.querySelector('#render-vert')!.textContent!.trim(),
++                fragmentShader: document.querySelector('#render-frag')!.textContent!.trim(),
+                 uniforms: {
+                     tDiffuse: { value: renderTarget.texture[0] },
+                     tNormal: { value: renderTarget.texture[1] },
+@@ -124,8 +124,8 @@ function render() {
+     renderTarget.samples = parameters.samples;
+ 
+     scene.traverse(function (child) {
+-        if (child.material !== undefined) {
+-            child.material.wireframe = parameters.wireframe;
++        if ((child as THREE.Mesh).material !== undefined) {
++            ((child as THREE.Mesh).material as THREE.RawShaderMaterial).wireframe = parameters.wireframe;
+         }
+     });
+ 
+diff --git a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+index 18cf29d..a1a050a 100644
+--- a/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
++++ b/examples-testing/examples/webgl2_multisampled_renderbuffers.ts
+@@ -7,9 +7,9 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, renderer, group, container;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, group: THREE.Group, container: HTMLElement;
+ 
+-let composer1, composer2;
++let composer1: EffectComposer, composer2: EffectComposer;
+ 
+ const params = {
+     animate: true,
+@@ -23,7 +23,7 @@ function init() {
+         return;
+     }
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 10, 2000);
+     camera.position.z = 500;
+diff --git a/examples-testing/examples/webgl2_texture2darray_compressed.ts b/examples-testing/examples/webgl2_texture2darray_compressed.ts
+index bf86320..5294a1f 100644
+--- a/examples-testing/examples/webgl2_texture2darray_compressed.ts
++++ b/examples-testing/examples/webgl2_texture2darray_compressed.ts
+@@ -9,7 +9,12 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let camera, scene, mesh, renderer, stats, clock;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    clock: THREE.Clock;
+ 
+ const planeWidth = 50;
+ const planeHeight = 25;
+@@ -49,8 +54,8 @@ function init() {
+                 depth: { value: 55 },
+                 size: { value: new THREE.Vector2(planeWidth, planeHeight) },
+             },
+-            vertexShader: document.getElementById('vs').textContent.trim(),
+-            fragmentShader: document.getElementById('fs').textContent.trim(),
++            vertexShader: document.getElementById('vs')!.textContent!.trim(),
++            fragmentShader: document.getElementById('fs')!.textContent!.trim(),
+             glslVersion: THREE.GLSL3,
+         });
+ 
+diff --git a/examples-testing/examples/webgl2_ubo.ts b/examples-testing/examples/webgl2_ubo.ts
+index e296fdc..527b9a7 100644
+--- a/examples-testing/examples/webgl2_ubo.ts
++++ b/examples-testing/examples/webgl2_ubo.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import WebGL from 'three/addons/capabilities/WebGL.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+ init();
+ animate();
+@@ -13,7 +13,7 @@ function init() {
+         return;
+     }
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+     camera.position.set(0, 0, 25);
+@@ -59,8 +59,8 @@ function init() {
+             normalMatrix: { value: null },
+             color: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader1').textContent,
+-        fragmentShader: document.getElementById('fragmentShader1').textContent,
++        vertexShader: document.getElementById('vertexShader1')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader1')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -69,8 +69,8 @@ function init() {
+             modelMatrix: { value: null },
+             diffuseMap: { value: null },
+         },
+-        vertexShader: document.getElementById('vertexShader2').textContent,
+-        fragmentShader: document.getElementById('fragmentShader2').textContent,
++        vertexShader: document.getElementById('vertexShader2')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader2')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -136,7 +136,7 @@ function animate() {
+     const delta = clock.getDelta();
+ 
+     scene.traverse(function (child) {
+-        if (child.isMesh) {
++        if ((child as THREE.Mesh).isMesh) {
+             child.rotation.x += delta * 0.5;
+             child.rotation.y += delta * 0.3;
+         }
+diff --git a/examples-testing/examples/webgl2_volume_cloud.ts b/examples-testing/examples/webgl2_volume_cloud.ts
+index bc54732..2ebf428 100644
+--- a/examples-testing/examples/webgl2_volume_cloud.ts
++++ b/examples-testing/examples/webgl2_volume_cloud.ts
+@@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ 
+ init();
+ animate();
+@@ -34,7 +34,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
+diff --git a/examples-testing/examples/webgl2_volume_instancing.ts b/examples-testing/examples/webgl2_volume_instancing.ts
+index 8932869..54fe148 100644
+--- a/examples-testing/examples/webgl2_volume_instancing.ts
++++ b/examples-testing/examples/webgl2_volume_instancing.ts
+@@ -8,8 +8,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let controls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let controls: OrbitControls;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl2_volume_perlin.ts b/examples-testing/examples/webgl2_volume_perlin.ts
+index a75328f..cdd9549 100644
+--- a/examples-testing/examples/webgl2_volume_perlin.ts
++++ b/examples-testing/examples/webgl2_volume_perlin.ts
+@@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ 
+ init();
+ animate();
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
