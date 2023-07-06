@@ -301,7 +301,7 @@ const files = {
         'webgl2_materials_texture3d',
         'webgl2_materials_texture3d_partialupdate',
         'webgl2_multiple_rendertargets',
-        // 'webgl2_multisampled_renderbuffers',
+        'webgl2_multisampled_renderbuffers',
         // 'webgl2_rendertarget_texture2darray',
         // 'webgl2_texture2darray_compressed',
         // 'webgl2_ubo',
