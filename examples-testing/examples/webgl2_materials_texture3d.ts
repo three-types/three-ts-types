@@ -10,15 +10,7 @@ if (WebGL.isWebGL2Available() === false) {
     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
 }
 
-type ColorMap = 'gray' | 'viridis';
-
-let renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.OrthographicCamera,
-    controls: OrbitControls,
-    material: THREE.ShaderMaterial,
-    volconfig: { clim1: number; clim2: number; renderstyle: string; isothreshold: number; colormap: ColorMap },
-    cmtextures: { [K in ColorMap]: THREE.Texture };
+let renderer, scene, camera, controls, material, volconfig, cmtextures;
 
 init();
 

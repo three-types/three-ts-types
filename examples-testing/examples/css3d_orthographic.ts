@@ -3,11 +3,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { Controller } from 'lil-gui';
 
-let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+let scene2, renderer2;
 
 const frustumSize = 500;
 
@@ -76,18 +75,18 @@ function init() {
     renderer2 = new CSS3DRenderer();
     renderer2.setSize(window.innerWidth, window.innerHeight);
     renderer2.domElement.style.position = 'absolute';
-    renderer2.domElement.style.top = '0';
+    renderer2.domElement.style.top = 0;
     document.body.appendChild(renderer2.domElement);
 
     const controls = new OrbitControls(camera, renderer2.domElement);
     controls.minZoom = 0.5;
     controls.maxZoom = 2;
 
-    function createPlane(width: number, height: number, cssColor: string, pos: THREE.Vector3, rot: THREE.Euler) {
+    function createPlane(width, height, cssColor, pos, rot) {
         const element = document.createElement('div');
         element.style.width = width + 'px';
         element.style.height = height + 'px';
-        element.style.opacity = '0.75';
+        element.style.opacity = 0.75;
         element.style.background = cssColor;
 
         const object = new CSS3DObject(element);
@@ -134,12 +133,12 @@ function createPanel() {
 
     const settings = {
         setViewOffset() {
-            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
-            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
-            (folder1.children[3] as Controller).enable().setValue(0);
-            (folder1.children[4] as Controller).enable().setValue(0);
-            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
-            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+            folder1.children[1].enable().setValue(window.innerWidth);
+            folder1.children[2].enable().setValue(window.innerHeight);
+            folder1.children[3].enable().setValue(0);
+            folder1.children[4].enable().setValue(0);
+            folder1.children[5].enable().setValue(window.innerWidth);
+            folder1.children[6].enable().setValue(window.innerHeight);
         },
         fullWidth: 0,
         fullHeight: 0,
@@ -148,12 +147,12 @@ function createPanel() {
         width: 0,
         height: 0,
         clearViewOffset() {
-            (folder1.children[1] as Controller).setValue(0).disable();
-            (folder1.children[2] as Controller).setValue(0).disable();
-            (folder1.children[3] as Controller).setValue(0).disable();
-            (folder1.children[4] as Controller).setValue(0).disable();
-            (folder1.children[5] as Controller).setValue(0).disable();
-            (folder1.children[6] as Controller).setValue(0).disable();
+            folder1.children[1].setValue(0).disable();
+            folder1.children[2].setValue(0).disable();
+            folder1.children[3].setValue(0).disable();
+            folder1.children[4].setValue(0).disable();
+            folder1.children[5].setValue(0).disable();
+            folder1.children[6].setValue(0).disable();
             camera.clearViewOffset();
         },
     };
@@ -161,46 +160,32 @@ function createPanel() {
     folder1.add(settings, 'setViewOffset');
     folder1
         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
-        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
+        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
         .disable();
     folder1
         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
-        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
+        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
         .disable();
     folder1
         .add(settings, 'offsetX', 0, 256, 1)
-        .onChange((val: number) => updateCameraViewOffset({ x: val }))
+        .onChange(val => updateCameraViewOffset({ x: val }))
         .disable();
     folder1
         .add(settings, 'offsetY', 0, 256, 1)
-        .onChange((val: number) => updateCameraViewOffset({ y: val }))
+        .onChange(val => updateCameraViewOffset({ y: val }))
         .disable();
     folder1
         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
-        .onChange((val: number) => updateCameraViewOffset({ width: val }))
+        .onChange(val => updateCameraViewOffset({ width: val }))
         .disable();
     folder1
         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
-        .onChange((val: number) => updateCameraViewOffset({ height: val }))
+        .onChange(val => updateCameraViewOffset({ height: val }))
         .disable();
     folder1.add(settings, 'clearViewOffset');
 }
 
-function updateCameraViewOffset({
-    fullWidth,
-    fullHeight,
-    x,
-    y,
-    width,
-    height,
-}: {
-    fullWidth?: number;
-    fullHeight?: number;
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-}) {
+function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
     if (!camera.view) {
         camera.setViewOffset(
             fullWidth || window.innerWidth,

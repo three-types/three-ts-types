@@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-function exportGLTF(input: THREE.Object3D | THREE.Object3D[]) {
+function exportGLTF(input) {
     const gltfExporter = new GLTFExporter();
 
     const options = {
@@ -37,7 +37,7 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link); // Firefox workaround, see #6594
 
-function save(blob: Blob, filename: string) {
+function save(blob, filename) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
@@ -45,25 +45,18 @@ function save(blob: Blob, filename: string) {
     // URL.revokeObjectURL( url ); breaks Firefox...
 }
 
-function saveString(text: string, filename: string) {
+function saveString(text, filename) {
     save(new Blob([text], { type: 'text/plain' }), filename);
 }
 
-function saveArrayBuffer(buffer: BufferSource, filename: string) {
+function saveArrayBuffer(buffer, filename) {
     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
 }
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera,
-    object: THREE.Object3D,
-    object2: THREE.Mesh,
-    material: THREE.MeshBasicMaterial | THREE.MeshStandardMaterial,
-    geometry: THREE.BufferGeometry,
-    scene1: THREE.Scene,
-    scene2: THREE.Scene,
-    renderer: THREE.WebGLRenderer;
-let gridHelper: THREE.GridHelper, sphere: THREE.Mesh, model: THREE.Group, coffeemat: THREE.Group;
+let camera, object, object2, material, geometry, scene1, scene2, renderer;
+let gridHelper, sphere, model, coffeemat;
 
 const params = {
     trs: false,

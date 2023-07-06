@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 render();
@@ -45,7 +45,7 @@ function init() {
         const arraybuffer = await exporter.parse(gltf.scene);
         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
 
-        const link = document.getElementById('link') as HTMLAnchorElement;
+        const link = document.getElementById('link');
         link.href = URL.createObjectURL(blob);
     });
 
@@ -64,7 +64,7 @@ function createSpotShadowMesh() {
     canvas.width = 128;
     canvas.height = 128;
 
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     const gradient = context.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,

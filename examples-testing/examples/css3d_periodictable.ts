@@ -597,16 +597,11 @@ const table = [
     7,
 ];
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
-let controls: TrackballControls;
+let camera, scene, renderer;
+let controls;
 
-const objects: CSS3DObject[] = [];
-const targets: {
-    table: THREE.Object3D[];
-    sphere: THREE.Object3D[];
-    helix: THREE.Object3D[];
-    grid: THREE.Object3D[];
-} = { table: [], sphere: [], helix: [], grid: [] };
+const objects = [];
+const targets = { table: [], sphere: [], helix: [], grid: [] };
 
 init();
 animate();
@@ -626,12 +621,12 @@ function init() {
 
         const number = document.createElement('div');
         number.className = 'number';
-        number.textContent = `${i / 5 + 1}`;
+        number.textContent = i / 5 + 1;
         element.appendChild(number);
 
         const symbol = document.createElement('div');
         symbol.className = 'symbol';
-        symbol.textContent = table[i] as string;
+        symbol.textContent = table[i];
         element.appendChild(symbol);
 
         const details = document.createElement('div');
@@ -650,8 +645,8 @@ function init() {
         //
 
         const object = new THREE.Object3D();
-        object.position.x = (table[i + 3] as number) * 140 - 1330;
-        object.position.y = -((table[i + 4] as number) * 180) + 990;
+        object.position.x = table[i + 3] * 140 - 1330;
+        object.position.y = -(table[i + 4] * 180) + 990;
 
         targets.table.push(object);
     }
@@ -710,7 +705,7 @@ function init() {
 
     renderer = new CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('container')!.appendChild(renderer.domElement);
+    document.getElementById('container').appendChild(renderer.domElement);
 
     //
 
@@ -719,22 +714,22 @@ function init() {
     controls.maxDistance = 6000;
     controls.addEventListener('change', render);
 
-    const buttonTable = document.getElementById('table')!;
+    const buttonTable = document.getElementById('table');
     buttonTable.addEventListener('click', function () {
         transform(targets.table, 2000);
     });
 
-    const buttonSphere = document.getElementById('sphere')!;
+    const buttonSphere = document.getElementById('sphere');
     buttonSphere.addEventListener('click', function () {
         transform(targets.sphere, 2000);
     });
 
-    const buttonHelix = document.getElementById('helix')!;
+    const buttonHelix = document.getElementById('helix');
     buttonHelix.addEventListener('click', function () {
         transform(targets.helix, 2000);
     });
 
-    const buttonGrid = document.getElementById('grid')!;
+    const buttonGrid = document.getElementById('grid');
     buttonGrid.addEventListener('click', function () {
         transform(targets.grid, 2000);
     });
@@ -746,7 +741,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function transform(targets: THREE.Object3D[], duration: number) {
+function transform(targets, duration) {
     TWEEN.removeAll();
 
     for (let i = 0; i < objects.length; i++) {
@@ -770,7 +765,7 @@ function transform(targets: THREE.Object3D[], duration: number) {
             .start();
     }
 
-    new TWEEN.Tween({})
+    new TWEEN.Tween(this)
         .to({}, duration * 2)
         .onUpdate(render)
         .start();

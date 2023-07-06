@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 
-let cameraPersp: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera, currentCamera: THREE.Camera;
-let scene: THREE.Scene, renderer: THREE.WebGLRenderer, control: TransformControls, orbit: OrbitControls;
+let cameraPersp, cameraOrtho, currentCamera;
+let scene, renderer, control, orbit;
 
 init();
 render();
@@ -36,10 +36,7 @@ function init() {
     texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
 
     const geometry = new THREE.BoxGeometry(200, 200, 200);
-    const material = new THREE.MeshLambertMaterial({
-        map: texture,
-        transparent: true,
-    });
+    const material = new THREE.MeshLambertMaterial({ map: texture, transparent: true });
 
     orbit = new OrbitControls(currentCamera, renderer.domElement);
     orbit.update();
@@ -87,9 +84,7 @@ function init() {
             case 67: // C
                 const position = currentCamera.position.clone();
 
-                currentCamera = (currentCamera as THREE.PerspectiveCamera).isPerspectiveCamera
-                    ? cameraOrtho
-                    : cameraPersp;
+                currentCamera = currentCamera.isPerspectiveCamera ? cameraOrtho : cameraPersp;
                 currentCamera.position.copy(position);
 
                 orbit.object = currentCamera;

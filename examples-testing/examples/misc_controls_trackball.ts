@@ -5,12 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-let perspectiveCamera: THREE.PerspectiveCamera,
-    orthographicCamera: THREE.OrthographicCamera,
-    controls: TrackballControls,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    stats: Stats;
+let perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
 
 const params = {
     orthographicCamera: false,
@@ -44,10 +39,7 @@ function init() {
     scene.fog = new THREE.FogExp2(0xcccccc, 0.002);
 
     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
-    const material = new THREE.MeshPhongMaterial({
-        color: 0xffffff,
-        flatShading: true,
-    });
+    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
 
     for (let i = 0; i < 500; i++) {
         const mesh = new THREE.Mesh(geometry, material);
@@ -87,7 +79,7 @@ function init() {
     const gui = new GUI();
     gui.add(params, 'orthographicCamera')
         .name('use orthographic')
-        .onChange(function (value: boolean) {
+        .onChange(function (value) {
             controls.dispose();
 
             createControls(value ? orthographicCamera : perspectiveCamera);
@@ -100,7 +92,7 @@ function init() {
     createControls(perspectiveCamera);
 }
 
-function createControls(camera: THREE.Camera) {
+function createControls(camera) {
     controls = new TrackballControls(camera, renderer.domElement);
 
     controls.rotateSpeed = 1.0;

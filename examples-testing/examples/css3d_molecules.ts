@@ -5,11 +5,11 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
 import { CSS3DRenderer, CSS3DObject, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
-let controls: TrackballControls;
-let root: THREE.Object3D;
+let camera, scene, renderer;
+let controls;
+let root;
 
-const objects: Array<CSS3DObject | CSS3DSprite> = [];
+const objects = [];
 const tmpVec1 = new THREE.Vector3();
 const tmpVec2 = new THREE.Vector3();
 const tmpVec3 = new THREE.Vector3();
@@ -49,7 +49,7 @@ const params = {
 };
 
 const loader = new PDBLoader();
-const colorSpriteMap: { [element: string]: string | undefined } = {};
+const colorSpriteMap = {};
 const baseSprite = document.createElement('img');
 
 init();
@@ -68,7 +68,7 @@ function init() {
 
     renderer = new CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('container')!.appendChild(renderer.domElement);
+    document.getElementById('container').appendChild(renderer.domElement);
 
     //
 
@@ -96,7 +96,7 @@ function init() {
     gui.open();
 }
 
-function changeVizType(value: number) {
+function changeVizType(value) {
     if (value === 0) showAtoms();
     else if (value === 1) showBonds();
     else showAtomsBonds();
@@ -148,7 +148,7 @@ function showAtomsBonds() {
 
 //
 
-function colorify(ctx: CanvasRenderingContext2D, width: number, height: number, color: THREE.Color) {
+function colorify(ctx, width, height, color) {
     const r = color.r,
         g = color.g,
         b = color.b;
@@ -165,7 +165,7 @@ function colorify(ctx: CanvasRenderingContext2D, width: number, height: number, 
     ctx.putImageData(imageData, 0, 0);
 }
 
-function imageToCanvas(image: HTMLImageElement) {
+function imageToCanvas(image) {
     const width = image.width;
     const height = image.height;
 
@@ -174,7 +174,7 @@ function imageToCanvas(image: HTMLImageElement) {
     canvas.width = width;
     canvas.height = height;
 
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     context.drawImage(image, 0, 0, width, height);
 
     return canvas;
@@ -182,12 +182,12 @@ function imageToCanvas(image: HTMLImageElement) {
 
 //
 
-function loadMolecule(model: string) {
+function loadMolecule(model) {
     const url = 'models/pdb/' + model;
 
     for (let i = 0; i < objects.length; i++) {
         const object = objects[i];
-        object.parent!.remove(object);
+        object.parent.remove(object);
     }
 
     objects.length = 0;
@@ -198,7 +198,7 @@ function loadMolecule(model: string) {
         const json = pdb.json;
 
         geometryAtoms.computeBoundingBox();
-        geometryAtoms.boundingBox!.getCenter(offset).negate();
+        geometryAtoms.boundingBox.getCenter(offset).negate();
 
         geometryAtoms.translate(offset.x, offset.y, offset.z);
         geometryBonds.translate(offset.x, offset.y, offset.z);
@@ -218,7 +218,7 @@ function loadMolecule(model: string) {
 
             if (!colorSpriteMap[element]) {
                 const canvas = imageToCanvas(baseSprite);
-                const context = canvas.getContext('2d')!;
+                const context = canvas.getContext('2d');
 
                 colorify(context, canvas.width, canvas.height, color);
 
@@ -227,7 +227,7 @@ function loadMolecule(model: string) {
                 colorSpriteMap[element] = dataUrl;
             }
 
-            const colorSprite = colorSpriteMap[element]!;
+            const colorSprite = colorSpriteMap[element];
 
             const atom = document.createElement('img');
             atom.src = colorSprite;
