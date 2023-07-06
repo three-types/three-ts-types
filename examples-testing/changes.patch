@@ -2174,6 +2174,30 @@ index e296fdc..527b9a7 100644
              child.rotation.x += delta * 0.5;
              child.rotation.y += delta * 0.3;
          }
+diff --git a/examples-testing/examples/webgl2_volume_cloud.ts b/examples-testing/examples/webgl2_volume_cloud.ts
+index bc54732..2ebf428 100644
+--- a/examples-testing/examples/webgl2_volume_cloud.ts
++++ b/examples-testing/examples/webgl2_volume_cloud.ts
+@@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
+     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
+ }
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+ 
+ init();
+ animate();
+@@ -34,7 +34,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index a819541..46230b4 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
