@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: PointerLockControls;
 
-const objects = [];
+const objects: THREE.Mesh[] = [];
 
-let raycaster;
+let raycaster: THREE.Raycaster;
 
 let moveForward = false;
 let moveBackward = false;
@@ -37,8 +37,8 @@ function init() {
 
     controls = new PointerLockControls(camera, document.body);
 
-    const blocker = document.getElementById('blocker');
-    const instructions = document.getElementById('instructions');
+    const blocker = document.getElementById('blocker')!;
+    const instructions = document.getElementById('instructions')!;
 
     instructions.addEventListener('click', function () {
         controls.lock();
@@ -56,7 +56,7 @@ function init() {
 
     scene.add(controls.getObject());
 
-    const onKeyDown = function (event) {
+    const onKeyDown = function (event: KeyboardEvent) {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
@@ -85,7 +85,7 @@ function init() {
         }
     };
 
-    const onKeyUp = function (event) {
+    const onKeyUp = function (event: KeyboardEvent) {
         switch (event.code) {
             case 'ArrowUp':
             case 'KeyW':
@@ -116,7 +116,7 @@ function init() {
 
     // floor
 
-    let floorGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
+    let floorGeometry: THREE.BufferGeometry = new THREE.PlaneGeometry(2000, 2000, 100, 100);
     floorGeometry.rotateX(-Math.PI / 2);
 
     // vertex displacement
@@ -165,7 +165,11 @@ function init() {
     boxGeometry.setAttribute('color', new THREE.Float32BufferAttribute(colorsBox, 3));
 
     for (let i = 0; i < 500; i++) {
-        const boxMaterial = new THREE.MeshPhongMaterial({ specular: 0xffffff, flatShading: true, vertexColors: true });
+        const boxMaterial = new THREE.MeshPhongMaterial({
+            specular: 0xffffff,
+            flatShading: true,
+            vertexColors: true,
+        });
         boxMaterial.color.setHSL(Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75, THREE.SRGBColorSpace);
 
         const box = new THREE.Mesh(boxGeometry, boxMaterial);

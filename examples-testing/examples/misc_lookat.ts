@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
 
-let sphere;
+let sphere: THREE.Mesh;
 
 let mouseX = 0,
     mouseY = 0;
@@ -64,7 +64,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = (event.clientX - windowHalfX) * 10;
     mouseY = (event.clientY - windowHalfY) * 10;
 }

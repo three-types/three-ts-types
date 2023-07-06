@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { AmmoPhysics } from 'three/addons/physics/AmmoPhysics.js';
+import { AmmoPhysics, AmmoPhysicsObject } from 'three/addons/physics/AmmoPhysics.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, position;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let physics: AmmoPhysicsObject, position: THREE.Vector3;
 
-let boxes, spheres;
+let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
 
 init();
 

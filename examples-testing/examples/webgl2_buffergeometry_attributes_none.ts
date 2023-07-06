@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
 }
 
-let camera, scene, renderer, mesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
 
 init();
 animate();
@@ -34,8 +34,8 @@ function init() {
         uniforms: {
             seed: { value: 42 },
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         side: THREE.DoubleSide,
         glslVersion: THREE.GLSL3,
     });
@@ -54,11 +54,11 @@ function init() {
     document.body.appendChild(renderer.domElement);
 }
 
-function animate(time) {
+function animate(time?: number) {
     requestAnimationFrame(animate);
 
-    mesh.rotation.x = (time / 1000.0) * 0.25;
-    mesh.rotation.y = (time / 1000.0) * 0.5;
+    mesh.rotation.x = time != null ? (time / 1000.0) * 0.25 : NaN;
+    mesh.rotation.y = time != null ? (time / 1000.0) * 0.5 : NaN;
 
     renderer.render(scene, camera);
 }

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, controls, scene, renderer;
+let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -41,7 +41,10 @@ function init() {
     // world
 
     const geometry = new THREE.CylinderGeometry(0, 10, 30, 4, 1);
-    const material = new THREE.MeshPhongMaterial({ color: 0xffffff, flatShading: true });
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xffffff,
+        flatShading: true,
+    });
 
     for (let i = 0; i < 500; i++) {
         const mesh = new THREE.Mesh(geometry, material);

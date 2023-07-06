@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { MapControls } from 'three/addons/controls/MapControls.js';
 
-let camera, controls, scene, renderer;
+let camera: THREE.PerspectiveCamera, controls: MapControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 //render(); // remove when using next line for animation loop (requestAnimationFrame)
@@ -43,7 +43,10 @@ function init() {
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     geometry.translate(0, 0.5, 0);
-    const material = new THREE.MeshPhongMaterial({ color: 0xeeeeee, flatShading: true });
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xeeeeee,
+        flatShading: true,
+    });
 
     for (let i = 0; i < 500; i++) {
         const mesh = new THREE.Mesh(geometry, material);

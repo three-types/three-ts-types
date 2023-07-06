@@ -6,7 +6,7 @@ if (WebGL.isWebGL2Available() === false) {
     document.body.appendChild(WebGL.getWebGL2ErrorMessage());
 }
 
-let camera, scene, renderer, mesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
 
 init();
 animate();
@@ -72,7 +72,7 @@ function init() {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     geometry.setAttribute('textureIndex', new THREE.Int16BufferAttribute(textureIndices, 1));
-    geometry.attributes.textureIndex.gpuType = THREE.IntType;
+    (geometry.attributes.textureIndex as THREE.BufferAttribute).gpuType = THREE.IntType;
 
     geometry.computeBoundingSphere();
 
@@ -90,8 +90,8 @@ function init() {
                 value: [map1, map2, map3],
             },
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         side: THREE.DoubleSide,
         glslVersion: THREE.GLSL3,
     });
