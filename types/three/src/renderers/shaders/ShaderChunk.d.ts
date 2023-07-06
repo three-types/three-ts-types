@@ -1,5 +1,7 @@
 // Renderers / Shaders /////////////////////////////////////////////////////////////////////
 export const ShaderChunk: {
+    alphahash_fragment: string;
+    alphahash_pars_fragment: string;
     alphamap_fragment: string;
     alphamap_pars_fragment: string;
     alphatest_fragment: string;
