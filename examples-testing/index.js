@@ -365,7 +365,7 @@ const files = {
         'webxr_vr_video',
         // 'webxr_xr_ballshooter',
         // 'webxr_xr_cubes',
-        'webxr_xr_dragging',
+        // 'webxr_xr_dragging',
         // 'webxr_xr_haptics',
         // 'webxr_xr_paint',
         // 'webxr_xr_sculpt',
