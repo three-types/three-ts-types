@@ -114,11 +114,11 @@ export class BufferAttribute {
     normalized: boolean;
 
     /**
-     * Stores the {@link BufferAttribute.array | array}'s length divided by the {@link BufferAttribute.itemSize | itemSize}.
-     * @remarks If the buffer is storing a 3-component vector (such as a position, normal, or color), then this will count the number of such vectors stored.
-     * @remarks Expects a `Integer`
+     * Represents the number of items this buffer attribute stores. It is internally computed by dividing the
+     * {@link BufferAttribute.array | array}'s length by the {@link BufferAttribute.itemSize | itemSize}. Read-only
+     * property.
      */
-    count: number;
+    readonly count: number;
 
     /**
      * Flag to indicate that this attribute has changed and should be re-sent to the GPU.
