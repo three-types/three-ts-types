@@ -2242,3 +2242,109 @@ index c2a8058..c3fbbfc 100644
                  }
              });
  
+diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
+index c2357f8..eab4381 100644
+--- a/examples-testing/examples/webxr_ar_cones.ts
++++ b/examples-testing/examples/webxr_ar_cones.ts
+@@ -1,8 +1,8 @@
+ import * as THREE from 'three';
+ import { ARButton } from 'three/addons/webxr/ARButton.js';
+ 
+-let camera, scene, renderer;
+-let controller;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controller: THREE.XRTargetRaySpace;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webxr_ar_hittest.ts b/examples-testing/examples/webxr_ar_hittest.ts
+index b6feada..ba190ee 100644
+--- a/examples-testing/examples/webxr_ar_hittest.ts
++++ b/examples-testing/examples/webxr_ar_hittest.ts
+@@ -1,13 +1,13 @@
+ import * as THREE from 'three';
+ import { ARButton } from 'three/addons/webxr/ARButton.js';
+ 
+-let container;
+-let camera, scene, renderer;
+-let controller;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controller: THREE.XRTargetRaySpace;
+ 
+-let reticle;
++let reticle: THREE.Mesh;
+ 
+-let hitTestSource = null;
++let hitTestSource: XRHitTestSource | null = null;
+ let hitTestSourceRequested = false;
+ 
+ init();
+@@ -82,14 +82,14 @@ function animate() {
+     renderer.setAnimationLoop(render);
+ }
+ 
+-function render(timestamp, frame) {
++function render(timestamp: DOMHighResTimeStamp, frame: XRFrame) {
+     if (frame) {
+         const referenceSpace = renderer.xr.getReferenceSpace();
+-        const session = renderer.xr.getSession();
++        const session = renderer.xr.getSession()!;
+ 
+         if (hitTestSourceRequested === false) {
+             session.requestReferenceSpace('viewer').then(function (referenceSpace) {
+-                session.requestHitTestSource({ space: referenceSpace }).then(function (source) {
++                session.requestHitTestSource!({ space: referenceSpace })!.then(function (source) {
+                     hitTestSource = source;
+                 });
+             });
+@@ -109,7 +109,7 @@ function render(timestamp, frame) {
+                 const hit = hitTestResults[0];
+ 
+                 reticle.visible = true;
+-                reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix);
++                reticle.matrix.fromArray(hit.getPose(referenceSpace!)!.transform.matrix);
+             } else {
+                 reticle.visible = false;
+             }
+diff --git a/examples-testing/examples/webxr_ar_lighting.ts b/examples-testing/examples/webxr_ar_lighting.ts
+index 81aa8e0..6c4fc65 100644
+--- a/examples-testing/examples/webxr_ar_lighting.ts
++++ b/examples-testing/examples/webxr_ar_lighting.ts
+@@ -3,9 +3,9 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { ARButton } from 'three/addons/webxr/ARButton.js';
+ import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
+ 
+-let camera, scene, renderer;
+-let controller;
+-let defaultEnvironment;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controller: THREE.XRTargetRaySpace;
++let defaultEnvironment: THREE.DataTexture;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webxr_vr_handinput.ts b/examples-testing/examples/webxr_vr_handinput.ts
+index 86f70ce..44a61ca 100644
+--- a/examples-testing/examples/webxr_vr_handinput.ts
++++ b/examples-testing/examples/webxr_vr_handinput.ts
+@@ -4,13 +4,13 @@ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+ import { XRHandModelFactory } from 'three/addons/webxr/XRHandModelFactory.js';
+ 
+-let container;
+-let camera, scene, renderer;
+-let hand1, hand2;
+-let controller1, controller2;
+-let controllerGrip1, controllerGrip2;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let hand1: THREE.XRHandSpace, hand2: THREE.XRHandSpace;
++let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
++let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
+ 
+-let controls;
++let controls: OrbitControls;
+ 
+ init();
+ animate();
