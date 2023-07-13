@@ -2348,3 +2348,141 @@ index 86f70ce..44a61ca 100644
  
  init();
  animate();
+diff --git a/examples-testing/examples/webxr_vr_panorama.ts b/examples-testing/examples/webxr_vr_panorama.ts
+index 1aeba88..4612ebe 100644
+--- a/examples-testing/examples/webxr_vr_panorama.ts
++++ b/examples-testing/examples/webxr_vr_panorama.ts
+@@ -1,9 +1,9 @@
+ import * as THREE from 'three';
+ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ 
+-let camera;
+-let renderer;
+-let scene;
++let camera: THREE.PerspectiveCamera;
++let renderer: THREE.WebGLRenderer;
++let scene: THREE.Scene;
+ 
+ init();
+ animate();
+@@ -54,8 +54,8 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
+-    const textures = [];
++function getTexturesFromAtlasFile(atlasImgUrl: string, tilesNum: number) {
++    const textures: THREE.Texture[] = [];
+ 
+     for (let i = 0; i < tilesNum; i++) {
+         textures[i] = new THREE.Texture();
+@@ -68,7 +68,7 @@ function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
+ 
+         for (let i = 0; i < textures.length; i++) {
+             canvas = document.createElement('canvas');
+-            context = canvas.getContext('2d');
++            context = canvas.getContext('2d')!;
+             canvas.height = tileWidth;
+             canvas.width = tileWidth;
+             context.drawImage(imageObj, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);
+diff --git a/examples-testing/examples/webxr_vr_panorama_depth.ts b/examples-testing/examples/webxr_vr_panorama_depth.ts
+index cad78ad..9d632af 100644
+--- a/examples-testing/examples/webxr_vr_panorama_depth.ts
++++ b/examples-testing/examples/webxr_vr_panorama_depth.ts
+@@ -1,13 +1,17 @@
+ import * as THREE from 'three';
+ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ 
+-let camera, scene, renderer, sphere, clock;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
++    clock: THREE.Clock;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     clock = new THREE.Clock();
+ 
+diff --git a/examples-testing/examples/webxr_vr_rollercoaster.ts b/examples-testing/examples/webxr_vr_rollercoaster.ts
+index 66f8f89..2e12898 100644
+--- a/examples-testing/examples/webxr_vr_rollercoaster.ts
++++ b/examples-testing/examples/webxr_vr_rollercoaster.ts
+@@ -9,7 +9,7 @@ import {
+ } from 'three/addons/misc/RollerCoaster.js';
+ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ 
+-let mesh, material, geometry;
++let mesh: THREE.Mesh, material: THREE.MeshBasicMaterial, geometry: SkyGeometry;
+ 
+ const renderer = new THREE.WebGLRenderer({ antialias: true });
+ renderer.setPixelRatio(window.devicePixelRatio);
+@@ -87,7 +87,7 @@ const curve = (function () {
+     const vector2 = new THREE.Vector3();
+ 
+     return {
+-        getPointAt: function (t) {
++        getPointAt: function (t: number) {
+             t = t * PI2;
+ 
+             const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
+@@ -97,7 +97,7 @@ const curve = (function () {
+             return vector.set(x, y, z).multiplyScalar(2);
+         },
+ 
+-        getTangentAt: function (t) {
++        getTangentAt: function (t: number) {
+             const delta = 0.0001;
+             const t1 = Math.max(0, t - delta);
+             const t2 = Math.min(1, t + delta);
+@@ -130,7 +130,7 @@ mesh = new THREE.Mesh(geometry, material);
+ mesh.position.y = 0.1;
+ scene.add(mesh);
+ 
+-const funfairs = [];
++const funfairs: THREE.Mesh[] = [];
+ 
+ //
+ 
+diff --git a/examples-testing/examples/webxr_vr_sandbox.ts b/examples-testing/examples/webxr_vr_sandbox.ts
+index 408df61..bcee51e 100644
+--- a/examples-testing/examples/webxr_vr_sandbox.ts
++++ b/examples-testing/examples/webxr_vr_sandbox.ts
+@@ -12,9 +12,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer;
+-let reflector;
+-let stats, statsMesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let reflector: Reflector;
++let stats: Stats, statsMesh: HTMLMesh;
+ 
+ const parameters = {
+     radius: 0.6,
+@@ -198,7 +198,7 @@ function animate() {
+ 
+ function render() {
+     const time = performance.now() * 0.0002;
+-    const torus = scene.getObjectByName('torus');
++    const torus = scene.getObjectByName('torus')!;
+     torus.rotation.x = time * 0.4;
+     torus.rotation.y = time;
+ 
+@@ -206,5 +206,9 @@ function render() {
+     stats.update();
+ 
+     // Canvas elements doesn't trigger DOM updates, so we have to update the texture
+-    statsMesh.material.map.update();
++    (statsMesh.material.map as HTMLTexture).update();
++}
++
++interface HTMLTexture extends THREE.CanvasTexture {
++    update(): void;
+ }
