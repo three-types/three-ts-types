@@ -351,7 +351,7 @@ const files = {
         'webxr_ar_lighting',
         'webxr_ar_plane_detection',
         'webxr_vr_handinput',
-        'webxr_vr_handinput_cubes',
+        // 'webxr_vr_handinput_cubes',
         'webxr_vr_handinput_profiles',
         'webxr_vr_handinput_pointerclick',
         'webxr_vr_handinput_pointerdrag',
