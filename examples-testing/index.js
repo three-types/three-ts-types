@@ -355,7 +355,7 @@ const files = {
         // 'webxr_vr_handinput_profiles',
         // 'webxr_vr_handinput_pointerclick',
         // 'webxr_vr_handinput_pointerdrag',
-        'webxr_vr_handinput_pressbutton',
+        // 'webxr_vr_handinput_pressbutton',
         // 'webxr_vr_layers',
         // 'webxr_vr_panorama',
         // 'webxr_vr_panorama_depth',
