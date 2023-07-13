@@ -210,6 +210,7 @@ export class WebGLRenderer implements Renderer {
     get coordinateSystem(): typeof WebGLCoordinateSystem;
 
     /**
+     * @deprecated
      * @default true
      */
     useLegacyLights: boolean;
