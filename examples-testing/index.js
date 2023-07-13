@@ -366,9 +366,9 @@ const files = {
         // 'webxr_xr_ballshooter',
         // 'webxr_xr_cubes',
         // 'webxr_xr_dragging',
-        // 'webxr_xr_haptics',
-        // 'webxr_xr_paint',
-        // 'webxr_xr_sculpt',
+        'webxr_xr_haptics',
+        'webxr_xr_paint',
+        'webxr_xr_sculpt',
     ],
     games: ['games_fps'],
     physics: [
