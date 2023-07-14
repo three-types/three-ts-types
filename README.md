@@ -145,6 +145,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Yonet"><img src="https://avatars.githubusercontent.com/u/3523671?v=4?s=100" width="100px;" alt="Yönet"/><br /><sub><b>Yönet</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=Yonet" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ericbroberic"><img src="https://avatars.githubusercontent.com/u/9359928?v=4?s=100" width="100px;" alt="Eric Benn"/><br /><sub><b>Eric Benn</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=ericbroberic" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ybt-new"><img src="https://avatars.githubusercontent.com/u/131513278?v=4?s=100" width="100px;" alt="Botao Yang"/><br /><sub><b>Botao Yang</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=ybt-new" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/mrxz"><img src="https://avatars.githubusercontent.com/u/8823461?v=4?s=100" width="100px;" alt="Noeri Huisman"/><br /><sub><b>Noeri Huisman</b></sub></a><br /><a href="https://github.com/three-types/three-ts-types/commits?author=mrxz" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
