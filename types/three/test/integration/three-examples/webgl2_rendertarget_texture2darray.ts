@@ -184,8 +184,8 @@ function onMouseMove(e: MouseEvent) {
     const y = e.clientY;
     const deltaX = (x - App.mousePrevious.x) * 0.001;
     const deltaY = (y - App.mousePrevious.y) * 0.001;
-    (postProcessMaterial.uniforms.uSampleLeft.value as number) += deltaX;
-    (postProcessMaterial.uniforms.uSampleWidth.value as number) += deltaY;
+    postProcessMaterial.uniforms.uSampleLeft.value += deltaX;
+    postProcessMaterial.uniforms.uSampleWidth.value += deltaY;
 
     App.mousePrevious.set(x, y);
 }
@@ -200,7 +200,7 @@ function onWindowResize() {
 function animate() {
     requestAnimationFrame(animate);
 
-    let value = (mesh.material as THREE.ShaderMaterial).uniforms['depth'].value as number;
+    let value = (mesh.material as THREE.ShaderMaterial).uniforms['depth'].value;
 
     value += depthStep;
 
@@ -220,7 +220,7 @@ function animate() {
  * Renders the 2D array into the render target `renderTarget`.
  */
 function renderToArrayTexture() {
-    const layer = Math.floor((mesh.material as THREE.ShaderMaterial).uniforms['depth'].value as number);
+    const layer = Math.floor((mesh.material as THREE.ShaderMaterial).uniforms['depth'].value);
     postProcessMaterial.uniforms.uDepth.value = layer;
     renderer.setRenderTarget(renderTarget, layer);
     renderer.render(postProcessScene, postProcessCamera);

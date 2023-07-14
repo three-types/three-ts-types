@@ -267,16 +267,16 @@ function render() {
 
     // remember camera projection changes
 
-    (materialVelocity.uniforms.previousProjectionViewMatrix.value as THREE.Matrix4).copy(
-        materialVelocity.uniforms.currentProjectionViewMatrix.value as THREE.Matrix4,
+    materialVelocity.uniforms.previousProjectionViewMatrix.value.copy(
+        materialVelocity.uniforms.currentProjectionViewMatrix.value,
     );
-    (materialVelocity.uniforms.currentProjectionViewMatrix.value as THREE.Matrix4).multiplyMatrices(
+    materialVelocity.uniforms.currentProjectionViewMatrix.value.multiplyMatrices(
         camera.projectionMatrix,
         camera.matrixWorldInverse,
     );
 
     if (mesh && mesh.userData.matrixWorldPrevious) {
-        (materialVelocity.uniforms.modelMatrixPrev.value as THREE.Matrix4).copy(mesh.userData.matrixWorldPrevious);
+        materialVelocity.uniforms.modelMatrixPrev.value.copy(mesh.userData.matrixWorldPrevious);
     }
 
     renderer.render(scene, camera);

@@ -490,7 +490,7 @@ function sphereDynamics() {
             // Read water level and orientation
             const u = (0.5 * sphere.position.x) / BOUNDS_HALF + 0.5;
             const v = 1 - ((0.5 * sphere.position.z) / BOUNDS_HALF + 0.5);
-            (readWaterLevelShader.uniforms['point1'].value as THREE.Vector2).set(u, v);
+            readWaterLevelShader.uniforms['point1'].value.set(u, v);
             gpuCompute.doRenderTarget(readWaterLevelShader, readWaterLevelRenderTarget);
 
             renderer.readRenderTargetPixels(readWaterLevelRenderTarget, 0, 0, 4, 1, readWaterLevelImage);
@@ -563,14 +563,14 @@ function render() {
 
         if (intersects.length > 0) {
             const point = intersects[0].point;
-            (uniforms['mousePos'].value as THREE.Vector2).set(point.x, point.z);
+            uniforms['mousePos'].value.set(point.x, point.z);
         } else {
-            (uniforms['mousePos'].value as THREE.Vector2).set(10000, 10000);
+            uniforms['mousePos'].value.set(10000, 10000);
         }
 
         mouseMoved = false;
     } else {
-        (uniforms['mousePos'].value as THREE.Vector2).set(10000, 10000);
+        uniforms['mousePos'].value.set(10000, 10000);
     }
 
     // Do the gpu computation
