@@ -236,7 +236,7 @@ const files = {
     ],
     'webgl / postprocessing': [
         'webgl_postprocessing',
-        'webgl_postprocessing_3dlut',
+        // 'webgl_postprocessing_3dlut',
         'webgl_postprocessing_advanced',
         'webgl_postprocessing_afterimage',
         'webgl_postprocessing_backgrounds',
