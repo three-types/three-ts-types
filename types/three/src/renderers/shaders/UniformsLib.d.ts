@@ -3,7 +3,7 @@ import { Vector2 } from '../../math/Vector2.js';
 import { Matrix3 } from '../../math/Matrix3.js';
 
 // tslint:disable-next-line:interface-name
-export interface IUniform<TValue = any> {
+export interface IUniform<TValue = unknown> {
     value: TValue;
 }
 
@@ -11,25 +11,25 @@ export const UniformsLib: {
     common: {
         diffuse: IUniform<Color>;
         opacity: IUniform<number>;
-        map: IUniform<unknown>;
+        map: IUniform;
         mapTransform: IUniform<Matrix3>;
-        alphaMap: IUniform<unknown>;
+        alphaMap: IUniform;
         alphaMapTransform: IUniform<Matrix3>;
         alphaTest: IUniform<number>;
     };
     specularmap: {
-        specularMap: IUniform<unknown>;
+        specularMap: IUniform;
         specularMapTransform: IUniform<Matrix3>;
     };
     envmap: {
-        envMap: IUniform<unknown>;
+        envMap: IUniform;
         flipEnvMap: IUniform<number>;
         reflectivity: IUniform<number>;
         ior: IUniform<number>;
         refractRatio: IUniform<number>;
     };
     aomap: {
-        aoMap: IUniform<unknown>;
+        aoMap: IUniform;
         aoMapIntensity: IUniform<number>;
         aoMapTransform: IUniform<Matrix3>;
     };
@@ -39,35 +39,35 @@ export const UniformsLib: {
         lightMapTransform: IUniform<Matrix3>;
     };
     bumpmap: {
-        bumpMap: IUniform<unknown>;
+        bumpMap: IUniform;
         bumpMapTransform: IUniform<Matrix3>;
         bumpScale: IUniform<number>;
     };
     normalmap: {
-        normalMap: IUniform<unknown>;
+        normalMap: IUniform;
         normalMapTransform: IUniform<Matrix3>;
         normalScale: IUniform<Vector2>;
     };
     displacementmap: {
-        displacementMap: IUniform<unknown>;
+        displacementMap: IUniform;
         displacementMapTransform: IUniform<Matrix3>;
         displacementScale: IUniform<number>;
         displacementBias: IUniform<number>;
     };
     emissivemap: {
-        emissiveMap: IUniform<unknown>;
+        emissiveMap: IUniform;
         emissiveMapTransform: IUniform<Matrix3>;
     };
     metalnessmap: {
-        metalnessMap: IUniform<unknown>;
+        metalnessMap: IUniform;
         metalnessMapTransform: IUniform<Matrix3>;
     };
     roughnessmap: {
-        roughnessMap: IUniform<unknown>;
+        roughnessMap: IUniform;
         roughnessMapTransform: IUniform<Matrix3>;
     };
     gradientmap: {
-        gradientMap: IUniform<unknown>;
+        gradientMap: IUniform;
     };
     fog: {
         fogDensity: IUniform<number>;
@@ -159,16 +159,16 @@ export const UniformsLib: {
                 height: {};
             };
         };
-        ltc_1: IUniform<unknown>;
-        ltc_2: IUniform<unknown>;
+        ltc_1: IUniform;
+        ltc_2: IUniform;
     };
     points: {
         diffuse: IUniform<Color>;
         opacity: IUniform<number>;
         size: IUniform<number>;
         scale: IUniform<number>;
-        map: IUniform<unknown>;
-        alphaMap: IUniform<unknown>;
+        map: IUniform;
+        alphaMap: IUniform;
         alphaTest: IUniform<number>;
         uvTransform: IUniform<Matrix3>;
     };
@@ -177,9 +177,9 @@ export const UniformsLib: {
         opacity: IUniform<number>;
         center: IUniform<Vector2>;
         rotation: IUniform<number>;
-        map: IUniform<unknown>;
+        map: IUniform;
         mapTransform: IUniform<Matrix3>;
-        alphaMap: IUniform<unknown>;
+        alphaMap: IUniform;
         alphaTest: IUniform<number>;
     };
 };
