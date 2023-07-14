@@ -1789,7 +1789,7 @@ index 39259ae..3852550 100644
                  ball.userData.down = false;
              }
 diff --git a/examples-testing/examples/webaudio_visualizer.ts b/examples-testing/examples/webaudio_visualizer.ts
-index ecbcda0..b045a17 100644
+index ecbcda0..ff46509 100644
 --- a/examples-testing/examples/webaudio_visualizer.ts
 +++ b/examples-testing/examples/webaudio_visualizer.ts
 @@ -1,8 +1,13 @@
@@ -1834,6 +1834,15 @@ index ecbcda0..b045a17 100644
      });
  
      const geometry = new THREE.PlaneGeometry(1, 1);
+@@ -88,7 +93,7 @@ function animate() {
+ function render() {
+     analyser.getFrequencyData();
+ 
+-    uniforms.tAudioData.value.needsUpdate = true;
++    (uniforms.tAudioData.value as THREE.DataTexture).needsUpdate = true;
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts b/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
 index 9a22568..c98f35d 100644
 --- a/examples-testing/examples/webgl2_buffergeometry_attributes_integer.ts
@@ -1907,7 +1916,7 @@ index 75bea7b..27151c7 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl2_materials_texture3d.ts b/examples-testing/examples/webgl2_materials_texture3d.ts
-index be5c068..43f73eb 100644
+index be5c068..53f823c 100644
 --- a/examples-testing/examples/webgl2_materials_texture3d.ts
 +++ b/examples-testing/examples/webgl2_materials_texture3d.ts
 @@ -10,7 +10,15 @@ if (WebGL.isWebGL2Available() === false) {
@@ -1927,8 +1936,17 @@ index be5c068..43f73eb 100644
  
  init();
  
+@@ -106,7 +114,7 @@ function init() {
+ }
+ 
+ function updateUniforms() {
+-    material.uniforms['u_clim'].value.set(volconfig.clim1, volconfig.clim2);
++    (material.uniforms['u_clim'].value as THREE.Vector2).set(volconfig.clim1, volconfig.clim2);
+     material.uniforms['u_renderstyle'].value = volconfig.renderstyle == 'mip' ? 0 : 1; // 0: MIP, 1: ISO
+     material.uniforms['u_renderthreshold'].value = volconfig.isothreshold; // For ISO renderstyle
+     material.uniforms['u_cmdata'].value = cmtextures[volconfig.colormap];
 diff --git a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
-index d0c8b1a..b16d46c 100644
+index d0c8b1a..9d00f29 100644
 --- a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
 +++ b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
 @@ -11,15 +11,15 @@ if (WebGL.isWebGL2Available() === false) {
@@ -1960,7 +1978,7 @@ index d0c8b1a..b16d46c 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -318,7 +318,7 @@ function animate() {
+@@ -318,17 +318,17 @@ function animate() {
          const scaleFactor = (Math.random() + 0.5) * 0.5;
          const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
  
@@ -1969,6 +1987,18 @@ index d0c8b1a..b16d46c 100644
  
          prevTime = time;
  
+         curr++;
+     }
+ 
+-    mesh.material.uniforms.cameraPos.value.copy(camera.position);
++    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+     // mesh.rotation.y = - performance.now() / 7500;
+ 
+-    mesh.material.uniforms.frame.value++;
++    (mesh.material.uniforms.frame.value as number)++;
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl2_multiple_rendertargets.ts b/examples-testing/examples/webgl2_multiple_rendertargets.ts
 index 1d85f79..a94cbe8 100644
 --- a/examples-testing/examples/webgl2_multiple_rendertargets.ts
@@ -2127,7 +2157,7 @@ index f4f8c07..2163795 100644
              child.rotation.y += delta * 0.3;
          }
 diff --git a/examples-testing/examples/webgl2_volume_cloud.ts b/examples-testing/examples/webgl2_volume_cloud.ts
-index 217ab94..b986403 100644
+index 217ab94..c60b77c 100644
 --- a/examples-testing/examples/webgl2_volume_cloud.ts
 +++ b/examples-testing/examples/webgl2_volume_cloud.ts
 @@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
@@ -2150,8 +2180,21 @@ index 217ab94..b986403 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
+@@ -278,10 +278,10 @@ function onWindowResize() {
+ function animate() {
+     requestAnimationFrame(animate);
+ 
+-    mesh.material.uniforms.cameraPos.value.copy(camera.position);
++    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+     mesh.rotation.y = -performance.now() / 7500;
+ 
+-    mesh.material.uniforms.frame.value++;
++    (mesh.material.uniforms.frame.value as number)++;
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl2_volume_instancing.ts b/examples-testing/examples/webgl2_volume_instancing.ts
-index fe795d5..60fad45 100644
+index fe795d5..cb10b1d 100644
 --- a/examples-testing/examples/webgl2_volume_instancing.ts
 +++ b/examples-testing/examples/webgl2_volume_instancing.ts
 @@ -8,8 +8,8 @@ if (WebGL.isWebGL2Available() === false) {
@@ -2165,8 +2208,17 @@ index fe795d5..60fad45 100644
  
  init();
  animate();
+@@ -161,7 +161,7 @@ function init() {
+ 
+             const mesh = new THREE.InstancedMesh(geometry, material, 50000);
+             mesh.onBeforeRender = function () {
+-                this.material.uniforms.cameraPos.value.copy(camera.position);
++                (this.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+             };
+ 
+             const transform = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgl2_volume_perlin.ts b/examples-testing/examples/webgl2_volume_perlin.ts
-index 75ccf8d..ae357e0 100644
+index 75ccf8d..35d06e4 100644
 --- a/examples-testing/examples/webgl2_volume_perlin.ts
 +++ b/examples-testing/examples/webgl2_volume_perlin.ts
 @@ -9,8 +9,8 @@ if (WebGL.isWebGL2Available() === false) {
@@ -2180,6 +2232,15 @@ index 75ccf8d..ae357e0 100644
  
  init();
  animate();
+@@ -210,7 +210,7 @@ function onWindowResize() {
+ function animate() {
+     requestAnimationFrame(animate);
+ 
+-    mesh.material.uniforms.cameraPos.value.copy(camera.position);
++    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index f746f2e..143dc67 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
