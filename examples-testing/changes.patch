@@ -3169,6 +3169,509 @@ index f746f2e..143dc67 100644
          });
  
          render();
+diff --git a/examples-testing/examples/webgl_gpgpu_birds.ts b/examples-testing/examples/webgl_gpgpu_birds.ts
+index 8fe7ab1..0010fda 100644
+--- a/examples-testing/examples/webgl_gpgpu_birds.ts
++++ b/examples-testing/examples/webgl_gpgpu_birds.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
++import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+ 
+ /* TEXTURE WIDTH FOR SIMULATION */
+ const WIDTH = 32;
+@@ -33,9 +33,9 @@ class BirdGeometry extends THREE.BufferGeometry {
+ 
+         let v = 0;
+ 
+-        function verts_push() {
+-            for (let i = 0; i < arguments.length; i++) {
+-                vertices.array[v++] = arguments[i];
++        function verts_push(...args: number[]) {
++            for (let i = 0; i < args.length; i++) {
++                vertices.array[v++] = args[i];
+             }
+         }
+ 
+@@ -77,8 +77,8 @@ class BirdGeometry extends THREE.BufferGeometry {
+ 
+ //
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ let mouseX = 0,
+     mouseY = 0;
+ 
+@@ -90,12 +90,12 @@ const BOUNDS = 800,
+ 
+ let last = performance.now();
+ 
+-let gpuCompute;
+-let velocityVariable;
+-let positionVariable;
+-let positionUniforms;
+-let velocityUniforms;
+-let birdUniforms;
++let gpuCompute: GPUComputationRenderer;
++let velocityVariable: Variable;
++let positionVariable: Variable;
++let positionUniforms: Record<string, THREE.IUniform>;
++let velocityUniforms: Record<string, THREE.IUniform>;
++let birdUniforms: Record<string, THREE.IUniform>;
+ 
+ init();
+ animate();
+@@ -169,12 +169,12 @@ function initComputeRenderer() {
+ 
+     velocityVariable = gpuCompute.addVariable(
+         'textureVelocity',
+-        document.getElementById('fragmentShaderVelocity').textContent,
++        document.getElementById('fragmentShaderVelocity')!.textContent!,
+         dtVelocity,
+     );
+     positionVariable = gpuCompute.addVariable(
+         'texturePosition',
+-        document.getElementById('fragmentShaderPosition').textContent,
++        document.getElementById('fragmentShaderPosition')!.textContent!,
+         dtPosition,
+     );
+ 
+@@ -223,8 +223,8 @@ function initBirds() {
+     // THREE.ShaderMaterial
+     const material = new THREE.ShaderMaterial({
+         uniforms: birdUniforms,
+-        vertexShader: document.getElementById('birdVS').textContent,
+-        fragmentShader: document.getElementById('birdFS').textContent,
++        vertexShader: document.getElementById('birdVS')!.textContent!,
++        fragmentShader: document.getElementById('birdFS')!.textContent!,
+         side: THREE.DoubleSide,
+     });
+ 
+@@ -236,7 +236,7 @@ function initBirds() {
+     scene.add(birdMesh);
+ }
+ 
+-function fillPositionTexture(texture) {
++function fillPositionTexture(texture: THREE.DataTexture) {
+     const theArray = texture.image.data;
+ 
+     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+@@ -251,7 +251,7 @@ function fillPositionTexture(texture) {
+     }
+ }
+ 
+-function fillVelocityTexture(texture) {
++function fillVelocityTexture(texture: THREE.DataTexture) {
+     const theArray = texture.image.data;
+ 
+     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+@@ -276,7 +276,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
+index 574c3d4..ab889b5 100644
+--- a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
++++ b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
++import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+ 
+ /* TEXTURE WIDTH FOR SIMULATION */
+ const WIDTH = 64;
+@@ -10,16 +10,20 @@ const BIRDS = WIDTH * WIDTH;
+ 
+ /* BAKE ANIMATION INTO TEXTURE and CREATE GEOMETRY FROM BASE MODEL */
+ const BirdGeometry = new THREE.BufferGeometry();
+-let textureAnimation, durationAnimation, birdMesh, materialShader, indicesPerBird;
++let textureAnimation: THREE.DataTexture,
++    durationAnimation: number,
++    birdMesh: THREE.Mesh,
++    materialShader: THREE.Shader,
++    indicesPerBird: number;
+ 
+-function nextPowerOf2(n) {
++function nextPowerOf2(n: number) {
+     return Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
+ }
+ 
+-Math.lerp = function (value1, value2, amount) {
++function lerp(value1: number, value2: number, amount: number) {
+     amount = Math.max(Math.min(amount, 1), 0);
+     return value1 + (value2 - value1) * amount;
+-};
++}
+ 
+ const gltfs = ['models/gltf/Parrot.glb', 'models/gltf/Flamingo.glb'];
+ const colors = [0xccffff, 0xffdeff];
+@@ -28,11 +32,11 @@ const selectModel = Math.floor(Math.random() * gltfs.length);
+ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+     const animations = gltf.animations;
+     durationAnimation = Math.round(animations[0].duration * 60);
+-    const birdGeo = gltf.scene.children[0].geometry;
++    const birdGeo = (gltf.scene.children[0] as THREE.Mesh).geometry;
+     const morphAttributes = birdGeo.morphAttributes.position;
+     const tHeight = nextPowerOf2(durationAnimation);
+     const tWidth = nextPowerOf2(birdGeo.getAttribute('position').count);
+-    indicesPerBird = birdGeo.index.count;
++    indicesPerBird = birdGeo.index!.count;
+     const tData = new Float32Array(4 * tWidth * tHeight);
+ 
+     for (let i = 0; i < tWidth; i++) {
+@@ -50,17 +54,17 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+                 d0 = morphAttributes[curMorph].array[i * 3];
+                 d1 = morphAttributes[nextMorph].array[i * 3];
+ 
+-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = Math.lerp(d0, d1, lerpAmount);
++                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = lerp(d0, d1, lerpAmount);
+ 
+                 d0 = morphAttributes[curMorph].array[i * 3 + 1];
+                 d1 = morphAttributes[nextMorph].array[i * 3 + 1];
+ 
+-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = Math.lerp(d0, d1, lerpAmount);
++                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = lerp(d0, d1, lerpAmount);
+ 
+                 d0 = morphAttributes[curMorph].array[i * 3 + 2];
+                 d1 = morphAttributes[nextMorph].array[i * 3 + 2];
+ 
+-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = Math.lerp(d0, d1, lerpAmount);
++                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = lerp(d0, d1, lerpAmount);
+ 
+                 tData[offset + i * 4 + 3] = 1;
+             }
+@@ -94,9 +98,9 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+         seeds.push(bird, r, Math.random(), Math.random());
+     }
+ 
+-    for (let i = 0; i < birdGeo.index.array.length * BIRDS; i++) {
+-        const offset = Math.floor(i / birdGeo.index.array.length) * birdGeo.getAttribute('position').count;
+-        indices.push(birdGeo.index.array[i % birdGeo.index.array.length] + offset);
++    for (let i = 0; i < birdGeo.index!.array.length * BIRDS; i++) {
++        const offset = Math.floor(i / birdGeo.index!.array.length) * birdGeo.getAttribute('position').count;
++        indices.push(birdGeo.index!.array[i % birdGeo.index!.array.length] + offset);
+     }
+ 
+     BirdGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
+@@ -111,8 +115,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+     animate();
+ });
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ let mouseX = 0,
+     mouseY = 0;
+ 
+@@ -124,11 +128,20 @@ const BOUNDS = 800,
+ 
+ let last = performance.now();
+ 
+-let gpuCompute;
+-let velocityVariable;
+-let positionVariable;
+-let positionUniforms;
+-let velocityUniforms;
++let gpuCompute: GPUComputationRenderer;
++let velocityVariable: Variable;
++let positionVariable: Variable;
++let positionUniforms: Record<string, THREE.IUniform>;
++let velocityUniforms: Record<string, THREE.IUniform>;
++
++interface EffectController {
++    separation: number;
++    alignment: number;
++    cohesion: number;
++    freedom: number;
++    size: number;
++    count: number;
++}
+ 
+ function init() {
+     container = document.createElement('div');
+@@ -217,12 +230,12 @@ function initComputeRenderer() {
+ 
+     velocityVariable = gpuCompute.addVariable(
+         'textureVelocity',
+-        document.getElementById('fragmentShaderVelocity').textContent,
++        document.getElementById('fragmentShaderVelocity')!.textContent!,
+         dtVelocity,
+     );
+     positionVariable = gpuCompute.addVariable(
+         'texturePosition',
+-        document.getElementById('fragmentShaderPosition').textContent,
++        document.getElementById('fragmentShaderPosition')!.textContent!,
+         dtPosition,
+     );
+ 
+@@ -256,7 +269,7 @@ function initComputeRenderer() {
+     }
+ }
+ 
+-function initBirds(effectController) {
++function initBirds(effectController: EffectController) {
+     const geometry = BirdGeometry;
+ 
+     const m = new THREE.MeshStandardMaterial({
+@@ -336,7 +349,7 @@ function initBirds(effectController) {
+     scene.add(birdMesh);
+ }
+ 
+-function fillPositionTexture(texture) {
++function fillPositionTexture(texture: THREE.DataTexture) {
+     const theArray = texture.image.data;
+ 
+     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+@@ -351,7 +364,7 @@ function fillPositionTexture(texture) {
+     }
+ }
+ 
+-function fillVelocityTexture(texture) {
++function fillVelocityTexture(texture: THREE.DataTexture) {
+     const theArray = texture.image.data;
+ 
+     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+@@ -376,7 +389,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgl_gpgpu_protoplanet.ts b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
+index 7906b0b..1543994 100644
+--- a/examples-testing/examples/webgl_gpgpu_protoplanet.ts
++++ b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
+@@ -4,22 +4,32 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
++import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+ 
+ // Texture width for simulation (each texel is a debris particle)
+ const WIDTH = 64;
+ 
+-let container, stats;
+-let camera, scene, renderer, geometry;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, geometry;
+ 
+ const PARTICLES = WIDTH * WIDTH;
+ 
+-let gpuCompute;
+-let velocityVariable;
+-let positionVariable;
+-let velocityUniforms;
+-let particleUniforms;
+-let effectController;
++let gpuCompute: GPUComputationRenderer;
++let velocityVariable: Variable;
++let positionVariable: Variable;
++let velocityUniforms: Record<string, THREE.IUniform>;
++let particleUniforms: Record<string, THREE.IUniform>;
++let effectController: {
++    gravityConstant: number;
++    density: number;
++    radius: number;
++    height: number;
++    exponent: number;
++    maxMass: number;
++    velocity: number;
++    velocityExponent: number;
++    randVelocity: number;
++};
+ 
+ init();
+ animate();
+@@ -87,12 +97,12 @@ function initComputeRenderer() {
+ 
+     velocityVariable = gpuCompute.addVariable(
+         'textureVelocity',
+-        document.getElementById('computeShaderVelocity').textContent,
++        document.getElementById('computeShaderVelocity')!.textContent!,
+         dtVelocity,
+     );
+     positionVariable = gpuCompute.addVariable(
+         'texturePosition',
+-        document.getElementById('computeShaderPosition').textContent,
++        document.getElementById('computeShaderPosition')!.textContent!,
+         dtPosition,
+     );
+ 
+@@ -158,8 +168,8 @@ function initProtoplanets() {
+     // THREE.ShaderMaterial
+     const material = new THREE.ShaderMaterial({
+         uniforms: particleUniforms,
+-        vertexShader: document.getElementById('particleVertexShader').textContent,
+-        fragmentShader: document.getElementById('particleFragmentShader').textContent,
++        vertexShader: document.getElementById('particleVertexShader')!.textContent!,
++        fragmentShader: document.getElementById('particleFragmentShader')!.textContent!,
+     });
+ 
+     material.extensions.drawBuffers = true;
+@@ -171,7 +181,7 @@ function initProtoplanets() {
+     scene.add(particles);
+ }
+ 
+-function fillTextures(texturePosition, textureVelocity) {
++function fillTextures(texturePosition: THREE.DataTexture, textureVelocity: THREE.DataTexture) {
+     const posArray = texturePosition.image.data;
+     const velArray = textureVelocity.image.data;
+ 
+@@ -268,7 +278,7 @@ function initGUI() {
+     folder2.open();
+ }
+ 
+-function getCameraConstant(camera) {
++function getCameraConstant(camera: THREE.PerspectiveCamera) {
+     return window.innerHeight / (Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom);
+ }
+ 
+diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
+index eebb24f..eb4fa94 100644
+--- a/examples-testing/examples/webgl_gpgpu_water.ts
++++ b/examples-testing/examples/webgl_gpgpu_water.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
++import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+ 
+ // Texture width for simulation
+@@ -13,25 +13,25 @@ const WIDTH = 128;
+ const BOUNDS = 512;
+ const BOUNDS_HALF = BOUNDS * 0.5;
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ let mouseMoved = false;
+ const mouseCoords = new THREE.Vector2();
+ const raycaster = new THREE.Raycaster();
+ 
+-let waterMesh;
+-let meshRay;
+-let gpuCompute;
+-let heightmapVariable;
+-let waterUniforms;
+-let smoothShader;
+-let readWaterLevelShader;
+-let readWaterLevelRenderTarget;
+-let readWaterLevelImage;
++let waterMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
++let meshRay: THREE.Mesh;
++let gpuCompute: GPUComputationRenderer;
++let heightmapVariable: Variable;
++let waterUniforms: Record<string, THREE.IUniform>;
++let smoothShader: THREE.ShaderMaterial;
++let readWaterLevelShader: THREE.ShaderMaterial;
++let readWaterLevelRenderTarget: THREE.WebGLRenderTarget;
++let readWaterLevelImage: Uint8Array;
+ const waterNormal = new THREE.Vector3();
+ 
+ const NUM_SPHERES = 5;
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ let spheresEnabled = true;
+ 
+ const simplex = new SimplexNoise();
+@@ -128,21 +128,17 @@ function initWater() {
+                 heightmap: { value: null },
+             },
+         ]),
+-        vertexShader: document.getElementById('waterVertexShader').textContent,
++        vertexShader: document.getElementById('waterVertexShader')!.textContent!,
+         fragmentShader: THREE.ShaderChunk['meshphong_frag'],
+     });
+ 
+     material.lights = true;
+ 
+     // Material attributes from THREE.MeshPhongMaterial
+-    material.color = new THREE.Color(materialColor);
+-    material.specular = new THREE.Color(0x111111);
+-    material.shininess = 50;
+-
+     // Sets the uniforms with the material values
+-    material.uniforms['diffuse'].value = material.color;
+-    material.uniforms['specular'].value = material.specular;
+-    material.uniforms['shininess'].value = Math.max(material.shininess, 1e-4);
++    material.uniforms['diffuse'].value = new THREE.Color(materialColor);
++    material.uniforms['specular'].value = new THREE.Color(0x111111);
++    material.uniforms['shininess'].value = Math.max(50, 1e-4);
+     material.uniforms['opacity'].value = material.opacity;
+ 
+     // Defines
+@@ -180,7 +176,7 @@ function initWater() {
+ 
+     heightmapVariable = gpuCompute.addVariable(
+         'heightmap',
+-        document.getElementById('heightmapFragmentShader').textContent,
++        document.getElementById('heightmapFragmentShader')!.textContent!,
+         heightmap0,
+     );
+ 
+@@ -198,13 +194,13 @@ function initWater() {
+     }
+ 
+     // Create compute shader to smooth the water surface and velocity
+-    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, {
++    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader')!.textContent!, {
+         smoothTexture: { value: null },
+     });
+ 
+     // Create compute shader to read water level
+     readWaterLevelShader = gpuCompute.createShaderMaterial(
+-        document.getElementById('readWaterLevelFragmentShader').textContent,
++        document.getElementById('readWaterLevelFragmentShader')!.textContent!,
+         {
+             point1: { value: new THREE.Vector2() },
+             levelTexture: { value: null },
+@@ -227,10 +223,10 @@ function initWater() {
+     });
+ }
+ 
+-function fillTexture(texture) {
++function fillTexture(texture: THREE.DataTexture) {
+     const waterMaxHeight = 10;
+ 
+-    function noise(x, y) {
++    function noise(x: number, y: number) {
+         let multR = waterMaxHeight;
+         let mult = 0.025;
+         let r = 0;
+@@ -355,12 +351,12 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function setMouseCoords(x, y) {
++function setMouseCoords(x: number, y: number) {
+     mouseCoords.set((x / renderer.domElement.clientWidth) * 2 - 1, -(y / renderer.domElement.clientHeight) * 2 + 1);
+     mouseMoved = true;
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     setMouseCoords(event.clientX, event.clientY);
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
 index c2a8058..c3fbbfc 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
