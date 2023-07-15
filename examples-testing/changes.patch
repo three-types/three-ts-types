@@ -3551,6 +3551,266 @@ index f3028fa..9cf7166 100644
  
      composer.render();
  
+diff --git a/examples-testing/examples/webgl_postprocessing_ssao.ts b/examples-testing/examples/webgl_postprocessing_ssao.ts
+index 4c03241..07013bf 100644
+--- a/examples-testing/examples/webgl_postprocessing_ssao.ts
++++ b/examples-testing/examples/webgl_postprocessing_ssao.ts
+@@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+ import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
+-let composer;
+-let group;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let composer: EffectComposer;
++let group: THREE.Group;
+ 
+ init();
+ animate();
+@@ -80,7 +80,7 @@ function init() {
+         Beauty: SSAOPass.OUTPUT.Beauty,
+         Depth: SSAOPass.OUTPUT.Depth,
+         Normal: SSAOPass.OUTPUT.Normal,
+-    }).onChange(function (value) {
++    }).onChange(function (value: string) {
+         ssaoPass.output = parseInt(value);
+     });
+     gui.add(ssaoPass, 'kernelRadius').min(0).max(32);
+diff --git a/examples-testing/examples/webgl_postprocessing_ssr.ts b/examples-testing/examples/webgl_postprocessing_ssr.ts
+index 5a2c6a9..046203f 100644
+--- a/examples-testing/examples/webgl_postprocessing_ssr.ts
++++ b/examples-testing/examples/webgl_postprocessing_ssr.ts
+@@ -18,17 +18,17 @@ const params = {
+     otherMeshes: true,
+     groundReflector: true,
+ };
+-let composer;
+-let ssrPass;
+-let gui;
+-let stats;
+-let controls;
+-let camera, scene, renderer;
+-const otherMeshes = [];
+-let groundReflector;
+-const selects = [];
+-
+-const container = document.querySelector('#container');
++let composer: EffectComposer;
++let ssrPass: SSRPass;
++let gui: GUI;
++let stats: Stats;
++let controls: OrbitControls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++const otherMeshes: THREE.Mesh[] = [];
++let groundReflector: ReflectorForSSRPass;
++const selects: THREE.Mesh[] = [];
++
++const container = document.querySelector('#container')!;
+ 
+ // Configure and create Draco decoder.
+ const dracoLoader = new DRACOLoader();
+@@ -78,7 +78,7 @@ function init() {
+         dracoLoader.dispose();
+     });
+ 
+-    let geometry, material, mesh;
++    let geometry: THREE.BufferGeometry, material: THREE.MeshStandardMaterial, mesh: THREE.Mesh;
+ 
+     geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
+     material = new THREE.MeshStandardMaterial({ color: 'green' });
+@@ -207,7 +207,7 @@ function init() {
+             Normal: SSRPass.OUTPUT.Normal,
+             Metalness: SSRPass.OUTPUT.Metalness,
+         })
+-        .onChange(function (value) {
++        .onChange(function (value: string) {
+             ssrPass.output = parseInt(value);
+         });
+     ssrPass.opacity = 1;
+diff --git a/examples-testing/examples/webgl_postprocessing_taa.ts b/examples-testing/examples/webgl_postprocessing_taa.ts
+index b4d2b37..be57963 100644
+--- a/examples-testing/examples/webgl_postprocessing_taa.ts
++++ b/examples-testing/examples/webgl_postprocessing_taa.ts
+@@ -8,8 +8,13 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+ import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ 
+-let camera, scene, renderer, composer, taaRenderPass, renderPass;
+-let gui, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    composer: EffectComposer,
++    taaRenderPass: TAARenderPass,
++    renderPass: RenderPass;
++let gui: GUI | undefined, stats: Stats;
+ let index = 0;
+ 
+ const param = { TAAEnabled: '1', TAASampleLevel: 0 };
+@@ -51,7 +56,7 @@ function clearGui() {
+ }
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     renderer = new THREE.WebGLRenderer();
+     renderer.setPixelRatio(window.devicePixelRatio);
+diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
+index 1317f0f..fd7c58b 100644
+--- a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
++++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
+@@ -10,8 +10,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ 
+-let camera, stats;
+-let composer, renderer, mixer, clock;
++let camera: THREE.PerspectiveCamera, stats: Stats;
++let composer: EffectComposer, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer, clock: THREE.Clock;
+ 
+ const params = {
+     threshold: 0,
+@@ -23,7 +23,7 @@ const params = {
+ init();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     stats = new Stats();
+     container.appendChild(stats.dom);
+@@ -82,23 +82,23 @@ function init() {
+ 
+     const bloomFolder = gui.addFolder('bloom');
+ 
+-    bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value) {
++    bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value: number) {
+         bloomPass.threshold = Number(value);
+     });
+ 
+-    bloomFolder.add(params, 'strength', 0.0, 3.0).onChange(function (value) {
++    bloomFolder.add(params, 'strength', 0.0, 3.0).onChange(function (value: number) {
+         bloomPass.strength = Number(value);
+     });
+ 
+     gui.add(params, 'radius', 0.0, 1.0)
+         .step(0.01)
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             bloomPass.radius = Number(value);
+         });
+ 
+     const toneMappingFolder = gui.addFolder('tone mapping');
+ 
+-    toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
++    toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value: number) {
+         outputPass.toneMappingExposure = Math.pow(value, 4.0);
+     });
+ 
+diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
+index 9c2e530..c0e796b 100644
+--- a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
++++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
+@@ -22,7 +22,7 @@ const params = {
+ };
+ 
+ const darkMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
+-const materials = {};
++const materials: Record<string, THREE.Material | THREE.Material[]> = {};
+ 
+ const renderer = new THREE.WebGLRenderer({ antialias: true });
+ renderer.setPixelRatio(window.devicePixelRatio);
+@@ -60,8 +60,8 @@ const mixPass = new ShaderPass(
+             baseTexture: { value: null },
+             bloomTexture: { value: bloomComposer.renderTarget2.texture },
+         },
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+         defines: {},
+     }),
+     'baseTexture',
+@@ -85,12 +85,12 @@ const gui = new GUI();
+ 
+ const bloomFolder = gui.addFolder('bloom');
+ 
+-bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value) {
++bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value: number) {
+     bloomPass.threshold = Number(value);
+     render();
+ });
+ 
+-bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value) {
++bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value: number) {
+     bloomPass.strength = Number(value);
+     render();
+ });
+@@ -98,21 +98,21 @@ bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value) {
+ bloomFolder
+     .add(params, 'radius', 0.0, 1.0)
+     .step(0.01)
+-    .onChange(function (value) {
++    .onChange(function (value: number) {
+         bloomPass.radius = Number(value);
+         render();
+     });
+ 
+ const toneMappingFolder = gui.addFolder('tone mapping');
+ 
+-toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
++toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value: number) {
+     outputPass.toneMappingExposure = Math.pow(value, 4.0);
+     render();
+ });
+ 
+ setupScene();
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ 
+@@ -165,9 +165,9 @@ function setupScene() {
+     render();
+ }
+ 
+-function disposeMaterial(obj) {
+-    if (obj.material) {
+-        obj.material.dispose();
++function disposeMaterial(obj: THREE.Object3D) {
++    if ((obj as THREE.Mesh).material) {
++        ((obj as THREE.Mesh).material as THREE.Material).dispose();
+     }
+ }
+ 
+@@ -180,16 +180,16 @@ function render() {
+     finalComposer.render();
+ }
+ 
+-function darkenNonBloomed(obj) {
+-    if (obj.isMesh && bloomLayer.test(obj.layers) === false) {
+-        materials[obj.uuid] = obj.material;
+-        obj.material = darkMaterial;
++function darkenNonBloomed(obj: THREE.Object3D) {
++    if ((obj as THREE.Mesh).isMesh && bloomLayer.test(obj.layers) === false) {
++        materials[obj.uuid] = (obj as THREE.Mesh).material;
++        (obj as THREE.Mesh).material = darkMaterial;
+     }
+ }
+ 
+-function restoreMaterial(obj) {
++function restoreMaterial(obj: THREE.Object3D) {
+     if (materials[obj.uuid]) {
+-        obj.material = materials[obj.uuid];
++        (obj as THREE.Mesh).material = materials[obj.uuid];
+         delete materials[obj.uuid];
+     }
+ }
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index c2357f8..eab4381 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
