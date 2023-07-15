@@ -2610,6 +2610,246 @@ index 507d899..a4d4bbc 100644
      const data = [];
  
      for (let i = 0; i < segments; i++) {
+diff --git a/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts b/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
+index e0a25ee..bb61a36 100644
+--- a/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
++++ b/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
+@@ -2,17 +2,17 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let parent_node;
++let parent_node: THREE.Object3D;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 1, 10000);
+     camera.position.z = 9000;
+@@ -22,9 +22,9 @@ function init() {
+     const geometry = new THREE.BufferGeometry();
+     const material = new THREE.LineBasicMaterial({ vertexColors: true });
+ 
+-    const indices = [];
+-    const positions = [];
+-    const colors = [];
++    const indices: number[] = [];
++    const positions: number[] = [];
++    const colors: number[] = [];
+ 
+     let next_positions_index = 0;
+ 
+@@ -33,7 +33,7 @@ function init() {
+     const iteration_count = 4;
+     const rangle = (60 * Math.PI) / 180.0;
+ 
+-    function add_vertex(v) {
++    function add_vertex(v: THREE.Vector3) {
+         if (next_positions_index == 0xffff) console.error('Too many points.');
+ 
+         positions.push(v.x, v.y, v.z);
+@@ -44,7 +44,7 @@ function init() {
+ 
+     // simple Koch curve
+ 
+-    function snowflake_iteration(p0, p4, depth) {
++    function snowflake_iteration(p0: THREE.Vector3, p4: THREE.Vector3, depth: number) {
+         if (--depth < 0) {
+             const i = next_positions_index - 1; // p0 already there
+             add_vertex(p4);
+@@ -71,7 +71,7 @@ function init() {
+         snowflake_iteration(p3, p4, depth);
+     }
+ 
+-    function snowflake(points, loop, x_offset) {
++    function snowflake(points: THREE.Vector3[], loop: boolean, x_offset: number) {
+         for (let iteration = 0; iteration != iteration_count; iteration++) {
+             add_vertex(points[0]);
+ 
+diff --git a/examples-testing/examples/webgl_buffergeometry_points.ts b/examples-testing/examples/webgl_buffergeometry_points.ts
+index 07d6273..c3110bb 100644
+--- a/examples-testing/examples/webgl_buffergeometry_points.ts
++++ b/examples-testing/examples/webgl_buffergeometry_points.ts
+@@ -2,17 +2,17 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let points;
++let points: THREE.Points;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+diff --git a/examples-testing/examples/webgl_buffergeometry_points_interleaved.ts b/examples-testing/examples/webgl_buffergeometry_points_interleaved.ts
+index 7c29a13..f5c781e 100644
+--- a/examples-testing/examples/webgl_buffergeometry_points_interleaved.ts
++++ b/examples-testing/examples/webgl_buffergeometry_points_interleaved.ts
+@@ -2,17 +2,17 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let points;
++let points: THREE.Points;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 5, 3500);
+     camera.position.z = 2750;
+diff --git a/examples-testing/examples/webgl_buffergeometry_rawshader.ts b/examples-testing/examples/webgl_buffergeometry_rawshader.ts
+index 6623468..c35a1da 100644
+--- a/examples-testing/examples/webgl_buffergeometry_rawshader.ts
++++ b/examples-testing/examples/webgl_buffergeometry_rawshader.ts
+@@ -2,15 +2,15 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10);
+     camera.position.z = 2;
+@@ -54,8 +54,8 @@ function init() {
+         uniforms: {
+             time: { value: 1.0 },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         transparent: true,
+     });
+@@ -94,7 +94,7 @@ function animate() {
+ function render() {
+     const time = performance.now();
+ 
+-    const object = scene.children[0];
++    const object = scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.RawShaderMaterial>;
+ 
+     object.rotation.y = time * 0.0005;
+     object.material.uniforms.time.value = time * 0.005;
+diff --git a/examples-testing/examples/webgl_buffergeometry_selective_draw.ts b/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
+index 2157752..5aebaef 100644
+--- a/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
++++ b/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let geometry, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let geometry: THREE.BufferGeometry, mesh: THREE.LineSegments;
+ const numLat = 100;
+ const numLng = 200;
+ let numLinesCulled = 0;
+@@ -30,14 +30,14 @@ function init() {
+ 
+     addLines(1.0);
+ 
+-    const hideLinesButton = document.getElementById('hideLines');
++    const hideLinesButton = document.getElementById('hideLines')!;
+     hideLinesButton.addEventListener('click', hideLines);
+ 
+-    const showAllLinesButton = document.getElementById('showAllLines');
++    const showAllLinesButton = document.getElementById('showAllLines')!;
+     showAllLinesButton.addEventListener('click', showAllLines);
+ }
+ 
+-function addLines(radius) {
++function addLines(radius: number) {
+     geometry = new THREE.BufferGeometry();
+     const linePositions = new Float32Array(numLat * numLng * 3 * 2);
+     const lineColors = new Float32Array(numLat * numLng * 3 * 2);
+@@ -82,8 +82,8 @@ function addLines(radius) {
+     geometry.computeBoundingSphere();
+ 
+     const shaderMaterial = new THREE.ShaderMaterial({
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+     });
+ 
+     mesh = new THREE.LineSegments(geometry, shaderMaterial);
+@@ -99,7 +99,7 @@ function updateCount() {
+         ' lines, ' +
+         numLinesCulled +
+         ' culled (<a target="_blank" href="http://callum.com">author</a>)';
+-    document.getElementById('title').innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
++    document.getElementById('title')!.innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+ }
+ 
+ function hideLines() {
+diff --git a/examples-testing/examples/webgl_buffergeometry_uint.ts b/examples-testing/examples/webgl_buffergeometry_uint.ts
+index c1dcfc0..736b9c6 100644
+--- a/examples-testing/examples/webgl_buffergeometry_uint.ts
++++ b/examples-testing/examples/webgl_buffergeometry_uint.ts
+@@ -2,17 +2,17 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let mesh;
++let mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index f746f2e..143dc67 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
