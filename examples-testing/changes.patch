@@ -2930,6 +2930,417 @@ index e668385..0b6509c 100644
      wildGlitchOption.addEventListener('change', updateOptions);
  
      updateOptions();
+diff --git a/examples-testing/examples/webgl_postprocessing_godrays.ts b/examples-testing/examples/webgl_postprocessing_godrays.ts
+index cd451e7..aa70f31 100644
+--- a/examples-testing/examples/webgl_postprocessing_godrays.ts
++++ b/examples-testing/examples/webgl_postprocessing_godrays.ts
+@@ -11,16 +11,37 @@ import {
+     GodRaysGenerateShader,
+ } from 'three/addons/shaders/GodRaysShader.js';
+ 
+-let container, stats;
+-let camera, scene, renderer, materialDepth;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    materialDepth: THREE.MeshDepthMaterial;
+ 
+-let sphereMesh;
++let sphereMesh: THREE.Mesh;
+ 
+ const sunPosition = new THREE.Vector3(0, 1000, -1000);
+ const clipPosition = new THREE.Vector4();
+ const screenSpacePosition = new THREE.Vector3();
+ 
+-const postprocessing = { enabled: true };
++const postprocessing: {
++    enabled: boolean;
++    scene?: THREE.Scene;
++    camera?: THREE.OrthographicCamera;
++    rtTextureColors?: THREE.WebGLRenderTarget;
++    rtTextureDepth?: THREE.WebGLRenderTarget;
++    rtTextureDepthMask?: THREE.WebGLRenderTarget;
++    rtTextureGodRays1?: THREE.WebGLRenderTarget;
++    rtTextureGodRays2?: THREE.WebGLRenderTarget;
++    godrayMaskUniforms?: (typeof GodRaysDepthMaskShader)['uniforms'];
++    materialGodraysDepthMask?: THREE.ShaderMaterial;
++    godrayGenUniforms?: (typeof GodRaysGenerateShader)['uniforms'];
++    materialGodraysGenerate?: THREE.ShaderMaterial;
++    godrayCombineUniforms?: (typeof GodRaysCombineShader)['uniforms'];
++    materialGodraysCombine?: THREE.ShaderMaterial;
++    godraysFakeSunUniforms?: (typeof GodRaysFakeSunShader)['uniforms'];
++    materialGodraysFakeSun?: THREE.ShaderMaterial;
++    quad?: THREE.Mesh;
++} = { enabled: true };
+ 
+ const orbitRadius = 200;
+ 
+@@ -54,7 +75,6 @@ function init() {
+ 
+     const loader = new OBJLoader();
+     loader.load('models/obj/tree.obj', function (object) {
+-        object.material = materialScene;
+         object.position.set(0, -150, -150);
+         object.scale.multiplyScalar(400);
+         scene.add(object);
+@@ -106,17 +126,17 @@ function onWindowResize() {
+     camera.updateProjectionMatrix();
+ 
+     renderer.setSize(renderTargetWidth, renderTargetHeight);
+-    postprocessing.rtTextureColors.setSize(renderTargetWidth, renderTargetHeight);
+-    postprocessing.rtTextureDepth.setSize(renderTargetWidth, renderTargetHeight);
+-    postprocessing.rtTextureDepthMask.setSize(renderTargetWidth, renderTargetHeight);
++    postprocessing.rtTextureColors!.setSize(renderTargetWidth, renderTargetHeight);
++    postprocessing.rtTextureDepth!.setSize(renderTargetWidth, renderTargetHeight);
++    postprocessing.rtTextureDepthMask!.setSize(renderTargetWidth, renderTargetHeight);
+ 
+     const adjustedWidth = renderTargetWidth * godrayRenderTargetResolutionMultiplier;
+     const adjustedHeight = renderTargetHeight * godrayRenderTargetResolutionMultiplier;
+-    postprocessing.rtTextureGodRays1.setSize(adjustedWidth, adjustedHeight);
+-    postprocessing.rtTextureGodRays2.setSize(adjustedWidth, adjustedHeight);
++    postprocessing.rtTextureGodRays1!.setSize(adjustedWidth, adjustedHeight);
++    postprocessing.rtTextureGodRays2!.setSize(adjustedWidth, adjustedHeight);
+ }
+ 
+-function initPostprocessing(renderTargetWidth, renderTargetHeight) {
++function initPostprocessing(renderTargetWidth: number, renderTargetHeight: number) {
+     postprocessing.scene = new THREE.Scene();
+ 
+     postprocessing.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -10000, 10000);
+@@ -187,10 +207,10 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight) {
+         fragmentShader: godraysFakeSunShader.fragmentShader,
+     });
+ 
+-    postprocessing.godraysFakeSunUniforms.bgColor.value.setHex(bgColor);
+-    postprocessing.godraysFakeSunUniforms.sunColor.value.setHex(sunColor);
++    postprocessing.godraysFakeSunUniforms!.bgColor.value.setHex(bgColor);
++    postprocessing.godraysFakeSunUniforms!.sunColor.value.setHex(sunColor);
+ 
+-    postprocessing.godrayCombineUniforms.fGodRayIntensity.value = 0.75;
++    postprocessing.godrayCombineUniforms!.fGodRayIntensity.value = 0.75;
+ 
+     postprocessing.quad = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), postprocessing.materialGodraysGenerate);
+     postprocessing.quad.position.z = -9900;
+@@ -198,26 +218,26 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight) {
+ }
+ 
+ function animate() {
+-    requestAnimationFrame(animate, renderer.domElement);
++    requestAnimationFrame(animate);
+ 
+     stats.begin();
+     render();
+     stats.end();
+ }
+ 
+-function getStepSize(filterLen, tapsPerPass, pass) {
++function getStepSize(filterLen: number, tapsPerPass: number, pass: number) {
+     return filterLen * Math.pow(tapsPerPass, -pass);
+ }
+ 
+-function filterGodRays(inputTex, renderTarget, stepSize) {
+-    postprocessing.scene.overrideMaterial = postprocessing.materialGodraysGenerate;
++function filterGodRays(inputTex: THREE.Texture, renderTarget: THREE.WebGLRenderTarget, stepSize: number) {
++    postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysGenerate!;
+ 
+-    postprocessing.godrayGenUniforms['fStepSize'].value = stepSize;
+-    postprocessing.godrayGenUniforms['tInput'].value = inputTex;
++    postprocessing.godrayGenUniforms!['fStepSize'].value = stepSize;
++    postprocessing.godrayGenUniforms!['tInput'].value = inputTex;
+ 
+     renderer.setRenderTarget(renderTarget);
+-    renderer.render(postprocessing.scene, postprocessing.camera);
+-    postprocessing.scene.overrideMaterial = null;
++    renderer.render(postprocessing.scene!, postprocessing.camera!);
++    postprocessing.scene!.overrideMaterial = null;
+ }
+ 
+ function render() {
+@@ -245,14 +265,14 @@ function render() {
+ 
+         // Give it to the god-ray and sun shaders
+ 
+-        postprocessing.godrayGenUniforms['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
+-        postprocessing.godraysFakeSunUniforms['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
++        postprocessing.godrayGenUniforms!['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
++        postprocessing.godraysFakeSunUniforms!['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
+ 
+         // -- Draw sky and sun --
+ 
+         // Clear colors and depths, will clear to sky color
+ 
+-        renderer.setRenderTarget(postprocessing.rtTextureColors);
++        renderer.setRenderTarget(postprocessing.rtTextureColors!);
+         renderer.clear(true, true, false);
+ 
+         // Sun render. Runs a shader that gives a brightness based on the screen
+@@ -268,11 +288,11 @@ function render() {
+         renderer.setScissor(screenSpacePosition.x - sunsqW / 2, screenSpacePosition.y - sunsqH / 2, sunsqW, sunsqH);
+         renderer.setScissorTest(true);
+ 
+-        postprocessing.godraysFakeSunUniforms['fAspect'].value = window.innerWidth / window.innerHeight;
++        postprocessing.godraysFakeSunUniforms!['fAspect'].value = window.innerWidth / window.innerHeight;
+ 
+-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysFakeSun;
+-        renderer.setRenderTarget(postprocessing.rtTextureColors);
+-        renderer.render(postprocessing.scene, postprocessing.camera);
++        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysFakeSun!;
++        renderer.setRenderTarget(postprocessing.rtTextureColors!);
++        renderer.render(postprocessing.scene!, postprocessing.camera!);
+ 
+         renderer.setScissorTest(false);
+ 
+@@ -281,23 +301,23 @@ function render() {
+         // Colors
+ 
+         scene.overrideMaterial = null;
+-        renderer.setRenderTarget(postprocessing.rtTextureColors);
++        renderer.setRenderTarget(postprocessing.rtTextureColors!);
+         renderer.render(scene, camera);
+ 
+         // Depth
+ 
+         scene.overrideMaterial = materialDepth;
+-        renderer.setRenderTarget(postprocessing.rtTextureDepth);
++        renderer.setRenderTarget(postprocessing.rtTextureDepth!);
+         renderer.clear();
+         renderer.render(scene, camera);
+ 
+         //
+ 
+-        postprocessing.godrayMaskUniforms['tInput'].value = postprocessing.rtTextureDepth.texture;
++        postprocessing.godrayMaskUniforms!['tInput'].value = postprocessing.rtTextureDepth!.texture;
+ 
+-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysDepthMask;
+-        renderer.setRenderTarget(postprocessing.rtTextureDepthMask);
+-        renderer.render(postprocessing.scene, postprocessing.camera);
++        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysDepthMask!;
++        renderer.setRenderTarget(postprocessing.rtTextureDepthMask!);
++        renderer.render(postprocessing.scene!, postprocessing.camera!);
+ 
+         // -- Render god-rays --
+ 
+@@ -316,35 +336,35 @@ function render() {
+ 
+         // pass 1 - render into first ping-pong target
+         filterGodRays(
+-            postprocessing.rtTextureDepthMask.texture,
+-            postprocessing.rtTextureGodRays2,
++            postprocessing.rtTextureDepthMask!.texture,
++            postprocessing.rtTextureGodRays2!,
+             getStepSize(filterLen, TAPS_PER_PASS, 1.0),
+         );
+ 
+         // pass 2 - render into second ping-pong target
+         filterGodRays(
+-            postprocessing.rtTextureGodRays2.texture,
+-            postprocessing.rtTextureGodRays1,
++            postprocessing.rtTextureGodRays2!.texture,
++            postprocessing.rtTextureGodRays1!,
+             getStepSize(filterLen, TAPS_PER_PASS, 2.0),
+         );
+ 
+         // pass 3 - 1st RT
+         filterGodRays(
+-            postprocessing.rtTextureGodRays1.texture,
+-            postprocessing.rtTextureGodRays2,
++            postprocessing.rtTextureGodRays1!.texture,
++            postprocessing.rtTextureGodRays2!,
+             getStepSize(filterLen, TAPS_PER_PASS, 3.0),
+         );
+ 
+         // final pass - composite god-rays onto colors
+ 
+-        postprocessing.godrayCombineUniforms['tColors'].value = postprocessing.rtTextureColors.texture;
+-        postprocessing.godrayCombineUniforms['tGodRays'].value = postprocessing.rtTextureGodRays2.texture;
++        postprocessing.godrayCombineUniforms!['tColors'].value = postprocessing.rtTextureColors!.texture;
++        postprocessing.godrayCombineUniforms!['tGodRays'].value = postprocessing.rtTextureGodRays2!.texture;
+ 
+-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysCombine;
++        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysCombine!;
+ 
+         renderer.setRenderTarget(null);
+-        renderer.render(postprocessing.scene, postprocessing.camera);
+-        postprocessing.scene.overrideMaterial = null;
++        renderer.render(postprocessing.scene!, postprocessing.camera!);
++        postprocessing.scene!.overrideMaterial = null;
+     } else {
+         renderer.setRenderTarget(null);
+         renderer.clear();
+diff --git a/examples-testing/examples/webgl_postprocessing_masking.ts b/examples-testing/examples/webgl_postprocessing_masking.ts
+index 53cda30..f061d6e 100644
+--- a/examples-testing/examples/webgl_postprocessing_masking.ts
++++ b/examples-testing/examples/webgl_postprocessing_masking.ts
+@@ -6,8 +6,8 @@ import { ClearPass } from 'three/addons/postprocessing/ClearPass.js';
+ import { MaskPass, ClearMaskPass } from 'three/addons/postprocessing/MaskPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ 
+-let camera, composer, renderer;
+-let box, torus;
++let camera: THREE.PerspectiveCamera, composer: EffectComposer, renderer: THREE.WebGLRenderer;
++let box: THREE.Mesh, torus: THREE.Mesh;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_postprocessing_outline.ts b/examples-testing/examples/webgl_postprocessing_outline.ts
+index 4930155..e041a19 100644
+--- a/examples-testing/examples/webgl_postprocessing_outline.ts
++++ b/examples-testing/examples/webgl_postprocessing_outline.ts
+@@ -12,11 +12,11 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+ 
+-let container, stats;
+-let camera, scene, renderer, controls;
+-let composer, effectFXAA, outlinePass;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let composer: EffectComposer, effectFXAA: ShaderPass, outlinePass: OutlinePass;
+ 
+-let selectedObjects = [];
++let selectedObjects: THREE.Object3D[] = [];
+ 
+ const raycaster = new THREE.Raycaster();
+ const mouse = new THREE.Vector2();
+@@ -37,40 +37,45 @@ const params = {
+ 
+ const gui = new GUI({ width: 280 });
+ 
+-gui.add(params, 'edgeStrength', 0.01, 10).onChange(function (value) {
++gui.add(params, 'edgeStrength', 0.01, 10).onChange(function (value: number) {
+     outlinePass.edgeStrength = Number(value);
+ });
+ 
+-gui.add(params, 'edgeGlow', 0.0, 1).onChange(function (value) {
++gui.add(params, 'edgeGlow', 0.0, 1).onChange(function (value: number) {
+     outlinePass.edgeGlow = Number(value);
+ });
+ 
+-gui.add(params, 'edgeThickness', 1, 4).onChange(function (value) {
++gui.add(params, 'edgeThickness', 1, 4).onChange(function (value: number) {
+     outlinePass.edgeThickness = Number(value);
+ });
+ 
+-gui.add(params, 'pulsePeriod', 0.0, 5).onChange(function (value) {
++gui.add(params, 'pulsePeriod', 0.0, 5).onChange(function (value: number) {
+     outlinePass.pulsePeriod = Number(value);
+ });
+ 
+ gui.add(params, 'rotate');
+ 
+-gui.add(params, 'usePatternTexture').onChange(function (value) {
++gui.add(params, 'usePatternTexture').onChange(function (value: boolean) {
+     outlinePass.usePatternTexture = value;
+ });
+ 
+-function Configuration() {
+-    this.visibleEdgeColor = '#ffffff';
+-    this.hiddenEdgeColor = '#190a05';
++class Configuration {
++    visibleEdgeColor: string;
++    hiddenEdgeColor: string;
++
++    constructor() {
++        this.visibleEdgeColor = '#ffffff';
++        this.hiddenEdgeColor = '#190a05';
++    }
+ }
+ 
+ const conf = new Configuration();
+ 
+-gui.addColor(conf, 'visibleEdgeColor').onChange(function (value) {
++gui.addColor(conf, 'visibleEdgeColor').onChange(function (value: string) {
+     outlinePass.visibleEdgeColor.set(value);
+ });
+ 
+-gui.addColor(conf, 'hiddenEdgeColor').onChange(function (value) {
++gui.addColor(conf, 'hiddenEdgeColor').onChange(function (value: string) {
+     outlinePass.hiddenEdgeColor.set(value);
+ });
+ 
+@@ -224,7 +229,7 @@ function init() {
+     renderer.domElement.style.touchAction = 'none';
+     renderer.domElement.addEventListener('pointermove', onPointerMove);
+ 
+-    function onPointerMove(event) {
++    function onPointerMove(event: PointerEvent) {
+         if (event.isPrimary === false) return;
+ 
+         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+@@ -233,7 +238,7 @@ function init() {
+         checkIntersection();
+     }
+ 
+-    function addSelectedObject(object) {
++    function addSelectedObject(object: THREE.Object3D) {
+         selectedObjects = [];
+         selectedObjects.push(object);
+     }
+diff --git a/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts b/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
+index cb97a5a..1c15b62 100644
+--- a/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
++++ b/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
+@@ -8,11 +8,11 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+ import { HalftonePass } from 'three/addons/postprocessing/HalftonePass.js';
+ 
+-let renderer, clock, camera, stats;
++let renderer: THREE.WebGLRenderer, clock: THREE.Clock, camera: THREE.PerspectiveCamera, stats: Stats;
+ 
+ const rotationSpeed = Math.PI / 64;
+ 
+-let composer, group;
++let composer: EffectComposer, group: THREE.Group;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_postprocessing_ssaa.ts b/examples-testing/examples/webgl_postprocessing_ssaa.ts
+index f3028fa..9cf7166 100644
+--- a/examples-testing/examples/webgl_postprocessing_ssaa.ts
++++ b/examples-testing/examples/webgl_postprocessing_ssaa.ts
+@@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+ import { SSAARenderPass } from 'three/addons/postprocessing/SSAARenderPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ 
+-let scene, renderer, composer;
+-let cameraP, ssaaRenderPassP;
+-let cameraO, ssaaRenderPassO;
+-let gui, stats;
++let scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
++let cameraP: THREE.PerspectiveCamera, ssaaRenderPassP: SSAARenderPass;
++let cameraO: THREE.OrthographicCamera, ssaaRenderPassO: SSAARenderPass;
++let gui: GUI, stats: Stats;
+ 
+ const params = {
+     sampleLevel: 4,
+@@ -51,7 +51,7 @@ function clearGui() {
+ }
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     const width = window.innerWidth || 1;
+     const height = window.innerHeight || 1;
+@@ -145,7 +145,7 @@ function onWindowResize() {
+     const aspect = width / height;
+ 
+     cameraP.aspect = aspect;
+-    cameraP.setViewOffset(width, height, params.viewOffset, 0, width, height);
++    cameraP.setViewOffset(width, height, params.viewOffsetX, 0, width, height);
+     cameraO.updateProjectionMatrix();
+ 
+     cameraO.left = -height * aspect;
+@@ -201,7 +201,7 @@ function animate() {
+     ssaaRenderPassP.enabled = params.camera === 'perspective';
+     ssaaRenderPassO.enabled = params.camera === 'orthographic';
+ 
+-    cameraP.view.offsetX = params.viewOffsetX;
++    cameraP.view!.offsetX = params.viewOffsetX;
+ 
+     composer.render();
+ 
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index c2357f8..eab4381 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
