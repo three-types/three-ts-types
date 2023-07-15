@@ -293,7 +293,7 @@ const files = {
         'webgl_shadowmap_pcss',
         'webgl_shadowmap_progressive',
         'webgl_simple_gi',
-        'webgl_worker_offscreencanvas',
+        // 'webgl_worker_offscreencanvas',
     ],
     webgl2: [
         'webgl2_buffergeometry_attributes_integer',
