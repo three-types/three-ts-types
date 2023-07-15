@@ -2241,6 +2241,144 @@ index 75ccf8d..35d06e4 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgl_animation_keyframes.ts b/examples-testing/examples/webgl_animation_keyframes.ts
+index 263eef7..9603bea 100644
+--- a/examples-testing/examples/webgl_animation_keyframes.ts
++++ b/examples-testing/examples/webgl_animation_keyframes.ts
+@@ -8,10 +8,10 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+-let mixer;
++let mixer: THREE.AnimationMixer;
+ 
+ const clock = new THREE.Clock();
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+ const stats = new Stats();
+ container.appendChild(stats.dom);
+diff --git a/examples-testing/examples/webgl_animation_multiple.ts b/examples-testing/examples/webgl_animation_multiple.ts
+index 16c58cf..5ccaf47 100644
+--- a/examples-testing/examples/webgl_animation_multiple.ts
++++ b/examples-testing/examples/webgl_animation_multiple.ts
+@@ -3,10 +3,10 @@ import * as THREE from 'three';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+ 
+-let camera, scene, renderer;
+-let clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let clock: THREE.Clock;
+ 
+-const mixers = [];
++const mixers: THREE.AnimationMixer[] = [];
+ 
+ init();
+ animate();
+@@ -52,7 +52,7 @@ function init() {
+     const loader = new GLTFLoader();
+     loader.load('models/gltf/Soldier.glb', function (gltf) {
+         gltf.scene.traverse(function (object) {
+-            if (object.isMesh) object.castShadow = true;
++            if ((object as THREE.Mesh).isMesh) object.castShadow = true;
+         });
+ 
+         const model1 = SkeletonUtils.clone(gltf.scene);
+diff --git a/examples-testing/examples/webgl_animation_skinning_morph.ts b/examples-testing/examples/webgl_animation_skinning_morph.ts
+index 03ba9ea..5b47c51 100644
+--- a/examples-testing/examples/webgl_animation_skinning_morph.ts
++++ b/examples-testing/examples/webgl_animation_skinning_morph.ts
+@@ -5,10 +5,29 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let container, stats, clock, gui, mixer, actions, activeAction, previousAction;
+-let camera, scene, renderer, model, face;
+-
+-const api = { state: 'Walking' };
++let container: HTMLDivElement,
++    stats: Stats,
++    clock: THREE.Clock,
++    gui: GUI,
++    mixer: THREE.AnimationMixer,
++    actions: Record<string, THREE.AnimationAction>,
++    activeAction: THREE.AnimationAction,
++    previousAction: THREE.AnimationAction;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    model: THREE.Group,
++    face: THREE.Mesh;
++
++const api: {
++    state: string;
++    Jump?: () => void;
++    Yes?: () => void;
++    No?: () => void;
++    Wave?: () => void;
++    Punch?: () => void;
++    ThumbsUp?: () => void;
++} = { state: 'Walking' };
+ 
+ init();
+ animate();
+@@ -81,9 +100,9 @@ function init() {
+     container.appendChild(stats.dom);
+ }
+ 
+-function createGUI(model, animations) {
++function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
+     const states = ['Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing'];
+-    const emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'];
++    const emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'] as const;
+ 
+     gui = new GUI();
+ 
+@@ -96,7 +115,7 @@ function createGUI(model, animations) {
+         const action = mixer.clipAction(clip);
+         actions[clip.name] = action;
+ 
+-        if (emotes.indexOf(clip.name) >= 0 || states.indexOf(clip.name) >= 4) {
++        if (emotes.indexOf(clip.name as (typeof emotes)[number]) >= 0 || states.indexOf(clip.name) >= 4) {
+             action.clampWhenFinished = true;
+             action.loop = THREE.LoopOnce;
+         }
+@@ -118,7 +137,7 @@ function createGUI(model, animations) {
+ 
+     const emoteFolder = gui.addFolder('Emotes');
+ 
+-    function createEmoteCallback(name) {
++    function createEmoteCallback(name: (typeof emotes)[number]) {
+         api[name] = function () {
+             fadeToAction(name, 0.2);
+ 
+@@ -142,13 +161,13 @@ function createGUI(model, animations) {
+ 
+     // expressions
+ 
+-    face = model.getObjectByName('Head_4');
++    face = model.getObjectByName('Head_4') as THREE.Mesh;
+ 
+-    const expressions = Object.keys(face.morphTargetDictionary);
++    const expressions = Object.keys(face.morphTargetDictionary!);
+     const expressionFolder = gui.addFolder('Expressions');
+ 
+     for (let i = 0; i < expressions.length; i++) {
+-        expressionFolder.add(face.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i]);
++        expressionFolder.add(face.morphTargetInfluences!, `${i}`, 0, 1, 0.01).name(expressions[i]);
+     }
+ 
+     activeAction = actions['Walking'];
+@@ -157,7 +176,7 @@ function createGUI(model, animations) {
+     expressionFolder.open();
+ }
+ 
+-function fadeToAction(name, duration) {
++function fadeToAction(name: string, duration: number) {
+     previousAction = activeAction;
+     activeAction = actions[name];
+ 
 diff --git a/examples-testing/examples/webgl_buffergeometry.ts b/examples-testing/examples/webgl_buffergeometry.ts
 index 42a9c31..ad80640 100644
 --- a/examples-testing/examples/webgl_buffergeometry.ts
