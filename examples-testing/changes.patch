@@ -3672,6 +3672,57 @@ index eebb24f..eb4fa94 100644
      if (event.isPrimary === false) return;
  
      setMouseCoords(event.clientX, event.clientY);
+diff --git a/examples-testing/examples/webgl_materials_modified.ts b/examples-testing/examples/webgl_materials_modified.ts
+index 48e4781..b717d93 100644
+--- a/examples-testing/examples/webgl_materials_modified.ts
++++ b/examples-testing/examples/webgl_materials_modified.ts
+@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ init();
+ animate();
+@@ -18,7 +18,7 @@ function init() {
+ 
+     const loader = new GLTFLoader();
+     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        const geometry = gltf.scene.children[0].geometry;
++        const geometry = (gltf.scene.children[0] as THREE.Mesh).geometry;
+ 
+         let mesh = new THREE.Mesh(geometry, buildTwistMaterial(2.0));
+         mesh.position.x = -3.5;
+@@ -51,7 +51,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function buildTwistMaterial(amount) {
++function buildTwistMaterial(amount: number) {
+     const material = new THREE.MeshNormalMaterial();
+     material.onBeforeCompile = function (shader) {
+         shader.uniforms.time = { value: 0 };
+@@ -75,7 +75,7 @@ function buildTwistMaterial(amount) {
+     // Make sure WebGLRenderer doesnt reuse a single program
+ 
+     material.customProgramCacheKey = function () {
+-        return amount;
++        return amount.toFixed(1);
+     };
+ 
+     return material;
+@@ -105,8 +105,8 @@ function animate() {
+ 
+ function render() {
+     scene.traverse(function (child) {
+-        if (child.isMesh) {
+-            const shader = child.material.userData.shader;
++        if ((child as THREE.Mesh).isMesh) {
++            const shader = ((child as THREE.Mesh).material as THREE.Material).userData.shader;
+ 
+             if (shader) {
+                 shader.uniforms.time.value = performance.now() / 1000;
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
 index c2a8058..c3fbbfc 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
@@ -5210,6 +5261,459 @@ index 9c2e530..c0e796b 100644
          delete materials[obj.uuid];
      }
  }
+diff --git a/examples-testing/examples/webgl_raymarching_reflect.ts b/examples-testing/examples/webgl_raymarching_reflect.ts
+index b19db24..53d07f6 100644
+--- a/examples-testing/examples/webgl_raymarching_reflect.ts
++++ b/examples-testing/examples/webgl_raymarching_reflect.ts
+@@ -5,11 +5,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let dolly, camera, scene, renderer;
+-let geometry, material, mesh;
+-let stats, clock;
++let dolly: THREE.Group, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let geometry: THREE.PlaneGeometry, material: THREE.RawShaderMaterial, mesh;
++let stats: Stats, clock: THREE.Clock;
+ 
+-const canvas = document.querySelector('#canvas');
++const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
+ 
+ const config = {
+     saveImage: function () {
+@@ -25,7 +25,7 @@ render();
+ function init() {
+     renderer = new THREE.WebGLRenderer({ canvas: canvas });
+     renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(config.resolution, config.resolution);
++    renderer.setSize(parseInt(config.resolution), parseInt(config.resolution));
+     renderer.useLegacyLights = false;
+ 
+     window.addEventListener('resize', onWindowResize);
+@@ -49,8 +49,8 @@ function init() {
+             cameraWorldMatrix: { value: camera.matrixWorld },
+             cameraProjectionMatrixInverse: { value: camera.projectionMatrixInverse.clone() },
+         },
+-        vertexShader: document.getElementById('vertex_shader').textContent,
+-        fragmentShader: document.getElementById('fragment_shader').textContent,
++        vertexShader: document.getElementById('vertex_shader')!.textContent!,
++        fragmentShader: document.getElementById('fragment_shader')!.textContent!,
+     });
+     mesh = new THREE.Mesh(geometry, material);
+     mesh.frustumCulled = false;
+@@ -73,7 +73,7 @@ function onWindowResize() {
+     if (config.resolution === 'full') {
+         renderer.setSize(window.innerWidth, window.innerHeight);
+     } else {
+-        renderer.setSize(config.resolution, config.resolution);
++        renderer.setSize(parseInt(config.resolution), parseInt(config.resolution));
+     }
+ 
+     camera.aspect = canvas.width / canvas.height;
+diff --git a/examples-testing/examples/webgl_shadowmap_csm.ts b/examples-testing/examples/webgl_shadowmap_csm.ts
+index 1776942..3d405af 100644
+--- a/examples-testing/examples/webgl_shadowmap_csm.ts
++++ b/examples-testing/examples/webgl_shadowmap_csm.ts
+@@ -2,16 +2,22 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-import { CSM } from 'three/addons/csm/CSM.js';
++import { CSM, CSMMode } from 'three/addons/csm/CSM.js';
+ import { CSMHelper } from 'three/addons/csm/CSMHelper.js';
+ 
+-let renderer, scene, camera, orthoCamera, controls, csm, csmHelper;
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    orthoCamera: THREE.OrthographicCamera,
++    controls: OrbitControls,
++    csm: CSM,
++    csmHelper: CSMHelper;
+ 
+ const params = {
+     orthographic: false,
+     fade: false,
+     far: 1000,
+-    mode: 'practical',
++    mode: 'practical' as const,
+     lightX: -1,
+     lightY: -1,
+     lightZ: -1,
+@@ -119,12 +125,12 @@ function init() {
+ 
+     const gui = new GUI();
+ 
+-    gui.add(params, 'orthographic').onChange(function (value) {
++    gui.add(params, 'orthographic').onChange(function (value: boolean) {
+         csm.camera = value ? orthoCamera : camera;
+         csm.updateFrustums();
+     });
+ 
+-    gui.add(params, 'fade').onChange(function (value) {
++    gui.add(params, 'fade').onChange(function (value: boolean) {
+         csm.fade = value;
+         csm.updateFrustums();
+     });
+@@ -132,45 +138,45 @@ function init() {
+     gui.add(params, 'far', 1, 5000)
+         .step(1)
+         .name('shadow far')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             csm.maxFar = value;
+             csm.updateFrustums();
+         });
+ 
+     gui.add(params, 'mode', ['uniform', 'logarithmic', 'practical'])
+         .name('frustum split mode')
+-        .onChange(function (value) {
++        .onChange(function (value: CSMMode) {
+             csm.mode = value;
+             csm.updateFrustums();
+         });
+ 
+     gui.add(params, 'lightX', -1, 1)
+         .name('light direction x')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             csm.lightDirection.x = value;
+         });
+ 
+     gui.add(params, 'lightY', -1, 1)
+         .name('light direction y')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             csm.lightDirection.y = value;
+         });
+ 
+     gui.add(params, 'lightZ', -1, 1)
+         .name('light direction z')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             csm.lightDirection.z = value;
+         });
+ 
+     gui.add(params, 'margin', 0, 200)
+         .name('light margin')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             csm.lightMargin = value;
+         });
+ 
+     gui.add(params, 'lightNear', 1, 10000)
+         .name('light near')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             for (let i = 0; i < csm.lights.length; i++) {
+                 csm.lights[i].shadow.camera.near = value;
+                 csm.lights[i].shadow.camera.updateProjectionMatrix();
+@@ -179,7 +185,7 @@ function init() {
+ 
+     gui.add(params, 'lightFar', 1, 10000)
+         .name('light far')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             for (let i = 0; i < csm.lights.length; i++) {
+                 csm.lights[i].shadow.camera.far = value;
+                 csm.lights[i].shadow.camera.updateProjectionMatrix();
+diff --git a/examples-testing/examples/webgl_shadowmap_pcss.ts b/examples-testing/examples/webgl_shadowmap_pcss.ts
+index ca1ce0d..25ea881 100644
+--- a/examples-testing/examples/webgl_shadowmap_pcss.ts
++++ b/examples-testing/examples/webgl_shadowmap_pcss.ts
+@@ -4,10 +4,10 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let stats;
+-let camera, scene, renderer;
++let stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let group;
++let group: THREE.Group;
+ 
+ init();
+ animate();
+@@ -96,12 +96,12 @@ function init() {
+ 
+     shader = shader.replace(
+         '#ifdef USE_SHADOWMAP',
+-        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS').textContent,
++        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS')!.textContent,
+     );
+ 
+     shader = shader.replace(
+         '#if defined( SHADOWMAP_TYPE_PCF )',
+-        document.getElementById('PCSSGetShadow').textContent + '#if defined( SHADOWMAP_TYPE_PCF )',
++        document.getElementById('PCSSGetShadow')!.textContent + '#if defined( SHADOWMAP_TYPE_PCF )',
+     );
+ 
+     THREE.ShaderChunk.shadowmap_pars_fragment = shader;
+diff --git a/examples-testing/examples/webgl_shadowmap_progressive.ts b/examples-testing/examples/webgl_shadowmap_progressive.ts
+index 6bac312..ce14ee0 100644
+--- a/examples-testing/examples/webgl_shadowmap_progressive.ts
++++ b/examples-testing/examples/webgl_shadowmap_progressive.ts
+@@ -9,17 +9,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMap.js';
+ const shadowMapRes = 512,
+     lightMapRes = 1024,
+     lightCount = 8;
+-let camera,
+-    scene,
+-    renderer,
+-    controls,
+-    control,
+-    control2,
+-    object = new THREE.Mesh(),
+-    lightOrigin = null,
+-    progressiveSurfacemap;
+-const dirLights = [],
+-    lightmapObjects = [];
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    controls: OrbitControls,
++    control: TransformControls,
++    control2: TransformControls,
++    object: THREE.Object3D = new THREE.Mesh(),
++    lightOrigin: THREE.Group | null = null,
++    progressiveSurfacemap: ProgressiveLightMap;
++const dirLights: THREE.DirectionalLight[] = [],
++    lightmapObjects: THREE.Object3D[] = [];
+ const params = {
+     Enable: true,
+     'Blur Edges': true,
+@@ -99,11 +99,11 @@ function init() {
+     // model
+     function loadModel() {
+         object.traverse(function (child) {
+-            if (child.isMesh) {
++            if ((child as THREE.Mesh).isMesh) {
+                 child.name = 'Loaded Mesh';
+                 child.castShadow = true;
+                 child.receiveShadow = true;
+-                child.material = new THREE.MeshPhongMaterial();
++                (child as THREE.Mesh).material = new THREE.MeshPhongMaterial();
+ 
+                 // This adds the model to the lightmap
+                 lightmapObjects.push(child);
+@@ -129,7 +129,7 @@ function init() {
+ 
+         object.add(lightTarget);
+ 
+-        if (typeof TESTING !== 'undefined') {
++        if (typeof (window as any).TESTING !== 'undefined') {
+             for (let i = 0; i < 300; i++) {
+                 render();
+             }
+@@ -155,7 +155,7 @@ function init() {
+ }
+ 
+ function createGUI() {
+-    const gui = new GUI({ name: 'Accumulation Settings' });
++    const gui = new GUI({ title: 'Accumulation Settings' });
+     gui.add(params, 'Enable');
+     gui.add(params, 'Blur Edges');
+     gui.add(params, 'Blend Window', 1, 500).step(1);
+@@ -189,9 +189,9 @@ function render() {
+         // Sometimes they will be uniformly sampled from the upper hemisphere
+         if (Math.random() > params['Ambient Weight']) {
+             dirLights[l].position.set(
+-                lightOrigin.position.x + Math.random() * params['Light Radius'],
+-                lightOrigin.position.y + Math.random() * params['Light Radius'],
+-                lightOrigin.position.z + Math.random() * params['Light Radius'],
++                lightOrigin!.position.x + Math.random() * params['Light Radius'],
++                lightOrigin!.position.y + Math.random() * params['Light Radius'],
++                lightOrigin!.position.z + Math.random() * params['Light Radius'],
+             );
+         } else {
+             // Uniform Hemispherical Surface Distribution for Ambient Occlusion
+diff --git a/examples-testing/examples/webgl_simple_gi.ts b/examples-testing/examples/webgl_simple_gi.ts
+index 11522c1..c96df96 100644
+--- a/examples-testing/examples/webgl_simple_gi.ts
++++ b/examples-testing/examples/webgl_simple_gi.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ class GIMesh extends THREE.Mesh {
+-    copy(source) {
++    copy(source: this) {
+         super.copy(source);
+ 
+         this.geometry = source.geometry.clone();
+@@ -14,105 +14,107 @@ class GIMesh extends THREE.Mesh {
+ 
+ //
+ 
+-const SimpleGI = function (renderer, scene) {
+-    const SIZE = 32,
+-        SIZE2 = SIZE * SIZE;
++class SimpleGI {
++    constructor(renderer: THREE.WebGLRenderer, scene: THREE.Scene) {
++        const SIZE = 32,
++            SIZE2 = SIZE * SIZE;
+ 
+-    const camera = new THREE.PerspectiveCamera(90, 1, 0.01, 100);
++        const camera = new THREE.PerspectiveCamera(90, 1, 0.01, 100);
+ 
+-    scene.updateMatrixWorld(true);
++        scene.updateMatrixWorld(true);
+ 
+-    let clone = scene.clone();
+-    clone.matrixWorldAutoUpdate = false;
++        let clone = scene.clone();
++        clone.matrixWorldAutoUpdate = false;
+ 
+-    const rt = new THREE.WebGLRenderTarget(SIZE, SIZE);
++        const rt = new THREE.WebGLRenderTarget(SIZE, SIZE);
+ 
+-    const normalMatrix = new THREE.Matrix3();
++        const normalMatrix = new THREE.Matrix3();
+ 
+-    const position = new THREE.Vector3();
+-    const normal = new THREE.Vector3();
++        const position = new THREE.Vector3();
++        const normal = new THREE.Vector3();
+ 
+-    let bounces = 0;
+-    let currentVertex = 0;
++        let bounces = 0;
++        let currentVertex = 0;
+ 
+-    const color = new Float32Array(3);
+-    const buffer = new Uint8Array(SIZE2 * 4);
++        const color = new Float32Array(3);
++        const buffer = new Uint8Array(SIZE2 * 4);
+ 
+-    function compute() {
+-        if (bounces === 3) return;
++        function compute() {
++            if (bounces === 3) return;
+ 
+-        const object = scene.children[0]; // torusKnot
+-        const geometry = object.geometry;
++            const object = scene.children[0] as GIMesh; // torusKnot
++            const geometry = object.geometry;
+ 
+-        const attributes = geometry.attributes;
+-        const positions = attributes.position.array;
+-        const normals = attributes.normal.array;
++            const attributes = geometry.attributes;
++            const positions = attributes.position.array;
++            const normals = attributes.normal.array;
+ 
+-        if (attributes.color === undefined) {
+-            const colors = new Float32Array(positions.length);
+-            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
+-        }
++            if (attributes.color === undefined) {
++                const colors = new Float32Array(positions.length);
++                geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3).setUsage(THREE.DynamicDrawUsage));
++            }
+ 
+-        const colors = attributes.color.array;
++            const colors = attributes.color.array;
+ 
+-        const startVertex = currentVertex;
+-        const totalVertex = positions.length / 3;
++            const startVertex = currentVertex;
++            const totalVertex = positions.length / 3;
+ 
+-        for (let i = 0; i < 32; i++) {
+-            if (currentVertex >= totalVertex) break;
++            for (let i = 0; i < 32; i++) {
++                if (currentVertex >= totalVertex) break;
+ 
+-            position.fromArray(positions, currentVertex * 3);
+-            position.applyMatrix4(object.matrixWorld);
++                position.fromArray(positions, currentVertex * 3);
++                position.applyMatrix4(object.matrixWorld);
+ 
+-            normal.fromArray(normals, currentVertex * 3);
+-            normal.applyMatrix3(normalMatrix.getNormalMatrix(object.matrixWorld)).normalize();
++                normal.fromArray(normals, currentVertex * 3);
++                normal.applyMatrix3(normalMatrix.getNormalMatrix(object.matrixWorld)).normalize();
+ 
+-            camera.position.copy(position);
+-            camera.lookAt(position.add(normal));
++                camera.position.copy(position);
++                camera.lookAt(position.add(normal));
+ 
+-            renderer.setRenderTarget(rt);
+-            renderer.render(clone, camera);
++                renderer.setRenderTarget(rt);
++                renderer.render(clone, camera);
+ 
+-            renderer.readRenderTargetPixels(rt, 0, 0, SIZE, SIZE, buffer);
++                renderer.readRenderTargetPixels(rt, 0, 0, SIZE, SIZE, buffer);
+ 
+-            color[0] = 0;
+-            color[1] = 0;
+-            color[2] = 0;
++                color[0] = 0;
++                color[1] = 0;
++                color[2] = 0;
+ 
+-            for (let k = 0, kl = buffer.length; k < kl; k += 4) {
+-                color[0] += buffer[k + 0];
+-                color[1] += buffer[k + 1];
+-                color[2] += buffer[k + 2];
+-            }
++                for (let k = 0, kl = buffer.length; k < kl; k += 4) {
++                    color[0] += buffer[k + 0];
++                    color[1] += buffer[k + 1];
++                    color[2] += buffer[k + 2];
++                }
+ 
+-            colors[currentVertex * 3 + 0] = color[0] / (SIZE2 * 255);
+-            colors[currentVertex * 3 + 1] = color[1] / (SIZE2 * 255);
+-            colors[currentVertex * 3 + 2] = color[2] / (SIZE2 * 255);
++                colors[currentVertex * 3 + 0] = color[0] / (SIZE2 * 255);
++                colors[currentVertex * 3 + 1] = color[1] / (SIZE2 * 255);
++                colors[currentVertex * 3 + 2] = color[2] / (SIZE2 * 255);
+ 
+-            currentVertex++;
+-        }
++                currentVertex++;
++            }
+ 
+-        attributes.color.updateRange.offset = startVertex * 3;
+-        attributes.color.updateRange.count = (currentVertex - startVertex) * 3;
+-        attributes.color.needsUpdate = true;
++            (attributes.color as THREE.BufferAttribute).updateRange.offset = startVertex * 3;
++            (attributes.color as THREE.BufferAttribute).updateRange.count = (currentVertex - startVertex) * 3;
++            attributes.color.needsUpdate = true;
+ 
+-        if (currentVertex >= totalVertex) {
+-            clone = scene.clone();
+-            clone.matrixWorldAutoUpdate = false;
++            if (currentVertex >= totalVertex) {
++                clone = scene.clone();
++                clone.matrixWorldAutoUpdate = false;
+ 
+-            bounces++;
+-            currentVertex = 0;
++                bounces++;
++                currentVertex = 0;
++            }
++
++            requestAnimationFrame(compute);
+         }
+ 
+         requestAnimationFrame(compute);
+     }
+-
+-    requestAnimationFrame(compute);
+-};
++}
+ 
+ //
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index c2357f8..eab4381 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
