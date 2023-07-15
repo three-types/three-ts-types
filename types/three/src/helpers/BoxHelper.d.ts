@@ -1,8 +1,8 @@
 import { ColorRepresentation } from '../math/Color.js';
 import { Object3D } from '../core/Object3D.js';
 import { LineSegments } from '../objects/LineSegments.js';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { LineBasicMaterial } from '../materials/LineBasicMaterial';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
 
 /**
  * Helper object to graphically show the world-axis-aligned bounding box around an object
