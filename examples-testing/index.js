@@ -263,7 +263,7 @@ const files = {
     ],
     'webgl / advanced': [
         'webgl_buffergeometry',
-        'webgl_buffergeometry_compression',
+        // 'webgl_buffergeometry_compression',
         'webgl_buffergeometry_custom_attributes_particles',
         'webgl_buffergeometry_drawrange',
         'webgl_buffergeometry_glbufferattribute',
