@@ -2241,6 +2241,195 @@ index 75ccf8d..35d06e4 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgl_buffergeometry.ts b/examples-testing/examples/webgl_buffergeometry.ts
+index 42a9c31..ad80640 100644
+--- a/examples-testing/examples/webgl_buffergeometry.ts
++++ b/examples-testing/examples/webgl_buffergeometry.ts
+@@ -2,17 +2,17 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let mesh;
++let mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -117,8 +117,8 @@ function init() {
+         colors.push(color.r, color.g, color.b, alpha);
+     }
+ 
+-    function disposeArray() {
+-        this.array = null;
++    function disposeArray(this: THREE.BufferAttribute) {
++        this.array = null as unknown as THREE.TypedArray;
+     }
+ 
+     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3).onUpload(disposeArray));
+diff --git a/examples-testing/examples/webgl_buffergeometry_custom_attributes_particles.ts b/examples-testing/examples/webgl_buffergeometry_custom_attributes_particles.ts
+index 94c862c..653cf2b 100644
+--- a/examples-testing/examples/webgl_buffergeometry_custom_attributes_particles.ts
++++ b/examples-testing/examples/webgl_buffergeometry_custom_attributes_particles.ts
+@@ -2,9 +2,11 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let renderer, scene, camera, stats;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+ 
+-let particleSystem, uniforms, geometry;
++let particleSystem: THREE.Points,
++    uniforms: { pointTexture: THREE.IUniform<THREE.Texture> },
++    geometry: THREE.BufferGeometry;
+ 
+ const particles = 100000;
+ 
+@@ -23,8 +25,8 @@ function init() {
+ 
+     const shaderMaterial = new THREE.ShaderMaterial({
+         uniforms: uniforms,
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+ 
+         blending: THREE.AdditiveBlending,
+         depthTest: false,
+@@ -67,7 +69,7 @@ function init() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.useLegacyLights = false;
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+     container.appendChild(renderer.domElement);
+ 
+     stats = new Stats();
+diff --git a/examples-testing/examples/webgl_buffergeometry_drawrange.ts b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
+index 58e4dd1..915d687 100644
+--- a/examples-testing/examples/webgl_buffergeometry_drawrange.ts
++++ b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
+@@ -5,15 +5,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let group;
+-let container, stats;
+-const particlesData = [];
+-let camera, scene, renderer;
+-let positions, colors;
+-let particles;
+-let pointCloud;
+-let particlePositions;
+-let linesMesh;
++let group: THREE.Group;
++let container: HTMLElement, stats: Stats;
++const particlesData: { velocity: THREE.Vector3; numConnections: number }[] = [];
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let positions: Float32Array, colors: Float32Array;
++let particles: THREE.BufferGeometry;
++let pointCloud: THREE.Points;
++let particlePositions: Float32Array;
++let linesMesh: THREE.LineSegments;
+ 
+ const maxParticleCount = 1000;
+ let particleCount = 500;
+@@ -35,16 +35,16 @@ animate();
+ function initGUI() {
+     const gui = new GUI();
+ 
+-    gui.add(effectController, 'showDots').onChange(function (value) {
++    gui.add(effectController, 'showDots').onChange(function (value: boolean) {
+         pointCloud.visible = value;
+     });
+-    gui.add(effectController, 'showLines').onChange(function (value) {
++    gui.add(effectController, 'showLines').onChange(function (value: boolean) {
+         linesMesh.visible = value;
+     });
+     gui.add(effectController, 'minDistance', 10, 300);
+     gui.add(effectController, 'limitConnections');
+     gui.add(effectController, 'maxConnections', 0, 30, 1);
+-    gui.add(effectController, 'particleCount', 0, maxParticleCount, 1).onChange(function (value) {
++    gui.add(effectController, 'particleCount', 0, maxParticleCount, 1).onChange(function (value: string) {
+         particleCount = parseInt(value);
+         particles.setDrawRange(0, particleCount);
+     });
+@@ -53,7 +53,7 @@ function initGUI() {
+ function init() {
+     initGUI();
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
+     camera.position.z = 1750;
+diff --git a/examples-testing/examples/webgl_buffergeometry_glbufferattribute.ts b/examples-testing/examples/webgl_buffergeometry_glbufferattribute.ts
+index f62c733..06f84e6 100644
+--- a/examples-testing/examples/webgl_buffergeometry_glbufferattribute.ts
++++ b/examples-testing/examples/webgl_buffergeometry_glbufferattribute.ts
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let points;
++let points: THREE.Points<THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>, THREE.PointsMaterial>;
+ 
+ const particles = 300000;
+ let drawCount = 10000;
+@@ -15,7 +15,7 @@ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -37,7 +37,7 @@ function init() {
+ 
+     //
+ 
+-    const geometry = new THREE.BufferGeometry();
++    const geometry = new THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>();
+ 
+     const positions = [];
+     const positions2 = [];
+@@ -71,15 +71,15 @@ function init() {
+ 
+     const gl = renderer.getContext();
+ 
+-    const pos = gl.createBuffer();
++    const pos = gl.createBuffer()!;
+     gl.bindBuffer(gl.ARRAY_BUFFER, pos);
+     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+ 
+-    const pos2 = gl.createBuffer();
++    const pos2 = gl.createBuffer()!;
+     gl.bindBuffer(gl.ARRAY_BUFFER, pos2);
+     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions2), gl.STATIC_DRAW);
+ 
+-    const rgb = gl.createBuffer();
++    const rgb = gl.createBuffer()!;
+     gl.bindBuffer(gl.ARRAY_BUFFER, rgb);
+     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+ 
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index f746f2e..143dc67 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
