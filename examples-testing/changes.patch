@@ -2430,6 +2430,186 @@ index f62c733..06f84e6 100644
      gl.bindBuffer(gl.ARRAY_BUFFER, rgb);
      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
  
+diff --git a/examples-testing/examples/webgl_buffergeometry_indexed.ts b/examples-testing/examples/webgl_buffergeometry_indexed.ts
+index 769a3c9..707146a 100644
+--- a/examples-testing/examples/webgl_buffergeometry_indexed.ts
++++ b/examples-testing/examples/webgl_buffergeometry_indexed.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+-let mesh;
++let mesh: THREE.Mesh;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_buffergeometry_instancing.ts b/examples-testing/examples/webgl_buffergeometry_instancing.ts
+index 936d4c4..12d1546 100644
+--- a/examples-testing/examples/webgl_buffergeometry_instancing.ts
++++ b/examples-testing/examples/webgl_buffergeometry_instancing.ts
+@@ -3,15 +3,15 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10);
+     camera.position.z = 2;
+@@ -80,8 +80,8 @@ function init() {
+             time: { value: 1.0 },
+             sineTime: { value: 1.0 },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         forceSinglePass: true,
+         transparent: true,
+@@ -101,7 +101,7 @@ function init() {
+     container.appendChild(renderer.domElement);
+ 
+     if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has('ANGLE_instanced_arrays') === false) {
+-        document.getElementById('notSupported').style.display = '';
++        document.getElementById('notSupported')!.style.display = '';
+         return;
+     }
+ 
+@@ -139,7 +139,7 @@ function animate() {
+ function render() {
+     const time = performance.now();
+ 
+-    const object = scene.children[0];
++    const object = scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.RawShaderMaterial>;
+ 
+     object.rotation.y = time * 0.0005;
+     object.material.uniforms['time'].value = time * 0.005;
+diff --git a/examples-testing/examples/webgl_buffergeometry_instancing_billboards.ts b/examples-testing/examples/webgl_buffergeometry_instancing_billboards.ts
+index 92f0e4d..7478c75 100644
+--- a/examples-testing/examples/webgl_buffergeometry_instancing_billboards.ts
++++ b/examples-testing/examples/webgl_buffergeometry_instancing_billboards.ts
+@@ -2,16 +2,16 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
+-let geometry, material, mesh;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let geometry: THREE.InstancedBufferGeometry, material: THREE.RawShaderMaterial, mesh: THREE.Mesh;
+ 
+ function init() {
+     renderer = new THREE.WebGLRenderer();
+ 
+     if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has('ANGLE_instanced_arrays') === false) {
+-        document.getElementById('notSupported').style.display = '';
++        document.getElementById('notSupported')!.style.display = '';
+         return false;
+     }
+ 
+@@ -46,8 +46,8 @@ function init() {
+             map: { value: new THREE.TextureLoader().load('textures/sprites/circle.png') },
+             time: { value: 0.0 },
+         },
+-        vertexShader: document.getElementById('vshader').textContent,
+-        fragmentShader: document.getElementById('fshader').textContent,
++        vertexShader: document.getElementById('vshader')!.textContent!,
++        fragmentShader: document.getElementById('fshader')!.textContent!,
+         depthTest: true,
+         depthWrite: true,
+     });
+diff --git a/examples-testing/examples/webgl_buffergeometry_instancing_interleaved.ts b/examples-testing/examples/webgl_buffergeometry_instancing_interleaved.ts
+index 0b409ce..f934b06 100644
+--- a/examples-testing/examples/webgl_buffergeometry_instancing_interleaved.ts
++++ b/examples-testing/examples/webgl_buffergeometry_instancing_interleaved.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
+-let camera, scene, renderer, mesh;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.InstancedMesh;
+ 
+ const instances = 5000;
+ let lastTime = 0;
+@@ -17,7 +17,7 @@ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
+ 
+@@ -113,7 +113,7 @@ function init() {
+     container.appendChild(renderer.domElement);
+ 
+     if (renderer.capabilities.isWebGL2 === false && renderer.extensions.has('ANGLE_instanced_arrays') === false) {
+-        document.getElementById('notSupported').style.display = '';
++        document.getElementById('notSupported')!.style.display = '';
+         return;
+     }
+ 
+diff --git a/examples-testing/examples/webgl_buffergeometry_lines.ts b/examples-testing/examples/webgl_buffergeometry_lines.ts
+index 507d899..a4d4bbc 100644
+--- a/examples-testing/examples/webgl_buffergeometry_lines.ts
++++ b/examples-testing/examples/webgl_buffergeometry_lines.ts
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats, clock;
++let container: HTMLElement, stats: Stats, clock: THREE.Clock;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let line;
++let line: THREE.Line;
+ 
+ const segments = 10000;
+ const r = 800;
+@@ -16,7 +16,7 @@ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -101,12 +101,12 @@ function render() {
+     line.rotation.y = time * 0.5;
+ 
+     t += delta * 0.5;
+-    line.morphTargetInfluences[0] = Math.abs(Math.sin(t));
++    line.morphTargetInfluences![0] = Math.abs(Math.sin(t));
+ 
+     renderer.render(scene, camera);
+ }
+ 
+-function generateMorphTargets(geometry) {
++function generateMorphTargets(geometry: THREE.BufferGeometry) {
+     const data = [];
+ 
+     for (let i = 0; i < segments; i++) {
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index f746f2e..143dc67 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
