@@ -32,7 +32,7 @@ export function deinterleaveGeometry(geometry: BufferGeometry): void;
  * geometry with smooth normals everywhere except faces that meet at an angle greater than the crease angle.
  *
  * @param geometry The input geometry.
- * @param creaseAngle The crease angle.
+ * @param creaseAngle The crease angle in radians.
  */
 export function toCreasedNormals(geometry: BufferGeometry, creaseAngle?: number): BufferGeometry;
 
