@@ -2988,6 +2988,433 @@ index c1dcfc0..736b9c6 100644
  
      //
  
+diff --git a/examples-testing/examples/webgl_camera.ts b/examples-testing/examples/webgl_camera.ts
+index 47a2b53..14a6dd3 100644
+--- a/examples-testing/examples/webgl_camera.ts
++++ b/examples-testing/examples/webgl_camera.ts
+@@ -6,11 +6,11 @@ let SCREEN_WIDTH = window.innerWidth;
+ let SCREEN_HEIGHT = window.innerHeight;
+ let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+ 
+-let container, stats;
+-let camera, scene, renderer, mesh;
+-let cameraRig, activeCamera, activeHelper;
+-let cameraPerspective, cameraOrtho;
+-let cameraPerspectiveHelper, cameraOrthoHelper;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
++let cameraRig: THREE.Group, activeCamera: THREE.Camera, activeHelper: THREE.CameraHelper;
++let cameraPerspective: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera;
++let cameraPerspectiveHelper: THREE.CameraHelper, cameraOrthoHelper: THREE.CameraHelper;
+ const frustumSize = 600;
+ 
+ init();
+@@ -123,7 +123,7 @@ function init() {
+ 
+ //
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     switch (event.keyCode) {
+         case 79 /*O*/:
+             activeCamera = cameraOrtho;
+diff --git a/examples-testing/examples/webgl_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgl_camera_logarithmicdepthbuffer.ts
+index 2f1de25..9fa4a8e 100644
+--- a/examples-testing/examples/webgl_camera_logarithmicdepthbuffer.ts
++++ b/examples-testing/examples/webgl_camera_logarithmicdepthbuffer.ts
+@@ -1,6 +1,6 @@
+ import * as THREE from 'three';
+ 
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+@@ -17,8 +17,16 @@ let zoompos = -100,
+     minzoomspeed = 0.015;
+ let zoomspeed = minzoomspeed;
+ 
+-let container, border, stats;
+-const objects = {};
++let container: HTMLElement, border: HTMLElement, stats: Stats;
++
++interface ObjectView {
++    container: HTMLElement;
++    renderer: THREE.WebGLRenderer;
++    scene: THREE.Scene;
++    camera: THREE.PerspectiveCamera;
++}
++
++const objects: { normal?: ObjectView; logzbuf?: ObjectView } = {};
+ 
+ // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
+ // Try to use some descriptive real-world examples of objects at each scale
+@@ -44,7 +52,7 @@ const labeldata = [
+ init();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     const loader = new FontLoader();
+     loader.load('fonts/helvetiker_regular.typeface.json', function (font) {
+@@ -61,7 +69,7 @@ function init() {
+     container.appendChild(stats.dom);
+ 
+     // Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
+-    border = document.getElementById('renderer_border');
++    border = document.getElementById('renderer_border')!;
+     border.addEventListener('pointerdown', onBorderPointerDown);
+ 
+     window.addEventListener('mousemove', onMouseMove);
+@@ -69,8 +77,8 @@ function init() {
+     window.addEventListener('wheel', onMouseWheel);
+ }
+ 
+-function initView(scene, name, logDepthBuf) {
+-    const framecontainer = document.getElementById('container_' + name);
++function initView(scene: THREE.Scene, name: string, logDepthBuf: boolean) {
++    const framecontainer = document.getElementById('container_' + name)!;
+ 
+     const camera = new THREE.PerspectiveCamera(50, (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT, NEAR, FAR);
+     scene.add(camera);
+@@ -86,7 +94,7 @@ function initView(scene, name, logDepthBuf) {
+     return { container: framecontainer, renderer: renderer, scene: scene, camera: camera };
+ }
+ 
+-function initScene(font) {
++function initScene(font: Font) {
+     const scene = new THREE.Scene();
+ 
+     scene.add(new THREE.AmbientLight(0x777777));
+@@ -95,7 +103,7 @@ function initScene(font) {
+     light.position.set(100, 100, 100);
+     scene.add(light);
+ 
+-    const materialargs = {
++    const materialargs: { color: THREE.ColorRepresentation; specular: number; shininess: number; emissive: number } = {
+         color: 0xffffff,
+         specular: 0x050505,
+         shininess: 50,
+@@ -116,7 +124,7 @@ function initScene(font) {
+         labelgeo.computeBoundingSphere();
+ 
+         // center text
+-        labelgeo.translate(-labelgeo.boundingSphere.radius, 0, 0);
++        labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
+ 
+         materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
+ 
+@@ -149,16 +157,16 @@ function updateRendererSizes() {
+ 
+     screensplit_right = 1 - screensplit;
+ 
+-    objects.normal.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
+-    objects.normal.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
+-    objects.normal.camera.updateProjectionMatrix();
+-    objects.normal.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
+-    objects.normal.container.style.width = screensplit * 100 + '%';
++    objects.normal!.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
++    objects.normal!.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
++    objects.normal!.camera.updateProjectionMatrix();
++    objects.normal!.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
++    objects.normal!.container.style.width = screensplit * 100 + '%';
+ 
+-    objects.logzbuf.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
+-    objects.logzbuf.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
+-    objects.logzbuf.camera.updateProjectionMatrix();
+-    objects.logzbuf.camera.setViewOffset(
++    objects.logzbuf!.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
++    objects.logzbuf!.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
++    objects.logzbuf!.camera.updateProjectionMatrix();
++    objects.logzbuf!.camera.setViewOffset(
+         SCREEN_WIDTH,
+         SCREEN_HEIGHT,
+         SCREEN_WIDTH * screensplit,
+@@ -166,7 +174,7 @@ function updateRendererSizes() {
+         SCREEN_WIDTH * screensplit_right,
+         SCREEN_HEIGHT,
+     );
+-    objects.logzbuf.container.style.width = screensplit_right * 100 + '%';
++    objects.logzbuf!.container.style.width = screensplit_right * 100 + '%';
+ 
+     border.style.left = screensplit * 100 + '%';
+ }
+@@ -194,22 +202,22 @@ function render() {
+     zoompos += zoomspeed;
+     zoomspeed *= damping;
+ 
+-    objects.normal.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+-    objects.normal.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
+-    objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+-    objects.normal.camera.lookAt(objects.normal.scene.position);
++    objects.normal!.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
++    objects.normal!.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
++    objects.normal!.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
++    objects.normal!.camera.lookAt(objects.normal!.scene.position);
+ 
+     // Clone camera settings across both scenes
+-    objects.logzbuf.camera.position.copy(objects.normal.camera.position);
+-    objects.logzbuf.camera.quaternion.copy(objects.normal.camera.quaternion);
++    objects.logzbuf!.camera.position.copy(objects.normal!.camera.position);
++    objects.logzbuf!.camera.quaternion.copy(objects.normal!.camera.quaternion);
+ 
+     // Update renderer sizes if the split has changed
+     if (screensplit_right != 1 - screensplit) {
+         updateRendererSizes();
+     }
+ 
+-    objects.normal.renderer.render(objects.normal.scene, objects.normal.camera);
+-    objects.logzbuf.renderer.render(objects.logzbuf.scene, objects.logzbuf.camera);
++    objects.normal!.renderer.render(objects.normal!.scene, objects.normal!.camera);
++    objects.logzbuf!.renderer.render(objects.logzbuf!.scene, objects.logzbuf!.camera);
+ 
+     stats.update();
+ }
+@@ -224,7 +232,7 @@ function onBorderPointerDown() {
+     window.addEventListener('pointerup', onBorderPointerUp);
+ }
+ 
+-function onBorderPointerMove(ev) {
++function onBorderPointerMove(ev: PointerEvent) {
+     screensplit = Math.max(0, Math.min(1, ev.clientX / window.innerWidth));
+ }
+ 
+@@ -233,12 +241,12 @@ function onBorderPointerUp() {
+     window.removeEventListener('pointerup', onBorderPointerUp);
+ }
+ 
+-function onMouseMove(ev) {
++function onMouseMove(ev: MouseEvent) {
+     mouse[0] = ev.clientX / window.innerWidth;
+     mouse[1] = ev.clientY / window.innerHeight;
+ }
+ 
+-function onMouseWheel(ev) {
++function onMouseWheel(ev: WheelEvent) {
+     const amount = ev.deltaY;
+     if (amount === 0) return;
+     const dir = amount / Math.abs(amount);
+diff --git a/examples-testing/examples/webgl_clipping.ts b/examples-testing/examples/webgl_clipping.ts
+index 3d3d7a5..590b344 100644
+--- a/examples-testing/examples/webgl_clipping.ts
++++ b/examples-testing/examples/webgl_clipping.ts
+@@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, startTime, object, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    startTime: number,
++    object: THREE.Mesh,
++    stats: Stats;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_clipping_advanced.ts b/examples-testing/examples/webgl_clipping_advanced.ts
+index 5c48039..01528be 100644
+--- a/examples-testing/examples/webgl_clipping_advanced.ts
++++ b/examples-testing/examples/webgl_clipping_advanced.ts
+@@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-function planesFromMesh(vertices, indices) {
++function planesFromMesh(vertices: THREE.Vector3[], indices: number[]) {
+     // creates a clipping volume from a convex triangular mesh
+     // specified by the arrays 'vertices' and 'indices'
+ 
+@@ -23,23 +23,23 @@ function planesFromMesh(vertices, indices) {
+     return result;
+ }
+ 
+-function createPlanes(n) {
++function createPlanes(n: number) {
+     // creates an array of n uninitialized plane objects
+ 
+-    const result = new Array(n);
++    const result = new Array<THREE.Plane>(n);
+ 
+     for (let i = 0; i !== n; ++i) result[i] = new THREE.Plane();
+ 
+     return result;
+ }
+ 
+-function assignTransformedPlanes(planesOut, planesIn, matrix) {
++function assignTransformedPlanes(planesOut: THREE.Plane[], planesIn: THREE.Plane[], matrix: THREE.Matrix4) {
+     // sets an array of existing planes to transformed 'planesIn'
+ 
+     for (let i = 0, n = planesIn.length; i !== n; ++i) planesOut[i].copy(planesIn[i]).applyMatrix4(matrix);
+ }
+ 
+-function cylindricalPlanes(n, innerRadius) {
++function cylindricalPlanes(n: number, innerRadius: number) {
+     const result = createPlanes(n);
+ 
+     for (let i = 0; i !== n; ++i) {
+@@ -62,7 +62,7 @@ const planeToMatrix = (function () {
+         yAxis = new THREE.Vector3(),
+         trans = new THREE.Vector3();
+ 
+-    return function planeToMatrix(plane) {
++    return function planeToMatrix(plane: THREE.Plane) {
+         const zAxis = plane.normal,
+             matrix = new THREE.Matrix4();
+ 
+@@ -113,7 +113,15 @@ const Vertices = [
+     GlobalClippingPlanes = cylindricalPlanes(5, 2.5),
+     Empty = Object.freeze([]);
+ 
+-let camera, scene, renderer, startTime, stats, object, clipMaterial, volumeVisualization, globalClippingPlanes;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    startTime: number,
++    stats: Stats,
++    object: THREE.Group,
++    clipMaterial: THREE.MeshPhongMaterial,
++    volumeVisualization: THREE.Group,
++    globalClippingPlanes: THREE.Plane[];
+ 
+ function init() {
+     camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
+@@ -307,12 +315,12 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function setObjectWorldMatrix(object, matrix) {
++function setObjectWorldMatrix(object: THREE.Object3D, matrix: THREE.Matrix4) {
+     // set the orientation of an object based on a world matrix
+ 
+     const parent = object.parent;
+     scene.updateMatrixWorld();
+-    object.matrix.copy(parent.matrixWorld).invert();
++    object.matrix.copy(parent!.matrixWorld).invert();
+     object.applyMatrix4(matrix);
+ }
+ 
+diff --git a/examples-testing/examples/webgl_clipping_intersection.ts b/examples-testing/examples/webgl_clipping_intersection.ts
+index 494ef56..212e6db 100644
+--- a/examples-testing/examples/webgl_clipping_intersection.ts
++++ b/examples-testing/examples/webgl_clipping_intersection.ts
+@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ const params = {
+     clipIntersection: true,
+@@ -79,11 +79,11 @@ function init() {
+ 
+     gui.add(params, 'clipIntersection')
+         .name('clip intersection')
+-        .onChange(function (value) {
++        .onChange(function (value: boolean) {
+             const children = group.children;
+ 
+             for (let i = 0; i < children.length; i++) {
+-                children[i].material.clipIntersection = value;
++                ((children[i] as THREE.Mesh).material as THREE.Material).clipIntersection = value;
+             }
+ 
+             render();
+@@ -92,7 +92,7 @@ function init() {
+     gui.add(params, 'planeConstant', -1, 1)
+         .step(0.01)
+         .name('plane constant')
+-        .onChange(function (value) {
++        .onChange(function (value: number) {
+             for (let j = 0; j < clipPlanes.length; j++) {
+                 clipPlanes[j].constant = value;
+             }
+@@ -102,7 +102,7 @@ function init() {
+ 
+     gui.add(params, 'showHelpers')
+         .name('show helpers')
+-        .onChange(function (value) {
++        .onChange(function (value: boolean) {
+             helpers.visible = value;
+ 
+             render();
+diff --git a/examples-testing/examples/webgl_clipping_stencil.ts b/examples-testing/examples/webgl_clipping_stencil.ts
+index 47c7115..8b7a23e 100644
+--- a/examples-testing/examples/webgl_clipping_stencil.ts
++++ b/examples-testing/examples/webgl_clipping_stencil.ts
+@@ -3,9 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, object, stats;
+-let planes, planeObjects, planeHelpers;
+-let clock;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    object: THREE.Group,
++    stats: Stats;
++let planes: THREE.Plane[], planeObjects: THREE.Mesh[], planeHelpers: THREE.PlaneHelper[];
++let clock: THREE.Clock;
+ 
+ const params = {
+     animate: true,
+@@ -29,7 +33,7 @@ const params = {
+ init();
+ animate();
+ 
+-function createPlaneStencilGroup(geometry, plane, renderOrder) {
++function createPlaneStencilGroup(geometry: THREE.TorusKnotGeometry, plane: THREE.Plane, renderOrder: number) {
+     const group = new THREE.Group();
+     const baseMat = new THREE.MeshBasicMaterial();
+     baseMat.depthWrite = false;
+@@ -192,12 +196,12 @@ function init() {
+     gui.add(params, 'animate');
+ 
+     const planeX = gui.addFolder('planeX');
+-    planeX.add(params.planeX, 'displayHelper').onChange(v => (planeHelpers[0].visible = v));
++    planeX.add(params.planeX, 'displayHelper').onChange((v: boolean) => (planeHelpers[0].visible = v));
+     planeX
+         .add(params.planeX, 'constant')
+         .min(-1)
+         .max(1)
+-        .onChange(d => (planes[0].constant = d));
++        .onChange((d: number) => (planes[0].constant = d));
+     planeX.add(params.planeX, 'negated').onChange(() => {
+         planes[0].negate();
+         params.planeX.constant = planes[0].constant;
+@@ -205,12 +209,12 @@ function init() {
+     planeX.open();
+ 
+     const planeY = gui.addFolder('planeY');
+-    planeY.add(params.planeY, 'displayHelper').onChange(v => (planeHelpers[1].visible = v));
++    planeY.add(params.planeY, 'displayHelper').onChange((v: boolean) => (planeHelpers[1].visible = v));
+     planeY
+         .add(params.planeY, 'constant')
+         .min(-1)
+         .max(1)
+-        .onChange(d => (planes[1].constant = d));
++        .onChange((d: number) => (planes[1].constant = d));
+     planeY.add(params.planeY, 'negated').onChange(() => {
+         planes[1].negate();
+         params.planeY.constant = planes[1].constant;
+@@ -218,12 +222,12 @@ function init() {
+     planeY.open();
+ 
+     const planeZ = gui.addFolder('planeZ');
+-    planeZ.add(params.planeZ, 'displayHelper').onChange(v => (planeHelpers[2].visible = v));
++    planeZ.add(params.planeZ, 'displayHelper').onChange((v: boolean) => (planeHelpers[2].visible = v));
+     planeZ
+         .add(params.planeZ, 'constant')
+         .min(-1)
+         .max(1)
+-        .onChange(d => (planes[2].constant = d));
++        .onChange((d: number) => (planes[2].constant = d));
+     planeZ.add(params.planeZ, 'negated').onChange(() => {
+         planes[2].negate();
+         params.planeZ.constant = planes[2].constant;
 diff --git a/examples-testing/examples/webgl_custom_attributes.ts b/examples-testing/examples/webgl_custom_attributes.ts
 index a74bda8..cec7cd9 100644
 --- a/examples-testing/examples/webgl_custom_attributes.ts
