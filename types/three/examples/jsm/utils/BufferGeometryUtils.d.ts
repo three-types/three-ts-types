@@ -28,7 +28,8 @@ export function deinterleaveAttribute(geometry: BufferGeometry): void;
 export function deinterleaveGeometry(geometry: BufferGeometry): void;
 
 /**
- * Creates a new, non-indexed geometry with smooth normals everywhere except faces that meet at an angle greater than the crease angle.
+ * Modifies the supplied geometry if it is non-indexed, otherwise creates a new, non-indexed geometry. Returns the
+ * geometry with smooth normals everywhere except faces that meet at an angle greater than the crease angle.
  *
  * @param geometry The input geometry.
  * @param creaseAngle The crease angle.
