@@ -3702,6 +3702,267 @@ index f7022dd..baf629d 100644
      container.appendChild(renderer.domElement);
  
      stats = new Stats();
+diff --git a/examples-testing/examples/webgl_decals.ts b/examples-testing/examples/webgl_decals.ts
+index 8e6df57..4f99335 100644
+--- a/examples-testing/examples/webgl_decals.ts
++++ b/examples-testing/examples/webgl_decals.ts
+@@ -7,12 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
+ 
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+-let renderer, scene, camera, stats;
+-let mesh;
+-let raycaster;
+-let line;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
++let mesh: THREE.Mesh;
++let raycaster: THREE.Raycaster;
++let line: THREE.Line;
+ 
+ const intersection = {
+     intersects: false,
+@@ -20,7 +20,7 @@ const intersection = {
+     normal: new THREE.Vector3(),
+ };
+ const mouse = new THREE.Vector2();
+-const intersects = [];
++const intersects: THREE.Intersection[] = [];
+ 
+ const textureLoader = new THREE.TextureLoader();
+ const decalDiffuse = textureLoader.load('textures/decal/decal-diffuse.png');
+@@ -41,8 +41,8 @@ const decalMaterial = new THREE.MeshPhongMaterial({
+     wireframe: false,
+ });
+ 
+-const decals = [];
+-let mouseHelper;
++const decals: THREE.Mesh[] = [];
++let mouseHelper: THREE.Mesh;
+ const position = new THREE.Vector3();
+ const orientation = new THREE.Euler();
+ const size = new THREE.Vector3(10, 10, 10);
+@@ -124,13 +124,13 @@ function init() {
+ 
+     window.addEventListener('pointermove', onPointerMove);
+ 
+-    function onPointerMove(event) {
++    function onPointerMove(event: PointerEvent) {
+         if (event.isPrimary) {
+             checkIntersection(event.clientX, event.clientY);
+         }
+     }
+ 
+-    function checkIntersection(x, y) {
++    function checkIntersection(x: number, y: number) {
+         if (mesh === undefined) return;
+ 
+         mouse.x = (x / window.innerWidth) * 2 - 1;
+@@ -144,12 +144,12 @@ function init() {
+             mouseHelper.position.copy(p);
+             intersection.point.copy(p);
+ 
+-            const n = intersects[0].face.normal.clone();
++            const n = intersects[0].face!.normal.clone();
+             n.transformDirection(mesh.matrixWorld);
+             n.multiplyScalar(10);
+             n.add(intersects[0].point);
+ 
+-            intersection.normal.copy(intersects[0].face.normal);
++            intersection.normal.copy(intersects[0].face!.normal);
+             mouseHelper.lookAt(n);
+ 
+             const positions = line.geometry.attributes.position;
+@@ -183,7 +183,7 @@ function loadLeePerrySmith() {
+     const loader = new GLTFLoader();
+ 
+     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        mesh = gltf.scene.children[0];
++        mesh = gltf.scene.children[0] as THREE.Mesh;
+         mesh.material = new THREE.MeshPhongMaterial({
+             specular: 0x111111,
+             map: map,
+diff --git a/examples-testing/examples/webgl_effects_anaglyph.ts b/examples-testing/examples/webgl_effects_anaglyph.ts
+index 4d6f829..ccea1a9 100644
+--- a/examples-testing/examples/webgl_effects_anaglyph.ts
++++ b/examples-testing/examples/webgl_effects_anaglyph.ts
+@@ -2,9 +2,13 @@ import * as THREE from 'three';
+ 
+ import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';
+ 
+-let container, camera, scene, renderer, effect;
++let container: HTMLDivElement,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    effect: AnaglyphEffect;
+ 
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ 
+ let mouseX = 0;
+ let mouseY = 0;
+@@ -23,7 +27,7 @@ function init() {
+ 
+     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+     camera.position.z = 3;
+-    camera.focalLength = 3;
++    camera.setFocalLength(3);
+ 
+     const path = 'textures/cube/pisa/';
+     const format = '.png';
+@@ -86,7 +90,7 @@ function onWindowResize() {
+     effect.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) / 100;
+     mouseY = (event.clientY - windowHalfY) / 100;
+ }
+diff --git a/examples-testing/examples/webgl_effects_ascii.ts b/examples-testing/examples/webgl_effects_ascii.ts
+index ecb7136..cfca2ff 100644
+--- a/examples-testing/examples/webgl_effects_ascii.ts
++++ b/examples-testing/examples/webgl_effects_ascii.ts
+@@ -3,9 +3,13 @@ import * as THREE from 'three';
+ import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ 
+-let camera, controls, scene, renderer, effect;
++let camera: THREE.PerspectiveCamera,
++    controls: TrackballControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    effect: AsciiEffect;
+ 
+-let sphere, plane;
++let sphere: THREE.Mesh, plane: THREE.Mesh;
+ 
+ const start = Date.now();
+ 
+diff --git a/examples-testing/examples/webgl_effects_parallaxbarrier.ts b/examples-testing/examples/webgl_effects_parallaxbarrier.ts
+index 3a5c8ca..f6872d9 100644
+--- a/examples-testing/examples/webgl_effects_parallaxbarrier.ts
++++ b/examples-testing/examples/webgl_effects_parallaxbarrier.ts
+@@ -2,9 +2,13 @@ import * as THREE from 'three';
+ 
+ import { ParallaxBarrierEffect } from 'three/addons/effects/ParallaxBarrierEffect.js';
+ 
+-let container, camera, scene, renderer, effect;
++let container: HTMLDivElement,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    effect: ParallaxBarrierEffect;
+ 
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ 
+ let mouseX = 0;
+ let mouseY = 0;
+@@ -23,7 +27,7 @@ function init() {
+ 
+     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+     camera.position.z = 3;
+-    camera.focalLength = 3;
++    camera.setFocalLength(3);
+ 
+     const path = 'textures/cube/pisa/';
+     const format = '.png';
+@@ -86,7 +90,7 @@ function onWindowResize() {
+     effect.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) / 100;
+     mouseY = (event.clientY - windowHalfY) / 100;
+ }
+diff --git a/examples-testing/examples/webgl_effects_peppersghost.ts b/examples-testing/examples/webgl_effects_peppersghost.ts
+index 411d9d8..ecec99b 100644
+--- a/examples-testing/examples/webgl_effects_peppersghost.ts
++++ b/examples-testing/examples/webgl_effects_peppersghost.ts
+@@ -2,10 +2,10 @@ import * as THREE from 'three';
+ 
+ import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
+ 
+-let container;
++let container: HTMLDivElement;
+ 
+-let camera, scene, renderer, effect;
+-let group;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, effect: PeppersGhostEffect;
++let group: THREE.Group;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_effects_stereo.ts b/examples-testing/examples/webgl_effects_stereo.ts
+index 3f68985..8f40d2a 100644
+--- a/examples-testing/examples/webgl_effects_stereo.ts
++++ b/examples-testing/examples/webgl_effects_stereo.ts
+@@ -2,9 +2,13 @@ import * as THREE from 'three';
+ 
+ import { StereoEffect } from 'three/addons/effects/StereoEffect.js';
+ 
+-let container, camera, scene, renderer, effect;
++let container: HTMLDivElement,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    effect: StereoEffect;
+ 
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -74,7 +78,7 @@ function onWindowResize() {
+     effect.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) * 10;
+     mouseY = (event.clientY - windowHalfY) * 10;
+ }
+diff --git a/examples-testing/examples/webgl_framebuffer_texture.ts b/examples-testing/examples/webgl_framebuffer_texture.ts
+index e992ef1..3eaf545 100644
+--- a/examples-testing/examples/webgl_framebuffer_texture.ts
++++ b/examples-testing/examples/webgl_framebuffer_texture.ts
+@@ -3,10 +3,10 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+ 
+-let camera, scene, renderer;
+-let line, sprite, texture;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let line: THREE.Line, sprite: THREE.Sprite, texture: THREE.FramebufferTexture;
+ 
+-let cameraOrtho, sceneOrtho;
++let cameraOrtho: THREE.OrthographicCamera, sceneOrtho: THREE.Scene;
+ 
+ let offset = 0;
+ 
+@@ -77,7 +77,7 @@ function init() {
+ 
+     //
+ 
+-    const selection = document.getElementById('selection');
++    const selection = document.getElementById('selection')!;
+     const controls = new OrbitControls(camera, selection);
+     controls.enablePan = false;
+ 
+@@ -136,7 +136,7 @@ function animate() {
+     renderer.render(sceneOrtho, cameraOrtho);
+ }
+ 
+-function updateColors(colorAttribute) {
++function updateColors(colorAttribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute) {
+     const l = colorAttribute.count;
+ 
+     for (let i = 0; i < l; i++) {
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
 index f746f2e..143dc67 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
@@ -3734,6 +3995,57 @@ index f746f2e..143dc67 100644
          });
  
          render();
+diff --git a/examples-testing/examples/webgl_geometries.ts b/examples-testing/examples/webgl_geometries.ts
+index c8963d2..13a6cdc 100644
+--- a/examples-testing/examples/webgl_geometries.ts
++++ b/examples-testing/examples/webgl_geometries.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ init();
+ animate();
+@@ -130,7 +130,7 @@ function render() {
+     camera.lookAt(scene.position);
+ 
+     scene.traverse(function (object) {
+-        if (object.isMesh === true) {
++        if ((object as THREE.Mesh).isMesh === true) {
+             object.rotation.x = timer * 5;
+             object.rotation.y = timer * 2.5;
+         }
+diff --git a/examples-testing/examples/webgl_geometries_parametric.ts b/examples-testing/examples/webgl_geometries_parametric.ts
+index 492f72b..7e2d646 100644
+--- a/examples-testing/examples/webgl_geometries_parametric.ts
++++ b/examples-testing/examples/webgl_geometries_parametric.ts
+@@ -6,13 +6,13 @@ import * as Curves from 'three/addons/curves/CurveExtras.js';
+ import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
+ import { ParametricGeometries } from 'three/addons/geometries/ParametricGeometries.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+     camera.position.y = 400;
+@@ -117,7 +117,7 @@ function render() {
+     camera.lookAt(scene.position);
+ 
+     scene.traverse(function (object) {
+-        if (object.isMesh === true) {
++        if ((object as THREE.Mesh).isMesh === true) {
+             object.rotation.x = timer * 5;
+             object.rotation.y = timer * 2.5;
+         }
 diff --git a/examples-testing/examples/webgl_gpgpu_birds.ts b/examples-testing/examples/webgl_gpgpu_birds.ts
 index 8fe7ab1..0010fda 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds.ts
