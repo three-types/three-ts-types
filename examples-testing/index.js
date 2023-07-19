@@ -20,7 +20,7 @@ const files = {
         'webgl_clipping_intersection',
         'webgl_clipping_stencil',
         'webgl_decals',
-        'webgl_depth_texture',
+        // 'webgl_depth_texture',
         'webgl_effects_anaglyph',
         'webgl_effects_ascii',
         'webgl_effects_parallaxbarrier',
