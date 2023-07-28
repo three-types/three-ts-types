@@ -218,6 +218,16 @@ export class BufferAttribute {
     set(value: ArrayLike<number> | ArrayBufferView, offset?: number): this;
 
     /**
+     * Returns the given component of the vector at the given index.
+     */
+    getComponent(index: number, component: number): number;
+
+    /**
+     * Sets the given component of the vector at the given index.
+     */
+    setComponent(index: number, component: number, value: number): void;
+
+    /**
      * Returns the x component of the vector at the given index.
      * @param index Expects a `Integer`
      */
