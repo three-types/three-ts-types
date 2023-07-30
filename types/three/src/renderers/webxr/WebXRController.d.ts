@@ -1,6 +1,7 @@
-import { Group } from '../../objects/Group';
-import { Vector3 } from '../../math/Vector3';
-import { EmptyEvent, Object3DEventMap } from '../../Three';
+import { Group } from '../../objects/Group.js';
+import { Vector3 } from '../../math/Vector3.js';
+import { Object3DEventMap } from '../../core/Object3D.js';
+import { EmptyEvent } from '../../core/EventDispatcher.js';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 

@@ -1,4 +1,4 @@
-import { Camera, EmptyEvent, EventDispatcher } from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher } from '../../../src/Three.js';
 
 interface FlyControlsEventMap {
     change: EmptyEvent;
@@ -7,16 +7,16 @@ interface FlyControlsEventMap {
 export class FlyControls extends EventDispatcher<FlyControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
-    object: Camera;
-    domElement: HTMLElement | Document;
-
-    movementSpeed: number;
-    rollSpeed: number;
-    dragToLook: boolean;
     autoForward: boolean;
+    domElement: HTMLElement | Document;
+    dragToLook: boolean;
+    enabled: boolean;
+    movementSpeed: number;
+    object: Camera;
+    rollSpeed: number;
 
-    update(delta: number): void;
     dispose(): void;
+    update(delta: number): void;
 }
 
 export {};

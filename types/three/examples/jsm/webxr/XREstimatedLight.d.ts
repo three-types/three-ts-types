@@ -6,7 +6,7 @@ import {
     WebGLRenderer,
     Object3DEventMap,
     EmptyEvent,
-} from '../../../src/Three';
+} from '../../../src/Three.js';
 
 export class SessionLightProbe {
     xrLight: XREstimatedLight;

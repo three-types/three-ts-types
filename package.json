@@ -6,8 +6,8 @@
         "test-all": "node --require source-map-support/register node_modules/@definitelytyped/dtslint-runner/ --path .",
         "test": "node --require source-map-support/register node_modules/@definitelytyped/dtslint/ types/three",
         "lint": "node --require source-map-support/register node_modules/@definitelytyped/dtslint/ types/three",
-        "prettier:write": "prettier --write .",
-        "prettier:check": "prettier --check .",
+        "format": "prettier --write .",
+        "format-check": "prettier --check .",
         "contributors:add": "all-contributors add"
     },
     "devDependencies": {
@@ -16,17 +16,20 @@
         "@definitelytyped/dtslint-runner": "latest",
         "@definitelytyped/header-parser": "latest",
         "@definitelytyped/utils": "latest",
-        "@tweenjs/tween.js": "~18.6.4",
         "@types/stats.js": "*",
         "@types/webxr": "*",
-        "all-contributors-cli": "^6.26.0",
-        "fflate": "~0.6.9",
+        "all-contributors-cli": "^6.26.1",
         "husky": "^8.0.3",
-        "lil-gui": "~0.17.0",
+        "lint-staged": "^13.2.3",
         "prettier": "2.8.8",
-        "pretty-quick": "^3.1.3",
         "source-map-support": "^0.5.21",
-        "typescript": "next"
+        "typescript": "latest"
     },
-    "packageManager": "yarn@3.5.1"
+    "workspaces": [
+        "examples-testing",
+        "types/three"
+    ],
+    "lint-staged": {
+        "*": "prettier --ignore-unknown --write"
+    }
 }

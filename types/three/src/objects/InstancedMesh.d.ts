@@ -1,16 +1,15 @@
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Material } from './../materials/Material';
-import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute';
-import { Mesh } from './Mesh';
-import { Matrix4 } from './../math/Matrix4';
-import { Color } from './../math/Color';
-import { Box3, Object3DEventMap, Sphere } from '../Three';
-import { Disposable, DisposableEventMap } from '../types';
+import { BufferGeometry } from '../core/BufferGeometry.js';
+import { Material } from '../materials/Material.js';
+import { InstancedBufferAttribute } from '../core/InstancedBufferAttribute.js';
+import { Mesh } from './Mesh.js';
+import { Matrix4 } from '../math/Matrix4.js';
+import { Color } from '../math/Color.js';
+import { Object3DEventMap } from '../core/Object3D.js';
+import { Box3 } from '../math/Box3.js';
+import { Sphere } from '../math/Sphere.js';
+import { Disposable, DisposableEventMap } from '../types.js';
 
 export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEventMap {}
-
-// prettier needs to be ignored here. Create a format that Conflict rules from lint and prettier
-// prettier-ignore
 
 /**
  * A special version of {@link THREE.Mesh | Mesh} with instanced rendering support
@@ -25,13 +24,16 @@ export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEvent
  * @see {@link https://threejs.org/docs/index.html#api/en/objects/InstancedMesh | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/InstancedMesh.js | Source}
  */
+/* tslint:disable:one-line */
 export class InstancedMesh<
         TGeometry extends BufferGeometry = BufferGeometry,
         TMaterial extends Material | Material[] = Material | Material[],
         TEventMap extends InstancedMeshEventMap = InstancedMeshEventMap,
     >
     extends Mesh<TGeometry, TMaterial, TEventMap>
-    implements Disposable {
+    implements Disposable
+{
+    /* tslint:enable:one-line */
     /**
      * Create a new instance of {@link InstancedMesh}
      * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}.

@@ -1,4 +1,4 @@
-import { Camera, EmptyEvent, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three';
+import { Camera, EmptyEvent, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three.js';
 
 interface OrbitControlsEventMap {
     change: EmptyEvent;
@@ -127,6 +127,12 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
      * @default 1
      */
     zoomSpeed: number;
+
+    /**
+     * Setting this property to `true` allows to zoom to the cursor's position.
+     * @default false
+     */
+    zoomToCursor: boolean;
 
     /**
      * Enable or disable horizontal and

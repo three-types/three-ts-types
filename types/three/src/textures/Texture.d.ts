@@ -1,7 +1,7 @@
-import { Vector2 } from './../math/Vector2';
-import { Matrix3 } from './../math/Matrix3';
-import { Source } from './Source';
-import { EventDispatcher } from './../core/EventDispatcher';
+import { Vector2 } from '../math/Vector2.js';
+import { Matrix3 } from '../math/Matrix3.js';
+import { Source } from './Source.js';
+import { EventDispatcher } from '../core/EventDispatcher.js';
 import {
     Mapping,
     Wrapping,
@@ -14,8 +14,8 @@ import {
     AnyPixelFormat,
     AnyMapping,
     ColorSpace,
-} from '../constants';
-import { DisposableEventMap, Disposable } from '../types';
+} from '../constants.js';
+import { DisposableEventMap, Disposable } from '../types.js';
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface

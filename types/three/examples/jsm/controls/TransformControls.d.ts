@@ -8,7 +8,7 @@ import {
     Quaternion,
     Object3DEventMap,
     EmptyEvent,
-} from '../../../src/Three';
+} from '../../../src/Three.js';
 
 declare enum TransformControlsPropertiesWithEventsChanged {
     'camera',
