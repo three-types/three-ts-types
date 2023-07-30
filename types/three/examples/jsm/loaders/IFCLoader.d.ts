@@ -9,18 +9,10 @@ import {
     BufferAttribute,
 } from '../../../src/Three.js';
 
-declare class IFCLoader extends Loader {
+declare class IFCLoader extends Loader<IFCModel> {
     ifcManager: IFCManager;
 
     constructor(manager?: LoadingManager);
-
-    load(
-        url: any,
-        onLoad: (ifc: IFCModel) => void,
-        onProgress?: (event: ProgressEvent) => void,
-        onError?: (event: ErrorEvent) => void,
-    ): void;
-    loadAsync(url: string, onProgress?: (event: ProgressEvent) => void): Promise<IFCModel>;
 
     parse(buffer: ArrayBuffer): Promise<IFCModel>;
 }
