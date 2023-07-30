@@ -13,7 +13,6 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants.js';
-import { Disposable, DisposableEventMap } from '../types.js';
 
 export interface MaterialParameters {
     alphaHash?: boolean | undefined;
@@ -64,7 +63,7 @@ export interface MaterialParameters {
 /**
  * Materials describe the appearance of objects. They are defined in a (mostly) renderer-independent way, so you don't have to rewrite materials if you decide to use a different renderer.
  */
-export class Material extends EventDispatcher<DisposableEventMap> implements Disposable {
+export class Material extends EventDispatcher<{ dispose: {} }> {
     constructor();
 
     alphaHash: boolean;

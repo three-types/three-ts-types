@@ -7,10 +7,11 @@ import { Color } from '../math/Color.js';
 import { Object3DEventMap } from '../core/Object3D.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
-import { Disposable, DisposableEventMap } from '../types.js';
 import { BaseEvent, EventListener, EventTypeValidator } from '../core/EventDispatcher.js';
 
-export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEventMap {}
+export interface InstancedMeshEventMap extends Object3DEventMap {
+    dispose: {};
+}
 
 /**
  * A special version of {@link THREE.Mesh | Mesh} with instanced rendering support
@@ -27,12 +28,9 @@ export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEvent
  */
 /* tslint:disable:one-line */
 export class InstancedMesh<
-        TGeometry extends BufferGeometry = BufferGeometry,
-        TMaterial extends Material | Material[] = Material | Material[],
-    >
-    extends Mesh<TGeometry, TMaterial>
-    implements Disposable
-{
+    TGeometry extends BufferGeometry = BufferGeometry,
+    TMaterial extends Material | Material[] = Material | Material[],
+> extends Mesh<TGeometry, TMaterial> {
     /* tslint:enable:one-line */
     /**
      * Create a new instance of {@link InstancedMesh}

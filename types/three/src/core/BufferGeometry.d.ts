@@ -8,7 +8,6 @@ import { Vector2 } from '../math/Vector2.js';
 import { Vector3 } from '../math/Vector3.js';
 import { EventDispatcher } from './EventDispatcher.js';
 import { GLBufferAttribute } from './GLBufferAttribute.js';
-import { DisposableEventMap } from '../types.js';
 
 export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
 export type NormalOrGLBufferAttributes = Record<
@@ -76,7 +75,7 @@ export type NormalOrGLBufferAttributes = Record<
  */
 export class BufferGeometry<
     Attributes extends NormalOrGLBufferAttributes = NormalBufferAttributes,
-> extends EventDispatcher<DisposableEventMap> {
+> extends EventDispatcher<{ dispose: {} }> {
     /**
      * This creates a new {@link THREE.BufferGeometry | BufferGeometry} object.
      */

@@ -10,7 +10,6 @@ import {
     MagnificationTextureFilter,
     ColorSpace,
 } from '../constants.js';
-import { Disposable, DisposableEventMap } from '../types.js';
 
 export interface RenderTargetOptions {
     wrapS?: Wrapping | undefined;
@@ -34,12 +33,7 @@ export interface RenderTargetOptions {
     encoding?: TextureEncoding | undefined;
 }
 
-/* tslint:disable:one-line */
-export class RenderTarget<TTexture extends Texture | Texture[] = Texture>
-    extends EventDispatcher<DisposableEventMap>
-    implements Disposable
-{
-    /* tslint:enable:one-line */
+export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extends EventDispatcher<{ dispose: {} }> {
     constructor(width?: number, height?: number, options?: RenderTargetOptions);
 
     readonly isRenderTarget: true;

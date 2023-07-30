@@ -1,13 +1,12 @@
 import { EventDispatcher } from './EventDispatcher.js';
 import { Uniform } from './Uniform.js';
 import { Usage } from '../constants.js';
-import { Disposable, DisposableEventMap } from '../types.js';
 
 /**
  * @see Example: {@link https://threejs.org/examples/#webgl2_ubo | WebGL2 / UBO}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/UniformsGroup.js | Source}
  */
-export class UniformsGroup extends EventDispatcher<DisposableEventMap> implements Disposable {
+export class UniformsGroup extends EventDispatcher<{ dispose: {} }> {
     constructor();
 
     readonly isUniformsGroup: true;

@@ -15,7 +15,6 @@ import {
     AnyMapping,
     ColorSpace,
 } from '../constants.js';
-import { DisposableEventMap, Disposable } from '../types.js';
 
 /** Shim for OffscreenCanvas. */
 // tslint:disable-next-line:no-empty-interface
@@ -39,7 +38,7 @@ export interface OffscreenCanvas extends EventTarget {}
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/Texture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Texture.js | Source}
  */
-export class Texture extends EventDispatcher<DisposableEventMap> implements Disposable {
+export class Texture extends EventDispatcher<{ dispose: {} }> {
     /**
      * This creates a new {@link THREE.Texture | Texture} object.
      * @param image See {@link Texture.image | .image}. Default {@link THREE.Texture.DEFAULT_IMAGE}
