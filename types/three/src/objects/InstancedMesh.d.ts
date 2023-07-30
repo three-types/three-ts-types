@@ -8,6 +8,7 @@ import { Object3DEventMap } from '../core/Object3D.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Disposable, DisposableEventMap } from '../types.js';
+import { BaseEvent, EventListener, EventTypeValidator } from '../core/EventDispatcher';
 
 export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEventMap {}
 
@@ -28,9 +29,8 @@ export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEvent
 export class InstancedMesh<
         TGeometry extends BufferGeometry = BufferGeometry,
         TMaterial extends Material | Material[] = Material | Material[],
-        TEventMap extends InstancedMeshEventMap = InstancedMeshEventMap,
     >
-    extends Mesh<TGeometry, TMaterial, TEventMap>
+    extends Mesh<TGeometry, TMaterial>
     implements Disposable
 {
     /* tslint:enable:one-line */
@@ -143,4 +143,25 @@ export class InstancedMesh<
      * Call this method whenever this instance is no longer used in your app.
      */
     dispose(): void;
+
+    addEventListener<T extends Extract<keyof InstancedMeshEventMap, string>>(
+        type: T,
+        listener: EventListener<InstancedMeshEventMap[T], T, this>,
+    ): void;
+    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
+
+    hasEventListener<T extends Extract<keyof InstancedMeshEventMap, string>>(
+        type: T,
+        listener: EventListener<InstancedMeshEventMap[T], T, this>,
+    ): boolean;
+    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
+
+    removeEventListener<E extends Extract<keyof InstancedMeshEventMap, string>>(
+        type: E,
+        listener: EventListener<InstancedMeshEventMap[E], E, this>,
+    ): void;
+    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
+
+    dispatchEvent<E extends BaseEvent, Map extends InstancedMeshEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
 }

@@ -8,6 +8,9 @@ import {
     Quaternion,
     Object3DEventMap,
     EmptyEvent,
+    EventListener,
+    BaseEvent,
+    EventTypeValidator,
 } from '../../../src/Three.js';
 
 declare enum TransformControlsPropertiesWithEventsChanged {
@@ -52,7 +55,7 @@ interface TransformControlsEventMap extends Object3DEventMap, TransformControlsP
     objectChange: EmptyEvent;
 }
 
-export class TransformControls extends Object3D<TransformControlsEventMap> {
+export class TransformControls extends Object3D {
     constructor(object: Camera, domElement?: HTMLElement);
 
     domElement: HTMLElement;
@@ -88,6 +91,27 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     setSpace(space: 'world' | 'local'): void;
     reset(): void;
     dispose(): void;
+
+    addEventListener<T extends Extract<keyof TransformControlsEventMap, string>>(
+        type: T,
+        listener: EventListener<TransformControlsEventMap[T], T, this>,
+    ): void;
+    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
+
+    hasEventListener<T extends Extract<keyof TransformControlsEventMap, string>>(
+        type: T,
+        listener: EventListener<TransformControlsEventMap[T], T, this>,
+    ): boolean;
+    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
+
+    removeEventListener<E extends Extract<keyof TransformControlsEventMap, string>>(
+        type: E,
+        listener: EventListener<TransformControlsEventMap[E], E, this>,
+    ): void;
+    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
+
+    dispatchEvent<E extends BaseEvent, Map extends TransformControlsEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
 }
 
 export class TransformControlsGizmo extends Object3D {
