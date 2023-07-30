@@ -1,4 +1,14 @@
-import { Camera, Group, Object3D, Object3DEventMap, Vector2, WebGLRenderer } from '../../../src/Three.js';
+import {
+    BaseEvent,
+    Camera,
+    EventListener,
+    EventTypeValidator,
+    Group,
+    Object3D,
+    Object3DEventMap,
+    Vector2,
+    WebGLRenderer,
+} from '../../../src/Three.js';
 
 interface InteractiveObject3DEventMap extends Object3DEventMap {
     hoveron: { data: Vector2 };
@@ -11,7 +21,30 @@ interface InteractiveObject3DEventMap extends Object3DEventMap {
     click: { data: Vector2 };
 }
 
-export class InteractiveObject3D extends Object3D<InteractiveObject3DEventMap> {}
+export class InteractiveObject3D extends Object3D {
+    addEventListener<T extends Extract<keyof InteractiveObject3DEventMap, string>>(
+        type: T,
+        listener: EventListener<InteractiveObject3DEventMap[T], T, this>,
+    ): void;
+    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
+
+    hasEventListener<T extends Extract<keyof InteractiveObject3DEventMap, string>>(
+        type: T,
+        listener: EventListener<InteractiveObject3DEventMap[T], T, this>,
+    ): boolean;
+    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
+
+    removeEventListener<E extends Extract<keyof InteractiveObject3DEventMap, string>>(
+        type: E,
+        listener: EventListener<InteractiveObject3DEventMap[E], E, this>,
+    ): void;
+    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
+
+    dispatchEvent<E extends BaseEvent, Map extends InteractiveObject3DEventMap>(
+        event: EventTypeValidator<E, Map>,
+    ): void;
+    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+}
 
 export class InteractiveGroup extends Group {
     constructor(renderer: WebGLRenderer, camera: Camera);
