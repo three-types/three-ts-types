@@ -8,7 +8,7 @@ import { Object3DEventMap } from '../core/Object3D.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Disposable, DisposableEventMap } from '../types.js';
-import { BaseEvent, EventListener, EventTypeValidator } from '../core/EventDispatcher';
+import { BaseEvent, EventListener, EventTypeValidator } from '../core/EventDispatcher.js';
 
 export interface InstancedMeshEventMap extends Object3DEventMap, DisposableEventMap {}
 
