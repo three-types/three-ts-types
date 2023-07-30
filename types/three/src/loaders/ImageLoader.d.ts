@@ -10,7 +10,7 @@ export class ImageLoader extends Loader<HTMLImageElement> {
 
     load(
         url: string,
-        onLoad?: (data: HTMLImageElement, texData: object) => void,
+        onLoad?: (data: HTMLImageElement) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (err: unknown) => void,
     ): HTMLImageElement;

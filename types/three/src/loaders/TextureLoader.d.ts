@@ -11,7 +11,7 @@ export class TextureLoader extends Loader<Texture> {
 
     load(
         url: string,
-        onLoad?: (data: Texture, texData: object) => void,
+        onLoad?: (data: Texture) => void,
         onProgress?: (event: ProgressEvent) => void,
         onError?: (err: unknown) => void,
     ): Texture;
