@@ -33,7 +33,7 @@ export class SessionLightProbe {
     dispose: () => void;
 }
 
-interface XREstimatedLightEventMap extends Object3DEventMap {
+export interface XREstimatedLightEventMap extends Object3DEventMap {
     estimationstart: {};
     estimationend: {};
 }
@@ -66,5 +66,3 @@ export class XREstimatedLight extends Group {
     dispatchEvent<E extends BaseEvent, Map extends XREstimatedLightEventMap>(event: EventTypeValidator<E, Map>): void;
     dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
 }
-
-export {};

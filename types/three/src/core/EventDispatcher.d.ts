@@ -93,5 +93,3 @@ export class EventDispatcher<TEventMap extends {} = {}> {
      */
     dispatchEvent<E extends BaseEvent, Map extends TEventMap>(event: EventTypeValidator<E, Map>): void;
 }
-
-export {};

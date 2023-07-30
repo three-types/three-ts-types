@@ -1,6 +1,6 @@
 import { Camera, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three.js';
 
-interface OrbitControlsEventMap {
+export interface OrbitControlsEventMap {
     change: {};
     start: {};
     end: {};
@@ -279,5 +279,3 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
      */
     getDistance(): number;
 }
-
-export {};

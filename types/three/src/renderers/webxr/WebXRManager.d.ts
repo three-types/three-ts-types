@@ -11,7 +11,7 @@ import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController.js
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
 
-interface WebXRManagerEventMap {
+export interface WebXRManagerEventMap {
     sessionstart: {};
     sessionend: {};
     planeadded: { data: XRPlane };
@@ -74,5 +74,3 @@ export class WebXRManager extends EventDispatcher<WebXRManagerEventMap> {
 
     dispose(): void;
 }
-
-export {};

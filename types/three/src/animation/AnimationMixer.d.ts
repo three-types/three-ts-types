@@ -5,7 +5,7 @@ import { EventDispatcher } from './../core/EventDispatcher.js';
 import { Object3D } from '../core/Object3D.js';
 import { AnimationObjectGroup } from './AnimationObjectGroup.js';
 
-interface AnimationMixerEventMap {
+export interface AnimationMixerEventMap {
     loop: { action: AnimationAction; loopDelta: number };
     finished: { action: AnimationAction; direction: number };
 }
@@ -37,5 +37,3 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
     uncacheRoot(root: Object3D | AnimationObjectGroup): void;
     uncacheAction(clip: AnimationClip, root?: Object3D | AnimationObjectGroup): void;
 }
-
-export {};

@@ -1,6 +1,6 @@
 import { Camera, EventDispatcher } from '../../../src/Three.js';
 
-interface FlyControlsEventMap {
+export interface FlyControlsEventMap {
     change: {};
 }
 
@@ -18,5 +18,3 @@ export class FlyControls extends EventDispatcher<FlyControlsEventMap> {
     dispose(): void;
     update(delta: number): void;
 }
-
-export {};

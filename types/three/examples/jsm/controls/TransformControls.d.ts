@@ -12,7 +12,7 @@ import {
     EventTypeValidator,
 } from '../../../src/Three.js';
 
-interface TransformControlsEventMap extends Object3DEventMap {
+export interface TransformControlsEventMap extends Object3DEventMap {
     change: {};
     mouseDown: {};
     mouseUp: {};
@@ -142,5 +142,3 @@ export class TransformControlsPlane extends Mesh {
     worldPosition: Vector3;
     worldQuaternion: Quaternion;
 }
-
-export {};

@@ -14,7 +14,7 @@ export enum ArcballControlsMouseActionKeys {
     CTRL = 'CTRL',
 }
 
-interface ArcballControlsEventMap {
+export interface ArcballControlsEventMap {
     change: {};
     start: {};
     end: {};
@@ -167,5 +167,3 @@ export class ArcballControls extends EventDispatcher<ArcballControlsEventMap> {
 
     dispose(): void;
 }
-
-export {};
