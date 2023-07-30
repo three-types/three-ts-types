@@ -7,4 +7,11 @@ import { LoadingManager } from './LoadingManager.js';
  */
 export class ImageLoader extends Loader<HTMLImageElement> {
     constructor(manager?: LoadingManager);
+
+    load(
+        url: string,
+        onLoad?: (data: HTMLImageElement, texData: object) => void,
+        onProgress?: (event: ProgressEvent) => void,
+        onError?: (err: unknown) => void,
+    ): HTMLImageElement;
 }
