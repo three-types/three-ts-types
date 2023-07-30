@@ -13,46 +13,36 @@ import {
     EventTypeValidator,
 } from '../../../src/Three.js';
 
-declare enum TransformControlsPropertiesWithEventsChanged {
-    'camera',
-    'object',
-    'enabled',
-    'axis',
-    'mode',
-    'translationSnap',
-    'rotationSnap',
-    'scaleSnap',
-    'space',
-    'size',
-    'dragging',
-    'showX',
-    'showY',
-    'showZ',
-    'worldPosition',
-    'worldPositionStart',
-    'worldQuaternion',
-    'worldQuaternionStart',
-    'cameraPosition',
-    'cameraQuaternion',
-    'pointStart',
-    'pointEnd',
-    'rotationAxis',
-    'rotationAngle',
-    'eye',
-}
-
-type EnumToEventNamesHelper<T> = {
-    [K in keyof T & string as `${K}-changed`]: { value: unknown };
-};
-type TransformControlsPropertiesChangedEventMap = EnumToEventNamesHelper<
-    typeof TransformControlsPropertiesWithEventsChanged
->;
-
-interface TransformControlsEventMap extends Object3DEventMap, TransformControlsPropertiesChangedEventMap {
+interface TransformControlsEventMap extends Object3DEventMap {
     change: EmptyEvent;
     mouseDown: EmptyEvent;
     mouseUp: EmptyEvent;
     objectChange: EmptyEvent;
+    'camera-changed': { value: unknown };
+    'object-changed': { value: unknown };
+    'enabled-changed': { value: unknown };
+    'axis-changed': { value: unknown };
+    'mode-changed': { value: unknown };
+    'translationSnap-changed': { value: unknown };
+    'rotationSnap-changed': { value: unknown };
+    'scaleSnap-changed': { value: unknown };
+    'space-changed': { value: unknown };
+    'size-changed': { value: unknown };
+    'dragging-changed': { value: unknown };
+    'showX-changed': { value: unknown };
+    'showY-changed': { value: unknown };
+    'showZ-changed': { value: unknown };
+    'worldPosition-changed': { value: unknown };
+    'worldPositionStart-changed': { value: unknown };
+    'worldQuaternion-changed': { value: unknown };
+    'worldQuaternionStart-changed': { value: unknown };
+    'cameraPosition-changed': { value: unknown };
+    'cameraQuaternion-changed': { value: unknown };
+    'pointStart-changed': { value: unknown };
+    'pointEnd-changed': { value: unknown };
+    'rotationAxis-changed': { value: unknown };
+    'rotationAngle-changed': { value: unknown };
+    'eye-changed': { value: unknown };
 }
 
 export class TransformControls extends Object3D {
