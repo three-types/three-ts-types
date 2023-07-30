@@ -17,9 +17,6 @@ export type EventListener<TEventData, TEventType extends string, TTarget> = (
     event: TEventData & Event<TEventType, TTarget>,
 ) => void;
 
-// tslint:disable-next-line:interface-over-type-literal - Type Aliases to add better readability.
-export type EmptyEvent = {};
-
 export type EventTypeValidator<TEvent extends BaseEvent, TEventMap extends {}> = TEvent extends {
     type: infer TEventType;
 }

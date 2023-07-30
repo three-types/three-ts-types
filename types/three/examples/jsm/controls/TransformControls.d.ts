@@ -7,17 +7,16 @@ import {
     Vector3,
     Quaternion,
     Object3DEventMap,
-    EmptyEvent,
     EventListener,
     BaseEvent,
     EventTypeValidator,
 } from '../../../src/Three.js';
 
 interface TransformControlsEventMap extends Object3DEventMap {
-    change: EmptyEvent;
-    mouseDown: EmptyEvent;
-    mouseUp: EmptyEvent;
-    objectChange: EmptyEvent;
+    change: {};
+    mouseDown: {};
+    mouseUp: {};
+    objectChange: {};
     'camera-changed': { value: unknown };
     'object-changed': { value: unknown };
     'enabled-changed': { value: unknown };

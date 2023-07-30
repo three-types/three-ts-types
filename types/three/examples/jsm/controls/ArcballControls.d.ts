@@ -1,4 +1,4 @@
-import { EventDispatcher, Camera, Scene, Vector3, Raycaster, EmptyEvent } from '../../../src/Three.js';
+import { EventDispatcher, Camera, Scene, Vector3, Raycaster } from '../../../src/Three.js';
 
 export enum ArcballControlsMouseActionOperations {
     PAN = 'PAN',
@@ -15,9 +15,9 @@ export enum ArcballControlsMouseActionKeys {
 }
 
 interface ArcballControlsEventMap {
-    change: EmptyEvent;
-    start: EmptyEvent;
-    end: EmptyEvent;
+    change: {};
+    start: {};
+    end: {};
 }
 
 export class ArcballControls extends EventDispatcher<ArcballControlsEventMap> {

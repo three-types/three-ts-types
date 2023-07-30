@@ -5,7 +5,6 @@ import {
     Texture,
     WebGLRenderer,
     Object3DEventMap,
-    EmptyEvent,
     EventListener,
     BaseEvent,
     EventTypeValidator,
@@ -35,8 +34,8 @@ export class SessionLightProbe {
 }
 
 interface XREstimatedLightEventMap extends Object3DEventMap {
-    estimationstart: EmptyEvent;
-    estimationend: EmptyEvent;
+    estimationstart: {};
+    estimationend: {};
 }
 
 export class XREstimatedLight extends Group {

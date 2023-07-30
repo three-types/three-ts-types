@@ -1,7 +1,7 @@
 import { Group } from '../../objects/Group.js';
 import { Vector3 } from '../../math/Vector3.js';
 import { Object3DEventMap } from '../../core/Object3D.js';
-import { BaseEvent, EmptyEvent, EventListener, EventTypeValidator } from '../../core/EventDispatcher.js';
+import { BaseEvent, EventListener, EventTypeValidator } from '../../core/EventDispatcher.js';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
@@ -29,7 +29,7 @@ export interface WebXRSpaceEventMap extends Object3DEventMap {
     pinchend: { handedness: XRHandedness; target: WebXRController }; // This Event break the THREE.EventDispatcher contract, replacing the target to the wrong instance.
     pinchstart: { handedness: XRHandedness; target: WebXRController }; // This Event break the THREE.EventDispatcher contract, replacing the target to the wrong instance.
 
-    move: EmptyEvent;
+    move: {};
 }
 
 export class XRHandSpace extends Group {

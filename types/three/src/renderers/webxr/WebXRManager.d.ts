@@ -5,15 +5,15 @@
 import { Vector4 } from '../../math/Vector4.js';
 import { ArrayCamera } from '../../cameras/ArrayCamera.js';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
-import { EmptyEvent, EventDispatcher } from '../../core/EventDispatcher.js';
+import { EventDispatcher } from '../../core/EventDispatcher.js';
 import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController.js';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
 
 interface WebXRManagerEventMap {
-    sessionstart: EmptyEvent;
-    sessionend: EmptyEvent;
+    sessionstart: {};
+    sessionend: {};
     planeadded: { data: XRPlane };
     planeremoved: { data: XRPlane };
     planechanged: { data: XRPlane };

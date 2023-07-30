@@ -1,7 +1,7 @@
-import { Camera, EmptyEvent, EventDispatcher } from '../../../src/Three.js';
+import { Camera, EventDispatcher } from '../../../src/Three.js';
 
 interface FlyControlsEventMap {
-    change: EmptyEvent;
+    change: {};
 }
 
 export class FlyControls extends EventDispatcher<FlyControlsEventMap> {

@@ -1,9 +1,9 @@
-import { Camera, EmptyEvent, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three.js';
+import { Camera, EventDispatcher, MOUSE, TOUCH, Vector3 } from '../../../src/Three.js';
 
 interface OrbitControlsEventMap {
-    change: EmptyEvent;
-    start: EmptyEvent;
-    end: EmptyEvent;
+    change: {};
+    start: {};
+    end: {};
 }
 
 /**

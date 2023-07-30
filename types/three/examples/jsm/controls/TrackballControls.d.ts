@@ -1,9 +1,9 @@
-import { Camera, EmptyEvent, EventDispatcher, MOUSE, Vector3 } from '../../../src/Three.js';
+import { Camera, EventDispatcher, MOUSE, Vector3 } from '../../../src/Three.js';
 
 interface TrackballControlsEventMap {
-    change: EmptyEvent;
-    start: EmptyEvent;
-    end: EmptyEvent;
+    change: {};
+    start: {};
+    end: {};
 }
 
 export class TrackballControls extends EventDispatcher<TrackballControlsEventMap> {
