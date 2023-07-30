@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const eveDisForAnyEvent = new THREE.EventDispatcher<Record<string, THREE.BaseEvent & { [key: string]: unknown }>>();
 eveDisForAnyEvent.addEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<{}>
+    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
     // @ts-expect-error
     e.bar();
 });
@@ -13,11 +13,11 @@ eveDisForAnyEvent.dispatchEvent({ type: 'eventB', otherProp: 42 });
 
 eveDisForAnyEvent.removeEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<{}>
+    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
 });
 eveDisForAnyEvent.hasEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<{}>
+    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
 });
 
 // Test for typed events
