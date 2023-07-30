@@ -1,5 +1,4 @@
-import { WebGLRenderer, Camera, Group } from 'three';
-import { Object3D, Object3DEventMap, Vector2 } from '../../../src/Three';
+import { Camera, Group, Object3D, Object3DEventMap, Vector2, WebGLRenderer } from '../../../src/Three.js';
 
 interface InteractiveObject3DEventMap extends Object3DEventMap {
     hoveron: { data: Vector2 };

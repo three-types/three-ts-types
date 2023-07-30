@@ -1,4 +1,4 @@
-import { EmptyEvent } from './Three';
+import { EmptyEvent } from './Three.js';
 
 export interface DisposableEventMap {
     dispose: EmptyEvent;

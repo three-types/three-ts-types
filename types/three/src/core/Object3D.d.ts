@@ -7,7 +7,7 @@ import { Layers } from './Layers.js';
 import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
 import { Scene } from '../scenes/Scene.js';
 import { Camera } from '../cameras/Camera.js';
-import { Material } from '../materials/Material';
+import { Material } from '../materials/Material.js';
 import { Group } from '../objects/Group.js';
 import { Intersection, Raycaster } from './Raycaster.js';
 import { EmptyEvent, EventDispatcher } from './EventDispatcher.js';

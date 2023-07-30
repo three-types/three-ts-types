@@ -10,7 +10,7 @@ import {
     MagnificationTextureFilter,
     ColorSpace,
 } from '../constants.js';
-import { Disposable, DisposableEventMap } from '../types';
+import { Disposable, DisposableEventMap } from '../types.js';
 
 export interface RenderTargetOptions {
     wrapS?: Wrapping | undefined;
