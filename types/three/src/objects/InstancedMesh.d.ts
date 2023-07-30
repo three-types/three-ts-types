@@ -7,7 +7,6 @@ import { Color } from '../math/Color.js';
 import { Object3DEventMap } from '../core/Object3D.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
-import { EventListener } from '../core/EventDispatcher.js';
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
     dispose: {};
@@ -26,12 +25,11 @@ export interface InstancedMeshEventMap extends Object3DEventMap {
  * @see {@link https://threejs.org/docs/index.html#api/en/objects/InstancedMesh | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/InstancedMesh.js | Source}
  */
-/* tslint:disable:one-line */
 export class InstancedMesh<
     TGeometry extends BufferGeometry = BufferGeometry,
     TMaterial extends Material | Material[] = Material | Material[],
-> extends Mesh<TGeometry, TMaterial> {
-    /* tslint:enable:one-line */
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Mesh<TGeometry, TMaterial, TEventMap> {
     /**
      * Create a new instance of {@link InstancedMesh}
      * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}.
@@ -141,24 +139,4 @@ export class InstancedMesh<
      * Call this method whenever this instance is no longer used in your app.
      */
     dispose(): void;
-
-    addEventListener<T extends Extract<keyof InstancedMeshEventMap, string>>(
-        type: T,
-        listener: EventListener<InstancedMeshEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof InstancedMeshEventMap, string>>(
-        type: T,
-        listener: EventListener<InstancedMeshEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof InstancedMeshEventMap, string>>(
-        type: E,
-        listener: EventListener<InstancedMeshEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: InstancedMeshEventMap[Extract<keyof InstancedMeshEventMap, string>]): void;
 }

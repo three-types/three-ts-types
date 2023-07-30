@@ -1,7 +1,6 @@
 import { Group } from '../../objects/Group.js';
 import { Vector3 } from '../../math/Vector3.js';
 import { Object3DEventMap } from '../../core/Object3D.js';
-import { EventListener } from '../../core/EventDispatcher.js';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
@@ -32,83 +31,23 @@ export interface WebXRSpaceEventMap extends Object3DEventMap {
     move: {};
 }
 
-export class XRHandSpace extends Group {
+export class XRHandSpace extends Group<WebXRSpaceEventMap> {
     readonly joints: Partial<XRHandJoints>;
     readonly inputState: XRHandInputState;
-
-    addEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: E,
-        listener: EventListener<WebXRSpaceEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
-export class XRTargetRaySpace extends Group {
+export class XRTargetRaySpace extends Group<WebXRSpaceEventMap> {
     hasLinearVelocity: boolean;
     readonly linearVelocity: Vector3;
     hasAngularVelocity: boolean;
     readonly angularVelocity: Vector3;
-
-    addEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: E,
-        listener: EventListener<WebXRSpaceEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
-export class XRGripSpace extends Group {
+export class XRGripSpace extends Group<WebXRSpaceEventMap> {
     hasLinearVelocity: boolean;
     readonly linearVelocity: Vector3;
     hasAngularVelocity: boolean;
     readonly angularVelocity: Vector3;
-
-    addEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: T,
-        listener: EventListener<WebXRSpaceEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof WebXRSpaceEventMap, string>>(
-        type: E,
-        listener: EventListener<WebXRSpaceEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
 export class WebXRController {

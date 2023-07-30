@@ -1,14 +1,4 @@
-import {
-    Object3D,
-    Camera,
-    MOUSE,
-    Raycaster,
-    Mesh,
-    Vector3,
-    Quaternion,
-    Object3DEventMap,
-    EventListener,
-} from '../../../src/Three.js';
+import { Object3D, Camera, MOUSE, Raycaster, Mesh, Vector3, Quaternion, Object3DEventMap } from '../../../src/Three.js';
 
 export interface TransformControlsEventMap extends Object3DEventMap {
     change: {};
@@ -42,7 +32,7 @@ export interface TransformControlsEventMap extends Object3DEventMap {
     'eye-changed': { value: unknown };
 }
 
-export class TransformControls extends Object3D {
+export class TransformControls extends Object3D<TransformControlsEventMap> {
     constructor(object: Camera, domElement?: HTMLElement);
 
     domElement: HTMLElement;
@@ -78,26 +68,6 @@ export class TransformControls extends Object3D {
     setSpace(space: 'world' | 'local'): void;
     reset(): void;
     dispose(): void;
-
-    addEventListener<T extends Extract<keyof TransformControlsEventMap, string>>(
-        type: T,
-        listener: EventListener<TransformControlsEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof TransformControlsEventMap, string>>(
-        type: T,
-        listener: EventListener<TransformControlsEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof TransformControlsEventMap, string>>(
-        type: E,
-        listener: EventListener<TransformControlsEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: TransformControlsEventMap[Extract<keyof TransformControlsEventMap, string>]): void;
 }
 
 export class TransformControlsGizmo extends Object3D {

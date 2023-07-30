@@ -1,12 +1,4 @@
-import {
-    DirectionalLight,
-    Group,
-    LightProbe,
-    Texture,
-    WebGLRenderer,
-    Object3DEventMap,
-    EventListener,
-} from '../../../src/Three.js';
+import { DirectionalLight, Group, LightProbe, Texture, WebGLRenderer, Object3DEventMap } from '../../../src/Three.js';
 
 export class SessionLightProbe {
     xrLight: XREstimatedLight;
@@ -36,30 +28,10 @@ export interface XREstimatedLightEventMap extends Object3DEventMap {
     estimationend: {};
 }
 
-export class XREstimatedLight extends Group {
+export class XREstimatedLight extends Group<XREstimatedLightEventMap> {
     lightProbe: LightProbe;
     directionalLight: DirectionalLight;
     environment: Texture;
 
     constructor(renderer: WebGLRenderer, environmentEstimation?: boolean);
-
-    addEventListener<T extends Extract<keyof XREstimatedLightEventMap, string>>(
-        type: T,
-        listener: EventListener<XREstimatedLightEventMap[T], T, this>,
-    ): void;
-    addEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): void;
-
-    hasEventListener<T extends Extract<keyof XREstimatedLightEventMap, string>>(
-        type: T,
-        listener: EventListener<XREstimatedLightEventMap[T], T, this>,
-    ): boolean;
-    hasEventListener<T extends string>(type: T, listener: EventListener<{}, T, this>): boolean;
-
-    removeEventListener<E extends Extract<keyof XREstimatedLightEventMap, string>>(
-        type: E,
-        listener: EventListener<XREstimatedLightEventMap[E], E, this>,
-    ): void;
-    removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
-
-    dispatchEvent(event: XREstimatedLightEventMap[Extract<keyof XREstimatedLightEventMap, string>]): void;
 }

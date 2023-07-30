@@ -26,7 +26,7 @@ export interface Object3DEventMap {
  * @see {@link https://threejs.org/docs/index.html#api/en/core/Object3D | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/Object3D.js | Source}
  */
-export class Object3D extends EventDispatcher<Object3DEventMap> {
+export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> extends EventDispatcher<TEventMap> {
     /**
      * This creates a new {@link Object3D} object.
      */
