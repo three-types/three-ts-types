@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // Test for legacy usage
-const eveDisForAnyEvent = new THREE.EventDispatcher();
+const eveDisForAnyEvent = new THREE.EventDispatcher<Record<string, THREE.BaseEvent & { [key: string]: unknown }>>();
 eveDisForAnyEvent.addEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
     e.target; // $ExpectType EventDispatcher<{}>
@@ -69,8 +69,10 @@ eveDisForTestEvent.addEventListener('NotRegistered', e => {
 
 eveDisForTestEvent.dispatchEvent({ type: 'foo', foo: 42 });
 eveDisForTestEvent.dispatchEvent({ type: 'bar', bar: '42' });
-eveDisForTestEvent.dispatchEvent({ type: 'zzzz', shouldWork: '42' }); // Should fire a non strongType event / unknown event.
-eveDisForTestEvent.dispatchEvent({ type: 'eventA' }); // Should fire a non strongType event / unknown event.
+// @ts-expect-error
+eveDisForTestEvent.dispatchEvent({ type: 'zzzz', shouldWork: '42' });
+// @ts-expect-error
+eveDisForTestEvent.dispatchEvent({ type: 'eventA' });
 
 // call dispatchEvent with an invalid event
 // @ts-expect-error

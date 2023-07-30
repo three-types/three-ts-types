@@ -6,8 +6,6 @@ import {
     WebGLRenderer,
     Object3DEventMap,
     EventListener,
-    BaseEvent,
-    EventTypeValidator,
 } from '../../../src/Three.js';
 
 export class SessionLightProbe {
@@ -63,6 +61,5 @@ export class XREstimatedLight extends Group {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends XREstimatedLightEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: XREstimatedLightEventMap[Extract<keyof XREstimatedLightEventMap, string>]): void;
 }

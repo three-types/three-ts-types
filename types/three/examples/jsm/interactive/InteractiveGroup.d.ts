@@ -1,8 +1,6 @@
 import {
-    BaseEvent,
     Camera,
     EventListener,
-    EventTypeValidator,
     Group,
     Object3D,
     Object3DEventMap,
@@ -10,7 +8,7 @@ import {
     WebGLRenderer,
 } from '../../../src/Three.js';
 
-interface InteractiveObject3DEventMap extends Object3DEventMap {
+export interface InteractiveObject3DEventMap extends Object3DEventMap {
     hoveron: { data: Vector2 };
     pointerdown: { data: Vector2 };
     pointerup: { data: Vector2 };
@@ -40,10 +38,7 @@ export class InteractiveObject3D extends Object3D {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends InteractiveObject3DEventMap>(
-        event: EventTypeValidator<E, Map>,
-    ): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: InteractiveObject3DEventMap[Extract<keyof InteractiveObject3DEventMap, string>]): void;
 }
 
 export class InteractiveGroup extends Group {

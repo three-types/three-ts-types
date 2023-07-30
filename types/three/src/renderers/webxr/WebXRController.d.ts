@@ -1,7 +1,7 @@
 import { Group } from '../../objects/Group.js';
 import { Vector3 } from '../../math/Vector3.js';
 import { Object3DEventMap } from '../../core/Object3D.js';
-import { BaseEvent, EventListener, EventTypeValidator } from '../../core/EventDispatcher.js';
+import { EventListener } from '../../core/EventDispatcher.js';
 
 export type XRControllerEventType = XRSessionEventType | XRInputSourceEventType | 'disconnected' | 'connected';
 
@@ -54,8 +54,7 @@ export class XRHandSpace extends Group {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends WebXRSpaceEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
 export class XRTargetRaySpace extends Group {
@@ -82,8 +81,7 @@ export class XRTargetRaySpace extends Group {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends WebXRSpaceEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
 export class XRGripSpace extends Group {
@@ -110,8 +108,7 @@ export class XRGripSpace extends Group {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends WebXRSpaceEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: WebXRSpaceEventMap[Extract<keyof WebXRSpaceEventMap, string>]): void;
 }
 
 export class WebXRController {

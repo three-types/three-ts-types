@@ -8,8 +8,6 @@ import {
     Quaternion,
     Object3DEventMap,
     EventListener,
-    BaseEvent,
-    EventTypeValidator,
 } from '../../../src/Three.js';
 
 export interface TransformControlsEventMap extends Object3DEventMap {
@@ -99,8 +97,7 @@ export class TransformControls extends Object3D {
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends TransformControlsEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: TransformControlsEventMap[Extract<keyof TransformControlsEventMap, string>]): void;
 }
 
 export class TransformControlsGizmo extends Object3D {

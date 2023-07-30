@@ -1,8 +1,8 @@
 /**
  * The minimal basic Event that can be dispatched by a {@link EventDispatcher<>}.
  */
-export interface BaseEvent {
-    readonly type: string;
+export interface BaseEvent<TEventType extends string = string> {
+    readonly type: TEventType;
 }
 
 /**
@@ -16,16 +16,6 @@ export interface Event<TEventType extends string = string, TTarget = unknown> {
 export type EventListener<TEventData, TEventType extends string, TTarget> = (
     event: TEventData & Event<TEventType, TTarget>,
 ) => void;
-
-export type EventTypeValidator<TEvent extends BaseEvent, TEventMap extends {}> = TEvent extends {
-    type: infer TEventType;
-}
-    ? TEventType extends Extract<keyof TEventMap, string>
-        ? { type: TEventType } & TEventMap[TEventType]
-        : TEventType extends string
-        ? TEvent
-        : never
-    : never;
 
 /**
  * JavaScript events for custom objects
@@ -91,5 +81,5 @@ export class EventDispatcher<TEventMap extends {} = {}> {
      * Fire an event type.
      * @param event The event that gets fired.
      */
-    dispatchEvent<E extends BaseEvent, Map extends TEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent<T extends Extract<keyof TEventMap, string>>(event: BaseEvent<T> & TEventMap[T]): void;
 }

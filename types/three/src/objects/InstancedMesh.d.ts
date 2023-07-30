@@ -7,7 +7,7 @@ import { Color } from '../math/Color.js';
 import { Object3DEventMap } from '../core/Object3D.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
-import { BaseEvent, EventListener, EventTypeValidator } from '../core/EventDispatcher.js';
+import { EventListener } from '../core/EventDispatcher.js';
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
     dispose: {};
@@ -160,6 +160,5 @@ export class InstancedMesh<
     ): void;
     removeEventListener<E extends string>(type: E, listener: EventListener<{}, E, this>): void;
 
-    dispatchEvent<E extends BaseEvent, Map extends InstancedMeshEventMap>(event: EventTypeValidator<E, Map>): void;
-    dispatchEvent<E extends BaseEvent, Map extends Object3DEventMap>(event: EventTypeValidator<E, Map>): void;
+    dispatchEvent(event: InstancedMeshEventMap[Extract<keyof InstancedMeshEventMap, string>]): void;
 }
