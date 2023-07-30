@@ -7,5 +7,12 @@ export class HDRCubeTextureLoader extends Loader<CubeTexture, readonly string[]>
     hdrLoader: RGBELoader;
     type: TextureDataType;
 
+    load(
+        url: readonly string[],
+        onLoad?: (data: CubeTexture) => void,
+        onProgress?: (event: ProgressEvent) => void,
+        onError?: (err: unknown) => void,
+    ): CubeTexture;
+
     setDataType(type: TextureDataType): this;
 }
