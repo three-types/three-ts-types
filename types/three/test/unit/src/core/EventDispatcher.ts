@@ -4,7 +4,7 @@ import * as THREE from 'three';
 const eveDisForAnyEvent = new THREE.EventDispatcher<Record<string, { [key: string]: unknown }>>();
 eveDisForAnyEvent.addEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
+    e.target; // $ExpectType EventDispatcher<Record<string, { [key: string]: unknown; }>>
     // @ts-expect-error
     e.bar();
 });
@@ -13,11 +13,11 @@ eveDisForAnyEvent.dispatchEvent({ type: 'eventB', otherProp: 42 });
 
 eveDisForAnyEvent.removeEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
+    e.target; // $ExpectType EventDispatcher<Record<string, { [key: string]: unknown; }>>
 });
 eveDisForAnyEvent.hasEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
-    e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
+    e.target; // $ExpectType EventDispatcher<Record<string, { [key: string]: unknown; }>>
 });
 
 // Test for typed events
@@ -86,3 +86,27 @@ eveDisForTestEvent.dispatchEvent({ bar: 42 });
 
 eveDisForTestEvent.removeEventListener('bar', () => {});
 eveDisForTestEvent.hasEventListener('bar', () => {});
+
+// declare module 'three' {
+//     interface Object3DEventMap {
+//         [key: string]: { [key: string]: unknown };
+//     }
+// }
+
+const allowSpecificEvent = new THREE.Object3D();
+allowSpecificEvent.dispatchEvent({ type: 'test', data: 5 });
+
+const allowAnyEvent = new THREE.Object3D();
+allowAnyEvent.dispatchEvent({ type: 'any', data: 5 });
+
+class AllowSpecificEvent extends Object3D<THREE.Object3DEventMap & { test: { data: number } }> {}
+const allowSpecificEventClass = new AllowSpecificEvent();
+allowSpecificEventClass.dispatchEvent({ type: 'test', data: 5 });
+
+class AllowAnyEvent extends Object3D<THREE.Object3DEventMap & Record<string, { [key: string]: unknown }>> {}
+const allowAnyEventClass = new AllowAnyEvent();
+allowAnyEventClass.dispatchEvent({ type: 'any', data: 5 });
+
+test.addEventListener('any', event => {
+    event.thing.test;
+});
