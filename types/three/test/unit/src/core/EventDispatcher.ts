@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
 // Test for legacy usage
-const eveDisForAnyEvent = new THREE.EventDispatcher<Record<string, THREE.BaseEvent & { [key: string]: unknown }>>();
+const eveDisForAnyEvent = new THREE.EventDispatcher<Record<string, { [key: string]: unknown }>>();
 eveDisForAnyEvent.addEventListener('eventA', e => {
     e.type; // $ExpectType "eventA"
     e.target; // $ExpectType EventDispatcher<Record<string, BaseEvent<string> & { [key: string]: unknown; }>>
