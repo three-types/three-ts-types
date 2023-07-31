@@ -86,27 +86,3 @@ eveDisForTestEvent.dispatchEvent({ bar: 42 });
 
 eveDisForTestEvent.removeEventListener('bar', () => {});
 eveDisForTestEvent.hasEventListener('bar', () => {});
-
-// declare module 'three' {
-//     interface Object3DEventMap {
-//         [key: string]: { [key: string]: unknown };
-//     }
-// }
-
-const allowSpecificEvent = new THREE.Object3D();
-allowSpecificEvent.dispatchEvent({ type: 'test', data: 5 });
-
-const allowAnyEvent = new THREE.Object3D();
-allowAnyEvent.dispatchEvent({ type: 'any', data: 5 });
-
-class AllowSpecificEvent extends Object3D<THREE.Object3DEventMap & { test: { data: number } }> {}
-const allowSpecificEventClass = new AllowSpecificEvent();
-allowSpecificEventClass.dispatchEvent({ type: 'test', data: 5 });
-
-class AllowAnyEvent extends Object3D<THREE.Object3DEventMap & Record<string, { [key: string]: unknown }>> {}
-const allowAnyEventClass = new AllowAnyEvent();
-allowAnyEventClass.dispatchEvent({ type: 'any', data: 5 });
-
-test.addEventListener('any', event => {
-    event.thing.test;
-});
