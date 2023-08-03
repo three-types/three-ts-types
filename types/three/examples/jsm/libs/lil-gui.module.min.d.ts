@@ -6,28 +6,28 @@ export class GUI {
      * new GUI();
      * new GUI( { container: document.getElementById( 'custom' ) } );
      *
-     * @param {object} [options]
-     * @param {boolean} [options.autoPlace=true]
+     * @param [options]
+     * @param [options.autoPlace=true]
      * Adds the GUI to `document.body` and fixes it to the top right of the page.
      *
-     * @param {HTMLElement} [options.container]
+     * @param [options.container]
      * Adds the GUI to this DOM element. Overrides `autoPlace`.
      *
-     * @param {number} [options.width=245]
+     * @param [options.width=245]
      * Width of the GUI in pixels, usually set when name labels become too long. Note that you can make
      * name labels wider in CSS with `.lil‑gui { ‑‑name‑width: 55% }`
      *
-     * @param {string} [options.title=Controls]
+     * @param [options.title=Controls]
      * Name to display in the title bar.
      *
-     * @param {boolean} [options.injectStyles=true]
+     * @param [options.injectStyles=true]
      * Injects the default stylesheet into the page if this is the first GUI.
      * Pass `false` to use your own stylesheet.
      *
-     * @param {number} [options.touchStyles=true]
+     * @param [options.touchStyles=true]
      * Makes controllers larger on touch devices. Pass `false` to disable touch styles.
      *
-     * @param {GUI} [options.parent]
+     * @param [options.parent]
      * Adds this GUI as a child in another GUI. Usually this is done for you by `addFolder()`.
      *
      */
@@ -50,52 +50,42 @@ export class GUI {
     });
     /**
      * The GUI containing this folder, or `undefined` if this is the root GUI.
-     * @type {GUI}
      */
     parent: GUI;
     /**
      * The top level GUI containing this folder, or `this` if this is the root GUI.
-     * @type {GUI}
      */
     root: GUI;
     /**
      * The list of controllers and folders contained by this GUI.
-     * @type {Array<GUI|Controller>}
      */
     children: Array<GUI | Controller>;
     /**
      * The list of controllers contained by this GUI.
-     * @type {Array<Controller>}
      */
-    controllers: Array<Controller>;
+    controllers: Controller[];
     /**
      * The list of folders contained by this GUI.
-     * @type {Array<GUI>}
      */
-    folders: Array<GUI>;
+    folders: GUI[];
     /**
      * Used to determine if the GUI is closed. Use `gui.open()` or `gui.close()` to change this.
-     * @type {boolean}
      */
     _closed: boolean;
     /**
      * Used to determine if the GUI is hidden. Use `gui.show()` or `gui.hide()` to change this.
-     * @type {boolean}
      */
     _hidden: boolean;
     /**
      * The outermost container element.
-     * @type {HTMLElement}
      */
     domElement: HTMLElement;
     /**
      * The DOM element that contains the title.
-     * @type {HTMLElement}
      */
     $title: HTMLElement;
     /**
      * The DOM element that contains children.
-     * @type {HTMLElement}
      */
     $children: HTMLElement;
     /**
@@ -105,13 +95,12 @@ export class GUI {
      * gui.add( object, 'number', 0, 100, 1 );
      * gui.add( object, 'options', [ 1, 2, 3 ] );
      *
-     * @param {object} object The object the controller will modify.
-     * @param {string} property Name of the property to control.
-     * @param {number|object|Array} [$1] Minimum value for number controllers, or the set of
+     * @param object The object the controller will modify.
+     * @param property Name of the property to control.
+     * @param [$1] Minimum value for number controllers, or the set of
      * selectable values for a dropdown.
-     * @param {number} [max] Maximum value for number controllers.
-     * @param {number} [step] Step value for number controllers.
-     * @returns {Controller}
+     * @param [max] Maximum value for number controllers.
+     * @param [step] Step value for number controllers.
      */
     add(object: object, property: string, $1?: number | object | any[], max?: number, step?: number): Controller;
     /**
@@ -127,11 +116,10 @@ export class GUI {
      * gui.addColor( params, 'rgbColor' );
      * gui.addColor( params, 'customRange', 255 );
      *
-     * @param {object} object The object the controller will modify.
-     * @param {string} property Name of the property to control.
-     * @param {number} rgbScale Maximum value for a color channel when using an RGB color. You may
+     * @param object The object the controller will modify.
+     * @param property Name of the property to control.
+     * @param rgbScale Maximum value for a color channel when using an RGB color. You may
      * need to set this to 255 if your colors are too bright.
-     * @returns {Controller}
      */
     addColor(object: object, property: string, rgbScale?: number): Controller;
     /**
@@ -143,15 +131,13 @@ export class GUI {
      * folder.add( position, 'y' );
      * folder.add( position, 'z' );
      *
-     * @param {string} title Name to display in the folder's title bar.
-     * @returns {GUI}
+     * @param title Name to display in the folder's title bar.
      */
     addFolder(title: string): GUI;
     /**
      * Recalls values that were saved with `gui.save()`.
-     * @param {object} obj
-     * @param {boolean} recursive Pass false to exclude folders descending from this GUI.
-     * @returns {this}
+     * @param obj
+     * @param recursive Pass false to exclude folders descending from this GUI.
      */
     load(obj: object, recursive?: boolean): this;
     /**
@@ -171,14 +157,12 @@ export class GUI {
      * 	}
      * }
      *
-     * @param {boolean} recursive Pass false to exclude folders descending from this GUI.
-     * @returns {object}
+     * @param recursive Pass false to exclude folders descending from this GUI.
      */
     save(recursive?: boolean): object;
     /**
      * Opens a GUI or folder. GUI and folders are open by default.
-     * @param {boolean} open Pass false to close
-     * @returns {this}
+     * @param open Pass false to close
      * @example
      * gui.open(); // open
      * gui.open( false ); // close
@@ -187,13 +171,11 @@ export class GUI {
     open(open?: boolean): this;
     /**
      * Closes the GUI.
-     * @returns {this}
      */
     close(): this;
     /**
      * Shows the GUI after it's been hidden.
-     * @param {boolean} show
-     * @returns {this}
+     * @param show
      * @example
      * gui.show();
      * gui.show( false ); // hide
@@ -202,31 +184,26 @@ export class GUI {
     show(show?: boolean): this;
     /**
      * Hides the GUI.
-     * @returns {this}
      */
     hide(): this;
     openAnimated(open?: boolean): GUI;
     /**
      * Change the title of this GUI.
-     * @param {string} title
-     * @returns {this}
+     * @param title
      */
     title(title: string): this;
     /**
      * Current title of the GUI. Use `gui.title( 'Title' )` to modify this value.
-     * @type {string}
      */
     _title: string;
     /**
      * Resets all controllers to their initial values.
-     * @param {boolean} recursive Pass false to exclude folders descending from this GUI.
-     * @returns {this}
+     * @param recursive Pass false to exclude folders descending from this GUI.
      */
     reset(recursive?: boolean): this;
     /**
      * Pass a function to be called whenever a controller in this GUI changes.
-     * @param {function({object:object, property:string, value:any, controller:Controller})} callback
-     * @returns {this}
+     * @param callback
      * @example
      * gui.onChange( event => {
      * 	event.object     // object that was modified
@@ -239,14 +216,12 @@ export class GUI {
     /**
      * Used to access the function bound to `onChange` events. Don't modify this value
      * directly. Use the `gui.onChange( callback )` method instead.
-     * @type {Function}
      */
-    _onChange: Function;
+    _onChange: (arg0: { object: object; property: string; value: any; controller: Controller }) => any;
     _callOnChange(controller: any): void;
     /**
      * Pass a function to be called whenever a controller in this GUI has finished changing.
-     * @param {function({object:object, property:string, value:any, controller:Controller})} callback
-     * @returns {this}
+     * @param callback
      * @example
      * gui.onFinishChange( event => {
      * 	event.object     // object that was modified
@@ -261,9 +236,8 @@ export class GUI {
     /**
      * Used to access the function bound to `onFinishChange` events. Don't modify this value
      * directly. Use the `gui.onFinishChange( callback )` method instead.
-     * @type {Function}
      */
-    _onFinishChange: Function;
+    _onFinishChange: (arg0: { object: object; property: string; value: any; controller: Controller }) => any;
     _callOnFinishChange(controller: any): void;
     /**
      * Destroys all DOM elements and event listeners associated with this GUI
@@ -271,12 +245,10 @@ export class GUI {
     destroy(): void;
     /**
      * Returns an array of controllers contained by this GUI and its descendents.
-     * @returns {Controller[]}
      */
     controllersRecursive(): Controller[];
     /**
      * Returns an array of folders contained by this GUI and its descendents.
-     * @returns {GUI[]}
      */
     foldersRecursive(): GUI[];
 }
@@ -338,74 +310,61 @@ export class Controller {
     constructor(parent: any, object: any, property: any, className: any, widgetTag?: string);
     /**
      * The GUI that contains this controller.
-     * @type {GUI}
      */
     parent: GUI;
     /**
      * The object this controller will modify.
-     * @type {object}
      */
     object: object;
     /**
      * The name of the property to control.
-     * @type {string}
      */
     property: string;
     /**
      * Used to determine if the controller is disabled.
      * Use `controller.disable( true|false )` to modify this value
-     * @type {boolean}
      */
     _disabled: boolean;
     /**
      * Used to determine if the Controller is hidden.
      * Use `controller.show()` or `controller.hide()` to change this.
-     * @type {boolean}
      */
     _hidden: boolean;
     /**
      * The value of `object[ property ]` when the controller was created.
-     * @type {any}
      */
     initialValue: any;
     /**
      * The outermost container DOM element for this controller.
-     * @type {HTMLElement}
      */
     domElement: HTMLElement;
     /**
      * The DOM element that contains the controller's name.
-     * @type {HTMLElement}
      */
     $name: HTMLElement;
     /**
      * The DOM element that contains the controller's "widget" (which differs by controller type).
-     * @type {HTMLElement}
      */
     $widget: HTMLElement;
     /**
      * The DOM element that receives the disabled attribute when using disable()
-     * @type {HTMLElement}
      */
     $disable: HTMLElement;
     _listenCallback(): void;
     /**
      * Sets the name of the controller and its label in the GUI.
-     * @param {string} name
-     * @returns {this}
+     * @param name
      */
     name(name: string): this;
     /**
      * The controller's name. Use `controller.name( 'Name' )` to modify this value.
-     * @type {string}
      */
     _name: string;
     /**
      * Pass a function to be called whenever the value is modified by this controller.
      * The function receives the new value as its first parameter. The value of `this` will be the
      * controller.
-     * @param {Function} callback
-     * @returns {this}
+     * @param callback
      * @example
      * const controller = gui.add( object, 'property' );
      *
@@ -414,23 +373,20 @@ export class Controller {
      * 	console.assert( this === controller );
      * } );
      */
-    onChange(callback: Function): this;
+    onChange(callback: (value: unknown) => void): this;
     /**
      * Used to access the function bound to `onChange` events. Don't modify this value directly.
      * Use the `controller.onChange( callback )` method instead.
-     * @type {Function}
      */
-    _onChange: Function;
+    _onChange: (value: unknown) => void;
     /**
      * Calls the onChange methods of this controller and its parent GUI.
-     * @protected
      */
     protected _callOnChange(): void;
     _changed: boolean;
     /**
      * Pass a function to be called after this controller has been modified and loses focus.
-     * @param {Function} callback
-     * @returns {this}
+     * @param callback
      * @example
      * const controller = gui.add( object, 'property' );
      *
@@ -439,27 +395,23 @@ export class Controller {
      * 	console.assert( this === controller );
      * } );
      */
-    onFinishChange(callback: Function): this;
+    onFinishChange(callback: (value: unknown) => void): this;
     /**
      * Used to access the function bound to `onFinishChange` events. Don't modify this value
      * directly. Use the `controller.onFinishChange( callback )` method instead.
-     * @type {Function}
      */
-    _onFinishChange: Function;
+    _onFinishChange: (value: unknown) => void;
     /**
      * Should be called by Controller when its widgets lose focus.
-     * @protected
      */
     protected _callOnFinishChange(): void;
     /**
      * Sets the controller back to its initial value.
-     * @returns {this}
      */
     reset(): this;
     /**
      * Enables this controller.
-     * @param {boolean} enabled
-     * @returns {this}
+     * @param enabled
      * @example
      * controller.enable();
      * controller.enable( false ); // disable
@@ -468,8 +420,7 @@ export class Controller {
     enable(enabled?: boolean): this;
     /**
      * Disables this controller.
-     * @param {boolean} disabled
-     * @returns {this}
+     * @param disabled
      * @example
      * controller.disable();
      * controller.disable( false ); // enable
@@ -478,8 +429,7 @@ export class Controller {
     disable(disabled?: boolean): this;
     /**
      * Shows the Controller after it's been hidden.
-     * @param {boolean} show
-     * @returns {this}
+     * @param show
      * @example
      * controller.show();
      * controller.show( false ); // hide
@@ -488,7 +438,6 @@ export class Controller {
     show(show?: boolean): this;
     /**
      * Hides the Controller.
-     * @returns {this}
      */
     hide(): this;
     /**
@@ -515,27 +464,23 @@ export class Controller {
      * assert( c.parent.children.indexOf( c ) === -1 )
      * // c references a controller that no longer exists
      *
-     * @param {object|Array} options
-     * @returns {Controller}
+     * @param options
      */
     options(options: object | any[]): Controller;
     /**
      * Sets the minimum value. Only works on number controllers.
-     * @param {number} min
-     * @returns {this}
+     * @param min
      */
     min(min: number): this;
     /**
      * Sets the maximum value. Only works on number controllers.
-     * @param {number} max
-     * @returns {this}
+     * @param max
      */
     max(max: number): this;
     /**
      * Values set by this controller will be rounded to multiples of `step`. Only works on number
      * controllers.
-     * @param {number} step
-     * @returns {this}
+     * @param step
      */
     step(step: number): this;
     /**
@@ -543,39 +488,33 @@ export class Controller {
      * like `step()`. Only works on number controllers.
      * @example
      * gui.add( object, 'property' ).listen().decimals( 4 );
-     * @param {number} decimals
-     * @returns {this}
+     * @param decimals
      */
     decimals(decimals: number): this;
     /**
      * Calls `updateDisplay()` every animation frame. Pass `false` to stop listening.
-     * @param {boolean} listen
-     * @returns {this}
+     * @param listen
      */
     listen(listen?: boolean): this;
     /**
      * Used to determine if the controller is currently listening. Don't modify this value
      * directly. Use the `controller.listen( true|false )` method instead.
-     * @type {boolean}
      */
     _listening: boolean;
     _listenCallbackID: number;
     _listenPrevValue: any;
     /**
      * Returns `object[ property ]`.
-     * @returns {any}
      */
     getValue(): any;
     /**
      * Sets the value of `object[ property ]`, invokes any `onChange` handlers and updates the display.
-     * @param {any} value
-     * @returns {this}
+     * @param value
      */
     setValue(value: any): this;
     /**
      * Updates the display to keep it in sync with the current value. Useful for updating your
      * controllers when their values have been modified outside of the GUI.
-     * @returns {this}
      */
     updateDisplay(): this;
     load(value: any): Controller;
