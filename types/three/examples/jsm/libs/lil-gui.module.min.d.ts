@@ -141,7 +141,7 @@ export class GUI {
      * @param rgbScale Maximum value for a color channel when using an RGB color. You may
      * need to set this to 255 if your colors are too bright.
      */
-    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): Controller;
+    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ColorController<T, K>;
     /**
      * Adds a folder to the GUI, which is just another GUI. This method returns
      * the nested GUI so you can add controllers to it.
