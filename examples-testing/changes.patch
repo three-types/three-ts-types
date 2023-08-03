@@ -155,7 +155,7 @@ index 53847260..f08bb34a 100644
              const atom = document.createElement('img');
              atom.src = colorSprite;
 diff --git a/examples-testing/examples/css3d_orthographic.ts b/examples-testing/examples/css3d_orthographic.ts
-index 4aabbed0..b1862d0a 100644
+index 4aabbed0..67e41fde 100644
 --- a/examples-testing/examples/css3d_orthographic.ts
 +++ b/examples-testing/examples/css3d_orthographic.ts
 @@ -2,11 +2,11 @@ import * as THREE from 'three';
@@ -233,38 +233,7 @@ index 4aabbed0..b1862d0a 100644
              camera.clearViewOffset();
          },
      };
-@@ -160,32 +160,46 @@ function createPanel() {
-     folder1.add(settings, 'setViewOffset');
-     folder1
-         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
--        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
-         .disable();
-     folder1
-         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
--        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
-         .disable();
-     folder1
-         .add(settings, 'offsetX', 0, 256, 1)
--        .onChange(val => updateCameraViewOffset({ x: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ x: val }))
-         .disable();
-     folder1
-         .add(settings, 'offsetY', 0, 256, 1)
--        .onChange(val => updateCameraViewOffset({ y: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ y: val }))
-         .disable();
-     folder1
-         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
--        .onChange(val => updateCameraViewOffset({ width: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ width: val }))
-         .disable();
-     folder1
-         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
--        .onChange(val => updateCameraViewOffset({ height: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ height: val }))
-         .disable();
+@@ -185,7 +185,21 @@ function createPanel() {
      folder1.add(settings, 'clearViewOffset');
  }
  
@@ -393,7 +362,7 @@ index e3a33f79..516df464 100644
          .onUpdate(render)
          .start();
 diff --git a/examples-testing/examples/css3d_sandbox.ts b/examples-testing/examples/css3d_sandbox.ts
-index 1088b84b..b910c1f0 100644
+index 1088b84b..02f1fa75 100644
 --- a/examples-testing/examples/css3d_sandbox.ts
 +++ b/examples-testing/examples/css3d_sandbox.ts
 @@ -2,13 +2,13 @@ import * as THREE from 'three';
@@ -470,38 +439,7 @@ index 1088b84b..b910c1f0 100644
              camera.clearViewOffset();
          },
      };
-@@ -128,32 +128,46 @@ function createPanel() {
-     folder1.add(settings, 'setViewOffset');
-     folder1
-         .add(settings, 'fullWidth', window.screen.width / 4, window.screen.width * 2, 1)
--        .onChange(val => updateCameraViewOffset({ fullWidth: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ fullWidth: val }))
-         .disable();
-     folder1
-         .add(settings, 'fullHeight', window.screen.height / 4, window.screen.height * 2, 1)
--        .onChange(val => updateCameraViewOffset({ fullHeight: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ fullHeight: val }))
-         .disable();
-     folder1
-         .add(settings, 'offsetX', 0, 256, 1)
--        .onChange(val => updateCameraViewOffset({ x: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ x: val }))
-         .disable();
-     folder1
-         .add(settings, 'offsetY', 0, 256, 1)
--        .onChange(val => updateCameraViewOffset({ y: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ y: val }))
-         .disable();
-     folder1
-         .add(settings, 'width', window.screen.width / 4, window.screen.width * 2, 1)
--        .onChange(val => updateCameraViewOffset({ width: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ width: val }))
-         .disable();
-     folder1
-         .add(settings, 'height', window.screen.height / 4, window.screen.height * 2, 1)
--        .onChange(val => updateCameraViewOffset({ height: val }))
-+        .onChange((val: number) => updateCameraViewOffset({ height: val }))
-         .disable();
+@@ -153,7 +153,21 @@ function createPanel() {
      folder1.add(settings, 'clearViewOffset');
  }
  
@@ -624,7 +562,7 @@ index 62652f87..3dcc2f12 100644
  
      controls.addEventListener('start', function () {
 diff --git a/examples-testing/examples/games_fps.ts b/examples-testing/examples/games_fps.ts
-index 49d31e76..8398b565 100644
+index 49d31e76..0ede5e73 100644
 --- a/examples-testing/examples/games_fps.ts
 +++ b/examples-testing/examples/games_fps.ts
 @@ -39,7 +39,7 @@ directionalLight.shadow.radius = 4;
@@ -725,15 +663,6 @@ index 49d31e76..8398b565 100644
              }
          }
      });
-@@ -332,7 +338,7 @@ loader.load('collision-world.glb', gltf => {
-     scene.add(helper);
- 
-     const gui = new GUI({ width: 200 });
--    gui.add({ debug: false }, 'debug').onChange(function (value) {
-+    gui.add({ debug: false }, 'debug').onChange(function (value: boolean) {
-         helper.visible = value;
-     });
- 
 diff --git a/examples-testing/examples/misc_animation_groups.ts b/examples-testing/examples/misc_animation_groups.ts
 index 19d263f4..f8d0bed3 100644
 --- a/examples-testing/examples/misc_animation_groups.ts
@@ -1099,7 +1028,7 @@ index 72ea08f3..cf0142db 100644
  
          const box = new THREE.Mesh(boxGeometry, boxMaterial);
 diff --git a/examples-testing/examples/misc_controls_trackball.ts b/examples-testing/examples/misc_controls_trackball.ts
-index 88d0541a..94f66ace 100644
+index 88d0541a..fdd703f2 100644
 --- a/examples-testing/examples/misc_controls_trackball.ts
 +++ b/examples-testing/examples/misc_controls_trackball.ts
 @@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -1116,15 +1045,6 @@ index 88d0541a..94f66ace 100644
  
  const params = {
      orthographicCamera: false,
-@@ -79,7 +84,7 @@ function init() {
-     const gui = new GUI();
-     gui.add(params, 'orthographicCamera')
-         .name('use orthographic')
--        .onChange(function (value) {
-+        .onChange(function (value: boolean) {
-             controls.dispose();
- 
-             createControls(value ? orthographicCamera : perspectiveCamera);
 @@ -92,7 +97,7 @@ function init() {
      createControls(perspectiveCamera);
  }
@@ -2456,7 +2376,7 @@ index e9e115dc..65b7563a 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_buffergeometry_drawrange.ts b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
-index b69868ce..60bbde86 100644
+index b69868ce..51e7b7c2 100644
 --- a/examples-testing/examples/webgl_buffergeometry_drawrange.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
 @@ -5,15 +5,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -2484,19 +2404,7 @@ index b69868ce..60bbde86 100644
  
  const maxParticleCount = 1000;
  let particleCount = 500;
-@@ -35,25 +35,24 @@ animate();
- function initGUI() {
-     const gui = new GUI();
- 
--    gui.add(effectController, 'showDots').onChange(function (value) {
-+    gui.add(effectController, 'showDots').onChange(function (value: boolean) {
-         pointCloud.visible = value;
-     });
--    gui.add(effectController, 'showLines').onChange(function (value) {
-+    gui.add(effectController, 'showLines').onChange(function (value: boolean) {
-         linesMesh.visible = value;
-     });
-     gui.add(effectController, 'minDistance', 10, 300);
+@@ -45,15 +45,14 @@ function initGUI() {
      gui.add(effectController, 'limitConnections');
      gui.add(effectController, 'maxConnections', 0, 30, 1);
      gui.add(effectController, 'particleCount', 0, maxParticleCount, 1).onChange(function (value) {
@@ -3298,7 +3206,7 @@ index d60532ca..ccc98e65 100644
  }
  
 diff --git a/examples-testing/examples/webgl_clipping_intersection.ts b/examples-testing/examples/webgl_clipping_intersection.ts
-index 74022d77..d2906ce7 100644
+index 74022d77..6835776b 100644
 --- a/examples-testing/examples/webgl_clipping_intersection.ts
 +++ b/examples-testing/examples/webgl_clipping_intersection.ts
 @@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3310,12 +3218,7 @@ index 74022d77..d2906ce7 100644
  
  const params = {
      clipIntersection: true,
-@@ -78,11 +78,11 @@ function init() {
- 
-     gui.add(params, 'clipIntersection')
-         .name('clip intersection')
--        .onChange(function (value) {
-+        .onChange(function (value: boolean) {
+@@ -82,7 +82,7 @@ function init() {
              const children = group.children;
  
              for (let i = 0; i < children.length; i++) {
@@ -3324,26 +3227,8 @@ index 74022d77..d2906ce7 100644
              }
  
              render();
-@@ -91,7 +91,7 @@ function init() {
-     gui.add(params, 'planeConstant', -1, 1)
-         .step(0.01)
-         .name('plane constant')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             for (let j = 0; j < clipPlanes.length; j++) {
-                 clipPlanes[j].constant = value;
-             }
-@@ -101,7 +101,7 @@ function init() {
- 
-     gui.add(params, 'showHelpers')
-         .name('show helpers')
--        .onChange(function (value) {
-+        .onChange(function (value: boolean) {
-             helpers.visible = value;
- 
-             render();
 diff --git a/examples-testing/examples/webgl_clipping_stencil.ts b/examples-testing/examples/webgl_clipping_stencil.ts
-index 365087d6..cb3b7477 100644
+index 365087d6..9dd56a14 100644
 --- a/examples-testing/examples/webgl_clipping_stencil.ts
 +++ b/examples-testing/examples/webgl_clipping_stencil.ts
 @@ -3,9 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -3372,51 +3257,6 @@ index 365087d6..cb3b7477 100644
      const group = new THREE.Group();
      const baseMat = new THREE.MeshBasicMaterial();
      baseMat.depthWrite = false;
-@@ -191,12 +195,12 @@ function init() {
-     gui.add(params, 'animate');
- 
-     const planeX = gui.addFolder('planeX');
--    planeX.add(params.planeX, 'displayHelper').onChange(v => (planeHelpers[0].visible = v));
-+    planeX.add(params.planeX, 'displayHelper').onChange((v: boolean) => (planeHelpers[0].visible = v));
-     planeX
-         .add(params.planeX, 'constant')
-         .min(-1)
-         .max(1)
--        .onChange(d => (planes[0].constant = d));
-+        .onChange((d: number) => (planes[0].constant = d));
-     planeX.add(params.planeX, 'negated').onChange(() => {
-         planes[0].negate();
-         params.planeX.constant = planes[0].constant;
-@@ -204,12 +208,12 @@ function init() {
-     planeX.open();
- 
-     const planeY = gui.addFolder('planeY');
--    planeY.add(params.planeY, 'displayHelper').onChange(v => (planeHelpers[1].visible = v));
-+    planeY.add(params.planeY, 'displayHelper').onChange((v: boolean) => (planeHelpers[1].visible = v));
-     planeY
-         .add(params.planeY, 'constant')
-         .min(-1)
-         .max(1)
--        .onChange(d => (planes[1].constant = d));
-+        .onChange((d: number) => (planes[1].constant = d));
-     planeY.add(params.planeY, 'negated').onChange(() => {
-         planes[1].negate();
-         params.planeY.constant = planes[1].constant;
-@@ -217,12 +221,12 @@ function init() {
-     planeY.open();
- 
-     const planeZ = gui.addFolder('planeZ');
--    planeZ.add(params.planeZ, 'displayHelper').onChange(v => (planeHelpers[2].visible = v));
-+    planeZ.add(params.planeZ, 'displayHelper').onChange((v: boolean) => (planeHelpers[2].visible = v));
-     planeZ
-         .add(params.planeZ, 'constant')
-         .min(-1)
-         .max(1)
--        .onChange(d => (planes[2].constant = d));
-+        .onChange((d: number) => (planes[2].constant = d));
-     planeZ.add(params.planeZ, 'negated').onChange(() => {
-         planes[2].negate();
-         params.planeZ.constant = planes[2].constant;
 diff --git a/examples-testing/examples/webgl_custom_attributes.ts b/examples-testing/examples/webgl_custom_attributes.ts
 index 648e097d..98d024c7 100644
 --- a/examples-testing/examples/webgl_custom_attributes.ts
@@ -5409,7 +5249,7 @@ index 3708f65b..4c1f793c 100644
              if (shader) {
                  shader.uniforms.time.value = performance.now() / 1000;
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
-index b33e4e2f..4bbe5d11 100644
+index b33e4e2f..3f0ef819 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
 +++ b/examples-testing/examples/webgl_pmrem_test.ts
 @@ -5,7 +5,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -5421,12 +5261,7 @@ index b33e4e2f..4bbe5d11 100644
  
  function init() {
      const width = window.innerWidth;
-@@ -64,12 +64,13 @@ function init() {
-     const gui = new GUI();
-     gui.add({ enabled: true }, 'enabled')
-         .name('PMREM')
--        .onChange(value => {
-+        .onChange((value: boolean) => {
+@@ -68,8 +68,9 @@ function init() {
              directionalLight.intensity = value ? 0 : 1;
  
              scene.traverse(function (child) {
@@ -5585,7 +5420,7 @@ index 0bfb6550..89c4a5c1 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_postprocessing_crossfade.ts b/examples-testing/examples/webgl_postprocessing_crossfade.ts
-index d3203e35..02cec7a3 100644
+index d3203e35..7b7f06f6 100644
 --- a/examples-testing/examples/webgl_postprocessing_crossfade.ts
 +++ b/examples-testing/examples/webgl_postprocessing_crossfade.ts
 @@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5610,29 +5445,6 @@ index d3203e35..02cec7a3 100644
  
      renderer = new THREE.WebGLRenderer({ antialias: true });
      renderer.setPixelRatio(window.devicePixelRatio);
-@@ -56,19 +56,19 @@ function initGUI() {
-     gui.add(transitionParams, 'animate');
-     gui.add(transitionParams, 'transition', 0, 1, 0.01).listen();
- 
--    gui.add(transitionParams, 'useTexture').onChange(function (value) {
-+    gui.add(transitionParams, 'useTexture').onChange(function (value: boolean) {
-         transition.useTexture(value);
-     });
- 
-     gui.add(transitionParams, 'texture', { Perlin: 0, Squares: 1, Cells: 2, Distort: 3, Gradient: 4, Radial: 5 })
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             transition.setTexture(value);
-         })
-         .listen();
- 
-     gui.add(transitionParams, 'cycle');
- 
--    gui.add(transitionParams, 'threshold', 0, 1, 0.01).onChange(function (value) {
-+    gui.add(transitionParams, 'threshold', 0, 1, 0.01).onChange(function (value: number) {
-         transition.setTextureThreshold(value);
-     });
- }
 @@ -77,7 +77,7 @@ function render() {
      transition.render(clock.getDelta());
  }
@@ -6294,7 +6106,7 @@ index 3650bfee..88a3d816 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webgl_postprocessing_outline.ts b/examples-testing/examples/webgl_postprocessing_outline.ts
-index 60d8b010..9d624be3 100644
+index 60d8b010..daa0c751 100644
 --- a/examples-testing/examples/webgl_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgl_postprocessing_outline.ts
 @@ -12,11 +12,11 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
@@ -6313,34 +6125,7 @@ index 60d8b010..9d624be3 100644
  
  const raycaster = new THREE.Raycaster();
  const mouse = new THREE.Vector2();
-@@ -37,40 +37,45 @@ const params = {
- 
- const gui = new GUI({ width: 280 });
- 
--gui.add(params, 'edgeStrength', 0.01, 10).onChange(function (value) {
-+gui.add(params, 'edgeStrength', 0.01, 10).onChange(function (value: number) {
-     outlinePass.edgeStrength = Number(value);
- });
- 
--gui.add(params, 'edgeGlow', 0.0, 1).onChange(function (value) {
-+gui.add(params, 'edgeGlow', 0.0, 1).onChange(function (value: number) {
-     outlinePass.edgeGlow = Number(value);
- });
- 
--gui.add(params, 'edgeThickness', 1, 4).onChange(function (value) {
-+gui.add(params, 'edgeThickness', 1, 4).onChange(function (value: number) {
-     outlinePass.edgeThickness = Number(value);
- });
- 
--gui.add(params, 'pulsePeriod', 0.0, 5).onChange(function (value) {
-+gui.add(params, 'pulsePeriod', 0.0, 5).onChange(function (value: number) {
-     outlinePass.pulsePeriod = Number(value);
- });
- 
- gui.add(params, 'rotate');
- 
--gui.add(params, 'usePatternTexture').onChange(function (value) {
-+gui.add(params, 'usePatternTexture').onChange(function (value: boolean) {
+@@ -59,9 +59,14 @@ gui.add(params, 'usePatternTexture').onChange(function (value) {
      outlinePass.usePatternTexture = value;
  });
  
@@ -6358,17 +6143,6 @@ index 60d8b010..9d624be3 100644
  }
  
  const conf = new Configuration();
- 
--gui.addColor(conf, 'visibleEdgeColor').onChange(function (value) {
-+gui.addColor(conf, 'visibleEdgeColor').onChange(function (value: string) {
-     outlinePass.visibleEdgeColor.set(value);
- });
- 
--gui.addColor(conf, 'hiddenEdgeColor').onChange(function (value) {
-+gui.addColor(conf, 'hiddenEdgeColor').onChange(function (value: string) {
-     outlinePass.hiddenEdgeColor.set(value);
- });
- 
 @@ -223,7 +228,7 @@ function init() {
      renderer.domElement.style.touchAction = 'none';
      renderer.domElement.addEventListener('pointermove', onPointerMove);
@@ -6763,7 +6537,7 @@ index b2a12b53..b1efc76c 100644
      renderer = new THREE.WebGLRenderer();
      renderer.setPixelRatio(window.devicePixelRatio);
 diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
-index 886f77fd..70ac7b8c 100644
+index 886f77fd..00666b29 100644
 --- a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
 +++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
 @@ -10,8 +10,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -6786,36 +6560,8 @@ index 886f77fd..70ac7b8c 100644
  
      stats = new Stats();
      container.appendChild(stats.dom);
-@@ -82,23 +82,23 @@ function init() {
- 
-     const bloomFolder = gui.addFolder('bloom');
- 
--    bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value) {
-+    bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value: number) {
-         bloomPass.threshold = Number(value);
-     });
- 
--    bloomFolder.add(params, 'strength', 0.0, 3.0).onChange(function (value) {
-+    bloomFolder.add(params, 'strength', 0.0, 3.0).onChange(function (value: number) {
-         bloomPass.strength = Number(value);
-     });
- 
-     gui.add(params, 'radius', 0.0, 1.0)
-         .step(0.01)
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             bloomPass.radius = Number(value);
-         });
- 
-     const toneMappingFolder = gui.addFolder('tone mapping');
- 
--    toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
-+    toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value: number) {
-         renderer.toneMappingExposure = Math.pow(value, 4.0);
-     });
- 
 diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
-index d633806e..cd114983 100644
+index d633806e..a25f53b5 100644
 --- a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
 +++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
 @@ -22,7 +22,7 @@ const params = {
@@ -6838,38 +6584,7 @@ index d633806e..cd114983 100644
          defines: {},
      }),
      'baseTexture',
-@@ -85,12 +85,12 @@ const gui = new GUI();
- 
- const bloomFolder = gui.addFolder('bloom');
- 
--bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value) {
-+bloomFolder.add(params, 'threshold', 0.0, 1.0).onChange(function (value: number) {
-     bloomPass.threshold = Number(value);
-     render();
- });
- 
--bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value) {
-+bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value: number) {
-     bloomPass.strength = Number(value);
-     render();
- });
-@@ -98,21 +98,21 @@ bloomFolder.add(params, 'strength', 0.0, 3).onChange(function (value) {
- bloomFolder
-     .add(params, 'radius', 0.0, 1.0)
-     .step(0.01)
--    .onChange(function (value) {
-+    .onChange(function (value: number) {
-         bloomPass.radius = Number(value);
-         render();
-     });
- 
- const toneMappingFolder = gui.addFolder('tone mapping');
- 
--toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
-+toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value: number) {
-     renderer.toneMappingExposure = Math.pow(value, 4.0);
-     render();
- });
+@@ -112,7 +112,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
  
  setupScene();
  
@@ -6946,7 +6661,7 @@ index 96f9a81d..43bd75d6 100644
      mesh = new THREE.Mesh(geometry, material);
      mesh.frustumCulled = false;
 diff --git a/examples-testing/examples/webgl_shadowmap_csm.ts b/examples-testing/examples/webgl_shadowmap_csm.ts
-index f9df4abf..ad6ffde7 100644
+index f9df4abf..d2646faa 100644
 --- a/examples-testing/examples/webgl_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgl_shadowmap_csm.ts
 @@ -2,12 +2,31 @@ import * as THREE from 'three';
@@ -6985,83 +6700,6 @@ index f9df4abf..ad6ffde7 100644
      orthographic: false,
      fade: false,
      far: 1000,
-@@ -118,12 +137,12 @@ function init() {
- 
-     const gui = new GUI();
- 
--    gui.add(params, 'orthographic').onChange(function (value) {
-+    gui.add(params, 'orthographic').onChange(function (value: boolean) {
-         csm.camera = value ? orthoCamera : camera;
-         csm.updateFrustums();
-     });
- 
--    gui.add(params, 'fade').onChange(function (value) {
-+    gui.add(params, 'fade').onChange(function (value: boolean) {
-         csm.fade = value;
-         csm.updateFrustums();
-     });
-@@ -131,45 +150,45 @@ function init() {
-     gui.add(params, 'far', 1, 5000)
-         .step(1)
-         .name('shadow far')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             csm.maxFar = value;
-             csm.updateFrustums();
-         });
- 
-     gui.add(params, 'mode', ['uniform', 'logarithmic', 'practical'])
-         .name('frustum split mode')
--        .onChange(function (value) {
-+        .onChange(function (value: CSMMode) {
-             csm.mode = value;
-             csm.updateFrustums();
-         });
- 
-     gui.add(params, 'lightX', -1, 1)
-         .name('light direction x')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             csm.lightDirection.x = value;
-         });
- 
-     gui.add(params, 'lightY', -1, 1)
-         .name('light direction y')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             csm.lightDirection.y = value;
-         });
- 
-     gui.add(params, 'lightZ', -1, 1)
-         .name('light direction z')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             csm.lightDirection.z = value;
-         });
- 
-     gui.add(params, 'margin', 0, 200)
-         .name('light margin')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             csm.lightMargin = value;
-         });
- 
-     gui.add(params, 'lightNear', 1, 10000)
-         .name('light near')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             for (let i = 0; i < csm.lights.length; i++) {
-                 csm.lights[i].shadow.camera.near = value;
-                 csm.lights[i].shadow.camera.updateProjectionMatrix();
-@@ -178,7 +197,7 @@ function init() {
- 
-     gui.add(params, 'lightFar', 1, 10000)
-         .name('light far')
--        .onChange(function (value) {
-+        .onChange(function (value: number) {
-             for (let i = 0; i < csm.lights.length; i++) {
-                 csm.lights[i].shadow.camera.far = value;
-                 csm.lights[i].shadow.camera.updateProjectionMatrix();
 diff --git a/examples-testing/examples/webgl_shadowmap_pcss.ts b/examples-testing/examples/webgl_shadowmap_pcss.ts
 index 91ba3607..230059a6 100644
 --- a/examples-testing/examples/webgl_shadowmap_pcss.ts
