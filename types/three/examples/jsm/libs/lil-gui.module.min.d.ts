@@ -1,3 +1,5 @@
+export type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
+
 export default GUI;
 export class GUI {
     /**
@@ -102,7 +104,25 @@ export class GUI {
      * @param [max] Maximum value for number controllers.
      * @param [step] Step value for number controllers.
      */
-    add(object: object, property: string, $1?: number | object | any[], max?: number, step?: number): Controller;
+    add<T, K extends keyof T>(
+        object: T,
+        property: K,
+        options: ReadonlyArray<T[K]> | Record<string, T[K]>,
+    ): OptionController<T, K>;
+    add<T, K extends KeyToValueOfType<T, number>>(
+        object: T,
+        property: K,
+        min?: number,
+        max?: number,
+        step?: number,
+    ): NumberController<T, K>;
+    add<T, K extends KeyToValueOfType<T, boolean>>(object: T, property: K, options?: never): BooleanController<T, K>;
+    add<T, K extends KeyToValueOfType<T, string>>(object: T, property: K, options?: never): StringController<T, K>;
+    add<T, K extends KeyToValueOfType<T, (this: T) => void>>(
+        object: T,
+        property: K,
+        options?: never,
+    ): FunctionController<T, K>;
     /**
      * Adds a color controller to the GUI.
      * @example
@@ -121,7 +141,7 @@ export class GUI {
      * @param rgbScale Maximum value for a color channel when using an RGB color. You may
      * need to set this to 255 if your colors are too bright.
      */
-    addColor(object: object, property: string, rgbScale?: number): Controller;
+    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): Controller;
     /**
      * Adds a folder to the GUI, which is just another GUI. This method returns
      * the nested GUI so you can add controllers to it.
@@ -212,13 +232,15 @@ export class GUI {
      * 	event.controller // controller that was modified
      * } );
      */
-    onChange(callback: (arg0: { object: object; property: string; value: any; controller: Controller }) => any): this;
+    onChange(
+        callback: (arg0: { object: object; property: string; value: unknown; controller: Controller }) => void,
+    ): this;
     /**
      * Used to access the function bound to `onChange` events. Don't modify this value
      * directly. Use the `gui.onChange( callback )` method instead.
      */
-    _onChange: (arg0: { object: object; property: string; value: any; controller: Controller }) => any;
-    _callOnChange(controller: any): void;
+    _onChange: (arg0: { object: object; property: string; value: unknown; controller: Controller }) => void;
+    _callOnChange(controller: Controller): void;
     /**
      * Pass a function to be called whenever a controller in this GUI has finished changing.
      * @param callback
@@ -231,14 +253,14 @@ export class GUI {
      * } );
      */
     onFinishChange(
-        callback: (arg0: { object: object; property: string; value: any; controller: Controller }) => any,
+        callback: (arg0: { object: object; property: string; value: unknown; controller: Controller }) => void,
     ): this;
     /**
      * Used to access the function bound to `onFinishChange` events. Don't modify this value
      * directly. Use the `gui.onFinishChange( callback )` method instead.
      */
-    _onFinishChange: (arg0: { object: object; property: string; value: any; controller: Controller }) => any;
-    _callOnFinishChange(controller: any): void;
+    _onFinishChange: (arg0: { object: object; property: string; value: unknown; controller: Controller }) => void;
+    _callOnFinishChange(controller: Controller): void;
     /**
      * Destroys all DOM elements and event listeners associated with this GUI
      */
@@ -252,49 +274,52 @@ export class GUI {
      */
     foldersRecursive(): GUI[];
 }
-export class BooleanController extends Controller {
-    constructor(parent: any, object: any, property: any);
+export class BooleanController<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, boolean> = KeyToValueOfType<T, boolean>,
+> extends Controller<T, K> {
+    constructor(parent: GUI, object: T, property: K);
     $input: HTMLInputElement;
 }
-export class ColorController extends Controller {
-    constructor(parent: any, object: any, property: any, rgbScale: any);
+export class ColorController<T = Record<string, unknown>, K extends keyof T = keyof T> extends Controller<T, K> {
+    constructor(parent: GUI, object: T, property: K, rgbScale: number);
     $input: HTMLInputElement;
     $text: HTMLInputElement;
     $display: HTMLDivElement;
     _format:
         | {
               isPrimitive: boolean;
-              match: (v: any) => boolean;
+              match: (v: unknown) => boolean;
               fromHexString: typeof normalizeColorString;
               toHexString: typeof normalizeColorString;
           }
         | {
               isPrimitive: boolean;
-              match: (arg: any) => arg is any[];
-              fromHexString(string: any, target: any, rgbScale?: number): void;
-              toHexString([r, g, b]: [any, any, any], rgbScale?: number): string;
+              match: (arg: unknown) => arg is unknown[];
+              fromHexString(string: unknown, target: unknown, rgbScale?: number): void;
+              toHexString([r, g, b]: [unknown, unknown, unknown], rgbScale?: number): string;
           }
         | {
               isPrimitive: boolean;
-              match: (v: any) => boolean;
-              fromHexString(string: any, target: any, rgbScale?: number): void;
+              match: (v: unknown) => boolean;
+              fromHexString(string: unknown, target: unknown, rgbScale?: number): void;
               toHexString(
                   {
                       r,
                       g,
                       b,
                   }: {
-                      r: any;
-                      g: any;
-                      b: any;
+                      r: unknown;
+                      g: unknown;
+                      b: unknown;
                   },
                   rgbScale?: number,
               ): string;
           };
-    _rgbScale: any;
+    _rgbScale: number;
     _initialValueHexString: string | boolean;
     _textFocused: boolean;
-    _setValueFromHexString(value: any): void;
+    _setValueFromHexString(value: unknown): void;
 }
 /**
  * lil-gui
@@ -306,8 +331,8 @@ export class ColorController extends Controller {
 /**
  * Base class for all controllers.
  */
-export class Controller {
-    constructor(parent: any, object: any, property: any, className: any, widgetTag?: string);
+export class Controller<T = Record<string, unknown>, K extends keyof T = keyof T> {
+    constructor(parent: GUI, object: T, property: K, className: string, widgetTag?: string);
     /**
      * The GUI that contains this controller.
      */
@@ -333,7 +358,7 @@ export class Controller {
     /**
      * The value of `object[ property ]` when the controller was created.
      */
-    initialValue: any;
+    initialValue: T[K];
     /**
      * The outermost container DOM element for this controller.
      */
@@ -373,12 +398,12 @@ export class Controller {
      * 	console.assert( this === controller );
      * } );
      */
-    onChange(callback: (value: unknown) => void): this;
+    onChange(callback: (value: T[K]) => void): this;
     /**
      * Used to access the function bound to `onChange` events. Don't modify this value directly.
      * Use the `controller.onChange( callback )` method instead.
      */
-    _onChange: (value: unknown) => void;
+    _onChange: (value: T[K]) => void;
     /**
      * Calls the onChange methods of this controller and its parent GUI.
      */
@@ -395,12 +420,12 @@ export class Controller {
      * 	console.assert( this === controller );
      * } );
      */
-    onFinishChange(callback: (value: unknown) => void): this;
+    onFinishChange(callback: (value: T[K]) => void): this;
     /**
      * Used to access the function bound to `onFinishChange` events. Don't modify this value
      * directly. Use the `controller.onFinishChange( callback )` method instead.
      */
-    _onFinishChange: (value: unknown) => void;
+    _onFinishChange: (value: T[K]) => void;
     /**
      * Should be called by Controller when its widgets lose focus.
      */
@@ -466,7 +491,82 @@ export class Controller {
      *
      * @param options
      */
-    options(options: object | any[]): Controller;
+    options(options: object | unknown[]): Controller;
+    /**
+     * Calls `updateDisplay()` every animation frame. Pass `false` to stop listening.
+     * @param listen
+     */
+    listen(listen?: boolean): this;
+    /**
+     * Used to determine if the controller is currently listening. Don't modify this value
+     * directly. Use the `controller.listen( true|false )` method instead.
+     */
+    _listening: boolean;
+    _listenCallbackID: number;
+    _listenPrevValue: unknown;
+    /**
+     * Returns `object[ property ]`.
+     */
+    getValue(): T[K];
+    /**
+     * Sets the value of `object[ property ]`, invokes any `onChange` handlers and updates the display.
+     * @param value
+     */
+    setValue(value: T[K]): this;
+    /**
+     * Updates the display to keep it in sync with the current value. Useful for updating your
+     * controllers when their values have been modified outside of the GUI.
+     */
+    updateDisplay(): this;
+    load(value: T[K]): this;
+    save(): T[K];
+    /**
+     * Destroys this controller and removes it from the parent GUI.
+     */
+    destroy(): void;
+}
+export class FunctionController<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, (this: T) => void> = KeyToValueOfType<T, (this: T) => void>,
+> extends Controller<T, K> {
+    constructor(parent: GUI, object: T, property: K);
+    $button: HTMLButtonElement;
+}
+export class NumberController<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
+> extends Controller<T, K> {
+    constructor(
+        parent: GUI,
+        object: T,
+        property: K,
+        min: number | undefined,
+        max: number | undefined,
+        step: number | undefined,
+    );
+    _decimals: unknown;
+    _min: unknown;
+    _max: unknown;
+    _step: unknown;
+    _stepExplicit: boolean;
+    _initInput(): void;
+    $input: HTMLInputElement;
+    _inputFocused: boolean;
+    _initSlider(): void;
+    _hasSlider: boolean;
+    $slider: HTMLDivElement;
+    $fill: HTMLDivElement;
+    _setDraggingStyle(active: unknown, axis?: string): void;
+    _getImplicitStep(): number;
+    _onUpdateMinMax(): void;
+    _normalizeMouseWheel(e: unknown): unknown;
+    _arrowKeyMultiplier(e: unknown): number;
+    _snap(value: unknown): number;
+    _clamp(value: unknown): unknown;
+    _snapClampSetValue(value: unknown): void;
+    get _hasScrollBar(): boolean;
+    get _hasMin(): boolean;
+    get _hasMax(): boolean;
     /**
      * Sets the minimum value. Only works on number controllers.
      * @param min
@@ -491,78 +591,19 @@ export class Controller {
      * @param decimals
      */
     decimals(decimals: number): this;
-    /**
-     * Calls `updateDisplay()` every animation frame. Pass `false` to stop listening.
-     * @param listen
-     */
-    listen(listen?: boolean): this;
-    /**
-     * Used to determine if the controller is currently listening. Don't modify this value
-     * directly. Use the `controller.listen( true|false )` method instead.
-     */
-    _listening: boolean;
-    _listenCallbackID: number;
-    _listenPrevValue: any;
-    /**
-     * Returns `object[ property ]`.
-     */
-    getValue(): any;
-    /**
-     * Sets the value of `object[ property ]`, invokes any `onChange` handlers and updates the display.
-     * @param value
-     */
-    setValue(value: any): this;
-    /**
-     * Updates the display to keep it in sync with the current value. Useful for updating your
-     * controllers when their values have been modified outside of the GUI.
-     */
-    updateDisplay(): this;
-    load(value: any): Controller;
-    save(): any;
-    /**
-     * Destroys this controller and removes it from the parent GUI.
-     */
-    destroy(): void;
 }
-export class FunctionController extends Controller {
-    constructor(parent: any, object: any, property: any);
-    $button: HTMLButtonElement;
-}
-export class NumberController extends Controller {
-    constructor(parent: any, object: any, property: any, min: any, max: any, step: any);
-    _decimals: any;
-    _min: any;
-    _max: any;
-    _step: any;
-    _stepExplicit: boolean;
-    _initInput(): void;
-    $input: HTMLInputElement;
-    _inputFocused: boolean;
-    _initSlider(): void;
-    _hasSlider: boolean;
-    $slider: HTMLDivElement;
-    $fill: HTMLDivElement;
-    _setDraggingStyle(active: any, axis?: string): void;
-    _getImplicitStep(): number;
-    _onUpdateMinMax(): void;
-    _normalizeMouseWheel(e: any): any;
-    _arrowKeyMultiplier(e: any): number;
-    _snap(value: any): number;
-    _clamp(value: any): any;
-    _snapClampSetValue(value: any): void;
-    get _hasScrollBar(): boolean;
-    get _hasMin(): boolean;
-    get _hasMax(): boolean;
-}
-export class OptionController extends Controller {
-    constructor(parent: any, object: any, property: any, options: any);
+export class OptionController<T = Record<string, unknown>, K extends keyof T = keyof T> extends Controller<T, K> {
+    constructor(parent: GUI, object: T, property: K, options: ReadonlyArray<T[K]> | Record<string, T[K]>);
     $select: HTMLSelectElement;
     $display: HTMLDivElement;
-    _values: any[];
-    _names: any[];
+    _values: Array<T[K]>;
+    _names: unknown[];
 }
-export class StringController extends Controller {
-    constructor(parent: any, object: any, property: any);
+export class StringController<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, string> = KeyToValueOfType<T, string>,
+> extends Controller<T, K> {
+    constructor(parent: GUI, object: T, property: K);
     $input: HTMLInputElement;
 }
-declare function normalizeColorString(string: any): string | false;
+declare function normalizeColorString(string: unknown): string | false;
