@@ -2107,19 +2107,23 @@ index bc54732..7fe4043 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl2_volume_instancing.ts b/examples-testing/examples/webgl2_volume_instancing.ts
-index 09e1e58..1711584 100644
+index 09e1e58..3afdda9 100644
 --- a/examples-testing/examples/webgl2_volume_instancing.ts
 +++ b/examples-testing/examples/webgl2_volume_instancing.ts
-@@ -8,7 +8,7 @@ if (WebGL.isWebGL2Available() === false) {
+@@ -8,7 +8,11 @@ if (WebGL.isWebGL2Available() === false) {
      document.body.appendChild(WebGL.getWebGL2ErrorMessage());
  }
  
 -let renderer, scene, camera, controls, clock;
-+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, clock: THREE.Clock;
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    clock: THREE.Clock;
  
  init();
  animate();
-@@ -161,7 +161,7 @@ function init() {
+@@ -161,7 +165,7 @@ function init() {
  
              const mesh = new THREE.InstancedMesh(geometry, material, 50000);
              mesh.onBeforeRender = function () {
