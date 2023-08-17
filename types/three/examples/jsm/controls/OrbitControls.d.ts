@@ -181,8 +181,9 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
 
     /**
      * Set to true to automatically rotate around the target.
-     * Note that if this is enabled, you must call
-     * .update () in your animation loop.
+     * Note that if this is enabled, you must call .update() in your animation loop. If you want the auto-rotate speed
+     * to be independent of the frame rate (the refresh rate of the display), you must pass the time `deltaTime`, in
+     * seconds, to .update().
      */
     autoRotate: boolean;
 
@@ -229,11 +230,11 @@ export class OrbitControls extends EventDispatcher<OrbitControlsEventMap> {
     zoom0: number;
 
     /**
-     * Update the controls. Must be called after any manual changes
-     * to the camera's transform, or in the update loop if .autoRotate
-     * or .enableDamping are set.
+     * Update the controls. Must be called after any manual changes to the camera's transform, or in the update loop if
+     * .autoRotate or .enableDamping are set. `deltaTime`, in seconds, is optional, and is only required if you want the
+     * auto-rotate speed to be independent of the frame rate (the refresh rate of the display).
      */
-    update(): boolean;
+    update(deltaTime?: number): boolean;
 
     /**
      * Adds key event listeners to the given DOM element. `window`
