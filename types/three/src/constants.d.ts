@@ -716,11 +716,13 @@ export const NoColorSpace: '';
 export const SRGBColorSpace: 'srgb';
 export const LinearSRGBColorSpace: 'srgb-linear';
 export const DisplayP3ColorSpace: 'display-p3';
+export const LinearDisplayP3ColorSpace = 'display-p3-linear';
 export type ColorSpace =
     | typeof NoColorSpace
     | typeof SRGBColorSpace
     | typeof LinearSRGBColorSpace
-    | typeof DisplayP3ColorSpace;
+    | typeof DisplayP3ColorSpace
+    | typeof LinearDisplayP3ColorSpace;
 
 // Stencil Op types
 export const ZeroStencilOp: 0;
