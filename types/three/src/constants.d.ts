@@ -596,6 +596,9 @@ export const RGBA_ASTC_12x12_Format: 37821;
  * @remarks Require support for the _EXT_texture_compression_bptc_ WebGL extension.
  */
 export const RGBA_BPTC_Format: 36492;
+export const SRGB_ALPHA_BPTC_Format = 36493;
+export const RGB_BPTC_SIGNED_Format = 36494;
+export const RGB_BPTC_UNSIGNED_Format = 36495;
 
 // RGTC compressed texture formats
 export const RED_RGTC1_Format: 36283;
@@ -634,6 +637,9 @@ export type CompressedPixelFormat =
     | typeof RGBA_ASTC_12x10_Format
     | typeof RGBA_ASTC_12x12_Format
     | typeof RGBA_BPTC_Format
+    | typeof SRGB_ALPHA_BPTC_Format
+    | typeof RGB_BPTC_SIGNED_Format
+    | typeof RGB_BPTC_UNSIGNED_Format
     | typeof RED_RGTC1_Format
     | typeof SIGNED_RED_RGTC1_Format
     | typeof RED_GREEN_RGTC2_Format
