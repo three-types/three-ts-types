@@ -1,9 +1,9 @@
 type EasingFunction = (amount: number) => number;
-type EasingFunctionGroup = {
+interface EasingFunctionGroup {
     In: EasingFunction;
     Out: EasingFunction;
     InOut: EasingFunction;
-};
+}
 /**
  * The Ease class provides a collection of easing functions for use with tween.js.
  */
@@ -26,13 +26,7 @@ declare const Easing: Readonly<{
     generatePow(power?: number): EasingFunctionGroup;
 }>;
 
-/**
- *
- */
 type InterpolationFunction = (v: number[], k: number) => number;
-/**
- *
- */
 declare const Interpolation: {
     Linear: (v: number[], k: number) => number;
     Bezier: (v: number[], k: number) => number;
@@ -149,6 +143,7 @@ declare function now(): number;
 /**
  * Utils
  */
+// tslint:disable-next-line:no-unnecessary-class
 declare class Sequence {
     private static _nextId;
     static nextId(): number;
@@ -157,7 +152,7 @@ declare class Sequence {
 declare const VERSION = '21.0.0';
 
 declare const nextId: typeof Sequence.nextId;
-declare function getAll(): Tween<UnknownProps>[];
+declare function getAll(): Array<Tween<UnknownProps>>;
 declare function removeAll(): void;
 declare function add(tween: Tween<UnknownProps>): void;
 declare function remove(tween: Tween<UnknownProps>): void;
@@ -199,7 +194,7 @@ declare const exports: {
     nextId: typeof Sequence.nextId;
     Tween: typeof Tween;
     VERSION: string;
-    getAll: () => Tween<UnknownProps>[];
+    getAll: () => Array<Tween<UnknownProps>>;
     removeAll: () => void;
     add: (tween: Tween<UnknownProps>) => void;
     remove: (tween: Tween<UnknownProps>) => void;
