@@ -144,7 +144,7 @@ declare class Tween<T extends UnknownProps> {
 }
 type UnknownProps = Record<string, any>;
 
-declare const now: () => number;
+declare function now(): number;
 
 /**
  * Utils
@@ -157,11 +157,11 @@ declare class Sequence {
 declare const VERSION = '21.0.0';
 
 declare const nextId: typeof Sequence.nextId;
-declare const getAll: () => Tween<UnknownProps>[];
-declare const removeAll: () => void;
-declare const add: (tween: Tween<UnknownProps>) => void;
-declare const remove: (tween: Tween<UnknownProps>) => void;
-declare const update: (time?: number, preserve?: boolean) => boolean;
+declare function getAll(): Tween<UnknownProps>[];
+declare function removeAll(): void;
+declare function add(tween: Tween<UnknownProps>): void;
+declare function remove(tween: Tween<UnknownProps>): void;
+declare function update(time?: number, preserve?: boolean): boolean;
 
 declare const exports: {
     Easing: Readonly<{
