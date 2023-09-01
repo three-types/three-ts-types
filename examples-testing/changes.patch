@@ -1286,19 +1286,19 @@ index ad6e3f5..3eec71e 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
-index 97630ab..1cbb2e6 100644
+index 7a0e782..db8aee7 100644
 --- a/examples-testing/examples/misc_exporter_usdz.ts
 +++ b/examples-testing/examples/misc_exporter_usdz.ts
-@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
- init();
- render();
-@@ -45,7 +45,7 @@ function init() {
+ const params = {
+     exportUSDZ: exportUSDZ,
+@@ -50,7 +50,7 @@ function init() {
          const arraybuffer = await exporter.parse(gltf.scene);
          const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
  
@@ -1307,7 +1307,7 @@ index 97630ab..1cbb2e6 100644
          link.href = URL.createObjectURL(blob);
      });
  
-@@ -64,7 +64,7 @@ function createSpotShadowMesh() {
+@@ -78,7 +78,7 @@ function createSpotShadowMesh() {
      canvas.width = 128;
      canvas.height = 128;
  
@@ -1316,6 +1316,15 @@ index 97630ab..1cbb2e6 100644
      const gradient = context.createRadialGradient(
          canvas.width / 2,
          canvas.height / 2,
+@@ -118,7 +118,7 @@ function onWindowResize() {
+ }
+ 
+ function exportUSDZ() {
+-    const link = document.getElementById('link');
++    const link = document.getElementById('link')!;
+     link.click();
+ }
+ 
 diff --git a/examples-testing/examples/misc_lookat.ts b/examples-testing/examples/misc_lookat.ts
 index f6241b9..93e8340 100644
 --- a/examples-testing/examples/misc_lookat.ts
@@ -5783,7 +5792,7 @@ index d3203e3..7b7f06f 100644
 +    }
  }
 diff --git a/examples-testing/examples/webgl_postprocessing_fxaa.ts b/examples-testing/examples/webgl_postprocessing_fxaa.ts
-index 24270de..4012110 100644
+index 18ae7b7..83fb702 100644
 --- a/examples-testing/examples/webgl_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgl_postprocessing_fxaa.ts
 @@ -6,15 +6,20 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
