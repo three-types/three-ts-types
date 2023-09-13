@@ -105,8 +105,6 @@ export * from './lights/DirectionalLight.js';
 export * from './lights/AmbientLight.js';
 export * from './lights/LightShadow.js';
 export * from './lights/Light.js';
-export * from './lights/AmbientLightProbe.js';
-export * from './lights/HemisphereLightProbe.js';
 export * from './lights/LightProbe.js';
 /**
  * Loaders
