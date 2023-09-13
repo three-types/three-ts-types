@@ -11,17 +11,7 @@ Thanks for wanting to make a contribution and wanting to improve this library fo
 
 ## Commit Guidelines
 
-Be sure your commit messages follow this specification: https://www.conventionalcommits.org/en/v1.0.0-beta.4/
-
-## Add yourself as a contributor
-
-This project follows the [all contributors](https://github.com/kentcdodds/all-contributors) specification. To add yourself to the table of contributors on the `README.md`, please use the automated script as part of your PR:
-
-```console
-npm run contributors:add
-```
-
-Follow the prompt and commit `.all-contributorsrc` and `README.md` in the PR. If you've already added yourself to the list and are making a new type of contribution, you can run it again and select the added contribution type.
+Be sure your commit messages follow this specification: https://www.conventionalcommits.org/
 
 ## Testing
 
