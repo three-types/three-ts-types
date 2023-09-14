@@ -156,7 +156,7 @@ export * from './math/Vector2.js';
 export * from './math/Quaternion.js';
 export * from './math/Color.js';
 export * from './math/SphericalHarmonics3.js';
-export { ColorManagement } from './math/ColorManagement.js';
+export { ColorManagement, WorkingColorSpace, DefinedColorSpace } from './math/ColorManagement.js';
 import * as MathUtils from './math/MathUtils.js';
 export { MathUtils };
 /**
