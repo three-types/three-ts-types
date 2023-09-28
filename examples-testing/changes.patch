@@ -1112,6 +1112,35 @@ index d6a4535..63dab8d 100644
 +function saveArrayBuffer(buffer: BufferSource, filename: string) {
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
+diff --git a/examples-testing/examples/misc_exporter_exr.ts b/examples-testing/examples/misc_exporter_exr.ts
+index c8e2e9b..01ede70 100644
+--- a/examples-testing/examples/misc_exporter_exr.ts
++++ b/examples-testing/examples/misc_exporter_exr.ts
+@@ -5,7 +5,14 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: EXRExporter,
++    mesh: THREE.Mesh,
++    controls: OrbitControls,
++    renderTarget: THREE.WebGLRenderTarget,
++    dataTexture: THREE.DataTexture;
+ 
+ const params = {
+     target: 'pmrem',
+@@ -148,7 +155,7 @@ function exportFile() {
+     saveArrayBuffer(result, params.target + '.exr');
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: Uint8Array, filename: string) {
+     const blob = new Blob([buffer], { type: 'image/x-exr' });
+     const link = document.createElement('a');
+ 
 diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
 index 47c8712..7c7ff78 100644
 --- a/examples-testing/examples/misc_exporter_gltf.ts
