@@ -5199,6 +5199,759 @@ index f9cce64..66cf7a7 100644
      if (event.isPrimary === false) return;
  
      setMouseCoords(event.clientX, event.clientY);
+diff --git a/examples-testing/examples/webgl_helpers.ts b/examples-testing/examples/webgl_helpers.ts
+index 5d75326..65c573d 100644
+--- a/examples-testing/examples/webgl_helpers.ts
++++ b/examples-testing/examples/webgl_helpers.ts
+@@ -5,10 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
+ import { VertexTangentsHelper } from 'three/addons/helpers/VertexTangentsHelper.js';
+ 
+-let scene, renderer;
+-let camera, light;
+-let vnh;
+-let vth;
++let scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let camera: THREE.PerspectiveCamera, light: THREE.PointLight;
++let vnh: VertexNormalsHelper;
++let vth: VertexTangentsHelper;
+ 
+ init();
+ animate();
+@@ -44,7 +44,7 @@ function init() {
+ 
+     const loader = new GLTFLoader();
+     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        const mesh = gltf.scene.children[0];
++        const mesh = gltf.scene.children[0] as THREE.Mesh;
+ 
+         mesh.geometry.computeTangents(); // generates bad data due to degenerate UVs
+ 
+@@ -66,7 +66,7 @@ function init() {
+         scene.add(new THREE.BoxHelper(mesh));
+ 
+         const wireframe = new THREE.WireframeGeometry(mesh.geometry);
+-        let line = new THREE.LineSegments(wireframe);
++        let line: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> = new THREE.LineSegments(wireframe);
+         line.material.depthTest = false;
+         line.material.opacity = 0.25;
+         line.material.transparent = true;
+diff --git a/examples-testing/examples/webgl_instancing_dynamic.ts b/examples-testing/examples/webgl_instancing_dynamic.ts
+index 8c94528..b0e453e 100644
+--- a/examples-testing/examples/webgl_instancing_dynamic.ts
++++ b/examples-testing/examples/webgl_instancing_dynamic.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+-let mesh;
++let mesh: THREE.InstancedMesh;
+ const amount = parseInt(window.location.search.slice(1)) || 10;
+ const count = Math.pow(amount, 3);
+ const dummy = new THREE.Object3D();
+diff --git a/examples-testing/examples/webgl_instancing_performance.ts b/examples-testing/examples/webgl_instancing_performance.ts
+index 62ed935..b34abd6 100644
+--- a/examples-testing/examples/webgl_instancing_performance.ts
++++ b/examples-testing/examples/webgl_instancing_performance.ts
+@@ -6,8 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+ 
+-let container, stats, gui, guiStatsEl;
+-let camera, controls, scene, renderer, material;
++let container: HTMLElement, stats: Stats, gui: GUI, guiStatsEl: HTMLDivElement;
++let camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    material: THREE.MeshNormalMaterial;
+ 
+ // gui
+ 
+@@ -31,15 +35,15 @@ animate();
+ //
+ 
+ function clean() {
+-    const meshes = [];
++    const meshes: THREE.Mesh[] = [];
+ 
+     scene.traverse(function (object) {
+-        if (object.isMesh) meshes.push(object);
++        if ((object as THREE.Mesh).isMesh) meshes.push(object as THREE.Mesh);
+     });
+ 
+     for (let i = 0; i < meshes.length; i++) {
+         const mesh = meshes[i];
+-        mesh.material.dispose();
++        (mesh.material as THREE.Material).dispose();
+         mesh.geometry.dispose();
+ 
+         scene.remove(mesh);
+@@ -51,7 +55,7 @@ const randomizeMatrix = (function () {
+     const quaternion = new THREE.Quaternion();
+     const scale = new THREE.Vector3();
+ 
+-    return function (matrix) {
++    return function (matrix: THREE.Matrix4) {
+         position.x = Math.random() * 40 - 20;
+         position.y = Math.random() * 40 - 20;
+         position.z = Math.random() * 40 - 20;
+@@ -93,7 +97,7 @@ function initMesh() {
+     });
+ }
+ 
+-function makeInstanced(geometry) {
++function makeInstanced(geometry: THREE.BufferGeometry) {
+     const matrix = new THREE.Matrix4();
+     const mesh = new THREE.InstancedMesh(geometry, material, api.count);
+ 
+@@ -114,7 +118,7 @@ function makeInstanced(geometry) {
+     ].join('<br/>');
+ }
+ 
+-function makeMerged(geometry) {
++function makeMerged(geometry: THREE.BufferGeometry) {
+     const geometries = [];
+     const matrix = new THREE.Matrix4();
+ 
+@@ -139,7 +143,7 @@ function makeMerged(geometry) {
+     ].join('<br/>');
+ }
+ 
+-function makeNaive(geometry) {
++function makeNaive(geometry: THREE.BufferGeometry) {
+     const matrix = new THREE.Matrix4();
+ 
+     for (let i = 0; i < api.count; i++) {
+@@ -175,7 +179,7 @@ function init() {
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(width, height);
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+     container.appendChild(renderer.domElement);
+ 
+     // scene
+@@ -241,7 +245,7 @@ function render() {
+ 
+ //
+ 
+-function getGeometryByteLength(geometry) {
++function getGeometryByteLength(geometry: THREE.BufferGeometry) {
+     let total = 0;
+ 
+     if (geometry.index) total += geometry.index.array.byteLength;
+@@ -254,7 +258,7 @@ function getGeometryByteLength(geometry) {
+ }
+ 
+ // Source: https://stackoverflow.com/a/18650828/1314762
+-function formatBytes(bytes, decimals) {
++function formatBytes(bytes: number, decimals: number) {
+     if (bytes === 0) return '0 bytes';
+ 
+     const k = 1024;
+diff --git a/examples-testing/examples/webgl_instancing_raycast.ts b/examples-testing/examples/webgl_instancing_raycast.ts
+index 71f0d6e..ba3ebb0 100644
+--- a/examples-testing/examples/webgl_instancing_raycast.ts
++++ b/examples-testing/examples/webgl_instancing_raycast.ts
+@@ -4,9 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, controls, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    controls: OrbitControls,
++    stats: Stats;
+ 
+-let mesh;
++let mesh: THREE.InstancedMesh;
+ const amount = parseInt(window.location.search.slice(1)) || 10;
+ const count = Math.pow(amount, 3);
+ 
+@@ -84,7 +88,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onMouseMove(event) {
++function onMouseMove(event: MouseEvent) {
+     event.preventDefault();
+ 
+     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+@@ -101,14 +105,14 @@ function animate() {
+     const intersection = raycaster.intersectObject(mesh);
+ 
+     if (intersection.length > 0) {
+-        const instanceId = intersection[0].instanceId;
++        const instanceId = intersection[0].instanceId!;
+ 
+         mesh.getColorAt(instanceId, color);
+ 
+         if (color.equals(white)) {
+             mesh.setColorAt(instanceId, color.setHex(Math.random() * 0xffffff));
+ 
+-            mesh.instanceColor.needsUpdate = true;
++            mesh.instanceColor!.needsUpdate = true;
+         }
+     }
+ 
+diff --git a/examples-testing/examples/webgl_instancing_scatter.ts b/examples-testing/examples/webgl_instancing_scatter.ts
+index af7f39d..574f5c7 100644
+--- a/examples-testing/examples/webgl_instancing_scatter.ts
++++ b/examples-testing/examples/webgl_instancing_scatter.ts
+@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ const api = {
+     count: 2000,
+@@ -15,11 +15,11 @@ const api = {
+     backgroundColor: 0xe39469,
+ };
+ 
+-let stemMesh, blossomMesh;
+-let stemGeometry, blossomGeometry;
+-let stemMaterial, blossomMaterial;
++let stemMesh: THREE.InstancedMesh, blossomMesh: THREE.InstancedMesh;
++let stemGeometry: THREE.BufferGeometry, blossomGeometry: THREE.BufferGeometry;
++let stemMaterial: THREE.Material | THREE.Material[], blossomMaterial: THREE.Material | THREE.Material[];
+ 
+-let sampler;
++let sampler: MeshSurfaceSampler;
+ const count = api.count;
+ const ages = new Float32Array(count);
+ const scales = new Float32Array(count);
+@@ -35,21 +35,21 @@ const surfaceMaterial = new THREE.MeshLambertMaterial({ color: api.surfaceColor,
+ const surface = new THREE.Mesh(surfaceGeometry, surfaceMaterial);
+ 
+ // Source: https://gist.github.com/gre/1650294
+-const easeOutCubic = function (t) {
++const easeOutCubic = function (t: number) {
+     return --t * t * t + 1;
+ };
+ 
+ // Scaling curve causes particles to grow quickly, ease gradually into full scale, then
+ // disappear quickly. More of the particle's lifetime is spent around full scale.
+-const scaleCurve = function (t) {
++const scaleCurve = function (t: number) {
+     return Math.abs(easeOutCubic((t > 0.5 ? 1 - t : t) * 2));
+ };
+ 
+ const loader = new GLTFLoader();
+ 
+ loader.load('./models/gltf/Flower/Flower.glb', function (gltf) {
+-    const _stemMesh = gltf.scene.getObjectByName('Stem');
+-    const _blossomMesh = gltf.scene.getObjectByName('Blossom');
++    const _stemMesh = gltf.scene.getObjectByName('Stem') as THREE.Mesh;
++    const _blossomMesh = gltf.scene.getObjectByName('Blossom') as THREE.Mesh;
+ 
+     stemGeometry = _stemMesh.geometry.clone();
+     blossomGeometry = _blossomMesh.geometry.clone();
+@@ -179,7 +179,7 @@ function resample() {
+     blossomMesh.instanceMatrix.needsUpdate = true;
+ }
+ 
+-function resampleParticle(i) {
++function resampleParticle(i: number) {
+     sampler.sample(_position, _normal);
+     _normal.add(_position);
+ 
+@@ -192,7 +192,7 @@ function resampleParticle(i) {
+     blossomMesh.setMatrixAt(i, dummy.matrix);
+ }
+ 
+-function updateParticle(i) {
++function updateParticle(i: number) {
+     // Update lifecycle.
+ 
+     ages[i] += 0.005;
+diff --git a/examples-testing/examples/webgl_interactive_buffergeometry.ts b/examples-testing/examples/webgl_interactive_buffergeometry.ts
+index fafa7a1..98a202c 100644
+--- a/examples-testing/examples/webgl_interactive_buffergeometry.ts
++++ b/examples-testing/examples/webgl_interactive_buffergeometry.ts
+@@ -2,19 +2,19 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let raycaster, pointer;
++let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
+ 
+-let mesh, line;
++let mesh: THREE.Mesh, line: THREE.Line;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -147,7 +147,7 @@ function init() {
+ 
+     geometry.computeBoundingSphere();
+ 
+-    let material = new THREE.MeshPhongMaterial({
++    let material: THREE.Material = new THREE.MeshPhongMaterial({
+         color: 0xaaaaaa,
+         specular: 0xffffff,
+         shininess: 250,
+@@ -197,7 +197,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+@@ -223,10 +223,10 @@ function render() {
+ 
+     if (intersects.length > 0) {
+         const intersect = intersects[0];
+-        const face = intersect.face;
++        const face = intersect.face!;
+ 
+-        const linePosition = line.geometry.attributes.position;
+-        const meshPosition = mesh.geometry.attributes.position;
++        const linePosition = line.geometry.attributes.position as THREE.BufferAttribute;
++        const meshPosition = mesh.geometry.attributes.position as THREE.BufferAttribute;
+ 
+         linePosition.copyAt(0, meshPosition, face.a);
+         linePosition.copyAt(1, meshPosition, face.b);
+diff --git a/examples-testing/examples/webgl_interactive_cubes.ts b/examples-testing/examples/webgl_interactive_cubes.ts
+index c082289..a126b56 100644
+--- a/examples-testing/examples/webgl_interactive_cubes.ts
++++ b/examples-testing/examples/webgl_interactive_cubes.ts
+@@ -2,10 +2,10 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats;
+-let camera, scene, raycaster, renderer;
++let stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, raycaster: THREE.Raycaster, renderer: THREE.WebGLRenderer;
+ 
+-let INTERSECTED;
++let INTERSECTED: (THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> & { currentHex?: number }) | null;
+ let theta = 0;
+ 
+ const pointer = new THREE.Vector2();
+@@ -68,7 +68,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: MouseEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+@@ -100,14 +100,14 @@ function render() {
+ 
+     if (intersects.length > 0) {
+         if (INTERSECTED != intersects[0].object) {
+-            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
++            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+ 
+-            INTERSECTED = intersects[0].object;
++            INTERSECTED = intersects[0].object as THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>;
+             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+             INTERSECTED.material.emissive.setHex(0xff0000);
+         }
+     } else {
+-        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
++        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+ 
+         INTERSECTED = null;
+     }
+diff --git a/examples-testing/examples/webgl_interactive_cubes_gpu.ts b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
+index f80c89f..59c40eb 100644
+--- a/examples-testing/examples/webgl_interactive_cubes_gpu.ts
++++ b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
+@@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+ 
+-let container, stats;
+-let camera, controls, scene, renderer;
+-let pickingTexture, pickingScene;
+-let highlightBox;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, controls: TrackballControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let pickingTexture: THREE.WebGLRenderTarget, pickingScene: THREE.Scene;
++let highlightBox: THREE.Mesh;
+ 
+-const pickingData = [];
++const pickingData: { position: THREE.Vector3; rotation: THREE.Euler; scale: THREE.Vector3 }[] = [];
+ 
+ const pointer = new THREE.Vector2();
+ const offset = new THREE.Vector3(10, 10, 10);
+@@ -20,7 +20,7 @@ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
+     camera.position.z = 1000;
+@@ -74,7 +74,7 @@ function init() {
+ 					`,
+     });
+ 
+-    function applyId(geometry, id) {
++    function applyId(geometry: THREE.BoxGeometry, id: number) {
+         const position = geometry.attributes.position;
+         const array = new Int16Array(position.count);
+         array.fill(id);
+@@ -84,7 +84,7 @@ function init() {
+         geometry.setAttribute('id', bufferAttribute);
+     }
+ 
+-    function applyVertexColors(geometry, color) {
++    function applyVertexColors(geometry: THREE.BoxGeometry, color: THREE.Color) {
+         const position = geometry.attributes.position;
+         const colors = [];
+ 
+@@ -166,7 +166,7 @@ function init() {
+ 
+ //
+ 
+-function onPointerMove(e) {
++function onPointerMove(e: PointerEvent) {
+     pointer.x = e.clientX;
+     pointer.y = e.clientY;
+ }
+diff --git a/examples-testing/examples/webgl_interactive_cubes_ortho.ts b/examples-testing/examples/webgl_interactive_cubes_ortho.ts
+index 92396d7..4639221 100644
+--- a/examples-testing/examples/webgl_interactive_cubes_ortho.ts
++++ b/examples-testing/examples/webgl_interactive_cubes_ortho.ts
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats;
+-let camera, scene, raycaster, renderer;
++let stats: Stats;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, raycaster: THREE.Raycaster, renderer: THREE.WebGLRenderer;
+ 
+ let theta = 0;
+-let INTERSECTED;
++let INTERSECTED: (THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> & { currentHex?: number }) | null;
+ 
+ const pointer = new THREE.Vector2();
+ const radius = 25;
+@@ -83,7 +83,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+@@ -115,14 +115,14 @@ function render() {
+ 
+     if (intersects.length > 0) {
+         if (INTERSECTED != intersects[0].object) {
+-            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
++            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+ 
+-            INTERSECTED = intersects[0].object;
++            INTERSECTED = intersects[0].object as THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>;
+             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+             INTERSECTED.material.emissive.setHex(0xff0000);
+         }
+     } else {
+-        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
++        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+ 
+         INTERSECTED = null;
+     }
+diff --git a/examples-testing/examples/webgl_interactive_lines.ts b/examples-testing/examples/webgl_interactive_lines.ts
+index 69a1916..18bc732 100644
+--- a/examples-testing/examples/webgl_interactive_lines.ts
++++ b/examples-testing/examples/webgl_interactive_lines.ts
+@@ -2,8 +2,13 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
+-let camera, scene, raycaster, renderer, parentTransform, sphereInter;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    raycaster: THREE.Raycaster,
++    renderer: THREE.WebGLRenderer,
++    parentTransform: THREE.Object3D,
++    sphereInter: THREE.Mesh;
+ 
+ const pointer = new THREE.Vector2();
+ const radius = 100;
+@@ -121,7 +126,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+diff --git a/examples-testing/examples/webgl_interactive_points.ts b/examples-testing/examples/webgl_interactive_points.ts
+index 99bad4a..eb62bf3 100644
+--- a/examples-testing/examples/webgl_interactive_points.ts
++++ b/examples-testing/examples/webgl_interactive_points.ts
+@@ -4,20 +4,20 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+ 
+-let renderer, scene, camera, stats;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+ 
+-let particles;
++let particles: THREE.Points;
+ 
+ const PARTICLE_SIZE = 20;
+ 
+-let raycaster, intersects;
+-let pointer, INTERSECTED;
++let raycaster: THREE.Raycaster, intersects;
++let pointer: THREE.Vector2, INTERSECTED: number | null;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+ 
+@@ -26,7 +26,7 @@ function init() {
+ 
+     //
+ 
+-    let boxGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
++    let boxGeometry: THREE.BufferGeometry = new THREE.BoxGeometry(200, 200, 200, 16, 16, 16);
+ 
+     // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
+ 
+@@ -39,8 +39,8 @@ function init() {
+ 
+     const positionAttribute = boxGeometry.getAttribute('position');
+ 
+-    const colors = [];
+-    const sizes = [];
++    const colors: number[] = [];
++    const sizes: number[] = [];
+ 
+     const color = new THREE.Color();
+ 
+@@ -64,8 +64,8 @@ function init() {
+             pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/disc.png') },
+             alphaTest: { value: 0.9 },
+         },
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+     });
+ 
+     //
+@@ -96,7 +96,7 @@ function init() {
+     document.addEventListener('pointermove', onPointerMove);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+@@ -128,9 +128,9 @@ function render() {
+ 
+     if (intersects.length > 0) {
+         if (INTERSECTED != intersects[0].index) {
+-            attributes.size.array[INTERSECTED] = PARTICLE_SIZE;
++            attributes.size.array[INTERSECTED!] = PARTICLE_SIZE;
+ 
+-            INTERSECTED = intersects[0].index;
++            INTERSECTED = intersects[0].index!;
+ 
+             attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
+             attributes.size.needsUpdate = true;
+diff --git a/examples-testing/examples/webgl_interactive_raycasting_points.ts b/examples-testing/examples/webgl_interactive_raycasting_points.ts
+index ac4c0ba..a985151 100644
+--- a/examples-testing/examples/webgl_interactive_raycasting_points.ts
++++ b/examples-testing/examples/webgl_interactive_raycasting_points.ts
+@@ -2,16 +2,16 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let renderer, scene, camera, stats;
+-let pointclouds;
+-let raycaster;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
++let pointclouds: THREE.Points[];
++let raycaster: THREE.Raycaster;
+ let intersection = null;
+ let spheresIndex = 0;
+-let clock;
++let clock: THREE.Clock;
+ let toggle = 0;
+ 
+ const pointer = new THREE.Vector2();
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ 
+ const threshold = 0.1;
+ const pointSize = 0.05;
+@@ -22,7 +22,7 @@ const rotateY = new THREE.Matrix4().makeRotationY(0.005);
+ init();
+ animate();
+ 
+-function generatePointCloudGeometry(color, width, length) {
++function generatePointCloudGeometry(color: THREE.Color, width: number, length: number) {
+     const geometry = new THREE.BufferGeometry();
+     const numPoints = width * length;
+ 
+@@ -59,14 +59,14 @@ function generatePointCloudGeometry(color, width, length) {
+     return geometry;
+ }
+ 
+-function generatePointcloud(color, width, length) {
++function generatePointcloud(color: THREE.Color, width: number, length: number) {
+     const geometry = generatePointCloudGeometry(color, width, length);
+     const material = new THREE.PointsMaterial({ size: pointSize, vertexColors: true });
+ 
+     return new THREE.Points(geometry, material);
+ }
+ 
+-function generateIndexedPointcloud(color, width, length) {
++function generateIndexedPointcloud(color: THREE.Color, width: number, length: number) {
+     const geometry = generatePointCloudGeometry(color, width, length);
+     const numPoints = width * length;
+     const indices = new Uint16Array(numPoints);
+@@ -87,7 +87,7 @@ function generateIndexedPointcloud(color, width, length) {
+     return new THREE.Points(geometry, material);
+ }
+ 
+-function generateIndexedWithOffsetPointcloud(color, width, length) {
++function generateIndexedWithOffsetPointcloud(color: THREE.Color, width: number, length: number) {
+     const geometry = generatePointCloudGeometry(color, width, length);
+     const numPoints = width * length;
+     const indices = new Uint16Array(numPoints);
+@@ -110,7 +110,7 @@ function generateIndexedWithOffsetPointcloud(color, width, length) {
+ }
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+ 
+@@ -174,7 +174,7 @@ function init() {
+     document.addEventListener('pointermove', onPointerMove);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+diff --git a/examples-testing/examples/webgl_interactive_voxelpainter.ts b/examples-testing/examples/webgl_interactive_voxelpainter.ts
+index 48b16f3..dae1d75 100644
+--- a/examples-testing/examples/webgl_interactive_voxelpainter.ts
++++ b/examples-testing/examples/webgl_interactive_voxelpainter.ts
+@@ -1,15 +1,15 @@
+ import * as THREE from 'three';
+ 
+-let camera, scene, renderer;
+-let plane;
+-let pointer,
+-    raycaster,
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let plane: THREE.Mesh;
++let pointer: THREE.Vector2,
++    raycaster: THREE.Raycaster,
+     isShiftDown = false;
+ 
+-let rollOverMesh, rollOverMaterial;
+-let cubeGeo, cubeMaterial;
++let rollOverMesh: THREE.Mesh, rollOverMaterial: THREE.MeshBasicMaterial;
++let cubeGeo: THREE.BoxGeometry, cubeMaterial: THREE.MeshLambertMaterial;
+ 
+-const objects = [];
++const objects: THREE.Object3D[] = [];
+ 
+ init();
+ render();
+@@ -87,7 +87,7 @@ function onWindowResize() {
+     render();
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+ 
+     raycaster.setFromCamera(pointer, camera);
+@@ -97,14 +97,14 @@ function onPointerMove(event) {
+     if (intersects.length > 0) {
+         const intersect = intersects[0];
+ 
+-        rollOverMesh.position.copy(intersect.point).add(intersect.face.normal);
++        rollOverMesh.position.copy(intersect.point).add(intersect.face!.normal);
+         rollOverMesh.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
+ 
+         render();
+     }
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+ 
+     raycaster.setFromCamera(pointer, camera);
+@@ -126,7 +126,7 @@ function onPointerDown(event) {
+             // create cube
+         } else {
+             const voxel = new THREE.Mesh(cubeGeo, cubeMaterial);
+-            voxel.position.copy(intersect.point).add(intersect.face.normal);
++            voxel.position.copy(intersect.point).add(intersect.face!.normal);
+             voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
+             scene.add(voxel);
+ 
+@@ -137,7 +137,7 @@ function onPointerDown(event) {
+     }
+ }
+ 
+-function onDocumentKeyDown(event) {
++function onDocumentKeyDown(event: KeyboardEvent) {
+     switch (event.keyCode) {
+         case 16:
+             isShiftDown = true;
+@@ -145,7 +145,7 @@ function onDocumentKeyDown(event) {
+     }
+ }
+ 
+-function onDocumentKeyUp(event) {
++function onDocumentKeyUp(event: KeyboardEvent) {
+     switch (event.keyCode) {
+         case 16:
+             isShiftDown = false;
 diff --git a/examples-testing/examples/webgl_materials_modified.ts b/examples-testing/examples/webgl_materials_modified.ts
 index 3708f65..4c1f793 100644
 --- a/examples-testing/examples/webgl_materials_modified.ts
