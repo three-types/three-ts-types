@@ -98,7 +98,7 @@ const files = {
         'webgl_loader_gltf_transmission',
         // 'webgl_loader_gltf_variants',
         'webgl_loader_gltf_anisotropy',
-        'webgl_loader_ifc',
+        // 'webgl_loader_ifc',
         'webgl_loader_imagebitmap',
         'webgl_loader_kmz',
         'webgl_loader_ldraw',
