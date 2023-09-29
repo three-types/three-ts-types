@@ -114,7 +114,7 @@ const files = {
         'webgl_loader_pcd',
         'webgl_loader_pdb',
         'webgl_loader_ply',
-        'webgl_loader_stl',
+        // 'webgl_loader_stl',
         'webgl_loader_svg',
         'webgl_loader_tilt',
         'webgl_loader_texture_dds',
