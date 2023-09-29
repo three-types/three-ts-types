@@ -5999,6 +5999,529 @@ index 48b16f3..dae1d75 100644
      switch (event.keyCode) {
          case 16:
              isShiftDown = false;
+diff --git a/examples-testing/examples/webgl_layers.ts b/examples-testing/examples/webgl_layers.ts
+index 5b0a450..654840c 100644
+--- a/examples-testing/examples/webgl_layers.ts
++++ b/examples-testing/examples/webgl_layers.ts
+@@ -3,8 +3,8 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ let theta = 0;
+ const radius = 5;
+diff --git a/examples-testing/examples/webgl_lensflares.ts b/examples-testing/examples/webgl_lensflares.ts
+index e24dcd1..da07ba7 100644
+--- a/examples-testing/examples/webgl_lensflares.ts
++++ b/examples-testing/examples/webgl_lensflares.ts
+@@ -5,10 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { FlyControls } from 'three/addons/controls/FlyControls.js';
+ import { Lensflare, LensflareElement } from 'three/addons/objects/Lensflare.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controls: FlyControls;
+ 
+ const clock = new THREE.Clock();
+ 
+@@ -71,7 +71,7 @@ function init() {
+     addLight(0.08, 0.8, 0.5, 0, 0, -1000);
+     addLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
+ 
+-    function addLight(h, s, l, x, y, z) {
++    function addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
+         const light = new THREE.PointLight(0xffffff, 1.5, 2000, 0);
+         light.color.setHSL(h, s, l);
+         light.position.set(x, y, z);
+diff --git a/examples-testing/examples/webgl_lightprobe.ts b/examples-testing/examples/webgl_lightprobe.ts
+index 2efcad5..b21d028 100644
+--- a/examples-testing/examples/webgl_lightprobe.ts
++++ b/examples-testing/examples/webgl_lightprobe.ts
+@@ -5,12 +5,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
+ 
+-let mesh, renderer, scene, camera;
++let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
++    renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera;
+ 
+ let gui;
+ 
+-let lightProbe;
+-let directionalLight;
++let lightProbe: THREE.LightProbe;
++let directionalLight: THREE.DirectionalLight;
+ 
+ // linear color space
+ const API = {
+@@ -55,7 +58,7 @@ function init() {
+     scene.add(directionalLight);
+ 
+     // envmap
+-    const genCubeUrls = function (prefix, postfix) {
++    const genCubeUrls = function (prefix: string, postfix: string) {
+         return [
+             prefix + 'px' + postfix,
+             prefix + 'nx' + postfix,
+diff --git a/examples-testing/examples/webgl_lightprobe_cubecamera.ts b/examples-testing/examples/webgl_lightprobe_cubecamera.ts
+index c714d29..ccf95e0 100644
+--- a/examples-testing/examples/webgl_lightprobe_cubecamera.ts
++++ b/examples-testing/examples/webgl_lightprobe_cubecamera.ts
+@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
+ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
+ 
+-let renderer, scene, camera, cubeCamera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, cubeCamera: THREE.CubeCamera;
+ 
+-let lightProbe;
++let lightProbe: THREE.LightProbe;
+ 
+ init();
+ 
+@@ -40,7 +40,7 @@ function init() {
+     scene.add(lightProbe);
+ 
+     // envmap
+-    const genCubeUrls = function (prefix, postfix) {
++    const genCubeUrls = function (prefix: string, postfix: string) {
+         return [
+             prefix + 'px' + postfix,
+             prefix + 'nx' + postfix,
+diff --git a/examples-testing/examples/webgl_lights_hemisphere.ts b/examples-testing/examples/webgl_lights_hemisphere.ts
+index 71e1d3d..73aa07c 100644
+--- a/examples-testing/examples/webgl_lights_hemisphere.ts
++++ b/examples-testing/examples/webgl_lights_hemisphere.ts
+@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
+-const mixers = [];
+-let stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++const mixers: THREE.AnimationMixer[] = [];
++let stats: Stats;
+ 
+ const clock = new THREE.Clock();
+ 
+@@ -15,7 +15,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 5000);
+     camera.position.set(0, 0, 250);
+@@ -75,8 +75,8 @@ function init() {
+ 
+     // SKYDOME
+ 
+-    const vertexShader = document.getElementById('vertexShader').textContent;
+-    const fragmentShader = document.getElementById('fragmentShader').textContent;
++    const vertexShader = document.getElementById('vertexShader')!.textContent!;
++    const fragmentShader = document.getElementById('fragmentShader')!.textContent!;
+     const uniforms = {
+         topColor: { value: new THREE.Color(0x0077ff) },
+         bottomColor: { value: new THREE.Color(0xffffff) },
+diff --git a/examples-testing/examples/webgl_lights_physical.ts b/examples-testing/examples/webgl_lights_physical.ts
+index c284477..1966715 100644
+--- a/examples-testing/examples/webgl_lights_physical.ts
++++ b/examples-testing/examples/webgl_lights_physical.ts
+@@ -5,13 +5,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, bulbLight, bulbMat, hemiLight, stats;
+-let ballMat, cubeMat, floorMat;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    bulbLight: THREE.PointLight,
++    bulbMat: THREE.MeshStandardMaterial,
++    hemiLight: THREE.HemisphereLight,
++    stats: Stats;
++let ballMat: THREE.MeshStandardMaterial, cubeMat: THREE.MeshStandardMaterial, floorMat: THREE.MeshStandardMaterial;
+ 
+ let previousShadowMap = false;
+ 
+ // ref for lumens: http://www.power-sure.com/lumens.htm
+-const bulbLuminousPowers = {
++const bulbLuminousPowers: Record<string, number> = {
+     '110000 lm (1000W)': 110000,
+     '3500 lm (300W)': 3500,
+     '1700 lm (100W)': 1700,
+@@ -23,7 +29,7 @@ const bulbLuminousPowers = {
+ };
+ 
+ // ref for solar irradiances: https://en.wikipedia.org/wiki/Lux
+-const hemiLuminousIrradiances = {
++const hemiLuminousIrradiances: Record<string, number> = {
+     '0.0001 lx (Moonless Night)': 0.0001,
+     '0.002 lx (Night Airglow)': 0.002,
+     '0.5 lx (Full Moon)': 0.5,
+@@ -48,7 +54,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     stats = new Stats();
+     container.appendChild(stats.dom);
+diff --git a/examples-testing/examples/webgl_lights_pointlights.ts b/examples-testing/examples/webgl_lights_pointlights.ts
+index b3c17f4..b51888a 100644
+--- a/examples-testing/examples/webgl_lights_pointlights.ts
++++ b/examples-testing/examples/webgl_lights_pointlights.ts
+@@ -4,7 +4,15 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+ 
+-let camera, scene, renderer, light1, light2, light3, light4, object, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    light1: THREE.PointLight,
++    light2: THREE.PointLight,
++    light3: THREE.PointLight,
++    light4: THREE.PointLight,
++    object: THREE.Group,
++    stats: Stats;
+ 
+ const clock = new THREE.Clock();
+ 
+diff --git a/examples-testing/examples/webgl_lights_rectarealight.ts b/examples-testing/examples/webgl_lights_rectarealight.ts
+index b841fa6..f305161 100644
+--- a/examples-testing/examples/webgl_lights_rectarealight.ts
++++ b/examples-testing/examples/webgl_lights_rectarealight.ts
+@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+ import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+ 
+-let renderer, scene, camera;
+-let stats, meshKnot;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let stats: Stats, meshKnot: THREE.Mesh;
+ 
+ init();
+ 
+@@ -70,7 +70,7 @@ function onWindowResize() {
+     camera.updateProjectionMatrix();
+ }
+ 
+-function animation(time) {
++function animation(time: DOMHighResTimeStamp) {
+     meshKnot.rotation.y = time / 1000;
+ 
+     renderer.render(scene, camera);
+diff --git a/examples-testing/examples/webgl_lights_spotlight.ts b/examples-testing/examples/webgl_lights_spotlight.ts
+index 983afa6..47b24a2 100644
+--- a/examples-testing/examples/webgl_lights_spotlight.ts
++++ b/examples-testing/examples/webgl_lights_spotlight.ts
+@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let renderer, scene, camera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+ 
+-let spotLight, lightHelper;
++let spotLight: THREE.SpotLight, lightHelper: THREE.SpotLightHelper;
+ 
+ init();
+ 
+@@ -43,7 +43,7 @@ function init() {
+     const loader = new THREE.TextureLoader().setPath('textures/');
+     const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
+ 
+-    const textures = { none: null };
++    const textures: Record<string, THREE.Texture | null> = { none: null };
+ 
+     for (let i = 0; i < filenames.length; i++) {
+         const filename = filenames[i];
+@@ -156,8 +156,8 @@ function init() {
+         renderer.shadowMap.enabled = val;
+ 
+         scene.traverse(function (child) {
+-            if (child.material) {
+-                child.material.needsUpdate = true;
++            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
++                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
+             }
+         });
+     });
+diff --git a/examples-testing/examples/webgl_lights_spotlights.ts b/examples-testing/examples/webgl_lights_spotlights.ts
+index da6917b..ae113e9 100644
+--- a/examples-testing/examples/webgl_lights_spotlights.ts
++++ b/examples-testing/examples/webgl_lights_spotlights.ts
+@@ -28,7 +28,7 @@ const spotLight1 = createSpotlight(0xff7f00);
+ const spotLight2 = createSpotlight(0x00ff7f);
+ const spotLight3 = createSpotlight(0x7f00ff);
+ 
+-let lightHelper1, lightHelper2, lightHelper3;
++let lightHelper1: THREE.SpotLightHelper, lightHelper2: THREE.SpotLightHelper, lightHelper3: THREE.SpotLightHelper;
+ 
+ function init() {
+     renderer.shadowMap.enabled = true;
+@@ -67,7 +67,7 @@ function init() {
+     controls.update();
+ }
+ 
+-function createSpotlight(color) {
++function createSpotlight(color: number) {
+     const newObj = new THREE.SpotLight(color, 10);
+ 
+     newObj.castShadow = true;
+@@ -85,7 +85,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function tween(light) {
++function tween(light: THREE.SpotLight) {
+     new TWEEN.Tween(light)
+         .to(
+             {
+diff --git a/examples-testing/examples/webgl_lines_colors.ts b/examples-testing/examples/webgl_lines_colors.ts
+index 0582e48..fa920c8 100644
+--- a/examples-testing/examples/webgl_lines_colors.ts
++++ b/examples-testing/examples/webgl_lines_colors.ts
+@@ -8,7 +8,7 @@ let mouseX = 0,
+ let windowHalfX = window.innerWidth / 2;
+ let windowHalfY = window.innerHeight / 2;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+@@ -110,7 +110,7 @@ function init() {
+     const scale = 0.3,
+         d = 225;
+ 
+-    const parameters = [
++    const parameters: [THREE.Material, number, [number, number, number], THREE.BufferGeometry][] = [
+         [material, scale * 1.5, [-d, -d / 2, 0], geometry1],
+         [material, scale * 1.5, [0, -d / 2, 0], geometry2],
+         [material, scale * 1.5, [d, -d / 2, 0], geometry3],
+@@ -152,7 +152,7 @@ function onWindowResize() {
+ 
+ //
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+@@ -177,7 +177,7 @@ function render() {
+     for (let i = 0; i < scene.children.length; i++) {
+         const object = scene.children[i];
+ 
+-        if (object.isLine) {
++        if ((object as THREE.Line).isLine) {
+             object.rotation.y = time * (i % 2 ? 1 : -1);
+         }
+     }
+diff --git a/examples-testing/examples/webgl_lines_dashed.ts b/examples-testing/examples/webgl_lines_dashed.ts
+index 32f8f9c..4871ed8 100644
+--- a/examples-testing/examples/webgl_lines_dashed.ts
++++ b/examples-testing/examples/webgl_lines_dashed.ts
+@@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+ 
+-let renderer, scene, camera, stats;
+-const objects = [];
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
++const objects: THREE.Object3D[] = [];
+ 
+ const WIDTH = window.innerWidth,
+     HEIGHT = window.innerHeight;
+@@ -63,7 +63,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function box(width, height, depth) {
++function box(width: number, height: number, depth: number) {
+     (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+ 
+     const geometry = new THREE.BufferGeometry();
+@@ -178,7 +178,7 @@ function render() {
+     const time = Date.now() * 0.001;
+ 
+     scene.traverse(function (object) {
+-        if (object.isLine) {
++        if ((object as THREE.Line).isLine) {
+             object.rotation.x = 0.25 * time;
+             object.rotation.y = 0.25 * time;
+         }
+diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
+index abfbe1d..40d397e 100644
+--- a/examples-testing/examples/webgl_lines_fat.ts
++++ b/examples-testing/examples/webgl_lines_fat.ts
+@@ -10,15 +10,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+ import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+ import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+ 
+-let line, renderer, scene, camera, camera2, controls;
+-let line1;
+-let matLine, matLineBasic, matLineDashed;
+-let stats, gpuPanel;
+-let gui;
++let line: Line2,
++    renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    camera2: THREE.PerspectiveCamera,
++    controls: OrbitControls;
++let line1: THREE.Line;
++let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
++let stats: Stats, gpuPanel: GPUStatsPanel;
++let gui: GUI;
+ 
+ // viewport
+-let insetWidth;
+-let insetHeight;
++let insetWidth: number;
++let insetHeight: number;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
+index a40a775..bcbf72a 100644
+--- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
++++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
+@@ -11,12 +11,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
+ import { Line2 } from 'three/addons/lines/Line2.js';
+ import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
+ 
+-let line, thresholdLine, segments, thresholdSegments;
+-let renderer, scene, camera, controls;
+-let sphereInter, sphereOnLine;
+-let stats, gpuPanel;
+-let gui;
+-let clock;
++let line: Line2, thresholdLine: Line2, segments: LineSegments2, thresholdSegments: LineSegments2;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
++let sphereInter: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
++    sphereOnLine: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
++let stats: Stats, gpuPanel: GPUStatsPanel;
++let gui: GUI;
++let clock: THREE.Clock;
+ 
+ const color = new THREE.Color();
+ 
+@@ -24,8 +25,7 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
+ 
+ const raycaster = new THREE.Raycaster();
+ 
+-raycaster.params.Line2 = {};
+-raycaster.params.Line2.threshold = 0;
++raycaster.params.Line2 = { threshold: 0 };
+ 
+ const matLine = new LineMaterial({
+     color: 0xffffff,
+@@ -179,7 +179,7 @@ function onWindowResize() {
+     matThresholdLine.resolution.set(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
+ }
+@@ -212,9 +212,9 @@ function animate() {
+         sphereOnLine.visible = true;
+ 
+         sphereInter.position.copy(intersects[0].point);
+-        sphereOnLine.position.copy(intersects[0].pointOnLine);
++        sphereOnLine.position.copy(intersects[0].pointOnLine!);
+ 
+-        const index = intersects[0].faceIndex;
++        const index = intersects[0].faceIndex!;
+         const colors = obj.geometry.getAttribute('instanceColorStart');
+ 
+         color.fromBufferAttribute(colors, index);
+@@ -236,7 +236,7 @@ function animate() {
+ 
+ //
+ 
+-function switchLine(val) {
++function switchLine(val: number) {
+     switch (val) {
+         case 0:
+             line.visible = true;
+@@ -281,7 +281,7 @@ function initGui() {
+ 
+     gui.add(params, 'width', 1, 10).onChange(function (val) {
+         matLine.linewidth = val;
+-        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
++        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2!.threshold;
+     });
+ 
+     gui.add(params, 'alphaToCoverage').onChange(function (val) {
+@@ -289,8 +289,8 @@ function initGui() {
+     });
+ 
+     gui.add(params, 'threshold', 0, 10).onChange(function (val) {
+-        raycaster.params.Line2.threshold = val;
+-        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
++        raycaster.params.Line2!.threshold = val;
++        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2!.threshold;
+     });
+ 
+     gui.add(params, 'translation', 0, 10).onChange(function (val) {
+diff --git a/examples-testing/examples/webgl_lines_fat_wireframe.ts b/examples-testing/examples/webgl_lines_fat_wireframe.ts
+index b3ca12c..47dca0a 100644
+--- a/examples-testing/examples/webgl_lines_fat_wireframe.ts
++++ b/examples-testing/examples/webgl_lines_fat_wireframe.ts
+@@ -8,15 +8,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+ import { Wireframe } from 'three/addons/lines/Wireframe.js';
+ import { WireframeGeometry2 } from 'three/addons/lines/WireframeGeometry2.js';
+ 
+-let wireframe, renderer, scene, camera, camera2, controls;
+-let wireframe1;
+-let matLine, matLineBasic, matLineDashed;
+-let stats;
+-let gui;
++let wireframe: Wireframe,
++    renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    camera2: THREE.PerspectiveCamera,
++    controls: OrbitControls;
++let wireframe1: THREE.LineSegments;
++let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
++let stats: Stats;
++let gui: GUI;
+ 
+ // viewport
+-let insetWidth;
+-let insetHeight;
++let insetWidth: number;
++let insetHeight: number;
+ 
+ init();
+ animate();
+@@ -42,7 +47,7 @@ function init() {
+ 
+     // Wireframe ( WireframeGeometry2, LineMaterial )
+ 
+-    let geo = new THREE.IcosahedronGeometry(20, 1);
++    let geo: THREE.BufferGeometry = new THREE.IcosahedronGeometry(20, 1);
+ 
+     const geometry = new WireframeGeometry2(geo);
+ 
 diff --git a/examples-testing/examples/webgl_materials_modified.ts b/examples-testing/examples/webgl_materials_modified.ts
 index 3708f65..4c1f793 100644
 --- a/examples-testing/examples/webgl_materials_modified.ts
