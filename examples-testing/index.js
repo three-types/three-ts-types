@@ -96,7 +96,7 @@ const files = {
         'webgl_loader_gltf_lights',
         'webgl_loader_gltf_sheen',
         'webgl_loader_gltf_transmission',
-        'webgl_loader_gltf_variants',
+        // 'webgl_loader_gltf_variants',
         'webgl_loader_gltf_anisotropy',
         'webgl_loader_ifc',
         'webgl_loader_imagebitmap',
