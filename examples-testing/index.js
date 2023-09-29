@@ -102,7 +102,7 @@ const files = {
         'webgl_loader_imagebitmap',
         'webgl_loader_kmz',
         'webgl_loader_lwo',
-        'webgl_loader_md2',
+        // 'webgl_loader_md2',
         'webgl_loader_md2_control',
         'webgl_loader_mdd',
         'webgl_loader_mmd',
