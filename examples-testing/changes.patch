@@ -6504,6 +6504,1131 @@ index b3ca12c..47dca0a 100644
  
      const geometry = new WireframeGeometry2(geo);
  
+diff --git a/examples-testing/examples/webgl_loader_3dm.ts b/examples-testing/examples/webgl_loader_3dm.ts
+index c0ff73f..d910753 100644
+--- a/examples-testing/examples/webgl_loader_3dm.ts
++++ b/examples-testing/examples/webgl_loader_3dm.ts
+@@ -5,8 +5,8 @@ import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let controls, gui;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controls: OrbitControls, gui: GUI;
+ 
+ init();
+ animate();
+@@ -36,7 +36,7 @@ function init() {
+         initGUI(object.userData.layers);
+ 
+         // hide spinner
+-        document.getElementById('loader').style.display = 'none';
++        document.getElementById('loader')!.style.display = 'none';
+     });
+ 
+     controls = new OrbitControls(camera, renderer.domElement);
+@@ -61,7 +61,7 @@ function animate() {
+     requestAnimationFrame(animate);
+ }
+ 
+-function initGUI(layers) {
++function initGUI(layers: { name: string; visible: boolean }[]) {
+     gui = new GUI({ title: 'layers' });
+ 
+     for (let i = 0; i < layers.length; i++) {
+diff --git a/examples-testing/examples/webgl_loader_3ds.ts b/examples-testing/examples/webgl_loader_3ds.ts
+index b0bcebe..a0ae9d6 100644
+--- a/examples-testing/examples/webgl_loader_3ds.ts
++++ b/examples-testing/examples/webgl_loader_3ds.ts
+@@ -3,8 +3,8 @@ import * as THREE from 'three';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { TDSLoader } from 'three/addons/loaders/TDSLoader.js';
+ 
+-let container, controls;
+-let camera, scene, renderer;
++let container: HTMLDivElement, controls: TrackballControls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+@@ -30,9 +30,9 @@ function init() {
+     loader.setResourcePath('models/3ds/portalgun/textures/');
+     loader.load('models/3ds/portalgun/portalgun.3ds', function (object) {
+         object.traverse(function (child) {
+-            if (child.isMesh) {
+-                child.material.specular.setScalar(0.1);
+-                child.material.normalMap = normal;
++            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).isMesh) {
++                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.specular.setScalar(0.1);
++                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.normalMap = normal;
+             }
+         });
+ 
+diff --git a/examples-testing/examples/webgl_loader_3mf.ts b/examples-testing/examples/webgl_loader_3mf.ts
+index c31e321..eecda51 100644
+--- a/examples-testing/examples/webgl_loader_3mf.ts
++++ b/examples-testing/examples/webgl_loader_3mf.ts
+@@ -4,7 +4,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, object, loader, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    object: THREE.Group,
++    loader: ThreeMFLoader,
++    controls: OrbitControls;
+ 
+ const params = {
+     asset: 'cube_gears',
+@@ -73,13 +78,18 @@ function init() {
+     });
+ }
+ 
+-function loadAsset(asset) {
++function loadAsset(asset: string) {
+     loader.load('models/3mf/' + asset + '.3mf', function (group) {
+         if (object) {
+             object.traverse(function (child) {
+-                if (child.material) child.material.dispose();
+-                if (child.material && child.material.map) child.material.map.dispose();
+-                if (child.geometry) child.geometry.dispose();
++                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
++                if (
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material &&
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.map
++                )
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.map!.dispose();
++                if ((child as THREE.Mesh).geometry) (child as THREE.Mesh).geometry.dispose();
+             });
+ 
+             scene.remove(object);
+diff --git a/examples-testing/examples/webgl_loader_3mf_materials.ts b/examples-testing/examples/webgl_loader_3mf_materials.ts
+index fcdd730..3cfb49b 100644
+--- a/examples-testing/examples/webgl_loader_3mf_materials.ts
++++ b/examples-testing/examples/webgl_loader_3mf_materials.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_amf.ts b/examples-testing/examples/webgl_loader_amf.ts
+index ee576e0..7569a04 100644
+--- a/examples-testing/examples/webgl_loader_amf.ts
++++ b/examples-testing/examples/webgl_loader_amf.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { AMFLoader } from 'three/addons/loaders/AMFLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_bvh.ts b/examples-testing/examples/webgl_loader_bvh.ts
+index 22eddd6..ba5f08e 100644
+--- a/examples-testing/examples/webgl_loader_bvh.ts
++++ b/examples-testing/examples/webgl_loader_bvh.ts
+@@ -5,8 +5,8 @@ import { BVHLoader } from 'three/addons/loaders/BVHLoader.js';
+ 
+ const clock = new THREE.Clock();
+ 
+-let camera, controls, scene, renderer;
+-let mixer;
++let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_collada.ts b/examples-testing/examples/webgl_loader_collada.ts
+index 589217f..ee2f586 100644
+--- a/examples-testing/examples/webgl_loader_collada.ts
++++ b/examples-testing/examples/webgl_loader_collada.ts
+@@ -4,14 +4,14 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
+ 
+-let container, stats, clock;
+-let camera, scene, renderer, elf;
++let container: HTMLElement, stats: Stats, clock: THREE.Clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, elf: THREE.Scene;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
+     camera.position.set(8, 10, 8);
+diff --git a/examples-testing/examples/webgl_loader_collada_skinning.ts b/examples-testing/examples/webgl_loader_collada_skinning.ts
+index 4d3f393..a3f95c7 100644
+--- a/examples-testing/examples/webgl_loader_collada_skinning.ts
++++ b/examples-testing/examples/webgl_loader_collada_skinning.ts
+@@ -5,14 +5,14 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let container, stats, clock, controls;
+-let camera, scene, renderer, mixer;
++let container: HTMLElement, stats: Stats, clock: THREE.Clock, controls: OrbitControls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
+     camera.position.set(15, 10, -15);
+diff --git a/examples-testing/examples/webgl_loader_draco.ts b/examples-testing/examples/webgl_loader_draco.ts
+index 4e7d17b..32018ae 100644
+--- a/examples-testing/examples/webgl_loader_draco.ts
++++ b/examples-testing/examples/webgl_loader_draco.ts
+@@ -2,9 +2,9 @@ import * as THREE from 'three';
+ 
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-const container = document.querySelector('#container');
++const container = document.querySelector('#container')!;
+ 
+ // Configure and create Draco decoder.
+ const dracoLoader = new DRACOLoader();
+diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
+index eda3079..5a5a6be 100644
+--- a/examples-testing/examples/webgl_loader_fbx.ts
++++ b/examples-testing/examples/webgl_loader_fbx.ts
+@@ -5,11 +5,11 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ const clock = new THREE.Clock();
+ 
+-let mixer;
++let mixer: THREE.AnimationMixer;
+ 
+ init();
+ animate();
+@@ -63,7 +63,7 @@ function init() {
+         action.play();
+ 
+         object.traverse(function (child) {
+-            if (child.isMesh) {
++            if ((child as THREE.Mesh).isMesh) {
+                 child.castShadow = true;
+                 child.receiveShadow = true;
+             }
+diff --git a/examples-testing/examples/webgl_loader_fbx_nurbs.ts b/examples-testing/examples/webgl_loader_fbx_nurbs.ts
+index 919a96d..7af5eb7 100644
+--- a/examples-testing/examples/webgl_loader_fbx_nurbs.ts
++++ b/examples-testing/examples/webgl_loader_fbx_nurbs.ts
+@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_gcode.ts b/examples-testing/examples/webgl_loader_gcode.ts
+index 6fd3e14..79c6423 100644
+--- a/examples-testing/examples/webgl_loader_gcode.ts
++++ b/examples-testing/examples/webgl_loader_gcode.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GCodeLoader } from 'three/addons/loaders/GCodeLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_gltf.ts b/examples-testing/examples/webgl_loader_gltf.ts
+index 944cee3..3ac9f2b 100644
+--- a/examples-testing/examples/webgl_loader_gltf.ts
++++ b/examples-testing/examples/webgl_loader_gltf.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts b/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
+index 6e240a2..96a3939 100644
+--- a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
++++ b/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let renderer, scene, camera, controls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_gltf_avif.ts b/examples-testing/examples/webgl_loader_gltf_avif.ts
+index 37d6385..68dff97 100644
+--- a/examples-testing/examples/webgl_loader_gltf_avif.ts
++++ b/examples-testing/examples/webgl_loader_gltf_avif.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_gltf_compressed.ts b/examples-testing/examples/webgl_loader_gltf_compressed.ts
+index 8202430..0926a59 100644
+--- a/examples-testing/examples/webgl_loader_gltf_compressed.ts
++++ b/examples-testing/examples/webgl_loader_gltf_compressed.ts
+@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_gltf_instancing.ts b/examples-testing/examples/webgl_loader_gltf_instancing.ts
+index 5d23e77..b8a6814 100644
+--- a/examples-testing/examples/webgl_loader_gltf_instancing.ts
++++ b/examples-testing/examples/webgl_loader_gltf_instancing.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_gltf_iridescence.ts b/examples-testing/examples/webgl_loader_gltf_iridescence.ts
+index 366ee49..1f10a04 100644
+--- a/examples-testing/examples/webgl_loader_gltf_iridescence.ts
++++ b/examples-testing/examples/webgl_loader_gltf_iridescence.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let renderer, scene, camera, controls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+ 
+ init().catch(function (err) {
+     console.error(err);
+diff --git a/examples-testing/examples/webgl_loader_gltf_lights.ts b/examples-testing/examples/webgl_loader_gltf_lights.ts
+index f2bd5b1..7efbb03 100644
+--- a/examples-testing/examples/webgl_loader_gltf_lights.ts
++++ b/examples-testing/examples/webgl_loader_gltf_lights.ts
+@@ -6,7 +6,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ const params = {
+     punctualLightsEnabled: true,
+@@ -66,9 +66,9 @@ function onWindowResize() {
+     render();
+ }
+ 
+-function toggleLights(visible) {
++function toggleLights(visible: boolean) {
+     scene.traverse(function (object) {
+-        if (object.isLight) {
++        if ((object as THREE.Light).isLight) {
+             object.visible = visible;
+         }
+     });
+diff --git a/examples-testing/examples/webgl_loader_gltf_sheen.ts b/examples-testing/examples/webgl_loader_gltf_sheen.ts
+index 39072e9..a336dc5 100644
+--- a/examples-testing/examples/webgl_loader_gltf_sheen.ts
++++ b/examples-testing/examples/webgl_loader_gltf_sheen.ts
+@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+ 
+ init();
+ animate();
+@@ -25,7 +25,10 @@ function init() {
+     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
+         scene.add(gltf.scene);
+ 
+-        const object = gltf.scene.getObjectByName('SheenChair_fabric');
++        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh<
++            THREE.BufferGeometry,
++            THREE.MeshPhysicalMaterial
++        >;
+ 
+         const gui = new GUI();
+ 
+diff --git a/examples-testing/examples/webgl_loader_gltf_transmission.ts b/examples-testing/examples/webgl_loader_gltf_transmission.ts
+index 2d7f5c6..d14e88f 100644
+--- a/examples-testing/examples/webgl_loader_gltf_transmission.ts
++++ b/examples-testing/examples/webgl_loader_gltf_transmission.ts
+@@ -6,7 +6,12 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+-let camera, scene, renderer, controls, clock, mixer;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    controls: OrbitControls,
++    clock: THREE.Clock,
++    mixer: THREE.AnimationMixer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_imagebitmap.ts b/examples-testing/examples/webgl_loader_imagebitmap.ts
+index 4f2900f..ef1da2b 100644
+--- a/examples-testing/examples/webgl_loader_imagebitmap.ts
++++ b/examples-testing/examples/webgl_loader_imagebitmap.ts
+@@ -1,7 +1,7 @@
+ import * as THREE from 'three';
+ 
+-let camera, scene, renderer;
+-let group, cubes;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let group: THREE.Group, cubes: THREE.Group;
+ 
+ init();
+ animate();
+@@ -43,7 +43,7 @@ function addImage() {
+ 
+ const geometry = new THREE.BoxGeometry();
+ 
+-function addCube(material) {
++function addCube(material: THREE.MeshBasicMaterial) {
+     const cube = new THREE.Mesh(geometry, material);
+     cube.position.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
+     cube.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+diff --git a/examples-testing/examples/webgl_loader_kmz.ts b/examples-testing/examples/webgl_loader_kmz.ts
+index f93555e..8793a35 100644
+--- a/examples-testing/examples/webgl_loader_kmz.ts
++++ b/examples-testing/examples/webgl_loader_kmz.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { KMZLoader } from 'three/addons/loaders/KMZLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_lwo.ts b/examples-testing/examples/webgl_loader_lwo.ts
+index d505621..6b1d95a 100644
+--- a/examples-testing/examples/webgl_loader_lwo.ts
++++ b/examples-testing/examples/webgl_loader_lwo.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { LWOLoader } from 'three/addons/loaders/LWOLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_md2_control.ts b/examples-testing/examples/webgl_loader_md2_control.ts
+index 0ce644a..e0ada97 100644
+--- a/examples-testing/examples/webgl_loader_md2_control.ts
++++ b/examples-testing/examples/webgl_loader_md2_control.ts
+@@ -9,10 +9,10 @@ import { Gyroscope } from 'three/addons/misc/Gyroscope.js';
+ let SCREEN_WIDTH = window.innerWidth;
+ let SCREEN_HEIGHT = window.innerHeight;
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-const characters = [];
++const characters: MD2CharacterComplex[] = [];
+ let nCharacters = 0;
+ 
+ let cameraControls;
+@@ -77,10 +77,10 @@ function init() {
+ 
+     const ground = new THREE.Mesh(gg, gm);
+     ground.rotation.x = -Math.PI / 2;
+-    ground.material.map.repeat.set(64, 64);
+-    ground.material.map.wrapS = THREE.RepeatWrapping;
+-    ground.material.map.wrapT = THREE.RepeatWrapping;
+-    ground.material.map.colorSpace = THREE.SRGBColorSpace;
++    ground.material.map!.repeat.set(64, 64);
++    ground.material.map!.wrapS = THREE.RepeatWrapping;
++    ground.material.map!.wrapT = THREE.RepeatWrapping;
++    ground.material.map!.colorSpace = THREE.SRGBColorSpace;
+     // note that because the ground does not cast a shadow, .castShadow is left false
+     ground.receiveShadow = true;
+ 
+@@ -212,7 +212,7 @@ function onWindowResize() {
+     camera.updateProjectionMatrix();
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     switch (event.code) {
+         case 'ArrowUp':
+         case 'KeyW':
+@@ -241,7 +241,7 @@ function onKeyDown(event) {
+     }
+ }
+ 
+-function onKeyUp(event) {
++function onKeyUp(event: KeyboardEvent) {
+     switch (event.code) {
+         case 'ArrowUp':
+         case 'KeyW':
+diff --git a/examples-testing/examples/webgl_loader_mdd.ts b/examples-testing/examples/webgl_loader_mdd.ts
+index a1e76f0..4d3edb9 100644
+--- a/examples-testing/examples/webgl_loader_mdd.ts
++++ b/examples-testing/examples/webgl_loader_mdd.ts
+@@ -2,7 +2,11 @@ import * as THREE from 'three';
+ 
+ import { MDDLoader } from 'three/addons/loaders/MDDLoader.js';
+ 
+-let camera, scene, renderer, mixer, clock;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    mixer: THREE.AnimationMixer,
++    clock: THREE.Clock;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_obj.ts b/examples-testing/examples/webgl_loader_obj.ts
+index 7307f84..44b29b6 100644
+--- a/examples-testing/examples/webgl_loader_obj.ts
++++ b/examples-testing/examples/webgl_loader_obj.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let object;
++let object: THREE.Group;
+ 
+ init();
+ 
+@@ -28,7 +28,8 @@ function init() {
+ 
+     function loadModel() {
+         object.traverse(function (child) {
+-            if (child.isMesh) child.material.map = texture;
++            if ((child as THREE.Mesh).isMesh)
++                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map = texture;
+         });
+ 
+         object.position.y = -0.95;
+@@ -48,10 +49,10 @@ function init() {
+ 
+     // model
+ 
+-    function onProgress(xhr) {
++    function onProgress(xhr: ProgressEvent) {
+         if (xhr.lengthComputable) {
+             const percentComplete = (xhr.loaded / xhr.total) * 100;
+-            console.log('model ' + Math.round(percentComplete, 2) + '% downloaded');
++            console.log('model ' + percentComplete.toFixed(2) + '% downloaded');
+         }
+     }
+ 
+diff --git a/examples-testing/examples/webgl_loader_obj_mtl.ts b/examples-testing/examples/webgl_loader_obj_mtl.ts
+index 4dafab3..00b2416 100644
+--- a/examples-testing/examples/webgl_loader_obj_mtl.ts
++++ b/examples-testing/examples/webgl_loader_obj_mtl.ts
+@@ -4,7 +4,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
+ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+@@ -26,10 +26,10 @@ function init() {
+ 
+     // model
+ 
+-    const onProgress = function (xhr) {
++    const onProgress = function (xhr: ProgressEvent) {
+         if (xhr.lengthComputable) {
+             const percentComplete = (xhr.loaded / xhr.total) * 100;
+-            console.log(Math.round(percentComplete, 2) + '% downloaded');
++            console.log(percentComplete.toFixed(2) + '% downloaded');
+         }
+     };
+ 
+diff --git a/examples-testing/examples/webgl_loader_pcd.ts b/examples-testing/examples/webgl_loader_pcd.ts
+index d69e3fa..312ad67 100644
+--- a/examples-testing/examples/webgl_loader_pcd.ts
++++ b/examples-testing/examples/webgl_loader_pcd.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { PCDLoader } from 'three/addons/loaders/PCDLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgl_loader_pdb.ts b/examples-testing/examples/webgl_loader_pdb.ts
+index 5514f50..c95d5c3 100644
+--- a/examples-testing/examples/webgl_loader_pdb.ts
++++ b/examples-testing/examples/webgl_loader_pdb.ts
+@@ -5,10 +5,10 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
+ import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, labelRenderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, labelRenderer: CSS2DRenderer;
++let controls: TrackballControls;
+ 
+-let root;
++let root: THREE.Group;
+ 
+ const MOLECULES = {
+     Ethanol: 'ethanol.pdb',
+@@ -64,14 +64,14 @@ function init() {
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.getElementById('container').appendChild(renderer.domElement);
++    document.getElementById('container')!.appendChild(renderer.domElement);
+ 
+     labelRenderer = new CSS2DRenderer();
+     labelRenderer.setSize(window.innerWidth, window.innerHeight);
+     labelRenderer.domElement.style.position = 'absolute';
+     labelRenderer.domElement.style.top = '0px';
+     labelRenderer.domElement.style.pointerEvents = 'none';
+-    document.getElementById('container').appendChild(labelRenderer.domElement);
++    document.getElementById('container')!.appendChild(labelRenderer.domElement);
+ 
+     //
+ 
+@@ -97,12 +97,12 @@ function init() {
+ 
+ //
+ 
+-function loadMolecule(model) {
++function loadMolecule(model: string) {
+     const url = 'models/pdb/' + model;
+ 
+     while (root.children.length > 0) {
+         const object = root.children[0];
+-        object.parent.remove(object);
++        object.parent!.remove(object);
+     }
+ 
+     loader.load(url, function (pdb) {
+@@ -114,7 +114,7 @@ function loadMolecule(model) {
+         const sphereGeometry = new THREE.IcosahedronGeometry(1, 3);
+ 
+         geometryAtoms.computeBoundingBox();
+-        geometryAtoms.boundingBox.getCenter(offset).negate();
++        geometryAtoms.boundingBox!.getCenter(offset).negate();
+ 
+         geometryAtoms.translate(offset.x, offset.y, offset.z);
+         geometryBonds.translate(offset.x, offset.y, offset.z);
+@@ -171,7 +171,7 @@ function loadMolecule(model) {
+             start.multiplyScalar(75);
+             end.multiplyScalar(75);
+ 
+-            const object = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial(0xffffff));
++            const object = new THREE.Mesh(boxGeometry, new THREE.MeshPhongMaterial({ color: 0xffffff }));
+             object.position.copy(start);
+             object.position.lerp(end, 0.5);
+             object.scale.set(5, 5, start.distanceTo(end));
+diff --git a/examples-testing/examples/webgl_loader_ply.ts b/examples-testing/examples/webgl_loader_ply.ts
+index f3cb460..7b8a122 100644
+--- a/examples-testing/examples/webgl_loader_ply.ts
++++ b/examples-testing/examples/webgl_loader_ply.ts
+@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, cameraTarget, scene, renderer;
++let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+@@ -100,7 +100,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function addShadowedLight(x, y, z, color, intensity) {
++function addShadowedLight(x: number, y: number, z: number, color: number, intensity: number) {
+     const directionalLight = new THREE.DirectionalLight(color, intensity);
+     directionalLight.position.set(x, y, z);
+     scene.add(directionalLight);
+diff --git a/examples-testing/examples/webgl_loader_svg.ts b/examples-testing/examples/webgl_loader_svg.ts
+index 45361b9..f5d72d3 100644
+--- a/examples-testing/examples/webgl_loader_svg.ts
++++ b/examples-testing/examples/webgl_loader_svg.ts
+@@ -3,14 +3,24 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+ 
+-let renderer, scene, camera, gui, guiData;
++let renderer: THREE.WebGLRenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    gui: GUI,
++    guiData: {
++        currentURL: string;
++        drawFillShapes: boolean;
++        drawStrokes: boolean;
++        fillShapesWireframe: boolean;
++        strokesWireframe: boolean;
++    };
+ 
+ init();
+ 
+ //
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -100,7 +110,7 @@ function createGUI() {
+     }
+ }
+ 
+-function loadSVG(url) {
++function loadSVG(url: string) {
+     //
+ 
+     scene = new THREE.Scene();
+@@ -126,12 +136,12 @@ function loadSVG(url) {
+         let renderOrder = 0;
+ 
+         for (const path of data.paths) {
+-            const fillColor = path.userData.style.fill;
++            const fillColor = path.userData!.style.fill;
+ 
+             if (guiData.drawFillShapes && fillColor !== undefined && fillColor !== 'none') {
+                 const material = new THREE.MeshBasicMaterial({
+                     color: new THREE.Color().setStyle(fillColor),
+-                    opacity: path.userData.style.fillOpacity,
++                    opacity: path.userData!.style.fillOpacity,
+                     transparent: true,
+                     side: THREE.DoubleSide,
+                     depthWrite: false,
+@@ -149,12 +159,12 @@ function loadSVG(url) {
+                 }
+             }
+ 
+-            const strokeColor = path.userData.style.stroke;
++            const strokeColor = path.userData!.style.stroke;
+ 
+             if (guiData.drawStrokes && strokeColor !== undefined && strokeColor !== 'none') {
+                 const material = new THREE.MeshBasicMaterial({
+                     color: new THREE.Color().setStyle(strokeColor),
+-                    opacity: path.userData.style.strokeOpacity,
++                    opacity: path.userData!.style.strokeOpacity,
+                     transparent: true,
+                     side: THREE.DoubleSide,
+                     depthWrite: false,
+@@ -162,7 +172,7 @@ function loadSVG(url) {
+                 });
+ 
+                 for (const subPath of path.subPaths) {
+-                    const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData.style);
++                    const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData!.style);
+ 
+                     if (geometry) {
+                         const mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/webgl_loader_texture_dds.ts b/examples-testing/examples/webgl_loader_texture_dds.ts
+index cac02b8..9f00f89 100644
+--- a/examples-testing/examples/webgl_loader_texture_dds.ts
++++ b/examples-testing/examples/webgl_loader_texture_dds.ts
+@@ -2,8 +2,8 @@ import * as THREE from 'three';
+ 
+ import { DDSLoader } from 'three/addons/loaders/DDSLoader.js';
+ 
+-let camera, scene, renderer;
+-const meshes = [];
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++const meshes: THREE.Mesh[] = [];
+ 
+ init();
+ animate();
+@@ -107,7 +107,7 @@ function init() {
+     const material11 = new THREE.MeshBasicMaterial({ map: map9 });
+     const material12 = new THREE.MeshBasicMaterial({ map: map10 });
+ 
+-    let mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
++    let mesh: THREE.Mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
+     mesh.position.x = -10;
+     mesh.position.y = -2;
+     scene.add(mesh);
+diff --git a/examples-testing/examples/webgl_loader_texture_ktx.ts b/examples-testing/examples/webgl_loader_texture_ktx.ts
+index 1bb33e0..6e66f98 100644
+--- a/examples-testing/examples/webgl_loader_texture_ktx.ts
++++ b/examples-testing/examples/webgl_loader_texture_ktx.ts
+@@ -17,8 +17,8 @@ import { KTXLoader } from 'three/addons/loaders/KTXLoader.js';
+ 	ASTC_4x4, ASTC8x8 - transparent textures with full alpha range
+ 	*/
+ 
+-let camera, scene, renderer;
+-const meshes = [];
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++const meshes: THREE.Mesh[] = [];
+ 
+ init();
+ animate();
+@@ -51,14 +51,14 @@ function init() {
+         material1 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/disturb_PVR2bpp.ktx'),
+         });
+-        material1.map.colorSpace = THREE.SRGBColorSpace;
++        material1.map!.colorSpace = THREE.SRGBColorSpace;
+         material2 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/lensflare_PVR4bpp.ktx'),
+             depthTest: false,
+             transparent: true,
+             side: THREE.DoubleSide,
+         });
+-        material2.map.colorSpace = THREE.SRGBColorSpace;
++        material2.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+         meshes.push(new THREE.Mesh(geometry, material1));
+         meshes.push(new THREE.Mesh(geometry, material2));
+@@ -68,14 +68,14 @@ function init() {
+         material1 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/disturb_BC1.ktx'),
+         });
+-        material1.map.colorSpace = THREE.SRGBColorSpace;
++        material1.map!.colorSpace = THREE.SRGBColorSpace;
+         material2 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/lensflare_BC3.ktx'),
+             depthTest: false,
+             transparent: true,
+             side: THREE.DoubleSide,
+         });
+-        material2.map.colorSpace = THREE.SRGBColorSpace;
++        material2.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+         meshes.push(new THREE.Mesh(geometry, material1));
+         meshes.push(new THREE.Mesh(geometry, material2));
+@@ -93,14 +93,14 @@ function init() {
+         material1 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/disturb_ASTC4x4.ktx'),
+         });
+-        material1.map.colorSpace = THREE.SRGBColorSpace;
++        material1.map!.colorSpace = THREE.SRGBColorSpace;
+         material2 = new THREE.MeshBasicMaterial({
+             map: loader.load('textures/compressed/lensflare_ASTC8x8.ktx'),
+             depthTest: false,
+             transparent: true,
+             side: THREE.DoubleSide,
+         });
+-        material2.map.colorSpace = THREE.SRGBColorSpace;
++        material2.map!.colorSpace = THREE.SRGBColorSpace;
+ 
+         meshes.push(new THREE.Mesh(geometry, material1));
+         meshes.push(new THREE.Mesh(geometry, material2));
+diff --git a/examples-testing/examples/webgl_loader_texture_logluv.ts b/examples-testing/examples/webgl_loader_texture_logluv.ts
+index 7f3fbd4..181e003 100644
+--- a/examples-testing/examples/webgl_loader_texture_logluv.ts
++++ b/examples-testing/examples/webgl_loader_texture_logluv.ts
+@@ -8,7 +8,7 @@ const params = {
+     exposure: 2.0,
+ };
+ 
+-let renderer, scene, camera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_texture_rgbm.ts b/examples-testing/examples/webgl_loader_texture_rgbm.ts
+index a882cdb..a7cbf3e 100644
+--- a/examples-testing/examples/webgl_loader_texture_rgbm.ts
++++ b/examples-testing/examples/webgl_loader_texture_rgbm.ts
+@@ -8,7 +8,7 @@ const params = {
+     exposure: 2.0,
+ };
+ 
+-let renderer, scene, camera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_texture_tga.ts b/examples-testing/examples/webgl_loader_texture_tga.ts
+index 0a78b0f..a8e16b1 100644
+--- a/examples-testing/examples/webgl_loader_texture_tga.ts
++++ b/examples-testing/examples/webgl_loader_texture_tga.ts
+@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { TGALoader } from 'three/addons/loaders/TGALoader.js';
+ 
+-let camera, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_texture_tiff.ts b/examples-testing/examples/webgl_loader_texture_tiff.ts
+index f097774..bb5b9d9 100644
+--- a/examples-testing/examples/webgl_loader_texture_tiff.ts
++++ b/examples-testing/examples/webgl_loader_texture_tiff.ts
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import { TIFFLoader } from 'three/addons/loaders/TIFFLoader.js';
+ 
+-let renderer, scene, camera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_tilt.ts b/examples-testing/examples/webgl_loader_tilt.ts
+index 2a583c2..8e3e976 100644
+--- a/examples-testing/examples/webgl_loader_tilt.ts
++++ b/examples-testing/examples/webgl_loader_tilt.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { TiltLoader } from 'three/addons/loaders/TiltLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_loader_ttf.ts b/examples-testing/examples/webgl_loader_ttf.ts
+index 0dd7f41..4d6cd14 100644
+--- a/examples-testing/examples/webgl_loader_ttf.ts
++++ b/examples-testing/examples/webgl_loader_ttf.ts
+@@ -4,9 +4,9 @@ import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
+ import { Font } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ 
+-let container;
+-let camera, cameraTarget, scene, renderer;
+-let group, textMesh1, textMesh2, textGeo, material;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let group: THREE.Group, textMesh1: THREE.Mesh, textMesh2: THREE.Mesh, textGeo, material: THREE.MeshPhongMaterial;
+ let firstLetter = true;
+ 
+ let text = 'three.js';
+@@ -17,7 +17,7 @@ const height = 20,
+     bevelThickness = 2,
+     bevelSize = 1.5;
+ 
+-let font = null;
++let font: Font | null = null;
+ const mirror = true;
+ 
+ let targetRotation = 0;
+@@ -108,7 +108,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentKeyDown(event) {
++function onDocumentKeyDown(event: KeyboardEvent) {
+     if (firstLetter) {
+         firstLetter = false;
+         text = '';
+@@ -128,7 +128,7 @@ function onDocumentKeyDown(event) {
+     }
+ }
+ 
+-function onDocumentKeyPress(event) {
++function onDocumentKeyPress(event: KeyboardEvent) {
+     const keyCode = event.which;
+ 
+     // backspace
+@@ -145,7 +145,7 @@ function onDocumentKeyPress(event) {
+ 
+ function createText() {
+     textGeo = new TextGeometry(text, {
+-        font: font,
++        font: font!,
+ 
+         size: size,
+         height: height,
+@@ -159,7 +159,7 @@ function createText() {
+     textGeo.computeBoundingBox();
+     textGeo.computeVertexNormals();
+ 
+-    const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
++    const centerOffset = -0.5 * (textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x);
+ 
+     textMesh1 = new THREE.Mesh(textGeo, material);
+ 
+@@ -195,7 +195,7 @@ function refreshText() {
+     createText();
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     pointerXOnPointerDown = event.clientX - windowHalfX;
+@@ -205,7 +205,7 @@ function onPointerDown(event) {
+     document.addEventListener('pointerup', onPointerUp);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     pointerX = event.clientX - windowHalfX;
+@@ -214,7 +214,7 @@ function onPointerMove(event) {
+ }
+ 
+ function onPointerUp() {
+-    if (event.isPrimary === false) return;
++    if ((event as PointerEvent).isPrimary === false) return;
+ 
+     document.removeEventListener('pointermove', onPointerMove);
+     document.removeEventListener('pointerup', onPointerUp);
+diff --git a/examples-testing/examples/webgl_loader_usdz.ts b/examples-testing/examples/webgl_loader_usdz.ts
+index 63bebdb..3094cab 100644
+--- a/examples-testing/examples/webgl_loader_usdz.ts
++++ b/examples-testing/examples/webgl_loader_usdz.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { USDZLoader } from 'three/addons/loaders/USDZLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_vox.ts b/examples-testing/examples/webgl_loader_vox.ts
+index b536ebd..1ec3b80 100644
+--- a/examples-testing/examples/webgl_loader_vox.ts
++++ b/examples-testing/examples/webgl_loader_vox.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { VOXLoader, VOXMesh } from 'three/addons/loaders/VOXLoader.js';
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_vrml.ts b/examples-testing/examples/webgl_loader_vrml.ts
+index e7a7914..0ec3170 100644
+--- a/examples-testing/examples/webgl_loader_vrml.ts
++++ b/examples-testing/examples/webgl_loader_vrml.ts
+@@ -6,7 +6,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { VRMLLoader } from 'three/addons/loaders/VRMLLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats, controls, loader;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    controls: OrbitControls,
++    loader: VRMLLoader;
+ 
+ const params = {
+     asset: 'house',
+@@ -28,7 +33,7 @@ const assets = [
+     'points',
+ ];
+ 
+-let vrmlScene;
++let vrmlScene: THREE.Scene;
+ 
+ init();
+ animate();
+@@ -81,9 +86,14 @@ function init() {
+     gui.add(params, 'asset', assets).onChange(function (value) {
+         if (vrmlScene) {
+             vrmlScene.traverse(function (object) {
+-                if (object.material) object.material.dispose();
+-                if (object.material && object.material.map) object.material.map.dispose();
+-                if (object.geometry) object.geometry.dispose();
++                if ((object as THREE.Mesh).material)
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
++                if (
++                    (object as THREE.Mesh).material &&
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map
++                )
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map!.dispose();
++                if ((object as THREE.Mesh).geometry) (object as THREE.Mesh).geometry.dispose();
+             });
+ 
+             scene.remove(vrmlScene);
+@@ -93,7 +103,7 @@ function init() {
+     });
+ }
+ 
+-function loadAsset(asset) {
++function loadAsset(asset: string) {
+     loader.load('models/vrml/' + asset + '.wrl', function (object) {
+         vrmlScene = object;
+         scene.add(object);
+diff --git a/examples-testing/examples/webgl_loader_vtk.ts b/examples-testing/examples/webgl_loader_vtk.ts
+index 503dd76..b7fa273 100644
+--- a/examples-testing/examples/webgl_loader_vtk.ts
++++ b/examples-testing/examples/webgl_loader_vtk.ts
+@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { VTKLoader } from 'three/addons/loaders/VTKLoader.js';
+ 
+-let stats;
++let stats: Stats;
+ 
+-let camera, controls, scene, renderer;
++let camera: THREE.PerspectiveCamera, controls: TrackballControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_loader_xyz.ts b/examples-testing/examples/webgl_loader_xyz.ts
+index 28dd174..431c3de 100644
+--- a/examples-testing/examples/webgl_loader_xyz.ts
++++ b/examples-testing/examples/webgl_loader_xyz.ts
+@@ -2,9 +2,9 @@ import * as THREE from 'three';
+ 
+ import { XYZLoader } from 'three/addons/loaders/XYZLoader.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+-let points;
++let points: THREE.Points;
+ 
+ init();
+ animate();
 diff --git a/examples-testing/examples/webgl_materials_modified.ts b/examples-testing/examples/webgl_materials_modified.ts
 index 3708f65..4c1f793 100644
 --- a/examples-testing/examples/webgl_materials_modified.ts
