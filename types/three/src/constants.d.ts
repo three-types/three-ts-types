@@ -462,11 +462,11 @@ export type WebGL2PixelFormat =
 export type PixelFormat = WebGL1PixelFormat | WebGL2PixelFormat;
 
 /**
- * All Texture Pixel Formats Modes for {@link THREE.DeepTexture}.
+ * All Texture Pixel Formats Modes for {@link THREE.DepthTexture}.
  * @see {@link WebGLRenderingContext.texImage2D} for details.
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  */
-export type DeepTexturePixelFormat = typeof DepthFormat | typeof DepthStencilFormat;
+export type DepthTexturePixelFormat = typeof DepthFormat | typeof DepthStencilFormat;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Compressed texture formats
@@ -649,10 +649,10 @@ export type CompressedPixelFormat =
  * All Possible Texture Pixel Formats Modes. For any Type or SubType of Textures.
  * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in {@link TextureDataType}.
  * @see {@link WebGLRenderingContext.texImage2D} for details.
- * @see {@link PixelFormat} and {@link DeepTexturePixelFormat} and {@link CompressedPixelFormat}
+ * @see {@link PixelFormat} and {@link DepthTexturePixelFormat} and {@link CompressedPixelFormat}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  */
-export type AnyPixelFormat = PixelFormat | DeepTexturePixelFormat | CompressedPixelFormat;
+export type AnyPixelFormat = PixelFormat | DepthTexturePixelFormat | CompressedPixelFormat;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Loop styles for AnimationAction
