@@ -13,11 +13,14 @@ import {
     StencilOp,
     PixelFormat,
 } from '../constants.js';
+import { Color, ColorRepresentation } from '../math/Color.js';
 
 export interface MaterialParameters {
     alphaHash?: boolean | undefined;
     alphaTest?: number | undefined;
     alphaToCoverage?: boolean | undefined;
+    blendAlpha?: number | undefined;
+    blendColor?: ColorRepresentation | undefined;
     blendDst?: BlendingDstFactor | undefined;
     blendDstAlpha?: number | undefined;
     blendEquation?: BlendingEquation | undefined;
@@ -85,6 +88,20 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default false
      */
     alphaToCoverage: boolean;
+
+    /**
+     * Represents the alpha value of the constant blend color. This property has only an effect when using custom
+     * blending with {@link ConstantAlphaFactor} or {@link OneMinusConstantAlphaFactor}.
+     * @default 0
+     */
+    blendAlpha: number;
+
+    /**
+     * Represent the RGB values of the constant blend color. This property has only an effect when using custom
+     * blending with {@link ConstantColorFactor} or {@link OneMinusConstantColorFactor}.
+     * @default 0x000000
+     */
+    blendColor: Color;
 
     /**
      * Blending destination. It's one of the blending mode constants defined in Three.js. Default is {@link OneMinusSrcAlphaFactor}.
