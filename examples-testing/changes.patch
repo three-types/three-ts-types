@@ -3155,7 +3155,7 @@ index f0a18f3..754f7ce 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webgl_clipping_advanced.ts b/examples-testing/examples/webgl_clipping_advanced.ts
-index d60532c..ccc98e6 100644
+index d60532c..75dba77 100644
 --- a/examples-testing/examples/webgl_clipping_advanced.ts
 +++ b/examples-testing/examples/webgl_clipping_advanced.ts
 @@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3221,6 +3221,15 @@ index d60532c..ccc98e6 100644
  
  function init() {
      camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
+@@ -194,7 +202,7 @@ function init() {
+ 
+             // clip to the others to show the volume (wildly
+             // intersecting transparent planes look bad)
+-            clippingPlanes: clipMaterial.clippingPlanes.filter(function (_, j) {
++            clippingPlanes: clipMaterial.clippingPlanes!.filter(function (_, j) {
+                 return j !== i;
+             }),
+ 
 @@ -306,12 +314,12 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -3235,6 +3244,15 @@ index d60532c..ccc98e6 100644
 +    object.matrix.copy(parent!.matrixWorld).invert();
      object.applyMatrix4(matrix);
  }
+ 
+@@ -334,7 +342,7 @@ function animate() {
+     const bouncy = Math.cos(time * 0.5) * 0.5 + 0.7;
+     transform.multiply(tmpMatrix.makeScale(bouncy, bouncy, bouncy));
+ 
+-    assignTransformedPlanes(clipMaterial.clippingPlanes, Planes, transform);
++    assignTransformedPlanes(clipMaterial.clippingPlanes!, Planes, transform);
+ 
+     const planeMeshes = volumeVisualization.children;
  
 diff --git a/examples-testing/examples/webgl_clipping_intersection.ts b/examples-testing/examples/webgl_clipping_intersection.ts
 index 74022d7..6835776 100644
