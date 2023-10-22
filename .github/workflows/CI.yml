@@ -7,37 +7,56 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  path: 'three-ts-types'
+            - uses: actions/checkout@v4
+              with:
+                  repository: 'DefinitelyTyped/DefinitelyTyped'
+                  path: 'DefinitelyTyped'
+                  filter: blob:none
+                  fetch-depth: 0
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'npm'
-            - run: npm ci
-            - run: npm run test-all
+            - run: rsync -av three-ts-types/types/three DefinitelyTyped/types/three
+            - run: pnpm install
+              working-directory: 'DefinitelyTyped'
+            - run: pnpm run test-all
+              working-directory: 'DefinitelyTyped'
     check-fomatting:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'npm'
-            - run: npm ci
-            - run: npm run format-check
+                  cache: 'pnpm'
+            - run: pnpm install
+            - run: pnpm run format-check
     test-examples:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
               with:
                   submodules: true
+            - uses: pnpm/action-setup@v2
+              with:
+                  version: 8
             - uses: actions/setup-node@v3
               with:
                   node-version: 'lts/*'
-                  cache: 'npm'
-            - run: npm ci
-            - run: npm run create-examples
+                  cache: 'pnpm'
+            - run: pnpm install
+            - run: pnpm run create-examples
               working-directory: examples-testing
             - run: git apply changes.patch
               working-directory: examples-testing
-            - run: npm run type-check
+            - run: pnpm run type-check
               working-directory: examples-testing
-            - run: npm run format-check
+            - run: pnpm run format-check
