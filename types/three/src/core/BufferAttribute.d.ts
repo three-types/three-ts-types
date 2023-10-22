@@ -45,7 +45,7 @@ export class BufferAttribute {
      * Default `false`.
      * @throws `TypeError` When the {@link array} is not a `TypedArray`;
      */
-    constructor(array: TypedArray, itemSize: number, normalized?: boolean);
+    constructor(array: TypedArray, itemSize: string, normalized?: boolean);
 
     /**
      * Optional name for this attribute instance.
