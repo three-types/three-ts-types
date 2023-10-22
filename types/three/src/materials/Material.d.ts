@@ -141,7 +141,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * See the WebGL / clipping /intersection example. Default is null.
      * @default null
      */
-    clippingPlanes: Plane[];
+    clippingPlanes: Plane[] | null;
 
     /**
      * Defines whether to clip shadows according to the clipping planes specified on this material. Default is false.
