@@ -74,7 +74,7 @@ export type BlendingEquation =
     | typeof MinEquation
     | typeof MaxEquation;
 
-// custom blending destination factors
+// custom blending factors
 export const ZeroFactor: 200;
 export const OneFactor: 201;
 export const SrcColorFactor: 202;
@@ -85,6 +85,11 @@ export const DstAlphaFactor: 206;
 export const OneMinusDstAlphaFactor: 207;
 export const DstColorFactor: 208;
 export const OneMinusDstColorFactor: 209;
+export const SrcAlphaSaturateFactor: 210;
+export const ConstantColorFactor: 211;
+export const OneMinusConstantColorFactor: 212;
+export const ConstantAlphaFactor: 213;
+export const OneMinusConstantAlphaFactor: 214;
 export type BlendingDstFactor =
     | typeof ZeroFactor
     | typeof OneFactor
@@ -95,11 +100,12 @@ export type BlendingDstFactor =
     | typeof DstAlphaFactor
     | typeof OneMinusDstAlphaFactor
     | typeof DstColorFactor
-    | typeof OneMinusDstColorFactor;
-
-// custom blending src factors
-export const SrcAlphaSaturateFactor: 210;
-export type BlendingSrcFactor = typeof SrcAlphaSaturateFactor;
+    | typeof OneMinusDstColorFactor
+    | typeof ConstantColorFactor
+    | typeof OneMinusConstantColorFactor
+    | typeof ConstantAlphaFactor
+    | typeof OneMinusConstantAlphaFactor;
+export type BlendingSrcFactor = BlendingDstFactor | typeof SrcAlphaSaturateFactor;
 
 // depth modes
 export const NeverDepth: 0;
