@@ -7,6 +7,12 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
+              with:
+                  path: 'three-ts-types'
+            - uses: actions/checkout@v4
+              with:
+                  repository: 'DefinitelyTyped/DefinitelyTyped'
+                  path: 'DefinitelyTyped'
             - uses: pnpm/action-setup@v2
               with:
                   version: 8
@@ -14,8 +20,11 @@ jobs:
               with:
                   node-version: 'lts/*'
                   cache: 'pnpm'
+            - run: rsync -av three-ts-types/types/three DefinitelyTyped/types/three
             - run: pnpm install
+              working-directory: 'DefinitelyTyped'
             - run: pnpm run test-all
+              working-directory: 'DefinitelyTyped'
     check-fomatting:
         runs-on: ubuntu-latest
         steps:
