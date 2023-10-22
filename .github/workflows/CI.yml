@@ -22,6 +22,10 @@ jobs:
               with:
                   node-version: 'lts/*'
             - run: rsync -av three-ts-types/types/three DefinitelyTyped/types/three
+            - run: git add -A
+              working-directory: 'DefinitelyTyped'
+            - run: git commit -m "Changes"
+              working-directory: 'DefinitelyTyped'
             - run: pnpm install
               working-directory: 'DefinitelyTyped'
             - run: pnpm run test-all
