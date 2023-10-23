@@ -186,7 +186,8 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
     depthFunc: DepthModes;
 
     /**
-     * Whether to have depth test enabled when rendering this material. Default is true.
+     * Whether to have depth test enabled when rendering this material. When the depth test is disabled, the depth write
+     * will also be implicitly disabled.
      * @default true
      */
     depthTest: boolean;
