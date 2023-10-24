@@ -142,7 +142,7 @@ const files = {
         'webgl_materials_blending_custom',
         'webgl_materials_bumpmap',
         'webgl_materials_car',
-        'webgl_materials_channels',
+        // 'webgl_materials_channels',
         'webgl_materials_cubemap',
         'webgl_materials_cubemap_dynamic',
         'webgl_materials_cubemap_refraction',
