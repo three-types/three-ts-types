@@ -9616,6 +9616,142 @@ index 94987b7..4e920e2 100644
  
          view.updateCamera(camera, scene, mouseX, mouseY);
  
+diff --git a/examples-testing/examples/webgl_panorama_cube.ts b/examples-testing/examples/webgl_panorama_cube.ts
+index 951e6be..a66d5f0 100644
+--- a/examples-testing/examples/webgl_panorama_cube.ts
++++ b/examples-testing/examples/webgl_panorama_cube.ts
+@@ -2,15 +2,15 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, controls;
+-let renderer;
+-let scene;
++let camera: THREE.PerspectiveCamera, controls: OrbitControls;
++let renderer: THREE.WebGLRenderer;
++let scene: THREE.Scene;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     renderer = new THREE.WebGLRenderer();
+     renderer.setPixelRatio(window.devicePixelRatio);
+@@ -43,8 +43,8 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
+-    const textures = [];
++function getTexturesFromAtlasFile(atlasImgUrl: string, tilesNum: number) {
++    const textures: THREE.Texture[] = [];
+ 
+     for (let i = 0; i < tilesNum; i++) {
+         textures[i] = new THREE.Texture();
+@@ -56,7 +56,7 @@ function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
+ 
+         for (let i = 0; i < textures.length; i++) {
+             canvas = document.createElement('canvas');
+-            context = canvas.getContext('2d');
++            context = canvas.getContext('2d')!;
+             canvas.height = tileWidth;
+             canvas.width = tileWidth;
+             context.drawImage(image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);
+diff --git a/examples-testing/examples/webgl_panorama_equirectangular.ts b/examples-testing/examples/webgl_panorama_equirectangular.ts
+index aa441b8..5c162dd 100644
+--- a/examples-testing/examples/webgl_panorama_equirectangular.ts
++++ b/examples-testing/examples/webgl_panorama_equirectangular.ts
+@@ -1,6 +1,6 @@
+ import * as THREE from 'three';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ let isUserInteracting = false,
+     onPointerDownMouseX = 0,
+@@ -16,7 +16,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+ 
+@@ -48,15 +48,15 @@ function init() {
+ 
+     document.addEventListener('dragover', function (event) {
+         event.preventDefault();
+-        event.dataTransfer.dropEffect = 'copy';
++        event.dataTransfer!.dropEffect = 'copy';
+     });
+ 
+     document.addEventListener('dragenter', function () {
+-        document.body.style.opacity = 0.5;
++        document.body.style.opacity = '0.5';
+     });
+ 
+     document.addEventListener('dragleave', function () {
+-        document.body.style.opacity = 1;
++        document.body.style.opacity = '1';
+     });
+ 
+     document.addEventListener('drop', function (event) {
+@@ -64,12 +64,12 @@ function init() {
+ 
+         const reader = new FileReader();
+         reader.addEventListener('load', function (event) {
+-            material.map.image.src = event.target.result;
+-            material.map.needsUpdate = true;
++            material.map!.image.src = event.target!.result;
++            material.map!.needsUpdate = true;
+         });
+-        reader.readAsDataURL(event.dataTransfer.files[0]);
++        reader.readAsDataURL(event.dataTransfer!.files[0]);
+ 
+-        document.body.style.opacity = 1;
++        document.body.style.opacity = '1';
+     });
+ 
+     //
+@@ -84,7 +84,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     isUserInteracting = true;
+@@ -99,14 +99,14 @@ function onPointerDown(event) {
+     document.addEventListener('pointerup', onPointerUp);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     lon = (onPointerDownMouseX - event.clientX) * 0.1 + onPointerDownLon;
+     lat = (event.clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
+ }
+ 
+-function onPointerUp() {
++function onPointerUp(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     isUserInteracting = false;
+@@ -115,7 +115,7 @@ function onPointerUp() {
+     document.removeEventListener('pointerup', onPointerUp);
+ }
+ 
+-function onDocumentMouseWheel(event) {
++function onDocumentMouseWheel(event: WheelEvent) {
+     const fov = camera.fov + event.deltaY * 0.05;
+ 
+     camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
 index b33e4e2..3f0ef81 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
@@ -9641,6 +9777,171 @@ index b33e4e2..3f0ef81 100644
                  }
              });
  
+diff --git a/examples-testing/examples/webgl_points_billboards.ts b/examples-testing/examples/webgl_points_billboards.ts
+index a792b77..2ecaaeb 100644
+--- a/examples-testing/examples/webgl_points_billboards.ts
++++ b/examples-testing/examples/webgl_points_billboards.ts
+@@ -4,7 +4,11 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats, material;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    material: THREE.PointsMaterial;
+ let mouseX = 0,
+     mouseY = 0;
+ 
+@@ -91,7 +95,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgl_points_sprites.ts b/examples-testing/examples/webgl_points_sprites.ts
+index 2a7aaa1..c240034 100644
+--- a/examples-testing/examples/webgl_points_sprites.ts
++++ b/examples-testing/examples/webgl_points_sprites.ts
+@@ -4,14 +4,18 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, stats, parameters;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    parameters: [[number, number, number], THREE.Texture, number][];
+ let mouseX = 0,
+     mouseY = 0;
+ 
+ let windowHalfX = window.innerWidth / 2;
+ let windowHalfY = window.innerHeight / 2;
+ 
+-const materials = [];
++const materials: THREE.PointsMaterial[] = [];
+ 
+ init();
+ animate();
+@@ -28,7 +32,7 @@ function init() {
+ 
+     const textureLoader = new THREE.TextureLoader();
+ 
+-    const assignSRGB = texture => {
++    const assignSRGB = (texture: THREE.Texture) => {
+         texture.colorSpace = THREE.SRGBColorSpace;
+     };
+ 
+@@ -126,7 +130,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgl_points_waves.ts b/examples-testing/examples/webgl_points_waves.ts
+index d7405f0..fad9039 100644
+--- a/examples-testing/examples/webgl_points_waves.ts
++++ b/examples-testing/examples/webgl_points_waves.ts
+@@ -6,10 +6,10 @@ const SEPARATION = 100,
+     AMOUNTX = 50,
+     AMOUNTY = 50;
+ 
+-let container, stats;
+-let camera, scene, renderer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let particles,
++let particles: THREE.Points,
+     count = 0;
+ 
+ let mouseX = 0,
+@@ -61,8 +61,8 @@ function init() {
+         uniforms: {
+             color: { value: new THREE.Color(0xffffff) },
+         },
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+     });
+ 
+     //
+@@ -100,7 +100,7 @@ function onWindowResize() {
+ 
+ //
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgl_portal.ts b/examples-testing/examples/webgl_portal.ts
+index 6d47206..37355aa 100644
+--- a/examples-testing/examples/webgl_portal.ts
++++ b/examples-testing/examples/webgl_portal.ts
+@@ -3,27 +3,27 @@ import * as THREE from 'three';
+ import * as CameraUtils from 'three/addons/utils/CameraUtils.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let cameraControls;
++let cameraControls: OrbitControls;
+ 
+-let smallSphereOne, smallSphereTwo;
++let smallSphereOne: THREE.Mesh, smallSphereTwo: THREE.Mesh;
+ 
+-let portalCamera,
+-    leftPortal,
+-    rightPortal,
+-    leftPortalTexture,
+-    reflectedPosition,
+-    rightPortalTexture,
+-    bottomLeftCorner,
+-    bottomRightCorner,
+-    topLeftCorner;
++let portalCamera: THREE.PerspectiveCamera,
++    leftPortal: THREE.Mesh,
++    rightPortal: THREE.Mesh,
++    leftPortalTexture: THREE.WebGLRenderTarget,
++    reflectedPosition: THREE.Vector3,
++    rightPortalTexture: THREE.WebGLRenderTarget,
++    bottomLeftCorner: THREE.Vector3,
++    bottomRightCorner: THREE.Vector3,
++    topLeftCorner: THREE.Vector3;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     // renderer
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+@@ -150,7 +150,11 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function renderPortal(thisPortalMesh, otherPortalMesh, thisPortalTexture) {
++function renderPortal(
++    thisPortalMesh: THREE.Mesh,
++    otherPortalMesh: THREE.Mesh,
++    thisPortalTexture: THREE.WebGLRenderTarget,
++) {
+     // set the portal camera position to be reflected about the portal plane
+     thisPortalMesh.worldToLocal(reflectedPosition.copy(camera.position));
+     reflectedPosition.x *= -1.0;
 diff --git a/examples-testing/examples/webgl_postprocessing.ts b/examples-testing/examples/webgl_postprocessing.ts
 index 944115b..d0afc09 100644
 --- a/examples-testing/examples/webgl_postprocessing.ts
@@ -10970,6 +11271,255 @@ index d633806..a25f53b 100644
          delete materials[obj.uuid];
      }
  }
+diff --git a/examples-testing/examples/webgl_raycaster_sprite.ts b/examples-testing/examples/webgl_raycaster_sprite.ts
+index 1de2b51..0da8464 100644
+--- a/examples-testing/examples/webgl_raycaster_sprite.ts
++++ b/examples-testing/examples/webgl_raycaster_sprite.ts
+@@ -2,10 +2,10 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let renderer, scene, camera;
+-let group;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let group: THREE.Group;
+ 
+-let selectedObject = null;
++let selectedObject: THREE.Mesh<THREE.BufferGeometry, THREE.SpriteMaterial> | null = null;
+ const raycaster = new THREE.Raycaster();
+ const pointer = new THREE.Vector2();
+ 
+@@ -78,7 +78,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (selectedObject) {
+         selectedObject.material.color.set('#69f');
+         selectedObject = null;
+@@ -97,7 +97,7 @@ function onPointerMove(event) {
+         })[0];
+ 
+         if (res && res.object) {
+-            selectedObject = res.object;
++            selectedObject = res.object as THREE.Mesh<THREE.BufferGeometry, THREE.SpriteMaterial>;
+             selectedObject.material.color.set('#f00');
+         }
+     }
+diff --git a/examples-testing/examples/webgl_raycaster_texture.ts b/examples-testing/examples/webgl_raycaster_texture.ts
+index 2a9110c..8799c72 100644
+--- a/examples-testing/examples/webgl_raycaster_texture.ts
++++ b/examples-testing/examples/webgl_raycaster_texture.ts
+@@ -8,7 +8,15 @@ const WRAPPING = {
+     MirroredRepeatWrapping: THREE.MirroredRepeatWrapping,
+ };
+ 
+-const params = {
++const params: {
++    wrapS: THREE.Wrapping;
++    wrapT: THREE.Wrapping;
++    offsetX: number;
++    offsetY: number;
++    repeatX: number;
++    repeatY: number;
++    rotation: number;
++} = {
+     wrapS: THREE.RepeatWrapping,
+     wrapT: THREE.RepeatWrapping,
+     offsetX: 0,
+@@ -18,68 +26,68 @@ const params = {
+     rotation: 0,
+ };
+ 
+-function CanvasTexture(parentTexture) {
+-    this._canvas = document.createElement('canvas');
+-    this._canvas.width = this._canvas.height = 1024;
+-    this._context2D = this._canvas.getContext('2d');
++class CanvasTexture {
++    _background: HTMLImageElement;
+ 
+-    if (parentTexture) {
+-        this._parentTexture.push(parentTexture);
+-        parentTexture.image = this._canvas;
+-    }
++    constructor(parentTexture: THREE.Texture) {
++        this._canvas = document.createElement('canvas');
++        this._canvas.width = this._canvas.height = 1024;
++        this._context2D = this._canvas.getContext('2d');
+ 
+-    const that = this;
+-    this._background = document.createElement('img');
+-    this._background.addEventListener('load', function () {
+-        that._canvas.width = that._background.naturalWidth;
+-        that._canvas.height = that._background.naturalHeight;
++        if (parentTexture) {
++            this._parentTexture.push(parentTexture);
++            parentTexture.image = this._canvas;
++        }
+ 
+-        that._crossRadius = Math.ceil(Math.min(that._canvas.width, that._canvas.height / 30));
+-        that._crossMax = Math.ceil(0.70710678 * that._crossRadius);
+-        that._crossMin = Math.ceil(that._crossMax / 10);
+-        that._crossThickness = Math.ceil(that._crossMax / 10);
++        const that = this;
++        this._background = document.createElement('img');
++        this._background.addEventListener('load', function () {
++            that._canvas!.width = that._background.naturalWidth;
++            that._canvas!.height = that._background.naturalHeight;
+ 
+-        that._draw();
+-    });
+-    this._background.crossOrigin = '';
+-    this._background.src = 'textures/uv_grid_opengl.jpg';
++            that._crossRadius = Math.ceil(Math.min(that._canvas!.width, that._canvas!.height / 30));
++            that._crossMax = Math.ceil(0.70710678 * that._crossRadius);
++            that._crossMin = Math.ceil(that._crossMax / 10);
++            that._crossThickness = Math.ceil(that._crossMax / 10);
+ 
+-    this._draw();
+-}
++            that._draw();
++        });
++        this._background.crossOrigin = '';
++        this._background.src = 'textures/uv_grid_opengl.jpg';
+ 
+-CanvasTexture.prototype = {
+-    constructor: CanvasTexture,
++        this._draw();
++    }
+ 
+-    _canvas: null,
+-    _context2D: null,
+-    _xCross: 0,
+-    _yCross: 0,
++    _canvas: HTMLCanvasElement | null = null;
++    _context2D: CanvasRenderingContext2D | null = null;
++    _xCross = 0;
++    _yCross = 0;
+ 
+-    _crossRadius: 57,
+-    _crossMax: 40,
+-    _crossMin: 4,
+-    _crossThickness: 4,
++    _crossRadius = 57;
++    _crossMax = 40;
++    _crossMin = 4;
++    _crossThickness = 4;
+ 
+-    _parentTexture: [],
++    _parentTexture: THREE.Texture[] = [];
+ 
+-    addParent: function (parentTexture) {
++    addParent = function (this: CanvasTexture, parentTexture: THREE.Texture) {
+         if (this._parentTexture.indexOf(parentTexture) === -1) {
+             this._parentTexture.push(parentTexture);
+             parentTexture.image = this._canvas;
+         }
+-    },
++    };
+ 
+-    setCrossPosition: function (x, y) {
+-        this._xCross = x * this._canvas.width;
+-        this._yCross = y * this._canvas.height;
++    setCrossPosition = function (this: CanvasTexture, x: number, y: number) {
++        this._xCross = x * this._canvas!.width;
++        this._yCross = y * this._canvas!.height;
+ 
+         this._draw();
+-    },
++    };
+ 
+-    _draw: function () {
++    _draw = function (this: CanvasTexture) {
+         if (!this._context2D) return;
+ 
+-        this._context2D.clearRect(0, 0, this._canvas.width, this._canvas.height);
++        this._context2D.clearRect(0, 0, this._canvas!.width, this._canvas!.height);
+ 
+         // Background.
+         this._context2D.drawImage(this._background, 0, 0);
+@@ -106,18 +114,18 @@ CanvasTexture.prototype = {
+         for (let i = 0; i < this._parentTexture.length; i++) {
+             this._parentTexture[i].needsUpdate = true;
+         }
+-    },
+-};
++    };
++}
+ 
+ const width = window.innerWidth;
+ const height = window.innerHeight;
+ 
+-let canvas;
+-let planeTexture, cubeTexture, circleTexture;
++let canvas: CanvasTexture;
++let planeTexture: THREE.Texture, cubeTexture: THREE.Texture, circleTexture: THREE.Texture;
+ 
+-let container;
++let container: HTMLElement;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ const raycaster = new THREE.Raycaster();
+ const mouse = new THREE.Vector2();
+@@ -127,7 +135,7 @@ init();
+ render();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+     scene.background = new THREE.Color(0xeeeeee);
+@@ -233,7 +241,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onMouseMove(evt) {
++function onMouseMove(evt: MouseEvent) {
+     evt.preventDefault();
+ 
+     const array = getMousePosition(container, evt.clientX, evt.clientY);
+@@ -243,17 +251,19 @@ function onMouseMove(evt) {
+ 
+     if (intersects.length > 0 && intersects[0].uv) {
+         const uv = intersects[0].uv;
+-        intersects[0].object.material.map.transformUv(uv);
++        (intersects[0].object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>).material.map!.transformUv(
++            uv,
++        );
+         canvas.setCrossPosition(uv.x, uv.y);
+     }
+ }
+ 
+-function getMousePosition(dom, x, y) {
++function getMousePosition(dom: HTMLElement, x: number, y: number) {
+     const rect = dom.getBoundingClientRect();
+     return [(x - rect.left) / rect.width, (y - rect.top) / rect.height];
+ }
+ 
+-function getIntersects(point, objects) {
++function getIntersects(point: THREE.Vector2, objects: THREE.Object3D[]) {
+     mouse.set(point.x * 2 - 1, -(point.y * 2) + 1);
+ 
+     raycaster.setFromCamera(mouse, camera);
+@@ -277,12 +287,12 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-function setwrapS(value) {
++function setwrapS(value: THREE.Wrapping) {
+     circleTexture.wrapS = value;
+     circleTexture.needsUpdate = true;
+ }
+ 
+-function setwrapT(value) {
++function setwrapT(value: THREE.Wrapping) {
+     circleTexture.wrapT = value;
+     circleTexture.needsUpdate = true;
+ }
 diff --git a/examples-testing/examples/webgl_raymarching_reflect.ts b/examples-testing/examples/webgl_raymarching_reflect.ts
 index 96f9a81..43bd75d 100644
 --- a/examples-testing/examples/webgl_raymarching_reflect.ts
@@ -11001,6 +11551,172 @@ index 96f9a81..43bd75d 100644
      });
      mesh = new THREE.Mesh(geometry, material);
      mesh.frustumCulled = false;
+diff --git a/examples-testing/examples/webgl_read_float_buffer.ts b/examples-testing/examples/webgl_read_float_buffer.ts
+index fbc8057..42b50b0 100644
+--- a/examples-testing/examples/webgl_read_float_buffer.ts
++++ b/examples-testing/examples/webgl_read_float_buffer.ts
+@@ -2,9 +2,14 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let cameraRTT, sceneRTT, sceneScreen, renderer, zmesh1, zmesh2;
++let cameraRTT: THREE.OrthographicCamera,
++    sceneRTT: THREE.Scene,
++    sceneScreen: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    zmesh1: THREE.Mesh,
++    zmesh2: THREE.Mesh;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -12,16 +17,16 @@ let mouseX = 0,
+ const windowHalfX = window.innerWidth / 2;
+ const windowHalfY = window.innerHeight / 2;
+ 
+-let rtTexture, material, quad;
++let rtTexture: THREE.WebGLRenderTarget, material: THREE.ShaderMaterial, quad: THREE.Mesh;
+ 
+ let delta = 0.01;
+-let valueNode;
++let valueNode: HTMLElement;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     cameraRTT = new THREE.OrthographicCamera(
+         window.innerWidth / -2,
+@@ -55,14 +60,14 @@ function init() {
+ 
+     material = new THREE.ShaderMaterial({
+         uniforms: { time: { value: 0.0 } },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragment_shader_pass_1').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragment_shader_pass_1')!.textContent!,
+     });
+ 
+     const materialScreen = new THREE.ShaderMaterial({
+         uniforms: { tDiffuse: { value: rtTexture.texture } },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragment_shader_screen').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragment_shader_screen')!.textContent!,
+ 
+         depthWrite: false,
+     });
+@@ -102,12 +107,12 @@ function init() {
+     stats = new Stats();
+     container.appendChild(stats.dom);
+ 
+-    valueNode = document.getElementById('values');
++    valueNode = document.getElementById('values')!;
+ 
+     document.addEventListener('mousemove', onDocumentMouseMove);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = event.clientX - windowHalfX;
+     mouseY = event.clientY - windowHalfY;
+ }
+diff --git a/examples-testing/examples/webgl_refraction.ts b/examples-testing/examples/webgl_refraction.ts
+index fb22aa8..6820596 100644
+--- a/examples-testing/examples/webgl_refraction.ts
++++ b/examples-testing/examples/webgl_refraction.ts
+@@ -4,14 +4,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Refractor } from 'three/addons/objects/Refractor.js';
+ import { WaterRefractionShader } from 'three/addons/shaders/WaterRefractionShader.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+-let refractor, smallSphere;
++let refractor: Refractor, smallSphere: THREE.Mesh;
+ 
+ init();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     clock = new THREE.Clock();
+ 
+diff --git a/examples-testing/examples/webgl_rtt.ts b/examples-testing/examples/webgl_rtt.ts
+index 2f3714e..d0ccac2 100644
+--- a/examples-testing/examples/webgl_rtt.ts
++++ b/examples-testing/examples/webgl_rtt.ts
+@@ -2,9 +2,16 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let container, stats;
++let container: HTMLElement, stats: Stats;
+ 
+-let cameraRTT, camera, sceneRTT, sceneScreen, scene, renderer, zmesh1, zmesh2;
++let cameraRTT: THREE.OrthographicCamera,
++    camera: THREE.PerspectiveCamera,
++    sceneRTT: THREE.Scene,
++    sceneScreen: THREE.Scene,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    zmesh1: THREE.Mesh,
++    zmesh2: THREE.Mesh;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -12,7 +19,7 @@ let mouseX = 0,
+ const windowHalfX = window.innerWidth / 2;
+ const windowHalfY = window.innerHeight / 2;
+ 
+-let rtTexture, material, quad;
++let rtTexture: THREE.WebGLRenderTarget, material: THREE.ShaderMaterial, quad: THREE.Mesh;
+ 
+ let delta = 0.01;
+ 
+@@ -20,7 +27,7 @@ init();
+ animate();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
+     camera.position.z = 100;
+@@ -53,14 +60,14 @@ function init() {
+ 
+     material = new THREE.ShaderMaterial({
+         uniforms: { time: { value: 0.0 } },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragment_shader_pass_1').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragment_shader_pass_1')!.textContent!,
+     });
+ 
+     const materialScreen = new THREE.ShaderMaterial({
+         uniforms: { tDiffuse: { value: rtTexture.texture } },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragment_shader_screen').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragment_shader_screen')!.textContent!,
+ 
+         depthWrite: false,
+     });
+@@ -121,7 +128,7 @@ function init() {
+     document.addEventListener('mousemove', onDocumentMouseMove);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = event.clientX - windowHalfX;
+     mouseY = event.clientY - windowHalfY;
+ }
 diff --git a/examples-testing/examples/webgl_shadowmap_csm.ts b/examples-testing/examples/webgl_shadowmap_csm.ts
 index f9df4ab..d2646fa 100644
 --- a/examples-testing/examples/webgl_shadowmap_csm.ts
