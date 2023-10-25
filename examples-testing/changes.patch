@@ -9120,6 +9120,502 @@ index 569afc6..ab307d8 100644
      const vectors = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
  
      const position = geometry.attributes.position;
+diff --git a/examples-testing/examples/webgl_math_obb.ts b/examples-testing/examples/webgl_math_obb.ts
+index f9d12ec..bb55bcf 100644
+--- a/examples-testing/examples/webgl_math_obb.ts
++++ b/examples-testing/examples/webgl_math_obb.ts
+@@ -5,9 +5,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, clock, controls, stats, raycaster, hitbox;
+-
+-const objects = [],
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    clock: THREE.Clock,
++    controls: OrbitControls,
++    stats: Stats,
++    raycaster: THREE.Raycaster,
++    hitbox: THREE.Mesh;
++
++const objects: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>[] = [],
+     mouse = new THREE.Vector2();
+ 
+ init();
+@@ -89,7 +96,7 @@ function init() {
+     document.addEventListener('click', onClick);
+ }
+ 
+-function onClick(event) {
++function onClick(event: MouseEvent) {
+     event.preventDefault();
+ 
+     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+@@ -125,7 +132,10 @@ function onClick(event) {
+     }
+ }
+ 
+-function sortIntersections(a, b) {
++function sortIntersections(
++    a: { distance: number; object: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> },
++    b: { distance: number; object: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> },
++) {
+     return a.distance - b.distance;
+ }
+ 
+diff --git a/examples-testing/examples/webgl_math_orientation_transform.ts b/examples-testing/examples/webgl_math_orientation_transform.ts
+index dfca0ac..bfa38b8 100644
+--- a/examples-testing/examples/webgl_math_orientation_transform.ts
++++ b/examples-testing/examples/webgl_math_orientation_transform.ts
+@@ -1,6 +1,10 @@
+ import * as THREE from 'three';
+ 
+-let camera, scene, renderer, mesh, target;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    mesh: THREE.Mesh,
++    target: THREE.Mesh;
+ 
+ const spherical = new THREE.Spherical();
+ const rotationMatrix = new THREE.Matrix4();
+diff --git a/examples-testing/examples/webgl_mirror.ts b/examples-testing/examples/webgl_mirror.ts
+index 5e68213..e4850ea 100644
+--- a/examples-testing/examples/webgl_mirror.ts
++++ b/examples-testing/examples/webgl_mirror.ts
+@@ -3,19 +3,19 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Reflector } from 'three/addons/objects/Reflector.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let cameraControls;
++let cameraControls: OrbitControls;
+ 
+-let sphereGroup, smallSphere;
++let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
+ 
+-let groundMirror, verticalMirror;
++let groundMirror: Reflector, verticalMirror: Reflector;
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     // renderer
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+diff --git a/examples-testing/examples/webgl_modifier_edgesplit.ts b/examples-testing/examples/webgl_modifier_edgesplit.ts
+index 2a80a82..96620f5 100644
+--- a/examples-testing/examples/webgl_modifier_edgesplit.ts
++++ b/examples-testing/examples/webgl_modifier_edgesplit.ts
+@@ -7,9 +7,11 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera;
+-let modifier, mesh, baseGeometry;
+-let map;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let modifier: EdgeSplitModifier,
++    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
++    baseGeometry: THREE.BufferGeometry;
++let map: THREE.Texture;
+ 
+ const params = {
+     smoothShading: true,
+@@ -50,7 +52,7 @@ function init() {
+     scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 3));
+ 
+     new OBJLoader().load('./models/obj/cerberus/Cerberus.obj', function (group) {
+-        const cerberus = group.children[0];
++        const cerberus = group.children[0] as THREE.Mesh;
+         const modelGeometry = cerberus.geometry;
+ 
+         modifier = new EdgeSplitModifier();
+@@ -83,7 +85,7 @@ function init() {
+         }
+     });
+ 
+-    const gui = new GUI({ name: 'Edge split modifier parameters' });
++    const gui = new GUI({ title: 'Edge split modifier parameters' });
+ 
+     gui.add(params, 'showMap').onFinishChange(updateMesh);
+     gui.add(params, 'smoothShading').onFinishChange(updateMesh);
+diff --git a/examples-testing/examples/webgl_modifier_simplifier.ts b/examples-testing/examples/webgl_modifier_simplifier.ts
+index e6ea453..f55a658 100644
+--- a/examples-testing/examples/webgl_modifier_simplifier.ts
++++ b/examples-testing/examples/webgl_modifier_simplifier.ts
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
+ 
+-let renderer, scene, camera;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+ 
+ init();
+ 
+@@ -47,7 +47,7 @@ function init() {
+ 
+         const modifier = new SimplifyModifier();
+ 
+-        const simplified = mesh.clone();
++        const simplified = mesh.clone() as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+         simplified.material = simplified.material.clone();
+         simplified.material.flatShading = true;
+         const count = Math.floor(simplified.geometry.attributes.position.count * 0.875); // number of vertices to remove
+diff --git a/examples-testing/examples/webgl_modifier_tessellation.ts b/examples-testing/examples/webgl_modifier_tessellation.ts
+index ad9ed59..cd8f4e0 100644
+--- a/examples-testing/examples/webgl_modifier_tessellation.ts
++++ b/examples-testing/examples/webgl_modifier_tessellation.ts
+@@ -4,14 +4,14 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
+ import { TessellateModifier } from 'three/addons/modifiers/TessellateModifier.js';
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ 
+-let renderer, scene, camera, stats;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+ 
+-let controls;
++let controls: TrackballControls;
+ 
+-let mesh, uniforms;
++let mesh: THREE.Mesh, uniforms: Record<string, THREE.IUniform<unknown>>;
+ 
+ const WIDTH = window.innerWidth;
+ const HEIGHT = window.innerHeight;
+@@ -22,7 +22,7 @@ loader.load('fonts/helvetiker_bold.typeface.json', function (font) {
+     animate();
+ });
+ 
+-function init(font) {
++function init(font: Font) {
+     camera = new THREE.PerspectiveCamera(40, WIDTH / HEIGHT, 1, 10000);
+     camera.position.set(-100, 100, 200);
+ 
+@@ -91,8 +91,8 @@ function init(font) {
+ 
+     const shaderMaterial = new THREE.ShaderMaterial({
+         uniforms: uniforms,
+-        vertexShader: document.getElementById('vertexshader').textContent,
+-        fragmentShader: document.getElementById('fragmentshader').textContent,
++        vertexShader: document.getElementById('vertexshader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+     });
+ 
+     //
+@@ -105,7 +105,7 @@ function init(font) {
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(WIDTH, HEIGHT);
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+     container.appendChild(renderer.domElement);
+ 
+     controls = new TrackballControls(camera, renderer.domElement);
+diff --git a/examples-testing/examples/webgl_morphtargets.ts b/examples-testing/examples/webgl_morphtargets.ts
+index 40d605f..5965ef3 100644
+--- a/examples-testing/examples/webgl_morphtargets.ts
++++ b/examples-testing/examples/webgl_morphtargets.ts
+@@ -3,12 +3,16 @@ import * as THREE from 'three';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let container, camera, scene, renderer, mesh;
++let container: HTMLElement,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    mesh: THREE.Mesh;
+ 
+ init();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+     scene.background = new THREE.Color(0x8fbcd4);
+@@ -62,7 +66,7 @@ function createGeometry() {
+     const spherePositions = [];
+ 
+     // for the second morph target, we'll twist the cubes vertices
+-    const twistPositions = [];
++    const twistPositions: number[] = [];
+     const direction = new THREE.Vector3(1, 0, 0);
+     const vertex = new THREE.Vector3();
+ 
+@@ -103,12 +107,12 @@ function initGUI() {
+     gui.add(params, 'Spherify', 0, 1)
+         .step(0.01)
+         .onChange(function (value) {
+-            mesh.morphTargetInfluences[0] = value;
++            mesh.morphTargetInfluences![0] = value;
+         });
+     gui.add(params, 'Twist', 0, 1)
+         .step(0.01)
+         .onChange(function (value) {
+-            mesh.morphTargetInfluences[1] = value;
++            mesh.morphTargetInfluences![1] = value;
+         });
+ }
+ 
+diff --git a/examples-testing/examples/webgl_morphtargets_face.ts b/examples-testing/examples/webgl_morphtargets_face.ts
+index 14bd855..811c4db 100644
+--- a/examples-testing/examples/webgl_morphtargets_face.ts
++++ b/examples-testing/examples/webgl_morphtargets_face.ts
+@@ -15,7 +15,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ init();
+ 
+ function init() {
+-    let mixer;
++    let mixer: THREE.AnimationMixer;
+ 
+     const clock = new THREE.Clock();
+ 
+@@ -50,14 +50,14 @@ function init() {
+ 
+             // GUI
+ 
+-            const head = mesh.getObjectByName('mesh_2');
+-            const influences = head.morphTargetInfluences;
++            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh;
++            const influences = head.morphTargetInfluences!;
+ 
+             const gui = new GUI();
+             gui.close();
+ 
+-            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
+-                gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen(influences);
++            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
++                gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
+             }
+         });
+ 
+diff --git a/examples-testing/examples/webgl_morphtargets_horse.ts b/examples-testing/examples/webgl_morphtargets_horse.ts
+index e8253d2..5c1b3e1 100644
+--- a/examples-testing/examples/webgl_morphtargets_horse.ts
++++ b/examples-testing/examples/webgl_morphtargets_horse.ts
+@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
+-let mesh, mixer;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let mesh: THREE.Object3D, mixer: THREE.AnimationMixer;
+ 
+ const radius = 600;
+ let theta = 0;
+diff --git a/examples-testing/examples/webgl_morphtargets_sphere.ts b/examples-testing/examples/webgl_morphtargets_sphere.ts
+index dd73f97..aa2cfc5 100644
+--- a/examples-testing/examples/webgl_morphtargets_sphere.ts
++++ b/examples-testing/examples/webgl_morphtargets_sphere.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+ 
+-let mesh;
++let mesh: THREE.Mesh;
+ 
+ let sign = 1;
+ const speed = 0.5;
+@@ -14,7 +14,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
+     camera.position.set(0, 5, 5);
+@@ -35,7 +35,7 @@ function init() {
+ 
+     const loader = new GLTFLoader();
+     loader.load('models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
+-        mesh = gltf.scene.getObjectByName('AnimatedMorphSphere');
++        mesh = gltf.scene.getObjectByName('AnimatedMorphSphere') as THREE.Mesh;
+         mesh.rotation.z = Math.PI / 2;
+         scene.add(mesh);
+ 
+@@ -103,9 +103,9 @@ function render() {
+ 
+         mesh.rotation.y += step;
+ 
+-        mesh.morphTargetInfluences[1] = mesh.morphTargetInfluences[1] + step * sign;
++        mesh.morphTargetInfluences![1] = mesh.morphTargetInfluences![1] + step * sign;
+ 
+-        if (mesh.morphTargetInfluences[1] <= 0 || mesh.morphTargetInfluences[1] >= 1) {
++        if (mesh.morphTargetInfluences![1] <= 0 || mesh.morphTargetInfluences![1] >= 1) {
+             sign *= -1;
+         }
+     }
+diff --git a/examples-testing/examples/webgl_multiple_elements.ts b/examples-testing/examples/webgl_multiple_elements.ts
+index e21b51c..1b1f7d7 100644
+--- a/examples-testing/examples/webgl_multiple_elements.ts
++++ b/examples-testing/examples/webgl_multiple_elements.ts
+@@ -2,15 +2,15 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let canvas, renderer;
++let canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer;
+ 
+-const scenes = [];
++const scenes: THREE.Scene[] = [];
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    canvas = document.getElementById('c');
++    canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+     const geometries = [
+         new THREE.BoxGeometry(1, 1, 1),
+@@ -19,7 +19,7 @@ function init() {
+         new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
+     ];
+ 
+-    const content = document.getElementById('content');
++    const content = document.getElementById('content')!;
+ 
+     for (let i = 0; i < 40; i++) {
+         const scene = new THREE.Scene();
+diff --git a/examples-testing/examples/webgl_multiple_scenes_comparison.ts b/examples-testing/examples/webgl_multiple_scenes_comparison.ts
+index 1753aec..4d55dc8 100644
+--- a/examples-testing/examples/webgl_multiple_scenes_comparison.ts
++++ b/examples-testing/examples/webgl_multiple_scenes_comparison.ts
+@@ -2,15 +2,15 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let container, camera, renderer, controls;
+-let sceneL, sceneR;
++let container: HTMLElement, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let sceneL: THREE.Scene, sceneR: THREE.Scene;
+ 
+ let sliderPos = window.innerWidth / 2;
+ 
+ init();
+ 
+ function init() {
+-    container = document.querySelector('.container');
++    container = document.querySelector('.container')!;
+ 
+     sceneL = new THREE.Scene();
+     sceneL.background = new THREE.Color(0xbcd48f);
+@@ -52,9 +52,9 @@ function initMeshes() {
+ }
+ 
+ function initSlider() {
+-    const slider = document.querySelector('.slider');
++    const slider = document.querySelector('.slider') as HTMLElement;
+ 
+-    function onPointerDown() {
++    function onPointerDown(event: PointerEvent) {
+         if (event.isPrimary === false) return;
+ 
+         controls.enabled = false;
+@@ -70,10 +70,10 @@ function initSlider() {
+         window.removeEventListener('pointerup', onPointerUp);
+     }
+ 
+-    function onPointerMove(e) {
++    function onPointerMove(event: PointerEvent) {
+         if (event.isPrimary === false) return;
+ 
+-        sliderPos = Math.max(0, Math.min(window.innerWidth, e.pageX));
++        sliderPos = Math.max(0, Math.min(window.innerWidth, event.pageX));
+ 
+         slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
+     }
+diff --git a/examples-testing/examples/webgl_multiple_views.ts b/examples-testing/examples/webgl_multiple_views.ts
+index 94987b7..4e920e2 100644
+--- a/examples-testing/examples/webgl_multiple_views.ts
++++ b/examples-testing/examples/webgl_multiple_views.ts
+@@ -2,16 +2,27 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats;
++let stats: Stats;
+ 
+-let scene, renderer;
++let scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+ 
+-let windowWidth, windowHeight;
+-
+-const views = [
++let windowWidth: number, windowHeight: number;
++
++const views: {
++    left: number;
++    bottom: number;
++    width: number;
++    height: number;
++    background: THREE.Color;
++    eye: [number, number, number];
++    up: [number, number, number];
++    fov: number;
++    updateCamera: (camera: THREE.PerspectiveCamera, scene: THREE.Scene, mouseX: number, mouseY: number) => void;
++    camera?: THREE.PerspectiveCamera;
++}[] = [
+     {
+         left: 0,
+         bottom: 0,
+@@ -63,7 +74,7 @@ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     for (let ii = 0; ii < views.length; ++ii) {
+         const view = views[ii];
+@@ -85,7 +96,7 @@ function init() {
+     canvas.width = 128;
+     canvas.height = 128;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createRadialGradient(
+         canvas.width / 2,
+         canvas.height / 2,
+@@ -191,7 +202,7 @@ function init() {
+     document.addEventListener('mousemove', onDocumentMouseMove);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = event.clientX - windowWidth / 2;
+     mouseY = event.clientY - windowHeight / 2;
+ }
+@@ -217,7 +228,7 @@ function render() {
+ 
+     for (let ii = 0; ii < views.length; ++ii) {
+         const view = views[ii];
+-        const camera = view.camera;
++        const camera = view.camera!;
+ 
+         view.updateCamera(camera, scene, mouseX, mouseY);
+ 
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
 index b33e4e2..3f0ef81 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
