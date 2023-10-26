@@ -1,4 +1,4 @@
-import { Camera, ColorSpace, Scene, ToneMapping } from '../../../../src/Three.js';
+import { Camera, ColorSpace, CoordinateSystem, Scene, ToneMapping } from '../../../../src/Three.js';
 import Backend from './Backend.js';
 import Info from './Info.js';
 
@@ -30,7 +30,7 @@ export default class Renderer {
 
     init(): Promise<void>;
 
-    get coordinateSystem();
+    get coordinateSystem(): CoordinateSystem;
 
     render(scene: Scene, camera: Camera): Promise<void>;
 
