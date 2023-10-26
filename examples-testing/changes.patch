@@ -13002,6 +13002,362 @@ index 6aadaf2..bb7fa30 100644
  
  init();
  animate();
+diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
+index 6bc0667..1f52852 100644
+--- a/examples-testing/examples/webgpu_clearcoat.ts
++++ b/examples-testing/examples/webgpu_clearcoat.ts
+@@ -10,12 +10,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
+ 
+ import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+-let particleLight;
+-let group;
++let particleLight: THREE.Mesh;
++let group: THREE.Group;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
+index 1430a29..58b951d 100644
+--- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
++++ b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
+@@ -7,12 +7,12 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+ import IESSpotLight from 'three/addons/lights/IESSpotLight.js';
+ 
+-import { OrbitControls } from './jsm/controls/OrbitControls.js';
++import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-import { IESLoader } from './jsm/loaders/IESLoader.js';
++import { IESLoader } from 'three/addons/loaders/IESLoader.js';
+ 
+-let renderer, scene, camera;
+-let lights;
++let renderer: WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let lights: IESSpotLight[];
+ 
+ async function init() {
+     if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+@@ -119,7 +119,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function render(time) {
++function render(time: number) {
+     time = (time / 1000) * 2.0;
+ 
+     for (let i = 0; i < lights.length; i++) {
+diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
+index 74534c0..0f12128 100644
+--- a/examples-testing/examples/webgpu_loader_gltf.ts
++++ b/examples-testing/examples/webgpu_loader_gltf.ts
+@@ -8,7 +8,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+ init();
+ render();
+diff --git a/examples-testing/examples/webgpu_loader_gltf_compressed.ts b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
+index 5f40968..190d147 100644
+--- a/examples-testing/examples/webgpu_loader_gltf_compressed.ts
++++ b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
+@@ -9,7 +9,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_loader_gltf_iridescence.ts b/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
+index 02b4f22..78e1591 100644
+--- a/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
++++ b/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
+@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let renderer, scene, camera, controls;
++let renderer: WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+ 
+ init().catch(function (err) {
+     console.error(err);
+diff --git a/examples-testing/examples/webgpu_loader_gltf_sheen.ts b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
+index 56cfb9a..0790e0b 100644
+--- a/examples-testing/examples/webgpu_loader_gltf_sheen.ts
++++ b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
+@@ -9,7 +9,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer, controls: OrbitControls;
+ 
+ init();
+ animate();
+@@ -35,7 +35,10 @@ function init() {
+     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
+         scene.add(gltf.scene);
+ 
+-        const object = gltf.scene.getObjectByName('SheenChair_fabric');
++        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh<
++            THREE.BufferGeometry,
++            THREE.MeshPhysicalMaterial
++        >;
+ 
+         const gui = new GUI();
+ 
+diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
+index f50456f..59ec321 100644
+--- a/examples-testing/examples/webgpu_materials_video.ts
++++ b/examples-testing/examples/webgpu_materials_video.ts
+@@ -3,11 +3,14 @@ import * as THREE from 'three';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let container;
++let container: HTMLDivElement;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+-let video, texture, material, mesh;
++let video: HTMLVideoElement,
++    texture: THREE.VideoTexture,
++    material: THREE.MeshPhongMaterial & { hue?: number; saturation?: number },
++    mesh: THREE.Mesh & { dx?: number; dy?: number };
+ 
+ let mouseX = 0;
+ let mouseY = 0;
+@@ -15,14 +18,14 @@ let mouseY = 0;
+ let windowHalfX = window.innerWidth / 2;
+ let windowHalfY = window.innerHeight / 2;
+ 
+-let cube_count;
++let cube_count: number;
+ 
+-const meshes = [],
+-    materials = [],
++const meshes: THREE.Mesh[] = [],
++    materials: (THREE.MeshPhongMaterial & { hue?: number; saturation?: number })[] = [],
+     xgrid = 20,
+     ygrid = 10;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', function () {
+     init();
+ });
+@@ -34,7 +37,7 @@ function init() {
+         throw new Error('No WebGPU support');
+     }
+ 
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+     container = document.createElement('div');
+@@ -55,7 +58,7 @@ function init() {
+     renderer.setAnimationLoop(render);
+     container.appendChild(renderer.domElement);
+ 
+-    video = document.getElementById('video');
++    video = document.getElementById('video') as HTMLVideoElement;
+     video.play();
+     video.addEventListener('play', function () {
+         this.currentTime = 3;
+@@ -131,7 +134,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function change_uvs(geometry, unitx, unity, offsetx, offsety) {
++function change_uvs(geometry: THREE.BoxGeometry, unitx: number, unity: number, offsetx: number, offsety: number) {
+     const uvs = geometry.attributes.uv.array;
+ 
+     for (let i = 0; i < uvs.length; i += 2) {
+@@ -140,7 +143,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+     }
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = event.clientX - windowHalfX;
+     mouseY = (event.clientY - windowHalfY) * 0.3;
+ }
+@@ -161,20 +164,20 @@ function render() {
+     for (let i = 0; i < cube_count; i++) {
+         material = materials[i];
+ 
+-        h = ((360 * (material.hue + time)) % 360) / 360;
+-        material.color.setHSL(h, material.saturation, 0.5);
++        h = ((360 * (material.hue! + time)) % 360) / 360;
++        material.color.setHSL(h, material.saturation!, 0.5);
+     }
+ 
+     if (counter % 1000 > 200) {
+         for (let i = 0; i < cube_count; i++) {
+             mesh = meshes[i];
+ 
+-            mesh.rotation.x += 10 * mesh.dx;
+-            mesh.rotation.y += 10 * mesh.dy;
++            mesh.rotation.x += 10 * mesh.dx!;
++            mesh.rotation.y += 10 * mesh.dy!;
+ 
+-            mesh.position.x -= 150 * mesh.dx;
+-            mesh.position.y += 150 * mesh.dy;
+-            mesh.position.z += 300 * mesh.dx;
++            mesh.position.x -= 150 * mesh.dx!;
++            mesh.position.y += 150 * mesh.dy!;
++            mesh.position.z += 300 * mesh.dx!;
+         }
+     }
+ 
+@@ -182,8 +185,8 @@ function render() {
+         for (let i = 0; i < cube_count; i++) {
+             mesh = meshes[i];
+ 
+-            mesh.dx *= -1;
+-            mesh.dy *= -1;
++            mesh.dx! *= -1;
++            mesh.dy! *= -1;
+         }
+     }
+ 
+diff --git a/examples-testing/examples/webgpu_morphtargets.ts b/examples-testing/examples/webgpu_morphtargets.ts
+index 317a28b..7897a2d 100644
+--- a/examples-testing/examples/webgpu_morphtargets.ts
++++ b/examples-testing/examples/webgpu_morphtargets.ts
+@@ -6,7 +6,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let container, camera, scene, renderer, mesh;
++let container: HTMLElement,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: WebGPURenderer,
++    mesh: THREE.Mesh;
+ 
+ init();
+ 
+@@ -17,7 +21,7 @@ function init() {
+         throw new Error('No WebGPU support');
+     }
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     scene = new THREE.Scene();
+     scene.background = new THREE.Color(0x8fbcd4);
+@@ -71,7 +75,7 @@ function createGeometry() {
+     const spherePositions = [];
+ 
+     // for the second morph target, we'll twist the cubes vertices
+-    const twistPositions = [];
++    const twistPositions: number[] = [];
+     const direction = new THREE.Vector3(1, 0, 0);
+     const vertex = new THREE.Vector3();
+ 
+@@ -112,12 +116,12 @@ function initGUI() {
+     gui.add(params, 'Spherify', 0, 1)
+         .step(0.01)
+         .onChange(function (value) {
+-            mesh.morphTargetInfluences[0] = value;
++            mesh.morphTargetInfluences![0] = value;
+         });
+     gui.add(params, 'Twist', 0, 1)
+         .step(0.01)
+         .onChange(function (value) {
+-            mesh.morphTargetInfluences[1] = value;
++            mesh.morphTargetInfluences![1] = value;
+         });
+ }
+ 
+diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
+index 002b4c8..04b6497 100644
+--- a/examples-testing/examples/webgpu_shadowmap.ts
++++ b/examples-testing/examples/webgpu_shadowmap.ts
+@@ -5,9 +5,9 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, clock;
+-let dirLight, spotLight;
+-let torusKnot, dirGroup;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer, clock: THREE.Clock;
++let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
++let torusKnot: THREE.Mesh, dirGroup: THREE.Group;
+ 
+ init();
+ 
+@@ -137,7 +137,7 @@ function resize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     const delta = clock.getDelta();
+ 
+     torusKnot.rotation.x += 0.25 * delta;
+diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
+index d2b3482..d88be17 100644
+--- a/examples-testing/examples/webgpu_video_panorama.ts
++++ b/examples-testing/examples/webgpu_video_panorama.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+ let isUserInteracting = false,
+     lon = 0,
+@@ -27,7 +27,7 @@ function init() {
+         throw new Error('No WebGPU support');
+     }
+ 
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
+ 
+@@ -37,7 +37,7 @@ function init() {
+     // invert the geometry on the x-axis so that all of the faces point inward
+     geometry.scale(-1, 1, 1);
+ 
+-    const video = document.getElementById('video');
++    const video = document.getElementById('video') as HTMLVideoElement;
+     video.play();
+ 
+     const texture = new THREE.VideoTexture(video);
+@@ -68,7 +68,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     isUserInteracting = true;
+ 
+     onPointerDownPointerX = event.clientX;
+@@ -78,7 +78,7 @@ function onPointerDown(event) {
+     onPointerDownLat = lat;
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (isUserInteracting === true) {
+         lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
+         lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index 996e41f..03af8ca 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts

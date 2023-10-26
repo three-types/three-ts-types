@@ -1,5 +1,5 @@
-import { Loader, Texture } from 'three';
+import { DataTexture, Loader } from 'three';
 
-export class IESLoader extends Loader {
-    parse(text: string): Texture;
+export class IESLoader extends Loader<DataTexture> {
+    parse(text: string): DataTexture;
 }
