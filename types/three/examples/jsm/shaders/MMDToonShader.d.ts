@@ -1,6 +1,7 @@
 import { IUniform } from '../../../src/Three.js';
 
 export const MMDToonShader: {
+    name: string;
     defines: {
         TOON: boolean;
         MATCAP: boolean;
