@@ -39,6 +39,7 @@ const files = {
         'webgl_geometry_extrude_splines',
         'webgl_geometry_minecraft',
         'webgl_geometry_nurbs',
+        'webgl_geometry_sdf',
         'webgl_geometry_shapes',
         // 'webgl_geometry_spline_editor',
         'webgl_geometry_teapot',
@@ -174,6 +175,7 @@ const files = {
         'webgl_materials_wireframe',
         'webgl_math_obb',
         'webgl_math_orientation_transform',
+        'webgl_mesh_batch',
         'webgl_mirror',
         // 'webgl_modifier_curve',
         // 'webgl_modifier_curve_instanced',
@@ -318,6 +320,7 @@ const files = {
         'webgpu_clearcoat',
         // 'webgpu_compute_audio',
         // 'webgpu_compute_particles',
+        'webgpu_compute_particles_rain',
         // 'webgpu_compute_points',
         // 'webgpu_compute_texture',
         // 'webgpu_compute_texture_pingpong',
@@ -327,6 +330,7 @@ const files = {
         // 'webgpu_depth_texture',
         // 'webgpu_equirectangular',
         // 'webgpu_instance_mesh',
+        'webgpu_instance_points',
         // 'webgpu_instance_uniform',
         // 'webgpu_lights_custom',
         'webgpu_lights_ies_spotlight',
@@ -345,12 +349,14 @@ const files = {
         // 'webgpu_particles',
         // 'webgpu_rtt',
         // 'webgpu_sandbox',
+        'webgpu_shadertoy',
         'webgpu_shadowmap',
         // 'webgpu_skinning',
         // 'webgpu_skinning_instancing',
         // 'webgpu_skinning_points',
         // 'webgpu_sprites',
         // 'webgpu_tsl_editor',
+        'webgpu_tsl_transpiler',
         'webgpu_video_panorama',
     ],
     webaudio: ['webaudio_orientation', 'webaudio_sandbox', 'webaudio_timing', 'webaudio_visualizer'],
@@ -422,7 +428,6 @@ const files = {
     svg: ['svg_lines', 'svg_sandbox'],
     tests: ['webgl_furnace_test', 'webgl_pmrem_test', 'misc_uv_tests'],
 };
-
 const re = /<script type="module">((.|\r|\n)+)<\/script>/;
 
 const inDir = '../three.js/examples';
