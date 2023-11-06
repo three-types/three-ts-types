@@ -17,10 +17,6 @@ Be sure your commit messages follow this specification: https://www.conventional
 
 Consider [adding a test](README.md#testing) along with your changes to make sure they are correct and to avoid regressions. Regardless of whether you've added a test, make sure to run the tests before you create a PR. You can do so by running `pnpm run test`.
 
-## Creating a PR
-
-We have two core branches that mirror the `three` repo. If your PR is for the current release of `three` it should be based off `master` and aimed at merging back into `master`. If your PR is for the next release of `three` then it should be based off `dev` and therefore aimed at merging back into `dev`.
-
 ## Help needed
 
 Please check out the [the open issues](https://github.com/three-types/three-ts-types/issues).
