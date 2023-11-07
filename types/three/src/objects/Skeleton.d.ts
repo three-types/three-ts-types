@@ -61,12 +61,6 @@ export class Skeleton {
      */
     boneTexture: null | DataTexture;
 
-    /**
-     * The size of the {@link boneTexture | .boneTexture}.
-     * @remarks Expects a `Integer`
-     */
-    boneTextureSize: number;
-
     frame: number;
 
     init(): void;
