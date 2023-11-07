@@ -21,6 +21,9 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     _geometryInitialized: boolean;
     _geometryCount: number;
+    _multiDrawCounts: Int32Array | null;
+    _multiDrawStarts: Int32Array | null;
+    _multiDrawCount: number;
 
     _matrices: Matrix4[];
     _matricesTexture: DataTexture | null;
