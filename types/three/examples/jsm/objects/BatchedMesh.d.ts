@@ -1,10 +1,9 @@
 import { Matrix4, Mesh, BufferGeometry, Material, DataTexture, IUniform } from '../../../src/Three.js';
 
 declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
-    _vertexStarts: number[];
-    _vertexCounts: number[];
-    _indexStarts: number[];
-    _indexCounts: number[];
+    isBatchedMesh: true;
+
+    _drawRanges: { start: number; count: number }[];
 
     _reservedRanges: {
         vertexStart: number;
@@ -12,6 +11,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
         indexStart: number;
         indexCount: number;
     }[];
+
     _visible: boolean[];
     _active: boolean[];
 
@@ -21,8 +21,11 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     _geometryInitialized: boolean;
     _geometryCount: number;
+
     _matrices: Matrix4[];
     _matricesTexture: DataTexture | null;
+
+    _frustumCulled: boolean;
 
     _customUniforms: Record<string, IUniform>;
 
