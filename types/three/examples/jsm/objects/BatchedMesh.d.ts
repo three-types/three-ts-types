@@ -30,12 +30,9 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     _frustumCulled: boolean;
 
-    _customUniforms: Record<string, IUniform>;
-
     constructor(maxGeometryCount: number, maxVertexCount: number, maxIndexCount?: number, material?: Material);
 
     _initMatricesTexture(): void;
-    _initShader(): void;
     _initializeGeometry(reference: BufferGeometry): void;
     _validateGeometry(geometry: BufferGeometry): void;
 
