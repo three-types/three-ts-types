@@ -34,7 +34,7 @@ export default class Renderer {
 
     render(scene: Scene, camera: Camera): Promise<void>;
 
-    setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): void;
+    setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): Promise<void>;
 
     setPixelRatio(value?: number): void;
 
