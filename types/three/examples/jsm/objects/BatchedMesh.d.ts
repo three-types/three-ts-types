@@ -1,7 +1,8 @@
-import { Matrix4, Mesh, BufferGeometry, Material, DataTexture } from '../../../src/Three.js';
+import { Matrix4, Mesh, BufferGeometry, Material, DataTexture, Box3, Sphere } from '../../../src/Three.js';
 
 declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     isBatchedMesh: true;
+    perObjectFrustumCulled: boolean;
 
     _drawRanges: { start: number; count: number }[];
 
@@ -14,6 +15,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     _visible: boolean[];
     _active: boolean[];
+    _bounds: { boxInitialized: boolean; box: Box3; sphereInitialized: boolean; sphere: Sphere }[];
 
     _maxGeometryCount: number;
     _maxVertexCount: number;
@@ -27,8 +29,6 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     _matricesTexture: DataTexture | null;
 
-    _frustumCulled: boolean;
-
     constructor(maxGeometryCount: number, maxVertexCount: number, maxIndexCount?: number, material?: Material);
 
     _initMatricesTexture(): void;
@@ -41,6 +41,9 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     addGeometry(geometry: BufferGeometry, vertexCount?: number, indexCount?: number): number;
     setGeometryAt(id: number, geometry: BufferGeometry): number;
     deleteGeometry(geometryId: number): this;
+
+    getBoundingBoxAt(id: number, target: Box3): Box3;
+    getBoundingSphereAt(id: number, target: Sphere): Sphere;
 
     optimize(): never; // Not implemented
 
