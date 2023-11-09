@@ -104,7 +104,7 @@ export class BufferAttribute {
      * This can be used to only update some components of stored vectors (for example, just the component related to
      * color). Use the {@link .addUpdateRange} function to add ranges to this array.
      */
-    updateRanges: {
+    updateRanges: Array<{
         /**
          * Position at which to start update.
          */
@@ -113,7 +113,7 @@ export class BufferAttribute {
          * The number of components to update.
          */
         count: number;
-    }[];
+    }>;
 
     /**
      * A version number, incremented every time the {@link BufferAttribute.needsUpdate | needsUpdate} property is set to true.

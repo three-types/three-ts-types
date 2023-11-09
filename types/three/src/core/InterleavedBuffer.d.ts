@@ -56,7 +56,7 @@ export class InterleavedBuffer {
      * This can be used to only update some components of stored data. Use the {@link .addUpdateRange} function to add
      * ranges to this array.
      */
-    updateRanges: {
+    updateRanges: Array<{
         /**
          * Position at which to start update.
          */
@@ -65,7 +65,7 @@ export class InterleavedBuffer {
          * The number of components to update.
          */
         count: number;
-    }[];
+    }>;
 
     /**
      * A version number, incremented every time the {@link BufferAttribute.needsUpdate | needsUpdate} property is set to true.
