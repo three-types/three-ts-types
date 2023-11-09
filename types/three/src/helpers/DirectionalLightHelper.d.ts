@@ -12,6 +12,7 @@ import { ColorRepresentation } from '../math/Color.js';
  * ```typescript
  * const light = new THREE.DirectionalLight(0xFFFFFF);
  * const helper = new THREE.DirectionalLightHelper(light, 5);
+ * scene.add(light);
  * scene.add(helper);
  * ```
  * @see {@link https://threejs.org/docs/index.html#api/en/helpers/DirectionalLightHelper | Official Documentation}
