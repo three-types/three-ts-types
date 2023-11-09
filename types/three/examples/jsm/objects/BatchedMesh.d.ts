@@ -1,4 +1,4 @@
-import { Matrix4, Mesh, BufferGeometry, Material, DataTexture, IUniform } from '../../../src/Three.js';
+import { Matrix4, Mesh, BufferGeometry, Material, DataTexture } from '../../../src/Three.js';
 
 declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     isBatchedMesh: true;
@@ -42,16 +42,17 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     setGeometryAt(id: number, geometry: BufferGeometry): number;
     deleteGeometry(geometryId: number): this;
 
+    optimize(): never; // Not implemented
+
     setMatrixAt(geometryId: number, matrix: Matrix4): this;
     getMatrixAt(geometryId: number, matrix: Matrix4): Matrix4;
     setVisibleAt(geometryId: number, value: boolean): this;
     getVisibleAt(geometryId: number): boolean;
 
-    // Not implemented
-    optimize(): never;
     raycast(): void; // no-op
-    copy(): never;
-    toJSON(): never;
+
+    // Doesn't currently return this, see https://github.com/mrdoob/three.js/pull/27131#discussion_r1388014852
+    copy(source: this): this;
 
     dispose(): this;
 }
