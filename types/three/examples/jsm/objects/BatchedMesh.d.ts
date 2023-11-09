@@ -3,6 +3,8 @@ import { Matrix4, Mesh, BufferGeometry, Material, DataTexture, Box3, Sphere } fr
 declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     isBatchedMesh: true;
     perObjectFrustumCulled: boolean;
+    boundingBox: Box3 | null;
+    boundingSphere: Sphere | null;
 
     _drawRanges: { start: number; count: number }[];
 
@@ -38,6 +40,10 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     getGeometryCount(): number;
     getVertexCount(): number;
     getIndexCount(): number;
+
+    computeBoundingBox(): void;
+    computeBoundingSphere(): void;
+
     addGeometry(geometry: BufferGeometry, vertexCount?: number, indexCount?: number): number;
     setGeometryAt(id: number, geometry: BufferGeometry): number;
     deleteGeometry(geometryId: number): this;
