@@ -1,8 +1,9 @@
 import { Color, MaterialParameters, ShaderMaterial, Vector2 } from '../../../src/Three.js';
+import { ColorRepresentation } from '../../../src/math/Color.js';
 
 export interface LineMaterialParameters extends MaterialParameters {
     alphaToCoverage?: boolean | undefined;
-    color?: number | undefined;
+    color?: ColorRepresentation | undefined;
     dashed?: boolean | undefined;
     dashScale?: number | undefined;
     dashSize?: number | undefined;
