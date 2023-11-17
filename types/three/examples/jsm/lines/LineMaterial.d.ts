@@ -1,5 +1,4 @@
-import { Color, MaterialParameters, ShaderMaterial, Vector2 } from '../../../src/Three.js';
-import { ColorRepresentation } from '../../../src/math/Color.js';
+import { Color, ColorRepresentation, MaterialParameters, ShaderMaterial, Vector2 } from '../../../src/Three.js';
 
 export interface LineMaterialParameters extends MaterialParameters {
     alphaToCoverage?: boolean | undefined;
