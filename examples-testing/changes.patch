@@ -9207,25 +9207,25 @@ index dfca0ac..bfa38b8 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index c8e8597..cc3affd 100644
+index 1344aeb..6024675 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
-@@ -6,10 +6,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,10 +5,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { BatchedMesh } from 'three/addons/objects/BatchedMesh.js';
  
 -let stats, gui, guiStatsEl;
 -let camera, controls, scene, renderer;
--let geometries, mesh;
+-let geometries, mesh, material;
 -const ids = [];
 +let stats: Stats, gui: GUI, guiStatsEl: HTMLLIElement;
 +let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let geometries: THREE.BufferGeometry[], mesh: THREE.Group | BatchedMesh;
++let geometries: THREE.BufferGeometry[], mesh: THREE.Group | THREE.BatchedMesh, material: THREE.MeshNormalMaterial;
 +const ids: number[] = [];
  const matrix = new THREE.Matrix4();
  
  //
-@@ -41,7 +41,7 @@ animate();
+@@ -43,7 +43,7 @@ animate();
  
  //
  
@@ -9234,7 +9234,7 @@ index c8e8597..cc3affd 100644
      position.x = Math.random() * 40 - 20;
      position.y = Math.random() * 40 - 20;
      position.z = Math.random() * 40 - 20;
-@@ -57,7 +57,7 @@ function randomizeMatrix(matrix) {
+@@ -59,7 +59,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -9243,7 +9243,7 @@ index c8e8597..cc3affd 100644
      rotation.x = Math.random() * 0.01;
      rotation.y = Math.random() * 0.01;
      rotation.z = Math.random() * 0.01;
-@@ -78,10 +78,10 @@ function createMaterial() {
+@@ -85,10 +85,10 @@ function createMaterial() {
  
  function cleanup() {
      if (mesh) {
@@ -9252,23 +9252,34 @@ index c8e8597..cc3affd 100644
  
 -        if (mesh.dispose) {
 -            mesh.dispose();
-+        if ((mesh as BatchedMesh).dispose) {
-+            (mesh as BatchedMesh).dispose();
++        if ((mesh as THREE.BatchedMesh).dispose) {
++            (mesh as THREE.BatchedMesh).dispose();
          }
      }
  }
-@@ -214,9 +214,9 @@ function animateMeshes() {
+@@ -238,9 +238,9 @@ function animateMeshes() {
              const rotationMatrix = mesh.userData.rotationSpeeds[i];
              const id = ids[i];
  
 -            mesh.getMatrixAt(id, matrix);
-+            (mesh as BatchedMesh).getMatrixAt(id, matrix);
++            (mesh as THREE.BatchedMesh).getMatrixAt(id, matrix);
              matrix.multiply(rotationMatrix);
 -            mesh.setMatrixAt(id, matrix);
-+            (mesh as BatchedMesh).setMatrixAt(id, matrix);
++            (mesh as THREE.BatchedMesh).setMatrixAt(id, matrix);
          }
      } else {
          for (let i = 0; i < loopNum; i++) {
+@@ -257,8 +257,8 @@ function animateMeshes() {
+ }
+ 
+ function render() {
+-    if (mesh.isBatchedMesh) {
+-        mesh.sortObjects = api.sortObjects;
++    if ((mesh as THREE.BatchedMesh).isBatchedMesh) {
++        (mesh as THREE.BatchedMesh).sortObjects = api.sortObjects;
+     }
+ 
+     renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_mirror.ts b/examples-testing/examples/webgl_mirror.ts
 index 5e68213..e4850ea 100644
 --- a/examples-testing/examples/webgl_mirror.ts
@@ -12493,7 +12504,7 @@ index fd26313..203f44d 100644
      }
  }
 diff --git a/examples-testing/examples/webgl_simple_gi.ts b/examples-testing/examples/webgl_simple_gi.ts
-index cd5d567..12c30ec 100644
+index 5ce1d1d..0ddf9cf 100644
 --- a/examples-testing/examples/webgl_simple_gi.ts
 +++ b/examples-testing/examples/webgl_simple_gi.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -12505,7 +12516,7 @@ index cd5d567..12c30ec 100644
          super.copy(source);
  
          this.geometry = source.geometry.clone();
-@@ -14,105 +14,107 @@ class GIMesh extends THREE.Mesh {
+@@ -14,104 +14,109 @@ class GIMesh extends THREE.Mesh {
  
  //
  
@@ -12641,11 +12652,12 @@ index cd5d567..12c30ec 100644
 +                currentVertex++;
 +            }
  
--        attributes.color.updateRange.offset = startVertex * 3;
--        attributes.color.updateRange.count = (currentVertex - startVertex) * 3;
+-        attributes.color.addUpdateRange(startVertex * 3, (currentVertex - startVertex) * 3);
 -        attributes.color.needsUpdate = true;
-+            (attributes.color as THREE.BufferAttribute).updateRange.offset = startVertex * 3;
-+            (attributes.color as THREE.BufferAttribute).updateRange.count = (currentVertex - startVertex) * 3;
++            (attributes.color as THREE.BufferAttribute).addUpdateRange(
++                startVertex * 3,
++                (currentVertex - startVertex) * 3,
++            );
 +            attributes.color.needsUpdate = true;
  
 -        if (currentVertex >= totalVertex) {
