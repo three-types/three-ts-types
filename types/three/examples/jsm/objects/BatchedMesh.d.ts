@@ -58,8 +58,6 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     setVisibleAt(geometryId: number, value: boolean): this;
     getVisibleAt(geometryId: number): boolean;
 
-    raycast(): void; // no-op
-
     copy(source: this): this;
 
     dispose(): this;
