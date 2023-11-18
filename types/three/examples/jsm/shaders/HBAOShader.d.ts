@@ -8,7 +8,7 @@ export const HBAOShader: {
         SAMPLE_VECTORS: string;
         NORMAL_VECTOR_TYPE: number;
         DEPTH_VALUE_SOURCE: number;
-        COSINE_SAMPLE_HEMISPHERE: number;
+        SAMPLING_FROM_NOISE: number;
     };
     uniforms: {
         tNormal: IUniform;
