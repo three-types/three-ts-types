@@ -60,7 +60,6 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
 
     raycast(): void; // no-op
 
-    // Doesn't currently return this, see https://github.com/mrdoob/three.js/pull/27131#discussion_r1388014852
     copy(source: this): this;
 
     dispose(): this;
