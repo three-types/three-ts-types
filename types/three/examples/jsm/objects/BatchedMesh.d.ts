@@ -51,8 +51,6 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     getBoundingBoxAt(id: number, target: Box3): Box3;
     getBoundingSphereAt(id: number, target: Sphere): Sphere;
 
-    optimize(): never; // Not implemented
-
     setMatrixAt(geometryId: number, matrix: Matrix4): this;
     getMatrixAt(geometryId: number, matrix: Matrix4): Matrix4;
     setVisibleAt(geometryId: number, value: boolean): this;
