@@ -356,6 +356,7 @@ const files = {
         // 'webgpu_skinning_instancing',
         // 'webgpu_skinning_points',
         // 'webgpu_sprites',
+        // 'webgpu_textures_2d-array',
         // 'webgpu_tsl_editor',
         // 'webgpu_tsl_transpiler',
         'webgpu_video_panorama',
@@ -429,6 +430,7 @@ const files = {
     svg: ['svg_lines', 'svg_sandbox'],
     tests: ['webgl_furnace_test', 'webgl_pmrem_test', 'misc_uv_tests'],
 };
+
 const re = /<script type="module">((.|\r|\n)+)<\/script>/;
 
 const inDir = '../three.js/examples';
