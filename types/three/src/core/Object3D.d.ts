@@ -474,8 +474,10 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * and returns the first with a property that matches the value given.
      * @param name The property name to search for.
      * @param value Value of the given property.
+     * @param optionalTarget target to set the result. Otherwise a new Array is instantiated. If set, you must clear
+     * this array prior to each call (i.e., array.length = 0;).
      */
-    getObjectsByProperty(name: string, value: any): Object3D[];
+    getObjectsByProperty(name: string, value: any, optionalTarget?: Object3D[]): Object3D[];
 
     /**
      * Returns a vector representing the position of the object in world space.
