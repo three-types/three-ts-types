@@ -12,9 +12,26 @@ import { Camera } from '../cameras/Camera.js';
  * usage of {@link BatchedMesh} will help you to reduce the number of draw calls and thus improve the overall rendering
  * performance in your application.
  *
- * Requires platform support for the {@link https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_multi_draw WEBGL_multi_draw extension}.
+ * If the {@link https://developer.mozilla.org/en-US/docs/Web/API/WEBGL_multi_draw WEBGL_multi_draw extension} is not
+ * supported then a less performant callback is used.
  *
- * Example: {@link https://threejs.org/examples/#webgl_mesh_batch WebGL / mesh / batch}
+ * @example
+ * const box = new THREE.BoxGeometry( 1, 1, 1 );
+ * const sphere = new THREE.BoxGeometry( 1, 1, 1 );
+ * const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+ *
+ * // initialize and add geometries into the batched mesh
+ * const batchedMesh = new BatchedMesh( 10, 5000, 10000, material );
+ * const boxId = batchedMesh.addGeometry( box );
+ * const sphereId = batchedMesh.addGeometry( sphere );
+ *
+ * // position the geometries
+ * batchedMesh.setMatrixAt( boxId, boxMatrix );
+ * batchedMesh.setMatrixAt( sphereId, sphereMatrix );
+ *
+ * scene.add( batchedMesh );
+ *
+ * @also Example: {@link https://threejs.org/examples/#webgl_mesh_batch WebGL / mesh / batch}
  */
 declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     /**
@@ -46,6 +63,11 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * @default true
      */
     sortObjects: boolean;
+
+    /**
+     * The maximum number of individual geometries that can be stored in the {@link BatchedMesh}. Read only.
+     */
+    get maxGeometryCount(): number;
 
     /**
      * Read-only flag to check if a given object is of type {@link BatchedMesh}.
@@ -139,10 +161,6 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * Marks the geometry at the given index as deleted and to not be rendered anymore.
      */
     deleteGeometry(index: number): this;
-
-    getGeometryCount(): number;
-    getVertexCount(): number;
-    getIndexCount(): number;
 
     getBoundingBoxAt(index: number, target: Box3): Box3;
     getBoundingSphereAt(index: number, target: Sphere): Sphere;
