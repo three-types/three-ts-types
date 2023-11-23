@@ -9207,12 +9207,15 @@ index dfca0ac..bfa38b8 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index 1344aeb..6024675 100644
+index 340c731..f8968ab 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
-@@ -5,10 +5,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { radixSort } from 'three/addons/utils/SortUtils.js';
++import { RadixSortOptions, radixSort } from 'three/addons/utils/SortUtils.js';
  
 -let stats, gui, guiStatsEl;
 -let camera, controls, scene, renderer;
@@ -9225,7 +9228,7 @@ index 1344aeb..6024675 100644
  const matrix = new THREE.Matrix4();
  
  //
-@@ -43,7 +43,7 @@ animate();
+@@ -46,7 +46,7 @@ animate();
  
  //
  
@@ -9234,7 +9237,7 @@ index 1344aeb..6024675 100644
      position.x = Math.random() * 40 - 20;
      position.y = Math.random() * 40 - 20;
      position.z = Math.random() * 40 - 20;
-@@ -59,7 +59,7 @@ function randomizeMatrix(matrix) {
+@@ -62,7 +62,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -9243,7 +9246,7 @@ index 1344aeb..6024675 100644
      rotation.x = Math.random() * 0.01;
      rotation.y = Math.random() * 0.01;
      rotation.z = Math.random() * 0.01;
-@@ -85,10 +85,10 @@ function createMaterial() {
+@@ -87,10 +87,10 @@ function createMaterial() {
  
  function cleanup() {
      if (mesh) {
@@ -9257,7 +9260,38 @@ index 1344aeb..6024675 100644
          }
      }
  }
-@@ -238,9 +238,9 @@ function animateMeshes() {
+@@ -213,18 +213,26 @@ function init() {
+ 
+ //
+ 
+-function sortFunction(list, camera) {
++type BatchedMeshWithOptions = THREE.BatchedMesh & {
++    _options?: RadixSortOptions<{ start: number; count: number; z: number }>;
++};
++
++function sortFunction(
++    this: THREE.BatchedMesh,
++    list: { start: number; count: number; z: number }[],
++    camera: THREE.Camera,
++) {
+     // initialize options
+-    this._options = this._options || {
++    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
+         get: el => el.z,
+         aux: new Array(list.length),
+     };
+ 
+-    const options = this._options;
++    const options = (this as BatchedMeshWithOptions)._options!;
+     options.reversed = this.material.transparent;
+ 
+     // convert depth to unsigned 32 bit range
+-    const den = camera.far;
++    const den = (camera as THREE.PerspectiveCamera).far;
+     for (let i = 0, l = list.length; i < l; i++) {
+         const el = list[i];
+         el.z = (1 << 30) * (el.z / den);
+@@ -263,9 +271,9 @@ function animateMeshes() {
              const rotationMatrix = mesh.userData.rotationSpeeds[i];
              const id = ids[i];
  
@@ -9269,14 +9303,18 @@ index 1344aeb..6024675 100644
          }
      } else {
          for (let i = 0; i < loopNum; i++) {
-@@ -257,8 +257,8 @@ function animateMeshes() {
+@@ -282,10 +290,10 @@ function animateMeshes() {
  }
  
  function render() {
 -    if (mesh.isBatchedMesh) {
 -        mesh.sortObjects = api.sortObjects;
+-        mesh.perObjectFrustumCulled = api.perObjectFrustumCulled;
+-        mesh.setCustomSort(api.useCustomSort ? sortFunction : null);
 +    if ((mesh as THREE.BatchedMesh).isBatchedMesh) {
 +        (mesh as THREE.BatchedMesh).sortObjects = api.sortObjects;
++        (mesh as THREE.BatchedMesh).perObjectFrustumCulled = api.perObjectFrustumCulled;
++        (mesh as THREE.BatchedMesh).setCustomSort(api.useCustomSort ? sortFunction : null);
      }
  
      renderer.render(scene, camera);
@@ -13379,6 +13417,39 @@ index 751d39f..f54fb93 100644
          });
  }
  
+diff --git a/examples-testing/examples/webgpu_morphtargets_face.ts b/examples-testing/examples/webgpu_morphtargets_face.ts
+index 5cc6547..87058f0 100644
+--- a/examples-testing/examples/webgpu_morphtargets_face.ts
++++ b/examples-testing/examples/webgpu_morphtargets_face.ts
+@@ -24,7 +24,7 @@ function init() {
+         throw new Error('No WebGPU or WebGL2 support');
+     }
+ 
+-    let mixer;
++    let mixer: THREE.AnimationMixer;
+ 
+     const clock = new THREE.Clock();
+ 
+@@ -60,8 +60,8 @@ function init() {
+ 
+             // GUI
+ 
+-            const head = mesh.getObjectByName('mesh_2');
+-            const influences = head.morphTargetInfluences;
++            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
++            const influences = head.morphTargetInfluences!;
+ 
+             //head.morphTargetInfluences = null;
+ 
+@@ -71,7 +71,7 @@ function init() {
+             const gui = new GUI();
+             gui.close();
+ 
+-            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
++            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
+                 gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
+             }
+         });
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
 index 4184cb4..f6d36c0 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
