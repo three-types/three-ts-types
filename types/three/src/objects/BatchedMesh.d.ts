@@ -4,6 +4,7 @@ import { Material } from '../materials/Material.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Matrix4 } from '../math/Matrix4.js';
+import { Camera } from '../cameras/Camera';
 
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to
@@ -29,6 +30,8 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * @default null
      */
     boundingSphere: Sphere | null;
+
+    customSort: ((this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void) | null;
 
     /**
      * If true then the individual objects within the {@link BatchedMesh} are frustum culled.
@@ -75,6 +78,14 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * used in your app.
      */
     dispose(): this;
+
+    /**
+     * Takes a sort a function that is run before render. The function takes a list of items to sort and a camera. The
+     * objects in the list include a "z" field to perform a depth-ordered sort with.
+     */
+    setCustomSort(
+        func: (this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void,
+    ): this;
 
     /**
      * Get the local transformation matrix of the defined instance.
