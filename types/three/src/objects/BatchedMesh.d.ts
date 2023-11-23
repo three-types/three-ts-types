@@ -4,7 +4,7 @@ import { Material } from '../materials/Material.js';
 import { Box3 } from '../math/Box3.js';
 import { Sphere } from '../math/Sphere.js';
 import { Matrix4 } from '../math/Matrix4.js';
-import { Camera } from '../cameras/Camera';
+import { Camera } from '../cameras/Camera.js';
 
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to
@@ -84,7 +84,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * objects in the list include a "z" field to perform a depth-ordered sort with.
      */
     setCustomSort(
-        func: (this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void,
+        func: ((this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void) | null,
     ): this;
 
     /**
