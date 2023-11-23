@@ -31,7 +31,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      */
     boundingSphere: Sphere | null;
 
-    customSort: ((this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void) | null;
+    customSort: ((this: this, list: Array<{ start: number; count: number; z: number }>, camera: Camera) => void) | null;
 
     /**
      * If true then the individual objects within the {@link BatchedMesh} are frustum culled.
@@ -84,7 +84,7 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * objects in the list include a "z" field to perform a depth-ordered sort with.
      */
     setCustomSort(
-        func: ((this: this, list: { start: number; count: number; z: number }[], camera: Camera) => void) | null,
+        func: ((this: this, list: Array<{ start: number; count: number; z: number }>, camera: Camera) => void) | null,
     ): this;
 
     /**
