@@ -208,7 +208,7 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * @remarks It should not hold references to _functions_ as these **will not** be cloned.
      * @default `{}`
      */
-    userData: { [key: string]: any }; // TODO Replace this to a Record?
+    userData: Record<string, any>;
 
     /**
      * Custom depth material to be used when rendering to the depth map.
