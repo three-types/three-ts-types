@@ -1142,7 +1142,7 @@ index fdd35d4..1b12050 100644
      const link = document.createElement('a');
  
 diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
-index 0a45ec2..f7803d6 100644
+index ceb964b..2b7de4d 100644
 --- a/examples-testing/examples/misc_exporter_gltf.ts
 +++ b/examples-testing/examples/misc_exporter_gltf.ts
 @@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
@@ -1194,7 +1194,7 @@ index 0a45ec2..f7803d6 100644
  
  const params = {
      trs: false,
-@@ -388,8 +395,8 @@ function init() {
+@@ -389,8 +396,8 @@ function init() {
      const color = new THREE.Color();
      for (let i = 0; i < 50; i++) {
          matrix.setPosition(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
@@ -9207,7 +9207,7 @@ index dfca0ac..bfa38b8 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index 340c731..f8968ab 100644
+index 57a3ad8..e71bce8 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
 @@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -9278,7 +9278,7 @@ index 340c731..f8968ab 100644
 -    this._options = this._options || {
 +    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
          get: el => el.z,
-         aux: new Array(list.length),
+         aux: new Array(this.maxGeometryCount),
      };
  
 -    const options = this._options;
@@ -9286,12 +9286,12 @@ index 340c731..f8968ab 100644
      options.reversed = this.material.transparent;
  
      // convert depth to unsigned 32 bit range
--    const den = camera.far;
-+    const den = (camera as THREE.PerspectiveCamera).far;
+-    const factor = (2 ** 32 - 1) / camera.far; // UINT32_MAX / max_depth
++    const factor = (2 ** 32 - 1) / (camera as THREE.PerspectiveCamera).far; // UINT32_MAX / max_depth
      for (let i = 0, l = list.length; i < l; i++) {
-         const el = list[i];
-         el.z = (1 << 30) * (el.z / den);
-@@ -263,9 +271,9 @@ function animateMeshes() {
+         list[i].z *= factor;
+     }
+@@ -262,9 +270,9 @@ function animateMeshes() {
              const rotationMatrix = mesh.userData.rotationSpeeds[i];
              const id = ids[i];
  
@@ -9303,7 +9303,7 @@ index 340c731..f8968ab 100644
          }
      } else {
          for (let i = 0; i < loopNum; i++) {
-@@ -282,10 +290,10 @@ function animateMeshes() {
+@@ -281,10 +289,10 @@ function animateMeshes() {
  }
  
  function render() {
