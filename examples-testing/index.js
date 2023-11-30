@@ -319,6 +319,7 @@ const files = {
     'webgpu (wip)': [
         // 'webgpu_backdrop',
         // 'webgpu_backdrop_area',
+        'webgpu_camera_logarithmicdepthbuffer',
         'webgpu_clearcoat',
         // 'webgpu_compute_audio',
         // 'webgpu_compute_particles',
