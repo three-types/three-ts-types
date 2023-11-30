@@ -2723,7 +2723,7 @@ index c23ea0c..705d08f 100644
  
      for (let i = 0; i < segments; i++) {
 diff --git a/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts b/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
-index d81c173..209454f 100644
+index 54bf898..096245e 100644
 --- a/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_lines_indexed.ts
 @@ -2,17 +2,17 @@ import * as THREE from 'three';
@@ -2767,10 +2767,10 @@ index d81c173..209454f 100644
  
 -    function add_vertex(v) {
 +    function add_vertex(v: THREE.Vector3) {
-         if (next_positions_index == 0xffff) console.error('Too many points.');
- 
          positions.push(v.x, v.y, v.z);
-@@ -44,7 +44,7 @@ function init() {
+         colors.push(Math.random() * 0.5 + 0.5, Math.random() * 0.5 + 0.5, 1);
+ 
+@@ -42,7 +42,7 @@ function init() {
  
      // simple Koch curve
  
@@ -2779,7 +2779,7 @@ index d81c173..209454f 100644
          if (--depth < 0) {
              const i = next_positions_index - 1; // p0 already there
              add_vertex(p4);
-@@ -71,7 +71,7 @@ function init() {
+@@ -69,7 +69,7 @@ function init() {
          snowflake_iteration(p3, p4, depth);
      }
  
@@ -10886,7 +10886,7 @@ index 47e89f6..4329bfe 100644
          renderer.setRenderTarget(null);
          renderer.clear();
 diff --git a/examples-testing/examples/webgl_postprocessing_hbao.ts b/examples-testing/examples/webgl_postprocessing_hbao.ts
-index 31f50c5..8ef076e 100644
+index 191dba2..230d0f0 100644
 --- a/examples-testing/examples/webgl_postprocessing_hbao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_hbao.ts
 @@ -13,7 +13,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -13136,6 +13136,183 @@ index 6aadaf2..bb7fa30 100644
  
  init();
  animate();
+diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
+index 2e0d37c..deac7ad 100644
+--- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
++++ b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
+@@ -1,6 +1,6 @@
+ import * as THREE from 'three';
+ 
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -22,8 +22,16 @@ let zoompos = -100,
+     minzoomspeed = 0.015;
+ let zoomspeed = minzoomspeed;
+ 
+-let container, border, stats;
+-const objects = {};
++let container: HTMLElement, border: HTMLElement, stats: Stats;
++
++interface ObjectView {
++    container: HTMLElement;
++    renderer: WebGPURenderer;
++    scene: THREE.Scene;
++    camera: THREE.PerspectiveCamera;
++}
++
++const objects: { normal?: ObjectView; logzbuf?: ObjectView } = {};
+ 
+ // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
+ // Try to use some descriptive real-world examples of objects at each scale
+@@ -55,7 +63,7 @@ function init() {
+         throw new Error('No WebGPU or WebGL2 support');
+     }
+ 
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     const loader = new FontLoader();
+     loader.load('fonts/helvetiker_regular.typeface.json', function (font) {
+@@ -70,7 +78,7 @@ function init() {
+     container.appendChild(stats.dom);
+ 
+     // Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
+-    border = document.getElementById('renderer_border');
++    border = document.getElementById('renderer_border')!;
+     border.addEventListener('pointerdown', onBorderPointerDown);
+ 
+     window.addEventListener('mousemove', onMouseMove);
+@@ -78,8 +86,8 @@ function init() {
+     window.addEventListener('wheel', onMouseWheel);
+ }
+ 
+-function initView(scene, name, logDepthBuf) {
+-    const framecontainer = document.getElementById('container_' + name);
++function initView(scene: THREE.Scene, name: string, logDepthBuf: boolean) {
++    const framecontainer = document.getElementById('container_' + name)!;
+ 
+     const camera = new THREE.PerspectiveCamera(50, (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT, NEAR, FAR);
+     scene.add(camera);
+@@ -95,7 +103,7 @@ function initView(scene, name, logDepthBuf) {
+     return { container: framecontainer, renderer: renderer, scene: scene, camera: camera };
+ }
+ 
+-function initScene(font) {
++function initScene(font: Font) {
+     const scene = new THREE.Scene();
+ 
+     scene.add(new THREE.AmbientLight(0x777777));
+@@ -104,7 +112,7 @@ function initScene(font) {
+     light.position.set(100, 100, 100);
+     scene.add(light);
+ 
+-    const materialargs = {
++    const materialargs: { color: THREE.ColorRepresentation; specular: number; shininess: number; emissive: number } = {
+         color: 0xffffff,
+         specular: 0x050505,
+         shininess: 50,
+@@ -125,7 +133,7 @@ function initScene(font) {
+         labelgeo.computeBoundingSphere();
+ 
+         // center text
+-        labelgeo.translate(-labelgeo.boundingSphere.radius, 0, 0);
++        labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
+ 
+         materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
+ 
+@@ -158,16 +166,16 @@ function updateRendererSizes() {
+ 
+     screensplit_right = 1 - screensplit;
+ 
+-    objects.normal.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
+-    objects.normal.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
+-    objects.normal.camera.updateProjectionMatrix();
+-    objects.normal.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
+-    objects.normal.container.style.width = screensplit * 100 + '%';
++    objects.normal!.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
++    objects.normal!.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
++    objects.normal!.camera.updateProjectionMatrix();
++    objects.normal!.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
++    objects.normal!.container.style.width = screensplit * 100 + '%';
+ 
+-    objects.logzbuf.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
+-    objects.logzbuf.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
+-    objects.logzbuf.camera.updateProjectionMatrix();
+-    objects.logzbuf.camera.setViewOffset(
++    objects.logzbuf!.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
++    objects.logzbuf!.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
++    objects.logzbuf!.camera.updateProjectionMatrix();
++    objects.logzbuf!.camera.setViewOffset(
+         SCREEN_WIDTH,
+         SCREEN_HEIGHT,
+         SCREEN_WIDTH * screensplit,
+@@ -175,7 +183,7 @@ function updateRendererSizes() {
+         SCREEN_WIDTH * screensplit_right,
+         SCREEN_HEIGHT,
+     );
+-    objects.logzbuf.container.style.width = screensplit_right * 100 + '%';
++    objects.logzbuf!.container.style.width = screensplit_right * 100 + '%';
+ 
+     border.style.left = screensplit * 100 + '%';
+ }
+@@ -198,22 +206,22 @@ function render() {
+     zoompos += zoomspeed;
+     zoomspeed *= damping;
+ 
+-    objects.normal.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+-    objects.normal.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
+-    objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+-    objects.normal.camera.lookAt(objects.normal.scene.position);
++    objects.normal!.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
++    objects.normal!.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
++    objects.normal!.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
++    objects.normal!.camera.lookAt(objects.normal!.scene.position);
+ 
+     // Clone camera settings across both scenes
+-    objects.logzbuf.camera.position.copy(objects.normal.camera.position);
+-    objects.logzbuf.camera.quaternion.copy(objects.normal.camera.quaternion);
++    objects.logzbuf!.camera.position.copy(objects.normal!.camera.position);
++    objects.logzbuf!.camera.quaternion.copy(objects.normal!.camera.quaternion);
+ 
+     // Update renderer sizes if the split has changed
+     if (screensplit_right != 1 - screensplit) {
+         updateRendererSizes();
+     }
+ 
+-    objects.normal.renderer.render(objects.normal.scene, objects.normal.camera);
+-    objects.logzbuf.renderer.render(objects.logzbuf.scene, objects.logzbuf.camera);
++    objects.normal!.renderer.render(objects.normal!.scene, objects.normal!.camera);
++    objects.logzbuf!.renderer.render(objects.logzbuf!.scene, objects.logzbuf!.camera);
+ 
+     stats.update();
+ }
+@@ -228,7 +236,7 @@ function onBorderPointerDown() {
+     window.addEventListener('pointerup', onBorderPointerUp);
+ }
+ 
+-function onBorderPointerMove(ev) {
++function onBorderPointerMove(ev: PointerEvent) {
+     screensplit = Math.max(0, Math.min(1, ev.clientX / window.innerWidth));
+ }
+ 
+@@ -237,12 +245,12 @@ function onBorderPointerUp() {
+     window.removeEventListener('pointerup', onBorderPointerUp);
+ }
+ 
+-function onMouseMove(ev) {
++function onMouseMove(ev: MouseEvent) {
+     mouse[0] = ev.clientX / window.innerWidth;
+     mouse[1] = ev.clientY / window.innerHeight;
+ }
+ 
+-function onMouseWheel(ev) {
++function onMouseWheel(ev: WheelEvent) {
+     const amount = ev.deltaY;
+     if (amount === 0) return;
+     const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
 index 3705045..7fc1806 100644
 --- a/examples-testing/examples/webgpu_clearcoat.ts
