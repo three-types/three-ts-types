@@ -3,13 +3,13 @@ import { Triangle, Box3, Ray, Sphere, Object3D } from '../../../src/Three.js';
 import { Capsule } from './Capsule.js';
 
 export class Octree {
-    box: Box3;
+    box: Box3 | null | undefined;
     bounds: Box3;
 
     subTrees: Octree[];
     triangles: Triangle[];
 
-    constructor(box?: Box3);
+    constructor(box?: Box3 | null);
 
     addTriangle(triangle: Triangle): this;
     calcBox(): this;
