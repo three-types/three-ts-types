@@ -26,7 +26,7 @@ export default class Renderer {
 
     info: Info;
 
-    constructor(backend: Backend);
+    constructor(backend: Backend, parameters?: { logarithmicDepthBuffer?: boolean });
 
     init(): Promise<void>;
 
