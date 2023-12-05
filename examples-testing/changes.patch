@@ -2117,6 +2117,67 @@ index e296fdc..527b9a7 100644
              child.rotation.x += delta * 0.5;
              child.rotation.y += delta * 0.3;
          }
+diff --git a/examples-testing/examples/webgl2_ubo_arrays.ts b/examples-testing/examples/webgl2_ubo_arrays.ts
+index 74d9a62..ca43ef5 100644
+--- a/examples-testing/examples/webgl2_ubo_arrays.ts
++++ b/examples-testing/examples/webgl2_ubo_arrays.ts
+@@ -5,11 +5,15 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, clock, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    clock: THREE.Clock,
++    stats: Stats;
+ 
+-let lightingUniformsGroup, lightCenters;
++let lightingUniformsGroup: THREE.UniformsGroup, lightCenters: { x: number; z: number }[];
+ 
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+ const pointLightsMax = 300;
+ 
+@@ -78,8 +82,8 @@ function init() {
+         defines: {
+             POINTLIGHTS_MAX: pointLightsMax,
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         glslVersion: THREE.GLSL3,
+     });
+ 
+@@ -123,7 +127,7 @@ function init() {
+     // controls
+ 
+     const controls = new OrbitControls(camera, renderer.domElement);
+-    controls.enabledPan = false;
++    controls.enablePan = false;
+ 
+     // stats
+ 
+@@ -135,7 +139,7 @@ function init() {
+     gui.add(api, 'count', 1, pointLightsMax)
+         .step(1)
+         .onChange(function () {
+-            lightingUniformsGroup.uniforms[2].value = api.count;
++            (lightingUniformsGroup.uniforms[2] as THREE.Uniform).value = api.count;
+         });
+ }
+ 
+@@ -155,7 +159,7 @@ function animate() {
+ 
+     const elapsedTime = clock.getElapsedTime();
+ 
+-    const lights = lightingUniformsGroup.uniforms[0];
++    const lights = lightingUniformsGroup.uniforms[0] as THREE.Uniform[];
+ 
+     // Parameters for circular movement
+     const radius = 5; // Smaller radius for individual circular movements
 diff --git a/examples-testing/examples/webgl2_volume_cloud.ts b/examples-testing/examples/webgl2_volume_cloud.ts
 index bc54732..7fe4043 100644
 --- a/examples-testing/examples/webgl2_volume_cloud.ts
@@ -6591,7 +6652,7 @@ index b3ca12c..47dca0a 100644
      const geometry = new WireframeGeometry2(geo);
  
 diff --git a/examples-testing/examples/webgl_loader_3dm.ts b/examples-testing/examples/webgl_loader_3dm.ts
-index c0ff73f..d910753 100644
+index 545970a..c90ffcf 100644
 --- a/examples-testing/examples/webgl_loader_3dm.ts
 +++ b/examples-testing/examples/webgl_loader_3dm.ts
 @@ -5,8 +5,8 @@ import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js';
