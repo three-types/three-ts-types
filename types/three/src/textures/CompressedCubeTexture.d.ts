@@ -1,5 +1,5 @@
-import { CompressedTexture } from './CompressedTexture';
-import { CompressedPixelFormat, TextureDataType } from '../constants';
+import { CompressedTexture } from './CompressedTexture.js';
+import { CompressedPixelFormat, TextureDataType } from '../constants.js';
 
 export class CompressedCubeTexture extends CompressedTexture {
     readonly isCompressedCubeTexture: true;
