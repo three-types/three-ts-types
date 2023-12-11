@@ -1,7 +1,7 @@
-import { LoadingManager, CompressedTextureLoader, CompressedTexture, WebGLRenderer } from '../../../src/Three.js';
+import { LoadingManager, Loader, CompressedTexture, WebGLRenderer } from '../../../src/Three.js';
 import WebGPURenderer from '../renderers/webgpu/WebGPURenderer.js';
 
-export class KTX2Loader extends CompressedTextureLoader {
+export class KTX2Loader extends Loader {
     constructor(manager?: LoadingManager);
 
     setTranscoderPath(path: string): KTX2Loader;
@@ -9,9 +9,10 @@ export class KTX2Loader extends CompressedTextureLoader {
     detectSupport(renderer: WebGLRenderer | WebGPURenderer): KTX2Loader;
     dispose(): KTX2Loader;
 
-    parse(
-        buffer: ArrayBuffer,
+    load(
+        url: string,
         onLoad: (texture: CompressedTexture) => void,
+        onProgress?: (event: ProgressEvent) => void,
         onError?: (event: ErrorEvent) => void,
-    ): KTX2Loader;
+    ): CompressedTexture;
 }
