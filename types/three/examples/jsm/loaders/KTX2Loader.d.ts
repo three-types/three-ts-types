@@ -8,11 +8,4 @@ export class KTX2Loader extends Loader<CompressedTexture> {
     setWorkerLimit(limit: number): KTX2Loader;
     detectSupport(renderer: WebGLRenderer | WebGPURenderer): KTX2Loader;
     dispose(): KTX2Loader;
-
-    load(
-        url: string,
-        onLoad: (texture: CompressedTexture) => void,
-        onProgress?: (event: ProgressEvent) => void,
-        onError?: (event: ErrorEvent) => void,
-    ): CompressedTexture;
 }
