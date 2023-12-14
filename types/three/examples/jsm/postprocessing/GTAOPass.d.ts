@@ -15,7 +15,7 @@ import {
 
 import { FullScreenQuad, Pass } from './Pass.js';
 
-export class HBAOPass extends Pass {
+export class GTAOPass extends Pass {
     width: number;
     height: number;
     clear: boolean;
@@ -72,7 +72,7 @@ export class HBAOPass extends Pass {
         bias?: number | undefined;
         scale?: number | undefined;
         samples?: number | undefined;
-        screenSpaceRadius?: number | undefined;
+        screenSpaceRadius?: boolean | undefined;
     }): void;
 
     updatePdMaterial(parameters: {
