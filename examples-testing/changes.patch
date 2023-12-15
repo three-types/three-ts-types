@@ -2118,7 +2118,7 @@ index e296fdc..527b9a7 100644
              child.rotation.y += delta * 0.3;
          }
 diff --git a/examples-testing/examples/webgl2_ubo_arrays.ts b/examples-testing/examples/webgl2_ubo_arrays.ts
-index 74d9a62..ca43ef5 100644
+index 7f1b3c8..ca43ef5 100644
 --- a/examples-testing/examples/webgl2_ubo_arrays.ts
 +++ b/examples-testing/examples/webgl2_ubo_arrays.ts
 @@ -5,11 +5,15 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -2150,15 +2150,6 @@ index 74d9a62..ca43ef5 100644
 +        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
          glslVersion: THREE.GLSL3,
      });
- 
-@@ -123,7 +127,7 @@ function init() {
-     // controls
- 
-     const controls = new OrbitControls(camera, renderer.domElement);
--    controls.enabledPan = false;
-+    controls.enablePan = false;
- 
-     // stats
  
 @@ -135,7 +139,7 @@ function init() {
      gui.add(api, 'count', 1, pointLightsMax)
@@ -10947,21 +10938,25 @@ index 47e89f6..4329bfe 100644
          renderer.setRenderTarget(null);
          renderer.clear();
 diff --git a/examples-testing/examples/webgl_postprocessing_gtao.ts b/examples-testing/examples/webgl_postprocessing_gtao.ts
-index 6148f63..437f902 100644
+index 8993081..67c578c 100644
 --- a/examples-testing/examples/webgl_postprocessing_gtao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_gtao.ts
-@@ -17,9 +17,9 @@ const loader = new GLTFLoader();
- loader.setDRACOLoader(dracoLoader);
- loader.setPath('models/gltf/');
+@@ -10,7 +10,14 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
  
--let mixer;
-+let mixer: THREE.AnimationMixer;
+-let camera, scene, renderer, composer, controls, clock, stats, mixer;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    composer: EffectComposer,
++    controls: OrbitControls,
++    clock: THREE.Clock,
++    stats: Stats,
++    mixer: THREE.AnimationMixer;
  
--const generateLittlestTokyoScene = scene => {
-+const generateLittlestTokyoScene = (scene: THREE.Scene) => {
-     loader.load(
-         'LittlestTokyo.glb',
-         gltf => {
+ init();
+ animate();
 diff --git a/examples-testing/examples/webgl_postprocessing_masking.ts b/examples-testing/examples/webgl_postprocessing_masking.ts
 index 3650bfe..88a3d81 100644
 --- a/examples-testing/examples/webgl_postprocessing_masking.ts
