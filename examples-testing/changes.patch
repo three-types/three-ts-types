@@ -10938,7 +10938,7 @@ index 47e89f6..4329bfe 100644
          renderer.setRenderTarget(null);
          renderer.clear();
 diff --git a/examples-testing/examples/webgl_postprocessing_gtao.ts b/examples-testing/examples/webgl_postprocessing_gtao.ts
-index 8993081..67c578c 100644
+index e004cea..d4483b3 100644
 --- a/examples-testing/examples/webgl_postprocessing_gtao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_gtao.ts
 @@ -10,7 +10,14 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -12205,10 +12205,10 @@ index 122fa84..e539bef 100644
          if (morph.position.x > 2000) {
              morph.position.x = -1000 - Math.random() * 500;
 diff --git a/examples-testing/examples/webgl_shadowmap_csm.ts b/examples-testing/examples/webgl_shadowmap_csm.ts
-index f9df4ab..d2646fa 100644
+index bdcd49f..0fc8a64 100644
 --- a/examples-testing/examples/webgl_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgl_shadowmap_csm.ts
-@@ -2,12 +2,31 @@ import * as THREE from 'three';
+@@ -2,12 +2,32 @@ import * as THREE from 'three';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -12230,6 +12230,7 @@ index f9df4ab..d2646fa 100644
 +const params: {
 +    orthographic: boolean;
 +    fade: boolean;
++    shadows: boolean;
 +    far: number;
 +    mode: CSMMode;
 +    lightX: number;
@@ -12243,7 +12244,18 @@ index f9df4ab..d2646fa 100644
 +} = {
      orthographic: false,
      fade: false,
-     far: 1000,
+     shadows: true,
+@@ -133,8 +153,8 @@ function init() {
+         renderer.shadowMap.enabled = value;
+ 
+         scene.traverse(function (child) {
+-            if (child.material) {
+-                child.material.needsUpdate = true;
++            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
++                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
+             }
+         });
+     });
 diff --git a/examples-testing/examples/webgl_shadowmap_pcss.ts b/examples-testing/examples/webgl_shadowmap_pcss.ts
 index 91ba360..230059a 100644
 --- a/examples-testing/examples/webgl_shadowmap_pcss.ts
