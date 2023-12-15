@@ -54,7 +54,7 @@ export class Triangle {
     equals(triangle: Triangle): boolean;
 
     static getNormal(a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3;
-    static getBarycoord(point: Vector3, a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3;
+    static getBarycoord(point: Vector3, a: Vector3, b: Vector3, c: Vector3, target: Vector3): Vector3 | null;
     static containsPoint(point: Vector3, a: Vector3, b: Vector3, c: Vector3): boolean;
     /**
      * @deprecated THREE.Triangle.getUV() has been renamed to THREE.Triangle.getInterpolation().
