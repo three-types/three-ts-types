@@ -69,7 +69,6 @@ export class GTAOPass extends Pass {
         radius?: number | undefined;
         distanceExponent?: number | undefined;
         thickness?: number | undefined;
-        bias?: number | undefined;
         scale?: number | undefined;
         samples?: number | undefined;
         screenSpaceRadius?: boolean | undefined;
