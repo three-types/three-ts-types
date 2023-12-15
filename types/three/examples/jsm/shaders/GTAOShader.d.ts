@@ -22,6 +22,8 @@ export const GTAOShader: {
         cameraProjectionMatrixInverse: IUniform<Matrix4>;
         radius: IUniform<number>;
         distanceExponent: IUniform<number>;
+        thickness: IUniform<number>;
+        distanceFallOff: IUniform<number>;
         scale: IUniform<number>;
         sceneBoxMin: IUniform<Vector3>;
         sceneBoxMax: IUniform<Vector3>;
