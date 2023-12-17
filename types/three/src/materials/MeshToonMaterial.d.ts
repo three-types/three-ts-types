@@ -35,7 +35,7 @@ export interface MeshToonMaterialParameters extends MaterialParameters {
 
 export class MeshToonMaterial extends Material {
     constructor(parameters?: MeshToonMaterialParameters);
-    
+
     /**
      * Read-only flag to check if a given object is of type {@link MeshToonMaterial}.
      * @remarks This is a _constant_ value
