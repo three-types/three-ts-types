@@ -70,6 +70,13 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
     constructor();
 
     /**
+     * Read-only flag to check if a given object is of type {@link Material}.
+     * @remarks This is a _constant_ value
+     * @defaultValue `true`
+     */
+    readonly isMaterial: true;
+
+    /**
      * Enables alpha hashed transparency, an alternative to {@link .transparent} or {@link .alphaTest}. The material
      * will not be rendered if opacity is lower than a random threshold. Randomization introduces some grain or noise,
      * but approximates alpha blending without the associated problems of sorting. Using TAARenderPass can reduce the
@@ -255,12 +262,6 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default THREE.KeepStencilOp
      */
     stencilZPass: StencilOp;
-
-    /**
-     * Used to check whether this or derived classes are materials. Default is true.
-     * You should not change this, as it used internally for optimisation.
-     */
-    readonly isMaterial: true;
 
     /**
      * Material name. Default is an empty string.
