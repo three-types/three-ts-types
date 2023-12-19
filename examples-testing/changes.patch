@@ -1142,7 +1142,7 @@ index fdd35d4..1b12050 100644
      const link = document.createElement('a');
  
 diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
-index ceb964b..2b7de4d 100644
+index ceb964b..4a8e2be 100644
 --- a/examples-testing/examples/misc_exporter_gltf.ts
 +++ b/examples-testing/examples/misc_exporter_gltf.ts
 @@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
@@ -1185,7 +1185,7 @@ index ceb964b..2b7de4d 100644
 +let camera: THREE.PerspectiveCamera,
 +    object: THREE.Object3D,
 +    object2: THREE.Mesh,
-+    material: THREE.MeshBasicMaterial | THREE.MeshStandardMaterial,
++    material: THREE.MeshBasicMaterial | THREE.MeshLambertMaterial | THREE.MeshStandardMaterial,
 +    geometry: THREE.BufferGeometry,
 +    scene1: THREE.Scene,
 +    scene2: THREE.Scene,
@@ -12362,7 +12362,7 @@ index c3f0207..c211b8a 100644
          if (morph.position.x > 2000) {
              morph.position.x = -1000 - Math.random() * 500;
 diff --git a/examples-testing/examples/webgl_shadowmap_pointlight.ts b/examples-testing/examples/webgl_shadowmap_pointlight.ts
-index f921519..cffc086 100644
+index f921519..d39eb4e 100644
 --- a/examples-testing/examples/webgl_shadowmap_pointlight.ts
 +++ b/examples-testing/examples/webgl_shadowmap_pointlight.ts
 @@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -12385,6 +12385,18 @@ index f921519..cffc086 100644
          const intensity = 200;
  
          const light = new THREE.PointLight(color, intensity, 20);
+@@ -27,9 +27,9 @@ function init() {
+         light.shadow.bias = -0.005; // reduces self-shadowing on double-sided objects
+ 
+         let geometry = new THREE.SphereGeometry(0.3, 12, 6);
+-        let material = new THREE.MeshBasicMaterial({ color: color });
++        let material: THREE.MeshBasicMaterial | THREE.MeshPhongMaterial = new THREE.MeshBasicMaterial({ color: color });
+         material.color.multiplyScalar(intensity);
+-        let sphere = new THREE.Mesh(geometry, material);
++        let sphere = new THREE.Mesh<THREE.BufferGeometry, THREE.Material>(geometry, material);
+         light.add(sphere);
+ 
+         const texture = new THREE.CanvasTexture(generateTexture());
 @@ -107,7 +107,7 @@ function generateTexture() {
      canvas.width = 2;
      canvas.height = 2;
@@ -13941,7 +13953,7 @@ index a09b733..292719d 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webxr_vr_rollercoaster.ts b/examples-testing/examples/webxr_vr_rollercoaster.ts
-index b659652..a10b469 100644
+index b659652..06e3224 100644
 --- a/examples-testing/examples/webxr_vr_rollercoaster.ts
 +++ b/examples-testing/examples/webxr_vr_rollercoaster.ts
 @@ -9,7 +9,7 @@ import {
@@ -13949,7 +13961,7 @@ index b659652..a10b469 100644
  import { VRButton } from 'three/addons/webxr/VRButton.js';
  
 -let mesh, material, geometry;
-+let mesh: THREE.Mesh, material: THREE.MeshBasicMaterial, geometry: SkyGeometry;
++let mesh: THREE.Mesh, material: THREE.Material, geometry: SkyGeometry;
  
  const renderer = new THREE.WebGLRenderer({ antialias: true });
  renderer.setPixelRatio(window.devicePixelRatio);
