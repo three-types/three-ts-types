@@ -1876,6 +1876,47 @@ index a77b973..d24a458 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgl2_clipculldistance.ts b/examples-testing/examples/webgl2_clipculldistance.ts
+index bfa572c..fa75879 100644
+--- a/examples-testing/examples/webgl2_clipculldistance.ts
++++ b/examples-testing/examples/webgl2_clipculldistance.ts
+@@ -2,9 +2,14 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, controls, clock, scene, renderer, stats;
++let camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    clock: THREE.Clock,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats;
+ 
+-let material;
++let material: THREE.ShaderMaterial;
+ 
+ init();
+ animate();
+@@ -25,7 +30,7 @@ function init() {
+     document.body.appendChild(renderer.domElement);
+ 
+     if (renderer.extensions.has('WEBGL_clip_cull_distance') === false) {
+-        document.getElementById('notSupported').style.display = '';
++        document.getElementById('notSupported')!.style.display = '';
+         return;
+     }
+ 
+@@ -69,8 +74,8 @@ function init() {
+         uniforms: {
+             time: { value: 1.0 },
+         },
+-        vertexShader: document.getElementById('vertexShader').textContent,
+-        fragmentShader: document.getElementById('fragmentShader').textContent,
++        vertexShader: document.getElementById('vertexShader')!.textContent!,
++        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+         side: THREE.DoubleSide,
+         transparent: true,
+         vertexColors: true,
 diff --git a/examples-testing/examples/webgl2_materials_texture3d.ts b/examples-testing/examples/webgl2_materials_texture3d.ts
 index b746daf..581c97a 100644
 --- a/examples-testing/examples/webgl2_materials_texture3d.ts
@@ -9596,22 +9637,22 @@ index e8253d2..5c1b3e1 100644
  const radius = 600;
  let theta = 0;
 diff --git a/examples-testing/examples/webgl_morphtargets_sphere.ts b/examples-testing/examples/webgl_morphtargets_sphere.ts
-index dd73f97..aa2cfc5 100644
+index 305889a..2885ad1 100644
 --- a/examples-testing/examples/webgl_morphtargets_sphere.ts
 +++ b/examples-testing/examples/webgl_morphtargets_sphere.ts
-@@ -3,9 +3,9 @@ import * as THREE from 'three';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { Timer } from 'three/addons/misc/Timer.js';
  
--let camera, scene, renderer, clock;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+-let camera, scene, renderer, timer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: Timer;
  
 -let mesh;
 +let mesh: THREE.Mesh;
  
  let sign = 1;
  const speed = 0.5;
-@@ -14,7 +14,7 @@ init();
+@@ -15,7 +15,7 @@ init();
  animate();
  
  function init() {
@@ -9620,7 +9661,7 @@ index dd73f97..aa2cfc5 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
      camera.position.set(0, 5, 5);
-@@ -35,7 +35,7 @@ function init() {
+@@ -36,7 +36,7 @@ function init() {
  
      const loader = new GLTFLoader();
      loader.load('models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
@@ -9629,7 +9670,7 @@ index dd73f97..aa2cfc5 100644
          mesh.rotation.z = Math.PI / 2;
          scene.add(mesh);
  
-@@ -103,9 +103,9 @@ function render() {
+@@ -95,9 +95,9 @@ function render() {
  
          mesh.rotation.y += step;
  
