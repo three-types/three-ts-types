@@ -2,6 +2,7 @@ import { IUniform } from './UniformsLib.js';
 
 export interface Shader {
     uniforms: { [uniform: string]: IUniform };
+    defines?: { [define: string]: string | number | boolean };
     vertexShader: string;
     fragmentShader: string;
 }
