@@ -9835,6 +9835,45 @@ index 94987b7..4e920e2 100644
  
          view.updateCamera(camera, scene, mouseX, mouseY);
  
+diff --git a/examples-testing/examples/webgl_nodes_loader_gltf_iridescence.ts b/examples-testing/examples/webgl_nodes_loader_gltf_iridescence.ts
+index 6ff0f3b..c845683 100644
+--- a/examples-testing/examples/webgl_nodes_loader_gltf_iridescence.ts
++++ b/examples-testing/examples/webgl_nodes_loader_gltf_iridescence.ts
+@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let renderer, scene, camera, controls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+ 
+ init().catch(function (err) {
+     console.error(err);
+@@ -42,21 +42,21 @@ async function init() {
+     // nodes
+ 
+     gltf.scene.traverse(mesh => {
+-        const material = mesh.material;
++        const material = (mesh as THREE.Mesh).material;
+ 
+-        if (material && material.iridescence > 0) {
++        if (material && (material as THREE.MeshPhysicalMaterial).iridescence > 0) {
+             const iridescenceFactorNode = checker(
+                 uv()
+                     .add(vec2(timerLocal(-0.05), 0))
+                     .mul(20),
+             );
+ 
+-            const nodeMaterial = NodeMaterial.fromMaterial(material); // @TODO: NodeMaterial.fromMaterial can be removed if WebGLNodes will apply it by default (as in WebGPURenderer)
++            const nodeMaterial = NodeMaterial.fromMaterial(material as THREE.MeshPhysicalMaterial); // @TODO: NodeMaterial.fromMaterial can be removed if WebGLNodes will apply it by default (as in WebGPURenderer)
+             nodeMaterial.iridescenceNode = iridescenceFactorNode;
+             nodeMaterial.iridescenceIORNode = float(1.3);
+             nodeMaterial.iridescenceThicknessNode = float(400);
+ 
+-            mesh.material = nodeMaterial;
++            (mesh as THREE.Mesh).material = nodeMaterial;
+         }
+     });
+ 
 diff --git a/examples-testing/examples/webgl_panorama_cube.ts b/examples-testing/examples/webgl_panorama_cube.ts
 index 951e6be..a66d5f0 100644
 --- a/examples-testing/examples/webgl_panorama_cube.ts
