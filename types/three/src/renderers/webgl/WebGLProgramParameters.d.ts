@@ -4,11 +4,10 @@ import {
     DepthPackingStrategies,
     GLSLVersion,
     ShadowMapType,
-    ToneMapping
+    ToneMapping,
 } from '../../constants.js';
 
 export interface WebGLProgramParameters {
-
     isWebGL2: boolean;
 
     shaderID: string;
@@ -196,5 +195,5 @@ export interface WebGLProgramParameters {
     rendererExtensionShaderTextureLod: boolean;
     rendererExtensionParallelShaderCompile: boolean;
 
-    customProgramCacheKey: string
+    customProgramCacheKey: string;
 }

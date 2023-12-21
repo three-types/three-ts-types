@@ -30,7 +30,7 @@ export class WebGLPrograms {
         lights: WebGLLightsState,
         shadows: Light[],
         scene: Scene,
-        object: Object3D
+        object: Object3D,
     ): WebGLProgramParameters;
 
     getProgramCacheKey(parameters: WebGLProgramParameters): string;
