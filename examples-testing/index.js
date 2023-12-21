@@ -229,7 +229,7 @@ const files = {
         'webgl_water_flowmap',
     ],
     'webgl / nodes': [
-        // 'webgl_nodes_loader_gltf_iridescence',
+        'webgl_nodes_loader_gltf_iridescence',
         // 'webgl_nodes_loader_gltf_transmission',
         // 'webgl_nodes_loader_gltf_sheen',
         // 'webgl_nodes_loader_materialx',
