@@ -7,6 +7,7 @@ import { WebGLClipping } from './WebGLClipping.js';
 import { WebGLBindingStates } from './WebGLBindingStates.js';
 import { Material } from '../../materials/Material.js';
 import { Scene } from '../../scenes/Scene.js';
+import { WebGLProgramParameters } from './WebGLProgramParameters.js';
 
 export class WebGLPrograms {
     constructor(
@@ -20,9 +21,16 @@ export class WebGLPrograms {
 
     programs: WebGLProgram[];
 
-    getParameters(material: Material, lights: any, shadows: object[], scene: Scene, object: any): any;
-    getProgramCacheKey(parameters: any): string;
+    getParameters(
+        material: Material,
+        lights: any,
+        shadows: object[],
+        scene: Scene,
+        object: any
+    ): WebGLProgramParameters;
+
+    getProgramCacheKey(parameters: WebGLProgramParameters): string;
     getUniforms(material: Material): object;
-    acquireProgram(parameters: any, cacheKey: string): WebGLProgram;
+    acquireProgram(parameters: WebGLProgramParameters, cacheKey: string): WebGLProgram;
     releaseProgram(program: WebGLProgram): void;
 }
