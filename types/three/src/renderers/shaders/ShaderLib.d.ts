@@ -1,10 +1,8 @@
+import { WebGLProgramParameters } from '../webgl/WebGLProgramParameters.js';
 import { IUniform } from './UniformsLib.js';
 
-export interface Shader {
+export interface Shader extends WebGLProgramParameters {
     uniforms: { [uniform: string]: IUniform };
-    defines?: { [define: string]: string | number | boolean };
-    vertexShader: string;
-    fragmentShader: string;
 }
 
 export let ShaderLib: {
