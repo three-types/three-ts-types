@@ -1,6 +1,6 @@
 import ContextNode from '../core/ContextNode.js';
 import Node from '../core/Node.js';
-import { ShaderNode } from '../Nodes.js';
+import { ShaderNode, Swizzable } from '../shadernode/ShaderNode.js';
 
 export interface LightingModelNode {
     indirectDiffuse?: ShaderNode;
@@ -13,3 +13,5 @@ export default class LightingContextNode extends ContextNode {
 
     constructor(node: Node, lightingModelNode?: LightingModelNode | null);
 }
+
+export const lightingContext: (node: Node, lightingModelNode?: LightingModelNode) => Swizzable<LightingContextNode>;

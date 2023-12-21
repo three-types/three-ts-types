@@ -1,4 +1,5 @@
 import Node from '../core/Node.js';
+import { Swizzable } from '../shadernode/ShaderNode';
 
 export type PositionNodeScope =
     | typeof PositionNode.GEOMETRY
@@ -19,3 +20,10 @@ export default class PositionNode extends Node {
 
     constructor(scope?: PositionNodeScope);
 }
+
+export const positionGeometry: Swizzable<PositionNode>;
+export const positionLocal: Swizzable<PositionNode>;
+export const positionWorld: Swizzable<PositionNode>;
+export const positionWorldDirection: Swizzable<PositionNode>;
+export const positionView: Swizzable<PositionNode>;
+export const positionViewDirection: Swizzable<PositionNode>;

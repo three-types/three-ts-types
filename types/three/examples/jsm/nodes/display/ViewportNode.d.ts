@@ -1,4 +1,5 @@
 import Node from '../core/Node.js';
+import { Swizzable } from '../shadernode/ShaderNode.js';
 
 export type ViewportNodeScope =
     | typeof ViewportNode.COORDINATE
@@ -21,3 +22,10 @@ export default class ViewportNode extends Node {
 
     constructor(scope: ViewportNodeScope);
 }
+
+export const viewportCoordinate: Swizzable<ViewportNode>;
+export const viewportResolution: Swizzable<ViewportNode>;
+export const viewportTopLeft: Swizzable<ViewportNode>;
+export const viewportBottomLeft: Swizzable<ViewportNode>;
+export const viewportTopRight: Swizzable<ViewportNode>;
+export const viewportBottomRight: Swizzable<ViewportNode>;

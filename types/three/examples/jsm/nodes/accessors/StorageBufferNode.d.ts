@@ -1,6 +1,9 @@
-import { NodeTypeOption } from '../Nodes.js';
 import BufferNode from './BufferNode.js';
+import { NodeTypeOption } from '../core/constants.js';
+import { NodeOrType, Swizzable } from '../shadernode/ShaderNode.js';
 
 export default class StorageBufferNode extends BufferNode {
     constructor(value: ArrayLike<number>, bufferType: NodeTypeOption, bufferCount?: number);
 }
+
+export const storage: (value: ArrayLike<number>, nodeOrType: NodeOrType, count: number) => Swizzable<StorageBufferNode>;
