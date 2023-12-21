@@ -1,5 +1,6 @@
 import Node from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
+import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
@@ -113,3 +114,62 @@ export default class MathNode extends TempNode {
     constructor(method: MathNodeMethod2, aNode: Node, bNode: Node);
     constructor(method: MathNodeMethod3, aNode: Node, bNode: Node, cNode: Node);
 }
+
+export const EPSILON: Swizzable;
+export const INFINITY: Swizzable;
+
+export type Unary = (a: NodeRepresentation) => Swizzable<MathNode>;
+
+export const radians: Unary;
+export const degrees: Unary;
+export const exp: Unary;
+export const exp2: Unary;
+export const log: Unary;
+export const log2: Unary;
+export const sqrt: Unary;
+export const inversesqrt: Unary;
+export const floor: Unary;
+export const ceil: Unary;
+export const normalize: Unary;
+export const fract: Unary;
+export const sin: Unary;
+export const cos: Unary;
+export const tan: Unary;
+export const asin: Unary;
+export const acos: Unary;
+export const atan: Unary;
+export const abs: Unary;
+export const sign: Unary;
+export const length: Unary;
+export const negate: Unary;
+export const invert: Unary;
+export const dFdx: Unary;
+export const dFdy: Unary;
+export const round: Unary;
+export const reciprocal: Unary;
+
+export type Binary = (a: NodeRepresentation, b: NodeRepresentation) => Swizzable<MathNode>;
+
+export const atan2: Binary;
+export const min: Binary;
+export const max: Binary;
+export const mod: Binary;
+export const step: Binary;
+export const reflect: Binary;
+export const distance: Binary;
+export const difference: Binary;
+export const dot: Binary;
+export const cross: Binary;
+export const pow: Binary;
+export const pow2: Binary;
+export const pow3: Binary;
+export const pow4: Binary;
+export const transformDirection: Binary;
+
+export type Ternary = (a: NodeRepresentation, b: NodeRepresentation, c: NodeRepresentation) => Swizzable<MathNode>;
+
+export const mix: Ternary;
+export const clamp: Ternary;
+export const refract: Ternary;
+export const smoothstep: Ternary;
+export const faceforward: Ternary;

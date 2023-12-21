@@ -1,4 +1,6 @@
 import Node from '../core/Node.js';
+import { Swizzable } from '../shadernode/ShaderNode.js';
+import MathNode from '../math/MathNode.js';
 
 export type TangentNodeScope =
     | typeof TangentNode.LOCAL
@@ -16,3 +18,10 @@ export default class TangentNode extends Node {
 
     constructor(scope?: TangentNodeScope);
 }
+
+export const tangentGeometry: Swizzable<TangentNode>;
+export const tangentLocal: Swizzable<TangentNode>;
+export const tangentView: Swizzable<TangentNode>;
+export const tangentWorld: Swizzable<TangentNode>;
+export const transformedTangentView: Swizzable<MathNode>;
+export const transformedTangentWorld: Swizzable<MathNode>;

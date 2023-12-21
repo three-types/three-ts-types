@@ -1,6 +1,5 @@
 import { ConstNode, Node, NodeBuilder, NodeTypeOption, SwizzleOption } from '../Nodes.js';
-// lot of private typescript magic here
-export {};
+
 export type Swizzable<T extends Node = Node> = T & {
     [key in SwizzleOption | number]: Swizzable;
 };
@@ -115,6 +114,15 @@ type ConstructedNode<T> = T extends new (...args: any[]) => infer R ? (R extends
 export type NodeOrType = Node | NodeTypeOption;
 
 export function getConstNodeType(value: NodeOrType): NodeTypeOption | null;
+
+export class ShaderNode<T = {}, R extends Node = Node> {
+    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
+    call: (
+        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Swizzable | Node : T[key] },
+        builder?: NodeBuilder,
+    ) => Swizzable<R>;
+}
+
 export function nodeObject<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
@@ -140,17 +148,37 @@ export function nodeImmutable<T>(
     ...params: ProxiedTuple<GetConstructors<T>>
 ): Swizzable<ConstructedNode<T>>;
 
-export class ShaderNode<T = {}, R extends Node = Node> {
-    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
-    call: (
-        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? Swizzable | Node : T[key] },
-        builder?: NodeBuilder,
-    ) => Swizzable<R>;
-}
+export const color: ConvertType;
 
-export const cacheMaps: {
-    bool: Map<boolean, ConstNode>;
-    uint: Map<number, ConstNode>;
-    int: Map<number, ConstNode>;
-    float: Map<number, ConstNode>;
-};
+export const float: ConvertType;
+export const int: ConvertType;
+export const uint: ConvertType;
+export const bool: ConvertType;
+
+export const vec2: ConvertType;
+export const ivec2: ConvertType;
+export const uvec2: ConvertType;
+export const bvec2: ConvertType;
+
+export const vec3: ConvertType;
+export const ivec3: ConvertType;
+export const uvec3: ConvertType;
+export const bvec3: ConvertType;
+
+export const vec4: ConvertType;
+export const ivec4: ConvertType;
+export const uvec4: ConvertType;
+export const bvec4: ConvertType;
+
+export const mat3: ConvertType;
+export const imat3: ConvertType;
+export const umat3: ConvertType;
+export const bmat3: ConvertType;
+
+export const mat4: ConvertType;
+export const imat4: ConvertType;
+export const umat4: ConvertType;
+export const bmat4: ConvertType;
+
+export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => Swizzable;
+export const convert: (node: NodeRepresentation, types: NodeTypeOption) => Swizzable;
