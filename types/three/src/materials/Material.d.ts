@@ -339,8 +339,8 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
     shadowSide: Side | null;
 
     /**
-     * Defines whether this material is tone mapped according to the renderer's toneMapping setting.
-     * Default is true.
+     * Defines whether this material is tone mapped according to the renderer's
+     * {@link WebGLRenderer.toneMapping toneMapping} setting. It is ignored when rendering to a render target.
      * @default true
      */
     toneMapped: boolean;
@@ -348,7 +348,6 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
     /**
      * Defines whether this material is transparent. This has an effect on rendering as transparent objects need special treatment and are rendered after non-transparent objects.
      * When set to true, the extent to which the material is transparent is controlled by setting it's .opacity property.
-     * Default is false.
      * @default false
      */
     transparent: boolean;
