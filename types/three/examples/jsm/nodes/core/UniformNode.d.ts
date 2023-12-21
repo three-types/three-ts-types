@@ -2,7 +2,7 @@ import { NodeTypeOption, NodeValueOption } from './constants.js';
 import InputNode from './InputNode.js';
 import NodeBuilder from './NodeBuilder.js';
 import Node from './Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class UniformNode extends InputNode {
     isUniformNode: true;
@@ -12,6 +12,6 @@ export default class UniformNode extends InputNode {
 }
 
 export const uniform: (
-    arg1: Node | Swizzable | NodeValueOption,
-    arg2?: Node | Swizzable | NodeValueOption,
-) => Swizzable;
+    arg1: Node | ShaderNodeObject<Node> | NodeValueOption,
+    arg2?: Node | ShaderNodeObject<Node> | NodeValueOption,
+) => ShaderNodeObject<Node>;

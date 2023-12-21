@@ -1,25 +1,25 @@
 import Node from '../core/Node.js';
 import PositionNode from '../accessors/PositionNode.js';
 import TextureNode from '../accessors/TextureNode.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class TriplanarTexturesNode extends Node {
     textureXNode: TextureNode;
     textureYNode: TextureNode | null;
     textureZNode: TextureNode | null;
 
-    scaleNode: Swizzable;
+    scaleNode: ShaderNodeObject<Node>;
 
-    positionNode: Swizzable<PositionNode>;
-    normalNode: Swizzable<PositionNode>;
+    positionNode: ShaderNodeObject<PositionNode>;
+    normalNode: ShaderNodeObject<PositionNode>;
 
     constructor(
         textureXNode: Node,
         textureYNode?: TextureNode | null,
         textureZNode?: TextureNode | null,
-        scaleNode?: Swizzable,
-        positionNode?: Swizzable<PositionNode>,
-        normalNode?: Swizzable<PositionNode>,
+        scaleNode?: ShaderNodeObject<Node>,
+        positionNode?: ShaderNodeObject<PositionNode>,
+        normalNode?: ShaderNodeObject<PositionNode>,
     );
 }
 
@@ -30,8 +30,8 @@ export const triplanarTextures: (
     scaleNode?: NodeRepresentation,
     positionNode?: NodeRepresentation,
     normalNode?: NodeRepresentation,
-) => Swizzable<TriplanarTexturesNode>;
+) => ShaderNodeObject<TriplanarTexturesNode>;
 export const triplanarTexture: (
     texture: NodeRepresentation,
     ...params: NodeRepresentation[]
-) => Swizzable<TriplanarTexturesNode>;
+) => ShaderNodeObject<TriplanarTexturesNode>;

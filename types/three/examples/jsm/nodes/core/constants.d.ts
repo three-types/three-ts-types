@@ -50,8 +50,13 @@ export type NodeTypeOption =
     | 'umat4'
     | 'bmat4';
 
-// can be defined with string template type in Typescript 4.1
-export type SwizzleOption = string;
+export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
+
+export type SwizzleOption =
+    | `${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
 
 /** Should be the same type as Object3D.userData */
 export type NodeUserData = Record<string, any>;

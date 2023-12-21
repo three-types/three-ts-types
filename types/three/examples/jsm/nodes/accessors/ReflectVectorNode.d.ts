@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class ReflectVectorNode extends Node {
     constructor();
@@ -8,4 +8,4 @@ export default class ReflectVectorNode extends Node {
     setup(): Node;
 }
 
-export const reflectVector: Swizzable<ReflectVectorNode>;
+export const reflectVector: ShaderNodeObject<ReflectVectorNode>;

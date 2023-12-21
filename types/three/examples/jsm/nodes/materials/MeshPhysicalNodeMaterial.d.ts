@@ -1,12 +1,14 @@
 import { ShaderMaterialParameters } from '../../../../src/Three.js';
-import { Swizzable, CheckerNode, Node } from '../Nodes.js';
 
 import MeshStandardNodeMaterial from './MeshStandardNodeMaterial.js';
+import Node from '../core/Node.js';
+import CheckerNode from '../procedural/CheckerNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
-    iridescenceNode: null | Swizzable<CheckerNode>;
-    iridescenceIORNode: null | Swizzable;
-    iridescenceThicknessNode: null | Swizzable;
+    iridescenceNode: null | ShaderNodeObject<CheckerNode>;
+    iridescenceIORNode: null | ShaderNodeObject<Node>;
+    iridescenceThicknessNode: null | ShaderNodeObject<Node>;
 
     specularIntensityNode: Node | null;
     specularColorNode: Node | null;

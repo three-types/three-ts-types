@@ -1,8 +1,8 @@
 import { PositionNode, TempNode } from '../Nodes.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class EquirectUVNode extends TempNode {
-    constructor(dirNode?: Swizzable<PositionNode>);
+    constructor(dirNode?: ShaderNodeObject<PositionNode>);
 }
 
-export const equirectUV: Swizzable<EquirectUVNode>;
+export const equirectUV: ShaderNodeObject<EquirectUVNode>;

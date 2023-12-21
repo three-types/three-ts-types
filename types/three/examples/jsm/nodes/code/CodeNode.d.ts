@@ -1,7 +1,7 @@
 import Node from '../core/Node.js';
 import NodeBuilder from '../core/NodeBuilder.js';
 import { NodeTypeOption } from '../core/constants.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export interface CodeNodeInclude {
     build(builder: NodeBuilder): void;
@@ -16,4 +16,4 @@ export default class CodeNode extends Node {
     getIncludes(builder: NodeBuilder): CodeNodeInclude[];
 }
 
-export const code: (code: string, nodeType?: NodeTypeOption) => Swizzable<CodeNode>;
+export const code: (code: string, nodeType?: NodeTypeOption) => ShaderNodeObject<CodeNode>;

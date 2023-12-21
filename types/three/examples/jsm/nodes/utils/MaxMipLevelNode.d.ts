@@ -1,7 +1,7 @@
 import { Texture } from '../../../../src/Three.js';
 import UniformNode from '../core/UniformNode.js';
 import TextureNode from '../accessors/TextureNode.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class MaxMipLevelNode extends UniformNode {
     textureNode: TextureNode;
@@ -11,4 +11,4 @@ export default class MaxMipLevelNode extends UniformNode {
     get texture(): Texture;
 }
 
-export const maxMipLevel: (texture: Texture) => Swizzable<MaxMipLevelNode>;
+export const maxMipLevel: (texture: Texture) => ShaderNodeObject<MaxMipLevelNode>;

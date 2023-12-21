@@ -1,6 +1,6 @@
 import FogNode from './FogNode.js';
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class FogRangeNode extends FogNode {
     isFogRangeNode: true;
@@ -10,4 +10,4 @@ export default class FogRangeNode extends FogNode {
     constructor(colorNode: Node, nearNode: Node, farNode: Node);
 }
 
-export const rangeFog: (colorNode: Node, nearNode: Node, farNode: Node) => Swizzable<FogRangeNode>;
+export const rangeFog: (colorNode: Node, nearNode: Node, farNode: Node) => ShaderNodeObject<FogRangeNode>;
