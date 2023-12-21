@@ -6,7 +6,7 @@ export default class PropertyNode extends Node {
     constructor(name?: string, nodeType?: NodeTypeOption);
 }
 
-export const property: (name: string, nodeOrType: Node | NodeTypeOption) => ShaderNodeObject;
+export const property: (name: string, nodeOrType: Node | NodeTypeOption) => ShaderNodeObject<Node>;
 
 export const diffuseColor: ShaderNodeObject<PropertyNode>;
 export const roughness: ShaderNodeObject<PropertyNode>;

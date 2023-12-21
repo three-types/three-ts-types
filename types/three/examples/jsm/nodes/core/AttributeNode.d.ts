@@ -9,4 +9,4 @@ export default class AttributeNode extends Node {
     getAttributeName(builder: NodeBuilder): string;
 }
 
-export const attribute: (name: string, nodeType: NodeTypeOption) => ShaderNodeObject;
+export const attribute: (name: string, nodeType: NodeTypeOption) => ShaderNodeObject<Node>;
