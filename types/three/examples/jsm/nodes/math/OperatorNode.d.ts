@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type OperatorNodeOp =
     | '='
@@ -31,7 +31,11 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-export type Operator = (a: NodeRepresentation, b: NodeRepresentation, ...others: NodeRepresentation[]) => Swizzable;
+export type Operator = (
+    a: NodeRepresentation,
+    b: NodeRepresentation,
+    ...others: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
 
 export const add: Operator;
 export const sub: Operator;
@@ -52,3 +56,27 @@ export const bitOr: Operator;
 export const bitXor: Operator;
 export const shiftLeft: Operator;
 export const shiftRight: Operator;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        add: typeof add;
+        sub: typeof sub;
+        mul: typeof mul;
+        div: typeof div;
+        remainder: typeof remainder;
+        equal: typeof equal;
+        assign: typeof assign;
+        lessThan: typeof lessThan;
+        greaterThan: typeof greaterThan;
+        lessThanEqual: typeof lessThanEqual;
+        greaterThanEqual: typeof greaterThanEqual;
+        and: typeof and;
+        or: typeof or;
+        xor: typeof xor;
+        bitAnd: typeof bitAnd;
+        bitOr: typeof bitOr;
+        bitXor: typeof bitXor;
+        shiftLeft: typeof shiftLeft;
+        shiftRight: typeof shiftRight;
+    }
+}

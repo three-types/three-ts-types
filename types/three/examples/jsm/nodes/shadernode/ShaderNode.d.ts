@@ -3,9 +3,19 @@ import { NodeTypeOption, SwizzleOption } from '../core/constants.js';
 import ConstNode from '../core/ConstNode.js';
 import NodeBuilder from '../core/NodeBuilder.js';
 
+export interface NodeElements {}
+
+export function addNodeElement(name: string, nodeElement: unknown): void;
+
 export type Swizzable<T extends Node = Node> = T & {
     [key in SwizzleOption | number]: Swizzable;
 };
+
+export type ShaderNodeObject<T extends Node> = T & {
+    [Key in keyof NodeElements]: NodeElements[Key] extends (node: T, ...args: infer Args) => infer R
+        ? (...args: Args) => R
+        : never;
+} & Swizzable<T>;
 
 /** anything that can be passed to {@link nodeObject} and returns a proxy */
 export type NodeRepresentation<T extends Node = Node> = number | boolean | Node | Swizzable<T>;

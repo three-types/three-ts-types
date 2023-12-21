@@ -1,5 +1,5 @@
 import AttributeNode from '../core/AttributeNode.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class UVNode extends AttributeNode {
     isUVNode: true;
@@ -8,4 +8,4 @@ export default class UVNode extends AttributeNode {
     constructor(index?: number);
 }
 
-export const uv: (index?: number) => Swizzable<UVNode>;
+export const uv: (index?: number) => ShaderNodeObject<UVNode>;
