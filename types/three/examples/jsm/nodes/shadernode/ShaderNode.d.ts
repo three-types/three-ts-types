@@ -1,4 +1,7 @@
-import { ConstNode, Node, NodeBuilder, NodeTypeOption, SwizzleOption } from '../Nodes.js';
+import Node from '../core/Node.js';
+import { NodeTypeOption, SwizzleOption } from '../core/constants.js';
+import ConstNode from '../core/ConstNode.js';
+import NodeBuilder from '../core/NodeBuilder.js';
 
 export type Swizzable<T extends Node = Node> = T & {
     [key in SwizzleOption | number]: Swizzable;
