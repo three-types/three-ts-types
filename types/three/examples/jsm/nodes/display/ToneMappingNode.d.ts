@@ -1,7 +1,7 @@
 import { ToneMapping } from '../../../../src/Three.js';
 import TempNode from '../core/TempNode.js';
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 // exposure only
 export const LinearToneMappingNode: Node;
@@ -18,4 +18,4 @@ export const toneMapping: (
     mapping: ToneMapping,
     exposure: NodeRepresentation,
     color: NodeRepresentation,
-) => Swizzable<ToneMappingNode>;
+) => ShaderNodeObject<ToneMappingNode>;

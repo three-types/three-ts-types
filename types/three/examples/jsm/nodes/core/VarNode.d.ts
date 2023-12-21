@@ -1,6 +1,6 @@
 import { OperatorNodeOp } from '../math/OperatorNode.js';
 import Node from './Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class VarNode extends Node {
     node: Node;
@@ -16,5 +16,5 @@ export default class VarNode extends Node {
     div(...params: Node[]): this;
 }
 
-export const label: (node: NodeRepresentation, name?: string) => Swizzable<VarNode>;
-export const temp: (node: NodeRepresentation, name?: string) => Swizzable<VarNode>;
+export const label: (node: NodeRepresentation, name?: string) => ShaderNodeObject<VarNode>;
+export const temp: (node: NodeRepresentation, name?: string) => ShaderNodeObject<VarNode>;

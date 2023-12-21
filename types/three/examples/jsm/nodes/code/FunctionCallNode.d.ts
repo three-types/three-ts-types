@@ -1,7 +1,7 @@
 import FunctionNode, { FunctionNodeArguments } from './FunctionNode.js';
 import TempNode from '../core/TempNode.js';
 import Node from '../core/Node.js';
-import { ProxiedObject, Swizzable } from '../shadernode/ShaderNode.js';
+import { ProxiedObject, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class FunctionCallNode<P extends Node[] | { [name: string]: Node }> extends TempNode {
     functionNode: FunctionNode<P>;
@@ -16,4 +16,4 @@ export default class FunctionCallNode<P extends Node[] | { [name: string]: Node 
 export const call: <P extends FunctionNodeArguments>(
     functionNode?: FunctionNode<P>,
     parameters?: ProxiedObject<P>,
-) => Swizzable<FunctionCallNode<P>>;
+) => ShaderNodeObject<FunctionCallNode<P>>;

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class SpriteSheetUVNode extends Node {
     countNode: Node;
@@ -13,4 +13,4 @@ export const spritesheetUV: (
     countNode: NodeRepresentation,
     uvNode?: NodeRepresentation,
     frameNode?: NodeRepresentation,
-) => Swizzable<SpriteSheetUVNode>;
+) => ShaderNodeObject<SpriteSheetUVNode>;

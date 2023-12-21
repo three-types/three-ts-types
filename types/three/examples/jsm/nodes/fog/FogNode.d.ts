@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class FogNode extends Node {
     isFogNode: true;
@@ -10,4 +10,4 @@ export default class FogNode extends Node {
     mixAssign(outputNode: Node): Node;
 }
 
-export const fog: (colorNode: NodeRepresentation, factorNode: NodeRepresentation) => Swizzable<FogNode>;
+export const fog: (colorNode: NodeRepresentation, factorNode: NodeRepresentation) => ShaderNodeObject<FogNode>;

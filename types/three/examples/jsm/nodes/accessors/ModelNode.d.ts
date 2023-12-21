@@ -1,5 +1,5 @@
 import Object3DNode, { Object3DNodeScope } from './Object3DNode.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 /**
  * Similar to {@link Object3DNode} but the object comes from {@link NodeFrame}
@@ -8,8 +8,8 @@ export default class ModelNode extends Object3DNode {
     constructor(scope?: Object3DNodeScope);
 }
 
-export const modelViewMatrix: Swizzable<ModelNode>;
-export const modelNormalMatrix: Swizzable<ModelNode>;
-export const modelWorldMatrix: Swizzable<ModelNode>;
-export const modelPosition: Swizzable<ModelNode>;
-export const modelViewPosition: Swizzable<ModelNode>;
+export const modelViewMatrix: ShaderNodeObject<ModelNode>;
+export const modelNormalMatrix: ShaderNodeObject<ModelNode>;
+export const modelWorldMatrix: ShaderNodeObject<ModelNode>;
+export const modelPosition: ShaderNodeObject<ModelNode>;
+export const modelViewPosition: ShaderNodeObject<ModelNode>;

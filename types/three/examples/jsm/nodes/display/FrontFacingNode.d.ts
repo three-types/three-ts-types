@@ -1,10 +1,10 @@
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class FrontFacingNode extends Node {
     isFrontFacingNode: true;
     constructor();
 }
 
-export const frontFacing: Swizzable<FrontFacingNode>;
-export const faceDirection: Swizzable;
+export const frontFacing: ShaderNodeObject<FrontFacingNode>;
+export const faceDirection: ShaderNodeObject<Node>;

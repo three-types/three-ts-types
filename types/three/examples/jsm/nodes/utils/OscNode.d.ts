@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type OscNodeMethod =
     | typeof OscNode.SINE
@@ -19,7 +19,7 @@ export default class OscNode extends Node {
     constructor(method: OscNodeMethod, timeNode?: Node);
 }
 
-export const oscSine: (timeNode?: NodeRepresentation) => Swizzable<OscNode>;
-export const oscSquare: (timeNode?: NodeRepresentation) => Swizzable<OscNode>;
-export const oscTriangle: (timeNode?: NodeRepresentation) => Swizzable<OscNode>;
-export const oscSawtooth: (timeNode?: NodeRepresentation) => Swizzable<OscNode>;
+export const oscSine: (timeNode?: NodeRepresentation) => ShaderNodeObject<OscNode>;
+export const oscSquare: (timeNode?: NodeRepresentation) => ShaderNodeObject<OscNode>;
+export const oscTriangle: (timeNode?: NodeRepresentation) => ShaderNodeObject<OscNode>;
+export const oscSawtooth: (timeNode?: NodeRepresentation) => ShaderNodeObject<OscNode>;

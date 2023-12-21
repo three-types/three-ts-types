@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import TextureNode from '../accessors/TextureNode.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class SpecularMIPLevelNode extends Node {
     textureNode: TextureNode;
@@ -9,4 +9,4 @@ export default class SpecularMIPLevelNode extends Node {
     constructor(textureNode: TextureNode, roughnessNode?: Node | null);
 }
 
-export const specularMIPLevel: () => Swizzable<SpecularMIPLevelNode>;
+export const specularMIPLevel: () => ShaderNodeObject<SpecularMIPLevelNode>;

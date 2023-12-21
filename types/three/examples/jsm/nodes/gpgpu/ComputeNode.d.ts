@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class ComputeNode extends Node {
     isComputeNode: true;
@@ -11,4 +11,8 @@ export default class ComputeNode extends Node {
     constructor(computeNode: Node, count: number, workgroupSize?: number[]);
 }
 
-export const compute: (node: NodeRepresentation, count: number, workgroupSize: number[]) => Swizzable<ComputeNode>;
+export const compute: (
+    node: NodeRepresentation,
+    count: number,
+    workgroupSize: number[],
+) => ShaderNodeObject<ComputeNode>;

@@ -1,6 +1,6 @@
 import Node from './Node.js';
 import { NodeBuilderContext } from './NodeBuilder.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class ContextNode extends Node {
     isContextNode: true;
@@ -10,4 +10,4 @@ export default class ContextNode extends Node {
     constructor(node: Node, context: NodeBuilderContext);
 }
 
-export const context: (node: NodeRepresentation, context: NodeBuilderContext) => Swizzable<ContextNode>;
+export const context: (node: NodeRepresentation, context: NodeBuilderContext) => ShaderNodeObject<ContextNode>;

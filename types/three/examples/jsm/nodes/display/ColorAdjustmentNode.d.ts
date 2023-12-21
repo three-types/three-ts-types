@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import MathNode from '../math/MathNode.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type ColorAdjustmentMethod =
     | typeof ColorAdjustmentNode.SATURATION
@@ -23,15 +23,15 @@ export default class ColorAdjustmentNode extends TempNode {
 export const saturation: (
     colorNode: NodeRepresentation,
     adjustmentNode?: NodeRepresentation,
-) => Swizzable<ColorAdjustmentNode>;
+) => ShaderNodeObject<ColorAdjustmentNode>;
 export const vibrance: (
     colorNode: NodeRepresentation,
     adjustmentNode?: NodeRepresentation,
-) => Swizzable<ColorAdjustmentNode>;
+) => ShaderNodeObject<ColorAdjustmentNode>;
 export const hue: (
     colorNode: NodeRepresentation,
     adjustmentNode?: NodeRepresentation,
-) => Swizzable<ColorAdjustmentNode>;
+) => ShaderNodeObject<ColorAdjustmentNode>;
 
-export const lumaCoeffs: Swizzable<MathNode>;
-export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => Swizzable<MathNode>;
+export const lumaCoeffs: ShaderNodeObject<MathNode>;
+export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;

@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type MaterialNodeScope =
     | typeof MaterialNode.ALPHA_TEST
@@ -23,13 +23,13 @@ export default class MaterialNode extends Node {
     constructor(scope?: MaterialNodeScope);
 }
 
-export const materialAlphaTest: Swizzable<MaterialNode>;
-export const materialColor: Swizzable<MaterialNode>;
-export const materialShininess: Swizzable<MaterialNode>;
-export const materialEmissive: Swizzable<MaterialNode>;
-export const materialOpacity: Swizzable<MaterialNode>;
-export const materialSpecularColor: Swizzable<MaterialNode>;
-export const materialReflectivity: Swizzable<MaterialNode>;
-export const materialRoughness: Swizzable<MaterialNode>;
-export const materialMetalness: Swizzable<MaterialNode>;
-export const materialRotation: Swizzable<MaterialNode>;
+export const materialAlphaTest: ShaderNodeObject<MaterialNode>;
+export const materialColor: ShaderNodeObject<MaterialNode>;
+export const materialShininess: ShaderNodeObject<MaterialNode>;
+export const materialEmissive: ShaderNodeObject<MaterialNode>;
+export const materialOpacity: ShaderNodeObject<MaterialNode>;
+export const materialSpecularColor: ShaderNodeObject<MaterialNode>;
+export const materialReflectivity: ShaderNodeObject<MaterialNode>;
+export const materialRoughness: ShaderNodeObject<MaterialNode>;
+export const materialMetalness: ShaderNodeObject<MaterialNode>;
+export const materialRotation: ShaderNodeObject<MaterialNode>;

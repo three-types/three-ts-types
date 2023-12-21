@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import TempNode from '../core/TempNode.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
@@ -115,10 +115,10 @@ export default class MathNode extends TempNode {
     constructor(method: MathNodeMethod3, aNode: Node, bNode: Node, cNode: Node);
 }
 
-export const EPSILON: Swizzable;
-export const INFINITY: Swizzable;
+export const EPSILON: ShaderNodeObject<Node>;
+export const INFINITY: ShaderNodeObject<Node>;
 
-export type Unary = (a: NodeRepresentation) => Swizzable<MathNode>;
+export type Unary = (a: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
 export const radians: Unary;
 export const degrees: Unary;
@@ -148,7 +148,7 @@ export const dFdy: Unary;
 export const round: Unary;
 export const reciprocal: Unary;
 
-export type Binary = (a: NodeRepresentation, b: NodeRepresentation) => Swizzable<MathNode>;
+export type Binary = (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
 export const atan2: Binary;
 export const min: Binary;
@@ -166,7 +166,11 @@ export const pow3: Binary;
 export const pow4: Binary;
 export const transformDirection: Binary;
 
-export type Ternary = (a: NodeRepresentation, b: NodeRepresentation, c: NodeRepresentation) => Swizzable<MathNode>;
+export type Ternary = (
+    a: NodeRepresentation,
+    b: NodeRepresentation,
+    c: NodeRepresentation,
+) => ShaderNodeObject<MathNode>;
 
 export const mix: Ternary;
 export const clamp: Ternary;

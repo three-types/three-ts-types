@@ -1,7 +1,7 @@
 import { Texture } from '../../../../src/Three.js';
 import UniformNode from '../core/UniformNode.js';
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class TextureNode extends UniformNode {
     isTextureNode: true;
@@ -18,5 +18,5 @@ export const texture: (
     value: Texture,
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
-) => Swizzable<TextureNode>;
-export const sampler: (aTexture: Texture | TextureNode) => Swizzable;
+) => ShaderNodeObject<TextureNode>;
+export const sampler: (aTexture: Texture | TextureNode) => ShaderNodeObject<Node>;

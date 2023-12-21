@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class PosterizeNode extends Node {
     sourceNode: Node;
@@ -8,4 +8,7 @@ export default class PosterizeNode extends Node {
     constructor(sourceNode: Node, stepsNode: Node);
 }
 
-export const posterize: (sourceNode: NodeRepresentation, stepsNode: NodeRepresentation) => Swizzable<PosterizeNode>;
+export const posterize: (
+    sourceNode: NodeRepresentation,
+    stepsNode: NodeRepresentation,
+) => ShaderNodeObject<PosterizeNode>;

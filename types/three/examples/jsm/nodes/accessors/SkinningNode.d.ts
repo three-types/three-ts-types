@@ -1,6 +1,6 @@
 import { SkinnedMesh } from '../../../../src/Three.js';
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class SkinningNode extends Node {
     skinIndexNode: Node;
@@ -13,4 +13,4 @@ export default class SkinningNode extends Node {
     constructor(skinnedMesh: SkinnedMesh);
 }
 
-export function skinning(skinnedMesh: SkinnedMesh): Swizzable<SkinningNode>;
+export function skinning(skinnedMesh: SkinnedMesh): ShaderNodeObject<SkinningNode>;

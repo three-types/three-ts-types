@@ -1,7 +1,7 @@
 import { CubeTexture } from '../../../../src/Three.js';
 import TextureNode from './TextureNode.js';
 import Node from '../core/Node.js';
-import { NodeRepresentation, Swizzable } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class CubeTextureNode extends TextureNode {
     isCubeTextureNode: boolean;
@@ -17,4 +17,4 @@ export const cubeTexture: (
     value: CubeTexture,
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
-) => Swizzable<CubeTextureNode>;
+) => ShaderNodeObject<CubeTextureNode>;

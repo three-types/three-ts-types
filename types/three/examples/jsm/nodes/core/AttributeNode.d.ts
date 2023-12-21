@@ -1,7 +1,7 @@
 import { NodeTypeOption } from './constants.js';
 import Node from './Node.js';
 import NodeBuilder from './NodeBuilder.js';
-import { Swizzable } from '../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class AttributeNode extends Node {
     constructor(attributeName: string, nodeType?: NodeTypeOption | null);
@@ -9,4 +9,4 @@ export default class AttributeNode extends Node {
     getAttributeName(builder: NodeBuilder): string;
 }
 
-export const attribute: (name: string, nodeType: NodeTypeOption) => Swizzable;
+export const attribute: (name: string, nodeType: NodeTypeOption) => ShaderNodeObject;
