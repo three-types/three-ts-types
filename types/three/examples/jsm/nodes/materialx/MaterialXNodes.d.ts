@@ -1,5 +1,5 @@
 import { mx_hsvtorgb, mx_rgbtohsv } from './lib/mx_hsv.js';
-import { Swizzable } from '../shadernode/ShaderNodeElements.js';
+import { Swizzable } from '../shadernode/ShaderNode.js';
 import { UVNode, MathNode } from '../Nodes.js';
 import { NodeRepresentation } from '../shadernode/ShaderNode.js';
 

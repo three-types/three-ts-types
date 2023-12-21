@@ -1,6 +1,6 @@
 import Node from '../core/Node.js';
 import NodeBuilder from '../core/NodeBuilder.js';
-import { NodeTypeOption } from '../core/constants';
+import { NodeTypeOption } from '../core/constants.js';
 import { Swizzable } from '../shadernode/ShaderNode.js';
 
 export interface CodeNodeInclude {

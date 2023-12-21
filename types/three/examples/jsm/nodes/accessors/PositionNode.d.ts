@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { Swizzable } from '../shadernode/ShaderNode';
+import { Swizzable } from '../shadernode/ShaderNode.js';
 
 export type PositionNodeScope =
     | typeof PositionNode.GEOMETRY
