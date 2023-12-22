@@ -9,7 +9,7 @@ export const LinearToneMappingNode: Node;
 export default class ToneMappingNode extends TempNode {
     toneMapping: ToneMapping;
     exposureNode: Node;
-    colorNode: Node | null;
+    colorNode: Node | null | undefined;
 
     constructor(toneMapping: ToneMapping, exposureNode?: Node, colorNode?: Node | null);
 }
@@ -17,5 +17,5 @@ export default class ToneMappingNode extends TempNode {
 export const toneMapping: (
     mapping: ToneMapping,
     exposure: NodeRepresentation,
-    color: NodeRepresentation,
+    color?: NodeRepresentation,
 ) => ShaderNodeObject<ToneMappingNode>;

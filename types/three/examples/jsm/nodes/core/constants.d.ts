@@ -49,11 +49,13 @@ export type NodeTypeOption =
 
 export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
 
-export type SwizzleOption =
+export type SwizzleOption = Exclude<
     | `${SwizzleCharacter}`
     | `${SwizzleCharacter}${SwizzleCharacter}`
     | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`
-    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`;
+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`,
+    'abs' | 'sqrt'
+>;
 
 /** Should be the same type as Object3D.userData */
 export type NodeUserData = Record<string, any>;
