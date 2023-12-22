@@ -28,7 +28,11 @@ export type MathNodeMethod1 =
     | typeof MathNode.ONE_MINUS
     | typeof MathNode.DFDX
     | typeof MathNode.DFDY
-    | typeof MathNode.ROUND;
+    | typeof MathNode.ROUND
+    | typeof MathNode.RECIPROCAL
+    | typeof MathNode.TRUNC
+    | typeof MathNode.FWIDTH
+    | typeof MathNode.BITCAST;
 
 export type MathNodeMethod2 =
     | typeof MathNode.ATAN2
@@ -82,6 +86,9 @@ export default class MathNode extends TempNode {
     static DFDY: 'dFdy';
     static ROUND: 'round';
     static RECIPROCAL: 'reciprocal';
+    static TRUNC: 'trunc';
+    static FWIDTH: 'fwidth';
+    static BITCAST: 'bitcast';
 
     // 2 inputs
 
@@ -127,7 +134,7 @@ export const exp2: Unary;
 export const log: Unary;
 export const log2: Unary;
 export const sqrt: Unary;
-export const inversesqrt: Unary;
+export const inverseSqrt: Unary;
 export const floor: Unary;
 export const ceil: Unary;
 export const normalize: Unary;
@@ -142,11 +149,14 @@ export const abs: Unary;
 export const sign: Unary;
 export const length: Unary;
 export const negate: Unary;
-export const invert: Unary;
+export const oneMinus: Unary;
 export const dFdx: Unary;
 export const dFdy: Unary;
 export const round: Unary;
 export const reciprocal: Unary;
+export const trunc: Unary;
+export const fwidth: Unary;
+export const bitcast: Unary;
 
 export type Binary = (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
@@ -174,6 +184,65 @@ export type Ternary = (
 
 export const mix: Ternary;
 export const clamp: Ternary;
+export const saturate: Ternary;
 export const refract: Ternary;
 export const smoothstep: Ternary;
-export const faceforward: Ternary;
+export const faceForward: Ternary;
+
+export const mixElement: Ternary;
+export const smoothstepElement: Ternary;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        radians: typeof radians;
+        degrees: typeof degrees;
+        exp: typeof exp;
+        exp2: typeof exp2;
+        log: typeof log;
+        log2: typeof log2;
+        sqrt: typeof sqrt;
+        inverseSqrt: typeof inverseSqrt;
+        floor: typeof floor;
+        ceil: typeof ceil;
+        normalize: typeof normalize;
+        fract: typeof fract;
+        sin: typeof sin;
+        cos: typeof cos;
+        tan: typeof tan;
+        asin: typeof asin;
+        acos: typeof acos;
+        atan: typeof atan;
+        abs: typeof abs;
+        sign: typeof sign;
+        length: typeof length;
+        negate: typeof negate;
+        oneMinus: typeof oneMinus;
+        dFdx: typeof dFdx;
+        dFdy: typeof dFdy;
+        round: typeof round;
+        reciprocal: typeof reciprocal;
+        trunc: typeof trunc;
+        fwidth: typeof fwidth;
+        atan2: typeof atan2;
+        min: typeof min;
+        max: typeof max;
+        mod: typeof mod;
+        step: typeof step;
+        reflect: typeof reflect;
+        distance: typeof distance;
+        dot: typeof dot;
+        cross: typeof cross;
+        pow: typeof pow;
+        pow2: typeof pow2;
+        pow3: typeof pow3;
+        pow4: typeof pow4;
+        transformDirection: typeof transformDirection;
+        mix: typeof mixElement;
+        clamp: typeof clamp;
+        refract: typeof refract;
+        smoothstep: typeof smoothstepElement;
+        faceForward: typeof faceForward;
+        difference: typeof difference;
+        saturate: typeof saturate;
+    }
+}

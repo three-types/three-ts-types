@@ -17,5 +17,5 @@ export default class ToneMappingNode extends TempNode {
 export const toneMapping: (
     mapping: ToneMapping,
     exposure: NodeRepresentation,
-    color: NodeRepresentation,
+    color?: NodeRepresentation,
 ) => ShaderNodeObject<ToneMappingNode>;
