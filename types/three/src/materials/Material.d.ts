@@ -1,7 +1,7 @@
 import { Plane } from '../math/Plane.js';
 import { EventDispatcher } from '../core/EventDispatcher.js';
+import { WebGLProgramParametersWithUniforms } from '../renderers/webgl/WebGLPrograms.js';
 import { WebGLRenderer } from '../renderers/WebGLRenderer.js';
-import { Shader } from '../renderers/shaders/ShaderLib.js';
 import {
     BlendingDstFactor,
     BlendingEquation,
@@ -406,12 +406,12 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
 
     /**
      * An optional callback that is executed immediately before the shader program is compiled.
-     * This function is called with the shader source code as a parameter.
+     * This function is called with the associated WebGL program parameters and renderer.
      * Useful for the modification of built-in materials.
-     * @param shader Source code of the shader
-     * @param renderer WebGLRenderer Context that is initializing the material
+     * @param parameters WebGL program parameters
+     * @param renderer WebGLRenderer context that is initializing the material
      */
-    onBeforeCompile(shader: Shader, renderer: WebGLRenderer): void;
+    onBeforeCompile(parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
 
     /**
      * In case onBeforeCompile is used, this callback can be used to identify values of settings used in onBeforeCompile, so three.js can reuse a cached shader or recompile the shader as needed.
