@@ -9874,6 +9874,209 @@ index 6ff0f3b..c845683 100644
          }
      });
  
+diff --git a/examples-testing/examples/webgl_nodes_loader_gltf_sheen.ts b/examples-testing/examples/webgl_nodes_loader_gltf_sheen.ts
+index 589658f..473434d 100644
+--- a/examples-testing/examples/webgl_nodes_loader_gltf_sheen.ts
++++ b/examples-testing/examples/webgl_nodes_loader_gltf_sheen.ts
+@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+ 
+ init();
+ animate();
+@@ -26,10 +26,10 @@ function init() {
+     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
+         scene.add(gltf.scene);
+ 
+-        const object = gltf.scene.getObjectByName('SheenChair_fabric');
++        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh;
+ 
+         // Convert to NodeMaterial
+-        const material = NodeMaterial.fromMaterial(object.material); // @TODO: NodeMaterial.fromMaterial can be removed if WebGLNodes will apply it by default (as in WebGPURenderer)
++        const material = NodeMaterial.fromMaterial(object.material as THREE.MeshPhysicalMaterial); // @TODO: NodeMaterial.fromMaterial can be removed if WebGLNodes will apply it by default (as in WebGPURenderer)
+ 
+         const checkerNode = checker(uv().mul(5));
+ 
+diff --git a/examples-testing/examples/webgl_nodes_loader_materialx.ts b/examples-testing/examples/webgl_nodes_loader_materialx.ts
+index a70415a..371f648 100644
+--- a/examples-testing/examples/webgl_nodes_loader_materialx.ts
++++ b/examples-testing/examples/webgl_nodes_loader_materialx.ts
+@@ -1,11 +1,11 @@
+ import * as THREE from 'three';
+ 
+-import { MaterialXLoader } from './jsm/loaders/MaterialXLoader.js';
+-import { OrbitControls } from './jsm/controls/OrbitControls.js';
+-import { RGBELoader } from './jsm/loaders/RGBELoader.js';
+-import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
++import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
++import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
++import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
++import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-import { nodeFrame } from './jsm/renderers/webgl-legacy/nodes/WebGLNodes.js';
++import { nodeFrame } from 'three/addons/renderers/webgl-legacy/nodes/WebGLNodes.js';
+ 
+ const SAMPLE_PATH =
+     'https://raw.githubusercontent.com/materialx/MaterialX/main/resources/Materials/Examples/StandardSurface/';
+@@ -34,8 +34,8 @@ const samples = [
+     'standard_surface_wood_tiled.mtlx',
+ ];
+ 
+-let camera, scene, renderer, prefab;
+-const models = [];
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, prefab: THREE.Group;
++const models: THREE.Group[] = [];
+ 
+ init();
+ 
+@@ -98,7 +98,7 @@ function updateModelsAlign() {
+     }
+ }
+ 
+-async function addSample(sample) {
++async function addSample(sample: string) {
+     const model = prefab.clone();
+ 
+     models.push(model);
+@@ -109,15 +109,15 @@ async function addSample(sample) {
+ 
+     //
+ 
+-    const material = await new MaterialXLoader()
++    const material = (await new MaterialXLoader()
+         .setPath(SAMPLE_PATH)
+         .loadAsync(sample)
+-        .then(({ materials }) => Object.values(materials).pop());
++        .then(({ materials }) => Object.values(materials).pop()))!;
+ 
+-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
++    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
+     calibrationMesh.material = material;
+ 
+-    const Preview_Mesh = model.getObjectByName('Preview_Mesh');
++    const Preview_Mesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
+     Preview_Mesh.material = material;
+ }
+ 
+diff --git a/examples-testing/examples/webgl_nodes_materials_instance_uniform.ts b/examples-testing/examples/webgl_nodes_materials_instance_uniform.ts
+index 0c911aa..ec8e186 100644
+--- a/examples-testing/examples/webgl_nodes_materials_instance_uniform.ts
++++ b/examples-testing/examples/webgl_nodes_materials_instance_uniform.ts
+@@ -1,5 +1,15 @@
+ import * as THREE from 'three';
+-import { MeshStandardNodeMaterial, Node, NodeUpdateType, nodeObject, uniform, cubeTexture } from 'three/nodes';
++import {
++    MeshStandardNodeMaterial,
++    Node,
++    NodeUpdateType,
++    nodeObject,
++    uniform,
++    cubeTexture,
++    NodeFrame,
++    NodeBuilder,
++    UniformNode,
++} from 'three/nodes';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -8,6 +18,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { nodeFrame } from 'three/addons/renderers/webgl-legacy/nodes/WebGLNodes.js';
+ 
+ class InstanceUniformNode extends Node {
++    uniformNode: UniformNode<THREE.Color>;
++
+     constructor() {
+         super('vec3');
+ 
+@@ -16,22 +28,22 @@ class InstanceUniformNode extends Node {
+         this.uniformNode = uniform(new THREE.Color());
+     }
+ 
+-    update(frame) {
+-        this.uniformNode.value.copy(frame.object.color);
++    update(frame: NodeFrame) {
++        this.uniformNode.value.copy((frame.object as THREE.Mesh & { color: THREE.Color }).color);
+     }
+ 
+-    generate(builder, output) {
++    generate(builder: NodeBuilder, output?: string | null) {
+         return this.uniformNode.build(builder, output);
+     }
+ }
+ 
+-let stats;
++let stats: Stats;
+ 
+-let camera, scene, renderer;
+-let controls;
+-let pointLight;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controls: OrbitControls;
++let pointLight: THREE.PointLight;
+ 
+-const objects = [];
++const objects: THREE.Mesh[] = [];
+ 
+ init();
+ animate();
+@@ -126,10 +138,10 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function addMesh(geometry, material) {
++function addMesh(geometry: THREE.SphereGeometry, material: MeshStandardNodeMaterial) {
+     const mesh = new THREE.Mesh(geometry, material);
+ 
+-    mesh.color = new THREE.Color(Math.random() * 0xffffff);
++    (mesh as THREE.Mesh & { color?: THREE.Color }).color = new THREE.Color(Math.random() * 0xffffff);
+ 
+     mesh.position.x = (objects.length % 4) * 20 - 30;
+     mesh.position.z = Math.floor(objects.length / 4) * 20 - 20;
+diff --git a/examples-testing/examples/webgl_nodes_materials_physical_clearcoat.ts b/examples-testing/examples/webgl_nodes_materials_physical_clearcoat.ts
+index 615179e..41a86a6 100644
+--- a/examples-testing/examples/webgl_nodes_materials_physical_clearcoat.ts
++++ b/examples-testing/examples/webgl_nodes_materials_physical_clearcoat.ts
+@@ -10,12 +10,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
+ 
+ import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let particleLight;
+-let group;
++let particleLight: THREE.Mesh;
++let group: THREE.Group;
+ 
+ init();
+ animate();
+diff --git a/examples-testing/examples/webgl_nodes_materialx_noise.ts b/examples-testing/examples/webgl_nodes_materialx_noise.ts
+index 028b06b..07e50e8 100644
+--- a/examples-testing/examples/webgl_nodes_materialx_noise.ts
++++ b/examples-testing/examples/webgl_nodes_materialx_noise.ts
+@@ -16,12 +16,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+-let particleLight;
+-let group;
++let particleLight: THREE.Mesh;
++let group: THREE.Group;
+ 
+ init();
+ animate();
 diff --git a/examples-testing/examples/webgl_panorama_cube.ts b/examples-testing/examples/webgl_panorama_cube.ts
 index 951e6be..a66d5f0 100644
 --- a/examples-testing/examples/webgl_panorama_cube.ts
