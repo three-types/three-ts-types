@@ -1,5 +1,3 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from '../../../../src/Three.js';
-
 // disable automatic export, we have some private declarations
 export const NodeShaderStage: {
     VERTEX: 'vertex';
@@ -13,7 +11,6 @@ export const NodeUpdateType: {
     OBJECT: 'object';
 };
 
-export type NodeValueOption = Color | Vector2 | Vector3 | Vector4 | Matrix3 | Matrix4 | boolean | number;
 export type NodeUpdateTypeOption = 'none' | 'frame' | 'object';
 export type NodeShaderStageOption = 'vertex' | 'fragment' | 'compute';
 export type NodeTypeOption =

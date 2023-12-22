@@ -2,7 +2,7 @@ import { NodeTypeOption } from '../core/constants.js';
 import UniformNode from '../core/UniformNode.js';
 import { NodeOrType, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
-export default class BufferNode extends UniformNode {
+export default class BufferNode extends UniformNode<ArrayLike<number>> {
     isBufferNode: true;
 
     bufferType: string;
