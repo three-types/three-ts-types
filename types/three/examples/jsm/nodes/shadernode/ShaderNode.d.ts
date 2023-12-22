@@ -28,7 +28,7 @@ export type NodeObjectOption = NodeRepresentation | string;
 export type NodeObject<T> = T extends Node
     ? ShaderNodeObject<T>
     : T extends number | boolean
-    ? ShaderNodeObject<ConstNode>
+    ? ShaderNodeObject<ConstNode<number | boolean>>
     : T;
 
 // opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
@@ -121,17 +121,13 @@ type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
 
 export type ConvertType = (...params: unknown[]) => ShaderNodeObject<Node>;
 
-export const ConvertType: {
-    new (type: NodeTypeOption, cacheMap?: Map<unknown, ConstNode>): ConvertType;
-};
-
 type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
 type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
 type ConstructedNode<T> = T extends new (...args: any[]) => infer R ? (R extends Node ? R : never) : never;
 
 export type NodeOrType = Node | NodeTypeOption;
 
-export function getConstNodeType(value: NodeOrType): NodeTypeOption | null;
+export const getConstNodeType: (value: NodeOrType) => NodeTypeOption | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);

@@ -3,7 +3,7 @@ import UniformNode from '../core/UniformNode.js';
 import Node from '../core/Node.js';
 import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
-export default class TextureNode extends UniformNode {
+export default class TextureNode extends UniformNode<Texture> {
     isTextureNode: true;
 
     uvNode: Node | null;

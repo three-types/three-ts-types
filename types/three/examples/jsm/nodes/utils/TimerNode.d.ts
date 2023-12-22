@@ -7,7 +7,7 @@ export type TimerNodeScope =
     | typeof TimerNode.DELTA
     | typeof TimerNode.FRAME;
 
-export default class TimerNode extends UniformNode {
+export default class TimerNode extends UniformNode<number> {
     static LOCAL: 'local';
     static GLOBAL: 'global';
     static DELTA: 'delta';
