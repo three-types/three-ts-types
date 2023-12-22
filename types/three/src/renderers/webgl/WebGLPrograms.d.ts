@@ -16,6 +16,7 @@ import {
     Combine,
     DepthPackingStrategies,
     GLSLVersion,
+    Mapping,
     ShadowMapType,
     ToneMapping,
 } from '../../constants.js';
@@ -29,13 +30,13 @@ export interface WebGLProgramParameters {
 
     vertexShader: string;
     fragmentShader: string;
-    defines?: { [define: string]: string | number | boolean };
+    defines: { [define: string]: string | number | boolean } | undefined;
 
-    customVertexShaderID?: string;
-    customFragmentShaderID?: string;
+    customVertexShaderID: string | undefined;
+    customFragmentShaderID: string | undefined;
 
     isRawShaderMaterial: boolean;
-    glslVersion?: GLSLVersion;
+    glslVersion: GLSLVersion | null | undefined;
 
     precision: 'lowp' | 'mediump' | 'highp';
 
@@ -49,7 +50,7 @@ export interface WebGLProgramParameters {
     map: boolean;
     matcap: boolean;
     envMap: boolean;
-    envMapMode: boolean;
+    envMapMode: Mapping | false;
     envMapCubeUVHeight: number | null;
     aoMap: boolean;
     lightMap: boolean;
@@ -96,41 +97,41 @@ export interface WebGLProgramParameters {
     alphaTest: boolean;
     alphaHash: boolean;
 
-    combine: Combine;
+    combine: Combine | undefined;
 
     //
 
-    mapUv: boolean;
-    aoMapUv: boolean;
-    lightMapUv: boolean;
-    bumpMapUv: boolean;
-    normalMapUv: boolean;
-    displacementMapUv: boolean;
-    emissiveMapUv: boolean;
+    mapUv: string | false;
+    aoMapUv: string | false;
+    lightMapUv: string | false;
+    bumpMapUv: string | false;
+    normalMapUv: string | false;
+    displacementMapUv: string | false;
+    emissiveMapUv: string | false;
 
-    metalnessMapUv: boolean;
-    roughnessMapUv: boolean;
+    metalnessMapUv: string | false;
+    roughnessMapUv: string | false;
 
-    anisotropyMapUv: boolean;
+    anisotropyMapUv: string | false;
 
-    clearcoatMapUv: boolean;
-    clearcoatNormalMapUv: boolean;
-    clearcoatRoughnessMapUv: boolean;
+    clearcoatMapUv: string | false;
+    clearcoatNormalMapUv: string | false;
+    clearcoatRoughnessMapUv: string | false;
 
-    iridescenceMapUv: boolean;
-    iridescenceThicknessMapUv: boolean;
+    iridescenceMapUv: string | false;
+    iridescenceThicknessMapUv: string | false;
 
-    sheenColorMapUv: boolean;
-    sheenRoughnessMapUv: boolean;
+    sheenColorMapUv: string | false;
+    sheenRoughnessMapUv: string | false;
 
-    specularMapUv: boolean;
-    specularColorMapUv: boolean;
-    specularIntensityMapUv: boolean;
+    specularMapUv: string | false;
+    specularColorMapUv: string | false;
+    specularIntensityMapUv: string | false;
 
-    transmissionMapUv: boolean;
-    thicknessMapUv: boolean;
+    transmissionMapUv: string | false;
+    thicknessMapUv: string | false;
 
-    alphaMapUv: boolean;
+    alphaMapUv: string | false;
 
     //
 
@@ -193,9 +194,9 @@ export interface WebGLProgramParameters {
     flipSided: boolean;
 
     useDepthPacking: boolean;
-    depthPacking: DepthPackingStrategies;
+    depthPacking: DepthPackingStrategies | 0;
 
-    index0AttributeName: string;
+    index0AttributeName: string | undefined;
 
     extensionDerivatives: boolean;
     extensionFragDepth: boolean;
