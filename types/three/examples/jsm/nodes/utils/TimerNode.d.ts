@@ -19,7 +19,7 @@ export default class TimerNode extends UniformNode<number> {
     constructor(scope?: TimerNodeScope, scale?: number, value?: number);
 }
 
-export const timerLocal: (timeScale: number, value?: number) => ShaderNodeObject<TimerNode>;
-export const timerGlobal: (timeScale: number, value?: number) => ShaderNodeObject<TimerNode>;
-export const timerDelta: (timeScale: number, value?: number) => ShaderNodeObject<TimerNode>;
+export const timerLocal: (timeScale?: number, value?: number) => ShaderNodeObject<TimerNode>;
+export const timerGlobal: (timeScale?: number, value?: number) => ShaderNodeObject<TimerNode>;
+export const timerDelta: (timeScale?: number, value?: number) => ShaderNodeObject<TimerNode>;
 export const frameId: ShaderNodeObject<TimerNode>;
