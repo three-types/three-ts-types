@@ -9,7 +9,7 @@ export const LinearToneMappingNode: Node;
 export default class ToneMappingNode extends TempNode {
     toneMapping: ToneMapping;
     exposureNode: Node;
-    colorNode: Node | null | undefined;
+    colorNode: Node | null;
 
     constructor(toneMapping: ToneMapping, exposureNode?: Node, colorNode?: Node | null);
 }
