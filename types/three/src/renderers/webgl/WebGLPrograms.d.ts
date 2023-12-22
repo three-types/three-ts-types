@@ -211,6 +211,10 @@ export interface WebGLProgramParameters {
     customProgramCacheKey: string;
 }
 
+export interface WebGLProgramParametersWithUniforms extends WebGLProgramParameters {
+    uniforms: { [uniform: string]: IUniform };
+}
+
 export class WebGLPrograms {
     constructor(
         renderer: WebGLRenderer,
@@ -233,6 +237,6 @@ export class WebGLPrograms {
 
     getProgramCacheKey(parameters: WebGLProgramParameters): string;
     getUniforms(material: Material): { [uniform: string]: IUniform };
-    acquireProgram(parameters: WebGLProgramParameters, cacheKey: string): WebGLProgram;
+    acquireProgram(parameters: WebGLProgramParametersWithUniforms, cacheKey: string): WebGLProgram;
     releaseProgram(program: WebGLProgram): void;
 }
