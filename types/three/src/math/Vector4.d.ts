@@ -1,5 +1,5 @@
 import { Matrix4 } from './Matrix4.js';
-import { Quaternion, QuaternionLike } from './Quaternion.js';
+import { QuaternionLike } from './Quaternion.js';
 import { BufferAttribute } from '../core/BufferAttribute.js';
 
 export type Vector4Tuple = [number, number, number, number];
