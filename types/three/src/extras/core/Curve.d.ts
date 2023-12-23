@@ -1,3 +1,4 @@
+import { Vector2 } from '../../math/Vector2.js';
 import { Vector3 } from '../../math/Vector3.js';
 
 /**
@@ -24,7 +25,7 @@ import { Vector3 } from '../../math/Vector3.js';
  * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/Curve | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/Curve.js | Source}
  */
-export abstract class Curve<TVector> {
+export abstract class Curve<TVector extends Vector2 | Vector3> {
     protected constructor();
 
     /**

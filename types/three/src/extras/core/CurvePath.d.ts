@@ -1,4 +1,6 @@
 import { Curve } from './Curve.js';
+import { Vector2 } from '../../math/Vector2';
+import { Vector3 } from '../../math/Vector3';
 
 /**
  * Curved Path - a curve path is simply a array of connected curves, but retains the api of a curve.
@@ -7,7 +9,7 @@ import { Curve } from './Curve.js';
  * @see {@link https://threejs.org/docs/index.html#api/en/extras/core/CurvePath | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/extras/core/CurvePath.js | Source}
  */
-export class CurvePath<TVector> extends Curve<TVector> {
+export class CurvePath<TVector extends Vector2 | Vector3> extends Curve<TVector> {
     /**
      * The constructor take no parameters.
      */
