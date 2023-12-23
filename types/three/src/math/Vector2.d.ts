@@ -11,7 +11,7 @@ export interface Vector2Like {
 /**
  * 2D vector.
  */
-export class Vector2 implements Vector2Like {
+export class Vector2 {
     constructor(x?: number, y?: number);
 
     /**
