@@ -35,3 +35,11 @@ export const hue: (
 
 export const lumaCoeffs: ShaderNodeObject<MathNode>;
 export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        saturation: typeof saturation;
+        vibrance: typeof vibrance;
+        hue: typeof hue;
+    }
+}
