@@ -26,7 +26,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
  */
 export class Line<
     TGeometry extends BufferGeometry = BufferGeometry,
-    TMaterial extends Material | Material[] = Material | Material[],
+    TMaterial extends Material | Material[] = Material,
 > extends Object3D {
     /**
      * Create a new instance of {@link Line}

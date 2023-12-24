@@ -33,7 +33,7 @@ import { Camera } from '../cameras/Camera.js';
  *
  * @also Example: {@link https://threejs.org/examples/#webgl_mesh_batch WebGL / mesh / batch}
  */
-declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
+declare class BatchedMesh extends Mesh {
     /**
      * This bounding box encloses all instances of the {@link BatchedMesh}. Can be calculated with
      * {@link .computeBoundingBox()}.

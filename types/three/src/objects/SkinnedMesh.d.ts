@@ -49,7 +49,7 @@ import { BindMode } from '../constants.js';
  */
 export class SkinnedMesh<
     TGeometry extends BufferGeometry = BufferGeometry,
-    TMaterial extends Material | Material[] = Material | Material[],
+    TMaterial extends Material | Material[] = Material,
 > extends Mesh<TGeometry, TMaterial> {
     /**
      * Create a new instance of {@link SkinnedMesh}

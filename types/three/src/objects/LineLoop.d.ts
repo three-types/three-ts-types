@@ -14,7 +14,7 @@ import { BufferGeometry } from '../core/BufferGeometry.js';
  */
 export class LineLoop<
     TGeometry extends BufferGeometry = BufferGeometry,
-    TMaterial extends Material | Material[] = Material | Material[],
+    TMaterial extends Material | Material[] = Material,
 > extends Line<TGeometry, TMaterial> {
     /**
      * Create a new instance of {@link LineLoop}
