@@ -158,7 +158,7 @@ export const trunc: Unary;
 export const fwidth: Unary;
 export const bitcast: Unary;
 
-export type Binary = (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
+export type Binary = (a: NodeRepresentation, b?: NodeRepresentation | null) => ShaderNodeObject<MathNode>;
 
 export const atan2: Binary;
 export const min: Binary;
@@ -178,8 +178,8 @@ export const transformDirection: Binary;
 
 export type Ternary = (
     a: NodeRepresentation,
-    b: NodeRepresentation,
-    c: NodeRepresentation,
+    b?: NodeRepresentation | null,
+    c?: NodeRepresentation | null,
 ) => ShaderNodeObject<MathNode>;
 
 export const mix: Ternary;

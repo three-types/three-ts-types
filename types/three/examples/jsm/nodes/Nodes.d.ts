@@ -22,11 +22,23 @@ export { default as NodeVarying } from './core/NodeVarying.js';
 export {
     default as PropertyNode,
     property,
+    varyingProperty,
+    output,
     diffuseColor,
     roughness,
     metalness,
+    clearcoat,
+    clearcoatRoughness,
+    sheen,
+    sheenRoughness,
+    iridescence,
+    iridescenceIOR,
+    iridescenceThickness,
     specularColor,
     shininess,
+    dashSize,
+    gapSize,
+    pointWidth,
 } from './core/PropertyNode.js';
 export { default as StackNode } from './core/StackNode.js';
 export { default as TempNode } from './core/TempNode.js';
@@ -195,13 +207,16 @@ export {
     MaterialNodeScope,
 } from './accessors/MaterialNode.js';
 export { default as MaterialReferenceNode, materialReference } from './accessors/MaterialReferenceNode.js';
+export { default as TextureBicubicNode, textureBicubic } from './accessors/TextureBicubicNode.js';
 export {
     default as ModelNode,
+    modelDirection,
     modelViewMatrix,
     modelNormalMatrix,
     modelWorldMatrix,
     modelPosition,
     modelViewPosition,
+    modelScale,
 } from './accessors/ModelNode.js';
 export { default as ModelViewProjectionNode, modelViewProjection } from './accessors/ModelViewProjectionNode.js';
 export {
@@ -268,6 +283,19 @@ export {
     viewportTopRight,
     viewportBottomRight,
 } from './display/ViewportNode.js';
+export { default as ViewportTextureNode, viewportTexture, viewportMipTexture } from './display/ViewportTextureNode.js';
+export { default as ViewportSharedTextureNode, viewportSharedTexture } from './display/ViewportSharedTextureNode.js';
+export {
+    default as ViewportDepthNode,
+    viewZToOrthographicDepth,
+    orthographicDepthToViewZ,
+    viewZToPerspectiveDepth,
+    perspectiveDepthToViewZ,
+    depth,
+    depthTexture,
+    depthPixel,
+    ViewportDepthNodeScope,
+} from './display/ViewportDepthNode.js';
 
 // code
 export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
