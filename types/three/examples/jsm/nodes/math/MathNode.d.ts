@@ -182,9 +182,15 @@ export type Ternary = (
     c?: NodeRepresentation | null,
 ) => ShaderNodeObject<MathNode>;
 
+export type UnaryOrBinaryOrTernary = (
+    a: NodeRepresentation,
+    b?: NodeRepresentation,
+    c?: NodeRepresentation,
+) => ShaderNodeObject<MathNode>;
+
 export const mix: Ternary;
-export const clamp: Ternary;
-export const saturate: Ternary;
+export const clamp: UnaryOrBinaryOrTernary;
+export const saturate: Unary;
 export const refract: Ternary;
 export const smoothstep: Ternary;
 export const faceForward: Ternary;
