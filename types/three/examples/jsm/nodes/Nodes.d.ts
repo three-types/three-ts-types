@@ -269,7 +269,14 @@ export {
     luminance,
     ColorAdjustmentMethod,
 } from './display/ColorAdjustmentNode.js';
-export { default as ColorSpaceNode, ColorSpaceNodeMethod, linearTosRGB, sRGBToLinear, linearToColorSpace, colorSpaceToLinear } from './display/ColorSpaceNode.js';
+export {
+    default as ColorSpaceNode,
+    ColorSpaceNodeMethod,
+    linearTosRGB,
+    sRGBToLinear,
+    linearToColorSpace,
+    colorSpaceToLinear,
+} from './display/ColorSpaceNode.js';
 export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.js';
 export { default as NormalMapNode, normalMap, TBNViewMatrix } from './display/NormalMapNode.js';
 export { default as PosterizeNode, posterize } from './display/PosterizeNode.js';
