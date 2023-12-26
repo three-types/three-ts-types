@@ -1,5 +1,5 @@
 import Node from '../core/Node.js';
-import { NodeTypeOption, SwizzleOption } from '../core/constants.js';
+import { AnyObject, NodeTypeOption, SwizzleOption } from '../core/constants.js';
 import ConstNode from '../core/ConstNode.js';
 import NodeBuilder from '../core/NodeBuilder.js';
 
@@ -162,6 +162,12 @@ export function nodeImmutable<T>(
     nodeClass: T,
     ...params: ProxiedTuple<GetConstructors<T>>
 ): ShaderNodeObject<ConstructedNode<T>>;
+
+export function tslFn<T, R extends Node = ShaderNodeObject<Node>>(
+    jsFunc: (args: T) => R
+): T extends AnyObject
+    ? (args: T) => R
+    : () => R;
 
 export function append(node: Node): Node;
 
