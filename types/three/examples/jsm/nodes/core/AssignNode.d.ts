@@ -1,6 +1,6 @@
-import { ShaderNodeObject } from '../shadernode/ShaderNode';
-import Node from './Node';
-import TempNode from './TempNode';
+import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
+import Node from './Node.js';
+import TempNode from './TempNode.js';
 
 export default class AssignNode extends TempNode {
     constructor(targetNode: Node, sourceNode: Node);
