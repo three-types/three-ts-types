@@ -146,7 +146,7 @@ export interface WebGLProgramParameters {
 
     fog: boolean;
     useFog: boolean;
-    fogExp2: boolean | null; // null is possible because of a bug: ( fog && fog.isFogExp2 )
+    fogExp2: boolean;
 
     flatShading: boolean;
 
