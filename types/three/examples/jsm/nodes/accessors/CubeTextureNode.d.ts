@@ -18,3 +18,9 @@ export const cubeTexture: (
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
 ) => ShaderNodeObject<CubeTextureNode>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        cubeTexture: typeof cubeTexture;
+    }
+}

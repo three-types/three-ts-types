@@ -24,3 +24,10 @@ export const viewportMipTexture: (
     levelNode?: Node | null,
     framebufferTexture?: FramebufferTexture | null,
 ) => ShaderNodeObject<Node>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        viewportTexture: typeof viewportTexture;
+        viewportMipTexture: typeof viewportMipTexture;
+    }
+}
