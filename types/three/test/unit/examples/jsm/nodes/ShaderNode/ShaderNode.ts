@@ -57,7 +57,7 @@ export const remainder = nodeProxy(OperatorNode, '%');
 assertSwizzable<OperatorNode>(remainder(s, new ConstNode(1), new ConstNode(1), new ConstNode(1), new ConstNode(1)));
 
 assertSwizzable<MaterialNode>(nodeImmutable(MaterialNode, MaterialNode.ROTATION));
-assertSwizzable<PropertyNode>(nodeImmutable(PropertyNode, 'DiffuseColor', 'vec4'));
+assertSwizzable<PropertyNode>(nodeImmutable(PropertyNode, 'vec4', 'DiffuseColor'));
 assertSwizzable<MathNode>(nodeImmutable(MathNode, 'abs', 1));
 
 export const shiftRight = nodeProxy(OperatorNode, '>>');
