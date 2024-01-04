@@ -17,13 +17,12 @@ import {
     ConstNode,
 } from 'three/examples/jsm/nodes/Nodes';
 
-import { ConvertType, Swizzable } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
+import { color, Swizzable } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
 
 // just to type check
 // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
 function assertSwizzable<T extends Node>(_s: Swizzable<T>) {}
 
-export const color = new ConvertType('color');
 const s = color(1);
 s.xyz;
 
