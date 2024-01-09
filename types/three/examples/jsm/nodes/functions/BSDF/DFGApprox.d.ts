@@ -6,6 +6,6 @@ import OperatorNode from '../../math/OperatorNode.js';
 // split-sum approximation used in indirect specular lighting.
 // via 'environmentBRDF' from "Physically Based Shading on Mobile"
 // https://www.unrealengine.com/blog/physically-based-shading-on-mobile
-declare const DFGApprox: (args: { roughness: Node, dotNV: Node }) => ShaderNodeObject<OperatorNode>;
+declare const DFGApprox: (args: { roughness: Node; dotNV: Node }) => ShaderNodeObject<OperatorNode>;
 
 export default DFGApprox;
