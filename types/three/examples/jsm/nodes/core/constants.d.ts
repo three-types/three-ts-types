@@ -1,18 +1,26 @@
-// disable automatic export, we have some private declarations
-export const NodeShaderStage: {
-    VERTEX: 'vertex';
-    FRAGMENT: 'fragment';
-};
+export enum NodeShaderStage {
+    VERTEX = 'vertex',
+    FRAGMENT = 'fragment',
+}
 
-export const NodeUpdateType: {
-    NONE: 'none';
-    FRAME: 'frame';
-    RENDER: 'render';
-    OBJECT: 'object';
-};
+export enum NodeUpdateType {
+    NONE = 'none',
+    FRAME = 'frame',
+    RENDER = 'render',
+    OBJECT = 'object',
+}
 
-export type NodeUpdateTypeOption = 'none' | 'frame' | 'object';
-export type NodeShaderStageOption = 'vertex' | 'fragment' | 'compute';
+export enum NodeType {
+    BOOLEAN = 'bool',
+    INTEGER = 'int',
+    FLOAT = 'float',
+    VECTOR2 = 'vec2',
+    VECTOR3 = 'vec3',
+    VECTOR4 = 'vec4',
+    MATRIX3 = 'mat3',
+    MATRIX4 = 'mat4',
+}
+
 export type NodeTypeOption =
     | 'bool'
     | 'int'
@@ -67,14 +75,3 @@ export interface AnyObject {
 
 /** a generic JSON type, used by nodes only */
 export type AnyJson = any;
-
-export const NodeType: {
-    BOOLEAN: 'bool';
-    INTEGER: 'int';
-    FLOAT: 'float';
-    VECTOR2: 'vec2';
-    VECTOR3: 'vec3';
-    VECTOR4: 'vec4';
-    MATRIX3: 'mat3';
-    MATRIX4: 'mat4';
-};

@@ -12,6 +12,8 @@ export default class TextureNode extends UniformNode<Texture> {
     constructor(value: Texture, uvNode?: Node, levelNode?: Node | null);
 
     getDefaultUV(): Node;
+
+    clone(): this;
 }
 
 export const texture: (

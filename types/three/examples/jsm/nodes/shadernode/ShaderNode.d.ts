@@ -2,14 +2,15 @@ import Node from '../core/Node.js';
 import { NodeTypeOption, SwizzleOption } from '../core/constants.js';
 import ConstNode from '../core/ConstNode.js';
 import NodeBuilder from '../core/NodeBuilder.js';
-import SplitNode from '../utils/SplitNode.js';
 
-export interface NodeElements {}
+export interface NodeElements {
+    append: typeof append;
+}
 
 export function addNodeElement(name: string, nodeElement: unknown): void;
 
 export type Swizzable<T extends Node = Node> = T & {
-    [key in SwizzleOption | number]: ShaderNodeObject<SplitNode>;
+    [key in SwizzleOption | number]: Node;
 };
 
 export type ShaderNodeObject<T extends Node> = T & {
@@ -161,6 +162,8 @@ export function nodeImmutable<T>(
     nodeClass: T,
     ...params: ProxiedTuple<GetConstructors<T>>
 ): ShaderNodeObject<ConstructedNode<T>>;
+
+export function append(node: Node): Node;
 
 export const color: ConvertType;
 
