@@ -118,7 +118,7 @@ export default class Renderer {
 
     setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
 
-    setOpaqueSort(method): void;
+    setOpaqueSort(method: () => {}): void;
 
     /**
      * Copies the scissor area into target.
