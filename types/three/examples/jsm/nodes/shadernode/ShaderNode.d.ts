@@ -2,7 +2,6 @@ import Node from '../core/Node.js';
 import { NodeTypeOption, SwizzleOption } from '../core/constants.js';
 import ConstNode from '../core/ConstNode.js';
 import NodeBuilder from '../core/NodeBuilder.js';
-import SplitNode from '../utils/SplitNode.js';
 
 export interface NodeElements {
     append: typeof append;
@@ -11,7 +10,7 @@ export interface NodeElements {
 export function addNodeElement(name: string, nodeElement: unknown): void;
 
 export type Swizzable<T extends Node = Node> = T & {
-    [key in SwizzleOption | number]: ShaderNodeObject<SplitNode>;
+    [key in SwizzleOption | number]: Node;
 };
 
 export type ShaderNodeObject<T extends Node> = T & {
