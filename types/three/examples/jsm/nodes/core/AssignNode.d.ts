@@ -8,7 +8,7 @@ export default class AssignNode extends TempNode {
     hasDependencies(): false;
 }
 
-export const assign: (targetNode: Node, sourceNode: Node) => ShaderNodeObject<AssignNode>;
+export const assign: (targetNode: NodeRepresentation, sourceNode: NodeRepresentation) => ShaderNodeObject<AssignNode>;
 
 declare module '../shadernode/ShaderNode.js' {
     interface NodeElements {
