@@ -3,7 +3,6 @@ import Node from '../core/Node.js';
 import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export type OperatorNodeOp =
-    | '='
     | '%'
     | '&'
     | '|'
@@ -43,7 +42,6 @@ export const mul: Operator;
 export const div: Operator;
 export const remainder: Operator;
 export const equal: Operator;
-export const assign: Operator;
 export const lessThan: Operator;
 export const greaterThan: Operator;
 export const lessThanEqual: Operator;
@@ -65,7 +63,6 @@ declare module '../shadernode/ShaderNode.js' {
         div: typeof div;
         remainder: typeof remainder;
         equal: typeof equal;
-        assign: typeof assign;
         lessThan: typeof lessThan;
         greaterThan: typeof greaterThan;
         lessThanEqual: typeof lessThanEqual;

@@ -5,6 +5,37 @@ import NodeBuilder from '../core/NodeBuilder.js';
 
 export interface NodeElements {
     append: typeof append;
+
+    color: typeof color;
+    float: typeof float;
+    int: typeof int;
+    uint: typeof uint;
+    bool: typeof bool;
+    vec2: typeof vec2;
+    ivec2: typeof ivec2;
+    uvec2: typeof uvec2;
+    bvec2: typeof bvec2;
+    vec3: typeof vec3;
+    ivec3: typeof ivec3;
+    uvec3: typeof uvec3;
+    bvec3: typeof bvec3;
+    vec4: typeof vec4;
+    ivec4: typeof ivec4;
+    uvec4: typeof uvec4;
+    bvec4: typeof bvec4;
+    mat3: typeof mat3;
+    imat3: typeof imat3;
+    umat3: typeof umat3;
+    bmat3: typeof bmat3;
+    mat4: typeof mat4;
+    imat4: typeof imat4;
+    umat4: typeof umat4;
+    bmat4: typeof bmat4;
+    string: typeof string;
+    arrayBuffer: typeof arrayBuffer;
+
+    element: typeof element;
+    convert: typeof convert;
 }
 
 export function addNodeElement(name: string, nodeElement: unknown): void;
@@ -196,6 +227,9 @@ export const mat4: ConvertType;
 export const imat4: ConvertType;
 export const umat4: ConvertType;
 export const bmat4: ConvertType;
+
+export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
+export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
 
 export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
 export const convert: (node: NodeRepresentation, types: NodeTypeOption) => ShaderNodeObject<Node>;

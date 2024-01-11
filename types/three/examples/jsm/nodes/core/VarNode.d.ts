@@ -16,7 +16,6 @@ export default class VarNode extends Node {
     div(...params: Node[]): this;
 }
 
-export const label: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<VarNode>;
 export const temp: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<VarNode>;
 
 declare module '../shadernode/ShaderNode.js' {

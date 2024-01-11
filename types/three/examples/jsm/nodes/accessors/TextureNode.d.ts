@@ -22,3 +22,9 @@ export const texture: (
     levelNode?: NodeRepresentation,
 ) => ShaderNodeObject<TextureNode>;
 export const sampler: (aTexture: Texture | TextureNode) => ShaderNodeObject<Node>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        texture: typeof texture;
+    }
+}

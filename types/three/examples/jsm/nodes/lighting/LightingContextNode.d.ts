@@ -18,3 +18,9 @@ export const lightingContext: (
     node: Node,
     lightingModelNode?: LightingModelNode,
 ) => ShaderNodeObject<LightingContextNode>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        lightingContext: typeof lightingContext;
+    }
+}

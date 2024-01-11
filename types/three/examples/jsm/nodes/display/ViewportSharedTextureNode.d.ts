@@ -10,3 +10,9 @@ export const viewportSharedTexture: (
     uvNode?: Node,
     levelNode?: Node | null,
 ) => ShaderNodeObject<ViewportSharedTextureNode>;
+
+declare module '../shadernode/ShaderNode.js' {
+    interface NodeElements {
+        viewportSharedTexture: typeof viewportSharedTexture;
+    }
+}
