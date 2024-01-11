@@ -19,8 +19,8 @@ export default class ColorSpaceNode extends TempNode {
     constructor(method: ColorSpaceNodeMethod | null, node: Node);
 }
 
-export const linearToColorSpace: (node: NodeRepresentation, encoding: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
-export const colorSpaceToLinear: (node: NodeRepresentation, encoding: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
+export const linearToColorSpace: (node: NodeRepresentation, colorSpace: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
+export const colorSpaceToLinear: (node: NodeRepresentation, colorSpace: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
 
 export const linearTosRGB: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
 export const sRGBToLinear: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
