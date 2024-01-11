@@ -118,17 +118,34 @@ export default class Renderer {
 
     setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
 
-    setOpaqueSort(method: () => {}): void;
+    /**
+     * Sets the custom opaque sort function for the RenderLists. Pass null to use the default painterSortStable function.
+     */
+    setOpaqueSort(method: (a: any, b: any) => number): void;
+
+    /**
+     * Sets the custom transparent sort function for the RenderLists. Pass null to use the default reversePainterSortStable function.
+     */
+    setTransparentSort(method: (a: any, b: any) => number): void;
 
     /**
      * Copies the scissor area into target.
      */
     getScissor(target: Vector4): Vector4;
 
+    /**
+     * Sets the scissor area from (x, y) to (x + width, y + height).
+     */
     setScissor(x: number, y: number, width: number, height: number): void;
 
+    /**
+     * Returns true if scissor test is enabled; returns false otherwise.
+     */
     getScissorTest(): boolean;
 
+    /**
+     * Enable the scissor test. When this is enabled, only the pixels within the defined scissor area will be affected by further renderer actions.
+     */
     setScissorTest(boolean: boolean): void;
 
     /**
@@ -142,10 +159,19 @@ export default class Renderer {
      */
     setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
 
+    /**
+     * Returns a Color4 instance with the current clear color.
+     */
     getClearColor(target: Color4): Color4;
 
+    /**
+     * Sets the clear color, using color for the color and alpha for the opacity.
+     */
     setClearColor(color: Color, alpha?: number): void;
 
+    /**
+     * Returns a float with the current clear alpha. Ranges from 0 to 1.
+     */
     getClearAlpha(): number;
 
     setClearAlpha(alpha: number): void;
@@ -160,6 +186,10 @@ export default class Renderer {
 
     isOccluded(object: Object3D): boolean;
 
+    /**
+     * Tells the renderer to clear its color, depth or stencil drawing buffer(s).
+     * Arguments default to true
+     */
     clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
 
     clearColor(): void;
