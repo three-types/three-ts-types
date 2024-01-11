@@ -271,11 +271,11 @@ export {
 } from './display/ColorAdjustmentNode.js';
 export {
     default as ColorSpaceNode,
-    ColorSpaceNodeMethod,
-    linearTosRGB,
-    sRGBToLinear,
     linearToColorSpace,
     colorSpaceToLinear,
+    linearTosRGB,
+    sRGBToLinear,
+    ColorSpaceNodeMethod,
 } from './display/ColorSpaceNode.js';
 export { default as FrontFacingNode, frontFacing, faceDirection } from './display/FrontFacingNode.js';
 export { default as NormalMapNode, normalMap, TBNViewMatrix } from './display/NormalMapNode.js';
