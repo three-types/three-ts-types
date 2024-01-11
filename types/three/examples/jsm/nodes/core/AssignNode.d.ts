@@ -1,4 +1,4 @@
-import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 import Node from './Node.js';
 import TempNode from './TempNode.js';
 
