@@ -121,12 +121,12 @@ export default class Renderer {
     /**
      * Sets the custom opaque sort function for the RenderLists. Pass null to use the default painterSortStable function.
      */
-    setOpaqueSort(method: (a: any, b: any) => number): void;
+    setOpaqueSort(method: (a: unknown, b: unknown) => number): void;
 
     /**
      * Sets the custom transparent sort function for the RenderLists. Pass null to use the default reversePainterSortStable function.
      */
-    setTransparentSort(method: (a: any, b: any) => number): void;
+    setTransparentSort(method: (a: unknown, b: unknown) => number): void;
 
     /**
      * Copies the scissor area into target.
