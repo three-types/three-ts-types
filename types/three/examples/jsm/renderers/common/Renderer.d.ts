@@ -21,7 +21,7 @@ export default class Renderer {
     /**
      * @default true
      */
-    isRenderer: boolean;
+    readonly isRenderer: true;
 
     domElement: HTMLCanvasElement;
 
