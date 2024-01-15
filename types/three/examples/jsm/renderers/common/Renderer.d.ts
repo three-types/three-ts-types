@@ -14,6 +14,11 @@ import Backend from './Backend.js';
 import Info from './Info.js';
 import Color4 from './../common/Color4.js';
 
+export interface RendererParameters {
+    logarithmicDepthBuffer?: boolean | undefined;
+    alpha?: boolean | undefined;
+}
+
 /**
  * Generic Renderer interface containing either a WebGL or WebGPU backend.
  */
@@ -82,7 +87,7 @@ export default class Renderer {
 
     info: Info;
 
-    constructor(backend: Backend, parameters?: { logarithmicDepthBuffer?: boolean | undefined });
+    constructor(backend: Backend, parameters?: RendererParameters);
 
     init(): Promise<void>;
 
