@@ -13303,7 +13303,7 @@ index fa96129..58f8d4a 100644
      // and does so without distortion. Akin to CSS object-fit: contain.
      // Source: https://github.com/mrdoob/three.js/pull/17199
 diff --git a/examples-testing/examples/webgl_tonemapping.ts b/examples-testing/examples/webgl_tonemapping.ts
-index 9f7ce3f..60893f1 100644
+index df42a7b..a55fe3d 100644
 --- a/examples-testing/examples/webgl_tonemapping.ts
 +++ b/examples-testing/examples/webgl_tonemapping.ts
 @@ -1,22 +1,35 @@
@@ -13318,6 +13318,9 @@ index 9f7ce3f..60893f1 100644
 -let mesh, renderer, scene, camera, controls;
 -let gui,
 -    guiExposure = null;
++type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Custom';
+ 
+-const params = {
 +interface Params {
 +    exposure: number;
 +    toneMapping: ToneMapping;
@@ -13333,12 +13336,9 @@ index 9f7ce3f..60893f1 100644
 +let gui: GUI,
 +    guiExposure: NumberController<Params, 'exposure'> | null = null;
 +
-+type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Custom';
- 
--const params = {
 +const params: Params = {
      exposure: 1.0,
-     toneMapping: 'ACESFilmic',
+     toneMapping: 'AgX',
      blurriness: 0.3,
      intensity: 1.0,
  };
@@ -13993,6 +13993,46 @@ index 5cc6547..87058f0 100644
                  gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
              }
          });
+diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
+index 4310fdb..0ac9b10 100644
+--- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
++++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
+@@ -3,12 +3,13 @@ import * as THREE from 'three';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
++import type WebGPUBackend from 'three/addons/renderers/webgpu/WebGPUBackend.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ import PostProcessing from 'three/addons/renderers/common/PostProcessing.js';
+-import { pass } from 'three/nodes';
++import { AfterImageNode, pass, ShaderNodeObject } from 'three/nodes';
+ 
+-let camera, scene, renderer;
+-let mesh, postProcessing, combinedPass;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let mesh: THREE.Mesh, postProcessing: PostProcessing, combinedPass: ShaderNodeObject<AfterImageNode>;
+ 
+ const params = {
+     damp: 0.96,
+@@ -48,8 +49,7 @@ function init() {
+     const scenePass = pass(scene, camera);
+     const scenePassColor = scenePass.getTextureNode();
+ 
+-    combinedPass = scenePassColor;
+-    combinedPass = combinedPass.afterImage(params.damp);
++    combinedPass = scenePassColor.afterImage(params.damp);
+ 
+     postProcessing.outputNode = combinedPass;
+ 
+@@ -72,7 +72,7 @@ function render() {
+     mesh.rotation.x += 0.0075;
+     mesh.rotation.y += 0.015;
+ 
+-    if (renderer.backend.isWebGPUBackend) {
++    if ((renderer.backend as WebGPUBackend).isWebGPUBackend) {
+         postProcessing.render();
+     } else {
+         renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
 index 4184cb4..f6d36c0 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
