@@ -1,4 +1,27 @@
-import { mx_aastep, mx_cell_noise_float, mx_contrast, mx_fractal_noise_float, mx_fractal_noise_vec2, mx_fractal_noise_vec3, mx_fractal_noise_vec4, mx_hsvtorgb, mx_noise_float, mx_noise_vec3, mx_noise_vec4, mx_ramplr, mx_ramptb, mx_rgbtohsv, mx_safepower, mx_splitlr, mx_splittb, mx_srgb_texture_to_lin_rec709, mx_transform_uv, mx_worley_noise_float, mx_worley_noise_vec2, mx_worley_noise_vec3 } from 'three/examples/jsm/nodes/materialx/MaterialXNodes';
+import {
+    mx_aastep,
+    mx_cell_noise_float,
+    mx_contrast,
+    mx_fractal_noise_float,
+    mx_fractal_noise_vec2,
+    mx_fractal_noise_vec3,
+    mx_fractal_noise_vec4,
+    mx_hsvtorgb,
+    mx_noise_float,
+    mx_noise_vec3,
+    mx_noise_vec4,
+    mx_ramplr,
+    mx_ramptb,
+    mx_rgbtohsv,
+    mx_safepower,
+    mx_splitlr,
+    mx_splittb,
+    mx_srgb_texture_to_lin_rec709,
+    mx_transform_uv,
+    mx_worley_noise_float,
+    mx_worley_noise_vec2,
+    mx_worley_noise_vec3,
+} from 'three/examples/jsm/nodes/materialx/MaterialXNodes';
 import { vec2, vec3 } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
 
 mx_aastep(0, 1);

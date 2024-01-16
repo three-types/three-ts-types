@@ -36,10 +36,7 @@ export function mx_transform_uv(
     uv_geo?: NodeRepresentation,
 ): ShaderNodeObject<Node>;
 
-export function mx_safepower(
-    in1: NodeRepresentation,
-    in2?: NodeRepresentation,
-): ShaderNodeObject<Node>;
+export function mx_safepower(in1: NodeRepresentation, in2?: NodeRepresentation): ShaderNodeObject<Node>;
 
 export function mx_contrast(
     input: NodeRepresentation,
