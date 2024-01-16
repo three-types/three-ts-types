@@ -163,9 +163,7 @@ export function nodeImmutable<T>(
     ...params: ProxiedTuple<GetConstructors<T>>
 ): ShaderNodeObject<ConstructedNode<T>>;
 
-export function tslFn<R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: () => R,
-): () => R;
+export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
 export function tslFn<T extends AnyObject, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
 ): (args: T) => R;
