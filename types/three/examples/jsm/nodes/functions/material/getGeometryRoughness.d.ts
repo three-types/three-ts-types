@@ -1,5 +1,6 @@
-import { ShaderNode } from '../../shadernode/ShaderNode.js';
+import { ShaderNodeObject } from '../../shadernode/ShaderNode.js';
+import MathNode from '../../math/MathNode.js';
 
-declare const getGeometryRoughness: ShaderNode;
+declare const getGeometryRoughness: () => ShaderNodeObject<MathNode>;
 
 export default getGeometryRoughness;
