@@ -1,5 +1,5 @@
-import { Mesh, IcosahedronGeometry, ShaderMaterial, Texture } from '../../../src/Three.js';
+import { Mesh, MeshBasicMaterial, SphereGeometry, Texture } from '../../../src/Three.js';
 
-export class GroundedSkybox extends Mesh<IcosahedronGeometry, ShaderMaterial> {
+export class GroundedSkybox extends Mesh<SphereGeometry, MeshBasicMaterial> {
     constructor(map: Texture, height: number, radius: number, resolution?: number);
 }
