@@ -303,6 +303,7 @@ export {
     depthPixel,
     ViewportDepthNodeScope,
 } from './display/ViewportDepthNode.js';
+export { default as AfterImageNode, afterImage } from './display/AfterImageNode.js';
 
 // code
 export { default as ExpressionNode, expression } from './code/ExpressionNode.js';
