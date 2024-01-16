@@ -7,6 +7,8 @@ export interface WebGPUBackendParameters extends BackendParameters {
 }
 
 export default class WebGPUBackend extends Backend {
+    readonly isWebGPUBackend: true;
+
     constructor(parameters?: WebGPUBackendParameters);
 
     get coordinateSystem(): CoordinateSystem;
