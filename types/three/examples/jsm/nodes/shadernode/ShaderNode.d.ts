@@ -197,10 +197,10 @@ export function nodeImmutable<T>(
 export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
 export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): (...args: T) => R;
+): (...args: ProxiedTuple<T>) => R;
 export function tslFn<T extends AnyObject, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): (args: T) => R;
+): (args: ProxiedObject<T>) => R;
 
 export function append(node: Node): Node;
 
