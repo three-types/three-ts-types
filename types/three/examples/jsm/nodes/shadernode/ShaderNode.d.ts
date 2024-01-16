@@ -195,6 +195,9 @@ export function nodeImmutable<T>(
 ): ShaderNodeObject<ConstructedNode<T>>;
 
 export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
+export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
+    jsFunc: (args: T) => R,
+): (...args: T) => R;
 export function tslFn<T extends AnyObject, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
 ): (args: T) => R;
