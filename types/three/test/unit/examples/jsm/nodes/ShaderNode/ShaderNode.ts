@@ -72,7 +72,7 @@ const fnWithoutArgs = tslFn(() => vec3(1, 2, 3));
 assertSwizzable<Node>(fnWithoutArgs());
 
 const fnWithArrayArgs = tslFn(([a, b]: [a: ShaderNodeObject<Node>, b: ShaderNodeObject<Node>]) => a.add(b));
-fnWithArrayArgs(0.5, color(0.0, 0.25, 0.5));
+assertSwizzable<Node>(fnWithArrayArgs(0.5, color(0.0, 0.25, 0.5)));
 
 const fnWithArgs = tslFn(({ a, b }: { a: ShaderNodeObject<Node>; b: ShaderNodeObject<Node> }) => a.add(b));
 assertSwizzable<Node>(fnWithArgs({ a: 0.5, b: color(0.0, 0.25, 0.5) }));
