@@ -190,6 +190,7 @@ export {
     cameraPosition,
     CameraNodeScope,
 } from './accessors/CameraNode.js';
+export { default as VertexColorNode, vertexColor } from './accessors/VertexColorNode.js';
 export { default as CubeTextureNode, cubeTexture } from './accessors/CubeTextureNode.js';
 export { default as InstanceNode, instance } from './accessors/InstanceNode.js';
 export {
