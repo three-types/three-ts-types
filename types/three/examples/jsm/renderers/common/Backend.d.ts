@@ -11,7 +11,7 @@ export default abstract class Backend {
 
     constructor(parameters?: BackendParameters);
 
-    init(renderer: Renderer): Promise<void>;
+    init(renderer: Renderer): void;
 
     abstract get coordinateSystem(): CoordinateSystem;
 
