@@ -150,9 +150,4 @@ export class SkinnedMesh<
      * @param vector
      */
     applyBoneTransform(index: number, vector: Vector3): Vector3;
-
-    /**
-     * @deprecated {@link THREE.SkinnedMesh}: {@link boneTransform | .boneTransform()} was renamed to {@link applyBoneTransform | .applyBoneTransform()} in **r151**.
-     */
-    boneTransform(index: number, target: Vector3): Vector3;
 }
