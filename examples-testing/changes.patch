@@ -11255,6 +11255,33 @@ index 3650bfe..88a3d81 100644
  
  init();
  animate();
+diff --git a/examples-testing/examples/webgl_postprocessing_material_ao.ts b/examples-testing/examples/webgl_postprocessing_material_ao.ts
+index 299ca00..fee1ca8 100644
+--- a/examples-testing/examples/webgl_postprocessing_material_ao.ts
++++ b/examples-testing/examples/webgl_postprocessing_material_ao.ts
+@@ -10,7 +10,12 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ import { MeshPostProcessingMaterial } from 'three/addons/materials/MeshPostProcessingMaterial.js';
+ 
+-let renderer, camera, scene, composer, controls, stats;
++let renderer: THREE.WebGLRenderer,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    composer: EffectComposer,
++    controls: OrbitControls,
++    stats: Stats;
+ const sceneParameters = {
+     output: 0,
+     envMapIntensity: 1.0,
+@@ -218,7 +223,7 @@ function init() {
+         .max(100)
+         .step(1)
+         .onChange(() => {
+-            lightGroup.children.forEach(light => (light.intensity = sceneParameters.lightIntensity));
++            lightGroup.children.forEach(light => ((light as THREE.Light).intensity = sceneParameters.lightIntensity));
+         });
+     gui.add(sceneParameters, 'shadow').onChange(value => {
+         renderer.shadowMap.enabled = value;
 diff --git a/examples-testing/examples/webgl_postprocessing_outline.ts b/examples-testing/examples/webgl_postprocessing_outline.ts
 index 60d8b01..daa0c75 100644
 --- a/examples-testing/examples/webgl_postprocessing_outline.ts
@@ -13744,11 +13771,11 @@ index 74534c0..0f12128 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_loader_gltf_compressed.ts b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
-index 5f40968..190d147 100644
+index fc3dba3..d0c133e 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_compressed.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
-@@ -9,7 +9,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -8,7 +8,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
  import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
  
 -let camera, scene, renderer;
