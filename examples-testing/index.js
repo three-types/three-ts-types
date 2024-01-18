@@ -254,6 +254,7 @@ const files = {
         'webgl_postprocessing_gtao',
         'webgl_postprocessing_rgb_halftone',
         'webgl_postprocessing_masking',
+        'webgl_postprocessing_material_ao',
         'webgl_postprocessing_ssaa',
         'webgl_postprocessing_outline',
         'webgl_postprocessing_pixel',
