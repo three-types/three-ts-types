@@ -110,7 +110,7 @@ export class GTAOPass extends Pass {
     generateNoise(size?: number): DataTexture;
 
     static OUTPUT: {
-        off: -1;
+        Off: -1;
         Default: 0;
         Diffuse: 1;
         Depth: 2;
