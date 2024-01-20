@@ -16,6 +16,8 @@ import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
 import MeshStandardNodeMaterial from './MeshStandardNodeMaterial.js';
 import PointsNodeMaterial from './PointsNodeMaterial.js';
 import SpriteNodeMaterial from './SpriteNodeMaterial.js';
+import LightsNode from '../lighting/LightsNode.js';
+import LightingModel from '../core/LightingModel.js';
 
 export default class NodeMaterial extends ShaderMaterial {
     readonly isNodeMaterial: true;
@@ -24,7 +26,7 @@ export default class NodeMaterial extends ShaderMaterial {
 
     colorSpaced: boolean;
 
-    lightsNode: Node | null;
+    lightsNode: LightsNode | null;
     envNode: Node | null;
 
     colorNode: Node | null;
@@ -48,15 +50,15 @@ export default class NodeMaterial extends ShaderMaterial {
     build(builder: NodeBuilder): void;
     setup(builder: NodeBuilder): void;
     setupDepth(builder: NodeBuilder): void;
-    setupPosition(builder: NodeBuilder): void;
+    setupPosition(builder: NodeBuilder): Node;
     setupDiffuseColor(builder: NodeBuilder): void;
     setupVariants(builder: NodeBuilder): void;
-    setupNormal(): void;
-    getEnvNode(builder: NodeBuilder): void;
-    setupLights(builder: NodeBuilder): void;
-    setupLightingModel(builder: NodeBuilder): void;
-    setupLighting(builder: NodeBuilder): void;
-    setupOutput(builder: NodeBuilder, outputNode: Node): void;
+    setupNormal(builder: NodeBuilder): void;
+    getEnvNode(builder: NodeBuilder): Node | null;
+    setupLights(builder: NodeBuilder): LightsNode;
+    setupLightingModel(builder: NodeBuilder): LightingModel;
+    setupLighting(builder: NodeBuilder): Node;
+    setupOutput(builder: NodeBuilder, outputNode: Node): Node;
 
     setDefaultValues(material: Material): void;
 
