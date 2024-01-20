@@ -10,7 +10,6 @@ import {
 } from '../../../../src/Three.js';
 import NodeBuilder from '../core/NodeBuilder.js';
 import Node from '../core/Node.js';
-import { LightingModelNode } from '../lighting/LightingContextNode.js';
 import LineBasicNodeMaterial from './LineBasicNodeMaterial.js';
 import MeshBasicNodeMaterial from './MeshBasicNodeMaterial.js';
 import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
@@ -19,12 +18,11 @@ import PointsNodeMaterial from './PointsNodeMaterial.js';
 import SpriteNodeMaterial from './SpriteNodeMaterial.js';
 
 export default class NodeMaterial extends ShaderMaterial {
-    isNodeMaterial: true;
+    readonly isNodeMaterial: true;
 
-    type: string;
+    normals: boolean;
 
-    lights: true;
-    normals: true;
+    colorSpaced: boolean;
 
     lightsNode: Node | null;
     envNode: Node | null;
@@ -38,17 +36,29 @@ export default class NodeMaterial extends ShaderMaterial {
 
     positionNode: Node | null;
 
+    depthNode: Node | null;
+
+    outputNode: Node | null;
+
+    fragmentNode: Node | null;
+    vertexNode: Node | null;
+
     constructor();
 
     build(builder: NodeBuilder): void;
-    customProgramCacheKey(): string;
-    generatePosition(builder: NodeBuilder): void;
-    generateDiffuseColor(builder: NodeBuilder): void;
-    generateLight(
-        builder: NodeBuilder,
-        lights: { diffuseColorNode: Node; lightingModelNode: LightingModelNode; lightsNode?: Node },
-    ): void;
-    generateOutput(builder: NodeBuilder, lights: { diffuseColorNode: Node; outgoingLightNode: Node }): void;
+    setup(builder: NodeBuilder): void;
+    setupDepth(builder: NodeBuilder): void;
+    setupPosition(builder: NodeBuilder): void;
+    setupDiffuseColor(builder: NodeBuilder): void;
+    setupVariants(builder: NodeBuilder): void;
+    setupNormal(): void;
+    getEnvNode(builder: NodeBuilder): void;
+    setupLights(builder: NodeBuilder): void;
+    setupLightingModel(builder: NodeBuilder): void;
+    setupLighting(builder: NodeBuilder): void;
+    setupOutput(builder: NodeBuilder, outputNode: Node): void;
+
+    setDefaultValues(material: Material): void;
 
     static fromMaterial(material: LineBasicMaterial): LineBasicNodeMaterial;
     static fromMaterial(material: MeshBasicMaterial): MeshBasicNodeMaterial;
