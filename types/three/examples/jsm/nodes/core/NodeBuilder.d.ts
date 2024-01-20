@@ -17,6 +17,7 @@ import NodeParser from './NodeParser.js';
 import NodeUniform from './NodeUniform.js';
 import NodeVar from './NodeVar.js';
 import NodeVarying from './NodeVarying.js';
+import StackNode from './StackNode.js';
 
 export type BuildStageOption = 'construct' | 'analyze' | 'generate';
 
@@ -60,7 +61,7 @@ export default abstract class NodeBuilder {
 
     shaderStage: NodeShaderStage | null;
     buildStage: BuildStageOption | null;
-    stack: Node[];
+    stack: StackNode;
 
     setHashNode(node: Node, hash: string): void;
     addNode(node: Node): void;

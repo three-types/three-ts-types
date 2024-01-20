@@ -9,6 +9,12 @@ export { default as BypassNode, bypass } from './core/BypassNode.js';
 export { default as CacheNode, cache } from './core/CacheNode.js';
 export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
+export {
+    default as LightingModel,
+    LightingModelReflectedLight,
+    LightingModelDirectInput,
+    LightingModelIndirectInput,
+} from './core/LightingModel.js';
 export { default as Node } from './core/Node.js';
 export { default as NodeAttribute } from './core/NodeAttribute.js';
 export { default as NodeBuilder } from './core/NodeBuilder.js';
@@ -330,7 +336,7 @@ export { default as PointLightNode } from './lighting/PointLightNode.js';
 export { default as SpotLightNode } from './lighting/SpotLightNode.js';
 export { default as LightsNode, lights } from './lighting/LightsNode.js';
 export { default as LightingNode } from './lighting/LightingNode.js';
-export { default as LightingContextNode, lightingContext, LightingModelNode } from './lighting/LightingContextNode.js';
+export { default as LightingContextNode, lightingContext } from './lighting/LightingContextNode.js';
 export { default as HemisphereLightNode } from './lighting/HemisphereLightNode.js';
 export { default as EnvironmentNode } from './lighting/EnvironmentNode.js';
 export { default as AONode } from './lighting/AONode.js';
@@ -363,4 +369,5 @@ export { getDistanceAttenuation } from './lighting/LightUtils.js';
 export { default as getGeometryRoughness } from './functions/material/getGeometryRoughness.js';
 export { default as getRoughness } from './functions/material/getRoughness.js';
 
-export { default as physicalLightingModel } from './functions/PhysicalLightingModel.js';
+export { default as PhongLightingModel } from './functions/PhongLightingModel.js';
+export { default as PhysicalLightingModel } from './functions/PhysicalLightingModel.js';
