@@ -136,7 +136,7 @@ export default abstract class NodeBuilder {
     setBuildStage(buildStage: BuildStageOption): void;
     getBuildStage(): BuildStageOption;
     abstract buildCode(): void;
-    build(): this;
+    build(createMaterial?: boolean): this;
     format(snippet: string, fromType: NodeTypeOption, toType: NodeTypeOption): string;
     getSignature(): string;
 }
