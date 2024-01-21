@@ -351,6 +351,7 @@ const files = {
         'webgpu_loader_gltf_sheen',
         // 'webgpu_loader_materialx',
         // 'webgpu_materials',
+        // 'webgpu_materials_sss',
         'webgpu_materials_video',
         // 'webgpu_materialx_noise',
         // 'webgpu_multiple_rendertargets',
