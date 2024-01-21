@@ -1,6 +1,6 @@
 import TempNode from '../core/TempNode.js';
 import Node from '../core/Node.js';
-import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode';
+import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
 
 export default class RotateNode extends TempNode {
     positionNode: Node;
