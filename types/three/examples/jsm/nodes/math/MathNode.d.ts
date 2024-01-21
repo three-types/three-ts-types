@@ -182,6 +182,7 @@ export type Ternary = (
     c: NodeRepresentation,
 ) => ShaderNodeObject<MathNode>;
 
+export const cbrt: (a: NodeRepresentation) => ShaderNodeObject<MathNode>;
 export const mix: Ternary;
 export const clamp: (
     a: NodeRepresentation,
@@ -248,5 +249,6 @@ declare module '../shadernode/ShaderNode.js' {
         faceForward: typeof faceForward;
         difference: typeof difference;
         saturate: typeof saturate;
+        cbrt: typeof cbrt;
     }
 }

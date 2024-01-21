@@ -112,6 +112,7 @@ export {
     refract,
     smoothstep,
     faceForward,
+    cbrt,
     MathNodeMethod1,
     MathNodeMethod2,
     MathNodeMethod3,
