@@ -124,6 +124,8 @@ export default class MathNode extends TempNode {
 
 export const EPSILON: ShaderNodeObject<Node>;
 export const INFINITY: ShaderNodeObject<Node>;
+export const PI: ShaderNodeObject<Node>;
+export const PI2: ShaderNodeObject<Node>;
 
 export type Unary = (a: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
@@ -176,13 +178,19 @@ export const pow3: Binary;
 export const pow4: Binary;
 export const transformDirection: Binary;
 
+// remapping functions
+export const parabola: Binary;
+export const gain: Binary;
+export const pcurve: Ternary;
+export const sinc: Binary;
+
 export type Ternary = (
     a: NodeRepresentation,
     b: NodeRepresentation,
     c: NodeRepresentation,
 ) => ShaderNodeObject<MathNode>;
 
-export const cbrt: (a: NodeRepresentation) => ShaderNodeObject<MathNode>;
+export const cbrt: Unary;
 export const mix: Ternary;
 export const clamp: (
     a: NodeRepresentation,
@@ -250,5 +258,10 @@ declare module '../shadernode/ShaderNode.js' {
         difference: typeof difference;
         saturate: typeof saturate;
         cbrt: typeof cbrt;
+
+        parabola: typeof parabola;
+        gain: typeof gain;
+        pcurve: typeof pcurve;
+        sinc: typeof sinc;
     }
 }
