@@ -2,6 +2,7 @@ import {
     LineBasicMaterial,
     Material,
     MeshBasicMaterial,
+    MeshPhongMaterial,
     MeshPhysicalMaterial,
     MeshStandardMaterial,
     PointsMaterial,
@@ -18,6 +19,7 @@ import PointsNodeMaterial from './PointsNodeMaterial.js';
 import SpriteNodeMaterial from './SpriteNodeMaterial.js';
 import LightsNode from '../lighting/LightsNode.js';
 import LightingModel from '../core/LightingModel.js';
+import MeshPhongNodeMaterial from './MeshPhongNodeMaterial.js';
 
 export default class NodeMaterial extends ShaderMaterial {
     readonly isNodeMaterial: true;
@@ -64,6 +66,7 @@ export default class NodeMaterial extends ShaderMaterial {
 
     static fromMaterial(material: LineBasicMaterial): LineBasicNodeMaterial;
     static fromMaterial(material: MeshBasicMaterial): MeshBasicNodeMaterial;
+    static fromMaterial(material: MeshPhongMaterial): MeshPhongNodeMaterial;
     static fromMaterial(material: MeshPhysicalMaterial): MeshPhysicalNodeMaterial;
     static fromMaterial(material: MeshStandardMaterial): MeshStandardNodeMaterial;
     static fromMaterial(material: PointsMaterial): PointsNodeMaterial;

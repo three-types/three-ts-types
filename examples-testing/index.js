@@ -373,6 +373,7 @@ const files = {
         // 'webgpu_tsl_transpiler',
         'webgpu_video_panorama',
         'webgpu_postprocessing_afterimage',
+        // 'webgpu_multisampled_renderbuffers',
     ],
     webaudio: ['webaudio_orientation', 'webaudio_sandbox', 'webaudio_timing', 'webaudio_visualizer'],
     webxr: [

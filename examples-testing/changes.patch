@@ -14021,18 +14021,14 @@ index 5cc6547..87058f0 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 4310fdb..0ac9b10 100644
+index 86f21eb..bf2af6b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-@@ -3,12 +3,13 @@ import * as THREE from 'three';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
-+import type WebGPUBackend from 'three/addons/renderers/webgpu/WebGPUBackend.js';
+@@ -5,9 +5,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
  import PostProcessing from 'three/addons/renderers/common/PostProcessing.js';
--import { pass } from 'three/nodes';
-+import { AfterImageNode, pass, ShaderNodeObject } from 'three/nodes';
+ import { pass } from 'three/nodes';
++import type { AfterImageNode, ShaderNodeObject } from 'three/nodes';
  
 -let camera, scene, renderer;
 -let mesh, postProcessing, combinedPass;
@@ -14041,7 +14037,7 @@ index 4310fdb..0ac9b10 100644
  
  const params = {
      damp: 0.96,
-@@ -48,8 +49,7 @@ function init() {
+@@ -41,8 +42,7 @@ function init() {
      const scenePass = pass(scene, camera);
      const scenePassColor = scenePass.getTextureNode();
  
@@ -14051,15 +14047,6 @@ index 4310fdb..0ac9b10 100644
  
      postProcessing.outputNode = combinedPass;
  
-@@ -72,7 +72,7 @@ function render() {
-     mesh.rotation.x += 0.0075;
-     mesh.rotation.y += 0.015;
- 
--    if (renderer.backend.isWebGPUBackend) {
-+    if ((renderer.backend as WebGPUBackend).isWebGPUBackend) {
-         postProcessing.render();
-     } else {
-         renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
 index 4184cb4..f6d36c0 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
