@@ -191,6 +191,7 @@ export type Ternary = (
 ) => ShaderNodeObject<MathNode>;
 
 export const cbrt: Unary;
+export const lengthSq: Unary;
 export const mix: Ternary;
 export const clamp: (
     a: NodeRepresentation,
@@ -228,6 +229,7 @@ declare module '../shadernode/ShaderNode.js' {
         abs: typeof abs;
         sign: typeof sign;
         length: typeof length;
+        lengthSq: typeof lengthSq;
         negate: typeof negate;
         oneMinus: typeof oneMinus;
         dFdx: typeof dFdx;
