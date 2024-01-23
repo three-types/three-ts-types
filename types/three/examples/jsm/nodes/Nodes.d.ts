@@ -59,6 +59,8 @@ export { NodeUtils };
 // math
 export {
     default as MathNode,
+    PI,
+    PI2,
     EPSILON,
     INFINITY,
     radians,
@@ -195,10 +197,14 @@ export { default as BufferNode, buffer } from './accessors/BufferNode.js';
 export {
     default as CameraNode,
     cameraProjectionMatrix,
+    cameraProjectionMatrixInverse,
     cameraViewMatrix,
     cameraNormalMatrix,
     cameraWorldMatrix,
     cameraPosition,
+    cameraNear,
+    cameraFar,
+    cameraLogDepth,
     CameraNodeScope,
 } from './accessors/CameraNode.js';
 export { default as VertexColorNode, vertexColor } from './accessors/VertexColorNode.js';
