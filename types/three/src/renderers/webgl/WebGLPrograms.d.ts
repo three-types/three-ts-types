@@ -46,6 +46,7 @@ export interface WebGLProgramParameters {
 
     supportsVertexTextures: boolean;
     outputColorSpace: ColorSpace;
+    alphaToCoverage: boolean;
 
     map: boolean;
     matcap: boolean;
