@@ -239,7 +239,13 @@ export default class Renderer {
 
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
 
-    readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number): void;
+    readRenderTargetPixelsAsync(
+        renderTarget: RenderTarget,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    ): Promise<Float32Array | Uint16Array | Uint8Array | Int8Array | Int16Array | Uint32Array | Int32Array>;
 
     renderObject(
         object: Object3D,
