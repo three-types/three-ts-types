@@ -1,6 +1,5 @@
 import { Camera } from './Camera.js';
-import { Vector3 } from '../math/Vector3';
-import { Vector2 } from '../math/Vector2';
+import { Vector2 } from '../math/Vector2.js';
 
 /**
  * Camera that uses {@link https://en.wikipedia.org/wiki/Perspective_(graphical) | perspective projection}.
