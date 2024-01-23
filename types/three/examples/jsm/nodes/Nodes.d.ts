@@ -82,6 +82,7 @@ export {
     abs,
     sign,
     length,
+    lengthSq,
     negate,
     oneMinus,
     dFdx,
