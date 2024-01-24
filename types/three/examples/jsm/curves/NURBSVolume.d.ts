@@ -7,7 +7,7 @@ export class NURBSVolume {
     knots1: readonly number[];
     knots2: readonly number[];
     knots3: readonly number[];
-    controlsPoints: Vector4[][][];
+    controlPoints: Vector4[][][];
 
     constructor(
         degree1: number,
@@ -16,7 +16,7 @@ export class NURBSVolume {
         knots1: readonly number[],
         knots2: readonly number[],
         knots3: readonly number[],
-        controlsPoints: Vector4[][][],
+        controlPoints: Vector4[][][],
     );
 
     getPoint(t1: number, t2: number, t3: number, target: Vector3): void;
