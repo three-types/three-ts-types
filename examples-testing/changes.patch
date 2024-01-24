@@ -3263,7 +3263,7 @@ index a80cc19..4d1f2c8 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgl_clipping.ts b/examples-testing/examples/webgl_clipping.ts
-index f0a18f3..754f7ce 100644
+index 219a704..74a24e3 100644
 --- a/examples-testing/examples/webgl_clipping.ts
 +++ b/examples-testing/examples/webgl_clipping.ts
 @@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3381,7 +3381,7 @@ index d60532c..75dba77 100644
      const planeMeshes = volumeVisualization.children;
  
 diff --git a/examples-testing/examples/webgl_clipping_intersection.ts b/examples-testing/examples/webgl_clipping_intersection.ts
-index 74022d7..6835776 100644
+index 5f45e45..cb3cbdf 100644
 --- a/examples-testing/examples/webgl_clipping_intersection.ts
 +++ b/examples-testing/examples/webgl_clipping_intersection.ts
 @@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3393,7 +3393,18 @@ index 74022d7..6835776 100644
  
  const params = {
      clipIntersection: true,
-@@ -82,7 +82,7 @@ function init() {
+@@ -80,8 +80,8 @@ function init() {
+ 
+     gui.add(params, 'alphaToCoverage').onChange(function (value) {
+         group.children.forEach(c => {
+-            c.material.alphaToCoverage = Boolean(value);
+-            c.material.needsUpdate = true;
++            (c as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.alphaToCoverage = Boolean(value);
++            (c as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
+         });
+ 
+         render();
+@@ -93,7 +93,7 @@ function init() {
              const children = group.children;
  
              for (let i = 0; i < children.length; i++) {
@@ -8545,11 +8556,11 @@ index be789ae..8585310 100644
          roughness: params.roughness,
          envMapIntensity: 1.0,
 diff --git a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
-index 7a4af34..9d8a52b 100644
+index fb1dc1a..22f3dfc 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
-@@ -11,7 +11,7 @@ const params = {
-     radius: 100,
+@@ -13,7 +13,7 @@ const params = {
+     enabled: true,
  };
  
 -let camera, scene, renderer, skybox;
@@ -8557,7 +8568,7 @@ index 7a4af34..9d8a52b 100644
  
  init().then(render);
  
-@@ -66,15 +66,15 @@ async function init() {
+@@ -68,15 +68,15 @@ async function init() {
          carModel.scale.multiplyScalar(4);
          carModel.rotation.y = Math.PI;
  
