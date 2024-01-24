@@ -326,7 +326,7 @@ const files = {
         'webgpu_camera_logarithmicdepthbuffer',
         'webgpu_clearcoat',
         // 'webgpu_compute_audio',
-        'webgpu_compute_particles',
+        // 'webgpu_compute_particles',
         // 'webgpu_compute_particles_rain',
         // 'webgpu_compute_particles_snow',
         // 'webgpu_compute_points',
