@@ -4348,11 +4348,11 @@ index 537d8d5..bfa97ba 100644
  }
  
 diff --git a/examples-testing/examples/webgl_geometry_nurbs.ts b/examples-testing/examples/webgl_geometry_nurbs.ts
-index 8336ef0..d9c564d 100644
+index 6ab8b32..47ab35c 100644
 --- a/examples-testing/examples/webgl_geometry_nurbs.ts
 +++ b/examples-testing/examples/webgl_geometry_nurbs.ts
-@@ -6,10 +6,10 @@ import { NURBSCurve } from 'three/addons/curves/NURBSCurve.js';
- import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
+@@ -7,10 +7,10 @@ import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
+ import { NURBSVolume } from 'three/addons/curves/NURBSVolume.js';
  import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
  
 -let container, stats;
@@ -4365,7 +4365,7 @@ index 8336ef0..d9c564d 100644
  
  let targetRotation = 0;
  let targetRotationOnPointerDown = 0;
-@@ -78,7 +78,7 @@ function init() {
+@@ -79,7 +79,7 @@ function init() {
      group.add(nurbsLine);
  
      const nurbsControlPointsGeometry = new THREE.BufferGeometry();
@@ -4374,16 +4374,45 @@ index 8336ef0..d9c564d 100644
  
      const nurbsControlPointsMaterial = new THREE.LineBasicMaterial({
          color: 0x333333,
-@@ -123,7 +123,7 @@ function init() {
-     map.anisotropy = 16;
-     map.colorSpace = THREE.SRGBColorSpace;
+@@ -124,7 +124,7 @@ function init() {
+         map.anisotropy = 16;
+         map.colorSpace = THREE.SRGBColorSpace;
  
--    function getSurfacePoint(u, v, target) {
-+    function getSurfacePoint(u: number, v: number, target: THREE.Vector3) {
-         return nurbsSurface.getPoint(u, v, target);
-     }
+-        function getSurfacePoint(u, v, target) {
++        function getSurfacePoint(u: number, v: number, target: THREE.Vector3) {
+             return nurbsSurface.getPoint(u, v, target);
+         }
  
-@@ -163,7 +163,7 @@ function onWindowResize() {
+@@ -175,23 +175,23 @@ function init() {
+         // we create evaluation functions for different surfaces with one of the three
+         // parameter values (u, v, w) kept constant and create multiple THREE.Mesh
+         // objects one for each surface
+-        function getSurfacePointFront(u, v, target) {
++        function getSurfacePointFront(u: number, v: number, target: THREE.Vector3) {
+             return nurbsVolume.getPoint(u, v, 0, target);
+         }
+ 
+-        function getSurfacePointMiddle(u, v, target) {
++        function getSurfacePointMiddle(u: number, v: number, target: THREE.Vector3) {
+             return nurbsVolume.getPoint(u, v, 0.5, target);
+         }
+ 
+-        function getSurfacePointBack(u, v, target) {
++        function getSurfacePointBack(u: number, v: number, target: THREE.Vector3) {
+             return nurbsVolume.getPoint(u, v, 1, target);
+         }
+ 
+-        function getSurfacePointTop(u, w, target) {
++        function getSurfacePointTop(u: number, w: number, target: THREE.Vector3) {
+             return nurbsVolume.getPoint(u, 1, w, target);
+         }
+ 
+-        function getSurfacePointSide(v, w, target) {
++        function getSurfacePointSide(v: number, w: number, target: THREE.Vector3) {
+             return nurbsVolume.getPoint(0, v, w, target);
+         }
+ 
+@@ -260,7 +260,7 @@ function onWindowResize() {
  
  //
  
@@ -4392,7 +4421,7 @@ index 8336ef0..d9c564d 100644
      if (event.isPrimary === false) return;
  
      pointerXOnPointerDown = event.clientX - windowHalfX;
-@@ -173,7 +173,7 @@ function onPointerDown(event) {
+@@ -270,7 +270,7 @@ function onPointerDown(event) {
      document.addEventListener('pointerup', onPointerUp);
  }
  
@@ -4401,7 +4430,7 @@ index 8336ef0..d9c564d 100644
      if (event.isPrimary === false) return;
  
      pointerX = event.clientX - windowHalfX;
-@@ -181,7 +181,7 @@ function onPointerMove(event) {
+@@ -278,7 +278,7 @@ function onPointerMove(event) {
      targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
  }
  
