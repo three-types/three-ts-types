@@ -41,7 +41,7 @@ export interface NodeElements {
 export function addNodeElement(name: string, nodeElement: unknown): void;
 
 export type Swizzable<T extends Node = Node> = T & {
-    [key in SwizzleOption | number]: Node;
+    [key in SwizzleOption | number]: ShaderNodeObject<Node>;
 };
 
 export type ShaderNodeObject<T extends Node> = T & {

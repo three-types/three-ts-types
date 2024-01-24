@@ -335,6 +335,7 @@ const files = {
         // 'webgpu_cubemap_adjustments',
         // 'webgpu_cubemap_dynamic',
         // 'webgpu_cubemap_mix',
+        // 'webgpu_custom_fog',
         // 'webgpu_depth_texture',
         // 'webgpu_equirectangular',
         // 'webgpu_instance_mesh',
