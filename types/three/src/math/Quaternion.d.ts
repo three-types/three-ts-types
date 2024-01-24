@@ -119,7 +119,7 @@ export class Quaternion {
     multiplyQuaternions(a: Quaternion, b: Quaternion): this;
 
     slerp(qb: Quaternion, t: number): this;
-    slerpQuaternions(qa: QuaternionLike, qb: Quaternion, t: number): this;
+    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): this;
     equals(v: Quaternion): boolean;
 
     /**
