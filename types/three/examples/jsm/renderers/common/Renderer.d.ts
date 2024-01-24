@@ -99,7 +99,7 @@ export default class Renderer {
 
     get coordinateSystem(): CoordinateSystem;
 
-    render(scene: Scene, camera: Camera): Promise<void>;
+    renderAsync(scene: Scene, camera: Camera): Promise<void>;
 
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): Promise<void>;
 
@@ -233,7 +233,7 @@ export default class Renderer {
     /**
      * Runs a compute pipeline
      */
-    compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
+    computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
 
     hasFeature(name: string): boolean;
 
@@ -256,4 +256,8 @@ export default class Renderer {
         group: Group,
         lightsNode: LightsNode,
     ): void;
+
+    get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
+
+    get render(): (scene: Scene, camera: Camera) => Promise<void>;
 }
