@@ -23,6 +23,10 @@ export interface NodeElements {
     ivec4: typeof ivec4;
     uvec4: typeof uvec4;
     bvec4: typeof bvec4;
+    mat2: typeof mat2;
+    imat2: typeof imat2;
+    umat2: typeof umat2;
+    bmat2: typeof bmat2;
     mat3: typeof mat3;
     imat3: typeof imat3;
     umat3: typeof umat3;
@@ -222,6 +226,11 @@ export const vec4: ConvertType;
 export const ivec4: ConvertType;
 export const uvec4: ConvertType;
 export const bvec4: ConvertType;
+
+export const mat2: ConvertType;
+export const imat2: ConvertType;
+export const umat2: ConvertType;
+export const bmat2: ConvertType;
 
 export const mat3: ConvertType;
 export const imat3: ConvertType;
