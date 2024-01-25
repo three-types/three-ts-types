@@ -179,7 +179,7 @@ export {
     triplanarTextures,
     triplanarTexture,
 } from './utils/TriplanarTexturesNode.js';
-export { default as ReflectorNode, reflector, ReflectorNodeParameters } from './utils/ReflectorNode';
+export { default as ReflectorNode, reflector, ReflectorNodeParameters } from './utils/ReflectorNode.js';
 
 // shader node
 export * from './shadernode/ShaderNode.js';
