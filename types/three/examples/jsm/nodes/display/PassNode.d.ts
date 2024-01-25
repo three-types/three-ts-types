@@ -2,6 +2,7 @@ import { Camera, RenderTarget, Scene, Texture } from '../../../../src/Three.js';
 import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
 import TempNode from '../core/TempNode.js';
 import TextureNode from '../accessors/TextureNode.js';
+import Node from '../core/Node.js';
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
@@ -24,7 +25,7 @@ export default class PassNode extends TempNode {
 
     getTextureDepthNode(): ShaderNodeObject<PassTextureNode>;
 
-    getDepthNode(): Node;
+    getDepthNode(): ShaderNodeObject<Node>;
 
     setSize(width: number, height: number): void;
 

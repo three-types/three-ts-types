@@ -5,4 +5,6 @@ export default class WebGLBackend extends Backend {
     constructor(parameters?: BackendParameters);
 
     get coordinateSystem(): CoordinateSystem;
+
+    getMaxAnisotropy(): number;
 }

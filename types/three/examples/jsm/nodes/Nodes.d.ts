@@ -179,6 +179,7 @@ export {
     triplanarTextures,
     triplanarTexture,
 } from './utils/TriplanarTexturesNode.js';
+export { default as ReflectorNode, reflector, ReflectorNodeParameters } from './utils/ReflectorNode.js';
 
 // shader node
 export * from './shadernode/ShaderNode.js';
@@ -322,6 +323,7 @@ export {
     depthPixel,
     ViewportDepthNodeScope,
 } from './display/ViewportDepthNode.js';
+export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.js';
 export { default as AfterImageNode, afterImage } from './display/AfterImageNode.js';
 
 export { default as PassNode, pass, depthPass, PassNodeScope } from './display/PassNode.js';

@@ -14,4 +14,8 @@ export default class WebGPUBackend extends Backend {
     constructor(parameters?: WebGPUBackendParameters);
 
     get coordinateSystem(): CoordinateSystem;
+
+    // utils public
+
+    getMaxAnisotropy(): number;
 }
