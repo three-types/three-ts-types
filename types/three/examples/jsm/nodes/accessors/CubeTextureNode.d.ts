@@ -5,8 +5,8 @@ import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.j
 
 export default class CubeTextureNode extends TextureNode {
     isCubeTextureNode: boolean;
-    uvNode: Node | null;
-    levelNode: Node | null;
+    uvNode: ShaderNodeObject<Node> | null;
+    levelNode: ShaderNodeObject<Node> | null;
 
     constructor(value: CubeTexture, uvNode?: Node | null, levelNode?: Node | null);
 
