@@ -103,6 +103,12 @@ export default class Renderer {
 
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
 
+    getMaxAnisotropy(): number;
+
+    getActiveCubeFace(): number;
+
+    getActiveMipmapLevel(): number;
+
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): Promise<void>;
 
     /**
