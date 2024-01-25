@@ -27,4 +27,4 @@ export default class ReflectorNode extends TextureNode {
     getRenderTarget(camera: Camera): RenderTarget;
 }
 
-export const reflector: (parameters: ReflectorNodeParameters) => ShaderNodeObject<ReflectorNode>;
+export const reflector: (parameters?: ReflectorNodeParameters) => ShaderNodeObject<ReflectorNode>;
