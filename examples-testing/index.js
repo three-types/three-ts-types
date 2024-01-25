@@ -361,6 +361,7 @@ const files = {
         // 'webgpu_occlusion',
         // 'webgpu_particles',
         // 'webgpu_portal',
+        'webgpu_reflection',
         // 'webgpu_rtt',
         // 'webgpu_sandbox',
         // 'webgpu_shadertoy',
@@ -374,7 +375,9 @@ const files = {
         // 'webgpu_tsl_transpiler',
         'webgpu_video_panorama',
         'webgpu_postprocessing_afterimage',
+        'webgpu_mirror',
         // 'webgpu_multisampled_renderbuffers',
+        'webgpu_materials_texture_anisotropy',
     ],
     webaudio: ['webaudio_orientation', 'webaudio_sandbox', 'webaudio_timing', 'webaudio_visualizer'],
     webxr: [
