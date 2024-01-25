@@ -99,6 +99,8 @@ export default class Renderer {
 
     get coordinateSystem(): CoordinateSystem;
 
+    compileAsync(scene: Scene, camera: Camera, targetScene?: Scene | null): Promise<void>;
+
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
 
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): Promise<void>;
@@ -258,6 +260,11 @@ export default class Renderer {
     ): void;
 
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
+
+    /**
+     * @deprecated THREE.Renderer: compile() is deprecated and will be removed in r170, use compileAsync instead.
+     */
+    get compile(): (scene: Scene, camera: Camera, targetScene?: Scene | null) => Promise<void>;
 
     get render(): (scene: Scene, camera: Camera) => Promise<void>;
 
