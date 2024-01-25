@@ -17,6 +17,7 @@ export enum NodeType {
     VECTOR2 = 'vec2',
     VECTOR3 = 'vec3',
     VECTOR4 = 'vec4',
+    MATRIX2 = 'mat2',
     MATRIX3 = 'mat3',
     MATRIX4 = 'mat4',
 }
@@ -28,6 +29,7 @@ export type NodeTypeOption =
     | 'vec2'
     | 'vec3'
     | 'vec4'
+    | 'mat2'
     | 'mat3'
     | 'mat4'
     | 'code' /* CodeNode */
