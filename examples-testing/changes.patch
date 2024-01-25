@@ -13861,12 +13861,53 @@ index b8fb383..0bcc65c 100644
  
          const gui = new GUI();
  
+diff --git a/examples-testing/examples/webgpu_materials_texture_anisotropy.ts b/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
+index 00672da..cf96e31 100644
+--- a/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
++++ b/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene1, scene2, renderer;
++let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: WebGPURenderer;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -76,11 +76,11 @@ async function init() {
+     texture2.repeat.set(512, 512);
+ 
+     if (maxAnisotropy > 0) {
+-        document.getElementById('val_left').innerHTML = texture1.anisotropy;
+-        document.getElementById('val_right').innerHTML = texture2.anisotropy;
++        document.getElementById('val_left')!.innerHTML = texture1.anisotropy.toString();
++        document.getElementById('val_right')!.innerHTML = texture2.anisotropy.toString();
+     } else {
+-        document.getElementById('val_left').innerHTML = 'not supported';
+-        document.getElementById('val_right').innerHTML = 'not supported';
++        document.getElementById('val_left')!.innerHTML = 'not supported';
++        document.getElementById('val_right')!.innerHTML = 'not supported';
+     }
+ 
+     //
+@@ -115,7 +115,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     const windowHalfX = window.innerWidth / 2;
+     const windowHalfY = window.innerHeight / 2;
+ 
 diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
-index f50456f..59ec321 100644
+index fbbabfc..a1a82bd 100644
 --- a/examples-testing/examples/webgpu_materials_video.ts
 +++ b/examples-testing/examples/webgpu_materials_video.ts
-@@ -3,11 +3,14 @@ import * as THREE from 'three';
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -2,11 +2,14 @@ import * as THREE from 'three';
+ 
  import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
  
 -let container;
@@ -13883,7 +13924,7 @@ index f50456f..59ec321 100644
  
  let mouseX = 0;
  let mouseY = 0;
-@@ -15,14 +18,14 @@ let mouseY = 0;
+@@ -14,20 +17,20 @@ let mouseY = 0;
  let windowHalfX = window.innerWidth / 2;
  let windowHalfY = window.innerHeight / 2;
  
@@ -13902,16 +13943,14 @@ index f50456f..59ec321 100644
  startButton.addEventListener('click', function () {
      init();
  });
-@@ -34,7 +37,7 @@ function init() {
-         throw new Error('No WebGPU support');
-     }
  
+ function init() {
 -    const overlay = document.getElementById('overlay');
 +    const overlay = document.getElementById('overlay')!;
      overlay.remove();
  
      container = document.createElement('div');
-@@ -55,7 +58,7 @@ function init() {
+@@ -48,7 +51,7 @@ function init() {
      renderer.setAnimationLoop(render);
      container.appendChild(renderer.domElement);
  
@@ -13920,7 +13959,7 @@ index f50456f..59ec321 100644
      video.play();
      video.addEventListener('play', function () {
          this.currentTime = 3;
-@@ -131,7 +134,7 @@ function onWindowResize() {
+@@ -124,7 +127,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -13929,7 +13968,7 @@ index f50456f..59ec321 100644
      const uvs = geometry.attributes.uv.array;
  
      for (let i = 0; i < uvs.length; i += 2) {
-@@ -140,7 +143,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+@@ -133,7 +136,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
      }
  }
  
@@ -13938,7 +13977,7 @@ index f50456f..59ec321 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = (event.clientY - windowHalfY) * 0.3;
  }
-@@ -161,20 +164,20 @@ function render() {
+@@ -154,20 +157,20 @@ function render() {
      for (let i = 0; i < cube_count; i++) {
          material = materials[i];
  
@@ -13966,7 +14005,7 @@ index f50456f..59ec321 100644
          }
      }
  
-@@ -182,8 +185,8 @@ function render() {
+@@ -175,8 +178,8 @@ function render() {
          for (let i = 0; i < cube_count; i++) {
              mesh = meshes[i];
  
@@ -14114,11 +14153,11 @@ index 4184cb4..f6d36c0 100644
  
      torusKnot.rotation.x += 0.25 * delta;
 diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
-index 527cc17..eb03f96 100644
+index c6e051f..dca0db3 100644
 --- a/examples-testing/examples/webgpu_video_panorama.ts
 +++ b/examples-testing/examples/webgpu_video_panorama.ts
-@@ -3,7 +3,7 @@ import * as THREE from 'three';
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
  import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
  
 -let camera, scene, renderer;
@@ -14126,16 +14165,16 @@ index 527cc17..eb03f96 100644
  
  let isUserInteracting = false,
      lon = 0,
-@@ -26,7 +26,7 @@ function init() {
-         throw new Error('No WebGPU support');
-     }
+@@ -19,7 +19,7 @@ const distance = 0.5;
+ init();
  
+ function init() {
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
  
      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
  
-@@ -36,7 +36,7 @@ function init() {
+@@ -29,7 +29,7 @@ function init() {
      // invert the geometry on the x-axis so that all of the faces point inward
      geometry.scale(-1, 1, 1);
  
@@ -14144,7 +14183,7 @@ index 527cc17..eb03f96 100644
      video.play();
  
      const texture = new THREE.VideoTexture(video);
-@@ -68,7 +68,7 @@ function onWindowResize() {
+@@ -61,7 +61,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14153,7 +14192,7 @@ index 527cc17..eb03f96 100644
      isUserInteracting = true;
  
      onPointerDownPointerX = event.clientX;
-@@ -78,7 +78,7 @@ function onPointerDown(event) {
+@@ -71,7 +71,7 @@ function onPointerDown(event) {
      onPointerDownLat = lat;
  }
  
