@@ -201,22 +201,22 @@ export default class Renderer {
      * Tells the renderer to clear its color, depth or stencil drawing buffer(s).
      * Arguments default to true
      */
-    clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
+    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
 
     /**
      * Clear the color buffer. Equivalent to calling .clear( true, false, false ).
      */
-    clearColor(): void;
+    clearColorAsync(): Promise<void>;
 
     /**
      * Clear the depth buffer. Equivalent to calling .clear( false, true, false ).
      */
-    clearDepth(): void;
+    clearDepthAsync(): Promise<void>;
 
     /**
      * Clear the stencil buffer. Equivalent to calling .clear( false, false, true ).
      */
-    clearStencil(): void;
+    clearStencilAsync(): Promise<void>;
 
     get currentColorSpace(): ColorSpace;
 
@@ -260,4 +260,12 @@ export default class Renderer {
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
 
     get render(): (scene: Scene, camera: Camera) => Promise<void>;
+
+    get clear(): (color?: boolean, depth?: boolean, stencil?: boolean) => Promise<void>;
+
+    get clearColor(): () => Promise<void>;
+
+    get clearDepth(): () => Promise<void>;
+
+    get clearStencil(): () => Promise<void>;
 }
