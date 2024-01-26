@@ -289,6 +289,7 @@ export {
     hue,
     lumaCoeffs,
     luminance,
+    threshold,
     ColorAdjustmentMethod,
 } from './display/ColorAdjustmentNode.js';
 export {
@@ -327,6 +328,7 @@ export {
 } from './display/ViewportDepthNode.js';
 export { default as GaussianBlurNode, gaussianBlur } from './display/GaussianBlurNode.js';
 export { default as AfterImageNode, afterImage } from './display/AfterImageNode.js';
+export { default as AnamorphicNode, anamorphic } from './display/AnamorphicNode.js';
 
 export { default as PassNode, pass, depthPass, PassNodeScope } from './display/PassNode.js';
 

@@ -15,6 +15,8 @@ export default class GaussianBlurNode extends TempNode {
     constructor(textureNode: TextureNode, sigma?: number);
 
     setSize(width: number, height: number): void;
+
+    getTextureNode(): TextureNode;
 }
 
 export const gaussianBlur: (node: NodeRepresentation, sigma?: number) => ShaderNodeObject<GaussianBlurNode>;
