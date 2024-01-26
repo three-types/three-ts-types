@@ -11,6 +11,8 @@ export default class AfterImageNode extends TempNode {
 
     constructor(textureNode: Node, damp?: number);
 
+    getTextureNode(): TextureNode;
+
     setSize(width: number, height: number): void;
 }
 

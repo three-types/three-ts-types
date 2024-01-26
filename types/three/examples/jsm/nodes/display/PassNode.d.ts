@@ -40,4 +40,5 @@ export default class PassNode extends TempNode {
 export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;
 
 export const pass: (scene: Scene, camera: Camera) => ShaderNodeObject<PassNode>;
+export const texturePass: (pass: PassNode, texture: Texture) => ShaderNodeObject<PassTextureNode>;
 export const depthPass: (scene: Scene, camera: Camera) => ShaderNodeObject<PassNode>;
