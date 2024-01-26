@@ -178,12 +178,6 @@ export const pow3: Binary;
 export const pow4: Binary;
 export const transformDirection: Binary;
 
-// remapping functions
-export const parabola: Binary;
-export const gain: Binary;
-export const pcurve: Ternary;
-export const sinc: Binary;
-
 export type Ternary = (
     a: NodeRepresentation,
     b: NodeRepresentation,
@@ -260,10 +254,5 @@ declare module '../shadernode/ShaderNode.js' {
         difference: typeof difference;
         saturate: typeof saturate;
         cbrt: typeof cbrt;
-
-        parabola: typeof parabola;
-        gain: typeof gain;
-        pcurve: typeof pcurve;
-        sinc: typeof sinc;
     }
 }
