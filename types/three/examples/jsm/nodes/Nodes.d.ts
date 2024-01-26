@@ -124,8 +124,6 @@ export {
     Binary,
     Ternary,
 } from './math/MathNode.js';
-export { parabola, gain, pcurve, sinc } from './math/MathNode.js';
-export { triNoise3D } from './math/TriNoise3D.js';
 
 export {
     default as OperatorNode,
@@ -151,6 +149,10 @@ export {
     Operator,
 } from './math/OperatorNode.js';
 export { default as CondNode, cond } from './math/CondNode.js';
+
+// math utils
+export { parabola, gain, pcurve, sinc } from './math/MathUtilsNode.js';
+export { triNoise3D } from './math/TriNoise3D.js';
 
 // utils
 export { default as ArrayElementNode } from './utils/ArrayElementNode.js';

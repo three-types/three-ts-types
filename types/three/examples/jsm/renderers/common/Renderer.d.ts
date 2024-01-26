@@ -267,9 +267,6 @@ export default class Renderer {
 
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
 
-    /**
-     * @deprecated THREE.Renderer: compile() is deprecated and will be removed in r170, use compileAsync instead.
-     */
     get compile(): (scene: Scene, camera: Camera, targetScene?: Scene | null) => Promise<void>;
 
     get render(): (scene: Scene, camera: Camera) => Promise<void>;
