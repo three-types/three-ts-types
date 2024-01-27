@@ -9,6 +9,7 @@ export { default as BypassNode, bypass } from './core/BypassNode.js';
 export { default as CacheNode, cache } from './core/CacheNode.js';
 export { default as ConstNode } from './core/ConstNode.js';
 export { default as ContextNode, context, label } from './core/ContextNode.js';
+export { default as IndexNode, vertexIndex, instanceIndex, IndexNodeScope } from './core/IndexNode.js';
 export {
     default as LightingModel,
     LightingModelReflectedLight,
@@ -149,6 +150,7 @@ export {
     Operator,
 } from './math/OperatorNode.js';
 export { default as CondNode, cond } from './math/CondNode.js';
+export { default as HashNode, hash } from './math/HashNode.js';
 
 // math utils
 export { parabola, gain, pcurve, sinc } from './math/MathUtils.js';
@@ -157,6 +159,7 @@ export { triNoise3D } from './math/TriNoise3D.js';
 // utils
 export { default as ArrayElementNode } from './utils/ArrayElementNode.js';
 export { default as ConvertNode } from './utils/ConvertNode.js';
+export { default as DiscardNode, discard } from './utils/DiscardNode.js';
 export { default as EquirectUVNode, equirectUV } from './utils/EquirectUVNode.js';
 export { default as JoinNode } from './utils/JoinNode.js';
 export { default as MatcapUVNode, matcapUV } from './utils/MatcapUVNode.js';
