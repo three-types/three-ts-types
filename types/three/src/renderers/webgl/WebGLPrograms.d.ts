@@ -204,6 +204,7 @@ export interface WebGLProgramParameters {
     extensionDrawBuffers: boolean;
     extensionShaderTextureLOD: boolean;
     extensionClipCullDistance: boolean;
+    extensionMultiDraw: boolean;
 
     rendererExtensionFragDepth: boolean;
     rendererExtensionDrawBuffers: boolean;
