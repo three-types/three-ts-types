@@ -121,9 +121,6 @@ export {
     MathNodeMethod2,
     MathNodeMethod3,
     MathNodeMethod,
-    Unary,
-    Binary,
-    Ternary,
 } from './math/MathNode.js';
 
 export {
@@ -140,14 +137,15 @@ export {
     greaterThanEqual,
     and,
     or,
+    not,
     xor,
     bitAnd,
+    bitNot,
     bitOr,
     bitXor,
     shiftLeft,
     shiftRight,
     OperatorNodeOp,
-    Operator,
 } from './math/OperatorNode.js';
 export { default as CondNode, cond } from './math/CondNode.js';
 export { default as HashNode, hash } from './math/HashNode.js';
