@@ -1,7 +1,7 @@
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-import prettier from 'prettier';
+import dprint from 'dprint-node';
 
 const files = {
     webgl: [
@@ -465,8 +465,8 @@ for (const section of Object.values(files)) {
             encoding: 'utf-8',
         });
         const results = re.exec(fileContents);
-        const options = await prettier.resolveConfig(file);
-        const formattedFile = prettier.format(results[1], { ...options, parser: 'babel' });
-        fs.writeFileSync(path.join(outDir, `${file}.ts`), formattedFile);
+        const outFilePath = path.join(outDir, `${file}.ts`);
+        const formattedFile = dprint.format(outFilePath, results[1], { indentWidth: 4, lineWidth: 120 });
+        fs.writeFileSync(outFilePath, formattedFile);
     }
 }
