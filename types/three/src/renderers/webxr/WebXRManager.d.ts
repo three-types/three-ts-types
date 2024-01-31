@@ -7,7 +7,7 @@ import { ArrayCamera } from '../../cameras/ArrayCamera.js';
 import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
 import { EventDispatcher } from '../../core/EventDispatcher.js';
 import { XRTargetRaySpace, XRGripSpace, XRHandSpace } from './WebXRController.js';
-import { WebGLRenderer } from '../WebGLRenderer';
+import { WebGLRenderer } from '../WebGLRenderer.js';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, 'cameras'> & { cameras: [WebXRCamera, WebXRCamera] };
