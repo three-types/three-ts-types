@@ -14,11 +14,18 @@ import {
     Vector2,
     Vector4,
 } from "../../../../src/Three.js";
+import Node from "../../nodes/core/Node.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import Color4 from "./../common/Color4.js";
 import Backend from "./Backend.js";
 import Info from "./Info.js";
+
+declare module "../../../../src/Three.js" {
+    interface Material {
+        outputNode: Node;
+    }
+}
 
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
@@ -92,6 +99,8 @@ export default class Renderer {
     stencil: boolean;
 
     info: Info;
+
+    toneMappingNode?: Node;
 
     constructor(backend: Backend, parameters?: RendererParameters);
 
