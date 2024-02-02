@@ -1,4 +1,11 @@
-import { Color, Combine, MeshPhongMaterialParameters, NormalMapTypes, Texture, Vector2 } from "../../../../src/Three.js";
+import {
+    Color,
+    Combine,
+    MeshPhongMaterialParameters,
+    NormalMapTypes,
+    Texture,
+    Vector2,
+} from "../../../../src/Three.js";
 import Node from "../core/Node.js";
 import NodeMaterial from "./NodeMaterial.js";
 
