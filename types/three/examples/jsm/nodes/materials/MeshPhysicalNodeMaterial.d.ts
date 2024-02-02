@@ -3,7 +3,9 @@ import { Color, MeshPhysicalMaterialParameters, Texture, Vector2 } from "../../.
 import Node from "../core/Node.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
 
-export interface MeshPhysicalNodeMaterialParameters extends MeshStandardNodeMaterialParameters, MeshPhysicalMaterialParameters {
+export interface MeshPhysicalNodeMaterialParameters
+    extends MeshStandardNodeMaterialParameters, MeshPhysicalMaterialParameters
+{
 }
 
 export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {

@@ -6,7 +6,8 @@ import {
     MeshPhysicalMaterial,
     MeshStandardMaterial,
     PointsMaterial,
-    ShaderMaterial, ShaderMaterialParameters,
+    ShaderMaterial,
+    ShaderMaterialParameters,
     SpriteMaterial,
 } from "../../../../src/Three.js";
 import LightingModel from "../core/LightingModel.js";
