@@ -320,7 +320,7 @@ const files = {
         'webgl2_volume_perlin',
     ],
     'webgpu (wip)': [
-        // 'webgpu_backdrop',
+        'webgpu_backdrop',
         // 'webgpu_backdrop_area',
         // 'webgpu_backdrop_water',
         'webgpu_camera_logarithmicdepthbuffer',

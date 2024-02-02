@@ -1,6 +1,5 @@
-import { ShaderMaterialParameters } from "../../../../src/Three.js";
+import { Color, SpriteMaterialParameters, Texture } from "../../../../src/Three.js";
 import Node from "../core/Node.js";
-import { NodeBuilder } from "../Nodes.js";
 import NodeMaterial from "./NodeMaterial.js";
 
 export default class SpriteNodeMaterial extends NodeMaterial {
@@ -9,5 +8,13 @@ export default class SpriteNodeMaterial extends NodeMaterial {
     rotationNode: Node | null;
     scaleNode: Node | null;
 
-    constructor(parameters?: ShaderMaterialParameters);
+    // Properties from SpriteMaterial
+    readonly isSpriteMaterial: true;
+    color: Color;
+    map: Texture | null;
+    alphaMap: Texture | null;
+    rotation: number;
+    sizeAttenuation: boolean;
+
+    constructor(parameters?: SpriteMaterialParameters);
 }
