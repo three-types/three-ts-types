@@ -1,5 +1,8 @@
 import { Color, Combine, MeshBasicMaterialParameters, Texture } from "../../../../src/Three.js";
-import NodeMaterial from "./NodeMaterial.js";
+import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
+
+export interface MeshBasicNodeMaterialParameters extends NodeMaterialParameters, MeshBasicMaterialParameters {
+}
 
 export default class MeshBasicNodeMaterial extends NodeMaterial {
     readonly isMeshBasicNodeMaterial: true;
@@ -21,5 +24,5 @@ export default class MeshBasicNodeMaterial extends NodeMaterial {
     wireframeLinecap: string;
     wireframeLinejoin: string;
 
-    constructor(parameters?: MeshBasicMaterialParameters);
+    constructor(parameters?: MeshBasicNodeMaterialParameters);
 }

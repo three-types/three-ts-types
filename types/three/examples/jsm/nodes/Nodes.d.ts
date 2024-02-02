@@ -203,7 +203,6 @@ export {
     cameraFar,
     cameraLogDepth,
     cameraNear,
-    CameraNodeScope,
     cameraNormalMatrix,
     cameraPosition,
     cameraProjectionMatrix,
@@ -249,7 +248,7 @@ export {
     normalWorld,
     transformedNormalView,
 } from "./accessors/NormalNode.js";
-export { default as Object3DNode, Object3DNodeScope as OObject3DNodeScope } from "./accessors/Object3DNode.js";
+export { default as Object3DNode, objectDirection, objectViewMatrix, objectNormalMatrix, objectWorldMatrix, objectPosition, objectScale, objectViewPosition } from "./accessors/Object3DNode.js";
 export { default as PointUVNode, pointUV } from "./accessors/PointUVNode.js";
 export {
     default as PositionNode,
@@ -329,6 +328,7 @@ export {
     viewportTopRight,
 } from "./display/ViewportNode.js";
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
+export { default as ViewportDepthTextureNode, viewportDepthTexture } from './display/ViewportDepthTextureNode.js';
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";
 
 export { default as PassNode, depthPass, pass, PassNodeScope } from "./display/PassNode.js";

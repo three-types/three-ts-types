@@ -1,5 +1,8 @@
 import { Color, PointsMaterialParameters, Texture } from "../../../../src/Three.js";
-import NodeMaterial from "./NodeMaterial.js";
+import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
+
+export interface PointsNodeMaterialParameters extends NodeMaterialParameters, PointsMaterialParameters {
+}
 
 export default class PointsNodeMaterial extends NodeMaterial {
     readonly isPointsNodeMaterial: true;
@@ -12,5 +15,5 @@ export default class PointsNodeMaterial extends NodeMaterial {
     size: number;
     sizeAttenuation: boolean;
 
-    constructor(parameters?: PointsMaterialParameters);
+    constructor(parameters?: PointsNodeMaterialParameters);
 }

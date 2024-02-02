@@ -1,6 +1,9 @@
 import { Color, MeshStandardMaterialParameters, NormalMapTypes, Texture, Vector2 } from "../../../../src/Three.js";
 import Node from "../core/Node.js";
-import NodeMaterial from "./NodeMaterial.js";
+import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
+
+export interface MeshStandardNodeMaterialParameters extends NodeMaterialParameters, MeshStandardMaterialParameters {
+}
 
 export default class MeshStandardNodeMaterial extends NodeMaterial {
     readonly isMeshStandardNodeMaterial: true;
@@ -40,5 +43,5 @@ export default class MeshStandardNodeMaterial extends NodeMaterial {
     wireframeLinejoin: string;
     flatShading: boolean;
 
-    constructor(paramters?: MeshStandardMaterialParameters);
+    constructor(paramters?: MeshStandardNodeMaterialParameters);
 }

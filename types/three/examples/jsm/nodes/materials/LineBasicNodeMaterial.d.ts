@@ -1,5 +1,8 @@
 import { Color, LineBasicMaterialParameters, Texture } from "../../../../src/Three.js";
-import NodeMaterial from "./NodeMaterial.js";
+import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
+
+export interface LineBasicNodeMaterialParameters extends NodeMaterialParameters, LineBasicMaterialParameters {
+}
 
 export default class LineBasicNodeMaterial extends NodeMaterial {
     readonly isLineBasicNodeMaterial: true;
@@ -11,5 +14,5 @@ export default class LineBasicNodeMaterial extends NodeMaterial {
     linejoin: string;
     map: Texture | null;
 
-    constructor(parameters?: LineBasicMaterialParameters);
+    constructor(parameters?: LineBasicNodeMaterialParameters);
 }
