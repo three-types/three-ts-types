@@ -1,4 +1,4 @@
-import { ShaderMaterialParameters } from "../../../../src/Three.js";
+import { MeshPhysicalMaterialParameters } from "../../../../src/Three.js";
 import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import MeshPhysicalNodeMaterial from "./MeshPhysicalNodeMaterial.js";
@@ -11,7 +11,7 @@ export default class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     thicknessPowerNode: ConstNode<number>;
     thicknessScaleNode: ConstNode<number>;
 
-    constructor(parameters?: ShaderMaterialParameters);
+    constructor(parameters?: MeshPhysicalMaterialParameters);
 
     get useSSS(): boolean;
 }

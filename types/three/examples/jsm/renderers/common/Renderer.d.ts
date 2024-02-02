@@ -23,7 +23,7 @@ import Info from "./Info.js";
 
 declare module "../../../../src/Three.js" {
     interface Material {
-        outputNode: Node;
+        outputNode?: Node | null;
     }
 }
 
