@@ -1,4 +1,4 @@
-import { Color, LineBasicMaterialParameters, Texture } from "../../../../src/Three.js";
+import { Color, LineBasicMaterialParameters, Texture } from "three";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface LineBasicNodeMaterialParameters extends NodeMaterialParameters, LineBasicMaterialParameters {

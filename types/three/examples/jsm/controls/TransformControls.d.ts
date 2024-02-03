@@ -1,4 +1,4 @@
-import { Camera, Mesh, MOUSE, Object3D, Object3DEventMap, Quaternion, Raycaster, Vector3 } from "../../../src/Three.js";
+import { Camera, Mesh, MOUSE, Object3D, Object3DEventMap, Quaternion, Raycaster, Vector3 } from "three";
 
 export interface TransformControlsEventMap extends Object3DEventMap {
     change: {};

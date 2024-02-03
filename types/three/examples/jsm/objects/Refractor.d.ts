@@ -6,7 +6,7 @@ import {
     ShaderMaterial,
     TextureEncoding,
     WebGLRenderTarget,
-} from "../../../src/Three.js";
+} from "three";
 
 export interface RefractorOptions {
     color?: ColorRepresentation;

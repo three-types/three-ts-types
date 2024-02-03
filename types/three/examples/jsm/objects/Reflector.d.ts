@@ -5,7 +5,7 @@ import {
     PerspectiveCamera,
     TextureEncoding,
     WebGLRenderTarget,
-} from "../../../src/Three.js";
+} from "three";
 
 export interface ReflectorOptions {
     color?: ColorRepresentation;
