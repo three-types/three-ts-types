@@ -7,7 +7,10 @@ import {
     Vector2,
 } from "../../../../src/Three.js";
 import Node from "../core/Node.js";
-import NodeMaterial from "./NodeMaterial.js";
+import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
+
+export interface MeshPhongNodeMaterialParameters extends NodeMaterialParameters, MeshPhongMaterialParameters {
+}
 
 export default class MeshPhongNodeMaterial extends NodeMaterial {
     readonly isMeshPhongNodeMaterial: true;
@@ -47,5 +50,5 @@ export default class MeshPhongNodeMaterial extends NodeMaterial {
     flatShading: boolean;
     metal: boolean;
 
-    constructor(parameters?: MeshPhongMaterialParameters);
+    constructor(parameters?: MeshPhongNodeMaterialParameters);
 }

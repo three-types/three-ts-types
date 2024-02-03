@@ -7,6 +7,7 @@ import {
     MeshStandardMaterial,
     PointsMaterial,
     ShaderMaterial,
+    ShaderMaterialParameters,
     SpriteMaterial,
 } from "../../../../src/Three.js";
 import LightingModel from "../core/LightingModel.js";
@@ -20,6 +21,32 @@ import MeshPhysicalNodeMaterial from "./MeshPhysicalNodeMaterial.js";
 import MeshStandardNodeMaterial from "./MeshStandardNodeMaterial.js";
 import PointsNodeMaterial from "./PointsNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
+
+export interface NodeMaterialParameters extends ShaderMaterialParameters {
+    normals?: boolean | undefined;
+
+    colorSpaced?: boolean | undefined;
+
+    lightsNode?: LightsNode | null | undefined;
+    envNode?: Node | null | undefined;
+
+    colorNode?: Node | null | undefined;
+    normalNode?: Node | null | undefined;
+    opacityNode?: Node | null | undefined;
+    backdropNode?: Node | null | undefined;
+    backdropAlphaNode?: Node | null | undefined;
+    alphaTestNode?: Node | null | undefined;
+
+    positionNode?: Node | null | undefined;
+
+    depthNode?: Node | null | undefined;
+    shadowNode?: Node | null | undefined;
+
+    outputNode?: Node | null | undefined;
+
+    fragmentNode?: Node | null | undefined;
+    vertexNode?: Node | null | undefined;
+}
 
 export default class NodeMaterial extends ShaderMaterial {
     readonly isNodeMaterial: true;

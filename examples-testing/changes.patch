@@ -13613,6 +13613,37 @@ index 9a2b1d8..be0b330 100644
          const distance = 1;
          const id = portals.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 45);
+diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
+index a40092c..9dc155c 100644
+--- a/examples-testing/examples/webgpu_backdrop_area.ts
++++ b/examples-testing/examples/webgpu_backdrop_area.ts
+@@ -24,8 +24,8 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
+-let mixer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let mixer: THREE.AnimationMixer, clock: THREE.Clock;
+ 
+ init();
+ 
+@@ -137,13 +137,13 @@ function init() {
+     };
+ 
+     const gui = new GUI();
+-    const options = { material: 'blurred' };
++    const options: { material: keyof typeof materials } = { material: 'blurred' };
+ 
+     box.material = materials[options.material];
+ 
+     gui.add(box.scale, 'x', 0.1, 2, 0.01);
+     gui.add(box.scale, 'z', 0.1, 2, 0.01);
+-    gui.add(options, 'material', Object.keys(materials)).onChange(name => {
++    gui.add(options, 'material', Object.keys(materials) as (keyof typeof materials)[]).onChange(name => {
+         box.material = materials[name];
+     });
+ }
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 index 2e0d37c..deac7ad 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts

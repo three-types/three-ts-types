@@ -1,7 +1,12 @@
 import { Color, MeshPhysicalMaterialParameters, Texture, Vector2 } from "../../../../src/Three.js";
 
 import Node from "../core/Node.js";
-import MeshStandardNodeMaterial from "./MeshStandardNodeMaterial.js";
+import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
+
+export interface MeshPhysicalNodeMaterialParameters
+    extends MeshStandardNodeMaterialParameters, MeshPhysicalMaterialParameters
+{
+}
 
 export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     readonly isMeshPhysicalNodeMaterial: true;
@@ -61,5 +66,5 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     anisotropyRotation?: number;
     anisotropyMap?: Texture | null;
 
-    constructor(parameters?: MeshPhysicalMaterialParameters);
+    constructor(parameters?: MeshPhysicalNodeMaterialParameters);
 }
