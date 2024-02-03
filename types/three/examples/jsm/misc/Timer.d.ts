@@ -10,7 +10,7 @@
  * @example
  * const timer = new Timer();
  *
- * function animate() {
+ * function animate(timestamp) {
  *   requestAnimationFrame(animate);
  *   // timestamp is optional
  *   timer.update(timestamp);
