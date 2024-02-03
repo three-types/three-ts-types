@@ -1,12 +1,4 @@
-import {
-    BufferGeometry,
-    ColorRepresentation,
-    Mesh,
-    ShaderMaterial,
-    Texture,
-    TextureEncoding,
-    Vector2,
-} from "../../../src/Three.js";
+import { BufferGeometry, ColorRepresentation, Mesh, ShaderMaterial, Texture, TextureEncoding, Vector2 } from "three";
 
 export interface Water2Options {
     color?: ColorRepresentation;

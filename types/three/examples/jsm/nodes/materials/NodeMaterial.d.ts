@@ -9,7 +9,7 @@ import {
     ShaderMaterial,
     ShaderMaterialParameters,
     SpriteMaterial,
-} from "../../../../src/Three.js";
+} from "three";
 import LightingModel from "../core/LightingModel.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";

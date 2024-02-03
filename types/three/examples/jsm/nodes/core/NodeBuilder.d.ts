@@ -1,12 +1,4 @@
-import {
-    BufferGeometry,
-    Material,
-    Object3D,
-    Renderer,
-    Texture,
-    TextureEncoding,
-    WebGLRenderTarget,
-} from "../../../../src/Three.js";
+import { BufferGeometry, Material, Object3D, Renderer, Texture, TextureEncoding, WebGLRenderTarget } from "three";
 import FogNode from "../fog/FogNode.js";
 import LightsNode from "../lighting/LightsNode.js";
 import { AnyObject, NodeShaderStage, NodeTypeOption } from "./constants.js";

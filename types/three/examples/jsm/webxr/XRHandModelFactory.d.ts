@@ -1,4 +1,4 @@
-import { Group, Object3D } from "../../../src/Three.js";
+import { Group, Object3D } from "three";
 
 import { XRHandMeshModel } from "./XRHandMeshModel.js";
 import { XRHandPrimitiveModel, XRHandPrimitiveModelOptions } from "./XRHandPrimitiveModel.js";

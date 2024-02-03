@@ -1,4 +1,4 @@
-import { Color, MeshPhysicalMaterialParameters, Texture, Vector2 } from "../../../../src/Three.js";
+import { Color, MeshPhysicalMaterialParameters, Texture, Vector2 } from "three";
 
 import Node from "../core/Node.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";

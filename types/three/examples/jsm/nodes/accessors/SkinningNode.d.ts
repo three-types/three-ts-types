@@ -1,4 +1,4 @@
-import { SkinnedMesh } from "../../../../src/Three.js";
+import { SkinnedMesh } from "three";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 

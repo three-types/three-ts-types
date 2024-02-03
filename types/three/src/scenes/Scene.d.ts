@@ -1,8 +1,8 @@
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Color } from "../math/Color.js";
+import { CubeTexture } from "../textures/CubeTexture.js";
 import { Texture } from "../textures/Texture.js";
-import { CubeTexture } from "../Three.js";
 import { FogBase } from "./Fog.js";
 
 /**

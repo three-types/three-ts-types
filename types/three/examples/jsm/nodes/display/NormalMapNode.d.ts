@@ -1,4 +1,4 @@
-import { NormalMapTypes } from "../../../../src/Three.js";
+import { NormalMapTypes } from "three";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import MathNode from "../math/MathNode.js";

@@ -1,4 +1,4 @@
-import { Color, SpriteMaterialParameters, Texture } from "../../../../src/Three.js";
+import { Color, SpriteMaterialParameters, Texture } from "three";
 import Node from "../core/Node.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
