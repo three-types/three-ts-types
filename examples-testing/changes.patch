@@ -13644,6 +13644,56 @@ index a40092c..9dc155c 100644
          box.material = materials[name];
      });
  }
+diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
+index 50291c7..7b3aed1 100644
+--- a/examples-testing/examples/webgpu_backdrop_water.ts
++++ b/examples-testing/examples/webgpu_backdrop_water.ts
+@@ -17,6 +17,8 @@ import {
+     timerLocal,
+     MeshStandardNodeMaterial,
+     MeshBasicNodeMaterial,
++    ShaderNodeObject,
++    Node,
+ } from 'three/nodes';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -33,12 +35,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer;
+-let mixer, objects, clock;
+-let model, floor, floorPosition;
+-let postProcessing;
+-let controls;
+-let stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let mixer: THREE.AnimationMixer, objects: THREE.Group, clock: THREE.Clock;
++let model: THREE.Group,
++    floor: THREE.Mesh<THREE.CylinderGeometry, MeshStandardNodeMaterial>,
++    floorPosition: THREE.Vector3;
++let postProcessing: PostProcessing;
++let controls: OrbitControls;
++let stats: Stats;
+ 
+ init();
+ 
+@@ -177,10 +181,13 @@ function init() {
+ 
+     const waterPosY = positionWorld.y.sub(water.position.y);
+ 
+-    let transition = waterPosY.add(0.1).saturate().oneMinus();
++    let transition: ShaderNodeObject<Node> = waterPosY.add(0.1).saturate().oneMinus();
+     transition = waterPosY.lessThan(0).cond(transition, normalWorld.y.mix(transition, 0)).toVar();
+ 
+-    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
++    const colorNode = transition.mix(
++        material.colorNode!,
++        (material.colorNode as ShaderNodeObject<Node>).add(waterLayer0),
++    );
+ 
+     //material.colorNode = colorNode;
+     floor.material.colorNode = colorNode;
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 index 2e0d37c..deac7ad 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
