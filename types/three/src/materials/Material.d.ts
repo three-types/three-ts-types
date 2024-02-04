@@ -37,6 +37,7 @@ export interface MaterialParameters {
     depthTest?: boolean | undefined;
     depthWrite?: boolean | undefined;
     name?: string | undefined;
+    onBeforeCompile?: (parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer) => void;
     opacity?: number | undefined;
     polygonOffset?: boolean | undefined;
     polygonOffsetFactor?: number | undefined;
