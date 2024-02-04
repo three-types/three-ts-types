@@ -14,6 +14,7 @@ import LightingModel from "../core/LightingModel.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import LightsNode from "../lighting/LightsNode.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import LineBasicNodeMaterial from "./LineBasicNodeMaterial.js";
 import MeshBasicNodeMaterial from "./MeshBasicNodeMaterial.js";
 import MeshPhongNodeMaterial from "./MeshPhongNodeMaterial.js";
@@ -27,25 +28,25 @@ export interface NodeMaterialParameters extends ShaderMaterialParameters {
 
     colorSpaced?: boolean | undefined;
 
-    lightsNode?: LightsNode | null | undefined;
-    envNode?: Node | null | undefined;
+    lightsNode?: ShaderNodeObject<LightsNode> | null | undefined;
+    envNode?: ShaderNodeObject<Node> | null | undefined;
 
-    colorNode?: Node | null | undefined;
-    normalNode?: Node | null | undefined;
-    opacityNode?: Node | null | undefined;
-    backdropNode?: Node | null | undefined;
-    backdropAlphaNode?: Node | null | undefined;
-    alphaTestNode?: Node | null | undefined;
+    colorNode?: ShaderNodeObject<Node> | null | undefined;
+    normalNode?: ShaderNodeObject<Node> | null | undefined;
+    opacityNode?: ShaderNodeObject<Node> | null | undefined;
+    backdropNode?: ShaderNodeObject<Node> | null | undefined;
+    backdropAlphaNode?: ShaderNodeObject<Node> | null | undefined;
+    alphaTestNode?: ShaderNodeObject<Node> | null | undefined;
 
-    positionNode?: Node | null | undefined;
+    positionNode?: ShaderNodeObject<Node> | null | undefined;
 
-    depthNode?: Node | null | undefined;
-    shadowNode?: Node | null | undefined;
+    depthNode?: ShaderNodeObject<Node> | null | undefined;
+    shadowNode?: ShaderNodeObject<Node> | null | undefined;
 
-    outputNode?: Node | null | undefined;
+    outputNode?: ShaderNodeObject<Node> | null | undefined;
 
-    fragmentNode?: Node | null | undefined;
-    vertexNode?: Node | null | undefined;
+    fragmentNode?: ShaderNodeObject<Node> | null | undefined;
+    vertexNode?: ShaderNodeObject<Node> | null | undefined;
 }
 
 export default class NodeMaterial extends ShaderMaterial {
@@ -55,25 +56,25 @@ export default class NodeMaterial extends ShaderMaterial {
 
     colorSpaced: boolean;
 
-    lightsNode: LightsNode | null;
-    envNode: Node | null;
+    lightsNode: ShaderNodeObject<LightsNode> | null;
+    envNode: ShaderNodeObject<Node> | null;
 
-    colorNode: Node | null;
-    normalNode: Node | null;
-    opacityNode: Node | null;
-    backdropNode: Node | null;
-    backdropAlphaNode: Node | null;
-    alphaTestNode: Node | null;
+    colorNode: ShaderNodeObject<Node> | null;
+    normalNode: ShaderNodeObject<Node> | null;
+    opacityNode: ShaderNodeObject<Node> | null;
+    backdropNode: ShaderNodeObject<Node> | null;
+    backdropAlphaNode: ShaderNodeObject<Node> | null;
+    alphaTestNode: ShaderNodeObject<Node> | null;
 
-    positionNode: Node | null;
+    positionNode: ShaderNodeObject<Node> | null;
 
-    depthNode: Node | null;
-    shadowNode: Node | null;
+    depthNode: ShaderNodeObject<Node> | null;
+    shadowNode: ShaderNodeObject<Node> | null;
 
-    outputNode: Node | null;
+    outputNode: ShaderNodeObject<Node> | null;
 
-    fragmentNode: Node | null;
-    vertexNode: Node | null;
+    fragmentNode: ShaderNodeObject<Node> | null;
+    vertexNode: ShaderNodeObject<Node> | null;
 
     constructor();
 
