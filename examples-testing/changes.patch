@@ -13570,18 +13570,19 @@ index 6aadaf2..bb7fa30 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webgpu_backdrop.ts b/examples-testing/examples/webgpu_backdrop.ts
-index 9a2b1d8..be0b330 100644
+index 9a2b1d8..21a9da9 100644
 --- a/examples-testing/examples/webgpu_backdrop.ts
 +++ b/examples-testing/examples/webgpu_backdrop.ts
-@@ -12,6 +12,7 @@ import {
+@@ -12,6 +12,8 @@ import {
      oscSine,
      output,
      MeshStandardNodeMaterial,
 +    Node,
++    ShaderNodeObject,
  } from 'three/nodes';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -23,10 +24,10 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+@@ -23,10 +25,10 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -13595,7 +13596,7 @@ index 9a2b1d8..be0b330 100644
  
  init();
  
-@@ -58,7 +59,7 @@ function init() {
+@@ -58,7 +60,7 @@ function init() {
          const object = gltf.scene;
          mixer = new THREE.AnimationMixer(object);
  
@@ -13604,12 +13605,15 @@ index 9a2b1d8..be0b330 100644
  
          // output material effect ( better using hsv )
          // ignore output.sRGBToLinear().linearTosRGB() for now
-@@ -78,7 +79,7 @@ function init() {
+@@ -78,7 +80,10 @@ function init() {
      portals = new THREE.Group();
      scene.add(portals);
  
 -    function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
-+    function addBackdropSphere(backdropNode: Node, backdropAlphaNode: Node | null = null) {
++    function addBackdropSphere(
++        backdropNode: ShaderNodeObject<Node>,
++        backdropAlphaNode: ShaderNodeObject<Node> | null = null,
++    ) {
          const distance = 1;
          const id = portals.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 45);
@@ -13645,7 +13649,7 @@ index a40092c..9dc155c 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 50291c7..7b3aed1 100644
+index 50291c7..1c02c55 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -17,6 +17,8 @@ import {
@@ -13678,7 +13682,7 @@ index 50291c7..7b3aed1 100644
  
  init();
  
-@@ -177,10 +181,13 @@ function init() {
+@@ -177,10 +181,10 @@ function init() {
  
      const waterPosY = positionWorld.y.sub(water.position.y);
  
@@ -13687,10 +13691,7 @@ index 50291c7..7b3aed1 100644
      transition = waterPosY.lessThan(0).cond(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(
-+        material.colorNode!,
-+        (material.colorNode as ShaderNodeObject<Node>).add(waterLayer0),
-+    );
++    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
  
      //material.colorNode = colorNode;
      floor.material.colorNode = colorNode;

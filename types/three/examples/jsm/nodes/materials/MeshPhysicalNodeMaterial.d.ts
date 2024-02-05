@@ -1,6 +1,7 @@
 import { Color, MeshPhysicalMaterialParameters, Texture, Vector2 } from "three";
 
 import Node from "../core/Node.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
 
 export interface MeshPhysicalNodeMaterialParameters
@@ -11,26 +12,26 @@ export interface MeshPhysicalNodeMaterialParameters
 export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     readonly isMeshPhysicalNodeMaterial: true;
 
-    clearcoatNode: Node | null;
-    clearcoatRoughnessNode: Node | null;
-    clearcoatNormalNode: Node | null;
+    clearcoatNode: ShaderNodeObject<Node> | null;
+    clearcoatRoughnessNode: ShaderNodeObject<Node> | null;
+    clearcoatNormalNode: ShaderNodeObject<Node> | null;
 
-    sheenNode: Node | null;
-    sheenRoughnessNode: Node | null;
+    sheenNode: ShaderNodeObject<Node> | null;
+    sheenRoughnessNode: ShaderNodeObject<Node> | null;
 
-    iridescenceNode: Node | null;
-    iridescenceIORNode: Node | null;
-    iridescenceThicknessNode: Node | null;
+    iridescenceNode: ShaderNodeObject<Node> | null;
+    iridescenceIORNode: ShaderNodeObject<Node> | null;
+    iridescenceThicknessNode: ShaderNodeObject<Node> | null;
 
-    iorNode?: Node | null;
+    iorNode?: ShaderNodeObject<Node> | null;
 
-    specularIntensityNode: Node | null;
-    specularColorNode: Node | null;
+    specularIntensityNode: ShaderNodeObject<Node> | null;
+    specularColorNode: ShaderNodeObject<Node> | null;
 
-    transmissionNode: Node | null;
-    thicknessNode: Node | null;
-    attenuationDistanceNode: Node | null;
-    attenuationColorNode: Node | null;
+    transmissionNode: ShaderNodeObject<Node> | null;
+    thicknessNode: ShaderNodeObject<Node> | null;
+    attenuationDistanceNode: ShaderNodeObject<Node> | null;
+    attenuationColorNode: ShaderNodeObject<Node> | null;
 
     // Properties from MeshPhysicalMaterial
     readonly isMeshPhysicalMaterial: true;
