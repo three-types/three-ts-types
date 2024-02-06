@@ -1,11 +1,5 @@
 import { Camera } from "../cameras/Camera.js";
-import {
-    ColorSpace,
-    CullFace,
-    ShadowMapType,
-    ToneMapping,
-    WebGLCoordinateSystem,
-} from "../constants.js";
+import { ColorSpace, CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
