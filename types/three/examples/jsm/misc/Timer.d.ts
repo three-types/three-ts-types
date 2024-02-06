@@ -41,8 +41,6 @@ export class Timer {
 
     /**
      * Sets a time scale that scales the time delta in {@link .update()}.
-     *
-     * @param timescale
      */
     setTimescale(timescale: number): this;
 
@@ -72,7 +70,7 @@ export class FixedTimer extends Timer {
     /**
      * @param fps The desired fixed delta expressed in frames per second.
      */
-    constructor(fps: number);
+    constructor(fps?: number);
 
     /**
      * Updates the internal state of the timer. This method should be called once per simulation step and before you
