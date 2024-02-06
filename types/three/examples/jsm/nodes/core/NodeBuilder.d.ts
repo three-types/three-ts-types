@@ -1,4 +1,4 @@
-import { BufferGeometry, Material, Object3D, Renderer, Texture, TextureEncoding, WebGLRenderTarget } from "three";
+import { BufferGeometry, Material, Object3D, Renderer } from "three";
 import FogNode from "../fog/FogNode.js";
 import LightsNode from "../lighting/LightsNode.js";
 import { AnyObject, NodeShaderStage, NodeTypeOption } from "./constants.js";
@@ -89,7 +89,6 @@ export default abstract class NodeBuilder {
     isMatrix(type: NodeTypeOption): boolean;
     isReference(type: NodeTypeOption): boolean;
     isShaderStage(shaderStage: NodeShaderStage): boolean;
-    getTextureEncodingFromMap(map: Texture | WebGLRenderTarget | unknown): TextureEncoding;
     getComponentType(type: NodeTypeOption): NodeTypeOption;
     getVectorType(type: NodeTypeOption): NodeTypeOption;
     getTypeFromLength(length: number): NodeTypeOption;
