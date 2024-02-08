@@ -21,18 +21,6 @@ import Color4 from "./../common/Color4.js";
 import Backend from "./Backend.js";
 import Info from "./Info.js";
 
-declare module "three" {
-    interface Material {
-        outputNode?: Node | null | undefined;
-    }
-
-    interface Scene {
-        environmentNode?: Node | null | undefined;
-        backgroundNode?: Node | null | undefined;
-        fogNode?: Node | null | undefined;
-    }
-}
-
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
