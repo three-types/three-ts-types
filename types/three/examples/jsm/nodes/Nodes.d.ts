@@ -170,6 +170,7 @@ export { default as RotateUVNode, rotateUV } from "./utils/RotateUVNode.js";
 export { default as SpecularMIPLevelNode, specularMIPLevel } from "./utils/SpecularMIPLevelNode.js";
 export { default as SplitNode } from "./utils/SplitNode.js";
 export { default as SpriteSheetUVNode, spritesheetUV } from "./utils/SpriteSheetUVNode.js";
+export { default as StorageArrayElementNode } from "./utils/SpriteSheetUVNode.js";
 export {
     default as TimerNode,
     frameId,
