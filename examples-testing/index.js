@@ -468,7 +468,7 @@ for (const section of Object.values(files)) {
         });
         const results = re.exec(fileContents);
         const options = await prettier.resolveConfig(file);
-        const formattedFile = prettier.format(results[1], { ...options, parser: 'babel' });
+        const formattedFile = await prettier.format(results[1], { ...options, parser: 'babel' });
         fs.writeFileSync(path.join(outDir, `${file}.ts`), formattedFile);
     }
 }
