@@ -6,6 +6,7 @@ import { Box3 } from "../math/Box3.js";
 import { Color } from "../math/Color.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
+import { DataTexture } from "../textures/DataTexture.js";
 import { Mesh } from "./Mesh.js";
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
@@ -82,6 +83,8 @@ export class InstancedMesh<
      */
     instanceMatrix: InstancedBufferAttribute;
 
+    morphTexture: DataTexture | null;
+
     /**
      * Computes bounding box of the all instances, updating {@link boundingBox | .boundingBox} attribute.
      * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
@@ -125,6 +128,8 @@ export class InstancedMesh<
      * @param matrix A 4x4 matrix representing the local transformation of a single instance.
      */
     setMatrixAt(index: number, matrix: Matrix4): void;
+
+    setMorphAt(index: number, dummy: Mesh): void;
 
     /**
      * No effect in {@link InstancedMesh}.
