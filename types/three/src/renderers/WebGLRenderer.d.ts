@@ -1,12 +1,5 @@
 import { Camera } from "../cameras/Camera.js";
-import {
-    ColorSpace,
-    CullFace,
-    ShadowMapType,
-    TextureEncoding,
-    ToneMapping,
-    WebGLCoordinateSystem,
-} from "../constants.js";
+import { ColorSpace, CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
@@ -193,13 +186,6 @@ export class WebGLRenderer implements Renderer {
     localClippingEnabled: boolean;
 
     extensions: WebGLExtensions;
-
-    /**
-     * Default is LinearEncoding.
-     * @default THREE.LinearEncoding
-     * @deprecated Use {@link WebGLRenderer.outputColorSpace .outputColorSpace} in three.js r152+.
-     */
-    outputEncoding: TextureEncoding;
 
     /**
      * Color space used for output to HTMLCanvasElement. Supported values are
