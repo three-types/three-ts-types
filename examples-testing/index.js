@@ -380,7 +380,7 @@ const files = {
         // 'webgpu_mirror',
         // 'webgpu_multisampled_renderbuffers',
         'webgpu_materials_texture_anisotropy',
-        'webgpu_storage_buffer'
+        // 'webgpu_storage_buffer',
     ],
     webaudio: ['webaudio_orientation', 'webaudio_sandbox', 'webaudio_timing', 'webaudio_visualizer'],
     webxr: [
