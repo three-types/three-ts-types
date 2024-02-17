@@ -6,6 +6,7 @@ import { Box3 } from "../math/Box3.js";
 import { Color } from "../math/Color.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
+import { DataTexture } from "../textures/DataTexture.js";
 import { Mesh } from "./Mesh.js";
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
@@ -81,6 +82,8 @@ export class InstancedMesh<
      * You have to set {@link InstancedBufferAttribute.needsUpdate | .instanceMatrix.needsUpdate()} flag to `true` if you modify instanced data via {@link setMatrixAt | .setMatrixAt()}.
      */
     instanceMatrix: InstancedBufferAttribute;
+
+    morphTexture: DataTexture | null;
 
     /**
      * Computes bounding box of the all instances, updating {@link boundingBox | .boundingBox} attribute.
