@@ -126,6 +126,8 @@ export class InstancedMesh<
      */
     setMatrixAt(index: number, matrix: Matrix4): void;
 
+    setMorphAt(index: number, dummy: Mesh): void;
+
     /**
      * No effect in {@link InstancedMesh}.
      * @ignore
