@@ -189,6 +189,7 @@ export {
 export * from "./shadernode/ShaderNode.js";
 
 // accessors
+export { TBNViewMatrix } from "./accessors/AccessorsUtils.js";
 export {
     bitangentGeometry,
     bitangentLocal,
@@ -314,7 +315,7 @@ export {
 } from "./display/ColorSpaceNode.js";
 export { default as FrontFacingNode, faceDirection, frontFacing } from "./display/FrontFacingNode.js";
 export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlurNode.js";
-export { default as NormalMapNode, normalMap, TBNViewMatrix } from "./display/NormalMapNode.js";
+export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
 export {
