@@ -83,6 +83,10 @@ export class InstancedMesh<
      */
     instanceMatrix: InstancedBufferAttribute;
 
+    /**
+     * Represents the morph target weights of all instances. You have to set its {@link .needsUpdate} flag to true if
+     * you modify instanced data via {@link .setMorphAt}.
+     */
     morphTexture: DataTexture | null;
 
     /**
@@ -121,6 +125,13 @@ export class InstancedMesh<
     getMatrixAt(index: number, matrix: Matrix4): void;
 
     /**
+     * Get the morph target weights of the defined instance.
+     * @param index The index of an instance. Values have to be in the range [0, count].
+     * @param mesh The {@link .morphTargetInfluences} property of this mesh will be filled with the morph target weights of the defined instance.
+     */
+    getMorphAt(index: number, mesh: Mesh): void;
+
+    /**
      * Sets the given local transformation matrix to the defined instance.
      * @remarks
      * Make sure you set {@link InstancedBufferAttribute.needsUpdate | .instanceMatrix.needsUpdate()} flag to `true` after updating all the matrices.
@@ -129,7 +140,13 @@ export class InstancedMesh<
      */
     setMatrixAt(index: number, matrix: Matrix4): void;
 
-    setMorphAt(index: number, dummy: Mesh): void;
+    /**
+     * Sets the morph target weights to the defined instance. Make sure you set {@link .morphTexture}{@link .needsUpdate}
+     * to true after updating all the influences.
+     * @param index The index of an instance. Values have to be in the range [0, count].
+     * @param mesh A mesh with {@link .morphTargetInfluences} property containing the morph target weights of a single instance.
+     */
+    setMorphAt(index: number, mesh: Mesh): void;
 
     /**
      * No effect in {@link InstancedMesh}.
