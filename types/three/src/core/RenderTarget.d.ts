@@ -33,7 +33,7 @@ export interface RenderTargetOptions {
     count?: number | undefined;
 }
 
-export class RenderTarget<TTarget extends Texture | Texture[] = Texture> extends EventDispatcher<{ dispose: {} }> {
+export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extends EventDispatcher<{ dispose: {} }> {
     readonly isRenderTarget: true;
 
     width: number;
@@ -46,7 +46,7 @@ export class RenderTarget<TTarget extends Texture | Texture[] = Texture> extends
      */
     scissorTest: boolean;
     viewport: Vector4;
-    textures: TTarget[];
+    textures: TTexture[];
 
     /**
      * @default true
@@ -71,8 +71,8 @@ export class RenderTarget<TTarget extends Texture | Texture[] = Texture> extends
 
     constructor(width?: number, height?: number, options?: RenderTargetOptions);
 
-    get texture(): TTarget;
-    set texture(value: TTarget);
+    get texture(): TTexture;
+    set texture(value: TTexture);
 
     setSize(width: number, height: number, depth?: number): void;
     clone(): this;
