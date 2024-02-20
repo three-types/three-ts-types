@@ -189,6 +189,7 @@ export * from "./shadernode/ShaderNode.js";
 
 // accessors
 export { TBNViewMatrix } from "./accessors/AccessorsUtils.js";
+export { default as UniformsNode, uniforms } from './accessors/UniformsNode.js';
 export {
     bitangentGeometry,
     bitangentLocal,
