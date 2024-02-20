@@ -11,4 +11,8 @@ export default class BufferNode extends UniformNode<ArrayLike<number> | null> {
     constructor(value: ArrayLike<number> | null, bufferType: NodeTypeOption, bufferCount?: number);
 }
 
-export const buffer: (value: ArrayLike<number> | null, nodeOrType: NodeOrType, count: number) => ShaderNodeObject<BufferNode>;
+export const buffer: (
+    value: ArrayLike<number> | null,
+    nodeOrType: NodeOrType,
+    count: number,
+) => ShaderNodeObject<BufferNode>;

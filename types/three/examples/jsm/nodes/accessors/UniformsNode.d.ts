@@ -1,7 +1,7 @@
-import BufferNode from './BufferNode.js';
-import { ShaderNodeObject } from '../shadernode/ShaderNode.js';
-import ArrayElementNode from '../utils/ArrayElementNode.js';
-import Node from '../core/Node.js';
+import Node from "../core/Node.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import ArrayElementNode from "../utils/ArrayElementNode.js";
+import BufferNode from "./BufferNode.js";
 
 declare class UniformsElementNode extends ArrayElementNode {
     constructor(arrayBuffer: Node, indexNode: Node);
