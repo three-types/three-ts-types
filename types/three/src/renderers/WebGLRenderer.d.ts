@@ -21,7 +21,6 @@ import { WebGLProperties } from "./webgl/WebGLProperties.js";
 import { WebGLRenderLists } from "./webgl/WebGLRenderLists.js";
 import { WebGLShadowMap } from "./webgl/WebGLShadowMap.js";
 import { WebGLState } from "./webgl/WebGLState.js";
-import { WebGLMultipleRenderTargets } from "./WebGLMultipleRenderTargets.js";
 import { WebGLRenderTarget } from "./WebGLRenderTarget.js";
 import { WebXRManager } from "./webxr/WebXRManager.js";
 
@@ -411,13 +410,13 @@ export class WebGLRenderer implements Renderer {
      * @param activeMipmapLevel Specifies the active mipmap level.
      */
     setRenderTarget(
-        renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets | null,
+        renderTarget: WebGLRenderTarget | null,
         activeCubeFace?: number,
         activeMipmapLevel?: number,
     ): void;
 
     readRenderTargetPixels(
-        renderTarget: WebGLRenderTarget | WebGLMultipleRenderTargets,
+        renderTarget: WebGLRenderTarget,
         x: number,
         y: number,
         width: number,

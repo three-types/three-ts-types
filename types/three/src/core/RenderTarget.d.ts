@@ -29,12 +29,11 @@ export interface RenderTargetOptions {
      * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
      * @default 0
      */
-    samples?: number;
+    samples?: number | undefined;
+    count?: number | undefined;
 }
 
-export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extends EventDispatcher<{ dispose: {} }> {
-    constructor(width?: number, height?: number, options?: RenderTargetOptions);
-
+export class RenderTarget<TTarget extends Texture | Texture[] = Texture> extends EventDispatcher<{ dispose: {} }> {
     readonly isRenderTarget: true;
 
     width: number;
@@ -47,7 +46,7 @@ export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extend
      */
     scissorTest: boolean;
     viewport: Vector4;
-    texture: TTexture;
+    textures: TTarget[];
 
     /**
      * @default true
@@ -69,6 +68,11 @@ export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extend
      * @default 0
      */
     samples: number;
+
+    constructor(width?: number, height?: number, options?: RenderTargetOptions);
+
+    get texture(): TTarget;
+    set texture(value: TTarget);
 
     setSize(width: number, height: number, depth?: number): void;
     clone(): this;
