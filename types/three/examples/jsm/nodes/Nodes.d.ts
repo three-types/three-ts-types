@@ -189,7 +189,7 @@ export {
 export * from "./shadernode/ShaderNode.js";
 
 // accessors
-export { TBNViewMatrix } from "./accessors/AccessorsUtils";
+export { TBNViewMatrix } from "./accessors/AccessorsUtils.js";
 export {
     bitangentGeometry,
     bitangentLocal,
