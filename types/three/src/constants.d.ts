@@ -140,6 +140,7 @@ export const CineonToneMapping: 3;
 export const ACESFilmicToneMapping: 4;
 export const CustomToneMapping: 5;
 export const AgXToneMapping: 6;
+export const NeutralToneMapping: 7;
 export type ToneMapping =
     | typeof NoToneMapping
     | typeof LinearToneMapping
@@ -147,7 +148,8 @@ export type ToneMapping =
     | typeof CineonToneMapping
     | typeof ACESFilmicToneMapping
     | typeof CustomToneMapping
-    | typeof AgXToneMapping;
+    | typeof AgXToneMapping
+    | typeof NeutralToneMapping;
 
 // Bind modes
 export const AttachedBindMode: "attached";
