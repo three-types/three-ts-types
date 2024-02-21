@@ -10,6 +10,7 @@ import {
     ShaderMaterialParameters,
     SpriteMaterial,
 } from "three";
+import ClippingNode from "../accessors/ClippingNode.js";
 import LightingModel from "../core/LightingModel.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
@@ -80,6 +81,7 @@ export default class NodeMaterial extends ShaderMaterial {
 
     build(builder: NodeBuilder): void;
     setup(builder: NodeBuilder): void;
+    setupClipping(builder: NodeBuilder): ShaderNodeObject<ClippingNode> | null;
     setupDepth(builder: NodeBuilder): void;
     setupPosition(builder: NodeBuilder): Node;
     setupDiffuseColor(builder: NodeBuilder): void;

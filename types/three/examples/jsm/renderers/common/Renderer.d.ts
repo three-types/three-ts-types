@@ -8,6 +8,7 @@ import {
     Group,
     Material,
     Object3D,
+    Plane,
     RenderTarget,
     Scene,
     ToneMapping,
@@ -91,6 +92,8 @@ export default class Renderer {
      * @default true
      */
     stencil: boolean;
+
+    clippingPlanes: Plane[];
 
     info: Info;
 
