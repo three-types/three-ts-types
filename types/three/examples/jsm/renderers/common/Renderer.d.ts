@@ -8,6 +8,7 @@ import {
     Group,
     Material,
     Object3D,
+    Plane,
     RenderTarget,
     Scene,
     ToneMapping,
@@ -92,9 +93,17 @@ export default class Renderer {
      */
     stencil: boolean;
 
+    clippingPlanes: readonly Plane[];
+
     info: Info;
 
+    shadowMap: { enabled: boolean; type: THREE.ShadowMapType };
+
+    xr: { enabled: boolean };
+
     toneMappingNode?: Node;
+
+    localClippingEnabled?: boolean;
 
     constructor(backend: Backend, parameters?: RendererParameters);
 
