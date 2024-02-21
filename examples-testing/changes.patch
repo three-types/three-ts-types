@@ -2002,7 +2002,7 @@ index 0268130..0e78ed5 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl2_multiple_rendertargets.ts b/examples-testing/examples/webgl2_multiple_rendertargets.ts
-index 40fd12e..105902e 100644
+index 59f70c9..9b622a5 100644
 --- a/examples-testing/examples/webgl2_multiple_rendertargets.ts
 +++ b/examples-testing/examples/webgl2_multiple_rendertargets.ts
 @@ -4,9 +4,9 @@ import WebGL from 'three/addons/capabilities/WebGL.js';
@@ -2013,12 +2013,12 @@ index 40fd12e..105902e 100644
 -let renderTarget;
 -let postScene, postCamera;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-+let renderTarget: THREE.WebGLMultipleRenderTargets;
++let renderTarget: THREE.WebGLRenderTarget;
 +let postScene: THREE.Scene, postCamera: THREE.OrthographicCamera;
  
  const parameters = {
      samples: 4,
-@@ -69,8 +69,8 @@ function init() {
+@@ -68,8 +68,8 @@ function init() {
              new THREE.TorusKnotGeometry(1, 0.3, 128, 32),
              new THREE.RawShaderMaterial({
                  name: 'G-Buffer Shader',
@@ -2029,7 +2029,7 @@ index 40fd12e..105902e 100644
                  uniforms: {
                      tDiffuse: { value: diffuse },
                      repeat: { value: new THREE.Vector2(5, 0.5) },
-@@ -90,8 +90,8 @@ function init() {
+@@ -89,8 +89,8 @@ function init() {
              new THREE.PlaneGeometry(2, 2),
              new THREE.RawShaderMaterial({
                  name: 'Post-FX Shader',
@@ -2038,9 +2038,9 @@ index 40fd12e..105902e 100644
 +                vertexShader: document.querySelector('#render-vert')!.textContent!.trim(),
 +                fragmentShader: document.querySelector('#render-frag')!.textContent!.trim(),
                  uniforms: {
-                     tDiffuse: { value: renderTarget.texture[0] },
-                     tNormal: { value: renderTarget.texture[1] },
-@@ -126,8 +126,8 @@ function render() {
+                     tDiffuse: { value: renderTarget.textures[0] },
+                     tNormal: { value: renderTarget.textures[1] },
+@@ -125,8 +125,8 @@ function render() {
      renderTarget.samples = parameters.samples;
  
      scene.traverse(function (child) {
@@ -13834,6 +13834,61 @@ index 3705045..7fc1806 100644
 +let group: THREE.Group;
  
  init();
+ 
+diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
+index 3b237c3..c458d01 100644
+--- a/examples-testing/examples/webgpu_clipping.ts
++++ b/examples-testing/examples/webgpu_clipping.ts
+@@ -12,7 +12,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, startTime, object, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: WebGPURenderer,
++    startTime: number,
++    object: THREE.Mesh,
++    stats: Stats;
+ 
+ init();
+ animate();
+@@ -82,7 +87,6 @@ function init() {
+         clipIntersection: true,
+     });
+ 
+-    material.isClipping = true;
+     const geometry = new THREE.TorusKnotGeometry(0.4, 0.08, 95, 20);
+ 
+     object = new THREE.Mesh(geometry, material);
+@@ -114,7 +118,7 @@ function init() {
+ 
+     // ***** Clipping setup (renderer): *****
+     const globalPlanes = [globalPlane];
+-    const Empty = Object.freeze([]);
++    const Empty: readonly THREE.Plane[] = Object.freeze([]);
+ 
+     renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+     renderer.localClippingEnabled = true;
+@@ -133,7 +137,7 @@ function init() {
+         folderLocal = gui.addFolder('Local Clipping'),
+         propsLocal = {
+             get Enabled() {
+-                return renderer.localClippingEnabled;
++                return renderer.localClippingEnabled!;
+             },
+             set Enabled(v) {
+                 renderer.localClippingEnabled = v;
+@@ -206,8 +210,8 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(currentTime) {
+-    const time = (currentTime - startTime) / 1000;
++function animate(currentTime?: DOMHighResTimeStamp) {
++    const time = (currentTime! - startTime) / 1000;
+ 
+     requestAnimationFrame(animate);
  
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 index 1430a29..58b951d 100644
