@@ -829,7 +829,7 @@ index fbef331..be69ca7 100644
          camera = makeOrthographicCamera();
          camera.position.set(0, 0, orthographicDistance);
 diff --git a/examples-testing/examples/misc_controls_drag.ts b/examples-testing/examples/misc_controls_drag.ts
-index 5036ab7..8522f7d 100644
+index eb7e7ca..4d327e3 100644
 --- a/examples-testing/examples/misc_controls_drag.ts
 +++ b/examples-testing/examples/misc_controls_drag.ts
 @@ -2,12 +2,12 @@ import * as THREE from 'three';
@@ -849,16 +849,16 @@ index 5036ab7..8522f7d 100644
  
  const mouse = new THREE.Vector2(),
      raycaster = new THREE.Raycaster();
-@@ -97,7 +97,7 @@ function onWindowResize() {
+@@ -98,7 +98,7 @@ function onWindowResize() {
      render();
  }
  
 -function onKeyDown(event) {
 +function onKeyDown(event: KeyboardEvent) {
      enableSelection = event.keyCode === 16 ? true : false;
- }
  
-@@ -105,7 +105,7 @@ function onKeyUp() {
+     if (event.keyCode === 77) {
+@@ -110,7 +110,7 @@ function onKeyUp() {
      enableSelection = false;
  }
  
@@ -867,7 +867,7 @@ index 5036ab7..8522f7d 100644
      event.preventDefault();
  
      if (enableSelection === true) {
-@@ -123,10 +123,10 @@ function onClick(event) {
+@@ -128,10 +128,10 @@ function onClick(event) {
              const object = intersections[0].object;
  
              if (group.children.includes(object) === true) {
@@ -13407,7 +13407,7 @@ index fa96129..58f8d4a 100644
      // and does so without distortion. Akin to CSS object-fit: contain.
      // Source: https://github.com/mrdoob/three.js/pull/17199
 diff --git a/examples-testing/examples/webgl_tonemapping.ts b/examples-testing/examples/webgl_tonemapping.ts
-index df42a7b..a55fe3d 100644
+index 08115cf..f68d7a8 100644
 --- a/examples-testing/examples/webgl_tonemapping.ts
 +++ b/examples-testing/examples/webgl_tonemapping.ts
 @@ -1,22 +1,35 @@
@@ -13422,7 +13422,7 @@ index df42a7b..a55fe3d 100644
 -let mesh, renderer, scene, camera, controls;
 -let gui,
 -    guiExposure = null;
-+type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Custom';
++type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral' | 'Custom';
  
 -const params = {
 +interface Params {
@@ -13452,7 +13452,7 @@ index df42a7b..a55fe3d 100644
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -87,7 +100,7 @@ async function init() {
+@@ -88,7 +101,7 @@ async function init() {
  
      // model
  
@@ -13461,7 +13461,7 @@ index df42a7b..a55fe3d 100644
      scene.add(mesh);
  
      render();
-@@ -98,7 +111,7 @@ async function init() {
+@@ -99,7 +112,7 @@ async function init() {
      const toneMappingFolder = gui.addFolder('tone mapping');
  
      toneMappingFolder
@@ -13470,7 +13470,7 @@ index df42a7b..a55fe3d 100644
  
          .onChange(function () {
              updateGUI(toneMappingFolder);
-@@ -130,7 +143,7 @@ async function init() {
+@@ -131,7 +144,7 @@ async function init() {
      gui.open();
  }
  
@@ -14381,7 +14381,7 @@ index 1a9c4de..53cb684 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webxr_vr_handinput.ts b/examples-testing/examples/webxr_vr_handinput.ts
-index d3c2cdd..06aad83 100644
+index 5758501..33f9ab9 100644
 --- a/examples-testing/examples/webxr_vr_handinput.ts
 +++ b/examples-testing/examples/webxr_vr_handinput.ts
 @@ -4,13 +4,13 @@ import { VRButton } from 'three/addons/webxr/VRButton.js';
