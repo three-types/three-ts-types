@@ -17,6 +17,8 @@ import { Intersection, Raycaster } from "./Raycaster.js";
 export interface Object3DEventMap {
     added: {};
     removed: {};
+    childadded: { child: Object3D };
+    childremoved: { child: Object3D };
 }
 
 /**
