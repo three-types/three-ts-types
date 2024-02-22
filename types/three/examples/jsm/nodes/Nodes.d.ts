@@ -188,7 +188,7 @@ export {
 export * from "./shadernode/ShaderNode.js";
 
 // accessors
-export { TBNViewMatrix, parallaxDirection, parallaxUV } from "./accessors/AccessorsUtils.js";
+export { parallaxDirection, parallaxUV, TBNViewMatrix } from "./accessors/AccessorsUtils.js";
 export {
     bitangentGeometry,
     bitangentLocal,
