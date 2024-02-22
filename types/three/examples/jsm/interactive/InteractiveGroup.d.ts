@@ -14,5 +14,7 @@ export interface InteractiveObject3DEventMap extends Object3DEventMap {
 export class InteractiveObject3D extends Object3D<InteractiveObject3DEventMap> {}
 
 export class InteractiveGroup extends Group {
-    constructor(renderer: WebGLRenderer, camera: Camera);
+    listenToPointerEvents(renderer: WebGLRenderer, camera: Camera): void;
+
+    listenToXRControllerEvents(renderer: WebGLRenderer): void;
 }
