@@ -90,14 +90,16 @@ export class InstancedMesh<
     morphTexture: DataTexture | null;
 
     /**
-     * Computes bounding box of the all instances, updating {@link boundingBox | .boundingBox} attribute.
-     * @remarks Bounding boxes aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+     * Computes the bounding box of the instanced mesh, and updates the {@link .boundingBox} attribute. The bounding box
+     * is not computed by the engine; it must be computed by your app. You may need to recompute the bounding box if an
+     * instance is transformed via {@link .setMatrixAt()}.
      */
     computeBoundingBox(): void;
 
     /**
-     * Computes bounding sphere of the all instances, updating {@link boundingSphere | .boundingSphere} attribute.
-     * @remarks bounding spheres aren't computed by default. They need to be explicitly computed, otherwise they are `null`.
+     * Computes the bounding sphere of the instanced mesh, and updates the {@link .boundingSphere} attribute. The engine
+     * automatically computes the bounding sphere when it is needed, e.g., for ray casting or view frustum culling. You
+     * may need to recompute the bounding sphere if an instance is transformed via [page:.setMatrixAt]().
      */
     computeBoundingSphere(): void;
 
