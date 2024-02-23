@@ -1,9 +1,9 @@
 import { Combine, NormalMapTypes } from "../constants.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
+import { Euler } from "../math/Euler.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Texture } from "../textures/Texture.js";
 import { Material, MaterialParameters } from "./Material.js";
-import { Euler } from '../math/Euler.js';
 
 export interface MeshLambertMaterialParameters extends MaterialParameters {
     bumpMap?: Texture | undefined;
