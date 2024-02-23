@@ -4,24 +4,25 @@ import { NodeOrType, NodeRepresentation, ShaderNodeObject } from "../shadernode/
 
 export default class ReferenceNode<T> extends Node {
     property: string;
-    indexNode: Node | null;
 
     uniformType: NodeTypeOption;
 
     object: T;
-    reference: T | null;
+    count: number | null;
 
+    properties: string[];
+    reference: T | null;
     node: Node | null;
 
-    constructor(property: string, uniformType: NodeTypeOption, object?: T | null, indexNode?: Node | null);
+    constructor(property: string, uniformType: NodeTypeOption, object?: T | null, count?: number | null);
 
     setNodeType(uniformType: NodeTypeOption): void;
 }
 
 export const reference: <T>(name: string, nodeOrType: NodeOrType, object: T) => ShaderNodeObject<ReferenceNode<T>>;
-export const referenceIndex: <T>(
+export const referenceBuffer: <T>(
     name: string,
-    index: NodeRepresentation,
     nodeOrType: NodeOrType,
+    count: NodeRepresentation,
     object: T,
 ) => ShaderNodeObject<ReferenceNode<T>>;
