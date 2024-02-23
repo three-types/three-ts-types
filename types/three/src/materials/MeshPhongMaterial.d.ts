@@ -3,6 +3,7 @@ import { Color, ColorRepresentation } from "../math/Color.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Texture } from "../textures/Texture.js";
 import { Material, MaterialParameters } from "./Material.js";
+import { Euler } from '../math/Euler.js';
 
 export interface MeshPhongMaterialParameters extends MaterialParameters {
     /** geometry color in hexadecimal. Default is 0xffffff. */
@@ -29,6 +30,7 @@ export interface MeshPhongMaterialParameters extends MaterialParameters {
     specularMap?: Texture | null | undefined;
     alphaMap?: Texture | null | undefined;
     envMap?: Texture | null | undefined;
+    envMapRotation?: Euler | undefined;
     combine?: Combine | undefined;
     reflectivity?: number | undefined;
     refractionRatio?: number | undefined;
@@ -164,6 +166,11 @@ export class MeshPhongMaterial extends Material {
      * @default null
      */
     envMap: Texture | null;
+
+    /**
+     * The rotation of the environment map in radians. Default is `(0,0,0)`.
+     */
+    envMapRotation: Euler;
 
     /**
      * @default THREE.MultiplyOperation
