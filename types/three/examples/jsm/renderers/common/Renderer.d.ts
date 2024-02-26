@@ -11,6 +11,7 @@ import {
     Plane,
     RenderTarget,
     Scene,
+    ShadowMapType,
     ToneMapping,
     Vector2,
     Vector4,
@@ -97,7 +98,7 @@ export default class Renderer {
 
     info: Info;
 
-    shadowMap: { enabled: boolean; type: THREE.ShadowMapType };
+    shadowMap: { enabled: boolean; type: ShadowMapType };
 
     xr: { enabled: boolean };
 
