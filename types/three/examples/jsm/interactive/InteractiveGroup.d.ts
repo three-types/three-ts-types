@@ -1,4 +1,4 @@
-import { Camera, Group, Object3D, Object3DEventMap, Vector2, WebGLRenderer } from "three";
+import { Camera, Group, Object3D, Object3DEventMap, Vector2, WebGLRenderer, XRTargetRaySpace } from 'three';
 
 export interface InteractiveObject3DEventMap extends Object3DEventMap {
     hoveron: { data: Vector2 };
@@ -16,5 +16,5 @@ export class InteractiveObject3D extends Object3D<InteractiveObject3DEventMap> {
 export class InteractiveGroup extends Group {
     listenToPointerEvents(renderer: WebGLRenderer, camera: Camera): void;
 
-    listenToXRControllerEvents(renderer: WebGLRenderer): void;
+    listenToXRControllerEvents(controller: XRTargetRaySpace): void;
 }
