@@ -8572,19 +8572,29 @@ index ebd2f34..bbc3a2d 100644
  
          mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgl_materials_envmaps.ts b/examples-testing/examples/webgl_materials_envmaps.ts
-index 4b31971..2196b43 100644
+index e4a70c1..5eb4ab9 100644
 --- a/examples-testing/examples/webgl_materials_envmaps.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps.ts
-@@ -3,9 +3,9 @@ import * as THREE from 'three';
+@@ -3,9 +3,19 @@ import * as THREE from 'three';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let controls, camera, scene, renderer;
 -let textureEquirec, textureCube;
--let sphereMesh, sphereMaterial;
+-let sphereMesh, sphereMaterial, params;
 +let controls: OrbitControls, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 +let textureEquirec: THREE.Texture, textureCube: THREE.CubeTexture;
-+let sphereMesh: THREE.Mesh, sphereMaterial: THREE.MeshBasicMaterial;
++let sphereMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicMaterial>,
++    sphereMaterial: THREE.MeshBasicMaterial,
++    params: {
++        Cube: () => void;
++        Equirectangular: () => void;
++        Refraction: boolean;
++        backgroundRotationX: boolean;
++        backgroundRotationY: boolean;
++        backgroundRotationZ: boolean;
++        syncMaterial: boolean;
++    };
  
  init();
  animate();
@@ -13836,7 +13846,7 @@ index 3705045..7fc1806 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index 3b237c3..c458d01 100644
+index ffd1e7c..c458d01 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
 @@ -12,7 +12,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -13853,15 +13863,7 @@ index 3b237c3..c458d01 100644
  
  init();
  animate();
-@@ -82,7 +87,6 @@ function init() {
-         clipIntersection: true,
-     });
- 
--    material.isClipping = true;
-     const geometry = new THREE.TorusKnotGeometry(0.4, 0.08, 95, 20);
- 
-     object = new THREE.Mesh(geometry, material);
-@@ -114,7 +118,7 @@ function init() {
+@@ -113,7 +118,7 @@ function init() {
  
      // ***** Clipping setup (renderer): *****
      const globalPlanes = [globalPlane];
@@ -13870,7 +13872,7 @@ index 3b237c3..c458d01 100644
  
      renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
      renderer.localClippingEnabled = true;
-@@ -133,7 +137,7 @@ function init() {
+@@ -132,7 +137,7 @@ function init() {
          folderLocal = gui.addFolder('Local Clipping'),
          propsLocal = {
              get Enabled() {
@@ -13879,7 +13881,7 @@ index 3b237c3..c458d01 100644
              },
              set Enabled(v) {
                  renderer.localClippingEnabled = v;
-@@ -206,8 +210,8 @@ function onWindowResize() {
+@@ -205,8 +210,8 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14522,7 +14524,7 @@ index b659652..06e3224 100644
  //
  
 diff --git a/examples-testing/examples/webxr_vr_sandbox.ts b/examples-testing/examples/webxr_vr_sandbox.ts
-index 6ffadcf..b3b80e3 100644
+index d8212a4..3302cb5 100644
 --- a/examples-testing/examples/webxr_vr_sandbox.ts
 +++ b/examples-testing/examples/webxr_vr_sandbox.ts
 @@ -12,9 +12,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
@@ -14538,7 +14540,7 @@ index 6ffadcf..b3b80e3 100644
  
  const parameters = {
      radius: 0.6,
-@@ -199,7 +199,7 @@ function animate() {
+@@ -200,7 +200,7 @@ function animate() {
  
  function render() {
      const time = performance.now() * 0.0002;
@@ -14547,7 +14549,7 @@ index 6ffadcf..b3b80e3 100644
      torus.rotation.x = time * 0.4;
      torus.rotation.y = time;
  
-@@ -207,5 +207,9 @@ function render() {
+@@ -208,5 +208,9 @@ function render() {
      stats.update();
  
      // Canvas elements doesn't trigger DOM updates, so we have to update the texture
