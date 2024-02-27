@@ -68,25 +68,30 @@ export class DragControls extends EventDispatcher<DragControlsEventMap> {
     /**
      * Adds the event listeners of the controls.
      */
-    activate(): void;
+    activate: () => void;
 
     /**
      * Removes the event listeners of the controls.
      */
-    deactivate(): void;
+    deactivate: () => void;
 
     /**
      * Should be called if the controls is no longer required.
      */
-    dispose(): void;
+    dispose: () => void;
 
     /**
      * Returns the array of draggable objects.
      */
-    getObjects(): Object3D[];
+    getObjects: () => Object3D[];
 
     /**
      * Returns the internal {@link Raycaster} instance that is used for intersection tests.
      */
-    getRaycaster(): Raycaster;
+    getRaycaster: () => Raycaster;
+
+    /**
+     * Sets an array of draggable objects by overwriting the existing one.
+     */
+    setObjects: (objects: readonly Object3D[]) => void;
 }
