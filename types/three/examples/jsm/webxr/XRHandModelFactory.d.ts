@@ -6,16 +6,17 @@ import { XRHandPrimitiveModel, XRHandPrimitiveModelOptions } from "./XRHandPrimi
 export type XRHandModelHandedness = "left" | "right";
 
 export class XRHandModel extends Object3D {
-    constructor();
-
     motionController: XRHandPrimitiveModel | XRHandMeshModel;
+
+    constructor();
 }
 
 export class XRHandModelFactory {
-    constructor();
-    path: string;
+    path: string | null;
 
-    setPath(path: string): XRHandModelFactory;
+    constructor();
+
+    setPath(path: string | null): this;
 
     createHandModel(
         controller: Group,
