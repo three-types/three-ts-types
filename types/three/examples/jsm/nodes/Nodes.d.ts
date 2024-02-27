@@ -60,6 +60,8 @@ export { NodeUtils };
 export {
     abs,
     acos,
+    all,
+    any,
     asin,
     atan,
     atan2,
@@ -77,6 +79,7 @@ export {
     distance,
     dot,
     EPSILON,
+    equals,
     exp,
     exp2,
     faceForward,
