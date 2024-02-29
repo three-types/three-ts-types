@@ -2,17 +2,7 @@
  * Various tests of func, fn and call
  */
 
-import {
-    call,
-    code,
-    fn,
-    func,
-    FunctionCallNode,
-    FunctionNode,
-    Node,
-    Swizzable,
-    uv,
-} from "three/addons/nodes/Nodes.js";
+import { call, code, fn, func, FunctionCallNode, FunctionNode, Node, Swizzable, uv } from "three/addons/nodes/Nodes.js";
 
 import { ProxiedObject } from "three/addons/nodes/shadernode/ShaderNode.js";
 
