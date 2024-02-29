@@ -12,9 +12,9 @@ import {
     Node,
     Swizzable,
     uv,
-} from "three/examples/jsm/nodes/Nodes";
+} from "three/addons/nodes/Nodes.js";
 
-import { ProxiedObject } from "three/examples/jsm/nodes/shadernode/ShaderNode";
+import { ProxiedObject } from "three/addons/nodes/shadernode/ShaderNode.js";
 
 export const mx_noise = code("whatever");
 const includes = [mx_noise];
