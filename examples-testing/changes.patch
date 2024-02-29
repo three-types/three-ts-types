@@ -6761,7 +6761,7 @@ index b3ca12c..47dca0a 100644
      const geometry = new WireframeGeometry2(geo);
  
 diff --git a/examples-testing/examples/webgl_loader_3dm.ts b/examples-testing/examples/webgl_loader_3dm.ts
-index 545970a..c90ffcf 100644
+index fc3b73d..218a5f1 100644
 --- a/examples-testing/examples/webgl_loader_3dm.ts
 +++ b/examples-testing/examples/webgl_loader_3dm.ts
 @@ -5,8 +5,8 @@ import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js';
@@ -6775,16 +6775,16 @@ index 545970a..c90ffcf 100644
  
  init();
  animate();
-@@ -36,7 +36,7 @@ function init() {
-         initGUI(object.userData.layers);
+@@ -38,7 +38,7 @@ function init() {
+             initGUI(object.userData.layers);
  
-         // hide spinner
--        document.getElementById('loader').style.display = 'none';
-+        document.getElementById('loader')!.style.display = 'none';
-     });
- 
-     controls = new OrbitControls(camera, renderer.domElement);
-@@ -61,7 +61,7 @@ function animate() {
+             // hide spinner
+-            document.getElementById('loader').style.display = 'none';
++            document.getElementById('loader')!.style.display = 'none';
+         },
+         function (progress) {
+             console.log((progress.loaded / progress.total) * 100 + '%');
+@@ -70,7 +70,7 @@ function animate() {
      requestAnimationFrame(animate);
  }
  
@@ -7783,7 +7783,7 @@ index b536ebd..1ec3b80 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webgl_loader_vrml.ts b/examples-testing/examples/webgl_loader_vrml.ts
-index e7a7914..0ec3170 100644
+index 242405a..407d284 100644
 --- a/examples-testing/examples/webgl_loader_vrml.ts
 +++ b/examples-testing/examples/webgl_loader_vrml.ts
 @@ -6,7 +6,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7800,7 +7800,7 @@ index e7a7914..0ec3170 100644
  
  const params = {
      asset: 'house',
-@@ -28,7 +33,7 @@ const assets = [
+@@ -29,7 +34,7 @@ const assets = [
      'points',
  ];
  
@@ -7809,7 +7809,7 @@ index e7a7914..0ec3170 100644
  
  init();
  animate();
-@@ -81,9 +86,14 @@ function init() {
+@@ -82,9 +87,14 @@ function init() {
      gui.add(params, 'asset', assets).onChange(function (value) {
          if (vrmlScene) {
              vrmlScene.traverse(function (object) {
@@ -7827,7 +7827,7 @@ index e7a7914..0ec3170 100644
              });
  
              scene.remove(vrmlScene);
-@@ -93,7 +103,7 @@ function init() {
+@@ -94,7 +104,7 @@ function init() {
      });
  }
  
@@ -13846,24 +13846,19 @@ index 3705045..7fc1806 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index ffd1e7c..c458d01 100644
+index c89b95f..49361b8 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
-@@ -12,7 +12,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -12,7 +12,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer, startTime, object, stats;
-+let camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    renderer: WebGPURenderer,
-+    startTime: number,
-+    object: THREE.Mesh,
-+    stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer, startTime: number, object: THREE.Mesh, stats: Stats;
  
  init();
- animate();
-@@ -113,7 +118,7 @@ function init() {
+ 
+@@ -113,7 +113,7 @@ function init() {
  
      // ***** Clipping setup (renderer): *****
      const globalPlanes = [globalPlane];
@@ -13872,7 +13867,7 @@ index ffd1e7c..c458d01 100644
  
      renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
      renderer.localClippingEnabled = true;
-@@ -132,7 +137,7 @@ function init() {
+@@ -132,7 +132,7 @@ function init() {
          folderLocal = gui.addFolder('Local Clipping'),
          propsLocal = {
              get Enabled() {
@@ -13881,17 +13876,15 @@ index ffd1e7c..c458d01 100644
              },
              set Enabled(v) {
                  renderer.localClippingEnabled = v;
-@@ -205,8 +210,8 @@ function onWindowResize() {
+@@ -205,7 +205,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
 -function animate(currentTime) {
--    const time = (currentTime - startTime) / 1000;
-+function animate(currentTime?: DOMHighResTimeStamp) {
-+    const time = (currentTime! - startTime) / 1000;
++function animate(currentTime: DOMHighResTimeStamp) {
+     const time = (currentTime - startTime) / 1000;
  
-     requestAnimationFrame(animate);
- 
+     object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 index 1430a29..58b951d 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
@@ -13923,7 +13916,7 @@ index 1430a29..58b951d 100644
  
      for (let i = 0; i < lights.length; i++) {
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index a4579e0..c63622e 100644
+index d0fd310..7292c9e 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -10,7 +10,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -13987,7 +13980,7 @@ index b8fb383..0bcc65c 100644
          const gui = new GUI();
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_anisotropy.ts b/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
-index 00672da..cf96e31 100644
+index ca0ae9e..2125232 100644
 --- a/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_materials_texture_anisotropy.ts
 @@ -3,9 +3,9 @@ import * as THREE from 'three';
@@ -14002,7 +13995,7 @@ index 00672da..cf96e31 100644
  
  let mouseX = 0,
      mouseY = 0;
-@@ -76,11 +76,11 @@ async function init() {
+@@ -76,11 +76,11 @@ function init() {
      texture2.repeat.set(512, 512);
  
      if (maxAnisotropy > 0) {
@@ -14241,7 +14234,7 @@ index e042466..68f5e73 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 86f21eb..bf2af6b 100644
+index b89f292..c3cfcdf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -5,9 +5,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -14589,3 +14582,48 @@ index 2baded4..9c3f5e7 100644
      video.play();
  
      const texture = new THREE.VideoTexture(video);
+diff --git a/examples-testing/examples/webxr_xr_controls_transform.ts b/examples-testing/examples/webxr_xr_controls_transform.ts
+index 12e2dbf..adcaad8 100644
+--- a/examples-testing/examples/webxr_xr_controls_transform.ts
++++ b/examples-testing/examples/webxr_xr_controls_transform.ts
+@@ -2,15 +2,16 @@ import * as THREE from 'three';
+ import { TransformControls } from 'three/addons/controls/TransformControls.js';
+ import { XRButton } from 'three/addons/webxr/XRButton.js';
+ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
++import { Event } from 'three';
+ 
+-let container;
+-let camera, scene, renderer;
+-let controller1, controller2, line;
+-let controllerGrip1, controllerGrip2;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace, line: THREE.Line;
++let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
+ 
+-let raycaster;
++let raycaster: THREE.Raycaster;
+ 
+-let controls, group;
++let controls: TransformControls, group: THREE.Group;
+ 
+ init();
+ animate();
+@@ -148,7 +149,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function onSelect(event) {
++function onSelect(event: Event<'select', THREE.XRTargetRaySpace>) {
+     const controller = event.target;
+ 
+     controller1.userData.active = false;
+@@ -173,7 +174,7 @@ function onSelect(event) {
+     }
+ }
+ 
+-function onControllerEvent(event) {
++function onControllerEvent(event: Event<'selectstart' | 'selectend' | 'move', THREE.XRTargetRaySpace>) {
+     const controller = event.target;
+ 
+     if (controller.userData.active === false) return;
