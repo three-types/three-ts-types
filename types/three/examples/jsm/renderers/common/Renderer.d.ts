@@ -116,6 +116,8 @@ export default class Renderer {
 
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
 
+    render(scene: Scene, camera: Camera): void;
+
     getMaxAnisotropy(): number;
 
     getActiveCubeFace(): number;
@@ -222,22 +224,28 @@ export default class Renderer {
      * Tells the renderer to clear its color, depth or stencil drawing buffer(s).
      * Arguments default to true
      */
-    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
+    clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
 
     /**
      * Clear the color buffer. Equivalent to calling .clear( true, false, false ).
      */
-    clearColorAsync(): Promise<void>;
+    clearColor(): void;
 
     /**
      * Clear the depth buffer. Equivalent to calling .clear( false, true, false ).
      */
-    clearDepthAsync(): Promise<void>;
+    clearDepth(): void;
 
     /**
      * Clear the stencil buffer. Equivalent to calling .clear( false, false, true ).
      */
-    clearStencilAsync(): Promise<void>;
+    clearStencil(): void;
+
+    /**
+     * Tells the renderer to clear its color, depth or stencil drawing buffer(s).
+     * Arguments default to true
+     */
+    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
 
     get currentColorSpace(): ColorSpace;
 
@@ -281,14 +289,4 @@ export default class Renderer {
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
 
     get compile(): (scene: Scene, camera: Camera, targetScene?: Scene | null) => Promise<void>;
-
-    get render(): (scene: Scene, camera: Camera) => Promise<void>;
-
-    get clear(): (color?: boolean, depth?: boolean, stencil?: boolean) => Promise<void>;
-
-    get clearColor(): () => Promise<void>;
-
-    get clearDepth(): () => Promise<void>;
-
-    get clearStencil(): () => Promise<void>;
 }
