@@ -364,7 +364,7 @@ export type TextureDataType =
 /** {@link AlphaFormat} discards the red, green and blue components and reads just the alpha component. */
 export const AlphaFormat: 1021;
 
-/** {@link RGBAFormat} discards the green and blue components and reads just the red component. (Can only be used with a WebGL 2 rendering context). */
+/** {@link RGBAFormat} is the default and reads the red, green, blue and alpha components. */
 export const RGBAFormat: 1023;
 
 /**
