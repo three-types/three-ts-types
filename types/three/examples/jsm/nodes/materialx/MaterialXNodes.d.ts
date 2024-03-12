@@ -1,8 +1,8 @@
-import { mx_hsvtorgb, mx_rgbtohsv } from './lib/mx_hsv.js';
-import { mx_srgb_texture_to_lin_rec709 } from './lib/mx_transform_color.js';
-import Node from '../core/Node.js';
-import MathNode from '../math/MathNode.js';
-import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
+import Node from "../core/Node.js";
+import MathNode from "../math/MathNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { mx_hsvtorgb, mx_rgbtohsv } from "./lib/mx_hsv.js";
+import { mx_srgb_texture_to_lin_rec709 } from "./lib/mx_transform_color.js";
 
 export function mx_aastep(threshold: NodeRepresentation, value: NodeRepresentation): ShaderNodeObject<MathNode>;
 

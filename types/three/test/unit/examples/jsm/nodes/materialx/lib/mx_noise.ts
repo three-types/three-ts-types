@@ -28,8 +28,8 @@ import {
     mx_worley_noise_float,
     mx_worley_noise_vec2,
     mx_worley_noise_vec3,
-} from 'three/examples/jsm/nodes/materialx/lib/mx_noise';
-import { float, vec2 } from 'three/examples/jsm/nodes/shadernode/ShaderNode';
+} from "three/examples/jsm/nodes/materialx/lib/mx_noise";
+import { float, vec2 } from "three/examples/jsm/nodes/shadernode/ShaderNode";
 
 mx_select(true, 1, 0);
 mx_negate_if(true, 1);
