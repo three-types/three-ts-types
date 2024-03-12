@@ -1,5 +1,5 @@
-import { CoordinateSystem } from '../../../../src/Three.js';
-import Renderer from './Renderer.js';
+import { CoordinateSystem } from "three";
+import Renderer from "./Renderer.js";
 
 export interface BackendParameters {
     canvas?: HTMLCanvasElement | undefined;
@@ -11,7 +11,7 @@ export default abstract class Backend {
 
     constructor(parameters?: BackendParameters);
 
-    init(renderer: Renderer): Promise<void>;
+    init(renderer: Renderer): void;
 
     abstract get coordinateSystem(): CoordinateSystem;
 

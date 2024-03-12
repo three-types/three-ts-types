@@ -1,18 +1,27 @@
 import {
+    BufferGeometry,
     Camera,
+    Color,
     ColorSpace,
     CoordinateSystem,
+    FramebufferTexture,
+    Group,
+    Material,
+    Object3D,
+    Plane,
+    RenderTarget,
     Scene,
+    ShadowMapType,
     ToneMapping,
     Vector2,
     Vector4,
-    Color,
-    Object3D,
-    RenderTarget,
-} from '../../../../src/Three.js';
-import Backend from './Backend.js';
-import Info from './Info.js';
-import Color4 from './../common/Color4.js';
+} from "three";
+import Node from "../../nodes/core/Node.js";
+import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
+import LightsNode from "../../nodes/lighting/LightsNode.js";
+import Color4 from "./../common/Color4.js";
+import Backend from "./Backend.js";
+import Info from "./Info.js";
 
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
@@ -85,7 +94,17 @@ export default class Renderer {
      */
     stencil: boolean;
 
+    clippingPlanes: readonly Plane[];
+
     info: Info;
+
+    shadowMap: { enabled: boolean; type: ShadowMapType };
+
+    xr: { enabled: boolean };
+
+    toneMappingNode?: Node;
+
+    localClippingEnabled?: boolean;
 
     constructor(backend: Backend, parameters?: RendererParameters);
 
@@ -93,7 +112,17 @@ export default class Renderer {
 
     get coordinateSystem(): CoordinateSystem;
 
-    render(scene: Scene, camera: Camera): Promise<void>;
+    compileAsync(scene: Scene, camera: Camera, targetScene?: Scene | null): Promise<void>;
+
+    renderAsync(scene: Scene, camera: Camera): Promise<void>;
+
+    render(scene: Scene, camera: Camera): void;
+
+    getMaxAnisotropy(): number;
+
+    getActiveCubeFace(): number;
+
+    getActiveMipmapLevel(): number;
 
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null): Promise<void>;
 
@@ -197,11 +226,26 @@ export default class Renderer {
      */
     clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
 
+    /**
+     * Clear the color buffer. Equivalent to calling .clear( true, false, false ).
+     */
     clearColor(): void;
 
+    /**
+     * Clear the depth buffer. Equivalent to calling .clear( false, true, false ).
+     */
     clearDepth(): void;
 
+    /**
+     * Clear the stencil buffer. Equivalent to calling .clear( false, false, true ).
+     */
     clearStencil(): void;
+
+    /**
+     * Tells the renderer to clear its color, depth or stencil drawing buffer(s).
+     * Arguments default to true
+     */
+    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
 
     get currentColorSpace(): ColorSpace;
 
@@ -214,4 +258,35 @@ export default class Renderer {
     setRenderObjectFunction(renderObjectFunction: () => {}): void;
 
     getRenderObjectFunction(): () => {};
+
+    /**
+     * Runs a compute pipeline
+     */
+    computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
+
+    hasFeature(name: string): boolean;
+
+    copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
+
+    readRenderTargetPixelsAsync(
+        renderTarget: RenderTarget,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+    ): Promise<Float32Array | Uint16Array | Uint8Array | Int8Array | Int16Array | Uint32Array | Int32Array>;
+
+    renderObject(
+        object: Object3D,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        material: Material,
+        group: Group,
+        lightsNode: LightsNode,
+    ): void;
+
+    get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
+
+    get compile(): (scene: Scene, camera: Camera, targetScene?: Scene | null) => Promise<void>;
 }

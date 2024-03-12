@@ -1,26 +1,26 @@
-import TempNode from '../core/TempNode.js';
-import Node from '../core/Node.js';
-import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
+import Node from "../core/Node.js";
+import TempNode from "../core/TempNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 export type OperatorNodeOp =
-    | '%'
-    | '&'
-    | '|'
-    | '^'
-    | '>>'
-    | '<<'
-    | '=='
-    | '&&'
-    | '||'
-    | '^^'
-    | '<'
-    | '>'
-    | '<='
-    | '>='
-    | '+'
-    | '-'
-    | '*'
-    | '/';
+    | "%"
+    | "&"
+    | "|"
+    | "^"
+    | ">>"
+    | "<<"
+    | "=="
+    | "&&"
+    | "||"
+    | "^^"
+    | "<"
+    | ">"
+    | "<="
+    | ">="
+    | "+"
+    | "-"
+    | "*"
+    | "/";
 
 export default class OperatorNode extends TempNode {
     aNode: Node;
@@ -30,7 +30,7 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-export type Operator = (
+type Operator = (
     a: NodeRepresentation,
     b: NodeRepresentation,
     ...others: NodeRepresentation[]
@@ -48,14 +48,16 @@ export const lessThanEqual: Operator;
 export const greaterThanEqual: Operator;
 export const and: Operator;
 export const or: Operator;
+export const not: (a: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 export const xor: Operator;
 export const bitAnd: Operator;
+export const bitNot: (a: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 export const bitOr: Operator;
 export const bitXor: Operator;
 export const shiftLeft: Operator;
 export const shiftRight: Operator;
 
-declare module '../shadernode/ShaderNode.js' {
+declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
         add: typeof add;
         sub: typeof sub;
@@ -69,8 +71,10 @@ declare module '../shadernode/ShaderNode.js' {
         greaterThanEqual: typeof greaterThanEqual;
         and: typeof and;
         or: typeof or;
+        not: typeof not;
         xor: typeof xor;
         bitAnd: typeof bitAnd;
+        bitNot: typeof bitNot;
         bitOr: typeof bitOr;
         bitXor: typeof bitXor;
         shiftLeft: typeof shiftLeft;

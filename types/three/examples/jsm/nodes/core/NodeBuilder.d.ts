@@ -1,24 +1,17 @@
-import {
-    BufferGeometry,
-    Material,
-    Object3D,
-    Renderer,
-    Texture,
-    TextureEncoding,
-    WebGLRenderTarget,
-} from '../../../../src/Three.js';
-import FogNode from '../fog/FogNode.js';
-import LightsNode from '../lighting/LightsNode.js';
-import { AnyObject, NodeShaderStage, NodeTypeOption } from './constants.js';
-import Node from './Node.js';
-import NodeAttribute from './NodeAttribute.js';
-import NodeCache from './NodeCache.js';
-import NodeParser from './NodeParser.js';
-import NodeUniform from './NodeUniform.js';
-import NodeVar from './NodeVar.js';
-import NodeVarying from './NodeVarying.js';
+import { BufferGeometry, Material, Object3D, Renderer } from "three";
+import FogNode from "../fog/FogNode.js";
+import LightsNode from "../lighting/LightsNode.js";
+import { AnyObject, NodeShaderStage, NodeTypeOption } from "./constants.js";
+import Node from "./Node.js";
+import NodeAttribute from "./NodeAttribute.js";
+import NodeCache from "./NodeCache.js";
+import NodeParser from "./NodeParser.js";
+import NodeUniform from "./NodeUniform.js";
+import NodeVar from "./NodeVar.js";
+import NodeVarying from "./NodeVarying.js";
+import StackNode from "./StackNode.js";
 
-export type BuildStageOption = 'construct' | 'analyze' | 'generate';
+export type BuildStageOption = "construct" | "analyze" | "generate";
 
 export interface FlowData {
     code: string;
@@ -60,7 +53,7 @@ export default abstract class NodeBuilder {
 
     shaderStage: NodeShaderStage | null;
     buildStage: BuildStageOption | null;
-    stack: Node[];
+    stack: StackNode;
 
     setHashNode(node: Node, hash: string): void;
     addNode(node: Node): void;
@@ -96,7 +89,6 @@ export default abstract class NodeBuilder {
     isMatrix(type: NodeTypeOption): boolean;
     isReference(type: NodeTypeOption): boolean;
     isShaderStage(shaderStage: NodeShaderStage): boolean;
-    getTextureEncodingFromMap(map: Texture | WebGLRenderTarget | unknown): TextureEncoding;
     getComponentType(type: NodeTypeOption): NodeTypeOption;
     getVectorType(type: NodeTypeOption): NodeTypeOption;
     getTypeFromLength(length: number): NodeTypeOption;
@@ -135,7 +127,7 @@ export default abstract class NodeBuilder {
     setBuildStage(buildStage: BuildStageOption): void;
     getBuildStage(): BuildStageOption;
     abstract buildCode(): void;
-    build(): this;
+    build(createMaterial?: boolean): this;
     format(snippet: string, fromType: NodeTypeOption, toType: NodeTypeOption): string;
     getSignature(): string;
 }

@@ -1,68 +1,68 @@
 name: CI
 on:
-    pull_request: {}
+  pull_request: {}
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  path: 'three-ts-types'
-            - uses: actions/checkout@v4
-              with:
-                  repository: 'DefinitelyTyped/DefinitelyTyped'
-                  path: 'DefinitelyTyped'
-                  filter: blob:none
-                  fetch-depth: 0
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 'lts/*'
-            - run: rsync -av three-ts-types/types/three/ DefinitelyTyped/types/three
-            - run: git add -A
-              working-directory: 'DefinitelyTyped'
-            - run: git config --global user.email "nbierema@gmail.com"
-            - run: git config --global user.name "Nathan Bierema"
-            - run: git commit -m "Changes"
-              working-directory: 'DefinitelyTyped'
-            - run: pnpm install --filter . --filter '...[origin/master]'
-              working-directory: 'DefinitelyTyped'
-            - run: pnpm run test-all
-              working-directory: 'DefinitelyTyped'
-    check-fomatting:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 'lts/*'
-                  cache: 'pnpm'
-            - run: pnpm install
-            - run: pnpm run format-check
-    test-examples:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  submodules: true
-            - uses: pnpm/action-setup@v2
-              with:
-                  version: 8
-            - uses: actions/setup-node@v4
-              with:
-                  node-version: 'lts/*'
-                  cache: 'pnpm'
-            - run: pnpm install
-            - run: pnpm run create-examples
-              working-directory: examples-testing
-            - run: git apply changes.patch
-              working-directory: examples-testing
-            - run: pnpm run type-check
-              working-directory: examples-testing
-            - run: pnpm run format-check
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: 'three-ts-types'
+      - uses: actions/checkout@v4
+        with:
+          repository: 'DefinitelyTyped/DefinitelyTyped'
+          path: 'DefinitelyTyped'
+          filter: blob:none
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - run: rsync -av three-ts-types/types/three/ DefinitelyTyped/types/three
+      - run: git add -A
+        working-directory: 'DefinitelyTyped'
+      - run: git config --global user.email "nbierema@gmail.com"
+      - run: git config --global user.name "Nathan Bierema"
+      - run: git commit -m "Changes"
+        working-directory: 'DefinitelyTyped'
+      - run: pnpm install --filter . --filter ...[HEAD^1]...
+        working-directory: 'DefinitelyTyped'
+      - run: pnpm run test-all --diffBase HEAD^1
+        working-directory: 'DefinitelyTyped'
+  check-fomatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run format-check
+  test-examples:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run create-examples
+        working-directory: examples-testing
+      - run: git apply changes.patch
+        working-directory: examples-testing
+      - run: pnpm run type-check
+        working-directory: examples-testing
+      - run: pnpm run format-check

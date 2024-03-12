@@ -1,6 +1,6 @@
-import { AnyJson, NodeTypeOption, NodeUpdateType } from './constants.js';
-import NodeBuilder from './NodeBuilder.js';
-import NodeFrame from './NodeFrame.js';
+import { AnyJson, NodeTypeOption, NodeUpdateType } from "./constants.js";
+import NodeBuilder from "./NodeBuilder.js";
+import NodeFrame from "./NodeFrame.js";
 
 export default abstract class Node {
     readonly isNode: true;
@@ -35,6 +35,8 @@ export default abstract class Node {
     getReference(builder: NodeBuilder): Node;
 
     setup(builder: NodeBuilder): Node | null;
+
+    increaseUsage(builder: NodeBuilder): number;
 
     analyze(builder: NodeBuilder): void;
 

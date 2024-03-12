@@ -1,12 +1,12 @@
-import { CubeTexture } from '../../../../src/Three.js';
-import TextureNode from './TextureNode.js';
-import Node from '../core/Node.js';
-import { NodeRepresentation, ShaderNodeObject } from '../shadernode/ShaderNode.js';
+import { CubeTexture } from "three";
+import Node from "../core/Node.js";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import TextureNode from "./TextureNode.js";
 
 export default class CubeTextureNode extends TextureNode {
     isCubeTextureNode: boolean;
-    uvNode: Node | null;
-    levelNode: Node | null;
+    uvNode: ShaderNodeObject<Node> | null;
+    levelNode: ShaderNodeObject<Node> | null;
 
     constructor(value: CubeTexture, uvNode?: Node | null, levelNode?: Node | null);
 
@@ -19,7 +19,7 @@ export const cubeTexture: (
     levelNode?: NodeRepresentation,
 ) => ShaderNodeObject<CubeTextureNode>;
 
-declare module '../shadernode/ShaderNode.js' {
+declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
         cubeTexture: typeof cubeTexture;
     }

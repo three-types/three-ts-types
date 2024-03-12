@@ -1,8 +1,8 @@
-import { Euler } from './Euler.js';
-import { Vector3, Vector3Like } from './Vector3.js';
-import { Matrix4 } from './Matrix4.js';
-import { BufferAttribute } from '../core/BufferAttribute.js';
-import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.js';
+import { BufferAttribute } from "../core/BufferAttribute.js";
+import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
+import { Euler } from "./Euler.js";
+import { Matrix4 } from "./Matrix4.js";
+import { Vector3, Vector3Like } from "./Vector3.js";
 
 export interface QuaternionLike {
     readonly x: number;
@@ -119,7 +119,7 @@ export class Quaternion {
     multiplyQuaternions(a: Quaternion, b: Quaternion): this;
 
     slerp(qb: Quaternion, t: number): this;
-    slerpQuaternions(qa: QuaternionLike, qb: Quaternion, t: number): this;
+    slerpQuaternions(qa: Quaternion, qb: Quaternion, t: number): this;
     equals(v: Quaternion): boolean;
 
     /**
