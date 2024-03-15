@@ -1,7 +1,7 @@
 import { Texture } from "three";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 export default class PMREMNode extends TempNode {
     uvNode: Node | null;
