@@ -395,27 +395,23 @@ export const DepthStencilFormat: 1027;
 
 /**
  * {@link RedFormat} discards the green and blue components and reads just the red component.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RedFormat: 1028;
 
 /**
  * {@link RedIntegerFormat} discards the green and blue components and reads just the red component.
  * The texels are read as integers instead of floating point.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RedIntegerFormat: 1029;
 
 /**
  * {@link RGFormat} discards the alpha, and blue components and reads the red, and green components.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RGFormat: 1030;
 
 /**
  * {@link RGIntegerFormat} discards the alpha, and blue components and reads the red, and green components.
  * The texels are read as integers instead of floating point.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RGIntegerFormat: 1031;
 
