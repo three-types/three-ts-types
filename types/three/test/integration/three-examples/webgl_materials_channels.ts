@@ -166,7 +166,6 @@ function init() {
     materialVelocity.uniforms.displacementMap.value = displacementMap;
     materialVelocity.uniforms.displacementScale.value = SCALE;
     materialVelocity.uniforms.displacementBias.value = BIAS;
-    materialVelocity.extensions.derivatives = true;
 
     //
 

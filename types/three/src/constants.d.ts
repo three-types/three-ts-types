@@ -395,27 +395,23 @@ export const DepthStencilFormat: 1027;
 
 /**
  * {@link RedFormat} discards the green and blue components and reads just the red component.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RedFormat: 1028;
 
 /**
  * {@link RedIntegerFormat} discards the green and blue components and reads just the red component.
  * The texels are read as integers instead of floating point.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RedIntegerFormat: 1029;
 
 /**
  * {@link RGFormat} discards the alpha, and blue components and reads the red, and green components.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RGFormat: 1030;
 
 /**
  * {@link RGIntegerFormat} discards the alpha, and blue components and reads the red, and green components.
  * The texels are read as integers instead of floating point.
- * @remarks Can only be used with a WebGL 2 rendering context.
  */
 export const RGIntegerFormat: 1031;
 
@@ -425,34 +421,13 @@ export const RGIntegerFormat: 1031;
  */
 export const RGBAIntegerFormat: 1033;
 
-export const _SRGBAFormat: 1035; // fallback for WebGL 1
-
 /**
- * Texture Pixel Formats Modes. Compatible only with {@link WebGLRenderingContext | WebGL 1 Rendering Context}.
+ * All Texture Pixel Formats Modes.
  * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
  * @see {@link WebGLRenderingContext.texImage2D} for details.
- * @see {@link WebGL2PixelFormat} and {@link PixelFormat}
  * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
  */
-export type WebGL1PixelFormat =
-    | typeof AlphaFormat
-    | typeof LuminanceFormat
-    | typeof LuminanceAlphaFormat
-    | typeof DepthFormat
-    | typeof DepthStencilFormat
-    | typeof RedFormat
-    | typeof RedIntegerFormat
-    | typeof RGFormat
-    | typeof _SRGBAFormat;
-
-/**
- * Texture Pixel Formats Modes. Compatible only with {@link WebGL2RenderingContext | WebGL 2 Rendering Context}.
- * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
- * @see {@link WebGLRenderingContext.texImage2D} for details.
- * @see {@link WebGL2PixelFormat} and {@link PixelFormat}
- * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
- */
-export type WebGL2PixelFormat =
+export type PixelFormat =
     | typeof AlphaFormat
     | typeof RGBAFormat
     | typeof LuminanceFormat
@@ -463,17 +438,7 @@ export type WebGL2PixelFormat =
     | typeof RedIntegerFormat
     | typeof RGFormat
     | typeof RGIntegerFormat
-    | typeof RGBAIntegerFormat
-    | typeof _SRGBAFormat;
-
-/**
- * All Texture Pixel Formats Modes.
- * @remarks Note that the texture must have the correct {@link THREE.Texture.type} set, as described in  {@link TextureDataType}.
- * @see {@link WebGLRenderingContext.texImage2D} for details.
- * @see {@link WebGL1PixelFormat} and {@link WebGL2PixelFormat}
- * @see {@link https://threejs.org/docs/index.html#api/en/constants/Textures | Texture Constants}
- */
-export type PixelFormat = WebGL1PixelFormat | WebGL2PixelFormat;
+    | typeof RGBAIntegerFormat;
 
 /**
  * All Texture Pixel Formats Modes for {@link THREE.DepthTexture}.
