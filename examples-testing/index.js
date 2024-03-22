@@ -101,7 +101,6 @@ const exceptionList = [
     'webgpu_postprocessing_anamorphic',
     'webgpu_mirror',
     'webgpu_multisampled_renderbuffers',
-    'webgpu_storage_buffer',
     'webxr_vr_handinput_cubes',
     'webxr_vr_handinput_profiles',
     'webxr_vr_handinput_pointerclick',
