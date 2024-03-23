@@ -11,7 +11,7 @@ import {
     Plane,
     RenderTarget,
     Scene,
-    ShadowMapType,
+    ShadowMapType, Texture,
     ToneMapping,
     Vector2,
     Vector4,
@@ -267,6 +267,8 @@ export default class Renderer {
     hasFeature(name: string): boolean;
 
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
+
+    copyTextureToTexture(position: Vector2, srcTexture: Texture, dstTexture: Texture, level?: number): void;
 
     readRenderTargetPixelsAsync(
         renderTarget: RenderTarget,
