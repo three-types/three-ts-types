@@ -14192,6 +14192,131 @@ index fbbabfc..a1a82bd 100644
          }
      }
  
+diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
+index 028192e..48fb520 100644
+--- a/examples-testing/examples/webgpu_mesh_batch.ts
++++ b/examples-testing/examples/webgpu_mesh_batch.ts
+@@ -4,15 +4,15 @@ import Stats from 'stats-gl';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { radixSort } from 'three/addons/utils/SortUtils.js';
++import { RadixSortOptions, radixSort } from 'three/addons/utils/SortUtils.js';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ import { MeshNormalNodeMaterial } from 'three/nodes';
+ 
+-let camera, scene, renderer;
+-let controls, stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let controls: OrbitControls, stats: Stats;
+ let gui;
+-let geometries, mesh, material;
+-const ids = [];
++let geometries: THREE.BufferGeometry[], mesh: THREE.BatchedMesh, material: MeshNormalNodeMaterial;
++const ids: number[] = [];
+ 
+ const matrix = new THREE.Matrix4();
+ 
+@@ -42,7 +42,7 @@ init();
+ 
+ //
+ 
+-function randomizeMatrix(matrix) {
++function randomizeMatrix(matrix: THREE.Matrix4) {
+     position.x = Math.random() * 40 - 20;
+     position.y = Math.random() * 40 - 20;
+     position.z = Math.random() * 40 - 20;
+@@ -58,7 +58,7 @@ function randomizeMatrix(matrix) {
+     return matrix.compose(position, quaternion, scale);
+ }
+ 
+-function randomizeRotationSpeed(rotation) {
++function randomizeRotationSpeed(rotation: THREE.Euler) {
+     rotation.x = Math.random() * 0.01;
+     rotation.y = Math.random() * 0.01;
+     rotation.z = Math.random() * 0.01;
+@@ -83,7 +83,7 @@ function createMaterial() {
+ 
+ function cleanup() {
+     if (mesh) {
+-        mesh.parent.remove(mesh);
++        mesh.parent!.remove(mesh);
+ 
+         if (mesh.dispose) {
+             mesh.dispose();
+@@ -133,7 +133,7 @@ function init(forceWebGL = false) {
+         document.body.removeChild(renderer.domElement);
+     }
+ 
+-    document.getElementById('backend').innerText = 'Active Backend: ' + (forceWebGL ? 'WebGL' : 'WebGPU');
++    document.getElementById('backend')!.innerText = 'Active Backend: ' + (forceWebGL ? 'WebGL' : 'WebGPU');
+     // camera
+ 
+     const aspect = window.innerWidth / window.innerHeight;
+@@ -184,7 +184,7 @@ function init(forceWebGL = false) {
+     // gui
+ 
+     gui = new GUI();
+-    gui.add(api, 'webgpu', true).onChange(() => {
++    gui.add(api, 'webgpu').onChange(() => {
+         init(!api.webgpu);
+     });
+     gui.add(api, 'count', 1, MAX_GEOMETRY_COUNT).step(1).onChange(initMesh);
+@@ -211,18 +211,13 @@ function init(forceWebGL = false) {
+     window.addEventListener('resize', onWindowResize);
+ 
+     function onWindowResize() {
+-        renderer.setSize(window.innerWidth, window.innerHeight);
+-
+-        const aspect = window.innerWidth / window.innerHeight;
+-
+-        camera.aspect = aspect;
+-
+-        const frustumHeight = camera.top - camera.bottom;
+-
+-        camera.left = (-frustumHeight * aspect) / 2;
+-        camera.right = (frustumHeight * aspect) / 2;
++        const width = window.innerWidth;
++        const height = window.innerHeight;
+ 
++        camera.aspect = width / height;
+         camera.updateProjectionMatrix();
++
++        renderer.setSize(width, height);
+     }
+ 
+     async function animate() {
+@@ -257,18 +252,26 @@ function init(forceWebGL = false) {
+ 
+ //
+ 
+-function sortFunction(list, camera) {
++type BatchedMeshWithOptions = THREE.BatchedMesh & {
++    _options?: RadixSortOptions<{ start: number; count: number; z: number }>;
++};
++
++function sortFunction(
++    this: THREE.BatchedMesh,
++    list: { start: number; count: number; z: number }[],
++    camera: THREE.Camera,
++) {
+     // initialize options
+-    this._options = this._options || {
++    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
+         get: el => el.z,
+         aux: new Array(this.maxGeometryCount),
+     };
+ 
+-    const options = this._options;
++    const options = (this as BatchedMeshWithOptions)._options!;
+     options.reversed = this.material.transparent;
+ 
+     // convert depth to unsigned 32 bit range
+-    const factor = (2 ** 32 - 1) / camera.far; // UINT32_MAX / max_depth
++    const factor = (2 ** 32 - 1) / (camera as THREE.PerspectiveCamera).far; // UINT32_MAX / max_depth
+     for (let i = 0, l = list.length; i < l; i++) {
+         list[i].z *= factor;
+     }
 diff --git a/examples-testing/examples/webgpu_morphtargets.ts b/examples-testing/examples/webgpu_morphtargets.ts
 index 751d39f..f54fb93 100644
 --- a/examples-testing/examples/webgpu_morphtargets.ts
