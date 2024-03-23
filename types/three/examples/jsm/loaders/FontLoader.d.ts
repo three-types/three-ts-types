@@ -24,7 +24,7 @@ export interface FontData {
         license_description: string;
         manufacturer_name: string;
         font_sub_family_name: string;
-    },
+    };
     descender: number;
     familyName: string;
     lineHeight: number;
