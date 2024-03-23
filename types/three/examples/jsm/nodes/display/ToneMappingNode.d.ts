@@ -26,8 +26,8 @@ declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
         toneMapping: (
             color: NodeRepresentation,
-            mapping: NodeRepresentation,
-            exposure: NodeRepresentation,
+            mapping?: NodeRepresentation,
+            exposure?: NodeRepresentation,
         ) => ShaderNodeObject<ToneMappingNode>;
     }
 }
