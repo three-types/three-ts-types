@@ -14,7 +14,7 @@ export default class Info {
 
     update(object: Object3D, count: number, instanceCount: number): void;
 
-    updateTimestamp(type: 'render' | 'compute', time: number): void;
+    updateTimestamp(type: "render" | "compute", time: number): void;
 
     reset(): void;
 
