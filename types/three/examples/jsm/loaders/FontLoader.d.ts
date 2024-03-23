@@ -2,33 +2,14 @@ import { Loader, LoadingManager, Shape } from "three";
 
 export interface FontData {
     glyphs: Record<string, { x_min: number; x_max: number; ha: number; o: string }>;
-    cssFontWeight: string;
+    familyName: string;
     ascender: number;
+    descender: number;
     underlinePosition: number;
-    cssFontStyle: string;
+    underlineThickness: number;
     boundingBox: { yMin: number; xMin: number; yMax: number; xMax: number };
     resolution: number;
-    original_font_information: {
-        postscript_name: string;
-        version_string: string;
-        vendor_url: string;
-        full_font_name: string;
-        font_family_name: string;
-        copyright: string;
-        description: string;
-        trademark: string;
-        designer: string;
-        designer_url: string;
-        unique_font_identifier: string;
-        license_url: string;
-        license_description: string;
-        manufacturer_name: string;
-        font_sub_family_name: string;
-    };
-    descender: number;
-    familyName: string;
-    lineHeight: number;
-    underlineThickness: number;
+    original_font_information: Record<string, string>;
 }
 
 export class FontLoader extends Loader<Font> {
