@@ -191,6 +191,7 @@ export * from "./shadernode/ShaderNode.js";
 
 // accessors
 export { parallaxDirection, parallaxUV, TBNViewMatrix } from "./accessors/AccessorsUtils.js";
+export { batch, default as BatchNode } from "./accessors/BatchNode.js";
 export {
     bitangentGeometry,
     bitangentLocal,
