@@ -1,6 +1,6 @@
 import { Loader, LoadingManager, Shape } from "three";
 
-interface FontData {
+export interface FontData {
     glyphs: Record<string, { x_min: number; x_max: number; ha: number; o: string }>;
     cssFontWeight: string;
     ascender: number;
