@@ -13999,6 +13999,33 @@ index ca0ae9e..2125232 100644
      const windowHalfX = window.innerWidth / 2;
      const windowHalfY = window.innerHeight / 2;
  
+diff --git a/examples-testing/examples/webgpu_materials_texture_partialupdate.ts b/examples-testing/examples/webgpu_materials_texture_partialupdate.ts
+index 3fb91ed..67f2f7b 100644
+--- a/examples-testing/examples/webgpu_materials_texture_partialupdate.ts
++++ b/examples-testing/examples/webgpu_materials_texture_partialupdate.ts
+@@ -1,7 +1,12 @@
+ import * as THREE from 'three';
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let camera, scene, renderer, clock, dataTexture, diffuseMap;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: WebGPURenderer,
++    clock: THREE.Clock,
++    dataTexture: THREE.DataTexture,
++    diffuseMap: THREE.Texture;
+ 
+ let last = 0;
+ const position = new THREE.Vector2();
+@@ -79,7 +84,7 @@ async function animate() {
+     }
+ }
+ 
+-function updateDataTexture(texture) {
++function updateDataTexture(texture: THREE.DataTexture) {
+     const size = texture.image.width * texture.image.height;
+     const data = texture.image.data;
+ 
 diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
 index fbbabfc..a1a82bd 100644
 --- a/examples-testing/examples/webgpu_materials_video.ts
@@ -14496,7 +14523,7 @@ index b659652..06e3224 100644
  //
  
 diff --git a/examples-testing/examples/webxr_vr_sandbox.ts b/examples-testing/examples/webxr_vr_sandbox.ts
-index d8212a4..3302cb5 100644
+index 27c8572..0e78647 100644
 --- a/examples-testing/examples/webxr_vr_sandbox.ts
 +++ b/examples-testing/examples/webxr_vr_sandbox.ts
 @@ -12,9 +12,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
@@ -14512,7 +14539,7 @@ index d8212a4..3302cb5 100644
  
  const parameters = {
      radius: 0.6,
-@@ -200,7 +200,7 @@ function animate() {
+@@ -199,7 +199,7 @@ function animate() {
  
  function render() {
      const time = performance.now() * 0.0002;
@@ -14521,7 +14548,7 @@ index d8212a4..3302cb5 100644
      torus.rotation.x = time * 0.4;
      torus.rotation.y = time;
  
-@@ -208,5 +208,9 @@ function render() {
+@@ -207,5 +207,9 @@ function render() {
      stats.update();
  
      // Canvas elements doesn't trigger DOM updates, so we have to update the texture
