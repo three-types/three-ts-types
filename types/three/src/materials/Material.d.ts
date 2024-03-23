@@ -334,7 +334,8 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
 
     /**
      * Defines whether this material is tone mapped according to the renderer's
-     * {@link WebGLRenderer.toneMapping toneMapping} setting. It is ignored when rendering to a render target.
+     * {@link WebGLRenderer.toneMapping toneMapping} setting. It is ignored when rendering to a render target or using
+     * post processing.
      * @default true
      */
     toneMapped: boolean;
