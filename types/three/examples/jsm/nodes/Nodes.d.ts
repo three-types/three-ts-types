@@ -274,6 +274,7 @@ export {
 } from "./accessors/PositionNode.js";
 export { default as ReferenceNode, reference, referenceBuffer } from "./accessors/ReferenceNode.js";
 export { default as ReflectVectorNode, reflectVector } from "./accessors/ReflectVectorNode.js";
+export { default as RendererReferenceNode, rendererReference } from "./accessors/RendererReferenceNode.js";
 export { default as SkinningNode, skinning } from "./accessors/SkinningNode.js";
 export { default as StorageBufferNode, storage, storageObject } from "./accessors/StorageBufferNode.js";
 export {

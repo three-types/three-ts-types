@@ -3384,7 +3384,7 @@ index 5f45e45..cb3cbdf 100644
  
              render();
 diff --git a/examples-testing/examples/webgl_clipping_stencil.ts b/examples-testing/examples/webgl_clipping_stencil.ts
-index 365087d..9dd56a1 100644
+index aec09f6..5f0feae 100644
 --- a/examples-testing/examples/webgl_clipping_stencil.ts
 +++ b/examples-testing/examples/webgl_clipping_stencil.ts
 @@ -3,9 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -12918,10 +12918,10 @@ index 2e42ab5..9ea1dde 100644
      renderer.render(scene, camera);
  
 diff --git a/examples-testing/examples/webgl_shadowmesh.ts b/examples-testing/examples/webgl_shadowmesh.ts
-index fd26313..203f44d 100644
+index 01fd853..4cf69fe 100644
 --- a/examples-testing/examples/webgl_shadowmesh.ts
 +++ b/examples-testing/examples/webgl_shadowmesh.ts
-@@ -12,18 +12,18 @@ const renderer = new THREE.WebGLRenderer();
+@@ -12,18 +12,18 @@ const renderer = new THREE.WebGLRenderer({ stencil: true });
  
  const sunLight = new THREE.DirectionalLight('rgb(255,255,255)', 3);
  let useDirectionalLight = true;
@@ -13591,7 +13591,7 @@ index 6aadaf2..bb7fa30 100644
  init();
  animate();
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index a40092c..9dc155c 100644
+index 5561ada..74fed79 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -24,8 +24,8 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
@@ -13605,7 +13605,7 @@ index a40092c..9dc155c 100644
  
  init();
  
-@@ -137,13 +137,13 @@ function init() {
+@@ -136,13 +136,13 @@ function init() {
      };
  
      const gui = new GUI();
@@ -13864,6 +13864,21 @@ index c89b95f..60e0571 100644
      const time = (currentTime - startTime) / 1000;
  
      object.position.y = 0.8;
+diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
+index 9f06a5a..5b5f93c 100644
+--- a/examples-testing/examples/webgpu_custom_fog_background.ts
++++ b/examples-testing/examples/webgpu_custom_fog_background.ts
+@@ -10,8 +10,8 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let postProcessing: PostProcessing;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 index 1430a29..58b951d 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
