@@ -91,7 +91,7 @@ export default class Renderer {
     depth: boolean;
 
     /**
-     * @default true
+     * @default false
      */
     stencil: boolean;
 
