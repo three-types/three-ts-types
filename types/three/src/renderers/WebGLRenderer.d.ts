@@ -177,7 +177,7 @@ export class WebGLRenderer implements Renderer {
     /**
      * @default []
      */
-    clippingPlanes: readonly Plane[];
+    clippingPlanes: Plane[];
 
     /**
      * @default false

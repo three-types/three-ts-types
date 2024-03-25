@@ -3233,7 +3233,7 @@ index f1d4400..7f149db 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgl_clipping.ts b/examples-testing/examples/webgl_clipping.ts
-index 219a704..74a24e3 100644
+index 219a704..50a9d90 100644
 --- a/examples-testing/examples/webgl_clipping.ts
 +++ b/examples-testing/examples/webgl_clipping.ts
 @@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3250,8 +3250,28 @@ index 219a704..74a24e3 100644
  
  init();
  animate();
+@@ -97,8 +102,8 @@ function init() {
+ 
+     // ***** Clipping setup (renderer): *****
+     const globalPlanes = [globalPlane],
+-        Empty = Object.freeze([]);
+-    renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
++        Empty = Object.freeze<THREE.Plane[]>([]);
++    renderer.clippingPlanes = Empty as THREE.Plane[]; // GUI sets it to globalPlanes
+     renderer.localClippingEnabled = true;
+ 
+     // Controls
+@@ -142,7 +147,7 @@ function init() {
+                 return renderer.clippingPlanes !== Empty;
+             },
+             set Enabled(v) {
+-                renderer.clippingPlanes = v ? globalPlanes : Empty;
++                renderer.clippingPlanes = v ? globalPlanes : (Empty as THREE.Plane[]);
+             },
+ 
+             get Plane() {
 diff --git a/examples-testing/examples/webgl_clipping_advanced.ts b/examples-testing/examples/webgl_clipping_advanced.ts
-index d60532c..75dba77 100644
+index d60532c..63db93a 100644
 --- a/examples-testing/examples/webgl_clipping_advanced.ts
 +++ b/examples-testing/examples/webgl_clipping_advanced.ts
 @@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3300,11 +3320,15 @@ index d60532c..75dba77 100644
          const zAxis = plane.normal,
              matrix = new THREE.Matrix4();
  
-@@ -113,7 +113,15 @@ const Vertices = [
+@@ -111,9 +111,17 @@ const Vertices = [
+     Planes = planesFromMesh(Vertices, Indices),
+     PlaneMatrices = Planes.map(planeToMatrix),
      GlobalClippingPlanes = cylindricalPlanes(5, 2.5),
-     Empty = Object.freeze([]);
- 
+-    Empty = Object.freeze([]);
+-
 -let camera, scene, renderer, startTime, stats, object, clipMaterial, volumeVisualization, globalClippingPlanes;
++    Empty = Object.freeze<THREE.Plane[]>([]);
++
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
@@ -3326,6 +3350,24 @@ index d60532c..75dba77 100644
                  return j !== i;
              }),
  
+@@ -234,7 +242,7 @@ function init() {
+     container.appendChild(renderer.domElement);
+     // Clipping setup:
+     globalClippingPlanes = createPlanes(GlobalClippingPlanes.length);
+-    renderer.clippingPlanes = Empty;
++    renderer.clippingPlanes = Empty as THREE.Plane[];
+     renderer.localClippingEnabled = true;
+ 
+     // Stats
+@@ -288,7 +296,7 @@ function init() {
+                 return renderer.clippingPlanes !== Empty;
+             },
+             set Enabled(v) {
+-                renderer.clippingPlanes = v ? globalClippingPlanes : Empty;
++                renderer.clippingPlanes = v ? globalClippingPlanes : (Empty as THREE.Plane[]);
+             },
+         },
+         'Enabled',
 @@ -306,12 +314,12 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
