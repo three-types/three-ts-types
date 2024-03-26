@@ -336,6 +336,7 @@ export const HalfFloatType: 1016;
 export const UnsignedShort4444Type: 1017;
 export const UnsignedShort5551Type: 1018;
 export const UnsignedInt248Type: 1020;
+export const UnsignedInt5999Type: 35902;
 
 export type AttributeGPUType = typeof FloatType | typeof IntType;
 
@@ -356,13 +357,16 @@ export type TextureDataType =
     | typeof HalfFloatType
     | typeof UnsignedShort4444Type
     | typeof UnsignedShort5551Type
-    | typeof UnsignedInt248Type;
+    | typeof UnsignedInt248Type
+    | typeof UnsignedInt5999Type;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Pixel formats
 
 /** {@link AlphaFormat} discards the red, green and blue components and reads just the alpha component. */
 export const AlphaFormat: 1021;
+
+export const RGBFormat: 1022;
 
 /** {@link RGBAFormat} is the default and reads the red, green, blue and alpha components. */
 export const RGBAFormat: 1023;
@@ -429,6 +433,7 @@ export const RGBAIntegerFormat: 1033;
  */
 export type PixelFormat =
     | typeof AlphaFormat
+    | typeof RGBFormat
     | typeof RGBAFormat
     | typeof LuminanceFormat
     | typeof LuminanceAlphaFormat
