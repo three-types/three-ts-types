@@ -1055,7 +1055,7 @@ index 88d0541..fdd703f 100644
  
      controls.rotateSpeed = 1.0;
 diff --git a/examples-testing/examples/misc_controls_transform.ts b/examples-testing/examples/misc_controls_transform.ts
-index abc4657..4254e08 100644
+index b1becec..a5ae46c 100644
 --- a/examples-testing/examples/misc_controls_transform.ts
 +++ b/examples-testing/examples/misc_controls_transform.ts
 @@ -3,8 +3,8 @@ import * as THREE from 'three';
@@ -1069,7 +1069,7 @@ index abc4657..4254e08 100644
  
  init();
  render();
-@@ -86,7 +86,9 @@ function init() {
+@@ -95,7 +95,9 @@ function init() {
              case 67: // C
                  const position = currentCamera.position.clone();
  
@@ -9302,7 +9302,7 @@ index 26c7c13..5999082 100644
      const texture = new THREE.VideoTexture(video);
      texture.colorSpace = THREE.SRGBColorSpace;
 diff --git a/examples-testing/examples/webgl_materials_wireframe.ts b/examples-testing/examples/webgl_materials_wireframe.ts
-index 569afc6..6424e8c 100644
+index 8adbd71..6424e8c 100644
 --- a/examples-testing/examples/webgl_materials_wireframe.ts
 +++ b/examples-testing/examples/webgl_materials_wireframe.ts
 @@ -8,7 +8,10 @@ const API = {
@@ -9317,7 +9317,7 @@ index 569afc6..6424e8c 100644
  
  init();
  
-@@ -50,12 +53,11 @@ function init() {
+@@ -50,8 +53,8 @@ function init() {
  
          const material2 = new THREE.ShaderMaterial({
              uniforms: { thickness: { value: API.thickness } },
@@ -9328,11 +9328,7 @@ index 569afc6..6424e8c 100644
              side: THREE.DoubleSide,
              alphaToCoverage: true, // only works when WebGLRenderer's "antialias" is set to "true"
          });
--        material2.extensions.derivatives = true;
- 
-         mesh2 = new THREE.Mesh(geometry, material2);
-         mesh2.position.set(40, 0, 0);
-@@ -83,7 +85,7 @@ function init() {
+@@ -82,7 +85,7 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -14235,7 +14231,7 @@ index fbbabfc..a1a82bd 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 028192e..48fb520 100644
+index 5316621..48fb520 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -4,15 +4,15 @@ import Stats from 'stats-gl';
@@ -14295,40 +14291,7 @@ index 028192e..48fb520 100644
      // camera
  
      const aspect = window.innerWidth / window.innerHeight;
-@@ -184,7 +184,7 @@ function init(forceWebGL = false) {
-     // gui
- 
-     gui = new GUI();
--    gui.add(api, 'webgpu', true).onChange(() => {
-+    gui.add(api, 'webgpu').onChange(() => {
-         init(!api.webgpu);
-     });
-     gui.add(api, 'count', 1, MAX_GEOMETRY_COUNT).step(1).onChange(initMesh);
-@@ -211,18 +211,13 @@ function init(forceWebGL = false) {
-     window.addEventListener('resize', onWindowResize);
- 
-     function onWindowResize() {
--        renderer.setSize(window.innerWidth, window.innerHeight);
--
--        const aspect = window.innerWidth / window.innerHeight;
--
--        camera.aspect = aspect;
--
--        const frustumHeight = camera.top - camera.bottom;
--
--        camera.left = (-frustumHeight * aspect) / 2;
--        camera.right = (frustumHeight * aspect) / 2;
-+        const width = window.innerWidth;
-+        const height = window.innerHeight;
- 
-+        camera.aspect = width / height;
-         camera.updateProjectionMatrix();
-+
-+        renderer.setSize(width, height);
-     }
- 
-     async function animate() {
-@@ -257,18 +252,26 @@ function init(forceWebGL = false) {
+@@ -252,18 +252,26 @@ function init(forceWebGL = false) {
  
  //
  
@@ -14443,7 +14406,7 @@ index 3a13ab5..2850b1b 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
-index 3021949..4ba3502 100644
+index 2540603..0d2dd79 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
 +++ b/examples-testing/examples/webgpu_parallax_uv.ts
 @@ -5,9 +5,9 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
