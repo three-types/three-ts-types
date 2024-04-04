@@ -53,8 +53,8 @@ export type Swizzable<T extends Node = Node> =
 export type ShaderNodeObject<T extends Node> =
     & T
     & {
-        [Key in keyof NodeElements]: NodeElements[Key] extends (node: T, ...args: infer Args) => infer R
-            ? (...args: Args) => R
+        [Key in keyof NodeElements]: T extends { [K in Key]: infer M } ? M
+            : NodeElements[Key] extends (node: T, ...args: infer Args) => infer R ? (...args: Args) => R
             : never;
     }
     & Swizzable<T>;
