@@ -234,6 +234,7 @@ export {
     materialLineScale,
     materialLineWidth,
     materialMetalness,
+    MaterialNodeScope,
     materialNormal,
     materialOpacity,
     materialPointWidth,
