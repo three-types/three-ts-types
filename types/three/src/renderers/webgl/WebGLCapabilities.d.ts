@@ -13,8 +13,8 @@ export class WebGLCapabilities {
     getMaxAnisotropy: () => number;
     getMaxPrecision: (precision: string) => string;
 
-    textureFormatReadable(textureFormat: PixelFormat): boolean;
-    textureTypeReadable(textureType: TextureDataType): boolean;
+    textureFormatReadable: (textureFormat: PixelFormat) => boolean;
+    textureTypeReadable: (textureType: TextureDataType) => boolean;
 
     precision: string;
     logarithmicDepthBuffer: boolean;
