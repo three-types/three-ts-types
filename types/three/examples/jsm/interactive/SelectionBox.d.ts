@@ -8,7 +8,7 @@ export class SelectionBox {
     endPoint: Vector3;
     scene: Scene;
     startPoint: Vector3;
-    instances: {} | {[key:string]:number[]};
+    instances: Record<string, number[]>;
 
     select(startPoint?: Vector3, endPoint?: Vector3): Mesh[];
     updateFrustum(startPoint: Vector3, endPoint: Vector3): void;
