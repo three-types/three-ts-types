@@ -33,6 +33,7 @@ export interface NodeMaterialParameters extends ShaderMaterialParameters {
 
     lightsNode?: ShaderNodeObject<LightsNode> | null | undefined;
     envNode?: ShaderNodeObject<Node> | null | undefined;
+    aoNode?: ShaderNodeObject<Node> | null | undefined;
 
     colorNode?: ShaderNodeObject<Node> | null | undefined;
     normalNode?: ShaderNodeObject<Node> | null | undefined;
@@ -61,6 +62,7 @@ export default class NodeMaterial extends ShaderMaterial {
 
     lightsNode: ShaderNodeObject<LightsNode> | null;
     envNode: ShaderNodeObject<Node> | null;
+    aoNode: ShaderNodeObject<Node> | null;
 
     colorNode: ShaderNodeObject<Node> | null;
     normalNode: ShaderNodeObject<Node> | null;
