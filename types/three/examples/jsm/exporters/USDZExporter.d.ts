@@ -8,7 +8,12 @@ export interface USDZExporterOptions {
 export class USDZExporter {
     constructor();
 
-    parse(scene: Object3D, onDone: (result: Uint8Array) => void, onError: (error: unknown) => void, options?: USDZExporterOptions): void;
+    parse(
+        scene: Object3D,
+        onDone: (result: Uint8Array) => void,
+        onError: (error: unknown) => void,
+        options?: USDZExporterOptions,
+    ): void;
 
     parseAsync(scene: Object3D, options?: USDZExporterOptions): Promise<Uint8Array>;
 }
