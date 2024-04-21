@@ -25,7 +25,7 @@ export interface RenderTargetOptions {
     depthBuffer?: boolean | undefined; // true;
     stencilBuffer?: boolean | undefined; // false;
     resolveStencilBuffer?: boolean | undefined; // true
-    depthTexture?: DepthTexture | undefined; // null
+    depthTexture?: DepthTexture | null | undefined; // null
     /**
      * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
      * @default 0
