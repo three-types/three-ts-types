@@ -20,3 +20,5 @@ export default class CodeNode extends Node {
 
 export const code: (code: string, includes?: CodeNodeInclude[], language?: string) => ShaderNodeObject<CodeNode>;
 export const js: (src: string, includes?: CodeNodeInclude[]) => ShaderNodeObject<CodeNode>;
+export const wgsl: (src: string, includes?: CodeNodeInclude[]) => ShaderNodeObject<CodeNode>;
+export const glsl: (src: string, includes?: CodeNodeInclude[]) => ShaderNodeObject<CodeNode>;
