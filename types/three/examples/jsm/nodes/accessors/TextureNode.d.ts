@@ -21,6 +21,8 @@ export default class TextureNode extends UniformNode<Texture> {
 
     getDefaultUV(): Node;
 
+    grad(gradeNodeX: NodeRepresentation, gradeNodeY: NodeRepresentation): ShaderNodeObject<Node>;
+
     clone(): this;
 }
 
