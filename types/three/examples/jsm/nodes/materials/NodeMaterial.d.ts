@@ -58,8 +58,6 @@ export default class NodeMaterial extends ShaderMaterial {
 
     normals: boolean;
 
-    colorSpaced: boolean;
-
     lightsNode: ShaderNodeObject<LightsNode> | null;
     envNode: ShaderNodeObject<Node> | null;
     aoNode: ShaderNodeObject<Node> | null;
