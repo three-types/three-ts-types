@@ -17,5 +17,5 @@ export default class PhysicalLightingModel extends LightingModel {
 
     constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean);
 
-    computeMultiscattering(singleScatter: Node, multiScatter: Node, specularF90?: Node): void;
+    computeMultiscattering(singleScatter: Node, multiScatter: Node, specularF90: Node): void;
 }
