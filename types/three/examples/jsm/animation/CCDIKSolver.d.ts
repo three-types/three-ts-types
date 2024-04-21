@@ -1,4 +1,4 @@
-import {LineBasicMaterial, MeshBasicMaterial, Object3D, SkinnedMesh, SphereGeometry, Vector3} from "three";
+import { LineBasicMaterial, MeshBasicMaterial, Object3D, SkinnedMesh, SphereGeometry, Vector3 } from "three";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface IK {
