@@ -35,37 +35,45 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
 
     // Properties from MeshPhysicalMaterial
     readonly isMeshPhysicalMaterial: true;
-    clearcoat: number;
+    anisotropyRotation: number;
+    anisotropyMap: Texture | null;
     clearcoatMap: Texture | null;
     clearcoatRoughness: number;
     clearcoatRoughnessMap: Texture | null;
     clearcoatNormalScale: Vector2;
     clearcoatNormalMap: Texture | null;
-    reflectivity: number;
     ior: number;
-    sheen: number;
+    get reflectivity(): number;
+    set reflectivity(reflectivity: number);
+    iridescenceMap: Texture | null;
+    iridescenceIOR: number;
+    iridescenceThicknessRange: [number, number];
+    iridescenceThicknessMap: Texture | null;
     sheenColor: Color;
     sheenColorMap: Texture | null;
     sheenRoughness: number;
     sheenRoughnessMap: Texture | null;
-    transmission: number;
     transmissionMap: Texture | null;
     thickness: number;
     thicknessMap: Texture | null;
     attenuationDistance: number;
     attenuationColor: Color;
     specularIntensity: number;
-    specularColor: Color;
     specularIntensityMap: Texture | null;
+    specularColor: Color;
     specularColorMap: Texture | null;
-    iridescenceMap: Texture | null;
-    iridescenceIOR: number;
-    iridescence: number;
-    iridescenceThicknessRange: [number, number];
-    iridescenceThicknessMap: Texture | null;
-    anisotropy?: number;
-    anisotropyRotation?: number;
-    anisotropyMap?: Texture | null;
+    get anisotropy(): number;
+    set anisotropy(value: number);
+    get clearcoat(): number;
+    set clearcoat(value: number);
+    get iridescence(): number;
+    set iridescence(value: number);
+    get dispersion(): number;
+    set dispersion(value: number);
+    get sheen(): number;
+    set sheen(value: number);
+    get transmission(): number;
+    set transmission(value: number);
 
     constructor(parameters?: MeshPhysicalNodeMaterialParameters);
 }
