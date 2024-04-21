@@ -10,6 +10,7 @@ export default class TextureNode extends UniformNode<Texture> {
     levelNode: ShaderNodeObject<Node> | null;
     compareNode: Node | null;
     depthNode: Node | null;
+    gradNode: Node | null;
 
     sampler: boolean;
     updateMatrix: boolean;
