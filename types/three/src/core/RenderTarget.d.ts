@@ -21,10 +21,11 @@ export interface RenderTargetOptions {
     type?: TextureDataType | undefined; // UnsignedByteType;
     anisotropy?: number | undefined; // 1;
     colorSpace?: ColorSpace | undefined;
-    internalFormat?: PixelFormatGPU | null | undefined;
+    internalFormat?: PixelFormatGPU | null | undefined; // null
     depthBuffer?: boolean | undefined; // true;
     stencilBuffer?: boolean | undefined; // false;
-    depthTexture?: DepthTexture | undefined;
+    resolveStencilBuffer?: boolean | undefined; // true
+    depthTexture?: DepthTexture | undefined; // null
     /**
      * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
      * @default 0
@@ -54,14 +55,20 @@ export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extend
     depthBuffer: boolean;
 
     /**
-     * @default true
+     * @default false
      */
     stencilBuffer: boolean;
 
     /**
+     * Defines whether the stencil buffer should be resolved when rendering into a multisampled render target.
+     * @default true
+     */
+    resolveStencilBuffer: boolean;
+
+    /**
      * @default null
      */
-    depthTexture: DepthTexture;
+    depthTexture: DepthTexture | null;
 
     /**
      * Defines the count of MSAA samples. Can only be used with WebGL 2. Default is **0**.
