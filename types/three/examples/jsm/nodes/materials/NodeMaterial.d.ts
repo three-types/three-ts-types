@@ -73,6 +73,7 @@ export default class NodeMaterial extends ShaderMaterial {
 
     depthNode: ShaderNodeObject<Node> | null;
     shadowNode: ShaderNodeObject<Node> | null;
+    shadowPositionNode: ShaderNodeObject<Node> | null;
 
     outputNode: ShaderNodeObject<Node> | null;
 
