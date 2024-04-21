@@ -23,7 +23,7 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     iridescenceIORNode: ShaderNodeObject<Node> | null;
     iridescenceThicknessNode: ShaderNodeObject<Node> | null;
 
-    iorNode?: ShaderNodeObject<Node> | null;
+    iorNode: ShaderNodeObject<Node> | null;
 
     specularIntensityNode: ShaderNodeObject<Node> | null;
     specularColorNode: ShaderNodeObject<Node> | null;

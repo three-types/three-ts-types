@@ -97,13 +97,13 @@ export default class Renderer {
 
     clippingPlanes: readonly Plane[];
 
+    toneMappingNode: Node | null;
+
     info: Info;
 
     shadowMap: { enabled: boolean; type: ShadowMapType };
 
     xr: { enabled: boolean };
-
-    toneMappingNode?: Node;
 
     localClippingEnabled?: boolean;
 
