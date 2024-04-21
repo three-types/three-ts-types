@@ -33,6 +33,8 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     attenuationDistanceNode: ShaderNodeObject<Node> | null;
     attenuationColorNode: ShaderNodeObject<Node> | null;
 
+    anisotropyNode: ShaderNodeObject<Node> | null;
+
     // Properties from MeshPhysicalMaterial
     readonly isMeshPhysicalMaterial: true;
     anisotropyRotation: number;

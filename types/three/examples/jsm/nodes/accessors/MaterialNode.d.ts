@@ -1,4 +1,6 @@
+import { Vector2 } from "three";
 import Node from "../core/Node.js";
+import UniformNode from "../core/UniformNode.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 export type MaterialNodeScope =
@@ -47,6 +49,7 @@ export default class MaterialNode extends Node {
     static ROTATION: "rotation";
     static SHEEN: "sheen";
     static SHEEN_ROUGHNESS: "sheenRoughness";
+    static ANISOTROPY: "anisotropy";
     static IRIDESCENCE: "iridescence";
     static IRIDESCENCE_IOR: "iridescenceIOR";
     static IRIDESCENCE_THICKNESS: "iridescenceThickness";
@@ -78,6 +81,7 @@ export const materialClearcoatNormal: ShaderNodeObject<MaterialNode>;
 export const materialRotation: ShaderNodeObject<MaterialNode>;
 export const materialSheen: ShaderNodeObject<MaterialNode>;
 export const materialSheenRoughness: ShaderNodeObject<MaterialNode>;
+export const materialAnisotropy: ShaderNodeObject<MaterialNode>;
 export const materialIridescence: ShaderNodeObject<MaterialNode>;
 export const materialIridescenceIOR: ShaderNodeObject<MaterialNode>;
 export const materialIridescenceThickness: ShaderNodeObject<MaterialNode>;
@@ -87,3 +91,4 @@ export const materialLineGapSize: ShaderNodeObject<MaterialNode>;
 export const materialLineWidth: ShaderNodeObject<MaterialNode>;
 export const materialLineDashOffset: ShaderNodeObject<MaterialNode>;
 export const materialPointWidth: ShaderNodeObject<MaterialNode>;
+export const materialAnisotropyVector: ShaderNodeObject<UniformNode<Vector2>>;

@@ -27,6 +27,10 @@ export { default as NodeUniform } from "./core/NodeUniform.js";
 export { default as NodeVar } from "./core/NodeVar.js";
 export { default as NodeVarying } from "./core/NodeVarying.js";
 export {
+    alphaT,
+    anisotropy,
+    anisotropyB,
+    anisotropyT,
     clearcoat,
     clearcoatRoughness,
     dashSize,
@@ -190,7 +194,7 @@ export {
 export * from "./shadernode/ShaderNode.js";
 
 // accessors
-export { parallaxDirection, parallaxUV, TBNViewMatrix } from "./accessors/AccessorsUtils.js";
+export { parallaxDirection, parallaxUV, TBNViewMatrix, transformedBentNormalView } from "./accessors/AccessorsUtils.js";
 export { batch, default as BatchNode } from "./accessors/BatchNode.js";
 export {
     bitangentGeometry,
@@ -220,6 +224,8 @@ export { default as InstanceNode, instance } from "./accessors/InstanceNode.js";
 export {
     default as MaterialNode,
     materialAlphaTest,
+    materialAnisotropy,
+    materialAnisotropyVector,
     materialClearcoat,
     materialClearcoatNormal,
     materialClearcoatRoughness,
