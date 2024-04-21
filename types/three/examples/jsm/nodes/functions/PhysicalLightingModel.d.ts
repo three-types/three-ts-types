@@ -24,5 +24,5 @@ export default class PhysicalLightingModel extends LightingModel {
         transmission?: boolean,
     );
 
-    computeMultiscattering(singleScatter: Node, multiScatter: Node, specularF90?: Node): void;
+    computeMultiscattering(singleScatter: Node, multiScatter: Node, specularF90: Node): void;
 }
