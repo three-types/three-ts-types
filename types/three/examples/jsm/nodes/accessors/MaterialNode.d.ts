@@ -8,10 +8,10 @@ export type MaterialNodeScope =
     | typeof MaterialNode.COLOR
     | typeof MaterialNode.OPACITY
     | typeof MaterialNode.SHININESS
-    | typeof MaterialNode.SPECULAR_COLOR
+    | typeof MaterialNode.SPECULAR
     | typeof MaterialNode.SPECULAR_STRENGTH
     | typeof MaterialNode.SPECULAR_INTENSITY
-    | typeof MaterialNode.SPECULAR_COLOR2
+    | typeof MaterialNode.SPECULAR_COLOR
     | typeof MaterialNode.REFLECTIVITY
     | typeof MaterialNode.ROUGHNESS
     | typeof MaterialNode.METALNESS
@@ -44,10 +44,10 @@ export default class MaterialNode extends Node {
     static COLOR: "color";
     static OPACITY: "opacity";
     static SHININESS: "shininess";
-    static SPECULAR_COLOR: "specular";
+    static SPECULAR: "specular";
     static SPECULAR_STRENGTH: "specularStrength";
     static SPECULAR_INTENSITY: "specularIntensity";
-    static SPECULAR_COLOR2: "specularColor";
+    static SPECULAR_COLOR: "specularColor";
     static REFLECTIVITY: "reflectivity";
     static ROUGHNESS: "roughness";
     static METALNESS: "metalness";
@@ -84,10 +84,10 @@ export const materialColor: ShaderNodeObject<MaterialNode>;
 export const materialShininess: ShaderNodeObject<MaterialNode>;
 export const materialEmissive: ShaderNodeObject<MaterialNode>;
 export const materialOpacity: ShaderNodeObject<MaterialNode>;
-export const materialSpecularColor: ShaderNodeObject<MaterialNode>;
+export const materialSpecular: ShaderNodeObject<MaterialNode>;
 
 export const materialSpecularIntensity: ShaderNodeObject<MaterialNode>;
-export const materialSpecularColor2: ShaderNodeObject<MaterialNode>;
+export const materialSpecularColor: ShaderNodeObject<MaterialNode>;
 
 export const materialSpecularStrength: ShaderNodeObject<MaterialNode>;
 export const materialReflectivity: ShaderNodeObject<MaterialNode>;

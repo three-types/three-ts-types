@@ -250,7 +250,7 @@ export {
     materialSheen,
     materialSheenRoughness,
     materialShininess,
-    materialSpecularColor,
+    materialSpecular,
     materialSpecularStrength,
 } from "./accessors/MaterialNode.js";
 export { default as MaterialReferenceNode, materialReference } from "./accessors/MaterialReferenceNode.js";
