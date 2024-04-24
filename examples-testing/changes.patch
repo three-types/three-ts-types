@@ -10464,384 +10464,126 @@ index 0bfb6550..89c4a5c1 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_postprocessing_crossfade.ts b/examples-testing/examples/webgl_postprocessing_crossfade.ts
-index d3203e35..7b7f06f6 100644
+index 711be871..ec52f236 100644
 --- a/examples-testing/examples/webgl_postprocessing_crossfade.ts
 +++ b/examples-testing/examples/webgl_postprocessing_crossfade.ts
-@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import TWEEN from 'three/addons/libs/tween.module.js';
+@@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+ import { RenderTransitionPass } from 'three/addons/postprocessing/RenderTransitionPass.js';
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
  
--let container, stats;
--let renderer;
--let transition;
-+let container: HTMLElement, stats: Stats;
-+let renderer: THREE.WebGLRenderer;
-+let transition: Transition;
+-let stats;
+-let renderer, composer, renderTransitionPass;
++let stats: Stats;
++let renderer: THREE.WebGLRenderer, composer: EffectComposer, renderTransitionPass: RenderTransitionPass;
  
- const transitionParams = {
-     useTexture: true,
-@@ -25,7 +25,7 @@ animate();
- function init() {
-     initGUI();
+-const textures = [];
++const textures: THREE.Texture[] = [];
+ const clock = new THREE.Clock();
  
--    container = document.getElementById('container');
-+    container = document.getElementById('container')!;
+ const params = {
+@@ -23,6 +23,55 @@ const params = {
+     threshold: 0.1,
+ };
  
-     renderer = new THREE.WebGLRenderer({ antialias: true });
-     renderer.setPixelRatio(window.devicePixelRatio);
-@@ -77,7 +77,7 @@ function render() {
-     transition.render(clock.getDelta());
++class FXScene {
++    rotationSpeed: THREE.Vector3;
++
++    scene: THREE.Scene;
++    camera: THREE.PerspectiveCamera;
++    mesh: THREE.InstancedMesh;
++
++    render: (delta: number) => void;
++    resize: () => void;
++
++    constructor(geometry: THREE.BufferGeometry, rotationSpeed: THREE.Vector3, backgroundColor: number) {
++        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
++        camera.position.z = 20;
++
++        // Setup scene
++        const scene = new THREE.Scene();
++        scene.background = new THREE.Color(backgroundColor);
++        scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
++
++        const light = new THREE.DirectionalLight(0xffffff, 3);
++        light.position.set(0, 1, 4);
++        scene.add(light);
++
++        this.rotationSpeed = rotationSpeed;
++
++        const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
++        const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
++        const mesh = generateInstancedMesh(geometry, material, 500);
++        scene.add(mesh);
++
++        this.scene = scene;
++        this.camera = camera;
++        this.mesh = mesh;
++
++        this.render = function (delta) {
++            if (params.sceneAnimate) {
++                mesh.rotation.x += this.rotationSpeed.x * delta;
++                mesh.rotation.y += this.rotationSpeed.y * delta;
++                mesh.rotation.z += this.rotationSpeed.z * delta;
++            }
++        };
++
++        this.resize = function () {
++            camera.aspect = window.innerWidth / window.innerHeight;
++            camera.updateProjectionMatrix();
++        };
++    }
++}
++
+ const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
+ const fxSceneB = new FXScene(new THREE.IcosahedronGeometry(1, 1), new THREE.Vector3(0, 0.2, 0.1), 0x000000);
+ 
+@@ -139,45 +188,7 @@ function render() {
+     }
  }
  
+-function FXScene(geometry, rotationSpeed, backgroundColor) {
+-    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+-    camera.position.z = 20;
+-
+-    // Setup scene
+-    const scene = new THREE.Scene();
+-    scene.background = new THREE.Color(backgroundColor);
+-    scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
+-
+-    const light = new THREE.DirectionalLight(0xffffff, 3);
+-    light.position.set(0, 1, 4);
+-    scene.add(light);
+-
+-    this.rotationSpeed = rotationSpeed;
+-
+-    const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
+-    const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
+-    const mesh = generateInstancedMesh(geometry, material, 500);
+-    scene.add(mesh);
+-
+-    this.scene = scene;
+-    this.camera = camera;
+-    this.mesh = mesh;
+-
+-    this.render = function (delta) {
+-        if (params.sceneAnimate) {
+-            mesh.rotation.x += this.rotationSpeed.x * delta;
+-            mesh.rotation.y += this.rotationSpeed.y * delta;
+-            mesh.rotation.z += this.rotationSpeed.z * delta;
+-        }
+-    };
+-
+-    this.resize = function () {
+-        camera.aspect = window.innerWidth / window.innerHeight;
+-        camera.updateProjectionMatrix();
+-    };
+-}
+-
 -function generateInstancedMesh(geometry, material, count) {
 +function generateInstancedMesh(geometry: THREE.BufferGeometry, material: THREE.MeshPhongMaterial, count: number) {
      const mesh = new THREE.InstancedMesh(geometry, material, count);
  
      const dummy = new THREE.Object3D();
-@@ -111,192 +111,207 @@ function generateInstancedMesh(geometry, material, count) {
-     return mesh;
- }
- 
--function FXScene(geometry, rotationSpeed, clearColor) {
--    this.clearColor = clearColor;
-+class FXScene {
-+    clearColor: number;
-+    rotationSpeed: THREE.Vector3;
-+    fbo: THREE.WebGLRenderTarget;
-+    render: (delta: number, rtt: boolean) => void;
- 
--    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
--    camera.position.z = 20;
-+    constructor(geometry: THREE.BufferGeometry, rotationSpeed: THREE.Vector3, clearColor: number) {
-+        this.clearColor = clearColor;
- 
--    // Setup scene
--    const scene = new THREE.Scene();
--    scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
-+        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-+        camera.position.z = 20;
- 
--    const light = new THREE.DirectionalLight(0xffffff, 3);
--    light.position.set(0, 1, 4);
--    scene.add(light);
-+        // Setup scene
-+        const scene = new THREE.Scene();
-+        scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
- 
--    this.rotationSpeed = rotationSpeed;
-+        const light = new THREE.DirectionalLight(0xffffff, 3);
-+        light.position.set(0, 1, 4);
-+        scene.add(light);
- 
--    const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
--    const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
--    const mesh = generateInstancedMesh(geometry, material, 500);
--    scene.add(mesh);
-+        this.rotationSpeed = rotationSpeed;
- 
--    this.fbo = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: THREE.HalfFloatType });
-+        const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
-+        const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
-+        const mesh = generateInstancedMesh(geometry, material, 500);
-+        scene.add(mesh);
- 
--    this.render = function (delta, rtt) {
--        mesh.rotation.x += delta * this.rotationSpeed.x;
--        mesh.rotation.y += delta * this.rotationSpeed.y;
--        mesh.rotation.z += delta * this.rotationSpeed.z;
-+        this.fbo = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, { type: THREE.HalfFloatType });
- 
--        renderer.setClearColor(this.clearColor);
-+        this.render = function (delta, rtt) {
-+            mesh.rotation.x += delta * this.rotationSpeed.x;
-+            mesh.rotation.y += delta * this.rotationSpeed.y;
-+            mesh.rotation.z += delta * this.rotationSpeed.z;
- 
--        if (rtt) {
--            renderer.setRenderTarget(this.fbo);
--            renderer.clear();
--            renderer.render(scene, camera);
--        } else {
--            renderer.setRenderTarget(null);
--            renderer.render(scene, camera);
--        }
--    };
-+            renderer.setClearColor(this.clearColor);
-+
-+            if (rtt) {
-+                renderer.setRenderTarget(this.fbo);
-+                renderer.clear();
-+                renderer.render(scene, camera);
-+            } else {
-+                renderer.setRenderTarget(null);
-+                renderer.render(scene, camera);
-+            }
-+        };
-+    }
- }
- 
--function Transition(sceneA, sceneB) {
--    const scene = new THREE.Scene();
-+class Transition {
-+    needsTextureChange: boolean;
-+    setTextureThreshold: (value: number) => void;
-+    useTexture: (value: boolean) => void;
-+    setTexture: (value: number) => void;
-+    render: (delta: number) => void;
- 
--    const width = window.innerWidth;
--    const height = window.innerHeight;
-+    constructor(sceneA: FXScene, sceneB: FXScene) {
-+        const scene = new THREE.Scene();
- 
--    const camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, -10, 10);
-+        const width = window.innerWidth;
-+        const height = window.innerHeight;
- 
--    const textures = [];
-+        const camera = new THREE.OrthographicCamera(width / -2, width / 2, height / 2, height / -2, -10, 10);
- 
--    const loader = new THREE.TextureLoader();
-+        const textures: THREE.Texture[] = [];
- 
--    for (let i = 0; i < 6; i++) {
--        textures[i] = loader.load('textures/transition/transition' + (i + 1) + '.png');
--    }
-+        const loader = new THREE.TextureLoader();
- 
--    const material = new THREE.ShaderMaterial({
--        uniforms: {
--            tDiffuse1: {
--                value: null,
--            },
--            tDiffuse2: {
--                value: null,
--            },
--            mixRatio: {
--                value: 0.0,
--            },
--            threshold: {
--                value: 0.1,
--            },
--            useTexture: {
--                value: 1,
--            },
--            tMixTexture: {
--                value: textures[0],
-+        for (let i = 0; i < 6; i++) {
-+            textures[i] = loader.load('textures/transition/transition' + (i + 1) + '.png');
-+        }
-+
-+        const material = new THREE.ShaderMaterial({
-+            uniforms: {
-+                tDiffuse1: {
-+                    value: null,
-+                },
-+                tDiffuse2: {
-+                    value: null,
-+                },
-+                mixRatio: {
-+                    value: 0.0,
-+                },
-+                threshold: {
-+                    value: 0.1,
-+                },
-+                useTexture: {
-+                    value: 1,
-+                },
-+                tMixTexture: {
-+                    value: textures[0],
-+                },
-             },
--        },
--        vertexShader: [
--            'varying vec2 vUv;',
-+            vertexShader: [
-+                'varying vec2 vUv;',
- 
--            'void main() {',
-+                'void main() {',
- 
--            'vUv = vec2( uv.x, uv.y );',
--            'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
-+                'vUv = vec2( uv.x, uv.y );',
-+                'gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );',
- 
--            '}',
--        ].join('\n'),
--        fragmentShader: [
--            'uniform float mixRatio;',
-+                '}',
-+            ].join('\n'),
-+            fragmentShader: [
-+                'uniform float mixRatio;',
- 
--            'uniform sampler2D tDiffuse1;',
--            'uniform sampler2D tDiffuse2;',
--            'uniform sampler2D tMixTexture;',
-+                'uniform sampler2D tDiffuse1;',
-+                'uniform sampler2D tDiffuse2;',
-+                'uniform sampler2D tMixTexture;',
- 
--            'uniform int useTexture;',
--            'uniform float threshold;',
-+                'uniform int useTexture;',
-+                'uniform float threshold;',
- 
--            'varying vec2 vUv;',
-+                'varying vec2 vUv;',
- 
--            'void main() {',
-+                'void main() {',
- 
--            '	vec4 texel1 = texture2D( tDiffuse1, vUv );',
--            '	vec4 texel2 = texture2D( tDiffuse2, vUv );',
-+                '	vec4 texel1 = texture2D( tDiffuse1, vUv );',
-+                '	vec4 texel2 = texture2D( tDiffuse2, vUv );',
- 
--            '	if (useTexture==1) {',
-+                '	if (useTexture==1) {',
- 
--            '		vec4 transitionTexel = texture2D( tMixTexture, vUv );',
--            '		float r = mixRatio * (1.0 + threshold * 2.0) - threshold;',
--            '		float mixf=clamp((transitionTexel.r - r)*(1.0/threshold), 0.0, 1.0);',
-+                '		vec4 transitionTexel = texture2D( tMixTexture, vUv );',
-+                '		float r = mixRatio * (1.0 + threshold * 2.0) - threshold;',
-+                '		float mixf=clamp((transitionTexel.r - r)*(1.0/threshold), 0.0, 1.0);',
- 
--            '		gl_FragColor = mix( texel1, texel2, mixf );',
-+                '		gl_FragColor = mix( texel1, texel2, mixf );',
- 
--            '	} else {',
-+                '	} else {',
- 
--            '		gl_FragColor = mix( texel2, texel1, mixRatio );',
-+                '		gl_FragColor = mix( texel2, texel1, mixRatio );',
- 
--            '	}',
-+                '	}',
- 
--            '	#include <tonemapping_fragment>',
--            '	#include <colorspace_fragment>',
-+                '	#include <tonemapping_fragment>',
-+                '	#include <colorspace_fragment>',
- 
--            '}',
--        ].join('\n'),
--    });
-+                '}',
-+            ].join('\n'),
-+        });
- 
--    const geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
--    const mesh = new THREE.Mesh(geometry, material);
--    scene.add(mesh);
-+        const geometry = new THREE.PlaneGeometry(window.innerWidth, window.innerHeight);
-+        const mesh = new THREE.Mesh(geometry, material);
-+        scene.add(mesh);
- 
--    material.uniforms.tDiffuse1.value = sceneA.fbo.texture;
--    material.uniforms.tDiffuse2.value = sceneB.fbo.texture;
-+        material.uniforms.tDiffuse1.value = sceneA.fbo.texture;
-+        material.uniforms.tDiffuse2.value = sceneB.fbo.texture;
- 
--    new TWEEN.Tween(transitionParams).to({ transition: 1 }, 1500).repeat(Infinity).delay(2000).yoyo(true).start();
-+        new TWEEN.Tween(transitionParams).to({ transition: 1 }, 1500).repeat(Infinity).delay(2000).yoyo(true).start();
- 
--    this.needsTextureChange = false;
-+        this.needsTextureChange = false;
- 
--    this.setTextureThreshold = function (value) {
--        material.uniforms.threshold.value = value;
--    };
-+        this.setTextureThreshold = function (value) {
-+            material.uniforms.threshold.value = value;
-+        };
- 
--    this.useTexture = function (value) {
--        material.uniforms.useTexture.value = value ? 1 : 0;
--    };
-+        this.useTexture = function (value) {
-+            material.uniforms.useTexture.value = value ? 1 : 0;
-+        };
- 
--    this.setTexture = function (i) {
--        material.uniforms.tMixTexture.value = textures[i];
--    };
-+        this.setTexture = function (i) {
-+            material.uniforms.tMixTexture.value = textures[i];
-+        };
- 
--    this.render = function (delta) {
--        // Transition animation
--        if (transitionParams.animate) {
--            TWEEN.update();
-+        this.render = function (delta) {
-+            // Transition animation
-+            if (transitionParams.animate) {
-+                TWEEN.update();
- 
--            // Change the current alpha texture after each transition
--            if (transitionParams.cycle) {
--                if (transitionParams.transition == 0 || transitionParams.transition == 1) {
--                    if (this.needsTextureChange) {
--                        transitionParams.texture = (transitionParams.texture + 1) % textures.length;
--                        material.uniforms.tMixTexture.value = textures[transitionParams.texture];
--                        this.needsTextureChange = false;
-+                // Change the current alpha texture after each transition
-+                if (transitionParams.cycle) {
-+                    if (transitionParams.transition == 0 || transitionParams.transition == 1) {
-+                        if (this.needsTextureChange) {
-+                            transitionParams.texture = (transitionParams.texture + 1) % textures.length;
-+                            material.uniforms.tMixTexture.value = textures[transitionParams.texture];
-+                            this.needsTextureChange = false;
-+                        }
-+                    } else {
-+                        this.needsTextureChange = true;
-                     }
-                 } else {
-                     this.needsTextureChange = true;
-                 }
--            } else {
--                this.needsTextureChange = true;
-             }
--        }
- 
--        material.uniforms.mixRatio.value = transitionParams.transition;
-+            material.uniforms.mixRatio.value = transitionParams.transition;
- 
--        // Prevent render both scenes when it's not necessary
--        if (transitionParams.transition == 0) {
--            sceneB.render(delta, false);
--        } else if (transitionParams.transition == 1) {
--            sceneA.render(delta, false);
--        } else {
--            // When 0<transition<1 render transition between two scenes
-+            // Prevent render both scenes when it's not necessary
-+            if (transitionParams.transition == 0) {
-+                sceneB.render(delta, false);
-+            } else if (transitionParams.transition == 1) {
-+                sceneA.render(delta, false);
-+            } else {
-+                // When 0<transition<1 render transition between two scenes
- 
--            sceneA.render(delta, true);
--            sceneB.render(delta, true);
-+                sceneA.render(delta, true);
-+                sceneB.render(delta, true);
- 
--            renderer.setRenderTarget(null);
--            renderer.clear();
--            renderer.render(scene, camera);
--        }
--    };
-+                renderer.setRenderTarget(null);
-+                renderer.clear();
-+                renderer.render(scene, camera);
-+            }
-+        };
-+    }
- }
 diff --git a/examples-testing/examples/webgl_postprocessing_fxaa.ts b/examples-testing/examples/webgl_postprocessing_fxaa.ts
 index 14b6a357..c6e40d56 100644
 --- a/examples-testing/examples/webgl_postprocessing_fxaa.ts
