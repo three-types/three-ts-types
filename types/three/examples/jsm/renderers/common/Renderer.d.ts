@@ -277,6 +277,7 @@ export default class Renderer {
         y: number,
         width: number,
         height: number,
+        index?: number,
     ): Promise<Float32Array | Uint16Array | Uint8Array | Int8Array | Int16Array | Uint32Array | Int32Array>;
 
     renderObject(
