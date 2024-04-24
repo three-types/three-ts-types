@@ -9,6 +9,7 @@ import {
     PointsMaterial,
     ShaderMaterial,
     ShaderMaterialParameters,
+    ShadowMaterial,
     SpriteMaterial,
 } from "three";
 import ClippingNode from "../accessors/ClippingNode.js";
@@ -24,6 +25,7 @@ import MeshPhongNodeMaterial from "./MeshPhongNodeMaterial.js";
 import MeshPhysicalNodeMaterial from "./MeshPhysicalNodeMaterial.js";
 import MeshStandardNodeMaterial from "./MeshStandardNodeMaterial.js";
 import PointsNodeMaterial from "./PointsNodeMaterial.js";
+import ShadowNodeMaterial from "./ShadowNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
 
 export interface NodeMaterialParameters extends ShaderMaterialParameters {
@@ -105,6 +107,7 @@ export default class NodeMaterial extends ShaderMaterial {
     static fromMaterial(material: MeshPhysicalMaterial): MeshPhysicalNodeMaterial;
     static fromMaterial(material: MeshStandardMaterial): MeshStandardNodeMaterial;
     static fromMaterial(material: PointsMaterial): PointsNodeMaterial;
+    static fromMaterial(material: ShadowMaterial): ShadowNodeMaterial;
     static fromMaterial(material: SpriteMaterial): SpriteNodeMaterial;
     static fromMaterial(material: NodeMaterial): NodeMaterial;
     static fromMaterial(material: Material): NodeMaterial;
