@@ -1,5 +1,5 @@
-import { FullScreenQuad, Pass } from './Pass.js';
-import { Camera, Object3D, ShaderMaterial, Texture, WebGLRenderer, WebGLRenderTarget } from 'three';
+import { Camera, Object3D, ShaderMaterial, Texture, WebGLRenderer, WebGLRenderTarget } from "three";
+import { FullScreenQuad, Pass } from "./Pass.js";
 
 export class RenderTransitionPass extends Pass {
     material: ShaderMaterial;
