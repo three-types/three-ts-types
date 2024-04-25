@@ -265,6 +265,8 @@ export default class Renderer {
      */
     computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
 
+    hasFeatureAsync(name: string): Promise<boolean>;
+
     hasFeature(name: string): boolean;
 
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
