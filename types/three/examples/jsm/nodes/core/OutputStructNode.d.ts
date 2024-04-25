@@ -1,5 +1,5 @@
-import { ShaderNodeObject } from "../shadernode/ShaderNode";
-import Node from "./Node";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import Node from "./Node.js";
 
 export default class OutputStructNode extends Node {
     members: Node[];
