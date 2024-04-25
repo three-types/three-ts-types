@@ -9,4 +9,4 @@ export default class OutputStructNode extends Node {
     constructor(...members: Node[]);
 }
 
-export const outputStruct: ShaderNodeObject<OutputStructNode>;
+export const outputStruct: (...members: Node[]) => ShaderNodeObject<OutputStructNode>;

@@ -252,9 +252,9 @@ export default class Renderer {
 
     dispose(): void;
 
-    setRenderTarget(renderTarget: RenderTarget, activeCubeFace?: number, activeMipmapLevel?: number): void;
+    setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
 
-    getRenderTarget(): RenderTarget;
+    getRenderTarget(): RenderTarget | null;
 
     setRenderObjectFunction(renderObjectFunction: () => {}): void;
 
