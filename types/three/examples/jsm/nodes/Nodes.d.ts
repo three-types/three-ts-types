@@ -26,6 +26,7 @@ export { default as NodeKeywords } from "./core/NodeKeywords.js";
 export { default as NodeUniform } from "./core/NodeUniform.js";
 export { default as NodeVar } from "./core/NodeVar.js";
 export { default as NodeVarying } from "./core/NodeVarying.js";
+export { default as OutputStructNode, outputStruct } from "./core/OutputStructNode.js";
 export {
     alphaT,
     anisotropy,
