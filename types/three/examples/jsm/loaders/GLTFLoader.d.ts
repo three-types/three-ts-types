@@ -19,6 +19,7 @@ import {
     TextureLoader,
 } from "three";
 
+import { MeshoptDecoder } from "../libs/meshopt_decoder.module.js";
 import { DRACOLoader } from "./DRACOLoader.js";
 import { KTX2Loader } from "./KTX2Loader.js";
 
@@ -43,15 +44,15 @@ export class GLTFLoader extends Loader<GLTF> {
     constructor(manager?: LoadingManager);
     dracoLoader: DRACOLoader | null;
     ktx2Loader: KTX2Loader | null;
-    meshoptDecoder: /* MeshoptDecoder */ any;
+    meshoptDecoder: typeof MeshoptDecoder | null;
 
     setDRACOLoader(dracoLoader: DRACOLoader): GLTFLoader;
 
     register(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
     unregister(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
 
-    setKTX2Loader(ktx2Loader: KTX2Loader): GLTFLoader;
-    setMeshoptDecoder(meshoptDecoder: /* MeshoptDecoder */ any): GLTFLoader;
+    setKTX2Loader(ktx2Loader: KTX2Loader | null): GLTFLoader;
+    setMeshoptDecoder(meshoptDecoder: typeof MeshoptDecoder | null): GLTFLoader;
 
     parse(
         data: ArrayBuffer | string,
