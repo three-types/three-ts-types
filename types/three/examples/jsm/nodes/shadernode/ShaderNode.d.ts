@@ -2,6 +2,7 @@ import { AnyObject, NodeTypeOption, SwizzleOption } from "../core/constants.js";
 import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
+import StackNode from "../core/StackNode.js";
 
 export interface NodeElements {
     append: typeof append;
@@ -204,6 +205,15 @@ export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
 export function tslFn<T extends AnyObject, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
 ): (args: ProxiedObject<T>) => R;
+
+export const setCurrentStack: (stack: StackNode | null) => void;
+
+export const getCurrentStack: () => StackNode | null;
+
+export const If: (
+    boolNode: Node,
+    method: (inputs: NodeObjects<unknown>, builder: NodeBuilder) => NodeRepresentation,
+) => void;
 
 export function append(node: Node): Node;
 
