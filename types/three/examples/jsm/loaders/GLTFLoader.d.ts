@@ -41,18 +41,18 @@ export interface GLTF {
 }
 
 export class GLTFLoader extends Loader<GLTF> {
-    constructor(manager?: LoadingManager);
     dracoLoader: DRACOLoader | null;
     ktx2Loader: KTX2Loader | null;
     meshoptDecoder: typeof MeshoptDecoder | null;
 
-    setDRACOLoader(dracoLoader: DRACOLoader): GLTFLoader;
+    constructor(manager?: LoadingManager);
 
-    register(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
-    unregister(callback: (parser: GLTFParser) => GLTFLoaderPlugin): GLTFLoader;
+    setDRACOLoader(dracoLoader: DRACOLoader): this;
+    setKTX2Loader(ktx2Loader: KTX2Loader | null): this;
+    setMeshoptDecoder(meshoptDecoder: typeof MeshoptDecoder | null): this;
 
-    setKTX2Loader(ktx2Loader: KTX2Loader | null): GLTFLoader;
-    setMeshoptDecoder(meshoptDecoder: typeof MeshoptDecoder | null): GLTFLoader;
+    register(callback: (parser: GLTFParser) => GLTFLoaderPlugin): this;
+    unregister(callback: (parser: GLTFParser) => GLTFLoaderPlugin): this;
 
     parse(
         data: ArrayBuffer | string,
