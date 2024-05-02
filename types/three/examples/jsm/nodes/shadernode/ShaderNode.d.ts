@@ -210,10 +210,7 @@ export const setCurrentStack: (stack: StackNode | null) => void;
 
 export const getCurrentStack: () => StackNode | null;
 
-export const If: (
-    boolNode: Node,
-    method: (inputs: NodeObjects<unknown>, builder: NodeBuilder) => NodeRepresentation,
-) => void;
+export const If: (boolNode: Node, method: () => void) => void;
 
 export function append(node: Node): Node;
 
