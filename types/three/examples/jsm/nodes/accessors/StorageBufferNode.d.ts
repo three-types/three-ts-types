@@ -1,3 +1,5 @@
+import StorageBufferAttribute from "../../renderers/common/StorageBufferAttribute.js";
+import StorageInstancedBufferAttribute from "../../renderers/common/StorageInstancedBufferAttribute.js";
 import { NodeTypeOption } from "../core/constants.js";
 import { NodeOrType, NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import StorageArrayElementNode from "../utils/StoargeArrayElementNode.js";
@@ -7,7 +9,11 @@ export default class StorageBufferNode extends BufferNode {
     readonly isStorageBufferNode: true;
     bufferObject: boolean;
 
-    constructor(value: ArrayLike<number>, bufferType: NodeTypeOption, bufferCount?: number);
+    constructor(
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute,
+        bufferType: NodeTypeOption,
+        bufferCount?: number,
+    );
 
     element(indexNode: NodeRepresentation): ShaderNodeObject<StorageArrayElementNode>;
 
@@ -15,12 +21,12 @@ export default class StorageBufferNode extends BufferNode {
 }
 
 export const storage: (
-    value: ArrayLike<number>,
+    value: StorageBufferAttribute | StorageInstancedBufferAttribute,
     nodeOrType: NodeOrType,
     count: number,
 ) => ShaderNodeObject<StorageBufferNode>;
 export const storageObject: (
-    value: ArrayLike<number>,
+    value: StorageBufferAttribute | StorageInstancedBufferAttribute,
     nodeOrType: NodeOrType,
     count: number,
 ) => ShaderNodeObject<StorageBufferNode>;
