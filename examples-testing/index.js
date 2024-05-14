@@ -83,7 +83,7 @@ const exceptionList = [
     'webgpu_rtt',
     'webgpu_sandbox',
     'webgpu_shadertoy',
-    // 'webgpu_shadowmap',
+    'webgpu_shadowmap',
     'webgpu_skinning',
     'webgpu_skinning_instancing',
     'webgpu_skinning_points',
