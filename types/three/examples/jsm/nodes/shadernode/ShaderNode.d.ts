@@ -58,6 +58,12 @@ export type ShaderNodeObject<T extends Node> =
             : NodeElements[Key] extends (node: T, ...args: infer Args) => infer R ? (...args: Args) => R
             : never;
     }
+    & {
+        [Key in keyof NodeElements as `${Key}Assign`]: T extends { [K in Key]: infer M } ? M
+            : NodeElements[Key] extends (node: T, ...args: infer Args) => unknown
+                ? (...args: Args) => ShaderNodeObject<T>
+            : never;
+    }
     & Swizzable<T>;
 
 /** anything that can be passed to {@link nodeObject} and returns a proxy */
