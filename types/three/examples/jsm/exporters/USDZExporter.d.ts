@@ -1,6 +1,8 @@
 import { Object3D } from "three";
 
 export interface USDZExporterOptions {
+    ar?: { anchoring: { type: "plane" }; planeAnchoring: { alignment: "horizontal" | "vertical" | "any" } };
+    includeAnchoringProperties?: boolean;
     quickLookCompatible?: boolean;
     maxTextureSize?: number;
 }
