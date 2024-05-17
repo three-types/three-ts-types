@@ -560,7 +560,7 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * @param intersects
      * @defaultValue `() => {}`
      */
-    raycast(raycaster: Raycaster, intersects: Intersection[]): void;
+    raycast(raycaster: Raycaster, intersects: Intersection[]): boolean | void;
 
     /**
      * Executes the callback on this object and all descendants.
