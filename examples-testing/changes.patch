@@ -3039,7 +3039,7 @@ index 0b8df6ec..dbb23e05 100644
      //
  
 diff --git a/examples-testing/examples/webgl_camera.ts b/examples-testing/examples/webgl_camera.ts
-index d78fbec0..6b84a2ce 100644
+index f3d66360..4235f508 100644
 --- a/examples-testing/examples/webgl_camera.ts
 +++ b/examples-testing/examples/webgl_camera.ts
 @@ -6,11 +6,11 @@ let SCREEN_WIDTH = window.innerWidth;
@@ -3069,7 +3069,7 @@ index d78fbec0..6b84a2ce 100644
          case 79 /*O*/:
              activeCamera = cameraOrtho;
 diff --git a/examples-testing/examples/webgl_camera_array.ts b/examples-testing/examples/webgl_camera_array.ts
-index ffef3a77..298acc42 100644
+index 8b10e27c..11295c5f 100644
 --- a/examples-testing/examples/webgl_camera_array.ts
 +++ b/examples-testing/examples/webgl_camera_array.ts
 @@ -1,7 +1,7 @@
@@ -3269,7 +3269,7 @@ index f1d44000..7f149db1 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgl_clipping.ts b/examples-testing/examples/webgl_clipping.ts
-index 219a7049..50a9d90a 100644
+index cde10c7d..6ab3ba65 100644
 --- a/examples-testing/examples/webgl_clipping.ts
 +++ b/examples-testing/examples/webgl_clipping.ts
 @@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3285,8 +3285,8 @@ index 219a7049..50a9d90a 100644
 +    stats: Stats;
  
  init();
- animate();
-@@ -97,8 +102,8 @@ function init() {
+ 
+@@ -93,8 +98,8 @@ function init() {
  
      // ***** Clipping setup (renderer): *****
      const globalPlanes = [globalPlane],
@@ -3296,8 +3296,8 @@ index 219a7049..50a9d90a 100644
 +    renderer.clippingPlanes = Empty as THREE.Plane[]; // GUI sets it to globalPlanes
      renderer.localClippingEnabled = true;
  
-     // Controls
-@@ -142,7 +147,7 @@ function init() {
+     // Stats
+@@ -143,7 +148,7 @@ function init() {
                  return renderer.clippingPlanes !== Empty;
              },
              set Enabled(v) {
@@ -3307,7 +3307,7 @@ index 219a7049..50a9d90a 100644
  
              get Plane() {
 diff --git a/examples-testing/examples/webgl_clipping_advanced.ts b/examples-testing/examples/webgl_clipping_advanced.ts
-index d60532ca..63db93a7 100644
+index 614d710d..02b9ad88 100644
 --- a/examples-testing/examples/webgl_clipping_advanced.ts
 +++ b/examples-testing/examples/webgl_clipping_advanced.ts
 @@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3394,8 +3394,8 @@ index d60532ca..63db93a7 100644
 +    renderer.clippingPlanes = Empty as THREE.Plane[];
      renderer.localClippingEnabled = true;
  
-     // Stats
-@@ -288,7 +296,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+@@ -290,7 +298,7 @@ function init() {
                  return renderer.clippingPlanes !== Empty;
              },
              set Enabled(v) {
@@ -3404,7 +3404,7 @@ index d60532ca..63db93a7 100644
              },
          },
          'Enabled',
-@@ -306,12 +314,12 @@ function onWindowResize() {
+@@ -308,12 +316,12 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -3462,7 +3462,7 @@ index 5f45e45d..cb3cbdf2 100644
  
              render();
 diff --git a/examples-testing/examples/webgl_clipping_stencil.ts b/examples-testing/examples/webgl_clipping_stencil.ts
-index aec09f66..5f0feae0 100644
+index ecb6b42b..6efdbf5a 100644
 --- a/examples-testing/examples/webgl_clipping_stencil.ts
 +++ b/examples-testing/examples/webgl_clipping_stencil.ts
 @@ -3,9 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -3482,9 +3482,9 @@ index aec09f66..5f0feae0 100644
  
  const params = {
      animate: true,
-@@ -29,7 +33,7 @@ const params = {
+@@ -28,7 +32,7 @@ const params = {
+ 
  init();
- animate();
  
 -function createPlaneStencilGroup(geometry, plane, renderOrder) {
 +function createPlaneStencilGroup(geometry: THREE.TorusKnotGeometry, plane: THREE.Plane, renderOrder: number) {
@@ -3492,7 +3492,7 @@ index aec09f66..5f0feae0 100644
      const baseMat = new THREE.MeshBasicMaterial();
      baseMat.depthWrite = false;
 diff --git a/examples-testing/examples/webgl_custom_attributes.ts b/examples-testing/examples/webgl_custom_attributes.ts
-index 648e097d..98d024c7 100644
+index 0dc89774..8725fd46 100644
 --- a/examples-testing/examples/webgl_custom_attributes.ts
 +++ b/examples-testing/examples/webgl_custom_attributes.ts
 @@ -2,11 +2,16 @@ import * as THREE from 'three';
@@ -3514,8 +3514,8 @@ index 648e097d..98d024c7 100644
 +let displacement: Float32Array, noise: Float32Array;
  
  init();
- animate();
-@@ -28,8 +33,8 @@ function init() {
+ 
+@@ -27,8 +32,8 @@ function init() {
  
      const shaderMaterial = new THREE.ShaderMaterial({
          uniforms: uniforms,
@@ -3527,8 +3527,8 @@ index 648e097d..98d024c7 100644
  
      const radius = 50,
 @@ -54,7 +59,7 @@ function init() {
-     renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setAnimationLoop(animate);
  
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
@@ -3536,10 +3536,10 @@ index 648e097d..98d024c7 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_custom_attributes_lines.ts b/examples-testing/examples/webgl_custom_attributes_lines.ts
-index 5f18f653..c6c7dd09 100644
+index 3e2454e9..d89a77d5 100644
 --- a/examples-testing/examples/webgl_custom_attributes_lines.ts
 +++ b/examples-testing/examples/webgl_custom_attributes_lines.ts
-@@ -1,13 +1,18 @@
+@@ -1,20 +1,25 @@
  import * as THREE from 'three';
  
 -import { FontLoader } from 'three/addons/loaders/FontLoader.js';
@@ -3561,8 +3561,7 @@ index 5f18f653..c6c7dd09 100644
  
  const loader = new FontLoader();
  loader.load('fonts/helvetiker_bold.typeface.json', function (font) {
-@@ -15,7 +20,7 @@ loader.load('fonts/helvetiker_bold.typeface.json', function (font) {
-     animate();
+     init(font);
  });
  
 -function init(font) {
@@ -3570,7 +3569,7 @@ index 5f18f653..c6c7dd09 100644
      camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
      camera.position.z = 400;
  
-@@ -30,8 +35,8 @@ function init(font) {
+@@ -29,8 +34,8 @@ function init(font) {
  
      const shaderMaterial = new THREE.ShaderMaterial({
          uniforms: uniforms,
@@ -3582,8 +3581,8 @@ index 5f18f653..c6c7dd09 100644
          depthTest: false,
          transparent: true,
 @@ -75,7 +80,7 @@ function init(font) {
-     renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setAnimationLoop(animate);
  
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
@@ -3591,7 +3590,7 @@ index 5f18f653..c6c7dd09 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_custom_attributes_points.ts b/examples-testing/examples/webgl_custom_attributes_points.ts
-index f1cfedc0..a6ec2066 100644
+index ae112980..9035134c 100644
 --- a/examples-testing/examples/webgl_custom_attributes_points.ts
 +++ b/examples-testing/examples/webgl_custom_attributes_points.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -3606,7 +3605,7 @@ index f1cfedc0..a6ec2066 100644
  
  const WIDTH = window.innerWidth;
  const HEIGHT = window.innerHeight;
-@@ -57,8 +57,8 @@ function init() {
+@@ -56,8 +56,8 @@ function init() {
              color: { value: new THREE.Color(0xffffff) },
              pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/spark1.png') },
          },
@@ -3618,8 +3617,8 @@ index f1cfedc0..a6ec2066 100644
          blending: THREE.AdditiveBlending,
          depthTest: false,
 @@ -76,7 +76,7 @@ function init() {
-     renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(WIDTH, HEIGHT);
+     renderer.setAnimationLoop(animate);
  
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
@@ -3627,7 +3626,7 @@ index f1cfedc0..a6ec2066 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_custom_attributes_points2.ts b/examples-testing/examples/webgl_custom_attributes_points2.ts
-index f744a1eb..d3b5cc21 100644
+index edd158fa..6f58c70a 100644
 --- a/examples-testing/examples/webgl_custom_attributes_points2.ts
 +++ b/examples-testing/examples/webgl_custom_attributes_points2.ts
 @@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -3641,7 +3640,7 @@ index f744a1eb..d3b5cc21 100644
  
  const WIDTH = window.innerWidth;
  const HEIGHT = window.innerHeight;
-@@ -23,8 +23,8 @@ function init() {
+@@ -22,8 +22,8 @@ function init() {
          segments = 68,
          rings = 38;
  
@@ -3652,7 +3651,7 @@ index f744a1eb..d3b5cc21 100644
  
      // if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
  
-@@ -40,8 +40,8 @@ function init() {
+@@ -39,8 +39,8 @@ function init() {
      const combinedGeometry = BufferGeometryUtils.mergeGeometries([sphereGeometry, boxGeometry]);
      const positionAttribute = combinedGeometry.getAttribute('position');
  
@@ -3663,7 +3662,7 @@ index f744a1eb..d3b5cc21 100644
  
      const color = new THREE.Color();
      const vertex = new THREE.Vector3();
-@@ -78,8 +78,8 @@ function init() {
+@@ -77,8 +77,8 @@ function init() {
              color: { value: new THREE.Color(0xffffff) },
              pointTexture: { value: texture },
          },
@@ -3675,8 +3674,8 @@ index f744a1eb..d3b5cc21 100644
      });
  
 @@ -94,7 +94,7 @@ function init() {
-     renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(WIDTH, HEIGHT);
+     renderer.setAnimationLoop(animate);
  
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
@@ -3702,7 +3701,7 @@ index f744a1eb..d3b5cc21 100644
  
  function animate() {
 diff --git a/examples-testing/examples/webgl_custom_attributes_points3.ts b/examples-testing/examples/webgl_custom_attributes_points3.ts
-index 1ef2f1f8..fc340462 100644
+index 1b46a805..e5798e30 100644
 --- a/examples-testing/examples/webgl_custom_attributes_points3.ts
 +++ b/examples-testing/examples/webgl_custom_attributes_points3.ts
 @@ -4,11 +4,11 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -3720,7 +3719,7 @@ index 1ef2f1f8..fc340462 100644
  
  const WIDTH = window.innerWidth;
  const HEIGHT = window.innerHeight;
-@@ -48,7 +48,7 @@ function init() {
+@@ -47,7 +47,7 @@ function init() {
  
      radius = 200;
  
@@ -3729,7 +3728,7 @@ index 1ef2f1f8..fc340462 100644
  
      // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
  
-@@ -63,7 +63,7 @@ function init() {
+@@ -62,7 +62,7 @@ function init() {
      const quaternion = new THREE.Quaternion();
      const scale = new THREE.Vector3(1, 1, 1);
  
@@ -3738,7 +3737,7 @@ index 1ef2f1f8..fc340462 100644
          position.set(x, y, z);
          rotation.set(0, ry, 0);
  
-@@ -94,7 +94,7 @@ function init() {
+@@ -93,7 +93,7 @@ function init() {
  
      // corner edges
  
@@ -3747,7 +3746,7 @@ index 1ef2f1f8..fc340462 100644
  
      boxGeometry2.deleteAttribute('normal');
      boxGeometry2.deleteAttribute('uv');
-@@ -108,8 +108,8 @@ function init() {
+@@ -107,8 +107,8 @@ function init() {
  
      const positionAttribute = new THREE.Float32BufferAttribute(vertices, 3);
  
@@ -3758,7 +3757,7 @@ index 1ef2f1f8..fc340462 100644
  
      const color = new THREE.Color();
  
-@@ -142,8 +142,8 @@ function init() {
+@@ -141,8 +141,8 @@ function init() {
              color: { value: new THREE.Color(0xffffff) },
              pointTexture: { value: texture },
          },
@@ -3770,8 +3769,8 @@ index 1ef2f1f8..fc340462 100644
  
      //
 @@ -157,7 +157,7 @@ function init() {
-     renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(WIDTH, HEIGHT);
+     renderer.setAnimationLoop(animate);
  
 -    const container = document.getElementById('container');
 +    const container = document.getElementById('container')!;
@@ -3779,7 +3778,7 @@ index 1ef2f1f8..fc340462 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_decals.ts b/examples-testing/examples/webgl_decals.ts
-index 975463ca..d1ffa772 100644
+index 23cdb4da..bbaddccc 100644
 --- a/examples-testing/examples/webgl_decals.ts
 +++ b/examples-testing/examples/webgl_decals.ts
 @@ -7,12 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -3861,7 +3860,7 @@ index 975463ca..d1ffa772 100644
              specular: 0x111111,
              map: map,
 diff --git a/examples-testing/examples/webgl_effects_anaglyph.ts b/examples-testing/examples/webgl_effects_anaglyph.ts
-index 51329638..af1bb7f0 100644
+index 8415973d..d6a7d4c5 100644
 --- a/examples-testing/examples/webgl_effects_anaglyph.ts
 +++ b/examples-testing/examples/webgl_effects_anaglyph.ts
 @@ -2,9 +2,13 @@ import * as THREE from 'three';
@@ -3890,7 +3889,7 @@ index 51329638..af1bb7f0 100644
      mouseY = (event.clientY - windowHalfY) / 100;
  }
 diff --git a/examples-testing/examples/webgl_effects_ascii.ts b/examples-testing/examples/webgl_effects_ascii.ts
-index 60b7de88..6e546c42 100644
+index a412bb79..751102d7 100644
 --- a/examples-testing/examples/webgl_effects_ascii.ts
 +++ b/examples-testing/examples/webgl_effects_ascii.ts
 @@ -3,9 +3,13 @@ import * as THREE from 'three';
@@ -3910,7 +3909,7 @@ index 60b7de88..6e546c42 100644
  const start = Date.now();
  
 diff --git a/examples-testing/examples/webgl_effects_parallaxbarrier.ts b/examples-testing/examples/webgl_effects_parallaxbarrier.ts
-index 45e74917..f6ed13c5 100644
+index 90c86797..e03cb5d7 100644
 --- a/examples-testing/examples/webgl_effects_parallaxbarrier.ts
 +++ b/examples-testing/examples/webgl_effects_parallaxbarrier.ts
 @@ -2,9 +2,13 @@ import * as THREE from 'three';
@@ -3939,7 +3938,7 @@ index 45e74917..f6ed13c5 100644
      mouseY = (event.clientY - windowHalfY) / 100;
  }
 diff --git a/examples-testing/examples/webgl_effects_peppersghost.ts b/examples-testing/examples/webgl_effects_peppersghost.ts
-index 90cfe01e..314b24c5 100644
+index 41dfb4b6..54f8aaa5 100644
 --- a/examples-testing/examples/webgl_effects_peppersghost.ts
 +++ b/examples-testing/examples/webgl_effects_peppersghost.ts
 @@ -2,10 +2,10 @@ import * as THREE from 'three';
@@ -3955,9 +3954,9 @@ index 90cfe01e..314b24c5 100644
 +let group: THREE.Group;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_effects_stereo.ts b/examples-testing/examples/webgl_effects_stereo.ts
-index 4db7184f..a5457e3e 100644
+index dd2f61f9..6dab1b6e 100644
 --- a/examples-testing/examples/webgl_effects_stereo.ts
 +++ b/examples-testing/examples/webgl_effects_stereo.ts
 @@ -2,9 +2,13 @@ import * as THREE from 'three';
@@ -3986,7 +3985,7 @@ index 4db7184f..a5457e3e 100644
      mouseY = (event.clientY - windowHalfY) * 10;
  }
 diff --git a/examples-testing/examples/webgl_framebuffer_texture.ts b/examples-testing/examples/webgl_framebuffer_texture.ts
-index 379737fe..5f4095fb 100644
+index 521261a0..5844c437 100644
 --- a/examples-testing/examples/webgl_framebuffer_texture.ts
 +++ b/examples-testing/examples/webgl_framebuffer_texture.ts
 @@ -3,10 +3,10 @@ import * as THREE from 'three';
@@ -4012,7 +4011,7 @@ index 379737fe..5f4095fb 100644
      const controls = new OrbitControls(camera, selection);
      controls.enablePan = false;
  
-@@ -135,7 +135,7 @@ function animate() {
+@@ -133,7 +133,7 @@ function animate() {
      renderer.render(sceneOrtho, cameraOrtho);
  }
  
@@ -4054,7 +4053,7 @@ index a8195417..46230b4a 100644
  
          render();
 diff --git a/examples-testing/examples/webgl_geometries.ts b/examples-testing/examples/webgl_geometries.ts
-index 154164e1..ab4961b4 100644
+index 2b2d0261..d5820b37 100644
 --- a/examples-testing/examples/webgl_geometries.ts
 +++ b/examples-testing/examples/webgl_geometries.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -4065,8 +4064,8 @@ index 154164e1..ab4961b4 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
  
  init();
- animate();
-@@ -129,7 +129,7 @@ function render() {
+ 
+@@ -127,7 +127,7 @@ function render() {
      camera.lookAt(scene.position);
  
      scene.traverse(function (object) {
@@ -4076,10 +4075,10 @@ index 154164e1..ab4961b4 100644
              object.rotation.y = timer * 2.5;
          }
 diff --git a/examples-testing/examples/webgl_geometries_parametric.ts b/examples-testing/examples/webgl_geometries_parametric.ts
-index 8aa86c34..ea8662cd 100644
+index 29bf7ae2..30a6930c 100644
 --- a/examples-testing/examples/webgl_geometries_parametric.ts
 +++ b/examples-testing/examples/webgl_geometries_parametric.ts
-@@ -6,13 +6,13 @@ import * as Curves from 'three/addons/curves/CurveExtras.js';
+@@ -6,12 +6,12 @@ import * as Curves from 'three/addons/curves/CurveExtras.js';
  import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
  import { ParametricGeometries } from 'three/addons/geometries/ParametricGeometries.js';
  
@@ -4087,7 +4086,6 @@ index 8aa86c34..ea8662cd 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
  
  init();
- animate();
  
  function init() {
 -    const container = document.getElementById('container');
@@ -4095,7 +4093,7 @@ index 8aa86c34..ea8662cd 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
      camera.position.y = 400;
-@@ -116,7 +116,7 @@ function render() {
+@@ -114,7 +114,7 @@ function render() {
      camera.lookAt(scene.position);
  
      scene.traverse(function (object) {
@@ -4105,7 +4103,7 @@ index 8aa86c34..ea8662cd 100644
              object.rotation.y = timer * 2.5;
          }
 diff --git a/examples-testing/examples/webgl_geometry_colors.ts b/examples-testing/examples/webgl_geometry_colors.ts
-index 7acc60f2..836e466a 100644
+index bc0bf517..68466b5b 100644
 --- a/examples-testing/examples/webgl_geometry_colors.ts
 +++ b/examples-testing/examples/webgl_geometry_colors.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -4120,8 +4118,8 @@ index 7acc60f2..836e466a 100644
  
  let mouseX = 0,
      mouseY = 0;
-@@ -16,7 +16,7 @@ init();
- animate();
+@@ -15,7 +15,7 @@ let windowHalfY = window.innerHeight / 2;
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -4129,7 +4127,7 @@ index 7acc60f2..836e466a 100644
  
      camera = new THREE.PerspectiveCamera(20, window.innerWidth / window.innerHeight, 1, 10000);
      camera.position.z = 1800;
-@@ -34,7 +34,7 @@ function init() {
+@@ -33,7 +33,7 @@ function init() {
      canvas.width = 128;
      canvas.height = 128;
  
@@ -4196,7 +4194,7 @@ index 6b013852..382a9b7a 100644
      map.needsUpdate = true;
  }
 diff --git a/examples-testing/examples/webgl_geometry_convex.ts b/examples-testing/examples/webgl_geometry_convex.ts
-index b0330363..38eecb8b 100644
+index ade9cb80..87ea7be3 100644
 --- a/examples-testing/examples/webgl_geometry_convex.ts
 +++ b/examples-testing/examples/webgl_geometry_convex.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -4207,7 +4205,7 @@ index b0330363..38eecb8b 100644
 +let group: THREE.Group, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 @@ -54,7 +54,7 @@ function init() {
  
      // points
@@ -4218,7 +4216,7 @@ index b0330363..38eecb8b 100644
      // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
  
 diff --git a/examples-testing/examples/webgl_geometry_cube.ts b/examples-testing/examples/webgl_geometry_cube.ts
-index bf22fcb2..71a36106 100644
+index 572601ac..136a3141 100644
 --- a/examples-testing/examples/webgl_geometry_cube.ts
 +++ b/examples-testing/examples/webgl_geometry_cube.ts
 @@ -1,7 +1,7 @@
@@ -4230,9 +4228,9 @@ index bf22fcb2..71a36106 100644
 +let mesh: THREE.Mesh;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_geometry_dynamic.ts b/examples-testing/examples/webgl_geometry_dynamic.ts
-index ccbaa6b7..b9307ac3 100644
+index 06e858f5..28273563 100644
 --- a/examples-testing/examples/webgl_geometry_dynamic.ts
 +++ b/examples-testing/examples/webgl_geometry_dynamic.ts
 @@ -4,9 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -4251,7 +4249,7 @@ index ccbaa6b7..b9307ac3 100644
  
  const worldWidth = 128,
      worldDepth = 128;
-@@ -27,7 +31,7 @@ function init() {
+@@ -26,7 +30,7 @@ function init() {
      geometry = new THREE.PlaneGeometry(20000, 20000, worldWidth - 1, worldDepth - 1);
      geometry.rotateX(-Math.PI / 2);
  
@@ -4261,7 +4259,7 @@ index ccbaa6b7..b9307ac3 100644
  
      for (let i = 0; i < position.count; i++) {
 diff --git a/examples-testing/examples/webgl_geometry_extrude_shapes.ts b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
-index 099b4257..a2de450e 100644
+index 7428aee3..386e8d57 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -4272,8 +4270,8 @@ index 099b4257..a2de450e 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: TrackballControls;
  
  init();
- animate();
-@@ -14,7 +14,7 @@ function init() {
+ 
+@@ -13,7 +13,7 @@ function init() {
      info.style.width = '100%';
      info.style.textAlign = 'center';
      info.style.color = '#fff';
@@ -4283,7 +4281,7 @@ index 099b4257..a2de450e 100644
          '<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - geometry extrude shapes';
      document.body.appendChild(info);
 diff --git a/examples-testing/examples/webgl_geometry_extrude_splines.ts b/examples-testing/examples/webgl_geometry_extrude_splines.ts
-index 370a4d97..bbb481fb 100644
+index 0741083d..e988b543 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_splines.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_splines.ts
 @@ -6,9 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -4334,8 +4332,8 @@ index 370a4d97..bbb481fb 100644
      // 3D shape
  
      mesh = new THREE.Mesh(geometry, material);
-@@ -144,7 +158,7 @@ init();
- animate();
+@@ -143,7 +157,7 @@ function animateCamera() {
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -4353,7 +4351,7 @@ index 370a4d97..bbb481fb 100644
      });
      folderGeometry
 diff --git a/examples-testing/examples/webgl_geometry_minecraft.ts b/examples-testing/examples/webgl_geometry_minecraft.ts
-index 537d8d54..bfa97ba5 100644
+index 765aa1e4..b15665d8 100644
 --- a/examples-testing/examples/webgl_geometry_minecraft.ts
 +++ b/examples-testing/examples/webgl_geometry_minecraft.ts
 @@ -6,9 +6,9 @@ import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.j
@@ -4368,8 +4366,8 @@ index 537d8d54..bfa97ba5 100644
  
  const worldWidth = 128,
      worldDepth = 128;
-@@ -22,7 +22,7 @@ init();
- animate();
+@@ -21,7 +21,7 @@ const clock = new THREE.Clock();
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -4396,7 +4394,7 @@ index 537d8d54..bfa97ba5 100644
  }
  
 diff --git a/examples-testing/examples/webgl_geometry_nurbs.ts b/examples-testing/examples/webgl_geometry_nurbs.ts
-index 6ab8b327..47ab35ca 100644
+index a603710b..74676e45 100644
 --- a/examples-testing/examples/webgl_geometry_nurbs.ts
 +++ b/examples-testing/examples/webgl_geometry_nurbs.ts
 @@ -7,10 +7,10 @@ import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
@@ -4413,7 +4411,7 @@ index 6ab8b327..47ab35ca 100644
  
  let targetRotation = 0;
  let targetRotationOnPointerDown = 0;
-@@ -79,7 +79,7 @@ function init() {
+@@ -78,7 +78,7 @@ function init() {
      group.add(nurbsLine);
  
      const nurbsControlPointsGeometry = new THREE.BufferGeometry();
@@ -4422,7 +4420,7 @@ index 6ab8b327..47ab35ca 100644
  
      const nurbsControlPointsMaterial = new THREE.LineBasicMaterial({
          color: 0x333333,
-@@ -124,7 +124,7 @@ function init() {
+@@ -123,7 +123,7 @@ function init() {
          map.anisotropy = 16;
          map.colorSpace = THREE.SRGBColorSpace;
  
@@ -4431,7 +4429,7 @@ index 6ab8b327..47ab35ca 100644
              return nurbsSurface.getPoint(u, v, target);
          }
  
-@@ -175,23 +175,23 @@ function init() {
+@@ -174,23 +174,23 @@ function init() {
          // we create evaluation functions for different surfaces with one of the three
          // parameter values (u, v, w) kept constant and create multiple THREE.Mesh
          // objects one for each surface
@@ -4488,7 +4486,7 @@ index 6ab8b327..47ab35ca 100644
  
      document.removeEventListener('pointermove', onPointerMove);
 diff --git a/examples-testing/examples/webgl_geometry_sdf.ts b/examples-testing/examples/webgl_geometry_sdf.ts
-index c3420659..bff700c7 100644
+index 01b047a2..9ce7da93 100644
 --- a/examples-testing/examples/webgl_geometry_sdf.ts
 +++ b/examples-testing/examples/webgl_geometry_sdf.ts
 @@ -1,10 +1,19 @@
@@ -4523,7 +4521,7 @@ index c3420659..bff700c7 100644
  
  // Example SDF from https://www.shadertoy.com/view/MdXSWn -->
 diff --git a/examples-testing/examples/webgl_geometry_shapes.ts b/examples-testing/examples/webgl_geometry_shapes.ts
-index c3ff3a74..ff3abca5 100644
+index f1d00f01..2042c353 100644
 --- a/examples-testing/examples/webgl_geometry_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_shapes.ts
 @@ -2,11 +2,11 @@ import * as THREE from 'three';
@@ -4541,7 +4539,7 @@ index c3ff3a74..ff3abca5 100644
  
  let targetRotation = 0;
  let targetRotationOnPointerDown = 0;
-@@ -46,11 +46,22 @@ function init() {
+@@ -45,11 +45,22 @@ function init() {
      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
      texture.repeat.set(0.008, 0.008);
  
@@ -4566,7 +4564,7 @@ index c3ff3a74..ff3abca5 100644
  
          let mesh = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({ side: THREE.DoubleSide, map: texture }));
          mesh.position.set(x, y, z - 175);
-@@ -81,7 +92,17 @@ function init() {
+@@ -80,7 +91,17 @@ function init() {
          addLineShape(shape, color, x, y, z, rx, ry, rz, s);
      }
  
@@ -4660,7 +4658,7 @@ index 4c884a55..b94b16db 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_geometry_terrain.ts b/examples-testing/examples/webgl_geometry_terrain.ts
-index b63a3637..965d70a0 100644
+index 8b6ed84e..22ec3f6a 100644
 --- a/examples-testing/examples/webgl_geometry_terrain.ts
 +++ b/examples-testing/examples/webgl_geometry_terrain.ts
 @@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -4676,8 +4674,8 @@ index b63a3637..965d70a0 100644
  
  const worldWidth = 256,
      worldDepth = 256;
-@@ -17,7 +17,7 @@ init();
- animate();
+@@ -16,7 +16,7 @@ const clock = new THREE.Clock();
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -4722,7 +4720,7 @@ index b63a3637..965d70a0 100644
      context.drawImage(canvas, 0, 0);
  
 diff --git a/examples-testing/examples/webgl_geometry_terrain_raycast.ts b/examples-testing/examples/webgl_geometry_terrain_raycast.ts
-index 4e9a7d39..86071e37 100644
+index f1383c13..6e9cd025 100644
 --- a/examples-testing/examples/webgl_geometry_terrain_raycast.ts
 +++ b/examples-testing/examples/webgl_geometry_terrain_raycast.ts
 @@ -5,18 +5,18 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -4748,8 +4746,8 @@ index 4e9a7d39..86071e37 100644
  
  const raycaster = new THREE.Raycaster();
  const pointer = new THREE.Vector2();
-@@ -25,7 +25,7 @@ init();
- animate();
+@@ -24,7 +24,7 @@ const pointer = new THREE.Vector2();
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -4793,7 +4791,7 @@ index 4e9a7d39..86071e37 100644
      context.scale(4, 4);
      context.drawImage(canvas, 0, 0);
  
-@@ -190,7 +190,7 @@ function render() {
+@@ -188,7 +188,7 @@ function render() {
      renderer.render(scene, camera);
  }
  
@@ -4802,7 +4800,7 @@ index 4e9a7d39..86071e37 100644
      pointer.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
      pointer.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
      raycaster.setFromCamera(pointer, camera);
-@@ -201,7 +201,7 @@ function onPointerMove(event) {
+@@ -199,7 +199,7 @@ function onPointerMove(event) {
      // Toggle rotation bool for meshes that we clicked
      if (intersects.length > 0) {
          helper.position.set(0, 0, 0);
@@ -4812,7 +4810,7 @@ index 4e9a7d39..86071e37 100644
          helper.position.copy(intersects[0].point);
      }
 diff --git a/examples-testing/examples/webgl_geometry_text.ts b/examples-testing/examples/webgl_geometry_text.ts
-index c6000e0e..e0b49b62 100644
+index 831ebcd6..e5947329 100644
 --- a/examples-testing/examples/webgl_geometry_text.ts
 +++ b/examples-testing/examples/webgl_geometry_text.ts
 @@ -1,23 +1,23 @@
@@ -5010,7 +5008,7 @@ index 9a198325..e47d7b66 100644
              if (shape.holes && shape.holes.length > 0) {
                  for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_gpgpu_birds.ts b/examples-testing/examples/webgl_gpgpu_birds.ts
-index 4c03ce38..2d272b8e 100644
+index 20a5e0d9..5bb4ed25 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -5064,7 +5062,7 @@ index 4c03ce38..2d272b8e 100644
 +let birdUniforms: Record<string, THREE.IUniform>;
  
  init();
- animate();
+ 
 @@ -164,12 +164,12 @@ function initComputeRenderer() {
  
      velocityVariable = gpuCompute.addVariable(
@@ -5119,7 +5117,7 @@ index 4c03ce38..2d272b8e 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
-index 18d54404..ce0db571 100644
+index 3176b95a..df84fb25 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -5204,8 +5202,8 @@ index 18d54404..ce0db571 100644
      }
  
      BirdGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-@@ -111,8 +115,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
-     animate();
+@@ -110,8 +114,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+     init();
  });
  
 -let container, stats;
@@ -5215,7 +5213,7 @@ index 18d54404..ce0db571 100644
  let mouseX = 0,
      mouseY = 0;
  
-@@ -124,11 +128,20 @@ const BOUNDS = 800,
+@@ -123,11 +127,20 @@ const BOUNDS = 800,
  
  let last = performance.now();
  
@@ -5293,7 +5291,7 @@ index 18d54404..ce0db571 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_protoplanet.ts b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
-index a1fa5f86..23481ee7 100644
+index 30444ddb..158350b0 100644
 --- a/examples-testing/examples/webgl_gpgpu_protoplanet.ts
 +++ b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
 @@ -4,22 +4,32 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5309,7 +5307,7 @@ index a1fa5f86..23481ee7 100644
 -let container, stats;
 -let camera, scene, renderer, geometry;
 +let container: HTMLDivElement, stats: Stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, geometry;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, geometry: THREE.BufferGeometry;
  
  const PARTICLES = WIDTH * WIDTH;
  
@@ -5337,7 +5335,7 @@ index a1fa5f86..23481ee7 100644
 +};
  
  init();
- animate();
+ 
 @@ -82,12 +92,12 @@ function initComputeRenderer() {
  
      velocityVariable = gpuCompute.addVariable(
@@ -5383,7 +5381,7 @@ index a1fa5f86..23481ee7 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index fe78e10f..015cc6d9 100644
+index 00c32f22..57e7c212 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -5496,7 +5494,7 @@ index fe78e10f..015cc6d9 100644
  
      setMouseCoords(event.clientX, event.clientY);
 diff --git a/examples-testing/examples/webgl_helpers.ts b/examples-testing/examples/webgl_helpers.ts
-index 5d75326f..65c573df 100644
+index a8c3b977..09ad778d 100644
 --- a/examples-testing/examples/webgl_helpers.ts
 +++ b/examples-testing/examples/webgl_helpers.ts
 @@ -5,10 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -5513,7 +5511,7 @@ index 5d75326f..65c573df 100644
 +let vth: VertexTangentsHelper;
  
  init();
- animate();
+ 
 @@ -44,7 +44,7 @@ function init() {
  
      const loader = new GLTFLoader();
@@ -5533,7 +5531,7 @@ index 5d75326f..65c573df 100644
          line.material.opacity = 0.25;
          line.material.transparent = true;
 diff --git a/examples-testing/examples/webgl_instancing_dynamic.ts b/examples-testing/examples/webgl_instancing_dynamic.ts
-index 8c945283..b0e453ef 100644
+index 88562fc5..a8b1e2d0 100644
 --- a/examples-testing/examples/webgl_instancing_dynamic.ts
 +++ b/examples-testing/examples/webgl_instancing_dynamic.ts
 @@ -3,9 +3,9 @@ import * as THREE from 'three';
@@ -5549,7 +5547,7 @@ index 8c945283..b0e453ef 100644
  const count = Math.pow(amount, 3);
  const dummy = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgl_instancing_morph.ts b/examples-testing/examples/webgl_instancing_morph.ts
-index 7a4245c9..6eecf7c4 100644
+index 8686a75b..fb76abe3 100644
 --- a/examples-testing/examples/webgl_instancing_morph.ts
 +++ b/examples-testing/examples/webgl_instancing_morph.ts
 @@ -4,7 +4,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -5567,7 +5565,7 @@ index 7a4245c9..6eecf7c4 100644
  
  const offset = 5000;
  
-@@ -64,7 +70,7 @@ function init() {
+@@ -63,7 +69,7 @@ function init() {
      const loader = new GLTFLoader();
  
      loader.load('models/gltf/Horse.glb', function (glb) {
@@ -5576,7 +5574,7 @@ index 7a4245c9..6eecf7c4 100644
  
          mesh = new THREE.InstancedMesh(dummy.geometry, dummy.material, 1024);
  
-@@ -142,7 +148,7 @@ function render() {
+@@ -140,7 +146,7 @@ function render() {
              mesh.setMorphAt(i, dummy);
          }
  
@@ -5586,7 +5584,7 @@ index 7a4245c9..6eecf7c4 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_instancing_performance.ts b/examples-testing/examples/webgl_instancing_performance.ts
-index 62ed9356..b34abd67 100644
+index bf1deaba..705d2cf3 100644
 --- a/examples-testing/examples/webgl_instancing_performance.ts
 +++ b/examples-testing/examples/webgl_instancing_performance.ts
 @@ -6,8 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -5604,7 +5602,7 @@ index 62ed9356..b34abd67 100644
  
  // gui
  
-@@ -31,15 +35,15 @@ animate();
+@@ -30,15 +34,15 @@ initMesh();
  //
  
  function clean() {
@@ -5623,7 +5621,7 @@ index 62ed9356..b34abd67 100644
          mesh.geometry.dispose();
  
          scene.remove(mesh);
-@@ -51,7 +55,7 @@ const randomizeMatrix = (function () {
+@@ -50,7 +54,7 @@ const randomizeMatrix = (function () {
      const quaternion = new THREE.Quaternion();
      const scale = new THREE.Vector3();
  
@@ -5632,7 +5630,7 @@ index 62ed9356..b34abd67 100644
          position.x = Math.random() * 40 - 20;
          position.y = Math.random() * 40 - 20;
          position.z = Math.random() * 40 - 20;
-@@ -93,7 +97,7 @@ function initMesh() {
+@@ -92,7 +96,7 @@ function initMesh() {
      });
  }
  
@@ -5641,7 +5639,7 @@ index 62ed9356..b34abd67 100644
      const matrix = new THREE.Matrix4();
      const mesh = new THREE.InstancedMesh(geometry, material, api.count);
  
-@@ -114,7 +118,7 @@ function makeInstanced(geometry) {
+@@ -113,7 +117,7 @@ function makeInstanced(geometry) {
      ].join('<br/>');
  }
  
@@ -5650,7 +5648,7 @@ index 62ed9356..b34abd67 100644
      const geometries = [];
      const matrix = new THREE.Matrix4();
  
-@@ -139,7 +143,7 @@ function makeMerged(geometry) {
+@@ -138,7 +142,7 @@ function makeMerged(geometry) {
      ].join('<br/>');
  }
  
@@ -5660,15 +5658,15 @@ index 62ed9356..b34abd67 100644
  
      for (let i = 0; i < api.count; i++) {
 @@ -175,7 +179,7 @@ function init() {
-     renderer = new THREE.WebGLRenderer({ antialias: true });
      renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(width, height);
+     renderer.setAnimationLoop(animate);
 -    container = document.getElementById('container');
 +    container = document.getElementById('container')!;
      container.appendChild(renderer.domElement);
  
      // scene
-@@ -241,7 +245,7 @@ function render() {
+@@ -236,7 +240,7 @@ function animate() {
  
  //
  
@@ -5677,7 +5675,7 @@ index 62ed9356..b34abd67 100644
      let total = 0;
  
      if (geometry.index) total += geometry.index.array.byteLength;
-@@ -254,7 +258,7 @@ function getGeometryByteLength(geometry) {
+@@ -249,7 +253,7 @@ function getGeometryByteLength(geometry) {
  }
  
  // Source: https://stackoverflow.com/a/18650828/1314762
@@ -5687,7 +5685,7 @@ index 62ed9356..b34abd67 100644
  
      const k = 1024;
 diff --git a/examples-testing/examples/webgl_instancing_raycast.ts b/examples-testing/examples/webgl_instancing_raycast.ts
-index 71f0d6ec..ba3ebb0c 100644
+index 371ea070..861bc9c5 100644
 --- a/examples-testing/examples/webgl_instancing_raycast.ts
 +++ b/examples-testing/examples/webgl_instancing_raycast.ts
 @@ -4,9 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5715,7 +5713,7 @@ index 71f0d6ec..ba3ebb0c 100644
      event.preventDefault();
  
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-@@ -101,14 +105,14 @@ function animate() {
+@@ -99,14 +103,14 @@ function animate() {
      const intersection = raycaster.intersectObject(mesh);
  
      if (intersection.length > 0) {
@@ -5733,7 +5731,7 @@ index 71f0d6ec..ba3ebb0c 100644
      }
  
 diff --git a/examples-testing/examples/webgl_instancing_scatter.ts b/examples-testing/examples/webgl_instancing_scatter.ts
-index af7f39db..574f5c71 100644
+index fc3b9cc9..d0904e8e 100644
 --- a/examples-testing/examples/webgl_instancing_scatter.ts
 +++ b/examples-testing/examples/webgl_instancing_scatter.ts
 @@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -5806,10 +5804,10 @@ index af7f39db..574f5c71 100644
  
      ages[i] += 0.005;
 diff --git a/examples-testing/examples/webgl_interactive_buffergeometry.ts b/examples-testing/examples/webgl_interactive_buffergeometry.ts
-index fafa7a16..98a202c0 100644
+index 1d6608b1..c6aca942 100644
 --- a/examples-testing/examples/webgl_interactive_buffergeometry.ts
 +++ b/examples-testing/examples/webgl_interactive_buffergeometry.ts
-@@ -2,19 +2,19 @@ import * as THREE from 'three';
+@@ -2,18 +2,18 @@ import * as THREE from 'three';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -5826,7 +5824,6 @@ index fafa7a16..98a202c0 100644
 +let mesh: THREE.Mesh, line: THREE.Line;
  
  init();
- animate();
  
  function init() {
 -    container = document.getElementById('container');
@@ -5834,7 +5831,7 @@ index fafa7a16..98a202c0 100644
  
      //
  
-@@ -147,7 +147,7 @@ function init() {
+@@ -146,7 +146,7 @@ function init() {
  
      geometry.computeBoundingSphere();
  
@@ -5852,7 +5849,7 @@ index fafa7a16..98a202c0 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -223,10 +223,10 @@ function render() {
+@@ -221,10 +221,10 @@ function render() {
  
      if (intersects.length > 0) {
          const intersect = intersects[0];
@@ -5867,7 +5864,7 @@ index fafa7a16..98a202c0 100644
          linePosition.copyAt(0, meshPosition, face.a);
          linePosition.copyAt(1, meshPosition, face.b);
 diff --git a/examples-testing/examples/webgl_interactive_cubes.ts b/examples-testing/examples/webgl_interactive_cubes.ts
-index c0822893..a126b560 100644
+index adfcfddf..d26cee37 100644
 --- a/examples-testing/examples/webgl_interactive_cubes.ts
 +++ b/examples-testing/examples/webgl_interactive_cubes.ts
 @@ -2,10 +2,10 @@ import * as THREE from 'three';
@@ -5893,7 +5890,7 @@ index c0822893..a126b560 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -100,14 +100,14 @@ function render() {
+@@ -98,14 +98,14 @@ function render() {
  
      if (intersects.length > 0) {
          if (INTERSECTED != intersects[0].object) {
@@ -5912,7 +5909,7 @@ index c0822893..a126b560 100644
          INTERSECTED = null;
      }
 diff --git a/examples-testing/examples/webgl_interactive_cubes_gpu.ts b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
-index f80c89f3..59c40eb1 100644
+index 313b023a..7e77fbc5 100644
 --- a/examples-testing/examples/webgl_interactive_cubes_gpu.ts
 +++ b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
 @@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5933,8 +5930,8 @@ index f80c89f3..59c40eb1 100644
  
  const pointer = new THREE.Vector2();
  const offset = new THREE.Vector3(10, 10, 10);
-@@ -20,7 +20,7 @@ init();
- animate();
+@@ -19,7 +19,7 @@ const clearColor = new THREE.Color();
+ init();
  
  function init() {
 -    container = document.getElementById('container');
@@ -5942,7 +5939,7 @@ index f80c89f3..59c40eb1 100644
  
      camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 10000);
      camera.position.z = 1000;
-@@ -74,7 +74,7 @@ function init() {
+@@ -73,7 +73,7 @@ function init() {
  					`,
      });
  
@@ -5951,7 +5948,7 @@ index f80c89f3..59c40eb1 100644
          const position = geometry.attributes.position;
          const array = new Int16Array(position.count);
          array.fill(id);
-@@ -84,7 +84,7 @@ function init() {
+@@ -83,7 +83,7 @@ function init() {
          geometry.setAttribute('id', bufferAttribute);
      }
  
@@ -5970,7 +5967,7 @@ index f80c89f3..59c40eb1 100644
      pointer.y = e.clientY;
  }
 diff --git a/examples-testing/examples/webgl_interactive_cubes_ortho.ts b/examples-testing/examples/webgl_interactive_cubes_ortho.ts
-index 92396d7a..46392211 100644
+index 520674b5..4b083ffe 100644
 --- a/examples-testing/examples/webgl_interactive_cubes_ortho.ts
 +++ b/examples-testing/examples/webgl_interactive_cubes_ortho.ts
 @@ -2,11 +2,11 @@ import * as THREE from 'three';
@@ -5997,7 +5994,7 @@ index 92396d7a..46392211 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -115,14 +115,14 @@ function render() {
+@@ -113,14 +113,14 @@ function render() {
  
      if (intersects.length > 0) {
          if (INTERSECTED != intersects[0].object) {
@@ -6016,7 +6013,7 @@ index 92396d7a..46392211 100644
          INTERSECTED = null;
      }
 diff --git a/examples-testing/examples/webgl_interactive_lines.ts b/examples-testing/examples/webgl_interactive_lines.ts
-index 69a1916c..18bc732a 100644
+index b137c550..891e5541 100644
 --- a/examples-testing/examples/webgl_interactive_lines.ts
 +++ b/examples-testing/examples/webgl_interactive_lines.ts
 @@ -2,8 +2,13 @@ import * as THREE from 'three';
@@ -6045,10 +6042,10 @@ index 69a1916c..18bc732a 100644
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgl_interactive_points.ts b/examples-testing/examples/webgl_interactive_points.ts
-index 99bad4a0..eb62bf30 100644
+index 93113b86..e090fb6c 100644
 --- a/examples-testing/examples/webgl_interactive_points.ts
 +++ b/examples-testing/examples/webgl_interactive_points.ts
-@@ -4,20 +4,20 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -4,19 +4,19 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
  
@@ -6062,11 +6059,10 @@ index 99bad4a0..eb62bf30 100644
  
 -let raycaster, intersects;
 -let pointer, INTERSECTED;
-+let raycaster: THREE.Raycaster, intersects;
++let raycaster: THREE.Raycaster, intersects: THREE.Intersection<THREE.Object3D>[];
 +let pointer: THREE.Vector2, INTERSECTED: number | null;
  
  init();
- animate();
  
  function init() {
 -    const container = document.getElementById('container');
@@ -6074,7 +6070,7 @@ index 99bad4a0..eb62bf30 100644
  
      scene = new THREE.Scene();
  
-@@ -26,7 +26,7 @@ function init() {
+@@ -25,7 +25,7 @@ function init() {
  
      //
  
@@ -6083,7 +6079,7 @@ index 99bad4a0..eb62bf30 100644
  
      // if normal and uv attributes are not removed, mergeVertices() can't consolidate indentical vertices with different normal/uv data
  
-@@ -39,8 +39,8 @@ function init() {
+@@ -38,8 +38,8 @@ function init() {
  
      const positionAttribute = boxGeometry.getAttribute('position');
  
@@ -6094,7 +6090,7 @@ index 99bad4a0..eb62bf30 100644
  
      const color = new THREE.Color();
  
-@@ -64,8 +64,8 @@ function init() {
+@@ -63,8 +63,8 @@ function init() {
              pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/disc.png') },
              alphaTest: { value: 0.9 },
          },
@@ -6114,7 +6110,7 @@ index 99bad4a0..eb62bf30 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -128,9 +128,9 @@ function render() {
+@@ -126,9 +126,9 @@ function render() {
  
      if (intersects.length > 0) {
          if (INTERSECTED != intersects[0].index) {
@@ -6127,7 +6123,7 @@ index 99bad4a0..eb62bf30 100644
              attributes.size.array[INTERSECTED] = PARTICLE_SIZE * 1.25;
              attributes.size.needsUpdate = true;
 diff --git a/examples-testing/examples/webgl_interactive_raycasting_points.ts b/examples-testing/examples/webgl_interactive_raycasting_points.ts
-index ac4c0ba3..a9851514 100644
+index 41c158a4..bb134818 100644
 --- a/examples-testing/examples/webgl_interactive_raycasting_points.ts
 +++ b/examples-testing/examples/webgl_interactive_raycasting_points.ts
 @@ -2,16 +2,16 @@ import * as THREE from 'three';
@@ -6152,16 +6148,16 @@ index ac4c0ba3..a9851514 100644
  
  const threshold = 0.1;
  const pointSize = 0.05;
-@@ -22,7 +22,7 @@ const rotateY = new THREE.Matrix4().makeRotationY(0.005);
+@@ -21,7 +21,7 @@ const rotateY = new THREE.Matrix4().makeRotationY(0.005);
+ 
  init();
- animate();
  
 -function generatePointCloudGeometry(color, width, length) {
 +function generatePointCloudGeometry(color: THREE.Color, width: number, length: number) {
      const geometry = new THREE.BufferGeometry();
      const numPoints = width * length;
  
-@@ -59,14 +59,14 @@ function generatePointCloudGeometry(color, width, length) {
+@@ -58,14 +58,14 @@ function generatePointCloudGeometry(color, width, length) {
      return geometry;
  }
  
@@ -6178,7 +6174,7 @@ index ac4c0ba3..a9851514 100644
      const geometry = generatePointCloudGeometry(color, width, length);
      const numPoints = width * length;
      const indices = new Uint16Array(numPoints);
-@@ -87,7 +87,7 @@ function generateIndexedPointcloud(color, width, length) {
+@@ -86,7 +86,7 @@ function generateIndexedPointcloud(color, width, length) {
      return new THREE.Points(geometry, material);
  }
  
@@ -6187,7 +6183,7 @@ index ac4c0ba3..a9851514 100644
      const geometry = generatePointCloudGeometry(color, width, length);
      const numPoints = width * length;
      const indices = new Uint16Array(numPoints);
-@@ -110,7 +110,7 @@ function generateIndexedWithOffsetPointcloud(color, width, length) {
+@@ -109,7 +109,7 @@ function generateIndexedWithOffsetPointcloud(color, width, length) {
  }
  
  function init() {
@@ -6286,7 +6282,7 @@ index 48b16f3b..dae1d758 100644
          case 16:
              isShiftDown = false;
 diff --git a/examples-testing/examples/webgl_layers.ts b/examples-testing/examples/webgl_layers.ts
-index 5b0a4501..654840cb 100644
+index 8bdcda7f..f24cdc8b 100644
 --- a/examples-testing/examples/webgl_layers.ts
 +++ b/examples-testing/examples/webgl_layers.ts
 @@ -3,8 +3,8 @@ import * as THREE from 'three';
@@ -6301,7 +6297,7 @@ index 5b0a4501..654840cb 100644
  let theta = 0;
  const radius = 5;
 diff --git a/examples-testing/examples/webgl_lensflares.ts b/examples-testing/examples/webgl_lensflares.ts
-index e24dcd1f..da07ba70 100644
+index 230cebfa..56651e28 100644
 --- a/examples-testing/examples/webgl_lensflares.ts
 +++ b/examples-testing/examples/webgl_lensflares.ts
 @@ -5,10 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6318,7 +6314,7 @@ index e24dcd1f..da07ba70 100644
  
  const clock = new THREE.Clock();
  
-@@ -71,7 +71,7 @@ function init() {
+@@ -70,7 +70,7 @@ function init() {
      addLight(0.08, 0.8, 0.5, 0, 0, -1000);
      addLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
  
@@ -6385,10 +6381,10 @@ index c714d297..ccf95e09 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_lights_hemisphere.ts b/examples-testing/examples/webgl_lights_hemisphere.ts
-index 71e1d3d5..73aa07cf 100644
+index 6a4965df..152a2428 100644
 --- a/examples-testing/examples/webgl_lights_hemisphere.ts
 +++ b/examples-testing/examples/webgl_lights_hemisphere.ts
-@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,16 +5,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -6401,8 +6397,7 @@ index 71e1d3d5..73aa07cf 100644
  
  const clock = new THREE.Clock();
  
-@@ -15,7 +15,7 @@ init();
- animate();
+ init();
  
  function init() {
 -    const container = document.getElementById('container');
@@ -6410,7 +6405,7 @@ index 71e1d3d5..73aa07cf 100644
  
      camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 5000);
      camera.position.set(0, 0, 250);
-@@ -75,8 +75,8 @@ function init() {
+@@ -74,8 +74,8 @@ function init() {
  
      // SKYDOME
  
@@ -6422,7 +6417,7 @@ index 71e1d3d5..73aa07cf 100644
          topColor: { value: new THREE.Color(0x0077ff) },
          bottomColor: { value: new THREE.Color(0xffffff) },
 diff --git a/examples-testing/examples/webgl_lights_physical.ts b/examples-testing/examples/webgl_lights_physical.ts
-index 4fa760d0..b91677ce 100644
+index 707ef200..8e4cf0bb 100644
 --- a/examples-testing/examples/webgl_lights_physical.ts
 +++ b/examples-testing/examples/webgl_lights_physical.ts
 @@ -5,13 +5,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6457,8 +6452,8 @@ index 4fa760d0..b91677ce 100644
      '0.0001 lx (Moonless Night)': 0.0001,
      '0.002 lx (Night Airglow)': 0.002,
      '0.5 lx (Full Moon)': 0.5,
-@@ -48,7 +54,7 @@ init();
- animate();
+@@ -47,7 +53,7 @@ const params = {
+ init();
  
  function init() {
 -    const container = document.getElementById('container');
@@ -6467,7 +6462,7 @@ index 4fa760d0..b91677ce 100644
      stats = new Stats();
      container.appendChild(stats.dom);
 diff --git a/examples-testing/examples/webgl_lights_pointlights.ts b/examples-testing/examples/webgl_lights_pointlights.ts
-index b3c17f46..b51888a5 100644
+index ea95070c..020d2160 100644
 --- a/examples-testing/examples/webgl_lights_pointlights.ts
 +++ b/examples-testing/examples/webgl_lights_pointlights.ts
 @@ -4,7 +4,15 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6512,7 +6507,7 @@ index b841fa6b..f3051618 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_lights_spotlight.ts b/examples-testing/examples/webgl_lights_spotlight.ts
-index a05169e6..e0e0febf 100644
+index 894abaf6..342a70fb 100644
 --- a/examples-testing/examples/webgl_lights_spotlight.ts
 +++ b/examples-testing/examples/webgl_lights_spotlight.ts
 @@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6527,7 +6522,7 @@ index a05169e6..e0e0febf 100644
  
  init();
  
-@@ -43,7 +43,7 @@ function init() {
+@@ -42,7 +42,7 @@ function init() {
      const loader = new THREE.TextureLoader().setPath('textures/');
      const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
  
@@ -6536,7 +6531,7 @@ index a05169e6..e0e0febf 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -156,8 +156,8 @@ function init() {
+@@ -155,8 +155,8 @@ function init() {
          renderer.shadowMap.enabled = val;
  
          scene.traverse(function (child) {
@@ -6548,10 +6543,10 @@ index a05169e6..e0e0febf 100644
          });
      });
 diff --git a/examples-testing/examples/webgl_lights_spotlights.ts b/examples-testing/examples/webgl_lights_spotlights.ts
-index da6917bc..ae113e98 100644
+index 70caf5a5..fc4817fb 100644
 --- a/examples-testing/examples/webgl_lights_spotlights.ts
 +++ b/examples-testing/examples/webgl_lights_spotlights.ts
-@@ -28,7 +28,7 @@ const spotLight1 = createSpotlight(0xff7f00);
+@@ -29,7 +29,7 @@ const spotLight1 = createSpotlight(0xff7f00);
  const spotLight2 = createSpotlight(0x00ff7f);
  const spotLight3 = createSpotlight(0x7f00ff);
  
@@ -6560,7 +6555,7 @@ index da6917bc..ae113e98 100644
  
  function init() {
      renderer.shadowMap.enabled = true;
-@@ -67,7 +67,7 @@ function init() {
+@@ -68,7 +68,7 @@ function init() {
      controls.update();
  }
  
@@ -6569,7 +6564,7 @@ index da6917bc..ae113e98 100644
      const newObj = new THREE.SpotLight(color, 10);
  
      newObj.castShadow = true;
-@@ -85,7 +85,7 @@ function onWindowResize() {
+@@ -86,7 +86,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -6579,7 +6574,7 @@ index da6917bc..ae113e98 100644
          .to(
              {
 diff --git a/examples-testing/examples/webgl_lines_colors.ts b/examples-testing/examples/webgl_lines_colors.ts
-index 0582e48e..fa920c8d 100644
+index 9da19ee2..68bc979b 100644
 --- a/examples-testing/examples/webgl_lines_colors.ts
 +++ b/examples-testing/examples/webgl_lines_colors.ts
 @@ -8,7 +8,7 @@ let mouseX = 0,
@@ -6590,7 +6585,7 @@ index 0582e48e..fa920c8d 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 @@ -110,7 +110,7 @@ function init() {
      const scale = 0.3,
          d = 225;
@@ -6609,7 +6604,7 @@ index 0582e48e..fa920c8d 100644
      if (event.isPrimary === false) return;
  
      mouseX = event.clientX - windowHalfX;
-@@ -177,7 +177,7 @@ function render() {
+@@ -172,7 +172,7 @@ function animate() {
      for (let i = 0; i < scene.children.length; i++) {
          const object = scene.children[i];
  
@@ -6619,7 +6614,7 @@ index 0582e48e..fa920c8d 100644
          }
      }
 diff --git a/examples-testing/examples/webgl_lines_dashed.ts b/examples-testing/examples/webgl_lines_dashed.ts
-index 32f8f9c4..4871ed8b 100644
+index 4849e7c3..4bddc484 100644
 --- a/examples-testing/examples/webgl_lines_dashed.ts
 +++ b/examples-testing/examples/webgl_lines_dashed.ts
 @@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6642,7 +6637,7 @@ index 32f8f9c4..4871ed8b 100644
      (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
  
      const geometry = new THREE.BufferGeometry();
-@@ -178,7 +178,7 @@ function render() {
+@@ -176,7 +176,7 @@ function render() {
      const time = Date.now() * 0.001;
  
      scene.traverse(function (object) {
@@ -6652,7 +6647,7 @@ index 32f8f9c4..4871ed8b 100644
              object.rotation.y = 0.25 * time;
          }
 diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
-index 41354b06..414df7a7 100644
+index 75a66df6..37d59938 100644
 --- a/examples-testing/examples/webgl_lines_fat.ts
 +++ b/examples-testing/examples/webgl_lines_fat.ts
 @@ -10,15 +10,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
@@ -6682,9 +6677,9 @@ index 41354b06..414df7a7 100644
 +let insetHeight: number;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-index a40a7755..bcbf72a0 100644
+index e5b61d4a..49a66bb1 100644
 --- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
 @@ -11,12 +11,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
@@ -6726,7 +6721,7 @@ index a40a7755..bcbf72a0 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -212,9 +212,9 @@ function animate() {
+@@ -208,9 +208,9 @@ function animate() {
          sphereOnLine.visible = true;
  
          sphereInter.position.copy(intersects[0].point);
@@ -6738,7 +6733,7 @@ index a40a7755..bcbf72a0 100644
          const colors = obj.geometry.getAttribute('instanceColorStart');
  
          color.fromBufferAttribute(colors, index);
-@@ -236,7 +236,7 @@ function animate() {
+@@ -234,7 +234,7 @@ function animate() {
  
  //
  
@@ -6747,7 +6742,7 @@ index a40a7755..bcbf72a0 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -281,7 +281,7 @@ function initGui() {
+@@ -279,7 +279,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -6756,7 +6751,7 @@ index a40a7755..bcbf72a0 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -289,8 +289,8 @@ function initGui() {
+@@ -287,8 +287,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
@@ -6768,7 +6763,7 @@ index a40a7755..bcbf72a0 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgl_lines_fat_wireframe.ts b/examples-testing/examples/webgl_lines_fat_wireframe.ts
-index b3ca12ce..47dca0a1 100644
+index 1b6b6567..95cb9cee 100644
 --- a/examples-testing/examples/webgl_lines_fat_wireframe.ts
 +++ b/examples-testing/examples/webgl_lines_fat_wireframe.ts
 @@ -8,15 +8,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
@@ -6798,7 +6793,7 @@ index b3ca12ce..47dca0a1 100644
 +let insetHeight: number;
  
  init();
- animate();
+ 
 @@ -42,7 +47,7 @@ function init() {
  
      // Wireframe ( WireframeGeometry2, LineMaterial )
@@ -6809,7 +6804,7 @@ index b3ca12ce..47dca0a1 100644
      const geometry = new WireframeGeometry2(geo);
  
 diff --git a/examples-testing/examples/webgl_loader_3dm.ts b/examples-testing/examples/webgl_loader_3dm.ts
-index fc3b73db..218a5f1d 100644
+index 7570306f..a363c213 100644
 --- a/examples-testing/examples/webgl_loader_3dm.ts
 +++ b/examples-testing/examples/webgl_loader_3dm.ts
 @@ -5,8 +5,8 @@ import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js';
@@ -6822,7 +6817,7 @@ index fc3b73db..218a5f1d 100644
 +let controls: OrbitControls, gui: GUI;
  
  init();
- animate();
+ 
 @@ -38,7 +38,7 @@ function init() {
              initGUI(object.userData.layers);
  
@@ -6832,8 +6827,8 @@ index fc3b73db..218a5f1d 100644
          },
          function (progress) {
              console.log((progress.loaded / progress.total) * 100 + '%');
-@@ -70,7 +70,7 @@ function animate() {
-     requestAnimationFrame(animate);
+@@ -68,7 +68,7 @@ function animate() {
+     renderer.render(scene, camera);
  }
  
 -function initGUI(layers) {
@@ -6842,7 +6837,7 @@ index fc3b73db..218a5f1d 100644
  
      for (let i = 0; i < layers.length; i++) {
 diff --git a/examples-testing/examples/webgl_loader_3ds.ts b/examples-testing/examples/webgl_loader_3ds.ts
-index b0bcebe8..a0ae9d60 100644
+index 10ce3407..ac3a6e23 100644
 --- a/examples-testing/examples/webgl_loader_3ds.ts
 +++ b/examples-testing/examples/webgl_loader_3ds.ts
 @@ -3,8 +3,8 @@ import * as THREE from 'three';
@@ -6855,8 +6850,8 @@ index b0bcebe8..a0ae9d60 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
-@@ -30,9 +30,9 @@ function init() {
+ 
+@@ -29,9 +29,9 @@ function init() {
      loader.setResourcePath('models/3ds/portalgun/textures/');
      loader.load('models/3ds/portalgun/portalgun.3ds', function (object) {
          object.traverse(function (child) {
@@ -6937,7 +6932,7 @@ index ee576e04..7569a044 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_bvh.ts b/examples-testing/examples/webgl_loader_bvh.ts
-index 22eddd6a..ba5f08eb 100644
+index 0be3add4..cfdf0bc7 100644
 --- a/examples-testing/examples/webgl_loader_bvh.ts
 +++ b/examples-testing/examples/webgl_loader_bvh.ts
 @@ -5,8 +5,8 @@ import { BVHLoader } from 'three/addons/loaders/BVHLoader.js';
@@ -6950,12 +6945,12 @@ index 22eddd6a..ba5f08eb 100644
 +let mixer: THREE.AnimationMixer;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_collada.ts b/examples-testing/examples/webgl_loader_collada.ts
-index 589217fb..ee2f586e 100644
+index 62588b69..e1e82771 100644
 --- a/examples-testing/examples/webgl_loader_collada.ts
 +++ b/examples-testing/examples/webgl_loader_collada.ts
-@@ -4,14 +4,14 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -4,13 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
  
@@ -6965,7 +6960,6 @@ index 589217fb..ee2f586e 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, elf: THREE.Scene;
  
  init();
- animate();
  
  function init() {
 -    container = document.getElementById('container');
@@ -6974,10 +6968,10 @@ index 589217fb..ee2f586e 100644
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
      camera.position.set(8, 10, 8);
 diff --git a/examples-testing/examples/webgl_loader_collada_skinning.ts b/examples-testing/examples/webgl_loader_collada_skinning.ts
-index 4d3f3933..a3f95c71 100644
+index 5cb808b1..7b2b57bd 100644
 --- a/examples-testing/examples/webgl_loader_collada_skinning.ts
 +++ b/examples-testing/examples/webgl_loader_collada_skinning.ts
-@@ -5,14 +5,14 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -5,13 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -6987,7 +6981,6 @@ index 4d3f3933..a3f95c71 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
  
  init();
- animate();
  
  function init() {
 -    container = document.getElementById('container');
@@ -6996,7 +6989,7 @@ index 4d3f3933..a3f95c71 100644
      camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
      camera.position.set(15, 10, -15);
 diff --git a/examples-testing/examples/webgl_loader_draco.ts b/examples-testing/examples/webgl_loader_draco.ts
-index 4e7d17b0..32018aee 100644
+index c9947c69..69bf22b4 100644
 --- a/examples-testing/examples/webgl_loader_draco.ts
 +++ b/examples-testing/examples/webgl_loader_draco.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -7012,7 +7005,7 @@ index 4e7d17b0..32018aee 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index eda30796..5a5a6be6 100644
+index 8625cee0..816d8036 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -5,11 +5,11 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7028,8 +7021,8 @@ index eda30796..5a5a6be6 100644
 +let mixer: THREE.AnimationMixer;
  
  init();
- animate();
-@@ -63,7 +63,7 @@ function init() {
+ 
+@@ -62,7 +62,7 @@ function init() {
          action.play();
  
          object.traverse(function (child) {
@@ -7039,7 +7032,7 @@ index eda30796..5a5a6be6 100644
                  child.receiveShadow = true;
              }
 diff --git a/examples-testing/examples/webgl_loader_fbx_nurbs.ts b/examples-testing/examples/webgl_loader_fbx_nurbs.ts
-index 919a96d9..7af5eb77 100644
+index f2e45bcb..c15264d7 100644
 --- a/examples-testing/examples/webgl_loader_fbx_nurbs.ts
 +++ b/examples-testing/examples/webgl_loader_fbx_nurbs.ts
 @@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7050,7 +7043,7 @@ index 919a96d9..7af5eb77 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_gcode.ts b/examples-testing/examples/webgl_loader_gcode.ts
 index 6fd3e149..79c64232 100644
 --- a/examples-testing/examples/webgl_loader_gcode.ts
@@ -7143,7 +7136,7 @@ index 5d23e775..b8a6814d 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_loader_gltf_iridescence.ts b/examples-testing/examples/webgl_loader_gltf_iridescence.ts
-index 366ee49b..1f10a040 100644
+index eb0f8d91..9ab15779 100644
 --- a/examples-testing/examples/webgl_loader_gltf_iridescence.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_iridescence.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7181,7 +7174,7 @@ index f2bd5b10..7efbb033 100644
          }
      });
 diff --git a/examples-testing/examples/webgl_loader_gltf_sheen.ts b/examples-testing/examples/webgl_loader_gltf_sheen.ts
-index 39072e99..a336dc55 100644
+index 1ff3e7a8..ac16074b 100644
 --- a/examples-testing/examples/webgl_loader_gltf_sheen.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_sheen.ts
 @@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -7192,8 +7185,8 @@ index 39072e99..a336dc55 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
  
  init();
- animate();
-@@ -25,7 +25,10 @@ function init() {
+ 
+@@ -24,7 +24,10 @@ function init() {
      new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
          scene.add(gltf.scene);
  
@@ -7206,7 +7199,7 @@ index 39072e99..a336dc55 100644
          const gui = new GUI();
  
 diff --git a/examples-testing/examples/webgl_loader_gltf_transmission.ts b/examples-testing/examples/webgl_loader_gltf_transmission.ts
-index 05d4fd10..3b3add91 100644
+index 87a47d2c..c1341d80 100644
 --- a/examples-testing/examples/webgl_loader_gltf_transmission.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_transmission.ts
 @@ -6,7 +6,12 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -7224,7 +7217,7 @@ index 05d4fd10..3b3add91 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_imagebitmap.ts b/examples-testing/examples/webgl_loader_imagebitmap.ts
-index 4f2900fc..ef1da2bc 100644
+index 1049e985..ae304ad8 100644
 --- a/examples-testing/examples/webgl_loader_imagebitmap.ts
 +++ b/examples-testing/examples/webgl_loader_imagebitmap.ts
 @@ -1,7 +1,7 @@
@@ -7236,8 +7229,8 @@ index 4f2900fc..ef1da2bc 100644
 +let group: THREE.Group, cubes: THREE.Group;
  
  init();
- animate();
-@@ -43,7 +43,7 @@ function addImage() {
+ 
+@@ -42,7 +42,7 @@ function addImage() {
  
  const geometry = new THREE.BoxGeometry();
  
@@ -7260,7 +7253,7 @@ index f93555e4..8793a351 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_lwo.ts b/examples-testing/examples/webgl_loader_lwo.ts
-index 79b73b33..d810c145 100644
+index fb10c834..df003a04 100644
 --- a/examples-testing/examples/webgl_loader_lwo.ts
 +++ b/examples-testing/examples/webgl_loader_lwo.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -7273,7 +7266,7 @@ index 79b73b33..d810c145 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_md2_control.ts b/examples-testing/examples/webgl_loader_md2_control.ts
-index 0ce644a2..e0ada97d 100644
+index 683e4c2a..845039ea 100644
 --- a/examples-testing/examples/webgl_loader_md2_control.ts
 +++ b/examples-testing/examples/webgl_loader_md2_control.ts
 @@ -9,10 +9,10 @@ import { Gyroscope } from 'three/addons/misc/Gyroscope.js';
@@ -7290,7 +7283,7 @@ index 0ce644a2..e0ada97d 100644
  let nCharacters = 0;
  
  let cameraControls;
-@@ -77,10 +77,10 @@ function init() {
+@@ -76,10 +76,10 @@ function init() {
  
      const ground = new THREE.Mesh(gg, gm);
      ground.rotation.x = -Math.PI / 2;
@@ -7324,7 +7317,7 @@ index 0ce644a2..e0ada97d 100644
          case 'ArrowUp':
          case 'KeyW':
 diff --git a/examples-testing/examples/webgl_loader_mdd.ts b/examples-testing/examples/webgl_loader_mdd.ts
-index a1e76f0d..4d3edb93 100644
+index 5b13e8f4..83aad15c 100644
 --- a/examples-testing/examples/webgl_loader_mdd.ts
 +++ b/examples-testing/examples/webgl_loader_mdd.ts
 @@ -2,7 +2,11 @@ import * as THREE from 'three';
@@ -7376,7 +7369,7 @@ index f61eeb75..44b29b66 100644
              const percentComplete = (xhr.loaded / xhr.total) * 100;
              console.log('model ' + percentComplete.toFixed(2) + '% downloaded');
 diff --git a/examples-testing/examples/webgl_loader_obj_mtl.ts b/examples-testing/examples/webgl_loader_obj_mtl.ts
-index 2e6a2675..00b24164 100644
+index 4308aee7..f27d82d9 100644
 --- a/examples-testing/examples/webgl_loader_obj_mtl.ts
 +++ b/examples-testing/examples/webgl_loader_obj_mtl.ts
 @@ -4,7 +4,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
@@ -7387,8 +7380,8 @@ index 2e6a2675..00b24164 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
-@@ -26,7 +26,7 @@ function init() {
+ 
+@@ -25,7 +25,7 @@ function init() {
  
      // model
  
@@ -7411,7 +7404,7 @@ index d69e3fa2..312ad67c 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_loader_pdb.ts b/examples-testing/examples/webgl_loader_pdb.ts
-index 3ab34b57..c95d5c32 100644
+index b560efa7..9882dff5 100644
 --- a/examples-testing/examples/webgl_loader_pdb.ts
 +++ b/examples-testing/examples/webgl_loader_pdb.ts
 @@ -5,10 +5,10 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
@@ -7429,9 +7422,9 @@ index 3ab34b57..c95d5c32 100644
  const MOLECULES = {
      Ethanol: 'ethanol.pdb',
 @@ -64,14 +64,14 @@ function init() {
-     renderer = new THREE.WebGLRenderer({ antialias: true });
      renderer.setPixelRatio(window.devicePixelRatio);
      renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setAnimationLoop(animate);
 -    document.getElementById('container').appendChild(renderer.domElement);
 +    document.getElementById('container')!.appendChild(renderer.domElement);
  
@@ -7470,7 +7463,7 @@ index 3ab34b57..c95d5c32 100644
          geometryAtoms.translate(offset.x, offset.y, offset.z);
          geometryBonds.translate(offset.x, offset.y, offset.z);
 diff --git a/examples-testing/examples/webgl_loader_ply.ts b/examples-testing/examples/webgl_loader_ply.ts
-index f3cb4605..7b8a122f 100644
+index 0f4042b7..dff17d16 100644
 --- a/examples-testing/examples/webgl_loader_ply.ts
 +++ b/examples-testing/examples/webgl_loader_ply.ts
 @@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7484,7 +7477,7 @@ index f3cb4605..7b8a122f 100644
 +let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 @@ -100,7 +100,7 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  }
@@ -7574,7 +7567,7 @@ index 45361b92..f5d72d3c 100644
                      if (geometry) {
                          const mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgl_loader_texture_dds.ts b/examples-testing/examples/webgl_loader_texture_dds.ts
-index cac02b87..9f00f893 100644
+index bc4bd057..0bf94def 100644
 --- a/examples-testing/examples/webgl_loader_texture_dds.ts
 +++ b/examples-testing/examples/webgl_loader_texture_dds.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three';
@@ -7587,8 +7580,8 @@ index cac02b87..9f00f893 100644
 +const meshes: THREE.Mesh[] = [];
  
  init();
- animate();
-@@ -107,7 +107,7 @@ function init() {
+ 
+@@ -106,7 +106,7 @@ function init() {
      const material11 = new THREE.MeshBasicMaterial({ map: map9 });
      const material12 = new THREE.MeshBasicMaterial({ map: map10 });
  
@@ -7598,7 +7591,7 @@ index cac02b87..9f00f893 100644
      mesh.position.y = -2;
      scene.add(mesh);
 diff --git a/examples-testing/examples/webgl_loader_texture_ktx.ts b/examples-testing/examples/webgl_loader_texture_ktx.ts
-index 1bb33e02..6e66f986 100644
+index af66eb81..f7832073 100644
 --- a/examples-testing/examples/webgl_loader_texture_ktx.ts
 +++ b/examples-testing/examples/webgl_loader_texture_ktx.ts
 @@ -17,8 +17,8 @@ import { KTXLoader } from 'three/addons/loaders/KTXLoader.js';
@@ -7611,7 +7604,7 @@ index 1bb33e02..6e66f986 100644
 +const meshes: THREE.Mesh[] = [];
  
  init();
- animate();
+ 
 @@ -51,14 +51,14 @@ function init() {
          material1 = new THREE.MeshBasicMaterial({
              map: loader.load('textures/compressed/disturb_PVR2bpp.ktx'),
@@ -7690,7 +7683,7 @@ index a882cdbc..a7cbf3e0 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_texture_tga.ts b/examples-testing/examples/webgl_loader_texture_tga.ts
-index 0a78b0f5..a8e16b16 100644
+index c4f65b79..fd6bab07 100644
 --- a/examples-testing/examples/webgl_loader_texture_tga.ts
 +++ b/examples-testing/examples/webgl_loader_texture_tga.ts
 @@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7701,7 +7694,7 @@ index 0a78b0f5..a8e16b16 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_texture_tiff.ts b/examples-testing/examples/webgl_loader_texture_tiff.ts
 index f097774a..bb5b9d9d 100644
 --- a/examples-testing/examples/webgl_loader_texture_tiff.ts
@@ -7729,7 +7722,7 @@ index 2a583c2b..8e3e976b 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_ttf.ts b/examples-testing/examples/webgl_loader_ttf.ts
-index bda80dbe..e0f5ca8f 100644
+index 168371a1..073084f7 100644
 --- a/examples-testing/examples/webgl_loader_ttf.ts
 +++ b/examples-testing/examples/webgl_loader_ttf.ts
 @@ -4,9 +4,9 @@ import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
@@ -7818,7 +7811,7 @@ index bda80dbe..e0f5ca8f 100644
      document.removeEventListener('pointermove', onPointerMove);
      document.removeEventListener('pointerup', onPointerUp);
 diff --git a/examples-testing/examples/webgl_loader_usdz.ts b/examples-testing/examples/webgl_loader_usdz.ts
-index 63bebdbc..3094cab0 100644
+index d75823d8..cdd7c733 100644
 --- a/examples-testing/examples/webgl_loader_usdz.ts
 +++ b/examples-testing/examples/webgl_loader_usdz.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7829,9 +7822,9 @@ index 63bebdbc..3094cab0 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_vox.ts b/examples-testing/examples/webgl_loader_vox.ts
-index b536ebda..1ec3b80b 100644
+index 06184801..1f9629e0 100644
 --- a/examples-testing/examples/webgl_loader_vox.ts
 +++ b/examples-testing/examples/webgl_loader_vox.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -7842,9 +7835,9 @@ index b536ebda..1ec3b80b 100644
 +let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_vrml.ts b/examples-testing/examples/webgl_loader_vrml.ts
-index 242405a5..407d2845 100644
+index fecf4bb4..a6093ead 100644
 --- a/examples-testing/examples/webgl_loader_vrml.ts
 +++ b/examples-testing/examples/webgl_loader_vrml.ts
 @@ -6,7 +6,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7869,7 +7862,7 @@ index 242405a5..407d2845 100644
 +let vrmlScene: THREE.Scene;
  
  init();
- animate();
+ 
 @@ -82,9 +87,14 @@ function init() {
      gui.add(params, 'asset', assets).onChange(function (value) {
          if (vrmlScene) {
@@ -7898,7 +7891,7 @@ index 242405a5..407d2845 100644
          vrmlScene = object;
          scene.add(object);
 diff --git a/examples-testing/examples/webgl_loader_vtk.ts b/examples-testing/examples/webgl_loader_vtk.ts
-index 503dd76e..b7fa2733 100644
+index dfc79865..de6983fb 100644
 --- a/examples-testing/examples/webgl_loader_vtk.ts
 +++ b/examples-testing/examples/webgl_loader_vtk.ts
 @@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7912,9 +7905,9 @@ index 503dd76e..b7fa2733 100644
 +let camera: THREE.PerspectiveCamera, controls: TrackballControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_loader_xyz.ts b/examples-testing/examples/webgl_loader_xyz.ts
-index 28dd174a..431c3de7 100644
+index 90e00984..61ef0cf1 100644
 --- a/examples-testing/examples/webgl_loader_xyz.ts
 +++ b/examples-testing/examples/webgl_loader_xyz.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -7928,9 +7921,9 @@ index 28dd174a..431c3de7 100644
 +let points: THREE.Points;
  
  init();
- animate();
+ 
 diff --git a/examples-testing/examples/webgl_lod.ts b/examples-testing/examples/webgl_lod.ts
-index 6e005701..c6928a7a 100644
+index 0bb9e7be..bd1d0e46 100644
 --- a/examples-testing/examples/webgl_lod.ts
 +++ b/examples-testing/examples/webgl_lod.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -7945,7 +7938,7 @@ index 6e005701..c6928a7a 100644
  
  const clock = new THREE.Clock();
  
-@@ -29,7 +29,7 @@ function init() {
+@@ -28,7 +28,7 @@ function init() {
      dirLight.position.set(0, 0, 1).normalize();
      scene.add(dirLight);
  
