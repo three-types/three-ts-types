@@ -7,11 +7,12 @@ import UniformGroupNode from "./UniformGroupNode.js";
 
 export default class UniformNode<Value> extends InputNode<Value> {
     readonly isUniformNode: true;
+
     groupNode: UniformGroupNode;
 
     constructor(value: Value, nodeType?: NodeTypeOption | null);
 
-    setGroup(group: UniformGroupNode): UniformNode<Value>;
+    setGroup(group: UniformGroupNode): this;
 
     getGroup(): UniformGroupNode;
 

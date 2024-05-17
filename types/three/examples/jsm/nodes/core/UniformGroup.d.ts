@@ -1,6 +1,7 @@
 export default class UniformGroup {
-    readonly isUniformGroup: true;
     name: string;
+
+    readonly isUniformGroup: true;
 
     constructor(name: string);
 }
