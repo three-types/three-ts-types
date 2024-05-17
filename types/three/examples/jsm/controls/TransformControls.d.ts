@@ -1,9 +1,11 @@
 import { Camera, Mesh, MOUSE, Object3D, Object3DEventMap, Quaternion, Raycaster, Vector3 } from "three";
 
+type TransformControlMode = "translate" | "rotate" | "scale";
+
 export interface TransformControlsEventMap extends Object3DEventMap {
     change: {};
-    mouseDown: {};
-    mouseUp: {};
+    mouseDown: { mode: TransformControlMode };
+    mouseUp: { mode: TransformControlMode };
     objectChange: {};
     "camera-changed": { value: unknown };
     "object-changed": { value: unknown };
@@ -43,7 +45,7 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
     object: Object3D | undefined;
     enabled: boolean;
     axis: "X" | "Y" | "Z" | "E" | "XY" | "YZ" | "XZ" | "XYZ" | "XYZE" | null;
-    mode: "translate" | "rotate" | "scale";
+    mode: TransformControlMode;
     translationSnap: number | null;
     rotationSnap: number | null;
     space: "world" | "local";
@@ -67,9 +69,9 @@ export class TransformControls extends Object3D<TransformControlsEventMap> {
 
     attach(object: Object3D): this;
     detach(): this;
-    getMode(): "translate" | "rotate" | "scale";
+    getMode(): TransformControlMode;
     getRaycaster(): Raycaster;
-    setMode(mode: "translate" | "rotate" | "scale"): void;
+    setMode(mode: TransformControlMode): void;
     setTranslationSnap(translationSnap: number | null): void;
     setRotationSnap(rotationSnap: number | null): void;
     setScaleSnap(scaleSnap: number | null): void;
@@ -108,7 +110,7 @@ export class TransformControlsPlane extends Mesh {
 
     constructor();
 
-    mode: "translate" | "scale" | "rotate";
+    mode: TransformControlMode;
 
     axis: "X" | "Y" | "Z" | "XY" | "YZ" | "XZ" | "XYZ" | "E";
 
