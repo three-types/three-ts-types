@@ -13705,6 +13705,43 @@ index 3fb91ed9..67f2f7bf 100644
      const size = texture.image.width * texture.image.height;
      const data = texture.image.data;
  
+diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
+index 107f4f84..f7b787da 100644
+--- a/examples-testing/examples/webgpu_materials_toon.ts
++++ b/examples-testing/examples/webgpu_materials_toon.ts
+@@ -12,18 +12,19 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
++import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
+-let particleLight;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
++let particleLight: THREE.Mesh;
+ 
+ const loader = new FontLoader();
+ loader.load('fonts/gentilis_regular.typeface.json', function (font) {
+     init(font);
+ });
+ 
+-function init(font) {
++function init(font: Font) {
+     if (WebGPU.isAvailable() === false && WebGL.isWebGL2Available() === false) {
+         document.body.appendChild(WebGPU.getErrorMessage());
+ 
+@@ -91,7 +92,7 @@ function init(font) {
+         }
+     }
+ 
+-    function addLabel(name, location) {
++    function addLabel(name: string, location: THREE.Vector3) {
+         const textGeo = new TextGeometry(name, {
+             font: font,
+ 
 diff --git a/examples-testing/examples/webgpu_materials_transmission.ts b/examples-testing/examples/webgpu_materials_transmission.ts
 index f3f854ee..72688efc 100644
 --- a/examples-testing/examples/webgpu_materials_transmission.ts
