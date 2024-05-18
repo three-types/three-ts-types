@@ -483,6 +483,11 @@ export class WebGLRenderer implements Renderer {
         level?: number,
     ): void;
 
+    /**
+     * Initializes the given WebGLRenderTarget memory. Useful for initializing a render target so data can be copied
+     * into it using {@link WebGLRenderer.copyTextureToTexture} before it has been rendered to.
+     * @param target
+     */
     initRenderTarget(target: WebGLRenderTarget): void;
 
     /**
