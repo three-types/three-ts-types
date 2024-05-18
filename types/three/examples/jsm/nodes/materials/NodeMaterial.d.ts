@@ -1,6 +1,7 @@
 import {
     LineBasicMaterial,
-    Material, MaterialParameters,
+    Material,
+    MaterialParameters,
     MeshBasicMaterial,
     MeshMatcapMaterial,
     MeshNormalMaterial,

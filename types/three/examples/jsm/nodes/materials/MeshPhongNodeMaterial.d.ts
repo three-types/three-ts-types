@@ -1,4 +1,4 @@
-import {Color, Combine, Euler, MeshPhongMaterialParameters, NormalMapTypes, Texture, Vector2} from "three";
+import { Color, Combine, Euler, MeshPhongMaterialParameters, NormalMapTypes, Texture, Vector2 } from "three";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
