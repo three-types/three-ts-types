@@ -4,8 +4,12 @@ import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 
 export default class AttributeNode extends Node {
-    constructor(attributeName: string, nodeType?: NodeTypeOption | null);
+    defaultNode: Node | null;
+
+    constructor(attributeName: string, nodeType?: NodeTypeOption | null, defaultNode?: Node | null);
+
     setAttributeName(attributeName: string): this;
+
     getAttributeName(builder: NodeBuilder): string;
 }
 
