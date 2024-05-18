@@ -1,4 +1,5 @@
 import {
+    Box2,
     BufferGeometry,
     Camera,
     Color,
@@ -271,7 +272,13 @@ export default class Renderer {
 
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
 
-    copyTextureToTexture(position: Vector2, srcTexture: Texture, dstTexture: Texture, level?: number): void;
+    copyTextureToTexture(
+      srcTexture: Texture,
+      dstTexture: Texture,
+      srcRegion?: Box2 | null,
+      dstPosition?: Vector2 | null,
+      level?: number,
+    ): void;
 
     readRenderTargetPixelsAsync(
         renderTarget: RenderTarget,
