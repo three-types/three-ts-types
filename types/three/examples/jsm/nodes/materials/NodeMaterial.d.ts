@@ -1,6 +1,7 @@
 import {
     LineBasicMaterial,
     Material,
+    MaterialParameters,
     MeshBasicMaterial,
     MeshMatcapMaterial,
     MeshNormalMaterial,
@@ -9,8 +10,6 @@ import {
     MeshStandardMaterial,
     MeshToonMaterial,
     PointsMaterial,
-    ShaderMaterial,
-    ShaderMaterialParameters,
     ShadowMaterial,
     SpriteMaterial,
 } from "three";
@@ -32,7 +31,7 @@ import PointsNodeMaterial from "./PointsNodeMaterial.js";
 import ShadowNodeMaterial from "./ShadowNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
 
-export interface NodeMaterialParameters extends ShaderMaterialParameters {
+export interface NodeMaterialParameters extends MaterialParameters {
     normals?: boolean | undefined;
 
     colorSpaced?: boolean | undefined;
@@ -59,7 +58,7 @@ export interface NodeMaterialParameters extends ShaderMaterialParameters {
     vertexNode?: ShaderNodeObject<Node> | null | undefined;
 }
 
-export default class NodeMaterial extends ShaderMaterial {
+export default class NodeMaterial extends Material {
     readonly isNodeMaterial: true;
 
     normals: boolean;

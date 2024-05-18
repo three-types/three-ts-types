@@ -28,8 +28,11 @@ export default class MeshToonNodeMaterial extends NodeMaterial {
     displacementScale: number;
     displacementBias: number;
     alphaMap: Texture | null;
+    wireframe: boolean;
+    wireframeLinewidth: number;
     wireframeLinecap: string;
     wireframeLinejoin: string;
+    fog: boolean;
 
     constructor(paramters: MeshToonNodeMaterialParameters);
 }
