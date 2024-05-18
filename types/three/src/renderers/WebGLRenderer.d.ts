@@ -1,5 +1,6 @@
 import { Camera } from "../cameras/Camera.js";
 import { ColorSpace, CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
+import { TypedArray } from "../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
@@ -421,9 +422,19 @@ export class WebGLRenderer implements Renderer {
         y: number,
         width: number,
         height: number,
-        buffer: any,
+        buffer: TypedArray,
         activeCubeFaceIndex?: number,
     ): void;
+
+    readRenderTargetPixelsAsync(
+        renderTarget: WebGLRenderTarget | WebGLRenderTarget<Texture[]>,
+        x: number,
+        y: number,
+        width: number,
+        height: number,
+        buffer: TypedArray,
+        activeCubeFaceIndex?: number,
+    ): Promise<TypedArray>;
 
     /**
      * Copies a region of the currently bound framebuffer into the selected mipmap level of the selected texture.
