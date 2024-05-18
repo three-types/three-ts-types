@@ -22,6 +22,7 @@ export default class MeshMatcapNodeMaterial extends NodeMaterial {
     displacementBias: number;
     alphaMap: Texture | null;
     flatShading: boolean;
+    fog: boolean;
 
     constructor(paramters: MeshMatcapNodeMaterialParameters);
 }
