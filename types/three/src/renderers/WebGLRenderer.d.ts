@@ -483,6 +483,8 @@ export class WebGLRenderer implements Renderer {
         level?: number,
     ): void;
 
+    initRenderTarget(target: WebGLRenderTarget): void;
+
     /**
      * Initializes the given texture. Can be used to preload a texture rather than waiting until first render (which can cause noticeable lags due to decode and GPU upload overhead).
      *
