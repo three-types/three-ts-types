@@ -266,15 +266,7 @@ export {
     modelWorldMatrix,
 } from "./accessors/ModelNode.js";
 export { default as ModelViewProjectionNode, modelViewProjection } from "./accessors/ModelViewProjectionNode.js";
-export {
-    default as NormalNode,
-    normalGeometry,
-    normalLocal,
-    NormalNodeScope,
-    normalView,
-    normalWorld,
-    transformedNormalView,
-} from "./accessors/NormalNode.js";
+export * from "./accessors/NormalNode.js";
 export {
     default as Object3DNode,
     objectDirection,
