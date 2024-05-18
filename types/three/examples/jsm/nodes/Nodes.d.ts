@@ -197,16 +197,7 @@ export * from "./shadernode/ShaderNode.js";
 // accessors
 export { parallaxDirection, parallaxUV, TBNViewMatrix, transformedBentNormalView } from "./accessors/AccessorsUtils.js";
 export { batch, default as BatchNode } from "./accessors/BatchNode.js";
-export {
-    bitangentGeometry,
-    bitangentLocal,
-    BitangentNodeScope,
-    bitangentView,
-    bitangentWorld,
-    default as BitangentNode,
-    transformedBitangentView,
-    transformedBitangentWorld,
-} from "./accessors/BitangentNode.js";
+export * from "./accessors/BitangentNode.js";
 export { buffer, default as BufferNode } from "./accessors/BufferNode.js";
 export {
     cameraFar,
@@ -293,16 +284,7 @@ export { default as ReflectVectorNode, reflectVector } from "./accessors/Reflect
 export { default as RendererReferenceNode, rendererReference } from "./accessors/RendererReferenceNode.js";
 export { default as SkinningNode, skinning } from "./accessors/SkinningNode.js";
 export { default as StorageBufferNode, storage, storageObject } from "./accessors/StorageBufferNode.js";
-export {
-    default as TangentNode,
-    tangentGeometry,
-    tangentLocal,
-    TangentNodeScope,
-    tangentView,
-    tangentWorld,
-    transformedTangentView,
-    transformedTangentWorld,
-} from "./accessors/TangentNode.js";
+export * from "./accessors/TangentNode.js";
 export { default as TextureBicubicNode, textureBicubic } from "./accessors/TextureBicubicNode.js";
 export { default as TextureNode, sampler, texture } from "./accessors/TextureNode.js";
 export { default as UniformsNode, uniforms } from "./accessors/UniformsNode.js";
