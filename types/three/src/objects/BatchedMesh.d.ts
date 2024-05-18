@@ -2,10 +2,10 @@ import { Camera } from "../cameras/Camera.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Material } from "../materials/Material.js";
 import { Box3 } from "../math/Box3.js";
+import { Color } from "../math/Color.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
 import { Mesh } from "./Mesh.js";
-import {Color} from "../math/Color.js";
 
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to
