@@ -369,7 +369,7 @@ export {
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";
 
-export { default as PassNode, depthPass, pass, PassNodeScope } from "./display/PassNode.js";
+export { default as PassNode, depthPass, pass, PassNodeScope, texturePass } from "./display/PassNode.js";
 
 // code
 export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
