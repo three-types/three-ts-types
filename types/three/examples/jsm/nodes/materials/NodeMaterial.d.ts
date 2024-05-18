@@ -7,6 +7,7 @@ import {
     MeshPhongMaterial,
     MeshPhysicalMaterial,
     MeshStandardMaterial,
+    MeshToonMaterial,
     PointsMaterial,
     ShaderMaterial,
     ShaderMaterialParameters,
@@ -26,6 +27,7 @@ import MeshNormalNodeMaterial from "./MeshNormalNodeMaterial.js";
 import MeshPhongNodeMaterial from "./MeshPhongNodeMaterial.js";
 import MeshPhysicalNodeMaterial from "./MeshPhysicalNodeMaterial.js";
 import MeshStandardNodeMaterial from "./MeshStandardNodeMaterial.js";
+import MeshToonNodeMaterial from "./MeshToonNodeMaterial.js";
 import PointsNodeMaterial from "./PointsNodeMaterial.js";
 import ShadowNodeMaterial from "./ShadowNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
@@ -109,6 +111,7 @@ export default class NodeMaterial extends ShaderMaterial {
     static fromMaterial(material: MeshPhongMaterial): MeshPhongNodeMaterial;
     static fromMaterial(material: MeshPhysicalMaterial): MeshPhysicalNodeMaterial;
     static fromMaterial(material: MeshStandardMaterial): MeshStandardNodeMaterial;
+    static fromMaterial(material: MeshToonMaterial): MeshToonNodeMaterial;
     static fromMaterial(material: PointsMaterial): PointsNodeMaterial;
     static fromMaterial(material: ShadowMaterial): ShadowNodeMaterial;
     static fromMaterial(material: SpriteMaterial): SpriteNodeMaterial;
