@@ -17,4 +17,4 @@ export const attribute: (
     name: string,
     nodeType?: NodeTypeOption | null,
     defaultNode?: NodeRepresentation,
-) => ShaderNodeObject<Node>;
+) => ShaderNodeObject<AttributeNode>;
