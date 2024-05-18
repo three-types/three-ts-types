@@ -5,6 +5,7 @@ import { Box3 } from "../math/Box3.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
 import { Mesh } from "./Mesh.js";
+import {Color} from "../math/Color.js";
 
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to
@@ -109,6 +110,13 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     ): this;
 
     /**
+     * Get the color of the defined geometry.
+     * @param index The index of a geometry. Values have to be in the range [0, count].
+     * @param color This color object will be set to the color of the defined geometry.
+     */
+    getColorAt(index: number, color: Color): void;
+
+    /**
      * Get the local transformation matrix of the defined instance.
      * @param index The index of an instance. Values have to be in the range [0, count].
      * @param matrix This 4x4 matrix will be set to the local transformation matrix of the defined instance.
@@ -120,6 +128,13 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * @param index The index of an instance. Values have to be in the range [0, count].
      */
     getVisibleAt(index: number): boolean;
+
+    /**
+     * Sets the given color to the defined geometry.
+     * @param index The index of a geometry. Values have to be in the range [0, count].
+     * @param color The color of a single geometry.
+     */
+    setColorAt(index: number, color: Color): void;
 
     /**
      * Sets the given local transformation matrix to the defined instance. Make sure you set {@link .instanceMatrix}

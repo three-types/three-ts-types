@@ -39,6 +39,7 @@ export interface WebGLProgramParameters {
     precision: "lowp" | "mediump" | "highp";
 
     batching: boolean;
+    batchingColor: boolean;
     instancing: boolean;
     instancingColor: boolean;
     instancingMorph: boolean;
