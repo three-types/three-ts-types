@@ -13622,6 +13622,42 @@ index e8de51c0..1db14de9 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_materials_displacementmap.ts b/examples-testing/examples/webgpu_materials_displacementmap.ts
+index 5c7287ff..da3d0831 100644
+--- a/examples-testing/examples/webgpu_materials_displacementmap.ts
++++ b/examples-testing/examples/webgpu_materials_displacementmap.ts
+@@ -10,8 +10,8 @@ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+ 
+ import { MeshStandardNodeMaterial } from 'three/nodes';
+ 
+-let stats;
+-let camera, scene, renderer, controls;
++let stats: Stats;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: WebGPURenderer, controls: OrbitControls;
+ 
+ const settings = {
+     metalness: 1.0,
+@@ -23,9 +23,9 @@ const settings = {
+     normalScale: 1.0,
+ };
+ 
+-let mesh, material;
++let mesh: THREE.Mesh, material: MeshStandardNodeMaterial;
+ 
+-let pointLight, ambientLight;
++let pointLight: THREE.PointLight, ambientLight: THREE.AmbientLight;
+ 
+ const height = 500; // of camera frustum
+ 
+@@ -177,7 +177,7 @@ function init() {
+ 
+     const loader = new OBJLoader();
+     loader.load('models/obj/ninja/ninjaHead_Low.obj', function (group) {
+-        const geometry = group.children[0].geometry;
++        const geometry = (group.children[0] as THREE.Mesh).geometry;
+         geometry.center();
+ 
+         mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
 index 99b484c4..9eb3c67b 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
