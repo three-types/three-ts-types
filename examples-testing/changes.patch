@@ -1952,7 +1952,7 @@ index 977dbadb..fb1460ca 100644
      material.uniforms['u_renderthreshold'].value = volconfig.isothreshold; // For ISO renderstyle
      material.uniforms['u_cmdata'].value = cmtextures[volconfig.colormap];
 diff --git a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
-index fc2fc783..cd17b027 100644
+index 1ad6d264..10b32582 100644
 --- a/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
 +++ b/examples-testing/examples/webgl2_materials_texture3d_partialupdate.ts
 @@ -6,14 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -1987,8 +1987,8 @@ index fc2fc783..cd17b027 100644
          const scaleFactor = (Math.random() + 0.5) * 0.5;
          const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
  
--        renderer.copyTextureToTexture3D(box, position, source, cloudTexture);
-+        renderer.copyTextureToTexture3D(box, position, source, cloudTexture!);
+-        renderer.copyTextureToTexture3D(source, cloudTexture, box, position);
++        renderer.copyTextureToTexture3D(source, cloudTexture!, box, position);
  
          prevTime = time;
  
@@ -5901,7 +5901,7 @@ index adfcfddf..d26cee37 100644
          INTERSECTED = null;
      }
 diff --git a/examples-testing/examples/webgl_interactive_cubes_gpu.ts b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
-index 313b023a..7e77fbc5 100644
+index 2644469c..d48fa232 100644
 --- a/examples-testing/examples/webgl_interactive_cubes_gpu.ts
 +++ b/examples-testing/examples/webgl_interactive_cubes_gpu.ts
 @@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -9104,7 +9104,7 @@ index 24bd4eb9..5d5e77b6 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgl_materials_texture_partialupdate.ts b/examples-testing/examples/webgl_materials_texture_partialupdate.ts
-index 04844817..2f734b77 100644
+index 5adfc8e6..55d802e3 100644
 --- a/examples-testing/examples/webgl_materials_texture_partialupdate.ts
 +++ b/examples-testing/examples/webgl_materials_texture_partialupdate.ts
 @@ -1,6 +1,11 @@
