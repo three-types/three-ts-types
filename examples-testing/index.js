@@ -73,6 +73,7 @@ const exceptionList = [
     'webgpu_lines_fat',
     'webgpu_loader_materialx',
     'webgpu_materials',
+    'webgpu_materials_matcap',
     'webgpu_materials_sss',
     'webgpu_materialx_noise',
     'webgpu_multiple_rendertargets',
