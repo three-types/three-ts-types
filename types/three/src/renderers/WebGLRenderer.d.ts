@@ -4,6 +4,7 @@ import { TypedArray } from "../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
+import { Box2 } from "../math/Box2.js";
 import { Box3 } from "../math/Box3.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { Plane } from "../math/Plane.js";
@@ -447,28 +448,38 @@ export class WebGLRenderer implements Renderer {
     copyFramebufferToTexture(position: Vector2, texture: Texture, level?: number): void;
 
     /**
-     * Copies srcTexture to the specified level of dstTexture, offset by the input position.
+     * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
+     * position.
      *
-     * @param position Specifies the pixel offset into the dstTexture where the copy will occur.
      * @param srcTexture Specifies the source texture.
      * @param dstTexture Specifies the destination texture.
+     * @param srcRegion Specifies the bounds
+     * @param dstPosition Specifies the pixel offset into the dstTexture where the copy will occur.
      * @param level Specifies the destination mipmap level of the texture.
      */
-    copyTextureToTexture(position: Vector2, srcTexture: Texture, dstTexture: Texture, level?: number): void;
+    copyTextureToTexture(
+        srcTexture: Texture,
+        dstTexture: Texture,
+        srcRegion?: Box2 | null,
+        dstPosition?: Vector2 | null,
+        level?: number,
+    ): void;
 
     /**
-     * Copies the pixels of a texture in the bounds sourceBox in the desination texture starting from the given position.
-     * @param sourceBox Specifies the bounds
-     * @param position Specifies the pixel offset into the dstTexture where the copy will occur.
+     * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
+     * position.
+     *
      * @param srcTexture Specifies the source texture.
      * @param dstTexture Specifies the destination texture.
+     * @param srcRegion Specifies the bounds
+     * @param dstPosition Specifies the pixel offset into the dstTexture where the copy will occur.
      * @param level Specifies the destination mipmap level of the texture.
      */
     copyTextureToTexture3D(
-        sourceBox: Box3,
-        position: Vector3,
         srcTexture: Texture,
         dstTexture: Data3DTexture | DataArrayTexture,
+        srcRegion?: Box3 | null,
+        dstPosition?: Vector3 | null,
         level?: number,
     ): void;
 
