@@ -3977,7 +3977,7 @@ index dd2f61f9..6dab1b6e 100644
      mouseY = (event.clientY - windowHalfY) * 10;
  }
 diff --git a/examples-testing/examples/webgl_framebuffer_texture.ts b/examples-testing/examples/webgl_framebuffer_texture.ts
-index 521261a0..5844c437 100644
+index df4acc9d..636f9db9 100644
 --- a/examples-testing/examples/webgl_framebuffer_texture.ts
 +++ b/examples-testing/examples/webgl_framebuffer_texture.ts
 @@ -3,10 +3,10 @@ import * as THREE from 'three';
@@ -14059,7 +14059,7 @@ index 3a13ab5a..2850b1be 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 19e195de..e321b7a1 100644
+index 19e195de..6a7d4ceb 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 @@ -26,8 +26,14 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
@@ -14079,11 +14079,13 @@ index 19e195de..e321b7a1 100644
  
  const gui = new GUI();
  
-@@ -38,7 +44,11 @@ const options = {
+@@ -38,7 +44,13 @@ const options = {
  gui.add(options, 'selection', ['mrt', 'diffuse', 'normal']);
  
  class WriteGBufferMaterial extends NodeMaterial {
 -    constructor(diffuseTexture) {
++    lights: boolean;
++    fog: boolean;
 +    colorSpaced: boolean;
 +
 +    diffuseTexture: THREE.Texture;
@@ -14092,16 +14094,19 @@ index 19e195de..e321b7a1 100644
          super();
  
          this.lights = false;
-@@ -62,7 +72,7 @@ class WriteGBufferMaterial extends NodeMaterial {
+@@ -62,7 +74,10 @@ class WriteGBufferMaterial extends NodeMaterial {
  }
  
  class ReadGBufferMaterial extends NodeMaterial {
 -    constructor(tDiffuse, tNormal) {
++    lights: boolean;
++    fog: boolean;
++
 +    constructor(tDiffuse: THREE.Texture, tNormal: THREE.Texture) {
          super();
  
          this.lights = false;
-@@ -159,7 +169,7 @@ function onWindowResize() {
+@@ -159,7 +174,7 @@ function onWindowResize() {
      renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
  }
  
@@ -14110,7 +14115,7 @@ index 19e195de..e321b7a1 100644
      const selection = options.selection;
  
      torus.rotation.y = (time / 1000) * 0.4;
-@@ -189,12 +199,26 @@ async function readback() {
+@@ -189,12 +204,26 @@ async function readback() {
      const selection = options.selection;
  
      if (selection === 'diffuse') {
