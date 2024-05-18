@@ -273,11 +273,11 @@ export default class Renderer {
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
 
     copyTextureToTexture(
-      srcTexture: Texture,
-      dstTexture: Texture,
-      srcRegion?: Box2 | null,
-      dstPosition?: Vector2 | null,
-      level?: number,
+        srcTexture: Texture,
+        dstTexture: Texture,
+        srcRegion?: Box2 | null,
+        dstPosition?: Vector2 | null,
+        level?: number,
     ): void;
 
     readRenderTargetPixelsAsync(
