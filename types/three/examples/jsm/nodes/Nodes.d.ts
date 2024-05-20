@@ -255,6 +255,7 @@ export {
     modelViewMatrix,
     modelViewPosition,
     modelWorldMatrix,
+    modelWorldMatrixInverse,
 } from "./accessors/ModelNode.js";
 export { default as ModelViewProjectionNode, modelViewProjection } from "./accessors/ModelViewProjectionNode.js";
 export * from "./accessors/NormalNode.js";
