@@ -1,5 +1,7 @@
+import { Matrix4 } from "three/src/Three.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import Object3DNode from "./Object3DNode.js";
+import { UniformNode } from "../Nodes.js";
 
 /**
  * Similar to {@link Object3DNode} but the object comes from {@link NodeFrame}
@@ -15,3 +17,4 @@ export const modelWorldMatrix: ShaderNodeObject<ModelNode>;
 export const modelPosition: ShaderNodeObject<ModelNode>;
 export const modelScale: ShaderNodeObject<ModelNode>;
 export const modelViewPosition: ShaderNodeObject<ModelNode>;
+export const modelWorldMatrixInverse: ShaderNodeObject<UniformNode<Matrix4>>;
