@@ -211,6 +211,7 @@ export {
     materialClearcoatNormal,
     materialClearcoatRoughness,
     materialColor,
+    materialDispersion,
     materialEmissive,
     materialIridescence,
     materialIridescenceIOR,
