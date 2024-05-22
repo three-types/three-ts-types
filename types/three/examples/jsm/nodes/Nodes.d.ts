@@ -207,6 +207,7 @@ export {
     materialAlphaTest,
     materialAnisotropy,
     materialAnisotropyVector,
+    materialDispersion,
     materialClearcoat,
     materialClearcoatNormal,
     materialClearcoatRoughness,

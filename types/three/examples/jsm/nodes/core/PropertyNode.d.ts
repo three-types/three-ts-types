@@ -40,3 +40,4 @@ export const transmission: ShaderNodeObject<PropertyNode>;
 export const thickness: ShaderNodeObject<PropertyNode>;
 export const attenuationDistance: ShaderNodeObject<PropertyNode>;
 export const attenuationColor: ShaderNodeObject<PropertyNode>;
+export const dispersion: ShaderNodeObject<PropertyNode>;
