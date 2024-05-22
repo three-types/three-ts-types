@@ -88,8 +88,8 @@ export default abstract class NodeBuilder {
 
     isMatrix(type: NodeTypeOption): boolean;
     isReference(type: NodeTypeOption): boolean;
-    isShaderStage(shaderStage: NodeShaderStage): boolean;
-    getComponentType(type: NodeTypeOption): NodeTypeOption;
+    getElementType(type: NodeTypeOption): NodeTypeOption | null;
+    getComponentType(type: NodeTypeOption): NodeTypeOption | null;
     getVectorType(type: NodeTypeOption): NodeTypeOption;
     getTypeFromLength(length: number): NodeTypeOption;
     getTypeLength(type: NodeTypeOption): number;

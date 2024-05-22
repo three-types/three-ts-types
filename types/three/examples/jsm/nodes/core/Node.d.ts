@@ -34,6 +34,8 @@ export default abstract class Node {
 
     getUpdateBeforeType(): NodeUpdateType;
 
+    getElementType(builder: NodeBuilder): NodeTypeOption | null;
+
     getNodeType(builder: NodeBuilder, output?: string | null): NodeTypeOption | null;
 
     getReference(builder: NodeBuilder): Node;
