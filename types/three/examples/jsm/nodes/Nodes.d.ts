@@ -199,18 +199,7 @@ export { parallaxDirection, parallaxUV, TBNViewMatrix, transformedBentNormalView
 export { batch, default as BatchNode } from "./accessors/BatchNode.js";
 export * from "./accessors/BitangentNode.js";
 export { buffer, default as BufferNode } from "./accessors/BufferNode.js";
-export {
-    cameraFar,
-    cameraLogDepth,
-    cameraNear,
-    cameraNormalMatrix,
-    cameraPosition,
-    cameraProjectionMatrix,
-    cameraProjectionMatrixInverse,
-    cameraViewMatrix,
-    cameraWorldMatrix,
-    default as CameraNode,
-} from "./accessors/CameraNode.js";
+export * from "./accessors/CameraNode.js";
 export { cubeTexture, default as CubeTextureNode } from "./accessors/CubeTextureNode.js";
 export { default as InstanceNode, instance } from "./accessors/InstanceNode.js";
 export {
