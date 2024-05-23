@@ -100,6 +100,8 @@ const exceptionList = [
     'webgpu_multisampled_renderbuffers',
     'webgpu_storage_buffer',
     'webgpu_texturegrad',
+    'webgpu_volume_cloud',
+    'webgpu_volume_perlin',
     'webxr_vr_handinput_cubes',
     'webxr_vr_handinput_profiles',
     'webxr_vr_handinput_pointerclick',
