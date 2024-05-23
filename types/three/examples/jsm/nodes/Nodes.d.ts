@@ -276,6 +276,7 @@ export { default as RendererReferenceNode, rendererReference } from "./accessors
 export { default as SkinningNode, skinning } from "./accessors/SkinningNode.js";
 export { default as StorageBufferNode, storage, storageObject } from "./accessors/StorageBufferNode.js";
 export * from "./accessors/TangentNode.js";
+export { default as Texture3DNode } from "./accessors/Texture3DNode.js";
 export { default as TextureBicubicNode, textureBicubic } from "./accessors/TextureBicubicNode.js";
 export { default as TextureNode, sampler, texture } from "./accessors/TextureNode.js";
 export { default as UniformsNode, uniforms } from "./accessors/UniformsNode.js";
