@@ -1,6 +1,6 @@
 import StorageBufferAttribute from "../../renderers/common/StorageBufferAttribute.js";
 import StorageInstancedBufferAttribute from "../../renderers/common/StorageInstancedBufferAttribute.js";
-import { NodeTypeOption } from "../core/constants.js";
+import { NodeTypeOption } from "../core/Node.js";
 import { NodeOrType, NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import StorageArrayElementNode from "../utils/StoargeArrayElementNode.js";
 import BufferNode from "./BufferNode.js";

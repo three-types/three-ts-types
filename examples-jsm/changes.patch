@@ -683,15 +683,36 @@ index a148236..0a62b23 100644
  
          this.needsInterpolation = false;
 diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
-index 3b01a9a..f42f0fd 100644
+index 3b01a9a..5ff6ad5 100644
 --- a/examples-jsm/examples/nodes/core/constants.ts
 +++ b/examples-jsm/examples/nodes/core/constants.ts
-@@ -22,7 +22,9 @@ export const NodeType = {
+@@ -1,14 +1,14 @@
+ export const NodeShaderStage = {
+     VERTEX: 'vertex',
+     FRAGMENT: 'fragment',
+-};
++} as const;
+ 
+ export const NodeUpdateType = {
+     NONE: 'none',
+     FRAME: 'frame',
+     RENDER: 'render',
+     OBJECT: 'object',
+-};
++} as const;
+ 
+ export const NodeType = {
+     BOOLEAN: 'bool',
+@@ -20,9 +20,12 @@ export const NodeType = {
+     MATRIX2: 'mat2',
+     MATRIX3: 'mat3',
      MATRIX4: 'mat4',
- };
+-};
++} as const;
  
 -export const defaultShaderStages = ['fragment', 'vertex'];
 +export type NodeShaderStage = 'vertex' | 'fragment' | 'compute';
++export type NodeUpdateType = 'none' | 'frame' | 'render' | 'object';
 +
 +export const defaultShaderStages: NodeShaderStage[] = ['fragment', 'vertex'];
  export const defaultBuildStages = ['setup', 'analyze', 'generate'];

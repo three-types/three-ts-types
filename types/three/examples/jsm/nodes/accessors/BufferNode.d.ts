@@ -1,4 +1,4 @@
-import { NodeTypeOption } from "../core/constants.js";
+import { NodeTypeOption } from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 import { NodeOrType, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 

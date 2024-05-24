@@ -1,6 +1,5 @@
-import { AnyObject, NodeTypeOption, SwizzleOption } from "../core/constants.js";
 import ConstNode from "../core/ConstNode.js";
-import Node from "../core/Node.js";
+import Node, { NodeTypeOption } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 
@@ -42,6 +41,16 @@ export interface NodeElements {
 }
 
 export function addNodeElement(name: string, nodeElement: unknown): void;
+
+export type SwizzleCharacter = "x" | "y" | "z" | "w" | "r" | "g" | "b" | "a" | "s" | "t" | "p" | "q";
+
+export type SwizzleOption = Exclude<
+    | `${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`
+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`,
+    "abs" | "sqrt"
+>;
 
 export type Swizzable<T extends Node = Node> =
     & T
@@ -206,7 +215,7 @@ export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R):
 export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
 ): (...args: ProxiedTuple<T>) => R;
-export function tslFn<T extends AnyObject, R extends Node = ShaderNodeObject<Node>>(
+export function tslFn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
 ): (args: ProxiedObject<T>) => R;
 

@@ -1,6 +1,41 @@
-import { AnyJson, NodeTypeOption, NodeUpdateType } from "./constants.js";
+import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
+
+export type NodeTypeOption =
+    | "bool"
+    | "int"
+    | "float"
+    | "vec2"
+    | "vec3"
+    | "vec4"
+    | "mat2"
+    | "mat3"
+    | "mat4"
+    | "code" /* CodeNode */
+    | "color" /* NodeUtis.getValueType */
+    | "uint"
+    | "int" /* NodeBuilder.getComponentType */
+    | "void"
+    | "property"
+    | "sampler"
+    | "texture"
+    | "cubeTexture" /* NodeBuilder.isReference */
+    | "ivec2"
+    | "uvec2"
+    | "bvec2" /* ShaderNodeBaseElements */
+    | "ivec3"
+    | "uvec3"
+    | "bvec3"
+    | "ivec4"
+    | "uvec4"
+    | "bvec4"
+    | "imat3"
+    | "umat3"
+    | "bmat3"
+    | "imat4"
+    | "umat4"
+    | "bmat4";
 
 export default abstract class Node {
     nodeType: NodeTypeOption | null;
@@ -55,9 +90,9 @@ export default abstract class Node {
 
     build(builder: NodeBuilder, output?: string | null): string;
 
-    serialize(json: AnyJson): void;
+    serialize(json: unknown): void;
 
-    deserialize(json: AnyJson): void;
+    deserialize(json: unknown): void;
 
-    toJSON(meta?: string | { textures: {}; images: {}; nodes: {} }): AnyJson;
+    toJSON(meta?: string | { textures: {}; images: {}; nodes: {} }): unknown;
 }

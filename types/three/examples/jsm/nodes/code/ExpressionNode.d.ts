@@ -1,4 +1,4 @@
-import { NodeTypeOption } from "../core/constants.js";
+import { NodeTypeOption } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
