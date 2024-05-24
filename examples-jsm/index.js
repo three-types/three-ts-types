@@ -6,7 +6,9 @@ import prettier from 'prettier';
 const files = [
     'nodes/core/Node',
     'nodes/core/NodeBuilder',
+    'nodes/core/NodeCache',
     'nodes/core/NodeFrame',
+    'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',
     'nodes/core/constants',
     'nodes/fog/FogNode',
