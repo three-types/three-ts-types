@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import Node from "./Node.js";
 declare class NodeAttribute {
     readonly isNodeAttribute: true;
     name: string;

@@ -1,5 +1,5 @@
-import Node from './Node.js';
-import NodeBuilder from './NodeBuilder.js';
+import Node from "./Node.js";
+import NodeBuilder from "./NodeBuilder.js";
 declare class NodeKeywords {
     keywords: string[];
     nodes: {

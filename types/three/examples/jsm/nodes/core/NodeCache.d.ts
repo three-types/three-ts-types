@@ -1,9 +1,9 @@
-import Node from './Node.js';
-import NodeAttribute from './NodeAttribute.js';
-import NodeUniform from './NodeUniform.js';
-import NodeVar from './NodeVar.js';
-import NodeVarying from './NodeVarying.js';
-import NodeCode from './NodeCode.js';
+import Node from "./Node.js";
+import NodeAttribute from "./NodeAttribute.js";
+import NodeCode from "./NodeCode.js";
+import NodeUniform from "./NodeUniform.js";
+import NodeVar from "./NodeVar.js";
+import NodeVarying from "./NodeVarying.js";
 interface ShaderStageNodeData {
     properties?: {
         outputNode: Node | null;

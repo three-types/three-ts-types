@@ -19,7 +19,7 @@ export declare const NodeType: {
     MATRIX3: string;
     MATRIX4: string;
 };
-export type NodeShaderStage = 'vertex' | 'fragment' | 'compute';
+export type NodeShaderStage = "vertex" | "fragment" | "compute";
 export declare const defaultShaderStages: NodeShaderStage[];
 export declare const defaultBuildStages: string[];
 export declare const shaderStages: NodeShaderStage[];
