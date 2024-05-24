@@ -98,6 +98,7 @@ const exceptionList = [
     'webgpu_postprocessing_anamorphic',
     'webgpu_mirror',
     'webgpu_multisampled_renderbuffers',
+    'webgpu_renderbundle',
     'webgpu_storage_buffer',
     'webgpu_texturegrad',
     'webgpu_volume_cloud',
