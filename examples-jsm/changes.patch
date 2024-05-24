@@ -1,8 +1,8 @@
 diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
-index 438c44dd..dd88fd34 100644
+index 438c44d..0cee90a 100644
 --- a/examples-jsm/examples/nodes/core/Node.ts
 +++ b/examples-jsm/examples/nodes/core/Node.ts
-@@ -2,12 +2,32 @@ import { EventDispatcher } from 'three';
+@@ -2,12 +2,31 @@ import { EventDispatcher } from 'three';
  import { NodeUpdateType } from './constants.js';
  import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  import { MathUtils } from 'three';
@@ -13,9 +13,9 @@ index 438c44dd..dd88fd34 100644
  
  let _nodeId = 0;
  
- class Node extends EventDispatcher {
-+    // TODO
-+    // nodeType: string??
+-class Node extends EventDispatcher {
++class Node extends EventDispatcher<{ dispose: {} }> {
++    nodeType: string | null;
 +
 +    updateType: NodeUpdateType;
 +    updateBeforeType: NodeUpdateType;
@@ -35,7 +35,7 @@ index 438c44dd..dd88fd34 100644
      constructor(nodeType = null) {
          super();
  
-@@ -28,7 +48,7 @@ class Node extends EventDispatcher {
+@@ -28,7 +47,7 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -44,7 +44,7 @@ index 438c44dd..dd88fd34 100644
          if (value === true) {
              this.version++;
          }
-@@ -73,7 +93,7 @@ class Node extends EventDispatcher {
+@@ -73,7 +92,7 @@ class Node extends EventDispatcher {
          return this;
      }
  
@@ -53,7 +53,7 @@ index 438c44dd..dd88fd34 100644
          return false;
      }
  
-@@ -106,7 +126,7 @@ class Node extends EventDispatcher {
+@@ -106,7 +125,7 @@ class Node extends EventDispatcher {
          return this._cacheKey;
      }
  
@@ -62,7 +62,7 @@ index 438c44dd..dd88fd34 100644
          return this.uuid;
      }
  
-@@ -118,14 +138,14 @@ class Node extends EventDispatcher {
+@@ -118,14 +137,14 @@ class Node extends EventDispatcher {
          return this.updateBeforeType;
      }
  
@@ -79,7 +79,7 @@ index 438c44dd..dd88fd34 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -135,14 +155,14 @@ class Node extends EventDispatcher {
+@@ -135,14 +154,14 @@ class Node extends EventDispatcher {
          return this.nodeType;
      }
  
@@ -96,7 +96,7 @@ index 438c44dd..dd88fd34 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          for (const childNode of this.getChildren()) {
-@@ -153,7 +173,7 @@ class Node extends EventDispatcher {
+@@ -153,7 +172,7 @@ class Node extends EventDispatcher {
          return null;
      }
  
@@ -105,7 +105,7 @@ index 438c44dd..dd88fd34 100644
          // @deprecated, r157
  
          console.warn('THREE.Node: construct() is deprecated. Use setup() instead.');
-@@ -161,14 +181,14 @@ class Node extends EventDispatcher {
+@@ -161,14 +180,14 @@ class Node extends EventDispatcher {
          return this.setup(builder);
      }
  
@@ -122,7 +122,7 @@ index 438c44dd..dd88fd34 100644
          const usageCount = this.increaseUsage(builder);
  
          if (usageCount === 1) {
-@@ -184,7 +204,7 @@ class Node extends EventDispatcher {
+@@ -184,7 +203,7 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -131,7 +131,7 @@ index 438c44dd..dd88fd34 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -192,15 +212,15 @@ class Node extends EventDispatcher {
+@@ -192,15 +211,15 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -151,10 +151,19 @@ index 438c44dd..dd88fd34 100644
  
          if (this !== refNode) {
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..99c48afa 100644
+index ebdc13f..4192e90 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-@@ -30,6 +30,11 @@ import {
+@@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
+ import ParameterNode from './ParameterNode.js';
+ import FunctionNode from '../code/FunctionNode.js';
+ import { createNodeMaterialFromType, default as NodeMaterial } from '../materials/NodeMaterial.js';
+-import { NodeUpdateType, defaultBuildStages, shaderStages } from './constants.js';
++import { NodeUpdateType, defaultBuildStages, shaderStages, NodeShaderStage } from './constants.js';
+ 
+ import {
+     FloatNodeUniform,
+@@ -30,6 +30,12 @@ import {
      IntType,
      UnsignedIntType,
      Float16BufferAttribute,
@@ -163,10 +172,11 @@ index ebdc13ff..99c48afa 100644
 +    Mesh,
 +    BufferGeometry,
 +    Scene,
++    RenderTargetOptions,
  } from 'three';
  
  import { stack } from './StackNode.js';
-@@ -39,6 +44,12 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
+@@ -39,6 +45,12 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
  
  import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
@@ -179,7 +189,7 @@ index ebdc13ff..99c48afa 100644
  
  const uniformsGroupCache = new ChainMap();
  
-@@ -67,10 +78,68 @@ const toFloat = value => {
+@@ -67,10 +79,73 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -207,8 +217,7 @@ index ebdc13ff..99c48afa 100644
 +    fragmentShader: string | null;
 +    computeShader: string | null;
 +
-+    // TODO
-+    // flowNodes
++    flowNodes: { vertex: Node[]; fragment: Node[]; compute: Node[] };
 +    // flowCode
 +    // uniforms
 +    // structs
@@ -236,6 +245,12 @@ index ebdc13ff..99c48afa 100644
 +    cache: NodeCache;
 +    globalCache: NodeCache;
 +
++    // TODO
++    // flowsData
++
++    shaderStage: string | null;
++    buildStage: string | null;
++
 +    constructor(
 +        object: Object3D,
 +        renderer: Renderer,
@@ -251,7 +266,16 @@ index ebdc13ff..99c48afa 100644
          this.renderer = renderer;
          this.parser = parser;
          this.scene = scene;
-@@ -138,7 +207,7 @@ class NodeBuilder {
+@@ -124,7 +199,7 @@ class NodeBuilder {
+         this.buildStage = null;
+     }
+ 
+-    createRenderTarget(width, height, options) {
++    createRenderTarget(width?: number, height?: number, options?: RenderTargetOptions) {
+         return new RenderTarget(width, height, options);
+     }
+ 
+@@ -138,7 +213,7 @@ class NodeBuilder {
          return new PMREMGenerator(this.renderer);
      }
  
@@ -260,7 +284,7 @@ index ebdc13ff..99c48afa 100644
          return this.nodes.includes(node);
      }
  
-@@ -181,11 +250,11 @@ class NodeBuilder {
+@@ -181,11 +256,11 @@ class NodeBuilder {
          return bindingsArray;
      }
  
@@ -274,7 +298,7 @@ index ebdc13ff..99c48afa 100644
          if (this.nodes.includes(node) === false) {
              this.nodes.push(node);
  
-@@ -212,7 +281,7 @@ class NodeBuilder {
+@@ -212,7 +287,7 @@ class NodeBuilder {
          return this.chaining[this.chaining.length - 1];
      }
  
@@ -283,7 +307,7 @@ index ebdc13ff..99c48afa 100644
          /*
  		if ( this.chaining.indexOf( node ) !== - 1 ) {
  
-@@ -224,7 +293,7 @@ class NodeBuilder {
+@@ -224,7 +299,7 @@ class NodeBuilder {
          this.chaining.push(node);
      }
  
@@ -292,7 +316,7 @@ index ebdc13ff..99c48afa 100644
          const lastChain = this.chaining.pop();
  
          if (lastChain !== node) {
-@@ -232,11 +301,11 @@ class NodeBuilder {
+@@ -232,15 +307,15 @@ class NodeBuilder {
          }
      }
  
@@ -306,7 +330,21 @@ index ebdc13ff..99c48afa 100644
          return this.hashNodes[hash];
      }
  
-@@ -262,7 +331,7 @@ class NodeBuilder {
+-    addFlow(shaderStage, node) {
++    addFlow(shaderStage: 'vertex' | 'fragment' | 'compute', node: Node) {
+         this.flowNodes[shaderStage].push(node);
+ 
+         return node;
+@@ -254,7 +329,7 @@ class NodeBuilder {
+         return this.context;
+     }
+ 
+-    setCache(cache) {
++    setCache(cache: NodeCache) {
+         this.cache = cache;
+     }
+ 
+@@ -262,7 +337,7 @@ class NodeBuilder {
          return this.cache;
      }
  
@@ -315,7 +353,36 @@ index ebdc13ff..99c48afa 100644
          return false;
      }
  
-@@ -648,7 +717,7 @@ class NodeBuilder {
+@@ -515,7 +590,7 @@ class NodeBuilder {
+         return lastStack;
+     }
+ 
+-    getDataFromNode(node, shaderStage = this.shaderStage, cache = null) {
++    getDataFromNode(node: Node, shaderStage: string = this.shaderStage!, cache: NodeCache | null = null) {
+         cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
+ 
+         let nodeData = cache.getNodeData(node);
+@@ -528,16 +603,16 @@ class NodeBuilder {
+ 
+         if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};
+ 
+-        return nodeData[shaderStage];
++        return nodeData[shaderStage]!;
+     }
+ 
+-    getNodeProperties(node, shaderStage = 'any') {
++    getNodeProperties(node: Node, shaderStage: string = 'any') {
+         const nodeData = this.getDataFromNode(node, shaderStage);
+ 
+         return nodeData.properties || (nodeData.properties = { outputNode: null });
+     }
+ 
+-    getBufferAttributeFromNode(node, type) {
++    getBufferAttributeFromNode(node: Node, type) {
+         const nodeData = this.getDataFromNode(node);
+ 
+         let bufferAttribute = nodeData.bufferAttribute;
+@@ -648,7 +723,7 @@ class NodeBuilder {
          return nodeCode;
      }
  
@@ -324,7 +391,7 @@ index ebdc13ff..99c48afa 100644
          if (code === '') return this;
  
          code = this.tab + code;
-@@ -662,7 +731,7 @@ class NodeBuilder {
+@@ -662,7 +737,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -333,7 +400,7 @@ index ebdc13ff..99c48afa 100644
          this.flow.code += code;
  
          return this;
-@@ -684,7 +753,7 @@ class NodeBuilder {
+@@ -684,7 +759,7 @@ class NodeBuilder {
          return this.flowsData.get(node);
      }
  
@@ -343,20 +410,41 @@ index ebdc13ff..99c48afa 100644
  
          const flowData = this.flowChildNode(node, output);
 diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
-index 96a7e0c7..656fdf12 100644
+index 96a7e0c..f9e3cbd 100644
 --- a/examples-jsm/examples/nodes/core/NodeCache.ts
 +++ b/examples-jsm/examples/nodes/core/NodeCache.ts
-@@ -1,6 +1,8 @@
+@@ -1,16 +1,27 @@
++import Node from './Node.js';
++
  let id = 0;
  
++interface NodeData {
++    properties?: {
++        outputNode: Node | null;
++    };
++}
++
  class NodeCache {
 +    id: number;
++    nodesData: WeakMap<Node, { [shaderStage: string]: NodeData | undefined }>;
 +
      constructor() {
          this.id = id++;
          this.nodesData = new WeakMap();
+     }
+ 
+-    getNodeData(node) {
++    getNodeData(node: Node) {
+         return this.nodesData.get(node);
+     }
+ 
+-    setNodeData(node, data) {
++    setNodeData(node: Node, data: { [shaderStage: string]: NodeData | undefined }) {
+         this.nodesData.set(node, data);
+     }
+ }
 diff --git a/examples-jsm/examples/nodes/core/NodeFrame.ts b/examples-jsm/examples/nodes/core/NodeFrame.ts
-index b8e8d37b..399c788b 100644
+index b8e8d37..399c788 100644
 --- a/examples-jsm/examples/nodes/core/NodeFrame.ts
 +++ b/examples-jsm/examples/nodes/core/NodeFrame.ts
 @@ -1,6 +1,16 @@
@@ -395,7 +483,7 @@ index b8e8d37b..399c788b 100644
          const reference = node.updateReference(this);
  
 diff --git a/examples-jsm/examples/nodes/core/NodeKeywords.ts b/examples-jsm/examples/nodes/core/NodeKeywords.ts
-index 53da9bf5..36bdcabe 100644
+index 53da9bf..36bdcab 100644
 --- a/examples-jsm/examples/nodes/core/NodeKeywords.ts
 +++ b/examples-jsm/examples/nodes/core/NodeKeywords.ts
 @@ -1,11 +1,18 @@
@@ -445,60 +533,8 @@ index 53da9bf5..36bdcabe 100644
          const keywordNodes = this.parse(code);
  
          for (const keywordNode of keywordNodes) {
-diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
-index 3b01a9a6..3391a4be 100644
---- a/examples-jsm/examples/nodes/core/constants.ts
-+++ b/examples-jsm/examples/nodes/core/constants.ts
-@@ -1,26 +1,26 @@
--export const NodeShaderStage = {
--    VERTEX: 'vertex',
--    FRAGMENT: 'fragment',
--};
-+export enum NodeShaderStage {
-+    VERTEX = 'vertex',
-+    FRAGMENT = 'fragment',
-+}
- 
--export const NodeUpdateType = {
--    NONE: 'none',
--    FRAME: 'frame',
--    RENDER: 'render',
--    OBJECT: 'object',
--};
-+export enum NodeUpdateType {
-+    NONE = 'none',
-+    FRAME = 'frame',
-+    RENDER = 'render',
-+    OBJECT = 'object',
-+}
- 
--export const NodeType = {
--    BOOLEAN: 'bool',
--    INTEGER: 'int',
--    FLOAT: 'float',
--    VECTOR2: 'vec2',
--    VECTOR3: 'vec3',
--    VECTOR4: 'vec4',
--    MATRIX2: 'mat2',
--    MATRIX3: 'mat3',
--    MATRIX4: 'mat4',
--};
-+export enum NodeType {
-+    BOOLEAN = 'bool',
-+    INTEGER = 'int',
-+    FLOAT = 'float',
-+    VECTOR2 = 'vec2',
-+    VECTOR3 = 'vec3',
-+    VECTOR4 = 'vec4',
-+    MATRIX2 = 'mat2',
-+    MATRIX3 = 'mat3',
-+    MATRIX4 = 'mat4',
-+}
- 
- export const defaultShaderStages = ['fragment', 'vertex'];
- export const defaultBuildStages = ['setup', 'analyze', 'generate'];
 diff --git a/examples-jsm/examples/nodes/fog/FogNode.ts b/examples-jsm/examples/nodes/fog/FogNode.ts
-index 9417df5a..43761555 100644
+index 9417df5..4376155 100644
 --- a/examples-jsm/examples/nodes/fog/FogNode.ts
 +++ b/examples-jsm/examples/nodes/fog/FogNode.ts
 @@ -1,6 +1,7 @@
