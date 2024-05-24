@@ -650,7 +650,7 @@ index 2918e21..c407d0a 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeUtils.ts b/examples-jsm/examples/nodes/core/NodeUtils.ts
-index 16a5f32..59d528d 100644
+index 16a5f32..85884bc 100644
 --- a/examples-jsm/examples/nodes/core/NodeUtils.ts
 +++ b/examples-jsm/examples/nodes/core/NodeUtils.ts
 @@ -1,10 +1,11 @@
@@ -668,7 +668,7 @@ index 16a5f32..59d528d 100644
      }
  
      for (const { property, childNode } of getNodeChildren(object)) {
-@@ -16,36 +17,36 @@ export function getCacheKey(object, force = false) {
+@@ -16,36 +17,44 @@ export function getCacheKey(object, force = false) {
      return cacheKey;
  }
  
@@ -684,12 +684,17 @@ index 16a5f32..59d528d 100644
          if (Array.isArray(object) === true) {
              for (let i = 0; i < object.length; i++) {
 -                const child = object[i];
-+                const child = object[i] as unknown;
- 
+-
 -                if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
 -                    yield { property, index: i, childNode: child };
-+                if (child && ((child as Node).isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
-+                    yield { property, index: i, childNode: child as Node };
++                const child = object[i] as unknown;
++
++                if (
++                    child &&
++                    ((child as Node).isNode === true ||
++                        (toJSON && typeof (child as { toJSON: () => unknown }).toJSON === 'function'))
++                ) {
++                    yield { property, index: i, childNode: child as Node | { toJSON: () => unknown } };
                  }
              }
 -        } else if (object && object.isNode === true) {
@@ -699,12 +704,17 @@ index 16a5f32..59d528d 100644
          } else if (typeof object === 'object') {
              for (const subProperty in object) {
 -                const child = object[subProperty];
-+                const child = object[subProperty as keyof typeof object];
- 
+-
 -                if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
 -                    yield { property, index: subProperty, childNode: child };
-+                if (child && ((child as Node).isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
-+                    yield { property, index: subProperty, childNode: child as Node };
++                const child = object[subProperty as keyof typeof object];
++
++                if (
++                    child &&
++                    ((child as Node).isNode === true ||
++                        (toJSON && typeof (child as { toJSON: () => unknown }).toJSON === 'function'))
++                ) {
++                    yield { property, index: subProperty, childNode: child as Node | { toJSON: () => unknown } };
                  }
              }
          }
