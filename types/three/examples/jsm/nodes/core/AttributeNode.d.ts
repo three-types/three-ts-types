@@ -1,6 +1,5 @@
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
-import { NodeTypeOption } from "./constants.js";
-import Node from "./Node.js";
+import Node, { NodeTypeOption } from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 
 export default class AttributeNode extends Node {

@@ -1,7 +1,6 @@
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
-import { NodeTypeOption } from "./constants.js";
 import InputNode from "./InputNode.js";
-import Node from "./Node.js";
+import Node, { NodeTypeOption } from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import UniformGroupNode from "./UniformGroupNode.js";
 

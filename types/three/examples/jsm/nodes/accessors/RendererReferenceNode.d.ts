@@ -1,5 +1,5 @@
 import Renderer from "../../renderers/common/Renderer.js";
-import { NodeTypeOption } from "../core/constants.js";
+import { NodeTypeOption } from "../core/Node.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import ReferenceNode from "./ReferenceNode.js";
 

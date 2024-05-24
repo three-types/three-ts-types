@@ -1,5 +1,4 @@
-import { NodeTypeOption } from "../core/constants.js";
-import Node from "../core/Node.js";
+import Node, { NodeTypeOption } from "../core/Node.js";
 import { NodeOrType, NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 export default class ReferenceNode<T> extends Node {

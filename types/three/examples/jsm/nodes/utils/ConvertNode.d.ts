@@ -1,5 +1,4 @@
-import Node from "../core/Node.js";
-import { NodeTypeOption } from "../Nodes.js";
+import Node, { NodeTypeOption } from "../core/Node.js";
 
 export default class ConvertNode extends Node {
     node: Node;

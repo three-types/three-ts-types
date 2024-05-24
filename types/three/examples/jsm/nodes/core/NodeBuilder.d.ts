@@ -1,8 +1,8 @@
 import { BufferGeometry, Material, Object3D, Renderer } from "three";
 import FogNode from "../fog/FogNode.js";
 import LightsNode from "../lighting/LightsNode.js";
-import { AnyObject, NodeShaderStage, NodeTypeOption } from "./constants.js";
-import Node from "./Node.js";
+import { NodeShaderStage } from "./constants.js";
+import Node, { NodeTypeOption } from "./Node.js";
 import NodeAttribute from "./NodeAttribute.js";
 import NodeCache from "./NodeCache.js";
 import NodeParser from "./NodeParser.js";
@@ -18,12 +18,12 @@ export interface FlowData {
 }
 
 export interface NodeData {
-    vertex: AnyObject;
-    fragment: AnyObject;
-    compute: AnyObject;
+    vertex: { [key: string]: unknown };
+    fragment: { [key: string]: unknown };
+    compute: { [key: string]: unknown };
 }
 
-export type NodeBuilderContext = AnyObject;
+export type NodeBuilderContext = { [key: string]: unknown };
 
 export default abstract class NodeBuilder {
     object: Object3D;
@@ -95,7 +95,7 @@ export default abstract class NodeBuilder {
     getTypeLength(type: NodeTypeOption): number;
     getVectorFromMatrix(type: NodeTypeOption): NodeTypeOption;
     getDataFromNode(node: Node, shaderStage?: NodeShaderStage): NodeData;
-    getNodeProperties(node: Node, shaderStage?: NodeShaderStage): AnyObject;
+    getNodeProperties(node: Node, shaderStage?: NodeShaderStage): { [key: string]: unknown };
     getUniformFromNode(
         node: Node,
         type: NodeTypeOption,

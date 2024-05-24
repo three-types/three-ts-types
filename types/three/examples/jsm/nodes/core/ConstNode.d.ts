@@ -1,5 +1,5 @@
-import { NodeTypeOption } from "./constants.js";
 import InputNode from "./InputNode.js";
+import { NodeTypeOption } from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 
 export default class ConstNode<Value> extends InputNode<Value> {
