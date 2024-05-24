@@ -1,8 +1,15 @@
 diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
-index 438c44dd..eb111a83 100644
+index 438c44dd..d5115493 100644
 --- a/examples-jsm/examples/nodes/core/Node.ts
 +++ b/examples-jsm/examples/nodes/core/Node.ts
-@@ -8,6 +8,24 @@ const NodeClasses = new Map();
+@@ -2,12 +2,31 @@ import { EventDispatcher } from 'three';
+ import { NodeUpdateType } from './constants.js';
+ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
+ import { MathUtils } from 'three';
++import NodeBuilder from './NodeBuilder.js';
+ 
+ const NodeClasses = new Map();
+ 
  let _nodeId = 0;
  
  class Node extends EventDispatcher {
@@ -27,7 +34,7 @@ index 438c44dd..eb111a83 100644
      constructor(nodeType = null) {
          super();
  
-@@ -28,7 +46,7 @@ class Node extends EventDispatcher {
+@@ -28,7 +47,7 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -36,6 +43,93 @@ index 438c44dd..eb111a83 100644
          if (value === true) {
              this.version++;
          }
+@@ -73,7 +92,7 @@ class Node extends EventDispatcher {
+         return this;
+     }
+ 
+-    isGlobal(/*builder*/) {
++    isGlobal(builder: NodeBuilder) {
+         return false;
+     }
+ 
+@@ -106,7 +125,7 @@ class Node extends EventDispatcher {
+         return this._cacheKey;
+     }
+ 
+-    getHash(/*builder*/) {
++    getHash(builder: NodeBuilder) {
+         return this.uuid;
+     }
+ 
+@@ -118,14 +137,14 @@ class Node extends EventDispatcher {
+         return this.updateBeforeType;
+     }
+ 
+-    getElementType(builder) {
++    getElementType(builder: NodeBuilder) {
+         const type = this.getNodeType(builder);
+         const elementType = builder.getElementType(type);
+ 
+         return elementType;
+     }
+ 
+-    getNodeType(builder) {
++    getNodeType(builder: NodeBuilder) {
+         const nodeProperties = builder.getNodeProperties(this);
+ 
+         if (nodeProperties.outputNode) {
+@@ -135,14 +154,14 @@ class Node extends EventDispatcher {
+         return this.nodeType;
+     }
+ 
+-    getShared(builder) {
++    getShared(builder: NodeBuilder) {
+         const hash = this.getHash(builder);
+         const nodeFromHash = builder.getNodeFromHash(hash);
+ 
+         return nodeFromHash || this;
+     }
+ 
+-    setup(builder) {
++    setup(builder: NodeBuilder) {
+         const nodeProperties = builder.getNodeProperties(this);
+ 
+         for (const childNode of this.getChildren()) {
+@@ -153,7 +172,7 @@ class Node extends EventDispatcher {
+         return null;
+     }
+ 
+-    construct(builder) {
++    construct(builder: NodeBuilder) {
+         // @deprecated, r157
+ 
+         console.warn('THREE.Node: construct() is deprecated. Use setup() instead.');
+@@ -161,14 +180,14 @@ class Node extends EventDispatcher {
+         return this.setup(builder);
+     }
+ 
+-    increaseUsage(builder) {
++    increaseUsage(builder: NodeBuilder) {
+         const nodeData = builder.getDataFromNode(this);
+         nodeData.usageCount = nodeData.usageCount === undefined ? 1 : nodeData.usageCount + 1;
+ 
+         return nodeData.usageCount;
+     }
+ 
+-    analyze(builder) {
++    analyze(builder: NodeBuilder) {
+         const usageCount = this.increaseUsage(builder);
+ 
+         if (usageCount === 1) {
+@@ -184,7 +203,7 @@ class Node extends EventDispatcher {
+         }
+     }
+ 
+-    generate(builder, output) {
++    generate(builder: NodeBuilder, output?: string | null) {
+         const { outputNode } = builder.getNodeProperties(this);
+ 
+         if (outputNode && outputNode.isNode === true) {
 diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
 index 3b01a9a6..3391a4be 100644
 --- a/examples-jsm/examples/nodes/core/constants.ts
