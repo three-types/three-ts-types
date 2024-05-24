@@ -3,7 +3,14 @@ import * as path from 'node:path';
 
 import prettier from 'prettier';
 
-const files = ['nodes/core/Node', 'nodes/core/NodeBuilder', 'nodes/core/NodeFrame', 'nodes/core/constants'];
+const files = [
+    'nodes/core/Node',
+    'nodes/core/NodeBuilder',
+    'nodes/core/NodeFrame',
+    'nodes/core/NodeParser',
+    'nodes/core/constants',
+    'renderers/common/Renderer',
+];
 
 const inDir = '../three.js/examples/jsm';
 const outDir = './examples';
