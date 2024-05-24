@@ -151,7 +151,7 @@ index 438c44dd..dd88fd34 100644
  
          if (this !== refNode) {
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..1304d0da 100644
+index ebdc13ff..99c48afa 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -30,6 +30,11 @@ import {
@@ -179,7 +179,7 @@ index ebdc13ff..1304d0da 100644
  
  const uniformsGroupCache = new ChainMap();
  
-@@ -67,10 +78,63 @@ const toFloat = value => {
+@@ -67,10 +78,68 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -222,14 +222,19 @@ index ebdc13ff..1304d0da 100644
 +    // codes
 +    // vars
 +    flow: { code: string };
++    chaining: Node[];
 +    // TODO
-+    // chaining
 +    // stack
 +    // stacks
 +    tab: string;
 +
 +    // TODO
 +    // currentFunctionNode
++
++    context: { keywords: NodeKeywords; material: Material | Material[] };
++
++    cache: NodeCache;
++    globalCache: NodeCache;
 +
 +    constructor(
 +        object: Object3D,
@@ -246,6 +251,200 @@ index ebdc13ff..1304d0da 100644
          this.renderer = renderer;
          this.parser = parser;
          this.scene = scene;
+@@ -138,7 +207,7 @@ class NodeBuilder {
+         return new PMREMGenerator(this.renderer);
+     }
+ 
+-    includes(node) {
++    includes(node: Node) {
+         return this.nodes.includes(node);
+     }
+ 
+@@ -181,11 +250,11 @@ class NodeBuilder {
+         return bindingsArray;
+     }
+ 
+-    setHashNode(node, hash) {
++    setHashNode(node: Node, hash: string) {
+         this.hashNodes[hash] = node;
+     }
+ 
+-    addNode(node) {
++    addNode(node: Node) {
+         if (this.nodes.includes(node) === false) {
+             this.nodes.push(node);
+ 
+@@ -212,7 +281,7 @@ class NodeBuilder {
+         return this.chaining[this.chaining.length - 1];
+     }
+ 
+-    addChain(node) {
++    addChain(node: Node) {
+         /*
+ 		if ( this.chaining.indexOf( node ) !== - 1 ) {
+ 
+@@ -224,7 +293,7 @@ class NodeBuilder {
+         this.chaining.push(node);
+     }
+ 
+-    removeChain(node) {
++    removeChain(node: Node) {
+         const lastChain = this.chaining.pop();
+ 
+         if (lastChain !== node) {
+@@ -232,11 +301,11 @@ class NodeBuilder {
+         }
+     }
+ 
+-    getMethod(method) {
++    getMethod(method: string) {
+         return method;
+     }
+ 
+-    getNodeFromHash(hash) {
++    getNodeFromHash(hash: string) {
+         return this.hashNodes[hash];
+     }
+ 
+@@ -262,7 +331,7 @@ class NodeBuilder {
+         return this.cache;
+     }
+ 
+-    isAvailable(/*name*/) {
++    isAvailable(name: string) {
+         return false;
+     }
+ 
+@@ -648,7 +717,7 @@ class NodeBuilder {
+         return nodeCode;
+     }
+ 
+-    addLineFlowCode(code) {
++    addLineFlowCode(code: string) {
+         if (code === '') return this;
+ 
+         code = this.tab + code;
+@@ -662,7 +731,7 @@ class NodeBuilder {
+         return this;
+     }
+ 
+-    addFlowCode(code) {
++    addFlowCode(code: string) {
+         this.flow.code += code;
+ 
+         return this;
+@@ -684,7 +753,7 @@ class NodeBuilder {
+         return this.flowsData.get(node);
+     }
+ 
+-    flowNode(node) {
++    flowNode(node: Node) {
+         const output = node.getNodeType(this);
+ 
+         const flowData = this.flowChildNode(node, output);
+diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
+index 96a7e0c7..656fdf12 100644
+--- a/examples-jsm/examples/nodes/core/NodeCache.ts
++++ b/examples-jsm/examples/nodes/core/NodeCache.ts
+@@ -1,6 +1,8 @@
+ let id = 0;
+ 
+ class NodeCache {
++    id: number;
++
+     constructor() {
+         this.id = id++;
+         this.nodesData = new WeakMap();
+diff --git a/examples-jsm/examples/nodes/core/NodeFrame.ts b/examples-jsm/examples/nodes/core/NodeFrame.ts
+index b8e8d37b..399c788b 100644
+--- a/examples-jsm/examples/nodes/core/NodeFrame.ts
++++ b/examples-jsm/examples/nodes/core/NodeFrame.ts
+@@ -1,6 +1,16 @@
+ import { NodeUpdateType } from './constants.js';
++import Node from './Node.js';
+ 
+ class NodeFrame {
++    time: number;
++    deltaTime: number;
++
++    frameId: number;
++    renderId: number;
++
++    // TODO
++    // startTime
++
+     constructor() {
+         this.time = 0;
+         this.deltaTime = 0;
+@@ -35,7 +45,7 @@ class NodeFrame {
+         return maps;
+     }
+ 
+-    updateBeforeNode(node) {
++    updateBeforeNode(node: Node) {
+         const updateType = node.getUpdateBeforeType();
+         const reference = node.updateReference(this);
+ 
+@@ -60,7 +70,7 @@ class NodeFrame {
+         }
+     }
+ 
+-    updateNode(node) {
++    updateNode(node: Node) {
+         const updateType = node.getUpdateType();
+         const reference = node.updateReference(this);
+ 
+diff --git a/examples-jsm/examples/nodes/core/NodeKeywords.ts b/examples-jsm/examples/nodes/core/NodeKeywords.ts
+index 53da9bf5..36bdcabe 100644
+--- a/examples-jsm/examples/nodes/core/NodeKeywords.ts
++++ b/examples-jsm/examples/nodes/core/NodeKeywords.ts
+@@ -1,11 +1,18 @@
++import Node from './Node.js';
++import NodeBuilder from './NodeBuilder.js';
++
+ class NodeKeywords {
++    keywords: string[];
++    nodes: { [name: string]: Node };
++    keywordsCallback: { [name: string]: (name: string) => Node };
++
+     constructor() {
+         this.keywords = [];
+-        this.nodes = [];
++        this.nodes = {};
+         this.keywordsCallback = {};
+     }
+ 
+-    getNode(name) {
++    getNode(name: string) {
+         let node = this.nodes[name];
+ 
+         if (node === undefined && this.keywordsCallback[name] !== undefined) {
+@@ -17,14 +24,14 @@ class NodeKeywords {
+         return node;
+     }
+ 
+-    addKeyword(name, callback) {
++    addKeyword(name: string, callback: (name: string) => Node) {
+         this.keywords.push(name);
+         this.keywordsCallback[name] = callback;
+ 
+         return this;
+     }
+ 
+-    parse(code) {
++    parse(code: string) {
+         const keywordNames = this.keywords;
+ 
+         const regExp = new RegExp(`\\b${keywordNames.join('\\b|\\b')}\\b`, 'g');
+@@ -46,7 +53,7 @@ class NodeKeywords {
+         return keywordNodes;
+     }
+ 
+-    include(builder, code) {
++    include(builder: NodeBuilder, code: string) {
+         const keywordNodes = this.parse(code);
+ 
+         for (const keywordNode of keywordNodes) {
 diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
 index 3b01a9a6..3391a4be 100644
 --- a/examples-jsm/examples/nodes/core/constants.ts
@@ -298,3 +497,24 @@ index 3b01a9a6..3391a4be 100644
  
  export const defaultShaderStages = ['fragment', 'vertex'];
  export const defaultBuildStages = ['setup', 'analyze', 'generate'];
+diff --git a/examples-jsm/examples/nodes/fog/FogNode.ts b/examples-jsm/examples/nodes/fog/FogNode.ts
+index 9417df5a..43761555 100644
+--- a/examples-jsm/examples/nodes/fog/FogNode.ts
++++ b/examples-jsm/examples/nodes/fog/FogNode.ts
+@@ -1,6 +1,7 @@
+ import Node, { addNodeClass } from '../core/Node.js';
+ import { positionView } from '../accessors/PositionNode.js';
+ import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
++import NodeBuilder from '../core/NodeBuilder.js';
+ 
+ class FogNode extends Node {
+     constructor(colorNode, factorNode) {
+@@ -12,7 +13,7 @@ class FogNode extends Node {
+         this.factorNode = factorNode;
+     }
+ 
+-    getViewZNode(builder) {
++    getViewZNode(builder: NodeBuilder) {
+         let viewZ;
+ 
+         const getViewZ = builder.context.getViewZ;
