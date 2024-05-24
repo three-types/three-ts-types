@@ -151,10 +151,10 @@ index 438c44dd..dd88fd34 100644
  
          if (this !== refNode) {
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..319b26eb 100644
+index ebdc13ff..179f68ec 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-@@ -30,6 +30,10 @@ import {
+@@ -30,6 +30,11 @@ import {
      IntType,
      UnsignedIntType,
      Float16BufferAttribute,
@@ -162,10 +162,21 @@ index ebdc13ff..319b26eb 100644
 +    Material,
 +    Mesh,
 +    BufferGeometry,
++    Scene,
  } from 'three';
  
  import { stack } from './StackNode.js';
-@@ -67,10 +71,14 @@ const toFloat = value => {
+@@ -39,6 +44,9 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
+ import ChainMap from '../../renderers/common/ChainMap.js';
+ 
+ import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
++import Renderer from '../../renderers/common/Renderer.js';
++import NodeParser from './NodeParser.js';
++import Node from './Node.js';
+ 
+ const uniformsGroupCache = new ChainMap();
+ 
+@@ -67,10 +75,28 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -173,8 +184,22 @@ index ebdc13ff..319b26eb 100644
 +    object: Object3D;
 +    material: Material | Material[];
 +    geometry: BufferGeometry;
++    renderer: Renderer;
++    parser: NodeParser;
++    scene: Scene | null;
 +
-+    constructor(object: Object3D, renderer, parser, scene = null, material: Material | null = null) {
++    nodes: Node[];
++    updateNodes: Node[];
++    updateBeforeNodes: Node[];
++    hashNodes: { [hash: string]: Node };
++
++    constructor(
++        object: Object3D,
++        renderer: Renderer,
++        parser: NodeParser,
++        scene: Scene | null = null,
++        material: Material | null = null,
++    ) {
          this.object = object;
 -        this.material = material || (object && object.material) || null;
 -        this.geometry = (object && object.geometry) || null;
