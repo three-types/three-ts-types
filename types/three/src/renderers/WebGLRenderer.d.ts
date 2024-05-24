@@ -127,7 +127,7 @@ export interface WebGLDebug {
  */
 export class WebGLRenderer implements Renderer {
     /**
-     * parameters is an optional object with properties defining the renderer's behaviour.
+     * parameters is an optional object with properties defining the renderer's behavior.
      * The constructor also accepts no parameters at all.
      * In all cases, it will assume sane defaults when parameters are missing.
      */
