@@ -5,11 +5,16 @@ import prettier from 'prettier';
 
 const files = [
     'nodes/core/Node',
+    'nodes/core/NodeAttribute',
     'nodes/core/NodeBuilder',
     'nodes/core/NodeCache',
+    'nodes/core/NodeCode',
     'nodes/core/NodeFrame',
     'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',
+    'nodes/core/NodeUniform',
+    'nodes/core/NodeVar',
+    'nodes/core/NodeVarying',
     'nodes/core/constants',
     'nodes/fog/FogNode',
     'nodes/lighting/EnvironmentNode',
