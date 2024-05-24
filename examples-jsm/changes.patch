@@ -1,0 +1,90 @@
+diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
+index 438c44dd..eb111a83 100644
+--- a/examples-jsm/examples/nodes/core/Node.ts
++++ b/examples-jsm/examples/nodes/core/Node.ts
+@@ -8,6 +8,24 @@ const NodeClasses = new Map();
+ let _nodeId = 0;
+ 
+ class Node extends EventDispatcher {
++    // TODO
++    // nodeType: string??
++
++    updateType: NodeUpdateType;
++    updateBeforeType: NodeUpdateType;
++
++    uuid: string;
++
++    version: number;
++
++    // TODO
++    // _cacheKey??
++    _cacheKeyVersion: number;
++
++    readonly isNode: true;
++
++    readonly id!: number;
++
+     constructor(nodeType = null) {
+         super();
+ 
+@@ -28,7 +46,7 @@ class Node extends EventDispatcher {
+         Object.defineProperty(this, 'id', { value: _nodeId++ });
+     }
+ 
+-    set needsUpdate(value) {
++    set needsUpdate(value: boolean) {
+         if (value === true) {
+             this.version++;
+         }
+diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
+index 3b01a9a6..3391a4be 100644
+--- a/examples-jsm/examples/nodes/core/constants.ts
++++ b/examples-jsm/examples/nodes/core/constants.ts
+@@ -1,26 +1,26 @@
+-export const NodeShaderStage = {
+-    VERTEX: 'vertex',
+-    FRAGMENT: 'fragment',
+-};
++export enum NodeShaderStage {
++    VERTEX = 'vertex',
++    FRAGMENT = 'fragment',
++}
+ 
+-export const NodeUpdateType = {
+-    NONE: 'none',
+-    FRAME: 'frame',
+-    RENDER: 'render',
+-    OBJECT: 'object',
+-};
++export enum NodeUpdateType {
++    NONE = 'none',
++    FRAME = 'frame',
++    RENDER = 'render',
++    OBJECT = 'object',
++}
+ 
+-export const NodeType = {
+-    BOOLEAN: 'bool',
+-    INTEGER: 'int',
+-    FLOAT: 'float',
+-    VECTOR2: 'vec2',
+-    VECTOR3: 'vec3',
+-    VECTOR4: 'vec4',
+-    MATRIX2: 'mat2',
+-    MATRIX3: 'mat3',
+-    MATRIX4: 'mat4',
+-};
++export enum NodeType {
++    BOOLEAN = 'bool',
++    INTEGER = 'int',
++    FLOAT = 'float',
++    VECTOR2 = 'vec2',
++    VECTOR3 = 'vec3',
++    VECTOR4 = 'vec4',
++    MATRIX2 = 'mat2',
++    MATRIX3 = 'mat3',
++    MATRIX4 = 'mat4',
++}
+ 
+ export const defaultShaderStages = ['fragment', 'vertex'];
+ export const defaultBuildStages = ['setup', 'analyze', 'generate'];
