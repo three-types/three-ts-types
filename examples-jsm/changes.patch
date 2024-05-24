@@ -649,6 +649,73 @@ index 2918e21..c407d0a 100644
          this.isNodeUniform = true;
  
          this.name = name;
+diff --git a/examples-jsm/examples/nodes/core/NodeUtils.ts b/examples-jsm/examples/nodes/core/NodeUtils.ts
+index 16a5f32..59d528d 100644
+--- a/examples-jsm/examples/nodes/core/NodeUtils.ts
++++ b/examples-jsm/examples/nodes/core/NodeUtils.ts
+@@ -1,10 +1,11 @@
+ import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
++import Node from './Node.js';
+ 
+-export function getCacheKey(object, force = false) {
++export function getCacheKey(object: object, force = false) {
+     let cacheKey = '{';
+ 
+-    if (object.isNode === true) {
+-        cacheKey += object.id;
++    if ((object as Node).isNode === true) {
++        cacheKey += (object as Node).id;
+     }
+ 
+     for (const { property, childNode } of getNodeChildren(object)) {
+@@ -16,36 +17,36 @@ export function getCacheKey(object, force = false) {
+     return cacheKey;
+ }
+ 
+-export function* getNodeChildren(node, toJSON = false) {
++export function* getNodeChildren(node: object, toJSON = false) {
+     for (const property in node) {
+         // Ignore private properties.
+         if (property.startsWith('_') === true) continue;
+ 
+-        const object = node[property];
++        const object = node[property as keyof typeof node] as unknown;
+ 
+         if (Array.isArray(object) === true) {
+             for (let i = 0; i < object.length; i++) {
+-                const child = object[i];
++                const child = object[i] as unknown;
+ 
+-                if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+-                    yield { property, index: i, childNode: child };
++                if (child && ((child as Node).isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
++                    yield { property, index: i, childNode: child as Node };
+                 }
+             }
+-        } else if (object && object.isNode === true) {
+-            yield { property, childNode: object };
++        } else if (object && (object as Node).isNode === true) {
++            yield { property, childNode: object as Node };
+         } else if (typeof object === 'object') {
+             for (const subProperty in object) {
+-                const child = object[subProperty];
++                const child = object[subProperty as keyof typeof object];
+ 
+-                if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
+-                    yield { property, index: subProperty, childNode: child };
++                if (child && ((child as Node).isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
++                    yield { property, index: subProperty, childNode: child as Node };
+                 }
+             }
+         }
+     }
+ }
+ 
+-export function getValueType(value) {
++export function getValueType(value: unknown) {
+     if (value === undefined || value === null) return null;
+ 
+     const typeOf = typeof value;
 diff --git a/examples-jsm/examples/nodes/core/NodeVar.ts b/examples-jsm/examples/nodes/core/NodeVar.ts
 index e6e935b..8d04ff1 100644
 --- a/examples-jsm/examples/nodes/core/NodeVar.ts
