@@ -151,7 +151,7 @@ index 438c44dd..dd88fd34 100644
  
          if (this !== refNode) {
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..179f68ec 100644
+index ebdc13ff..1304d0da 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -30,6 +30,11 @@ import {
@@ -166,17 +166,20 @@ index ebdc13ff..179f68ec 100644
  } from 'three';
  
  import { stack } from './StackNode.js';
-@@ -39,6 +44,9 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
+@@ -39,6 +44,12 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
  
  import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
 +import Renderer from '../../renderers/common/Renderer.js';
 +import NodeParser from './NodeParser.js';
 +import Node from './Node.js';
++import LightsNode from '../lighting/LightsNode.js';
++import EnvironmentNode from '../lighting/EnvironmentNode.js';
++import FogNode from '../fog/FogNode.js';
  
  const uniformsGroupCache = new ChainMap();
  
-@@ -67,10 +75,28 @@ const toFloat = value => {
+@@ -67,10 +78,63 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -192,6 +195,41 @@ index ebdc13ff..179f68ec 100644
 +    updateNodes: Node[];
 +    updateBeforeNodes: Node[];
 +    hashNodes: { [hash: string]: Node };
++
++    lightsNode: LightsNode | null;
++    environmentNode: EnvironmentNode | null;
++    fogNode: FogNode | null;
++
++    // TODO
++    // clippingContext
++
++    vertexShader: string | null;
++    fragmentShader: string | null;
++    computeShader: string | null;
++
++    // TODO
++    // flowNodes
++    // flowCode
++    // uniforms
++    // structs
++    // bindings
++    bindingsOffset: { vertex: number; fragment: number; compute: number };
++    // TODO
++    // bindingsArray
++    // attributes
++    // bufferAttributes
++    // varyings
++    // codes
++    // vars
++    flow: { code: string };
++    // TODO
++    // chaining
++    // stack
++    // stacks
++    tab: string;
++
++    // TODO
++    // currentFunctionNode
 +
 +    constructor(
 +        object: Object3D,
