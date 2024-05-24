@@ -1,12 +1,13 @@
 diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
-index 438c44dd..d5115493 100644
+index 438c44dd..dd88fd34 100644
 --- a/examples-jsm/examples/nodes/core/Node.ts
 +++ b/examples-jsm/examples/nodes/core/Node.ts
-@@ -2,12 +2,31 @@ import { EventDispatcher } from 'three';
+@@ -2,12 +2,32 @@ import { EventDispatcher } from 'three';
  import { NodeUpdateType } from './constants.js';
  import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  import { MathUtils } from 'three';
 +import NodeBuilder from './NodeBuilder.js';
++import NodeFrame from './NodeFrame.js';
  
  const NodeClasses = new Map();
  
@@ -34,7 +35,7 @@ index 438c44dd..d5115493 100644
      constructor(nodeType = null) {
          super();
  
-@@ -28,7 +47,7 @@ class Node extends EventDispatcher {
+@@ -28,7 +48,7 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -43,7 +44,7 @@ index 438c44dd..d5115493 100644
          if (value === true) {
              this.version++;
          }
-@@ -73,7 +92,7 @@ class Node extends EventDispatcher {
+@@ -73,7 +93,7 @@ class Node extends EventDispatcher {
          return this;
      }
  
@@ -52,7 +53,7 @@ index 438c44dd..d5115493 100644
          return false;
      }
  
-@@ -106,7 +125,7 @@ class Node extends EventDispatcher {
+@@ -106,7 +126,7 @@ class Node extends EventDispatcher {
          return this._cacheKey;
      }
  
@@ -61,7 +62,7 @@ index 438c44dd..d5115493 100644
          return this.uuid;
      }
  
-@@ -118,14 +137,14 @@ class Node extends EventDispatcher {
+@@ -118,14 +138,14 @@ class Node extends EventDispatcher {
          return this.updateBeforeType;
      }
  
@@ -78,7 +79,7 @@ index 438c44dd..d5115493 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -135,14 +154,14 @@ class Node extends EventDispatcher {
+@@ -135,14 +155,14 @@ class Node extends EventDispatcher {
          return this.nodeType;
      }
  
@@ -95,7 +96,7 @@ index 438c44dd..d5115493 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          for (const childNode of this.getChildren()) {
-@@ -153,7 +172,7 @@ class Node extends EventDispatcher {
+@@ -153,7 +173,7 @@ class Node extends EventDispatcher {
          return null;
      }
  
@@ -104,7 +105,7 @@ index 438c44dd..d5115493 100644
          // @deprecated, r157
  
          console.warn('THREE.Node: construct() is deprecated. Use setup() instead.');
-@@ -161,14 +180,14 @@ class Node extends EventDispatcher {
+@@ -161,14 +181,14 @@ class Node extends EventDispatcher {
          return this.setup(builder);
      }
  
@@ -121,7 +122,7 @@ index 438c44dd..d5115493 100644
          const usageCount = this.increaseUsage(builder);
  
          if (usageCount === 1) {
-@@ -184,7 +203,7 @@ class Node extends EventDispatcher {
+@@ -184,7 +204,7 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -130,6 +131,58 @@ index 438c44dd..d5115493 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
+@@ -192,15 +212,15 @@ class Node extends EventDispatcher {
+         }
+     }
+ 
+-    updateBefore(/*frame*/) {
++    updateBefore(frame: NodeFrame) {
+         console.warn('Abstract function.');
+     }
+ 
+-    update(/*frame*/) {
++    update(frame: NodeFrame) {
+         console.warn('Abstract function.');
+     }
+ 
+-    build(builder, output = null) {
++    build(builder: NodeBuilder, output: string | null = null) {
+         const refNode = this.getShared(builder);
+ 
+         if (this !== refNode) {
+diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
+index ebdc13ff..319b26eb 100644
+--- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
++++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
+@@ -30,6 +30,10 @@ import {
+     IntType,
+     UnsignedIntType,
+     Float16BufferAttribute,
++    Object3D,
++    Material,
++    Mesh,
++    BufferGeometry,
+ } from 'three';
+ 
+ import { stack } from './StackNode.js';
+@@ -67,10 +71,14 @@ const toFloat = value => {
+ };
+ 
+ class NodeBuilder {
+-    constructor(object, renderer, parser, scene = null, material = null) {
++    object: Object3D;
++    material: Material | Material[];
++    geometry: BufferGeometry;
++
++    constructor(object: Object3D, renderer, parser, scene = null, material: Material | null = null) {
+         this.object = object;
+-        this.material = material || (object && object.material) || null;
+-        this.geometry = (object && object.geometry) || null;
++        this.material = material || (object && (object as Mesh).material) || null;
++        this.geometry = (object && (object as Mesh).geometry) || null;
+         this.renderer = renderer;
+         this.parser = parser;
+         this.scene = scene;
 diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
 index 3b01a9a6..3391a4be 100644
 --- a/examples-jsm/examples/nodes/core/constants.ts
