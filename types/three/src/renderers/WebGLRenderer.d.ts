@@ -199,13 +199,6 @@ export class WebGLRenderer implements Renderer {
     get coordinateSystem(): typeof WebGLCoordinateSystem;
 
     /**
-     * @deprecated Migrate your lighting according to the following guide:
-     * https://discourse.threejs.org/t/updates-to-lighting-in-three-js-r155/53733.
-     * @default true
-     */
-    useLegacyLights: boolean;
-
-    /**
      * @default THREE.NoToneMapping
      */
     toneMapping: ToneMapping;

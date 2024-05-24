@@ -187,7 +187,6 @@ export interface WebGLProgramParameters {
     shadowMapType: ShadowMapType;
 
     toneMapping: ToneMapping;
-    useLegacyLights: boolean;
 
     decodeVideoTexture: boolean;
 
