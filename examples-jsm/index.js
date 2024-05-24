@@ -9,6 +9,9 @@ const files = [
     'nodes/core/NodeFrame',
     'nodes/core/NodeParser',
     'nodes/core/constants',
+    'nodes/fog/FogNode',
+    'nodes/lighting/EnvironmentNode',
+    'nodes/lighting/LightsNode',
     'renderers/common/Renderer',
 ];
 
