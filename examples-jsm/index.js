@@ -13,6 +13,7 @@ const files = [
     'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',
     'nodes/core/NodeUniform',
+    'nodes/core/NodeUtils',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
     'nodes/core/constants',
