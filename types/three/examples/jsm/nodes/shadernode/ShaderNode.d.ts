@@ -1,5 +1,5 @@
 import ConstNode from "../core/ConstNode.js";
-import Node, { NodeTypeOption } from "../core/Node.js";
+import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 
@@ -174,9 +174,9 @@ type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<
 type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
 type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends Node ? R : never) : never;
 
-export type NodeOrType = Node | NodeTypeOption;
+export type NodeOrType = Node | string;
 
-export const getConstNodeType: (value: NodeOrType) => NodeTypeOption | null;
+export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
     constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
@@ -268,4 +268,4 @@ export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
 
 export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
-export const convert: (node: NodeRepresentation, types: NodeTypeOption) => ShaderNodeObject<Node>;
+export const convert: (node: NodeRepresentation, types: string) => ShaderNodeObject<Node>;

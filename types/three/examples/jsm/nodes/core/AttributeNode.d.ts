@@ -1,11 +1,11 @@
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
-import Node, { NodeTypeOption } from "./Node.js";
+import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 
 export default class AttributeNode extends Node {
     defaultNode: Node | null;
 
-    constructor(attributeName: string, nodeType?: NodeTypeOption | null, defaultNode?: Node | null);
+    constructor(attributeName: string, nodeType?: string | null, defaultNode?: Node | null);
 
     setAttributeName(attributeName: string): this;
 
@@ -14,6 +14,6 @@ export default class AttributeNode extends Node {
 
 export const attribute: (
     name: string,
-    nodeType?: NodeTypeOption | null,
+    nodeType?: string | null,
     defaultNode?: NodeRepresentation,
 ) => ShaderNodeObject<AttributeNode>;
