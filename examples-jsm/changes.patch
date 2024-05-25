@@ -1262,13 +1262,14 @@ index ed9e8e9e..f0f75022 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..e56230ab 100644
+index e48a8029..ebc97439 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,19 +1,28 @@
+@@ -1,19 +1,32 @@
 +import Color4 from './Color4.js';
 +import { Vector2, Vector4, REVISION, createCanvasElement } from 'three';
 +import Renderer from './Renderer.js';
++import RenderContext from './RenderContext.js';
 +
  let vector2 = null;
  let vector4 = null;
@@ -1279,16 +1280,20 @@ index e48a8029..e56230ab 100644
 +export interface BackendParameters {
 +    canvas?: HTMLCanvasElement | undefined;
 +}
++
++interface RenderContextData {}
  
  class Backend {
 -    constructor(parameters = {}) {
 +    parameters: BackendParameters;
++    data: WeakMap<RenderContext, RenderContextData>;
 +    renderer: Renderer | null;
 +    domElement: HTMLCanvasElement | null;
 +
 +    constructor(parameters: BackendParameters = {}) {
          this.parameters = Object.assign({}, parameters);
-         this.data = new WeakMap();
+-        this.data = new WeakMap();
++        this.data = new WeakMap<RenderContext, RenderContextData>();
          this.renderer = null;
          this.domElement = null;
      }
@@ -1298,6 +1303,29 @@ index e48a8029..e56230ab 100644
          this.renderer = renderer;
      }
  
+@@ -144,7 +157,7 @@ class Backend {
+         this.data.set(object, value);
+     }
+ 
+-    get(object) {
++    get(object: RenderContext) {
+         let map = this.data.get(object);
+ 
+         if (map === undefined) {
+@@ -155,11 +168,11 @@ class Backend {
+         return map;
+     }
+ 
+-    has(object) {
++    has(object: RenderContext) {
+         return this.data.has(object);
+     }
+ 
+-    delete(object) {
++    delete(object: RenderContext) {
+         this.data.delete(object);
+     }
+ }
 diff --git a/examples-jsm/examples/renderers/common/Background.ts b/examples-jsm/examples/renderers/common/Background.ts
 index b7902dd4..82ee22cb 100644
 --- a/examples-jsm/examples/renderers/common/Background.ts
@@ -1371,6 +1399,71 @@ index 9485ec3b..6a39a1db 100644
          super();
  
          this.backend = backend;
+diff --git a/examples-jsm/examples/renderers/common/ChainMap.ts b/examples-jsm/examples/renderers/common/ChainMap.ts
+index e233beca..b43faed4 100644
+--- a/examples-jsm/examples/renderers/common/ChainMap.ts
++++ b/examples-jsm/examples/renderers/common/ChainMap.ts
+@@ -1,14 +1,18 @@
+-export default class ChainMap {
++type RecursiveWeakMap<K extends object, V> = WeakMap<K, V | RecursiveWeakMap<K, V>>;
++
++export default class ChainMap<K extends object, V> {
++    weakMap: RecursiveWeakMap<K, V>;
++
+     constructor() {
+-        this.weakMap = new WeakMap();
++        this.weakMap = new WeakMap<K, V | RecursiveWeakMap<K, V>>();
+     }
+ 
+-    get(keys) {
++    get(keys: K[]) {
+         if (Array.isArray(keys)) {
+-            let map = this.weakMap;
++            let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
+ 
+             for (let i = 0; i < keys.length; i++) {
+-                map = map.get(keys[i]);
++                map = map.get(keys[i]) as RecursiveWeakMap<K, V> | undefined;
+ 
+                 if (map === undefined) return undefined;
+             }
+@@ -19,16 +23,16 @@ export default class ChainMap {
+         }
+     }
+ 
+-    set(keys, value) {
++    set(keys: K[], value: V) {
+         if (Array.isArray(keys)) {
+-            let map = this.weakMap;
++            let map: RecursiveWeakMap<K, V> = this.weakMap;
+ 
+             for (let i = 0; i < keys.length; i++) {
+                 const key = keys[i];
+ 
+-                if (map.has(key) === false) map.set(key, new WeakMap());
++                if (map.has(key) === false) map.set(key, new WeakMap<K, V | RecursiveWeakMap<K, V>>());
+ 
+-                map = map.get(key);
++                map = map.get(key) as RecursiveWeakMap<K, V>;
+             }
+ 
+             return map.set(keys[keys.length - 1], value);
+@@ -37,12 +41,12 @@ export default class ChainMap {
+         }
+     }
+ 
+-    delete(keys) {
++    delete(keys: K[]) {
+         if (Array.isArray(keys)) {
+-            let map = this.weakMap;
++            let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
+ 
+             for (let i = 0; i < keys.length; i++) {
+-                map = map.get(keys[i]);
++                map = map.get(keys[i]) as RecursiveWeakMap<K, V> | undefined;
+ 
+                 if (map === undefined) return false;
+             }
 diff --git a/examples-jsm/examples/renderers/common/Color4.ts b/examples-jsm/examples/renderers/common/Color4.ts
 index c681cc90..5d03adec 100644
 --- a/examples-jsm/examples/renderers/common/Color4.ts
@@ -1583,6 +1676,47 @@ index f6c570c4..704790fe 100644
          super();
  
          this.backend = backend;
+diff --git a/examples-jsm/examples/renderers/common/RenderContext.ts b/examples-jsm/examples/renderers/common/RenderContext.ts
+index 3b43028e..3efe66b9 100644
+--- a/examples-jsm/examples/renderers/common/RenderContext.ts
++++ b/examples-jsm/examples/renderers/common/RenderContext.ts
+@@ -3,6 +3,36 @@ import { Vector4 } from 'three';
+ let id = 0;
+ 
+ class RenderContext {
++    id: number;
++
++    color: boolean;
++    clearColor: boolean;
++    clearColorValue: { r: number; g: number; b: number; a: number };
++
++    depth: boolean;
++    clearDepth: boolean;
++    clearDepthValue: number;
++
++    stencil: boolean;
++    clearStencil: boolean;
++    clearStencilValue: number;
++
++    viewport: boolean;
++    viewportValue: Vector4;
++    scissor: boolean;
++    scissorValue: Vector4;
++
++    // TODO
++    // textures
++    // depthTexture
++    activeCubeFace: number;
++    sampleCount: number;
++
++    width: number;
++    height: number;
++
++    readonly isRenderContext: true;
++
+     constructor() {
+         this.id = id++;
+ 
 diff --git a/examples-jsm/examples/renderers/common/RenderContexts.ts b/examples-jsm/examples/renderers/common/RenderContexts.ts
 index 630a2e42..1328da1e 100644
 --- a/examples-jsm/examples/renderers/common/RenderContexts.ts
@@ -1612,6 +1746,27 @@ index 630a2e42..1328da1e 100644
 +    getChainMap(attachmentState: string) {
          return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
      }
+ 
+diff --git a/examples-jsm/examples/renderers/common/RenderLists.ts b/examples-jsm/examples/renderers/common/RenderLists.ts
+index 3fc3134e..e61a7fea 100644
+--- a/examples-jsm/examples/renderers/common/RenderLists.ts
++++ b/examples-jsm/examples/renderers/common/RenderLists.ts
+@@ -1,12 +1,15 @@
++import { Camera, Scene } from 'three';
+ import ChainMap from './ChainMap.js';
+ import RenderList from './RenderList.js';
+ 
+ class RenderLists {
++    lists: ChainMap;
++
+     constructor() {
+         this.lists = new ChainMap();
+     }
+ 
+-    get(scene, camera) {
++    get(scene: Scene, camera: Camera) {
+         const lists = this.lists;
+         const keys = [scene, camera];
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObjects.ts b/examples-jsm/examples/renderers/common/RenderObjects.ts
 index 76dc482e..b4d04b17 100644
@@ -1648,10 +1803,10 @@ index 76dc482e..b4d04b17 100644
          this.nodes = nodes;
          this.geometries = geometries;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..48ed1bf4 100644
+index acf180d8..572d78df 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
-@@ -30,10 +30,26 @@ import {
+@@ -30,10 +30,27 @@ import {
      RenderTarget,
      HalfFloatType,
      RGBAFormat,
@@ -1675,10 +1830,11 @@ index acf180d8..48ed1bf4 100644
 +import Backend from './Backend.js';
 +import Node from '../../nodes/core/Node.js';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
++import RenderContext from './RenderContext.js';
  
  const _scene = new Scene();
  const _drawingBufferSize = new Vector2();
-@@ -43,8 +59,100 @@ const _projScreenMatrix = new Matrix4();
+@@ -43,8 +60,100 @@ const _projScreenMatrix = new Matrix4();
  const _vector3 = new Vector3();
  const _quad = new QuadMesh(new NodeMaterial());
  
@@ -1780,7 +1936,7 @@ index acf180d8..48ed1bf4 100644
          this.isRenderer = true;
  
          //
-@@ -207,12 +315,12 @@ class Renderer {
+@@ -207,12 +316,12 @@ class Renderer {
          return this.backend.coordinateSystem;
      }
  
@@ -1795,7 +1951,7 @@ index acf180d8..48ed1bf4 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -226,7 +334,7 @@ class Renderer {
+@@ -226,7 +335,7 @@ class Renderer {
          if (targetScene === null) targetScene = scene;
  
          const renderTarget = this._renderTarget;
@@ -1804,7 +1960,7 @@ index acf180d8..48ed1bf4 100644
          const activeMipmapLevel = this._activeMipmapLevel;
  
          const compilationPromises = [];
-@@ -277,9 +385,9 @@ class Renderer {
+@@ -277,9 +386,9 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -1816,7 +1972,7 @@ index acf180d8..48ed1bf4 100644
  
              renderContext.textures = renderTargetData.textures;
              renderContext.depthTexture = renderTargetData.depthTexture;
-@@ -290,11 +398,11 @@ class Renderer {
+@@ -290,11 +399,11 @@ class Renderer {
  
          //
  
@@ -1830,7 +1986,7 @@ index acf180d8..48ed1bf4 100644
  
          // process render lists
  
-@@ -320,7 +428,7 @@ class Renderer {
+@@ -320,7 +429,7 @@ class Renderer {
          await Promise.all(compilationPromises);
      }
  
@@ -1839,7 +1995,22 @@ index acf180d8..48ed1bf4 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -350,7 +458,7 @@ class Renderer {
+@@ -331,12 +440,12 @@ class Renderer {
+     _renderBundle(bundle, sceneRef, lightsNode) {
+         const { object, camera, renderList } = bundle;
+ 
+-        const renderContext = this._currentRenderContext;
++        const renderContext = this._currentRenderContext!;
+         const renderContextData = this.backend.get(renderContext);
+ 
+         //
+ 
+-        const renderBundle = this._bundles.get(object, camera);
++        const renderBundle = this._bundles!.get(object, camera);
+ 
+         const renderBundleData = this.backend.get(renderBundle);
+         if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
+@@ -350,7 +459,7 @@ class Renderer {
  
          if (renderBundleNeedsUpdate) {
              if (renderContextData.renderObjects === undefined || object.needsUpdate === true) {
@@ -1848,7 +2019,7 @@ index acf180d8..48ed1bf4 100644
  
                  renderContextData.renderObjects = [];
                  renderContextData.renderBundles = [];
-@@ -379,7 +487,7 @@ class Renderer {
+@@ -379,7 +488,7 @@ class Renderer {
              for (let i = 0, l = renderContextData.renderObjects.length; i < l; i++) {
                  const renderObject = renderContextData.renderObjects[i];
  
@@ -1857,7 +2028,7 @@ index acf180d8..48ed1bf4 100644
  
                  //
  
-@@ -389,15 +497,15 @@ class Renderer {
+@@ -389,15 +498,15 @@ class Renderer {
                  );
                  renderObject.object.normalMatrix.getNormalMatrix(renderObject.object.modelViewMatrix);
  
@@ -1876,7 +2047,7 @@ index acf180d8..48ed1bf4 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -453,12 +561,12 @@ class Renderer {
+@@ -453,12 +562,12 @@ class Renderer {
          return frameBufferTarget;
      }
  
@@ -1891,7 +2062,16 @@ index acf180d8..48ed1bf4 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -572,9 +680,9 @@ class Renderer {
+@@ -558,7 +667,7 @@ class Renderer {
+         _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+         _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
+ 
+-        const renderList = this._renderLists.get(scene, camera);
++        const renderList = this._renderLists!.get(scene, camera);
+         renderList.begin();
+ 
+         this._projectObject(scene, camera, 0, renderList);
+@@ -572,9 +681,9 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -1903,7 +2083,7 @@ index acf180d8..48ed1bf4 100644
  
              renderContext.textures = renderTargetData.textures;
              renderContext.depthTexture = renderTargetData.depthTexture;
-@@ -600,11 +708,11 @@ class Renderer {
+@@ -600,11 +709,11 @@ class Renderer {
  
          //
  
@@ -1917,7 +2097,7 @@ index acf180d8..48ed1bf4 100644
  
          //
  
-@@ -637,7 +745,7 @@ class Renderer {
+@@ -637,7 +746,7 @@ class Renderer {
          if (frameBufferTarget !== null) {
              this.setRenderTarget(outputRenderTarget, activeCubeFace, activeMipmapLevel);
  
@@ -1926,7 +2106,7 @@ index acf180d8..48ed1bf4 100644
  
              this._renderScene(_quad, _quad.camera, false);
          }
-@@ -663,10 +771,10 @@ class Renderer {
+@@ -663,10 +772,10 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -1939,7 +2119,7 @@ index acf180d8..48ed1bf4 100644
      }
  
      getArrayBuffer(attribute) {
-@@ -689,11 +797,11 @@ class Renderer {
+@@ -689,11 +798,11 @@ class Renderer {
          return this._pixelRatio;
      }
  
@@ -1953,7 +2133,7 @@ index acf180d8..48ed1bf4 100644
          return target.set(this._width, this._height);
      }
  
-@@ -703,30 +811,30 @@ class Renderer {
+@@ -703,30 +812,30 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -1992,7 +2172,7 @@ index acf180d8..48ed1bf4 100644
          }
  
          this.setViewport(0, 0, width, height);
-@@ -734,15 +842,15 @@ class Renderer {
+@@ -734,15 +843,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -2011,7 +2191,7 @@ index acf180d8..48ed1bf4 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -753,13 +861,15 @@ class Renderer {
+@@ -753,13 +862,15 @@ class Renderer {
          return target;
      }
  
@@ -2031,7 +2211,7 @@ index acf180d8..48ed1bf4 100644
          }
      }
  
-@@ -767,34 +877,36 @@ class Renderer {
+@@ -767,34 +878,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -2076,7 +2256,7 @@ index acf180d8..48ed1bf4 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -803,7 +915,7 @@ class Renderer {
+@@ -803,7 +916,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -2085,7 +2265,7 @@ index acf180d8..48ed1bf4 100644
          this._clearColor.a = alpha;
      }
  
-@@ -811,7 +923,7 @@ class Renderer {
+@@ -811,7 +924,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -2094,7 +2274,7 @@ index acf180d8..48ed1bf4 100644
          this._clearDepth = depth;
      }
  
-@@ -819,11 +931,11 @@ class Renderer {
+@@ -819,11 +932,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -2108,7 +2288,7 @@ index acf180d8..48ed1bf4 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -843,9 +955,9 @@ class Renderer {
+@@ -843,9 +956,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -2120,7 +2300,7 @@ index acf180d8..48ed1bf4 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -896,20 +1008,20 @@ class Renderer {
+@@ -896,20 +1009,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -2150,7 +2330,7 @@ index acf180d8..48ed1bf4 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -927,10 +1039,10 @@ class Renderer {
+@@ -927,10 +1040,10 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -2163,7 +2343,7 @@ index acf180d8..48ed1bf4 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -993,13 +1105,13 @@ class Renderer {
+@@ -993,13 +1106,13 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -2179,7 +2359,7 @@ index acf180d8..48ed1bf4 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1011,22 +1123,35 @@ class Renderer {
+@@ -1011,22 +1124,35 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -2221,7 +2401,7 @@ index acf180d8..48ed1bf4 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[index], x, y, width, height);
      }
  
-@@ -1167,7 +1292,15 @@ class Renderer {
+@@ -1167,7 +1293,15 @@ class Renderer {
          }
      }
  
@@ -2238,7 +2418,7 @@ index acf180d8..48ed1bf4 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1268,7 +1401,7 @@ class Renderer {
+@@ -1268,7 +1402,7 @@ class Renderer {
  
          //
  
@@ -2247,7 +2427,7 @@ index acf180d8..48ed1bf4 100644
  
          //
  
-@@ -1277,10 +1410,10 @@ class Renderer {
+@@ -1277,10 +1411,10 @@ class Renderer {
  
          //
  
@@ -2262,7 +2442,7 @@ index acf180d8..48ed1bf4 100644
  
          //
  
-@@ -1313,15 +1446,15 @@ class Renderer {
+@@ -1313,15 +1447,15 @@ class Renderer {
  
          //
  
