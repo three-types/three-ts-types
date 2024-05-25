@@ -1192,3 +1192,478 @@ index 9417df5..4376155 100644
          let viewZ;
  
          const getViewZ = builder.context.getViewZ;
+diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
+index e48a802..e56230a 100644
+--- a/examples-jsm/examples/renderers/common/Backend.ts
++++ b/examples-jsm/examples/renderers/common/Backend.ts
+@@ -1,19 +1,28 @@
++import Color4 from './Color4.js';
++import { Vector2, Vector4, REVISION, createCanvasElement } from 'three';
++import Renderer from './Renderer.js';
++
+ let vector2 = null;
+ let vector4 = null;
+ let color4 = null;
+ 
+-import Color4 from './Color4.js';
+-import { Vector2, Vector4, REVISION, createCanvasElement } from 'three';
++export interface BackendParameters {
++    canvas?: HTMLCanvasElement | undefined;
++}
+ 
+ class Backend {
+-    constructor(parameters = {}) {
++    parameters: BackendParameters;
++    renderer: Renderer | null;
++    domElement: HTMLCanvasElement | null;
++
++    constructor(parameters: BackendParameters = {}) {
+         this.parameters = Object.assign({}, parameters);
+         this.data = new WeakMap();
+         this.renderer = null;
+         this.domElement = null;
+     }
+ 
+-    async init(renderer) {
++    async init(renderer: Renderer) {
+         this.renderer = renderer;
+     }
+ 
+diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
+index acf180d..e4fcfbd 100644
+--- a/examples-jsm/examples/renderers/common/Renderer.ts
++++ b/examples-jsm/examples/renderers/common/Renderer.ts
+@@ -30,10 +30,26 @@ import {
+     RenderTarget,
+     HalfFloatType,
+     RGBAFormat,
++    ColorSpace,
++    ToneMapping,
++    Plane,
++    ShadowMapType,
++    Camera,
++    Color,
++    Object3D,
++    FramebufferTexture,
++    Texture,
++    Box2,
++    BufferGeometry,
++    Material,
++    Group,
+ } from 'three';
+ import { NodeMaterial } from '../../nodes/Nodes.js';
+ import QuadMesh from '../../objects/QuadMesh.js';
+ import RenderBundles from './RenderBundles.js';
++import Backend from './Backend.js';
++import Node from '../../nodes/core/Node.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
+ 
+ const _scene = new Scene();
+ const _drawingBufferSize = new Vector2();
+@@ -43,8 +59,101 @@ const _projScreenMatrix = new Matrix4();
+ const _vector3 = new Vector3();
+ const _quad = new QuadMesh(new NodeMaterial());
+ 
++export interface RendererParameters {
++    logarithmicDepthBuffer?: boolean | undefined;
++    alpha?: boolean | undefined;
++}
++
+ class Renderer {
+-    constructor(backend, parameters = {}) {
++    readonly isRenderer: true;
++
++    domElement: HTMLCanvasElement | null;
++
++    backend: Backend;
++
++    autoClear: boolean;
++    autoClearColor: boolean;
++    autoClearDepth: boolean;
++    autoClearStencil: boolean;
++
++    alpha: boolean;
++
++    logarithmicDepthBuffer: boolean;
++
++    outputColorSpace: ColorSpace;
++
++    toneMapping: ToneMapping;
++    toneMappingExposure: number;
++
++    sortObjects: boolean;
++
++    depth: boolean;
++    stencil: boolean;
++
++    clippingPlanes: Plane[];
++
++    info: Info;
++
++    toneMappingNode: Node | null;
++
++    _pixelRatio: number;
++    _width: number;
++    _height: number;
++
++    _viewport: Vector4;
++    _scissor: Vector4;
++    _scissorTest: boolean;
++
++    _attributes: Attributes | null;
++    _geometries: Geometries | null;
++    _nodes: Nodes | null;
++    _animation: Animation | null;
++    _bindings: Bindings | null;
++    _objects: RenderObjects | null;
++    _pipelines: Pipelines | null;
++    _bundles: RenderBundles | null;
++    _renderLists: RenderLists | null;
++    _renderContexts: RenderContexts | null;
++    _textures: Textures | null;
++    _background: Background | null;
++
++    // TODO
++    // this._currentRenderContext = null;
++
++    _opaqueSort: ((a: unknown, b: unknown) => number) | null;
++    _transparentSort: ((a: unknown, b: unknown) => number) | null;
++
++    // TODO
++    // this._frameBufferTarget = null;
++
++    _clearColor: ColorSpace;
++    _clearDepth: number;
++    _clearStencil: number;
++
++    _renderTarget: RenderTarget | null;
++    _activeCubeFace: number;
++    _activeMipmapLevel: number;
++
++    // TODO
++    // this._renderObjectFunction = null;
++    // this._currentRenderObjectFunction = null;
++    // this._currentRenderBundle = null;
++
++    // TODO
++    // this._handleObjectFunction = this._renderObjectDirect;
++
++    // TODO
++    _initialized: boolean;
++    _initPromise: Promise<void> | null;
++
++    // TODO
++    // this._compilationPromises = null;
++
++    shadowMap: { enabled: boolean; type: ShadowMapType | null };
++
++    xr: { enabled: boolean };
++
++    constructor(backend: Backend, parameters: RendererParameters = {}) {
+         this.isRenderer = true;
+ 
+         //
+@@ -207,7 +316,7 @@ class Renderer {
+         return this.backend.coordinateSystem;
+     }
+ 
+-    async compileAsync(scene, camera, targetScene = null) {
++    async compileAsync(scene: Scene, camera: Camera, targetScene: Scene | null = null) {
+         if (this._initialized === false) await this.init();
+ 
+         // preserve render tree
+@@ -320,7 +429,7 @@ class Renderer {
+         await Promise.all(compilationPromises);
+     }
+ 
+-    async renderAsync(scene, camera) {
++    async renderAsync(scene: Scene, camera: Camera) {
+         if (this._initialized === false) await this.init();
+ 
+         const renderContext = this._renderScene(scene, camera);
+@@ -397,7 +506,7 @@ class Renderer {
+         }
+     }
+ 
+-    render(scene, camera) {
++    render(scene: Scene, camera: Camera) {
+         if (this._initialized === false) {
+             console.warn(
+                 'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
+@@ -453,7 +562,7 @@ class Renderer {
+         return frameBufferTarget;
+     }
+ 
+-    _renderScene(scene, camera, useFrameBufferTarget = true) {
++    _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget = true) {
+         const frameBufferTarget = useFrameBufferTarget ? this._getFrameBufferTarget() : null;
+ 
+         // preserve render tree
+@@ -663,7 +772,7 @@ class Renderer {
+         return this._activeMipmapLevel;
+     }
+ 
+-    async setAnimationLoop(callback) {
++    async setAnimationLoop(callback: ((time: DOMHighResTimeStamp) => void) | null) {
+         if (this._initialized === false) await this.init();
+ 
+         this._animation.setAnimationLoop(callback);
+@@ -689,11 +798,11 @@ class Renderer {
+         return this._pixelRatio;
+     }
+ 
+-    getDrawingBufferSize(target) {
++    getDrawingBufferSize(target: Vector2) {
+         return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
+     }
+ 
+-    getSize(target) {
++    getSize(target: Vector2) {
+         return target.set(this._width, this._height);
+     }
+ 
+@@ -703,30 +812,30 @@ class Renderer {
+         this.setSize(this._width, this._height, false);
+     }
+ 
+-    setDrawingBufferSize(width, height, pixelRatio) {
++    setDrawingBufferSize(width: number, height: number, pixelRatio: number) {
+         this._width = width;
+         this._height = height;
+ 
+         this._pixelRatio = pixelRatio;
+ 
+-        this.domElement.width = Math.floor(width * pixelRatio);
+-        this.domElement.height = Math.floor(height * pixelRatio);
++        this.domElement!.width = Math.floor(width * pixelRatio);
++        this.domElement!.height = Math.floor(height * pixelRatio);
+ 
+         this.setViewport(0, 0, width, height);
+ 
+         if (this._initialized) this.backend.updateSize();
+     }
+ 
+-    setSize(width, height, updateStyle = true) {
++    setSize(width: number, height: number, updateStyle = true) {
+         this._width = width;
+         this._height = height;
+ 
+-        this.domElement.width = Math.floor(width * this._pixelRatio);
+-        this.domElement.height = Math.floor(height * this._pixelRatio);
++        this.domElement!.width = Math.floor(width * this._pixelRatio);
++        this.domElement!.height = Math.floor(height * this._pixelRatio);
+ 
+         if (updateStyle === true) {
+-            this.domElement.style.width = width + 'px';
+-            this.domElement.style.height = height + 'px';
++            this.domElement!.style.width = width + 'px';
++            this.domElement!.style.height = height + 'px';
+         }
+ 
+         this.setViewport(0, 0, width, height);
+@@ -734,15 +843,15 @@ class Renderer {
+         if (this._initialized) this.backend.updateSize();
+     }
+ 
+-    setOpaqueSort(method) {
++    setOpaqueSort(method: ((a: unknown, b: unknown) => number) | null) {
+         this._opaqueSort = method;
+     }
+ 
+-    setTransparentSort(method) {
++    setTransparentSort(method: ((a: unknown, b: unknown) => number) | null) {
+         this._transparentSort = method;
+     }
+ 
+-    getScissor(target) {
++    getScissor(target: Vector4) {
+         const scissor = this._scissor;
+ 
+         target.x = scissor.x;
+@@ -753,13 +862,15 @@ class Renderer {
+         return target;
+     }
+ 
+-    setScissor(x, y, width, height) {
++    setScissor(x: Vector4): void;
++    setScissor(x: number, y: number, width: number, height: number): void;
++    setScissor(x: Vector4 | number, y?: number, width?: number, height?: number) {
+         const scissor = this._scissor;
+ 
+-        if (x.isVector4) {
+-            scissor.copy(x);
++        if ((x as Vector4).isVector4) {
++            scissor.copy(x as Vector4);
+         } else {
+-            scissor.set(x, y, width, height);
++            scissor.set(x as number, y!, width!, height!);
+         }
+     }
+ 
+@@ -767,34 +878,36 @@ class Renderer {
+         return this._scissorTest;
+     }
+ 
+-    setScissorTest(boolean) {
++    setScissorTest(boolean: boolean) {
+         this._scissorTest = boolean;
+ 
+         this.backend.setScissorTest(boolean);
+     }
+ 
+-    getViewport(target) {
++    getViewport(target: Vector4) {
+         return target.copy(this._viewport);
+     }
+ 
+-    setViewport(x, y, width, height, minDepth = 0, maxDepth = 1) {
++    setScissor(x: Vector4): void;
++    setScissor(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
++    setViewport(x: Vector4 | number, y?: number, width?: number, height?: number, minDepth = 0, maxDepth = 1) {
+         const viewport = this._viewport;
+ 
+-        if (x.isVector4) {
+-            viewport.copy(x);
++        if ((x as Vector4).isVector4) {
++            viewport.copy(x as Vector4);
+         } else {
+-            viewport.set(x, y, width, height);
++            viewport.set(x as number, y!, width!, height!);
+         }
+ 
+         viewport.minDepth = minDepth;
+         viewport.maxDepth = maxDepth;
+     }
+ 
+-    getClearColor(target) {
++    getClearColor(target: Color4) {
+         return target.copy(this._clearColor);
+     }
+ 
+-    setClearColor(color, alpha = 1) {
++    setClearColor(color: Color, alpha = 1) {
+         this._clearColor.set(color);
+         this._clearColor.a = alpha;
+     }
+@@ -803,7 +916,7 @@ class Renderer {
+         return this._clearColor.a;
+     }
+ 
+-    setClearAlpha(alpha) {
++    setClearAlpha(alpha: number) {
+         this._clearColor.a = alpha;
+     }
+ 
+@@ -811,7 +924,7 @@ class Renderer {
+         return this._clearDepth;
+     }
+ 
+-    setClearDepth(depth) {
++    setClearDepth(depth: number) {
+         this._clearDepth = depth;
+     }
+ 
+@@ -819,11 +932,11 @@ class Renderer {
+         return this._clearStencil;
+     }
+ 
+-    setClearStencil(stencil) {
++    setClearStencil(stencil: number) {
+         this._clearStencil = stencil;
+     }
+ 
+-    isOccluded(object) {
++    isOccluded(object: Object3D) {
+         const renderContext = this._currentRenderContext;
+ 
+         return renderContext && this.backend.isOccluded(renderContext, object);
+@@ -909,7 +1022,7 @@ class Renderer {
+         this.setAnimationLoop(null);
+     }
+ 
+-    setRenderTarget(renderTarget, activeCubeFace = 0, activeMipmapLevel = 0) {
++    setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace = 0, activeMipmapLevel = 0) {
+         this._renderTarget = renderTarget;
+         this._activeCubeFace = activeCubeFace;
+         this._activeMipmapLevel = activeMipmapLevel;
+@@ -927,7 +1040,7 @@ class Renderer {
+         return this._renderObjectFunction;
+     }
+ 
+-    async computeAsync(computeNodes) {
++    async computeAsync(computeNodes: ComputeNode | ComputeNode[]) {
+         if (this._initialized === false) await this.init();
+ 
+         const nodeFrame = this._nodes.nodeFrame;
+@@ -993,13 +1106,13 @@ class Renderer {
+         nodeFrame.renderId = previousRenderId;
+     }
+ 
+-    async hasFeatureAsync(name) {
++    async hasFeatureAsync(name: string) {
+         if (this._initialized === false) await this.init();
+ 
+         return this.backend.hasFeature(name);
+     }
+ 
+-    hasFeature(name) {
++    hasFeature(name: string) {
+         if (this._initialized === false) {
+             console.warn(
+                 'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
+@@ -1011,7 +1124,7 @@ class Renderer {
+         return this.backend.hasFeature(name);
+     }
+ 
+-    copyFramebufferToTexture(framebufferTexture) {
++    copyFramebufferToTexture(framebufferTexture: FramebufferTexture) {
+         const renderContext = this._currentRenderContext;
+ 
+         this._textures.updateTexture(framebufferTexture);
+@@ -1019,14 +1132,27 @@ class Renderer {
+         this.backend.copyFramebufferToTexture(framebufferTexture, renderContext);
+     }
+ 
+-    copyTextureToTexture(srcTexture, dstTexture, srcRegion = null, dstPosition = null, level = 0) {
++    copyTextureToTexture(
++        srcTexture: Texture,
++        dstTexture: Texture,
++        srcRegion: Box2 | null = null,
++        dstPosition: Vector2 | null = null,
++        level = 0,
++    ) {
+         this._textures.updateTexture(srcTexture);
+         this._textures.updateTexture(dstTexture);
+ 
+         this.backend.copyTextureToTexture(srcTexture, dstTexture, srcRegion, dstPosition, level);
+     }
+ 
+-    readRenderTargetPixelsAsync(renderTarget, x, y, width, height, index = 0) {
++    readRenderTargetPixelsAsync(
++        renderTarget: RenderTarget,
++        x: number,
++        y: number,
++        width: number,
++        height: number,
++        index = 0,
++    ) {
+         return this.backend.copyTextureToBuffer(renderTarget.textures[index], x, y, width, height);
+     }
+ 
+@@ -1167,7 +1293,15 @@ class Renderer {
+         }
+     }
+ 
+-    renderObject(object, scene, camera, geometry, material, group, lightsNode) {
++    renderObject(
++        object: Object3D,
++        scene: Scene,
++        camera: Camera,
++        geometry: BufferGeometry,
++        material: Material,
++        group: Group,
++        lightsNode: LightsNode,
++    ) {
+         let overridePositionNode;
+         let overrideFragmentNode;
+         let overrideDepthNode;
