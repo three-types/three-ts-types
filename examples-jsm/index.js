@@ -42,6 +42,7 @@ const files = [
     'renderers/common/RenderBundles',
     'renderers/common/RenderContext',
     'renderers/common/RenderContexts',
+    'renderers/common/RenderList',
     'renderers/common/RenderLists',
     'renderers/common/Renderer',
     'renderers/common/RenderObject',
