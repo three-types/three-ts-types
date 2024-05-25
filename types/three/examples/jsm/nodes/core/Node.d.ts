@@ -97,8 +97,8 @@ declare class Node extends EventDispatcher<{
     getElementType(builder: NodeBuilder): "bool" | "int" | "float" | "vec2" | "vec3" | "vec4" | "uint" | null;
     getNodeType(builder: NodeBuilder): string | null;
     getShared(builder: NodeBuilder): Node;
-    setup(builder: NodeBuilder): null;
-    construct(builder: NodeBuilder): null;
+    setup(builder: NodeBuilder): Node | null;
+    construct(builder: NodeBuilder): Node | null;
     increaseUsage(builder: NodeBuilder): number;
     analyze(builder: NodeBuilder): void;
     generate(builder: NodeBuilder, output?: string | null): string | null | undefined;
