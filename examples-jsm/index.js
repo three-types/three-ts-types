@@ -20,7 +20,11 @@ const files = [
     'nodes/fog/FogNode',
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightsNode',
+    'renderers/common/Backend',
     'renderers/common/Renderer',
+    'renderers/webgl/WebGLBackend',
+    'renderers/webgpu/WebGPUBackend',
+    'renderers/webgpu/WebGPURenderer',
 ];
 
 const inDir = '../three.js/examples/jsm';
