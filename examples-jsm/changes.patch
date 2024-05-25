@@ -1,8 +1,8 @@
 diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
-index 438c44d..9bf03bb 100644
+index 438c44d..22392df 100644
 --- a/examples-jsm/examples/nodes/core/Node.ts
 +++ b/examples-jsm/examples/nodes/core/Node.ts
-@@ -2,12 +2,30 @@ import { EventDispatcher } from 'three';
+@@ -2,12 +2,94 @@ import { EventDispatcher } from 'three';
  import { NodeUpdateType } from './constants.js';
  import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  import { MathUtils } from 'three';
@@ -15,6 +15,68 @@ index 438c44d..9bf03bb 100644
  let _nodeId = 0;
  
 -class Node extends EventDispatcher {
++interface NodeConstructor {
++    type?: string;
++}
++
++interface NodeJSONMeta {
++    textures: { [key: string]: unknown };
++    images: { [key: string]: unknown };
++    nodes: { [key: string]: NodeJSONIntermediateOutputData };
++}
++
++interface NodeJSONMetadata {
++    version: number;
++    type: 'Node';
++    generator: 'Node.toJSON';
++}
++
++interface NodeJSONInputNodes {
++    [property: string]:
++        | string[]
++        | {
++              [index: string]: string | undefined;
++          }
++        | string
++        | undefined;
++}
++
++interface NodeJSONInputData {
++    inputNodes?: NodeJSONInputNodes | undefined;
++    meta: {
++        textures: { [key: string]: unknown };
++        nodes: { [key: string]: Node };
++    };
++}
++
++interface NodeJSONInputData {
++    uuid: string;
++    type: string | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++}
++
++interface NodeJSONIntermediateOutputData {
++    uuid: string;
++    type: string | undefined;
++    meta?: NodeJSONMeta | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONIntermediateOutputData[];
++}
++
++interface NodeJSONOutputData {
++    uuid: string;
++    type: string | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONOutputData[];
++}
++
 +class Node extends EventDispatcher<{ dispose: {} }> {
 +    nodeType: string | null;
 +
@@ -32,10 +94,12 @@ index 438c44d..9bf03bb 100644
 +
 +    readonly id!: number;
 +
++    self?: this;
++
      constructor(nodeType = null) {
          super();
  
-@@ -28,7 +46,7 @@ class Node extends EventDispatcher {
+@@ -28,36 +110,36 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -44,8 +108,11 @@ index 438c44d..9bf03bb 100644
          if (value === true) {
              this.version++;
          }
-@@ -38,26 +56,26 @@ class Node extends EventDispatcher {
-         return this.constructor.type;
+     }
+ 
+     get type() {
+-        return this.constructor.type;
++        return (this.constructor as NodeConstructor).type;
      }
  
 -    onUpdate(callback, updateType) {
@@ -76,7 +143,7 @@ index 438c44d..9bf03bb 100644
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
-@@ -69,11 +87,11 @@ class Node extends EventDispatcher {
+@@ -69,11 +151,11 @@ class Node extends EventDispatcher {
          return this.self || this;
      }
  
@@ -90,7 +157,7 @@ index 438c44d..9bf03bb 100644
          return false;
      }
  
-@@ -87,7 +105,7 @@ class Node extends EventDispatcher {
+@@ -87,7 +169,7 @@ class Node extends EventDispatcher {
          this.dispatchEvent({ type: 'dispose' });
      }
  
@@ -99,7 +166,7 @@ index 438c44d..9bf03bb 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -106,7 +124,7 @@ class Node extends EventDispatcher {
+@@ -106,7 +188,7 @@ class Node extends EventDispatcher {
          return this._cacheKey;
      }
  
@@ -108,7 +175,7 @@ index 438c44d..9bf03bb 100644
          return this.uuid;
      }
  
-@@ -118,14 +136,14 @@ class Node extends EventDispatcher {
+@@ -118,14 +200,14 @@ class Node extends EventDispatcher {
          return this.updateBeforeType;
      }
  
@@ -125,7 +192,7 @@ index 438c44d..9bf03bb 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -135,14 +153,14 @@ class Node extends EventDispatcher {
+@@ -135,25 +217,25 @@ class Node extends EventDispatcher {
          return this.nodeType;
      }
  
@@ -138,11 +205,15 @@ index 438c44d..9bf03bb 100644
      }
  
 -    setup(builder) {
-+    setup(builder: NodeBuilder) {
++    setup(builder: NodeBuilder): Node | null {
          const nodeProperties = builder.getNodeProperties(this);
  
          for (const childNode of this.getChildren()) {
-@@ -153,7 +171,7 @@ class Node extends EventDispatcher {
+-            nodeProperties['_node' + childNode.id] = childNode;
++            nodeProperties[`_node${childNode.id}`] = childNode;
+         }
+ 
+         // return a outputNode if exists
          return null;
      }
  
@@ -151,7 +222,7 @@ index 438c44d..9bf03bb 100644
          // @deprecated, r157
  
          console.warn('THREE.Node: construct() is deprecated. Use setup() instead.');
-@@ -161,14 +179,14 @@ class Node extends EventDispatcher {
+@@ -161,14 +243,14 @@ class Node extends EventDispatcher {
          return this.setup(builder);
      }
  
@@ -168,7 +239,7 @@ index 438c44d..9bf03bb 100644
          const usageCount = this.increaseUsage(builder);
  
          if (usageCount === 1) {
-@@ -177,14 +195,14 @@ class Node extends EventDispatcher {
+@@ -177,14 +259,14 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -186,7 +257,7 @@ index 438c44d..9bf03bb 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -192,15 +210,15 @@ class Node extends EventDispatcher {
+@@ -192,15 +274,15 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -205,7 +276,7 @@ index 438c44d..9bf03bb 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -235,8 +253,8 @@ class Node extends EventDispatcher {
+@@ -235,8 +317,8 @@ class Node extends EventDispatcher {
                  }
  
                  for (const childNode of Object.values(properties)) {
@@ -216,7 +287,141 @@ index 438c44d..9bf03bb 100644
                      }
                  }
              }
-@@ -391,7 +409,7 @@ class Node extends EventDispatcher {
+@@ -272,10 +354,10 @@ class Node extends EventDispatcher {
+         return getNodeChildren(this);
+     }
+ 
+-    serialize(json) {
++    serialize(json: NodeJSONIntermediateOutputData) {
+         const nodeChildren = this.getSerializeChildren();
+ 
+-        const inputNodes = {};
++        const inputNodes: NodeJSONInputNodes = {};
+ 
+         for (const { property, index, childNode } of nodeChildren) {
+             if (index !== undefined) {
+@@ -283,7 +365,9 @@ class Node extends EventDispatcher {
+                     inputNodes[property] = Number.isInteger(index) ? [] : {};
+                 }
+ 
+-                inputNodes[property][index] = childNode.toJSON(json.meta).uuid;
++                (inputNodes[property]! as { [index: number | string]: string })[index] = childNode.toJSON(
++                    json.meta,
++                ).uuid;
+             } else {
+                 inputNodes[property] = childNode.toJSON(json.meta).uuid;
+             }
+@@ -294,39 +378,39 @@ class Node extends EventDispatcher {
+         }
+     }
+ 
+-    deserialize(json) {
++    deserialize(json: NodeJSONInputData) {
+         if (json.inputNodes !== undefined) {
+             const nodes = json.meta.nodes;
+ 
+             for (const property in json.inputNodes) {
+                 if (Array.isArray(json.inputNodes[property])) {
+-                    const inputArray = [];
++                    const inputArray: Node[] = [];
+ 
+-                    for (const uuid of json.inputNodes[property]) {
++                    for (const uuid of json.inputNodes[property] as string[]) {
+                         inputArray.push(nodes[uuid]);
+                     }
+ 
+-                    this[property] = inputArray;
++                    (this[property as keyof typeof this] as Node[]) = inputArray;
+                 } else if (typeof json.inputNodes[property] === 'object') {
+-                    const inputObject = {};
++                    const inputObject: { [subProperty: string]: Node } = {};
+ 
+-                    for (const subProperty in json.inputNodes[property]) {
+-                        const uuid = json.inputNodes[property][subProperty];
++                    for (const subProperty in json.inputNodes[property] as { [subProperty: string]: string }) {
++                        const uuid = (json.inputNodes[property] as { [subProperty: string]: string })[subProperty];
+ 
+                         inputObject[subProperty] = nodes[uuid];
+                     }
+ 
+-                    this[property] = inputObject;
++                    (this[property as keyof typeof this] as { [subProperty: string]: Node }) = inputObject;
+                 } else {
+-                    const uuid = json.inputNodes[property];
++                    const uuid = json.inputNodes[property] as string;
+ 
+-                    this[property] = nodes[uuid];
++                    (this[property as keyof typeof this] as Node) = nodes[uuid];
+                 }
+             }
+         }
+     }
+ 
+-    toJSON(meta) {
++    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData {
+         const { uuid, type } = this;
+         const isRoot = meta === undefined || typeof meta === 'string';
+ 
+@@ -335,18 +419,18 @@ class Node extends EventDispatcher {
+                 textures: {},
+                 images: {},
+                 nodes: {},
+-            };
++            } satisfies NodeJSONMeta;
+         }
+ 
+         // serialize
+ 
+-        let data = meta.nodes[uuid];
++        let data = (meta as NodeJSONMeta).nodes[uuid];
+ 
+         if (data === undefined) {
+             data = {
+                 uuid,
+                 type,
+-                meta,
++                meta: meta as NodeJSONMeta,
+                 metadata: {
+                     version: 4.6,
+                     type: 'Node',
+@@ -354,7 +438,7 @@ class Node extends EventDispatcher {
+                 },
+             };
+ 
+-            if (isRoot !== true) meta.nodes[data.uuid] = data;
++            if (isRoot !== true) (meta as NodeJSONMeta).nodes[data.uuid] = data;
+ 
+             this.serialize(data);
+ 
+@@ -363,12 +447,12 @@ class Node extends EventDispatcher {
+ 
+         // TODO: Copied from Object3D.toJSON
+ 
+-        function extractFromCache(cache) {
++        function extractFromCache<T>(cache: { [key: string]: T }) {
+             const values = [];
+ 
+             for (const key in cache) {
+                 const data = cache[key];
+-                delete data.metadata;
++                delete (data as NodeJSONIntermediateOutputData).metadata;
+                 values.push(data);
+             }
+ 
+@@ -376,9 +460,9 @@ class Node extends EventDispatcher {
+         }
+ 
+         if (isRoot) {
+-            const textures = extractFromCache(meta.textures);
+-            const images = extractFromCache(meta.images);
+-            const nodes = extractFromCache(meta.nodes);
++            const textures = extractFromCache((meta as NodeJSONMeta).textures);
++            const images = extractFromCache((meta as NodeJSONMeta).images);
++            const nodes = extractFromCache((meta as NodeJSONMeta).nodes);
+ 
+             if (textures.length > 0) data.textures = textures;
+             if (images.length > 0) data.images = images;
+@@ -391,7 +475,7 @@ class Node extends EventDispatcher {
  
  export default Node;
  
@@ -225,8 +430,12 @@ index 438c44d..9bf03bb 100644
      if (typeof nodeClass !== 'function' || !type) throw new Error(`Node class ${type} is not a class`);
      if (NodeClasses.has(type)) {
          console.warn(`Redefinition of node class ${type}`);
-@@ -402,7 +420,7 @@ export function addNodeClass(type, nodeClass) {
-     nodeClass.type = type;
+@@ -399,10 +483,10 @@ export function addNodeClass(type, nodeClass) {
+     }
+ 
+     NodeClasses.set(type, nodeClass);
+-    nodeClass.type = type;
++    (nodeClass as NodeConstructor).type = type;
  }
  
 -export function createNodeFromType(type) {
@@ -254,7 +463,7 @@ index 190fe8c..d873bb2 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13f..5174db4 100644
+index ebdc13f..a077bb0 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
@@ -345,7 +554,7 @@ index ebdc13f..5174db4 100644
 +    // TODO
 +    // currentFunctionNode
 +
-+    context: { keywords: NodeKeywords; material: Material | Material[] };
++    context: { keywords: NodeKeywords; material: Material | Material[]; tempRead?: boolean };
 +
 +    cache: NodeCache;
 +    globalCache: NodeCache;
@@ -632,10 +841,10 @@ index ebdc13f..5174db4 100644
          toType = this.getVectorType(toType);
  
 diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
-index 96a7e0c..316e946 100644
+index 96a7e0c..b1a61b3 100644
 --- a/examples-jsm/examples/nodes/core/NodeCache.ts
 +++ b/examples-jsm/examples/nodes/core/NodeCache.ts
-@@ -1,16 +1,50 @@
+@@ -1,16 +1,52 @@
 +import Node from './Node.js';
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
@@ -647,10 +856,12 @@ index 96a7e0c..316e946 100644
  
 +export interface ShaderStageNodeData {
 +    properties?:
-+        | {
++        | ({
 +              outputNode: Node | null;
 +              initialized?: boolean | undefined;
-+          }
++          } & {
++              [K in `_node${string}`]?: Node | undefined;
++          })
 +        | undefined;
 +    bufferAttribute?: NodeAttribute | undefined;
 +    structType?: Node | undefined;

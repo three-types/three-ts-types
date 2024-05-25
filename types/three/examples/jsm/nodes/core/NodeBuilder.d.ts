@@ -2,7 +2,7 @@ import { BufferGeometry, Material, Object3D, Renderer } from "three";
 import FogNode from "../fog/FogNode.js";
 import LightsNode from "../lighting/LightsNode.js";
 import { NodeShaderStage } from "./constants.js";
-import Node, { NodeTypeOption } from "./Node.js";
+import Node from "./Node.js";
 import NodeAttribute from "./NodeAttribute.js";
 import NodeCache from "./NodeCache.js";
 import NodeParser from "./NodeParser.js";
@@ -76,35 +76,35 @@ export default abstract class NodeBuilder {
     isFlipY(): boolean;
 
     // @TODO: rename to .generateConst()
-    getConst(type: NodeTypeOption, value?: unknown): Node;
-    getType(type: NodeTypeOption): NodeTypeOption;
+    getConst(type: string, value?: unknown): Node;
+    getType(type: string): string;
 
     generateMethod(method: string): string;
 
-    getAttribute(name: string, type: NodeTypeOption): NodeAttribute;
+    getAttribute(name: string, type: string): NodeAttribute;
 
     getPropertyName(node: Node, shaderStage: NodeShaderStage): string;
-    isVector(type: NodeTypeOption): boolean;
+    isVector(type: string): boolean;
 
-    isMatrix(type: NodeTypeOption): boolean;
-    isReference(type: NodeTypeOption): boolean;
-    getElementType(type: NodeTypeOption): NodeTypeOption | null;
-    getComponentType(type: NodeTypeOption): NodeTypeOption | null;
-    getVectorType(type: NodeTypeOption): NodeTypeOption;
-    getTypeFromLength(length: number): NodeTypeOption;
-    getTypeLength(type: NodeTypeOption): number;
-    getVectorFromMatrix(type: NodeTypeOption): NodeTypeOption;
+    isMatrix(type: string): boolean;
+    isReference(type: string): boolean;
+    getElementType(type: string): string | null;
+    getComponentType(type: string): string | null;
+    getVectorType(type: string): string;
+    getTypeFromLength(length: number): string;
+    getTypeLength(type: string): number;
+    getVectorFromMatrix(type: string): string;
     getDataFromNode(node: Node, shaderStage?: NodeShaderStage): NodeData;
     getNodeProperties(node: Node, shaderStage?: NodeShaderStage): { [key: string]: unknown };
     getUniformFromNode(
         node: Node,
-        type: NodeTypeOption,
+        type: string,
         shaderStage?: NodeShaderStage,
         name?: string | null,
     ): NodeUniform<string>;
-    getVarFromNode(node: Node, type: NodeTypeOption, shaderStage?: NodeShaderStage): NodeVar;
-    getVaryFromNode(node: Node, type: NodeTypeOption): NodeVarying;
-    getCodeFromNode(node: Node, type: NodeTypeOption, shaderStage?: NodeShaderStage): string;
+    getVarFromNode(node: Node, type: string, shaderStage?: NodeShaderStage): NodeVar;
+    getVaryFromNode(node: Node, type: string): NodeVarying;
+    getCodeFromNode(node: Node, type: string, shaderStage?: NodeShaderStage): string;
     addFlowCode(code: string): void;
     getFlowData(node: Node, shaderStage: NodeShaderStage): FlowData;
     flowNode(node: Node): FlowData;
@@ -128,6 +128,6 @@ export default abstract class NodeBuilder {
     getBuildStage(): BuildStageOption;
     abstract buildCode(): void;
     build(): this;
-    format(snippet: string, fromType: NodeTypeOption, toType: NodeTypeOption): string;
+    format(snippet: string, fromType: string, toType: string): string;
     getSignature(): string;
 }

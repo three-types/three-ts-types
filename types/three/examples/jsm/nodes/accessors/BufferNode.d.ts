@@ -1,4 +1,3 @@
-import { NodeTypeOption } from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 import { NodeOrType, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
@@ -8,7 +7,7 @@ export default class BufferNode extends UniformNode<unknown> {
     bufferType: string;
     bufferCount: number;
 
-    constructor(value: unknown, bufferType: NodeTypeOption, bufferCount?: number);
+    constructor(value: unknown, bufferType: string, bufferCount?: number);
 }
 
 export const buffer: (

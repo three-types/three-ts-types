@@ -1,6 +1,6 @@
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import InputNode from "./InputNode.js";
-import Node, { NodeTypeOption } from "./Node.js";
+import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import UniformGroupNode from "./UniformGroupNode.js";
 
@@ -9,7 +9,7 @@ export default class UniformNode<Value> extends InputNode<Value> {
 
     groupNode: UniformGroupNode;
 
-    constructor(value: Value, nodeType?: NodeTypeOption | null);
+    constructor(value: Value, nodeType?: string | null);
 
     setGroup(group: UniformGroupNode): this;
 
