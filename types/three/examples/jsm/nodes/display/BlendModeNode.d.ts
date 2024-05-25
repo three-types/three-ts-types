@@ -28,6 +28,8 @@ export default class BlendModeNode extends TempNode {
     blendNode: Node;
 
     constructor(blendMode: BlendMode, baseNode: Node, blendNode: Node);
+
+    setup(): Node;
 }
 
 export const burn: (baseNode: NodeRepresentation, blendNode?: NodeRepresentation) => ShaderNodeObject<BlendModeNode>;

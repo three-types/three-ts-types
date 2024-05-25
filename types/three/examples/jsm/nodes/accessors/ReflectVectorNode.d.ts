@@ -5,6 +5,7 @@ export default class ReflectVectorNode extends Node {
     constructor();
 
     getHash(): "reflectVector";
+    setup(): Node;
 }
 
 export const reflectVector: ShaderNodeObject<ReflectVectorNode>;
