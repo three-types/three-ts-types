@@ -16,7 +16,6 @@ const files = [
     'nodes/core/NodeUtils',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
-    'nodes/core/StackNode',
     'nodes/core/constants',
     'nodes/fog/FogNode',
     'nodes/lighting/EnvironmentNode',
