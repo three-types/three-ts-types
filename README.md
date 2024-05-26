@@ -2,9 +2,9 @@ This repository is the home for the TypeScript types for three.js. Periodically 
 
 We are using this repository as a home for the types instead of DefinitelyTyped because:
 
--   It is less daunting for users to raise issues or create PRs on a repository that is specific to three.js
--   It is easier to organize the process of making sure we're staying up-to-date with the changes in the three.js repository
--   It gives us more freedom to use our own process
+- It is less daunting for users to raise issues or create PRs on a repository that is specific to three.js
+- It is easier to organize the process of making sure we're staying up-to-date with the changes in the three.js repository
+- It gives us more freedom to use our own process
 
 ## Priorities and goals
 
