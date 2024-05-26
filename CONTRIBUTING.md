@@ -4,10 +4,10 @@ Thanks for wanting to make a contribution and wanting to improve this library fo
 
 ## Project setup
 
-1.  Fork and clone the repo
-2.  Run `pnpm install` to install dependencies
-3.  Create a branch for your PR with `git checkout -b pr-type/issue-number-your-branch-name`
-4.  Let's get cooking! 👨🏻‍🍳🥓
+1. Fork and clone the repo
+2. Run `pnpm install` to install dependencies
+3. Create a branch for your PR with `git checkout -b pr-type/issue-number-your-branch-name`
+4. Let's get cooking! 👨🏻‍🍳🥓
 
 ## Commit Guidelines
 
