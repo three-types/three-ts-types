@@ -18,6 +18,7 @@ const files = [
     'nodes/core/NodeVarying',
     'nodes/core/constants',
     'nodes/fog/FogNode',
+    'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightsNode',
     'renderers/common/nodes/NodeBuilderState',
