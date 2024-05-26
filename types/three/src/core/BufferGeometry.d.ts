@@ -162,7 +162,7 @@ export class BufferGeometry<
      * @remarks Use {@link addGroup | .addGroup} to add groups, rather than modifying this array directly.
      * @defaultValue `[]`
      */
-    groups: Array<GeometryGroup>;
+    groups: GeometryGroup[];
 
     /**
      * Bounding box for the {@link THREE.BufferGeometry | BufferGeometry}, which can be calculated with {@link computeBoundingBox | .computeBoundingBox()}.
