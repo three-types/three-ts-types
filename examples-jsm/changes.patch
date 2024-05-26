@@ -1262,14 +1262,15 @@ index ed9e8e9e..f0f75022 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..ebc97439 100644
+index e48a8029..4916a325 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,19 +1,32 @@
+@@ -1,19 +1,35 @@
 +import Color4 from './Color4.js';
 +import { Vector2, Vector4, REVISION, createCanvasElement } from 'three';
 +import Renderer from './Renderer.js';
 +import RenderContext from './RenderContext.js';
++import RenderBundle from './RenderBundle.js';
 +
  let vector2 = null;
  let vector4 = null;
@@ -1282,11 +1283,13 @@ index e48a8029..ebc97439 100644
 +}
 +
 +interface RenderContextData {}
++
++interface RenderBundleData {}
  
  class Backend {
 -    constructor(parameters = {}) {
 +    parameters: BackendParameters;
-+    data: WeakMap<RenderContext, RenderContextData>;
++    data: WeakMap<RenderContext | RenderBundle, RenderContextData | RenderBundleData>;
 +    renderer: Renderer | null;
 +    domElement: HTMLCanvasElement | null;
 +
@@ -1303,16 +1306,16 @@ index e48a8029..ebc97439 100644
          this.renderer = renderer;
      }
  
-@@ -144,7 +157,7 @@ class Backend {
+@@ -144,7 +160,7 @@ class Backend {
          this.data.set(object, value);
      }
  
 -    get(object) {
-+    get(object: RenderContext) {
++    get(object: RenderContext | RenderBundle) {
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +168,11 @@ class Backend {
+@@ -155,11 +171,11 @@ class Backend {
          return map;
      }
  
@@ -1327,7 +1330,7 @@ index e48a8029..ebc97439 100644
      }
  }
 diff --git a/examples-jsm/examples/renderers/common/Background.ts b/examples-jsm/examples/renderers/common/Background.ts
-index b7902dd4..82ee22cb 100644
+index b7902dd4..025bdf5c 100644
 --- a/examples-jsm/examples/renderers/common/Background.ts
 +++ b/examples-jsm/examples/renderers/common/Background.ts
 @@ -1,6 +1,6 @@
@@ -1338,12 +1341,14 @@ index b7902dd4..82ee22cb 100644
  import {
      vec4,
      context,
-@@ -10,18 +10,23 @@ import {
+@@ -10,18 +10,25 @@ import {
      NodeMaterial,
      modelViewProjection,
  } from '../../nodes/Nodes.js';
 +import Renderer from './Renderer.js';
 +import Nodes from './nodes/Nodes.js';
++import RenderList from './RenderList.js';
++import RenderContext from './RenderContext.js';
  
  const _clearColor = new Color4();
  
@@ -1361,7 +1366,7 @@ index b7902dd4..82ee22cb 100644
      }
  
 -    update(scene, renderList, renderContext) {
-+    update(scene: Scene, renderList, renderContext) {
++    update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
          const renderer = this.renderer;
          const background = this.nodes.getBackgroundNode(scene) || scene.background;
  
@@ -1400,10 +1405,10 @@ index 9485ec3b..6a39a1db 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/ChainMap.ts b/examples-jsm/examples/renderers/common/ChainMap.ts
-index e233beca..b43faed4 100644
+index e233beca..3ef8e095 100644
 --- a/examples-jsm/examples/renderers/common/ChainMap.ts
 +++ b/examples-jsm/examples/renderers/common/ChainMap.ts
-@@ -1,14 +1,18 @@
+@@ -1,34 +1,38 @@
 -export default class ChainMap {
 +type RecursiveWeakMap<K extends object, V> = WeakMap<K, V | RecursiveWeakMap<K, V>>;
 +
@@ -1416,7 +1421,7 @@ index e233beca..b43faed4 100644
      }
  
 -    get(keys) {
-+    get(keys: K[]) {
++    get(keys: K[]): V | undefined {
          if (Array.isArray(keys)) {
 -            let map = this.weakMap;
 +            let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
@@ -1427,7 +1432,11 @@ index e233beca..b43faed4 100644
  
                  if (map === undefined) return undefined;
              }
-@@ -19,16 +23,16 @@ export default class ChainMap {
+ 
+-            return map.get(keys[keys.length - 1]);
++            return map.get(keys[keys.length - 1]) as V | undefined;
+         } else {
+             return super.get(keys);
          }
      }
  
@@ -1464,6 +1473,31 @@ index e233beca..b43faed4 100644
  
                  if (map === undefined) return false;
              }
+diff --git a/examples-jsm/examples/renderers/common/ClippingContext.ts b/examples-jsm/examples/renderers/common/ClippingContext.ts
+index 312e0b77..807083f6 100644
+--- a/examples-jsm/examples/renderers/common/ClippingContext.ts
++++ b/examples-jsm/examples/renderers/common/ClippingContext.ts
+@@ -5,6 +5,20 @@ const _plane = new Plane();
+ let _clippingContextVersion = 0;
+ 
+ class ClippingContext {
++    version: number;
++
++    globalClippingCount: number;
++
++    localClippingCount: number;
++    localClippingEnabled: boolean;
++    localClipIntersection: boolean;
++
++    // TODO
++    // planes
++
++    parentVersion: number;
++    viewNormalMatrix: Matrix3;
++
+     constructor() {
+         this.version = ++_clippingContextVersion;
+ 
 diff --git a/examples-jsm/examples/renderers/common/Color4.ts b/examples-jsm/examples/renderers/common/Color4.ts
 index c681cc90..5d03adec 100644
 --- a/examples-jsm/examples/renderers/common/Color4.ts
@@ -1676,11 +1710,82 @@ index f6c570c4..704790fe 100644
          super();
  
          this.backend = backend;
+diff --git a/examples-jsm/examples/renderers/common/ProgrammableStage.ts b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
+index a684e444..6b643625 100644
+--- a/examples-jsm/examples/renderers/common/ProgrammableStage.ts
++++ b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
+@@ -1,6 +1,16 @@
+ let _id = 0;
+ 
+ class ProgrammableStage {
++    id: number;
++
++    // TODO
++    // code
++    // stage
++    // transforms
++    // attributes
++
++    usedTimes: number;
++
+     constructor(code, type, transforms = null, attributes = null) {
+         this.id = _id++;
+ 
+diff --git a/examples-jsm/examples/renderers/common/RenderBundle.ts b/examples-jsm/examples/renderers/common/RenderBundle.ts
+index e59e4937..c7ba8cd4 100644
+--- a/examples-jsm/examples/renderers/common/RenderBundle.ts
++++ b/examples-jsm/examples/renderers/common/RenderBundle.ts
+@@ -1,5 +1,10 @@
++import { Camera, Object3D } from 'three';
++
+ class RenderBundle {
+-    constructor(scene, camera) {
++    scene: Object3D;
++    camera: Camera;
++
++    constructor(scene: Object3D, camera: Camera) {
+         this.scene = scene;
+         this.camera = camera;
+     }
+diff --git a/examples-jsm/examples/renderers/common/RenderBundles.ts b/examples-jsm/examples/renderers/common/RenderBundles.ts
+index 29140365..fbd2c210 100644
+--- a/examples-jsm/examples/renderers/common/RenderBundles.ts
++++ b/examples-jsm/examples/renderers/common/RenderBundles.ts
+@@ -1,12 +1,15 @@
++import { Camera, Object3D } from 'three';
+ import ChainMap from './ChainMap.js';
+ import RenderBundle from './RenderBundle.js';
+ 
+ class RenderBundles {
++    lists: ChainMap<Object3D | Camera, RenderBundle>;
++
+     constructor() {
+-        this.lists = new ChainMap();
++        this.lists = new ChainMap<Object3D | Camera, RenderBundle>();
+     }
+ 
+-    get(scene, camera) {
++    get(scene: Object3D, camera: Camera) {
+         const lists = this.lists;
+         const keys = [scene, camera];
+ 
+@@ -21,7 +24,7 @@ class RenderBundles {
+     }
+ 
+     dispose() {
+-        this.lists = new ChainMap();
++        this.lists = new ChainMap<Object3D | Camera, RenderBundle>();
+     }
+ }
+ 
 diff --git a/examples-jsm/examples/renderers/common/RenderContext.ts b/examples-jsm/examples/renderers/common/RenderContext.ts
-index 3b43028e..3efe66b9 100644
+index 3b43028e..b53cfc72 100644
 --- a/examples-jsm/examples/renderers/common/RenderContext.ts
 +++ b/examples-jsm/examples/renderers/common/RenderContext.ts
-@@ -3,6 +3,36 @@ import { Vector4 } from 'three';
+@@ -1,8 +1,41 @@
+ import { Vector4 } from 'three';
++import ClippingContext from './ClippingContext.js';
+ 
  let id = 0;
  
  class RenderContext {
@@ -1714,11 +1819,13 @@ index 3b43028e..3efe66b9 100644
 +
 +    readonly isRenderContext: true;
 +
++    clippingContext?: ClippingContext | undefined;
++
      constructor() {
          this.id = id++;
  
 diff --git a/examples-jsm/examples/renderers/common/RenderContexts.ts b/examples-jsm/examples/renderers/common/RenderContexts.ts
-index 630a2e42..1328da1e 100644
+index 630a2e42..9b1c1942 100644
 --- a/examples-jsm/examples/renderers/common/RenderContexts.ts
 +++ b/examples-jsm/examples/renderers/common/RenderContexts.ts
 @@ -1,12 +1,15 @@
@@ -1727,7 +1834,7 @@ index 630a2e42..1328da1e 100644
  import RenderContext from './RenderContext.js';
  
  class RenderContexts {
-+    chainMaps: { [attachmentState: string]: ChainMap | undefined };
++    chainMaps: { [attachmentState: string]: ChainMap<Scene | Camera, RenderContext> | undefined };
 +
      constructor() {
          this.chainMaps = {};
@@ -1738,41 +1845,222 @@ index 630a2e42..1328da1e 100644
          const chainKey = [scene, camera];
  
          let attachmentState;
-@@ -35,7 +38,7 @@ class RenderContexts {
+@@ -35,8 +38,11 @@ class RenderContexts {
          return renderState;
      }
  
 -    getChainMap(attachmentState) {
+-        return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
 +    getChainMap(attachmentState: string) {
-         return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
++        return (
++            this.chainMaps[attachmentState] ||
++            (this.chainMaps[attachmentState] = new ChainMap<Scene | Camera, RenderContext>())
++        );
+     }
+ 
+     dispose() {
+diff --git a/examples-jsm/examples/renderers/common/RenderList.ts b/examples-jsm/examples/renderers/common/RenderList.ts
+index a72a91df..77c6c4a4 100644
+--- a/examples-jsm/examples/renderers/common/RenderList.ts
++++ b/examples-jsm/examples/renderers/common/RenderList.ts
+@@ -1,3 +1,4 @@
++import { Camera, Light, Object3D } from 'three';
+ import { LightsNode } from '../../nodes/Nodes.js';
+ 
+ function painterSortStable(a, b) {
+@@ -26,7 +27,27 @@ function reversePainterSortStable(a, b) {
+     }
+ }
+ 
++export interface Bundle {
++    object: Object3D;
++    camera: Camera;
++    renderList: RenderList;
++}
++
+ class RenderList {
++    // TODO
++    // renderItems
++    renderItemsIndex: number;
++
++    // TODO
++    // opaque
++    // transparent
++    bundles: Bundle[];
++
++    lightsNode: LightsNode;
++    lightsArray: Light[];
++
++    occlusionQueryCount: number;
++
+     constructor() {
+         this.renderItems = [];
+         this.renderItemsIndex = 0;
+@@ -101,11 +122,11 @@ class RenderList {
+         (material.transparent === true ? this.transparent : this.opaque).unshift(renderItem);
+     }
+ 
+-    pushBundle(group) {
++    pushBundle(group: Bundle) {
+         this.bundles.push(group);
+     }
+ 
+-    pushLight(light) {
++    pushLight(light: Light) {
+         this.lightsArray.push(light);
      }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderLists.ts b/examples-jsm/examples/renderers/common/RenderLists.ts
-index 3fc3134e..e61a7fea 100644
+index 3fc3134e..66c64756 100644
 --- a/examples-jsm/examples/renderers/common/RenderLists.ts
 +++ b/examples-jsm/examples/renderers/common/RenderLists.ts
 @@ -1,12 +1,15 @@
-+import { Camera, Scene } from 'three';
++import { Camera, Object3D, Scene } from 'three';
  import ChainMap from './ChainMap.js';
  import RenderList from './RenderList.js';
  
  class RenderLists {
-+    lists: ChainMap;
++    lists: ChainMap<Object3D | Camera, RenderList>;
 +
      constructor() {
-         this.lists = new ChainMap();
+-        this.lists = new ChainMap();
++        this.lists = new ChainMap<Object3D | Camera, RenderList>();
      }
  
 -    get(scene, camera) {
-+    get(scene: Scene, camera: Camera) {
++    get(scene: Object3D, camera: Camera) {
          const lists = this.lists;
          const keys = [scene, camera];
  
+@@ -21,7 +24,7 @@ class RenderLists {
+     }
+ 
+     dispose() {
+-        this.lists = new ChainMap();
++        this.lists = new ChainMap<Object3D | Camera, RenderList>();
+     }
+ }
+ 
+diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
+index 861c15dc..876f48a1 100644
+--- a/examples-jsm/examples/renderers/common/RenderObject.ts
++++ b/examples-jsm/examples/renderers/common/RenderObject.ts
+@@ -1,4 +1,10 @@
+ import ClippingContext from './ClippingContext.js';
++import Nodes from './nodes/Nodes.js';
++import Geometries from './Geometries.js';
++import Renderer from './Renderer.js';
++import { Camera, Material, Object3D, Scene } from 'three';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import RenderContext from './RenderContext.js';
+ 
+ let id = 0;
+ 
+@@ -27,7 +33,60 @@ function getKeys(obj) {
+ }
+ 
+ export default class RenderObject {
+-    constructor(nodes, geometries, renderer, object, material, scene, camera, lightsNode, renderContext) {
++    _nodes: Nodes;
++    _geometries: Geometries;
++
++    id: number;
++
++    renderer: Renderer;
++    object: Object3D;
++    material: Material;
++    scene: Scene;
++    camera: Camera;
++    lightsNode: LightsNode;
++    context: RenderContext;
++
++    // TODO
++    // geometry: BufferGeometry | undefined; ??
++    version: number;
++
++    // TODO
++    // drawRange
++
++    // TODO
++    // attributes
++    // pipeline
++    // vertexBuffers
++
++    clippingContext?: ClippingContext | undefined;
++
++    clippingContextVersion: number;
++
++    // TODO
++    // initialNodesCacheKey
++    initialCacheKey: string;
++
++    // TODO
++    // this._nodeBuilderState = null;
++    // this._bindings = null;
++
++    onDispose: (() => void) | null;
++
++    readonly isRenderObject: true;
++
++    onMaterialDispose: () => void;
++
++    constructor(
++        nodes: Nodes,
++        geometries: Geometries,
++        renderer: Renderer,
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        renderContext: RenderContext,
++    ) {
+         this._nodes = nodes;
+         this._geometries = geometries;
+ 
+@@ -52,7 +111,7 @@ export default class RenderObject {
+ 
+         this.updateClipping(renderContext.clippingContext);
+ 
+-        this.clippingContextVersion = this.clippingContext.version;
++        this.clippingContextVersion = this.clippingContext!.version;
+ 
+         this.initialNodesCacheKey = this.getNodesCacheKey();
+         this.initialCacheKey = this.getCacheKey();
+@@ -71,7 +130,7 @@ export default class RenderObject {
+         this.material.addEventListener('dispose', this.onMaterialDispose);
+     }
+ 
+-    updateClipping(parent) {
++    updateClipping(parent: ClippingContext | undefined) {
+         const material = this.material;
+ 
+         let clippingContext = this.clippingContext;
+@@ -89,9 +148,9 @@ export default class RenderObject {
+     }
+ 
+     get clippingNeedsUpdate() {
+-        if (this.clippingContext.version === this.clippingContextVersion) return false;
++        if (this.clippingContext!.version === this.clippingContextVersion) return false;
+ 
+-        this.clippingContextVersion = this.clippingContext.version;
++        this.clippingContextVersion = this.clippingContext!.version;
+ 
+         return true;
+     }
+@@ -206,6 +265,6 @@ export default class RenderObject {
+     dispose() {
+         this.material.removeEventListener('dispose', this.onMaterialDispose);
+ 
+-        this.onDispose();
++        this.onDispose!();
+     }
+ }
 diff --git a/examples-jsm/examples/renderers/common/RenderObjects.ts b/examples-jsm/examples/renderers/common/RenderObjects.ts
-index 76dc482e..b4d04b17 100644
+index 76dc482e..f0b87b98 100644
 --- a/examples-jsm/examples/renderers/common/RenderObjects.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObjects.ts
-@@ -1,8 +1,28 @@
+@@ -1,8 +1,33 @@
  import ChainMap from './ChainMap.js';
  import RenderObject from './RenderObject.js';
 +import Renderer from './Renderer.js';
@@ -1781,15 +2069,20 @@ index 76dc482e..b4d04b17 100644
 +import Pipelines from './Pipelines.js';
 +import Bindings from './Bindings.js';
 +import Info from './Info.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import { Camera, Material, Object3D, Scene } from 'three';
++import RenderContext from './RenderContext.js';
  
  class RenderObjects {
 -    constructor(renderer, nodes, geometries, pipelines, bindings, info) {
-+    renderer: RenderObject;
++    renderer: Renderer;
 +    nodes: Nodes;
 +    geometries: Geometries;
 +    pipelines: Pipelines;
 +    bindings: Bindings;
 +    info: Info;
++
++    chainMaps: { [passId: string]: ChainMap<Object3D | Material | RenderContext | LightsNode, RenderObject> };
 +
 +    constructor(
 +        renderer: Renderer,
@@ -1802,11 +2095,67 @@ index 76dc482e..b4d04b17 100644
          this.renderer = renderer;
          this.nodes = nodes;
          this.geometries = geometries;
+@@ -13,7 +38,15 @@ class RenderObjects {
+         this.chainMaps = {};
+     }
+ 
+-    get(object, material, scene, camera, lightsNode, renderContext, passId) {
++    get(
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        renderContext: RenderContext,
++        passId: string | undefined,
++    ): RenderObject {
+         const chainMap = this.getChainMap(passId);
+         const chainArray = [object, material, renderContext, lightsNode];
+ 
+@@ -52,7 +85,10 @@ class RenderObjects {
+     }
+ 
+     getChainMap(passId = 'default') {
+-        return this.chainMaps[passId] || (this.chainMaps[passId] = new ChainMap());
++        return (
++            this.chainMaps[passId] ||
++            (this.chainMaps[passId] = new ChainMap<Object3D | Material | RenderContext | LightsNode, RenderObject>())
++        );
+     }
+ 
+     dispose() {
+@@ -60,16 +96,16 @@ class RenderObjects {
+     }
+ 
+     createRenderObject(
+-        nodes,
+-        geometries,
+-        renderer,
+-        object,
+-        material,
+-        scene,
+-        camera,
+-        lightsNode,
+-        renderContext,
+-        passId,
++        nodes: Nodes,
++        geometries: Geometries,
++        renderer: Renderer,
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        renderContext: RenderContext,
++        passId: string | undefined,
+     ) {
+         const chainMap = this.getChainMap(passId);
+ 
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..50fde9da 100644
+index acf180d8..eecff683 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
-@@ -30,10 +30,28 @@ import {
+@@ -30,10 +30,36 @@ import {
      RenderTarget,
      HalfFloatType,
      RGBAFormat,
@@ -1823,6 +2172,13 @@ index acf180d8..50fde9da 100644
 +    BufferGeometry,
 +    Material,
 +    Group,
++    Light,
++    LOD,
++    Sprite,
++    LineLoop,
++    Mesh,
++    Line,
++    Points,
  } from 'three';
  import { NodeMaterial } from '../../nodes/Nodes.js';
  import QuadMesh from '../../objects/QuadMesh.js';
@@ -1832,10 +2188,11 @@ index acf180d8..50fde9da 100644
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import RenderContext from './RenderContext.js';
 +import RenderBundle from './RenderBundle.js';
++import RenderList, { Bundle } from './RenderList.js';
  
  const _scene = new Scene();
  const _drawingBufferSize = new Vector2();
-@@ -43,8 +61,118 @@ const _projScreenMatrix = new Matrix4();
+@@ -43,8 +69,124 @@ const _projScreenMatrix = new Matrix4();
  const _vector3 = new Vector3();
  const _quad = new QuadMesh(new NodeMaterial());
  
@@ -1937,10 +2294,16 @@ index acf180d8..50fde9da 100644
 +        | null;
 +    _currentRenderBundle: RenderBundle | null;
 +
-+    // TODO
-+    // this._handleObjectFunction = this._renderObjectDirect;
++    _handleObjectFunction: (
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        group: Group,
++        passId?: string,
++    ) => void;
 +
-+    // TODO
 +    _initialized: boolean;
 +    _initPromise: Promise<void> | null;
 +
@@ -1955,7 +2318,7 @@ index acf180d8..50fde9da 100644
          this.isRenderer = true;
  
          //
-@@ -207,12 +335,12 @@ class Renderer {
+@@ -207,12 +349,12 @@ class Renderer {
          return this.backend.coordinateSystem;
      }
  
@@ -1970,7 +2333,7 @@ index acf180d8..50fde9da 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -226,7 +354,7 @@ class Renderer {
+@@ -226,7 +368,7 @@ class Renderer {
          if (targetScene === null) targetScene = scene;
  
          const renderTarget = this._renderTarget;
@@ -1979,7 +2342,27 @@ index acf180d8..50fde9da 100644
          const activeMipmapLevel = this._activeMipmapLevel;
  
          const compilationPromises = [];
-@@ -277,9 +405,9 @@ class Renderer {
+@@ -258,7 +400,7 @@ class Renderer {
+ 
+         //
+ 
+-        const renderList = this._renderLists.get(scene, camera);
++        const renderList = this._renderLists!.get(scene, camera);
+         renderList.begin();
+ 
+         this._projectObject(scene, camera, 0, renderList);
+@@ -266,8 +408,8 @@ class Renderer {
+         // include lights from target scene
+         if (targetScene !== scene) {
+             targetScene.traverseVisible(function (object) {
+-                if (object.isLight && object.layers.test(camera.layers)) {
+-                    renderList.pushLight(object);
++                if ((object as Light).isLight && object.layers.test(camera.layers)) {
++                    renderList.pushLight(object as Light);
+                 }
+             });
+         }
+@@ -277,9 +419,9 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -1991,7 +2374,7 @@ index acf180d8..50fde9da 100644
  
              renderContext.textures = renderTargetData.textures;
              renderContext.depthTexture = renderTargetData.depthTexture;
-@@ -290,11 +418,11 @@ class Renderer {
+@@ -290,11 +432,11 @@ class Renderer {
  
          //
  
@@ -2005,7 +2388,7 @@ index acf180d8..50fde9da 100644
  
          // process render lists
  
-@@ -320,7 +448,7 @@ class Renderer {
+@@ -320,7 +462,7 @@ class Renderer {
          await Promise.all(compilationPromises);
      }
  
@@ -2014,8 +2397,12 @@ index acf180d8..50fde9da 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -331,12 +459,12 @@ class Renderer {
-     _renderBundle(bundle, sceneRef, lightsNode) {
+@@ -328,15 +470,15 @@ class Renderer {
+         await this.backend.resolveTimestampAsync(renderContext, 'render');
+     }
+ 
+-    _renderBundle(bundle, sceneRef, lightsNode) {
++    _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode) {
          const { object, camera, renderList } = bundle;
  
 -        const renderContext = this._currentRenderContext;
@@ -2029,7 +2416,7 @@ index acf180d8..50fde9da 100644
  
          const renderBundleData = this.backend.get(renderBundle);
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -350,7 +478,7 @@ class Renderer {
+@@ -350,7 +492,7 @@ class Renderer {
  
          if (renderBundleNeedsUpdate) {
              if (renderContextData.renderObjects === undefined || object.needsUpdate === true) {
@@ -2038,7 +2425,14 @@ index acf180d8..50fde9da 100644
  
                  renderContextData.renderObjects = [];
                  renderContextData.renderBundles = [];
-@@ -379,7 +507,7 @@ class Renderer {
+@@ -373,13 +515,13 @@ class Renderer {
+ 
+             object.needsUpdate = false;
+         } else {
+-            const renderContext = this._currentRenderContext;
++            const renderContext = this._currentRenderContext!;
+             const renderContextData = this.backend.get(renderContext);
+ 
              for (let i = 0, l = renderContextData.renderObjects.length; i < l; i++) {
                  const renderObject = renderContextData.renderObjects[i];
  
@@ -2047,7 +2441,7 @@ index acf180d8..50fde9da 100644
  
                  //
  
-@@ -389,15 +517,15 @@ class Renderer {
+@@ -389,15 +531,15 @@ class Renderer {
                  );
                  renderObject.object.normalMatrix.getNormalMatrix(renderObject.object.modelViewMatrix);
  
@@ -2066,7 +2460,7 @@ index acf180d8..50fde9da 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -453,12 +581,12 @@ class Renderer {
+@@ -453,12 +595,12 @@ class Renderer {
          return frameBufferTarget;
      }
  
@@ -2081,7 +2475,7 @@ index acf180d8..50fde9da 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -487,7 +615,7 @@ class Renderer {
+@@ -487,7 +629,7 @@ class Renderer {
  
          //
  
@@ -2090,7 +2484,7 @@ index acf180d8..50fde9da 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -558,7 +686,7 @@ class Renderer {
+@@ -558,7 +700,7 @@ class Renderer {
          _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
          _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
  
@@ -2099,7 +2493,7 @@ index acf180d8..50fde9da 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -572,9 +700,9 @@ class Renderer {
+@@ -572,9 +714,9 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -2111,7 +2505,7 @@ index acf180d8..50fde9da 100644
  
              renderContext.textures = renderTargetData.textures;
              renderContext.depthTexture = renderTargetData.depthTexture;
-@@ -586,8 +714,8 @@ class Renderer {
+@@ -586,8 +728,8 @@ class Renderer {
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
@@ -2122,7 +2516,7 @@ index acf180d8..50fde9da 100644
              renderContext.depth = this.depth;
              renderContext.stencil = this.stencil;
          }
-@@ -600,11 +728,11 @@ class Renderer {
+@@ -600,11 +742,11 @@ class Renderer {
  
          //
  
@@ -2136,7 +2530,7 @@ index acf180d8..50fde9da 100644
  
          //
  
-@@ -637,7 +765,7 @@ class Renderer {
+@@ -637,7 +779,7 @@ class Renderer {
          if (frameBufferTarget !== null) {
              this.setRenderTarget(outputRenderTarget, activeCubeFace, activeMipmapLevel);
  
@@ -2145,7 +2539,7 @@ index acf180d8..50fde9da 100644
  
              this._renderScene(_quad, _quad.camera, false);
          }
-@@ -663,10 +791,10 @@ class Renderer {
+@@ -663,10 +805,10 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -2158,7 +2552,7 @@ index acf180d8..50fde9da 100644
      }
  
      getArrayBuffer(attribute) {
-@@ -689,11 +817,11 @@ class Renderer {
+@@ -689,11 +831,11 @@ class Renderer {
          return this._pixelRatio;
      }
  
@@ -2172,7 +2566,7 @@ index acf180d8..50fde9da 100644
          return target.set(this._width, this._height);
      }
  
-@@ -703,30 +831,30 @@ class Renderer {
+@@ -703,30 +845,30 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -2211,7 +2605,7 @@ index acf180d8..50fde9da 100644
          }
  
          this.setViewport(0, 0, width, height);
-@@ -734,15 +862,15 @@ class Renderer {
+@@ -734,15 +876,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -2230,7 +2624,7 @@ index acf180d8..50fde9da 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -753,13 +881,15 @@ class Renderer {
+@@ -753,13 +895,15 @@ class Renderer {
          return target;
      }
  
@@ -2250,7 +2644,7 @@ index acf180d8..50fde9da 100644
          }
      }
  
-@@ -767,34 +897,36 @@ class Renderer {
+@@ -767,34 +911,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -2295,7 +2689,7 @@ index acf180d8..50fde9da 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -803,7 +935,7 @@ class Renderer {
+@@ -803,7 +949,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -2304,7 +2698,7 @@ index acf180d8..50fde9da 100644
          this._clearColor.a = alpha;
      }
  
-@@ -811,7 +943,7 @@ class Renderer {
+@@ -811,7 +957,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -2313,7 +2707,7 @@ index acf180d8..50fde9da 100644
          this._clearDepth = depth;
      }
  
-@@ -819,11 +951,11 @@ class Renderer {
+@@ -819,11 +965,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -2327,7 +2721,7 @@ index acf180d8..50fde9da 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -843,9 +975,9 @@ class Renderer {
+@@ -843,9 +989,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -2339,7 +2733,7 @@ index acf180d8..50fde9da 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -896,20 +1028,20 @@ class Renderer {
+@@ -896,20 +1042,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -2369,7 +2763,7 @@ index acf180d8..50fde9da 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -927,10 +1059,10 @@ class Renderer {
+@@ -927,10 +1073,10 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -2382,7 +2776,7 @@ index acf180d8..50fde9da 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -993,13 +1125,13 @@ class Renderer {
+@@ -993,13 +1139,13 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -2398,7 +2792,7 @@ index acf180d8..50fde9da 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1011,22 +1143,35 @@ class Renderer {
+@@ -1011,64 +1157,77 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -2440,7 +2834,91 @@ index acf180d8..50fde9da 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[index], x, y, width, height);
      }
  
-@@ -1167,7 +1312,15 @@ class Renderer {
+-    _projectObject(object, camera, groupOrder, renderList) {
++    _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList) {
+         if (object.visible === false) return;
+ 
+         const visible = object.layers.test(camera.layers);
+ 
+         if (visible) {
+-            if (object.isGroup) {
++            if ((object as Group).isGroup) {
+                 groupOrder = object.renderOrder;
+-            } else if (object.isLOD) {
+-                if (object.autoUpdate === true) object.update(camera);
+-            } else if (object.isLight) {
+-                renderList.pushLight(object);
+-            } else if (object.isSprite) {
+-                if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
++            } else if ((object as LOD).isLOD) {
++                if ((object as LOD).autoUpdate === true) (object as LOD).update(camera);
++            } else if ((object as Light).isLight) {
++                renderList.pushLight(object as Light);
++            } else if ((object as Sprite).isSprite) {
++                if (!object.frustumCulled || _frustum.intersectsSprite(object as Sprite)) {
+                     if (this.sortObjects === true) {
+                         _vector3.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
+                     }
+ 
+-                    const geometry = object.geometry;
+-                    const material = object.material;
++                    const geometry = (object as Sprite).geometry;
++                    const material = (object as Sprite).material;
+ 
+                     if (material.visible) {
+                         renderList.push(object, geometry, material, groupOrder, _vector3.z, null);
+                     }
+                 }
+-            } else if (object.isLineLoop) {
++            } else if ((object as LineLoop).isLineLoop) {
+                 console.error(
+                     'THREE.Renderer: Objects of type THREE.LineLoop are not supported. Please use THREE.Line or THREE.LineSegments.',
+                 );
+-            } else if (object.isMesh || object.isLine || object.isPoints) {
++            } else if ((object as Mesh).isMesh || (object as Line).isLine || (object as Points).isPoints) {
+                 if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+-                    const geometry = object.geometry;
+-                    const material = object.material;
++                    const geometry = (object as Mesh | Line | Points).geometry;
++                    const material = (object as Mesh | Line | Points).material;
+ 
+                     if (this.sortObjects === true) {
+                         if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
+ 
+                         _vector3
+-                            .copy(geometry.boundingSphere.center)
++                            .copy(geometry.boundingSphere!.center)
+                             .applyMatrix4(object.matrixWorld)
+                             .applyMatrix4(_projScreenMatrix);
+                     }
+@@ -1078,7 +1237,7 @@ class Renderer {
+ 
+                         for (let i = 0, l = groups.length; i < l; i++) {
+                             const group = groups[i];
+-                            const groupMaterial = material[group.materialIndex];
++                            const groupMaterial = material[group.materialIndex!];
+ 
+                             if (groupMaterial && groupMaterial.visible) {
+                                 renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
+@@ -1095,7 +1254,7 @@ class Renderer {
+             const baseRenderList = renderList;
+ 
+             // replace render list
+-            renderList = this._renderLists.get(object, camera);
++            renderList = this._renderLists!.get(object, camera);
+ 
+             renderList.begin();
+ 
+@@ -1115,7 +1274,7 @@ class Renderer {
+         }
+     }
+ 
+-    _renderBundles(bundles, sceneRef, lightsNode) {
++    _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode) {
+         for (const bundle of bundles) {
+             this._renderBundle(bundle, sceneRef, lightsNode);
+         }
+@@ -1167,7 +1326,15 @@ class Renderer {
          }
      }
  
@@ -2457,7 +2935,26 @@ index acf180d8..50fde9da 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1268,7 +1421,7 @@ class Renderer {
+@@ -1254,8 +1421,16 @@ class Renderer {
+         object.onAfterRender(this, scene, camera, geometry, material, group);
+     }
+ 
+-    _renderObjectDirect(object, material, scene, camera, lightsNode, group, passId) {
+-        const renderObject = this._objects.get(
++    _renderObjectDirect(
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        group: Group,
++        passId?: string,
++    ) {
++        const renderObject = this._objects!.get(
+             object,
+             material,
+             scene,
+@@ -1268,7 +1443,7 @@ class Renderer {
  
          //
  
@@ -2466,7 +2963,7 @@ index acf180d8..50fde9da 100644
  
          //
  
-@@ -1277,10 +1430,10 @@ class Renderer {
+@@ -1277,10 +1452,10 @@ class Renderer {
  
          //
  
@@ -2481,7 +2978,31 @@ index acf180d8..50fde9da 100644
  
          //
  
-@@ -1313,15 +1466,15 @@ class Renderer {
+@@ -1300,28 +1475,36 @@ class Renderer {
+         }
+     }
+ 
+-    _createObjectPipeline(object, material, scene, camera, lightsNode, passId) {
+-        const renderObject = this._objects.get(
++    _createObjectPipeline(
++        object: Object3D,
++        material: Material,
++        scene: Scene,
++        camera: Camera,
++        lightsNode: LightsNode,
++        group: Group,
++        passId?: string,
++    ) {
++        const renderObject = this._objects!.get(
+             object,
+             material,
+             scene,
+             camera,
+             lightsNode,
+-            this._currentRenderContext,
++            this._currentRenderContext!,
+             passId,
+         );
  
          //
  
@@ -2503,10 +3024,10 @@ index acf180d8..50fde9da 100644
  
      get compute() {
 diff --git a/examples-jsm/examples/renderers/common/Textures.ts b/examples-jsm/examples/renderers/common/Textures.ts
-index 0eb0509c..76068908 100644
+index 0eb0509c..23c04c1b 100644
 --- a/examples-jsm/examples/renderers/common/Textures.ts
 +++ b/examples-jsm/examples/renderers/common/Textures.ts
-@@ -14,12 +14,21 @@ import {
+@@ -14,12 +14,23 @@ import {
      CubeReflectionMapping,
      CubeRefractionMapping,
      UnsignedByteType,
@@ -2519,8 +3040,11 @@ index 0eb0509c..76068908 100644
  
  const _size = new Vector3();
  
- class Textures extends DataMap {
+-class Textures extends DataMap {
 -    constructor(renderer, backend, info) {
++interface RenderTargetData {}
++
++class Textures extends DataMap<RenderTarget, RenderTargetData> {
 +    renderer: Renderer;
 +    backend: Backend;
 +    info: Info;
@@ -2529,7 +3053,7 @@ index 0eb0509c..76068908 100644
          super();
  
          this.renderer = renderer;
-@@ -27,7 +36,7 @@ class Textures extends DataMap {
+@@ -27,7 +38,7 @@ class Textures extends DataMap {
          this.info = info;
      }
  
@@ -2538,7 +3062,7 @@ index 0eb0509c..76068908 100644
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -116,7 +125,7 @@ class Textures extends DataMap {
+@@ -116,7 +127,7 @@ class Textures extends DataMap {
          }
      }
  
@@ -2547,7 +3071,7 @@ index 0eb0509c..76068908 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -229,7 +238,7 @@ class Textures extends DataMap {
+@@ -229,7 +240,7 @@ class Textures extends DataMap {
          textureData.version = texture.version;
      }
  
@@ -2556,7 +3080,7 @@ index 0eb0509c..76068908 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -245,7 +254,7 @@ class Textures extends DataMap {
+@@ -245,7 +256,7 @@ class Textures extends DataMap {
          return target;
      }
  
@@ -2565,7 +3089,7 @@ index 0eb0509c..76068908 100644
          let mipLevelCount;
  
          if (texture.isCompressedTexture) {
-@@ -257,7 +266,7 @@ class Textures extends DataMap {
+@@ -257,7 +268,7 @@ class Textures extends DataMap {
          return mipLevelCount;
      }
  
@@ -2574,7 +3098,7 @@ index 0eb0509c..76068908 100644
          if (this.isEnvironmentTexture(texture)) return true;
  
          return (
-@@ -266,7 +275,7 @@ class Textures extends DataMap {
+@@ -266,7 +277,7 @@ class Textures extends DataMap {
          );
      }
  
@@ -2583,7 +3107,7 @@ index 0eb0509c..76068908 100644
          const mapping = texture.mapping;
  
          return (
-@@ -277,7 +286,7 @@ class Textures extends DataMap {
+@@ -277,7 +288,7 @@ class Textures extends DataMap {
          );
      }
  
@@ -2593,7 +3117,7 @@ index 0eb0509c..76068908 100644
          this.backend.destroyTexture(texture);
  
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..819ea472 100644
+index 86df5654..b0389629 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 @@ -2,10 +2,16 @@ import DataMap from '../DataMap.js';
@@ -2613,12 +3137,13 @@ index 86df5654..819ea472 100644
  } from 'three';
  import {
      NodeFrame,
-@@ -23,9 +29,18 @@ import {
+@@ -23,9 +29,19 @@ import {
      pmremTexture,
      viewportTopLeft,
  } from '../../../nodes/Nodes.js';
 +import Renderer from '../Renderer.js';
 +import Backend from '../Backend.js';
++import LightsNode from '../../../nodes/lighting/LightsNode.js';
  
  class Nodes extends DataMap {
 -    constructor(renderer, backend) {
@@ -2633,7 +3158,16 @@ index 86df5654..819ea472 100644
          super();
  
          this.renderer = renderer;
-@@ -215,7 +230,7 @@ class Nodes extends DataMap {
+@@ -188,7 +204,7 @@ class Nodes extends DataMap {
+         return scene.fogNode || this.get(scene).fogNode || null;
+     }
+ 
+-    getCacheKey(scene, lightsNode) {
++    getCacheKey(scene: Scene, lightsNode: LightsNode) {
+         const chain = [scene, lightsNode];
+         const callId = this.renderer.info.calls;
+ 
+@@ -215,7 +231,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -2642,7 +3176,7 @@ index 86df5654..819ea472 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -225,7 +240,7 @@ class Nodes extends DataMap {
+@@ -225,7 +241,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -2651,7 +3185,7 @@ index 86df5654..819ea472 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -239,10 +254,10 @@ class Nodes extends DataMap {
+@@ -239,10 +255,10 @@ class Nodes extends DataMap {
                      background.mapping === EquirectangularRefractionMapping
                  ) {
                      backgroundNode = pmremTexture(background, normalWorld);
@@ -2666,7 +3200,7 @@ index 86df5654..819ea472 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -254,7 +269,7 @@ class Nodes extends DataMap {
+@@ -254,7 +270,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -2675,7 +3209,7 @@ index 86df5654..819ea472 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -262,9 +277,9 @@ class Nodes extends DataMap {
+@@ -262,9 +278,9 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -2687,7 +3221,7 @@ index 86df5654..819ea472 100644
                      fogNode = rangeFog(
                          reference('color', 'color', fog),
                          reference('near', 'float', fog),
-@@ -283,7 +298,7 @@ class Nodes extends DataMap {
+@@ -283,7 +299,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -2696,7 +3230,7 @@ index 86df5654..819ea472 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -291,7 +306,7 @@ class Nodes extends DataMap {
+@@ -291,7 +307,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
