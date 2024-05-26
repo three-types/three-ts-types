@@ -16,6 +16,8 @@ const files = [
     'renderers/common/DataMap',
     'renderers/common/Info',
     'renderers/common/RenderContexts',
+    'renderers/common/RenderList',
+    'renderers/common/RenderLists',
     'renderers/common/Textures',
 ];
 
