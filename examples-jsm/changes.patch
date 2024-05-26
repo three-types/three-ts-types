@@ -1815,10 +1815,10 @@ index a684e444..6b643625 100644
          this.id = _id++;
  
 diff --git a/examples-jsm/examples/renderers/common/RenderBundle.ts b/examples-jsm/examples/renderers/common/RenderBundle.ts
-index e59e4937..c7ba8cd4 100644
+index e59e4937..95b0518a 100644
 --- a/examples-jsm/examples/renderers/common/RenderBundle.ts
 +++ b/examples-jsm/examples/renderers/common/RenderBundle.ts
-@@ -1,5 +1,10 @@
+@@ -1,11 +1,16 @@
 +import { Camera, Object3D } from 'three';
 +
  class RenderBundle {
@@ -1830,6 +1830,13 @@ index e59e4937..c7ba8cd4 100644
          this.scene = scene;
          this.camera = camera;
      }
+ 
+     clone() {
+-        return Object.assign(new this.constructor(), this);
++        return Object.assign(new (this.constructor as { new (): RenderBundle })(), this);
+     }
+ }
+ 
 diff --git a/examples-jsm/examples/renderers/common/RenderBundles.ts b/examples-jsm/examples/renderers/common/RenderBundles.ts
 index 29140365..48f5d598 100644
 --- a/examples-jsm/examples/renderers/common/RenderBundles.ts
