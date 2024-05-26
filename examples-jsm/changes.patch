@@ -463,7 +463,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..a077bb0c 100644
+index ebdc13ff..065940d7 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
@@ -488,7 +488,7 @@ index ebdc13ff..a077bb0c 100644
  } from 'three';
  
  import { stack } from './StackNode.js';
-@@ -39,6 +45,12 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
+@@ -39,6 +45,15 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
  
  import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
@@ -498,10 +498,13 @@ index ebdc13ff..a077bb0c 100644
 +import LightsNode from '../lighting/LightsNode.js';
 +import EnvironmentNode from '../lighting/EnvironmentNode.js';
 +import FogNode from '../fog/FogNode.js';
++import ClippingContext from '../../renderers/common/ClippingContext.js';
++import Binding from '../../renderers/common/Binding.js';
++import NodeUniformsGroup from '../../renderers/common/nodes/NodeUniformsGroup.js';
  
  const uniformsGroupCache = new ChainMap();
  
-@@ -67,10 +79,75 @@ const toFloat = value => {
+@@ -67,10 +82,72 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -522,8 +525,7 @@ index ebdc13ff..a077bb0c 100644
 +    environmentNode: EnvironmentNode | null;
 +    fogNode: FogNode | null;
 +
-+    // TODO
-+    // clippingContext
++    clippingContext: ClippingContext | null;
 +
 +    vertexShader: string | null;
 +    fragmentShader: string | null;
@@ -534,12 +536,10 @@ index ebdc13ff..a077bb0c 100644
 +    // flowCode
 +    uniforms: { vertex: NodeUniform[]; fragment: NodeUniform[]; compute: NodeUniform[]; index: number };
 +    structs: { vertex: Node[]; fragment: Node[]; compute: Node[]; index: number };
-+    // TODO
-+    // bindings
++    bindings: { vertex: Binding[]; fragment: Binding[]; compute: Binding[] };
 +    bindingsOffset: { vertex: number; fragment: number; compute: number };
-+    // TODO
-+    // bindingsArray
-+    // attributes
++    bindingsArray: Binding[];
++    attributes: NodeAttribute[];
 +    bufferAttributes: NodeAttribute[];
 +    varyings: NodeVarying[];
 +    codes: { vertex?: NodeCode[] | undefined; fragment?: NodeCode[] | undefined; compute?: NodeCode[] | undefined };
@@ -589,7 +589,7 @@ index ebdc13ff..a077bb0c 100644
          return new RenderTarget(width, height, options);
      }
  
-@@ -138,7 +215,7 @@ class NodeBuilder {
+@@ -138,17 +215,17 @@ class NodeBuilder {
          return new PMREMGenerator(this.renderer);
      }
  
@@ -597,6 +597,19 @@ index ebdc13ff..a077bb0c 100644
 +    includes(node: Node) {
          return this.nodes.includes(node);
      }
+ 
+-    _getSharedBindings(bindings) {
++    _getSharedBindings(bindings: Binding[]) {
+         const shared = [];
+ 
+         for (const binding of bindings) {
+-            if (binding.shared === true) {
++            if ((binding as NodeUniformsGroup).shared === true) {
+                 // nodes is the chainmap key
+-                const nodes = binding.getNodes();
++                const nodes = (binding as NodeUniformsGroup).getNodes();
+ 
+                 let sharedBinding = uniformsGroupCache.get(nodes);
  
 @@ -181,11 +258,11 @@ class NodeBuilder {
          return bindingsArray;
@@ -900,12 +913,14 @@ index 96a7e0c7..b1a61b35 100644
      }
  }
 diff --git a/examples-jsm/examples/nodes/core/NodeFrame.ts b/examples-jsm/examples/nodes/core/NodeFrame.ts
-index b8e8d37b..399c788b 100644
+index b8e8d37b..d5c60178 100644
 --- a/examples-jsm/examples/nodes/core/NodeFrame.ts
 +++ b/examples-jsm/examples/nodes/core/NodeFrame.ts
-@@ -1,6 +1,16 @@
+@@ -1,6 +1,26 @@
  import { NodeUpdateType } from './constants.js';
 +import Node from './Node.js';
++import Renderer from '../../renderers/common/Renderer.js';
++import { Camera, Material, Object3D, Scene } from 'three';
  
  class NodeFrame {
 +    time: number;
@@ -914,13 +929,21 @@ index b8e8d37b..399c788b 100644
 +    frameId: number;
 +    renderId: number;
 +
-+    // TODO
-+    // startTime
++    // TODO startTime
++
++    // TODO updateMap
++    // TODO updateBeforeMap
++
++    renderer: Renderer | null;
++    material: Material | null;
++    camera: Camera | null;
++    object: Object3D | null;
++    scene: Scene | null;
 +
      constructor() {
          this.time = 0;
          this.deltaTime = 0;
-@@ -35,7 +45,7 @@ class NodeFrame {
+@@ -35,7 +55,7 @@ class NodeFrame {
          return maps;
      }
  
@@ -929,7 +952,7 @@ index b8e8d37b..399c788b 100644
          const updateType = node.getUpdateBeforeType();
          const reference = node.updateReference(this);
  
-@@ -60,7 +70,7 @@ class NodeFrame {
+@@ -60,7 +80,7 @@ class NodeFrame {
          }
      }
  
@@ -1283,10 +1306,10 @@ index ed9e8e9e..f0f75022 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..514dd6dd 100644
+index e48a8029..7b683c48 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,66 @@
+@@ -1,22 +1,68 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
@@ -1307,6 +1330,8 @@ index e48a8029..514dd6dd 100644
 +import RenderContext from './RenderContext.js';
 +import RenderBundle from './RenderBundle.js';
 +import RenderObject from './RenderObject.js';
++import NodeBuilder from '../../nodes/core/NodeBuilder.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +
 +let vector2: Vector2 | null = null;
 +let vector4: Vector4 | null = null;
@@ -1362,16 +1387,20 @@ index e48a8029..514dd6dd 100644
      // render context
  
      begin(renderContext) {}
-@@ -55,7 +99,7 @@ class Backend {
+@@ -55,7 +101,11 @@ class Backend {
  
      // node builder
  
 -    createNodeBuilder(renderObject) {} // return NodeBuilder (ADD IT)
-+    createNodeBuilder(renderObject: Object3D, renderer: Renderer, scene: Scene) {} // return NodeBuilder (ADD IT)
++    abstract createNodeBuilder(
++        renderObject: Object3D | ComputeNode,
++        renderer: Renderer,
++        scene?: Scene | null,
++    ): NodeBuilder; // return NodeBuilder (ADD IT)
  
      // textures
  
-@@ -144,7 +188,10 @@ class Backend {
+@@ -144,7 +194,10 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -1383,7 +1412,7 @@ index e48a8029..514dd6dd 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +202,11 @@ class Backend {
+@@ -155,11 +208,11 @@ class Backend {
          return map;
      }
  
@@ -2293,7 +2322,7 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 861c15dc..080da785 100644
+index 861c15dc..3d9b27b7 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
 @@ -1,4 +1,11 @@
@@ -2338,7 +2367,7 @@ index 861c15dc..080da785 100644
 +    // pipeline
 +    // vertexBuffers
 +
-+    clippingContext?: ClippingContext | undefined;
++    clippingContext!: ClippingContext;
 +
 +    clippingContextVersion: number;
 +
@@ -2370,18 +2399,15 @@ index 861c15dc..080da785 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,9 +110,9 @@ export default class RenderObject {
+@@ -50,7 +110,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
 -        this.updateClipping(renderContext.clippingContext);
 +        this.updateClipping(renderContext.clippingContext!);
  
--        this.clippingContextVersion = this.clippingContext.version;
-+        this.clippingContextVersion = this.clippingContext!.version;
+         this.clippingContextVersion = this.clippingContext.version;
  
-         this.initialNodesCacheKey = this.getNodesCacheKey();
-         this.initialCacheKey = this.getCacheKey();
 @@ -71,7 +131,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
@@ -2531,7 +2557,7 @@ index 76dc482e..27997a90 100644
          const chainMap = this.getChainMap(passId);
  
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..ef90cb7e 100644
+index acf180d8..3e7e9dfd 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
 @@ -30,10 +30,40 @@ import {
@@ -2936,7 +2962,7 @@ index acf180d8..ef90cb7e 100644
              this.setRenderTarget(outputRenderTarget, activeCubeFace, activeMipmapLevel);
  
 -            _quad.material.fragmentNode = this._nodes.getOutputNode(renderTarget.texture);
-+            _quad.material.fragmentNode = this._nodes!.getOutputNode(renderTarget.texture);
++            _quad.material.fragmentNode = this._nodes!.getOutputNode(renderTarget!.texture);
  
              this._renderScene(_quad, _quad.camera, false);
          }
@@ -3719,8 +3745,49 @@ index beb35347..b51cf541 100644
          super(name);
  
          this.isUniformsGroup = true;
+diff --git a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts b/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
+index 5553bd2d..4c4a4cde 100644
+--- a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
++++ b/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
+@@ -1,12 +1,29 @@
++import Node from '../../../nodes/core/Node.js';
++import NodeAttribute from '../../../nodes/core/NodeAttribute.js';
++import Binding from '../Binding.js';
++
+ class NodeBuilderState {
++    vertexShader: string | null;
++    fragmentShader: string | null;
++    computeShader: string | null;
++    // TODO transforms
++
++    nodeAttributes: NodeAttribute[];
++    bindings: Binding[];
++
++    updateNodes: Node[];
++    updateBeforeNodes: Node[];
++
++    usedTimes: number;
++
+     constructor(
+-        vertexShader,
+-        fragmentShader,
+-        computeShader,
+-        nodeAttributes,
+-        bindings,
+-        updateNodes,
+-        updateBeforeNodes,
++        vertexShader: string | null,
++        fragmentShader: string | null,
++        computeShader: string | null,
++        nodeAttributes: NodeAttribute[],
++        bindings: Binding[],
++        updateNodes: Node[],
++        updateBeforeNodes: Node[],
+         transforms = [],
+     ) {
+         this.vertexShader = vertexShader;
 diff --git a/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts b/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
-index 0bbc1add..95fbd9c8 100644
+index 0bbc1add..62c6e2ee 100644
 --- a/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
 @@ -3,7 +3,12 @@ import UniformsGroup from '../UniformsGroup.js';
@@ -3729,36 +3796,40 @@ index 0bbc1add..95fbd9c8 100644
  class NodeUniformsGroup extends UniformsGroup {
 -    constructor(name, groupNode) {
 +    id: number;
-+    // TODO groupNode?
++    groupNode: UniformGroupNode;
 +
 +    readonly isNodeUniformsGroup: true;
 +
-+    constructor(name?: string, groupNode) {
++    constructor(name?: string, groupNode: UniformGroupNode) {
          super(name);
  
          this.id = id++;
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..99ab16e5 100644
+index 86df5654..0220f0b7 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-@@ -2,10 +2,16 @@ import DataMap from '../DataMap.js';
+@@ -2,10 +2,20 @@ import DataMap from '../DataMap.js';
  import ChainMap from '../ChainMap.js';
  import NodeBuilderState from './NodeBuilderState.js';
  import {
++    Camera,
 +    Color,
 +    CubeTexture,
      EquirectangularReflectionMapping,
      EquirectangularRefractionMapping,
 +    Fog,
++    FogBase,
 +    FogExp2,
++    Material,
      NoToneMapping,
++    Object3D,
 +    Scene,
      SRGBColorSpace,
 +    Texture,
  } from 'three';
  import {
      NodeFrame,
-@@ -23,9 +29,30 @@ import {
+@@ -23,20 +33,62 @@ import {
      pmremTexture,
      viewportTopLeft,
  } from '../../../nodes/Nodes.js';
@@ -3767,31 +3838,70 @@ index 86df5654..99ab16e5 100644
 +import LightsNode from '../../../nodes/lighting/LightsNode.js';
 +import RenderObject from '../RenderObject.js';
 +import NodeUniformsGroup from './NodeUniformsGroup.js';
- 
--class Nodes extends DataMap {
--    constructor(renderer, backend) {
-+interface NodeUniformsGroupData {}
++import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
++import ComputeNode from '../../../nodes/gpgpu/ComputeNode.js';
++import Node from '../../../nodes/core/Node.js';
++
++interface NodeUniformsGroupData {
++    renderId?: number | undefined;
++    frameId?: number | undefined;
++}
 +
 +interface RenderObjectData {
 +    nodeBuilderState?: NodeBuilderState | undefined;
 +}
 +
++interface ComputeNodeData {
++    nodeBuilderState?: NodeBuilderState | undefined;
++}
++
++interface SceneData {
++    background?: Color | Texture | CubeTexture | undefined;
++    backgroundNode?: Node | undefined;
++    fog?: FogBase | undefined;
++    fogNode?: Node | undefined;
++    environment?: Texture | undefined;
++    environmentNode?: Node | undefined;
++}
+ 
+-class Nodes extends DataMap {
+-    constructor(renderer, backend) {
 +class Nodes extends DataMap<{
 +    nodeUniformsGroup: { key: NodeUniformsGroup; value: NodeUniformsGroupData };
 +    renderObject: { key: RenderObject; value: RenderObjectData };
++    computeNode: { key: ComputeNode; value: ComputeNodeData };
++    scene: { key: Scene; value: SceneData };
 +}> {
 +    renderer: Renderer;
 +    backend: Backend;
 +    nodeFrame: NodeFrame;
 +    nodeBuilderCache: Map<string, NodeBuilderState>;
-+    callHashCache: ChainMap;
++    callHashCache: ChainMap<readonly [Scene, LightsNode], { callId: number; cacheKey: string }>;
 +    groupsData: ChainMap;
 +
 +    constructor(renderer: Renderer, backend: Backend) {
          super();
  
          this.renderer = renderer;
-@@ -94,7 +121,7 @@ class Nodes extends DataMap {
+         this.backend = backend;
+         this.nodeFrame = new NodeFrame();
+         this.nodeBuilderCache = new Map();
+-        this.callHashCache = new ChainMap();
++        this.callHashCache = new ChainMap<readonly [Scene, LightsNode], { callId: number; cacheKey: string }>();
+         this.groupsData = new ChainMap();
+     }
+ 
+-    updateGroup(nodeUniformsGroup) {
++    updateGroup(nodeUniformsGroup: NodeUniformsGroup) {
+         const groupNode = nodeUniformsGroup.groupNode;
+         const name = groupNode.name;
+ 
+@@ -90,11 +142,11 @@ class Nodes extends DataMap {
+         return false;
+     }
+ 
+-    getForRenderCacheKey(renderObject) {
++    getForRenderCacheKey(renderObject: RenderObject) {
          return renderObject.initialCacheKey;
      }
  
@@ -3800,16 +3910,68 @@ index 86df5654..99ab16e5 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -188,7 +215,7 @@ class Nodes extends DataMap {
+@@ -133,20 +185,20 @@ class Nodes extends DataMap {
+         return nodeBuilderState;
+     }
+ 
+-    delete(object) {
+-        if (object.isRenderObject) {
+-            const nodeBuilderState = this.get(object).nodeBuilderState;
++    delete(object: NodeUniformsGroup | RenderObject | ComputeNode | Scene) {
++        if ((object as RenderObject).isRenderObject) {
++            const nodeBuilderState = this.get(object as RenderObject).nodeBuilderState!;
+             nodeBuilderState.usedTimes--;
+ 
+             if (nodeBuilderState.usedTimes === 0) {
+-                this.nodeBuilderCache.delete(this.getForRenderCacheKey(object));
++                this.nodeBuilderCache.delete(this.getForRenderCacheKey(object as RenderObject));
+             }
+         }
+ 
+         return super.delete(object);
+     }
+ 
+-    getForCompute(computeNode) {
++    getForCompute(computeNode: ComputeNode) {
+         const computeData = this.get(computeNode);
+ 
+         let nodeBuilderState = computeData.nodeBuilderState;
+@@ -163,7 +215,7 @@ class Nodes extends DataMap {
+         return nodeBuilderState;
+     }
+ 
+-    _createNodeBuilderState(nodeBuilder) {
++    _createNodeBuilderState(nodeBuilder: NodeBuilder) {
+         return new NodeBuilderState(
+             nodeBuilder.vertexShader,
+             nodeBuilder.fragmentShader,
+@@ -176,20 +228,20 @@ class Nodes extends DataMap {
+         );
+     }
+ 
+-    getEnvironmentNode(scene) {
++    getEnvironmentNode(scene: Scene) {
+         return scene.environmentNode || this.get(scene).environmentNode || null;
+     }
+ 
+-    getBackgroundNode(scene) {
++    getBackgroundNode(scene: Scene) {
+         return scene.backgroundNode || this.get(scene).backgroundNode || null;
+     }
+ 
+-    getFogNode(scene) {
++    getFogNode(scene: Scene) {
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
 -    getCacheKey(scene, lightsNode) {
+-        const chain = [scene, lightsNode];
 +    getCacheKey(scene: Scene, lightsNode: LightsNode) {
-         const chain = [scene, lightsNode];
++        const chain = [scene, lightsNode] as const;
          const callId = this.renderer.info.calls;
  
-@@ -215,7 +242,7 @@ class Nodes extends DataMap {
+         let cacheKeyData = this.callHashCache.get(chain);
+@@ -215,7 +267,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -3818,7 +3980,7 @@ index 86df5654..99ab16e5 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -225,7 +252,7 @@ class Nodes extends DataMap {
+@@ -225,7 +277,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -3827,8 +3989,16 @@ index 86df5654..99ab16e5 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -239,10 +266,10 @@ class Nodes extends DataMap {
-                     background.mapping === EquirectangularRefractionMapping
+@@ -234,15 +286,15 @@ class Nodes extends DataMap {
+                 let backgroundNode = null;
+ 
+                 if (
+-                    background.isCubeTexture === true ||
+-                    background.mapping === EquirectangularReflectionMapping ||
+-                    background.mapping === EquirectangularRefractionMapping
++                    (background as CubeTexture).isCubeTexture === true ||
++                    (background as CubeTexture).mapping === EquirectangularReflectionMapping ||
++                    (background as CubeTexture).mapping === EquirectangularRefractionMapping
                  ) {
                      backgroundNode = pmremTexture(background, normalWorld);
 -                } else if (background.isTexture === true) {
@@ -3842,7 +4012,7 @@ index 86df5654..99ab16e5 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -254,7 +281,7 @@ class Nodes extends DataMap {
+@@ -254,7 +306,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -3851,7 +4021,7 @@ index 86df5654..99ab16e5 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -262,9 +289,9 @@ class Nodes extends DataMap {
+@@ -262,9 +314,9 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -3863,7 +4033,7 @@ index 86df5654..99ab16e5 100644
                      fogNode = rangeFog(
                          reference('color', 'color', fog),
                          reference('near', 'float', fog),
-@@ -283,7 +310,7 @@ class Nodes extends DataMap {
+@@ -283,7 +335,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -3872,7 +4042,7 @@ index 86df5654..99ab16e5 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -291,7 +318,7 @@ class Nodes extends DataMap {
+@@ -291,7 +343,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
@@ -3881,3 +4051,76 @@ index 86df5654..99ab16e5 100644
                      environmentNode = cubeTexture(environment);
                  } else if (environment.isTexture === true) {
                      environmentNode = texture(environment);
+@@ -308,7 +360,13 @@ class Nodes extends DataMap {
+         }
+     }
+ 
+-    getNodeFrame(renderer = this.renderer, scene = null, object = null, camera = null, material = null) {
++    getNodeFrame(
++        renderer = this.renderer,
++        scene: Scene | null = null,
++        object: Object3D | null = null,
++        camera: Camera | null = null,
++        material: Material | null = null,
++    ) {
+         const nodeFrame = this.nodeFrame;
+         nodeFrame.renderer = renderer;
+         nodeFrame.scene = scene;
+@@ -319,7 +377,7 @@ class Nodes extends DataMap {
+         return nodeFrame;
+     }
+ 
+-    getNodeFrameForRender(renderObject) {
++    getNodeFrameForRender(renderObject: RenderObject) {
+         return this.getNodeFrame(
+             renderObject.renderer,
+             renderObject.scene,
+@@ -329,7 +387,7 @@ class Nodes extends DataMap {
+         );
+     }
+ 
+-    getOutputNode(outputTexture) {
++    getOutputNode(outputTexture: Texture) {
+         let output = texture(outputTexture, viewportTopLeft);
+ 
+         if (this.isToneMappingState) {
+@@ -347,7 +405,7 @@ class Nodes extends DataMap {
+         return output;
+     }
+ 
+-    updateBefore(renderObject) {
++    updateBefore(renderObject: RenderObject) {
+         const nodeFrame = this.getNodeFrameForRender(renderObject);
+         const nodeBuilder = renderObject.getNodeBuilderState();
+ 
+@@ -356,7 +414,7 @@ class Nodes extends DataMap {
+         }
+     }
+ 
+-    updateForCompute(computeNode) {
++    updateForCompute(computeNode: ComputeNode) {
+         const nodeFrame = this.getNodeFrame();
+         const nodeBuilder = this.getForCompute(computeNode);
+ 
+@@ -365,7 +423,7 @@ class Nodes extends DataMap {
+         }
+     }
+ 
+-    updateForRender(renderObject) {
++    updateForRender(renderObject: RenderObject) {
+         const nodeFrame = this.getNodeFrameForRender(renderObject);
+         const nodeBuilder = renderObject.getNodeBuilderState();
+ 
+diff --git a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
+index 4910f51f..34e51ee8 100644
+--- a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
++++ b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
+@@ -595,7 +595,7 @@ void main() {
+         }
+     }
+ 
+-    getUniformFromNode(node, type, shaderStage, name = null) {
++    getUniformFromNode(node, type, shaderStage: 'vertex' | 'fragment' | 'compute', name = null) {
+         const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
+         const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+ 
