@@ -17,6 +17,7 @@ const files = [
     'nodes/core/NodeUtils',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'nodes/core/UniformGroupNode',
     'nodes/fog/FogNode',
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
