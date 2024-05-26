@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import prettier from 'prettier';
 
 const files = [
+    'nodes/core/constants',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
     'nodes/core/NodeBuilder',
@@ -16,7 +17,6 @@ const files = [
     'nodes/core/NodeUtils',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
-    'nodes/core/constants',
     'nodes/fog/FogNode',
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
