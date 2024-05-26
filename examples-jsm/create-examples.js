@@ -56,7 +56,11 @@ const files = [
     'renderers/common/Textures',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
+    'renderers/webgl/nodes/GLSLNodeBuilder',
     'renderers/webgl/WebGLBackend',
+    'renderers/webgpu/nodes/WGSLNodeBuilder',
+    'renderers/webgpu/nodes/WGSLNodeFunction',
+    'renderers/webgpu/nodes/WGSLNodeParser',
     'renderers/webgpu/WebGPUBackend',
     'renderers/webgpu/WebGPURenderer',
 ];
