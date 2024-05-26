@@ -10,7 +10,6 @@ const files = [
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
     'nodes/core/constants',
-    'renderers/common/Renderer',
 ];
 
 const inDir = './examples';
