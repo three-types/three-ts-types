@@ -1262,10 +1262,10 @@ index ed9e8e9..f0f7502 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a802..6b43b30 100644
+index e48a802..0084dc8 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,55 @@
+@@ -1,22 +1,57 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
@@ -1325,12 +1325,14 @@ index e48a802..6b43b30 100644
 +
 +    abstract getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
 +
++    abstract isOccluded(renderContext: RenderContext, object: Object): boolean;
++
 +    abstract getMaxAnisotropy(): number;
 +
      // render context
  
      begin(renderContext) {}
-@@ -144,7 +177,10 @@ class Backend {
+@@ -144,7 +179,10 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -1342,7 +1344,7 @@ index e48a802..6b43b30 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +191,11 @@ class Backend {
+@@ -155,11 +193,11 @@ class Backend {
          return map;
      }
  
