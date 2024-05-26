@@ -1262,17 +1262,17 @@ index ed9e8e9..f0f7502 100644
  
          this.backend = backend;
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a802..7f3998d 100644
+index e48a802..6b43b30 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,51 @@
+@@ -1,22 +1,55 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
 -
  import Color4 from './Color4.js';
 -import { Vector2, Vector4, REVISION, createCanvasElement } from 'three';
-+import { Vector2, Vector4, REVISION, createCanvasElement, CoordinateSystem } from 'three';
++import { Vector2, Vector4, REVISION, createCanvasElement, CoordinateSystem, BufferAttribute } from 'three';
 +import Renderer from './Renderer.js';
 +import RenderContext from './RenderContext.js';
 +import RenderBundle from './RenderBundle.js';
@@ -1286,9 +1286,7 @@ index e48a802..7f3998d 100644
 +    canvas?: HTMLCanvasElement | undefined;
 +    antialias?: boolean;
 +}
- 
--class Backend {
--    constructor(parameters = {}) {
++
 +interface RenderContextData {
 +    renderObjects?: RenderObject[];
 +}
@@ -1296,7 +1294,9 @@ index e48a802..7f3998d 100644
 +interface RenderBundleData {
 +    renderContexts?: Set<RenderContext>;
 +}
-+
+ 
+-class Backend {
+-    constructor(parameters = {}) {
 +interface RenderObjectData {}
 +
 +abstract class Backend {
@@ -1323,10 +1323,14 @@ index e48a802..7f3998d 100644
  
 +    abstract get coordinateSystem(): CoordinateSystem;
 +
++    abstract getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
++
++    abstract getMaxAnisotropy(): number;
++
      // render context
  
      begin(renderContext) {}
-@@ -144,7 +173,10 @@ class Backend {
+@@ -144,7 +177,10 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -1338,7 +1342,7 @@ index e48a802..7f3998d 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +187,11 @@ class Backend {
+@@ -155,11 +191,11 @@ class Backend {
          return map;
      }
  
@@ -2339,7 +2343,7 @@ index 76dc482..a5ce085 100644
          const chainMap = this.getChainMap(passId);
  
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d..7a72e74 100644
+index acf180d..e2f3c02 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
 @@ -30,10 +30,39 @@ import {
@@ -2367,7 +2371,7 @@ index acf180d..7a72e74 100644
 +    Line,
 +    Points,
 +    ArrayCamera,
-+    GeometryGroup,
++    GeometryGroup, BufferAttribute,
  } from 'three';
  import { NodeMaterial } from '../../nodes/Nodes.js';
  import QuadMesh from '../../objects/QuadMesh.js';
@@ -2745,7 +2749,7 @@ index acf180d..7a72e74 100644
  
              this._renderScene(_quad, _quad.camera, false);
          }
-@@ -663,10 +807,10 @@ class Renderer {
+@@ -663,13 +807,13 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -2757,7 +2761,20 @@ index acf180d..7a72e74 100644
 +        this._animation!.setAnimationLoop(callback);
      }
  
-     getArrayBuffer(attribute) {
+-    getArrayBuffer(attribute) {
++    getArrayBuffer(attribute: BufferAttribute) {
+         // @deprecated, r155
+ 
+         console.warn('THREE.Renderer: getArrayBuffer() is deprecated. Use getArrayBufferAsync() instead.');
+@@ -677,7 +821,7 @@ class Renderer {
+         return this.getArrayBufferAsync(attribute);
+     }
+ 
+-    async getArrayBufferAsync(attribute) {
++    async getArrayBufferAsync(attribute: BufferAttribute) {
+         return await this.backend.getArrayBufferAsync(attribute);
+     }
+ 
 @@ -689,11 +833,11 @@ class Renderer {
          return this._pixelRatio;
      }
@@ -2816,12 +2833,12 @@ index acf180d..7a72e74 100644
      }
  
 -    setOpaqueSort(method) {
-+    setOpaqueSort(method: ((a: unknown, b: unknown) => number) | null) {
++    setOpaqueSort(method: ((a: RenderItem, b: RenderItem) => number) | null) {
          this._opaqueSort = method;
      }
  
 -    setTransparentSort(method) {
-+    setTransparentSort(method: ((a: unknown, b: unknown) => number) | null) {
++    setTransparentSort(method: ((a: RenderItem, b: RenderItem) => number) | null) {
          this._transparentSort = method;
      }
  
@@ -2939,6 +2956,15 @@ index acf180d..7a72e74 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
+@@ -882,7 +1030,7 @@ class Renderer {
+     }
+ 
+     get currentColorSpace() {
+-        const renderTarget = this._renderTarget;
++        const renderTarget = this._renderTarget as RenderTarget<Texture | Texture[]>;
+ 
+         if (renderTarget !== null) {
+             const texture = renderTarget.texture;
 @@ -896,20 +1044,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
