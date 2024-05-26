@@ -3,13 +3,28 @@ import * as path from 'node:path';
 import { argv } from 'node:process';
 
 const files = [
+    'nodes/core/constants',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
+    'nodes/core/NodeCache',
     'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
-    'nodes/core/constants',
+    'renderers/common/Animation',
+    'renderers/common/Background',
+    'renderers/common/ChainMap',
+    'renderers/common/Color4',
+    'renderers/common/Constants',
+    'renderers/common/DataMap',
+    'renderers/common/Info',
+    'renderers/common/RenderBundles',
+    'renderers/common/RenderContext',
+    'renderers/common/RenderContexts',
+    'renderers/common/Renderer',
+    'renderers/common/RenderLists',
+    'renderers/common/RenderObjects',
+    'renderers/common/Textures',
 ];
 
 const inDir = './examples';
