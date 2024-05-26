@@ -1428,21 +1428,32 @@ index b7902dd4..38e1f624 100644
          const background = this.nodes.getBackgroundNode(scene) || scene.background;
  
 diff --git a/examples-jsm/examples/renderers/common/Bindings.ts b/examples-jsm/examples/renderers/common/Bindings.ts
-index 9485ec3b..6a39a1db 100644
+index 9485ec3b..2e6ff73b 100644
 --- a/examples-jsm/examples/renderers/common/Bindings.ts
 +++ b/examples-jsm/examples/renderers/common/Bindings.ts
-@@ -1,8 +1,28 @@
+@@ -1,8 +1,37 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
+-
+-class Bindings extends DataMap {
+-    constructor(backend, nodes, textures, attributes, pipelines, info) {
 +import Backend from './Backend.js';
 +import Nodes from './nodes/Nodes.js';
 +import Textures from './Textures.js';
 +import Attributes from './Attributes.js';
 +import Pipelines from './Pipelines.js';
 +import Info from './Info.js';
- 
- class Bindings extends DataMap {
--    constructor(backend, nodes, textures, attributes, pipelines, info) {
++import RenderObject from './RenderObject.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++
++interface RenderObjectData {}
++
++interface ComputeNodeData {}
++
++class Bindings extends DataMap<{
++    renderObject: { key: RenderObject; value: RenderObjectData };
++    computeNode: { key: RenderObject; value: ComputeNodeData };
++}> {
 +    backend: Backend;
 +    textures: Textures;
 +    pipelines: Pipelines;
@@ -1461,6 +1472,38 @@ index 9485ec3b..6a39a1db 100644
          super();
  
          this.backend = backend;
+@@ -15,7 +44,7 @@ class Bindings extends DataMap {
+         this.pipelines.bindings = this; // assign bindings to pipelines
+     }
+ 
+-    getForRender(renderObject) {
++    getForRender(renderObject: RenderObject) {
+         const bindings = renderObject.getBindings();
+ 
+         const data = this.get(renderObject);
+@@ -33,7 +62,7 @@ class Bindings extends DataMap {
+         return data.bindings;
+     }
+ 
+-    getForCompute(computeNode) {
++    getForCompute(computeNode: ComputeNode) {
+         const data = this.get(computeNode);
+ 
+         if (data.bindings === undefined) {
+@@ -51,11 +80,11 @@ class Bindings extends DataMap {
+         return data.bindings;
+     }
+ 
+-    updateForCompute(computeNode) {
++    updateForCompute(computeNode: ComputeNode) {
+         this._update(computeNode, this.getForCompute(computeNode));
+     }
+ 
+-    updateForRender(renderObject) {
++    updateForRender(renderObject: RenderObject) {
+         this._update(renderObject, this.getForRender(renderObject));
+     }
+ 
 diff --git a/examples-jsm/examples/renderers/common/ChainMap.ts b/examples-jsm/examples/renderers/common/ChainMap.ts
 index e233beca..c4e8a2e9 100644
 --- a/examples-jsm/examples/renderers/common/ChainMap.ts
@@ -3584,7 +3627,7 @@ index 0eb0509c..6eb18198 100644
          this.backend.destroyTexture(texture);
  
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..b0389629 100644
+index 86df5654..8821cbd6 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 @@ -2,10 +2,16 @@ import DataMap from '../DataMap.js';
@@ -3604,13 +3647,18 @@ index 86df5654..b0389629 100644
  } from 'three';
  import {
      NodeFrame,
-@@ -23,9 +29,19 @@ import {
+@@ -23,9 +29,24 @@ import {
      pmremTexture,
      viewportTopLeft,
  } from '../../../nodes/Nodes.js';
 +import Renderer from '../Renderer.js';
 +import Backend from '../Backend.js';
 +import LightsNode from '../../../nodes/lighting/LightsNode.js';
++import RenderObject from '../RenderObject.js';
++
++interface NodeUniformsGroupData {}
++
++interface RenderObjectData {}
  
  class Nodes extends DataMap {
 -    constructor(renderer, backend) {
@@ -3625,7 +3673,16 @@ index 86df5654..b0389629 100644
          super();
  
          this.renderer = renderer;
-@@ -188,7 +204,7 @@ class Nodes extends DataMap {
+@@ -94,7 +115,7 @@ class Nodes extends DataMap {
+         return renderObject.initialCacheKey;
+     }
+ 
+-    getForRender(renderObject) {
++    getForRender(renderObject: RenderObject) {
+         const renderObjectData = this.get(renderObject);
+ 
+         let nodeBuilderState = renderObjectData.nodeBuilderState;
+@@ -188,7 +209,7 @@ class Nodes extends DataMap {
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
@@ -3634,7 +3691,7 @@ index 86df5654..b0389629 100644
          const chain = [scene, lightsNode];
          const callId = this.renderer.info.calls;
  
-@@ -215,7 +231,7 @@ class Nodes extends DataMap {
+@@ -215,7 +236,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -3643,7 +3700,7 @@ index 86df5654..b0389629 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -225,7 +241,7 @@ class Nodes extends DataMap {
+@@ -225,7 +246,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -3652,7 +3709,7 @@ index 86df5654..b0389629 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -239,10 +255,10 @@ class Nodes extends DataMap {
+@@ -239,10 +260,10 @@ class Nodes extends DataMap {
                      background.mapping === EquirectangularRefractionMapping
                  ) {
                      backgroundNode = pmremTexture(background, normalWorld);
@@ -3667,7 +3724,7 @@ index 86df5654..b0389629 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -254,7 +270,7 @@ class Nodes extends DataMap {
+@@ -254,7 +275,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -3676,7 +3733,7 @@ index 86df5654..b0389629 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -262,9 +278,9 @@ class Nodes extends DataMap {
+@@ -262,9 +283,9 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -3688,7 +3745,7 @@ index 86df5654..b0389629 100644
                      fogNode = rangeFog(
                          reference('color', 'color', fog),
                          reference('near', 'float', fog),
-@@ -283,7 +299,7 @@ class Nodes extends DataMap {
+@@ -283,7 +304,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -3697,7 +3754,7 @@ index 86df5654..b0389629 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -291,7 +307,7 @@ class Nodes extends DataMap {
+@@ -291,7 +312,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
