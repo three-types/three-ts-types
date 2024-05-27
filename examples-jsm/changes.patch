@@ -2293,6 +2293,34 @@ index 17013c6d..830dc0a8 100644
      }
  
      get buffer() {
+diff --git a/examples-jsm/examples/renderers/common/BufferUtils.ts b/examples-jsm/examples/renderers/common/BufferUtils.ts
+index 99ddcb48..e18679b1 100644
+--- a/examples-jsm/examples/renderers/common/BufferUtils.ts
++++ b/examples-jsm/examples/renderers/common/BufferUtils.ts
+@@ -1,12 +1,12 @@
+ import { GPU_CHUNK_BYTES } from './Constants.js';
+ 
+-function getFloatLength(floatLength) {
++function getFloatLength(floatLength: number) {
+     // ensure chunk size alignment (STD140 layout)
+ 
+     return floatLength + ((GPU_CHUNK_BYTES - (floatLength % GPU_CHUNK_BYTES)) % GPU_CHUNK_BYTES);
+ }
+ 
+-function getVectorLength(count, vectorLength = 4) {
++function getVectorLength(count: number, vectorLength = 4) {
+     const strideLength = getStrideLength(vectorLength);
+ 
+     const floatLength = strideLength * count;
+@@ -14,7 +14,7 @@ function getVectorLength(count, vectorLength = 4) {
+     return getFloatLength(floatLength);
+ }
+ 
+-function getStrideLength(vectorLength) {
++function getStrideLength(vectorLength: number) {
+     const strideLength = 4;
+ 
+     return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/examples-jsm/examples/renderers/common/ChainMap.ts b/examples-jsm/examples/renderers/common/ChainMap.ts
 index e233beca..c4e8a2e9 100644
 --- a/examples-jsm/examples/renderers/common/ChainMap.ts
