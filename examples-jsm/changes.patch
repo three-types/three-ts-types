@@ -243,6 +243,60 @@ index feeb5a55..d16e2359 100644
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
  
  addNodeClass('FunctionNode', FunctionNode);
+diff --git a/examples-jsm/examples/nodes/core/ContextNode.ts b/examples-jsm/examples/nodes/core/ContextNode.ts
+index 2ac1d499..b5d2c58c 100644
+--- a/examples-jsm/examples/nodes/core/ContextNode.ts
++++ b/examples-jsm/examples/nodes/core/ContextNode.ts
+@@ -1,8 +1,14 @@
+ import Node, { addNodeClass } from './Node.js';
+-import { addNodeElement, nodeProxy } from '../shadernode/ShaderNode.js';
++import { addNodeElement, nodeProxy, NodeRepresentation } from '../shadernode/ShaderNode.js';
++import NodeBuilder from './NodeBuilder.js';
+ 
+-class ContextNode extends Node {
+-    constructor(node, context = {}) {
++class ContextNode<TContext> extends Node {
++    readonly isContextNode: true;
++
++    node: Node;
++    context: TContext;
++
++    constructor(node: Node, context: TContext = {} as TContext) {
+         super();
+ 
+         this.isContextNode = true;
+@@ -11,11 +17,11 @@ class ContextNode extends Node {
+         this.context = context;
+     }
+ 
+-    getNodeType(builder) {
++    getNodeType(builder: NodeBuilder) {
+         return this.node.getNodeType(builder);
+     }
+ 
+-    setup(builder) {
++    setup(builder: NodeBuilder) {
+         const previousContext = builder.getContext();
+ 
+         builder.setContext({ ...builder.context, ...this.context });
+@@ -27,7 +33,7 @@ class ContextNode extends Node {
+         return node;
+     }
+ 
+-    generate(builder, output) {
++    generate(builder: NodeBuilder, output?: string | null) {
+         const previousContext = builder.getContext();
+ 
+         builder.setContext({ ...builder.context, ...this.context });
+@@ -43,7 +49,7 @@ class ContextNode extends Node {
+ export default ContextNode;
+ 
+ export const context = nodeProxy(ContextNode);
+-export const label = (node, name) => context(node, { label: name });
++export const label = (node: NodeRepresentation, name: string) => context(node, { label: name });
+ 
+ addNodeElement('context', context);
+ addNodeElement('label', label);
 diff --git a/examples-jsm/examples/nodes/core/InputNode.ts b/examples-jsm/examples/nodes/core/InputNode.ts
 index 4d52ec26..5987158d 100644
 --- a/examples-jsm/examples/nodes/core/InputNode.ts
