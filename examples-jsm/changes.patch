@@ -2140,6 +2140,37 @@ index b3695ea8..603a4520 100644
          const lightNodes = [];
  
          lights = sortLights(lights);
+diff --git a/examples-jsm/examples/nodes/materials/NodeMaterial.ts b/examples-jsm/examples/nodes/materials/NodeMaterial.ts
+index 78937411..ecb01aef 100644
+--- a/examples-jsm/examples/nodes/materials/NodeMaterial.ts
++++ b/examples-jsm/examples/nodes/materials/NodeMaterial.ts
+@@ -31,7 +31,7 @@ import { cameraLogDepth } from '../accessors/CameraNode.js';
+ import { clipping, clippingAlpha } from '../accessors/ClippingNode.js';
+ import { faceDirection } from '../display/FrontFacingNode.js';
+ 
+-const NodeMaterials = new Map();
++const NodeMaterials = new Map<string, typeof NodeMaterial>();
+ 
+ class NodeMaterial extends Material {
+     constructor() {
+@@ -490,7 +490,7 @@ class NodeMaterial extends Material {
+ 
+ export default NodeMaterial;
+ 
+-export function addNodeMaterial(type, nodeMaterial) {
++export function addNodeMaterial(type: string, nodeMaterial: typeof NodeMaterial) {
+     if (typeof nodeMaterial !== 'function' || !type) throw new Error(`Node material ${type} is not a class`);
+     if (NodeMaterials.has(type)) {
+         console.warn(`Redefinition of node material ${type}`);
+@@ -501,7 +501,7 @@ export function addNodeMaterial(type, nodeMaterial) {
+     nodeMaterial.type = type;
+ }
+ 
+-export function createNodeMaterialFromType(type) {
++export function createNodeMaterialFromType(type: string) {
+     const Material = NodeMaterials.get(type);
+ 
+     if (Material !== undefined) {
 diff --git a/examples-jsm/examples/nodes/shadernode/ShaderNode.ts b/examples-jsm/examples/nodes/shadernode/ShaderNode.ts
 index d0dca242..6ec0b7e5 100644
 --- a/examples-jsm/examples/nodes/shadernode/ShaderNode.ts
