@@ -1899,10 +1899,10 @@ index ed9e8e9e..a17571cb 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..c387c7ae 100644
+index e48a8029..16b3c6e4 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,74 @@
+@@ -1,22 +1,75 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
@@ -1919,6 +1919,7 @@ index e48a8029..c387c7ae 100644
 +    Object3D,
 +    Scene,
 +    Texture,
++    TypedArray,
 +} from 'three';
 +import Renderer from './Renderer.js';
 +import RenderContext from './RenderContext.js';
@@ -1986,7 +1987,7 @@ index e48a8029..c387c7ae 100644
      // render context
  
      begin(renderContext) {}
-@@ -55,7 +107,11 @@ class Backend {
+@@ -55,7 +108,11 @@ class Backend {
  
      // node builder
  
@@ -1999,7 +2000,22 @@ index e48a8029..c387c7ae 100644
  
      // textures
  
-@@ -144,7 +200,11 @@ class Backend {
+@@ -65,7 +122,13 @@ class Backend {
+ 
+     createTexture(texture) {}
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {}
++    abstract copyTextureToBuffer(
++        texture: Texture,
++        x: number,
++        y: number,
++        width: number,
++        height: number,
++    ): Promise<TypedArray>;
+ 
+     // attributes
+ 
+@@ -144,7 +207,11 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -2012,7 +2028,7 @@ index e48a8029..c387c7ae 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +215,11 @@ class Backend {
+@@ -155,11 +222,11 @@ class Backend {
          return map;
      }
  
@@ -5698,6 +5714,25 @@ index 86df5654..b2b73dbb 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
+diff --git a/examples-jsm/examples/renderers/webgl/WebGLBackend.ts b/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
+index b9a999f1..2ed970b6 100644
+--- a/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
++++ b/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
+@@ -1,4 +1,4 @@
+-import { WebGLCoordinateSystem } from 'three';
++import { Texture, WebGLCoordinateSystem } from 'three';
+ 
+ import GLSLNodeBuilder from './nodes/GLSLNodeBuilder.js';
+ import Backend from '../common/Backend.js';
+@@ -614,7 +614,7 @@ class WebGLBackend extends Backend {
+         this.textureUtils.destroyTexture(texture);
+     }
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+     }
+ 
 diff --git a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
 index 4910f51f..34e51ee8 100644
 --- a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
@@ -5710,4 +5745,26 @@ index 4910f51f..34e51ee8 100644
 +    getUniformFromNode(node, type, shaderStage: 'vertex' | 'fragment' | 'compute', name = null) {
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+ 
+diff --git a/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts b/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
+index 97a42577..4491def1 100644
+--- a/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
++++ b/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
+@@ -2,7 +2,7 @@
+ import 'https://greggman.github.io/webgpu-avoid-redundant-state-setting/webgpu-check-redundant-state-setting.js';
+ //*/
+ 
+-import { WebGPUCoordinateSystem } from 'three';
++import { Texture, WebGPUCoordinateSystem } from 'three';
+ 
+ import {
+     GPUFeatureName,
+@@ -921,7 +921,7 @@ class WebGPUBackend extends Backend {
+         this.textureUtils.destroyTexture(texture);
+     }
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+     }
  
