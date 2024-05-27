@@ -31,6 +31,7 @@ const files = [
     'renderers/common/Color4',
     'renderers/common/ComputePipeline',
     'renderers/common/Constants',
+    'renderers/common/CubeRenderTarget',
     'renderers/common/DataMap',
     'renderers/common/Geometries',
     'renderers/common/Info',
