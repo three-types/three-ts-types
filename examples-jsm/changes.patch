@@ -3694,7 +3694,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..3e7e9dfd 100644
+index acf180d8..d0457be2 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
 @@ -30,10 +30,40 @@ import {
@@ -3751,7 +3751,7 @@ index acf180d8..3e7e9dfd 100644
 -    constructor(backend, parameters = {}) {
 +    readonly isRenderer: true;
 +
-+    domElement: HTMLCanvasElement | null;
++    domElement: HTMLCanvasElement;
 +
 +    backend: Backend;
 +
@@ -4049,7 +4049,7 @@ index acf180d8..3e7e9dfd 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -572,22 +719,22 @@ class Renderer {
+@@ -572,14 +719,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -4070,16 +4070,6 @@ index acf180d8..3e7e9dfd 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-         } else {
-             renderContext.textures = null;
-             renderContext.depthTexture = null;
--            renderContext.width = this.domElement.width;
--            renderContext.height = this.domElement.height;
-+            renderContext.width = this.domElement!.width;
-+            renderContext.height = this.domElement!.height;
-             renderContext.depth = this.depth;
-             renderContext.stencil = this.stencil;
-         }
 @@ -600,11 +747,11 @@ class Renderer {
  
          //
@@ -4143,7 +4133,7 @@ index acf180d8..3e7e9dfd 100644
          return target.set(this._width, this._height);
      }
  
-@@ -703,30 +850,30 @@ class Renderer {
+@@ -703,7 +850,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -4152,15 +4142,7 @@ index acf180d8..3e7e9dfd 100644
          this._width = width;
          this._height = height;
  
-         this._pixelRatio = pixelRatio;
- 
--        this.domElement.width = Math.floor(width * pixelRatio);
--        this.domElement.height = Math.floor(height * pixelRatio);
-+        this.domElement!.width = Math.floor(width * pixelRatio);
-+        this.domElement!.height = Math.floor(height * pixelRatio);
- 
-         this.setViewport(0, 0, width, height);
- 
+@@ -717,7 +864,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -4169,19 +4151,6 @@ index acf180d8..3e7e9dfd 100644
          this._width = width;
          this._height = height;
  
--        this.domElement.width = Math.floor(width * this._pixelRatio);
--        this.domElement.height = Math.floor(height * this._pixelRatio);
-+        this.domElement!.width = Math.floor(width * this._pixelRatio);
-+        this.domElement!.height = Math.floor(height * this._pixelRatio);
- 
-         if (updateStyle === true) {
--            this.domElement.style.width = width + 'px';
--            this.domElement.style.height = height + 'px';
-+            this.domElement!.style.width = width + 'px';
-+            this.domElement!.style.height = height + 'px';
-         }
- 
-         this.setViewport(0, 0, width, height);
 @@ -734,15 +881,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
