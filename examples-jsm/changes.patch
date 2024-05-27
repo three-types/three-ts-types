@@ -2780,7 +2780,7 @@ index 16017455..16b5276c 100644
  
          this.usedTimes = 0;
 diff --git a/examples-jsm/examples/renderers/common/Pipelines.ts b/examples-jsm/examples/renderers/common/Pipelines.ts
-index f6c570c4..31a6ea5d 100644
+index f6c570c4..682056b4 100644
 --- a/examples-jsm/examples/renderers/common/Pipelines.ts
 +++ b/examples-jsm/examples/renderers/common/Pipelines.ts
 @@ -2,9 +2,40 @@ import DataMap from './DataMap.js';
@@ -2935,7 +2935,7 @@ index f6c570c4..31a6ea5d 100644
      }
  
 -    delete(object) {
-+    delete<K extends ComputeNode | RenderObject>(object: K) {
++    delete(object: ComputeNode | RenderObject): never {
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
@@ -2967,7 +2967,7 @@ index f6c570c4..31a6ea5d 100644
          }
  
 -        super.delete(object);
-+        return super.delete(object);
++        return super.delete(object) as never;
      }
  
      dispose() {
