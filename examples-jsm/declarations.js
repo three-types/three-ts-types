@@ -4,6 +4,7 @@ import { argv } from 'node:process';
 
 const files = [
     'nodes/core/constants',
+    'nodes/core/ContextNode',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
     'nodes/core/NodeBuilder',

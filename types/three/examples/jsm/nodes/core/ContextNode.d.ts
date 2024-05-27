@@ -1,21 +1,21 @@
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation } from "../shadernode/ShaderNode.js";
 import Node from "./Node.js";
-import { NodeBuilderContext } from "./NodeBuilder.js";
-
-export default class ContextNode extends Node {
-    isContextNode: true;
+import NodeBuilder from "./NodeBuilder.js";
+declare class ContextNode<TContext> extends Node {
+    readonly isContextNode: true;
     node: Node;
-    context: NodeBuilderContext;
-
-    constructor(node: Node, context: NodeBuilderContext);
+    context: TContext;
+    constructor(node: Node, context?: TContext);
+    getNodeType(builder: NodeBuilder): string | null;
+    setup(builder: NodeBuilder): string | null;
+    generate(builder: NodeBuilder, output?: string | null): string | null;
 }
-
-export const context: (node: NodeRepresentation, context: NodeBuilderContext) => ShaderNodeObject<ContextNode>;
-export const label: (node: NodeRepresentation, label: string) => ShaderNodeObject<ContextNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        context: typeof context;
-        label: typeof label;
-    }
-}
+export default ContextNode;
+export declare const context: (
+    node: NodeRepresentation<Node>,
+    context?: unknown,
+) => import("../shadernode/ShaderNode.js").ShaderNodeObject<ContextNode<unknown>>;
+export declare const label: (
+    node: NodeRepresentation,
+    name: string,
+) => import("../shadernode/ShaderNode.js").ShaderNodeObject<ContextNode<unknown>>;
