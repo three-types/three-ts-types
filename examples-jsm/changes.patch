@@ -2350,6 +2350,24 @@ index c681cc90..5d03adec 100644
      }
  }
  
+diff --git a/examples-jsm/examples/renderers/common/ComputePipeline.ts b/examples-jsm/examples/renderers/common/ComputePipeline.ts
+index 0fd3ca53..f6112ccf 100644
+--- a/examples-jsm/examples/renderers/common/ComputePipeline.ts
++++ b/examples-jsm/examples/renderers/common/ComputePipeline.ts
+@@ -1,7 +1,12 @@
+ import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
+ 
+ class ComputePipeline extends Pipeline {
+-    constructor(cacheKey, computeProgram) {
++    computeProgram: ProgrammableStage;
++
++    readonly isComputePipeline: true;
++
++    constructor(cacheKey: string, computeProgram: ProgrammableStage) {
+         super(cacheKey);
+ 
+         this.computeProgram = computeProgram;
 diff --git a/examples-jsm/examples/renderers/common/Constants.ts b/examples-jsm/examples/renderers/common/Constants.ts
 index 0d0c35a2..f5a186e1 100644
 --- a/examples-jsm/examples/renderers/common/Constants.ts
@@ -2578,10 +2596,10 @@ index c8e7cb41..083e7c42 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/common/Pipelines.ts b/examples-jsm/examples/renderers/common/Pipelines.ts
-index f6c570c4..3ef59295 100644
+index f6c570c4..65433aaf 100644
 --- a/examples-jsm/examples/renderers/common/Pipelines.ts
 +++ b/examples-jsm/examples/renderers/common/Pipelines.ts
-@@ -2,9 +2,31 @@ import DataMap from './DataMap.js';
+@@ -2,9 +2,38 @@ import DataMap from './DataMap.js';
  import RenderPipeline from './RenderPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
@@ -2611,11 +2629,30 @@ index f6c570c4..3ef59295 100644
  
 -class Pipelines extends DataMap {
 -    constructor(backend, nodes) {
++    caches: Map<string, ComputePipeline | RenderPipeline>;
++    programs: {
++        vertex: Map<string, ProgrammableStage>;
++        fragment: Map<string, ProgrammableStage>;
++        compute: Map<string, ProgrammableStage>;
++    };
++
 +    constructor(backend: Backend, nodes: Nodes) {
          super();
  
          this.backend = backend;
-@@ -20,7 +42,7 @@ class Pipelines extends DataMap {
+@@ -12,15 +41,15 @@ class Pipelines extends DataMap {
+ 
+         this.bindings = null; // set by the bindings
+ 
+-        this.caches = new Map();
++        this.caches = new Map<string, ComputePipeline | RenderPipeline>();
+         this.programs = {
+-            vertex: new Map(),
+-            fragment: new Map(),
+-            compute: new Map(),
++            vertex: new Map<string, ProgrammableStage>(),
++            fragment: new Map<string, ProgrammableStage>(),
++            compute: new Map<string, ProgrammableStage>(),
          };
      }
  
@@ -2624,7 +2661,7 @@ index f6c570c4..3ef59295 100644
          const { backend } = this;
  
          const data = this.get(computeNode);
-@@ -82,7 +104,7 @@ class Pipelines extends DataMap {
+@@ -82,7 +111,7 @@ class Pipelines extends DataMap {
          return data.pipeline;
      }
  
@@ -2633,7 +2670,7 @@ index f6c570c4..3ef59295 100644
          const { backend } = this;
  
          const data = this.get(renderObject);
-@@ -154,7 +176,7 @@ class Pipelines extends DataMap {
+@@ -154,7 +183,7 @@ class Pipelines extends DataMap {
          return data.pipeline;
      }
  
@@ -2642,6 +2679,49 @@ index f6c570c4..3ef59295 100644
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
+@@ -197,7 +226,12 @@ class Pipelines extends DataMap {
+         this.getForRender(renderObject);
+     }
+ 
+-    _getComputePipeline(computeNode, stageCompute, cacheKey, bindings) {
++    _getComputePipeline(
++        computeNode: ComputeNode,
++        stageCompute: ProgrammableStage,
++        cacheKey: string,
++        bindings: Binding[],
++    ) {
+         // check for existing pipeline
+ 
+         cacheKey = cacheKey || this._getComputeCacheKey(computeNode, stageCompute);
+@@ -215,7 +249,13 @@ class Pipelines extends DataMap {
+         return pipeline;
+     }
+ 
+-    _getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises) {
++    _getRenderPipeline(
++        renderObject: RenderObject,
++        stageVertex: ProgrammableStage,
++        stageFragment: ProgrammableStage,
++        cacheKey: string,
++        promises: Promise<void> | null,
++    ) {
+         // check for existing pipeline
+ 
+         cacheKey = cacheKey || this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
+@@ -235,11 +275,11 @@ class Pipelines extends DataMap {
+         return pipeline;
+     }
+ 
+-    _getComputeCacheKey(computeNode, stageCompute) {
++    _getComputeCacheKey(computeNode: ComputeNode, stageCompute: ProgrammableStage) {
+         return computeNode.id + ',' + stageCompute.id;
+     }
+ 
+-    _getRenderCacheKey(renderObject, stageVertex, stageFragment) {
++    _getRenderCacheKey(renderObject: RenderObject, stageVertex: ProgrammableStage, stageFragment: ProgrammableStage) {
+         return stageVertex.id + ',' + stageFragment.id + ',' + this.backend.getRenderCacheKey(renderObject);
+     }
+ 
 diff --git a/examples-jsm/examples/renderers/common/ProgrammableStage.ts b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
 index a684e444..6b643625 100644
 --- a/examples-jsm/examples/renderers/common/ProgrammableStage.ts
@@ -3230,6 +3310,23 @@ index 76dc482e..27997a90 100644
      ) {
          const chainMap = this.getChainMap(passId);
  
+diff --git a/examples-jsm/examples/renderers/common/RenderPipeline.ts b/examples-jsm/examples/renderers/common/RenderPipeline.ts
+index 0ec34b04..573cae2b 100644
+--- a/examples-jsm/examples/renderers/common/RenderPipeline.ts
++++ b/examples-jsm/examples/renderers/common/RenderPipeline.ts
+@@ -1,7 +1,11 @@
+ import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
+ 
+ class RenderPipeline extends Pipeline {
+-    constructor(cacheKey, vertexProgram, fragmentProgram) {
++    vertexProgram: ProgrammableStage;
++    fragmentProgram: ProgrammableStage;
++
++    constructor(cacheKey: string, vertexProgram: ProgrammableStage, fragmentProgram: ProgrammableStage) {
+         super(cacheKey);
+ 
+         this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
 index acf180d8..3e7e9dfd 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
