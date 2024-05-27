@@ -46,6 +46,7 @@ const files = [
     'renderers/common/DataMap',
     'renderers/common/Geometries',
     'renderers/common/Info',
+    'renderers/common/Pipeline',
     'renderers/common/Pipelines',
     'renderers/common/ProgrammableStage',
     'renderers/common/RenderBundle',

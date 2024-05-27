@@ -2045,15 +2045,12 @@ index a12f3563..e7ae8d1c 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/Bindings.ts b/examples-jsm/examples/renderers/common/Bindings.ts
-index 9485ec3b..2e6ff73b 100644
+index 9485ec3b..1b25feb7 100644
 --- a/examples-jsm/examples/renderers/common/Bindings.ts
 +++ b/examples-jsm/examples/renderers/common/Bindings.ts
-@@ -1,8 +1,37 @@
+@@ -1,8 +1,38 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
--
--class Bindings extends DataMap {
--    constructor(backend, nodes, textures, attributes, pipelines, info) {
 +import Backend from './Backend.js';
 +import Nodes from './nodes/Nodes.js';
 +import Textures from './Textures.js';
@@ -2062,14 +2059,17 @@ index 9485ec3b..2e6ff73b 100644
 +import Info from './Info.js';
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import Binding from './Binding.js';
 +
-+interface RenderObjectData {}
-+
-+interface ComputeNodeData {}
-+
++interface Data {
++    bindings?: Binding[] | undefined;
++}
+ 
+-class Bindings extends DataMap {
+-    constructor(backend, nodes, textures, attributes, pipelines, info) {
 +class Bindings extends DataMap<{
-+    renderObject: { key: RenderObject; value: RenderObjectData };
-+    computeNode: { key: RenderObject; value: ComputeNodeData };
++    renderObject: { key: RenderObject; value: Data };
++    computeNode: { key: ComputeNode; value: Data };
 +}> {
 +    backend: Backend;
 +    textures: Textures;
@@ -2089,7 +2089,7 @@ index 9485ec3b..2e6ff73b 100644
          super();
  
          this.backend = backend;
-@@ -15,7 +44,7 @@ class Bindings extends DataMap {
+@@ -15,7 +45,7 @@ class Bindings extends DataMap {
          this.pipelines.bindings = this; // assign bindings to pipelines
      }
  
@@ -2098,7 +2098,7 @@ index 9485ec3b..2e6ff73b 100644
          const bindings = renderObject.getBindings();
  
          const data = this.get(renderObject);
-@@ -33,7 +62,7 @@ class Bindings extends DataMap {
+@@ -33,7 +63,7 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2107,7 +2107,7 @@ index 9485ec3b..2e6ff73b 100644
          const data = this.get(computeNode);
  
          if (data.bindings === undefined) {
-@@ -51,11 +80,11 @@ class Bindings extends DataMap {
+@@ -51,15 +81,15 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2121,6 +2121,20 @@ index 9485ec3b..2e6ff73b 100644
          this._update(renderObject, this.getForRender(renderObject));
      }
  
+-    _init(bindings) {
++    _init(bindings: Binding[]) {
+         for (const binding of bindings) {
+             if (binding.isSampledTexture) {
+                 this.textures.updateTexture(binding.texture);
+@@ -71,7 +101,7 @@ class Bindings extends DataMap {
+         }
+     }
+ 
+-    _update(object, bindings) {
++    _update(object: ComputeNode | RenderObject, bindings: Binding[]) {
+         const { backend } = this;
+ 
+         let needsBindingsUpdate = false;
 diff --git a/examples-jsm/examples/renderers/common/Buffer.ts b/examples-jsm/examples/renderers/common/Buffer.ts
 index 17013c6d..56064725 100644
 --- a/examples-jsm/examples/renderers/common/Buffer.ts
@@ -2336,16 +2350,36 @@ index c681cc90..5d03adec 100644
      }
  }
  
+diff --git a/examples-jsm/examples/renderers/common/ComputePipeline.ts b/examples-jsm/examples/renderers/common/ComputePipeline.ts
+index 0fd3ca53..f6112ccf 100644
+--- a/examples-jsm/examples/renderers/common/ComputePipeline.ts
++++ b/examples-jsm/examples/renderers/common/ComputePipeline.ts
+@@ -1,7 +1,12 @@
+ import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
+ 
+ class ComputePipeline extends Pipeline {
+-    constructor(cacheKey, computeProgram) {
++    computeProgram: ProgrammableStage;
++
++    readonly isComputePipeline: true;
++
++    constructor(cacheKey: string, computeProgram: ProgrammableStage) {
+         super(cacheKey);
+ 
+         this.computeProgram = computeProgram;
 diff --git a/examples-jsm/examples/renderers/common/Constants.ts b/examples-jsm/examples/renderers/common/Constants.ts
-index 0d0c35a2..53caf06e 100644
+index 0d0c35a2..f5a186e1 100644
 --- a/examples-jsm/examples/renderers/common/Constants.ts
 +++ b/examples-jsm/examples/renderers/common/Constants.ts
-@@ -2,7 +2,7 @@ export const AttributeType = {
+@@ -2,7 +2,9 @@ export const AttributeType = {
      VERTEX: 1,
      INDEX: 2,
      STORAGE: 4,
 -};
 +} as const;
++
++export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType];
  
  // size of a chunk in bytes (STD140 layout)
  
@@ -2387,30 +2421,114 @@ index 006bc295..eb39fca8 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/common/Geometries.ts b/examples-jsm/examples/renderers/common/Geometries.ts
-index 5da99946..79bed8a5 100644
+index 5da99946..96cd0e8d 100644
 --- a/examples-jsm/examples/renderers/common/Geometries.ts
 +++ b/examples-jsm/examples/renderers/common/Geometries.ts
-@@ -1,6 +1,8 @@
+@@ -1,8 +1,11 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
- import { Uint32BufferAttribute, Uint16BufferAttribute } from 'three';
+-import { Uint32BufferAttribute, Uint16BufferAttribute } from 'three';
++import { Uint32BufferAttribute, Uint16BufferAttribute, BufferGeometry, BufferAttribute } from 'three';
 +import Attributes from './Attributes.js';
 +import Info from './Info.js';
++import RenderObject from './RenderObject.js';
  
- function arrayNeedsUint32(array) {
+-function arrayNeedsUint32(array) {
++function arrayNeedsUint32(array: number[]) {
      // assumes larger values usually on last
-@@ -51,7 +53,10 @@ function getWireframeIndex(geometry) {
+ 
+     for (let i = array.length - 1; i >= 0; --i) {
+@@ -12,11 +15,11 @@ function arrayNeedsUint32(array) {
+     return false;
  }
  
- class Geometries extends DataMap {
+-function getWireframeVersion(geometry) {
+-    return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
++function getWireframeVersion(geometry: BufferGeometry) {
++    return geometry.index !== null ? geometry.index.version : (geometry.attributes.position as BufferAttribute).version;
+ }
+ 
+-function getWireframeIndex(geometry) {
++function getWireframeIndex(geometry: BufferGeometry) {
+     const indices = [];
+ 
+     const geometryIndex = geometry.index;
+@@ -50,30 +53,40 @@ function getWireframeIndex(geometry) {
+     return attribute;
+ }
+ 
+-class Geometries extends DataMap {
 -    constructor(attributes, info) {
++interface GeometryData {
++    initialized?: boolean | undefined;
++}
++
++class Geometries extends DataMap<{ geometry: { key: BufferGeometry; value: GeometryData } }> {
 +    attributes: Attributes;
 +    info: Info;
++
++    wireframes: WeakMap<BufferGeometry, BufferAttribute>;
++    attributeCall: WeakMap<BufferAttribute, number>;
 +
 +    constructor(attributes: Attributes, info: Info) {
          super();
  
          this.attributes = attributes;
+         this.info = info;
+ 
+-        this.wireframes = new WeakMap();
+-        this.attributeCall = new WeakMap();
++        this.wireframes = new WeakMap<BufferGeometry, BufferAttribute>();
++        this.attributeCall = new WeakMap<BufferAttribute, number>();
+     }
+ 
+-    has(renderObject) {
+-        const geometry = renderObject.geometry;
++    has(renderObject: RenderObject | BufferGeometry) {
++        const geometry = (renderObject as RenderObject).geometry;
+ 
+         return super.has(geometry) && this.get(geometry).initialized === true;
+     }
+ 
+-    updateForRender(renderObject) {
++    updateForRender(renderObject: RenderObject) {
+         if (this.has(renderObject) === false) this.initGeometry(renderObject);
+ 
+         this.updateAttributes(renderObject);
+     }
+ 
+-    initGeometry(renderObject) {
++    initGeometry(renderObject: RenderObject) {
+         const geometry = renderObject.geometry;
+         const geometryData = this.get(geometry);
+ 
+@@ -107,7 +120,7 @@ class Geometries extends DataMap {
+         geometry.addEventListener('dispose', onDispose);
+     }
+ 
+-    updateAttributes(renderObject) {
++    updateAttributes(renderObject: RenderObject) {
+         const attributes = renderObject.getAttributes();
+ 
+         for (const attribute of attributes) {
+@@ -121,7 +134,7 @@ class Geometries extends DataMap {
+         }
+     }
+ 
+-    updateAttribute(attribute, type) {
++    updateAttribute(attribute: BufferAttribute, type: AttributeType) {
+         const callId = this.info.render.calls;
+ 
+         if (this.attributeCall.get(attribute) !== callId) {
+@@ -131,7 +144,7 @@ class Geometries extends DataMap {
+         }
+     }
+ 
+-    getIndex(renderObject) {
++    getIndex(renderObject: RenderObject) {
+         const { geometry, material } = renderObject;
+ 
+         let index = geometry.index;
 diff --git a/examples-jsm/examples/renderers/common/Info.ts b/examples-jsm/examples/renderers/common/Info.ts
 index c8e7cb41..083e7c42 100644
 --- a/examples-jsm/examples/renderers/common/Info.ts
@@ -2477,11 +2595,26 @@ index c8e7cb41..083e7c42 100644
          this[type].timestamp += time;
      }
  
+diff --git a/examples-jsm/examples/renderers/common/Pipeline.ts b/examples-jsm/examples/renderers/common/Pipeline.ts
+index 16017455..16b5276c 100644
+--- a/examples-jsm/examples/renderers/common/Pipeline.ts
++++ b/examples-jsm/examples/renderers/common/Pipeline.ts
+@@ -1,5 +1,9 @@
+ class Pipeline {
+-    constructor(cacheKey) {
++    cacheKey: string;
++
++    usedTimes: number;
++
++    constructor(cacheKey: string) {
+         this.cacheKey = cacheKey;
+ 
+         this.usedTimes = 0;
 diff --git a/examples-jsm/examples/renderers/common/Pipelines.ts b/examples-jsm/examples/renderers/common/Pipelines.ts
-index f6c570c4..0a1c0238 100644
+index f6c570c4..3bda7243 100644
 --- a/examples-jsm/examples/renderers/common/Pipelines.ts
 +++ b/examples-jsm/examples/renderers/common/Pipelines.ts
-@@ -2,9 +2,18 @@ import DataMap from './DataMap.js';
+@@ -2,9 +2,40 @@ import DataMap from './DataMap.js';
  import RenderPipeline from './RenderPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
@@ -2489,19 +2622,95 @@ index f6c570c4..0a1c0238 100644
 +import Nodes from './nodes/Nodes.js';
 +import Bindings from './Bindings.js';
 +import RenderObject from './RenderObject.js';
- 
- class Pipelines extends DataMap {
--    constructor(backend, nodes) {
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import Binding from './Binding.js';
++import Pipeline from './Pipeline.js';
++
++interface ComputeNodeData {
++    version: number;
++    pipeline: ComputePipeline;
++}
++
++interface RenderObjectData {
++    pipeline: RenderPipeline;
++}
++
++class Pipelines extends DataMap<{
++    computeNode: { key: ComputeNode; value: ComputeNodeData };
++    renderObject: { key: RenderObject; value: RenderObjectData };
++}> {
 +    backend: Backend;
 +    nodes: Nodes;
 +
 +    bindings: Bindings | null;
+ 
+-class Pipelines extends DataMap {
+-    constructor(backend, nodes) {
++    caches: Map<string, Pipeline>;
++    programs: {
++        vertex: Map<string, ProgrammableStage>;
++        fragment: Map<string, ProgrammableStage>;
++        compute: Map<string, ProgrammableStage>;
++    };
 +
 +    constructor(backend: Backend, nodes: Nodes) {
          super();
  
          this.backend = backend;
-@@ -82,7 +91,7 @@ class Pipelines extends DataMap {
+@@ -12,15 +43,15 @@ class Pipelines extends DataMap {
+ 
+         this.bindings = null; // set by the bindings
+ 
+-        this.caches = new Map();
++        this.caches = new Map<string, Pipeline>();
+         this.programs = {
+-            vertex: new Map(),
+-            fragment: new Map(),
+-            compute: new Map(),
++            vertex: new Map<string, ProgrammableStage>(),
++            fragment: new Map<string, ProgrammableStage>(),
++            compute: new Map<string, ProgrammableStage>(),
+         };
+     }
+ 
+-    getForCompute(computeNode, bindings) {
++    getForCompute(computeNode: ComputeNode, bindings: Binding[]) {
+         const { backend } = this;
+ 
+         const data = this.get(computeNode);
+@@ -39,19 +70,19 @@ class Pipelines extends DataMap {
+ 
+             // programmable stage
+ 
+-            let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader);
++            let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
+ 
+             if (stageCompute === undefined) {
+                 if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.computeProgram);
+ 
+                 stageCompute = new ProgrammableStage(
+-                    nodeBuilderState.computeShader,
++                    nodeBuilderState.computeShader!,
+                     'compute',
+                     nodeBuilderState.transforms,
+                     nodeBuilderState.nodeAttributes,
+                 );
+-                this.programs.compute.set(nodeBuilderState.computeShader, stageCompute);
++                this.programs.compute.set(nodeBuilderState.computeShader!, stageCompute);
+ 
+                 backend.createProgram(stageCompute);
+             }
+@@ -60,7 +91,7 @@ class Pipelines extends DataMap {
+ 
+             const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
+ 
+-            let pipeline = this.caches.get(cacheKey);
++            let pipeline = this.caches.get(cacheKey) as ComputePipeline | undefined;
+ 
+             if (pipeline === undefined) {
+                 if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(computeNode);
+@@ -82,7 +113,7 @@ class Pipelines extends DataMap {
          return data.pipeline;
      }
  
@@ -2510,27 +2719,204 @@ index f6c570c4..0a1c0238 100644
          const { backend } = this;
  
          const data = this.get(renderObject);
+@@ -102,26 +133,26 @@ class Pipelines extends DataMap {
+ 
+             // programmable stages
+ 
+-            let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader);
++            let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader!);
+ 
+             if (stageVertex === undefined) {
+                 if (previousPipeline && previousPipeline.vertexProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.vertexProgram);
+ 
+-                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, 'vertex');
+-                this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
++                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader!, 'vertex');
++                this.programs.vertex.set(nodeBuilderState.vertexShader!, stageVertex);
+ 
+                 backend.createProgram(stageVertex);
+             }
+ 
+-            let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader);
++            let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader!);
+ 
+             if (stageFragment === undefined) {
+                 if (previousPipeline && previousPipeline.fragmentProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.fragmentProgram);
+ 
+-                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, 'fragment');
+-                this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
++                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader!, 'fragment');
++                this.programs.fragment.set(nodeBuilderState.fragmentShader!, stageFragment);
+ 
+                 backend.createProgram(stageFragment);
+             }
+@@ -130,7 +161,7 @@ class Pipelines extends DataMap {
+ 
+             const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
+ 
+-            let pipeline = this.caches.get(cacheKey);
++            let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
+ 
+             if (pipeline === undefined) {
+                 if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
+@@ -154,7 +185,7 @@ class Pipelines extends DataMap {
+         return data.pipeline;
+     }
+ 
+-    delete(object) {
++    delete(object: ComputeNode | RenderObject) {
+         const pipeline = this.get(object).pipeline;
+ 
+         if (pipeline) {
+@@ -166,20 +197,23 @@ class Pipelines extends DataMap {
+ 
+             // programs
+ 
+-            if (pipeline.isComputePipeline) {
+-                pipeline.computeProgram.usedTimes--;
++            if ((pipeline as ComputePipeline).isComputePipeline) {
++                (pipeline as ComputePipeline).computeProgram.usedTimes--;
+ 
+-                if (pipeline.computeProgram.usedTimes === 0) this._releaseProgram(pipeline.computeProgram);
++                if ((pipeline as ComputePipeline).computeProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as ComputePipeline).computeProgram);
+             } else {
+-                pipeline.fragmentProgram.usedTimes--;
+-                pipeline.vertexProgram.usedTimes--;
++                (pipeline as RenderPipeline).fragmentProgram.usedTimes--;
++                (pipeline as RenderPipeline).vertexProgram.usedTimes--;
+ 
+-                if (pipeline.vertexProgram.usedTimes === 0) this._releaseProgram(pipeline.vertexProgram);
+-                if (pipeline.fragmentProgram.usedTimes === 0) this._releaseProgram(pipeline.fragmentProgram);
++                if ((pipeline as RenderPipeline).vertexProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderPipeline).vertexProgram);
++                if ((pipeline as RenderPipeline).fragmentProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderPipeline).fragmentProgram);
+             }
+         }
+ 
+-        super.delete(object);
++        return super.delete(object);
+     }
+ 
+     dispose() {
+@@ -193,16 +227,21 @@ class Pipelines extends DataMap {
+         };
+     }
+ 
+-    updateForRender(renderObject) {
++    updateForRender(renderObject: RenderObject) {
+         this.getForRender(renderObject);
+     }
+ 
+-    _getComputePipeline(computeNode, stageCompute, cacheKey, bindings) {
++    _getComputePipeline(
++        computeNode: ComputeNode,
++        stageCompute: ProgrammableStage,
++        cacheKey: string,
++        bindings: Binding[],
++    ) {
+         // check for existing pipeline
+ 
+         cacheKey = cacheKey || this._getComputeCacheKey(computeNode, stageCompute);
+ 
+-        let pipeline = this.caches.get(cacheKey);
++        let pipeline = this.caches.get(cacheKey) as ComputePipeline | undefined;
+ 
+         if (pipeline === undefined) {
+             pipeline = new ComputePipeline(cacheKey, stageCompute);
+@@ -215,12 +254,18 @@ class Pipelines extends DataMap {
+         return pipeline;
+     }
+ 
+-    _getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises) {
++    _getRenderPipeline(
++        renderObject: RenderObject,
++        stageVertex: ProgrammableStage,
++        stageFragment: ProgrammableStage,
++        cacheKey: string,
++        promises: Promise<void>[] | null,
++    ) {
+         // check for existing pipeline
+ 
+         cacheKey = cacheKey || this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
+ 
+-        let pipeline = this.caches.get(cacheKey);
++        let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
+ 
+         if (pipeline === undefined) {
+             pipeline = new RenderPipeline(cacheKey, stageVertex, stageFragment);
+@@ -235,32 +280,32 @@ class Pipelines extends DataMap {
+         return pipeline;
+     }
+ 
+-    _getComputeCacheKey(computeNode, stageCompute) {
++    _getComputeCacheKey(computeNode: ComputeNode, stageCompute: ProgrammableStage) {
+         return computeNode.id + ',' + stageCompute.id;
+     }
+ 
+-    _getRenderCacheKey(renderObject, stageVertex, stageFragment) {
++    _getRenderCacheKey(renderObject: RenderObject, stageVertex: ProgrammableStage, stageFragment: ProgrammableStage) {
+         return stageVertex.id + ',' + stageFragment.id + ',' + this.backend.getRenderCacheKey(renderObject);
+     }
+ 
+-    _releasePipeline(pipeline) {
++    _releasePipeline(pipeline: Pipeline) {
+         this.caches.delete(pipeline.cacheKey);
+     }
+ 
+-    _releaseProgram(program) {
++    _releaseProgram(program: ProgrammableStage) {
+         const code = program.code;
+         const stage = program.stage;
+ 
+         this.programs[stage].delete(code);
+     }
+ 
+-    _needsComputeUpdate(computeNode) {
++    _needsComputeUpdate(computeNode: ComputeNode) {
+         const data = this.get(computeNode);
+ 
+         return data.pipeline === undefined || data.version !== computeNode.version;
+     }
+ 
+-    _needsRenderUpdate(renderObject) {
++    _needsRenderUpdate(renderObject: RenderObject) {
+         const data = this.get(renderObject);
+ 
+         return data.pipeline === undefined || this.backend.needsRenderUpdate(renderObject);
 diff --git a/examples-jsm/examples/renderers/common/ProgrammableStage.ts b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
-index a684e444..6b643625 100644
+index a684e444..62ebf0a0 100644
 --- a/examples-jsm/examples/renderers/common/ProgrammableStage.ts
 +++ b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
-@@ -1,6 +1,16 @@
+@@ -1,7 +1,24 @@
++import NodeAttribute from '../../nodes/core/NodeAttribute.js';
++
  let _id = 0;
  
  class ProgrammableStage {
+-    constructor(code, type, transforms = null, attributes = null) {
 +    id: number;
 +
++    code: string;
++    stage: 'compute' | 'vertex' | 'fragment';
 +    // TODO
-+    // code
-+    // stage
 +    // transforms
-+    // attributes
++    attributes: NodeAttribute[] | null;
 +
 +    usedTimes: number;
 +
-     constructor(code, type, transforms = null, attributes = null) {
++    constructor(
++        code: string,
++        type: 'compute' | 'vertex' | 'fragment',
++        transforms = null,
++        attributes: NodeAttribute[] | null = null,
++    ) {
          this.id = _id++;
  
+         this.code = code;
 diff --git a/examples-jsm/examples/renderers/common/RenderBundle.ts b/examples-jsm/examples/renderers/common/RenderBundle.ts
 index e59e4937..95b0518a 100644
 --- a/examples-jsm/examples/renderers/common/RenderBundle.ts
@@ -2865,22 +3251,24 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 861c15dc..3d9b27b7 100644
+index 861c15dc..7a13d82d 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
-@@ -1,4 +1,11 @@
+@@ -1,4 +1,13 @@
  import ClippingContext from './ClippingContext.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
 +import Renderer from './Renderer.js';
-+import { Camera, Material, Object3D, Scene } from 'three';
++import { BufferGeometry, Camera, Material, Object3D, Scene } from 'three';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import RenderContext from './RenderContext.js';
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
++import Binding from './Binding.js';
++import RenderPipeline from './RenderPipeline.js';
  
  let id = 0;
  
-@@ -27,7 +34,60 @@ function getKeys(obj) {
+@@ -27,7 +36,59 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -2898,8 +3286,7 @@ index 861c15dc..3d9b27b7 100644
 +    lightsNode: LightsNode;
 +    context: RenderContext;
 +
-+    // TODO
-+    // geometry: BufferGeometry | undefined; ??
++    geometry: BufferGeometry;
 +    version: number;
 +
 +    // TODO
@@ -2907,7 +3294,8 @@ index 861c15dc..3d9b27b7 100644
 +
 +    // TODO
 +    // attributes
-+    // pipeline
++    pipeline: RenderPipeline;
++    // TODO
 +    // vertexBuffers
 +
 +    clippingContext!: ClippingContext;
@@ -2919,8 +3307,7 @@ index 861c15dc..3d9b27b7 100644
 +    initialCacheKey: string;
 +
 +    _nodeBuilderState: NodeBuilderState | null;
-+    // TODO
-+    // this._bindings = null;
++    _bindings: Binding[] | null;
 +
 +    onDispose: (() => void) | null;
 +
@@ -2942,7 +3329,7 @@ index 861c15dc..3d9b27b7 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +110,7 @@ export default class RenderObject {
+@@ -50,7 +111,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
@@ -2951,7 +3338,7 @@ index 861c15dc..3d9b27b7 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +131,7 @@ export default class RenderObject {
+@@ -71,7 +132,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -2960,7 +3347,7 @@ index 861c15dc..3d9b27b7 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +149,9 @@ export default class RenderObject {
+@@ -89,9 +150,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -2972,7 +3359,7 @@ index 861c15dc..3d9b27b7 100644
  
          return true;
      }
-@@ -109,7 +169,7 @@ export default class RenderObject {
+@@ -109,7 +170,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -2981,7 +3368,7 @@ index 861c15dc..3d9b27b7 100644
      }
  
      getAttributes() {
-@@ -206,6 +266,6 @@ export default class RenderObject {
+@@ -206,6 +267,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -3099,6 +3486,23 @@ index 76dc482e..27997a90 100644
      ) {
          const chainMap = this.getChainMap(passId);
  
+diff --git a/examples-jsm/examples/renderers/common/RenderPipeline.ts b/examples-jsm/examples/renderers/common/RenderPipeline.ts
+index 0ec34b04..573cae2b 100644
+--- a/examples-jsm/examples/renderers/common/RenderPipeline.ts
++++ b/examples-jsm/examples/renderers/common/RenderPipeline.ts
+@@ -1,7 +1,11 @@
+ import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
+ 
+ class RenderPipeline extends Pipeline {
+-    constructor(cacheKey, vertexProgram, fragmentProgram) {
++    vertexProgram: ProgrammableStage;
++    fragmentProgram: ProgrammableStage;
++
++    constructor(cacheKey: string, vertexProgram: ProgrammableStage, fragmentProgram: ProgrammableStage) {
+         super(cacheKey);
+ 
+         this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
 index acf180d8..3e7e9dfd 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
