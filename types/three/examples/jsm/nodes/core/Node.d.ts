@@ -76,7 +76,7 @@ declare class Node extends EventDispatcher<{
     readonly isNode: true;
     readonly id: number;
     self?: this;
-    constructor(nodeType?: null);
+    constructor(nodeType?: string | null);
     set needsUpdate(value: boolean);
     get type(): string | undefined;
     onUpdate(callback: (this: this, frame: NodeFrame) => void, updateType: NodeUpdateType): this;

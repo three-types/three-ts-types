@@ -10,16 +10,18 @@ const files = [
     'nodes/core/NodeParser',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'renderers/common/nodes/NodeBuilderState',
+    'renderers/common/Binding',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',
     'renderers/common/Color4',
     'renderers/common/Constants',
     'renderers/common/DataMap',
     'renderers/common/Info',
-    'renderers/common/RenderContexts',
     'renderers/common/RenderBundle',
     'renderers/common/RenderBundles',
     'renderers/common/RenderContext',
+    'renderers/common/RenderContexts',
     'renderers/common/RenderList',
     'renderers/common/RenderLists',
     'renderers/common/Textures',
@@ -33,6 +35,7 @@ for (const file of files) {
     const fileContents = fs.readFileSync(path.join(inDir, `${file}.d.ts`), { encoding: 'utf-8' });
     const outFile = path.join(outDir, `${file}.d.ts`);
     if (argv[2] === 'copy') {
+        fs.mkdirSync(path.dirname(outFile), { recursive: true });
         fs.writeFileSync(outFile, fileContents);
     } else if (argv[2] === 'check') {
         const outFileContents = fs.readFileSync(outFile, { encoding: 'utf-8' });
