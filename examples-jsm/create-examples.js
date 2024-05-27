@@ -25,6 +25,7 @@ const files = [
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightsNode',
+    'nodes/shadernode/ShaderNode',
     'nodes/Nodes',
     'renderers/common/nodes/NodeBuilderState',
     'renderers/common/nodes/NodeUniformsGroup',
