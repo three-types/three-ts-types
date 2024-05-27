@@ -5,6 +5,8 @@ import prettier from 'prettier';
 
 const files = [
     'nodes/accessors/TextureNode',
+    'nodes/code/CodeNode',
+    'nodes/code/FunctionNode',
     'nodes/core/constants',
     'nodes/core/InputNode',
     'nodes/core/Node',
