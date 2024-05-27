@@ -4,7 +4,9 @@ import * as path from 'node:path';
 import prettier from 'prettier';
 
 const files = [
+    'nodes/accessors/TextureNode',
     'nodes/core/constants',
+    'nodes/core/InputNode',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
     'nodes/core/NodeBuilder',
@@ -18,10 +20,12 @@ const files = [
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
     'nodes/core/UniformGroupNode',
+    'nodes/core/UniformNode',
     'nodes/fog/FogNode',
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightsNode',
+    'nodes/shadernode/ShaderNode',
     'nodes/Nodes',
     'renderers/common/nodes/NodeBuilderState',
     'renderers/common/nodes/NodeUniformsGroup',

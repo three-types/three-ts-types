@@ -11,6 +11,7 @@ const files = [
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
     'renderers/common/nodes/NodeBuilderState',
+    'renderers/common/nodes/Nodes',
     'renderers/common/Binding',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',

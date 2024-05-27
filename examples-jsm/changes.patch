@@ -1,5 +1,214 @@
+diff --git a/examples-jsm/examples/nodes/accessors/TextureNode.ts b/examples-jsm/examples/nodes/accessors/TextureNode.ts
+index 73a989fe..87b7a155 100644
+--- a/examples-jsm/examples/nodes/accessors/TextureNode.ts
++++ b/examples-jsm/examples/nodes/accessors/TextureNode.ts
+@@ -3,13 +3,34 @@ import { uv } from './UVNode.js';
+ import { textureSize } from './TextureSizeNode.js';
+ import { colorSpaceToLinear } from '../display/ColorSpaceNode.js';
+ import { expression } from '../code/ExpressionNode.js';
+-import { addNodeClass } from '../core/Node.js';
++import Node, { addNodeClass } from '../core/Node.js';
+ import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
+-import { addNodeElement, nodeProxy, vec3, nodeObject } from '../shadernode/ShaderNode.js';
++import { addNodeElement, nodeProxy, vec3, nodeObject, ShaderNodeObject } from '../shadernode/ShaderNode.js';
+ import { NodeUpdateType } from '../core/constants.js';
++import { DepthTexture, Texture } from 'three';
++import NodeBuilder from '../core/NodeBuilder.js';
+ 
+-class TextureNode extends UniformNode {
+-    constructor(value, uvNode = null, levelNode = null) {
++class TextureNode extends UniformNode<Texture> {
++    readonly isTextureNode: true;
++
++    uvNode: ShaderNodeObject<Node> | null;
++    levelNode: ShaderNodeObject<Node> | null;
++    compareNode: Node | null;
++    depthNode: Node | null;
++    gradNode: Node | null;
++
++    sampler: boolean;
++    updateMatrix: boolean;
++
++    referenceNode: this | null;
++
++    _value: Texture;
++
++    constructor(
++        value: Texture,
++        uvNode: ShaderNodeObject<Node> | null = null,
++        levelNode: ShaderNodeObject<Node> | null = null,
++    ) {
+         super(value);
+ 
+         this.isTextureNode = true;
+@@ -31,7 +52,7 @@ class TextureNode extends UniformNode {
+         this.setUpdateMatrix(uvNode === null);
+     }
+ 
+-    set value(value) {
++    set value(value: Texture) {
+         if (this.referenceNode) {
+             this.referenceNode.value = value;
+         } else {
+@@ -48,7 +69,7 @@ class TextureNode extends UniformNode {
+     }
+ 
+     getNodeType(/*builder*/) {
+-        if (this.value.isDepthTexture === true) return 'float';
++        if ((this.value as DepthTexture).isDepthTexture === true) return 'float';
+ 
+         return 'vec4';
+     }
+@@ -71,14 +92,14 @@ class TextureNode extends UniformNode {
+         return uniform(texture.matrix).mul(vec3(uvNode, 1)).xy;
+     }
+ 
+-    setUpdateMatrix(value) {
++    setUpdateMatrix(value: boolean) {
+         this.updateMatrix = value;
+         this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
+ 
+         return this;
+     }
+ 
+-    setupUV(builder, uvNode) {
++    setupUV(builder: NodeBuilder, uvNode) {
+         const texture = this.value;
+ 
+         if (
+@@ -93,7 +114,7 @@ class TextureNode extends UniformNode {
+         return uvNode;
+     }
+ 
+-    setup(builder) {
++    setup(builder: NodeBuilder) {
+         const properties = builder.getNodeProperties(this);
+ 
+         //
+@@ -129,11 +150,19 @@ class TextureNode extends UniformNode {
+         properties.depthNode = this.depthNode;
+     }
+ 
+-    generateUV(builder, uvNode) {
++    generateUV(builder: NodeBuilder, uvNode) {
+         return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
+     }
+ 
+-    generateSnippet(builder, textureProperty, uvSnippet, levelSnippet, depthSnippet, compareSnippet, gradSnippet) {
++    generateSnippet(
++        builder: NodeBuilder,
++        textureProperty,
++        uvSnippet,
++        levelSnippet,
++        depthSnippet,
++        compareSnippet,
++        gradSnippet,
++    ) {
+         const texture = this.value;
+ 
+         let snippet;
+@@ -153,7 +182,7 @@ class TextureNode extends UniformNode {
+         return snippet;
+     }
+ 
+-    generate(builder, output) {
++    generate(builder: NodeBuilder, output) {
+         const properties = builder.getNodeProperties(this);
+ 
+         const texture = this.value;
+@@ -219,7 +248,7 @@ class TextureNode extends UniformNode {
+         }
+     }
+ 
+-    setSampler(value) {
++    setSampler(value: boolean) {
+         this.sampler = value;
+ 
+         return this;
+@@ -231,7 +260,7 @@ class TextureNode extends UniformNode {
+ 
+     // @TODO: Move to TSL
+ 
+-    uv(uvNode) {
++    uv(uvNode: ShaderNodeObject<Node> | null) {
+         const textureNode = this.clone();
+         textureNode.uvNode = uvNode;
+         textureNode.referenceNode = this;
+@@ -239,7 +268,7 @@ class TextureNode extends UniformNode {
+         return nodeObject(textureNode);
+     }
+ 
+-    blur(levelNode) {
++    blur(levelNode: ShaderNodeObject<Node>) {
+         const textureNode = this.clone();
+         textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
+         textureNode.referenceNode = this;
+@@ -247,7 +276,7 @@ class TextureNode extends UniformNode {
+         return nodeObject(textureNode);
+     }
+ 
+-    level(levelNode) {
++    level(levelNode: ShaderNodeObject<Node> | null) {
+         const textureNode = this.clone();
+         textureNode.levelNode = levelNode;
+         textureNode.referenceNode = this;
+diff --git a/examples-jsm/examples/nodes/core/InputNode.ts b/examples-jsm/examples/nodes/core/InputNode.ts
+index 4d52ec26..5987158d 100644
+--- a/examples-jsm/examples/nodes/core/InputNode.ts
++++ b/examples-jsm/examples/nodes/core/InputNode.ts
+@@ -1,8 +1,14 @@
+ import Node, { addNodeClass } from './Node.js';
+ import { getValueType, getValueFromType, arrayBufferToBase64 } from './NodeUtils.js';
++import NodeBuilder from './NodeBuilder.js';
+ 
+-class InputNode extends Node {
+-    constructor(value, nodeType = null) {
++class InputNode<TValue> extends Node {
++    readonly isInputNode: true;
++
++    value: TValue;
++    precision: 'low' | 'medium' | 'high' | null;
++
++    constructor(value: TValue, nodeType: string | null = null) {
+         super(nodeType);
+ 
+         this.isInputNode = true;
+@@ -11,7 +17,7 @@ class InputNode extends Node {
+         this.precision = null;
+     }
+ 
+-    getNodeType(/*builder*/) {
++    getNodeType(builder: NodeBuilder) {
+         if (this.nodeType === null) {
+             return getValueType(this.value);
+         }
+@@ -19,11 +25,11 @@ class InputNode extends Node {
+         return this.nodeType;
+     }
+ 
+-    getInputType(builder) {
++    getInputType(builder: NodeBuilder) {
+         return this.getNodeType(builder);
+     }
+ 
+-    setPrecision(precision) {
++    setPrecision(precision: 'low' | 'medium' | 'high' | null) {
+         this.precision = precision;
+ 
+         return this;
+@@ -54,10 +60,6 @@ class InputNode extends Node {
+ 
+         if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
+     }
+-
+-    generate(/*builder, output*/) {
+-        console.warn('Abstract function.');
+-    }
+ }
+ 
+ export default InputNode;
 diff --git a/examples-jsm/examples/nodes/core/Node.ts b/examples-jsm/examples/nodes/core/Node.ts
-index 438c44dd..ec4f8b35 100644
+index 438c44dd..e5816758 100644
 --- a/examples-jsm/examples/nodes/core/Node.ts
 +++ b/examples-jsm/examples/nodes/core/Node.ts
 @@ -2,13 +2,95 @@ import { EventDispatcher } from 'three';
@@ -118,7 +327,7 @@ index 438c44dd..ec4f8b35 100644
      }
  
 -    onUpdate(callback, updateType) {
-+    onUpdate(callback: (this: this, frame: NodeFrame) => void, updateType: NodeUpdateType) {
++    onUpdate(callback: (this: this, frame: NodeFrame) => unknown, updateType: NodeUpdateType) {
          this.updateType = updateType;
          this.update = callback.bind(this.getSelf());
  
@@ -141,7 +350,7 @@ index 438c44dd..ec4f8b35 100644
      }
  
 -    onReference(callback) {
-+    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => this) {
++    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown) {
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
@@ -150,7 +359,7 @@ index 438c44dd..ec4f8b35 100644
      }
  
 -    updateReference(/*state*/) {
-+    updateReference(state: NodeBuilder | NodeFrame) {
++    updateReference(state: NodeBuilder | NodeFrame): unknown {
          return this;
      }
  
@@ -207,7 +416,7 @@ index 438c44dd..ec4f8b35 100644
      }
  
 -    setup(builder) {
-+    setup(builder: NodeBuilder): Node | null {
++    setup(builder: NodeBuilder): unknown {
          const nodeProperties = builder.getNodeProperties(this);
  
          for (const childNode of this.getChildren()) {
@@ -428,7 +637,7 @@ index 438c44dd..ec4f8b35 100644
  export default Node;
  
 -export function addNodeClass(type, nodeClass) {
-+export function addNodeClass(type: string, nodeClass: typeof Node) {
++export function addNodeClass(type: string, nodeClass: { new (...args: any[]): Node }) {
      if (typeof nodeClass !== 'function' || !type) throw new Error(`Node class ${type} is not a class`);
      if (NodeClasses.has(type)) {
          console.warn(`Redefinition of node class ${type}`);
@@ -1186,6 +1395,96 @@ index f8bb2b37..cee70486 100644
          if (value === true) this.version++;
      }
  }
+diff --git a/examples-jsm/examples/nodes/core/UniformNode.ts b/examples-jsm/examples/nodes/core/UniformNode.ts
+index 90e86648..0987ac55 100644
+--- a/examples-jsm/examples/nodes/core/UniformNode.ts
++++ b/examples-jsm/examples/nodes/core/UniformNode.ts
+@@ -1,10 +1,17 @@
+ import InputNode from './InputNode.js';
+-import { objectGroup } from './UniformGroupNode.js';
+-import { addNodeClass } from './Node.js';
++import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
++import Node, { addNodeClass } from './Node.js';
+ import { nodeObject, getConstNodeType } from '../shadernode/ShaderNode.js';
++import NodeBuilder from './NodeBuilder.js';
++import NodeFrame from './NodeFrame.js';
++import { NodeUpdateType } from './constants.js';
+ 
+-class UniformNode extends InputNode {
+-    constructor(value, nodeType = null) {
++class UniformNode<TValue> extends InputNode<TValue> {
++    readonly isUniformNode: true;
++
++    groupNode: UniformGroupNode;
++
++    constructor(value: TValue, nodeType: string | null = null) {
+         super(value, nodeType);
+ 
+         this.isUniformNode = true;
+@@ -12,7 +19,7 @@ class UniformNode extends InputNode {
+         this.groupNode = objectGroup;
+     }
+ 
+-    setGroup(group) {
++    setGroup(group: UniformGroupNode) {
+         this.groupNode = group;
+ 
+         return this;
+@@ -22,11 +29,11 @@ class UniformNode extends InputNode {
+         return this.groupNode;
+     }
+ 
+-    getUniformHash(builder) {
++    getUniformHash(builder: NodeBuilder) {
+         return this.getHash(builder);
+     }
+ 
+-    onUpdate(callback, updateType) {
++    onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType) {
+         const self = this.getSelf();
+ 
+         callback = callback.bind(self);
+@@ -40,12 +47,12 @@ class UniformNode extends InputNode {
+         }, updateType);
+     }
+ 
+-    generate(builder, output) {
++    generate(builder: NodeBuilder, output: string | null) {
+         const type = this.getNodeType(builder);
+ 
+         const hash = this.getUniformHash(builder);
+ 
+-        let sharedNode = builder.getNodeFromHash(hash);
++        let sharedNode = builder.getNodeFromHash(hash) as this;
+ 
+         if (sharedNode === undefined) {
+             builder.setHashNode(this, hash);
+@@ -58,7 +65,7 @@ class UniformNode extends InputNode {
+         const nodeUniform = builder.getUniformFromNode(
+             sharedNode,
+             sharedNodeType,
+-            builder.shaderStage,
++            builder.shaderStage!,
+             builder.context.label,
+         );
+         const propertyName = builder.getPropertyName(nodeUniform);
+@@ -71,11 +78,14 @@ class UniformNode extends InputNode {
+ 
+ export default UniformNode;
+ 
+-export const uniform = (arg1, arg2) => {
++export const uniform = <TValue>(arg1: InputNode<TValue> | TValue, arg2?: Node | string) => {
+     const nodeType = getConstNodeType(arg2 || arg1);
+ 
+     // @TODO: get ConstNode from .traverse() in the future
+-    const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
++    const value =
++        arg1 && (arg1 as Node).isNode === true
++            ? (arg1.node && arg1.node.value) || (arg1 as InputNode<TValue>).value
++            : arg1;
+ 
+     return nodeObject(new UniformNode(value, nodeType));
+ };
 diff --git a/examples-jsm/examples/nodes/core/constants.ts b/examples-jsm/examples/nodes/core/constants.ts
 index 3b01a9a6..5ff6ad5f 100644
 --- a/examples-jsm/examples/nodes/core/constants.ts
@@ -1265,6 +1564,221 @@ index b3695ea8..603a4520 100644
          const lightNodes = [];
  
          lights = sortLights(lights);
+diff --git a/examples-jsm/examples/nodes/shadernode/ShaderNode.ts b/examples-jsm/examples/nodes/shadernode/ShaderNode.ts
+index d0dca242..dd91e4fc 100644
+--- a/examples-jsm/examples/nodes/shadernode/ShaderNode.ts
++++ b/examples-jsm/examples/nodes/shadernode/ShaderNode.ts
+@@ -11,6 +11,43 @@ import { getValueFromType, getValueType } from '../core/NodeUtils.js';
+ 
+ let currentStack = null;
+ 
++export interface NodeElements {
++    append: typeof append;
++
++    toColor: typeof color;
++    toFloat: typeof float;
++    toInt: typeof int;
++    toUint: typeof uint;
++    toBool: typeof bool;
++    toVec2: typeof vec2;
++    toIvec2: typeof ivec2;
++    toUvec2: typeof uvec2;
++    toBvec2: typeof bvec2;
++    toVec3: typeof vec3;
++    toIvec3: typeof ivec3;
++    toUvec3: typeof uvec3;
++    toBvec3: typeof bvec3;
++    toVec4: typeof vec4;
++    toIvec4: typeof ivec4;
++    toUvec4: typeof uvec4;
++    toBvec4: typeof bvec4;
++    toMat2: typeof mat2;
++    toImat2: typeof imat2;
++    toUmat2: typeof umat2;
++    toBmat2: typeof bmat2;
++    toMat3: typeof mat3;
++    toImat3: typeof imat3;
++    toUmat3: typeof umat3;
++    toBmat3: typeof bmat3;
++    toMat4: typeof mat4;
++    toImat4: typeof imat4;
++    toUmat4: typeof umat4;
++    toBmat4: typeof bmat4;
++
++    element: typeof element;
++    convert: typeof convert;
++}
++
+ const NodeElements = new Map(); // @TODO: Currently only a few nodes are added, probably also add others
+ 
+ export function addNodeElement(name, nodeElement) {
+@@ -24,6 +61,141 @@ export function addNodeElement(name, nodeElement) {
+     NodeElements.set(name, nodeElement);
+ }
+ 
++export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
++
++export type SwizzleOption = Exclude<
++    | `${SwizzleCharacter}`
++    | `${SwizzleCharacter}${SwizzleCharacter}`
++    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`
++    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`,
++    'abs' | 'sqrt'
++>;
++
++export type Swizzable<T extends Node = Node> = T & {
++    [key in SwizzleOption | number]: ShaderNodeObject<Node>;
++};
++
++export type ShaderNodeObject<T extends Node> = T & {
++    [Key in keyof NodeElements]: T extends { [K in Key]: infer M }
++        ? M
++        : NodeElements[Key] extends (node: T, ...args: infer Args) => infer R
++          ? (...args: Args) => R
++          : never;
++} & {
++    [Key in keyof NodeElements as `${Key}Assign`]: T extends { [K in Key]: infer M }
++        ? M
++        : NodeElements[Key] extends (node: T, ...args: infer Args) => unknown
++          ? (...args: Args) => ShaderNodeObject<T>
++          : never;
++} & Swizzable<T>;
++
++/** anything that can be passed to {@link nodeObject} and returns a proxy */
++export type NodeRepresentation<T extends Node = Node> = number | boolean | Node | ShaderNodeObject<T>;
++
++/** anything that can be passed to {@link nodeObject} */
++export type NodeObjectOption = NodeRepresentation | string;
++
++// same logic as in ShaderNodeObject: number,boolean,node->ShaderNodeObject, otherwise do nothing
++export type NodeObject<T> = T extends Node
++    ? ShaderNodeObject<T>
++    : T extends number | boolean
++      ? ShaderNodeObject<ConstNode<number | boolean>>
++      : T;
++
++// opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
++type Proxied<T> = T extends Node ? NodeRepresentation<T> : T;
++// https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
++export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
++export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
++type RemoveTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X] ? X : [];
++type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X, unknown] ? X : [];
++
++/**
++ * Temporary type to save signatures of 4 constructors. Each element may be tuple or undefined.
++ *
++ * We use an object instead of tuple or union as it makes stuff easier, especially in Typescript 4.0.
++ */
++interface Construtors<
++    A extends undefined | [...unknown[]],
++    B extends undefined | [...unknown[]],
++    C extends undefined | [...unknown[]],
++    D extends undefined | [...unknown[]],
++> {
++    a: A;
++    b: B;
++    c: C;
++    d: D;
++}
++
++/**
++ * Returns all constructors
++ *
++ * <https://github.com/microsoft/TypeScript/issues/37079>
++ * <https://stackoverflow.com/a/52761156/1623826>
++ */
++type OverloadedConstructorsOf<T> = T extends {
++    new (...args: infer A1): unknown;
++    new (...args: infer A2): unknown;
++    new (...args: infer A3): unknown;
++    new (...args: infer A4): unknown;
++}
++    ? Construtors<A1, A2, A3, A4>
++    : T extends {
++            new (...args: infer A1): unknown;
++            new (...args: infer A2): unknown;
++            new (...args: infer A3): unknown;
++        }
++      ? Construtors<A1, A2, A3, undefined>
++      : T extends {
++              new (...args: infer A1): unknown;
++              new (...args: infer A2): unknown;
++          }
++        ? Construtors<A1, A2, undefined, undefined>
++        : T extends new (...args: infer A) => unknown
++          ? Construtors<A, undefined, undefined, undefined>
++          : Construtors<undefined, undefined, undefined, undefined>;
++
++type AnyConstructors = Construtors<any, any, any, any>;
++
++/**
++ * Returns all constructors where the first paramter is assignable to given "scope"
++ */
++// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
++type FilterConstructorsByScope<T extends AnyConstructors, S> = {
++    a: S extends T['a'][0] ? T['a'] : undefined;
++    b: S extends T['b'][0] ? T['b'] : undefined;
++    c: S extends T['c'][0] ? T['c'] : undefined;
++    d: S extends T['d'][0] ? T['d'] : undefined;
++};
++/**
++ * "flattens" the tuple into an union type
++ */
++type ConstructorUnion<T extends AnyConstructors> =
++    | Exclude<T['a'], undefined>
++    | Exclude<T['b'], undefined>
++    | Exclude<T['c'], undefined>
++    | Exclude<T['d'], undefined>;
++
++/**
++ * Extract list of possible scopes - union of the first paramter
++ * of all constructors, should it be string
++ */
++type ExtractScopes<T extends AnyConstructors> =
++    | (T['a'][0] extends string ? T['a'][0] : never)
++    | (T['b'][0] extends string ? T['b'][0] : never)
++    | (T['c'][0] extends string ? T['c'][0] : never)
++    | (T['d'][0] extends string ? T['d'][0] : never);
++
++type GetConstructorsByScope<T, S> = ConstructorUnion<FilterConstructorsByScope<OverloadedConstructorsOf<T>, S>>;
++type GetConstructors<T> = ConstructorUnion<OverloadedConstructorsOf<T>>;
++type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
++
++export type ConvertType = (...params: unknown[]) => ShaderNodeObject<Node>;
++
++type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
++type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
++type ConstructedNode<T> = T extends new (...args: any[]) => infer R ? (R extends Node ? R : never) : never;
++
+ const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
+ 
+ const shaderNodeHandler = {
+@@ -385,7 +557,23 @@ export function ShaderNode(jsFunc) {
+ export const nodeObject = (val, altType = null) => /* new */ ShaderNodeObject(val, altType);
+ export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
+ export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altType);
+-export const nodeProxy = (...params) => new ShaderNodeProxy(...params);
++
++interface NodeProxy {
++    <T>(nodeClass: T): (...params: ProxiedTuple<GetConstructors<T>>) => ShaderNodeObject<ConstructedNode<T>>;
++    <T, S extends GetPossibleScopes<T>>(
++        nodeClass: T,
++        scope: S,
++    ): (...params: ProxiedTuple<RemoveTail<GetConstructorsByScope<T, S>>>) => ShaderNodeObject<ConstructedNode<T>>;
++    <T, S extends GetPossibleScopes<T>>(
++        nodeClass: T,
++        scope: S,
++        factor: NodeObjectOption,
++    ): (
++        ...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>
++    ) => ShaderNodeObject<ConstructedNode<T>>;
++}
++
++export const nodeProxy: NodeProxy = (...params) => new ShaderNodeProxy(...params);
+ export const nodeImmutable = (...params) => new ShaderNodeImmutable(...params);
+ 
+ export const tslFn = jsFunc => {
 diff --git a/examples-jsm/examples/renderers/common/Animation.ts b/examples-jsm/examples/renderers/common/Animation.ts
 index 0b00319a..c190633b 100644
 --- a/examples-jsm/examples/renderers/common/Animation.ts
@@ -3837,7 +4351,7 @@ index 0bbc1add..783d8db1 100644
  
          this.id = id++;
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..f8f1f74f 100644
+index 86df5654..1b9cfdb3 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 @@ -2,10 +2,20 @@ import DataMap from '../DataMap.js';
@@ -3861,9 +4375,11 @@ index 86df5654..f8f1f74f 100644
  } from 'three';
  import {
      NodeFrame,
-@@ -23,20 +33,63 @@ import {
+@@ -22,21 +32,73 @@ import {
+     normalWorld,
      pmremTexture,
      viewportTopLeft,
++    ShaderNodeObject,
  } from '../../../nodes/Nodes.js';
 +import Renderer from '../Renderer.js';
 +import Backend from '../Backend.js';
@@ -3874,6 +4390,14 @@ index 86df5654..f8f1f74f 100644
 +import ComputeNode from '../../../nodes/gpgpu/ComputeNode.js';
 +import Node from '../../../nodes/core/Node.js';
 +import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
++
++declare module 'three' {
++    interface Scene {
++        environmentNode?: Node | null | undefined;
++        backgroundNode?: Node | null | undefined;
++        fogNode?: Node | null | undefined;
++    }
++}
 +
 +interface NodeUniformsGroupData {
 +    renderId?: number | undefined;
@@ -3929,7 +4453,7 @@ index 86df5654..f8f1f74f 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -76,7 +129,7 @@ class Nodes extends DataMap {
+@@ -76,7 +138,7 @@ class Nodes extends DataMap {
  
          // other groups are updated just when groupNode.needsUpdate is true
  
@@ -3938,7 +4462,7 @@ index 86df5654..f8f1f74f 100644
  
          let groupData = this.groupsData.get(groupChain);
          if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -90,11 +143,11 @@ class Nodes extends DataMap {
+@@ -90,11 +152,11 @@ class Nodes extends DataMap {
          return false;
      }
  
@@ -3952,7 +4476,7 @@ index 86df5654..f8f1f74f 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -133,20 +186,20 @@ class Nodes extends DataMap {
+@@ -133,20 +195,20 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -3978,7 +4502,7 @@ index 86df5654..f8f1f74f 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -163,7 +216,7 @@ class Nodes extends DataMap {
+@@ -163,7 +225,7 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -3987,7 +4511,7 @@ index 86df5654..f8f1f74f 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -176,20 +229,20 @@ class Nodes extends DataMap {
+@@ -176,20 +238,20 @@ class Nodes extends DataMap {
          );
      }
  
@@ -4013,7 +4537,7 @@ index 86df5654..f8f1f74f 100644
          const callId = this.renderer.info.calls;
  
          let cacheKeyData = this.callHashCache.get(chain);
-@@ -215,7 +268,7 @@ class Nodes extends DataMap {
+@@ -215,7 +277,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -4022,7 +4546,7 @@ index 86df5654..f8f1f74f 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -225,7 +278,7 @@ class Nodes extends DataMap {
+@@ -225,7 +287,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -4031,7 +4555,7 @@ index 86df5654..f8f1f74f 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -234,15 +287,15 @@ class Nodes extends DataMap {
+@@ -234,15 +296,15 @@ class Nodes extends DataMap {
                  let backgroundNode = null;
  
                  if (
@@ -4054,7 +4578,7 @@ index 86df5654..f8f1f74f 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -254,7 +307,7 @@ class Nodes extends DataMap {
+@@ -254,7 +316,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -4063,7 +4587,7 @@ index 86df5654..f8f1f74f 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -262,9 +315,9 @@ class Nodes extends DataMap {
+@@ -262,9 +324,9 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -4075,7 +4599,7 @@ index 86df5654..f8f1f74f 100644
                      fogNode = rangeFog(
                          reference('color', 'color', fog),
                          reference('near', 'float', fog),
-@@ -283,7 +336,7 @@ class Nodes extends DataMap {
+@@ -283,7 +345,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -4084,7 +4608,7 @@ index 86df5654..f8f1f74f 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -291,7 +344,7 @@ class Nodes extends DataMap {
+@@ -291,7 +353,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
@@ -4093,7 +4617,7 @@ index 86df5654..f8f1f74f 100644
                      environmentNode = cubeTexture(environment);
                  } else if (environment.isTexture === true) {
                      environmentNode = texture(environment);
-@@ -308,7 +361,13 @@ class Nodes extends DataMap {
+@@ -308,7 +370,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -4108,7 +4632,7 @@ index 86df5654..f8f1f74f 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -319,7 +378,7 @@ class Nodes extends DataMap {
+@@ -319,7 +387,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -4117,16 +4641,18 @@ index 86df5654..f8f1f74f 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -329,7 +388,7 @@ class Nodes extends DataMap {
+@@ -329,8 +397,8 @@ class Nodes extends DataMap {
          );
      }
  
 -    getOutputNode(outputTexture) {
+-        let output = texture(outputTexture, viewportTopLeft);
 +    getOutputNode(outputTexture: Texture) {
-         let output = texture(outputTexture, viewportTopLeft);
++        let output: ShaderNodeObject<Node> = texture(outputTexture, viewportTopLeft);
  
          if (this.isToneMappingState) {
-@@ -347,7 +406,7 @@ class Nodes extends DataMap {
+             if (this.renderer.toneMappingNode) {
+@@ -347,7 +415,7 @@ class Nodes extends DataMap {
          return output;
      }
  
@@ -4135,7 +4661,7 @@ index 86df5654..f8f1f74f 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -356,7 +415,7 @@ class Nodes extends DataMap {
+@@ -356,7 +424,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -4144,7 +4670,7 @@ index 86df5654..f8f1f74f 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -365,7 +424,7 @@ class Nodes extends DataMap {
+@@ -365,7 +433,7 @@ class Nodes extends DataMap {
          }
      }
  

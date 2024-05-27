@@ -79,13 +79,13 @@ declare class Node extends EventDispatcher<{
     constructor(nodeType?: string | null);
     set needsUpdate(value: boolean);
     get type(): string | undefined;
-    onUpdate(callback: (this: this, frame: NodeFrame) => void, updateType: NodeUpdateType): this;
+    onUpdate(callback: (this: this, frame: NodeFrame) => unknown, updateType: NodeUpdateType): this;
     onFrameUpdate(callback: (this: this, frame: NodeFrame) => void): this;
     onRenderUpdate(callback: (this: this, frame: NodeFrame) => void): this;
     onObjectUpdate(callback: (this: this, frame: NodeFrame) => void): this;
-    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => this): this;
+    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown): this;
     getSelf(): this;
-    updateReference(state: NodeBuilder | NodeFrame): this;
+    updateReference(state: NodeBuilder | NodeFrame): unknown;
     isGlobal(builder: NodeBuilder): boolean;
     getChildren(): Generator<Node, void, unknown>;
     dispose(): void;
@@ -97,8 +97,8 @@ declare class Node extends EventDispatcher<{
     getElementType(builder: NodeBuilder): "bool" | "int" | "float" | "vec2" | "vec3" | "vec4" | "uint" | null;
     getNodeType(builder: NodeBuilder): string | null;
     getShared(builder: NodeBuilder): Node;
-    setup(builder: NodeBuilder): Node | null;
-    construct(builder: NodeBuilder): Node | null;
+    setup(builder: NodeBuilder): unknown;
+    construct(builder: NodeBuilder): unknown;
     increaseUsage(builder: NodeBuilder): number;
     analyze(builder: NodeBuilder): void;
     generate(builder: NodeBuilder, output?: string | null): string | null | undefined;
@@ -111,5 +111,7 @@ declare class Node extends EventDispatcher<{
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
 export default Node;
-export declare function addNodeClass(type: string, nodeClass: typeof Node): void;
+export declare function addNodeClass(type: string, nodeClass: {
+    new(...args: any[]): Node;
+}): void;
 export declare function createNodeFromType(type: string): Node | undefined;
