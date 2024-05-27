@@ -5367,7 +5367,7 @@ index 0bbc1add..570a79ac 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..1b9cfdb3 100644
+index 86df5654..b2b73dbb 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 @@ -2,10 +2,20 @@ import DataMap from '../DataMap.js';
@@ -5391,7 +5391,7 @@ index 86df5654..1b9cfdb3 100644
  } from 'three';
  import {
      NodeFrame,
-@@ -22,21 +32,73 @@ import {
+@@ -22,21 +32,65 @@ import {
      normalWorld,
      pmremTexture,
      viewportTopLeft,
@@ -5407,14 +5407,6 @@ index 86df5654..1b9cfdb3 100644
 +import Node from '../../../nodes/core/Node.js';
 +import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
 +
-+declare module 'three' {
-+    interface Scene {
-+        environmentNode?: Node | null | undefined;
-+        backgroundNode?: Node | null | undefined;
-+        fogNode?: Node | null | undefined;
-+    }
-+}
-+
 +interface NodeUniformsGroupData {
 +    renderId?: number | undefined;
 +    frameId?: number | undefined;
@@ -5427,7 +5419,9 @@ index 86df5654..1b9cfdb3 100644
 +interface ComputeNodeData {
 +    nodeBuilderState?: NodeBuilderState | undefined;
 +}
-+
+ 
+-class Nodes extends DataMap {
+-    constructor(renderer, backend) {
 +interface SceneData {
 +    background?: Color | Texture | CubeTexture | undefined;
 +    backgroundNode?: Node | undefined;
@@ -5436,9 +5430,7 @@ index 86df5654..1b9cfdb3 100644
 +    environment?: Texture | undefined;
 +    environmentNode?: Node | undefined;
 +}
- 
--class Nodes extends DataMap {
--    constructor(renderer, backend) {
++
 +class Nodes extends DataMap<{
 +    nodeUniformsGroup: { key: NodeUniformsGroup; value: NodeUniformsGroupData };
 +    renderObject: { key: RenderObject; value: RenderObjectData };
@@ -5469,7 +5461,7 @@ index 86df5654..1b9cfdb3 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -76,7 +138,7 @@ class Nodes extends DataMap {
+@@ -76,7 +130,7 @@ class Nodes extends DataMap {
  
          // other groups are updated just when groupNode.needsUpdate is true
  
@@ -5478,7 +5470,7 @@ index 86df5654..1b9cfdb3 100644
  
          let groupData = this.groupsData.get(groupChain);
          if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -90,11 +152,11 @@ class Nodes extends DataMap {
+@@ -90,11 +144,11 @@ class Nodes extends DataMap {
          return false;
      }
  
@@ -5492,7 +5484,7 @@ index 86df5654..1b9cfdb3 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -133,20 +195,20 @@ class Nodes extends DataMap {
+@@ -133,20 +187,20 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -5518,7 +5510,7 @@ index 86df5654..1b9cfdb3 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -163,7 +225,7 @@ class Nodes extends DataMap {
+@@ -163,7 +217,7 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -5527,23 +5519,34 @@ index 86df5654..1b9cfdb3 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -176,20 +238,20 @@ class Nodes extends DataMap {
+@@ -176,20 +230,28 @@ class Nodes extends DataMap {
          );
      }
  
 -    getEnvironmentNode(scene) {
+-        return scene.environmentNode || this.get(scene).environmentNode || null;
 +    getEnvironmentNode(scene: Scene) {
-         return scene.environmentNode || this.get(scene).environmentNode || null;
++        return (
++            (scene as { environmentNode?: Node | null | undefined }).environmentNode ||
++            this.get(scene).environmentNode ||
++            null
++        );
      }
  
 -    getBackgroundNode(scene) {
+-        return scene.backgroundNode || this.get(scene).backgroundNode || null;
 +    getBackgroundNode(scene: Scene) {
-         return scene.backgroundNode || this.get(scene).backgroundNode || null;
++        return (
++            (scene as { backgroundNode?: Node | null | undefined }).backgroundNode ||
++            this.get(scene).backgroundNode ||
++            null
++        );
      }
  
 -    getFogNode(scene) {
+-        return scene.fogNode || this.get(scene).fogNode || null;
 +    getFogNode(scene: Scene) {
-         return scene.fogNode || this.get(scene).fogNode || null;
++        return (scene as { fogNode?: Node | null | undefined }).fogNode || this.get(scene).fogNode || null;
      }
  
 -    getCacheKey(scene, lightsNode) {
