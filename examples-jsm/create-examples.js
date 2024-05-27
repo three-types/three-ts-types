@@ -19,6 +19,7 @@ const files = [
     'nodes/core/NodeUtils',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'nodes/core/StackNode',
     'nodes/core/UniformGroupNode',
     'nodes/core/UniformNode',
     'nodes/fog/FogNode',
