@@ -2411,7 +2411,7 @@ index e233beca..c4e8a2e9 100644
  
      dispose() {
 diff --git a/examples-jsm/examples/renderers/common/ClippingContext.ts b/examples-jsm/examples/renderers/common/ClippingContext.ts
-index 312e0b77..d2b44082 100644
+index 312e0b77..67dd83d8 100644
 --- a/examples-jsm/examples/renderers/common/ClippingContext.ts
 +++ b/examples-jsm/examples/renderers/common/ClippingContext.ts
 @@ -1,10 +1,26 @@
@@ -2447,7 +2447,7 @@ index 312e0b77..d2b44082 100644
      }
  
 -    projectPlanes(source, offset) {
-+    projectPlanes(source: Plane[], offset: number) {
++    projectPlanes(source: readonly Plane[], offset: number) {
          const l = source.length;
          const planes = this.planes;
  
@@ -3694,7 +3694,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..d0457be2 100644
+index acf180d8..3ca9d4cc 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
 @@ -30,10 +30,40 @@ import {
@@ -3774,7 +3774,7 @@ index acf180d8..d0457be2 100644
 +    depth: boolean;
 +    stencil: boolean;
 +
-+    clippingPlanes: Plane[];
++    clippingPlanes: readonly Plane[];
 +
 +    info: Info;
 +
