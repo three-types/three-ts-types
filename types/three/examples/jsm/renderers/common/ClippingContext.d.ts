@@ -11,7 +11,7 @@ declare class ClippingContext {
     viewNormalMatrix: Matrix3;
     viewMatrix?: Matrix4 | undefined;
     constructor();
-    projectPlanes(source: Plane[], offset: number): void;
+    projectPlanes(source: readonly Plane[], offset: number): void;
     updateGlobal(renderer: Renderer, camera: Camera): void;
     update(parent: ClippingContext, material: Material): void;
 }

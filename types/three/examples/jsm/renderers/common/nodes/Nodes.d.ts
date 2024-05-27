@@ -12,13 +12,6 @@ import Renderer from "../Renderer.js";
 import RenderObject from "../RenderObject.js";
 import NodeBuilderState from "./NodeBuilderState.js";
 import NodeUniformsGroup from "./NodeUniformsGroup.js";
-declare module "three" {
-    interface Scene {
-        environmentNode?: Node | null | undefined;
-        backgroundNode?: Node | null | undefined;
-        fogNode?: Node | null | undefined;
-    }
-}
 interface NodeUniformsGroupData {
     renderId?: number | undefined;
     frameId?: number | undefined;
@@ -72,7 +65,7 @@ declare class Nodes extends DataMap<{
     getForRender(renderObject: RenderObject): NodeBuilderState;
     delete(
         object: NodeUniformsGroup | RenderObject | ComputeNode | Scene,
-    ): RenderObjectData | SceneData | NodeUniformsGroupData | ComputeNodeData;
+    ): SceneData | RenderObjectData | NodeUniformsGroupData | ComputeNodeData;
     getForCompute(computeNode: ComputeNode): NodeBuilderState;
     _createNodeBuilderState(nodeBuilder: NodeBuilder): NodeBuilderState;
     getEnvironmentNode(scene: Scene): Node | null;

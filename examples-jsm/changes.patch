@@ -674,7 +674,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..065940d7 100644
+index ebdc13ff..664d5325 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
@@ -699,7 +699,7 @@ index ebdc13ff..065940d7 100644
  } from 'three';
  
  import { stack } from './StackNode.js';
-@@ -39,6 +45,15 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
+@@ -39,6 +45,16 @@ import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
  
  import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
@@ -712,10 +712,11 @@ index ebdc13ff..065940d7 100644
 +import ClippingContext from '../../renderers/common/ClippingContext.js';
 +import Binding from '../../renderers/common/Binding.js';
 +import NodeUniformsGroup from '../../renderers/common/nodes/NodeUniformsGroup.js';
++import UniformNode from './UniformNode.js';
  
  const uniformsGroupCache = new ChainMap();
  
-@@ -67,10 +82,72 @@ const toFloat = value => {
+@@ -67,10 +83,77 @@ const toFloat = value => {
  };
  
  class NodeBuilder {
@@ -745,7 +746,12 @@ index ebdc13ff..065940d7 100644
 +    flowNodes: { vertex: Node[]; fragment: Node[]; compute: Node[] };
 +    // TODO
 +    // flowCode
-+    uniforms: { vertex: NodeUniform[]; fragment: NodeUniform[]; compute: NodeUniform[]; index: number };
++    uniforms: {
++        vertex: NodeUniform<unknown>[];
++        fragment: NodeUniform<unknown>[];
++        compute: NodeUniform<unknown>[];
++        index: number;
++    };
 +    structs: { vertex: Node[]; fragment: Node[]; compute: Node[]; index: number };
 +    bindings: { vertex: Binding[]; fragment: Binding[]; compute: Binding[] };
 +    bindingsOffset: { vertex: number; fragment: number; compute: number };
@@ -791,7 +797,7 @@ index ebdc13ff..065940d7 100644
          this.renderer = renderer;
          this.parser = parser;
          this.scene = scene;
-@@ -124,7 +201,7 @@ class NodeBuilder {
+@@ -124,7 +207,7 @@ class NodeBuilder {
          this.buildStage = null;
      }
  
@@ -800,7 +806,7 @@ index ebdc13ff..065940d7 100644
          return new RenderTarget(width, height, options);
      }
  
-@@ -138,17 +215,17 @@ class NodeBuilder {
+@@ -138,17 +221,17 @@ class NodeBuilder {
          return new PMREMGenerator(this.renderer);
      }
  
@@ -822,7 +828,7 @@ index ebdc13ff..065940d7 100644
  
                  let sharedBinding = uniformsGroupCache.get(nodes);
  
-@@ -181,11 +258,11 @@ class NodeBuilder {
+@@ -181,11 +264,11 @@ class NodeBuilder {
          return bindingsArray;
      }
  
@@ -836,7 +842,7 @@ index ebdc13ff..065940d7 100644
          if (this.nodes.includes(node) === false) {
              this.nodes.push(node);
  
-@@ -212,7 +289,7 @@ class NodeBuilder {
+@@ -212,7 +295,7 @@ class NodeBuilder {
          return this.chaining[this.chaining.length - 1];
      }
  
@@ -845,7 +851,7 @@ index ebdc13ff..065940d7 100644
          /*
  		if ( this.chaining.indexOf( node ) !== - 1 ) {
  
-@@ -224,7 +301,7 @@ class NodeBuilder {
+@@ -224,7 +307,7 @@ class NodeBuilder {
          this.chaining.push(node);
      }
  
@@ -854,7 +860,7 @@ index ebdc13ff..065940d7 100644
          const lastChain = this.chaining.pop();
  
          if (lastChain !== node) {
-@@ -232,15 +309,15 @@ class NodeBuilder {
+@@ -232,15 +315,15 @@ class NodeBuilder {
          }
      }
  
@@ -873,7 +879,7 @@ index ebdc13ff..065940d7 100644
          this.flowNodes[shaderStage].push(node);
  
          return node;
-@@ -254,7 +331,7 @@ class NodeBuilder {
+@@ -254,7 +337,7 @@ class NodeBuilder {
          return this.context;
      }
  
@@ -882,7 +888,7 @@ index ebdc13ff..065940d7 100644
          this.cache = cache;
      }
  
-@@ -262,7 +339,7 @@ class NodeBuilder {
+@@ -262,7 +345,7 @@ class NodeBuilder {
          return this.cache;
      }
  
@@ -891,7 +897,7 @@ index ebdc13ff..065940d7 100644
          return false;
      }
  
-@@ -332,7 +409,7 @@ class NodeBuilder {
+@@ -332,7 +415,7 @@ class NodeBuilder {
          throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
      }
  
@@ -900,7 +906,7 @@ index ebdc13ff..065940d7 100644
          if (type === 'color') return 'vec3';
  
          return type;
-@@ -378,7 +455,7 @@ class NodeBuilder {
+@@ -378,7 +461,7 @@ class NodeBuilder {
          return /mat\d/.test(type);
      }
  
@@ -909,7 +915,7 @@ index ebdc13ff..065940d7 100644
          return (
              type === 'void' ||
              type === 'property' ||
-@@ -405,7 +482,7 @@ class NodeBuilder {
+@@ -405,7 +488,7 @@ class NodeBuilder {
          return 'float';
      }
  
@@ -918,7 +924,7 @@ index ebdc13ff..065940d7 100644
          if (type === 'mat2') return 'vec2';
          if (type === 'mat3') return 'vec3';
          if (type === 'mat4') return 'vec4';
-@@ -413,7 +490,7 @@ class NodeBuilder {
+@@ -413,7 +496,7 @@ class NodeBuilder {
          return this.getComponentType(type);
      }
  
@@ -927,7 +933,7 @@ index ebdc13ff..065940d7 100644
          type = this.getVectorType(type);
  
          if (type === 'float' || type === 'bool' || type === 'int' || type === 'uint') return type;
-@@ -429,7 +506,7 @@ class NodeBuilder {
+@@ -429,7 +512,7 @@ class NodeBuilder {
          return 'float';
      }
  
@@ -936,7 +942,7 @@ index ebdc13ff..065940d7 100644
          if (type === 'color') return 'vec3';
          if (type === 'texture' || type === 'cubeTexture' || type === 'storageTexture' || type === 'texture3D')
              return 'vec4';
-@@ -468,7 +545,7 @@ class NodeBuilder {
+@@ -468,7 +551,7 @@ class NodeBuilder {
          return this.getTypeFromLength(itemSize, arrayType);
      }
  
@@ -945,7 +951,7 @@ index ebdc13ff..065940d7 100644
          const vecType = this.getVectorType(type);
          const vecNum = /vec([2-4])/.exec(vecType);
  
-@@ -515,7 +592,11 @@ class NodeBuilder {
+@@ -515,7 +598,11 @@ class NodeBuilder {
          return lastStack;
      }
  
@@ -958,7 +964,7 @@ index ebdc13ff..065940d7 100644
          cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
  
          let nodeData = cache.getNodeData(node);
-@@ -528,16 +609,16 @@ class NodeBuilder {
+@@ -528,16 +615,16 @@ class NodeBuilder {
  
          if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};
  
@@ -978,7 +984,7 @@ index ebdc13ff..065940d7 100644
          const nodeData = this.getDataFromNode(node);
  
          let bufferAttribute = nodeData.bufferAttribute;
-@@ -555,7 +636,7 @@ class NodeBuilder {
+@@ -555,7 +642,7 @@ class NodeBuilder {
          return bufferAttribute;
      }
  
@@ -987,16 +993,21 @@ index ebdc13ff..065940d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          if (nodeData.structType === undefined) {
-@@ -570,7 +651,7 @@ class NodeBuilder {
+@@ -570,7 +657,12 @@ class NodeBuilder {
          return node;
      }
  
 -    getUniformFromNode(node, type, shaderStage = this.shaderStage, name = null) {
-+    getUniformFromNode(node: Node, type: string | null, shaderStage = this.shaderStage!, name: string | null = null) {
++    getUniformFromNode(
++        node: UniformNode<unknown>,
++        type: string | null,
++        shaderStage = this.shaderStage!,
++        name: string | null = null,
++    ) {
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let nodeUniform = nodeData.uniform;
-@@ -588,7 +669,12 @@ class NodeBuilder {
+@@ -588,7 +680,12 @@ class NodeBuilder {
          return nodeUniform;
      }
  
@@ -1010,7 +1021,7 @@ index ebdc13ff..065940d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          let nodeVar = nodeData.variable;
-@@ -608,7 +694,7 @@ class NodeBuilder {
+@@ -608,7 +705,7 @@ class NodeBuilder {
          return nodeVar;
      }
  
@@ -1019,7 +1030,7 @@ index ebdc13ff..065940d7 100644
          const nodeData = this.getDataFromNode(node, 'any');
  
          let nodeVarying = nodeData.varying;
-@@ -629,7 +715,7 @@ class NodeBuilder {
+@@ -629,7 +726,7 @@ class NodeBuilder {
          return nodeVarying;
      }
  
@@ -1028,7 +1039,7 @@ index ebdc13ff..065940d7 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -648,7 +734,7 @@ class NodeBuilder {
+@@ -648,7 +745,7 @@ class NodeBuilder {
          return nodeCode;
      }
  
@@ -1037,7 +1048,7 @@ index ebdc13ff..065940d7 100644
          if (code === '') return this;
  
          code = this.tab + code;
-@@ -662,7 +748,7 @@ class NodeBuilder {
+@@ -662,7 +759,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -1046,7 +1057,7 @@ index ebdc13ff..065940d7 100644
          this.flow.code += code;
  
          return this;
-@@ -684,7 +770,7 @@ class NodeBuilder {
+@@ -684,7 +781,7 @@ class NodeBuilder {
          return this.flowsData.get(node);
      }
  
@@ -1055,7 +1066,7 @@ index ebdc13ff..065940d7 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -940,7 +1026,7 @@ class NodeBuilder {
+@@ -940,7 +1037,7 @@ class NodeBuilder {
          return createNodeMaterialFromType(type);
      }
  
@@ -1065,7 +1076,7 @@ index ebdc13ff..065940d7 100644
          toType = this.getVectorType(toType);
  
 diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
-index 96a7e0c7..b1a61b35 100644
+index 96a7e0c7..a8dfa1ff 100644
 --- a/examples-jsm/examples/nodes/core/NodeCache.ts
 +++ b/examples-jsm/examples/nodes/core/NodeCache.ts
 @@ -1,16 +1,52 @@
@@ -1089,7 +1100,7 @@ index 96a7e0c7..b1a61b35 100644
 +        | undefined;
 +    bufferAttribute?: NodeAttribute | undefined;
 +    structType?: Node | undefined;
-+    uniform?: NodeUniform | undefined;
++    uniform?: NodeUniform<unknown> | undefined;
 +    variable?: NodeVar | undefined;
 +    varying?: NodeVarying | undefined;
 +    code?: NodeCode | undefined;
@@ -1224,23 +1235,23 @@ index 53da9bf5..36bdcabe 100644
  
          for (const keywordNode of keywordNodes) {
 diff --git a/examples-jsm/examples/nodes/core/NodeUniform.ts b/examples-jsm/examples/nodes/core/NodeUniform.ts
-index 2918e219..c407d0a5 100644
+index 2918e219..b6ccba3a 100644
 --- a/examples-jsm/examples/nodes/core/NodeUniform.ts
 +++ b/examples-jsm/examples/nodes/core/NodeUniform.ts
-@@ -1,5 +1,15 @@
-+import Node from './Node.js';
-+
- class NodeUniform {
+@@ -1,5 +1,14 @@
+-class NodeUniform {
 -    constructor(name, type, node, needsUpdate = undefined) {
++import UniformNode from './UniformNode.js';
++
++class NodeUniform<TValue> {
 +    readonly isNodeUniform: true;
 +
 +    name: string;
 +    type: string | null;
-+    // TODO
-+    // node: Node??
++    node: UniformNode<TValue>;
 +    needsUpdate: boolean | undefined;
 +
-+    constructor(name: string, type: string | null, node: Node, needsUpdate = undefined) {
++    constructor(name: string, type: string | null, node: UniformNode<TValue>, needsUpdate = undefined) {
          this.isNodeUniform = true;
  
          this.name = name;
@@ -1831,28 +1842,67 @@ index 0b00319a..c190633b 100644
      }
  }
 diff --git a/examples-jsm/examples/renderers/common/Attributes.ts b/examples-jsm/examples/renderers/common/Attributes.ts
-index ed9e8e9e..f0f75022 100644
+index ed9e8e9e..a17571cb 100644
 --- a/examples-jsm/examples/renderers/common/Attributes.ts
 +++ b/examples-jsm/examples/renderers/common/Attributes.ts
-@@ -1,9 +1,12 @@
+@@ -1,23 +1,32 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
- import { DynamicDrawUsage } from 'three';
+-import { DynamicDrawUsage } from 'three';
++import { BufferAttribute, DynamicDrawUsage, InterleavedBuffer, InterleavedBufferAttribute } from 'three';
 +import Backend from './Backend.js';
  
- class Attributes extends DataMap {
+-class Attributes extends DataMap {
 -    constructor(backend) {
++interface Data {
++    version?: number | undefined;
++}
++
++class Attributes extends DataMap<{ attribute: { key: BufferAttribute | InterleavedBufferAttribute; value: Data } }> {
 +    backend: Backend;
 +
 +    constructor(backend: Backend) {
          super();
  
          this.backend = backend;
+     }
+ 
+-    delete(attribute) {
++    delete(attribute: BufferAttribute | InterleavedBufferAttribute) {
+         const attributeData = super.delete(attribute);
+ 
+         if (attributeData !== undefined) {
+             this.backend.destroyAttribute(attribute);
+         }
++
++        return attributeData;
+     }
+ 
+-    update(attribute, type) {
++    update(attribute: BufferAttribute | InterleavedBufferAttribute, type: AttributeType) {
+         const data = this.get(attribute);
+ 
+         if (data.version === undefined) {
+@@ -41,10 +50,11 @@ class Attributes extends DataMap {
+         }
+     }
+ 
+-    _getBufferAttribute(attribute) {
+-        if (attribute.isInterleavedBufferAttribute) attribute = attribute.data;
++    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute) {
++        if ((attribute as InterleavedBufferAttribute).isInterleavedBufferAttribute)
++            (attribute as BufferAttribute | InterleavedBuffer) = (attribute as InterleavedBufferAttribute).data;
+ 
+-        return attribute;
++        return attribute as BufferAttribute | InterleavedBuffer;
+     }
+ }
+ 
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..7b683c48 100644
+index e48a8029..16b3c6e4 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,68 @@
+@@ -1,22 +1,75 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
@@ -1868,6 +1918,8 @@ index e48a8029..7b683c48 100644
 +    BufferAttribute,
 +    Object3D,
 +    Scene,
++    Texture,
++    TypedArray,
 +} from 'three';
 +import Renderer from './Renderer.js';
 +import RenderContext from './RenderContext.js';
@@ -1892,14 +1944,19 @@ index e48a8029..7b683c48 100644
 +interface RenderBundleData {
 +    renderContexts?: Set<RenderContext>;
 +}
++
++interface RenderObjectData {}
  
 -class Backend {
 -    constructor(parameters = {}) {
-+interface RenderObjectData {}
++interface TextureData {}
 +
 +abstract class Backend {
 +    parameters: BackendParameters;
-+    data: WeakMap<RenderContext | RenderBundle | RenderObject, RenderContextData | RenderBundleData | RenderObjectData>;
++    data: WeakMap<
++        RenderContext | RenderBundle | RenderObject | Texture,
++        RenderContextData | RenderBundleData | RenderObjectData | TextureData
++    >;
 +    renderer: Renderer | null;
 +    domElement: HTMLCanvasElement | null;
 +
@@ -1907,8 +1964,8 @@ index e48a8029..7b683c48 100644
          this.parameters = Object.assign({}, parameters);
 -        this.data = new WeakMap();
 +        this.data = new WeakMap<
-+            RenderContext | RenderBundle | RenderObject,
-+            RenderContextData | RenderBundleData | RenderObjectData
++            RenderContext | RenderBundle | RenderObject | Texture,
++            RenderContextData | RenderBundleData | RenderObjectData | TextureData
 +        >();
          this.renderer = null;
          this.domElement = null;
@@ -1930,7 +1987,7 @@ index e48a8029..7b683c48 100644
      // render context
  
      begin(renderContext) {}
-@@ -55,7 +101,11 @@ class Backend {
+@@ -55,7 +108,11 @@ class Backend {
  
      // node builder
  
@@ -1943,7 +2000,22 @@ index e48a8029..7b683c48 100644
  
      // textures
  
-@@ -144,7 +194,10 @@ class Backend {
+@@ -65,7 +122,13 @@ class Backend {
+ 
+     createTexture(texture) {}
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {}
++    abstract copyTextureToBuffer(
++        texture: Texture,
++        x: number,
++        y: number,
++        width: number,
++        height: number,
++    ): Promise<TypedArray>;
+ 
+     // attributes
+ 
+@@ -144,7 +207,11 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -1951,11 +2023,12 @@ index e48a8029..7b683c48 100644
 +    get(object: RenderContext): RenderContextData;
 +    get(object: RenderBundle): RenderBundleData;
 +    get(object: RenderObject): RenderObjectData;
-+    get(object: RenderContext | RenderBundle | RenderObject) {
++    get(object: Texture): TextureData;
++    get(object: RenderContext | RenderBundle | RenderObject | Texture) {
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +208,11 @@ class Backend {
+@@ -155,11 +222,11 @@ class Backend {
          return map;
      }
  
@@ -2045,10 +2118,10 @@ index a12f3563..e7ae8d1c 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/Bindings.ts b/examples-jsm/examples/renderers/common/Bindings.ts
-index 9485ec3b..1b25feb7 100644
+index 9485ec3b..26ecf706 100644
 --- a/examples-jsm/examples/renderers/common/Bindings.ts
 +++ b/examples-jsm/examples/renderers/common/Bindings.ts
-@@ -1,8 +1,38 @@
+@@ -1,8 +1,43 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
 +import Backend from './Backend.js';
@@ -2060,6 +2133,11 @@ index 9485ec3b..1b25feb7 100644
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +import Binding from './Binding.js';
++import { SampledTexture } from './SampledTexture.js';
++import StorageBuffer from './StorageBuffer.js';
++import NodeUniformsGroup from './nodes/NodeUniformsGroup.js';
++import UniformBuffer from './UniformBuffer.js';
++import Sampler from './Sampler.js';
 +
 +interface Data {
 +    bindings?: Binding[] | undefined;
@@ -2089,7 +2167,7 @@ index 9485ec3b..1b25feb7 100644
          super();
  
          this.backend = backend;
-@@ -15,7 +45,7 @@ class Bindings extends DataMap {
+@@ -15,7 +50,7 @@ class Bindings extends DataMap {
          this.pipelines.bindings = this; // assign bindings to pipelines
      }
  
@@ -2098,7 +2176,7 @@ index 9485ec3b..1b25feb7 100644
          const bindings = renderObject.getBindings();
  
          const data = this.get(renderObject);
-@@ -33,7 +63,7 @@ class Bindings extends DataMap {
+@@ -33,7 +68,7 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2107,7 +2185,7 @@ index 9485ec3b..1b25feb7 100644
          const data = this.get(computeNode);
  
          if (data.bindings === undefined) {
-@@ -51,15 +81,15 @@ class Bindings extends DataMap {
+@@ -51,27 +86,27 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2124,9 +2202,17 @@ index 9485ec3b..1b25feb7 100644
 -    _init(bindings) {
 +    _init(bindings: Binding[]) {
          for (const binding of bindings) {
-             if (binding.isSampledTexture) {
-                 this.textures.updateTexture(binding.texture);
-@@ -71,7 +101,7 @@ class Bindings extends DataMap {
+-            if (binding.isSampledTexture) {
+-                this.textures.updateTexture(binding.texture);
+-            } else if (binding.isStorageBuffer) {
+-                const attribute = binding.attribute;
++            if ((binding as SampledTexture).isSampledTexture) {
++                this.textures.updateTexture((binding as SampledTexture).texture);
++            } else if ((binding as StorageBuffer).isStorageBuffer) {
++                const attribute = (binding as StorageBuffer).attribute;
+ 
+                 this.attributes.update(attribute, AttributeType.STORAGE);
+             }
          }
      }
  
@@ -2135,11 +2221,71 @@ index 9485ec3b..1b25feb7 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
+@@ -79,32 +114,32 @@ class Bindings extends DataMap {
+         // iterate over all bindings and check if buffer updates or a new binding group is required
+ 
+         for (const binding of bindings) {
+-            if (binding.isNodeUniformsGroup) {
+-                const updated = this.nodes.updateGroup(binding);
++            if ((binding as NodeUniformsGroup).isNodeUniformsGroup) {
++                const updated = this.nodes.updateGroup(binding as NodeUniformsGroup);
+ 
+                 if (!updated) continue;
+             }
+ 
+-            if (binding.isUniformBuffer) {
+-                const updated = binding.update();
++            if ((binding as UniformBuffer).isUniformBuffer) {
++                const updated = (binding as UniformBuffer).update();
+ 
+                 if (updated) {
+                     backend.updateBinding(binding);
+                 }
+-            } else if (binding.isSampler) {
+-                binding.update();
+-            } else if (binding.isSampledTexture) {
+-                const texture = binding.texture;
++            } else if ((binding as Sampler).isSampler) {
++                (binding as Sampler).update();
++            } else if ((binding as SampledTexture).isSampledTexture) {
++                const texture = (binding as SampledTexture).texture;
+ 
+-                if (binding.needsBindingsUpdate) needsBindingsUpdate = true;
++                if ((binding as SampledTexture).needsBindingsUpdate) needsBindingsUpdate = true;
+ 
+-                const updated = binding.update();
++                const updated = (binding as SampledTexture).update();
+ 
+                 if (updated) {
+-                    this.textures.updateTexture(binding.texture);
++                    this.textures.updateTexture((binding as SampledTexture).texture);
+                 }
+ 
+-                const textureData = backend.get(binding.texture);
++                const textureData = backend.get((binding as SampledTexture).texture);
+ 
+                 if (
+                     backend.isWebGPUBackend === true &&
+@@ -116,11 +151,11 @@ class Bindings extends DataMap {
+                         'Bindings._update: binding should be available:',
+                         binding,
+                         updated,
+-                        binding.texture,
+-                        binding.textureNode.value,
++                        (binding as SampledTexture).texture,
++                        (binding as SampledTexture).textureNode.value,
+                     );
+ 
+-                    this.textures.updateTexture(binding.texture);
++                    this.textures.updateTexture((binding as SampledTexture).texture);
+                     needsBindingsUpdate = true;
+                 }
+ 
 diff --git a/examples-jsm/examples/renderers/common/Buffer.ts b/examples-jsm/examples/renderers/common/Buffer.ts
-index 17013c6d..56064725 100644
+index 17013c6d..830dc0a8 100644
 --- a/examples-jsm/examples/renderers/common/Buffer.ts
 +++ b/examples-jsm/examples/renderers/common/Buffer.ts
-@@ -2,7 +2,11 @@ import Binding from './Binding.js';
+@@ -2,7 +2,13 @@ import Binding from './Binding.js';
  import { getFloatLength } from './BufferUtils.js';
  
  class Buffer extends Binding {
@@ -2148,10 +2294,49 @@ index 17013c6d..56064725 100644
 +
 +    bytesPerElement: number;
 +
-+    constructor(name?: string, buffer = null) {
++    _buffer: Float32Array | null;
++
++    constructor(name?: string, buffer: Float32Array | null = null) {
          super(name);
  
          this.isBuffer = true;
+@@ -13,7 +19,7 @@ class Buffer extends Binding {
+     }
+ 
+     get byteLength() {
+-        return getFloatLength(this._buffer.byteLength);
++        return getFloatLength(this._buffer!.byteLength);
+     }
+ 
+     get buffer() {
+diff --git a/examples-jsm/examples/renderers/common/BufferUtils.ts b/examples-jsm/examples/renderers/common/BufferUtils.ts
+index 99ddcb48..e18679b1 100644
+--- a/examples-jsm/examples/renderers/common/BufferUtils.ts
++++ b/examples-jsm/examples/renderers/common/BufferUtils.ts
+@@ -1,12 +1,12 @@
+ import { GPU_CHUNK_BYTES } from './Constants.js';
+ 
+-function getFloatLength(floatLength) {
++function getFloatLength(floatLength: number) {
+     // ensure chunk size alignment (STD140 layout)
+ 
+     return floatLength + ((GPU_CHUNK_BYTES - (floatLength % GPU_CHUNK_BYTES)) % GPU_CHUNK_BYTES);
+ }
+ 
+-function getVectorLength(count, vectorLength = 4) {
++function getVectorLength(count: number, vectorLength = 4) {
+     const strideLength = getStrideLength(vectorLength);
+ 
+     const floatLength = strideLength * count;
+@@ -14,7 +14,7 @@ function getVectorLength(count, vectorLength = 4) {
+     return getFloatLength(floatLength);
+ }
+ 
+-function getStrideLength(vectorLength) {
++function getStrideLength(vectorLength: number) {
+     const strideLength = 4;
+ 
+     return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/examples-jsm/examples/renderers/common/ChainMap.ts b/examples-jsm/examples/renderers/common/ChainMap.ts
 index e233beca..c4e8a2e9 100644
 --- a/examples-jsm/examples/renderers/common/ChainMap.ts
@@ -2242,7 +2427,7 @@ index e233beca..c4e8a2e9 100644
  
      dispose() {
 diff --git a/examples-jsm/examples/renderers/common/ClippingContext.ts b/examples-jsm/examples/renderers/common/ClippingContext.ts
-index 312e0b77..d2b44082 100644
+index 312e0b77..67dd83d8 100644
 --- a/examples-jsm/examples/renderers/common/ClippingContext.ts
 +++ b/examples-jsm/examples/renderers/common/ClippingContext.ts
 @@ -1,10 +1,26 @@
@@ -2278,7 +2463,7 @@ index 312e0b77..d2b44082 100644
      }
  
 -    projectPlanes(source, offset) {
-+    projectPlanes(source: Plane[], offset: number) {
++    projectPlanes(source: readonly Plane[], offset: number) {
          const l = source.length;
          const planes = this.planes;
  
@@ -2611,7 +2796,7 @@ index 16017455..16b5276c 100644
  
          this.usedTimes = 0;
 diff --git a/examples-jsm/examples/renderers/common/Pipelines.ts b/examples-jsm/examples/renderers/common/Pipelines.ts
-index f6c570c4..3bda7243 100644
+index f6c570c4..682056b4 100644
 --- a/examples-jsm/examples/renderers/common/Pipelines.ts
 +++ b/examples-jsm/examples/renderers/common/Pipelines.ts
 @@ -2,9 +2,40 @@ import DataMap from './DataMap.js';
@@ -2766,7 +2951,7 @@ index f6c570c4..3bda7243 100644
      }
  
 -    delete(object) {
-+    delete(object: ComputeNode | RenderObject) {
++    delete(object: ComputeNode | RenderObject): never {
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
@@ -2798,7 +2983,7 @@ index f6c570c4..3bda7243 100644
          }
  
 -        super.delete(object);
-+        return super.delete(object);
++        return super.delete(object) as never;
      }
  
      dispose() {
@@ -3251,15 +3436,24 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 861c15dc..7a13d82d 100644
+index 861c15dc..e443269d 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
-@@ -1,4 +1,13 @@
+@@ -1,8 +1,26 @@
  import ClippingContext from './ClippingContext.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
 +import Renderer from './Renderer.js';
-+import { BufferGeometry, Camera, Material, Object3D, Scene } from 'three';
++import {
++    BufferAttribute,
++    BufferGeometry,
++    Camera,
++    InterleavedBuffer,
++    InterleavedBufferAttribute,
++    Material,
++    Object3D,
++    Scene,
++} from 'three';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import RenderContext from './RenderContext.js';
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
@@ -3268,7 +3462,12 @@ index 861c15dc..7a13d82d 100644
  
  let id = 0;
  
-@@ -27,7 +36,59 @@ function getKeys(obj) {
+-function getKeys(obj) {
++function getKeys(obj: Material) {
+     const keys = Object.keys(obj);
+ 
+     let proto = Object.getPrototypeOf(obj);
+@@ -27,7 +45,55 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -3289,21 +3488,17 @@ index 861c15dc..7a13d82d 100644
 +    geometry: BufferGeometry;
 +    version: number;
 +
-+    // TODO
-+    // drawRange
++    drawRange: { start: number; count: number } | null;
 +
-+    // TODO
-+    // attributes
-+    pipeline: RenderPipeline;
-+    // TODO
-+    // vertexBuffers
++    attributes: Array<BufferAttribute | InterleavedBufferAttribute> | null;
++    pipeline: RenderPipeline | null;
++    vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
 +
 +    clippingContext!: ClippingContext;
 +
 +    clippingContextVersion: number;
 +
-+    // TODO
-+    // initialNodesCacheKey
++    initialNodesCacheKey: string;
 +    initialCacheKey: string;
 +
 +    _nodeBuilderState: NodeBuilderState | null;
@@ -3329,7 +3524,7 @@ index 861c15dc..7a13d82d 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +111,7 @@ export default class RenderObject {
+@@ -50,7 +116,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
@@ -3338,7 +3533,7 @@ index 861c15dc..7a13d82d 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +132,7 @@ export default class RenderObject {
+@@ -71,7 +137,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -3347,7 +3542,7 @@ index 861c15dc..7a13d82d 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +150,9 @@ export default class RenderObject {
+@@ -89,9 +155,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -3359,7 +3554,7 @@ index 861c15dc..7a13d82d 100644
  
          return true;
      }
-@@ -109,7 +170,7 @@ export default class RenderObject {
+@@ -109,7 +175,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -3368,7 +3563,18 @@ index 861c15dc..7a13d82d 100644
      }
  
      getAttributes() {
-@@ -206,6 +267,6 @@ export default class RenderObject {
+@@ -118,8 +184,8 @@ export default class RenderObject {
+         const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
+         const geometry = this.geometry;
+ 
+-        const attributes = [];
+-        const vertexBuffers = new Set();
++        const attributes: Array<BufferAttribute | InterleavedBufferAttribute> = [];
++        const vertexBuffers = new Set<BufferAttribute | InterleavedBuffer>();
+ 
+         for (const nodeAttribute of nodeAttributes) {
+             const attribute =
+@@ -206,6 +272,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -3504,7 +3710,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index acf180d8..3e7e9dfd 100644
+index acf180d8..3ca9d4cc 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
 @@ -30,10 +30,40 @@ import {
@@ -3561,7 +3767,7 @@ index acf180d8..3e7e9dfd 100644
 -    constructor(backend, parameters = {}) {
 +    readonly isRenderer: true;
 +
-+    domElement: HTMLCanvasElement | null;
++    domElement: HTMLCanvasElement;
 +
 +    backend: Backend;
 +
@@ -3584,7 +3790,7 @@ index acf180d8..3e7e9dfd 100644
 +    depth: boolean;
 +    stencil: boolean;
 +
-+    clippingPlanes: Plane[];
++    clippingPlanes: readonly Plane[];
 +
 +    info: Info;
 +
@@ -3859,7 +4065,7 @@ index acf180d8..3e7e9dfd 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -572,22 +719,22 @@ class Renderer {
+@@ -572,14 +719,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -3880,16 +4086,6 @@ index acf180d8..3e7e9dfd 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-         } else {
-             renderContext.textures = null;
-             renderContext.depthTexture = null;
--            renderContext.width = this.domElement.width;
--            renderContext.height = this.domElement.height;
-+            renderContext.width = this.domElement!.width;
-+            renderContext.height = this.domElement!.height;
-             renderContext.depth = this.depth;
-             renderContext.stencil = this.stencil;
-         }
 @@ -600,11 +747,11 @@ class Renderer {
  
          //
@@ -3953,7 +4149,7 @@ index acf180d8..3e7e9dfd 100644
          return target.set(this._width, this._height);
      }
  
-@@ -703,30 +850,30 @@ class Renderer {
+@@ -703,7 +850,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -3962,15 +4158,7 @@ index acf180d8..3e7e9dfd 100644
          this._width = width;
          this._height = height;
  
-         this._pixelRatio = pixelRatio;
- 
--        this.domElement.width = Math.floor(width * pixelRatio);
--        this.domElement.height = Math.floor(height * pixelRatio);
-+        this.domElement!.width = Math.floor(width * pixelRatio);
-+        this.domElement!.height = Math.floor(height * pixelRatio);
- 
-         this.setViewport(0, 0, width, height);
- 
+@@ -717,7 +864,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -3979,19 +4167,6 @@ index acf180d8..3e7e9dfd 100644
          this._width = width;
          this._height = height;
  
--        this.domElement.width = Math.floor(width * this._pixelRatio);
--        this.domElement.height = Math.floor(height * this._pixelRatio);
-+        this.domElement!.width = Math.floor(width * this._pixelRatio);
-+        this.domElement!.height = Math.floor(height * this._pixelRatio);
- 
-         if (updateStyle === true) {
--            this.domElement.style.width = width + 'px';
--            this.domElement.style.height = height + 'px';
-+            this.domElement!.style.width = width + 'px';
-+            this.domElement!.style.height = height + 'px';
-         }
- 
-         this.setViewport(0, 0, width, height);
 @@ -734,15 +881,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
@@ -4519,6 +4694,109 @@ index acf180d8..3e7e9dfd 100644
      }
  
      get compute() {
+diff --git a/examples-jsm/examples/renderers/common/SampledTexture.ts b/examples-jsm/examples/renderers/common/SampledTexture.ts
+index d995a59f..a57e1359 100644
+--- a/examples-jsm/examples/renderers/common/SampledTexture.ts
++++ b/examples-jsm/examples/renderers/common/SampledTexture.ts
+@@ -1,9 +1,18 @@
++import { Texture, VideoTexture } from 'three';
+ import Binding from './Binding.js';
+ 
+ let id = 0;
+ 
+ class SampledTexture extends Binding {
+-    constructor(name, texture) {
++    id: number;
++
++    texture: Texture;
++    version: number;
++    store: boolean;
++
++    readonly isSampledTexture: true;
++
++    constructor(name: string, texture: Texture) {
+         super(name);
+ 
+         this.id = id++;
+@@ -18,7 +27,7 @@ class SampledTexture extends Binding {
+     get needsBindingsUpdate() {
+         const { texture, version } = this;
+ 
+-        return texture.isVideoTexture ? true : version !== texture.version; // @TODO: version === 0 && texture.version > 0 ( add it just to External Textures like PNG,JPG )
++        return (texture as VideoTexture).isVideoTexture ? true : version !== texture.version; // @TODO: version === 0 && texture.version > 0 ( add it just to External Textures like PNG,JPG )
+     }
+ 
+     update() {
+@@ -35,7 +44,9 @@ class SampledTexture extends Binding {
+ }
+ 
+ class SampledArrayTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampledArrayTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampledArrayTexture = true;
+@@ -43,7 +54,9 @@ class SampledArrayTexture extends SampledTexture {
+ }
+ 
+ class Sampled3DTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampled3DTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampled3DTexture = true;
+@@ -51,7 +64,9 @@ class Sampled3DTexture extends SampledTexture {
+ }
+ 
+ class SampledCubeTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampledCubeTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampledCubeTexture = true;
+diff --git a/examples-jsm/examples/renderers/common/Sampler.ts b/examples-jsm/examples/renderers/common/Sampler.ts
+index 8cd20d04..86e6f45e 100644
+--- a/examples-jsm/examples/renderers/common/Sampler.ts
++++ b/examples-jsm/examples/renderers/common/Sampler.ts
+@@ -1,7 +1,13 @@
+ import Binding from './Binding.js';
+ 
+ class Sampler extends Binding {
+-    constructor(name, texture) {
++    // TODO
++    // texture
++    version: number;
++
++    readonly isSampler: true;
++
++    constructor(name: string, texture) {
+         super(name);
+ 
+         this.texture = texture;
+diff --git a/examples-jsm/examples/renderers/common/StorageBuffer.ts b/examples-jsm/examples/renderers/common/StorageBuffer.ts
+index ef5d3e46..fb6acc45 100644
+--- a/examples-jsm/examples/renderers/common/StorageBuffer.ts
++++ b/examples-jsm/examples/renderers/common/StorageBuffer.ts
+@@ -1,7 +1,12 @@
+ import Buffer from './Buffer.js';
+ 
+ class StorageBuffer extends Buffer {
+-    constructor(name, attribute) {
++    // TODO
++    // attribute
++
++    readonly isStorageBuffer: true;
++
++    constructor(name: string, attribute) {
+         super(name, attribute ? attribute.array : null);
+ 
+         this.attribute = attribute;
 diff --git a/examples-jsm/examples/renderers/common/Textures.ts b/examples-jsm/examples/renderers/common/Textures.ts
 index 0eb0509c..6eb18198 100644
 --- a/examples-jsm/examples/renderers/common/Textures.ts
@@ -4662,6 +4940,128 @@ index 0eb0509c..6eb18198 100644
          this.backend.destroySampler(texture);
          this.backend.destroyTexture(texture);
  
+diff --git a/examples-jsm/examples/renderers/common/Uniform.ts b/examples-jsm/examples/renderers/common/Uniform.ts
+index ec15fc02..a27d7580 100644
+--- a/examples-jsm/examples/renderers/common/Uniform.ts
++++ b/examples-jsm/examples/renderers/common/Uniform.ts
+@@ -1,7 +1,15 @@
+ import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
+ 
+-class Uniform {
+-    constructor(name, value = null) {
++class Uniform<TValue> {
++    name: string;
++    value: TValue;
++
++    boundary: number;
++    itemSize: number;
++
++    offset: number;
++
++    constructor(name: string, value: TValue) {
+         this.name = name;
+         this.value = value;
+ 
+@@ -11,7 +19,7 @@ class Uniform {
+         this.offset = 0; // this property is set by WebGPUUniformsGroup and marks the start position in the uniform buffer
+     }
+ 
+-    setValue(value) {
++    setValue(value: TValue) {
+         this.value = value;
+     }
+ 
+@@ -20,8 +28,10 @@ class Uniform {
+     }
+ }
+ 
+-class FloatUniform extends Uniform {
+-    constructor(name, value = 0) {
++class FloatUniform extends Uniform<number> {
++    readonly isFloatUniform: true;
++
++    constructor(name: string, value = 0) {
+         super(name, value);
+ 
+         this.isFloatUniform = true;
+@@ -31,8 +41,10 @@ class FloatUniform extends Uniform {
+     }
+ }
+ 
+-class Vector2Uniform extends Uniform {
+-    constructor(name, value = new Vector2()) {
++class Vector2Uniform extends Uniform<Vector2> {
++    readonly isVector2Uniform: true;
++
++    constructor(name: string, value = new Vector2()) {
+         super(name, value);
+ 
+         this.isVector2Uniform = true;
+@@ -42,8 +54,10 @@ class Vector2Uniform extends Uniform {
+     }
+ }
+ 
+-class Vector3Uniform extends Uniform {
+-    constructor(name, value = new Vector3()) {
++class Vector3Uniform extends Uniform<Vector3> {
++    readonly isVector3Uniform: true;
++
++    constructor(name: string, value = new Vector3()) {
+         super(name, value);
+ 
+         this.isVector3Uniform = true;
+@@ -53,8 +67,10 @@ class Vector3Uniform extends Uniform {
+     }
+ }
+ 
+-class Vector4Uniform extends Uniform {
+-    constructor(name, value = new Vector4()) {
++class Vector4Uniform extends Uniform<Vector4> {
++    readonly isVector4Uniform: true;
++
++    constructor(name: string, value = new Vector4()) {
+         super(name, value);
+ 
+         this.isVector4Uniform = true;
+@@ -64,8 +80,10 @@ class Vector4Uniform extends Uniform {
+     }
+ }
+ 
+-class ColorUniform extends Uniform {
+-    constructor(name, value = new Color()) {
++class ColorUniform extends Uniform<Color> {
++    readonly isColorUniform: true;
++
++    constructor(name: string, value = new Color()) {
+         super(name, value);
+ 
+         this.isColorUniform = true;
+@@ -75,8 +93,10 @@ class ColorUniform extends Uniform {
+     }
+ }
+ 
+-class Matrix3Uniform extends Uniform {
+-    constructor(name, value = new Matrix3()) {
++class Matrix3Uniform extends Uniform<Matrix3> {
++    readonly isMatrix3Uniform: true;
++
++    constructor(name: string, value = new Matrix3()) {
+         super(name, value);
+ 
+         this.isMatrix3Uniform = true;
+@@ -86,8 +106,10 @@ class Matrix3Uniform extends Uniform {
+     }
+ }
+ 
+-class Matrix4Uniform extends Uniform {
+-    constructor(name, value = new Matrix4()) {
++class Matrix4Uniform extends Uniform<Matrix4> {
++    readonly isMatrix4Uniform: true;
++
++    constructor(name: string, value = new Matrix4()) {
+         super(name, value);
+ 
+         this.isMatrix4Uniform = true;
 diff --git a/examples-jsm/examples/renderers/common/UniformBuffer.ts b/examples-jsm/examples/renderers/common/UniformBuffer.ts
 index 28aac0d7..2479d00d 100644
 --- a/examples-jsm/examples/renderers/common/UniformBuffer.ts
@@ -4678,20 +5078,141 @@ index 28aac0d7..2479d00d 100644
  
          this.isUniformBuffer = true;
 diff --git a/examples-jsm/examples/renderers/common/UniformsGroup.ts b/examples-jsm/examples/renderers/common/UniformsGroup.ts
-index beb35347..b51cf541 100644
+index beb35347..c264d777 100644
 --- a/examples-jsm/examples/renderers/common/UniformsGroup.ts
 +++ b/examples-jsm/examples/renderers/common/UniformsGroup.ts
-@@ -2,7 +2,9 @@ import UniformBuffer from './UniformBuffer.js';
+@@ -1,8 +1,22 @@
+ import UniformBuffer from './UniformBuffer.js';
  import { GPU_CHUNK_BYTES } from './Constants.js';
++import {
++    ColorNodeUniform,
++    FloatNodeUniform,
++    Matrix3NodeUniform,
++    Matrix4NodeUniform,
++    NodeUniformGPU,
++    Vector2NodeUniform,
++    Vector3NodeUniform,
++    Vector4NodeUniform,
++} from './nodes/NodeUniform.js';
  
  class UniformsGroup extends UniformBuffer {
 -    constructor(name) {
 +    readonly isUniformsGroup: true;
 +
++    uniforms: NodeUniformGPU[];
++
 +    constructor(name?: string) {
          super(name);
  
          this.isUniformsGroup = true;
+@@ -12,13 +26,13 @@ class UniformsGroup extends UniformBuffer {
+         this.uniforms = [];
+     }
+ 
+-    addUniform(uniform) {
++    addUniform(uniform: NodeUniformGPU) {
+         this.uniforms.push(uniform);
+ 
+         return this;
+     }
+ 
+-    removeUniform(uniform) {
++    removeUniform(uniform: NodeUniformGPU) {
+         const index = this.uniforms.indexOf(uniform);
+ 
+         if (index !== -1) {
+@@ -87,19 +101,19 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateByType(uniform) {
+-        if (uniform.isFloatUniform) return this.updateNumber(uniform);
+-        if (uniform.isVector2Uniform) return this.updateVector2(uniform);
+-        if (uniform.isVector3Uniform) return this.updateVector3(uniform);
+-        if (uniform.isVector4Uniform) return this.updateVector4(uniform);
+-        if (uniform.isColorUniform) return this.updateColor(uniform);
+-        if (uniform.isMatrix3Uniform) return this.updateMatrix3(uniform);
+-        if (uniform.isMatrix4Uniform) return this.updateMatrix4(uniform);
++    updateByType(uniform: NodeUniformGPU) {
++        if ((uniform as FloatNodeUniform).isFloatUniform) return this.updateNumber(uniform as FloatNodeUniform);
++        if ((uniform as Vector2NodeUniform).isVector2Uniform) return this.updateVector2(uniform as Vector2NodeUniform);
++        if ((uniform as Vector3NodeUniform).isVector3Uniform) return this.updateVector3(uniform as Vector3NodeUniform);
++        if ((uniform as Vector4NodeUniform).isVector4Uniform) return this.updateVector4(uniform as Vector4NodeUniform);
++        if ((uniform as ColorNodeUniform).isColorUniform) return this.updateColor(uniform as ColorNodeUniform);
++        if ((uniform as Matrix3NodeUniform).isMatrix3Uniform) return this.updateMatrix3(uniform as Matrix3NodeUniform);
++        if ((uniform as Matrix4NodeUniform).isMatrix4Uniform) return this.updateMatrix4(uniform as Matrix4NodeUniform);
+ 
+         console.error('THREE.WebGPUUniformsGroup: Unsupported uniform type.', uniform);
+     }
+ 
+-    updateNumber(uniform) {
++    updateNumber(uniform: FloatNodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -114,7 +128,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateVector2(uniform) {
++    updateVector2(uniform: Vector2NodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -131,7 +145,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateVector3(uniform) {
++    updateVector3(uniform: Vector3NodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -149,7 +163,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateVector4(uniform) {
++    updateVector4(uniform: Vector4NodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -168,7 +182,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateColor(uniform) {
++    updateColor(uniform: ColorNodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -186,7 +200,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateMatrix3(uniform) {
++    updateMatrix3(uniform: Matrix3NodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -220,7 +234,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    updateMatrix4(uniform) {
++    updateMatrix4(uniform: Matrix4NodeUniform) {
+         let updated = false;
+ 
+         const a = this.buffer;
+@@ -236,7 +250,7 @@ class UniformsGroup extends UniformBuffer {
+     }
+ }
+ 
+-function arraysEqual(a, b, offset) {
++function arraysEqual(a: Float32Array, b: number[], offset: number) {
+     for (let i = 0, l = b.length; i < l; i++) {
+         if (a[offset + i] !== b[i]) return false;
+     }
 diff --git a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts b/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
 index 5553bd2d..4c4a4cde 100644
 --- a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
@@ -4733,13 +5254,111 @@ index 5553bd2d..4c4a4cde 100644
          transforms = [],
      ) {
          this.vertexShader = vertexShader;
+diff --git a/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts b/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
+index f85a638a..748c530d 100644
+--- a/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
++++ b/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
+@@ -7,9 +7,13 @@ import {
+     Matrix3Uniform,
+     Matrix4Uniform,
+ } from '../Uniform.js';
++import NodeUniform from '../../../nodes/core/NodeUniform.js';
++import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
+ 
+ class FloatNodeUniform extends FloatUniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<number>;
++
++    constructor(nodeUniform: NodeUniform<number>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -21,7 +25,9 @@ class FloatNodeUniform extends FloatUniform {
+ }
+ 
+ class Vector2NodeUniform extends Vector2Uniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Vector2>;
++
++    constructor(nodeUniform: NodeUniform<Vector2>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -33,7 +39,9 @@ class Vector2NodeUniform extends Vector2Uniform {
+ }
+ 
+ class Vector3NodeUniform extends Vector3Uniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Vector3>;
++
++    constructor(nodeUniform: NodeUniform<Vector3>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -45,7 +53,9 @@ class Vector3NodeUniform extends Vector3Uniform {
+ }
+ 
+ class Vector4NodeUniform extends Vector4Uniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Vector4>;
++
++    constructor(nodeUniform: NodeUniform<Vector4>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -57,7 +67,9 @@ class Vector4NodeUniform extends Vector4Uniform {
+ }
+ 
+ class ColorNodeUniform extends ColorUniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Color>;
++
++    constructor(nodeUniform: NodeUniform<Color>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -69,7 +81,9 @@ class ColorNodeUniform extends ColorUniform {
+ }
+ 
+ class Matrix3NodeUniform extends Matrix3Uniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Matrix3>;
++
++    constructor(nodeUniform: NodeUniform<Matrix3>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -81,7 +95,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+ }
+ 
+ class Matrix4NodeUniform extends Matrix4Uniform {
+-    constructor(nodeUniform) {
++    nodeUniform: NodeUniform<Matrix4>;
++
++    constructor(nodeUniform: NodeUniform<Matrix4>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         this.nodeUniform = nodeUniform;
+@@ -101,3 +117,11 @@ export {
+     Matrix3NodeUniform,
+     Matrix4NodeUniform,
+ };
++export type NodeUniformGPU =
++    | FloatNodeUniform
++    | Vector2NodeUniform
++    | Vector3NodeUniform
++    | Vector4NodeUniform
++    | ColorNodeUniform
++    | Matrix3NodeUniform
++    | Matrix4NodeUniform;
 diff --git a/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts b/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
-index 0bbc1add..783d8db1 100644
+index 0bbc1add..570a79ac 100644
 --- a/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/NodeUniformsGroup.ts
-@@ -1,9 +1,15 @@
+@@ -1,9 +1,16 @@
  import UniformsGroup from '../UniformsGroup.js';
 +import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
++import UniformNode from '../../../nodes/core/UniformNode.js';
  
  let id = 0;
  
@@ -4754,8 +5373,17 @@ index 0bbc1add..783d8db1 100644
          super(name);
  
          this.id = id++;
+@@ -17,7 +24,7 @@ class NodeUniformsGroup extends UniformsGroup {
+     }
+ 
+     getNodes() {
+-        const nodes = [];
++        const nodes: UniformNode<unknown>[] = [];
+ 
+         for (const uniform of this.uniforms) {
+             const node = uniform.nodeUniform.node;
 diff --git a/examples-jsm/examples/renderers/common/nodes/Nodes.ts b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
-index 86df5654..1b9cfdb3 100644
+index 86df5654..b2b73dbb 100644
 --- a/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/Nodes.ts
 @@ -2,10 +2,20 @@ import DataMap from '../DataMap.js';
@@ -4779,7 +5407,7 @@ index 86df5654..1b9cfdb3 100644
  } from 'three';
  import {
      NodeFrame,
-@@ -22,21 +32,73 @@ import {
+@@ -22,21 +32,65 @@ import {
      normalWorld,
      pmremTexture,
      viewportTopLeft,
@@ -4795,14 +5423,6 @@ index 86df5654..1b9cfdb3 100644
 +import Node from '../../../nodes/core/Node.js';
 +import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
 +
-+declare module 'three' {
-+    interface Scene {
-+        environmentNode?: Node | null | undefined;
-+        backgroundNode?: Node | null | undefined;
-+        fogNode?: Node | null | undefined;
-+    }
-+}
-+
 +interface NodeUniformsGroupData {
 +    renderId?: number | undefined;
 +    frameId?: number | undefined;
@@ -4815,7 +5435,9 @@ index 86df5654..1b9cfdb3 100644
 +interface ComputeNodeData {
 +    nodeBuilderState?: NodeBuilderState | undefined;
 +}
-+
+ 
+-class Nodes extends DataMap {
+-    constructor(renderer, backend) {
 +interface SceneData {
 +    background?: Color | Texture | CubeTexture | undefined;
 +    backgroundNode?: Node | undefined;
@@ -4824,9 +5446,7 @@ index 86df5654..1b9cfdb3 100644
 +    environment?: Texture | undefined;
 +    environmentNode?: Node | undefined;
 +}
- 
--class Nodes extends DataMap {
--    constructor(renderer, backend) {
++
 +class Nodes extends DataMap<{
 +    nodeUniformsGroup: { key: NodeUniformsGroup; value: NodeUniformsGroupData };
 +    renderObject: { key: RenderObject; value: RenderObjectData };
@@ -4857,7 +5477,7 @@ index 86df5654..1b9cfdb3 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -76,7 +138,7 @@ class Nodes extends DataMap {
+@@ -76,7 +130,7 @@ class Nodes extends DataMap {
  
          // other groups are updated just when groupNode.needsUpdate is true
  
@@ -4866,7 +5486,7 @@ index 86df5654..1b9cfdb3 100644
  
          let groupData = this.groupsData.get(groupChain);
          if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -90,11 +152,11 @@ class Nodes extends DataMap {
+@@ -90,11 +144,11 @@ class Nodes extends DataMap {
          return false;
      }
  
@@ -4880,7 +5500,7 @@ index 86df5654..1b9cfdb3 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -133,20 +195,20 @@ class Nodes extends DataMap {
+@@ -133,20 +187,20 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -4906,7 +5526,7 @@ index 86df5654..1b9cfdb3 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -163,7 +225,7 @@ class Nodes extends DataMap {
+@@ -163,7 +217,7 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -4915,23 +5535,34 @@ index 86df5654..1b9cfdb3 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -176,20 +238,20 @@ class Nodes extends DataMap {
+@@ -176,20 +230,28 @@ class Nodes extends DataMap {
          );
      }
  
 -    getEnvironmentNode(scene) {
+-        return scene.environmentNode || this.get(scene).environmentNode || null;
 +    getEnvironmentNode(scene: Scene) {
-         return scene.environmentNode || this.get(scene).environmentNode || null;
++        return (
++            (scene as { environmentNode?: Node | null | undefined }).environmentNode ||
++            this.get(scene).environmentNode ||
++            null
++        );
      }
  
 -    getBackgroundNode(scene) {
+-        return scene.backgroundNode || this.get(scene).backgroundNode || null;
 +    getBackgroundNode(scene: Scene) {
-         return scene.backgroundNode || this.get(scene).backgroundNode || null;
++        return (
++            (scene as { backgroundNode?: Node | null | undefined }).backgroundNode ||
++            this.get(scene).backgroundNode ||
++            null
++        );
      }
  
 -    getFogNode(scene) {
+-        return scene.fogNode || this.get(scene).fogNode || null;
 +    getFogNode(scene: Scene) {
-         return scene.fogNode || this.get(scene).fogNode || null;
++        return (scene as { fogNode?: Node | null | undefined }).fogNode || this.get(scene).fogNode || null;
      }
  
 -    getCacheKey(scene, lightsNode) {
@@ -5083,6 +5714,25 @@ index 86df5654..1b9cfdb3 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
+diff --git a/examples-jsm/examples/renderers/webgl/WebGLBackend.ts b/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
+index b9a999f1..2ed970b6 100644
+--- a/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
++++ b/examples-jsm/examples/renderers/webgl/WebGLBackend.ts
+@@ -1,4 +1,4 @@
+-import { WebGLCoordinateSystem } from 'three';
++import { Texture, WebGLCoordinateSystem } from 'three';
+ 
+ import GLSLNodeBuilder from './nodes/GLSLNodeBuilder.js';
+ import Backend from '../common/Backend.js';
+@@ -614,7 +614,7 @@ class WebGLBackend extends Backend {
+         this.textureUtils.destroyTexture(texture);
+     }
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+     }
+ 
 diff --git a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
 index 4910f51f..34e51ee8 100644
 --- a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
@@ -5095,4 +5745,26 @@ index 4910f51f..34e51ee8 100644
 +    getUniformFromNode(node, type, shaderStage: 'vertex' | 'fragment' | 'compute', name = null) {
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
+ 
+diff --git a/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts b/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
+index 97a42577..4491def1 100644
+--- a/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
++++ b/examples-jsm/examples/renderers/webgpu/WebGPUBackend.ts
+@@ -2,7 +2,7 @@
+ import 'https://greggman.github.io/webgpu-avoid-redundant-state-setting/webgpu-check-redundant-state-setting.js';
+ //*/
+ 
+-import { WebGPUCoordinateSystem } from 'three';
++import { Texture, WebGPUCoordinateSystem } from 'three';
+ 
+ import {
+     GPUFeatureName,
+@@ -921,7 +921,7 @@ class WebGPUBackend extends Backend {
+         this.textureUtils.destroyTexture(texture);
+     }
+ 
+-    copyTextureToBuffer(texture, x, y, width, height) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+     }
  

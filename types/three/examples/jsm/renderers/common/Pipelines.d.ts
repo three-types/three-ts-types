@@ -38,7 +38,7 @@ declare class Pipelines extends DataMap<{
     constructor(backend: Backend, nodes: Nodes);
     getForCompute(computeNode: ComputeNode, bindings: Binding[]): ComputePipeline;
     getForRender(renderObject: RenderObject, promises?: Promise<void>[] | null): RenderPipeline;
-    delete(object: ComputeNode | RenderObject): RenderObjectData | ComputeNodeData;
+    delete(object: ComputeNode | RenderObject): never;
     dispose(): void;
     updateForRender(renderObject: RenderObject): void;
     _getComputePipeline(
