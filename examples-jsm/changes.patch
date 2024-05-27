@@ -2595,11 +2595,26 @@ index c8e7cb41..083e7c42 100644
          this[type].timestamp += time;
      }
  
+diff --git a/examples-jsm/examples/renderers/common/Pipeline.ts b/examples-jsm/examples/renderers/common/Pipeline.ts
+index 16017455..16b5276c 100644
+--- a/examples-jsm/examples/renderers/common/Pipeline.ts
++++ b/examples-jsm/examples/renderers/common/Pipeline.ts
+@@ -1,5 +1,9 @@
+ class Pipeline {
+-    constructor(cacheKey) {
++    cacheKey: string;
++
++    usedTimes: number;
++
++    constructor(cacheKey: string) {
+         this.cacheKey = cacheKey;
+ 
+         this.usedTimes = 0;
 diff --git a/examples-jsm/examples/renderers/common/Pipelines.ts b/examples-jsm/examples/renderers/common/Pipelines.ts
-index f6c570c4..65433aaf 100644
+index f6c570c4..3bda7243 100644
 --- a/examples-jsm/examples/renderers/common/Pipelines.ts
 +++ b/examples-jsm/examples/renderers/common/Pipelines.ts
-@@ -2,9 +2,38 @@ import DataMap from './DataMap.js';
+@@ -2,9 +2,40 @@ import DataMap from './DataMap.js';
  import RenderPipeline from './RenderPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
@@ -2609,13 +2624,15 @@ index f6c570c4..65433aaf 100644
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +import Binding from './Binding.js';
++import Pipeline from './Pipeline.js';
 +
 +interface ComputeNodeData {
 +    version: number;
++    pipeline: ComputePipeline;
 +}
 +
 +interface RenderObjectData {
-+    version: number;
++    pipeline: RenderPipeline;
 +}
 +
 +class Pipelines extends DataMap<{
@@ -2629,7 +2646,7 @@ index f6c570c4..65433aaf 100644
  
 -class Pipelines extends DataMap {
 -    constructor(backend, nodes) {
-+    caches: Map<string, ComputePipeline | RenderPipeline>;
++    caches: Map<string, Pipeline>;
 +    programs: {
 +        vertex: Map<string, ProgrammableStage>;
 +        fragment: Map<string, ProgrammableStage>;
@@ -2640,12 +2657,12 @@ index f6c570c4..65433aaf 100644
          super();
  
          this.backend = backend;
-@@ -12,15 +41,15 @@ class Pipelines extends DataMap {
+@@ -12,15 +43,15 @@ class Pipelines extends DataMap {
  
          this.bindings = null; // set by the bindings
  
 -        this.caches = new Map();
-+        this.caches = new Map<string, ComputePipeline | RenderPipeline>();
++        this.caches = new Map<string, Pipeline>();
          this.programs = {
 -            vertex: new Map(),
 -            fragment: new Map(),
@@ -2661,7 +2678,39 @@ index f6c570c4..65433aaf 100644
          const { backend } = this;
  
          const data = this.get(computeNode);
-@@ -82,7 +111,7 @@ class Pipelines extends DataMap {
+@@ -39,19 +70,19 @@ class Pipelines extends DataMap {
+ 
+             // programmable stage
+ 
+-            let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader);
++            let stageCompute = this.programs.compute.get(nodeBuilderState.computeShader!);
+ 
+             if (stageCompute === undefined) {
+                 if (previousPipeline && previousPipeline.computeProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.computeProgram);
+ 
+                 stageCompute = new ProgrammableStage(
+-                    nodeBuilderState.computeShader,
++                    nodeBuilderState.computeShader!,
+                     'compute',
+                     nodeBuilderState.transforms,
+                     nodeBuilderState.nodeAttributes,
+                 );
+-                this.programs.compute.set(nodeBuilderState.computeShader, stageCompute);
++                this.programs.compute.set(nodeBuilderState.computeShader!, stageCompute);
+ 
+                 backend.createProgram(stageCompute);
+             }
+@@ -60,7 +91,7 @@ class Pipelines extends DataMap {
+ 
+             const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
+ 
+-            let pipeline = this.caches.get(cacheKey);
++            let pipeline = this.caches.get(cacheKey) as ComputePipeline | undefined;
+ 
+             if (pipeline === undefined) {
+                 if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(computeNode);
+@@ -82,7 +113,7 @@ class Pipelines extends DataMap {
          return data.pipeline;
      }
  
@@ -2670,7 +2719,49 @@ index f6c570c4..65433aaf 100644
          const { backend } = this;
  
          const data = this.get(renderObject);
-@@ -154,7 +183,7 @@ class Pipelines extends DataMap {
+@@ -102,26 +133,26 @@ class Pipelines extends DataMap {
+ 
+             // programmable stages
+ 
+-            let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader);
++            let stageVertex = this.programs.vertex.get(nodeBuilderState.vertexShader!);
+ 
+             if (stageVertex === undefined) {
+                 if (previousPipeline && previousPipeline.vertexProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.vertexProgram);
+ 
+-                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, 'vertex');
+-                this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
++                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader!, 'vertex');
++                this.programs.vertex.set(nodeBuilderState.vertexShader!, stageVertex);
+ 
+                 backend.createProgram(stageVertex);
+             }
+ 
+-            let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader);
++            let stageFragment = this.programs.fragment.get(nodeBuilderState.fragmentShader!);
+ 
+             if (stageFragment === undefined) {
+                 if (previousPipeline && previousPipeline.fragmentProgram.usedTimes === 0)
+                     this._releaseProgram(previousPipeline.fragmentProgram);
+ 
+-                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, 'fragment');
+-                this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
++                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader!, 'fragment');
++                this.programs.fragment.set(nodeBuilderState.fragmentShader!, stageFragment);
+ 
+                 backend.createProgram(stageFragment);
+             }
+@@ -130,7 +161,7 @@ class Pipelines extends DataMap {
+ 
+             const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
+ 
+-            let pipeline = this.caches.get(cacheKey);
++            let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
+ 
+             if (pipeline === undefined) {
+                 if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
+@@ -154,7 +185,7 @@ class Pipelines extends DataMap {
          return data.pipeline;
      }
  
@@ -2679,7 +2770,44 @@ index f6c570c4..65433aaf 100644
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
-@@ -197,7 +226,12 @@ class Pipelines extends DataMap {
+@@ -166,20 +197,23 @@ class Pipelines extends DataMap {
+ 
+             // programs
+ 
+-            if (pipeline.isComputePipeline) {
+-                pipeline.computeProgram.usedTimes--;
++            if ((pipeline as ComputePipeline).isComputePipeline) {
++                (pipeline as ComputePipeline).computeProgram.usedTimes--;
+ 
+-                if (pipeline.computeProgram.usedTimes === 0) this._releaseProgram(pipeline.computeProgram);
++                if ((pipeline as ComputePipeline).computeProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as ComputePipeline).computeProgram);
+             } else {
+-                pipeline.fragmentProgram.usedTimes--;
+-                pipeline.vertexProgram.usedTimes--;
++                (pipeline as RenderPipeline).fragmentProgram.usedTimes--;
++                (pipeline as RenderPipeline).vertexProgram.usedTimes--;
+ 
+-                if (pipeline.vertexProgram.usedTimes === 0) this._releaseProgram(pipeline.vertexProgram);
+-                if (pipeline.fragmentProgram.usedTimes === 0) this._releaseProgram(pipeline.fragmentProgram);
++                if ((pipeline as RenderPipeline).vertexProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderPipeline).vertexProgram);
++                if ((pipeline as RenderPipeline).fragmentProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderPipeline).fragmentProgram);
+             }
+         }
+ 
+-        super.delete(object);
++        return super.delete(object);
+     }
+ 
+     dispose() {
+@@ -193,16 +227,21 @@ class Pipelines extends DataMap {
+         };
+     }
+ 
+-    updateForRender(renderObject) {
++    updateForRender(renderObject: RenderObject) {
          this.getForRender(renderObject);
      }
  
@@ -2693,7 +2821,13 @@ index f6c570c4..65433aaf 100644
          // check for existing pipeline
  
          cacheKey = cacheKey || this._getComputeCacheKey(computeNode, stageCompute);
-@@ -215,7 +249,13 @@ class Pipelines extends DataMap {
+ 
+-        let pipeline = this.caches.get(cacheKey);
++        let pipeline = this.caches.get(cacheKey) as ComputePipeline | undefined;
+ 
+         if (pipeline === undefined) {
+             pipeline = new ComputePipeline(cacheKey, stageCompute);
+@@ -215,12 +254,18 @@ class Pipelines extends DataMap {
          return pipeline;
      }
  
@@ -2703,12 +2837,18 @@ index f6c570c4..65433aaf 100644
 +        stageVertex: ProgrammableStage,
 +        stageFragment: ProgrammableStage,
 +        cacheKey: string,
-+        promises: Promise<void> | null,
++        promises: Promise<void>[] | null,
 +    ) {
          // check for existing pipeline
  
          cacheKey = cacheKey || this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
-@@ -235,11 +275,11 @@ class Pipelines extends DataMap {
+ 
+-        let pipeline = this.caches.get(cacheKey);
++        let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
+ 
+         if (pipeline === undefined) {
+             pipeline = new RenderPipeline(cacheKey, stageVertex, stageFragment);
+@@ -235,32 +280,32 @@ class Pipelines extends DataMap {
          return pipeline;
      }
  
@@ -2722,27 +2862,61 @@ index f6c570c4..65433aaf 100644
          return stageVertex.id + ',' + stageFragment.id + ',' + this.backend.getRenderCacheKey(renderObject);
      }
  
+-    _releasePipeline(pipeline) {
++    _releasePipeline(pipeline: Pipeline) {
+         this.caches.delete(pipeline.cacheKey);
+     }
+ 
+-    _releaseProgram(program) {
++    _releaseProgram(program: ProgrammableStage) {
+         const code = program.code;
+         const stage = program.stage;
+ 
+         this.programs[stage].delete(code);
+     }
+ 
+-    _needsComputeUpdate(computeNode) {
++    _needsComputeUpdate(computeNode: ComputeNode) {
+         const data = this.get(computeNode);
+ 
+         return data.pipeline === undefined || data.version !== computeNode.version;
+     }
+ 
+-    _needsRenderUpdate(renderObject) {
++    _needsRenderUpdate(renderObject: RenderObject) {
+         const data = this.get(renderObject);
+ 
+         return data.pipeline === undefined || this.backend.needsRenderUpdate(renderObject);
 diff --git a/examples-jsm/examples/renderers/common/ProgrammableStage.ts b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
-index a684e444..6b643625 100644
+index a684e444..62ebf0a0 100644
 --- a/examples-jsm/examples/renderers/common/ProgrammableStage.ts
 +++ b/examples-jsm/examples/renderers/common/ProgrammableStage.ts
-@@ -1,6 +1,16 @@
+@@ -1,7 +1,24 @@
++import NodeAttribute from '../../nodes/core/NodeAttribute.js';
++
  let _id = 0;
  
  class ProgrammableStage {
+-    constructor(code, type, transforms = null, attributes = null) {
 +    id: number;
 +
++    code: string;
++    stage: 'compute' | 'vertex' | 'fragment';
 +    // TODO
-+    // code
-+    // stage
 +    // transforms
-+    // attributes
++    attributes: NodeAttribute[] | null;
 +
 +    usedTimes: number;
 +
-     constructor(code, type, transforms = null, attributes = null) {
++    constructor(
++        code: string,
++        type: 'compute' | 'vertex' | 'fragment',
++        transforms = null,
++        attributes: NodeAttribute[] | null = null,
++    ) {
          this.id = _id++;
  
+         this.code = code;
 diff --git a/examples-jsm/examples/renderers/common/RenderBundle.ts b/examples-jsm/examples/renderers/common/RenderBundle.ts
 index e59e4937..95b0518a 100644
 --- a/examples-jsm/examples/renderers/common/RenderBundle.ts
@@ -3077,10 +3251,10 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 861c15dc..543e23b6 100644
+index 861c15dc..7a13d82d 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
-@@ -1,4 +1,12 @@
+@@ -1,4 +1,13 @@
  import ClippingContext from './ClippingContext.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
@@ -3090,10 +3264,11 @@ index 861c15dc..543e23b6 100644
 +import RenderContext from './RenderContext.js';
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
 +import Binding from './Binding.js';
++import RenderPipeline from './RenderPipeline.js';
  
  let id = 0;
  
-@@ -27,7 +35,58 @@ function getKeys(obj) {
+@@ -27,7 +36,59 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -3119,7 +3294,8 @@ index 861c15dc..543e23b6 100644
 +
 +    // TODO
 +    // attributes
-+    // pipeline
++    pipeline: RenderPipeline;
++    // TODO
 +    // vertexBuffers
 +
 +    clippingContext!: ClippingContext;
@@ -3153,7 +3329,7 @@ index 861c15dc..543e23b6 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +109,7 @@ export default class RenderObject {
+@@ -50,7 +111,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
@@ -3162,7 +3338,7 @@ index 861c15dc..543e23b6 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +130,7 @@ export default class RenderObject {
+@@ -71,7 +132,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -3171,7 +3347,7 @@ index 861c15dc..543e23b6 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +148,9 @@ export default class RenderObject {
+@@ -89,9 +150,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -3183,7 +3359,7 @@ index 861c15dc..543e23b6 100644
  
          return true;
      }
-@@ -109,7 +168,7 @@ export default class RenderObject {
+@@ -109,7 +170,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -3192,7 +3368,7 @@ index 861c15dc..543e23b6 100644
      }
  
      getAttributes() {
-@@ -206,6 +265,6 @@ export default class RenderObject {
+@@ -206,6 +267,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
