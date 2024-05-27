@@ -46,7 +46,7 @@ export interface RendererParameters {
 }
 declare class Renderer {
     readonly isRenderer: true;
-    domElement: HTMLCanvasElement | null;
+    domElement: HTMLCanvasElement;
     backend: Backend;
     autoClear: boolean;
     autoClearColor: boolean;
