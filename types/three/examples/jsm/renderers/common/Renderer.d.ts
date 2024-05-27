@@ -229,7 +229,7 @@ declare class Renderer {
         width: number,
         height: number,
         index?: number,
-    ): void;
+    ): Promise<import("three").TypedArray>;
     _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void;
     _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
     _renderObjects(renderList: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void;
