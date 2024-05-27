@@ -1831,28 +1831,67 @@ index 0b00319a..c190633b 100644
      }
  }
 diff --git a/examples-jsm/examples/renderers/common/Attributes.ts b/examples-jsm/examples/renderers/common/Attributes.ts
-index ed9e8e9e..f0f75022 100644
+index ed9e8e9e..a17571cb 100644
 --- a/examples-jsm/examples/renderers/common/Attributes.ts
 +++ b/examples-jsm/examples/renderers/common/Attributes.ts
-@@ -1,9 +1,12 @@
+@@ -1,23 +1,32 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
- import { DynamicDrawUsage } from 'three';
+-import { DynamicDrawUsage } from 'three';
++import { BufferAttribute, DynamicDrawUsage, InterleavedBuffer, InterleavedBufferAttribute } from 'three';
 +import Backend from './Backend.js';
  
- class Attributes extends DataMap {
+-class Attributes extends DataMap {
 -    constructor(backend) {
++interface Data {
++    version?: number | undefined;
++}
++
++class Attributes extends DataMap<{ attribute: { key: BufferAttribute | InterleavedBufferAttribute; value: Data } }> {
 +    backend: Backend;
 +
 +    constructor(backend: Backend) {
          super();
  
          this.backend = backend;
+     }
+ 
+-    delete(attribute) {
++    delete(attribute: BufferAttribute | InterleavedBufferAttribute) {
+         const attributeData = super.delete(attribute);
+ 
+         if (attributeData !== undefined) {
+             this.backend.destroyAttribute(attribute);
+         }
++
++        return attributeData;
+     }
+ 
+-    update(attribute, type) {
++    update(attribute: BufferAttribute | InterleavedBufferAttribute, type: AttributeType) {
+         const data = this.get(attribute);
+ 
+         if (data.version === undefined) {
+@@ -41,10 +50,11 @@ class Attributes extends DataMap {
+         }
+     }
+ 
+-    _getBufferAttribute(attribute) {
+-        if (attribute.isInterleavedBufferAttribute) attribute = attribute.data;
++    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute) {
++        if ((attribute as InterleavedBufferAttribute).isInterleavedBufferAttribute)
++            (attribute as BufferAttribute | InterleavedBuffer) = (attribute as InterleavedBufferAttribute).data;
+ 
+-        return attribute;
++        return attribute as BufferAttribute | InterleavedBuffer;
+     }
+ }
+ 
 diff --git a/examples-jsm/examples/renderers/common/Backend.ts b/examples-jsm/examples/renderers/common/Backend.ts
-index e48a8029..7b683c48 100644
+index e48a8029..c387c7ae 100644
 --- a/examples-jsm/examples/renderers/common/Backend.ts
 +++ b/examples-jsm/examples/renderers/common/Backend.ts
-@@ -1,22 +1,68 @@
+@@ -1,22 +1,74 @@
 -let vector2 = null;
 -let vector4 = null;
 -let color4 = null;
@@ -1868,6 +1907,7 @@ index e48a8029..7b683c48 100644
 +    BufferAttribute,
 +    Object3D,
 +    Scene,
++    Texture,
 +} from 'three';
 +import Renderer from './Renderer.js';
 +import RenderContext from './RenderContext.js';
@@ -1892,14 +1932,19 @@ index e48a8029..7b683c48 100644
 +interface RenderBundleData {
 +    renderContexts?: Set<RenderContext>;
 +}
++
++interface RenderObjectData {}
  
 -class Backend {
 -    constructor(parameters = {}) {
-+interface RenderObjectData {}
++interface TextureData {}
 +
 +abstract class Backend {
 +    parameters: BackendParameters;
-+    data: WeakMap<RenderContext | RenderBundle | RenderObject, RenderContextData | RenderBundleData | RenderObjectData>;
++    data: WeakMap<
++        RenderContext | RenderBundle | RenderObject | Texture,
++        RenderContextData | RenderBundleData | RenderObjectData | TextureData
++    >;
 +    renderer: Renderer | null;
 +    domElement: HTMLCanvasElement | null;
 +
@@ -1907,8 +1952,8 @@ index e48a8029..7b683c48 100644
          this.parameters = Object.assign({}, parameters);
 -        this.data = new WeakMap();
 +        this.data = new WeakMap<
-+            RenderContext | RenderBundle | RenderObject,
-+            RenderContextData | RenderBundleData | RenderObjectData
++            RenderContext | RenderBundle | RenderObject | Texture,
++            RenderContextData | RenderBundleData | RenderObjectData | TextureData
 +        >();
          this.renderer = null;
          this.domElement = null;
@@ -1930,7 +1975,7 @@ index e48a8029..7b683c48 100644
      // render context
  
      begin(renderContext) {}
-@@ -55,7 +101,11 @@ class Backend {
+@@ -55,7 +107,11 @@ class Backend {
  
      // node builder
  
@@ -1943,7 +1988,7 @@ index e48a8029..7b683c48 100644
  
      // textures
  
-@@ -144,7 +194,10 @@ class Backend {
+@@ -144,7 +200,11 @@ class Backend {
          this.data.set(object, value);
      }
  
@@ -1951,11 +1996,12 @@ index e48a8029..7b683c48 100644
 +    get(object: RenderContext): RenderContextData;
 +    get(object: RenderBundle): RenderBundleData;
 +    get(object: RenderObject): RenderObjectData;
-+    get(object: RenderContext | RenderBundle | RenderObject) {
++    get(object: Texture): TextureData;
++    get(object: RenderContext | RenderBundle | RenderObject | Texture) {
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -155,11 +208,11 @@ class Backend {
+@@ -155,11 +215,11 @@ class Backend {
          return map;
      }
  
@@ -2045,10 +2091,10 @@ index a12f3563..e7ae8d1c 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/Bindings.ts b/examples-jsm/examples/renderers/common/Bindings.ts
-index 9485ec3b..1b25feb7 100644
+index 9485ec3b..26ecf706 100644
 --- a/examples-jsm/examples/renderers/common/Bindings.ts
 +++ b/examples-jsm/examples/renderers/common/Bindings.ts
-@@ -1,8 +1,38 @@
+@@ -1,8 +1,43 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
 +import Backend from './Backend.js';
@@ -2060,6 +2106,11 @@ index 9485ec3b..1b25feb7 100644
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +import Binding from './Binding.js';
++import { SampledTexture } from './SampledTexture.js';
++import StorageBuffer from './StorageBuffer.js';
++import NodeUniformsGroup from './nodes/NodeUniformsGroup.js';
++import UniformBuffer from './UniformBuffer.js';
++import Sampler from './Sampler.js';
 +
 +interface Data {
 +    bindings?: Binding[] | undefined;
@@ -2089,7 +2140,7 @@ index 9485ec3b..1b25feb7 100644
          super();
  
          this.backend = backend;
-@@ -15,7 +45,7 @@ class Bindings extends DataMap {
+@@ -15,7 +50,7 @@ class Bindings extends DataMap {
          this.pipelines.bindings = this; // assign bindings to pipelines
      }
  
@@ -2098,7 +2149,7 @@ index 9485ec3b..1b25feb7 100644
          const bindings = renderObject.getBindings();
  
          const data = this.get(renderObject);
-@@ -33,7 +63,7 @@ class Bindings extends DataMap {
+@@ -33,7 +68,7 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2107,7 +2158,7 @@ index 9485ec3b..1b25feb7 100644
          const data = this.get(computeNode);
  
          if (data.bindings === undefined) {
-@@ -51,15 +81,15 @@ class Bindings extends DataMap {
+@@ -51,27 +86,27 @@ class Bindings extends DataMap {
          return data.bindings;
      }
  
@@ -2124,9 +2175,17 @@ index 9485ec3b..1b25feb7 100644
 -    _init(bindings) {
 +    _init(bindings: Binding[]) {
          for (const binding of bindings) {
-             if (binding.isSampledTexture) {
-                 this.textures.updateTexture(binding.texture);
-@@ -71,7 +101,7 @@ class Bindings extends DataMap {
+-            if (binding.isSampledTexture) {
+-                this.textures.updateTexture(binding.texture);
+-            } else if (binding.isStorageBuffer) {
+-                const attribute = binding.attribute;
++            if ((binding as SampledTexture).isSampledTexture) {
++                this.textures.updateTexture((binding as SampledTexture).texture);
++            } else if ((binding as StorageBuffer).isStorageBuffer) {
++                const attribute = (binding as StorageBuffer).attribute;
+ 
+                 this.attributes.update(attribute, AttributeType.STORAGE);
+             }
          }
      }
  
@@ -2135,6 +2194,66 @@ index 9485ec3b..1b25feb7 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
+@@ -79,32 +114,32 @@ class Bindings extends DataMap {
+         // iterate over all bindings and check if buffer updates or a new binding group is required
+ 
+         for (const binding of bindings) {
+-            if (binding.isNodeUniformsGroup) {
+-                const updated = this.nodes.updateGroup(binding);
++            if ((binding as NodeUniformsGroup).isNodeUniformsGroup) {
++                const updated = this.nodes.updateGroup(binding as NodeUniformsGroup);
+ 
+                 if (!updated) continue;
+             }
+ 
+-            if (binding.isUniformBuffer) {
+-                const updated = binding.update();
++            if ((binding as UniformBuffer).isUniformBuffer) {
++                const updated = (binding as UniformBuffer).update();
+ 
+                 if (updated) {
+                     backend.updateBinding(binding);
+                 }
+-            } else if (binding.isSampler) {
+-                binding.update();
+-            } else if (binding.isSampledTexture) {
+-                const texture = binding.texture;
++            } else if ((binding as Sampler).isSampler) {
++                (binding as Sampler).update();
++            } else if ((binding as SampledTexture).isSampledTexture) {
++                const texture = (binding as SampledTexture).texture;
+ 
+-                if (binding.needsBindingsUpdate) needsBindingsUpdate = true;
++                if ((binding as SampledTexture).needsBindingsUpdate) needsBindingsUpdate = true;
+ 
+-                const updated = binding.update();
++                const updated = (binding as SampledTexture).update();
+ 
+                 if (updated) {
+-                    this.textures.updateTexture(binding.texture);
++                    this.textures.updateTexture((binding as SampledTexture).texture);
+                 }
+ 
+-                const textureData = backend.get(binding.texture);
++                const textureData = backend.get((binding as SampledTexture).texture);
+ 
+                 if (
+                     backend.isWebGPUBackend === true &&
+@@ -116,11 +151,11 @@ class Bindings extends DataMap {
+                         'Bindings._update: binding should be available:',
+                         binding,
+                         updated,
+-                        binding.texture,
+-                        binding.textureNode.value,
++                        (binding as SampledTexture).texture,
++                        (binding as SampledTexture).textureNode.value,
+                     );
+ 
+-                    this.textures.updateTexture(binding.texture);
++                    this.textures.updateTexture((binding as SampledTexture).texture);
+                     needsBindingsUpdate = true;
+                 }
+ 
 diff --git a/examples-jsm/examples/renderers/common/Buffer.ts b/examples-jsm/examples/renderers/common/Buffer.ts
 index 17013c6d..56064725 100644
 --- a/examples-jsm/examples/renderers/common/Buffer.ts
@@ -3251,15 +3370,24 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 861c15dc..7a13d82d 100644
+index 861c15dc..e443269d 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
-@@ -1,4 +1,13 @@
+@@ -1,8 +1,26 @@
  import ClippingContext from './ClippingContext.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
 +import Renderer from './Renderer.js';
-+import { BufferGeometry, Camera, Material, Object3D, Scene } from 'three';
++import {
++    BufferAttribute,
++    BufferGeometry,
++    Camera,
++    InterleavedBuffer,
++    InterleavedBufferAttribute,
++    Material,
++    Object3D,
++    Scene,
++} from 'three';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import RenderContext from './RenderContext.js';
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
@@ -3268,7 +3396,12 @@ index 861c15dc..7a13d82d 100644
  
  let id = 0;
  
-@@ -27,7 +36,59 @@ function getKeys(obj) {
+-function getKeys(obj) {
++function getKeys(obj: Material) {
+     const keys = Object.keys(obj);
+ 
+     let proto = Object.getPrototypeOf(obj);
+@@ -27,7 +45,55 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -3289,21 +3422,17 @@ index 861c15dc..7a13d82d 100644
 +    geometry: BufferGeometry;
 +    version: number;
 +
-+    // TODO
-+    // drawRange
++    drawRange: { start: number; count: number } | null;
 +
-+    // TODO
-+    // attributes
-+    pipeline: RenderPipeline;
-+    // TODO
-+    // vertexBuffers
++    attributes: Array<BufferAttribute | InterleavedBufferAttribute> | null;
++    pipeline: RenderPipeline | null;
++    vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
 +
 +    clippingContext!: ClippingContext;
 +
 +    clippingContextVersion: number;
 +
-+    // TODO
-+    // initialNodesCacheKey
++    initialNodesCacheKey: string;
 +    initialCacheKey: string;
 +
 +    _nodeBuilderState: NodeBuilderState | null;
@@ -3329,7 +3458,7 @@ index 861c15dc..7a13d82d 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +111,7 @@ export default class RenderObject {
+@@ -50,7 +116,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
@@ -3338,7 +3467,7 @@ index 861c15dc..7a13d82d 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +132,7 @@ export default class RenderObject {
+@@ -71,7 +137,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -3347,7 +3476,7 @@ index 861c15dc..7a13d82d 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +150,9 @@ export default class RenderObject {
+@@ -89,9 +155,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -3359,7 +3488,7 @@ index 861c15dc..7a13d82d 100644
  
          return true;
      }
-@@ -109,7 +170,7 @@ export default class RenderObject {
+@@ -109,7 +175,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -3368,7 +3497,18 @@ index 861c15dc..7a13d82d 100644
      }
  
      getAttributes() {
-@@ -206,6 +267,6 @@ export default class RenderObject {
+@@ -118,8 +184,8 @@ export default class RenderObject {
+         const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
+         const geometry = this.geometry;
+ 
+-        const attributes = [];
+-        const vertexBuffers = new Set();
++        const attributes: Array<BufferAttribute | InterleavedBufferAttribute> = [];
++        const vertexBuffers = new Set<BufferAttribute | InterleavedBuffer>();
+ 
+         for (const nodeAttribute of nodeAttributes) {
+             const attribute =
+@@ -206,6 +272,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -4519,6 +4659,109 @@ index acf180d8..3e7e9dfd 100644
      }
  
      get compute() {
+diff --git a/examples-jsm/examples/renderers/common/SampledTexture.ts b/examples-jsm/examples/renderers/common/SampledTexture.ts
+index d995a59f..a57e1359 100644
+--- a/examples-jsm/examples/renderers/common/SampledTexture.ts
++++ b/examples-jsm/examples/renderers/common/SampledTexture.ts
+@@ -1,9 +1,18 @@
++import { Texture, VideoTexture } from 'three';
+ import Binding from './Binding.js';
+ 
+ let id = 0;
+ 
+ class SampledTexture extends Binding {
+-    constructor(name, texture) {
++    id: number;
++
++    texture: Texture;
++    version: number;
++    store: boolean;
++
++    readonly isSampledTexture: true;
++
++    constructor(name: string, texture: Texture) {
+         super(name);
+ 
+         this.id = id++;
+@@ -18,7 +27,7 @@ class SampledTexture extends Binding {
+     get needsBindingsUpdate() {
+         const { texture, version } = this;
+ 
+-        return texture.isVideoTexture ? true : version !== texture.version; // @TODO: version === 0 && texture.version > 0 ( add it just to External Textures like PNG,JPG )
++        return (texture as VideoTexture).isVideoTexture ? true : version !== texture.version; // @TODO: version === 0 && texture.version > 0 ( add it just to External Textures like PNG,JPG )
+     }
+ 
+     update() {
+@@ -35,7 +44,9 @@ class SampledTexture extends Binding {
+ }
+ 
+ class SampledArrayTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampledArrayTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampledArrayTexture = true;
+@@ -43,7 +54,9 @@ class SampledArrayTexture extends SampledTexture {
+ }
+ 
+ class Sampled3DTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampled3DTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampled3DTexture = true;
+@@ -51,7 +64,9 @@ class Sampled3DTexture extends SampledTexture {
+ }
+ 
+ class SampledCubeTexture extends SampledTexture {
+-    constructor(name, texture) {
++    readonly isSampledCubeTexture: true;
++
++    constructor(name: string, texture) {
+         super(name, texture);
+ 
+         this.isSampledCubeTexture = true;
+diff --git a/examples-jsm/examples/renderers/common/Sampler.ts b/examples-jsm/examples/renderers/common/Sampler.ts
+index 8cd20d04..86e6f45e 100644
+--- a/examples-jsm/examples/renderers/common/Sampler.ts
++++ b/examples-jsm/examples/renderers/common/Sampler.ts
+@@ -1,7 +1,13 @@
+ import Binding from './Binding.js';
+ 
+ class Sampler extends Binding {
+-    constructor(name, texture) {
++    // TODO
++    // texture
++    version: number;
++
++    readonly isSampler: true;
++
++    constructor(name: string, texture) {
+         super(name);
+ 
+         this.texture = texture;
+diff --git a/examples-jsm/examples/renderers/common/StorageBuffer.ts b/examples-jsm/examples/renderers/common/StorageBuffer.ts
+index ef5d3e46..fb6acc45 100644
+--- a/examples-jsm/examples/renderers/common/StorageBuffer.ts
++++ b/examples-jsm/examples/renderers/common/StorageBuffer.ts
+@@ -1,7 +1,12 @@
+ import Buffer from './Buffer.js';
+ 
+ class StorageBuffer extends Buffer {
+-    constructor(name, attribute) {
++    // TODO
++    // attribute
++
++    readonly isStorageBuffer: true;
++
++    constructor(name: string, attribute) {
+         super(name, attribute ? attribute.array : null);
+ 
+         this.attribute = attribute;
 diff --git a/examples-jsm/examples/renderers/common/Textures.ts b/examples-jsm/examples/renderers/common/Textures.ts
 index 0eb0509c..6eb18198 100644
 --- a/examples-jsm/examples/renderers/common/Textures.ts
