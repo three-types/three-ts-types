@@ -12,13 +12,6 @@ import Renderer from "../Renderer.js";
 import RenderObject from "../RenderObject.js";
 import NodeBuilderState from "./NodeBuilderState.js";
 import NodeUniformsGroup from "./NodeUniformsGroup.js";
-declare module "three" {
-    interface Scene {
-        environmentNode?: Node | null | undefined;
-        backgroundNode?: Node | null | undefined;
-        fogNode?: Node | null | undefined;
-    }
-}
 interface NodeUniformsGroupData {
     renderId?: number | undefined;
     frameId?: number | undefined;

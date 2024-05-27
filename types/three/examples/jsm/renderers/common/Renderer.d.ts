@@ -60,7 +60,7 @@ declare class Renderer {
     sortObjects: boolean;
     depth: boolean;
     stencil: boolean;
-    clippingPlanes: Plane[];
+    clippingPlanes: readonly Plane[];
     info: Info;
     toneMappingNode: Node | null;
     _pixelRatio: number;
