@@ -72,7 +72,7 @@ declare class Nodes extends DataMap<{
     getForRender(renderObject: RenderObject): NodeBuilderState;
     delete(
         object: NodeUniformsGroup | RenderObject | ComputeNode | Scene,
-    ): SceneData | RenderObjectData | NodeUniformsGroupData | ComputeNodeData;
+    ): RenderObjectData | SceneData | NodeUniformsGroupData | ComputeNodeData;
     getForCompute(computeNode: ComputeNode): NodeBuilderState;
     _createNodeBuilderState(nodeBuilder: NodeBuilder): NodeBuilderState;
     getEnvironmentNode(scene: Scene): Node | null;
