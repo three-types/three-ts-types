@@ -23,6 +23,7 @@ const files = [
     'renderers/common/Binding',
     'renderers/common/Bindings',
     'renderers/common/Buffer',
+    'renderers/common/BufferUtils',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',
     'renderers/common/Color4',
@@ -47,7 +48,7 @@ const files = [
     'renderers/common/Textures',
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
-    'renderers/common/UniformGroup',
+    'renderers/common/UniformsGroup',
 ];
 
 const inDir = './examples';
