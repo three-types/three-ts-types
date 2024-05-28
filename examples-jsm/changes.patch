@@ -1,3 +1,157 @@
+diff --git a/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts b/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
+index 4f7bbae4..ff871376 100644
+--- a/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
++++ b/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
+@@ -2,10 +2,36 @@ import InputNode from '../core/InputNode.js';
+ import { addNodeClass } from '../core/Node.js';
+ import { varying } from '../core/VaryingNode.js';
+ import { nodeObject, addNodeElement } from '../shadernode/ShaderNode.js';
+-import { InterleavedBufferAttribute, InterleavedBuffer, StaticDrawUsage, DynamicDrawUsage } from 'three';
+-
+-class BufferAttributeNode extends InputNode {
+-    constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
++import {
++    InterleavedBufferAttribute,
++    InterleavedBuffer,
++    StaticDrawUsage,
++    DynamicDrawUsage,
++    Usage,
++    BufferAttribute,
++    InstancedBufferAttribute,
++    TypedArray,
++} from 'three';
++import NodeBuilder from '../core/NodeBuilder.js';
++
++class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
++    readonly isBufferNode: true;
++
++    bufferType: string | null;
++    bufferStride: number;
++    bufferOffset: number;
++
++    usage: Usage;
++    instanced: boolean;
++
++    attribute: BufferAttribute | InterleavedBufferAttribute | null;
++
++    constructor(
++        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        bufferType: string | null = null,
++        bufferStride = 0,
++        bufferOffset = 0,
++    ) {
+         super(value, bufferType);
+ 
+         this.isBufferNode = true;
+@@ -19,14 +45,14 @@ class BufferAttributeNode extends InputNode {
+ 
+         this.attribute = null;
+ 
+-        if (value && value.isBufferAttribute === true) {
+-            this.attribute = value;
+-            this.usage = value.usage;
+-            this.instanced = value.isInstancedBufferAttribute;
++        if (value && (value as BufferAttribute).isBufferAttribute === true) {
++            this.attribute = value as BufferAttribute;
++            this.usage = (value as BufferAttribute).usage;
++            this.instanced = (value as InstancedBufferAttribute).isInstancedBufferAttribute;
+         }
+     }
+ 
+-    getNodeType(builder) {
++    getNodeType(builder: NodeBuilder) {
+         if (this.bufferType === null) {
+             this.bufferType = builder.getTypeFromAttribute(this.attribute);
+         }
+@@ -34,16 +60,19 @@ class BufferAttributeNode extends InputNode {
+         return this.bufferType;
+     }
+ 
+-    setup(builder) {
++    setup(builder: NodeBuilder) {
+         if (this.attribute !== null) return;
+ 
+         const type = this.getNodeType(builder);
+-        const array = this.value;
++        const array = this.value as TypedArray | InterleavedBuffer;
+         const itemSize = builder.getTypeLength(type);
+         const stride = this.bufferStride || itemSize;
+         const offset = this.bufferOffset;
+ 
+-        const buffer = array.isInterleavedBuffer === true ? array : new InterleavedBuffer(array, stride);
++        const buffer =
++            (array as InterleavedBuffer).isInterleavedBuffer === true
++                ? (array as InterleavedBuffer)
++                : new InterleavedBuffer(array as TypedArray, stride);
+         const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
+ 
+         buffer.setUsage(this.usage);
+@@ -52,7 +81,7 @@ class BufferAttributeNode extends InputNode {
+         this.attribute.isInstancedBufferAttribute = this.instanced; // @TODO: Add a possible: InstancedInterleavedBufferAttribute
+     }
+ 
+-    generate(builder) {
++    generate(builder: NodeBuilder) {
+         const nodeType = this.getNodeType(builder);
+ 
+         const nodeAttribute = builder.getBufferAttributeFromNode(this, nodeType);
+@@ -77,13 +106,13 @@ class BufferAttributeNode extends InputNode {
+         return 'bufferAttribute';
+     }
+ 
+-    setUsage(value) {
++    setUsage(value: Usage) {
+         this.usage = value;
+ 
+         return this;
+     }
+ 
+-    setInstanced(value) {
++    setInstanced(value: boolean) {
+         this.instanced = value;
+ 
+         return this;
+@@ -92,15 +121,31 @@ class BufferAttributeNode extends InputNode {
+ 
+ export default BufferAttributeNode;
+ 
+-export const bufferAttribute = (array, type, stride, offset) =>
+-    nodeObject(new BufferAttributeNode(array, type, stride, offset));
+-export const dynamicBufferAttribute = (array, type, stride, offset) =>
+-    bufferAttribute(array, type, stride, offset).setUsage(DynamicDrawUsage);
+-
+-export const instancedBufferAttribute = (array, type, stride, offset) =>
+-    bufferAttribute(array, type, stride, offset).setInstanced(true);
+-export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
+-    dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
++export const bufferAttribute = (
++    array: TypedArray | InterleavedBuffer | BufferAttribute,
++    type?: string | null,
++    stride?: number,
++    offset?: number,
++) => nodeObject(new BufferAttributeNode(array, type, stride, offset));
++export const dynamicBufferAttribute = (
++    array: TypedArray | InterleavedBuffer | BufferAttribute,
++    type?: string | null,
++    stride?: number,
++    offset?: number,
++) => bufferAttribute(array, type, stride, offset).setUsage(DynamicDrawUsage);
++
++export const instancedBufferAttribute = (
++    array: TypedArray | InterleavedBuffer | BufferAttribute,
++    type?: string | null,
++    stride?: number,
++    offset?: number,
++) => bufferAttribute(array, type, stride, offset).setInstanced(true);
++export const instancedDynamicBufferAttribute = (
++    array: TypedArray | InterleavedBuffer | BufferAttribute,
++    type?: string | null,
++    stride?: number,
++    offset?: number,
++) => dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
+ 
+ addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
+ 
 diff --git a/examples-jsm/examples/nodes/accessors/TextureNode.ts b/examples-jsm/examples/nodes/accessors/TextureNode.ts
 index 73a989fe..39012303 100644
 --- a/examples-jsm/examples/nodes/accessors/TextureNode.ts
@@ -7169,3 +7323,16 @@ index c32133df..8ac06078 100644
          return new WGSLNodeFunction(source);
      }
  }
+diff --git a/types/three/src/core/InterleavedBuffer.d.ts b/types/three/src/core/InterleavedBuffer.d.ts
+index be08e1f4..7b01ef5b 100644
+--- a/types/three/src/core/InterleavedBuffer.d.ts
++++ b/types/three/src/core/InterleavedBuffer.d.ts
+@@ -10,6 +10,8 @@ import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
+  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/InterleavedBuffer.js | Source}
+  */
+ export class InterleavedBuffer {
++    readonly isInterleavedBuffer: true;
++
+     /**
+      * Create a new instance of {@link InterleavedBuffer}
+      * @param array A {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray | TypedArray} with a shared buffer. Stores the geometry data.
