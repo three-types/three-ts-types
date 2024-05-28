@@ -2269,7 +2269,7 @@ index f8bb2b37..cee70486 100644
      }
  }
 diff --git a/examples-jsm/examples/nodes/core/UniformNode.ts b/examples-jsm/examples/nodes/core/UniformNode.ts
-index 90e86648..0987ac55 100644
+index 90e86648..78a60c3b 100644
 --- a/examples-jsm/examples/nodes/core/UniformNode.ts
 +++ b/examples-jsm/examples/nodes/core/UniformNode.ts
 @@ -1,10 +1,17 @@
@@ -2351,7 +2351,7 @@ index 90e86648..0987ac55 100644
  
      // @TODO: get ConstNode from .traverse() in the future
 -    const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
-+    const value =
++    const value: TValue =
 +        arg1 && (arg1 as Node).isNode === true
 +            ? (arg1.node && arg1.node.value) || (arg1 as InputNode<TValue>).value
 +            : arg1;
