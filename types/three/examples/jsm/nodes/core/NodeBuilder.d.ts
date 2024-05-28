@@ -41,6 +41,7 @@ import NodeUniform from "./NodeUniform.js";
 import NodeVar from "./NodeVar.js";
 import NodeVarying from "./NodeVarying.js";
 import StackNode from "./StackNode.js";
+import StructTypeNode from "./StructTypeNode.js";
 import UniformNode from "./UniformNode.js";
 interface Flow {
     code: string;
@@ -89,9 +90,9 @@ declare abstract class NodeBuilder {
         index: number;
     };
     structs: {
-        vertex: Node[];
-        fragment: Node[];
-        compute: Node[];
+        vertex: StructTypeNode[];
+        fragment: StructTypeNode[];
+        compute: StructTypeNode[];
         index: number;
     };
     bindings: {
@@ -162,13 +163,44 @@ declare abstract class NodeBuilder {
     getFrontFacing(): void;
     getFragCoord(): void;
     isFlipY(): boolean;
-    generateTexture(): void;
-    generateTextureLod(): void;
+    abstract generateTexture(
+        texture: Texture,
+        textureProperty: string,
+        uvSnippet: string | null,
+        depthSnippet: string | null,
+    ): string;
+    abstract generateTextureLevel(
+        texture: Texture,
+        textureProperty: string,
+        uvSnippet: string | null,
+        levelSnippet: string | null,
+        depthSnippet: string | null,
+    ): string;
+    abstract generateTextureGrad(
+        texture: Texture,
+        textureProperty: string,
+        uvSnippet: string | null,
+        gradSnippet: [string, string] | null,
+        depthSnippet: string | null,
+    ): string;
+    abstract generateTextureCompare(
+        texture: Texture,
+        textureProperty: string,
+        uvSnippet: string | null,
+        compareSnippet: string | null,
+        depthSnippet: string | null,
+    ): string;
+    abstract generateTextureLoad(
+        texture: Texture,
+        textureProperty: string,
+        uvSnippet: string | null,
+        depthSnippet: string | null,
+    ): string;
     generateConst(type: string | null, value?: unknown): string;
     getType(type: string | null): string | null;
     hasGeometryAttribute(name: string): boolean;
     getAttribute(name: string, type: string | null): NodeAttribute;
-    getPropertyName(node: Node): string | undefined;
+    getPropertyName(node: unknown, shaderStage?: NodeShaderStage): string | undefined;
     isVector(type: string | null): boolean;
     isMatrix(type: string | null): boolean;
     isReference(type: string | null): boolean;
@@ -198,7 +230,7 @@ declare abstract class NodeBuilder {
         [x: `_node${string}`]: Node | undefined;
     };
     getBufferAttributeFromNode(node: Node, type: string | null): NodeAttribute;
-    getStructTypeFromNode(node: Node, shaderStage?: NodeShaderStage): Node;
+    getStructTypeFromNode(node: StructTypeNode, shaderStage?: NodeShaderStage): StructTypeNode;
     getUniformFromNode(
         node: UniformNode<unknown>,
         type: string | null,
@@ -227,11 +259,11 @@ declare abstract class NodeBuilder {
         propertyName?: string | null,
     ): Flow;
     getAttributesArray(): NodeAttribute[];
-    getAttributes(): void;
-    getVaryings(): void;
+    abstract getAttributes(shaderStage: NodeShaderStage): string;
+    abstract getVaryings(shaderStage: NodeShaderStage): string;
     getVar(type: string | null, name: string): string;
     getVars(shaderStage: "vertex" | "fragment" | "compute"): string;
-    getUniforms(): void;
+    abstract getUniforms(shaderStage: NodeShaderStage): string;
     getCodes(shaderStage: "vertex" | "fragment" | "compute"): string;
     getHash(): string;
     setShaderStage(shaderStage: NodeShaderStage | null): void;

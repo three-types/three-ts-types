@@ -14,6 +14,7 @@ const files = [
     'nodes/core/NodeUniform',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'nodes/core/StructTypeNode',
     'nodes/core/UniformNode',
     'renderers/common/nodes/NodeBuilderState',
     'renderers/common/nodes/Nodes',
@@ -52,6 +53,7 @@ const files = [
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
+    'renderers/webgl/nodes/GLSLNodeBuilder',
 ];
 
 const inDir = './examples';

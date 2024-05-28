@@ -24,6 +24,8 @@ export interface ShaderStageNodeData {
     code?: NodeCode | undefined;
     usageCount?: number | undefined;
     snippet?: string | undefined;
+    propertyName?: string | undefined;
+    propertySizeName?: string | undefined;
 }
 interface NodeData {
     vertex?: ShaderStageNodeData | undefined;
