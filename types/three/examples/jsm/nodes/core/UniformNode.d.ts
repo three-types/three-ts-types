@@ -18,4 +18,4 @@ export default UniformNode;
 export declare const uniform: <TValue>(
     arg1: InputNode<TValue> | TValue,
     arg2?: Node | string,
-) => import("../shadernode/ShaderNode.js").ShaderNodeObject<UniformNode<any>>;
+) => import("../shadernode/ShaderNode.js").ShaderNodeObject<UniformNode<TValue>>;
