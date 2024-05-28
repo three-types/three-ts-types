@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import prettier from 'prettier';
 
 const files = [
+    'nodes/accessors/BufferAttributeNode',
     'nodes/accessors/TextureNode',
     'nodes/code/CodeNode',
     'nodes/code/FunctionNode',
