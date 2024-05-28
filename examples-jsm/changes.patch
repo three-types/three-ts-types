@@ -1,5 +1,5 @@
 diff --git a/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts b/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
-index 4f7bbae4..ff871376 100644
+index 4f7bbae4..88c9a245 100644
 --- a/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
 +++ b/examples-jsm/examples/nodes/accessors/BufferAttributeNode.ts
 @@ -2,10 +2,36 @@ import InputNode from '../core/InputNode.js';
@@ -86,7 +86,7 @@ index 4f7bbae4..ff871376 100644
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
  
          buffer.setUsage(this.usage);
-@@ -52,7 +81,7 @@ class BufferAttributeNode extends InputNode {
+@@ -52,13 +81,13 @@ class BufferAttributeNode extends InputNode {
          this.attribute.isInstancedBufferAttribute = this.instanced; // @TODO: Add a possible: InstancedInterleavedBufferAttribute
      }
  
@@ -95,6 +95,13 @@ index 4f7bbae4..ff871376 100644
          const nodeType = this.getNodeType(builder);
  
          const nodeAttribute = builder.getBufferAttributeFromNode(this, nodeType);
+         const propertyName = builder.getPropertyName(nodeAttribute);
+ 
+-        let output = null;
++        let output: string | null | undefined = null;
+ 
+         if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
+             this.name = propertyName;
 @@ -77,13 +106,13 @@ class BufferAttributeNode extends InputNode {
          return 'bufferAttribute';
      }
