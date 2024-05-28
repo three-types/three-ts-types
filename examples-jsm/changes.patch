@@ -819,7 +819,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index ebdc13ff..d211b07b 100644
+index ebdc13ff..71560672 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
@@ -1244,7 +1244,7 @@ index ebdc13ff..d211b07b 100644
  
 -    getPropertyName(node /*, shaderStage*/) {
 -        return node.name;
-+    getPropertyName(node, shaderStage?: NodeShaderStage) {
++    getPropertyName(node: unknown, shaderStage?: NodeShaderStage) {
 +        return (node as { name?: string }).name;
      }
  
@@ -1655,10 +1655,10 @@ index ebdc13ff..d211b07b 100644
          toType = this.getVectorType(toType);
  
 diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
-index 96a7e0c7..a8dfa1ff 100644
+index 96a7e0c7..dd0b8779 100644
 --- a/examples-jsm/examples/nodes/core/NodeCache.ts
 +++ b/examples-jsm/examples/nodes/core/NodeCache.ts
-@@ -1,16 +1,52 @@
+@@ -1,16 +1,54 @@
 +import Node from './Node.js';
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
@@ -1685,6 +1685,8 @@ index 96a7e0c7..a8dfa1ff 100644
 +    code?: NodeCode | undefined;
 +    usageCount?: number | undefined;
 +    snippet?: string | undefined;
++    propertyName?: string | undefined;
++    propertySizeName?: string | undefined;
 +}
 +
 +interface NodeData {
@@ -6543,7 +6545,7 @@ index b9a999f1..2ed970b6 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
-index 4910f51f..039dc7e7 100644
+index 4910f51f..9f92e088 100644
 --- a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
 +++ b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,16 @@
@@ -6634,7 +6636,7 @@ index 4910f51f..039dc7e7 100644
      }
  
 -    getPropertyName(node, shaderStage) {
-+    getPropertyName(node, shaderStage?: NodeShaderStage) {
++    getPropertyName(node: unknown, shaderStage?: NodeShaderStage) {
          if (node.isOutputStructVar) return '';
  
          return super.getPropertyName(node, shaderStage);
@@ -6767,6 +6769,15 @@ index 4910f51f..039dc7e7 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
+@@ -355,7 +422,7 @@ ${flowData.code}
+         return snippet;
+     }
+ 
+-    getStructMembers(struct) {
++    getStructMembers(struct: Node) {
+         const snippets = [];
+         const members = struct.getMemberTypes();
+ 
 @@ -367,7 +434,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
@@ -6925,7 +6936,7 @@ index 97a42577..4491def1 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index ed6e38f9..438311f6 100644
+index ed6e38f9..31707319 100644
 --- a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7044,6 +7055,15 @@ index ed6e38f9..438311f6 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
+@@ -286,7 +305,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+         return snippet;
+     }
+ 
+-    getPropertyName(node, shaderStage = this.shaderStage) {
++    getPropertyName(node: unknown, shaderStage = this.shaderStage) {
+         if (node.isNodeVarying === true && node.needsInterpolation === true) {
+             if (shaderStage === 'vertex') {
+                 return `varyings.${node.name}`;
 @@ -323,7 +342,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          return null;
      }
