@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { argv } from 'node:process';
 
 const files = [
+    'nodes/accessors/BufferAttributeNode',
     'nodes/core/constants',
     'nodes/core/ContextNode',
     'nodes/core/Node',
