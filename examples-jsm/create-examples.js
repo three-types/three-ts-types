@@ -31,6 +31,7 @@ const files = [
     'nodes/fog/FogNode',
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
+    'nodes/lighting/LightingContextNode',
     'nodes/lighting/LightsNode',
     'nodes/materials/NodeMaterial',
     'nodes/shadernode/ShaderNode',
