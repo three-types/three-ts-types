@@ -2416,6 +2416,64 @@ index 9417df5a..43761555 100644
          let viewZ;
  
          const getViewZ = builder.context.getViewZ;
+diff --git a/examples-jsm/examples/nodes/lighting/LightingContextNode.ts b/examples-jsm/examples/nodes/lighting/LightingContextNode.ts
+index 02a8b51f..1d11c859 100644
+--- a/examples-jsm/examples/nodes/lighting/LightingContextNode.ts
++++ b/examples-jsm/examples/nodes/lighting/LightingContextNode.ts
+@@ -1,9 +1,31 @@
+ import ContextNode from '../core/ContextNode.js';
+-import { addNodeClass } from '../core/Node.js';
+-import { addNodeElement, nodeProxy, float, vec3 } from '../shadernode/ShaderNode.js';
++import Node, { addNodeClass } from '../core/Node.js';
++import { addNodeElement, nodeProxy, float, vec3, ShaderNodeObject } from '../shadernode/ShaderNode.js';
++import NodeBuilder from '../core/NodeBuilder.js';
+ 
+-class LightingContextNode extends ContextNode {
+-    constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
++interface LightingContext {
++    radiance: ShaderNodeObject<Node>;
++    irradiance: ShaderNodeObject<Node>;
++    iblIrradiance: ShaderNodeObject<Node>;
++    ambientOcclusion: ShaderNodeObject<Node>;
++    reflectedLight: {
++        directDiffuse: ShaderNodeObject<Node>;
++        directSpecular: ShaderNodeObject<Node>;
++        indirectDiffuse: ShaderNodeObject<Node>;
++        indirectSpecular: ShaderNodeObject<Node>;
++    };
++    backdrop: Node | null;
++    backdropAlpha: Node | null;
++}
++
++class LightingContextNode extends ContextNode<LightingContext> {
++    // lightingModel;
++    backdropNode: Node | null;
++    backdropAlphaNode: Node | null;
++
++    _context: LightingContext | null;
++
++    constructor(node: Node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
+         super(node);
+ 
+         this.lightingModel = lightingModel;
+@@ -28,7 +50,7 @@ class LightingContextNode extends ContextNode {
+             indirectSpecular,
+         };
+ 
+-        const context = {
++        const context: LightingContext = {
+             radiance: vec3().temp('radiance'),
+             irradiance: vec3().temp('irradiance'),
+             iblIrradiance: vec3().temp('iblIrradiance'),
+@@ -41,7 +63,7 @@ class LightingContextNode extends ContextNode {
+         return context;
+     }
+ 
+-    setup(builder) {
++    setup(builder: NodeBuilder) {
+         this.context = this._context || (this._context = this.getContext());
+         this.context.lightingModel = this.lightingModel || builder.context.lightingModel;
+ 
 diff --git a/examples-jsm/examples/nodes/lighting/LightsNode.ts b/examples-jsm/examples/nodes/lighting/LightsNode.ts
 index b3695ea8..603a4520 100644
 --- a/examples-jsm/examples/nodes/lighting/LightsNode.ts
@@ -6742,10 +6800,10 @@ index b9a999f1..2ed970b6 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
-index 4910f51f..cdfc0ca6 100644
+index 4910f51f..23bd0b09 100644
 --- a/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
 +++ b/examples-jsm/examples/renderers/webgl/nodes/GLSLNodeBuilder.ts
-@@ -1,4 +1,16 @@
+@@ -1,4 +1,15 @@
 -import { MathNode, GLSLNodeParser, NodeBuilder, UniformNode, vectorComponents } from '../../../nodes/Nodes.js';
 +import {
 +    MathNode,
@@ -6754,7 +6812,6 @@ index 4910f51f..cdfc0ca6 100644
 +    UniformNode,
 +    vectorComponents,
 +    ShaderNodeObject,
-+    BufferAttributeNode,
 +    ShaderNodeInternal,
 +    NodeShaderStage,
 +    StorageArrayElementNode,
@@ -6763,7 +6820,7 @@ index 4910f51f..cdfc0ca6 100644
  
  import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
  import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
-@@ -9,9 +21,25 @@ import {
+@@ -9,9 +20,25 @@ import {
      NodeSampledTexture3D,
  } from '../../common/nodes/NodeSampledTexture.js';
  
@@ -6785,14 +6842,14 @@ index 4910f51f..cdfc0ca6 100644
 +    InterleavedBufferAttribute,
 +} from 'three';
 +import Renderer from '../../common/Renderer.js';
-+import Node from '../../../nodes/core/Node.js';
 +import StructTypeNode from '../../../nodes/core/StructTypeNode.js';
++import BufferAttributeNode from '../../../nodes/accessors/BufferAttributeNode.js';
 +
 +const glslMethods: { [method: string]: string } = {
      [MathNode.ATAN2]: 'atan',
      textureDimensions: 'textureSize',
      equals: 'equal',
-@@ -36,25 +64,48 @@ precision mediump sampler2DArray;
+@@ -36,25 +63,48 @@ precision mediump sampler2DArray;
  precision lowp sampler2DShadow;
  `;
  
@@ -6845,7 +6902,7 @@ index 4910f51f..cdfc0ca6 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -80,7 +131,7 @@ ${flowData.code}
+@@ -80,7 +130,7 @@ ${flowData.code}
          return code;
      }
  
@@ -6854,7 +6911,7 @@ index 4910f51f..cdfc0ca6 100644
          const attribute = storageBufferNode.value;
  
          if (attribute.pbo === undefined) {
-@@ -124,7 +175,7 @@ ${flowData.code}
+@@ -124,7 +174,7 @@ ${flowData.code}
          }
      }
  
@@ -6863,7 +6920,7 @@ index 4910f51f..cdfc0ca6 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -185,7 +236,13 @@ ${flowData.code}
+@@ -185,7 +235,13 @@ ${flowData.code}
          return propertyName;
      }
  
@@ -6878,7 +6935,7 @@ index 4910f51f..cdfc0ca6 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -193,7 +250,7 @@ ${flowData.code}
+@@ -193,7 +249,7 @@ ${flowData.code}
          }
      }
  
@@ -6887,7 +6944,7 @@ index 4910f51f..cdfc0ca6 100644
          if (texture.isDepthTexture) {
              return `texture( ${textureProperty}, ${uvSnippet} ).x`;
          } else {
-@@ -203,20 +260,30 @@ ${flowData.code}
+@@ -203,20 +259,30 @@ ${flowData.code}
          }
      }
  
@@ -6925,7 +6982,7 @@ index 4910f51f..cdfc0ca6 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -225,11 +292,12 @@ ${flowData.code}
+@@ -225,11 +291,12 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -6940,7 +6997,7 @@ index 4910f51f..cdfc0ca6 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -244,7 +312,7 @@ ${flowData.code}
+@@ -244,7 +311,7 @@ ${flowData.code}
          return snippets.join('\n\t');
      }
  
@@ -6949,7 +7006,7 @@ index 4910f51f..cdfc0ca6 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -316,7 +384,7 @@ ${flowData.code}
+@@ -316,7 +383,7 @@ ${flowData.code}
          return output;
      }
  
@@ -6958,7 +7015,7 @@ index 4910f51f..cdfc0ca6 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -339,7 +407,7 @@ ${flowData.code}
+@@ -339,7 +406,7 @@ ${flowData.code}
          return nodeType;
      }
  
@@ -6967,7 +7024,7 @@ index 4910f51f..cdfc0ca6 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -355,8 +423,8 @@ ${flowData.code}
+@@ -355,8 +422,8 @@ ${flowData.code}
          return snippet;
      }
  
@@ -6978,7 +7035,7 @@ index 4910f51f..cdfc0ca6 100644
          const members = struct.getMemberTypes();
  
          for (let i = 0; i < members.length; i++) {
-@@ -367,7 +435,7 @@ ${flowData.code}
+@@ -367,7 +434,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -6987,7 +7044,7 @@ index 4910f51f..cdfc0ca6 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -388,7 +456,7 @@ ${flowData.code}
+@@ -388,7 +455,7 @@ ${flowData.code}
          return snippets.join('\n\n');
      }
  
@@ -6996,7 +7053,7 @@ index 4910f51f..cdfc0ca6 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -435,7 +503,7 @@ ${flowData.code}
+@@ -435,7 +502,7 @@ ${flowData.code}
          return 'gl_FragDepth';
      }
  
@@ -7005,7 +7062,7 @@ index 4910f51f..cdfc0ca6 100644
          return supports[name] === true;
      }
  
-@@ -443,11 +511,11 @@ ${flowData.code}
+@@ -443,11 +510,11 @@ ${flowData.code}
          return true;
      }
  
@@ -7019,7 +7076,7 @@ index 4910f51f..cdfc0ca6 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -463,14 +531,14 @@ ${flowData.code}
+@@ -463,14 +530,14 @@ ${flowData.code}
          return snippet;
      }
  
@@ -7036,7 +7093,7 @@ index 4910f51f..cdfc0ca6 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -507,7 +575,7 @@ void main() {
+@@ -507,7 +574,7 @@ void main() {
  `;
      }
  
@@ -7045,7 +7102,7 @@ index 4910f51f..cdfc0ca6 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -539,17 +607,18 @@ void main() {
+@@ -539,17 +606,18 @@ void main() {
      }
  
      buildCode() {
@@ -7068,7 +7125,7 @@ index 4910f51f..cdfc0ca6 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -575,27 +644,32 @@ void main() {
+@@ -575,27 +643,32 @@ void main() {
                  }
              }
  
