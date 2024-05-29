@@ -8,7 +8,6 @@ const files = [
     'nodes/core/ContextNode',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
-    'nodes/core/NodeBuilder',
     'nodes/core/NodeCache',
     'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',

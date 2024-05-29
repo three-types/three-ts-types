@@ -1,7 +1,7 @@
 import { BufferAttribute, InterleavedBufferAttribute, Object3D, Scene, Texture } from "three";
+import BufferAttributeNode from "../../../nodes/accessors/BufferAttributeNode.js";
 import StructTypeNode from "../../../nodes/core/StructTypeNode.js";
 import {
-    BufferAttributeNode,
     NodeBuilder,
     NodeShaderStage,
     ShaderNodeInternal,
