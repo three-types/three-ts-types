@@ -6271,20 +6271,19 @@ index beb35347..c264d777 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts b/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
-index 5553bd2d..b4de06b4 100644
+index 5553bd2d..3d871cc6 100644
 --- a/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/NodeBuilderState.ts
-@@ -1,13 +1,31 @@
+@@ -1,13 +1,30 @@
 +import Node from '../../../nodes/core/Node.js';
 +import NodeAttribute from '../../../nodes/core/NodeAttribute.js';
 +import Binding from '../Binding.js';
-+import { Transform } from '../../webgl/nodes/GLSLNodeBuilder.js';
 +
  class NodeBuilderState {
 +    vertexShader: string | null;
 +    fragmentShader: string | null;
 +    computeShader: string | null;
-+    transforms: Transform[];
++    transforms: never[];
 +
 +    nodeAttributes: NodeAttribute[];
 +    bindings: Binding[];
@@ -6310,7 +6309,7 @@ index 5553bd2d..b4de06b4 100644
 +        bindings: Binding[],
 +        updateNodes: Node[],
 +        updateBeforeNodes: Node[],
-+        transforms: Transform[] = [],
++        transforms: never[] = [],
      ) {
          this.vertexShader = vertexShader;
          this.fragmentShader = fragmentShader;
