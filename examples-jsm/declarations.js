@@ -5,7 +5,6 @@ import { argv } from 'node:process';
 const files = [
     'nodes/accessors/BufferAttributeNode',
     'nodes/core/constants',
-    'nodes/core/ContextNode',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
     'nodes/core/NodeCache',
@@ -53,7 +52,6 @@ const files = [
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
-    'renderers/webgl/nodes/GLSLNodeBuilder',
 ];
 
 const inDir = './examples';
