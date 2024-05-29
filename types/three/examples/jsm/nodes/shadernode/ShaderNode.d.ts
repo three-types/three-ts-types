@@ -4,6 +4,8 @@ import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 
 export interface NodeElements {
+    toGlobal: (node: Node) => Node;
+
     append: typeof append;
 
     toColor: typeof color;
