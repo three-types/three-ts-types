@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { argv } from 'node:process';
 
 const files = [
+    'nodes/accessors/BufferAttributeNode',
     'nodes/core/constants',
     'nodes/core/Node',
     'nodes/core/NodeAttribute',
@@ -12,6 +13,7 @@ const files = [
     'nodes/core/NodeUniform',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'nodes/core/StructTypeNode',
     'nodes/core/UniformNode',
     'renderers/common/nodes/NodeBuilderState',
     'renderers/common/nodes/Nodes',
@@ -29,6 +31,7 @@ const files = [
     'renderers/common/Color4',
     'renderers/common/ComputePipeline',
     'renderers/common/Constants',
+    'renderers/common/CubeRenderTarget',
     'renderers/common/DataMap',
     'renderers/common/Geometries',
     'renderers/common/Info',

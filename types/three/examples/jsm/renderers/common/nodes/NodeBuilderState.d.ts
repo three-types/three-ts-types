@@ -5,6 +5,7 @@ declare class NodeBuilderState {
     vertexShader: string | null;
     fragmentShader: string | null;
     computeShader: string | null;
+    transforms: never[];
     nodeAttributes: NodeAttribute[];
     bindings: Binding[];
     updateNodes: Node[];
