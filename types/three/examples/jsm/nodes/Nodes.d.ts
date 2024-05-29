@@ -272,7 +272,7 @@ export { default as TextureBicubicNode, textureBicubic } from "./accessors/Textu
 export { default as TextureNode, sampler, texture } from "./accessors/TextureNode.js";
 export { default as UniformsNode, uniforms } from "./accessors/UniformsNode.js";
 export { default as UserDataNode, userData } from "./accessors/UserDataNode.js";
-export { default as UVNode, uv } from "./accessors/UVNode.js";
+export * from "./accessors/UVNode.js";
 export { default as VertexColorNode, vertexColor } from "./accessors/VertexColorNode.js";
 
 // display
