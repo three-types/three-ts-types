@@ -147,7 +147,6 @@ declare class Renderer {
     getActiveCubeFace(): number;
     getActiveMipmapLevel(): number;
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
-    getArrayBuffer(attribute: BufferAttribute): Promise<ArrayBuffer>;
     getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
     getContext(): void;
     getPixelRatio(): number;
