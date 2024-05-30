@@ -12,7 +12,7 @@ export interface ShaderStageNodeData {
                 initialized?: boolean | undefined;
             }
             & {
-                [K in `_node${string}`]?: Node | undefined;
+                [K in `node${string}`]?: Node | undefined;
             }
         )
         | undefined;

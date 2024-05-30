@@ -5,6 +5,5 @@ export default class ChainMap<K extends readonly object[], V> {
     get(keys: K): V | undefined;
     set(keys: K, value: V): V;
     delete(keys: K): boolean;
-    dispose(): void;
 }
 export {};

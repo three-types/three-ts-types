@@ -73,6 +73,7 @@ declare class Node extends EventDispatcher<{
     version: number;
     _cacheKey: string | null;
     _cacheKeyVersion: number;
+    global: boolean;
     readonly isNode: true;
     readonly id: number;
     self?: this;
