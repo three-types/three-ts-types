@@ -1,10 +1,11 @@
 import { Object3D, Renderer, Texture } from "three/src/Three.js";
 import { NodeShaderStage } from "../../../nodes/core/constants";
 import NodeBuilder from "../../../nodes/core/NodeBuilder";
-import NodeUniform from "../../../nodes/core/NodeUniform";
 import NodeVar from "../../../nodes/core/NodeVar";
 import StructTypeNode from "../../../nodes/core/StructTypeNode";
 import { ShaderNode } from "../../../nodes/shadernode/ShaderNode";
+import NodeUniformsGroup from "../../common/nodes/NodeUniformsGroup";
+import { NodeUniform } from "../../../nodes/Nodes";
 
 type BuiltinStage = NodeShaderStage | "attribute" | "output";
 interface BuiltinType {
@@ -15,7 +16,7 @@ interface BuiltinType {
 
 export default class WGSLNodeBuilder extends NodeBuilder {
     builtins: { [key in BuiltinStage]: Map<string, BuiltinType> };
-    uniformGroups: { [key in NodeShaderStage]: { [key: string]: { index: number; snippets: string[] } } };
+    uniformGroups: { [key in NodeShaderStage]: NodeUniformsGroup };
 
     needsColorSpaceToLinear(texture: Texture);
     _generateTextureSample(
