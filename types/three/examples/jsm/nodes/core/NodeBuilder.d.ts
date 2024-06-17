@@ -83,7 +83,7 @@ export default abstract class NodeBuilder {
 
     getAttribute(name: string, type: string): NodeAttribute;
 
-    getPropertyName(node: Node, shaderStage: NodeShaderStage): string;
+    getPropertyName<TValue>(node: NodeVar | NodeUniform<TValue>, shaderStage: NodeShaderStage): string;
     isVector(type: string): boolean;
 
     isMatrix(type: string): boolean;
@@ -117,7 +117,7 @@ export default abstract class NodeBuilder {
     ): FlowData;
     hasGeometryAttribute(name: string): boolean;
     abstract getAttributes(shaderStage: NodeShaderStage): string;
-    abstract getVarys(shaderStage: NodeShaderStage): string;
+    abstract getVaryings(shaderStage: NodeShaderStage): string;
     getVars(shaderStage: NodeShaderStage): string;
     abstract getUniforms(stage: NodeShaderStage): string;
     getCodes(shaderStage: NodeShaderStage): string;
