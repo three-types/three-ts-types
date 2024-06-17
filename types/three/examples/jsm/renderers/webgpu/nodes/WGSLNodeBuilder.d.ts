@@ -1,11 +1,11 @@
-import { Object3D, Renderer, Texture } from "three/src/Three.js";
+import { Texture } from "three/src/Three.js";
 import { NodeShaderStage } from "../../../nodes/core/constants";
 import NodeBuilder from "../../../nodes/core/NodeBuilder";
 import NodeVar from "../../../nodes/core/NodeVar";
 import StructTypeNode from "../../../nodes/core/StructTypeNode";
+import { NodeUniform } from "../../../nodes/Nodes";
 import { ShaderNode } from "../../../nodes/shadernode/ShaderNode";
 import NodeUniformsGroup from "../../common/nodes/NodeUniformsGroup";
-import { NodeUniform } from "../../../nodes/Nodes";
 
 type BuiltinStage = NodeShaderStage | "attribute" | "output";
 interface BuiltinType {
