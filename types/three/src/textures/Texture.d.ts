@@ -127,7 +127,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      * Array of user-specified mipmaps
      * @defaultValue `[]`
      */
-    mipmaps: any[]; // ImageData[] for 2D textures and CubeTexture[] for cube textures;
+    mipmaps: any[]; // CompressedTextureMipmap[] for 2D textures and CubeTexture[] for cube textures;
 
     /**
      * How the image is applied to the object.
