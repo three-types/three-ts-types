@@ -5,7 +5,7 @@ export default class WebGPUBindingUtils {
     backend: Backend;
 
     constructor(backend: Backend);
-    createBindingsLayout(bindings: Binding[]);
+    // createBindingsLayout(bindings: Binding[]): GPUBindGroupLayout;
     createBindings(bindings: Binding[]);
     updateBinding(binding: Binding);
     // createBindGroup(bindings: Binding[], layoutGPU: GPUBindGroupLayout): GPUBindGroup;

@@ -1,4 +1,4 @@
-import { BufferAttribute } from "three/src/Three.js";
+import { BufferAttribute } from "three";
 import Backend from "../../common/Backend";
 import RenderObject from "../../common/RenderObject";
 
@@ -8,7 +8,7 @@ export default class WebGPUAttributeUtiils {
     constructor(backend: Backend);
     createAttribute(attribute: BufferAttribute, usage: number);
     updateAttribute(attribute: BufferAttribute);
-    createShaderVertexBuffers(renderObject: RenderObject);
+    // createShaderVertexBuffers(renderObject: RenderObject): GPUVertexBufferLayout[];
     destroyAttribute(attribute: BufferAttribute);
-    getArrayBufferAsync(attribute: BufferAttribute);
+    getArrayBufferAsync(attribute: BufferAttribute): ArrayBuffer;
 }
