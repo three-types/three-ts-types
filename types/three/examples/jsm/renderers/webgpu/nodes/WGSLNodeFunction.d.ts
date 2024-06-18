@@ -1,4 +1,4 @@
-import NodeFunction from "../../../nodes/core/NodeFunction";
+import NodeFunction from "../../../nodes/core/NodeFunction.js";
 
 export default class WGSLNodeFunction extends NodeFunction {
     constructor(source: string);
