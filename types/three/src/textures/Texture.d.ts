@@ -129,7 +129,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      * Array of user-specified mipmaps
      * @defaultValue `[]`
      */
-    mipmaps: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[] | object[] | undefined;
+    mipmaps: CompressedTextureMipmap[] | CubeTexture[] | HTMLCanvasElement[] | undefined;
 
     /**
      * How the image is applied to the object.
