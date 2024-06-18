@@ -127,6 +127,7 @@ export {
     step,
     tan,
     transformDirection,
+    transpose,
     trunc,
 } from "./math/MathNode.js";
 
