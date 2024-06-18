@@ -1,5 +1,6 @@
 import { CompressedPixelFormat, TextureDataType, Wrapping } from "../constants.js";
 import { CompressedTexture } from "./CompressedTexture.js";
+import { MipmapImageData } from "./types.js";
 
 /**
  * Creates an texture 2D array based on data in compressed form, for example from a
@@ -46,7 +47,7 @@ export class CompressedArrayTexture extends CompressedTexture {
      * @param type See {@link Texture.type | .type}. Default {@link THREE.UnsignedByteType}
      */
     constructor(
-        mipmaps: ImageData[],
+        mipmaps: MipmapImageData[],
         width: number,
         height: number,
         depth: number,

@@ -8,6 +8,7 @@ import {
     Wrapping,
 } from "../constants.js";
 import { Texture } from "./Texture.js";
+import { MipmapImageData } from "./types.js";
 
 /**
  * Creates a texture based on data in compressed form, for example from a {@link https://en.wikipedia.org/wiki/DirectDraw_Surface | DDS} file.
@@ -33,7 +34,7 @@ export class CompressedTexture extends Texture {
      * @param colorSpace See {@link Texture.colorSpace .colorSpace}. Default {@link NoColorSpace}
      */
     constructor(
-        mipmaps: ImageData[],
+        mipmaps: MipmapImageData[],
         width: number,
         height: number,
         format: CompressedPixelFormat,
@@ -64,7 +65,7 @@ export class CompressedTexture extends Texture {
     /**
      *  The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct {@link format} and {@link type}.
      */
-    mipmaps: ImageData[];
+    mipmaps: MipmapImageData[];
 
     /**
      * @override
