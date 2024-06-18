@@ -8121,7 +8121,7 @@ index 8c025071..a47c4832 100644
      mouseY = (event.clientY - windowHalfY) * 4;
  }
 diff --git a/examples-testing/examples/webgl_materials_cubemap_render_to_mipmaps.ts b/examples-testing/examples/webgl_materials_cubemap_render_to_mipmaps.ts
-index 599a1369..fa4f85c1 100644
+index 599a1369..a23a0582 100644
 --- a/examples-testing/examples/webgl_materials_cubemap_render_to_mipmaps.ts
 +++ b/examples-testing/examples/webgl_materials_cubemap_render_to_mipmaps.ts
 @@ -1,8 +1,8 @@
@@ -8154,7 +8154,14 @@ index 599a1369..fa4f85c1 100644
      const params = {
          magFilter: THREE.LinearFilter,
          minFilter: THREE.LinearMipMapLinearFilter,
-@@ -83,7 +83,7 @@ function allocateCubemapRenderTarget(cubeMapSize) {
+@@ -77,13 +77,13 @@ function allocateCubemapRenderTarget(cubeMapSize) {
+     const rt = new THREE.WebGLCubeRenderTarget(cubeMapSize, params);
+ 
+     const mipLevels = Math.log(cubeMapSize) * Math.LOG2E + 1.0;
+-    for (let i = 0; i < mipLevels; i++) rt.texture.mipmaps.push({});
++    for (let i = 0; i < mipLevels; i++) (rt.texture.mipmaps as THREE.CubeTexture[]).push({} as THREE.CubeTexture);
+ 
+     rt.texture.mapping = THREE.CubeReflectionMapping;
      return rt;
  }
  
@@ -8732,7 +8739,7 @@ index 178c2ce4..fb67cabe 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgl_materials_texture_manualmipmap.ts b/examples-testing/examples/webgl_materials_texture_manualmipmap.ts
-index 24bd4eb9..5d5e77b6 100644
+index 24bd4eb9..2dad75e8 100644
 --- a/examples-testing/examples/webgl_materials_texture_manualmipmap.ts
 +++ b/examples-testing/examples/webgl_materials_texture_manualmipmap.ts
 @@ -3,9 +3,9 @@ import * as THREE from 'three';
@@ -8759,6 +8766,29 @@ index 24bd4eb9..5d5e77b6 100644
  
          imageCanvas.width = imageCanvas.height = size;
  
+@@ -49,14 +49,14 @@ function init() {
+ 
+     const canvas = mipmap(128, '#f00');
+     const textureCanvas1 = new THREE.CanvasTexture(canvas);
+-    textureCanvas1.mipmaps[0] = canvas;
+-    textureCanvas1.mipmaps[1] = mipmap(64, '#0f0');
+-    textureCanvas1.mipmaps[2] = mipmap(32, '#00f');
+-    textureCanvas1.mipmaps[3] = mipmap(16, '#400');
+-    textureCanvas1.mipmaps[4] = mipmap(8, '#040');
+-    textureCanvas1.mipmaps[5] = mipmap(4, '#004');
+-    textureCanvas1.mipmaps[6] = mipmap(2, '#044');
+-    textureCanvas1.mipmaps[7] = mipmap(1, '#404');
++    textureCanvas1.mipmaps![0] = canvas;
++    textureCanvas1.mipmaps![1] = mipmap(64, '#0f0');
++    textureCanvas1.mipmaps![2] = mipmap(32, '#00f');
++    textureCanvas1.mipmaps![3] = mipmap(16, '#400');
++    textureCanvas1.mipmaps![4] = mipmap(8, '#040');
++    textureCanvas1.mipmaps![5] = mipmap(4, '#004');
++    textureCanvas1.mipmaps![6] = mipmap(2, '#044');
++    textureCanvas1.mipmaps![7] = mipmap(1, '#404');
+     textureCanvas1.colorSpace = THREE.SRGBColorSpace;
+     textureCanvas1.repeat.set(1000, 1000);
+     textureCanvas1.wrapS = THREE.RepeatWrapping;
 @@ -97,7 +97,7 @@ function init() {
          addPainting(scene1, mesh1);
          addPainting(scene2, mesh2);
