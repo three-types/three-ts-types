@@ -6,10 +6,10 @@ import { ArrayCamera } from "../../cameras/ArrayCamera.js";
 import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { Vector4 } from "../../math/Vector4.js";
+import { Mesh } from "../../objects/Mesh.js";
+import { Texture } from "../../textures/Texture.js";
 import { WebGLRenderer } from "../WebGLRenderer.js";
 import { XRGripSpace, XRHandSpace, XRTargetRaySpace } from "./WebXRController.js";
-import { Texture } from '../../textures/Texture.js';
-import { Mesh } from '../../objects/Mesh.js';
 
 export type WebXRCamera = PerspectiveCamera & { viewport: Vector4 };
 export type WebXRArrayCamera = Omit<ArrayCamera, "cameras"> & { cameras: [WebXRCamera, WebXRCamera] };
