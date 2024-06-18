@@ -1,5 +1,5 @@
-import TextureNode from "../../nodes/accessors/TextureNode";
-import Binding from "./Binding";
+import TextureNode from "../../nodes/accessors/TextureNode.js";
+import Binding from "./Binding.js";
 
 declare class Sampler extends Binding {
     texture: TextureNode | null;

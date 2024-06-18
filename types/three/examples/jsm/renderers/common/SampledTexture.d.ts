@@ -1,5 +1,5 @@
-import { Texture } from "three/src/Three.js";
-import Binding from "./Binding";
+import { Texture } from "three";
+import Binding from "./Binding.js";
 
 declare class SampledTexture extends Binding {
     id: number;
