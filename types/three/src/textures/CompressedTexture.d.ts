@@ -40,10 +40,10 @@ export class CompressedTexture extends Texture {
      * @param colorSpace See {@link Texture.colorSpace .colorSpace}. Default {@link NoColorSpace}
      */
     constructor(
-        mipmaps: CompressedTextureMipmap[],
-        width: number,
-        height: number,
-        format: CompressedPixelFormat,
+        mipmaps?: CompressedTextureMipmap[],
+        width?: number,
+        height?: number,
+        format?: CompressedPixelFormat,
         type?: TextureDataType,
         mapping?: Mapping,
         wrapS?: Wrapping,
@@ -72,7 +72,7 @@ export class CompressedTexture extends Texture {
      *  The mipmaps array should contain objects with data, width and height. The mipmaps should be of the correct
      *  format and type.
      */
-    mipmaps: CompressedTextureMipmap[];
+    mipmaps: CompressedTextureMipmap[] | undefined;
 
     /**
      * @override
