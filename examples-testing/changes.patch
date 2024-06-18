@@ -6622,14 +6622,15 @@ index c9947c69..69bf22b4 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 9c044b13..cc34275c 100644
+index 3b157a22..af4de6ac 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
-@@ -6,10 +6,16 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ const manager = new THREE.LoadingManager();
  
 -let camera, scene, renderer, stats, object, loader, guiMorphsFolder;
+-let mixer;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
@@ -6637,14 +6638,11 @@ index 9c044b13..cc34275c 100644
 +    object: THREE.Group,
 +    loader: FBXLoader,
 +    guiMorphsFolder: GUI;
- const clock = new THREE.Clock();
- 
--let mixer;
 +let mixer: THREE.AnimationMixer | null;
  
- const params = {
-     asset: 'Samba Dancing',
-@@ -87,13 +93,18 @@ function init() {
+ const clock = new THREE.Clock();
+ 
+@@ -89,19 +95,22 @@ function init() {
      guiMorphsFolder = gui.addFolder('Morphs').hide();
  }
  
@@ -6653,21 +6651,27 @@ index 9c044b13..cc34275c 100644
      loader.load('models/fbx/' + asset + '.fbx', function (group) {
          if (object) {
              object.traverse(function (child) {
--                if (child.material) child.material.dispose();
--                if (child.material && child.material.map) child.material.map.dispose();
+-                if (child.material) {
+-                    const materials = Array.isArray(child.material) ? child.material : [child.material];
++                if ((child as THREE.Mesh).material) {
++                    const materials = Array.isArray((child as THREE.Mesh).material)
++                        ? (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material[]>).material
++                        : [(child as THREE.Mesh).material];
+                     materials.forEach(material => {
+-                        if (material.map) material.map.dispose();
+-                        material.dispose();
++                        if ((material as THREE.MeshPhongMaterial).map)
++                            (material as THREE.MeshPhongMaterial).map!.dispose();
++                        (material as THREE.MeshPhongMaterial).dispose();
+                     });
+                 }
+ 
 -                if (child.geometry) child.geometry.dispose();
-+                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
-+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
-+                if (
-+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material &&
-+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map
-+                )
-+                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map!.dispose();
 +                if ((child as THREE.Mesh).geometry) (child as THREE.Mesh).geometry.dispose();
              });
  
              scene.remove(object);
-@@ -116,15 +127,21 @@ function loadAsset(asset) {
+@@ -124,15 +133,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
@@ -9100,7 +9104,7 @@ index 99be247d..2ff2bca4 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index 5c70b6ce..7ddd3013 100644
+index 1d6aba4c..ee612f75 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
 @@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -9153,7 +9157,7 @@ index 5c70b6ce..7ddd3013 100644
          }
      }
  }
-@@ -213,14 +213,18 @@ function init() {
+@@ -219,14 +219,18 @@ function init() {
  
  //
  
@@ -9167,7 +9171,8 @@ index 5c70b6ce..7ddd3013 100644
 -    this._options = this._options || {
 +    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
          get: el => el.z,
-         aux: new Array(this.maxGeometryCount),
+-        aux: new Array(this.maxGeometryCount),
++        aux: new Array(this.maxInstanceCount),
      };
  
 -    const options = this._options;
@@ -9175,7 +9180,7 @@ index 5c70b6ce..7ddd3013 100644
      options.reversed = this.material.transparent;
  
      let minZ = Infinity;
-@@ -270,9 +274,9 @@ function animateMeshes() {
+@@ -276,9 +280,9 @@ function animateMeshes() {
              const rotationMatrix = mesh.userData.rotationSpeeds[i];
              const id = ids[i];
  
@@ -9187,7 +9192,7 @@ index 5c70b6ce..7ddd3013 100644
          }
      } else {
          for (let i = 0; i < loopNum; i++) {
-@@ -289,10 +293,10 @@ function animateMeshes() {
+@@ -295,10 +299,10 @@ function animateMeshes() {
  }
  
  function render() {
@@ -13860,7 +13865,7 @@ index fbbabfca..a1a82bd3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 53166211..48fb5207 100644
+index 53166211..ada965e7 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -4,15 +4,15 @@ import Stats from 'stats-gl';
@@ -13938,7 +13943,8 @@ index 53166211..48fb5207 100644
 -    this._options = this._options || {
 +    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
          get: el => el.z,
-         aux: new Array(this.maxGeometryCount),
+-        aux: new Array(this.maxGeometryCount),
++        aux: new Array(this.maxInstanceCount),
      };
  
 -    const options = this._options;
