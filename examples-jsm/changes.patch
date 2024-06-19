@@ -2266,10 +2266,10 @@ index f8bb2b37..cee70486 100644
      }
  }
 diff --git a/examples-jsm/examples/nodes/core/UniformNode.ts b/examples-jsm/examples/nodes/core/UniformNode.ts
-index 90e86648..78a60c3b 100644
+index 41e523c4..a0c2ae45 100644
 --- a/examples-jsm/examples/nodes/core/UniformNode.ts
 +++ b/examples-jsm/examples/nodes/core/UniformNode.ts
-@@ -1,10 +1,17 @@
+@@ -1,10 +1,18 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 -import { addNodeClass } from './Node.js';
@@ -2285,14 +2285,22 @@ index 90e86648..78a60c3b 100644
 +class UniformNode<TValue> extends InputNode<TValue> {
 +    readonly isUniformNode: true;
 +
++    name: string;
 +    groupNode: UniformGroupNode;
 +
 +    constructor(value: TValue, nodeType: string | null = null) {
          super(value, nodeType);
  
          this.isUniformNode = true;
-@@ -12,7 +19,7 @@ class UniformNode extends InputNode {
+@@ -13,13 +21,13 @@ class UniformNode extends InputNode {
          this.groupNode = objectGroup;
+     }
+ 
+-    label(name) {
++    label(name: string) {
+         this.name = name;
+ 
+         return this;
      }
  
 -    setGroup(group) {
@@ -2300,7 +2308,7 @@ index 90e86648..78a60c3b 100644
          this.groupNode = group;
  
          return this;
-@@ -22,11 +29,11 @@ class UniformNode extends InputNode {
+@@ -29,11 +37,11 @@ class UniformNode extends InputNode {
          return this.groupNode;
      }
  
@@ -2314,7 +2322,7 @@ index 90e86648..78a60c3b 100644
          const self = this.getSelf();
  
          callback = callback.bind(self);
-@@ -40,12 +47,12 @@ class UniformNode extends InputNode {
+@@ -47,12 +55,12 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -2329,16 +2337,16 @@ index 90e86648..78a60c3b 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -58,7 +65,7 @@ class UniformNode extends InputNode {
+@@ -65,7 +73,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
 -            builder.shaderStage,
 +            builder.shaderStage!,
-             builder.context.label,
+             this.name || builder.context.label,
          );
          const propertyName = builder.getPropertyName(nodeUniform);
-@@ -71,11 +78,14 @@ class UniformNode extends InputNode {
+@@ -78,11 +86,14 @@ class UniformNode extends InputNode {
  
  export default UniformNode;
  
