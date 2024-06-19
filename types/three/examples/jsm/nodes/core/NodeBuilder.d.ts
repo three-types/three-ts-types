@@ -65,6 +65,9 @@ export default abstract class NodeBuilder {
 
     setContext(context: NodeBuilderContext): void;
     getContext(): NodeBuilderContext;
+    setCache(cache: NodeCache): void;
+    getCache(): NodeCache;
+    getCacheFromNode(node: Node, parent?: boolean): NodeCache;
     isAvailable(name: string): boolean;
 
     abstract getInstanceIndex(): string;
