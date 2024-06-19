@@ -1844,15 +1844,18 @@ index a3cc4657..a44a544e 100644
          toType = this.getVectorType(toType);
  
 diff --git a/examples-jsm/examples/nodes/core/NodeCache.ts b/examples-jsm/examples/nodes/core/NodeCache.ts
-index ad72d50c..a76b7c04 100644
+index ad72d50c..c2593032 100644
 --- a/examples-jsm/examples/nodes/core/NodeCache.ts
 +++ b/examples-jsm/examples/nodes/core/NodeCache.ts
-@@ -1,14 +1,53 @@
+@@ -1,24 +1,74 @@
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
 +import NodeVar from './NodeVar.js';
 +import NodeVarying from './NodeVarying.js';
 +import NodeCode from './NodeCode.js';
++import Node from './Node.js';
++import { BufferAttribute, InterleavedBuffer, TypedArray } from 'three';
++import BufferAttributeNode from '../accessors/BufferAttributeNode.js';
 +
  let id = 0;
  
@@ -1884,10 +1887,14 @@ index ad72d50c..a76b7c04 100644
 +    any?: ShaderStageNodeData | undefined;
 +}
 +
++interface BufferAttributeData {
++    node: BufferAttributeNode;
++}
++
  class NodeCache {
 -    constructor(parent = null) {
 +    id: number;
-+    nodesData: WeakMap<Node, NodeData>;
++    nodesData: WeakMap<Node | TypedArray | InterleavedBuffer | BufferAttribute, NodeData | BufferAttributeData>;
 +
 +    parent: NodeCache | null;
 +
@@ -1899,16 +1906,23 @@ index ad72d50c..a76b7c04 100644
      }
  
 -    getData(node) {
-+    getData(node: Node): NodeData | undefined {
++    getData(node: Node): NodeData | undefined;
++    getData(node: TypedArray | InterleavedBuffer | BufferAttribute): BufferAttributeData | undefined;
++    getData(node: Node | TypedArray | InterleavedBuffer | BufferAttribute): NodeData | BufferAttributeData | undefined {
          let data = this.nodesData.get(node);
  
          if (data === undefined && this.parent !== null) {
-@@ -18,7 +57,7 @@ class NodeCache {
+-            data = this.parent.getData(node);
++            data = this.parent.getData(node as Node);
+         }
+ 
          return data;
      }
  
 -    setData(node, data) {
-+    setData(node: Node, data: NodeData) {
++    setData(node: Node, data: NodeData): void;
++    setData(node: TypedArray | InterleavedBuffer | BufferAttribute, data: BufferAttributeData): void;
++    setData(node: Node | TypedArray | InterleavedBuffer | BufferAttribute, data: NodeData | BufferAttributeData) {
          this.nodesData.set(node, data);
      }
  }
