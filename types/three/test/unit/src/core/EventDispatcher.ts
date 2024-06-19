@@ -31,7 +31,6 @@ eveDisForTestEvent.addEventListener("foo", e => {
     e.type; // $ExpectType "foo"
     e.target; // $ExpectType EventDispatcher<TestEvent>
     e.foo; // $ExpectType number
-
     // @ts-expect-error
     e.bar;
 });
