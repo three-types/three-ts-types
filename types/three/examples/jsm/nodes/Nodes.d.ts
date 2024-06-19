@@ -165,7 +165,7 @@ export { triNoise3D } from "./math/TriNoise3D.js";
 // utils
 export { default as ArrayElementNode } from "./utils/ArrayElementNode.js";
 export { default as ConvertNode } from "./utils/ConvertNode.js";
-export { default as DiscardNode, discard } from "./utils/DiscardNode.js";
+export { default as DiscardNode, discard, Return } from "./utils/DiscardNode.js";
 export { default as EquirectUVNode, equirectUV } from "./utils/EquirectUVNode.js";
 export { default as JoinNode } from "./utils/JoinNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
