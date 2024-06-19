@@ -10,6 +10,7 @@ declare class NodeBuilderState {
     bindings: Binding[];
     updateNodes: Node[];
     updateBeforeNodes: Node[];
+    updateAfterNodes: Node[];
     usedTimes: number;
     constructor(
         vertexShader: string | null,
@@ -19,6 +20,7 @@ declare class NodeBuilderState {
         bindings: Binding[],
         updateNodes: Node[],
         updateBeforeNodes: Node[],
+        updateAfterNodes: Node[],
         transforms?: never[],
     );
     createBindings(): Binding[];
