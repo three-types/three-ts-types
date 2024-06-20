@@ -562,7 +562,7 @@ index 62652f87..3dcc2f12 100644
  
      controls.addEventListener('start', function () {
 diff --git a/examples-testing/examples/games_fps.ts b/examples-testing/examples/games_fps.ts
-index d41f9161..306ccdc5 100644
+index 4c459f9b..b714f591 100644
 --- a/examples-testing/examples/games_fps.ts
 +++ b/examples-testing/examples/games_fps.ts
 @@ -39,7 +39,7 @@ directionalLight.shadow.radius = 4;
@@ -611,7 +611,7 @@ index d41f9161..306ccdc5 100644
  
  const vector1 = new THREE.Vector3();
  const vector2 = new THREE.Vector3();
-@@ -165,7 +171,7 @@ function playerCollisions() {
+@@ -167,7 +173,7 @@ function playerCollisions() {
      }
  }
  
@@ -620,7 +620,7 @@ index d41f9161..306ccdc5 100644
      let damping = Math.exp(-4 * deltaTime) - 1;
  
      if (!playerOnFloor) {
-@@ -185,7 +191,7 @@ function updatePlayer(deltaTime) {
+@@ -187,7 +193,7 @@ function updatePlayer(deltaTime) {
      camera.position.copy(playerCollider.end);
  }
  
@@ -629,7 +629,7 @@ index d41f9161..306ccdc5 100644
      const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
  
      const sphere_center = sphere.collider.center;
-@@ -240,7 +246,7 @@ function spheresCollisions() {
+@@ -242,7 +248,7 @@ function spheresCollisions() {
      }
  }
  
@@ -638,7 +638,7 @@ index d41f9161..306ccdc5 100644
      spheres.forEach(sphere => {
          sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
  
-@@ -283,7 +289,7 @@ function getSideVector() {
+@@ -285,7 +291,7 @@ function getSideVector() {
      return playerDirection;
  }
  
@@ -647,7 +647,7 @@ index d41f9161..306ccdc5 100644
      // gives a bit of air control
      const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
  
-@@ -318,12 +324,12 @@ loader.load('collision-world.glb', gltf => {
+@@ -320,12 +326,12 @@ loader.load('collision-world.glb', gltf => {
      worldOctree.fromGraphNode(gltf.scene);
  
      gltf.scene.traverse(child => {
@@ -9134,7 +9134,7 @@ index 99be247d..2ff2bca4 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index 1d6aba4c..ee612f75 100644
+index f93e5fb8..ee612f75 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
 @@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -9201,8 +9201,7 @@ index 1d6aba4c..ee612f75 100644
 -    this._options = this._options || {
 +    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
          get: el => el.z,
--        aux: new Array(this.maxGeometryCount),
-+        aux: new Array(this.maxInstanceCount),
+         aux: new Array(this.maxInstanceCount),
      };
  
 -    const options = this._options;
@@ -13919,7 +13918,7 @@ index fbbabfca..a1a82bd3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 53166211..ada965e7 100644
+index e1a8724d..ada965e7 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -4,15 +4,15 @@ import Stats from 'stats-gl';
@@ -13997,8 +13996,7 @@ index 53166211..ada965e7 100644
 -    this._options = this._options || {
 +    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
          get: el => el.z,
--        aux: new Array(this.maxGeometryCount),
-+        aux: new Array(this.maxInstanceCount),
+         aux: new Array(this.maxInstanceCount),
      };
  
 -    const options = this._options;
