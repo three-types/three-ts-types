@@ -1,4 +1,4 @@
-import { BufferGeometry, Material, Object3D, Renderer } from "three";
+import { BufferGeometry, Material, Object3D, Renderer, Texture } from "three";
 import FogNode from "../fog/FogNode.js";
 import LightsNode from "../lighting/LightsNode.js";
 import { NodeShaderStage } from "./constants.js";
@@ -58,6 +58,7 @@ export default abstract class NodeBuilder {
     setHashNode(node: Node, hash: string): void;
     addNode(node: Node): void;
     get currentNode(): Node;
+    isFilteredTexture(texture: Texture): boolean;
     getMethod(method: string): string;
     getNodeFromHash(hash: string): Node;
 
