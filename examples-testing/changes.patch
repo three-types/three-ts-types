@@ -13562,6 +13562,30 @@ index 1430a290..58b951d4 100644
      time = (time / 1000) * 2.0;
  
      for (let i = 0; i < lights.length; i++) {
+diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
+index cccf38f1..d5dc094a 100644
+--- a/examples-testing/examples/webgpu_lights_rectarealight.ts
++++ b/examples-testing/examples/webgpu_lights_rectarealight.ts
+@@ -8,8 +8,8 @@ import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUnifo
+ 
+ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+-let renderer, scene, camera;
+-let stats, meshKnot;
++let renderer: WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let stats: Stats, meshKnot: THREE.Mesh;
+ 
+ init();
+ 
+@@ -72,7 +72,7 @@ function onWindowResize() {
+     camera.updateProjectionMatrix();
+ }
+ 
+-function animation(time) {
++function animation(time: number) {
+     meshKnot.rotation.y = time / 1000;
+ 
+     renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
 index d0fd3109..7292c9ed 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
