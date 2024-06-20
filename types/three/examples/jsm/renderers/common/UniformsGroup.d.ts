@@ -1,9 +1,9 @@
 import {
     ColorNodeUniform,
-    FloatNodeUniform,
     Matrix3NodeUniform,
     Matrix4NodeUniform,
     NodeUniformGPU,
+    NumberNodeUniform,
     Vector2NodeUniform,
     Vector3NodeUniform,
     Vector4NodeUniform,
@@ -19,7 +19,7 @@ declare class UniformsGroup extends UniformBuffer {
     get byteLength(): number;
     update(): boolean;
     updateByType(uniform: NodeUniformGPU): boolean | undefined;
-    updateNumber(uniform: FloatNodeUniform): boolean;
+    updateNumber(uniform: NumberNodeUniform): boolean;
     updateVector2(uniform: Vector2NodeUniform): boolean;
     updateVector3(uniform: Vector3NodeUniform): boolean;
     updateVector4(uniform: Vector4NodeUniform): boolean;
