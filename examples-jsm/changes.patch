@@ -1004,7 +1004,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/examples-jsm/examples/nodes/core/NodeBuilder.ts b/examples-jsm/examples/nodes/core/NodeBuilder.ts
-index a3cc4657..a44a544e 100644
+index 64472992..a7600328 100644
 --- a/examples-jsm/examples/nodes/core/NodeBuilder.ts
 +++ b/examples-jsm/examples/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import NodeCache from './NodeCache.js';
@@ -1015,7 +1015,7 @@ index a3cc4657..a44a544e 100644
 +import { NodeUpdateType, defaultBuildStages, shaderStages, NodeShaderStage } from './constants.js';
  
  import {
-     FloatNodeUniform,
+     NumberNodeUniform,
 @@ -30,17 +30,41 @@ import {
      IntType,
      UnsignedIntType,
@@ -1831,9 +1831,9 @@ index a3cc4657..a44a544e 100644
  
 -    getNodeUniform(uniformNode, type) {
 +    getNodeUniform(uniformNode: NodeUniform<unknown>, type: string | null) {
-         if (type === 'float') return new FloatNodeUniform(uniformNode);
-         if (type === 'vec2') return new Vector2NodeUniform(uniformNode);
-         if (type === 'vec3') return new Vector3NodeUniform(uniformNode);
+         if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
+         if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
+         if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
 @@ -956,7 +1110,7 @@ class NodeBuilder {
          return createNodeMaterialFromType(type);
      }
@@ -6041,7 +6041,7 @@ index 0eb0509c..6eb18198 100644
          this.backend.destroyTexture(texture);
  
 diff --git a/examples-jsm/examples/renderers/common/Uniform.ts b/examples-jsm/examples/renderers/common/Uniform.ts
-index adf57d65..a27d7580 100644
+index 3d58b44c..0192ef8c 100644
 --- a/examples-jsm/examples/renderers/common/Uniform.ts
 +++ b/examples-jsm/examples/renderers/common/Uniform.ts
 @@ -1,7 +1,15 @@
@@ -6075,16 +6075,16 @@ index adf57d65..a27d7580 100644
      }
  }
  
--class FloatUniform extends Uniform {
+-class NumberUniform extends Uniform {
 -    constructor(name, value = 0) {
-+class FloatUniform extends Uniform<number> {
-+    readonly isFloatUniform: true;
++class NumberUniform extends Uniform<number> {
++    readonly isNumberUniform: true;
 +
 +    constructor(name: string, value = 0) {
          super(name, value);
  
-         this.isFloatUniform = true;
-@@ -31,8 +41,10 @@ class FloatUniform extends Uniform {
+         this.isNumberUniform = true;
+@@ -31,8 +41,10 @@ class NumberUniform extends Uniform {
      }
  }
  
@@ -6178,7 +6178,7 @@ index 28aac0d7..2479d00d 100644
  
          this.isUniformBuffer = true;
 diff --git a/examples-jsm/examples/renderers/common/UniformsGroup.ts b/examples-jsm/examples/renderers/common/UniformsGroup.ts
-index beb35347..c264d777 100644
+index 6f468160..5789a128 100644
 --- a/examples-jsm/examples/renderers/common/UniformsGroup.ts
 +++ b/examples-jsm/examples/renderers/common/UniformsGroup.ts
 @@ -1,8 +1,22 @@
@@ -6186,10 +6186,10 @@ index beb35347..c264d777 100644
  import { GPU_CHUNK_BYTES } from './Constants.js';
 +import {
 +    ColorNodeUniform,
-+    FloatNodeUniform,
 +    Matrix3NodeUniform,
 +    Matrix4NodeUniform,
 +    NodeUniformGPU,
++    NumberNodeUniform,
 +    Vector2NodeUniform,
 +    Vector3NodeUniform,
 +    Vector4NodeUniform,
@@ -6226,7 +6226,7 @@ index beb35347..c264d777 100644
      }
  
 -    updateByType(uniform) {
--        if (uniform.isFloatUniform) return this.updateNumber(uniform);
+-        if (uniform.isNumberUniform) return this.updateNumber(uniform);
 -        if (uniform.isVector2Uniform) return this.updateVector2(uniform);
 -        if (uniform.isVector3Uniform) return this.updateVector3(uniform);
 -        if (uniform.isVector4Uniform) return this.updateVector4(uniform);
@@ -6234,7 +6234,7 @@ index beb35347..c264d777 100644
 -        if (uniform.isMatrix3Uniform) return this.updateMatrix3(uniform);
 -        if (uniform.isMatrix4Uniform) return this.updateMatrix4(uniform);
 +    updateByType(uniform: NodeUniformGPU) {
-+        if ((uniform as FloatNodeUniform).isFloatUniform) return this.updateNumber(uniform as FloatNodeUniform);
++        if ((uniform as NumberNodeUniform).isNumberUniform) return this.updateNumber(uniform as NumberNodeUniform);
 +        if ((uniform as Vector2NodeUniform).isVector2Uniform) return this.updateVector2(uniform as Vector2NodeUniform);
 +        if ((uniform as Vector3NodeUniform).isVector3Uniform) return this.updateVector3(uniform as Vector3NodeUniform);
 +        if ((uniform as Vector4NodeUniform).isVector4Uniform) return this.updateVector4(uniform as Vector4NodeUniform);
@@ -6246,7 +6246,7 @@ index beb35347..c264d777 100644
      }
  
 -    updateNumber(uniform) {
-+    updateNumber(uniform: FloatNodeUniform) {
++    updateNumber(uniform: NumberNodeUniform) {
          let updated = false;
  
          const a = this.buffer;
@@ -6360,7 +6360,7 @@ index 2f4d0121..9c46d730 100644
          this.vertexShader = vertexShader;
          this.fragmentShader = fragmentShader;
 diff --git a/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts b/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
-index f85a638a..748c530d 100644
+index 659f5a82..8d29842c 100644
 --- a/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
 +++ b/examples-jsm/examples/renderers/common/nodes/NodeUniform.ts
 @@ -7,9 +7,13 @@ import {
@@ -6370,7 +6370,7 @@ index f85a638a..748c530d 100644
 +import NodeUniform from '../../../nodes/core/NodeUniform.js';
 +import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
  
- class FloatNodeUniform extends FloatUniform {
+ class NumberNodeUniform extends NumberUniform {
 -    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<number>;
 +
@@ -6378,7 +6378,7 @@ index f85a638a..748c530d 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -21,7 +25,9 @@ class FloatNodeUniform extends FloatUniform {
+@@ -21,7 +25,9 @@ class NumberNodeUniform extends NumberUniform {
  }
  
  class Vector2NodeUniform extends Vector2Uniform {
@@ -6449,7 +6449,7 @@ index f85a638a..748c530d 100644
      Matrix4NodeUniform,
  };
 +export type NodeUniformGPU =
-+    | FloatNodeUniform
++    | NumberNodeUniform
 +    | Vector2NodeUniform
 +    | Vector3NodeUniform
 +    | Vector4NodeUniform
@@ -7234,7 +7234,7 @@ index 97a42577..4491def1 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 570966c0..c88cf6da 100644
+index 31885165..9e94705b 100644
 --- a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7259,7 +7259,7 @@ index 570966c0..c88cf6da 100644
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
  const GPUShaderStage = self.GPUShaderStage;
-@@ -152,7 +154,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -175,7 +177,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -7274,8 +7274,8 @@ index 570966c0..c88cf6da 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -187,7 +195,12 @@ class WGSLNodeBuilder extends NodeBuilder {
-         }
+@@ -216,7 +224,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+         return `threejs_biquadraticTexture( ${textureProperty}, ${uvSnippet}, i32( ${levelSnippet} ) )`;
      }
  
 -    generateTextureLod(texture, textureProperty, uvSnippet, levelSnippet = '0') {
@@ -7288,7 +7288,7 @@ index 570966c0..c88cf6da 100644
          this._include('repeatWrapping');
  
          const dimension = `textureDimensions( ${textureProperty}, 0 )`;
-@@ -195,7 +208,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -224,7 +237,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `textureLoad( ${textureProperty}, threejs_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
      }
  
@@ -7303,7 +7303,7 @@ index 570966c0..c88cf6da 100644
          if (depthSnippet) {
              return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
          } else {
-@@ -229,11 +248,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -258,11 +277,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -7320,7 +7320,7 @@ index 570966c0..c88cf6da 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -245,11 +264,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -274,11 +293,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -7337,7 +7337,7 @@ index 570966c0..c88cf6da 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -262,11 +281,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -291,11 +310,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -7354,7 +7354,7 @@ index 570966c0..c88cf6da 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -287,7 +306,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -316,7 +335,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return snippet;
      }
  
@@ -7363,7 +7363,7 @@ index 570966c0..c88cf6da 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -349,7 +368,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -378,7 +397,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -7377,7 +7377,7 @@ index 570966c0..c88cf6da 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -473,7 +497,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -502,7 +526,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -7386,7 +7386,7 @@ index 570966c0..c88cf6da 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -534,8 +558,8 @@ ${flowData.code}
+@@ -563,8 +587,8 @@ ${flowData.code}
          return snippets.join(',\n\t');
      }
  
@@ -7397,7 +7397,7 @@ index 570966c0..c88cf6da 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -613,8 +637,8 @@ ${flowData.code}
+@@ -642,8 +666,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7408,7 +7408,7 @@ index 570966c0..c88cf6da 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -650,7 +674,7 @@ ${flowData.code}
+@@ -679,7 +703,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
@@ -7418,10 +7418,10 @@ index 570966c0..c88cf6da 100644
  
          const bindingSnippets = [];
 diff --git a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeFunction.ts b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeFunction.ts
-index e5ac3cba..bcecf037 100644
+index 3abfc4ad..b68c95bb 100644
 --- a/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeFunction.ts
 +++ b/examples-jsm/examples/renderers/webgpu/nodes/WGSLNodeFunction.ts
-@@ -107,7 +107,7 @@ const parse = source => {
+@@ -68,7 +68,7 @@ const parse = source => {
  };
  
  class WGSLNodeFunction extends NodeFunction {
