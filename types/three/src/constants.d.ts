@@ -448,7 +448,7 @@ export type PixelFormat =
     | typeof RedIntegerFormat
     | typeof RGFormat
     | typeof RGIntegerFormat
-  | typeof RGBIntegerFormat
+    | typeof RGBIntegerFormat
     | typeof RGBAIntegerFormat;
 
 /**
