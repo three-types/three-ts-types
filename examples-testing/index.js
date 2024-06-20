@@ -100,6 +100,7 @@ const exceptionList = [
     'webgpu_texturegrad',
     'webgpu_textures_2d-array',
     'webgpu_tsl_editor',
+    'webgpu_tsl_interoperability',
     'webgpu_tsl_transpiler',
     'webgpu_volume_cloud',
     'webgpu_volume_perlin',
