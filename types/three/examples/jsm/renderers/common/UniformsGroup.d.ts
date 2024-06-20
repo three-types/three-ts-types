@@ -11,10 +11,12 @@ import {
 import UniformBuffer from "./UniformBuffer.js";
 declare class UniformsGroup extends UniformBuffer {
     readonly isUniformsGroup: true;
+    _values: number[] | null;
     uniforms: NodeUniformGPU[];
     constructor(name?: string);
     addUniform(uniform: NodeUniformGPU): this;
     removeUniform(uniform: NodeUniformGPU): this;
+    get values(): number[];
     get buffer(): Float32Array;
     get byteLength(): number;
     update(): boolean;
