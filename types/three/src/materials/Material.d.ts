@@ -394,17 +394,6 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      */
     set alphaTest(value: number);
 
-    onBuild(object: Object3D, parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
-
-    onBeforeRender(
-        renderer: WebGLRenderer,
-        scene: Scene,
-        camera: Camera,
-        geometry: BufferGeometry,
-        object: Object3D,
-        group: Group,
-    ): void;
-
     /**
      * An optional callback that is executed immediately before the shader program is compiled.
      * This function is called with the associated WebGL program parameters and renderer.
@@ -453,4 +442,21 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default false
      */
     set needsUpdate(value: boolean);
+
+    /**
+     * @deprecated onBuild() has been removed.
+     */
+    onBuild(object: Object3D, parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
+
+    /**
+     * @deprecated onBeforeRender() has been removed.
+     */
+    onBeforeRender(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        object: Object3D,
+        group: Group,
+    ): void;
 }
