@@ -1,4 +1,4 @@
-import { BufferAttribute, BufferGeometry, InterleavedBufferAttribute } from "three";
+import { BufferAttribute, BufferGeometry, InterleavedBuffer, InterleavedBufferAttribute } from "three";
 import Attributes from "./Attributes.js";
 import { AttributeType } from "./Constants.js";
 import DataMap from "./DataMap.js";
@@ -16,7 +16,7 @@ declare class Geometries extends DataMap<{
     attributes: Attributes;
     info: Info;
     wireframes: WeakMap<BufferGeometry, BufferAttribute>;
-    attributeVersion: WeakMap<BufferAttribute | InterleavedBufferAttribute, number>;
+    attributeCall: WeakMap<BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer, number>;
     constructor(attributes: Attributes, info: Info);
     has(renderObject: RenderObject | BufferGeometry): boolean;
     updateForRender(renderObject: RenderObject): void;
