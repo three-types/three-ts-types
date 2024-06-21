@@ -3694,10 +3694,10 @@ index 006bc295..eb39fca8 100644
      }
  
 diff --git a/examples-jsm/examples/renderers/common/Geometries.ts b/examples-jsm/examples/renderers/common/Geometries.ts
-index df169bc2..40fdab4b 100644
+index ca0cd225..043f878e 100644
 --- a/examples-jsm/examples/renderers/common/Geometries.ts
 +++ b/examples-jsm/examples/renderers/common/Geometries.ts
-@@ -1,8 +1,17 @@
+@@ -1,8 +1,18 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
 -import { Uint32BufferAttribute, Uint16BufferAttribute } from 'three';
@@ -3709,6 +3709,7 @@ index df169bc2..40fdab4b 100644
 +    BufferGeometry,
 +    BufferAttribute,
 +    InterleavedBufferAttribute,
++    InterleavedBuffer,
 +} from 'three';
 +import Attributes from './Attributes.js';
 +import Info from './Info.js';
@@ -3718,7 +3719,7 @@ index df169bc2..40fdab4b 100644
      // assumes larger values usually on last
  
      for (let i = array.length - 1; i >= 0; --i) {
-@@ -12,11 +21,11 @@ function arrayNeedsUint32(array) {
+@@ -12,11 +22,11 @@ function arrayNeedsUint32(array) {
      return false;
  }
  
@@ -3733,7 +3734,7 @@ index df169bc2..40fdab4b 100644
      const indices = [];
  
      const geometryIndex = geometry.index;
-@@ -50,30 +59,40 @@ function getWireframeIndex(geometry) {
+@@ -50,31 +60,41 @@ function getWireframeIndex(geometry) {
      return attribute;
  }
  
@@ -3748,7 +3749,7 @@ index df169bc2..40fdab4b 100644
 +    info: Info;
 +
 +    wireframes: WeakMap<BufferGeometry, BufferAttribute>;
-+    attributeVersion: WeakMap<BufferAttribute | InterleavedBufferAttribute, number>;
++    attributeCall: WeakMap<BufferAttribute | InterleavedBufferAttribute | InterleavedBuffer, number>;
 +
 +    constructor(attributes: Attributes, info: Info) {
          super();
@@ -3757,9 +3758,10 @@ index df169bc2..40fdab4b 100644
          this.info = info;
  
 -        this.wireframes = new WeakMap();
--        this.attributeVersion = new WeakMap();
 +        this.wireframes = new WeakMap<BufferGeometry, BufferAttribute>();
-+        this.attributeVersion = new WeakMap<BufferAttribute | InterleavedBufferAttribute, number>();
+ 
+-        this.attributeCall = new WeakMap();
++        this.attributeCall = new WeakMap<BufferAttribute | InterleavedBufferAttribute, number>();
      }
  
 -    has(renderObject) {
@@ -3782,7 +3784,7 @@ index df169bc2..40fdab4b 100644
          const geometry = renderObject.geometry;
          const geometryData = this.get(geometry);
  
-@@ -107,7 +126,7 @@ class Geometries extends DataMap {
+@@ -108,7 +128,7 @@ class Geometries extends DataMap {
          geometry.addEventListener('dispose', onDispose);
      }
  
@@ -3791,20 +3793,32 @@ index df169bc2..40fdab4b 100644
          const attributes = renderObject.getAttributes();
  
          for (const attribute of attributes) {
-@@ -125,8 +144,10 @@ class Geometries extends DataMap {
+@@ -126,10 +146,10 @@ class Geometries extends DataMap {
          }
      }
  
 -    updateAttribute(attribute, type) {
--        const attributeData = attribute.isInterleavedBufferAttribute ? attribute.data : attribute;
 +    updateAttribute(attribute: BufferAttribute | InterleavedBufferAttribute, type: AttributeType) {
-+        const attributeData = (attribute as InterleavedBufferAttribute).isInterleavedBufferAttribute
-+            ? (attribute as InterleavedBufferAttribute).data
-+            : (attribute as BufferAttribute);
+         const callId = this.info.render.calls;
  
-         if (this.attributeVersion.get(attribute) !== attributeData.version) {
-             this.attributes.update(attribute, type);
-@@ -135,7 +156,7 @@ class Geometries extends DataMap {
+-        if (!attribute.isInterleavedBufferAttribute) {
++        if (!(attribute as InterleavedBufferAttribute).isInterleavedBufferAttribute) {
+             if (this.attributeCall.get(attribute) !== callId) {
+                 this.attributes.update(attribute, type);
+ 
+@@ -140,17 +160,17 @@ class Geometries extends DataMap {
+                 this.attributes.update(attribute, type);
+ 
+                 this.attributeCall.set(attribute, callId);
+-            } else if (this.attributeCall.get(attribute.data) !== callId) {
++            } else if (this.attributeCall.get((attribute as InterleavedBufferAttribute).data) !== callId) {
+                 this.attributes.update(attribute, type);
+ 
+-                this.attributeCall.set(attribute.data, callId);
++                this.attributeCall.set((attribute as InterleavedBufferAttribute).data, callId);
+ 
+                 this.attributeCall.set(attribute, callId);
+             }
          }
      }
  
