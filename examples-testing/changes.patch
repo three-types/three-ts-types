@@ -12734,6 +12734,58 @@ index f263be70..bc8f8622 100644
              glslVersion: THREE.GLSL3,
          });
  
+diff --git a/examples-testing/examples/webgl_texture2darray_layerupdate.ts b/examples-testing/examples/webgl_texture2darray_layerupdate.ts
+index 599fd857..7a8e62c5 100644
+--- a/examples-testing/examples/webgl_texture2darray_layerupdate.ts
++++ b/examples-testing/examples/webgl_texture2darray_layerupdate.ts
+@@ -3,7 +3,7 @@ import * as THREE from 'three';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ 
+-let camera, scene, mesh, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGLRenderer;
+ 
+ const planeWidth = 20;
+ const planeHeight = 10;
+@@ -35,7 +35,7 @@ async function init() {
+     // Load several KTX2 textures which will later be used to modify
+     // specific texture array layers.
+ 
+-    const spiritedaway = await ktx2Loader.loadAsync('textures/spiritedaway.ktx2');
++    const spiritedaway = (await ktx2Loader.loadAsync('textures/spiritedaway.ktx2')) as THREE.CompressedArrayTexture;
+ 
+     // Create a texture array for rendering.
+ 
+@@ -67,9 +67,9 @@ async function init() {
+         srcLayer: 0,
+         destLayer: 0,
+         transfer() {
+-            const layerElementLength = layerByteLength / spiritedaway.mipmaps[0].data.BYTES_PER_ELEMENT;
+-            textureArray.mipmaps[0].data.set(
+-                spiritedaway.mipmaps[0].data.subarray(
++            const layerElementLength = layerByteLength / spiritedaway.mipmaps![0].data.BYTES_PER_ELEMENT;
++            textureArray.mipmaps![0].data.set(
++                spiritedaway.mipmaps![0].data.subarray(
+                     layerElementLength * (formData.srcLayer % spiritedaway.image.depth),
+                     layerElementLength * ((formData.srcLayer % spiritedaway.image.depth) + 1),
+                 ),
+@@ -94,13 +94,13 @@ async function init() {
+             diffuse: { value: textureArray },
+             size: { value: new THREE.Vector2(planeWidth, planeHeight) },
+         },
+-        vertexShader: document.getElementById('vs').textContent.trim(),
+-        fragmentShader: document.getElementById('fs').textContent.trim(),
++        vertexShader: document.getElementById('vs')!.textContent!.trim(),
++        fragmentShader: document.getElementById('fs')!.textContent!.trim(),
+         glslVersion: THREE.GLSL3,
+     });
+ 
+     const geometry = new THREE.InstancedBufferGeometry();
+-    geometry.copy(new THREE.PlaneGeometry(planeWidth, planeHeight));
++    geometry.copy(new THREE.PlaneGeometry(planeWidth, planeHeight) as unknown as THREE.InstancedBufferGeometry);
+     geometry.instanceCount = 3;
+ 
+     const instancedIndexAttribute = new THREE.InstancedBufferAttribute(new Uint16Array([0, 1, 2]), 1, false, 1);
 diff --git a/examples-testing/examples/webgl_texture3d.ts b/examples-testing/examples/webgl_texture3d.ts
 index 977dbadb..fb1460ca 100644
 --- a/examples-testing/examples/webgl_texture3d.ts
