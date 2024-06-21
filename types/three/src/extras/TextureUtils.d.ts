@@ -1,5 +1,5 @@
 import { CompressedPixelFormat, PixelFormat, TextureDataType } from "../constants.js";
-import { Texture } from '../textures/Texture.js';
+import { Texture } from "../textures/Texture.js";
 
 /**
  * Scales the texture as large as possible within its surface without cropping or stretching the texture. The method
@@ -32,6 +32,11 @@ declare function getByteLength(
 /**
  * A class containing utility functions for textures.
  */
-declare const TextureUtils: { contain: typeof contain, cover: typeof cover, fill: typeof fill, getByteLength: typeof getByteLength };
+declare const TextureUtils: {
+    contain: typeof contain;
+    cover: typeof cover;
+    fill: typeof fill;
+    getByteLength: typeof getByteLength;
+};
 
 export { contain, cover, fill, getByteLength, TextureUtils };
