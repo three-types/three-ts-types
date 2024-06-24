@@ -1,4 +1,4 @@
-import { Vector2Like } from '../math/Vector2.js';
+import { Vector2Like } from "../math/Vector2.js";
 
 /**
  * A class containing utility functions for shapes.
