@@ -22,6 +22,7 @@ const files = [
     'renderers/common/Animation',
     'renderers/common/Attributes',
     'renderers/common/Background',
+    'renderers/common/BindGroup',
     'renderers/common/Binding',
     'renderers/common/Bindings',
     'renderers/common/Buffer',
