@@ -45,6 +45,7 @@ const files = [
     'renderers/common/Attributes',
     'renderers/common/Backend',
     'renderers/common/Background',
+    'renderers/common/BindGroup',
     'renderers/common/Binding',
     'renderers/common/Bindings',
     'renderers/common/Buffer',
