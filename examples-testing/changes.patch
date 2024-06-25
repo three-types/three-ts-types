@@ -12634,7 +12634,7 @@ index 366a2791..74077e99 100644
 +    console.log('after', renderer.info.programs!.length);
  }
 diff --git a/examples-testing/examples/webgl_test_wide_gamut.ts b/examples-testing/examples/webgl_test_wide_gamut.ts
-index 57c38ba0..1da45af5 100644
+index 620caaf1..6699085b 100644
 --- a/examples-testing/examples/webgl_test_wide_gamut.ts
 +++ b/examples-testing/examples/webgl_test_wide_gamut.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three';
@@ -12682,14 +12682,14 @@ index 57c38ba0..1da45af5 100644
  
          slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
      }
-@@ -90,18 +90,18 @@ function onWindowResize() {
+@@ -90,11 +90,11 @@ function onWindowResize() {
  
      renderer.setSize(window.innerWidth, window.innerHeight);
  
--    containTexture(window.innerWidth / window.innerHeight, sceneL.background);
--    containTexture(window.innerWidth / window.innerHeight, sceneR.background);
-+    containTexture(window.innerWidth / window.innerHeight, sceneL.background as THREE.Texture);
-+    containTexture(window.innerWidth / window.innerHeight, sceneR.background as THREE.Texture);
+-    THREE.TextureUtils.contain(sceneL.background, window.innerWidth / window.innerHeight);
+-    THREE.TextureUtils.contain(sceneR.background, window.innerWidth / window.innerHeight);
++    THREE.TextureUtils.contain(sceneL.background as THREE.Texture, window.innerWidth / window.innerHeight);
++    THREE.TextureUtils.contain(sceneR.background as THREE.Texture, window.innerWidth / window.innerHeight);
  }
  
 -function onGamutChange({ matches }) {
@@ -12697,14 +12697,6 @@ index 57c38ba0..1da45af5 100644
      renderer.outputColorSpace = isP3Context && matches ? THREE.DisplayP3ColorSpace : THREE.SRGBColorSpace;
  
      textureL.needsUpdate = true;
-     textureR.needsUpdate = true;
- }
- 
--function containTexture(aspect, target) {
-+function containTexture(aspect: number, target: THREE.Texture) {
-     // Sets the matrix uv transform so the texture image is contained in a region having the specified aspect ratio,
-     // and does so without distortion. Akin to CSS object-fit: contain.
-     // Source: https://github.com/mrdoob/three.js/pull/17199
 diff --git a/examples-testing/examples/webgl_texture2darray_compressed.ts b/examples-testing/examples/webgl_texture2darray_compressed.ts
 index f263be70..bc8f8622 100644
 --- a/examples-testing/examples/webgl_texture2darray_compressed.ts
