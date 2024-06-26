@@ -306,11 +306,11 @@ export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNo
 export {
     default as ViewportDepthNode,
     depth,
-    depthPixel,
-    depthTexture,
+    linearDepth,
     orthographicDepthToViewZ,
     perspectiveDepthToViewZ,
     ViewportDepthNodeScope,
+    viewportLinearDepth,
     viewZToOrthographicDepth,
     viewZToPerspectiveDepth,
 } from "./display/ViewportDepthNode.js";
