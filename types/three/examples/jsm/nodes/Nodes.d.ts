@@ -302,6 +302,7 @@ export { default as FrontFacingNode, faceDirection, frontFacing } from "./displa
 export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlurNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
+export { default as SobelOperatorNode, sobel } from "./display/SobelOperatorNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
 export {
     default as ViewportDepthNode,
