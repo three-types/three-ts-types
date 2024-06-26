@@ -14256,7 +14256,7 @@ index b89f2921..c3cfcdfe 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index fa0a9a5a..1b7bb74f 100644
+index 3d659a30..b2e2399d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
 @@ -10,7 +10,11 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -14279,9 +14279,9 @@ index fa0a9a5a..1b7bb74f 100644
 -let postProcessing;
 +let postProcessing: PostProcessing;
  
- const color = new THREE.Color();
+ init();
  
-@@ -132,7 +136,7 @@ function init() {
+@@ -130,7 +134,7 @@ function init() {
      updateEffect();
  }
  
@@ -14290,15 +14290,6 @@ index fa0a9a5a..1b7bb74f 100644
      if (event.isPrimary === false) return;
  
      mouseX = event.clientX - windowHalfX;
-@@ -171,7 +175,7 @@ function render() {
-         mesh.setColorAt(i, color);
-     }
- 
--    mesh.instanceColor.needsUpdate = true;
-+    mesh.instanceColor!.needsUpdate = true;
- 
-     postProcessing.render();
- }
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 index fc24f73b..27e9fe75 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
