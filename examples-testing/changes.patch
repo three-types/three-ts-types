@@ -14255,6 +14255,50 @@ index b89f2921..c3cfcdfe 100644
  
      postProcessing.outputNode = combinedPass;
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
+index fa0a9a5a..1b7bb74f 100644
+--- a/examples-testing/examples/webgpu_postprocessing_dof.ts
++++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
+@@ -10,7 +10,11 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ //
+ 
+-let camera, scene, renderer, mesh, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: WebGPURenderer,
++    mesh: THREE.InstancedMesh,
++    stats: Stats;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -21,7 +25,7 @@ let windowHalfY = window.innerHeight / 2;
+ let width = window.innerWidth;
+ let height = window.innerHeight;
+ 
+-let postProcessing;
++let postProcessing: PostProcessing;
+ 
+ const color = new THREE.Color();
+ 
+@@ -132,7 +136,7 @@ function init() {
+     updateEffect();
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     mouseX = event.clientX - windowHalfX;
+@@ -171,7 +175,7 @@ function render() {
+         mesh.setColorAt(i, color);
+     }
+ 
+-    mesh.instanceColor.needsUpdate = true;
++    mesh.instanceColor!.needsUpdate = true;
+ 
+     postProcessing.render();
+ }
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 index fc24f73b..27e9fe75 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts

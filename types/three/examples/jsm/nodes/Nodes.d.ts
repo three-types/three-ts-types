@@ -298,6 +298,7 @@ export {
     linearTosRGB,
     sRGBToLinear,
 } from "./display/ColorSpaceNode.js";
+export { default as DepthOfFieldNode, dof } from "./display/DepthOfFieldNode.js";
 export { default as FrontFacingNode, faceDirection, frontFacing } from "./display/FrontFacingNode.js";
 export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlurNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
