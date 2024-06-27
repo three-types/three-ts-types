@@ -432,7 +432,10 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
     copy(material: Material): this;
 
     /**
-     * This disposes the material. Textures of a material don't get disposed. These needs to be disposed by {@link Texture}.
+     * Frees the GPU-related resources allocated by this instance. Call this method whenever this instance is no longer
+     * used in your app.
+     *
+     * Material textures must be disposed of by the dispose() method of {@link Texture}.
      */
     dispose(): void;
 
