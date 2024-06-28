@@ -13,7 +13,7 @@ export default class DotScreenNode extends TempNode {
 
     constructor(colorNode: Node, center?: Vector2, angle?: number, scale?: number);
 
-    getTextureNode(): TextureNode;
+    getTextureNode(): ShaderNodeObject<TextureNode>;
 
     setSize(width: number, height: number): void;
 }
