@@ -38,7 +38,7 @@ export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
 
         morphTargetsRelative?: boolean;
 
-        groups?: Array<GeometryGroup>;
+        groups?: GeometryGroup[];
 
         boundingSphere?: { center: Vector3Tuple; radius: number };
     };

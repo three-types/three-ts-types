@@ -1,6 +1,8 @@
 import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 
-export interface BoneJSON<Type extends string = "Bone"> extends Object3DJSON<Type> {}
+export interface BoneJSON<Type extends string = "Bone"> extends Object3DJSON<Type> {
+    readonly type: Type;
+}
 
 /**
  * A {@link Bone} which is part of a {@link THREE.Skeleton | Skeleton}
