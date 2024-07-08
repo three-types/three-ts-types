@@ -1,10 +1,30 @@
-import { Camera } from "../cameras/Camera.js";
+import { Camera, CameraJSON } from "../cameras/Camera.js";
 import { Frustum } from "../math/Frustum.js";
 import { Matrix4 } from "../math/Matrix4.js";
-import { Vector2 } from "../math/Vector2.js";
+import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 import { Vector4 } from "../math/Vector4.js";
 import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
 import { Light } from "./Light.js";
+
+type Without<T, K extends keyof T> = {
+    [P in keyof T]: P extends K ? undefined : T[P];
+};
+
+export interface LightShadowJSON<TCamera extends CameraJSON = CameraJSON> {
+
+    intensity?: number;
+
+    bias?: number;
+
+    normalBias?: number;
+
+    radius?: number;
+
+    mapSize?: Vector2Tuple;
+
+    camera: Without<TCamera, "matrix">
+
+}
 
 /**
  * Serves as a base class for the other shadow classes.
