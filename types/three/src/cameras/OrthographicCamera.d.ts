@@ -1,7 +1,6 @@
 import { Camera, CameraJSON } from "./Camera.js";
 
 export interface OrthographicCameraJSON<Type extends string = "OrthographicCamera"> extends CameraJSON<Type> {
-
     zoom: number;
 
     view?: {
@@ -12,7 +11,7 @@ export interface OrthographicCameraJSON<Type extends string = "OrthographicCamer
         offsetY: number;
         width: number;
         height: number;
-    }
+    };
 
     left: number;
     right: number;
@@ -21,8 +20,6 @@ export interface OrthographicCameraJSON<Type extends string = "OrthographicCamer
     near: number;
     far: number;
 }
-
-
 
 /**
  * Camera that uses {@link https://en.wikipedia.org/wiki/Orthographic_projection | orthographic projection}.

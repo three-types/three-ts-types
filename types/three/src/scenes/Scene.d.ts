@@ -7,7 +7,6 @@ import { Texture } from "../textures/Texture.js";
 import { FogBase, FogJSON } from "./Fog.js";
 
 export interface SceneJSON<Type extends string = "Scene"> extends Object3DJSON<Type> {
-
     fog?: FogJSON; // Assuming the fog has a string representation; adjust as needed.
 
     backgroundBlurriness?: number;
@@ -20,7 +19,6 @@ export interface SceneJSON<Type extends string = "Scene"> extends Object3DJSON<T
 
     environmentRotation: EulerTuple; // Assuming it's a quaternion
 }
-
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js

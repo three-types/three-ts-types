@@ -1,7 +1,6 @@
 import { Color, ColorRepresentation } from "../math/Color.js";
 
 export interface FogJSON {
-
     type: "Fog";
 
     name: string;

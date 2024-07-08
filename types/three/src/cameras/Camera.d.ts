@@ -5,7 +5,7 @@ import { Matrix4 } from "../math/Matrix4.js";
 import { Vector3 } from "../math/Vector3.js";
 import { Vector4 } from "../math/Vector4.js";
 
-export interface CameraJSON<Type extends string = "Camera"> extends Object3DJSON<Type> { }
+export interface CameraJSON<Type extends string = "Camera"> extends Object3DJSON<Type> {}
 
 /**
  * Abstract base class for cameras
