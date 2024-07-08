@@ -1,9 +1,11 @@
 import { CoordinateSystem } from "../constants.js";
 import { Layers } from "../core/Layers.js";
-import { Object3D } from "../core/Object3D.js";
+import { Object3D, Object3DJSON } from "../core/Object3D.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Vector3 } from "../math/Vector3.js";
 import { Vector4 } from "../math/Vector4.js";
+
+export interface CameraJSON<Type extends string = "Camera"> extends Object3DJSON<Type> { }
 
 /**
  * Abstract base class for cameras
