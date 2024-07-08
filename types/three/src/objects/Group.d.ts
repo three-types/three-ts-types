@@ -1,6 +1,6 @@
-import { Object3D, Object3DJSON } from './../core/Object3D';
+import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 
-export interface GroupJSON<Type extends string = 'Group'> extends Object3DJSON<Type> {}
+export interface GroupJSON<Type extends string = 'Group'> extends Object3DJSON<Type> { }
 
 /**
  * Its purpose is to make working with groups of objects syntactically clearer.
@@ -24,9 +24,9 @@ export interface GroupJSON<Type extends string = 'Group'> extends Object3DJSON<T
  * @see {@link https://threejs.org/docs/index.html#api/en/objects/Group | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/objects/Group.js | Source}
  */
-export class Group extends Object3D {
+export class Group<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
     /**
-     * Creates a new {@link Bone}.
+     * Creates a new {@link Group}.
      */
     constructor();
 
@@ -41,5 +41,5 @@ export class Group extends Object3D {
      * @override
      * @defaultValue `Group`
      */
-    override readonly type: string | 'Group';
+    override readonly type: string | "Group";
 }

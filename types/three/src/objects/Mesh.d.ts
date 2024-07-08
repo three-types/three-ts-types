@@ -1,7 +1,7 @@
-import { Material } from './../materials/Material';
-import { Object3D, Object3DJSON } from './../core/Object3D';
-import { BufferGeometry } from '../core/BufferGeometry';
-import { Vector3 } from '../math/Vector3';
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { Material } from "../materials/Material.js";
+import { Vector3 } from "../math/Vector3.js";
 
 export interface MeshJSON<Type extends string = 'Mesh'> extends Object3DJSON<Type> {
     geometry: BufferGeometry['uuid'];
@@ -26,7 +26,8 @@ export interface MeshJSON<Type extends string = 'Mesh'> extends Object3DJSON<Typ
 export class Mesh<
     TGeometry extends BufferGeometry = BufferGeometry,
     TMaterial extends Material | Material[] = Material | Material[],
-> extends Object3D {
+    TEventMap extends Object3DEventMap = Object3DEventMap,
+> extends Object3D<TEventMap> {
     /**
      * Create a new instance of {@link Mesh}
      * @param geometry An instance of {@link THREE.BufferGeometry | BufferGeometry}. Default {@link THREE.BufferGeometry | `new THREE.BufferGeometry()`}.
@@ -45,7 +46,7 @@ export class Mesh<
      * @override
      * @defaultValue `Mesh`
      */
-    override readonly type: string | 'Mesh';
+    override readonly type: string | "Mesh";
 
     /**
      * An instance of {@link THREE.BufferGeometry | BufferGeometry} (or derived classes), defining the object's structure.
@@ -68,7 +69,6 @@ export class Mesh<
     /**
      * A dictionary of morphTargets based on the `morphTarget.name` property.
      * @defaultValue `undefined`, _but rebuilt by {@link updateMorphTargets | .updateMorphTargets()}._
-     *
      */
     morphTargetDictionary?: { [key: string]: number } | undefined;
 

@@ -1,7 +1,7 @@
-import { KeyframeTrack, KeyframeTrackJSON } from './KeyframeTrack';
-import { Vector3 } from './../math/Vector3';
-import { Bone } from './../objects/Bone';
-import { AnimationBlendMode } from '../constants';
+import { AnimationBlendMode } from "../constants.js";
+import { Vector3 } from "../math/Vector3.js";
+import { Bone } from "../objects/Bone.js";
+import { KeyframeTrack, KeyframeTrackJSON } from "./KeyframeTrack.js";
 
 export interface AnimationClipJSON {
     readonly uuid: string;

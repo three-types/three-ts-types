@@ -1,8 +1,7 @@
-import { Bone } from './Bone';
-import { Matrix4, Matrix4Tuple } from './../math/Matrix4';
-import { DataTexture } from './../textures/DataTexture';
-import { Meta } from '../Meta';
-
+import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
+import { DataTexture } from "../textures/DataTexture.js";
+import { Bone } from "./Bone.js";
+import { Meta } from '../Meta.js';
 export interface SkeletonJSON {
     readonly metadata: Meta<'Skeleton', 'Skeleton.toJSON'>;
 
@@ -71,12 +70,6 @@ export class Skeleton {
      * The {@link THREE.DataTexture | DataTexture} holding the bone data when using a vertex texture.
      */
     boneTexture: null | DataTexture;
-
-    /**
-     * The size of the {@link boneTexture | .boneTexture}.
-     * @remarks Expects a `Integer`
-     */
-    boneTextureSize: number;
 
     frame: number;
 
