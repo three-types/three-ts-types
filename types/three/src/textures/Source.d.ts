@@ -1,11 +1,11 @@
 export type SourceData<Type extends string = string> =
     | string
     | {
-          data: number[];
-          width: number;
-          height: number;
-          type: Type;
-      };
+        data: number[];
+        width: number;
+        height: number;
+        type: Type;
+    };
 
 export class SourceJSON {
     readonly uuid: string;

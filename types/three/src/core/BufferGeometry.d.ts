@@ -1,10 +1,10 @@
-import { Meta } from '../Meta.js';
 import { Box3 } from "../math/Box3.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Quaternion } from "../math/Quaternion.js";
 import { Sphere } from "../math/Sphere.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Vector3, Vector3Tuple } from "../math/Vector3.js";
+import { Meta } from "../Meta.js";
 import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { GLBufferAttribute } from "./GLBufferAttribute.js";
@@ -16,8 +16,8 @@ export type NormalOrGLBufferAttributes = Record<
     BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute
 >;
 
-export interface BufferGeometryJSON<Type extends string = 'BufferGeometry'> {
-    readonly metadata: Meta<'BufferGeometry', 'BufferGeometry.toJSON'>;
+export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
+    readonly metadata: Meta<"BufferGeometry", "BufferGeometry.toJSON">;
 
     readonly type: Type;
 

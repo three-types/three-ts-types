@@ -240,4 +240,4 @@ export { createCanvasElement } from "./utils.js";
 /**
  * JSON
  */
-export * from './Meta.js';
+export * from "./Meta.js";

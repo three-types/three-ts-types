@@ -1,6 +1,6 @@
+import { BufferAttributeJSON } from "./../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { InstancedBufferAttribute } from "../core/InstancedBufferAttribute.js";
-import { BufferAttributeJSON } from './../core/BufferAttribute.js';
 import { Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Box3 } from "../math/Box3.js";
@@ -10,7 +10,7 @@ import { Sphere } from "../math/Sphere.js";
 import { DataTexture } from "../textures/DataTexture.js";
 import { Mesh, MeshJSON } from "./Mesh.js";
 
-export interface InstancedMeshJSON<Type extends string = 'InstancedMesh'> extends MeshJSON<Type> {
+export interface InstancedMeshJSON<Type extends string = "InstancedMesh"> extends MeshJSON<Type> {
     count: number;
 
     instanceMatrix: Matrix4Tuple;

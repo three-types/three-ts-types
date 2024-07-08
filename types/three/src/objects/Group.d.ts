@@ -1,6 +1,6 @@
 import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 
-export interface GroupJSON<Type extends string = 'Group'> extends Object3DJSON<Type> { }
+export interface GroupJSON<Type extends string = "Group"> extends Object3DJSON<Type> {}
 
 /**
  * Its purpose is to make working with groups of objects syntactically clearer.

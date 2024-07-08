@@ -1,4 +1,3 @@
-import { Meta } from '../Meta.js';
 import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
 import { Material } from "../materials/Material.js";
@@ -7,6 +6,7 @@ import { Matrix3 } from "../math/Matrix3.js";
 import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
 import { Quaternion } from "../math/Quaternion.js";
 import { Vector3, Vector3Tuple } from "../math/Vector3.js";
+import { Meta } from "../Meta.js";
 import { Group } from "../objects/Group.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
@@ -15,16 +15,16 @@ import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
 import { Intersection, Raycaster } from "./Raycaster.js";
 
-export interface Object3DJSON<Type extends string = 'Object3D'> {
-    readonly metadata: Meta<'Object3D', 'Object3D.toJSON'>;
+export interface Object3DJSON<Type extends string = "Object3D"> {
+    readonly metadata: Meta<"Object3D", "Object3D.toJSON">;
 
     readonly type: Type;
 
     readonly uuid: string;
 
-    material?: Material['uuid'] | Array<Material['uuid']>;
+    material?: Material["uuid"] | Array<Material["uuid"]>;
 
-    animations?: Array<AnimationClipJSON['uuid']>;
+    animations?: Array<AnimationClipJSON["uuid"]>;
 
     children: Object3D[];
 

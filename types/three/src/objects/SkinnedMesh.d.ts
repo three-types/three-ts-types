@@ -9,12 +9,12 @@ import { Vector3 } from "../math/Vector3.js";
 import { Mesh, MeshJSON } from "./Mesh.js";
 import { Skeleton } from "./Skeleton.js";
 
-export interface SkinnedMeshJSON<Type extends string = 'SkinnedMesh'> extends MeshJSON<Type> {
+export interface SkinnedMeshJSON<Type extends string = "SkinnedMesh"> extends MeshJSON<Type> {
     bindMode: string;
 
     bindMatrix: Matrix4Tuple;
 
-    skeleton?: Skeleton['uuid'];
+    skeleton?: Skeleton["uuid"];
 }
 
 /**

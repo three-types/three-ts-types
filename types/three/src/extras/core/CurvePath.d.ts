@@ -2,12 +2,11 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Curve, CurveJSON } from "./Curve.js";
 
-export interface CurvePathJSON<Type extends string = 'CurvePath'> extends CurveJSON<Type> {
+export interface CurvePathJSON<Type extends string = "CurvePath"> extends CurveJSON<Type> {
     autoClose: boolean;
 
     curves: CurveJSON[];
 }
-
 
 /**
  * Curved Path - a curve path is simply a array of connected curves, but retains the api of a curve.

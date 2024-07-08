@@ -13,7 +13,7 @@ export type TypedArray =
     | Float32Array
     | Float64Array;
 
-export interface BufferAttributeJSON<Value, Type extends string = 'BufferAttribute'> {
+export interface BufferAttributeJSON<Value, Type extends string = "BufferAttribute"> {
     readonly type: Type;
 
     itemSize: number;
