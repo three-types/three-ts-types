@@ -1,5 +1,18 @@
 import { Color, ColorRepresentation } from "../math/Color.js";
 
+export interface FogJSON {
+
+    type: "Fog";
+
+    name: string;
+
+    color: number;
+
+    near: number;
+
+    far: number;
+}
+
 export interface FogBase {
     /**
      * Optional name of the `Fog` object

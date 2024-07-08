@@ -1,10 +1,26 @@
-import { Object3D } from "../core/Object3D.js";
+import { Object3D, Object3DJSON } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Color } from "../math/Color.js";
-import { Euler } from "../math/Euler.js";
+import { Euler, EulerTuple } from "../math/Euler.js";
 import { CubeTexture } from "../textures/CubeTexture.js";
 import { Texture } from "../textures/Texture.js";
-import { FogBase } from "./Fog.js";
+import { FogBase, FogJSON } from "./Fog.js";
+
+export interface SceneJSON<Type extends string = "Scene"> extends Object3DJSON<Type> {
+
+    fog?: FogJSON; // Assuming the fog has a string representation; adjust as needed.
+
+    backgroundBlurriness?: number;
+
+    backgroundIntensity?: number;
+
+    backgroundRotation: EulerTuple; // Assuming it's a quaternion
+
+    environmentIntensity?: number;
+
+    environmentRotation: EulerTuple; // Assuming it's a quaternion
+}
+
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js
