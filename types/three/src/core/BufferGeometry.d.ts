@@ -4,11 +4,11 @@ import { Quaternion } from "../math/Quaternion.js";
 import { Sphere } from "../math/Sphere.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Vector3, Vector3Tuple } from "../math/Vector3.js";
-import { Meta } from "../Meta.js";
 import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { GLBufferAttribute } from "./GLBufferAttribute.js";
 import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
+import { Meta } from "./Object3D.js";
 
 export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
 export type NormalOrGLBufferAttributes = Record<

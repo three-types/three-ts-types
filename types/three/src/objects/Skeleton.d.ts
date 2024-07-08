@@ -1,6 +1,6 @@
 import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
-import { Meta } from "../Meta.js";
 import { DataTexture } from "../textures/DataTexture.js";
+import { Meta } from "../Three.js";
 import { Bone } from "./Bone.js";
 export interface SkeletonJSON {
     readonly metadata: Meta<"Skeleton", "Skeleton.toJSON">;

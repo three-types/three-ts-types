@@ -237,7 +237,3 @@ export * from "./textures/VideoTexture.js";
  * Utils
  */
 export { createCanvasElement } from "./utils.js";
-/**
- * JSON
- */
-export * from "./Meta.js";

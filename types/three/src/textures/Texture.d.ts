@@ -13,7 +13,7 @@ import {
 import { EventDispatcher } from "../core/EventDispatcher.js";
 import { Matrix3 } from "../math/Matrix3.js";
 import { Vector2 } from "../math/Vector2.js";
-import { Meta } from "../Meta.js";
+import { Meta } from "../Three.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
 import { Source, SourceJSON } from "./Source.js";

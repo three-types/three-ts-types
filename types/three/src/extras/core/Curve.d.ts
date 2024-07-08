@@ -1,7 +1,6 @@
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
-
-import { Meta } from "../../Meta.js";
+import { Meta } from "../../Three.js";
 
 export class CurveJSON<Type extends string = "Curve"> {
     readonly metadata: Meta<"Curve", "Curve.toJSON">;
