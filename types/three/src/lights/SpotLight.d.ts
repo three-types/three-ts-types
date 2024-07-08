@@ -2,8 +2,13 @@ import { Object3D } from "../core/Object3D.js";
 import { ColorRepresentation } from "../math/Color.js";
 import { Vector3 } from "../math/Vector3.js";
 import { Texture } from "../textures/Texture.js";
-import { Light } from "./Light.js";
+import { Light, LightJSON } from "./Light.js";
 import { SpotLightShadow } from "./SpotLightShadow.js";
+
+export interface SpotLightJSON<Type extends string = "SpotLight"> extends LightJSON<Type> {
+    readonly type: Type;
+}
+
 
 /**
  * This light gets emitted from a single point in one direction, along a cone that increases in size the further from the light it gets.
