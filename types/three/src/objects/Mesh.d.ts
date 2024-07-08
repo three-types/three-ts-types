@@ -4,7 +4,7 @@ import { Material } from "../materials/Material.js";
 import { Vector3 } from "../math/Vector3.js";
 
 export interface MeshJSON<Type extends string = "Mesh"> extends Object3DJSON<Type> {
-    geometry: BufferGeometry["uuid"];
+    readonly type: Type
 }
 
 /**
