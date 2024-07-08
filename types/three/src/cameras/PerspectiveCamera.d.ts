@@ -1,5 +1,31 @@
 import { Vector2 } from "../math/Vector2.js";
-import { Camera } from "./Camera.js";
+import { Camera, CameraJSON } from "./Camera.js";
+
+export interface PerspectiveCameraJSON<Type extends string = "PerspectiveCamera"> extends CameraJSON<Type> {
+
+    fov: number;
+    zoom: number;
+
+    near: number;
+    far: number;
+    focus: number;
+
+    aspect: number;
+
+    view?: {
+        enabled: boolean;
+        fullWidth: number;
+        fullHeight: number;
+        offsetX: number;
+        offsetY: number;
+        width: number;
+        height: number;
+    }
+
+    filmGauge: number;
+    filmOffset: number;
+}
+
 
 /**
  * Camera that uses {@link https://en.wikipedia.org/wiki/Perspective_(graphical) | perspective projection}.
