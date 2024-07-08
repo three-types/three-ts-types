@@ -1,7 +1,12 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
-import { Line } from "./Line.js";
+import { Line, LineJSON } from "./Line.js";
+
+export interface LineLoopJSON<Type extends string = "LineLoop"> extends LineJSON<Type> {
+    readonly type: Type;
+}
+
 
 /**
  * A continuous line that connects back to the start.
