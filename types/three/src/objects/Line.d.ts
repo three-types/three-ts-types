@@ -3,8 +3,7 @@ import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 
 export interface LineJSON<Type extends string = "Line"> extends Object3DJSON<Type> {
-    geometry: BufferGeometryJSON["uuid"];
-    material: Material["uuid"] | Array<Material["uuid"]>;
+    readonly type: Type;
 }
 
 /**

@@ -1,5 +1,16 @@
 import { Camera } from "../cameras/Camera.js";
-import { Object3D, Object3DEventMap } from "../core/Object3D.js";
+import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+
+export interface LODJSON<Type extends string = "LOD"> extends Object3DJSON<Type> {
+
+    autoUpdate?: boolean;
+
+    levels: Array<{
+        object: Object3DJSON["uuid"];
+        distance: number;
+        hysteresis: number;
+    }>;
+}
 
 /**
  * Every level is associated with an object, and rendering can be switched between them at the distances specified
