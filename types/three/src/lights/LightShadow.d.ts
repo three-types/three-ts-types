@@ -10,7 +10,7 @@ type Without<T, K extends keyof T> = {
     [P in keyof T]: P extends K ? undefined : T[P];
 };
 
-export interface LightShadowJSON<TCamera extends CameraJSON = CameraJSON> {
+export interface LightShadowJSON<TCamera extends CameraJSON<string> = CameraJSON> {
 
     intensity?: number;
 

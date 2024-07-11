@@ -2,7 +2,12 @@ import { Object3D } from "../core/Object3D.js";
 import { ColorRepresentation } from "../math/Color.js";
 import { Vector3 } from "../math/Vector3.js";
 import { DirectionalLightShadow } from "./DirectionalLightShadow.js";
-import { Light } from "./Light.js";
+import { Light, LightJSON } from "./Light.js";
+
+export interface AmbientLightJSON<Type extends string = "AmbientLight"> extends LightJSON<Type> {
+    readonly type: Type;
+}
+
 
 /**
  * A light that gets emitted in a specific direction
