@@ -6,10 +6,6 @@ import { Vector4 } from "../math/Vector4.js";
 import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
 import { Light } from "./Light.js";
 
-type Without<T, K extends keyof T> = {
-    [P in keyof T]: P extends K ? undefined : T[P];
-};
-
 export interface LightShadowJSON<TCamera extends CameraJSON<string> = CameraJSON> {
     intensity?: number;
 
@@ -21,7 +17,9 @@ export interface LightShadowJSON<TCamera extends CameraJSON<string> = CameraJSON
 
     mapSize?: Vector2Tuple;
 
-    camera: Without<TCamera, "matrix">;
+    camera: {
+        [P in keyof TCamera]: P extends "matrix" ? undefined : TCamera[P];
+    };
 }
 
 /**
