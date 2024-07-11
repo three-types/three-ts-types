@@ -6,7 +6,6 @@ export interface PointLightJSON<Type extends string = "PointLight"> extends Ligh
     readonly type: Type;
 }
 
-
 /**
  * A light that gets emitted from a single point in all directions
  * @remarks

@@ -7,7 +7,6 @@ export interface LineLoopJSON<Type extends string = "LineLoop"> extends LineJSON
     readonly type: Type;
 }
 
-
 /**
  * A continuous line that connects back to the start.
  * @remarks

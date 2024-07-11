@@ -1,7 +1,7 @@
 import { OrthographicCamera, OrthographicCameraJSON } from "../cameras/OrthographicCamera.js";
 import { LightShadow, LightShadowJSON } from "./LightShadow.js";
 
-export type DirectionalLightShadowJSON = LightShadowJSON<OrthographicCameraJSON>
+export type DirectionalLightShadowJSON = LightShadowJSON<OrthographicCameraJSON>;
 
 /**
  * This is used internally by {@link DirectionalLight | DirectionalLights} for calculating shadows.

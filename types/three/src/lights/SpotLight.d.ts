@@ -9,7 +9,6 @@ export interface SpotLightJSON<Type extends string = "SpotLight"> extends LightJ
     readonly type: Type;
 }
 
-
 /**
  * This light gets emitted from a single point in one direction, along a cone that increases in size the further from the light it gets.
  * @example

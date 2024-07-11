@@ -7,7 +7,6 @@ export interface SpriteJSON<Type extends string = "Sprite"> extends Object3DJSON
     readonly type: Type;
 }
 
-
 /**
  * A {@link Sprite} is a plane that always faces towards the camera, generally with a partially transparent texture applied.
  * @remarks Sprites do not cast shadows, setting `castShadow = true` will have no effect.

@@ -2,7 +2,9 @@ import { Object3D, Object3DJSON } from "../core/Object3D.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { LightShadow, LightShadowJSON } from "./LightShadow.js";
 
-export interface LightJSON<Type extends string = "Light", Shadow extends LightShadowJSON = LightShadowJSON> extends Object3DJSON<Type> {
+export interface LightJSON<Type extends string = "Light", Shadow extends LightShadowJSON = LightShadowJSON>
+    extends Object3DJSON<Type>
+{
     color: number;
     intensity: number;
 
@@ -18,7 +20,6 @@ export interface LightJSON<Type extends string = "Light", Shadow extends LightSh
 
     target?: Object3DJSON["uuid"];
 }
-
 
 /**
  * Abstract base class for lights.

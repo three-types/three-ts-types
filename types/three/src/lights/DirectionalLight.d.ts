@@ -8,7 +8,6 @@ export interface AmbientLightJSON<Type extends string = "AmbientLight"> extends 
     readonly type: Type;
 }
 
-
 /**
  * A light that gets emitted in a specific direction
  * @remarks

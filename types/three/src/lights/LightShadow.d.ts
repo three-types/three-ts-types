@@ -11,7 +11,6 @@ type Without<T, K extends keyof T> = {
 };
 
 export interface LightShadowJSON<TCamera extends CameraJSON<string> = CameraJSON> {
-
     intensity?: number;
 
     bias?: number;
@@ -22,8 +21,7 @@ export interface LightShadowJSON<TCamera extends CameraJSON<string> = CameraJSON
 
     mapSize?: Vector2Tuple;
 
-    camera: Without<TCamera, "matrix">
-
+    camera: Without<TCamera, "matrix">;
 }
 
 /**

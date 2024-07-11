@@ -7,7 +7,6 @@ export interface LineSegmentsJSON<Type extends string = "LineSegments"> extends 
     readonly type: Type;
 }
 
-
 /**
  * A series of lines drawn between pairs of vertices.
  * @remarks

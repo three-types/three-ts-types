@@ -2,7 +2,6 @@ import { Camera } from "../cameras/Camera.js";
 import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 
 export interface LODJSON<Type extends string = "LOD"> extends Object3DJSON<Type> {
-
     autoUpdate?: boolean;
 
     levels: Array<{

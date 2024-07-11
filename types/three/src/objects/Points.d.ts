@@ -9,7 +9,6 @@ export interface PointsJSON<Type extends string = "Points"> extends Object3DJSON
     readonly type: Type;
 }
 
-
 /**
  * A class for displaying {@link Points}
  * @remarks

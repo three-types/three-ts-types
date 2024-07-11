@@ -5,7 +5,6 @@ export interface AmbientLightJSON<Type extends string = "AmbientLight"> extends 
     readonly type: Type;
 }
 
-
 /**
  * This light globally illuminates all objects in the scene equally.
  * @remarks This light cannot be used to cast shadows as it does not have a direction.
