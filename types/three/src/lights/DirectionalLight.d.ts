@@ -4,7 +4,7 @@ import { Vector3 } from "../math/Vector3.js";
 import { DirectionalLightShadow } from "./DirectionalLightShadow.js";
 import { Light, LightJSON } from "./Light.js";
 
-export interface AmbientLightJSON<Type extends string = "AmbientLight"> extends LightJSON<Type> {
+export interface DirectionalLightJSON<Type extends string = "DirectionalLight"> extends LightJSON<Type> {
     readonly type: Type;
 }
 
