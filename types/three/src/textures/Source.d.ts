@@ -1,3 +1,5 @@
+import { JSONMeta } from "../Three.js";
+
 export type SerializedImage =
     | string
     | {
@@ -71,5 +73,5 @@ export class Source {
      * Convert the data {@link Source} to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
-    toJSON(meta?: string | {}): SourceJSON;
+    toJSON(meta?: string | JSONMeta): SourceJSON;
 }
