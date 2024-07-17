@@ -4,15 +4,11 @@ import { Bone } from "../objects/Bone.js";
 import { KeyframeTrack, KeyframeTrackJSON } from "./KeyframeTrack.js";
 
 export interface AnimationClipJSON {
-    readonly uuid: string;
-
     name: string;
-
     duration: number;
-
-    blendMode: number;
-
     tracks: KeyframeTrackJSON[];
+    uuid: string;
+    blendMode: AnimationBlendMode;
 }
 
 export interface MorphTarget {
