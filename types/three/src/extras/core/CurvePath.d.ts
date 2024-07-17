@@ -2,9 +2,8 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Curve, CurveJSON } from "./Curve.js";
 
-export interface CurvePathJSON<Type extends string = "CurvePath"> extends CurveJSON<Type> {
+export interface CurvePathJSON extends CurveJSON {
     autoClose: boolean;
-
     curves: CurveJSON[];
 }
 
@@ -72,4 +71,7 @@ export class CurvePath<TVector extends Vector2 | Vector3> extends Curve<TVector>
      * @param divisions Number of pieces to divide the curve into. Expects a `Integer`. Default `40`
      */
     override getSpacedPoints(divisions?: number): TVector[];
+
+    toJSON(): CurvePathJSON;
+    fromJSON(json: CurvePathJSON): this;
 }
