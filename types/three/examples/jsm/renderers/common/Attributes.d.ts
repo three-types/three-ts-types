@@ -15,6 +15,6 @@ declare class Attributes extends DataMap<{
     constructor(backend: Backend);
     delete(attribute: BufferAttribute | InterleavedBufferAttribute): Data;
     update(attribute: BufferAttribute | InterleavedBufferAttribute, type: AttributeType): void;
-    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute): InterleavedBuffer | BufferAttribute;
+    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute): BufferAttribute | InterleavedBuffer;
 }
 export default Attributes;

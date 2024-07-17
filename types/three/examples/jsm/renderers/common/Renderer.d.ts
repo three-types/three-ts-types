@@ -1,4 +1,3 @@
-/// <reference types="webxr" />
 import {
     Box2,
     BufferAttribute,
@@ -212,10 +211,10 @@ declare class Renderer {
     ): void;
     getRenderObjectFunction():
         | ((
-            object: Object3D<import("three").Object3DEventMap>,
+            object: Object3D,
             scene: Scene,
             camera: Camera,
-            geometry: BufferGeometry<import("three").NormalBufferAttributes>,
+            geometry: BufferGeometry,
             material: Material,
             group: GeometryGroup,
             lightsNode: LightsNode,
