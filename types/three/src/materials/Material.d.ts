@@ -12,13 +12,14 @@ import {
 } from "../constants.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { EventDispatcher } from "../core/EventDispatcher.js";
-import { Object3D } from "../core/Object3D.js";
+import { JSONMeta, Object3D } from "../core/Object3D.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { Plane } from "../math/Plane.js";
 import { Group } from "../objects/Group.js";
 import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
+import { SourceJSON, TextureJSON } from "../Three.js";
 
 export interface MaterialParameters {
     alphaHash?: boolean | undefined;
@@ -66,6 +67,179 @@ export interface MaterialParameters {
     stencilZFail?: StencilOp | undefined;
     stencilZPass?: StencilOp | undefined;
     userData?: Record<string, any> | undefined;
+}
+export class MaterialJSON {
+    metadata: {
+        version: number;
+        type: "Material";
+        generator: "Material.toJSON";
+    };
+
+    // standard Material serialization
+    uuid: string;
+    type: string;
+    name: string;
+
+    color?: number;
+    roughness?: number;
+    metalness?: number;
+
+    sheen?: number;
+    sheenColor?: number;
+    sheenRoughness?: number;
+
+    emissive?: number;
+    emissiveIntensity?: number;
+
+    specular?: number;
+    specularIntensity?: number;
+    specularColor?: number;
+
+    shininess?: number;
+
+    clearcoat?: number;
+    clearcoatRoughness?: number;
+    clearcoatMap?: string;
+    clearcoatRoughnessMap?: string;
+    clearcoatNormalMap?: string;
+    clearcoatNormalScale?: number[];
+
+    dispersion?: number;
+
+    iridescence?: number;
+    iridescenceIOR?: number;
+    iridescenceThicknessRange?: number;
+    iridescenceMap?: string;
+    iridescenceThicknessMap?: string;
+
+    anisotropy?: number;
+    anisotropyRotation?: number;
+    anisotropyMap?: string;
+
+    map?: string;
+
+    matcap?: string;
+
+    alphaMap?: string;
+
+    lightMap?: string;
+    lightMapIntensity?: number;
+
+    aoMap?: string;
+    aoMapIntensity?: number;
+
+    bumpMap?: string;
+    bumpScale?: number;
+
+    normalMap?: string;
+    normalMapType?: number;
+    normalScale?: number[];
+
+    displacementMap?: string;
+    displacementScale?: number;
+    displacementBias?: number;
+
+    roughnessMap?: string;
+
+    metalnessMap?: string;
+
+    emissiveMap?: string;
+
+    specularMap?: string;
+
+    specularIntensityMap?: string;
+    specularColorMap?: string;
+
+    envMap?: string;
+
+    combine?: number;
+
+    envMapRotation?: number[];
+    envMapIntensity?: number;
+
+    reflectivity?: number;
+    refractionRatio?: number;
+
+    gradientMap?: string;
+
+    transmission?: number;
+    transmissionMap?: string;
+
+    thickness?: number;
+    thicknessMap?: string;
+
+    attenuationDistance?: number;
+    attenuationColor?: number;
+
+    size?: number;
+    shadowSide?: number;
+    sizeAttenuation?: boolean;
+
+    blending?: number;
+    side?: number;
+    vertexColors?: boolean;
+    opacity?: number;
+    transparent?: boolean;
+
+    blendSrc?: BlendingSrcFactor;
+    blendDst?: number;
+    blendEquation?: number;
+    blendSrcAlpha?: number | null;
+    blendDstAlpha?: number | null;
+    blendEquationAlpha?: number | null;
+    blendColor?: number;
+    blendAlpha?: number;
+
+    depthFunc?: number;
+    depthTest?: boolean;
+    depthWrite?: boolean;
+    colorWrite?: boolean;
+
+    stencilWriteMask?: number;
+    stencilFunc?: StencilFunc;
+    stencilRef?: number;
+    stencilFuncMask?: number;
+    stencilFail?: number;
+    stencilZFail?: number;
+    stencilZPass?: number;
+    stencilWrite?: boolean;
+
+    rotation?: number;
+
+    polygonOffset?: boolean;
+    polygonOffsetFactor?: number;
+    polygonOffsetUnits?: number;
+
+    linewidth?: number;
+    dashSize?: number;
+    gapSize?: number;
+    scale?: number;
+    dithering?: boolean;
+
+    alphaTest?: number;
+    alphaHash?: boolean;
+    alphaToCoverage?: boolean;
+    premultipliedAlpha?: boolean;
+
+    forceSinglePass?: boolean;
+
+    wireframe?: boolean;
+    wireframeLinewidth?: number;
+    wireframeLinecap?: string;
+    wireframeLinejoin?: string;
+
+    flatShading?: boolean;
+    visible?: boolean;
+    toneMapped?: boolean;
+    fog?: boolean;
+
+    userData: Record<string, unknown>;
+}
+
+export interface MaterialJSONRoot extends MaterialJSON {
+    textures?: Omit<TextureJSON, "metadata">[];
+
+    images?: SourceJSON[];
 }
 
 /**
@@ -418,7 +592,8 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * Convert the material to three.js JSON format.
      * @param meta Object containing metadata such as textures or images for the material.
      */
-    toJSON(meta?: any): any;
+    toJSON(): MaterialJSON;
+    toJSON(meta: JSONMeta): MaterialJSONRoot;
 
     /**
      * Return a new material with the same parameters as this material.

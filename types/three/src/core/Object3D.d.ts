@@ -1,6 +1,6 @@
 import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
-import { Material } from "../materials/Material.js";
+import { Material, MaterialJSON } from "../materials/Material.js";
 import { Euler } from "../math/Euler.js";
 import { Matrix3 } from "../math/Matrix3.js";
 import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
@@ -49,7 +49,7 @@ export interface Object3DJSON {
 
 export interface JSONMeta {
     geometries: Record<string, BufferGeometryJSON>;
-    materials: Record<string, unknown>;
+    materials: Record<string, MaterialJSON>;
     textures: Record<string, TextureJSON>;
     images: Record<string, SourceJSON>;
     shapes: Record<string, unknown>;
