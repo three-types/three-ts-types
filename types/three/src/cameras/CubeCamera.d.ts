@@ -1,11 +1,7 @@
 import { CoordinateSystem } from "../constants.js";
-import { Object3D, Object3DJSON } from "../core/Object3D.js";
+import { Object3D } from "../core/Object3D.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
-
-export interface CubeCameraJSON<Type extends string = "CubeCamera"> extends Object3DJSON<Type> {
-    readonly type: Type;
-}
 
 /**
  * Creates **6** {@link THREE.PerspectiveCamera | cameras} that render to a {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}.

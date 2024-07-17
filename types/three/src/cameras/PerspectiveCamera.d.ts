@@ -1,7 +1,8 @@
+import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
 import { Vector2 } from "../math/Vector2.js";
-import { Camera, CameraJSON } from "./Camera.js";
+import { Camera } from "./Camera.js";
 
-export interface PerspectiveCameraJSON<Type extends string = "PerspectiveCamera"> extends CameraJSON<Type> {
+export interface PerspectiveCameraJSONObject extends Object3DJSONObject {
     fov: number;
     zoom: number;
 
@@ -23,6 +24,10 @@ export interface PerspectiveCameraJSON<Type extends string = "PerspectiveCamera"
 
     filmGauge: number;
     filmOffset: number;
+}
+
+export interface PerspectiveCameraJSON extends Object3DJSON {
+    object: PerspectiveCameraJSONObject;
 }
 
 /**
@@ -244,4 +249,6 @@ export class PerspectiveCamera extends Camera {
      * @deprecated Use {@link PerspectiveCamera.setFocalLength | .setFocalLength()} and {@link PerspectiveCamera.filmGauge | .filmGauge} instead.
      */
     setLens(focalLength: number, frameHeight?: number): void;
+
+    toJSON(meta?: JSONMeta): PerspectiveCameraJSON;
 }

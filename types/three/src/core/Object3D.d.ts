@@ -44,6 +44,17 @@ export interface Object3DJSON {
     object: Object3DJSONObject;
 }
 
+export interface JSONMeta {
+    geometries: Record<string, unknown>;
+    materials: Record<string, unknown>;
+    textures: Record<string, unknown>;
+    images: Record<string, unknown>;
+    shapes: Record<string, unknown>;
+    skeletons: Record<string, unknown>;
+    animations: Record<string, unknown>;
+    nodes: Record<string, unknown>;
+}
+
 export interface Object3DEventMap {
     /**
      * Fires when the object has been added to its parent object.
@@ -638,7 +649,7 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * Convert the object to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Object containing metadata such as materials, textures or images for the object.
      */
-    toJSON(meta?: { geometries: any; materials: any; textures: any; images: any }): Object3DJSON;
+    toJSON(meta?: JSONMeta): Object3DJSON;
 
     /**
      * Returns a clone of `this` object and optionally all descendants.

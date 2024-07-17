@@ -1,7 +1,14 @@
-import { Camera, CameraJSON } from "./Camera.js";
+import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Camera } from "./Camera.js";
 
-export interface OrthographicCameraJSON<Type extends string = "OrthographicCamera"> extends CameraJSON<Type> {
+export interface OrthographicCameraJSONObject extends Object3DJSONObject {
     zoom: number;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+    near: number;
+    far: number;
 
     view?: {
         enabled: boolean;
@@ -12,13 +19,10 @@ export interface OrthographicCameraJSON<Type extends string = "OrthographicCamer
         width: number;
         height: number;
     };
+}
 
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
-    near: number;
-    far: number;
+export interface OrthographicCameraJSON extends Object3DJSON {
+    object: OrthographicCameraJSONObject;
 }
 
 /**
@@ -165,4 +169,6 @@ export class OrthographicCamera extends Camera {
      * Removes any offset set by the {@link setViewOffset | .setViewOffset} method.
      */
     clearViewOffset(): void;
+
+    toJSON(meta?: JSONMeta): OrthographicCameraJSON;
 }
