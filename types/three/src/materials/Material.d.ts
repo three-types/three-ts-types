@@ -102,7 +102,7 @@ export class MaterialJSON {
     clearcoatMap?: string;
     clearcoatRoughnessMap?: string;
     clearcoatNormalMap?: string;
-    clearcoatNormalScale?: Array<number>;
+    clearcoatNormalScale?: number[];
 
     dispersion?: number;
 
@@ -133,7 +133,7 @@ export class MaterialJSON {
 
     normalMap?: string;
     normalMapType?: number;
-    normalScale?: Array<number>;
+    normalScale?: number[];
 
     displacementMap?: string;
     displacementScale?: number;
@@ -154,7 +154,7 @@ export class MaterialJSON {
 
     combine?: number;
 
-    envMapRotation?: Array<number>;
+    envMapRotation?: number[];
     envMapIntensity?: number;
 
     reflectivity?: number;
@@ -237,9 +237,9 @@ export class MaterialJSON {
 }
 
 export interface MaterialJSONRoot extends MaterialJSON {
-    textures?: Array<Omit<TextureJSON, "metadata">>;
+    textures?: Omit<TextureJSON, "metadata">[];
 
-    images?: Array<SourceJSON>;
+    images?: SourceJSON[];
 }
 
 /**
