@@ -2,11 +2,9 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Path, PathJSON } from "./Path.js";
 
 export interface ShapeJSON extends PathJSON {
-
     uuid: string;
 
-    holes: PathJSON[]
-
+    holes: PathJSON[];
 }
 
 /**

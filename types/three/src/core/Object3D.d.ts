@@ -1,5 +1,6 @@
 import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
+import { ShapeJSON } from "../extras/core/Shape.js";
 import { Material } from "../materials/Material.js";
 import { Euler } from "../math/Euler.js";
 import { Matrix3 } from "../math/Matrix3.js";
@@ -16,7 +17,6 @@ import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
 import { Intersection, Raycaster } from "./Raycaster.js";
-import { ShapeJSON } from "../extras/core/Shape.js"
 
 export interface Object3DJSONObject {
     uuid: string;
