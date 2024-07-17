@@ -1,4 +1,4 @@
-import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { JSONMeta, Object3DJSON, Object3DJSONObject, Object3DRootJSON } from "../core/Object3D.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Camera } from "./Camera.js";
 
@@ -26,9 +26,7 @@ export interface PerspectiveCameraJSONObject extends Object3DJSONObject {
     filmOffset: number;
 }
 
-export interface PerspectiveCameraJSON extends Object3DJSON {
-    object: PerspectiveCameraJSONObject;
-}
+export type PerspectiveCameraJSON = Object3DJSON<PerspectiveCameraJSONObject>;
 
 /**
  * Camera that uses {@link https://en.wikipedia.org/wiki/Perspective_(graphical) | perspective projection}.
@@ -250,5 +248,6 @@ export class PerspectiveCamera extends Camera {
      */
     setLens(focalLength: number, frameHeight?: number): void;
 
-    toJSON(meta?: JSONMeta): PerspectiveCameraJSON;
+    toJSON(meta: JSONMeta): PerspectiveCameraJSON;
+    toJSON(): Object3DRootJSON<PerspectiveCameraJSONObject>;
 }

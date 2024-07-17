@@ -1,4 +1,4 @@
-import { JSONMeta, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { JSONMeta, Object3DJSON, Object3DJSONObject, Object3DRootJSON } from "../core/Object3D.js";
 import { Camera } from "./Camera.js";
 
 export interface OrthographicCameraJSONObject extends Object3DJSONObject {
@@ -21,9 +21,7 @@ export interface OrthographicCameraJSONObject extends Object3DJSONObject {
     };
 }
 
-export interface OrthographicCameraJSON extends Object3DJSON {
-    object: OrthographicCameraJSONObject;
-}
+export type OrthographicCameraJSON = Object3DJSON<OrthographicCameraJSONObject>;
 
 /**
  * Camera that uses {@link https://en.wikipedia.org/wiki/Orthographic_projection | orthographic projection}.
@@ -170,5 +168,6 @@ export class OrthographicCamera extends Camera {
      */
     clearViewOffset(): void;
 
-    toJSON(meta?: JSONMeta): OrthographicCameraJSON;
+    toJSON(meta: JSONMeta): OrthographicCameraJSON;
+    toJSON(): Object3DRootJSON<OrthographicCameraJSONObject>
 }

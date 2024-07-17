@@ -1,7 +1,7 @@
 import { BufferAttributeJSON } from "./../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { InstancedBufferAttribute } from "../core/InstancedBufferAttribute.js";
-import { JSONMeta, Object3DEventMap } from "../core/Object3D.js";
+import { JSONMeta, Object3DEventMap, Object3DJSON, Object3DRootJSON } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Box3 } from "../math/Box3.js";
 import { Color } from "../math/Color.js";
@@ -16,9 +16,7 @@ export interface InstancedMeshJSONObject extends MeshJSONObject {
     instanceColor?: BufferAttributeJSON;
 }
 
-export interface InstancedMeshJSON extends MeshJSONObject {
-    object: InstancedMeshJSONObject;
-}
+export type InstancedMeshJSON = Object3DJSON<InstancedMeshJSONObject>
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
     dispose: {};
@@ -175,5 +173,6 @@ export class InstancedMesh<
      */
     dispose(): this;
 
-    toJSON(meta?: JSONMeta): InstancedMeshJSON;
+    toJSON(meta: JSONMeta): InstancedMeshJSON;
+    toJSON(): Object3DRootJSON<InstancedMeshJSONObject>
 }

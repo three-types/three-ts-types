@@ -42,9 +42,20 @@ export interface Object3DJSONObject {
     animations?: string[];
 }
 
-export interface Object3DJSON {
+export interface Object3DJSON<O extends Object3DJSONObject = Object3DJSONObject> {
+    object: O
+}
+
+export interface Object3DRootJSON<O extends Object3DJSONObject = Object3DJSONObject> extends Object3DJSON<O> {
     metadata?: { version: number; type: string; generator: string };
-    object: Object3DJSONObject;
+    geometries?: Omit<BufferGeometryJSON, "metadata">[]
+    materials?: unknown[]
+    textures?: Omit<TextureJSON, "metadata">[]
+    images?: SourceJSON[]
+    shapes?: unknown[]
+    skeletons?: Omit<SkeletonJSON, "metadata">[]
+    animations?: AnimationClipJSON[]
+    nodes?: unknown[]
 }
 
 export interface JSONMeta {
@@ -57,6 +68,7 @@ export interface JSONMeta {
     animations: Record<string, AnimationClipJSON>;
     nodes: Record<string, unknown>;
 }
+
 
 export interface Object3DEventMap {
     /**
@@ -652,7 +664,9 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      * Convert the object to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Object containing metadata such as materials, textures or images for the object.
      */
-    toJSON(meta?: JSONMeta): Object3DJSON;
+    toJSON(): Object3DJSON;
+    toJSON(meta: JSONMeta): Object3DRootJSON;
+
 
     /**
      * Returns a clone of `this` object and optionally all descendants.

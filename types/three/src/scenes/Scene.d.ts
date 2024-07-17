@@ -1,4 +1,4 @@
-import { JSONMeta, Object3D, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { JSONMeta, Object3D, Object3DJSON, Object3DJSONObject, Object3DRootJSON } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Color } from "../math/Color.js";
 import { Euler, EulerTuple } from "../math/Euler.js";
@@ -18,9 +18,7 @@ export interface SceneJSONObject extends Object3DJSONObject {
     environmentRotation: EulerTuple;
 }
 
-export interface SceneJSON extends Object3DJSON {
-    object: SceneJSONObject;
-}
+export type SceneJSON = Object3DJSON<SceneJSONObject>
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js
@@ -114,5 +112,6 @@ export class Scene extends Object3D {
      * Convert the {@link Scene} to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Object containing metadata such as textures or images for the scene.
      */
-    toJSON(meta?: JSONMeta): SceneJSON;
+    toJSON(meta: JSONMeta): SceneJSON;
+    toJSON(): Object3DRootJSON<SceneJSONObject>
 }
