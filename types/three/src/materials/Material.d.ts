@@ -237,7 +237,7 @@ export class MaterialJSON {
 }
 
 export interface MaterialJSONRoot extends MaterialJSON {
-    textures?: Omit<TextureJSON, "metadata">[];
+    textures?: Array<Omit<TextureJSON, "metadata">>;
 
     images?: SourceJSON[];
 }
