@@ -1,9 +1,5 @@
 import { ColorRepresentation } from "../math/Color.js";
-import { Light, LightJSON } from "./Light.js";
-
-export interface AmbientLightJSON<Type extends string = "AmbientLight"> extends LightJSON<Type> {
-    readonly type: Type;
-}
+import { Light } from "./Light.js";
 
 /**
  * This light globally illuminates all objects in the scene equally.

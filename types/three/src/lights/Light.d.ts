@@ -1,24 +1,20 @@
-import { Object3D, Object3DJSON } from "../core/Object3D.js";
+import { JSONMeta, Object3D, Object3DJSON } from "../core/Object3D.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { LightShadow, LightShadowJSON } from "./LightShadow.js";
 
-export interface LightJSON<Type extends string = "Light", Shadow extends LightShadowJSON = LightShadowJSON>
-    extends Object3DJSON<Type>
-{
+export interface LightJSON extends Object3DJSON {
     color: number;
     intensity: number;
 
     groundColor?: number;
 
     distance?: number;
-
     angle?: number;
-    penumbra?: number;
     decay?: number;
+    penumbra?: number;
 
-    shadow?: Shadow;
-
-    target?: Object3DJSON["uuid"];
+    shadow?: LightShadowJSON;
+    target?: string;
 }
 
 /**
@@ -81,4 +77,6 @@ export abstract class Light<TShadowSupport extends LightShadow | undefined = Lig
      * Call this method whenever this instance is no longer used in your app.
      */
     dispose(): void;
+
+    toJSON(meta?: JSONMeta): LightJSON;
 }

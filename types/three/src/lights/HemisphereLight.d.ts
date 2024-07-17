@@ -1,10 +1,6 @@
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { Vector3 } from "../math/Vector3.js";
-import { Light, LightJSON } from "./Light.js";
-
-export interface HemisphereLightJSON<Type extends string = "HemisphereLight"> extends LightJSON<Type> {
-    readonly type: Type;
-}
+import { Light } from "./Light.js";
 
 /**
  * A light source positioned directly above the scene, with color fading from the sky color to the ground color.
