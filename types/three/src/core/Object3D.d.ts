@@ -16,6 +16,7 @@ import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
 import { Intersection, Raycaster } from "./Raycaster.js";
+import { ShapeJSON } from "../extras/core/Shape.js"
 
 export interface Object3DJSONObject {
     uuid: string;
@@ -52,7 +53,7 @@ export interface JSONMeta {
     materials: Record<string, unknown>;
     textures: Record<string, TextureJSON>;
     images: Record<string, SourceJSON>;
-    shapes: Record<string, unknown>;
+    shapes: Record<string, ShapeJSON>;
     skeletons: Record<string, SkeletonJSON>;
     animations: Record<string, AnimationClipJSON>;
     nodes: Record<string, unknown>;
