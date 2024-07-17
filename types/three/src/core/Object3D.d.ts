@@ -1,4 +1,4 @@
-import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
+import { AnimationClip } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
 import { Material } from "../materials/Material.js";
 import { Euler } from "../math/Euler.js";
@@ -13,44 +13,35 @@ import { BufferGeometry } from "./BufferGeometry.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
 import { Intersection, Raycaster } from "./Raycaster.js";
-export interface Meta<Type extends string, Generator extends string, Version extends number = 4.5> {
-    version: Version;
-    type: Type;
-    generator: Generator;
-}
 
-export interface Object3DJSON<Type extends string = "Object3D"> {
-    readonly metadata: Meta<"Object3D", "Object3D.toJSON">;
+export interface Object3DJSONObject {
+    uuid: string;
+    type: string;
 
-    readonly type: Type;
-
-    readonly uuid: string;
-
-    material?: Material["uuid"] | Array<Material["uuid"]>;
-
-    animations?: Array<AnimationClipJSON["uuid"]>;
-
-    children: Object3D[];
-
-    name: string;
-
+    name?: string;
     castShadow?: boolean;
-
     receiveShadow?: boolean;
-
+    visible?: boolean;
     frustumCulled?: boolean;
-
     renderOrder?: number;
+    userData?: Record<string, unknown>;
 
-    userData: Record<string, string | number>;
-
-    layers?: number;
-
+    layers: number;
     matrix: Matrix4Tuple;
-
-    up?: Vector3Tuple;
+    up: Vector3Tuple;
 
     matrixAutoUpdate?: boolean;
+
+    material?: string | string[];
+
+    children?: string[];
+
+    animations?: string[];
+}
+
+export interface Object3DJSON {
+    metadata?: { version: number; type: string; generator: string };
+    object: Object3DJSONObject;
 }
 
 export interface Object3DEventMap {
