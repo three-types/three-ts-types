@@ -13,6 +13,7 @@ import {
 import { EventDispatcher } from "../core/EventDispatcher.js";
 import { Matrix3 } from "../math/Matrix3.js";
 import { Vector2 } from "../math/Vector2.js";
+import { JSONMeta } from "../Three.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
 import { Source } from "./Source.js";
@@ -55,7 +56,7 @@ export interface TextureJSON {
 
 /** Shim for OffscreenCanvas. */
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface OffscreenCanvas extends EventTarget {}
+export interface OffscreenCanvas extends EventTarget { }
 
 /**
  * Create a {@link Texture} to apply to a surface or as a reflection or refraction map.
@@ -467,7 +468,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      * Convert the texture to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
      * @param meta Optional object containing metadata.
      */
-    toJSON(meta?: string | {}): TextureJSON;
+    toJSON(meta?: string | JSONMeta): TextureJSON;
 
     /**
      * Frees the GPU-related resources allocated by this instance
