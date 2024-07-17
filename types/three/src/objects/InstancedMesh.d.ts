@@ -16,7 +16,7 @@ export interface InstancedMeshJSONObject extends MeshJSONObject {
     instanceColor?: BufferAttributeJSON;
 }
 
-export type InstancedMeshJSON = Object3DJSON<InstancedMeshJSONObject>
+export type InstancedMeshJSON = Object3DJSON<InstancedMeshJSONObject>;
 
 export interface InstancedMeshEventMap extends Object3DEventMap {
     dispose: {};
@@ -174,5 +174,5 @@ export class InstancedMesh<
     dispose(): this;
 
     toJSON(meta: JSONMeta): InstancedMeshJSON;
-    toJSON(): Object3DRootJSON<InstancedMeshJSONObject>
+    toJSON(): Object3DRootJSON<InstancedMeshJSONObject>;
 }

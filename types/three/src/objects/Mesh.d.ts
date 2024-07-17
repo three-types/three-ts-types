@@ -1,5 +1,12 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject, Object3DRootJSON } from "../core/Object3D.js";
+import {
+    JSONMeta,
+    Object3D,
+    Object3DEventMap,
+    Object3DJSON,
+    Object3DJSONObject,
+    Object3DRootJSON,
+} from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Vector3 } from "../math/Vector3.js";
 
@@ -89,5 +96,5 @@ export class Mesh<
     getVertexPosition(index: number, target: Vector3): Vector3;
 
     toJSON(meta: JSONMeta): MeshJSON;
-    toJSON(): Object3DRootJSON<MeshJSONObject>
+    toJSON(): Object3DRootJSON<MeshJSONObject>;
 }

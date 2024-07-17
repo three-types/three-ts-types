@@ -43,19 +43,19 @@ export interface Object3DJSONObject {
 }
 
 export interface Object3DJSON<O extends Object3DJSONObject = Object3DJSONObject> {
-    object: O
+    object: O;
 }
 
 export interface Object3DRootJSON<O extends Object3DJSONObject = Object3DJSONObject> extends Object3DJSON<O> {
     metadata?: { version: number; type: string; generator: string };
-    geometries?: Omit<BufferGeometryJSON, "metadata">[]
-    materials?: unknown[]
-    textures?: Omit<TextureJSON, "metadata">[]
-    images?: SourceJSON[]
-    shapes?: unknown[]
-    skeletons?: Omit<SkeletonJSON, "metadata">[]
-    animations?: AnimationClipJSON[]
-    nodes?: unknown[]
+    geometries?: Omit<BufferGeometryJSON, "metadata">[];
+    materials?: unknown[];
+    textures?: Omit<TextureJSON, "metadata">[];
+    images?: SourceJSON[];
+    shapes?: unknown[];
+    skeletons?: Omit<SkeletonJSON, "metadata">[];
+    animations?: AnimationClipJSON[];
+    nodes?: unknown[];
 }
 
 export interface JSONMeta {
@@ -68,7 +68,6 @@ export interface JSONMeta {
     animations: Record<string, AnimationClipJSON>;
     nodes: Record<string, unknown>;
 }
-
 
 export interface Object3DEventMap {
     /**
@@ -666,7 +665,6 @@ export class Object3D<TEventMap extends Object3DEventMap = Object3DEventMap> ext
      */
     toJSON(): Object3DJSON;
     toJSON(meta: JSONMeta): Object3DRootJSON;
-
 
     /**
      * Returns a clone of `this` object and optionally all descendants.

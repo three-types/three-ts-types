@@ -15,8 +15,7 @@ export interface SkinnedMeshJSONObject extends MeshJSONObject {
     skeleton?: string;
 }
 
-export type SkinnedMeshJSON = Object3DJSON<SkinnedMeshJSONObject>
-
+export type SkinnedMeshJSON = Object3DJSON<SkinnedMeshJSONObject>;
 
 /**
  * A mesh that has a {@link THREE.Skeleton | Skeleton} with {@link Bone | bones} that can then be used to animate the vertices of the geometry.
@@ -156,5 +155,5 @@ export class SkinnedMesh<
     applyBoneTransform(index: number, vector: Vector3): Vector3;
 
     toJSON(meta: JSONMeta): SkinnedMeshJSON;
-    toJSON(): Object3DRootJSON<SkinnedMeshJSONObject>
+    toJSON(): Object3DRootJSON<SkinnedMeshJSONObject>;
 }

@@ -169,5 +169,5 @@ export class OrthographicCamera extends Camera {
     clearViewOffset(): void;
 
     toJSON(meta: JSONMeta): OrthographicCameraJSON;
-    toJSON(): Object3DRootJSON<OrthographicCameraJSONObject>
+    toJSON(): Object3DRootJSON<OrthographicCameraJSONObject>;
 }

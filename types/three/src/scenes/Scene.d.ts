@@ -18,7 +18,7 @@ export interface SceneJSONObject extends Object3DJSONObject {
     environmentRotation: EulerTuple;
 }
 
-export type SceneJSON = Object3DJSON<SceneJSONObject>
+export type SceneJSON = Object3DJSON<SceneJSONObject>;
 
 /**
  * Scenes allow you to set up what and where is to be rendered by three.js
@@ -113,5 +113,5 @@ export class Scene extends Object3D {
      * @param meta Object containing metadata such as textures or images for the scene.
      */
     toJSON(meta: JSONMeta): SceneJSON;
-    toJSON(): Object3DRootJSON<SceneJSONObject>
+    toJSON(): Object3DRootJSON<SceneJSONObject>;
 }
