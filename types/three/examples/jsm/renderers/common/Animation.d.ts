@@ -1,4 +1,3 @@
-/// <reference types="webxr" />
 import Info from "./Info.js";
 import Nodes from "./nodes/Nodes.js";
 declare class Animation {
