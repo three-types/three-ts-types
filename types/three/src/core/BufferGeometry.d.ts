@@ -8,7 +8,6 @@ import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { GLBufferAttribute } from "./GLBufferAttribute.js";
 import { InterleavedBufferAttribute } from "./InterleavedBufferAttribute.js";
-import { Meta } from "./Object3D.js";
 
 export type NormalBufferAttributes = Record<string, BufferAttribute | InterleavedBufferAttribute>;
 export type NormalOrGLBufferAttributes = Record<
@@ -16,26 +15,21 @@ export type NormalOrGLBufferAttributes = Record<
     BufferAttribute | InterleavedBufferAttribute | GLBufferAttribute
 >;
 
-export interface BufferGeometryJSON<Type extends string = "BufferGeometry"> {
-    readonly metadata: Meta<"BufferGeometry", "BufferGeometry.toJSON">;
+export interface BufferGeometryJSON {
+    metadata?: { version: number; type: string; generator: string };
 
-    readonly type: Type;
+    uuid: string;
+    type: string;
 
-    readonly uuid: string;
+    name?: string;
+    userData?: Record<string, unknown>;
 
-    name: string;
+    data?: {
+        attributes: Record<string, BufferAttributeJSON>;
 
-    userData: Record<string, string | number>;
+        index?: { type: string; array: number[] };
 
-    parameters: Record<string, unknown>;
-
-    data: {
-        attributes: Record<string, BufferAttributeJSON<number>>;
-
-        index?: BufferAttributeJSON<number>;
-
-        morphAttributes?: Record<string, Array<BufferAttributeJSON<number>>>;
-
+        morphAttributes?: Record<string, BufferAttributeJSON[]>;
         morphTargetsRelative?: boolean;
 
         groups?: GeometryGroup[];

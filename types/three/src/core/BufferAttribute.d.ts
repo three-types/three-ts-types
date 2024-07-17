@@ -13,23 +13,14 @@ export type TypedArray =
     | Float32Array
     | Float64Array;
 
-export interface BufferAttributeJSON<Value, Type extends string = "BufferAttribute"> {
-    readonly type: Type;
-
+export interface BufferAttributeJSON {
     itemSize: number;
-
-    array: ArrayLike<Value>;
-
+    type: string;
+    array: number[];
     normalized: boolean;
 
-    name: string;
-
-    usage: number;
-
-    updateRage: {
-        offset: number;
-        count: number;
-    };
+    name?: string;
+    usage?: Usage;
 }
 
 /**
@@ -355,7 +346,7 @@ export class BufferAttribute {
     /**
      * Convert this object to three.js to the `data.attributes` part of {@link https://github.com/mrdoob/three.js/wiki/JSON-Geometry-format-4 | JSON Geometry format v4},
      */
-    toJSON(): BufferAttributeJSON<number>;
+    toJSON(): BufferAttributeJSON;
 }
 
 /**

@@ -9,7 +9,7 @@ import { Vector3, Vector3Tuple } from "../math/Vector3.js";
 import { Group } from "../objects/Group.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
-import { BufferGeometry } from "./BufferGeometry.js";
+import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { Layers } from "./Layers.js";
 import { Intersection, Raycaster } from "./Raycaster.js";
@@ -45,7 +45,7 @@ export interface Object3DJSON {
 }
 
 export interface JSONMeta {
-    geometries: Record<string, unknown>;
+    geometries: Record<string, BufferGeometryJSON>;
     materials: Record<string, unknown>;
     textures: Record<string, unknown>;
     images: Record<string, unknown>;
