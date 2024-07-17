@@ -13,52 +13,44 @@ import {
 import { EventDispatcher } from "../core/EventDispatcher.js";
 import { Matrix3 } from "../math/Matrix3.js";
 import { Vector2 } from "../math/Vector2.js";
-import { Meta } from "../Three.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
-import { Source, SourceJSON } from "./Source.js";
+import { Source } from "./Source.js";
 
-export interface TextureJSON<Type extends string = "Texture"> {
-    readonly metadata: Meta<"Texture", "Texture.toJSON">;
+export interface TextureJSON {
+    metadata: { version: number; type: string; generator: string };
 
-    readonly type: Type;
-
-    readonly uuid: string;
-
+    uuid: string;
     name: string;
 
-    userData: Record<string, string | number>;
+    image: string;
 
-    image: SourceJSON["uuid"];
-
-    mapping: number;
-    cannel: number;
+    mapping: AnyMapping;
+    channel: number;
 
     repeat: [x: number, y: number];
-
     offset: [x: number, y: number];
-
     center: [x: number, y: number];
-
     rotation: number;
 
     wrap: [wrapS: number, wrapT: number];
 
-    format: number;
-    internalFormat: number;
+    format: AnyPixelFormat;
+    internalFormat: PixelFormatGPU | null;
+    type: TextureDataType;
+    colorSpace: ColorSpace;
 
-    encoding: number;
-
-    minFilter: number;
-    magFilter: number;
+    minFilter: MinificationTextureFilter;
+    magFilter: MagnificationTextureFilter;
     anisotropy: number;
 
     flipY: boolean;
 
     generateMipmaps: boolean;
     premultiplyAlpha: boolean;
-
     unpackAlignment: number;
+
+    userData?: Record<string, unknown>;
 }
 
 /** Shim for OffscreenCanvas. */

@@ -1,16 +1,15 @@
-export type SourceData<Type extends string = string> =
+export type SerializedImage =
     | string
     | {
         data: number[];
         width: number;
         height: number;
-        type: Type;
+        type: string;
     };
 
 export class SourceJSON {
-    readonly uuid: string;
-
-    url: SourceData | SourceData[];
+    uuid: string;
+    url: SerializedImage | SerializedImage[];
 }
 
 /**
