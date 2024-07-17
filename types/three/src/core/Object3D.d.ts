@@ -1,4 +1,4 @@
-import { AnimationClip } from "../animation/AnimationClip.js";
+import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
 import { Material } from "../materials/Material.js";
 import { Euler } from "../math/Euler.js";
@@ -7,6 +7,7 @@ import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
 import { Quaternion } from "../math/Quaternion.js";
 import { Vector3, Vector3Tuple } from "../math/Vector3.js";
 import { Group } from "../objects/Group.js";
+import { SkeletonJSON } from "../objects/Skeleton.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
 import { BufferGeometry, BufferGeometryJSON } from "./BufferGeometry.js";
@@ -50,8 +51,8 @@ export interface JSONMeta {
     textures: Record<string, unknown>;
     images: Record<string, unknown>;
     shapes: Record<string, unknown>;
-    skeletons: Record<string, unknown>;
-    animations: Record<string, unknown>;
+    skeletons: Record<string, SkeletonJSON>;
+    animations: Record<string, AnimationClipJSON>;
     nodes: Record<string, unknown>;
 }
 

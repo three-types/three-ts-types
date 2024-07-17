@@ -1,11 +1,7 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
-import { Line, LineJSON } from "./Line.js";
-
-export interface LineSegmentsJSON<Type extends string = "LineSegments"> extends LineJSON<Type> {
-    readonly type: Type;
-}
+import { Line } from "./Line.js";
 
 /**
  * A series of lines drawn between pairs of vertices.

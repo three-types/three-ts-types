@@ -1,14 +1,18 @@
 import { Camera } from "../cameras/Camera.js";
-import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
 
-export interface LODJSON<Type extends string = "LOD"> extends Object3DJSON<Type> {
+export interface LODJSONObject extends Object3DJSONObject {
     autoUpdate?: boolean;
 
     levels: Array<{
-        object: Object3DJSON["uuid"];
+        object: string;
         distance: number;
         hysteresis: number;
     }>;
+}
+
+export interface LODJSON extends Object3DJSON {
+    object: LODJSONObject;
 }
 
 /**
@@ -95,4 +99,6 @@ export class LOD<TEventMap extends Object3DEventMap = Object3DEventMap> extends 
      * @param camera
      */
     update(camera: Camera): void;
+
+    toJSON(meta?: JSONMeta): LODJSON;
 }

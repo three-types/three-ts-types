@@ -1,10 +1,6 @@
-import { BufferGeometry, BufferGeometryJSON } from "../core/BufferGeometry.js";
-import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { Object3D, Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
-
-export interface LineJSON<Type extends string = "Line"> extends Object3DJSON<Type> {
-    readonly type: Type;
-}
 
 /**
  * A continuous line.

@@ -1,13 +1,6 @@
-import { BufferAttribute } from "../core/BufferAttribute.js";
-import { BufferGeometry, BufferGeometryJSON, NormalOrGLBufferAttributes } from "../core/BufferGeometry.js";
-import { GLBufferAttribute } from "../core/GLBufferAttribute.js";
-import { InterleavedBufferAttribute } from "../core/InterleavedBufferAttribute.js";
-import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { BufferGeometry, NormalOrGLBufferAttributes } from "../core/BufferGeometry.js";
+import { Object3D, Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
-
-export interface PointsJSON<Type extends string = "Points"> extends Object3DJSON<Type> {
-    readonly type: Type;
-}
 
 /**
  * A class for displaying {@link Points}

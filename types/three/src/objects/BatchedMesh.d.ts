@@ -5,11 +5,7 @@ import { Box3 } from "../math/Box3.js";
 import { Color } from "../math/Color.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
-import { Mesh, MeshJSON } from "./Mesh.js";
-
-export interface BatchedMeshJSON<Type extends string = "BatchedMesh"> extends MeshJSON<Type> {
-    readonly type: Type;
-}
+import { Mesh } from "./Mesh.js";
 
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to

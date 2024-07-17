@@ -1,11 +1,7 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { Object3D, Object3DEventMap } from "../core/Object3D.js";
 import { SpriteMaterial } from "../materials/Materials.js";
-import { Vector2, Vector2Tuple } from "../math/Vector2.js";
-
-export interface SpriteJSON<Type extends string = "Sprite"> extends Object3DJSON<Type> {
-    readonly type: Type;
-}
+import { Vector2 } from "../math/Vector2.js";
 
 /**
  * A {@link Sprite} is a plane that always faces towards the camera, generally with a partially transparent texture applied.

@@ -1,10 +1,14 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
+import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Vector3 } from "../math/Vector3.js";
 
-export interface MeshJSON<Type extends string = "Mesh"> extends Object3DJSON<Type> {
-    readonly type: Type;
+export interface MeshJSONObject extends Object3DJSONObject {
+    geometry: string;
+}
+
+export interface MeshJSON extends Object3DJSON {
+    object: MeshJSONObject;
 }
 
 /**
@@ -85,4 +89,6 @@ export class Mesh<
      * @param target
      */
     getVertexPosition(index: number, target: Vector3): Vector3;
+
+    toJSON(meta?: JSONMeta): MeshJSON;
 }

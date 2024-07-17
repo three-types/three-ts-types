@@ -1,20 +1,22 @@
 import { BindMode } from "../constants.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
-import { Object3DEventMap } from "../core/Object3D.js";
+import { JSONMeta, Object3DEventMap } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Box3 } from "../math/Box3.js";
 import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
 import { Vector3 } from "../math/Vector3.js";
-import { Mesh, MeshJSON } from "./Mesh.js";
+import { Mesh, MeshJSON, MeshJSONObject } from "./Mesh.js";
 import { Skeleton } from "./Skeleton.js";
 
-export interface SkinnedMeshJSON<Type extends string = "SkinnedMesh"> extends MeshJSON<Type> {
-    bindMode: string;
-
+export interface SkinnedMeshJSONObject extends MeshJSONObject {
+    bindMode: BindMode;
     bindMatrix: Matrix4Tuple;
+    skeleton?: string;
+}
 
-    skeleton?: Skeleton["uuid"];
+export interface SkinnedMeshJSON extends MeshJSON {
+    object: SkinnedMeshJSONObject;
 }
 
 /**
@@ -153,4 +155,6 @@ export class SkinnedMesh<
      * @param vector
      */
     applyBoneTransform(index: number, vector: Vector3): Vector3;
+
+    toJSON(meta?: JSONMeta): SkinnedMeshJSON;
 }
