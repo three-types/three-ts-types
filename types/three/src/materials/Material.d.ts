@@ -102,7 +102,7 @@ export class MaterialJSON {
     clearcoatMap?: string;
     clearcoatRoughnessMap?: string;
     clearcoatNormalMap?: string;
-    clearcoatNormalScale?: Array<number>
+    clearcoatNormalScale?: Array<number>;
 
     dispersion?: number;
 
@@ -133,7 +133,7 @@ export class MaterialJSON {
 
     normalMap?: string;
     normalMapType?: number;
-    normalScale?: Array<number>
+    normalScale?: Array<number>;
 
     displacementMap?: string;
     displacementScale?: number;
@@ -154,7 +154,7 @@ export class MaterialJSON {
 
     combine?: number;
 
-    envMapRotation?: Array<number>
+    envMapRotation?: Array<number>;
     envMapIntensity?: number;
 
     reflectivity?: number;
@@ -237,9 +237,9 @@ export class MaterialJSON {
 }
 
 export interface MaterialJSONRoot extends MaterialJSON {
-    textures?: Array<Omit<TextureJSON, "metadata">>
+    textures?: Array<Omit<TextureJSON, "metadata">>;
 
-    images?: Array<SourceJSON>
+    images?: Array<SourceJSON>;
 }
 
 /**
@@ -592,8 +592,8 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * Convert the material to three.js JSON format.
      * @param meta Object containing metadata such as textures or images for the material.
      */
-    toJSON(): MaterialJSON;
-    toJSON(meta: JSONMeta): MaterialJSONRoot;
+    toJSON(): MaterialJSONRoot;
+    toJSON(meta: JSONMeta): MaterialJSON;
 
     /**
      * Return a new material with the same parameters as this material.
