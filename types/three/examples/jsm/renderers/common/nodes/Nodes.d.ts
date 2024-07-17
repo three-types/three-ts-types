@@ -1,4 +1,4 @@
-import { Camera, Color, CubeTexture, FogBase, Material, Object3D, Scene, Texture } from "three";
+import { Camera, Color, CubeTexture, Fog, FogExp2, Material, Object3D, Scene, Texture } from "three";
 import Node from "../../../nodes/core/Node.js";
 import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import UniformGroupNode from "../../../nodes/core/UniformGroupNode.js";
@@ -25,7 +25,7 @@ interface ComputeNodeData {
 interface SceneData {
     background?: Color | Texture | CubeTexture | undefined;
     backgroundNode?: Node | undefined;
-    fog?: FogBase | undefined;
+    fog?: Fog | FogExp2 | undefined;
     fogNode?: Node | undefined;
     environment?: Texture | undefined;
     environmentNode?: Node | undefined;
