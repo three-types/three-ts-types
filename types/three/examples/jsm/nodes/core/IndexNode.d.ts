@@ -1,7 +1,7 @@
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import Node from "./Node.js";
 
-export type IndexNodeScope = typeof IndexNode.VERTEX | typeof IndexNode.INSTANCE;
+export type IndexNodeScope = typeof IndexNode.VERTEX | typeof IndexNode.INSTANCE | typeof IndexNode.DRAW;
 
 export default class IndexNode extends Node {
     scope: IndexNodeScope;
@@ -12,7 +12,9 @@ export default class IndexNode extends Node {
 
     static VERTEX: "vertex";
     static INSTANCE: "instance";
+    static DRAW: "draw";
 }
 
 export const vertexIndex: ShaderNodeObject<IndexNode>;
 export const instanceIndex: ShaderNodeObject<IndexNode>;
+export const drawIndex: ShaderNodeObject<IndexNode>;
