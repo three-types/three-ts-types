@@ -4,7 +4,9 @@ import {
     BlendingDstFactor,
     BlendingEquation,
     BlendingSrcFactor,
+    Combine,
     DepthModes,
+    NormalMapTypes,
     PixelFormat,
     Side,
     StencilFunc,
@@ -19,7 +21,7 @@ import { Group } from "../objects/Group.js";
 import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
 import { Scene } from "../scenes/Scene.js";
-import { SourceJSON, TextureJSON } from "../Three.js";
+import { EulerTuple, SourceJSON, TextureJSON, Vector2Tuple } from "../Three.js";
 
 export interface MaterialParameters {
     alphaHash?: boolean | undefined;
@@ -68,17 +70,14 @@ export interface MaterialParameters {
     stencilZPass?: StencilOp | undefined;
     userData?: Record<string, any> | undefined;
 }
-export class MaterialJSON {
-    metadata: {
-        version: number;
-        type: "Material";
-        generator: "Material.toJSON";
-    };
 
-    // standard Material serialization
+export interface MaterialJSON {
+    metadata: { version: number; type: string; generator: string };
+
     uuid: string;
     type: string;
-    name: string;
+
+    name?: string;
 
     color?: number;
     roughness?: number;
@@ -87,22 +86,19 @@ export class MaterialJSON {
     sheen?: number;
     sheenColor?: number;
     sheenRoughness?: number;
-
     emissive?: number;
     emissiveIntensity?: number;
 
     specular?: number;
     specularIntensity?: number;
     specularColor?: number;
-
     shininess?: number;
-
     clearcoat?: number;
     clearcoatRoughness?: number;
     clearcoatMap?: string;
     clearcoatRoughnessMap?: string;
     clearcoatNormalMap?: string;
-    clearcoatNormalScale?: number[];
+    clearcoatNormalScale?: Vector2Tuple;
 
     dispersion?: number;
 
@@ -117,9 +113,7 @@ export class MaterialJSON {
     anisotropyMap?: string;
 
     map?: string;
-
     matcap?: string;
-
     alphaMap?: string;
 
     lightMap?: string;
@@ -132,31 +126,26 @@ export class MaterialJSON {
     bumpScale?: number;
 
     normalMap?: string;
-    normalMapType?: number;
-    normalScale?: number[];
+    normalMapType?: NormalMapTypes;
+    normalScale?: Vector2Tuple;
 
     displacementMap?: string;
     displacementScale?: number;
     displacementBias?: number;
 
     roughnessMap?: string;
-
     metalnessMap?: string;
 
     emissiveMap?: string;
-
     specularMap?: string;
-
     specularIntensityMap?: string;
     specularColorMap?: string;
 
     envMap?: string;
+    combine?: Combine;
 
-    combine?: number;
-
-    envMapRotation?: number[];
+    envMapRotation?: EulerTuple;
     envMapIntensity?: number;
-
     reflectivity?: number;
     refractionRatio?: number;
 
@@ -164,10 +153,8 @@ export class MaterialJSON {
 
     transmission?: number;
     transmissionMap?: string;
-
     thickness?: number;
     thicknessMap?: string;
-
     attenuationDistance?: number;
     attenuationColor?: number;
 
@@ -175,22 +162,23 @@ export class MaterialJSON {
     shadowSide?: number;
     sizeAttenuation?: boolean;
 
-    blending?: number;
-    side?: number;
+    blending?: Blending;
+    side?: Side;
     vertexColors?: boolean;
+
     opacity?: number;
     transparent?: boolean;
 
     blendSrc?: BlendingSrcFactor;
-    blendDst?: number;
-    blendEquation?: number;
+    blendDst?: BlendingDstFactor;
+    blendEquation?: BlendingEquation;
     blendSrcAlpha?: number | null;
     blendDstAlpha?: number | null;
     blendEquationAlpha?: number | null;
     blendColor?: number;
     blendAlpha?: number;
 
-    depthFunc?: number;
+    depthFunc?: DepthModes;
     depthTest?: boolean;
     depthWrite?: boolean;
     colorWrite?: boolean;
@@ -199,9 +187,9 @@ export class MaterialJSON {
     stencilFunc?: StencilFunc;
     stencilRef?: number;
     stencilFuncMask?: number;
-    stencilFail?: number;
-    stencilZFail?: number;
-    stencilZPass?: number;
+    stencilFail?: StencilOp;
+    stencilZFail?: StencilOp;
+    stencilZPass?: StencilOp;
     stencilWrite?: boolean;
 
     rotation?: number;
@@ -214,13 +202,13 @@ export class MaterialJSON {
     dashSize?: number;
     gapSize?: number;
     scale?: number;
+
     dithering?: boolean;
 
     alphaTest?: number;
     alphaHash?: boolean;
     alphaToCoverage?: boolean;
     premultipliedAlpha?: boolean;
-
     forceSinglePass?: boolean;
 
     wireframe?: boolean;
@@ -229,16 +217,16 @@ export class MaterialJSON {
     wireframeLinejoin?: string;
 
     flatShading?: boolean;
+
     visible?: boolean;
+
     toneMapped?: boolean;
+
     fog?: boolean;
 
-    userData: Record<string, unknown>;
-}
+    userData?: Record<string, unknown>;
 
-export interface MaterialJSONRoot extends MaterialJSON {
     textures?: Array<Omit<TextureJSON, "metadata">>;
-
     images?: SourceJSON[];
 }
 
@@ -592,8 +580,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * Convert the material to three.js JSON format.
      * @param meta Object containing metadata such as textures or images for the material.
      */
-    toJSON(): MaterialJSONRoot;
-    toJSON(meta: JSONMeta): MaterialJSON;
+    toJSON(meta?: JSONMeta): MaterialJSON;
 
     /**
      * Return a new material with the same parameters as this material.
