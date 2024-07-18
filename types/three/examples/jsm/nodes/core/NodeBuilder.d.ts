@@ -73,6 +73,8 @@ export default abstract class NodeBuilder {
 
     abstract getInstanceIndex(): string;
 
+    abstract getDrawIndex(): string | null;
+
     abstract getFrontFacing(): string;
 
     abstract getFragCoord(): string;
