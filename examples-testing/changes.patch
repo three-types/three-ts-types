@@ -13952,7 +13952,7 @@ index fbbabfca..a1a82bd3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index e1a8724d..ada965e7 100644
+index 9098b4ed..11582754 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -4,15 +4,15 @@ import Stats from 'stats-gl';
@@ -14003,7 +14003,7 @@ index e1a8724d..ada965e7 100644
  
          if (mesh.dispose) {
              mesh.dispose();
-@@ -133,7 +133,7 @@ function init(forceWebGL = false) {
+@@ -138,7 +138,7 @@ function init(forceWebGL = false) {
          document.body.removeChild(renderer.domElement);
      }
  
@@ -14012,7 +14012,7 @@ index e1a8724d..ada965e7 100644
      // camera
  
      const aspect = window.innerWidth / window.innerHeight;
-@@ -252,18 +252,26 @@ function init(forceWebGL = false) {
+@@ -257,18 +257,26 @@ function init(forceWebGL = false) {
  
  //
  
@@ -14320,6 +14320,34 @@ index fc24f73b..27e9fe75 100644
  
  const params = {
      enable: true,
+diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
+index 3270efea..f8d5341d 100644
+--- a/examples-testing/examples/webgpu_refraction.ts
++++ b/examples-testing/examples/webgpu_refraction.ts
+@@ -5,11 +5,11 @@ import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGPURenderer;
+ 
+-let cameraControls;
++let cameraControls: OrbitControls;
+ 
+-let smallSphere;
++let smallSphere: THREE.Mesh;
+ 
+ init();
+ 
+@@ -42,7 +42,7 @@ function init() {
+ 
+     const verticalNormalScale = 0.1;
+     const verticalUVOffset = texture(floorNormal, uv().mul(5)).xy.mul(2).sub(1).mul(verticalNormalScale);
+-    verticalRefractor.uvNode = verticalRefractor.uvNode.add(verticalUVOffset);
++    verticalRefractor.uvNode = verticalRefractor.uvNode!.add(verticalUVOffset);
+ 
+     const planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
+ 
 diff --git a/examples-testing/examples/webgpu_textures_anisotropy.ts b/examples-testing/examples/webgpu_textures_anisotropy.ts
 index ca0ae9e7..2125232e 100644
 --- a/examples-testing/examples/webgpu_textures_anisotropy.ts
