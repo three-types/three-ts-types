@@ -1,8 +1,8 @@
 import { GLSLVersion } from "../constants.js";
 import { JSONMeta } from "../core/Object3D.js";
 import { UniformsGroup } from "../core/UniformsGroup.js";
-import { Matrix3 } from "../math/Matrix3.js";
-import { Matrix4 } from "../math/Matrix4.js";
+import { Matrix3, Matrix3Tuple } from "../math/Matrix3.js";
+import { Matrix4, Matrix4Tuple } from "../math/Matrix4.js";
 import { Vector2Tuple } from "../math/Vector2.js";
 import { Vector3Tuple } from "../math/Vector3.js";
 import { Vector4Tuple } from "../math/Vector4.js";
@@ -46,16 +46,19 @@ export type ShaderMaterialUniformJSON = {
     value: Vector4Tuple;
 } | {
     type: "m3";
-    value: Matrix3;
+    value: Matrix3Tuple;
 } | {
     type: "m4";
-    value: Matrix4;
+    value: Matrix4Tuple;
 } | {
     value: unknown;
 };
 
 export interface ShaderMaterialJSON extends MaterialJSON {
     glslVersion: number | null;
+    uniforms: Record<string, ShaderMaterialUniformJSON>;
+
+    defines?: Record<string, unknown>;
 
     vertexShader: string;
     ragmentShader: string;
@@ -64,10 +67,6 @@ export interface ShaderMaterialJSON extends MaterialJSON {
     clipping: boolean;
 
     extensions?: Record<string, boolean>;
-
-    defines: Record<string, string | number | undefined>;
-
-    uniforms: Record<string, ShaderMaterialUniformJSON>;
 }
 
 export class ShaderMaterial extends Material {
