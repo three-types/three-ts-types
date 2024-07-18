@@ -1,5 +1,6 @@
 import { AnimationClip, AnimationClipJSON } from "../animation/AnimationClip.js";
 import { Camera } from "../cameras/Camera.js";
+import { ShapeJSON } from "../extras/core/Shape.js";
 import { Material, MaterialJSON } from "../materials/Material.js";
 import { Euler } from "../math/Euler.js";
 import { Matrix3 } from "../math/Matrix3.js";
@@ -52,7 +53,7 @@ export interface JSONMeta {
     materials: Record<string, MaterialJSON>;
     textures: Record<string, TextureJSON>;
     images: Record<string, SourceJSON>;
-    shapes: Record<string, unknown>;
+    shapes: Record<string, ShapeJSON>;
     skeletons: Record<string, SkeletonJSON>;
     animations: Record<string, AnimationClipJSON>;
     nodes: Record<string, unknown>;
