@@ -1,4 +1,4 @@
-import { Bone, Euler, Matrix4, Object3D, Quaternion, SkinnedMesh, Vector3, MeshBasicMaterial } from "three";
+import { Bone, Euler, Matrix4, MeshBasicMaterial, Object3D, Quaternion, SkinnedMesh, Vector3 } from "three";
 
 export interface MMDPhysicsParameter {
     unitStep?: number | undefined;
