@@ -56,7 +56,7 @@ const files = [
 ];
 
 const inDir = './examples';
-const outDir = '../types/three/examples/jsm';
+const outDir = '../types/three/src';
 
 for (const file of files) {
     console.log(file);

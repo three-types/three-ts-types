@@ -88,7 +88,7 @@ const files = [
     'renderers/webgpu/WebGPURenderer',
 ];
 
-const inDir = '../three.js/examples/jsm';
+const inDir = '../three.js/src';
 const outDir = './examples';
 
 fs.rmSync(outDir, { recursive: true, force: true });
