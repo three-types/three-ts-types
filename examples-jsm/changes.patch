@@ -4619,28 +4619,26 @@ index 3fc3134e..0cc369e5 100644
  }
  
 diff --git a/examples-jsm/examples/renderers/common/RenderObject.ts b/examples-jsm/examples/renderers/common/RenderObject.ts
-index 91ba0f2a..5cffdd08 100644
+index 91ba0f2a..14f01afd 100644
 --- a/examples-jsm/examples/renderers/common/RenderObject.ts
 +++ b/examples-jsm/examples/renderers/common/RenderObject.ts
-@@ -1,8 +1,26 @@
+@@ -1,8 +1,24 @@
  import ClippingContext from './ClippingContext.js';
++import { Material } from '../../materials/Material.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
 +import Renderer from './Renderer.js';
-+import {
-+    BufferAttribute,
-+    BufferGeometry,
-+    Camera,
-+    InterleavedBuffer,
-+    InterleavedBufferAttribute,
-+    Material,
-+    Object3D,
-+    Scene,
-+} from 'three';
++import { Object3D } from '../../core/Object3D.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import RenderContext from './RenderContext.js';
-+import NodeBuilderState from './nodes/NodeBuilderState.js';
++import { BufferGeometry } from '../../core/BufferGeometry.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
++import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 +import RenderPipeline from './RenderPipeline.js';
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import NodeBuilderState from './nodes/NodeBuilderState.js';
 +import BindGroup from './BindGroup.js';
  
  let id = 0;
@@ -4650,7 +4648,7 @@ index 91ba0f2a..5cffdd08 100644
      const keys = Object.keys(obj);
  
      let proto = Object.getPrototypeOf(obj);
-@@ -27,7 +45,55 @@ function getKeys(obj) {
+@@ -27,7 +43,55 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -4707,7 +4705,7 @@ index 91ba0f2a..5cffdd08 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +116,7 @@ export default class RenderObject {
+@@ -50,7 +114,7 @@ export default class RenderObject {
          this.pipeline = null;
          this.vertexBuffers = null;
  
@@ -4716,7 +4714,7 @@ index 91ba0f2a..5cffdd08 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +137,7 @@ export default class RenderObject {
+@@ -71,7 +135,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -4725,7 +4723,7 @@ index 91ba0f2a..5cffdd08 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +155,9 @@ export default class RenderObject {
+@@ -89,9 +153,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -4737,7 +4735,7 @@ index 91ba0f2a..5cffdd08 100644
  
          return true;
      }
-@@ -109,7 +175,7 @@ export default class RenderObject {
+@@ -109,7 +173,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -4746,7 +4744,7 @@ index 91ba0f2a..5cffdd08 100644
      }
  
      getAttributes() {
-@@ -118,8 +184,8 @@ export default class RenderObject {
+@@ -118,8 +182,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -4757,7 +4755,7 @@ index 91ba0f2a..5cffdd08 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -210,6 +276,6 @@ export default class RenderObject {
+@@ -210,6 +274,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
