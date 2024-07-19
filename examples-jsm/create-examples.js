@@ -88,20 +88,29 @@ const files = [
     'renderers/webgpu/WebGPURenderer',
 ];
 
-const inDir = '../three.js/src';
+const javascriptInDir = '../three.js/src';
+const typesInDir = '../types/three/src';
 const outDir = './examples';
 
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir);
 
+fs.cpSync(typesInDir, outDir, { recursive: true });
+
 for (const file of files) {
     console.log(file);
-    const fileContents = fs.readFileSync(path.join(inDir, `${file}.js`), {
+    const fileContents = fs.readFileSync(path.join(javascriptInDir, `${file}.js`), {
         encoding: 'utf-8',
     });
     const options = await prettier.resolveConfig(file);
     const formattedFile = await prettier.format(fileContents, { ...options, parser: 'babel' });
-    const outPath = path.join(outDir, `${file}.ts`);
-    fs.mkdirSync(path.dirname(outPath), { recursive: true });
-    fs.writeFileSync(outPath, formattedFile);
+
+    const typescriptOutPath = path.join(outDir, `${file}.ts`);
+    fs.mkdirSync(path.dirname(typescriptOutPath), { recursive: true });
+    fs.writeFileSync(typescriptOutPath, formattedFile);
+
+    const declarationOutPath = path.join(outDir, `${file}.d.ts`);
+    if (fs.existsSync(declarationOutPath)) {
+        fs.unlinkSync(declarationOutPath);
+    }
 }
