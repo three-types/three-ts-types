@@ -134,6 +134,7 @@ export * from "./renderers/shaders/ShaderLib.js";
 export * from "./renderers/shaders/UniformsLib.js";
 export * from "./renderers/shaders/UniformsUtils.js";
 export type { WebGLProgramParameters, WebGLProgramParametersWithUniforms } from "./renderers/webgl/WebGLPrograms.js";
+export type { WebGLShadowMap } from "./renderers/webgl/WebGLShadowMap.js";
 export * from "./renderers/webgl/WebGLUtils.js";
 export * from "./renderers/WebGL3DRenderTarget.js";
 export * from "./renderers/WebGLArrayRenderTarget.js";
