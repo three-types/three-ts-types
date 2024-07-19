@@ -63,8 +63,8 @@ export default class RenderObject {
     getBindings(): BindGroup[];
     getIndex(): BufferAttribute | null;
     getChainArray(): readonly [Object3D<import("three").Object3DEventMap>, Material, RenderContext, LightsNode];
-    getAttributes(): (InterleavedBufferAttribute | BufferAttribute)[];
-    getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
+    getAttributes(): (BufferAttribute | InterleavedBufferAttribute)[];
+    getVertexBuffers(): (BufferAttribute | InterleavedBuffer)[] | null;
     getMaterialCacheKey(): string;
     get needsUpdate(): boolean;
     getNodesCacheKey(): string;
