@@ -5,15 +5,17 @@
  * @see {@link https://threejs.org/docs/index.html#api/en/audio/AudioContext | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/audio/AudioContext.js | Source}
  */
-export namespace AudioContext {
+declare class AudioContext {
     /**
      * Return the value of the variable `context` in the outer scope, if defined, otherwise set it to a new {@link https://developer.mozilla.org/en-US/docs/Web/API/AudioContext | AudioContext}.
      */
-    function getContext(): AudioContext;
+    static getContext(): AudioContext;
 
     /**
      * Set the variable `context` in the outer scope to `value`.
      * @param value
      */
-    function setContext(context: AudioContext): void;
+    static setContext(value: AudioContext): void;
 }
+
+export { AudioContext };

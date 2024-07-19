@@ -1,5 +1,5 @@
 import { Material, Mesh, OrthographicCamera } from "three";
-import Renderer from "../renderers/common/Renderer.js";
+import Renderer from "./Renderer.js";
 
 export default class QuadMesh extends Mesh {
     camera: OrthographicCamera;
