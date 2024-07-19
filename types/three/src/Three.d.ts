@@ -133,12 +133,24 @@ export * from "./renderers/shaders/ShaderChunk.js";
 export * from "./renderers/shaders/ShaderLib.js";
 export * from "./renderers/shaders/UniformsLib.js";
 export * from "./renderers/shaders/UniformsUtils.js";
+export type { WebGLProgramParameters, WebGLProgramParametersWithUniforms } from "./renderers/webgl/WebGLPrograms.js";
 export * from "./renderers/webgl/WebGLUtils.js";
 export * from "./renderers/WebGL3DRenderTarget.js";
 export * from "./renderers/WebGLArrayRenderTarget.js";
 export * from "./renderers/WebGLCubeRenderTarget.js";
 export * from "./renderers/WebGLRenderer.js";
 export * from "./renderers/WebGLRenderTarget.js";
+export type {
+    WebXRController,
+    WebXRSpaceEventMap,
+    XRControllerEventType,
+    XRGripSpace,
+    XRHandInputState,
+    XRHandJoints,
+    XRHandSpace,
+    XRJointSpace,
+    XRTargetRaySpace,
+} from "./renderers/webxr/WebXRController.js";
 export * from "./scenes/Fog.js";
 export * from "./scenes/FogExp2.js";
 export * from "./scenes/Scene.js";
