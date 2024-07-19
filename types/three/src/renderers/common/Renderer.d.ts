@@ -1,26 +1,20 @@
-import {
-    Box2,
-    BufferAttribute,
-    BufferGeometry,
-    Camera,
-    Color,
-    ColorSpace,
-    FramebufferTexture,
-    GeometryGroup,
-    Material,
-    Object3D,
-    Plane,
-    RenderTarget,
-    Scene,
-    ShadowMapType,
-    Texture,
-    ToneMapping,
-    Vector2,
-    Vector4,
-} from "three";
-import Node from "../../nodes/core/Node.js";
+import { Camera } from "../../cameras/Camera.js";
+import { ColorSpace, ShadowMapType, ToneMapping } from "../../constants.js";
+import { BufferAttribute } from "../../core/BufferAttribute.js";
+import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
+import { Object3D } from "../../core/Object3D.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Material } from "../../materials/Material.js";
+import { Box2 } from "../../math/Box2.js";
+import { Color } from "../../math/Color.js";
+import { Plane } from "../../math/Plane.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector4 } from "../../math/Vector4.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { Scene } from "../../scenes/Scene.js";
+import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
+import { Texture } from "../../textures/Texture.js";
 import Animation from "./Animation.js";
 import Attributes from "./Attributes.js";
 import Backend from "./Backend.js";
@@ -146,7 +140,7 @@ declare class Renderer {
     localClippingEnabled?: boolean | undefined;
     constructor(backend: Backend, parameters?: RendererParameters);
     init(): Promise<void>;
-    get coordinateSystem(): import("three").CoordinateSystem;
+    get coordinateSystem(): import("../../constants.js").CoordinateSystem;
     compileAsync(scene: Scene, camera: Camera, targetScene?: Scene | null): Promise<void>;
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
@@ -238,7 +232,7 @@ declare class Renderer {
         width: number,
         height: number,
         index?: number,
-    ): Promise<import("three").TypedArray>;
+    ): Promise<import("../../core/BufferAttribute.js").TypedArray>;
     _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void;
     _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
     _renderObjects(renderList: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void;

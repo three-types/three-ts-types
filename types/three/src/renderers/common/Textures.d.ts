@@ -1,4 +1,7 @@
-import { DepthTexture, RenderTarget, Texture, Vector3 } from "three";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { DepthTexture } from "../../textures/DepthTexture.js";
+import { Texture } from "../../textures/Texture.js";
 import Backend from "./Backend.js";
 import DataMap from "./DataMap.js";
 import Info from "./Info.js";

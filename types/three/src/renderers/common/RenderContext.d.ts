@@ -1,4 +1,7 @@
-import { DepthTexture, RenderTarget, Texture, Vector4 } from "three";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Vector4 } from "../../math/Vector4.js";
+import { DepthTexture } from "../../textures/DepthTexture.js";
+import { Texture } from "../../textures/Texture.js";
 import ClippingContext from "./ClippingContext.js";
 declare class RenderContext {
     id: number;

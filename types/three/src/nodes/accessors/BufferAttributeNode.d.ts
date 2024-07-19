@@ -1,4 +1,7 @@
-import { BufferAttribute, InterleavedBuffer, InterleavedBufferAttribute, TypedArray, Usage } from "three";
+import { Usage } from "../../constants.js";
+import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
+import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
+import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import InputNode from "../core/InputNode.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 declare class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {

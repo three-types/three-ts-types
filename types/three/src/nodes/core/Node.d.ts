@@ -1,4 +1,4 @@
-import { EventDispatcher } from "three";
+import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";

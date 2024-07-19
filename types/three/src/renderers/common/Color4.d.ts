@@ -1,4 +1,4 @@
-import { Color, ColorRepresentation } from "three";
+import { Color, ColorRepresentation } from "../../math/Color.js";
 declare class Color4 extends Color {
     a: number;
     constructor(color?: ColorRepresentation);

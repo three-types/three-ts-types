@@ -1,4 +1,5 @@
-import { Mesh, Scene } from "three";
+import { Mesh } from "../../objects/Mesh.js";
+import { Scene } from "../../scenes/Scene.js";
 import DataMap from "./DataMap.js";
 import Nodes from "./nodes/Nodes.js";
 import RenderContext from "./RenderContext.js";

@@ -1,4 +1,6 @@
-import { BufferAttribute, InterleavedBuffer, InterleavedBufferAttribute } from "three";
+import { BufferAttribute } from "../../core/BufferAttribute.js";
+import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
+import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import Backend from "./Backend.js";
 import { AttributeType } from "./Constants.js";
 import DataMap from "./DataMap.js";

@@ -1,4 +1,7 @@
-import { RenderTargetOptions, Texture, WebGLCubeRenderTarget, WebGLRenderer } from "three";
+import { RenderTargetOptions } from "../../core/RenderTarget.js";
+import { WebGLCubeRenderTarget } from "../../renderers/WebGLCubeRenderTarget.js";
+import { Texture } from "../../textures/Texture.js";
+import { WebGLRenderer } from "../WebGLRenderer.js";
 declare class CubeRenderTarget extends WebGLCubeRenderTarget {
     readonly isCubeRenderTarget: true;
     constructor(size?: number, options?: RenderTargetOptions);

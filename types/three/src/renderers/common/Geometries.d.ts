@@ -1,4 +1,7 @@
-import { BufferAttribute, BufferGeometry, InterleavedBuffer, InterleavedBufferAttribute } from "three";
+import { BufferAttribute } from "../../core/BufferAttribute.js";
+import { BufferGeometry } from "../../core/BufferGeometry.js";
+import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
+import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import Attributes from "./Attributes.js";
 import { AttributeType } from "./Constants.js";
 import DataMap from "./DataMap.js";

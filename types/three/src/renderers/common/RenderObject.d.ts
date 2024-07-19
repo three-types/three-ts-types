@@ -1,14 +1,12 @@
-import {
-    BufferAttribute,
-    BufferGeometry,
-    Camera,
-    InterleavedBuffer,
-    InterleavedBufferAttribute,
-    Material,
-    Object3D,
-    Scene,
-} from "three";
+import { Camera } from "../../cameras/Camera.js";
+import { BufferAttribute } from "../../core/BufferAttribute.js";
+import { BufferGeometry } from "../../core/BufferGeometry.js";
+import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
+import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
+import { Object3D } from "../../core/Object3D.js";
+import { Material } from "../../materials/Material.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { Scene } from "../../scenes/Scene.js";
 import BindGroup from "./BindGroup.js";
 import ClippingContext from "./ClippingContext.js";
 import Geometries from "./Geometries.js";
@@ -62,9 +60,14 @@ export default class RenderObject {
     getNodeBuilderState(): NodeBuilderState;
     getBindings(): BindGroup[];
     getIndex(): BufferAttribute | null;
-    getChainArray(): readonly [Object3D<import("three").Object3DEventMap>, Material, RenderContext, LightsNode];
-    getAttributes(): (BufferAttribute | InterleavedBufferAttribute)[];
-    getVertexBuffers(): (BufferAttribute | InterleavedBuffer)[] | null;
+    getChainArray(): readonly [
+        Object3D<import("../../core/Object3D.js").Object3DEventMap>,
+        Material,
+        RenderContext,
+        LightsNode,
+    ];
+    getAttributes(): (InterleavedBufferAttribute | BufferAttribute)[];
+    getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
     getMaterialCacheKey(): string;
     get needsUpdate(): boolean;
     getNodesCacheKey(): string;
