@@ -1,3 +1,4 @@
+export { default as Line2NodeMaterial } from "./Line2NodeMaterial.js";
 export { default as LineBasicNodeMaterial } from "./LineBasicNodeMaterial.js";
 export { default as MeshBasicNodeMaterial } from "./MeshBasicNodeMaterial.js";
 export { default as MeshMatcapNodeMaterial } from "./MeshMatcapNodeMaterial.js";
