@@ -1,1 +1,2 @@
-export * from "../src/Three.js";
+import THREE = require("../src/Three.js");
+export = THREE;
