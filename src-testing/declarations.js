@@ -55,7 +55,7 @@ const files = [
     'renderers/common/UniformsGroup',
 ];
 
-const inDir = './examples';
+const inDir = './src';
 const outDir = '../types/three/src';
 
 for (const file of files) {

@@ -90,7 +90,7 @@ const files = [
 
 const javascriptInDir = '../three.js/src';
 const typesInDir = '../types/three/src';
-const outDir = './examples';
+const outDir = './src';
 
 fs.rmSync(outDir, { recursive: true, force: true });
 fs.mkdirSync(outDir);
