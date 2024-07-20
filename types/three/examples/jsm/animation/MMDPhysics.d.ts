@@ -1,4 +1,4 @@
-import { Bone, Euler, Matrix4, MeshBasicMaterial, Object3D, Quaternion, SkinnedMesh, Vector3 } from "three";
+import { Bone, Euler, Matrix4, Object3D, Quaternion, SkinnedMesh, Vector3 } from "three";
 
 export interface MMDPhysicsParameter {
     unitStep?: number | undefined;
@@ -115,10 +115,10 @@ export class Constraint {
 }
 
 export class MMDPhysicsHelper extends Object3D {
-    mesh: SkinnedMesh;
+    mesh: THREE.SkinnedMesh;
     physics: MMDPhysics;
-    materials: [MeshBasicMaterial, MeshBasicMaterial, MeshBasicMaterial];
+    materials: [THREE.MeshBasicMaterial, THREE.MeshBasicMaterial, THREE.MeshBasicMaterial];
 
-    constructor(mesh: SkinnedMesh, physics: MMDPhysics);
+    constructor(mesh: THREE.SkinnedMesh, physics: MMDPhysics);
     dispose(): void;
 }
