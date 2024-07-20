@@ -167,7 +167,7 @@ index e4a040de..c52771e6 100644
  addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
  
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 15422533..66c4e5bc 100644
+index 870ae096..6d2f1b05 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -3,15 +3,37 @@ import { uv } from './UVNode.js';
@@ -254,9 +254,9 @@ index 15422533..66c4e5bc 100644
 -    setup(builder) {
 +    setup(builder: NodeBuilder) {
          const properties = builder.getNodeProperties(this);
+         properties.referenceNode = this.referenceNode;
  
-         //
-@@ -137,11 +159,19 @@ class TextureNode extends UniformNode {
+@@ -138,11 +160,19 @@ class TextureNode extends UniformNode {
          properties.depthNode = this.depthNode;
      }
  
@@ -278,7 +278,7 @@ index 15422533..66c4e5bc 100644
          const texture = this.value;
  
          let snippet;
-@@ -161,7 +191,7 @@ class TextureNode extends UniformNode {
+@@ -162,7 +192,7 @@ class TextureNode extends UniformNode {
          return snippet;
      }
  
@@ -287,7 +287,7 @@ index 15422533..66c4e5bc 100644
          const properties = builder.getNodeProperties(this);
  
          const texture = this.value;
-@@ -225,7 +255,7 @@ class TextureNode extends UniformNode {
+@@ -226,7 +256,7 @@ class TextureNode extends UniformNode {
          }
      }
  
@@ -296,7 +296,7 @@ index 15422533..66c4e5bc 100644
          this.sampler = value;
  
          return this;
-@@ -237,7 +267,7 @@ class TextureNode extends UniformNode {
+@@ -238,7 +268,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -305,7 +305,7 @@ index 15422533..66c4e5bc 100644
          const textureNode = this.clone();
          textureNode.uvNode = uvNode;
          textureNode.referenceNode = this;
-@@ -245,7 +275,7 @@ class TextureNode extends UniformNode {
+@@ -246,7 +276,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -314,7 +314,7 @@ index 15422533..66c4e5bc 100644
          const textureNode = this.clone();
          textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this;
-@@ -253,7 +283,7 @@ class TextureNode extends UniformNode {
+@@ -254,7 +284,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
