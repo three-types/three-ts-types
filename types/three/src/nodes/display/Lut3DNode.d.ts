@@ -7,9 +7,9 @@ declare class Lut3DNode extends TempNode {
     inputNode: Node | undefined;
     lutNode: Node | undefined;
     size: ShaderNodeObject<UniformNode<number>>;
-    intensityNode: Node | undefined;
+    intensityNode: UniformNode<number> | undefined;
 
-    constructor(inputNode: Node, lutNode?: Node, size?: number, intensityNode?: Node);
+    constructor(inputNode: Node, lutNode?: Node, size?: number, intensityNode?: UniformNode<number>);
 }
 
 export const lut3D: (
