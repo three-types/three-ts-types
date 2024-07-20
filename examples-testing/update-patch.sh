@@ -1,3 +1,4 @@
+pnpm run format
 git diff > ../changes.patch
 mv ../changes.patch .
 rm -rf examples
