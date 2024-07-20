@@ -881,10 +881,16 @@ index eb7e7ca0..4d327e38 100644
              }
  
 diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
-index 5c37e20a..acb42943 100644
+index 4e58a36e..ce66548e 100644
 --- a/examples-testing/examples/misc_controls_fly.ts
 +++ b/examples-testing/examples/misc_controls_fly.ts
-@@ -19,11 +19,15 @@ const MARGIN = 0;
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass } from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+@@ -15,11 +15,15 @@ const MARGIN = 0;
  let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
  let SCREEN_WIDTH = window.innerWidth;
  
@@ -894,17 +900,17 @@ index 5c37e20a..acb42943 100644
 +let camera: THREE.PerspectiveCamera,
 +    controls: FlyControls,
 +    scene: THREE.Scene,
-+    renderer: THREE.WebGLRenderer,
++    renderer: THREE.WebGPURenderer,
 +    stats: Stats;
 +let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
 +let dirLight: THREE.DirectionalLight;
  
--let composer;
-+let composer: EffectComposer;
+-let postProcessing;
++let postProcessing: THREE.PostProcessing;
  
  const textureLoader = new THREE.TextureLoader();
  
-@@ -55,7 +59,7 @@ function init() {
+@@ -51,7 +55,7 @@ function init() {
          // y scale is negated to compensate for normal map handedness.
          normalScale: new THREE.Vector2(0.85, -0.85),
      });
@@ -913,7 +919,7 @@ index 5c37e20a..acb42943 100644
  
      // planet
  
-@@ -72,7 +76,7 @@ function init() {
+@@ -68,7 +72,7 @@ function init() {
          map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
          transparent: true,
      });
@@ -922,7 +928,7 @@ index 5c37e20a..acb42943 100644
  
      meshClouds = new THREE.Mesh(geometry, materialClouds);
      meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
-@@ -84,7 +88,7 @@ function init() {
+@@ -80,7 +84,7 @@ function init() {
      const materialMoon = new THREE.MeshPhongMaterial({
          map: textureLoader.load('textures/planets/moon_1024.jpg'),
      });
@@ -14451,16 +14457,13 @@ index cbc5a96b..66ec682e 100644
  const params = {
      enable: true,
 diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
-index 3270efea..0458832f 100644
+index dc018c6d..6c7faf4d 100644
 --- a/examples-testing/examples/webgpu_refraction.ts
 +++ b/examples-testing/examples/webgpu_refraction.ts
-@@ -1,15 +1,13 @@
+@@ -1,13 +1,13 @@
 -import * as THREE from 'three';
--import { MeshBasicNodeMaterial, viewportSharedTexture, texture, uv } from 'three/nodes';
--
--import WebGPURenderer from 'three/addons/renderers/webgpu/WebGPURenderer.js';
 +import * as THREE from 'three/webgpu';
-+import { MeshBasicNodeMaterial, viewportSharedTexture, texture, uv } from 'three/tsl';
+ import { viewportSharedTexture, texture, uv } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -14475,7 +14478,7 @@ index 3270efea..0458832f 100644
  
  init();
  
-@@ -42,7 +40,7 @@ function init() {
+@@ -40,7 +40,7 @@ function init() {
  
      const verticalNormalScale = 0.1;
      const verticalUVOffset = texture(floorNormal, uv().mul(5)).xy.mul(2).sub(1).mul(verticalNormalScale);
@@ -14484,15 +14487,6 @@ index 3270efea..0458832f 100644
  
      const planeGeo = new THREE.PlaneGeometry(100.1, 100.1);
  
-@@ -104,7 +102,7 @@ function init() {
- 
-     // renderer
- 
--    renderer = new WebGPURenderer({ antialias: true });
-+    renderer = new THREE.WebGPURenderer({ antialias: true });
-     renderer.setPixelRatio(window.devicePixelRatio);
-     renderer.setSize(window.innerWidth, window.innerHeight);
-     renderer.setAnimationLoop(animate);
 diff --git a/examples-testing/examples/webgpu_textures_anisotropy.ts b/examples-testing/examples/webgpu_textures_anisotropy.ts
 index 21cc1197..eec04d7e 100644
 --- a/examples-testing/examples/webgpu_textures_anisotropy.ts
