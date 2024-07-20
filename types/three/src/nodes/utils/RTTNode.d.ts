@@ -36,11 +36,6 @@ export const rtt: (
 
 declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
-        toTexture: (
-            node: NodeRepresentation,
-            width?: number | null,
-            height?: number | null,
-            options?: RTTNodeOptions,
-        ) => TextureNode | ShaderNodeObject<RTTNode>;
+        toTexture: typeof rtt;
     }
 }
