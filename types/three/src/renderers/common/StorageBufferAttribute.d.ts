@@ -1,4 +1,4 @@
-import { BufferAttribute, TypedArray } from "three";
+import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
 
 export default class StorageBufferAttribute extends BufferAttribute {
     readonly isStorageBufferAttribute: true;

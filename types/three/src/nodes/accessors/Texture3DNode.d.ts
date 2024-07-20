@@ -1,4 +1,5 @@
-import { CubeTexture, Texture } from "three";
+import { CubeTexture } from "../../textures/CubeTexture.js";
+import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import TextureNode from "./TextureNode.js";

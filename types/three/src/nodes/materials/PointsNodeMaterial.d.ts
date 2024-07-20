@@ -1,4 +1,6 @@
-import { Color, PointsMaterialParameters, Texture } from "three";
+import { PointsMaterialParameters } from "../../materials/PointsMaterial.js";
+import { Color } from "../../math/Color.js";
+import { Texture } from "../../textures/Texture.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface PointsNodeMaterialParameters extends NodeMaterialParameters, PointsMaterialParameters {

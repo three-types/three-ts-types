@@ -1,4 +1,6 @@
-import { Matrix3, Matrix4, Vector3 } from "three";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector3 } from "../../math/Vector3.js";
 import UniformNode from "../core/UniformNode.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 

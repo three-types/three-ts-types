@@ -1,4 +1,4 @@
-import { Texture } from "three";
+import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";

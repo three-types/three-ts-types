@@ -1,4 +1,4 @@
-import { BatchedMesh } from "three";
+import { BatchedMesh } from "../../objects/BatchedMesh.js";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 

@@ -1,7 +1,6 @@
-import { NormalMapTypes } from "three";
+import { NormalMapTypes } from "../../constants.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import MathNode from "../math/MathNode.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 export default class NormalMapNode extends TempNode {

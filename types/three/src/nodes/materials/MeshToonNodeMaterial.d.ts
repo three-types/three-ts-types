@@ -1,4 +1,8 @@
-import { Color, MeshToonMaterialParameters, NormalMapTypes, Texture, Vector2 } from "three";
+import { NormalMapTypes } from "../../constants.js";
+import { MeshToonMaterialParameters } from "../../materials/MeshToonMaterial.js";
+import { Color } from "../../math/Color.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Texture } from "../../textures/Texture.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface MeshToonNodeMaterialParameters extends NodeMaterialParameters, MeshToonMaterialParameters {

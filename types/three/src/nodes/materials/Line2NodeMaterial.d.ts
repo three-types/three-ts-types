@@ -1,4 +1,6 @@
-import { Color, LineDashedMaterialParameters, Texture } from "three";
+import { LineDashedMaterialParameters } from "../../materials/LineDashedMaterial.js";
+import { Color } from "../../math/Color.js";
+import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 

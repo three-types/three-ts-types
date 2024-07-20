@@ -1,5 +1,8 @@
-import { Camera, Material, Object3D, Renderer, Scene } from "three";
-
+import { Camera } from "../../cameras/Camera.js";
+import { Object3D } from "../../core/Object3D.js";
+import { Material } from "../../materials/Material.js";
+import Renderer from "../../renderers/common/Renderer.js";
+import { Scene } from "../../scenes/Scene.js";
 import Node from "./Node.js";
 
 export default class NodeFrame {

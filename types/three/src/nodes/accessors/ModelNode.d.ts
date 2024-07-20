@@ -1,4 +1,4 @@
-import { Matrix4 } from "three/src/Three.js";
+import { Matrix4 } from "../../math/Matrix4.js";
 import { UniformNode } from "../Nodes.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import Object3DNode from "./Object3DNode.js";

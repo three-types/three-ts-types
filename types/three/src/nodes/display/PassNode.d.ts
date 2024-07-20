@@ -1,4 +1,7 @@
-import { Camera, RenderTarget, Scene, Texture } from "three";
+import { Camera } from "../../cameras/Camera.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Scene } from "../../scenes/Scene.js";
+import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";

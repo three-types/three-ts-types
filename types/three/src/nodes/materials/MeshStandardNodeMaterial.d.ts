@@ -1,4 +1,9 @@
-import { Color, Euler, MeshStandardMaterialParameters, NormalMapTypes, Texture, Vector2 } from "three";
+import { NormalMapTypes } from "../../constants.js";
+import { MeshStandardMaterialParameters } from "../../materials/MeshStandardMaterial.js";
+import { Color } from "../../math/Color.js";
+import { Euler } from "../../math/Euler.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 

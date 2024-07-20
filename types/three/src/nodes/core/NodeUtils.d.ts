@@ -1,4 +1,9 @@
-import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from "three";
+import { Color } from "../../math/Color.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import Node from "./Node.js";
 
 export interface NodeChild {

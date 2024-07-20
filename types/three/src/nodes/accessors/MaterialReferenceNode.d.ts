@@ -1,4 +1,4 @@
-import { Material } from "three";
+import { Material } from "../../materials/Material.js";
 import { NodeOrType, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import ReferenceNode from "./ReferenceNode.js";
 

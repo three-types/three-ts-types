@@ -1,4 +1,4 @@
-import { Vector2 } from "three";
+import { Vector2 } from "../../math/Vector2.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";

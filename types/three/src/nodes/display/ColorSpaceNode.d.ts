@@ -1,4 +1,4 @@
-import { ColorSpace } from "three";
+import { ColorSpace } from "../../constants.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";

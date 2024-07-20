@@ -1,4 +1,5 @@
-import { DataTexture, RectAreaLight } from "three";
+import { RectAreaLight } from "../../lights/RectAreaLight.js";
+import { DataTexture } from "../../textures/DataTexture.js";
 import Node from "../core/Node.js";
 import AnalyticLightNode from "./AnalyticLightNode.js";
 

@@ -1,4 +1,4 @@
-import { InstancedMesh } from "three";
+import { InstancedMesh } from "../../objects/InstancedMesh.js";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 

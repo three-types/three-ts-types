@@ -1,4 +1,7 @@
-import { Color, Vector2, Vector3, Vector4 } from "three";
+import { Color } from "../../math/Color.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import { ShaderNodeObject } from "../shadernode/ShaderNode.js";

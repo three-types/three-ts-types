@@ -1,4 +1,6 @@
-import { Loader, LoadingManager, Texture } from "three";
+import { Loader } from "../../loaders/Loader.js";
+import { LoadingManager } from "../../loaders/LoadingManager.js";
+import { Texture } from "../../textures/Texture.js";
 import { Node } from "../Nodes.js";
 
 export interface NodeLoaderResult {

@@ -1,4 +1,3 @@
-import { Texture } from "three";
 import CodeNode from "../../../nodes/code/CodeNode.js";
 import { NodeShaderStage } from "../../../nodes/core/constants.js";
 import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
@@ -6,6 +5,7 @@ import NodeUniform from "../../../nodes/core/NodeUniform.js";
 import NodeVar from "../../../nodes/core/NodeVar.js";
 import StructTypeNode from "../../../nodes/core/StructTypeNode.js";
 import { ShaderNode } from "../../../nodes/shadernode/ShaderNode.js";
+import { Texture } from "../../../textures/Texture.js";
 import NodeUniformsGroup from "../../common/nodes/NodeUniformsGroup.js";
 
 type BuiltinStage = NodeShaderStage | "attribute" | "output";

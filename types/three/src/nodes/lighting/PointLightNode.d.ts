@@ -1,4 +1,4 @@
-import { PointLight } from "three";
+import { PointLight } from "../../lights/PointLight.js";
 import Node from "../core/Node.js";
 import AnalyticLightNode from "./AnalyticLightNode.js";
 

@@ -1,5 +1,5 @@
-import { Texture } from "three";
 import { GPUStorageTextureAccess } from "../../renderers/webgpu/utils/WebGPUConstants.js";
+import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";

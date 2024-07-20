@@ -1,18 +1,15 @@
-import {
-    LineBasicMaterial,
-    Material,
-    MaterialParameters,
-    MeshBasicMaterial,
-    MeshMatcapMaterial,
-    MeshNormalMaterial,
-    MeshPhongMaterial,
-    MeshPhysicalMaterial,
-    MeshStandardMaterial,
-    MeshToonMaterial,
-    PointsMaterial,
-    ShadowMaterial,
-    SpriteMaterial,
-} from "three";
+import { LineBasicMaterial } from "../../materials/LineBasicMaterial.js";
+import { Material, MaterialParameters } from "../../materials/Material.js";
+import { MeshBasicMaterial } from "../../materials/MeshBasicMaterial.js";
+import { MeshMatcapMaterial } from "../../materials/MeshMatcapMaterial.js";
+import { MeshNormalMaterial } from "../../materials/MeshNormalMaterial.js";
+import { MeshPhongMaterial } from "../../materials/MeshPhongMaterial.js";
+import { MeshPhysicalMaterial } from "../../materials/MeshPhysicalMaterial.js";
+import { MeshStandardMaterial } from "../../materials/MeshStandardMaterial.js";
+import { MeshToonMaterial } from "../../materials/MeshToonMaterial.js";
+import { PointsMaterial } from "../../materials/PointsMaterial.js";
+import { ShadowMaterial } from "../../materials/ShadowMaterial.js";
+import { SpriteMaterial } from "../../materials/SpriteMaterial.js";
 import ClippingNode from "../accessors/ClippingNode.js";
 import LightingModel from "../core/LightingModel.js";
 import Node from "../core/Node.js";

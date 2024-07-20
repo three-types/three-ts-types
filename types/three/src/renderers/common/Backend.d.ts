@@ -1,4 +1,4 @@
-import { CoordinateSystem } from "three";
+import { CoordinateSystem } from "../../constants.js";
 import Renderer from "./Renderer.js";
 
 export interface BackendParameters {

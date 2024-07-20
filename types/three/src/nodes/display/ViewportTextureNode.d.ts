@@ -1,4 +1,4 @@
-import { FramebufferTexture } from "three";
+import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import TextureNode from "../accessors/TextureNode.js";
 import { NodeUpdateType } from "../core/constants.js";
 import Node from "../core/Node.js";
