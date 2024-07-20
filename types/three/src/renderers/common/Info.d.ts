@@ -1,4 +1,4 @@
-import { Object3D } from "three";
+import { Object3D } from "../../core/Object3D.js";
 declare class Info {
     autoReset: boolean;
     frame: number;

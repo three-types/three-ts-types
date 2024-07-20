@@ -1,4 +1,6 @@
-import { Camera, RenderTarget, Scene } from "three";
+import { Camera } from "../../cameras/Camera.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Scene } from "../../scenes/Scene.js";
 import ChainMap from "./ChainMap.js";
 import RenderContext from "./RenderContext.js";
 declare class RenderContexts {

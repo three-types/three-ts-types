@@ -1,4 +1,8 @@
-import { BufferGeometry, Camera, GeometryGroup, Light, Material, Object3D } from "three";
+import { Camera } from "../../cameras/Camera.js";
+import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
+import { Object3D } from "../../core/Object3D.js";
+import { Light } from "../../lights/Light.js";
+import { Material } from "../../materials/Material.js";
 import { LightsNode } from "../../nodes/Nodes.js";
 export interface Bundle {
     object: Object3D;

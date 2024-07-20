@@ -1,4 +1,5 @@
-import { Camera, Object3D } from "three";
+import { Camera } from "../../cameras/Camera.js";
+import { Object3D } from "../../core/Object3D.js";
 import ChainMap from "./ChainMap.js";
 import RenderBundle from "./RenderBundle.js";
 declare class RenderBundles {

@@ -1,4 +1,5 @@
-import { BufferAttribute, InterleavedBuffer, TypedArray } from "three";
+import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
+import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import BufferAttributeNode from "../accessors/BufferAttributeNode.js";
 import Node from "./Node.js";
 import NodeAttribute from "./NodeAttribute.js";
