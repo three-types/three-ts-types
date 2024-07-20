@@ -1,5 +1,5 @@
-import { RenderTarget } from "../../../core/RenderTarget";
-import { Scene } from "../../../scenes/Scene";
+import { RenderTarget } from "../../../core/RenderTarget.js";
+import { Scene } from "../../../scenes/Scene.js";
 import Renderer from "../Renderer.js";
 
 export default class PMREMGenerator {
