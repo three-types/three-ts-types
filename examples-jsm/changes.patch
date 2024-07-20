@@ -4891,10 +4891,10 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/examples-jsm/examples/renderers/common/Renderer.ts b/examples-jsm/examples/renderers/common/Renderer.ts
-index c94a874a..3ae36fc5 100644
+index c94a874a..41b30acb 100644
 --- a/examples-jsm/examples/renderers/common/Renderer.ts
 +++ b/examples-jsm/examples/renderers/common/Renderer.ts
-@@ -35,7 +35,35 @@ import {
+@@ -35,7 +35,36 @@ import {
      LinearSRGBColorSpace,
      HalfFloatType,
      RGBAFormat,
@@ -4927,10 +4927,11 @@ index c94a874a..3ae36fc5 100644
 +import { Line } from '../../objects/Line.js';
 +import { Points } from '../../objects/Points.js';
 +import { ArrayCamera } from '../../cameras/ArrayCamera.js';
++import Node from "../../nodes/core/Node.js";
  
  const _scene = new Scene();
  const _drawingBufferSize = new Vector2();
-@@ -45,8 +73,137 @@ const _projScreenMatrix = new Matrix4();
+@@ -45,8 +74,137 @@ const _projScreenMatrix = new Matrix4();
  const _vector3 = new Vector3();
  const _quad = new QuadMesh(new NodeMaterial());
  
@@ -5069,7 +5070,7 @@ index c94a874a..3ae36fc5 100644
          this.isRenderer = true;
  
          //
-@@ -214,12 +371,12 @@ class Renderer {
+@@ -214,12 +372,12 @@ class Renderer {
          return this.backend.coordinateSystem;
      }
  
@@ -5084,7 +5085,7 @@ index c94a874a..3ae36fc5 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -233,10 +390,10 @@ class Renderer {
+@@ -233,10 +391,10 @@ class Renderer {
          if (targetScene === null) targetScene = scene;
  
          const renderTarget = this._renderTarget;
@@ -5097,7 +5098,7 @@ index c94a874a..3ae36fc5 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -265,7 +422,7 @@ class Renderer {
+@@ -265,7 +423,7 @@ class Renderer {
  
          //
  
@@ -5106,7 +5107,7 @@ index c94a874a..3ae36fc5 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -273,8 +430,8 @@ class Renderer {
+@@ -273,8 +431,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -5117,7 +5118,7 @@ index c94a874a..3ae36fc5 100644
                  }
              });
          }
-@@ -284,12 +441,12 @@ class Renderer {
+@@ -284,12 +442,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5134,7 +5135,7 @@ index c94a874a..3ae36fc5 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -297,11 +454,11 @@ class Renderer {
+@@ -297,11 +455,11 @@ class Renderer {
  
          //
  
@@ -5148,7 +5149,7 @@ index c94a874a..3ae36fc5 100644
  
          // process render lists
  
-@@ -327,7 +484,7 @@ class Renderer {
+@@ -327,7 +485,7 @@ class Renderer {
          await Promise.all(compilationPromises);
      }
  
@@ -5157,7 +5158,7 @@ index c94a874a..3ae36fc5 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -335,15 +492,15 @@ class Renderer {
+@@ -335,15 +493,15 @@ class Renderer {
          await this.backend.resolveTimestampAsync(renderContext, 'render');
      }
  
@@ -5176,7 +5177,7 @@ index c94a874a..3ae36fc5 100644
  
          const renderBundleData = this.backend.get(renderBundle);
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -357,7 +514,7 @@ class Renderer {
+@@ -357,7 +515,7 @@ class Renderer {
  
          if (renderBundleNeedsUpdate) {
              if (renderContextData.renderObjects === undefined || object.needsUpdate === true) {
@@ -5185,7 +5186,7 @@ index c94a874a..3ae36fc5 100644
  
                  renderContextData.renderObjects = [];
                  renderContextData.renderBundles = [];
-@@ -380,13 +537,13 @@ class Renderer {
+@@ -380,13 +538,13 @@ class Renderer {
  
              object.needsUpdate = false;
          } else {
@@ -5201,7 +5202,7 @@ index c94a874a..3ae36fc5 100644
  
                  //
  
-@@ -396,17 +553,17 @@ class Renderer {
+@@ -396,17 +554,17 @@ class Renderer {
                  );
                  renderObject.object.normalMatrix.getNormalMatrix(renderObject.object.modelViewMatrix);
  
@@ -5223,7 +5224,7 @@ index c94a874a..3ae36fc5 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -462,12 +619,12 @@ class Renderer {
+@@ -462,12 +620,12 @@ class Renderer {
          return frameBufferTarget;
      }
  
@@ -5238,7 +5239,7 @@ index c94a874a..3ae36fc5 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -496,7 +653,7 @@ class Renderer {
+@@ -496,7 +654,7 @@ class Renderer {
  
          //
  
@@ -5247,7 +5248,7 @@ index c94a874a..3ae36fc5 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -568,7 +725,7 @@ class Renderer {
+@@ -568,7 +726,7 @@ class Renderer {
          _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
          _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
  
@@ -5256,7 +5257,7 @@ index c94a874a..3ae36fc5 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -582,14 +739,14 @@ class Renderer {
+@@ -582,14 +740,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5277,7 +5278,7 @@ index c94a874a..3ae36fc5 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -610,11 +767,11 @@ class Renderer {
+@@ -610,11 +768,11 @@ class Renderer {
  
          //
  
@@ -5291,7 +5292,7 @@ index c94a874a..3ae36fc5 100644
  
          //
  
-@@ -647,7 +804,7 @@ class Renderer {
+@@ -647,7 +805,7 @@ class Renderer {
          if (frameBufferTarget !== null) {
              this.setRenderTarget(outputRenderTarget, activeCubeFace, activeMipmapLevel);
  
@@ -5300,7 +5301,7 @@ index c94a874a..3ae36fc5 100644
  
              this._renderScene(_quad, _quad.camera, false);
          }
-@@ -673,13 +830,13 @@ class Renderer {
+@@ -673,13 +831,13 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -5317,7 +5318,7 @@ index c94a874a..3ae36fc5 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -691,11 +848,11 @@ class Renderer {
+@@ -691,11 +849,11 @@ class Renderer {
          return this._pixelRatio;
      }
  
@@ -5331,7 +5332,7 @@ index c94a874a..3ae36fc5 100644
          return target.set(this._width, this._height);
      }
  
-@@ -705,7 +862,7 @@ class Renderer {
+@@ -705,7 +863,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -5340,7 +5341,7 @@ index c94a874a..3ae36fc5 100644
          this._width = width;
          this._height = height;
  
-@@ -719,7 +876,7 @@ class Renderer {
+@@ -719,7 +877,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5349,7 +5350,7 @@ index c94a874a..3ae36fc5 100644
          this._width = width;
          this._height = height;
  
-@@ -736,15 +893,15 @@ class Renderer {
+@@ -736,15 +894,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5368,7 +5369,7 @@ index c94a874a..3ae36fc5 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -755,13 +912,15 @@ class Renderer {
+@@ -755,13 +913,15 @@ class Renderer {
          return target;
      }
  
@@ -5388,7 +5389,7 @@ index c94a874a..3ae36fc5 100644
          }
      }
  
-@@ -769,34 +928,36 @@ class Renderer {
+@@ -769,34 +929,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -5433,7 +5434,7 @@ index c94a874a..3ae36fc5 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -805,7 +966,7 @@ class Renderer {
+@@ -805,7 +967,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -5442,7 +5443,7 @@ index c94a874a..3ae36fc5 100644
          this._clearColor.a = alpha;
      }
  
-@@ -813,7 +974,7 @@ class Renderer {
+@@ -813,7 +975,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -5451,7 +5452,7 @@ index c94a874a..3ae36fc5 100644
          this._clearDepth = depth;
      }
  
-@@ -821,11 +982,11 @@ class Renderer {
+@@ -821,11 +983,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -5465,7 +5466,7 @@ index c94a874a..3ae36fc5 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -845,9 +1006,9 @@ class Renderer {
+@@ -845,9 +1007,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -5477,7 +5478,7 @@ index c94a874a..3ae36fc5 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -856,7 +1017,7 @@ class Renderer {
+@@ -856,7 +1018,7 @@ class Renderer {
              // If a color space transform or tone mapping is required,
              // the clear operation clears the intermediate renderTarget texture, but does not update the screen canvas.
  
@@ -5486,7 +5487,7 @@ index c94a874a..3ae36fc5 100644
              this._renderScene(_quad, _quad.camera, false);
          }
      }
-@@ -892,7 +1053,7 @@ class Renderer {
+@@ -892,7 +1054,7 @@ class Renderer {
      }
  
      get currentColorSpace() {
@@ -5495,7 +5496,7 @@ index c94a874a..3ae36fc5 100644
  
          if (renderTarget !== null) {
              const texture = renderTarget.texture;
-@@ -906,20 +1067,20 @@ class Renderer {
+@@ -906,20 +1068,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -5525,7 +5526,7 @@ index c94a874a..3ae36fc5 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -929,7 +1090,19 @@ class Renderer {
+@@ -929,7 +1091,19 @@ class Renderer {
          return this._renderTarget;
      }
  
@@ -5546,7 +5547,7 @@ index c94a874a..3ae36fc5 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -937,10 +1110,10 @@ class Renderer {
+@@ -937,10 +1111,10 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -5559,7 +5560,7 @@ index c94a874a..3ae36fc5 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -955,9 +1128,9 @@ class Renderer {
+@@ -955,9 +1129,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -5572,7 +5573,7 @@ index c94a874a..3ae36fc5 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -1004,13 +1177,13 @@ class Renderer {
+@@ -1004,13 +1178,13 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -5588,7 +5589,7 @@ index c94a874a..3ae36fc5 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1022,64 +1195,77 @@ class Renderer {
+@@ -1022,64 +1196,77 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -5687,7 +5688,7 @@ index c94a874a..3ae36fc5 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1089,7 +1275,7 @@ class Renderer {
+@@ -1089,7 +1276,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5696,7 +5697,7 @@ index c94a874a..3ae36fc5 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
-@@ -1106,7 +1292,7 @@ class Renderer {
+@@ -1106,7 +1293,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5705,7 +5706,7 @@ index c94a874a..3ae36fc5 100644
  
              renderList.begin();
  
-@@ -1126,13 +1312,13 @@ class Renderer {
+@@ -1126,13 +1313,13 @@ class Renderer {
          }
      }
  
@@ -5721,7 +5722,7 @@ index c94a874a..3ae36fc5 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1143,42 +1329,50 @@ class Renderer {
+@@ -1143,42 +1330,50 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -5783,7 +5784,7 @@ index c94a874a..3ae36fc5 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1263,21 +1457,29 @@ class Renderer {
+@@ -1263,21 +1458,29 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5817,7 +5818,7 @@ index c94a874a..3ae36fc5 100644
  
          //
  
-@@ -1286,10 +1488,10 @@ class Renderer {
+@@ -1286,10 +1489,10 @@ class Renderer {
  
          //
  
@@ -5832,7 +5833,7 @@ index c94a874a..3ae36fc5 100644
  
          //
  
-@@ -1303,38 +1505,46 @@ class Renderer {
+@@ -1303,38 +1506,46 @@ class Renderer {
          this.backend.draw(renderObject, this.info);
  
          if (this._currentRenderBundle !== null) {
