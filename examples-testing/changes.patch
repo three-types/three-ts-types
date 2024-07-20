@@ -881,7 +881,7 @@ index eb7e7ca0..4d327e38 100644
              }
  
 diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
-index 4e58a36e..18134660 100644
+index 4e58a36e..ce66548e 100644
 --- a/examples-testing/examples/misc_controls_fly.ts
 +++ b/examples-testing/examples/misc_controls_fly.ts
 @@ -1,4 +1,4 @@
@@ -890,14 +890,18 @@ index 4e58a36e..18134660 100644
  import { pass } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
-@@ -15,11 +15,11 @@ const MARGIN = 0;
+@@ -15,11 +15,15 @@ const MARGIN = 0;
  let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
  let SCREEN_WIDTH = window.innerWidth;
  
 -let camera, controls, scene, renderer, stats;
 -let geometry, meshPlanet, meshClouds, meshMoon;
 -let dirLight;
-+let camera: THREE.PerspectiveCamera, controls: FlyControls, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
++let camera: THREE.PerspectiveCamera,
++    controls: FlyControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    stats: Stats;
 +let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
 +let dirLight: THREE.DirectionalLight;
  
@@ -906,7 +910,7 @@ index 4e58a36e..18134660 100644
  
  const textureLoader = new THREE.TextureLoader();
  
-@@ -51,7 +51,7 @@ function init() {
+@@ -51,7 +55,7 @@ function init() {
          // y scale is negated to compensate for normal map handedness.
          normalScale: new THREE.Vector2(0.85, -0.85),
      });
@@ -915,7 +919,7 @@ index 4e58a36e..18134660 100644
  
      // planet
  
-@@ -68,7 +68,7 @@ function init() {
+@@ -68,7 +72,7 @@ function init() {
          map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
          transparent: true,
      });
@@ -924,7 +928,7 @@ index 4e58a36e..18134660 100644
  
      meshClouds = new THREE.Mesh(geometry, materialClouds);
      meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
-@@ -80,7 +80,7 @@ function init() {
+@@ -80,7 +84,7 @@ function init() {
      const materialMoon = new THREE.MeshPhongMaterial({
          map: textureLoader.load('textures/planets/moon_1024.jpg'),
      });
