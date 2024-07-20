@@ -306,6 +306,7 @@ export { default as DotScreenNode, dotScreen } from "./display/DotScreenNode.js"
 export { default as FilmNode, film } from "./display/FilmNode.js";
 export { default as FrontFacingNode, faceDirection, frontFacing } from "./display/FrontFacingNode.js";
 export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlurNode.js";
+export { default as Lut3DNode, lut3D } from "./display/Lut3DNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
