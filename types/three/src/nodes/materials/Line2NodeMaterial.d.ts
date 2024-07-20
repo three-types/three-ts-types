@@ -1,5 +1,5 @@
-import { Color, LineBasicMaterialParameters, LineDashedMaterialParameters, Texture } from "three";
-import Node from "../core/Node";
+import { Color, LineDashedMaterialParameters, Texture } from "three";
+import Node from "../core/Node.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface Line2NodeMaterialParameters extends NodeMaterialParameters, LineDashedMaterialParameters {
