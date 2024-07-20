@@ -45,6 +45,19 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run format-check
+  type-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm exec tsc --project tsconfig.all-files.json
   test-examples:
     runs-on: ubuntu-latest
     steps:

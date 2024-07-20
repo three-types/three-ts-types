@@ -1,4 +1,5 @@
 import { Texture } from "three";
+import CodeNode from "../../../nodes/code/CodeNode.js";
 import { NodeShaderStage } from "../../../nodes/core/constants.js";
 import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import NodeUniform from "../../../nodes/core/NodeUniform.js";
@@ -18,7 +19,7 @@ export default class WGSLNodeBuilder extends NodeBuilder {
     builtins: { [key in BuiltinStage]: Map<string, BuiltinType> };
     uniformGroups: { [key in NodeShaderStage]: NodeUniformsGroup };
 
-    needsColorSpaceToLinear(texture: Texture);
+    needsColorSpaceToLinear(texture: Texture): boolean;
     _generateTextureSample(
         texture: Texture,
         textureProperty: string,
@@ -93,6 +94,7 @@ export default class WGSLNodeBuilder extends NodeBuilder {
     getBuiltin(name: string, property: string, type: string, shaderStage: BuiltinStage): string;
     getVertexIndex(): string;
     getInstanceIndex(): string;
+    getDrawIndex(): null;
 
     buildFunctionCode(shaderNode: ShaderNode): string;
 
@@ -113,8 +115,8 @@ export default class WGSLNodeBuilder extends NodeBuilder {
     buildCode(): void;
     getMethod(method: string, output?: string | null): string;
 
-    _getWGSLMethod(method: string);
-    // _include(name: string): CodeNode
+    _getWGSLMethod(method: string): CodeNode | string;
+    _include(name: string): CodeNode;
     _getWGSLVertexCode(shaderData: { [key: string]: string }): string;
     _getWGSLFragmentCode(shaderData: { [key: string]: string }): string;
     _getWGSLComputeCode(shaderData: { [key: string]: string }, workgroupSize: string): string;
