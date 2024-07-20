@@ -115,6 +115,7 @@ export {
     pow3,
     pow4,
     radians,
+    rand,
     reciprocal,
     reflect,
     refract,
