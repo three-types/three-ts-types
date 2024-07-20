@@ -10,6 +10,7 @@ import { Color } from "../../math/Color.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
+import Node from "../../nodes/core/Node.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { Scene } from "../../scenes/Scene.js";
