@@ -67,7 +67,7 @@ jobs:
         working-directory: examples-testing
       - run: pnpm run format-check
         working-directory: examples-testing
-  test-examples-jsm:
+  test-src:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -82,15 +82,15 @@ jobs:
           cache: 'pnpm'
       - run: pnpm install
       - run: pnpm run create-examples
-        working-directory: examples-jsm
+        working-directory: src-testing
       - run: git apply changes.patch
-        working-directory: examples-jsm
+        working-directory: src-testing
       - run: pnpm run format-check
-        working-directory: examples-jsm
+        working-directory: src-testing
       - run: pnpm run build-declarations
-        working-directory: examples-jsm
+        working-directory: src-testing
         continue-on-error: true
       - run: pnpm run format-dprint
-        working-directory: examples-jsm
+        working-directory: src-testing
       - run: pnpm run check-declarations
-        working-directory: examples-jsm
+        working-directory: src-testing
