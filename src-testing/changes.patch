@@ -1920,18 +1920,19 @@ index ca032e99..0a206add 100644
          toType = this.getVectorType(toType);
  
 diff --git a/src-testing/src/nodes/core/NodeCache.ts b/src-testing/src/nodes/core/NodeCache.ts
-index ad72d50c..c2593032 100644
+index ad72d50c..a7a5a966 100644
 --- a/src-testing/src/nodes/core/NodeCache.ts
 +++ b/src-testing/src/nodes/core/NodeCache.ts
-@@ -1,24 +1,74 @@
+@@ -1,24 +1,75 @@
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
 +import NodeVar from './NodeVar.js';
 +import NodeVarying from './NodeVarying.js';
 +import NodeCode from './NodeCode.js';
 +import Node from './Node.js';
-+import { BufferAttribute, InterleavedBuffer, TypedArray } from 'three';
 +import BufferAttributeNode from '../accessors/BufferAttributeNode.js';
++import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 +
  let id = 0;
  
@@ -3891,11 +3892,16 @@ index 9072f238..a8e29552 100644
  
          let index = geometry.index;
 diff --git a/src-testing/src/renderers/common/Info.ts b/src-testing/src/renderers/common/Info.ts
-index 4ede75de..af361ff1 100644
+index 4ede75de..38b7b9cd 100644
 --- a/src-testing/src/renderers/common/Info.ts
 +++ b/src-testing/src/renderers/common/Info.ts
-@@ -1,4 +1,36 @@
-+import { Line, LineSegments, Mesh, Object3D, Points, Sprite } from 'three';
+@@ -1,4 +1,41 @@
++import { Object3D } from '../../core/Object3D.js';
++import { Mesh } from '../../objects/Mesh.js';
++import { Sprite } from '../../objects/Sprite.js';
++import { Points } from '../../objects/Points.js';
++import { LineSegments } from '../../objects/LineSegments.js';
++import { Line } from '../../objects/Line.js';
 +
  class Info {
 +    autoReset: boolean;
@@ -3931,7 +3937,7 @@ index 4ede75de..af361ff1 100644
      constructor() {
          this.autoReset = true;
  
-@@ -31,23 +63,23 @@ class Info {
+@@ -31,23 +68,23 @@ class Info {
          };
      }
  
@@ -4284,11 +4290,12 @@ index a684e444..62ebf0a0 100644
  
          this.code = code;
 diff --git a/src-testing/src/renderers/common/RenderBundle.ts b/src-testing/src/renderers/common/RenderBundle.ts
-index e59e4937..95b0518a 100644
+index e59e4937..ca572cea 100644
 --- a/src-testing/src/renderers/common/RenderBundle.ts
 +++ b/src-testing/src/renderers/common/RenderBundle.ts
-@@ -1,11 +1,16 @@
-+import { Camera, Object3D } from 'three';
+@@ -1,11 +1,17 @@
++import { Object3D } from '../../core/Object3D.js';
++import { Camera } from '../../cameras/Camera.js';
 +
  class RenderBundle {
 -    constructor(scene, camera) {
@@ -4307,13 +4314,14 @@ index e59e4937..95b0518a 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderBundles.ts b/src-testing/src/renderers/common/RenderBundles.ts
-index 29140365..48f5d598 100644
+index 29140365..165ece53 100644
 --- a/src-testing/src/renderers/common/RenderBundles.ts
 +++ b/src-testing/src/renderers/common/RenderBundles.ts
-@@ -1,14 +1,17 @@
-+import { Camera, Object3D } from 'three';
+@@ -1,14 +1,18 @@
  import ChainMap from './ChainMap.js';
  import RenderBundle from './RenderBundle.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Camera } from '../../cameras/Camera.js';
  
  class RenderBundles {
 +    lists: ChainMap<readonly [Object3D, Camera], RenderBundle>;
@@ -4331,7 +4339,7 @@ index 29140365..48f5d598 100644
  
          let list = lists.get(keys);
  
-@@ -21,7 +24,7 @@ class RenderBundles {
+@@ -21,7 +25,7 @@ class RenderBundles {
      }
  
      dispose() {
@@ -4397,13 +4405,15 @@ index 55d35c49..a2c91530 100644
          this.id = id++;
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index 630a2e42..9d99c98e 100644
+index 630a2e42..00c09151 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
-@@ -1,13 +1,16 @@
-+import { Camera, RenderTarget, Scene } from 'three';
+@@ -1,13 +1,18 @@
  import ChainMap from './ChainMap.js';
  import RenderContext from './RenderContext.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
  
  class RenderContexts {
 +    chainMaps: { [attachmentState: string]: ChainMap<readonly [Scene, Camera], RenderContext> | undefined };
@@ -4419,7 +4429,7 @@ index 630a2e42..9d99c98e 100644
  
          let attachmentState;
  
-@@ -35,8 +38,11 @@ class RenderContexts {
+@@ -35,8 +40,11 @@ class RenderContexts {
          return renderState;
      }
  
@@ -4434,12 +4444,16 @@ index 630a2e42..9d99c98e 100644
  
      dispose() {
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
-index a72a91df..b72d6090 100644
+index a72a91df..1392d85f 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
 +++ b/src-testing/src/renderers/common/RenderList.ts
-@@ -1,32 +1,62 @@
-+import { BufferGeometry, Camera, GeometryGroup, Light, Material, Object3D } from 'three';
+@@ -1,32 +1,66 @@
  import { LightsNode } from '../../nodes/Nodes.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Camera } from '../../cameras/Camera.js';
++import { BufferGeometry, GeometryGroup } from '../../core/BufferGeometry.js';
++import { Material } from '../../materials/Material.js';
++import { Light } from '../../lights/Light.js';
  
 -function painterSortStable(a, b) {
 +function painterSortStable(a: RenderItem, b: RenderItem) {
@@ -4512,7 +4526,7 @@ index a72a91df..b72d6090 100644
      constructor() {
          this.renderItems = [];
          this.renderItemsIndex = 0;
-@@ -55,7 +85,14 @@ class RenderList {
+@@ -55,7 +89,14 @@ class RenderList {
          return this;
      }
  
@@ -4528,7 +4542,7 @@ index a72a91df..b72d6090 100644
          let renderItem = this.renderItems[this.renderItemsIndex];
  
          if (renderItem === undefined) {
-@@ -87,7 +124,14 @@ class RenderList {
+@@ -87,7 +128,14 @@ class RenderList {
          return renderItem;
      }
  
@@ -4544,7 +4558,7 @@ index a72a91df..b72d6090 100644
          const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group);
  
          if (object.occlusionTest === true) this.occlusionQueryCount++;
-@@ -95,17 +139,24 @@ class RenderList {
+@@ -95,17 +143,24 @@ class RenderList {
          (material.transparent === true || material.transmission > 0 ? this.transparent : this.opaque).push(renderItem);
      }
  
@@ -4572,7 +4586,7 @@ index a72a91df..b72d6090 100644
          this.lightsArray.push(light);
      }
  
-@@ -113,7 +164,10 @@ class RenderList {
+@@ -113,7 +168,10 @@ class RenderList {
          return this.lightsNode.fromLights(this.lightsArray);
      }
  
@@ -4585,13 +4599,14 @@ index a72a91df..b72d6090 100644
          if (this.transparent.length > 1) this.transparent.sort(customTransparentSort || reversePainterSortStable);
      }
 diff --git a/src-testing/src/renderers/common/RenderLists.ts b/src-testing/src/renderers/common/RenderLists.ts
-index 3fc3134e..0cc369e5 100644
+index 3fc3134e..c002ed0c 100644
 --- a/src-testing/src/renderers/common/RenderLists.ts
 +++ b/src-testing/src/renderers/common/RenderLists.ts
-@@ -1,14 +1,17 @@
-+import { Camera, Object3D } from 'three';
+@@ -1,14 +1,18 @@
  import ChainMap from './ChainMap.js';
  import RenderList from './RenderList.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Camera } from '../../cameras/Camera.js';
  
  class RenderLists {
 +    lists: ChainMap<readonly [Object3D, Camera], RenderList>;
@@ -4609,7 +4624,7 @@ index 3fc3134e..0cc369e5 100644
  
          let list = lists.get(keys);
  
-@@ -21,7 +24,7 @@ class RenderLists {
+@@ -21,7 +25,7 @@ class RenderLists {
      }
  
      dispose() {
@@ -4764,10 +4779,10 @@ index 91ba0f2a..14f01afd 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index 76dc482e..27997a90 100644
+index 76dc482e..d57ba4fd 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
-@@ -1,8 +1,33 @@
+@@ -1,8 +1,36 @@
  import ChainMap from './ChainMap.js';
  import RenderObject from './RenderObject.js';
 +import Renderer from './Renderer.js';
@@ -4777,8 +4792,11 @@ index 76dc482e..27997a90 100644
 +import Bindings from './Bindings.js';
 +import Info from './Info.js';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
-+import { Camera, Material, Object3D, Scene } from 'three';
 +import RenderContext from './RenderContext.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Material } from '../../materials/Material.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
  
  class RenderObjects {
 -    constructor(renderer, nodes, geometries, pipelines, bindings, info) {
@@ -4802,7 +4820,7 @@ index 76dc482e..27997a90 100644
          this.renderer = renderer;
          this.nodes = nodes;
          this.geometries = geometries;
-@@ -13,9 +38,17 @@ class RenderObjects {
+@@ -13,9 +41,17 @@ class RenderObjects {
          this.chainMaps = {};
      }
  
@@ -4822,7 +4840,7 @@ index 76dc482e..27997a90 100644
  
          let renderObject = chainMap.get(chainArray);
  
-@@ -35,7 +68,7 @@ class RenderObjects {
+@@ -35,7 +71,7 @@ class RenderObjects {
  
              chainMap.set(chainArray, renderObject);
          } else {
@@ -4831,7 +4849,7 @@ index 76dc482e..27997a90 100644
  
              if (renderObject.version !== material.version || renderObject.needsUpdate) {
                  if (renderObject.initialCacheKey !== renderObject.getCacheKey()) {
-@@ -52,7 +85,13 @@ class RenderObjects {
+@@ -52,7 +88,13 @@ class RenderObjects {
      }
  
      getChainMap(passId = 'default') {
@@ -4846,7 +4864,7 @@ index 76dc482e..27997a90 100644
      }
  
      dispose() {
-@@ -60,16 +99,16 @@ class RenderObjects {
+@@ -60,16 +102,16 @@ class RenderObjects {
      }
  
      createRenderObject(
@@ -6488,15 +6506,20 @@ index e94d965f..3389ae5c 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 659f5a82..8d29842c 100644
+index 659f5a82..d4f47579 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-@@ -7,9 +7,13 @@ import {
+@@ -7,9 +7,18 @@ import {
      Matrix3Uniform,
      Matrix4Uniform,
  } from '../Uniform.js';
 +import NodeUniform from '../../../nodes/core/NodeUniform.js';
-+import { Color, Matrix3, Matrix4, Vector2, Vector3, Vector4 } from 'three';
++import { Vector2 } from '../../../math/Vector2.js';
++import { Vector3 } from '../../../math/Vector3.js';
++import { Vector4 } from '../../../math/Vector4.js';
++import { Color } from '../../../math/Color.js';
++import { Matrix3 } from '../../../math/Matrix3.js';
++import { Matrix4 } from '../../../math/Matrix4.js';
  
  class NumberNodeUniform extends NumberUniform {
 -    constructor(nodeUniform) {
@@ -6506,7 +6529,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -21,7 +25,9 @@ class NumberNodeUniform extends NumberUniform {
+@@ -21,7 +30,9 @@ class NumberNodeUniform extends NumberUniform {
  }
  
  class Vector2NodeUniform extends Vector2Uniform {
@@ -6517,7 +6540,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -33,7 +39,9 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -33,7 +44,9 @@ class Vector2NodeUniform extends Vector2Uniform {
  }
  
  class Vector3NodeUniform extends Vector3Uniform {
@@ -6528,7 +6551,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -45,7 +53,9 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -45,7 +58,9 @@ class Vector3NodeUniform extends Vector3Uniform {
  }
  
  class Vector4NodeUniform extends Vector4Uniform {
@@ -6539,7 +6562,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -57,7 +67,9 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -57,7 +72,9 @@ class Vector4NodeUniform extends Vector4Uniform {
  }
  
  class ColorNodeUniform extends ColorUniform {
@@ -6550,7 +6573,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -69,7 +81,9 @@ class ColorNodeUniform extends ColorUniform {
+@@ -69,7 +86,9 @@ class ColorNodeUniform extends ColorUniform {
  }
  
  class Matrix3NodeUniform extends Matrix3Uniform {
@@ -6561,7 +6584,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -81,7 +95,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -81,7 +100,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
  }
  
  class Matrix4NodeUniform extends Matrix4Uniform {
@@ -6572,7 +6595,7 @@ index 659f5a82..8d29842c 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -101,3 +117,11 @@ export {
+@@ -101,3 +122,11 @@ export {
      Matrix3NodeUniform,
      Matrix4NodeUniform,
  };
