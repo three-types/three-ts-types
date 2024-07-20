@@ -12,15 +12,15 @@ export default class DepthOfFieldNode extends TempNode {
     aperture: UniformNode<number>;
     maxblur: UniformNode<number>;
 
-    constructor(textureNode: TextureNode, viewZNode: Node, focus?: number, aperture?: number, maxblur?: number);
+    constructor(textureNode: TextureNode, viewZNode: Node, focusNode: Node, apertureNode: Node, maxblurNode: Node);
 }
 
 export const dof: (
     node: NodeRepresentation,
     viewZNode: NodeRepresentation,
-    focus?: number,
-    aperture?: number,
-    maxblur?: number,
+    focus?: NodeRepresentation,
+    aperture?: NodeRepresentation,
+    maxblur?: NodeRepresentation,
 ) => ShaderNodeObject<DepthOfFieldNode>;
 
 declare module "../shadernode/ShaderNode.js" {
