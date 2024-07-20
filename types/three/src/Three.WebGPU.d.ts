@@ -176,6 +176,7 @@ export * from "./nodes/Nodes.js";
 export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenerator.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
+export type { default as Renderer } from "./renderers/common/Renderer.js";
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";
 export { default as StorageInstancedBufferAttribute } from "./renderers/common/StorageInstancedBufferAttribute.js";
 export { default as StorageTexture } from "./renderers/common/StorageTexture.js";
