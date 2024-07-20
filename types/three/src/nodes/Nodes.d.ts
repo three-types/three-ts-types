@@ -176,6 +176,7 @@ export { default as ReflectorNode, reflector, ReflectorNodeParameters } from "./
 export { default as RemapNode, remap, remapClamp } from "./utils/RemapNode.js";
 export { default as RotateNode, rotate } from "./utils/RotateNode.js";
 export { default as RotateUVNode, rotateUV } from "./utils/RotateUVNode.js";
+export { default as RTTNode, rtt, RTTNodeOptions } from "./utils/RTTNode.js";
 export { default as SplitNode } from "./utils/SplitNode.js";
 export { default as SpriteSheetUVNode, spritesheetUV } from "./utils/SpriteSheetUVNode.js";
 export { default as StorageArrayElementNode } from "./utils/SpriteSheetUVNode.js";

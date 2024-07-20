@@ -1,4 +1,4 @@
-cd ../three.js
+cd three.js
 git fetch
 git checkout $1
 cd ..
