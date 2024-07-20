@@ -6,20 +6,23 @@ import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.j
 
 export default class GaussianBlurNode extends TempNode {
     textureNode: TextureNode;
+    directionNode: Node | null;
     sigma: number;
-
-    directionNode: Node;
 
     resolution: Vector2;
 
-    constructor(textureNode: TextureNode, sigma?: number);
+    constructor(textureNode: TextureNode, directionNode?: Node | null, sigma?: number);
 
     setSize(width: number, height: number): void;
 
     getTextureNode(): TextureNode;
 }
 
-export const gaussianBlur: (node: NodeRepresentation, sigma?: number) => ShaderNodeObject<GaussianBlurNode>;
+export const gaussianBlur: (
+    node: NodeRepresentation,
+    directionNode?: NodeRepresentation | null,
+    sigma?: number,
+) => ShaderNodeObject<GaussianBlurNode>;
 
 declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
