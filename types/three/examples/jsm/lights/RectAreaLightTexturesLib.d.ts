@@ -1,5 +1,7 @@
+import { RectAreaLightTexturesLib as RectAreaLightTexturesLibInterface } from "three/webgpu";
+
 declare class RectAreaLightTexturesLib {
-    static init(): void;
+    static init(): RectAreaLightTexturesLibInterface;
 }
 
 export { RectAreaLightTexturesLib };

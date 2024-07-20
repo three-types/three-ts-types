@@ -361,7 +361,7 @@ export { default as LightingContextNode, lightingContext } from "./lighting/Ligh
 export { default as LightingNode } from "./lighting/LightingNode.js";
 export { default as LightsNode, lights } from "./lighting/LightsNode.js";
 export { default as PointLightNode } from "./lighting/PointLightNode.js";
-export { default as RectAreaLightNode } from "./lighting/RectAreaLightNode.js";
+export { default as RectAreaLightNode, RectAreaLightTexturesLib } from "./lighting/RectAreaLightNode.js";
 export { default as SpotLightNode } from "./lighting/SpotLightNode.js";
 
 // pmrem
