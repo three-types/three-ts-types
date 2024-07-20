@@ -1,6 +1,7 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import OperatorNode from "./OperatorNode.js";
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
@@ -204,6 +205,8 @@ export const refract: Ternary;
 export const smoothstep: Ternary;
 export const faceForward: Ternary;
 
+export const rand: (uv: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+
 export const mixElement: Ternary;
 export const smoothstepElement: Ternary;
 
@@ -265,5 +268,6 @@ declare module "../shadernode/ShaderNode.js" {
         saturate: typeof saturate;
         cbrt: typeof cbrt;
         transpose: typeof transpose;
+        rand: typeof rand;
     }
 }
