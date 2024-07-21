@@ -181,6 +181,7 @@ export { default as JoinNode } from "./utils/JoinNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
 export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
+export { colorToDirection, default as PackingNode, directionToColor } from "./utils/PackingNode.js";
 export { default as ReflectorNode, reflector, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
 export { default as RemapNode, remap, remapClamp } from "./utils/RemapNode.js";
 export { default as RotateNode, rotate } from "./utils/RotateNode.js";
