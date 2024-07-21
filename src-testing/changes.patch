@@ -2616,7 +2616,7 @@ index 02a8b51f..1d11c859 100644
          this.context.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/lighting/LightsNode.ts b/src-testing/src/nodes/lighting/LightsNode.ts
-index 96e5c60a..33fdf4d3 100644
+index 9a41cc7d..df337a72 100644
 --- a/src-testing/src/nodes/lighting/LightsNode.ts
 +++ b/src-testing/src/nodes/lighting/LightsNode.ts
 @@ -1,6 +1,7 @@
@@ -2627,7 +2627,7 @@ index 96e5c60a..33fdf4d3 100644
  
  const LightNodes = new WeakMap();
  
-@@ -126,7 +127,7 @@ class LightsNode extends Node {
+@@ -124,7 +125,7 @@ class LightsNode extends Node {
          return null;
      }
  
@@ -3174,7 +3174,7 @@ index 3dac46fe..e68939b8 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 7ea284d1..a6dcf6ed 100644
+index 203cebeb..258f84d4 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -13,18 +13,33 @@ import {
@@ -4645,7 +4645,7 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 91ba0f2a..14f01afd 100644
+index e538c722..d889a26f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,24 @@
@@ -4781,7 +4781,7 @@ index 91ba0f2a..14f01afd 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -210,6 +274,6 @@ export default class RenderObject {
+@@ -222,6 +286,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -4920,10 +4920,10 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 339db040..05f75af6 100644
+index fae2f88c..e9fba35d 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
-@@ -35,7 +35,36 @@ import {
+@@ -35,7 +35,37 @@ import {
      LinearSRGBColorSpace,
      HalfFloatType,
      RGBAFormat,
@@ -4957,10 +4957,11 @@ index 339db040..05f75af6 100644
 +import { Points } from '../../objects/Points.js';
 +import { ArrayCamera } from '../../cameras/ArrayCamera.js';
 +import Node from '../../nodes/core/Node.js';
++import MRTNode from '../../nodes/core/MRTNode.js';
  
  const _scene = new Scene();
  const _drawingBufferSize = new Vector2();
-@@ -44,8 +73,139 @@ const _frustum = new Frustum();
+@@ -44,8 +74,141 @@ const _frustum = new Frustum();
  const _projScreenMatrix = new Matrix4();
  const _vector3 = new Vector3();
  
@@ -5040,6 +5041,8 @@ index 339db040..05f75af6 100644
 +    _activeCubeFace: number;
 +    _activeMipmapLevel: number;
 +
++    _mrt: MRTNode | null;
++
 +    _renderObjectFunction:
 +        | ((
 +              object: Object3D,
@@ -5101,7 +5104,7 @@ index 339db040..05f75af6 100644
          this.isRenderer = true;
  
          //
-@@ -212,12 +372,12 @@ class Renderer {
+@@ -214,12 +377,12 @@ class Renderer {
          return this.backend.coordinateSystem;
      }
  
@@ -5116,7 +5119,7 @@ index 339db040..05f75af6 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -231,10 +391,10 @@ class Renderer {
+@@ -233,10 +396,10 @@ class Renderer {
          if (targetScene === null) targetScene = scene;
  
          const renderTarget = this._renderTarget;
@@ -5129,7 +5132,7 @@ index 339db040..05f75af6 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -263,7 +423,7 @@ class Renderer {
+@@ -265,7 +428,7 @@ class Renderer {
  
          //
  
@@ -5138,7 +5141,7 @@ index 339db040..05f75af6 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -271,8 +431,8 @@ class Renderer {
+@@ -273,8 +436,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -5149,7 +5152,7 @@ index 339db040..05f75af6 100644
                  }
              });
          }
-@@ -282,12 +442,12 @@ class Renderer {
+@@ -284,12 +447,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5166,7 +5169,7 @@ index 339db040..05f75af6 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -295,11 +455,11 @@ class Renderer {
+@@ -297,11 +460,11 @@ class Renderer {
  
          //
  
@@ -5180,7 +5183,7 @@ index 339db040..05f75af6 100644
  
          // process render lists
  
-@@ -325,7 +485,7 @@ class Renderer {
+@@ -327,7 +490,7 @@ class Renderer {
          await Promise.all(compilationPromises);
      }
  
@@ -5189,8 +5192,17 @@ index 339db040..05f75af6 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -333,15 +493,15 @@ class Renderer {
+@@ -335,7 +498,7 @@ class Renderer {
          await this.backend.resolveTimestampAsync(renderContext, 'render');
+     }
+ 
+-    setMRT(mrt) {
++    setMRT(mrt: MRTNode | null) {
+         this._mrt = mrt;
+ 
+         return this;
+@@ -345,15 +508,15 @@ class Renderer {
+         return this._mrt;
      }
  
 -    _renderBundle(bundle, sceneRef, lightsNode) {
@@ -5208,7 +5220,7 @@ index 339db040..05f75af6 100644
  
          const renderBundleData = this.backend.get(renderBundle);
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -355,7 +515,7 @@ class Renderer {
+@@ -367,7 +530,7 @@ class Renderer {
  
          if (renderBundleNeedsUpdate) {
              if (renderContextData.renderObjects === undefined || object.needsUpdate === true) {
@@ -5217,7 +5229,7 @@ index 339db040..05f75af6 100644
  
                  renderContextData.renderObjects = [];
                  renderContextData.renderBundles = [];
-@@ -378,13 +538,13 @@ class Renderer {
+@@ -390,13 +553,13 @@ class Renderer {
  
              object.needsUpdate = false;
          } else {
@@ -5233,7 +5245,7 @@ index 339db040..05f75af6 100644
  
                  //
  
-@@ -394,17 +554,17 @@ class Renderer {
+@@ -406,17 +569,17 @@ class Renderer {
                  );
                  renderObject.object.normalMatrix.getNormalMatrix(renderObject.object.modelViewMatrix);
  
@@ -5255,7 +5267,7 @@ index 339db040..05f75af6 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -459,12 +619,12 @@ class Renderer {
+@@ -471,12 +634,12 @@ class Renderer {
          return frameBufferTarget;
      }
  
@@ -5270,7 +5282,7 @@ index 339db040..05f75af6 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -493,7 +653,7 @@ class Renderer {
+@@ -505,7 +668,7 @@ class Renderer {
  
          //
  
@@ -5279,7 +5291,7 @@ index 339db040..05f75af6 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -565,7 +725,7 @@ class Renderer {
+@@ -577,7 +740,7 @@ class Renderer {
          _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
          _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
  
@@ -5288,7 +5300,7 @@ index 339db040..05f75af6 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -579,14 +739,14 @@ class Renderer {
+@@ -591,14 +754,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5309,7 +5321,7 @@ index 339db040..05f75af6 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -607,11 +767,11 @@ class Renderer {
+@@ -619,11 +782,11 @@ class Renderer {
  
          //
  
@@ -5323,7 +5335,7 @@ index 339db040..05f75af6 100644
  
          //
  
-@@ -646,8 +806,8 @@ class Renderer {
+@@ -658,8 +821,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -5334,7 +5346,7 @@ index 339db040..05f75af6 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -675,13 +835,13 @@ class Renderer {
+@@ -687,13 +850,13 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -5351,7 +5363,7 @@ index 339db040..05f75af6 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -693,11 +853,11 @@ class Renderer {
+@@ -705,11 +868,11 @@ class Renderer {
          return this._pixelRatio;
      }
  
@@ -5365,7 +5377,7 @@ index 339db040..05f75af6 100644
          return target.set(this._width, this._height);
      }
  
-@@ -707,7 +867,7 @@ class Renderer {
+@@ -719,7 +882,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -5374,7 +5386,7 @@ index 339db040..05f75af6 100644
          this._width = width;
          this._height = height;
  
-@@ -721,7 +881,7 @@ class Renderer {
+@@ -733,7 +896,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5383,7 +5395,7 @@ index 339db040..05f75af6 100644
          this._width = width;
          this._height = height;
  
-@@ -738,15 +898,15 @@ class Renderer {
+@@ -750,15 +913,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5402,7 +5414,7 @@ index 339db040..05f75af6 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -757,13 +917,15 @@ class Renderer {
+@@ -769,13 +932,15 @@ class Renderer {
          return target;
      }
  
@@ -5422,7 +5434,7 @@ index 339db040..05f75af6 100644
          }
      }
  
-@@ -771,34 +933,36 @@ class Renderer {
+@@ -783,34 +948,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -5467,7 +5479,7 @@ index 339db040..05f75af6 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -807,7 +971,7 @@ class Renderer {
+@@ -819,7 +986,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -5476,7 +5488,7 @@ index 339db040..05f75af6 100644
          this._clearColor.a = alpha;
      }
  
-@@ -815,7 +979,7 @@ class Renderer {
+@@ -827,7 +994,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -5485,7 +5497,7 @@ index 339db040..05f75af6 100644
          this._clearDepth = depth;
      }
  
-@@ -823,11 +987,11 @@ class Renderer {
+@@ -835,11 +1002,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -5499,7 +5511,7 @@ index 339db040..05f75af6 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -847,9 +1011,9 @@ class Renderer {
+@@ -859,9 +1026,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -5511,7 +5523,7 @@ index 339db040..05f75af6 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -860,8 +1024,8 @@ class Renderer {
+@@ -872,8 +1039,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -5522,7 +5534,7 @@ index 339db040..05f75af6 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -900,7 +1064,7 @@ class Renderer {
+@@ -912,7 +1079,7 @@ class Renderer {
      }
  
      get currentColorSpace() {
@@ -5531,7 +5543,7 @@ index 339db040..05f75af6 100644
  
          if (renderTarget !== null) {
              const texture = renderTarget.texture;
-@@ -914,20 +1078,20 @@ class Renderer {
+@@ -926,20 +1093,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -5561,7 +5573,7 @@ index 339db040..05f75af6 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -937,7 +1101,19 @@ class Renderer {
+@@ -949,7 +1116,19 @@ class Renderer {
          return this._renderTarget;
      }
  
@@ -5582,7 +5594,7 @@ index 339db040..05f75af6 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -945,10 +1121,10 @@ class Renderer {
+@@ -957,10 +1136,10 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -5595,7 +5607,7 @@ index 339db040..05f75af6 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -963,9 +1139,9 @@ class Renderer {
+@@ -975,9 +1154,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -5608,7 +5620,7 @@ index 339db040..05f75af6 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -1012,13 +1188,13 @@ class Renderer {
+@@ -1024,13 +1203,13 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -5624,7 +5636,7 @@ index 339db040..05f75af6 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1030,64 +1206,77 @@ class Renderer {
+@@ -1042,64 +1221,77 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -5723,7 +5735,7 @@ index 339db040..05f75af6 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1097,7 +1286,7 @@ class Renderer {
+@@ -1109,7 +1301,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5732,7 +5744,7 @@ index 339db040..05f75af6 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector3.z, group);
-@@ -1114,7 +1303,7 @@ class Renderer {
+@@ -1126,7 +1318,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5741,7 +5753,7 @@ index 339db040..05f75af6 100644
  
              renderList.begin();
  
-@@ -1134,13 +1323,13 @@ class Renderer {
+@@ -1146,13 +1338,13 @@ class Renderer {
          }
      }
  
@@ -5757,7 +5769,7 @@ index 339db040..05f75af6 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1151,42 +1340,50 @@ class Renderer {
+@@ -1163,42 +1355,50 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -5819,7 +5831,7 @@ index 339db040..05f75af6 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1271,21 +1468,29 @@ class Renderer {
+@@ -1283,21 +1483,29 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5853,7 +5865,7 @@ index 339db040..05f75af6 100644
  
          //
  
-@@ -1294,10 +1499,10 @@ class Renderer {
+@@ -1306,10 +1514,10 @@ class Renderer {
  
          //
  
@@ -5868,7 +5880,7 @@ index 339db040..05f75af6 100644
  
          //
  
-@@ -1311,38 +1516,46 @@ class Renderer {
+@@ -1323,38 +1531,46 @@ class Renderer {
          this.backend.draw(renderObject, this.info);
  
          if (this._currentRenderBundle !== null) {
@@ -7410,7 +7422,7 @@ index 3fc0ef70..7b119f3e 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 0737c312..64553c63 100644
+index 10f3f7f0..5b41f788 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -933,7 +933,7 @@ class WebGPUBackend extends Backend {

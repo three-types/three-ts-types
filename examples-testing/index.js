@@ -77,6 +77,7 @@ const exceptionList = [
     'webgpu_materials_sss',
     'webgpu_materialx_noise',
     'webgpu_mirror',
+    'webgpu_mrt_mask',
     'webgpu_multiple_rendertargets',
     'webgpu_multisampled_renderbuffers',
     'webgpu_occlusion',

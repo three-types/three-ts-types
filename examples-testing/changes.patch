@@ -14295,61 +14295,68 @@ index d2d737e5..68cba1c5 100644
                  gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
              }
          });
-diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index a031270b..5ffd10f4 100644
---- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-+++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
+diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
+index e4c1cd38..4fd7d5f2 100644
+--- a/examples-testing/examples/webgpu_mrt.ts
++++ b/examples-testing/examples/webgpu_mrt.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  import {
-     mix,
-     modelNormalMatrix,
-@@ -18,8 +18,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+     output,
+     transformedNormalWorld,
+@@ -17,8 +17,8 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let postProcessing: THREE.PostProcessing;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
+index 2405b8ad..bd503c49 100644
+--- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
++++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
+@@ -1,12 +1,31 @@
+-import * as THREE from 'three';
+-import { mix, step, texture, viewportTopLeft, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import {
++    mix,
++    step,
++    texture,
++    viewportTopLeft,
++    mrt,
++    output,
++    transformedNormalWorld,
++    uv,
++    vec2,
++    MRTNode,
++    ShaderNodeObject,
++} from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, torus;
--let quadMesh, renderTarget, readbackTarget, material, readbackMaterial, pixelBuffer, pixelBufferTexture;
+-let quadMesh, sceneMRT, renderTarget, readbackTarget, material, readbackMaterial, pixelBuffer, pixelBufferTexture;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
 +let quadMesh: THREE.QuadMesh,
++    sceneMRT: ShaderNodeObject<MRTNode>,
 +    renderTarget: THREE.RenderTarget,
 +    readbackTarget: THREE.RenderTarget,
-+    material: ReadGBufferMaterial,
++    material: THREE.NodeMaterial,
 +    readbackMaterial: THREE.MeshBasicNodeMaterial,
 +    pixelBuffer: Uint8Array,
 +    pixelBufferTexture: THREE.DataTexture;
  
  const gui = new GUI();
  
-@@ -30,7 +36,13 @@ const options = {
- gui.add(options, 'selection', ['mrt', 'diffuse', 'normal']);
- 
- class WriteGBufferMaterial extends THREE.NodeMaterial {
--    constructor(diffuseTexture) {
-+    lights: boolean;
-+    fog: boolean;
-+    colorSpaced: boolean;
-+
-+    diffuseTexture: THREE.Texture;
-+
-+    constructor(diffuseTexture: THREE.Texture) {
-         super();
- 
-         this.lights = false;
-@@ -54,7 +66,10 @@ class WriteGBufferMaterial extends THREE.NodeMaterial {
- }
- 
- class ReadGBufferMaterial extends THREE.NodeMaterial {
--    constructor(tDiffuse, tNormal) {
-+    lights: boolean;
-+    fog: boolean;
-+
-+    constructor(tDiffuse: THREE.Texture, tNormal: THREE.Texture) {
-         super();
- 
-         this.lights = false;
-@@ -145,7 +160,7 @@ function onWindowResize() {
+@@ -109,7 +128,7 @@ function onWindowResize() {
      renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
  }
  
@@ -14358,7 +14365,7 @@ index a031270b..5ffd10f4 100644
      const selection = options.selection;
  
      torus.rotation.y = (time / 1000) * 0.4;
-@@ -175,12 +190,26 @@ async function readback() {
+@@ -143,12 +162,26 @@ async function readback() {
      const selection = options.selection;
  
      if (selection === 'diffuse') {

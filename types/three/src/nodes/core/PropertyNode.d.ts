@@ -14,6 +14,7 @@ export const property: (type?: string | null, name?: string | null) => ShaderNod
 export const varyingProperty: (type?: string | null, name?: string | null) => ShaderNodeObject<PropertyNode>;
 
 export const diffuseColor: ShaderNodeObject<PropertyNode>;
+export const emissive: ShaderNodeObject<PropertyNode>;
 export const roughness: ShaderNodeObject<PropertyNode>;
 export const metalness: ShaderNodeObject<PropertyNode>;
 export const clearcoat: ShaderNodeObject<PropertyNode>;

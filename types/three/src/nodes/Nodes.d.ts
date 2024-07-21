@@ -15,6 +15,7 @@ export {
     LightingModelIndirectInput,
     LightingModelReflectedLight,
 } from "./core/LightingModel.js";
+export { default as MRTNode, mrt } from "./core/MRTNode.js";
 export { default as Node } from "./core/Node.js";
 export { default as NodeAttribute } from "./core/NodeAttribute.js";
 export { default as NodeBuilder } from "./core/NodeBuilder.js";
@@ -37,6 +38,7 @@ export {
     dashSize,
     default as PropertyNode,
     diffuseColor,
+    emissive,
     gapSize,
     iridescence,
     iridescenceIOR,
@@ -179,6 +181,7 @@ export { default as JoinNode } from "./utils/JoinNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
 export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
+export { colorToDirection, default as PackingNode, directionToColor } from "./utils/PackingNode.js";
 export { default as ReflectorNode, reflector, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
 export { default as RemapNode, remap, remapClamp } from "./utils/RemapNode.js";
 export { default as RotateNode, rotate } from "./utils/RotateNode.js";
@@ -346,7 +349,7 @@ export {
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";
 
-export { default as PassNode, depthPass, pass, PassNodeScope, texturePass } from "./display/PassNode.js";
+export { default as PassNode, depthPass, pass, PassNodeScope, passTexture } from "./display/PassNode.js";
 
 // code
 export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
