@@ -8,7 +8,12 @@ declare class CubeTextureNode extends TextureNode {
     uvNode: ShaderNodeObject<Node> | null;
     levelNode: ShaderNodeObject<Node> | null;
 
-    constructor(value: CubeTexture, uvNode?: ShaderNodeObject<Node> | null, levelNode?: ShaderNodeObject<Node> | null, biasNode?: ShaderNodeObject<Node> | null);
+    constructor(
+        value: CubeTexture,
+        uvNode?: ShaderNodeObject<Node> | null,
+        levelNode?: ShaderNodeObject<Node> | null,
+        biasNode?: ShaderNodeObject<Node> | null,
+    );
 
     getDefaultUV(): Node;
 }
