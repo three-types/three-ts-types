@@ -56,11 +56,11 @@ export { default as StackNode } from "./core/StackNode.js";
 export { default as TempNode } from "./core/TempNode.js";
 export {
     default as UniformGroupNode,
-    uniformGroup,
+    frameGroup,
     objectGroup,
     renderGroup,
-    frameGroup,
-} from './core/UniformGroupNode.js';
+    uniformGroup,
+} from "./core/UniformGroupNode.js";
 export { default as UniformNode, uniform } from "./core/UniformNode.js";
 export { default as VarNode, temp } from "./core/VarNode.js";
 export { default as VaryingNode, varying } from "./core/VaryingNode.js";
