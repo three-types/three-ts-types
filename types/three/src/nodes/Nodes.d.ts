@@ -226,6 +226,7 @@ export {
     materialIridescence,
     materialIridescenceIOR,
     materialIridescenceThickness,
+    materialLightMap,
     materialLineDashOffset,
     materialLineDashSize,
     materialLineGapSize,
