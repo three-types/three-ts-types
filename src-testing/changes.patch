@@ -167,7 +167,7 @@ index e4a040de..c52771e6 100644
  addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
  
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index aa3d3681..c314570e 100644
+index ee6143dd..7fefc06e 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -3,15 +3,39 @@ import { uv } from './UVNode.js';
@@ -312,16 +312,16 @@ index aa3d3681..c314570e 100644
 -    uv(uvNode) {
 +    uv(uvNode: ShaderNodeObject<Node> | null) {
          const textureNode = this.clone();
-         textureNode.uvNode = uvNode;
+         textureNode.uvNode = nodeObject(uvNode);
          textureNode.referenceNode = this;
 @@ -261,7 +285,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
--    blur(levelNode) {
-+    blur(levelNode: ShaderNodeObject<Node>) {
+-    blur(amountNode) {
++    blur(amountNode: ShaderNodeObject<Node>) {
          const textureNode = this.clone();
-         textureNode.levelNode = levelNode.mul(maxMipLevel(textureNode));
+         textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this;
 @@ -269,7 +293,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
@@ -330,7 +330,7 @@ index aa3d3681..c314570e 100644
 -    level(levelNode) {
 +    level(levelNode: ShaderNodeObject<Node> | null) {
          const textureNode = this.clone();
-         textureNode.levelNode = levelNode;
+         textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this;
 diff --git a/src-testing/src/nodes/code/CodeNode.ts b/src-testing/src/nodes/code/CodeNode.ts
 index 06347564..1f81819b 100644
