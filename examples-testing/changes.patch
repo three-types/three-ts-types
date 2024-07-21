@@ -14624,16 +14624,18 @@ index 4c3a1d66..4337b2c8 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 86fa7686..2f5cc263 100644
+index 5fe9a9b7..130a7821 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
 -import * as THREE from 'three';
+-import { pass, mrt, output, transformedNormalView } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
- import { pass, mrt, output, transformedNormalView } from 'three/tsl';
++import { pass, mrt, output, transformedNormalView, ShaderNodeObject, GTAONode } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -9,7 +9,14 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+@@ -9,9 +9,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14646,6 +14648,9 @@ index 86fa7686..2f5cc263 100644
 +    clock: THREE.Clock,
 +    stats: Stats,
 +    mixer: THREE.AnimationMixer;
+ 
+-let aoPass;
++let aoPass: ShaderNodeObject<GTAONode>;
  
  const params = {
      blendIntensity: 1,
