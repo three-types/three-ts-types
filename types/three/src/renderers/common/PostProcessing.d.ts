@@ -1,15 +1,21 @@
 import { Node } from "../../nodes/Nodes.js";
 import Renderer from "./Renderer.js";
 
-export default class PostProcessing {
+declare class PostProcessing {
     renderer: Renderer;
     outputNode: Node;
+
+    outputColorTransform: boolean;
+
+    needsUpdate: boolean;
 
     constructor(renderer: Renderer, outputNode?: Node);
 
     render(): void;
 
-    renderAsync(): Promise<void>;
+    update(): void;
 
-    set needsUpdate(value: boolean);
+    renderAsync(): Promise<void>;
 }
+
+export default PostProcessing;

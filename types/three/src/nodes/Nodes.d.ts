@@ -309,6 +309,7 @@ export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlu
 export { default as Lut3DNode, lut3D } from "./display/Lut3DNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
+export { default as RenderOutputNode, renderOutput } from "./display/RenderOutputNode.js";
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
 export { default as SobelOperatorNode, sobel } from "./display/SobelOperatorNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
