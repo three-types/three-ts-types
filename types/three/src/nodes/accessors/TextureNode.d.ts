@@ -8,6 +8,7 @@ export default class TextureNode extends UniformNode<Texture> {
 
     uvNode: ShaderNodeObject<Node> | null;
     levelNode: ShaderNodeObject<Node> | null;
+    biasNode: ShaderNodeObject<Node> | null;
     compareNode: Node | null;
     depthNode: Node | null;
     gradNode: Node | null;
@@ -17,7 +18,12 @@ export default class TextureNode extends UniformNode<Texture> {
 
     referenceNode: Node | null;
 
-    constructor(value: Texture, uvNode?: ShaderNodeObject<Node> | null, levelNode?: ShaderNodeObject<Node> | null);
+    constructor(
+        value: Texture,
+        uvNode?: ShaderNodeObject<Node> | null,
+        levelNode?: ShaderNodeObject<Node> | null,
+        biasNode?: ShaderNodeObject<Node> | null,
+    );
 
     getDefaultUV(): Node;
 
@@ -30,6 +36,7 @@ export const texture: (
     value: Texture,
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
+    biasNode?: NodeRepresentation,
 ) => ShaderNodeObject<TextureNode>;
 export const sampler: (aTexture: Texture | TextureNode) => ShaderNodeObject<Node>;
 
