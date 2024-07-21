@@ -92,6 +92,7 @@ export default class NodeMaterial extends Material {
     setupVariants(builder: NodeBuilder): void;
     setupNormal(builder: NodeBuilder): void;
     setupEnvironment(builder: NodeBuilder): Node | null;
+    setupLightMap(builder: NodeBuilder): Node | null;
     setupLights(builder: NodeBuilder): LightsNode;
     setupLightingModel(builder: NodeBuilder): LightingModel;
     setupLighting(builder: NodeBuilder): Node;
