@@ -13252,7 +13252,7 @@ index d0255e43..c924d666 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index d60467b4..2ac8cadf 100644
+index fab3ee88..434b816f 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -1,4 +1,4 @@
@@ -13261,7 +13261,7 @@ index d60467b4..2ac8cadf 100644
  import {
      color,
      linearDepth,
-@@ -18,8 +18,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -17,8 +17,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -14368,14 +14368,14 @@ index d83642f2..96b1bc0e 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index 85346b5d..e4d5bb15 100644
+index 60cf0aee..bdb25087 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 @@ -1,20 +1,30 @@
 -import * as THREE from 'three';
--import { pass, texture3D, uniform } from 'three/tsl';
+-import { pass, texture3D, uniform, renderOutput } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { Lut3DNode, ShaderNodeObject, pass, texture3D, uniform } from 'three/tsl';
++import { pass, texture3D, uniform, renderOutput, ShaderNodeObject, Lut3DNode } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14450,9 +14450,9 @@ index 85346b5d..e4d5bb15 100644
      }
  
      renderer = new THREE.WebGPURenderer();
-@@ -93,9 +107,8 @@ async function init() {
- 
-     const outputPass = scenePassColor.toneMapping(THREE.ACESFilmicToneMapping).linearTosRGB();
+@@ -97,9 +111,8 @@ async function init() {
+     const scenePass = pass(scene, camera);
+     const outputPass = renderOutput(scenePass);
  
 -    lutPass = outputPass.lut3D();
 -    lutPass.lutNode = texture3D(lutMap[params.lut]);
@@ -14462,7 +14462,7 @@ index 85346b5d..e4d5bb15 100644
  
      postProcessing.outputNode = lutPass;
  
-@@ -108,8 +121,7 @@ async function init() {
+@@ -112,8 +125,7 @@ async function init() {
      controls.update();
  
      gui = new GUI();
@@ -14472,7 +14472,7 @@ index 85346b5d..e4d5bb15 100644
      gui.add(params, 'intensity').min(0).max(1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -125,11 +137,11 @@ function onWindowResize() {
+@@ -129,11 +141,11 @@ function onWindowResize() {
  //
  
  function animate() {
