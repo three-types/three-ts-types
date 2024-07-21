@@ -12636,10 +12636,10 @@ index 366a2791..74077e99 100644
 +    console.log('after', renderer.info.programs!.length);
  }
 diff --git a/examples-testing/examples/webgl_test_wide_gamut.ts b/examples-testing/examples/webgl_test_wide_gamut.ts
-index 620caaf1..6699085b 100644
+index 693dd459..5e64e184 100644
 --- a/examples-testing/examples/webgl_test_wide_gamut.ts
 +++ b/examples-testing/examples/webgl_test_wide_gamut.ts
-@@ -2,8 +2,8 @@ import * as THREE from 'three';
+@@ -2,12 +2,12 @@ import * as THREE from 'three';
  
  import WebGL from 'three/addons/capabilities/WebGL.js';
  
@@ -12650,7 +12650,12 @@ index 620caaf1..6699085b 100644
  
  let sliderPos = window.innerWidth / 2;
  
-@@ -16,7 +16,7 @@ if (isP3Context) {
+-const slider = document.querySelector('.slider');
++const slider = document.querySelector('.slider') as HTMLElement;
+ 
+ const isP3Context = WebGL.isColorSpaceAvailable(THREE.DisplayP3ColorSpace);
+ 
+@@ -18,7 +18,7 @@ if (isP3Context) {
  init();
  
  function init() {
@@ -12659,13 +12664,10 @@ index 620caaf1..6699085b 100644
  
      sceneL = new THREE.Scene();
      sceneR = new THREE.Scene();
-@@ -58,9 +58,9 @@ async function initTextures() {
+@@ -60,7 +60,7 @@ async function initTextures() {
  }
  
  function initSlider() {
--    const slider = document.querySelector('.slider');
-+    const slider = document.querySelector('.slider') as HTMLElement;
- 
 -    function onPointerDown() {
 +    function onPointerDown(event: PointerEvent) {
          if (event.isPrimary === false) return;
@@ -12679,12 +12681,21 @@ index 620caaf1..6699085b 100644
 +    function onPointerMove(event: PointerEvent) {
          if (event.isPrimary === false) return;
  
--        sliderPos = Math.max(0, Math.min(window.innerWidth, e.pageX));
-+        sliderPos = Math.max(0, Math.min(window.innerWidth, event.pageX));
- 
-         slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
+-        updateSlider(e.pageX);
++        updateSlider(event.pageX);
      }
-@@ -90,11 +90,11 @@ function onWindowResize() {
+ 
+     updateSlider(sliderPos);
+@@ -84,7 +84,7 @@ function initSlider() {
+     slider.addEventListener('pointerdown', onPointerDown);
+ }
+ 
+-function updateSlider(offset) {
++function updateSlider(offset: number) {
+     sliderPos = Math.max(10, Math.min(window.innerWidth - 10, offset));
+ 
+     slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
+@@ -96,13 +96,13 @@ function onWindowResize() {
  
      renderer.setSize(window.innerWidth, window.innerHeight);
  
@@ -12692,6 +12703,8 @@ index 620caaf1..6699085b 100644
 -    THREE.TextureUtils.contain(sceneR.background, window.innerWidth / window.innerHeight);
 +    THREE.TextureUtils.contain(sceneL.background as THREE.Texture, window.innerWidth / window.innerHeight);
 +    THREE.TextureUtils.contain(sceneR.background as THREE.Texture, window.innerWidth / window.innerHeight);
+ 
+     updateSlider(sliderPos);
  }
  
 -function onGamutChange({ matches }) {
