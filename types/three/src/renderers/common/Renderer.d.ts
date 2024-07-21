@@ -10,6 +10,7 @@ import { Color } from "../../math/Color.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
+import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
@@ -87,6 +88,7 @@ declare class Renderer {
     _renderTarget: RenderTarget | null;
     _activeCubeFace: number;
     _activeMipmapLevel: number;
+    _mrt: MRTNode | null;
     _renderObjectFunction:
         | ((
             object: Object3D,
@@ -146,6 +148,8 @@ declare class Renderer {
     get coordinateSystem(): import("../../constants.js").CoordinateSystem;
     compileAsync(scene: Scene, camera: Camera, targetScene?: Scene | null): Promise<void>;
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
+    setMRT(mrt: MRTNode | null): this;
+    getMRT(): MRTNode | null;
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
     render(scene: Scene, camera: Camera): Promise<void> | undefined;
     _getFrameBufferTarget(): RenderTarget<Texture> | null;
