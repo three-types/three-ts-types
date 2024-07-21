@@ -1,11 +1,11 @@
-import { Camera } from "../../cameras/Camera";
-import { Matrix4 } from "../../math/Matrix4";
-import { Vector2 } from "../../math/Vector2";
-import TextureNode from "../accessors/TextureNode";
+import { Camera } from "../../cameras/Camera.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector2 } from "../../math/Vector2.js";
+import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 declare class GTAONode extends TempNode {
     textureNode: Node;
@@ -38,5 +38,11 @@ export const ao: (
     normalNode: NodeRepresentation,
     camera: Camera,
 ) => ShaderNodeObject<GTAONode>;
+
+declare module "../shadernode/ShaderNode.js" {
+    interface NodeElements {
+        ao: typeof ao;
+    }
+}
 
 export default GTAONode;
