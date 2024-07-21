@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { RenderTarget } from "../../core/RenderTarget.js";
+import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
@@ -13,7 +13,7 @@ declare class PassTextureNode extends TextureNode {
     constructor(passNode: PassNode, texture: Texture);
 }
 
-export default class PassNode extends TempNode {
+declare class PassNode extends TempNode {
     scope: PassNodeScope;
     scene: Scene;
     camera: Camera;
@@ -22,7 +22,7 @@ export default class PassNode extends TempNode {
 
     readonly isPassNode: true;
 
-    constructor(scope: PassNodeScope, scene: Scene, camera: Camera);
+    constructor(scope: PassNodeScope, scene: Scene, camera: Camera, options?: RenderTargetOptions);
 
     getTextureNode(): ShaderNodeObject<PassTextureNode>;
 
@@ -44,6 +44,8 @@ export default class PassNode extends TempNode {
 
 export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;
 
-export const pass: (scene: Scene, camera: Camera) => ShaderNodeObject<PassNode>;
+export default PassNode;
+
+export const pass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => ShaderNodeObject<PassNode>;
 export const texturePass: (pass: PassNode, texture: Texture) => ShaderNodeObject<PassTextureNode>;
 export const depthPass: (scene: Scene, camera: Camera) => ShaderNodeObject<PassNode>;
