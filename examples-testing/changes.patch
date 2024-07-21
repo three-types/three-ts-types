@@ -13821,6 +13821,48 @@ index 04023326..05ee79b0 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
+index 0161a9c7..590f668d 100644
+--- a/examples-testing/examples/webgpu_materials_basic.ts
++++ b/examples-testing/examples/webgpu_materials_basic.ts
+@@ -1,10 +1,10 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+-const spheres = [];
++const spheres: THREE.Mesh[] = [];
+ 
+ let mouseX = 0;
+ let mouseY = 0;
+@@ -12,7 +12,13 @@ let mouseY = 0;
+ let windowHalfX = window.innerWidth / 2;
+ let windowHalfY = window.innerHeight / 2;
+ 
+-const params = {
++const params: {
++    color: string;
++    mapping: THREE.CubeTextureMapping;
++    refractionRatio: number;
++    transparent: boolean;
++    opacity: number;
++} = {
+     color: '#ffffff',
+     mapping: THREE.CubeReflectionMapping,
+     refractionRatio: 0.98,
+@@ -111,7 +117,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) / 100;
+     mouseY = (event.clientY - windowHalfY) / 100;
+ }
 diff --git a/examples-testing/examples/webgpu_materials_displacementmap.ts b/examples-testing/examples/webgpu_materials_displacementmap.ts
 index 54d26d65..824c087a 100644
 --- a/examples-testing/examples/webgpu_materials_displacementmap.ts
