@@ -217,6 +217,7 @@ export {
     materialAlphaTest,
     materialAnisotropy,
     materialAnisotropyVector,
+    materialAOMap,
     materialClearcoat,
     materialClearcoatNormal,
     materialClearcoatRoughness,
