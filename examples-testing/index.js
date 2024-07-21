@@ -25,7 +25,6 @@ const exceptionList = [
     'webgl_loader_stl',
     'webgl_loader_texture_exr',
     'webgl_loader_texture_hdr',
-    'webgl_loader_texture_hdrjpg',
     'webgl_loader_texture_ktx2',
     'webgl_loader_texture_lottie',
     'webgl_loader_texture_pvrtc',
