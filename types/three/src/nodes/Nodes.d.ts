@@ -226,6 +226,7 @@ export {
     materialIridescence,
     materialIridescenceIOR,
     materialIridescenceThickness,
+    materialLightMap,
     materialLineDashOffset,
     materialLineDashSize,
     materialLineGapSize,
@@ -244,7 +245,6 @@ export {
     materialShininess,
     materialSpecular,
     materialSpecularStrength,
-    materialLightMap,
 } from "./accessors/MaterialNode.js";
 export { default as MaterialReferenceNode, materialReference } from "./accessors/MaterialReferenceNode.js";
 export {
