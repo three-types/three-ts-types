@@ -24,6 +24,7 @@ export const cubeTexture: (
     value: CubeTexture,
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
+    biasNode?: NodeRepresentation,
 ) => ShaderNodeObject<CubeTextureNode>;
 
 declare module "../shadernode/ShaderNode.js" {
