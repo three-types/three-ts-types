@@ -18,11 +18,15 @@ declare class RTTNode extends TextureNode {
     textureNeedsUpdate: boolean;
     autoUpdate: boolean;
 
+    pixelRatio?: number;
+
     constructor(node: Node, width?: number | null, height?: number | null, options?: RTTNodeOptions);
 
     get autoSize(): boolean;
 
     setSize(width: number | null, height: number | null): void;
+
+    setPixelRatio(pixelRatio: number): void;
 }
 
 export default RTTNode;
