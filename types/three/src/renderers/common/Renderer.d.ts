@@ -26,6 +26,7 @@ import Geometries from "./Geometries.js";
 import Info from "./Info.js";
 import Nodes from "./nodes/Nodes.js";
 import Pipelines from "./Pipelines.js";
+import QuadMesh from "./QuadMesh.js";
 import RenderBundle from "./RenderBundle.js";
 import RenderBundles from "./RenderBundles.js";
 import RenderContext from "./RenderContext.js";
@@ -75,6 +76,7 @@ declare class Renderer {
     _renderContexts: RenderContexts | null;
     _textures: Textures | null;
     _background: Background | null;
+    _quad: QuadMesh;
     _currentRenderContext: RenderContext | null;
     _opaqueSort: ((a: RenderItem, b: RenderItem) => number) | null;
     _transparentSort: ((a: RenderItem, b: RenderItem) => number) | null;
