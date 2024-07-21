@@ -77,6 +77,7 @@ export default class NodeMaterial extends Material {
     shadowPositionNode: Node | null;
 
     outputNode: Node | null;
+    mrtNode: Node | null;
 
     fragmentNode: Node | null;
     vertexNode: Node | null;

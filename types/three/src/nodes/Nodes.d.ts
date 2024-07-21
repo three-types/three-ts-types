@@ -15,6 +15,7 @@ export {
     LightingModelIndirectInput,
     LightingModelReflectedLight,
 } from "./core/LightingModel.js";
+export { default as MRTNode, mrt } from "./core/MRTNode.js";
 export { default as Node } from "./core/Node.js";
 export { default as NodeAttribute } from "./core/NodeAttribute.js";
 export { default as NodeBuilder } from "./core/NodeBuilder.js";
@@ -37,6 +38,7 @@ export {
     dashSize,
     default as PropertyNode,
     diffuseColor,
+    emissive,
     gapSize,
     iridescence,
     iridescenceIOR,
@@ -346,7 +348,7 @@ export {
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";
 
-export { default as PassNode, depthPass, pass, PassNodeScope, texturePass } from "./display/PassNode.js";
+export { default as PassNode, depthPass, pass, PassNodeScope, passTexture } from "./display/PassNode.js";
 
 // code
 export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
