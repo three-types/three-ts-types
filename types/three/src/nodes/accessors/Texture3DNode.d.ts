@@ -11,7 +11,7 @@ export default class Texture3DNode extends TextureNode {
 }
 
 export const texture3D: (
-    value: CubeTexture,
+    value: Texture,
     uvNode?: NodeRepresentation,
     levelNode?: NodeRepresentation,
 ) => ShaderNodeObject<Texture3DNode>;
