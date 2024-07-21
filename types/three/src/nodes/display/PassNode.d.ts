@@ -37,7 +37,7 @@ declare class PassNode extends TempNode {
 
     getTexture(name: string): Texture;
 
-    getTextureNode(name?: string): Node;
+    getTextureNode(name?: string): ShaderNodeObject<Node>;
 
     getTextureDepthNode(): ShaderNodeObject<PassTextureNode>;
 
