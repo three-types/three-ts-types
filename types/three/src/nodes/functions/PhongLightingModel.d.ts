@@ -1,6 +1,6 @@
-import LightingModel from "../core/LightingModel.js";
+import BasicLightingModel from "./BasicLightingModel.js";
 
-export default class PhongLightingModel extends LightingModel {
+export default class PhongLightingModel extends BasicLightingModel {
     specular: boolean;
 
     constructor(specular?: boolean);

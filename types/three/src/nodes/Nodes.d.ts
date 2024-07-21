@@ -366,6 +366,7 @@ export { compute, default as ComputeNode } from "./gpgpu/ComputeNode.js";
 // lighting
 export { default as AnalyticLightNode } from "./lighting/AnalyticLightNode.js";
 export { default as AONode } from "./lighting/AONode.js";
+export { default as BasicEnvironmentNode } from "./lighting/BasicEnvironmentNode.js";
 export { default as EnvironmentNode } from "./lighting/EnvironmentNode.js";
 export { default as HemisphereLightNode } from "./lighting/HemisphereLightNode.js";
 export { default as IrradianceNode } from "./lighting/IrradianceNode.js";
