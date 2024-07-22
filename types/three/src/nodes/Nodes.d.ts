@@ -313,6 +313,7 @@ export {
     linearTosRGB,
     sRGBToLinear,
 } from "./display/ColorSpaceNode.js";
+export { default as DenoiseNode, denoise } from "./display/DenoiseNode.js";
 export { default as DepthOfFieldNode, dof } from "./display/DepthOfFieldNode.js";
 export { default as DotScreenNode, dotScreen } from "./display/DotScreenNode.js";
 export { default as FilmNode, film } from "./display/FilmNode.js";
