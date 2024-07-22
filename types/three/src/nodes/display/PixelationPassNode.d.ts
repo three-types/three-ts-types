@@ -2,9 +2,9 @@ import { Camera } from "../../cameras/Camera.js";
 import { Scene } from "../../scenes/Scene.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
+import UniformNode from "../core/UniformNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import PassNode from "./PassNode.js";
-import UniformNode from "../core/UniformNode.js";
 
 declare class PixelationNode extends TempNode {
     textureNode: Node;
