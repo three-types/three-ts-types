@@ -8,7 +8,6 @@ import UniformNode from "../core/UniformNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
 declare class GTAONode extends TempNode {
-    textureNode: Node;
     depthNode: Node;
     normalNode: Node;
 
@@ -18,7 +17,6 @@ declare class GTAONode extends TempNode {
     distanceExponent: ShaderNodeObject<UniformNode<number>>;
     distanceFallOff: ShaderNodeObject<UniformNode<number>>;
     scale: ShaderNodeObject<UniformNode<number>>;
-    blendIntensity: ShaderNodeObject<UniformNode<number>>;
     noiseNode: ShaderNodeObject<TextureNode>;
 
     cameraProjectionMatrix: ShaderNodeObject<UniformNode<Matrix4>>;
@@ -26,13 +24,14 @@ declare class GTAONode extends TempNode {
 
     SAMPLES: ShaderNodeObject<UniformNode<number>>;
 
-    constructor(textureNode: Node, depthNode: Node, normalNode: Node, camera: Camera);
+    constructor(depthNode: Node, normalNode: Node, camera: Camera);
+
+    getTextureNode(): ShaderNodeObject<TextureNode>;
 
     setSize(width: number, height: number): void;
 }
 
 export const ao: (
-    node: NodeRepresentation,
     depthNode: NodeRepresentation,
     normalNode: NodeRepresentation,
     camera: Camera,
