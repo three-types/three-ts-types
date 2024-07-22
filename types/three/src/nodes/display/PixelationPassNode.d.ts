@@ -4,6 +4,7 @@ import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import PassNode from "./PassNode.js";
+import UniformNode from "../core/UniformNode.js";
 
 declare class PixelationNode extends TempNode {
     textureNode: Node;
@@ -40,27 +41,27 @@ declare module "../shadernode/ShaderNode.js" {
 }
 
 declare class PixelationPassNode extends PassNode {
-    pixelSize: number;
-    normalEdgeStrength: number;
-    depthEdgeStrength: number;
+    pixelSize: UniformNode<number>;
+    normalEdgeStrength: UniformNode<number>;
+    depthEdgeStrength: UniformNode<number>;
 
     readonly isPixelationPassNode: true;
 
     constructor(
         scene: Scene,
         camera: Camera,
-        pixelSize?: number,
-        normalEdgeStrength?: number,
-        depthEdgeStrength?: number,
+        pixelSize: number,
+        normalEdgeStrength: number,
+        depthEdgeStrength: number,
     );
 }
 
 export const pixelationPass: (
     scene: Scene,
     camera: Camera,
-    pixelSize?: number,
-    normalEdgeStrength?: number,
-    depthEdgeStrength?: number,
+    pixelSize: UniformNode<number>,
+    normalEdgeStrength: UniformNode<number>,
+    depthEdgeStrength: UniformNode<number>,
 ) => ShaderNodeObject<PixelationPassNode>;
 
 export default PixelationPassNode;

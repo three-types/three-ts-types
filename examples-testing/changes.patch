@@ -14720,6 +14720,92 @@ index 5e75fa7a..dfebe406 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
+index 731c8253..eb8bd63d 100644
+--- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
++++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
+@@ -1,12 +1,23 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-import { uniform, pixelationPass } from 'three/tsl';
+-
+-let camera, scene, renderer, postProcessing, crystalMesh, clock;
+-let gui, effectController;
++import { uniform, pixelationPass, UniformNode } from 'three/tsl';
++
++let camera: THREE.OrthographicCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
++    clock: THREE.Clock;
++let gui: GUI,
++    effectController: {
++        pixelSize: UniformNode<number>;
++        normalEdgeStrength: UniformNode<number>;
++        depthEdgeStrength: UniformNode<number>;
++        pixelAlignedPanning: boolean;
++    };
+ 
+ init();
+ 
+@@ -34,7 +45,7 @@ function init() {
+ 
+     const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
+ 
+-    function addBox(boxSideLength, x, z, rotation) {
++    function addBox(boxSideLength: number, x: number, z: number, rotation: number) {
+         const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
+         mesh.castShadow = true;
+         //mesh.receiveShadow = true;
+@@ -170,7 +181,7 @@ function animate() {
+ 
+ // Helper functions
+ 
+-function pixelTexture(texture) {
++function pixelTexture(texture: THREE.Texture) {
+     texture.minFilter = THREE.NearestFilter;
+     texture.magFilter = THREE.NearestFilter;
+     texture.generateMipmaps = false;
+@@ -180,25 +191,30 @@ function pixelTexture(texture) {
+     return texture;
+ }
+ 
+-function easeInOutCubic(x) {
++function easeInOutCubic(x: number) {
+     return x ** 2 * 3 - x ** 3 * 2;
+ }
+ 
+-function linearStep(x, edge0, edge1) {
++function linearStep(x: number, edge0: number, edge1: number) {
+     const w = edge1 - edge0;
+     const m = 1 / w;
+     const y0 = -m * edge0;
+     return THREE.MathUtils.clamp(y0 + m * x, 0, 1);
+ }
+ 
+-function stopGoEased(x, downtime, period) {
++function stopGoEased(x: number, downtime: number, period: number) {
+     const cycle = (x / period) | 0;
+     const tween = x - cycle * period;
+     const linStep = easeInOutCubic(linearStep(tween, downtime, period));
+     return cycle + linStep;
+ }
+ 
+-function pixelAlignFrustum(camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight) {
++function pixelAlignFrustum(
++    camera: THREE.OrthographicCamera,
++    aspectRatio: number,
++    pixelsPerScreenWidth: number,
++    pixelsPerScreenHeight: number,
++) {
+     // 0. Get Pixel Grid Units
+     const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
+     const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 index cbc5a96b..66ec682e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
@@ -15343,3 +15429,52 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/display/PixelationPassNode.d.ts b/types/three/src/nodes/display/PixelationPassNode.d.ts
+index ddd7369f..c4b99dae 100644
+--- a/types/three/src/nodes/display/PixelationPassNode.d.ts
++++ b/types/three/src/nodes/display/PixelationPassNode.d.ts
+@@ -4,6 +4,7 @@ import Node from "../core/Node.js";
+ import TempNode from "../core/TempNode.js";
+ import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+ import PassNode from "./PassNode.js";
++import UniformNode from "../core/UniformNode.js";
+ 
+ declare class PixelationNode extends TempNode {
+     textureNode: Node;
+@@ -40,27 +41,27 @@ declare module "../shadernode/ShaderNode.js" {
+ }
+ 
+ declare class PixelationPassNode extends PassNode {
+-    pixelSize: number;
+-    normalEdgeStrength: number;
+-    depthEdgeStrength: number;
++    pixelSize: UniformNode<number>;
++    normalEdgeStrength: UniformNode<number>;
++    depthEdgeStrength: UniformNode<number>;
+ 
+     readonly isPixelationPassNode: true;
+ 
+     constructor(
+         scene: Scene,
+         camera: Camera,
+-        pixelSize?: number,
+-        normalEdgeStrength?: number,
+-        depthEdgeStrength?: number,
++        pixelSize: number,
++        normalEdgeStrength: number,
++        depthEdgeStrength: number,
+     );
+ }
+ 
+ export const pixelationPass: (
+     scene: Scene,
+     camera: Camera,
+-    pixelSize?: number,
+-    normalEdgeStrength?: number,
+-    depthEdgeStrength?: number,
++    pixelSize: UniformNode<number>,
++    normalEdgeStrength: UniformNode<number>,
++    depthEdgeStrength: UniformNode<number>,
+ ) => ShaderNodeObject<PixelationPassNode>;
+ 
+ export default PixelationPassNode;
