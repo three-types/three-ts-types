@@ -1,22 +1,14 @@
 import { Camera } from "../../cameras/Camera.js";
 import { ColorSpace, ShadowMapType, ToneMapping } from "../../constants.js";
-import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import { Material } from "../../materials/Material.js";
-import { Box2 } from "../../math/Box2.js";
-import { Color } from "../../math/Color.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
-import MRTNode from "../../nodes/core/MRTNode.js";
-import Node from "../../nodes/core/Node.js";
-import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
-import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { LightsNode, MRTNode } from "../../nodes/Nodes.js";
 import { Scene } from "../../scenes/Scene.js";
-import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
-import { Texture } from "../../textures/Texture.js";
 import Animation from "./Animation.js";
 import Attributes from "./Attributes.js";
 import Backend from "./Backend.js";
@@ -32,18 +24,21 @@ import RenderBundle from "./RenderBundle.js";
 import RenderBundles from "./RenderBundles.js";
 import RenderContext from "./RenderContext.js";
 import RenderContexts from "./RenderContexts.js";
-import RenderList, { Bundle, RenderItem } from "./RenderList.js";
+import { RenderItem } from "./RenderList.js";
 import RenderLists from "./RenderLists.js";
 import RenderObjects from "./RenderObjects.js";
 import Textures from "./Textures.js";
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
+    antialias?: boolean | undefined;
+    samples?: number | undefined;
 }
 declare class Renderer {
     readonly isRenderer: true;
     domElement: HTMLCanvasElement;
     backend: Backend;
+    samples: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -58,7 +53,6 @@ declare class Renderer {
     stencil: boolean;
     clippingPlanes: readonly Plane[];
     info: Info;
-    toneMappingNode: Node | null;
     _pixelRatio: number;
     _width: number;
     _height: number;
@@ -152,7 +146,7 @@ declare class Renderer {
     getMRT(): MRTNode | null;
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
     render(scene: Scene, camera: Camera): Promise<void> | undefined;
-    _getFrameBufferTarget(): RenderTarget<Texture> | null;
+    _getFrameBufferTarget(): RenderTarget<import("../../Three.js").Texture> | null;
     _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext;
     getMaxAnisotropy(): number;
     getActiveCubeFace(): number;
@@ -193,10 +187,10 @@ declare class Renderer {
     clearColorAsync(): Promise<void>;
     clearDepthAsync(): Promise<void>;
     clearStencilAsync(): Promise<void>;
-    get currentColorSpace(): ColorSpace;
+    get currentColorSpace(): any;
     dispose(): void;
     setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
-    getRenderTarget(): RenderTarget<Texture> | null;
+    getRenderTarget(): RenderTarget<import("../../Three.js").Texture> | null;
     setRenderObjectFunction(
         renderObjectFunction:
             | ((
@@ -239,7 +233,7 @@ declare class Renderer {
         width: number,
         height: number,
         index?: number,
-    ): Promise<import("../../core/BufferAttribute.js").TypedArray>;
+    ): Promise<import("../../Three.js").TypedArray>;
     _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void;
     _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
     _renderObjects(renderList: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void;

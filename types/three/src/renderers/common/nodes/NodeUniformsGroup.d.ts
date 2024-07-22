@@ -1,5 +1,4 @@
-import UniformGroupNode from "../../../nodes/core/UniformGroupNode.js";
-import UniformNode from "../../../nodes/core/UniformNode.js";
+import { UniformGroupNode, UniformNode } from "../../../nodes/Nodes.js";
 import UniformsGroup from "../UniformsGroup.js";
 declare class NodeUniformsGroup extends UniformsGroup {
     id: number;
