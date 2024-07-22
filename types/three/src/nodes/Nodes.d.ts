@@ -322,6 +322,7 @@ export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlu
 export { ao, default as GTAONode } from "./display/GTAONode.js";
 export { default as Lut3DNode, lut3D } from "./display/Lut3DNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
+export { default as PixelationPassNode, pixelationPass } from "./display/PixelationPassNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as RenderOutputNode, renderOutput } from "./display/RenderOutputNode.js";
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
