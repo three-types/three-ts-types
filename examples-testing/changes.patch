@@ -14624,22 +14624,35 @@ index 4c3a1d66..4337b2c8 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 5fe9a9b7..130a7821 100644
+index c3af1121..7c941555 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
-@@ -1,5 +1,5 @@
+@@ -1,5 +1,16 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView } from 'three/tsl';
+-import { pass, mrt, output, transformedNormalView, texture, ao } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, transformedNormalView, ShaderNodeObject, GTAONode } from 'three/tsl';
++import {
++    pass,
++    mrt,
++    output,
++    transformedNormalView,
++    texture,
++    ao,
++    ShaderNodeObject,
++    GTAONode,
++    OperatorNode,
++    Node,
++} from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -9,9 +9,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -10,9 +21,19 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, postProcessing, controls, clock, stats, mixer;
+-
+-let aoPass, blendPassAO, blendPassDenoise, scenePassColor;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -14648,12 +14661,14 @@ index 5fe9a9b7..130a7821 100644
 +    clock: THREE.Clock,
 +    stats: Stats,
 +    mixer: THREE.AnimationMixer;
- 
--let aoPass;
-+let aoPass: ShaderNodeObject<GTAONode>;
++
++let aoPass: ShaderNodeObject<GTAONode>,
++    blendPassAO: ShaderNodeObject<OperatorNode>,
++    blendPassDenoise: ShaderNodeObject<OperatorNode>,
++    scenePassColor: ShaderNodeObject<Node>;
  
  const params = {
-     blendIntensity: 1,
+     distanceExponent: 1,
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
 index 3fb4046b..785a78f8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
@@ -15429,3 +15444,16 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/display/GTAONode.d.ts b/types/three/src/nodes/display/GTAONode.d.ts
+index 16e30199..5a6da521 100644
+--- a/types/three/src/nodes/display/GTAONode.d.ts
++++ b/types/three/src/nodes/display/GTAONode.d.ts
+@@ -26,7 +26,7 @@ declare class GTAONode extends TempNode {
+ 
+     constructor(depthNode: Node, normalNode: Node, camera: Camera);
+ 
+-    getTextureNode(): TextureNode;
++    getTextureNode(): ShaderNodeObject<TextureNode>;
+ 
+     setSize(width: number, height: number): void;
+ }

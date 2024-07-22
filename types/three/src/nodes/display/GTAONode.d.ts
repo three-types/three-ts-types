@@ -26,7 +26,7 @@ declare class GTAONode extends TempNode {
 
     constructor(depthNode: Node, normalNode: Node, camera: Camera);
 
-    getTextureNode(): TextureNode;
+    getTextureNode(): ShaderNodeObject<TextureNode>;
 
     setSize(width: number, height: number): void;
 }
