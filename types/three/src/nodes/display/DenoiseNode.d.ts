@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { Matrix4 } from "../../math/Matrix4";
+import { Matrix4 } from "../../math/Matrix4.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
