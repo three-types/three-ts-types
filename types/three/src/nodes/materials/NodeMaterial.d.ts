@@ -117,5 +117,5 @@ export default class NodeMaterial extends Material {
     static fromMaterial(material: Material): NodeMaterial;
 }
 
-export const addNodeMaterial: (type: string, nodeMaterial: typeof NodeMaterial) => void;
-export const createNodeMaterialFromType: (type: string) => NodeMaterial;
+export function addNodeMaterial(type: string, nodeMaterial: typeof NodeMaterial): void;
+export function createNodeMaterialFromType(type: string): NodeMaterial;
