@@ -10,10 +10,7 @@ import { Color } from "../../math/Color.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
-import MRTNode from "../../nodes/core/MRTNode.js";
-import Node from "../../nodes/core/Node.js";
-import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
-import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { ComputeNode, LightsNode, MRTNode } from "../../nodes/Nodes.js";
 import { Scene } from "../../scenes/Scene.js";
 import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import { Texture } from "../../textures/Texture.js";
@@ -39,11 +36,14 @@ import Textures from "./Textures.js";
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
+    antialias?: boolean | undefined;
+    samples?: number | undefined;
 }
 declare class Renderer {
     readonly isRenderer: true;
     domElement: HTMLCanvasElement;
     backend: Backend;
+    samples: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -58,7 +58,6 @@ declare class Renderer {
     stencil: boolean;
     clippingPlanes: readonly Plane[];
     info: Info;
-    toneMappingNode: Node | null;
     _pixelRatio: number;
     _width: number;
     _height: number;

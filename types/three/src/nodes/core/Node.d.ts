@@ -101,7 +101,6 @@ declare class Node extends EventDispatcher<{
     getNodeType(builder: NodeBuilder): string | null;
     getShared(builder: NodeBuilder): Node;
     setup(builder: NodeBuilder): unknown;
-    construct(builder: NodeBuilder): unknown;
     increaseUsage(builder: NodeBuilder): number;
     analyze(builder: NodeBuilder): void;
     generate(builder: NodeBuilder, output?: string | null): string | null | undefined;

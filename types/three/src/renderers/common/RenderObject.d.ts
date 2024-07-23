@@ -5,7 +5,7 @@ import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
 import { Material } from "../../materials/Material.js";
-import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { LightsNode } from "../../nodes/Nodes.js";
 import { Scene } from "../../scenes/Scene.js";
 import BindGroup from "./BindGroup.js";
 import ClippingContext from "./ClippingContext.js";
