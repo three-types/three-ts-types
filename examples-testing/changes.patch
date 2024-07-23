@@ -14672,6 +14672,39 @@ index 432d641a..1434cc30 100644
  
  const params = {
      distanceExponent: 1,
+diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
+index d38a7abb..80478cf8 100644
+--- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
++++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, bloom } from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+@@ -7,8 +7,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, stats;
+-let postProcessing, renderer, mixer, clock;
++let camera: THREE.PerspectiveCamera, stats: Stats;
++let postProcessing: THREE.PostProcessing,
++    renderer: THREE.WebGPURenderer,
++    mixer: THREE.AnimationMixer,
++    clock: THREE.Clock;
+ 
+ const params = {
+     threshold: 0,
+@@ -20,7 +23,7 @@ const params = {
+ init();
+ 
+ async function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     clock = new THREE.Clock();
+ 
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
 index 3fb4046b..785a78f8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
