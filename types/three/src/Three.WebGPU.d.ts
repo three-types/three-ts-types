@@ -104,6 +104,7 @@ export * from "./math/interpolants/LinearInterpolant.js";
 export * from "./math/interpolants/QuaternionLinearInterpolant.js";
 export * from "./math/Line3.js";
 export { MathUtils } from "./math/MathUtils.js";
+export * from "./math/Matrix2.js";
 export * from "./math/Matrix3.js";
 export * from "./math/Matrix4.js";
 export * from "./math/Plane.js";

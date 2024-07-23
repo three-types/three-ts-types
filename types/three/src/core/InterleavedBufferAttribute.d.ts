@@ -1,4 +1,4 @@
-import { Matrix3 } from '../math/Matrix3.js';
+import { Matrix3 } from "../math/Matrix3.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { BufferAttribute, TypedArray } from "./BufferAttribute.js";
 import { InterleavedBuffer } from "./InterleavedBuffer.js";

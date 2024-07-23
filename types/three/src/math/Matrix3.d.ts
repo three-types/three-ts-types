@@ -20,6 +20,12 @@ export class Matrix3 {
     readonly isMatrix3: true;
 
     /**
+     * Array with matrix values.
+     * @default [1, 0, 0, 0, 1, 0, 0, 0, 1]
+     */
+    elements: Matrix3Tuple;
+
+    /**
      * Creates an identity matrix.
      */
     constructor();
@@ -37,12 +43,6 @@ export class Matrix3 {
         n32: number,
         n33: number,
     );
-
-    /**
-     * Array with matrix values.
-     * @default [1, 0, 0, 0, 1, 0, 0, 0, 1]
-     */
-    elements: number[];
 
     set(
         n11: number,
