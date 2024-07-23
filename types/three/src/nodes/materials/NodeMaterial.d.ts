@@ -12,6 +12,7 @@ import { ShadowMaterial } from "../../materials/ShadowMaterial.js";
 import { SpriteMaterial } from "../../materials/SpriteMaterial.js";
 import ClippingNode from "../accessors/ClippingNode.js";
 import LightingModel from "../core/LightingModel.js";
+import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import LightsNode from "../lighting/LightsNode.js";
@@ -77,7 +78,7 @@ export default class NodeMaterial extends Material {
     shadowPositionNode: Node | null;
 
     outputNode: Node | null;
-    mrtNode: Node | null;
+    mrtNode: MRTNode | null;
 
     fragmentNode: Node | null;
     vertexNode: Node | null;

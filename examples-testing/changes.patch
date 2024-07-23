@@ -14705,6 +14705,52 @@ index d38a7abb..80478cf8 100644
  
      clock = new THREE.Clock();
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
+index 97186836..583a9eb3 100644
+--- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
++++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, mrt, output, emissive } from 'three/tsl';
+ 
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+@@ -8,8 +8,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let postProcessing: THREE.PostProcessing;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
+index 7140a8ad..a2dae285 100644
+--- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
++++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
+@@ -1,5 +1,5 @@
+-import * as THREE from 'three';
+-import { pass, mrt, output, float, uniform } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { pass, mrt, output, float, uniform, UniformNode } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+@@ -84,9 +84,10 @@ window.addEventListener('pointerdown', event => {
+     const intersects = raycaster.intersectObjects(scene.children, false);
+ 
+     if (intersects.length > 0) {
+-        const material = intersects[0].object.material;
++        const material = (intersects[0].object as THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicNodeMaterial>)
++            .material;
+ 
+-        const bloomIntensity = material.mrtNode.getNode('bloomIntensity');
++        const bloomIntensity = material.mrtNode!.getNode('bloomIntensity') as UniformNode<number>;
+         bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
+     }
+ });
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
 index 3fb4046b..785a78f8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
