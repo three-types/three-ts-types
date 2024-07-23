@@ -329,6 +329,7 @@ export { default as RenderOutputNode, renderOutput } from "./display/RenderOutpu
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
 export { default as SobelOperatorNode, sobel } from "./display/SobelOperatorNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
+export { default as TransitionNode, transition } from "./display/TransitionNode.js";
 export {
     default as ViewportDepthNode,
     depth,
