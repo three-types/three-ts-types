@@ -33,7 +33,6 @@ export const hue: (
     adjustmentNode?: NodeRepresentation,
 ) => ShaderNodeObject<ColorAdjustmentNode>;
 
-export const lumaCoeffs: ShaderNodeObject<MathNode>;
 export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
 export const threshold: (color: NodeRepresentation, thershold: NodeRepresentation) => ShaderNodeObject<MathNode>;
