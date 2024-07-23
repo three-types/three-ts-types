@@ -58,6 +58,8 @@ export interface NodeMaterialParameters extends MaterialParameters {
 export default class NodeMaterial extends Material {
     readonly isNodeMaterial: true;
 
+    fog: boolean;
+    lights: boolean;
     normals: boolean;
 
     lightsNode: LightsNode | null;
