@@ -300,7 +300,6 @@ export {
     ColorAdjustmentMethod,
     default as ColorAdjustmentNode,
     hue,
-    lumaCoeffs,
     luminance,
     saturation,
     threshold,
