@@ -12,6 +12,7 @@ import { ShadowMaterial } from "../../materials/ShadowMaterial.js";
 import { SpriteMaterial } from "../../materials/SpriteMaterial.js";
 import ClippingNode from "../accessors/ClippingNode.js";
 import LightingModel from "../core/LightingModel.js";
+import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import LightsNode from "../lighting/LightsNode.js";
@@ -26,7 +27,6 @@ import MeshToonNodeMaterial from "./MeshToonNodeMaterial.js";
 import PointsNodeMaterial from "./PointsNodeMaterial.js";
 import ShadowNodeMaterial from "./ShadowNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
-import MRTNode from "../core/MRTNode.js";
 
 export interface NodeMaterialParameters extends MaterialParameters {
     normals?: boolean | undefined;
