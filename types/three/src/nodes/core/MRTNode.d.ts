@@ -9,6 +9,8 @@ declare class MRTNode extends OutputStructNode {
 
     constructor(outputNodes: { [name: string]: Node });
 
+    getNode(name: string): Node;
+
     merge(mrtNode: MRTNode): ShaderNodeObject<MRTNode>;
 }
 
