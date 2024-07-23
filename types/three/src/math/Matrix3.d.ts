@@ -16,52 +16,7 @@ export type Matrix3Tuple = [
     n33: number,
 ];
 
-/**
- * ( interface Matrix<T> )
- */
-export interface Matrix {
-    /**
-     * Array with matrix values.
-     */
-    elements: number[];
-
-    /**
-     * identity():T;
-     */
-    identity(): Matrix;
-
-    /**
-     * copy(m:T):T;
-     */
-    copy(m: this): this;
-
-    /**
-     * multiplyScalar(s:number):T;
-     */
-    multiplyScalar(s: number): Matrix;
-
-    determinant(): number;
-
-    /**
-     * transpose():T;
-     */
-    transpose(): Matrix;
-
-    /**
-     * invert():T;
-     */
-    invert(): Matrix;
-
-    /**
-     * clone():T;
-     */
-    clone(): Matrix;
-}
-
-/**
- * ( class Matrix3 implements Matrix<Matrix3> )
- */
-export class Matrix3 implements Matrix {
+export class Matrix3 {
     readonly isMatrix3: true;
 
     /**
@@ -100,34 +55,68 @@ export class Matrix3 implements Matrix {
         n32: number,
         n33: number,
     ): Matrix3;
-    identity(): Matrix3;
-    clone(): this;
+
+    identity(): this;
+
     copy(m: Matrix3): this;
-    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): Matrix3;
+
+    extractBasis(xAxis: Vector3, yAxis: Vector3, zAxis: Vector3): this;
+
     setFromMatrix4(m: Matrix4): Matrix3;
-    multiplyScalar(s: number): Matrix3;
+
+    /**
+     * Multiplies this matrix by m.
+     */
+    multiply(m: Matrix3): this;
+
+    premultiply(m: Matrix3): this;
+
+    /**
+     * Sets this matrix to a x b.
+     */
+    multiplyMatrices(a: Matrix3, b: Matrix3): this;
+
+    multiplyScalar(s: number): this;
+
     determinant(): number;
 
     /**
      * Inverts this matrix in place.
      */
-    invert(): Matrix3;
+    invert(): this;
 
     /**
      * Transposes this matrix in place.
      */
-    transpose(): Matrix3;
-    getNormalMatrix(matrix4: Matrix4): Matrix3;
+    transpose(): this;
+
+    getNormalMatrix(matrix4: Matrix4): this;
 
     /**
      * Transposes this matrix into the supplied array r, and returns itself.
      */
-    transposeIntoArray(r: number[]): Matrix3;
+    transposeIntoArray(r: number[]): this;
 
-    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): Matrix3;
+    setUvTransform(tx: number, ty: number, sx: number, sy: number, rotation: number, cx: number, cy: number): this;
 
-    scale(sx: number, sy: number): Matrix3;
+    scale(sx: number, sy: number): this;
 
+    rotate(theta: number): this;
+
+    translate(tx: number, ty: number): this;
+
+    /**
+     * Sets this matrix as a 2D translation transform:
+     *
+     * ```
+     * 1, 0, x,
+     * 0, 1, y,
+     * 0, 0, 1
+     * ```
+     *
+     * @param v the amount to translate.
+     */
+    makeTranslation(v: Vector2): this;
     /**
      * Sets this matrix as a 2D translation transform:
      *
@@ -140,7 +129,6 @@ export class Matrix3 implements Matrix {
      * @param x the amount to translate in the X axis.
      * @param y the amount to translate in the Y axis.
      */
-    makeTranslation(v: Vector2): this;
     makeTranslation(x: number, y: number): this;
 
     /**
@@ -155,7 +143,6 @@ export class Matrix3 implements Matrix {
      * @param theta Rotation angle in radians. Positive values rotate counterclockwise.
      */
     makeRotation(theta: number): this;
-    makeRotation(theta: number): Matrix3;
 
     /**
      * Sets this matrix as a 2D scale transform:
@@ -170,11 +157,6 @@ export class Matrix3 implements Matrix {
      * @param y the amount to scale in the Y axis.
      */
     makeScale(x: number, y: number): this;
-    makeScale(x: number, y: number): Matrix3;
-
-    rotate(theta: number): Matrix3;
-
-    translate(tx: number, ty: number): Matrix3;
 
     equals(matrix: Matrix3): boolean;
 
@@ -183,7 +165,7 @@ export class Matrix3 implements Matrix {
      * @param array the source array or array-like.
      * @param offset (optional) offset into the array-like. Default is 0.
      */
-    fromArray(array: number[] | ArrayLike<number>, offset?: number): Matrix3;
+    fromArray(array: number[] | ArrayLike<number>, offset?: number): this;
 
     /**
      * Returns an array with the values of this matrix, or copies them into the provided array.
@@ -202,36 +184,5 @@ export class Matrix3 implements Matrix {
      */
     toArray(array?: ArrayLike<number>, offset?: number): ArrayLike<number>;
 
-    /**
-     * Multiplies this matrix by m.
-     */
-    multiply(m: Matrix3): Matrix3;
-
-    premultiply(m: Matrix3): Matrix3;
-
-    /**
-     * Sets this matrix to a x b.
-     */
-    multiplyMatrices(a: Matrix3, b: Matrix3): Matrix3;
-
-    /**
-     * @deprecated Use {@link Vector3.applyMatrix3 vector.applyMatrix3( matrix )} instead.
-     */
-    multiplyVector3(vector: Vector3): any;
-
-    /**
-     * @deprecated This method has been removed completely.
-     */
-    multiplyVector3Array(a: any): any;
-
-    /**
-     * @deprecated Use {@link Matrix3#invert .invert()} instead.
-     */
-    getInverse(matrix: Matrix4, throwOnDegenerate?: boolean): Matrix3;
-    getInverse(matrix: Matrix): Matrix;
-
-    /**
-     * @deprecated Use {@link Matrix3#toArray .toArray()} instead.
-     */
-    flattenToArrayOffset(array: number[], offset: number): number[];
+    clone(): this;
 }
