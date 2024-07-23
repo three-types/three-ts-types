@@ -123,6 +123,8 @@ declare class Renderer {
     _initialized: boolean;
     _initPromise: Promise<void> | null;
     _compilationPromises: Promise<void>[] | null;
+    transparent: boolean;
+    opaque: boolean;
     shadowMap: {
         enabled: boolean;
         type: ShadowMapType | null;
