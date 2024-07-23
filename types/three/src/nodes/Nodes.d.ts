@@ -295,6 +295,7 @@ export { default as VertexColorNode, vertexColor } from "./accessors/VertexColor
 export { afterImage, default as AfterImageNode } from "./display/AfterImageNode.js";
 export { anamorphic, default as AnamorphicNode } from "./display/AnamorphicNode.js";
 export { BlendMode, burn, default as BlendModeNode, dodge, overlay, screen } from "./display/BlendModeNode.js";
+export { bloom, default as BloomNode } from "./display/BloomNode.js";
 export {
     ColorAdjustmentMethod,
     default as ColorAdjustmentNode,
