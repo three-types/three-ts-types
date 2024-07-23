@@ -26,6 +26,7 @@ import MeshToonNodeMaterial from "./MeshToonNodeMaterial.js";
 import PointsNodeMaterial from "./PointsNodeMaterial.js";
 import ShadowNodeMaterial from "./ShadowNodeMaterial.js";
 import SpriteNodeMaterial from "./SpriteNodeMaterial.js";
+import MRTNode from "../core/MRTNode.js";
 
 export interface NodeMaterialParameters extends MaterialParameters {
     normals?: boolean | undefined;
@@ -77,7 +78,7 @@ export default class NodeMaterial extends Material {
     shadowPositionNode: Node | null;
 
     outputNode: Node | null;
-    mrtNode: Node | null;
+    mrtNode: MRTNode | null;
 
     fragmentNode: Node | null;
     vertexNode: Node | null;
