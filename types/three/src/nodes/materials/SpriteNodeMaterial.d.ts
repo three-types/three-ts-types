@@ -2,6 +2,7 @@ import { SpriteMaterialParameters } from "../../materials/SpriteMaterial.js";
 import { Color } from "../../math/Color.js";
 import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface SpriteNodeMaterialParameters extends NodeMaterialParameters, SpriteMaterialParameters {
@@ -10,8 +11,8 @@ export interface SpriteNodeMaterialParameters extends NodeMaterialParameters, Sp
 export default class SpriteNodeMaterial extends NodeMaterial {
     isSpriteNodeMaterial: true;
 
-    rotationNode: Node | null;
-    scaleNode: Node | null;
+    rotationNode: ShaderNodeObject<Node> | null;
+    scaleNode: ShaderNodeObject<Node> | null;
 
     // Properties from SpriteMaterial
     readonly isSpriteMaterial: true;
