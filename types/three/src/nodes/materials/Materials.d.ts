@@ -8,7 +8,7 @@ export { default as MeshPhysicalNodeMaterial } from "./MeshPhysicalNodeMaterial.
 export { default as MeshSSSPhysicalNodeMaterial } from "./MeshSSSNodeMaterial.js";
 export { default as MeshStandardNodeMaterial } from "./MeshStandardNodeMaterial.js";
 export { default as MeshToonNodeMaterial } from "./MeshToonNodeMaterial.js";
-export { default as NodeMaterial } from "./NodeMaterial.js";
+export { default as NodeMaterial, addNodeMaterial, createNodeMaterialFromType } from "./NodeMaterial.js";
 export { default as PointsNodeMaterial } from "./PointsNodeMaterial.js";
 export { default as ShadowNodeMaterial } from "./ShadowNodeMaterial.js";
 export { default as SpriteNodeMaterial } from "./SpriteNodeMaterial.js";
