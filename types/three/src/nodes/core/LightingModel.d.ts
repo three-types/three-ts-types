@@ -13,7 +13,6 @@ export interface LightingModelDirectInput {
     lightDirection: Node;
     lightColor: Node;
     reflectedLight: LightingModelReflectedLight;
-    shadowMask: Node;
 }
 
 export interface LightingModelDirectRectAreaInput {
