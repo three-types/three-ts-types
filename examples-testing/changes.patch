@@ -14476,7 +14476,7 @@ index d83642f2..96b1bc0e 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index 60cf0aee..bdb25087 100644
+index 9d4ffa6e..bdb25087 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 @@ -1,20 +1,30 @@
@@ -14558,29 +14558,25 @@ index 60cf0aee..bdb25087 100644
      }
  
      renderer = new THREE.WebGPURenderer();
-@@ -97,9 +111,8 @@ async function init() {
+@@ -97,7 +111,7 @@ async function init() {
      const scenePass = pass(scene, camera);
      const outputPass = renderOutput(scenePass);
  
--    lutPass = outputPass.lut3D();
--    lutPass.lutNode = texture3D(lutMap[params.lut]);
--    lutPass.intensityNode = uniform(1);
+-    const lut = lutMap[params.lut];
 +    const lut = lutMap[params.lut] as LUTCubeResult | LUT3dlResult | LUTImageResult;
-+    lutPass = outputPass.lut3D(texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
+     lutPass = outputPass.lut3D(texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
  
      postProcessing.outputNode = lutPass;
- 
-@@ -112,8 +125,7 @@ async function init() {
+@@ -111,7 +125,7 @@ async function init() {
      controls.update();
  
      gui = new GUI();
--    gui.width = 350;
 -    gui.add(params, 'lut', Object.keys(lutMap));
 +    gui.add(params, 'lut', Object.keys(lutMap) as (keyof typeof lutMap)[]);
      gui.add(params, 'intensity').min(0).max(1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -129,11 +141,11 @@ function onWindowResize() {
+@@ -127,11 +141,11 @@ function onWindowResize() {
  //
  
  function animate() {
@@ -14818,7 +14814,7 @@ index 5e75fa7a..dfebe406 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index 731c8253..eb8bd63d 100644
+index d7e51008..a9decd46 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
 @@ -1,12 +1,23 @@
@@ -14858,8 +14854,8 @@ index 731c8253..eb8bd63d 100644
 +    function addBox(boxSideLength: number, x: number, z: number, rotation: number) {
          const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
          mesh.castShadow = true;
-         //mesh.receiveShadow = true;
-@@ -170,7 +181,7 @@ function animate() {
+         mesh.receiveShadow = true;
+@@ -172,7 +183,7 @@ function animate() {
  
  // Helper functions
  
@@ -14868,7 +14864,7 @@ index 731c8253..eb8bd63d 100644
      texture.minFilter = THREE.NearestFilter;
      texture.magFilter = THREE.NearestFilter;
      texture.generateMipmaps = false;
-@@ -180,25 +191,30 @@ function pixelTexture(texture) {
+@@ -182,25 +193,30 @@ function pixelTexture(texture) {
      return texture;
  }
  
