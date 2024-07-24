@@ -27,7 +27,7 @@ interface NodeJSONInputNodes {
         | string
         | undefined;
 }
-interface NodeJSONInputData {
+export interface NodeJSONInputData {
     inputNodes?: NodeJSONInputNodes | undefined;
     meta: {
         textures: {
@@ -38,13 +38,7 @@ interface NodeJSONInputData {
         };
     };
 }
-interface NodeJSONInputData {
-    uuid: string;
-    type: string | undefined;
-    metadata?: NodeJSONMetadata;
-    inputNodes?: NodeJSONInputNodes | undefined;
-}
-interface NodeJSONIntermediateOutputData {
+export interface NodeJSONIntermediateOutputData {
     uuid: string;
     type: string | undefined;
     meta?: NodeJSONMeta | undefined;
