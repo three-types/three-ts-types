@@ -70,7 +70,7 @@ export default class RenderObject {
     getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
     getMaterialCacheKey(): string;
     get needsUpdate(): boolean;
-    getNodesCacheKey(): string;
+    getDynamicCacheKey(): string;
     getCacheKey(): string;
     dispose(): void;
 }
