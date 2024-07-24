@@ -167,7 +167,7 @@ index e4a040de..c52771e6 100644
  addNodeElement('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
  
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 7776961e..dda0a381 100644
+index 163e3ccc..e5516cc2 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -3,15 +3,41 @@ import { uv } from './UVNode.js';
@@ -541,10 +541,10 @@ index 4d52ec26..5987158d 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index e67dcb70..1d7ebdc1 100644
+index e67dcb70..0562802d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -3,13 +3,98 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
+@@ -3,13 +3,91 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
@@ -584,7 +584,7 @@ index e67dcb70..1d7ebdc1 100644
 +        | undefined;
 +}
 +
-+interface NodeJSONInputData {
++export interface NodeJSONInputData {
 +    inputNodes?: NodeJSONInputNodes | undefined;
 +    meta: {
 +        textures: { [key: string]: unknown };
@@ -592,14 +592,7 @@ index e67dcb70..1d7ebdc1 100644
 +    };
 +}
 +
-+interface NodeJSONInputData {
-+    uuid: string;
-+    type: string | undefined;
-+    metadata?: NodeJSONMetadata;
-+    inputNodes?: NodeJSONInputNodes | undefined;
-+}
-+
-+interface NodeJSONIntermediateOutputData {
++export interface NodeJSONIntermediateOutputData {
 +    uuid: string;
 +    type: string | undefined;
 +    meta?: NodeJSONMeta | undefined;
@@ -646,7 +639,7 @@ index e67dcb70..1d7ebdc1 100644
          super();
  
          this.nodeType = nodeType;
-@@ -32,36 +117,36 @@ class Node extends EventDispatcher {
+@@ -32,36 +110,36 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -690,7 +683,7 @@ index e67dcb70..1d7ebdc1 100644
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
-@@ -73,11 +158,11 @@ class Node extends EventDispatcher {
+@@ -73,11 +151,11 @@ class Node extends EventDispatcher {
          return this.self || this;
      }
  
@@ -704,7 +697,7 @@ index e67dcb70..1d7ebdc1 100644
          return this.global;
      }
  
-@@ -91,7 +176,7 @@ class Node extends EventDispatcher {
+@@ -91,7 +169,7 @@ class Node extends EventDispatcher {
          this.dispatchEvent({ type: 'dispose' });
      }
  
@@ -713,7 +706,7 @@ index e67dcb70..1d7ebdc1 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -110,7 +195,7 @@ class Node extends EventDispatcher {
+@@ -110,7 +188,7 @@ class Node extends EventDispatcher {
          return this._cacheKey;
      }
  
@@ -722,7 +715,7 @@ index e67dcb70..1d7ebdc1 100644
          return this.uuid;
      }
  
-@@ -126,14 +211,14 @@ class Node extends EventDispatcher {
+@@ -126,14 +204,14 @@ class Node extends EventDispatcher {
          return this.updateAfterType;
      }
  
@@ -739,7 +732,7 @@ index e67dcb70..1d7ebdc1 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -143,34 +228,34 @@ class Node extends EventDispatcher {
+@@ -143,34 +221,34 @@ class Node extends EventDispatcher {
          return this.nodeType;
      }
  
@@ -779,7 +772,7 @@ index e67dcb70..1d7ebdc1 100644
          const usageCount = this.increaseUsage(builder);
  
          if (usageCount === 1) {
-@@ -179,14 +264,14 @@ class Node extends EventDispatcher {
+@@ -179,14 +257,14 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -797,7 +790,7 @@ index e67dcb70..1d7ebdc1 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -194,19 +279,19 @@ class Node extends EventDispatcher {
+@@ -194,19 +272,19 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -821,7 +814,7 @@ index e67dcb70..1d7ebdc1 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -241,8 +326,8 @@ class Node extends EventDispatcher {
+@@ -241,8 +319,8 @@ class Node extends EventDispatcher {
                  }
  
                  for (const childNode of Object.values(properties)) {
@@ -832,7 +825,7 @@ index e67dcb70..1d7ebdc1 100644
                      }
                  }
              }
-@@ -278,10 +363,10 @@ class Node extends EventDispatcher {
+@@ -278,10 +356,10 @@ class Node extends EventDispatcher {
          return getNodeChildren(this);
      }
  
@@ -845,7 +838,7 @@ index e67dcb70..1d7ebdc1 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -289,7 +374,9 @@ class Node extends EventDispatcher {
+@@ -289,7 +367,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -856,7 +849,7 @@ index e67dcb70..1d7ebdc1 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -300,39 +387,39 @@ class Node extends EventDispatcher {
+@@ -300,39 +380,39 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -907,7 +900,7 @@ index e67dcb70..1d7ebdc1 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -341,18 +428,18 @@ class Node extends EventDispatcher {
+@@ -341,18 +421,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -929,7 +922,7 @@ index e67dcb70..1d7ebdc1 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -360,7 +447,7 @@ class Node extends EventDispatcher {
+@@ -360,7 +440,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -938,7 +931,7 @@ index e67dcb70..1d7ebdc1 100644
  
              this.serialize(data);
  
-@@ -369,12 +456,12 @@ class Node extends EventDispatcher {
+@@ -369,12 +449,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -953,7 +946,7 @@ index e67dcb70..1d7ebdc1 100644
                  values.push(data);
              }
  
-@@ -382,9 +469,9 @@ class Node extends EventDispatcher {
+@@ -382,9 +462,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -966,7 +959,7 @@ index e67dcb70..1d7ebdc1 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -397,7 +484,7 @@ class Node extends EventDispatcher {
+@@ -397,7 +477,7 @@ class Node extends EventDispatcher {
  
  export default Node;
  
@@ -975,7 +968,7 @@ index e67dcb70..1d7ebdc1 100644
      if (typeof nodeClass !== 'function' || !type) throw new Error(`Node class ${type} is not a class`);
      if (NodeClasses.has(type)) {
          console.warn(`Redefinition of node class ${type}`);
-@@ -405,10 +492,10 @@ export function addNodeClass(type, nodeClass) {
+@@ -405,10 +485,10 @@ export function addNodeClass(type, nodeClass) {
      }
  
      NodeClasses.set(type, nodeClass);
@@ -2366,10 +2359,12 @@ index 69718799..e7574a1c 100644
  
          this.types = types;
 diff --git a/src-testing/src/nodes/core/UniformGroupNode.ts b/src-testing/src/nodes/core/UniformGroupNode.ts
-index f8bb2b37..cee70486 100644
+index 4a4eed22..e6f0c124 100644
 --- a/src-testing/src/nodes/core/UniformGroupNode.ts
 +++ b/src-testing/src/nodes/core/UniformGroupNode.ts
-@@ -2,6 +2,13 @@ import Node from './Node.js';
+@@ -1,7 +1,14 @@
+-import Node from './Node.js';
++import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData } from './Node.js';
  import { addNodeClass } from './Node.js';
  
  class UniformGroupNode extends Node {
@@ -2383,7 +2378,7 @@ index f8bb2b37..cee70486 100644
      constructor(name, shared = false) {
          super('string');
  
-@@ -13,7 +20,7 @@ class UniformGroupNode extends Node {
+@@ -13,11 +20,11 @@ class UniformGroupNode extends Node {
          this.isUniformGroup = true;
      }
  
@@ -2391,7 +2386,21 @@ index f8bb2b37..cee70486 100644
 +    set needsUpdate(value: boolean) {
          if (value === true) this.version++;
      }
- }
+ 
+-    serialize(data) {
++    serialize(data: NodeJSONIntermediateOutputData) {
+         super.serialize(data);
+ 
+         data.name = this.name;
+@@ -25,7 +32,7 @@ class UniformGroupNode extends Node {
+         data.shared = this.shared;
+     }
+ 
+-    deserialize(data) {
++    deserialize(data: NodeJSONInputData) {
+         super.deserialize(data);
+ 
+         this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
 index 41e523c4..a0c2ae45 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
@@ -6669,7 +6678,7 @@ index d2d92cb2..c022f814 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 54af368d..01355bb0 100644
+index a162ac89..d43ca101 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,25 +15,78 @@ import {
