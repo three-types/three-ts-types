@@ -277,7 +277,7 @@ export class Matrix4 {
     /**
      * Writes the elements of this matrix to an array in
      * {@link https://en.wikipedia.org/wiki/Row-_and_column-major_order#Column-major_order column-major} format.
-     * @param array (optional) array to store the resulting vector in.
+     * @param array array to store the resulting vector in.
      * @param offset (optional) offset in the array at which to put the result.
      */
     toArray<TArray extends ArrayLike<number>>(array: TArray, offset?: number): TArray;
