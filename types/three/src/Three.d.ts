@@ -157,6 +157,7 @@ export type {
     XRJointSpace,
     XRTargetRaySpace,
 } from "./renderers/webxr/WebXRController.js";
+export * from "./renderers/webxr/WebXRManager.js";
 export * from "./scenes/Fog.js";
 export * from "./scenes/FogExp2.js";
 export * from "./scenes/Scene.js";
