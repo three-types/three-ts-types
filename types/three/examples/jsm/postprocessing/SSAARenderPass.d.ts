@@ -8,9 +8,9 @@ export class SSAARenderPass extends Pass {
     camera: Camera;
     sampleLevel: number;
     unbiased: boolean;
+    stencilBuffer: boolean;
     clearColor: ColorRepresentation;
     clearAlpha: number;
-    stencilBuffer: boolean;
     copyUniforms: object;
     copyMaterial: ShaderMaterial;
     fsQuad: FullScreenQuad;
