@@ -1,6 +1,12 @@
 import { Camera, EventDispatcher, Vector3 } from "three";
 
-export class PointerLockControls extends EventDispatcher {
+export interface PointerLockControlsEventMap {
+    change: {};
+    lock: {};
+    unlock: {};
+}
+
+export class PointerLockControls extends EventDispatcher<PointerLockControlsEventMap> {
     constructor(camera: Camera, domElement?: HTMLElement);
 
     camera: Camera;
