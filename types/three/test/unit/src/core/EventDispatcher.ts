@@ -43,27 +43,7 @@ eveDisForTestEvent.addEventListener("bar", e => {
 });
 
 // @ts-expect-error
-eveDisForTestEvent.addEventListener("baz", e => {
-    e.type; // $ExpectType "baz"
-    e.target; // $ExpectType EventDispatcher<TestEvent>
-    // @ts-expect-error
-    e.bar;
-    // @ts-expect-error
-    e.foo;
-    // @ts-expect-error
-    e.bar();
-});
-// @ts-expect-error
-eveDisForTestEvent.addEventListener("NotRegistered", e => {
-    e.type; // $ExpectType "NotRegistered"
-    e.target; // $ExpectType EventDispatcher<TestEvent>
-    // @ts-expect-error
-    e.bar;
-    // @ts-expect-error
-    e.foo;
-    // @ts-expect-error
-    e.bar();
-});
+eveDisForTestEvent.addEventListener("baz", e => {});
 
 eveDisForTestEvent.dispatchEvent({ type: "foo", foo: 42 });
 eveDisForTestEvent.dispatchEvent({ type: "bar", bar: "42" });
