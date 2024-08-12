@@ -42,7 +42,7 @@ eveDisForTestEvent.addEventListener("bar", e => {
     e.foo;
 });
 
-// call addEventListener with an unknown event. The typing should allow you listen any unknown event.
+// @ts-expect-error
 eveDisForTestEvent.addEventListener("baz", e => {
     e.type; // $ExpectType "baz"
     e.target; // $ExpectType EventDispatcher<TestEvent>
@@ -53,6 +53,7 @@ eveDisForTestEvent.addEventListener("baz", e => {
     // @ts-expect-error
     e.bar();
 });
+// @ts-expect-error
 eveDisForTestEvent.addEventListener("NotRegistered", e => {
     e.type; // $ExpectType "NotRegistered"
     e.target; // $ExpectType EventDispatcher<TestEvent>
