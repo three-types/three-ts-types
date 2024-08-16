@@ -15199,29 +15199,13 @@ index 6a8747fe..58799580 100644
      });
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index 890cc697..8526c7db 100644
+index 8e187897..82b68225 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-@@ -1,9 +1,32 @@
+@@ -1,9 +1,17 @@
 -import * as THREE from 'three';
--import { PI2, dot, sin, step, texture, timerLocal, tslFn, uv, vec2, vec3, vec4, mix } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import {
-+    PI2,
-+    dot,
-+    sin,
-+    step,
-+    texture,
-+    timerLocal,
-+    tslFn,
-+    uv,
-+    vec2,
-+    vec3,
-+    vec4,
-+    mix,
-+    Node,
-+    ShaderNodeObject,
-+} from 'three/tsl';
+ import { PI2, spherizeUV, sin, step, texture, timerLocal, tslFn, uv, vec2, vec3, vec4, mix } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15238,36 +15222,12 @@ index 890cc697..8526c7db 100644
  
  init();
  
-@@ -23,21 +46,28 @@ function init() {
- 
-     // TSL functions
- 
--    const spherizeUv = tslFn(([input, center, strength, offset]) => {
--        const delta = input.sub(center);
--        const delta2 = dot(delta, delta);
--        const delta4 = delta2.mul(delta2);
--        const deltaOffset = delta4.mul(strength);
--        return input.add(delta.mul(deltaOffset)).add(offset);
--    });
-+    const spherizeUv = tslFn(
-+        ([input, center, strength, offset]: [
-+            ShaderNodeObject<Node>,
-+            ShaderNodeObject<Node>,
-+            ShaderNodeObject<Node>,
-+            ShaderNodeObject<Node>,
-+        ]) => {
-+            const delta = input.sub(center);
-+            const delta2 = dot(delta, delta);
-+            const delta4 = delta2.mul(delta2);
-+            const deltaOffset = delta4.mul(strength);
-+            return input.add(delta.mul(deltaOffset)).add(offset);
-+        },
-+    );
+@@ -23,11 +31,11 @@ function init() {
  
      // gradient canvas
  
 -    const gradient = {};
-+    const gradient: Gradient = {} as Gradient;
++    const gradient = {} as Gradient;
      gradient.element = document.createElement('canvas');
      gradient.element.width = 128;
      gradient.element.height = 1;
