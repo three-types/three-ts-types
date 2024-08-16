@@ -286,7 +286,7 @@ export * from "./accessors/TangentNode.js";
 export { default as Texture3DNode, texture3D } from "./accessors/Texture3DNode.js";
 export { default as TextureBicubicNode, textureBicubic } from "./accessors/TextureBicubicNode.js";
 export { default as TextureNode, sampler, texture } from "./accessors/TextureNode.js";
-export { default as UniformsNode, uniforms } from "./accessors/UniformsNode.js";
+export { default as UniformArrayNode, uniformArray } from "./accessors/UniformArrayNode.js";
 export { default as UserDataNode, userData } from "./accessors/UserDataNode.js";
 export * from "./accessors/UVNode.js";
 export { default as VertexColorNode, vertexColor } from "./accessors/VertexColorNode.js";
