@@ -15170,6 +15170,34 @@ index e8ebe87d..9fae06bd 100644
      const size = texture.image.width * texture.image.height;
      const data = texture.image.data;
  
+diff --git a/examples-testing/examples/webgpu_tsl_coffee_smoke.ts b/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
+index 6a8747fe..58799580 100644
+--- a/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
++++ b/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
+@@ -1,10 +1,10 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { mix, mul, positionLocal, smoothstep, texture, timerLocal, tslFn, uv, vec2, vec3, vec4 } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+ 
+ init();
+ 
+@@ -22,7 +22,9 @@ function init() {
+     // baked model
+ 
+     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
+-        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
++        (
++            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
++        ).material.map!.anisotropy = 8;
+         scene.add(gltf.scene);
+     });
+ 
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 index 890cc697..8526c7db 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
@@ -15734,26 +15762,3 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/nodes/core/VarNode.d.ts b/types/three/src/nodes/core/VarNode.d.ts
-index 9e4bdcd2..b5de30a2 100644
---- a/types/three/src/nodes/core/VarNode.d.ts
-+++ b/types/three/src/nodes/core/VarNode.d.ts
-@@ -1,4 +1,3 @@
--import { OperatorNodeOp } from "../math/OperatorNode.js";
- import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
- import Node from "./Node.js";
- 
-@@ -9,13 +8,6 @@ export default class VarNode extends Node {
-     readonly isVarNode: true;
- 
-     constructor(node: Node, name?: string | null);
--
--    op(op: OperatorNodeOp, ...params: Node[]): this;
--    assign(...params: Node[]): this;
--    add(...params: Node[]): this;
--    sub(...params: Node[]): this;
--    mul(...params: Node[]): this;
--    div(...params: Node[]): this;
- }
- 
- export const temp: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<VarNode>;
