@@ -14,7 +14,6 @@ import {
     OperatorNode,
     OscNode,
     PropertyNode,
-    RotateUVNode,
     ShaderNode,
     ShaderNodeObject,
     Swizzable,
@@ -33,10 +32,6 @@ const aa = nodeArray([1, 2, "hello"]);
 aa[0].xy = s;
 aa[1].w = s;
 aa[2] = "hello";
-
-export const rotateUV = nodeProxy(RotateUVNode);
-
-assertSwizzable<RotateUVNode>(rotateUV(s, s, s));
 
 const oscNode0 = nodeProxy(OscNode);
 assertSwizzable<OscNode>(oscNode0("sawtooth", s));
