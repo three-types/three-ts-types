@@ -13311,7 +13311,7 @@ index d0255e43..c924d666 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index fab3ee88..434b816f 100644
+index 208bb15e..ad6da1e5 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -1,4 +1,4 @@
@@ -13331,7 +13331,7 @@ index fab3ee88..434b816f 100644
  
  init();
  
-@@ -128,13 +128,13 @@ function init() {
+@@ -135,13 +135,13 @@ function init() {
      };
  
      const gui = new GUI();
@@ -15170,6 +15170,84 @@ index e8ebe87d..9fae06bd 100644
      const size = texture.image.width * texture.image.height;
      const data = texture.image.data;
  
+diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
+index 890cc697..8526c7db 100644
+--- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
++++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
+@@ -1,9 +1,32 @@
+-import * as THREE from 'three';
+-import { PI2, dot, sin, step, texture, timerLocal, tslFn, uv, vec2, vec3, vec4, mix } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import {
++    PI2,
++    dot,
++    sin,
++    step,
++    texture,
++    timerLocal,
++    tslFn,
++    uv,
++    vec2,
++    vec3,
++    vec4,
++    mix,
++    Node,
++    ShaderNodeObject,
++} from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++
++interface Gradient {
++    element: HTMLCanvasElement;
++    context: CanvasRenderingContext2D;
++    colors: string[];
++    texture: THREE.CanvasTexture;
++    update: () => void;
++}
+ 
+ init();
+ 
+@@ -23,21 +46,28 @@ function init() {
+ 
+     // TSL functions
+ 
+-    const spherizeUv = tslFn(([input, center, strength, offset]) => {
+-        const delta = input.sub(center);
+-        const delta2 = dot(delta, delta);
+-        const delta4 = delta2.mul(delta2);
+-        const deltaOffset = delta4.mul(strength);
+-        return input.add(delta.mul(deltaOffset)).add(offset);
+-    });
++    const spherizeUv = tslFn(
++        ([input, center, strength, offset]: [
++            ShaderNodeObject<Node>,
++            ShaderNodeObject<Node>,
++            ShaderNodeObject<Node>,
++            ShaderNodeObject<Node>,
++        ]) => {
++            const delta = input.sub(center);
++            const delta2 = dot(delta, delta);
++            const delta4 = delta2.mul(delta2);
++            const deltaOffset = delta4.mul(strength);
++            return input.add(delta.mul(deltaOffset)).add(offset);
++        },
++    );
+ 
+     // gradient canvas
+ 
+-    const gradient = {};
++    const gradient: Gradient = {} as Gradient;
+     gradient.element = document.createElement('canvas');
+     gradient.element.width = 128;
+     gradient.element.height = 1;
+-    gradient.context = gradient.element.getContext('2d');
++    gradient.context = gradient.element.getContext('2d')!;
+ 
+     gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
+ 
 diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
 index e409b3c0..78885bec 100644
 --- a/examples-testing/examples/webgpu_video_panorama.ts
@@ -15656,3 +15734,26 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/core/VarNode.d.ts b/types/three/src/nodes/core/VarNode.d.ts
+index 9e4bdcd2..b5de30a2 100644
+--- a/types/three/src/nodes/core/VarNode.d.ts
++++ b/types/three/src/nodes/core/VarNode.d.ts
+@@ -1,4 +1,3 @@
+-import { OperatorNodeOp } from "../math/OperatorNode.js";
+ import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+ import Node from "./Node.js";
+ 
+@@ -9,13 +8,6 @@ export default class VarNode extends Node {
+     readonly isVarNode: true;
+ 
+     constructor(node: Node, name?: string | null);
+-
+-    op(op: OperatorNodeOp, ...params: Node[]): this;
+-    assign(...params: Node[]): this;
+-    add(...params: Node[]): this;
+-    sub(...params: Node[]): this;
+-    mul(...params: Node[]): this;
+-    div(...params: Node[]): this;
+ }
+ 
+ export const temp: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<VarNode>;
