@@ -142,6 +142,10 @@ declare class Renderer {
                 glFragmentShader: WebGLShader,
             ) => void)
             | null;
+        getRawShaderAsync: (scene: Scene, camera: Camera, object: Object3D) => Promise<{
+            fragmentShader: string | null;
+            vertexShader: string | null;
+        }>;
     };
     localClippingEnabled?: boolean | undefined;
     constructor(backend: Backend, parameters?: RendererParameters);
