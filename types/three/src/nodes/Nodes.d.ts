@@ -178,6 +178,7 @@ export { default as ConvertNode } from "./utils/ConvertNode.js";
 export { default as DiscardNode, discard, Return } from "./utils/DiscardNode.js";
 export { default as EquirectUVNode, equirectUV } from "./utils/EquirectUVNode.js";
 export { default as JoinNode } from "./utils/JoinNode.js";
+export { Break, Continue, default as LoopNode, loop } from "./utils/LoopNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
 export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
