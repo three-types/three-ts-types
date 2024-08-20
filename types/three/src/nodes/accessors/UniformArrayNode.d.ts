@@ -25,6 +25,6 @@ export default UniformArrayNode;
 export const uniformArray: (values: unknown[], nodeType?: string | null) => ShaderNodeObject<UniformArrayNode>;
 
 /**
- * @deprecated THREE.WebGPURenderer: uniforms() has been renamed to uniformArray().
+ * @deprecated uniforms() has been renamed to uniformArray().
  */
 export const uniforms: (values: unknown[], nodeType?: string | null) => ShaderNodeObject<UniformArrayNode>;
