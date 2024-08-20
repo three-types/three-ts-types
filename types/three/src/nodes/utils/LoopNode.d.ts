@@ -18,6 +18,6 @@ export const Break: () => ShaderNodeObject<Node>;
 
 declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
-        loop: (returns: NodeRepresentation) => ShaderNodeObject<Node>;
+        loop: (returns: NodeRepresentation, ...params: unknown[]) => ShaderNodeObject<Node>;
     }
 }
