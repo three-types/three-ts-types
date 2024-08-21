@@ -15190,13 +15190,16 @@ index 6a8747fe..58799580 100644
      });
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index 8e187897..82b68225 100644
+index 4049d68f..99f52dcb 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-@@ -1,9 +1,17 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { PI2, spherizeUV, sin, step, texture, timerLocal, tslFn, uv, vec2, vec3, vec4, mix } from 'three/tsl';
+ import {
+     PI2,
+     spherizeUV,
+@@ -17,7 +17,15 @@ import {
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15213,7 +15216,7 @@ index 8e187897..82b68225 100644
  
  init();
  
-@@ -23,11 +31,11 @@ function init() {
+@@ -37,11 +45,11 @@ function init() {
  
      // gradient canvas
  
@@ -15713,3 +15716,14 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/utils/SpriteUtils.d.ts b/types/three/src/nodes/utils/SpriteUtils.d.ts
+index c8a72fed..3952577c 100644
+--- a/types/three/src/nodes/utils/SpriteUtils.d.ts
++++ b/types/three/src/nodes/utils/SpriteUtils.d.ts
+@@ -2,5 +2,5 @@ import Node from "../core/Node.js";
+ import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+ 
+ export const billboarding: (
+-    args: { position?: NodeRepresentation | null; horizontal?: boolean; vertical?: boolean },
++    args?: { position?: NodeRepresentation | null; horizontal?: boolean; vertical?: boolean },
+ ) => ShaderNodeObject<Node>;
