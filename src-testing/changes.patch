@@ -4920,7 +4920,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 5beb82a6..0a9ee71b 100644
+index be803038..d09b36df 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -15,7 +15,7 @@ import ClippingContext from './ClippingContext.js';
@@ -5106,7 +5106,7 @@ index 5beb82a6..0a9ee71b 100644
 +                  glFragmentShader: WebGLShader,
 +              ) => void)
 +            | null;
-+        getRawShaderAsync: (
++        getShaderAsync: (
 +            scene: Scene,
 +            camera: Camera,
 +            object: Object3D,
@@ -5120,7 +5120,7 @@ index 5beb82a6..0a9ee71b 100644
  
          //
 @@ -156,12 +325,12 @@ class Renderer {
-             getRawShaderAsync: async (scene, camera, object) => {
+             getShaderAsync: async (scene, camera, object) => {
                  await this.compileAsync(scene, camera);
  
 -                const renderList = this._renderLists.get(scene, camera);
