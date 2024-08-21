@@ -14156,14 +14156,14 @@ index bd84aba0..f9d188c3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 1d8b2375..1b733151 100644
+index a619f430..46473e46 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -1,17 +1,17 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
- import Stats from 'stats-gl';
+ import Stats from 'three/addons/libs/stats.module.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14211,16 +14211,7 @@ index 1d8b2375..1b733151 100644
  
          if (mesh.dispose) {
              mesh.dispose();
-@@ -137,7 +137,7 @@ function init(forceWebGL = false) {
-         document.body.removeChild(renderer.domElement);
-     }
- 
--    document.getElementById('backend').innerText = 'Active Backend: ' + (forceWebGL ? 'WebGL' : 'WebGPU');
-+    document.getElementById('backend')!.innerText = 'Active Backend: ' + (forceWebGL ? 'WebGL' : 'WebGPU');
-     // camera
- 
-     const aspect = window.innerWidth / window.innerHeight;
-@@ -256,18 +256,26 @@ function init(forceWebGL = false) {
+@@ -250,18 +250,26 @@ function init(forceWebGL = false) {
  
  //
  
