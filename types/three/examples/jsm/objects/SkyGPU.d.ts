@@ -1,4 +1,4 @@
-import { Node, ShaderNodeObject, UniformNode } from "three/tsl";
+import { ShaderNodeObject, UniformNode } from "three/tsl";
 import { BoxGeometry, Mesh, NodeMaterial, Vector3 } from "three/webgpu";
 
 declare class Sky extends Mesh<BoxGeometry, NodeMaterial> {
