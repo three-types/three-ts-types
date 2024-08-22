@@ -7,7 +7,7 @@ declare class Sky extends Mesh<BoxGeometry, NodeMaterial> {
     mieCoefficient: ShaderNodeObject<UniformNode<number>>;
     mieDirectionalG: ShaderNodeObject<UniformNode<number>>;
     sunPosition: ShaderNodeObject<UniformNode<Vector3>>;
-    up: ShaderNodeObject<UniformNode<Vector3>>;
+    upUniform: ShaderNodeObject<UniformNode<Vector3>>;
     cameraPosition: ShaderNodeObject<Node>;
 
     readonly isSky: true;
