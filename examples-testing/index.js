@@ -100,6 +100,7 @@ const exceptionList = [
     'webgpu_storage_buffer',
     'webgpu_texturegrad',
     'webgpu_textures_2d-array',
+    'webgpu_tsl_angular_slicing',
     'webgpu_tsl_compute_attractors_particles',
     'webgpu_tsl_earth',
     'webgpu_tsl_editor',
