@@ -15354,6 +15354,40 @@ index e409b3c0..78885bec 100644
      if (isUserInteracting === true) {
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
+diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
+index 76e09f1f..edefce0e 100644
+--- a/examples-testing/examples/webgpu_water.ts
++++ b/examples-testing/examples/webgpu_water.ts
+@@ -1,12 +1,16 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { WaterMesh } from 'three/addons/objects/Water2Mesh.js';
++import { WaterMesh, WaterNode } from 'three/addons/objects/Water2Mesh.js';
+ 
+-let scene, camera, clock, renderer, water;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    clock: THREE.Clock,
++    renderer: THREE.WebGPURenderer,
++    water: WaterMesh;
+ 
+-let torusKnot;
++let torusKnot: THREE.Mesh;
+ 
+ const params = {
+     color: '#ffffff',
+@@ -121,7 +125,7 @@ function init() {
+     // gui
+ 
+     const gui = new GUI();
+-    const waterNode = water.material.fragmentNode;
++    const waterNode = water.material.fragmentNode as WaterNode;
+ 
+     gui.addColor(params, 'color').onChange(function (value) {
+         waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index 95eb3439..0e641cdb 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
@@ -15791,3 +15825,30 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/examples/jsm/objects/Water2Mesh.d.ts b/types/three/examples/jsm/objects/Water2Mesh.d.ts
+index b6a4cbfe..fb9935d4 100644
+--- a/types/three/examples/jsm/objects/Water2Mesh.d.ts
++++ b/types/three/examples/jsm/objects/Water2Mesh.d.ts
+@@ -1,5 +1,5 @@
+ import { TempNode, TextureNode, UniformNode, Vector2, Vector3 } from "three/tsl";
+-import { BufferGeometry, Color, ColorRepresentation, Mesh, Texture } from "three/webgpu";
++import { BufferGeometry, Color, ColorRepresentation, Mesh, NodeMaterial, Texture } from "three/webgpu";
+ 
+ export interface WaterMeshOptions {
+     normalMap0: Texture;
+@@ -13,7 +13,7 @@ export interface WaterMeshOptions {
+     scale?: number | undefined;
+ }
+ 
+-declare class WaterMesh extends Mesh {
++declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
+     readonly isWater: true;
+ 
+     constructor(geometry: BufferGeometry, options: WaterMeshOptions);
+@@ -38,4 +38,5 @@ declare class WaterNode extends TempNode {
+     updateFlow(delta: number): void;
+ }
+ 
+-export { WaterNode };
++export { WaterMesh };
++export type { WaterNode };
