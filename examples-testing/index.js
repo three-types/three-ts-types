@@ -110,6 +110,7 @@ const exceptionList = [
     'webgpu_tsl_procedural_terrain',
     'webgpu_tsl_raging_sea',
     'webgpu_tsl_transpiler',
+    'webgpu_tsl_vfx_tornado',
     'webgpu_volume_cloud',
     'webgpu_volume_perlin',
     'webxr_vr_handinput_cubes',

@@ -205,6 +205,7 @@ export {
     triplanarTextures,
 } from "./utils/TriplanarTexturesNode.js";
 export * from "./utils/UVUtils.js";
+export * from "./utils/ViewportUtils.js";
 
 // shader node
 export * from "./shadernode/ShaderNode.js";
