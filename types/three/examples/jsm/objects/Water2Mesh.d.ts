@@ -1,5 +1,5 @@
 import { TempNode, TextureNode, UniformNode, Vector2, Vector3 } from "three/tsl";
-import { BufferGeometry, Color, ColorRepresentation, Mesh, Texture } from "three/webgpu";
+import { BufferGeometry, Color, ColorRepresentation, Mesh, NodeMaterial, Texture } from "three/webgpu";
 
 export interface WaterMeshOptions {
     normalMap0: Texture;
@@ -13,7 +13,7 @@ export interface WaterMeshOptions {
     scale?: number | undefined;
 }
 
-declare class WaterMesh extends Mesh {
+declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
     readonly isWater: true;
 
     constructor(geometry: BufferGeometry, options: WaterMeshOptions);
@@ -38,4 +38,5 @@ declare class WaterNode extends TempNode {
     updateFlow(delta: number): void;
 }
 
-export { WaterNode };
+export { WaterMesh };
+export type { WaterNode };
