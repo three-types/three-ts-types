@@ -191,6 +191,7 @@ export { default as SplitNode } from "./utils/SplitNode.js";
 export { default as SpriteSheetUVNode, spritesheetUV } from "./utils/SpriteSheetUVNode.js";
 export { default as StorageArrayElementNode } from "./utils/SpriteSheetUVNode.js";
 export * from "./utils/SpriteUtils.js";
+export * from "./utils/ViewportUtils.js";
 export {
     default as TimerNode,
     frameId,
