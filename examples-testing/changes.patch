@@ -14431,6 +14431,44 @@ index 2405b8ad..bd503c49 100644
  
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
+diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
+index f27ed18c..ea15cbee 100644
+--- a/examples-testing/examples/webgpu_ocean.ts
++++ b/examples-testing/examples/webgpu_ocean.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Water } from 'three/addons/objects/WaterGPU.js';
+ import { Sky } from 'three/addons/objects/SkyGPU.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
+-let controls, water, sun, mesh;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls, water: Water, sun: THREE.Vector3, mesh: THREE.Mesh;
+ 
+ init();
+ 
+ function init() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+ 
+     //
+ 
+@@ -75,7 +75,7 @@ function init() {
+     const pmremGenerator = new THREE.PMREMGenerator(renderer);
+     const sceneEnv = new THREE.Scene();
+ 
+-    let renderTarget;
++    let renderTarget: THREE.RenderTarget | undefined;
+ 
+     function updateSun() {
+         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
 index c11a18ed..bfcafe6d 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
@@ -14803,6 +14841,32 @@ index 5e75fa7a..dfebe406 100644
 +let postProcessing: THREE.PostProcessing;
  
  init();
+ 
+diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
+index a4f56b17..ce7e7ad3 100644
+--- a/examples-testing/examples/webgpu_postprocessing_masking.ts
++++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
+@@ -1,8 +1,8 @@
+-import * as THREE from 'three';
+-import { pass, texture } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { Node, pass, texture } from 'three/tsl';
+ 
+-let camera, postProcessing, renderer;
+-let box, torus;
++let camera: THREE.PerspectiveCamera, postProcessing: THREE.PostProcessing, renderer: THREE.WebGPURenderer;
++let box: THREE.Mesh, torus: THREE.Mesh;
+ 
+ init();
+ 
+@@ -50,7 +50,7 @@ function init() {
+     const sceneMask1 = pass(maskScene1, camera).a;
+     const sceneMask2 = pass(maskScene2, camera).a;
+ 
+-    let compose = base;
++    let compose: Node = base;
+     compose = sceneMask1.mix(compose, texture(texture1));
+     compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
 index d7e51008..a9decd46 100644
@@ -15736,3 +15800,15 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/examples-testing/index.js b/examples-testing/index.js
+index d3dc679f..dd548d9a 100644
+--- a/examples-testing/index.js
++++ b/examples-testing/index.js
+@@ -100,6 +100,7 @@ const exceptionList = [
+     'webgpu_storage_buffer',
+     'webgpu_texturegrad',
+     'webgpu_textures_2d-array',
++    'webgpu_tsl_angular_slicing',
+     'webgpu_tsl_compute_attractors_particles',
+     'webgpu_tsl_earth',
+     'webgpu_tsl_editor',
