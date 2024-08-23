@@ -12,12 +12,11 @@ declare class LoopNode extends Node {
 
 export default LoopNode;
 
-export const loop: (...params: unknown[]) => ShaderNodeObject<Node>;
+export const Loop: (...params: unknown[]) => ShaderNodeObject<Node>;
 export const Continue: () => ShaderNodeObject<Node>;
 export const Break: () => ShaderNodeObject<Node>;
 
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        loop: (returns: NodeRepresentation, ...params: unknown[]) => ShaderNodeObject<Node>;
-    }
-}
+/**
+ * @deprecated loop() has been renamed to Loop()
+ */
+export const loop: (...params: unknown[]) => ShaderNodeObject<Node>;
