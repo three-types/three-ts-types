@@ -331,6 +331,7 @@ export { default as PixelationPassNode, pixelationPass } from "./display/Pixelat
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as RenderOutputNode, renderOutput } from "./display/RenderOutputNode.js";
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
+export { bleach } from './display/BleachBypassNode.js';
 export { sepia } from "./display/SepiaNode.js";
 export { default as SobelOperatorNode, sobel } from "./display/SobelOperatorNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
