@@ -366,7 +366,7 @@ export { default as PassNode, depthPass, pass, PassNodeScope, passTexture } from
 export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
 export { default as ExpressionNode, expression } from "./code/ExpressionNode.js";
 export { call, default as FunctionCallNode } from "./code/FunctionCallNode.js";
-export { default as FunctionNode, Fn, FunctionNodeArguments, glslFn, wgslFn } from "./code/FunctionNode.js";
+export { default as FunctionNode, FunctionNodeArguments, glslFn, wgslFn } from "./code/FunctionNode.js";
 
 // fog
 export { default as FogExp2Node, densityFog } from "./fog/FogExp2Node.js";
