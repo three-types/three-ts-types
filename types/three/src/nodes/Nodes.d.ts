@@ -298,6 +298,7 @@ export { default as VertexColorNode, vertexColor } from "./accessors/VertexColor
 // display
 export { afterImage, default as AfterImageNode } from "./display/AfterImageNode.js";
 export { anamorphic, default as AnamorphicNode } from "./display/AnamorphicNode.js";
+export { bleach } from "./display/BleachBypassNode.js";
 export { BlendMode, burn, default as BlendModeNode, dodge, overlay, screen } from "./display/BlendModeNode.js";
 export { bloom, default as BloomNode } from "./display/BloomNode.js";
 export {
@@ -331,7 +332,6 @@ export { default as PixelationPassNode, pixelationPass } from "./display/Pixelat
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as RenderOutputNode, renderOutput } from "./display/RenderOutputNode.js";
 export { default as RGBShiftNode, rgbShift } from "./display/RGBShiftNode.js";
-export { bleach } from './display/BleachBypassNode.js';
 export { sepia } from "./display/SepiaNode.js";
 export { default as SobelOperatorNode, sobel } from "./display/SobelOperatorNode.js";
 export { default as ToneMappingNode, toneMapping } from "./display/ToneMappingNode.js";
