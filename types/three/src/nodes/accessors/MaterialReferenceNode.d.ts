@@ -3,6 +3,8 @@ import { NodeOrType, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import ReferenceNode from "./ReferenceNode.js";
 
 export default class MaterialReferenceNode extends ReferenceNode<Material | null> {
+    readonly isMaterialReferenceNode: true;
+
     constructor(property: string, inputType: string, material?: Material | null);
 }
 

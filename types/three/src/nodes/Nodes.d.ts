@@ -253,6 +253,7 @@ export {
     materialSpecular,
     materialSpecularStrength,
 } from "./accessors/MaterialNode.js";
+export * from "./accessors/MaterialProperties.js";
 export { default as MaterialReferenceNode, materialReference } from "./accessors/MaterialReferenceNode.js";
 export {
     default as ModelNode,
