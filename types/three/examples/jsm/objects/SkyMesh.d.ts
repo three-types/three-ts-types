@@ -1,7 +1,7 @@
 import { ShaderNodeObject, UniformNode } from "three/tsl";
 import { BoxGeometry, Mesh, NodeMaterial, Vector3 } from "three/webgpu";
 
-declare class Sky extends Mesh<BoxGeometry, NodeMaterial> {
+declare class SkyMesh extends Mesh<BoxGeometry, NodeMaterial> {
     turbidity: ShaderNodeObject<UniformNode<number>>;
     rayleigh: ShaderNodeObject<UniformNode<number>>;
     mieCoefficient: ShaderNodeObject<UniformNode<number>>;
@@ -14,4 +14,4 @@ declare class Sky extends Mesh<BoxGeometry, NodeMaterial> {
     constructor();
 }
 
-export { Sky };
+export { SkyMesh };
