@@ -1,4 +1,4 @@
-import { Scene, WebGLRenderer } from "three";
+import { Scene } from "three";
 
 export class RoomEnvironment extends Scene {
     constructor();
