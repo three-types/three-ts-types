@@ -1,7 +1,7 @@
 import { TextureNode, UniformNode } from "three/tsl";
 import { BufferGeometry, Color, ColorRepresentation, Mesh, NodeMaterial, Texture, Vector3 } from "three/webgpu";
 
-export interface WaterOptions {
+export interface WaterMeshOptions {
     resolution?: number | undefined;
     waterNormals: Texture;
     alpha?: number | undefined;
@@ -12,7 +12,7 @@ export interface WaterOptions {
     distortionScale?: number | undefined;
 }
 
-declare class Water extends Mesh<BufferGeometry, NodeMaterial> {
+declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
     readonly isWater: true;
 
     resolution: number;
@@ -25,7 +25,7 @@ declare class Water extends Mesh<BufferGeometry, NodeMaterial> {
     waterColor: UniformNode<Color>;
     distortionScale: UniformNode<number>;
 
-    constructor(geometry: BufferGeometry, options: WaterOptions);
+    constructor(geometry: BufferGeometry, options: WaterMeshOptions);
 }
 
-export { Water };
+export { WaterMesh };

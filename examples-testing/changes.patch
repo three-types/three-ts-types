@@ -14432,7 +14432,7 @@ index 2405b8ad..bd503c49 100644
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
-index f27ed18c..ea15cbee 100644
+index 9eb9922d..b75024ec 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
 +++ b/examples-testing/examples/webgpu_ocean.ts
 @@ -1,4 +1,4 @@
@@ -14442,15 +14442,15 @@ index f27ed18c..ea15cbee 100644
  import Stats from 'three/addons/libs/stats.module.js';
  
 @@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Water } from 'three/addons/objects/WaterGPU.js';
- import { Sky } from 'three/addons/objects/SkyGPU.js';
+ import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
+ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
 -let container, stats;
 -let camera, scene, renderer;
 -let controls, water, sun, mesh;
 +let container: HTMLElement, stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let controls: OrbitControls, water: Water, sun: THREE.Vector3, mesh: THREE.Mesh;
++let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh;
  
  init();
  
@@ -15147,7 +15147,7 @@ index bf36d911..0e77df7c 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_sky.ts b/examples-testing/examples/webgpu_sky.ts
-index 60af1c2d..1b7a8906 100644
+index 097d06af..3836e7ee 100644
 --- a/examples-testing/examples/webgpu_sky.ts
 +++ b/examples-testing/examples/webgpu_sky.ts
 @@ -1,12 +1,12 @@
@@ -15156,13 +15156,13 @@ index 60af1c2d..1b7a8906 100644
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Sky } from 'three/addons/objects/SkyGPU.js';
+ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
 -let sky, sun;
-+let sky: Sky, sun: THREE.Vector3;
++let sky: SkyMesh, sun: THREE.Vector3;
  
  init();
  
@@ -15825,30 +15825,3 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/examples/jsm/objects/Water2Mesh.d.ts b/types/three/examples/jsm/objects/Water2Mesh.d.ts
-index b6a4cbfe..fb9935d4 100644
---- a/types/three/examples/jsm/objects/Water2Mesh.d.ts
-+++ b/types/three/examples/jsm/objects/Water2Mesh.d.ts
-@@ -1,5 +1,5 @@
- import { TempNode, TextureNode, UniformNode, Vector2, Vector3 } from "three/tsl";
--import { BufferGeometry, Color, ColorRepresentation, Mesh, Texture } from "three/webgpu";
-+import { BufferGeometry, Color, ColorRepresentation, Mesh, NodeMaterial, Texture } from "three/webgpu";
- 
- export interface WaterMeshOptions {
-     normalMap0: Texture;
-@@ -13,7 +13,7 @@ export interface WaterMeshOptions {
-     scale?: number | undefined;
- }
- 
--declare class WaterMesh extends Mesh {
-+declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
-     readonly isWater: true;
- 
-     constructor(geometry: BufferGeometry, options: WaterMeshOptions);
-@@ -38,4 +38,5 @@ declare class WaterNode extends TempNode {
-     updateFlow(delta: number): void;
- }
- 
--export { WaterNode };
-+export { WaterMesh };
-+export type { WaterNode };
