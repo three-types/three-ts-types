@@ -141,7 +141,7 @@ export {
     trunc,
 } from "./math/MathNode.js";
 
-export { cond, default as CondNode } from "./math/CondNode.js";
+export { cond, default as CondNode, select } from "./math/CondNode.js";
 export { default as HashNode, hash } from "./math/HashNode.js";
 export {
     add,
@@ -178,7 +178,7 @@ export { default as ConvertNode } from "./utils/ConvertNode.js";
 export { default as DiscardNode, discard, Return } from "./utils/DiscardNode.js";
 export { default as EquirectUVNode, equirectUV } from "./utils/EquirectUVNode.js";
 export { default as JoinNode } from "./utils/JoinNode.js";
-export { Break, Continue, default as LoopNode, loop } from "./utils/LoopNode.js";
+export { Break, Continue, default as LoopNode, Loop } from "./utils/LoopNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
 export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
@@ -366,7 +366,7 @@ export { default as PassNode, depthPass, pass, PassNodeScope, passTexture } from
 export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
 export { default as ExpressionNode, expression } from "./code/ExpressionNode.js";
 export { call, default as FunctionCallNode } from "./code/FunctionCallNode.js";
-export { default as FunctionNode, Fn, FunctionNodeArguments, glslFn, wgslFn } from "./code/FunctionNode.js";
+export { default as FunctionNode, FunctionNodeArguments, glslFn, wgslFn } from "./code/FunctionNode.js";
 
 // fog
 export { default as FogExp2Node, densityFog } from "./fog/FogExp2Node.js";
