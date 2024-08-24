@@ -13665,6 +13665,44 @@ index cfd72172..ae3271f9 100644
      }
  
      renderer.render(scene, camera);
+diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
+index a34ad2de..5a90c688 100644
+--- a/examples-testing/examples/webgpu_lightprobe.ts
++++ b/examples-testing/examples/webgpu_lightprobe.ts
+@@ -1,16 +1,19 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
+ 
+-let mesh, renderer, scene, camera;
++let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
++    renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera;
+ 
+-let gui;
++let gui: GUI;
+ 
+-let lightProbe;
+-let directionalLight;
++let lightProbe: THREE.LightProbe;
++let directionalLight: THREE.DirectionalLight;
+ 
+ // linear color space
+ const API = {
+@@ -55,7 +58,7 @@ function init() {
+     scene.add(directionalLight);
+ 
+     // envmap
+-    const genCubeUrls = function (prefix, postfix) {
++    const genCubeUrls = function (prefix: string, postfix: string) {
+         return [
+             prefix + 'px' + postfix,
+             prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 index 41b56de8..8f7abe1f 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
@@ -15843,16 +15881,3 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/nodes/display/ColorAdjustmentNode.d.ts b/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
-index b49345bb..517407fc 100644
---- a/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
-+++ b/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
-@@ -33,7 +33,7 @@ export const hue: (
-     adjustmentNode?: NodeRepresentation,
- ) => ShaderNodeObject<ColorAdjustmentNode>;
- 
--export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
-+export const luminance: (a: NodeRepresentation, b?: NodeRepresentation) => ShaderNodeObject<MathNode>;
- 
- export const threshold: (color: NodeRepresentation, thershold: NodeRepresentation) => ShaderNodeObject<MathNode>;
- 
