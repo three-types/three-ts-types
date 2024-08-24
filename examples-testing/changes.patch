@@ -13989,6 +13989,28 @@ index 54d26d65..824c087a 100644
          geometry.center();
  
          mesh = new THREE.Mesh(geometry, material);
+diff --git a/examples-testing/examples/webgpu_materials_envmaps.ts b/examples-testing/examples/webgpu_materials_envmaps.ts
+index f49b4ca1..73c27f5c 100644
+--- a/examples-testing/examples/webgpu_materials_envmaps.ts
++++ b/examples-testing/examples/webgpu_materials_envmaps.ts
+@@ -1,11 +1,13 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let controls, camera, scene, renderer;
+-let textureEquirec, textureCube;
+-let sphereMesh, sphereMaterial, params;
++let controls, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let textureEquirec: THREE.Texture, textureCube: THREE.CubeTexture;
++let sphereMesh: THREE.Mesh,
++    sphereMaterial: THREE.MeshBasicMaterial,
++    params: { Cube: () => void; Equirectangular: () => void; Refraction: boolean };
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
 index 616645aa..288f6e84 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
