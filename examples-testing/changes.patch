@@ -14773,6 +14773,27 @@ index 7140a8ad..a2dae285 100644
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
+diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
+index 49f9084f..aafb0475 100644
+--- a/examples-testing/examples/webgpu_postprocessing_difference.ts
++++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, luminance } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -10,8 +10,8 @@ const params = {
+     speed: 0,
+ };
+ 
+-let camera, renderer, postProcessing;
+-let timer, mesh, controls;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
++let timer: Timer, mesh: THREE.Mesh, controls: OrbitControls;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
 index 3fb4046b..785a78f8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
@@ -15822,3 +15843,16 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/display/ColorAdjustmentNode.d.ts b/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
+index b49345bb..517407fc 100644
+--- a/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
++++ b/types/three/src/nodes/display/ColorAdjustmentNode.d.ts
+@@ -33,7 +33,7 @@ export const hue: (
+     adjustmentNode?: NodeRepresentation,
+ ) => ShaderNodeObject<ColorAdjustmentNode>;
+ 
+-export const luminance: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
++export const luminance: (a: NodeRepresentation, b?: NodeRepresentation) => ShaderNodeObject<MathNode>;
+ 
+ export const threshold: (color: NodeRepresentation, thershold: NodeRepresentation) => ShaderNodeObject<MathNode>;
+ 
