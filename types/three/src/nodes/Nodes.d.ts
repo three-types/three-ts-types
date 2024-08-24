@@ -388,6 +388,7 @@ export { default as HemisphereLightNode } from "./lighting/HemisphereLightNode.j
 export { default as IrradianceNode } from "./lighting/IrradianceNode.js";
 export { default as LightingContextNode, lightingContext } from "./lighting/LightingContextNode.js";
 export { default as LightingNode } from "./lighting/LightingNode.js";
+export { default as LightProbeNode } from "./lighting/LightProbeNode.js";
 export { default as LightsNode, lights } from "./lighting/LightsNode.js";
 export { default as PointLightNode } from "./lighting/PointLightNode.js";
 export { default as RectAreaLightNode, RectAreaLightTexturesLib } from "./lighting/RectAreaLightNode.js";
