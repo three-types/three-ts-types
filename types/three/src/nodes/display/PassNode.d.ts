@@ -16,8 +16,11 @@ declare class PassTextureNode extends TextureNode {
 
 declare class PassMultipleTextureNode extends PassTextureNode {
     textureName: string;
+    previousTexture: boolean;
 
-    constructor(passNode: PassNode, textureName: string);
+    constructor(passNode: PassNode, textureName: string, previousTexture?: boolean);
+
+    updateTexture(): void;
 }
 
 declare class PassNode extends TempNode {
@@ -37,7 +40,13 @@ declare class PassNode extends TempNode {
 
     getTexture(name: string): Texture;
 
+    getPreviousTexture(name: string): Texture;
+
+    toggleTexture(name: string): void;
+
     getTextureNode(name?: string): ShaderNodeObject<Node>;
+
+    getPreviousTextureNode(name?: string): ShaderNodeObject<Node>;
 
     getViewZNode(name?: string): ShaderNodeObject<Node>;
 
