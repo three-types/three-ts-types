@@ -2649,7 +2649,7 @@ index 9a41cc7d..df337a72 100644
  
          lights = sortLights(lights);
 diff --git a/src-testing/src/nodes/shadernode/ShaderNode.ts b/src-testing/src/nodes/shadernode/ShaderNode.ts
-index 1781b70c..22aa238f 100644
+index 9b8e26e5..0b448c55 100644
 --- a/src-testing/src/nodes/shadernode/ShaderNode.ts
 +++ b/src-testing/src/nodes/shadernode/ShaderNode.ts
 @@ -6,11 +6,49 @@ import SplitNode from '../utils/SplitNode.js';
@@ -2873,7 +2873,7 @@ index 1781b70c..22aa238f 100644
          const { shaderNode, inputNodes } = this;
  
          if (shaderNode.layout) {
-@@ -260,7 +435,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -259,7 +434,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -2889,7 +2889,7 @@ index 1781b70c..22aa238f 100644
      constructor(jsFunc) {
          super();
  
-@@ -274,7 +457,7 @@ class ShaderNodeInternal extends Node {
+@@ -273,7 +456,7 @@ class ShaderNodeInternal extends Node {
          return /^\((\s+)?\[/.test(this.jsFunc.toString());
      }
  
@@ -2898,7 +2898,7 @@ index 1781b70c..22aa238f 100644
          this.layout = layout;
  
          return this;
-@@ -291,6 +474,8 @@ class ShaderNodeInternal extends Node {
+@@ -290,6 +473,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -2907,7 +2907,7 @@ index 1781b70c..22aa238f 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -384,10 +569,27 @@ export function ShaderNode(jsFunc) {
+@@ -383,10 +568,27 @@ export function ShaderNode(jsFunc) {
      return new Proxy(new ShaderNodeInternal(jsFunc), shaderNodeHandler);
  }
  
@@ -4373,7 +4373,7 @@ index 29140365..165ece53 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 55d35c49..a2c91530 100644
+index 342029ea..ab04452a 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
 @@ -1,8 +1,51 @@
@@ -4427,6 +4427,21 @@ index 55d35c49..a2c91530 100644
 +
      constructor() {
          this.id = id++;
+ 
+@@ -40,12 +83,12 @@ class RenderContext {
+     }
+ }
+ 
+-export function getCacheKey(renderContext) {
++export function getCacheKey(renderContext: RenderContext) {
+     const { textures, activeCubeFace } = renderContext;
+ 
+     let key = '';
+ 
+-    for (const texture of textures) {
++    for (const texture of textures!) {
+         key += texture.id + ',';
+     }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
 index e77308c1..9989358d 100644
@@ -7056,10 +7071,10 @@ index a162ac89..d43ca101 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 63c66ce4..6f3e94ce 100644
+index 35e79b78..74f3e1c5 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-@@ -12,6 +12,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
+@@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
  
  import { warnOnce } from '../../utils.js';
  import { WebGLCoordinateSystem } from '../../constants.js';
@@ -7067,7 +7082,7 @@ index 63c66ce4..6f3e94ce 100644
  
  //
  
-@@ -619,7 +620,7 @@ class WebGLBackend extends Backend {
+@@ -621,7 +622,7 @@ class WebGLBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7481,10 +7496,10 @@ index ec5211b5..4fe4f075 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 8dcf5435..db61bf4c 100644
+index 2b2aeefc..82d67043 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -959,7 +959,7 @@ class WebGPUBackend extends Backend {
+@@ -957,7 +957,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7494,7 +7509,7 @@ index 8dcf5435..db61bf4c 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 4a7730a7..2e766a82 100644
+index 1d808f4b..a1bfb45f 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7659,7 +7674,7 @@ index 4a7730a7..2e766a82 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -621,8 +645,8 @@ ${flowData.code}
+@@ -641,8 +665,8 @@ ${flowData.code}
          return snippets.join(',\n\t');
      }
  
@@ -7670,7 +7685,7 @@ index 4a7730a7..2e766a82 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -703,8 +727,8 @@ ${flowData.code}
+@@ -723,8 +747,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7681,7 +7696,7 @@ index 4a7730a7..2e766a82 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -740,7 +764,7 @@ ${flowData.code}
+@@ -760,7 +784,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
