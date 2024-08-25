@@ -28,12 +28,6 @@ export interface DragControlsEventMap {
     dragend: { object: Object3D };
 }
 
-/**
- * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches
- * properties.
- */
-export type DragControlsMode = "translate" | "rotate";
-
 declare class DragControls extends Controls<DragControlsEventMap> {
     /**
      * An array of draggable 3D objects.
@@ -122,18 +116,6 @@ declare class DragControls extends Controls<DragControlsEventMap> {
      * @deprecated deactivate() has been renamed to disconnect().
      */
     deactivate(): void;
-
-    /**
-     * The current transformation mode. Possible values are `translate`, and `rotate`. Default is `translate`.
-     * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches properties.
-     */
-    set mode(value: DragControlsMode);
-
-    /**
-     * The current transformation mode. Possible values are `translate`, and `rotate`. Default is `translate`.
-     * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches properties.
-     */
-    get mode(): DragControlsMode;
 }
 
 export { DragControls };
