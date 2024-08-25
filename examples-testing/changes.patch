@@ -13531,10 +13531,10 @@ index 4a2e6c80..22eeb6d0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 48358dcf..f69959cf 100644
+index 7eb45fa2..b2af0ebb 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,23 +1,36 @@
+@@ -1,24 +1,37 @@
 -import * as THREE from 'three';
 -
 -import { stereoPass, anaglyphPass, parallaxBarrierPass } from 'three/tsl';
@@ -13570,8 +13570,9 @@ index 48358dcf..f69959cf 100644
  const position = new THREE.Vector3();
  
 -const params = {
-+const params: { effect: 'stereo' | 'anaglyph' | 'parallaxBarrier' } = {
++const params: { effect: 'stereo' | 'anaglyph' | 'parallaxBarrier'; eyeSep: number } = {
      effect: 'stereo',
+     eyeSep: 0.064,
  };
  
 -const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' };
@@ -13579,7 +13580,7 @@ index 48358dcf..f69959cf 100644
  
  init();
  
-@@ -87,7 +100,7 @@ function init() {
+@@ -90,7 +103,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -13588,7 +13589,7 @@ index 48358dcf..f69959cf 100644
      if (value === 'stereo') {
          postProcessing.outputNode = stereo;
      } else if (value === 'anaglyph') {
-@@ -106,7 +119,7 @@ function onWindowResize() {
+@@ -109,7 +122,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
