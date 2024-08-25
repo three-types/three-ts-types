@@ -2597,7 +2597,7 @@ index 9a41cc7d..df337a72 100644
  
          lights = sortLights(lights);
 diff --git a/src-testing/src/nodes/shadernode/ShaderNode.ts b/src-testing/src/nodes/shadernode/ShaderNode.ts
-index b158091d..9fb48f71 100644
+index b158091d..66e3295d 100644
 --- a/src-testing/src/nodes/shadernode/ShaderNode.ts
 +++ b/src-testing/src/nodes/shadernode/ShaderNode.ts
 @@ -6,11 +6,49 @@ import SplitNode from '../utils/SplitNode.js';
@@ -2864,7 +2864,7 @@ index b158091d..9fb48f71 100644
  }
  
 -export const nodeObject = (val, altType = null) => /* new */ ShaderNodeObject(val, altType);
-+export const nodeObject = <T extends NodeObjectOption>(val: T, altType: string | null = null) =>
++export const nodeObject = <T extends NodeObjectOption>(val: T, altType: string | null = null): NodeObject<T> =>
 +    /* new */ ShaderNodeObject(val, altType);
  export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
  export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altType);
