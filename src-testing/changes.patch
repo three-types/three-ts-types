@@ -2601,11 +2601,11 @@ index 9a41cc7d..df337a72 100644
  
          lights = sortLights(lights);
 diff --git a/src-testing/src/nodes/shadernode/ShaderNode.ts b/src-testing/src/nodes/shadernode/ShaderNode.ts
-index b158091d..66e3295d 100644
+index b6b773d5..ef3c8944 100644
 --- a/src-testing/src/nodes/shadernode/ShaderNode.ts
 +++ b/src-testing/src/nodes/shadernode/ShaderNode.ts
-@@ -6,11 +6,49 @@ import SplitNode from '../utils/SplitNode.js';
- import SetNode from '../utils/SetNode.js';
+@@ -7,11 +7,49 @@ import SetNode from '../utils/SetNode.js';
+ import FlipNode from '../utils/FlipNode.js';
  import ConstNode from '../core/ConstNode.js';
  import { getValueFromType, getValueType } from '../core/NodeUtils.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
@@ -2654,7 +2654,7 @@ index b158091d..66e3295d 100644
  const NodeElements = new Map(); // @TODO: Currently only a few nodes are added, probably also add others
  
  export function addNodeElement(name, nodeElement) {
-@@ -24,6 +62,141 @@ export function addNodeElement(name, nodeElement) {
+@@ -25,6 +63,141 @@ export function addNodeElement(name, nodeElement) {
      NodeElements.set(name, nodeElement);
  }
  
@@ -2794,9 +2794,9 @@ index b158091d..66e3295d 100644
 +type ConstructedNode<T> = T extends new (...args: any[]) => infer R ? (R extends Node ? R : never) : never;
 +
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
+ const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
- const shaderNodeHandler = {
-@@ -113,7 +286,7 @@ const shaderNodeHandler = {
+@@ -117,7 +290,7 @@ const shaderNodeHandler = {
  const nodeObjectsCacheMap = new WeakMap();
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -2805,7 +2805,7 @@ index b158091d..66e3295d 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -182,18 +355,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -186,18 +359,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -2829,7 +2829,7 @@ index b158091d..66e3295d 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -268,7 +443,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -272,7 +447,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -2845,7 +2845,7 @@ index b158091d..66e3295d 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -284,7 +467,7 @@ class ShaderNodeInternal extends Node {
+@@ -288,7 +471,7 @@ class ShaderNodeInternal extends Node {
          return /^\((\s+)?\[/.test(this.jsFunc.toString());
      }
  
@@ -2854,7 +2854,7 @@ index b158091d..66e3295d 100644
          this.layout = layout;
  
          return this;
-@@ -301,6 +484,8 @@ class ShaderNodeInternal extends Node {
+@@ -305,6 +488,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -2863,7 +2863,7 @@ index b158091d..66e3295d 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -394,10 +579,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -398,10 +583,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -7482,7 +7482,7 @@ index 936cb08d..64711d5e 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index aa652d81..62f6a101 100644
+index e317836a..23e69691 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
