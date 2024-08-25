@@ -9,11 +9,13 @@ export default class ViewportDepthNode extends Node {
 
     constructor(scope: ViewportDepthNodeScope, valueNode?: Node | null);
 
+    static DEPTH_BASE: "depthBase";
     static DEPTH: "depth";
     static LINEAR_DEPTH: "linearDepth";
 }
 
 export type ViewportDepthNodeScope =
+    | typeof ViewportDepthNode.DEPTH_BASE
     | typeof ViewportDepthNode.DEPTH
     | typeof ViewportDepthNode.LINEAR_DEPTH;
 
