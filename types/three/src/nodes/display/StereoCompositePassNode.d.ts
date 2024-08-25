@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { StereoCamera } from "../../cameras/StereoCamera";
+import { StereoCamera } from "../../cameras/StereoCamera.js";
 import { CoordinateSystem } from "../../constants.js";
 import { Scene } from "../../scenes/Scene.js";
 import PassNode from "./PassNode.js";
