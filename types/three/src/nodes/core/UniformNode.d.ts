@@ -17,7 +17,4 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
     generate(builder: NodeBuilder, output: string | null): string;
 }
 export default UniformNode;
-export declare const uniform: <TValue>(
-    arg1: InputNode<TValue> | TValue,
-    arg2?: Node | string,
-) => import("../shadernode/ShaderNode.js").ShaderNodeObject<UniformNode<TValue>>;
+export declare const uniform: <TValue>(arg1: InputNode<TValue> | TValue, arg2?: Node | string) => any;
