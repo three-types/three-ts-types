@@ -9,7 +9,6 @@ import FunctionCallNode from "./FunctionCallNode.js";
 export type FunctionNodeArguments = Node[] | { [name: string]: Node };
 
 export default class FunctionNode<P extends Node[] | { [name: string]: Node }> extends CodeNode {
-    keywords: { [key: string]: Node };
     constructor(code?: string, includes?: CodeNodeInclude[], language?: string);
 
     getInputs(builder: NodeBuilder): NodeFunctionInput[];
