@@ -56,12 +56,18 @@ declare class DragControls extends Controls<DragControlsEventMap> {
      */
     raycaster: Raycaster;
 
+    /**
+     * This object defines what type of actions are assigned to the available mouse buttons.
+     */
     mouseButtons: {
         LEFT?: MOUSE | null | undefined;
         MIDDLE?: MOUSE | null | undefined;
         RIGHT?: MOUSE | null | undefined;
     };
 
+    /**
+     * This object defines what type of actions are assigned to what kind of touch interaction.
+     */
     touches: { ONE?: TOUCH | null | undefined };
 
     /**
