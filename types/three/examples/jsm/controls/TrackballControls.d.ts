@@ -1,5 +1,4 @@
-import { Camera, MOUSE, Vector3 } from "three";
-import { Controls } from "./Controls.js";
+import { Camera, Controls, MOUSE, Vector3 } from "three";
 
 export interface TrackballControlsEventMap {
     /**

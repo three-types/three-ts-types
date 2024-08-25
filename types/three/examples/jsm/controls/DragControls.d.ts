@@ -1,5 +1,4 @@
-import { Camera, MOUSE, Object3D, Raycaster, TOUCH } from "three";
-import { Controls } from "./Controls.js";
+import { Camera, Controls, MOUSE, Object3D, Raycaster, TOUCH } from "three";
 
 export interface DragControlsEventMap {
     /**
