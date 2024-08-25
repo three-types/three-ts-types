@@ -1,4 +1,5 @@
-import { Camera, EventDispatcher, Object3D, Raycaster } from "three";
+import { Camera, MOUSE, Object3D, Raycaster, TOUCH } from "three";
+import { Controls } from "./Controls.js";
 
 export interface DragControlsEventMap {
     /**
@@ -27,21 +28,17 @@ export interface DragControlsEventMap {
     dragend: { object: Object3D };
 }
 
+/**
+ * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches
+ * properties.
+ */
 export type DragControlsMode = "translate" | "rotate";
 
-export class DragControls extends EventDispatcher<DragControlsEventMap> {
+declare class DragControls extends Controls<DragControlsEventMap> {
     /**
-     * Creates a new instance of DragControls.
-     * @param objects An array of draggable 3D objects.
-     * @param camera The camera of the rendered scene.
-     * @param domElement The HTML element used for event listeners.
+     * An array of draggable 3D objects.
      */
-    constructor(objects: Object3D[], camera: Camera, domElement?: HTMLElement);
-
-    /**
-     * Whether or not the controls are enabled.
-     */
-    enabled: boolean;
+    objects: Object3D[];
 
     /**
      * Whether children of draggable objects can be dragged independently from their parent. Default is `true`.
@@ -55,43 +52,88 @@ export class DragControls extends EventDispatcher<DragControlsEventMap> {
     transformGroup: boolean;
 
     /**
-     * The current transformation mode. Possible values are `translate`, and `rotate`. Default is `translate`.
-     */
-    mode: DragControlsMode;
-
-    /**
      * The speed at which the object will rotate when dragged in `rotate` mode. The higher the number the faster the
      * rotation. Default is `1`.
      */
     rotateSpeed: number;
 
     /**
+     * The internal raycaster used for detecting 3D objects.
+     */
+    raycaster: Raycaster;
+
+    mouseButtons: {
+        LEFT?: MOUSE | null | undefined;
+        MIDDLE?: MOUSE | null | undefined;
+        RIGHT?: MOUSE | null | undefined;
+    };
+
+    touches: { ONE?: TOUCH | null | undefined };
+
+    /**
+     * Creates a new instance of DragControls.
+     * @param objects An array of draggable 3D objects.
+     * @param camera The camera of the rendered scene.
+     * @param domElement The HTML element used for event listeners.
+     */
+    constructor(objects: Object3D[], camera: Camera, domElement?: HTMLElement | null);
+
+    /**
      * Adds the event listeners of the controls.
      */
-    activate: () => void;
+    connect(): void;
 
     /**
      * Removes the event listeners of the controls.
      */
-    deactivate: () => void;
+    disconnect(): void;
 
     /**
      * Should be called if the controls is no longer required.
      */
-    dispose: () => void;
-
-    /**
-     * Returns the array of draggable objects.
-     */
-    getObjects: () => Object3D[];
+    dispose(): void;
 
     /**
      * Returns the internal {@link Raycaster} instance that is used for intersection tests.
+     * @deprecated getRaycaster() has been deprecated. Use controls.raycaster instead.
      */
-    getRaycaster: () => Raycaster;
+    getRaycaster(): Raycaster;
 
     /**
      * Sets an array of draggable objects by overwriting the existing one.
+     * @deprecated setObjects() has been deprecated. Use controls.objects instead.
      */
-    setObjects: (objects: readonly Object3D[]) => void;
+    setObjects(objects: readonly Object3D[]): void;
+
+    /**
+     * Returns the array of draggable objects.
+     * @deprecated getObjects() has been deprecated. Use controls.objects instead.
+     */
+    getObjects(): Object3D[];
+
+    /**
+     * Adds the event listeners of the controls.
+     * @deprecated activate() has been renamed to connect().
+     */
+    activate(): void;
+
+    /**
+     * Removes the event listeners of the controls.
+     * @deprecated deactivate() has been renamed to disconnect().
+     */
+    deactivate(): void;
+
+    /**
+     * The current transformation mode. Possible values are `translate`, and `rotate`. Default is `translate`.
+     * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches properties.
+     */
+    set mode(value: DragControlsMode);
+
+    /**
+     * The current transformation mode. Possible values are `translate`, and `rotate`. Default is `translate`.
+     * @deprecated The .mode property has been removed. Define the type of transformation via the .mouseButtons or .touches properties.
+     */
+    get mode(): DragControlsMode;
 }
+
+export { DragControls };
