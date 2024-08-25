@@ -8193,97 +8193,6 @@ index 599a1369..a23a0582 100644
      const geometry = new THREE.BoxGeometry(5, 5, 5);
  
      const material = new THREE.ShaderMaterial({
-diff --git a/examples-testing/examples/webgl_materials_curvature.ts b/examples-testing/examples/webgl_materials_curvature.ts
-index 60992dbc..15625389 100644
---- a/examples-testing/examples/webgl_materials_curvature.ts
-+++ b/examples-testing/examples/webgl_materials_curvature.ts
-@@ -4,14 +4,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
- 
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
- 
--let ninjaMeshRaw, curvatureAttribute, bufferGeo;
-+let ninjaMeshRaw: THREE.Mesh,
-+    curvatureAttribute: Float32Array,
-+    bufferGeo: THREE.BufferGeometry<Record<string, THREE.BufferAttribute>>;
- 
- init();
- 
- //returns average of elements in a dictionary
--function average(dict) {
-+function average(dict: Record<string, number>) {
-     let sum = 0;
-     let length = 0;
- 
-@@ -24,26 +26,26 @@ function average(dict) {
- }
- 
- //clamp a number between min and max
--function clamp(number, min, max) {
-+function clamp(number: number, min: number, max: number) {
-     return Math.max(min, Math.min(number, max));
- }
- 
- //filter the curvature array to only show concave values
--function filterConcave(curvature) {
-+function filterConcave(curvature: Float32Array) {
-     for (let i = 0; i < curvature.length; i++) {
-         curvature[i] = Math.abs(clamp(curvature[i], -1, 0));
-     }
- }
- 
- //filter the curvature array to only show convex values
--function filterConvex(curvature) {
-+function filterConvex(curvature: Float32Array) {
-     for (let i = 0; i < curvature.length; i++) {
-         curvature[i] = clamp(curvature[i], 0, 1);
-     }
- }
- 
- //filter the curvature array to show both the concave and convex values
--function filterBoth(curvature) {
-+function filterBoth(curvature: Float32Array) {
-     for (let i = 0; i < curvature.length; i++) {
-         curvature[i] = Math.abs(curvature[i]);
-     }
-@@ -74,10 +76,12 @@ function init() {
-     //load the obj
-     loader.load('models/obj/ninja/ninjaHead_Low.obj', function (object) {
-         object.traverse(function (child) {
--            if (child.isMesh) {
--                bufferGeo = child.geometry;
-+            if ((child as THREE.Mesh).isMesh) {
-+                bufferGeo = (child as THREE.Mesh).geometry as THREE.BufferGeometry<
-+                    Record<string, THREE.BufferAttribute>
-+                >;
-                 bufferGeo.center();
--                const dict = {};
-+                const dict: Record<string, Record<string, number>> = {};
- 
-                 for (let i = 0; i < bufferGeo.attributes.position.count; i += 3) {
-                     //create a dictionary of every position, and its neighboring positions
-@@ -140,7 +144,7 @@ function init() {
-                     dict[strC][strB] = c2b;
-                 }
- 
--                let curvatureDict = {};
-+                let curvatureDict: Record<string, number> = {};
-                 let min = 10,
-                     max = 0;
- 
-@@ -197,8 +201,8 @@ function init() {
-                 filterBoth(curvatureFiltered);
- 
-                 const materialRaw = new THREE.ShaderMaterial({
--                    vertexShader: document.getElementById('vertexShaderRaw').textContent,
--                    fragmentShader: document.getElementById('fragmentShaderRaw').textContent,
-+                    vertexShader: document.getElementById('vertexShaderRaw')!.textContent!,
-+                    fragmentShader: document.getElementById('fragmentShaderRaw')!.textContent!,
-                 });
- 
-                 ninjaMeshRaw = new THREE.Mesh(bufferGeo, materialRaw);
 diff --git a/examples-testing/examples/webgl_materials_displacementmap.ts b/examples-testing/examples/webgl_materials_displacementmap.ts
 index fd0be9a5..9b08fe73 100644
 --- a/examples-testing/examples/webgl_materials_displacementmap.ts
@@ -15329,7 +15238,7 @@ index 097d06af..3836e7ee 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_textures_anisotropy.ts b/examples-testing/examples/webgpu_textures_anisotropy.ts
-index 21cc1197..eec04d7e 100644
+index 7eb0ce1b..7528f59f 100644
 --- a/examples-testing/examples/webgpu_textures_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_textures_anisotropy.ts
 @@ -1,10 +1,10 @@
