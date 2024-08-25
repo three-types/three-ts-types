@@ -75,7 +75,7 @@ declare class FirstPersonControls extends Controls<{}> {
     /**
      * Creates a new instance of {@link FirstPersonControls}.
      * @param object The camera to be controlled.
-     * @param domElement The HTML element used for event listeners.
+     * @param domElement The HTML element used for event listeners. (optional)
      */
     constructor(object: Camera, domElement?: HTMLElement);
 

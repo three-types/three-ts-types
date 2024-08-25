@@ -74,7 +74,7 @@ declare class DragControls extends Controls<DragControlsEventMap> {
      * Creates a new instance of DragControls.
      * @param objects An array of draggable 3D objects.
      * @param camera The camera of the rendered scene.
-     * @param domElement The HTML element used for event listeners.
+     * @param domElement The HTML element used for event listeners. (optional)
      */
     constructor(objects: Object3D[], camera: Camera, domElement?: HTMLElement | null);
 
