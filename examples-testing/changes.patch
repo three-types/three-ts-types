@@ -13521,6 +13521,39 @@ index 4a2e6c80..22eeb6d0 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
+index 8063777c..51757359 100644
+--- a/examples-testing/examples/webgpu_display_stereo.ts
++++ b/examples-testing/examples/webgpu_display_stereo.ts
+@@ -1,10 +1,10 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { stereoPass } from 'three/tsl';
+ 
+-let camera, scene, renderer, postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer, postProcessing: THREE.PostProcessing;
+ 
+-let mesh, dummy;
++let mesh: THREE.InstancedMesh, dummy: THREE.Mesh;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -79,12 +79,12 @@ function onWindowResize() {
+     camera.updateProjectionMatrix();
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = (event.clientX - windowHalfX) * 0.01;
+     mouseY = (event.clientY - windowHalfY) * 0.01;
+ }
+ 
+-function extractPosition(matrix, position) {
++function extractPosition(matrix: THREE.Matrix4, position: THREE.Vector3) {
+     position.x = matrix.elements[12];
+     position.y = matrix.elements[13];
+     position.z = matrix.elements[14];
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
 index cfd72172..ae3271f9 100644
 --- a/examples-testing/examples/webgpu_instancing_morph.ts
