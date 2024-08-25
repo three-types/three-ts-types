@@ -2,15 +2,18 @@ import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.j
 import Node from "./Node.js";
 import { NodeBuilderContext } from "./NodeBuilder.js";
 
-export default class ContextNode extends Node {
-    isContextNode: true;
-    node: Node;
-    context: NodeBuilderContext;
+declare class ContextNode extends Node {
+    readonly isContextNode: true;
 
-    constructor(node: Node, context: NodeBuilderContext);
+    node: Node;
+    value: NodeBuilderContext;
+
+    constructor(node: Node, value?: NodeBuilderContext);
 }
 
-export const context: (node: NodeRepresentation, context: NodeBuilderContext) => ShaderNodeObject<ContextNode>;
+export default ContextNode;
+
+export const context: (node: NodeRepresentation, context?: NodeBuilderContext) => ShaderNodeObject<ContextNode>;
 export const label: (node: NodeRepresentation, label: string) => ShaderNodeObject<ContextNode>;
 
 declare module "../shadernode/ShaderNode.js" {
