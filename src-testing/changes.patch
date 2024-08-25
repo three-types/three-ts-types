@@ -426,7 +426,7 @@ index 6cffa933..5d5cc161 100644
  
  addNodeClass('FunctionNode', FunctionNode);
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index fcd488eb..84e3c972 100644
+index 674f1cda..cfb748a8 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,8 +1,14 @@
@@ -436,19 +436,19 @@ index fcd488eb..84e3c972 100644
 +import NodeBuilder from './NodeBuilder.js';
  
 -class ContextNode extends Node {
--    constructor(node, context = {}) {
+-    constructor(node, value = {}) {
 +class ContextNode<TContext> extends Node {
 +    readonly isContextNode: true;
 +
 +    node: Node;
-+    context: TContext;
++    value: TContext;
 +
-+    constructor(node: Node, context: TContext = {} as TContext) {
++    constructor(node: Node, value: TContext = {} as TContext) {
          super();
  
          this.isContextNode = true;
 @@ -11,15 +17,15 @@ class ContextNode extends Node {
-         this.context = context;
+         this.value = value;
      }
  
 -    getNodeType(builder) {
@@ -465,7 +465,7 @@ index fcd488eb..84e3c972 100644
 +    setup(builder: NodeBuilder) {
          const previousContext = builder.getContext();
  
-         builder.setContext({ ...builder.context, ...this.context });
+         builder.setContext({ ...builder.context, ...this.value });
 @@ -31,7 +37,7 @@ class ContextNode extends Node {
          return node;
      }
@@ -474,7 +474,7 @@ index fcd488eb..84e3c972 100644
 +    generate(builder: NodeBuilder, output?: string | null) {
          const previousContext = builder.getContext();
  
-         builder.setContext({ ...builder.context, ...this.context });
+         builder.setContext({ ...builder.context, ...this.value });
 @@ -47,7 +53,7 @@ class ContextNode extends Node {
  export default ContextNode;
  
@@ -2518,10 +2518,10 @@ index 9417df5a..43761555 100644
  
          const getViewZ = builder.context.getViewZ;
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index 02a8b51f..1d11c859 100644
+index a6262f9a..22657e2e 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
-@@ -1,9 +1,31 @@
+@@ -1,9 +1,30 @@
  import ContextNode from '../core/ContextNode.js';
 -import { addNodeClass } from '../core/Node.js';
 -import { addNodeElement, nodeProxy, float, vec3 } from '../shadernode/ShaderNode.js';
@@ -2547,17 +2547,16 @@ index 02a8b51f..1d11c859 100644
 +}
 +
 +class LightingContextNode extends ContextNode<LightingContext> {
-+    // lightingModel;
 +    backdropNode: Node | null;
 +    backdropAlphaNode: Node | null;
 +
-+    _context: LightingContext | null;
++    _value: LightingContext | null;
 +
 +    constructor(node: Node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
          super(node);
  
          this.lightingModel = lightingModel;
-@@ -28,7 +50,7 @@ class LightingContextNode extends ContextNode {
+@@ -28,7 +49,7 @@ class LightingContextNode extends ContextNode {
              indirectSpecular,
          };
  
@@ -2566,14 +2565,14 @@ index 02a8b51f..1d11c859 100644
              radiance: vec3().temp('radiance'),
              irradiance: vec3().temp('irradiance'),
              iblIrradiance: vec3().temp('iblIrradiance'),
-@@ -41,7 +63,7 @@ class LightingContextNode extends ContextNode {
+@@ -41,7 +62,7 @@ class LightingContextNode extends ContextNode {
          return context;
      }
  
 -    setup(builder) {
 +    setup(builder: NodeBuilder) {
-         this.context = this._context || (this._context = this.getContext());
-         this.context.lightingModel = this.lightingModel || builder.context.lightingModel;
+         this.value = this._value || (this._value = this.getContext());
+         this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/lighting/LightsNode.ts b/src-testing/src/nodes/lighting/LightsNode.ts
 index 9a41cc7d..df337a72 100644
