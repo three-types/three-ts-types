@@ -3,39 +3,13 @@ import TempNode from "../core/TempNode.js";
 import { JoinNode } from "../Nodes.js";
 import { NodeRepresentation, ShaderNode, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
-export const BurnNode: (args: { base: Node; blend: Node }) => ShaderNodeObject<JoinNode>;
+export const burn: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
-export const DodgeNode: (args: { base: Node; blend: Node }) => ShaderNodeObject<JoinNode>;
+export const dodge: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
-export const ScreenNode: (args: { base: Node; blend: Node }) => ShaderNodeObject<JoinNode>;
+export const screen: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
-export const OverlayNode: (args: { base: Node; blend: Node }) => ShaderNodeObject<JoinNode>;
-
-export type BlendMode =
-    | typeof BlendModeNode.BURN
-    | typeof BlendModeNode.DODGE
-    | typeof BlendModeNode.SCREEN
-    | typeof BlendModeNode.OVERLAY;
-
-export default class BlendModeNode extends TempNode {
-    static BURN: "burn";
-    static DODGE: "dodge";
-    static SCREEN: "screen";
-    static OVERLAY: "overlay";
-
-    baseNode: Node;
-    blendMode: BlendMode;
-    blendNode: Node;
-
-    constructor(blendMode: BlendMode, baseNode: Node, blendNode: Node);
-
-    setup(): Node;
-}
-
-export const burn: (baseNode: NodeRepresentation, blendNode?: NodeRepresentation) => ShaderNodeObject<BlendModeNode>;
-export const dodge: (baseNode: NodeRepresentation, blendNode?: NodeRepresentation) => ShaderNodeObject<BlendModeNode>;
-export const overlay: (baseNode: NodeRepresentation, blendNode?: NodeRepresentation) => ShaderNodeObject<BlendModeNode>;
-export const screen: (baseNode: NodeRepresentation, blendNode?: NodeRepresentation) => ShaderNodeObject<BlendModeNode>;
+export const overlay: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
 declare module "../shadernode/ShaderNode.js" {
     interface NodeElements {
