@@ -196,6 +196,8 @@ declare class ArcballControls extends Controls<ArcballControlsEventMap> {
      * {@link Raycaster} with a matching value, or else the {@link ArcballControls} won't work as expected.
      */
     getRaycaster(): Raycaster;
+
+    update(): void;
 }
 
 export { ArcballControls };
