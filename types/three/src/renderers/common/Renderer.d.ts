@@ -151,7 +151,7 @@ declare class Renderer {
     constructor(backend: Backend, parameters?: RendererParameters);
     init(): Promise<void>;
     get coordinateSystem(): import("../../constants.js").CoordinateSystem;
-    compileAsync(scene: Scene, camera: Camera, targetScene?: Scene | null): Promise<void>;
+    compileAsync(scene: Object3D, camera: Camera, targetScene?: Object3D | null): Promise<void>;
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
     setMRT(mrt: MRTNode | null): this;
     getMRT(): MRTNode | null;
@@ -276,6 +276,6 @@ declare class Renderer {
         passId?: string,
     ): void;
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
-    get compile(): (scene: Scene, camera: Camera, targetScene?: Scene | null) => Promise<void>;
+    get compile(): (scene: Object3D, camera: Camera, targetScene?: Object3D | null) => Promise<void>;
 }
 export default Renderer;
