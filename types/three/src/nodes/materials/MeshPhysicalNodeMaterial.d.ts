@@ -3,6 +3,7 @@ import { Color } from "../../math/Color.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
 
 export interface MeshPhysicalNodeMaterialParameters
@@ -87,4 +88,6 @@ export default class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
     get useAnisotropy(): boolean;
     get useTransmission(): boolean;
     get useDispersion(): boolean;
+
+    setupClearcoatNormal(): ShaderNodeObject<Node>;
 }
