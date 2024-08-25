@@ -298,6 +298,7 @@ export { default as VertexColorNode, vertexColor } from "./accessors/VertexColor
 
 // display
 export { afterImage, default as AfterImageNode } from "./display/AfterImageNode.js";
+export { anaglyphPass, default as AnaglyphPassNode } from "./display/AnaglyphPassNode.js";
 export { anamorphic, default as AnamorphicNode } from "./display/AnamorphicNode.js";
 export { bleach } from "./display/BleachBypassNode.js";
 export * from "./display/BlendModeNode.js";
@@ -322,6 +323,7 @@ export { ao, default as GTAONode } from "./display/GTAONode.js";
 export { default as Lut3DNode, lut3D } from "./display/Lut3DNode.js";
 export * from "./display/MotionBlurNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
+export { default as ParallaxBarrierPassNode, parallaxBarrierPass } from "./display/ParallaxBarrierPassNode.js";
 export { default as PixelationPassNode, pixelationPass } from "./display/PixelationPassNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";
 export { default as RenderOutputNode, renderOutput } from "./display/RenderOutputNode.js";
