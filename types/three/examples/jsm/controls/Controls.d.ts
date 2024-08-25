@@ -48,7 +48,7 @@ declare abstract class Controls<TEventMap extends {}> extends EventDispatcher<TE
     /**
      * Controls should implement this method if they have to update their internal state per simulation step.
      */
-    update(): void;
+    update(delta: number): void;
 }
 
 export { Controls };
