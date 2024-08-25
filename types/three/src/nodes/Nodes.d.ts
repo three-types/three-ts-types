@@ -157,6 +157,7 @@ export {
     greaterThanEqual,
     lessThan,
     lessThanEqual,
+    modInt,
     mul,
     not,
     OperatorNodeOp,

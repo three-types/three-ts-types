@@ -40,7 +40,7 @@ export const add: Operator;
 export const sub: Operator;
 export const mul: Operator;
 export const div: Operator;
-export const remainder: Operator;
+export const modInt: Operator;
 export const equal: Operator;
 export const lessThan: Operator;
 export const greaterThan: Operator;
@@ -63,7 +63,7 @@ declare module "../shadernode/ShaderNode.js" {
         sub: typeof sub;
         mul: typeof mul;
         div: typeof div;
-        remainder: typeof remainder;
+        modInt: typeof modInt;
         equal: typeof equal;
         lessThan: typeof lessThan;
         greaterThan: typeof greaterThan;
@@ -79,5 +79,19 @@ declare module "../shadernode/ShaderNode.js" {
         bitXor: typeof bitXor;
         shiftLeft: typeof shiftLeft;
         shiftRight: typeof shiftRight;
+    }
+}
+
+/**
+ * @deprecated .remainder() has been renamed to .modInt().
+ */
+export const remainder: Operator;
+
+declare module "../shadernode/ShaderNode.js" {
+    interface NodeElements {
+        /**
+         * @deprecated .remainder() has been renamed to .modInt().
+         */
+        remainder: typeof remainder;
     }
 }
