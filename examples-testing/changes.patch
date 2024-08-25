@@ -6816,31 +6816,6 @@ index eb0f8d91..9ab15779 100644
  
  init().catch(function (err) {
      console.error(err);
-diff --git a/examples-testing/examples/webgl_loader_gltf_lights.ts b/examples-testing/examples/webgl_loader_gltf_lights.ts
-index f2bd5b10..7efbb033 100644
---- a/examples-testing/examples/webgl_loader_gltf_lights.ts
-+++ b/examples-testing/examples/webgl_loader_gltf_lights.ts
-@@ -6,7 +6,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
- 
- const params = {
-     punctualLightsEnabled: true,
-@@ -66,9 +66,9 @@ function onWindowResize() {
-     render();
- }
- 
--function toggleLights(visible) {
-+function toggleLights(visible: boolean) {
-     scene.traverse(function (object) {
--        if (object.isLight) {
-+        if ((object as THREE.Light).isLight) {
-             object.visible = visible;
-         }
-     });
 diff --git a/examples-testing/examples/webgl_loader_gltf_sheen.ts b/examples-testing/examples/webgl_loader_gltf_sheen.ts
 index bd258d5c..de946286 100644
 --- a/examples-testing/examples/webgl_loader_gltf_sheen.ts
@@ -14787,7 +14762,7 @@ index 432d641a..1434cc30 100644
  const params = {
      distanceExponent: 1,
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index d38a7abb..80478cf8 100644
+index f1819db4..f8c8cf06 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 @@ -1,4 +1,4 @@
@@ -14841,7 +14816,7 @@ index 97186836..583a9eb3 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 066a4766..6ce4437c 100644
+index c180acb1..60fd7075 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 @@ -1,5 +1,5 @@
@@ -14852,7 +14827,7 @@ index 066a4766..6ce4437c 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
-@@ -84,9 +84,10 @@ window.addEventListener('pointerdown', event => {
+@@ -87,9 +87,10 @@ window.addEventListener('pointerdown', event => {
      const intersects = raycaster.intersectObjects(scene.children, false);
  
      if (intersects.length > 0) {
