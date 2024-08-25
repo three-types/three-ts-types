@@ -5,7 +5,6 @@ import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 export default class BatchNode extends Node {
     batchMesh: BatchedMesh;
 
-    instanceColorNode: Node | null;
     batchingIdNode: Node | null;
 
     constructor(batchMesh: BatchedMesh);
