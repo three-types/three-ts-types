@@ -1,5 +1,4 @@
-import { Camera, Vector3 } from "three";
-import { Controls } from "./Controls.js";
+import { Camera, Controls, Vector3 } from "three";
 
 /**
  * This class is an alternative implementation of {@link FlyControls}.

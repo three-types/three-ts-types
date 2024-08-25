@@ -1,5 +1,4 @@
-import { Camera, Raycaster, Scene } from "three";
-import { Controls } from "./Controls.js";
+import { Camera, Controls, Raycaster, Scene } from "three";
 
 export type ArcballControlsMouseActionOperation = "PAN" | "ROTATE" | "ZOOM" | "FOV";
 

@@ -1,5 +1,5 @@
-import { Camera } from "../../../src/cameras/Camera.js";
-import { EventDispatcher } from "../../../src/core/EventDispatcher.js";
+import { Camera } from "../cameras/Camera.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
 
 /**
  * Abstract base class for controls.
