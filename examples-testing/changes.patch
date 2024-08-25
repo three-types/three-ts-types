@@ -14189,10 +14189,10 @@ index bd84aba0..f9d188c3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index a619f430..46473e46 100644
+index 48c6fad6..52624f42 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
-@@ -1,17 +1,17 @@
+@@ -1,19 +1,19 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
@@ -14202,7 +14202,9 @@ index a619f430..46473e46 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { radixSort } from 'three/addons/utils/SortUtils.js';
-+import { RadixSortOptions, radixSort } from 'three/addons/utils/SortUtils.js';
++import { radixSort, RadixSortOptions } from 'three/addons/utils/SortUtils.js';
+ 
+ import { transformedNormalView, directionToColor, diffuseColor } from 'three/tsl';
  
 -let camera, scene, renderer;
 -let controls, stats;
@@ -14212,12 +14214,12 @@ index a619f430..46473e46 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let controls: OrbitControls, stats: Stats;
 +let gui: GUI;
-+let geometries: THREE.BufferGeometry[], mesh: THREE.BatchedMesh, material: THREE.MeshNormalNodeMaterial;
++let geometries: THREE.BufferGeometry[], mesh: THREE.BatchedMesh, material: THREE.MeshBasicNodeMaterial;
 +const ids: number[] = [];
  
  const matrix = new THREE.Matrix4();
  
-@@ -41,7 +41,7 @@ init();
+@@ -43,7 +43,7 @@ init();
  
  //
  
@@ -14226,7 +14228,7 @@ index a619f430..46473e46 100644
      position.x = Math.random() * 40 - 20;
      position.y = Math.random() * 40 - 20;
      position.z = Math.random() * 40 - 20;
-@@ -57,7 +57,7 @@ function randomizeMatrix(matrix) {
+@@ -59,7 +59,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -14235,7 +14237,7 @@ index a619f430..46473e46 100644
      rotation.x = Math.random() * 0.01;
      rotation.y = Math.random() * 0.01;
      rotation.z = Math.random() * 0.01;
-@@ -82,7 +82,7 @@ function createMaterial() {
+@@ -85,7 +85,7 @@ function createMaterial() {
  
  function cleanup() {
      if (mesh) {
@@ -14244,7 +14246,7 @@ index a619f430..46473e46 100644
  
          if (mesh.dispose) {
              mesh.dispose();
-@@ -250,18 +250,26 @@ function init(forceWebGL = false) {
+@@ -248,18 +248,26 @@ function init(forceWebGL = false) {
  
  //
  
