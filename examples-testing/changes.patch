@@ -12685,7 +12685,7 @@ index f263be70..bc8f8622 100644
          });
  
 diff --git a/examples-testing/examples/webgl_texture2darray_layerupdate.ts b/examples-testing/examples/webgl_texture2darray_layerupdate.ts
-index 599fd857..7a8e62c5 100644
+index 0cc136cb..26237259 100644
 --- a/examples-testing/examples/webgl_texture2darray_layerupdate.ts
 +++ b/examples-testing/examples/webgl_texture2darray_layerupdate.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -12736,6 +12736,15 @@ index 599fd857..7a8e62c5 100644
      geometry.instanceCount = 3;
  
      const instancedIndexAttribute = new THREE.InstancedBufferAttribute(new Uint16Array([0, 1, 2]), 1, false, 1);
+@@ -116,7 +116,7 @@ async function init() {
+     // Initialize the texture array by first rendering the spirited away
+     // frames in order.
+ 
+-    textureArray.mipmaps[0].data.set(spiritedaway.mipmaps[0].data.subarray(0, textureArray.mipmaps[0].data.length));
++    textureArray.mipmaps![0].data.set(spiritedaway.mipmaps![0].data.subarray(0, textureArray.mipmaps![0].data.length));
+     textureArray.needsUpdate = true;
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl_texture3d.ts b/examples-testing/examples/webgl_texture3d.ts
 index 977dbadb..fb1460ca 100644
 --- a/examples-testing/examples/webgl_texture3d.ts
@@ -13522,31 +13531,65 @@ index 4a2e6c80..22eeb6d0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 8063777c..51757359 100644
+index 48358dcf..f69959cf 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,10 +1,10 @@
+@@ -1,23 +1,36 @@
 -import * as THREE from 'three';
+-
+-import { stereoPass, anaglyphPass, parallaxBarrierPass } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
- 
- import { stereoPass } from 'three/tsl';
++
++import {
++    stereoPass,
++    anaglyphPass,
++    parallaxBarrierPass,
++    ShaderNodeObject,
++    StereoPassNode,
++    AnaglyphPassNode,
++    ParallaxBarrierPassNode,
++} from 'three/tsl';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Timer } from 'three/addons/misc/Timer.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, postProcessing;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer, postProcessing: THREE.PostProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing;
  
--let mesh, dummy;
-+let mesh: THREE.InstancedMesh, dummy: THREE.Mesh;
+-let stereo, anaglyph, parallaxBarrier;
++let stereo: ShaderNodeObject<StereoPassNode>,
++    anaglyph: ShaderNodeObject<AnaglyphPassNode>,
++    parallaxBarrier: ShaderNodeObject<ParallaxBarrierPassNode>;
  
- let mouseX = 0,
-     mouseY = 0;
-@@ -79,12 +79,12 @@ function onWindowResize() {
-     camera.updateProjectionMatrix();
+-let mesh, dummy, timer;
++let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: Timer;
+ 
+ const position = new THREE.Vector3();
+ 
+-const params = {
++const params: { effect: 'stereo' | 'anaglyph' | 'parallaxBarrier' } = {
+     effect: 'stereo',
+ };
+ 
+-const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' };
++const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' } as const;
+ 
+ init();
+ 
+@@ -87,7 +100,7 @@ function init() {
+     controls.maxDistance = 25;
  }
  
--function onDocumentMouseMove(event) {
-+function onDocumentMouseMove(event: MouseEvent) {
-     mouseX = (event.clientX - windowHalfX) * 0.01;
-     mouseY = (event.clientY - windowHalfY) * 0.01;
+-function update(value) {
++function update(value: 'stereo' | 'anaglyph' | 'parallaxBarrier') {
+     if (value === 'stereo') {
+         postProcessing.outputNode = stereo;
+     } else if (value === 'anaglyph') {
+@@ -106,7 +119,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
 -function extractPosition(matrix, position) {
