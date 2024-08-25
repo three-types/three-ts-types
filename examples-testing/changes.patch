@@ -15120,6 +15120,47 @@ index cbc5a96b..66ec682e 100644
  
  const params = {
      enable: true,
+diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
+index 76e3a95c..7748d8f0 100644
+--- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
++++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
+@@ -1,13 +1,13 @@
+-import * as THREE from 'three';
+-import { ssaaPass } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { ssaaPass, SSAAPassNode, ShaderNodeObject } from 'three/tsl';
+ 
+ import { Timer } from 'three/addons/misc/Timer.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, mesh, renderer, postProcessing;
+-let camera, ssaaRenderPass;
+-let gui, stats, timer;
++let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
++let camera: THREE.PerspectiveCamera, ssaaRenderPass: ShaderNodeObject<SSAAPassNode>;
++let gui: GUI | undefined, stats: Stats, timer: Timer;
+ 
+ const params = {
+     sampleLevel: 3,
+@@ -148,7 +148,7 @@ function animate() {
+         mesh.rotation.y += delta * 0.5;
+     }
+ 
+-    let newColor = ssaaRenderPass.clearColor;
++    let newColor: THREE.ColorRepresentation = ssaaRenderPass.clearColor;
+ 
+     switch (params.clearColor) {
+         case 'blue':
+@@ -173,7 +173,7 @@ function animate() {
+ 
+     ssaaRenderPass.sampleLevel = params.sampleLevel;
+ 
+-    camera.view.offsetX = params.viewOffsetX;
++    camera.view!.offsetX = params.viewOffsetX;
+ 
+     postProcessing.render();
+ 
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
 index b66bad12..babbe1a9 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
