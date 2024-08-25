@@ -293,6 +293,7 @@ export { default as TextureNode, sampler, texture } from "./accessors/TextureNod
 export { default as UniformArrayNode, uniformArray } from "./accessors/UniformArrayNode.js";
 export { default as UserDataNode, userData } from "./accessors/UserDataNode.js";
 export * from "./accessors/UVNode.js";
+export * from "./accessors/VelocityNode.js";
 export { default as VertexColorNode, vertexColor } from "./accessors/VertexColorNode.js";
 
 // display
@@ -327,6 +328,7 @@ export { default as FXAANode, fxaa } from "./display/FXAANode.js";
 export { default as GaussianBlurNode, gaussianBlur } from "./display/GaussianBlurNode.js";
 export { ao, default as GTAONode } from "./display/GTAONode.js";
 export { default as Lut3DNode, lut3D } from "./display/Lut3DNode.js";
+export * from "./display/MotionBlurNode.js";
 export { default as NormalMapNode, normalMap } from "./display/NormalMapNode.js";
 export { default as PixelationPassNode, pixelationPass } from "./display/PixelationPassNode.js";
 export { default as PosterizeNode, posterize } from "./display/PosterizeNode.js";

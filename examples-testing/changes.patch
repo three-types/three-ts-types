@@ -14841,7 +14841,7 @@ index 97186836..583a9eb3 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 7140a8ad..a2dae285 100644
+index 066a4766..6ce4437c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 @@ -1,5 +1,5 @@
@@ -14860,8 +14860,8 @@ index 7140a8ad..a2dae285 100644
 +        const material = (intersects[0].object as THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicNodeMaterial>)
 +            .material;
  
--        const bloomIntensity = material.mrtNode.getNode('bloomIntensity');
-+        const bloomIntensity = material.mrtNode!.getNode('bloomIntensity') as UniformNode<number>;
+-        const bloomIntensity = material.mrtNode.get('bloomIntensity');
++        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as UniformNode<number>;
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
@@ -14978,6 +14978,42 @@ index a4f56b17..ce7e7ad3 100644
      compose = sceneMask1.mix(compose, texture(texture1));
      compose = sceneMask2.mix(compose, texture(texture2));
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
+index aa76acb9..77f5f8b1 100644
+--- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
++++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, texture, motionBlur, uniform, output, mrt, mix, velocity, uv, viewportTopLeft } from 'three/tsl';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -9,11 +9,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer;
+-let boxLeft, boxRight, model, mixer, clock;
+-let postProcessing;
+-let controls;
+-let stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let boxLeft: THREE.Mesh, boxRight: THREE.Mesh, model: THREE.Group, mixer: THREE.AnimationMixer, clock: THREE.Clock;
++let postProcessing: THREE.PostProcessing;
++let controls: OrbitControls;
++let stats: Stats;
+ 
+ const params = {
+     speed: 1.0,
+@@ -59,7 +59,7 @@ function init() {
+         model.rotation.y = Math.PI / 2;
+ 
+         model.traverse(function (child) {
+-            if (child.isMesh) {
++            if ((child as THREE.Mesh).isMesh) {
+                 child.castShadow = true;
+                 child.receiveShadow = true;
+             }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
 index d7e51008..a9decd46 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
