@@ -16,6 +16,7 @@ import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import LightsNode from "../lighting/LightsNode.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import LineBasicNodeMaterial from "./LineBasicNodeMaterial.js";
 import MeshBasicNodeMaterial from "./MeshBasicNodeMaterial.js";
 import MeshMatcapNodeMaterial from "./MeshMatcapNodeMaterial.js";
@@ -55,12 +56,11 @@ export interface NodeMaterialParameters extends MaterialParameters {
     vertexNode?: Node | null | undefined;
 }
 
-export default class NodeMaterial extends Material {
+declare class NodeMaterial extends Material {
     readonly isNodeMaterial: true;
 
     fog: boolean;
     lights: boolean;
-    normals: boolean;
 
     lightsNode: LightsNode | null;
     envNode: Node | null;
@@ -94,7 +94,7 @@ export default class NodeMaterial extends Material {
     setupPosition(builder: NodeBuilder): Node;
     setupDiffuseColor(builder: NodeBuilder): void;
     setupVariants(builder: NodeBuilder): void;
-    setupNormal(builder: NodeBuilder): void;
+    setupNormal(builder: NodeBuilder): ShaderNodeObject<Node>;
     setupEnvironment(builder: NodeBuilder): Node | null;
     setupLightMap(builder: NodeBuilder): Node | null;
     setupLights(builder: NodeBuilder): LightsNode;
@@ -120,5 +120,8 @@ export default class NodeMaterial extends Material {
     static fromMaterial(material: Material): NodeMaterial;
 }
 
+export default NodeMaterial;
+
 export function addNodeMaterial(type: string, nodeMaterial: typeof NodeMaterial): void;
+
 export function createNodeMaterialFromType(type: string): NodeMaterial;
