@@ -24,7 +24,7 @@ declare abstract class Controls<TEventMap extends {}> extends EventDispatcher<TE
     /**
      * Creates a new instance of {@link Controls}.
      * @param object The object the controls should manage (usually the camera).
-     * @param domElement The HTML element used for event listeners (optional).
+     * @param domElement The HTML element used for event listeners. (optional)
      */
     constructor(object: Camera, domElement: HTMLElement | null);
 
