@@ -348,12 +348,12 @@ export {
 export { default as ViewportDepthTextureNode, viewportDepthTexture } from "./display/ViewportDepthTextureNode.js";
 export {
     default as ViewportNode,
-    viewportBottomLeft,
-    viewportBottomRight,
+    viewport,
     viewportCoordinate,
+    ViewportNodeScope,
     viewportResolution,
     viewportTopLeft,
-    viewportTopRight,
+    viewportUV,
 } from "./display/ViewportNode.js";
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";

@@ -10,22 +10,26 @@ export type ViewportNodeScope =
     | typeof ViewportNode.BOTTOM_RIGHT;
 
 export default class ViewportNode extends Node {
+    scope: ViewportNodeScope;
+
+    readonly isViewportNode: true;
+
+    constructor(scope: ViewportNodeScope);
+
     static COORDINATE: "coordinate";
     static RESOLUTION: "resolution";
     static TOP_LEFT: "topLeft";
     static BOTTOM_LEFT: "bottomLeft";
     static TOP_RIGHT: "topRight";
     static BOTTOM_RIGHT: "bottomRight";
-
-    scope: ViewportNodeScope;
-    isViewportNode: true;
-
-    constructor(scope: ViewportNodeScope);
 }
 
 export const viewportCoordinate: ShaderNodeObject<ViewportNode>;
 export const viewportResolution: ShaderNodeObject<ViewportNode>;
+export const viewport: ShaderNodeObject<ViewportNode>;
+export const viewportUV: ShaderNodeObject<ViewportNode>;
+
+/**
+ * @deprecated "viewportTopLeft" is deprecated. Use "viewportUV" instead.
+ */
 export const viewportTopLeft: ShaderNodeObject<ViewportNode>;
-export const viewportBottomLeft: ShaderNodeObject<ViewportNode>;
-export const viewportTopRight: ShaderNodeObject<ViewportNode>;
-export const viewportBottomRight: ShaderNodeObject<ViewportNode>;
