@@ -2,9 +2,16 @@ import { Camera } from "three";
 import { Controls } from "./Controls.js";
 
 export interface FlyControlsEventMap {
+    /**
+     * Fires when the camera has been transformed by the controls.
+     */
     change: {};
 }
 
+/**
+ * {@link FlyControls} enables a navigation similar to fly modes in DCC tools like Blender. You can arbitrarily
+ * transform the camera in 3D space without any limitations (e.g. focus on a specific target).
+ */
 declare class FlyControls extends Controls<FlyControlsEventMap> {
     /**
      * The movement speed. Default is `1`.
@@ -27,6 +34,11 @@ declare class FlyControls extends Controls<FlyControlsEventMap> {
      */
     autoForward: boolean;
 
+    /**
+     * Creates a new instance of {@link FlyControls}.
+     * @param object The camera to be controlled.
+     * @param domElement The HTML element used for event listeners.
+     */
     constructor(object: Camera, domElement?: HTMLElement | null);
 }
 
