@@ -356,6 +356,7 @@ export { default as ViewportDepthTextureNode, viewportDepthTexture } from "./dis
 export {
     default as ViewportNode,
     viewport,
+    viewportBottomLeft,
     viewportCoordinate,
     ViewportNodeScope,
     viewportResolution,
