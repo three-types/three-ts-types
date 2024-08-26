@@ -8,7 +8,14 @@ export { bypass, default as BypassNode } from "./core/BypassNode.js";
 export { cache, default as CacheNode } from "./core/CacheNode.js";
 export { default as ConstNode } from "./core/ConstNode.js";
 export { context, default as ContextNode, label } from "./core/ContextNode.js";
-export { default as IndexNode, drawIndex, IndexNodeScope, instanceIndex, vertexIndex } from "./core/IndexNode.js";
+export {
+    default as IndexNode,
+    drawIndex,
+    IndexNodeScope,
+    instanceIndex,
+    invocationLocalIndex,
+    vertexIndex,
+} from "./core/IndexNode.js";
 export {
     default as LightingModel,
     LightingModelDirectInput,
