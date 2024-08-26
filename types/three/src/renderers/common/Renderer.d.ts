@@ -38,6 +38,7 @@ export interface RendererParameters {
     alpha?: boolean | undefined;
     antialias?: boolean | undefined;
     samples?: number | undefined;
+    getFallback?: ((error: unknown) => Backend) | null | undefined;
 }
 declare class Renderer {
     readonly isRenderer: true;
@@ -58,6 +59,7 @@ declare class Renderer {
     stencil: boolean;
     clippingPlanes: readonly Plane[];
     info: Info;
+    _getFallback: ((error: unknown) => Backend) | null;
     _pixelRatio: number;
     _width: number;
     _height: number;
