@@ -141,7 +141,7 @@ export {
 } from "./math/MathNode.js";
 
 export { cond, default as CondNode, select } from "./math/CondNode.js";
-export { default as HashNode, hash } from "./math/HashNode.js";
+export * from "./math/Hash.js";
 export {
     add,
     and,
@@ -175,14 +175,14 @@ export { triNoise3D } from "./math/TriNoise3D.js";
 // utils
 export { default as ArrayElementNode } from "./utils/ArrayElementNode.js";
 export { default as ConvertNode } from "./utils/ConvertNode.js";
-export { default as DiscardNode, discard, Return } from "./utils/DiscardNode.js";
+export * from "./utils/Discard.js";
 export { default as EquirectUVNode, equirectUV } from "./utils/EquirectUVNode.js";
 export { default as JoinNode } from "./utils/JoinNode.js";
 export { Break, Continue, default as LoopNode, Loop } from "./utils/LoopNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
 export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
-export { colorToDirection, default as PackingNode, directionToColor } from "./utils/PackingNode.js";
+export * from "./utils/Packing.js";
 export { default as ReflectorNode, reflector, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
 export { default as RemapNode, remap, remapClamp } from "./utils/RemapNode.js";
 export { default as RotateNode, rotate } from "./utils/RotateNode.js";
