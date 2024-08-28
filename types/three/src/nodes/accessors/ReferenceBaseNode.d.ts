@@ -1,11 +1,9 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
-declare class ReferenceNode<T> extends Node {
+declare class ReferenceBaseNode<T> extends Node {
     property: string;
-
     uniformType: string;
-
     object: T;
     count: number | null;
 
@@ -18,12 +16,12 @@ declare class ReferenceNode<T> extends Node {
     setNodeType(uniformType: string): void;
 }
 
-export default ReferenceNode;
+export default ReferenceBaseNode;
 
-export const reference: <T>(name: string, type: string, object: T) => ShaderNodeObject<ReferenceNode<T>>;
+export const reference: <T>(name: string, type: string, object: T) => ShaderNodeObject<ReferenceBaseNode<T>>;
 export const referenceBuffer: <T>(
     name: string,
     type: string,
     count: number,
     object: T,
-) => ShaderNodeObject<ReferenceNode<T>>;
+) => ShaderNodeObject<ReferenceBaseNode<T>>;
