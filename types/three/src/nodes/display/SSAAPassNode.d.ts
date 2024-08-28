@@ -21,6 +21,6 @@ declare class SSAAPassNode extends PassNode {
     constructor(scene: Scene, camera: Camera);
 }
 
-export const ssaaPass: (scene: Scene, camera: Camera) => ShaderNodeObject<SSAAPassNode>;
-
 export default SSAAPassNode;
+
+export const ssaaPass: (scene: Scene, camera: Camera) => ShaderNodeObject<SSAAPassNode>;

@@ -17,9 +17,3 @@ export default class AfterImageNode extends TempNode {
 }
 
 export const afterImage: (node: Node, damp?: number) => ShaderNodeObject<AfterImageNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        afterImage: typeof afterImage;
-    }
-}

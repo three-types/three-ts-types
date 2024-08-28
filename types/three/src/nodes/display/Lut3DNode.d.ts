@@ -14,17 +14,11 @@ declare class Lut3DNode extends TempNode {
     constructor(inputNode: Node, lutNode: UniformNode<Data3DTexture>, size: number, intensityNode: UniformNode<number>);
 }
 
+export default Lut3DNode;
+
 export const lut3D: (
     node: NodeRepresentation,
     lut: NodeRepresentation,
     size: number,
     intensity: NodeRepresentation,
 ) => ShaderNodeObject<Lut3DNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        lut3D: typeof lut3D;
-    }
-}
-
-export default Lut3DNode;

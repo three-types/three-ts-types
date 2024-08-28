@@ -4,7 +4,7 @@ import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
-export default class GaussianBlurNode extends TempNode {
+declare class GaussianBlurNode extends TempNode {
     textureNode: TextureNode;
     directionNode: Node | null;
     sigma: number;
@@ -18,14 +18,10 @@ export default class GaussianBlurNode extends TempNode {
     getTextureNode(): TextureNode;
 }
 
+export default GaussianBlurNode;
+
 export const gaussianBlur: (
     node: NodeRepresentation,
     directionNode?: NodeRepresentation | null,
     sigma?: number,
 ) => ShaderNodeObject<GaussianBlurNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        gaussianBlur: typeof gaussianBlur;
-    }
-}

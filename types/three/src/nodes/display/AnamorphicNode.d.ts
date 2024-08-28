@@ -23,9 +23,3 @@ export const anamorphic: (
     scale?: NodeRepresentation,
     samples?: NodeRepresentation,
 ) => ShaderNodeObject<AnamorphicNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        anamorphic: typeof anamorphic;
-    }
-}

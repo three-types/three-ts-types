@@ -8,12 +8,6 @@ declare class FXAANode extends TempNode {
     constructor(textureNode: TextureNode);
 }
 
-export const fxaa: (node: NodeRepresentation) => ShaderNodeObject<FXAANode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        fxaa: typeof fxaa;
-    }
-}
-
 export default FXAANode;
+
+export const fxaa: (node: NodeRepresentation) => ShaderNodeObject<FXAANode>;

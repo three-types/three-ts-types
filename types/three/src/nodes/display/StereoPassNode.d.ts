@@ -12,6 +12,6 @@ declare class StereoPassNode extends PassNode {
     constructor(scene: Scene, camera: Camera);
 }
 
-export const stereoPass: (scene: Scene, camera: Camera) => ShaderNodeObject<StereoPassNode>;
-
 export default StereoPassNode;
+
+export const stereoPass: (scene: Scene, camera: Camera) => ShaderNodeObject<StereoPassNode>;

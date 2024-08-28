@@ -23,6 +23,8 @@ declare class TransitionNode extends TempNode {
     );
 }
 
+export default TransitionNode;
+
 export const transition: (
     node: NodeRepresentation,
     nodeB: NodeRepresentation,
@@ -31,11 +33,3 @@ export const transition: (
     threshold: UniformNode<number>,
     useTexture: UniformNode<number>,
 ) => ShaderNodeObject<TransitionNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        transition: typeof transition;
-    }
-}
-
-export default TransitionNode;

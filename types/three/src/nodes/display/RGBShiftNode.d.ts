@@ -16,9 +16,3 @@ export default class RGBShiftNode extends TempNode {
 }
 
 export const rgbShift: (node: NodeRepresentation, amount?: number, angle?: number) => ShaderNodeObject<RGBShiftNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        rgbShift: typeof rgbShift;
-    }
-}

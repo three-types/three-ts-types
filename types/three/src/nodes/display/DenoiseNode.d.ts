@@ -21,6 +21,8 @@ declare class DenoiseNode extends TempNode {
     constructor(textureNode: Node, depthNode: Node, normalNode: Node, noiseNode: Node, camera: Camera);
 }
 
+export default DenoiseNode;
+
 export const denoise: (
     node: NodeRepresentation,
     depthNode: NodeRepresentation,
@@ -28,11 +30,3 @@ export const denoise: (
     noiseNode: NodeRepresentation,
     camera: Camera,
 ) => ShaderNodeObject<DenoiseNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        denoise: typeof denoise;
-    }
-}
-
-export default DenoiseNode;

@@ -2,6 +2,8 @@ import Node from "../core/Node.js";
 import MathNode from "../math/MathNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
 
+export const grayscale: (color: NodeRepresentation) => ShaderNodeObject<Node>;
+
 export const saturation: (
     color: NodeRepresentation,
     adjustment?: NodeRepresentation,
@@ -23,12 +25,3 @@ export const luminance: (
 ) => ShaderNodeObject<MathNode>;
 
 export const threshold: (color: NodeRepresentation, thershold: NodeRepresentation) => ShaderNodeObject<MathNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        saturation: typeof saturation;
-        vibrance: typeof vibrance;
-        hue: typeof hue;
-        threshold: typeof threshold;
-    }
-}

@@ -26,10 +26,4 @@ export const bloom: (
     threshold?: number,
 ) => ShaderNodeObject<BloomNode>;
 
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        bloom: typeof bloom;
-    }
-}
-
 export default BloomNode;

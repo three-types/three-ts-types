@@ -9,7 +9,7 @@ export type ViewportNodeScope =
     | typeof ViewportNode.TOP_RIGHT
     | typeof ViewportNode.BOTTOM_RIGHT;
 
-export default class ViewportNode extends Node {
+declare class ViewportNode extends Node {
     scope: ViewportNodeScope;
 
     readonly isViewportNode: true;
@@ -23,6 +23,8 @@ export default class ViewportNode extends Node {
     static TOP_RIGHT: "topRight";
     static BOTTOM_RIGHT: "bottomRight";
 }
+
+export default ViewportNode;
 
 export const viewportCoordinate: ShaderNodeObject<ViewportNode>;
 export const viewportResolution: ShaderNodeObject<ViewportNode>;

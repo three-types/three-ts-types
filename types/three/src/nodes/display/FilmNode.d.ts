@@ -10,16 +10,10 @@ declare class FilmNode extends TempNode {
     constructor(inputNode: Node, intensityNode?: Node | null, uvNode?: Node | null);
 }
 
+export default FilmNode;
+
 export const film: (
     inputNode: NodeRepresentation,
     intensityNode?: NodeRepresentation | null,
     uvNode?: NodeRepresentation | null,
 ) => ShaderNodeObject<FilmNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        film: typeof film;
-    }
-}
-
-export default FilmNode;
