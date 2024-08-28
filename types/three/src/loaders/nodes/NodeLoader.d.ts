@@ -1,7 +1,7 @@
-import { Loader } from "../../loaders/Loader.js";
-import { LoadingManager } from "../../loaders/LoadingManager.js";
+import { Node } from "../../nodes/Nodes.js";
 import { Texture } from "../../textures/Texture.js";
-import { Node } from "../Nodes.js";
+import { Loader } from "../Loader.js";
+import { LoadingManager } from "../LoadingManager.js";
 
 export interface NodeLoaderResult {
     [hash: string]: Node;
