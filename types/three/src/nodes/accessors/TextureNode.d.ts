@@ -27,7 +27,25 @@ export default class TextureNode extends UniformNode<Texture> {
 
     getDefaultUV(): Node;
 
+    setSampler(value: boolean): this;
+
+    getSampler(): boolean;
+
+    uv(uvNode: NodeRepresentation): ShaderNodeObject<Node>;
+
+    blur(amountNode: NodeRepresentation): ShaderNodeObject<Node>;
+
+    level(levelNode: NodeRepresentation): ShaderNodeObject<Node>;
+
+    size(levelNode: NodeRepresentation): ShaderNodeObject<Node>;
+
+    bias(biasNode: NodeRepresentation): ShaderNodeObject<Node>;
+
+    compare(compareNode: NodeRepresentation): ShaderNodeObject<Node>;
+
     grad(gradeNodeX: NodeRepresentation, gradeNodeY: NodeRepresentation): ShaderNodeObject<Node>;
+
+    depth(depthNode: NodeRepresentation): ShaderNodeObject<Node>;
 
     clone(): this;
 }

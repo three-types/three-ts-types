@@ -57,7 +57,10 @@ export type SwizzleOption = Exclude<
 export type Swizzable<T extends Node = Node> =
     & T
     & {
-        [key in SwizzleOption | number]: ShaderNodeObject<Node>;
+        [Key in SwizzleOption | number]: ShaderNodeObject<Node>;
+    }
+    & {
+        [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => ShaderNodeObject<Node>;
     };
 
 export type ShaderNodeObject<T extends Node> =
