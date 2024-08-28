@@ -1,7 +1,7 @@
-import { LineDashedMaterialParameters } from "../../materials/LineDashedMaterial.js";
 import { Color } from "../../math/Color.js";
+import Node from "../../nodes/core/Node.js";
 import { Texture } from "../../textures/Texture.js";
-import Node from "../core/Node.js";
+import { LineDashedMaterialParameters } from "../LineDashedMaterial.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface Line2NodeMaterialParameters extends NodeMaterialParameters, LineDashedMaterialParameters {

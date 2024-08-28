@@ -1,8 +1,8 @@
 import { Combine } from "../../constants.js";
-import { MeshBasicMaterialParameters } from "../../materials/MeshBasicMaterial.js";
 import { Color } from "../../math/Color.js";
 import { Euler } from "../../math/Euler.js";
 import { Texture } from "../../textures/Texture.js";
+import { MeshBasicMaterialParameters } from "../MeshBasicMaterial.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface MeshBasicNodeMaterialParameters extends NodeMaterialParameters, MeshBasicMaterialParameters {

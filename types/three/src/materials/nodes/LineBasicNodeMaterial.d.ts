@@ -1,6 +1,6 @@
-import { LineBasicMaterialParameters } from "../../materials/LineBasicMaterial.js";
 import { Color } from "../../math/Color.js";
 import { Texture } from "../../textures/Texture.js";
+import { LineBasicMaterialParameters } from "../LineBasicMaterial.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface LineBasicNodeMaterialParameters extends NodeMaterialParameters, LineBasicMaterialParameters {

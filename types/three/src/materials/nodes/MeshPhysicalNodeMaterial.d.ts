@@ -1,9 +1,9 @@
-import { MeshPhysicalMaterialParameters } from "../../materials/MeshPhysicalMaterial.js";
 import { Color } from "../../math/Color.js";
 import { Vector2 } from "../../math/Vector2.js";
+import Node from "../../nodes/core/Node.js";
+import { ShaderNodeObject } from "../../nodes/shadernode/ShaderNode.js";
 import { Texture } from "../../textures/Texture.js";
-import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { MeshPhysicalMaterialParameters } from "../MeshPhysicalMaterial.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
 
 export interface MeshPhysicalNodeMaterialParameters

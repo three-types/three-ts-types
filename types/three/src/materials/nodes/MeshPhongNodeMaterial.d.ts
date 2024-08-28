@@ -1,28 +1,26 @@
-import { NormalMapTypes } from "../../constants.js";
-import { MeshStandardMaterialParameters } from "../../materials/MeshStandardMaterial.js";
+import { Combine, NormalMapTypes } from "../../constants.js";
 import { Color } from "../../math/Color.js";
 import { Euler } from "../../math/Euler.js";
 import { Vector2 } from "../../math/Vector2.js";
+import Node from "../../nodes/core/Node.js";
 import { Texture } from "../../textures/Texture.js";
-import Node from "../core/Node.js";
+import { MeshPhongMaterialParameters } from "../MeshPhongMaterial.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
-export interface MeshStandardNodeMaterialParameters extends NodeMaterialParameters, MeshStandardMaterialParameters {
+export interface MeshPhongNodeMaterialParameters extends NodeMaterialParameters, MeshPhongMaterialParameters {
 }
 
-export default class MeshStandardNodeMaterial extends NodeMaterial {
-    readonly isMeshStandardNodeMaterial: true;
+export default class MeshPhongNodeMaterial extends NodeMaterial {
+    readonly isMeshPhongNodeMaterial: true;
 
-    emissiveNode: Node | null;
+    shininessNode: Node | null;
+    specularNode: Node | null;
 
-    metalnessNode: Node | null;
-    roughnessNode: Node | null;
-
-    // Properties from MeshStandardMaterial
-    readonly isMeshStandardMaterial: true;
+    // Properties from MeshPhongMaterial
+    readonly isMeshPhongMaterial: true;
     color: Color;
-    roughness: number;
-    metalness: number;
+    specular: Color;
+    shininess: number;
     map: Texture | null;
     lightMap: Texture | null;
     lightMapIntensity: number;
@@ -39,18 +37,20 @@ export default class MeshStandardNodeMaterial extends NodeMaterial {
     displacementMap: Texture | null;
     displacementScale: number;
     displacementBias: number;
-    roughnessMap: Texture | null;
-    metalnessMap: Texture | null;
+    specularMap: Texture | null;
     alphaMap: Texture | null;
     envMap: Texture | null;
     envMapRotation: Euler;
-    envMapIntensity: number;
+    combine: Combine;
+    reflectivity: number;
+    refractionRatio: number;
     wireframe: boolean;
     wireframeLinewidth: number;
     wireframeLinecap: string;
     wireframeLinejoin: string;
     flatShading: boolean;
+    metal: boolean;
     fog: boolean;
 
-    constructor(paramters?: MeshStandardNodeMaterialParameters);
+    constructor(parameters?: MeshPhongNodeMaterialParameters);
 }
