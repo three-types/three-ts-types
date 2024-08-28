@@ -3524,10 +3524,10 @@ index b17e7080..e2b545b7 100644
              if (map === undefined) return false;
          }
 diff --git a/src-testing/src/renderers/common/ClippingContext.ts b/src-testing/src/renderers/common/ClippingContext.ts
-index 20728605..b9d2f974 100644
+index abb67bbd..d2976fc7 100644
 --- a/src-testing/src/renderers/common/ClippingContext.ts
 +++ b/src-testing/src/renderers/common/ClippingContext.ts
-@@ -1,12 +1,31 @@
+@@ -1,10 +1,30 @@
  import { Matrix3 } from '../../math/Matrix3.js';
  import { Plane } from '../../math/Plane.js';
  import { Vector4 } from '../../math/Vector4.js';
@@ -3537,8 +3537,6 @@ index 20728605..b9d2f974 100644
 +import { Material } from '../../materials/Material.js';
  
  const _plane = /*@__PURE__*/ new Plane();
- 
- let _clippingContextVersion = 0;
  
  class ClippingContext {
 +    version: number;
@@ -3553,14 +3551,15 @@ index 20728605..b9d2f974 100644
 +
 +    parentVersion: number;
 +    viewNormalMatrix: Matrix3;
++    cacheKey: string;
 +
 +    viewMatrix?: Matrix4 | undefined;
 +
      constructor() {
-         this.version = ++_clippingContextVersion;
+         this.version = 0;
  
-@@ -22,12 +41,12 @@ class ClippingContext {
-         this.viewNormalMatrix = new Matrix3();
+@@ -21,12 +41,12 @@ class ClippingContext {
+         this.cacheKey = '';
      }
  
 -    projectPlanes(source, offset) {
@@ -3574,7 +3573,7 @@ index 20728605..b9d2f974 100644
  
              const v = planes[offset + i];
              const normal = _plane.normal;
-@@ -39,7 +58,7 @@ class ClippingContext {
+@@ -38,7 +58,7 @@ class ClippingContext {
          }
      }
  
@@ -3583,8 +3582,8 @@ index 20728605..b9d2f974 100644
          const rendererClippingPlanes = renderer.clippingPlanes;
          this.viewMatrix = camera.matrixWorldInverse;
  
-@@ -78,7 +97,7 @@ class ClippingContext {
-         if (update) this.version = _clippingContextVersion++;
+@@ -80,7 +100,7 @@ class ClippingContext {
+         }
      }
  
 -    update(parent, material) {
@@ -4624,7 +4623,7 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 703e3d20..b9c95cd9 100644
+index 762a769a..a652f7ec 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,24 @@
@@ -7472,7 +7471,7 @@ index bb17e412..7c650bb1 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 1815728f..24c3a154 100644
+index 1a96bd2c..ec11853a 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -964,7 +964,7 @@ class WebGPUBackend extends Backend {
