@@ -5,6 +5,7 @@ import { Euler } from "../../math/Euler.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
+import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
 export interface MeshStandardNodeMaterialParameters extends NodeMaterialParameters, MeshStandardMaterialParameters {
@@ -13,10 +14,10 @@ export interface MeshStandardNodeMaterialParameters extends NodeMaterialParamete
 export default class MeshStandardNodeMaterial extends NodeMaterial {
     readonly isMeshStandardNodeMaterial: true;
 
-    emissiveNode: Node | null;
+    emissiveNode: ShaderNodeObject<Node> | null;
 
-    metalnessNode: Node | null;
-    roughnessNode: Node | null;
+    metalnessNode: ShaderNodeObject<Node> | null;
+    roughnessNode: ShaderNodeObject<Node> | null;
 
     // Properties from MeshStandardMaterial
     readonly isMeshStandardMaterial: true;
