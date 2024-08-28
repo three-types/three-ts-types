@@ -12,10 +12,3 @@ export const spherizeUV: (
     strength: NodeRepresentation,
     center?: NodeRepresentation,
 ) => ShaderNodeObject<OperatorNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        rotateUV: typeof rotateUV;
-        spherizeUV: typeof spherizeUV;
-    }
-}

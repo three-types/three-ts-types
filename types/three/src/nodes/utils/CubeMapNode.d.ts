@@ -8,6 +8,6 @@ declare class CubeMapNode extends TempNode {
     constructor(envNode: Node);
 }
 
-export const cubeMapNode: (envNode: NodeRepresentation) => ShaderNodeObject<CubeMapNode>;
-
 export default CubeMapNode;
+
+export const cubeMapNode: (envNode: NodeRepresentation) => ShaderNodeObject<CubeMapNode>;

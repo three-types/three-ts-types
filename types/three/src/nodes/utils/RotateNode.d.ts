@@ -13,9 +13,3 @@ export const rotate: (
     positionNode: NodeRepresentation,
     rotationNode: NodeRepresentation,
 ) => ShaderNodeObject<RotateNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        rotate: typeof rotate;
-    }
-}

@@ -17,9 +17,3 @@ export const storageElement: (
     storageBufferNode: NodeRepresentation,
     indexNode: NodeRepresentation,
 ) => ShaderNodeObject<StorageArrayElementNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        storageElement: typeof storageElement;
-    }
-}

@@ -37,9 +37,9 @@ export const rtt: (
     height?: number | null,
     options?: RTTNodeOptions,
 ) => ShaderNodeObject<RTTNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        toTexture: typeof rtt;
-    }
-}
+export const convertToTexture: (
+    node: Node,
+    width?: number | null,
+    height?: number | null,
+    options?: RTTNodeOptions,
+) => Node;
