@@ -19,9 +19,3 @@ export default class LightingContextNode extends ContextNode {
 }
 
 export const lightingContext: (node: Node, lightingModelNode?: LightingModel) => ShaderNodeObject<LightingContextNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        lightingContext: typeof lightingContext;
-    }
-}
