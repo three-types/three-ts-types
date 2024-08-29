@@ -38,5 +38,5 @@ export default class MeshToonNodeMaterial extends NodeMaterial {
     wireframeLinejoin: string;
     fog: boolean;
 
-    constructor(paramters: MeshToonNodeMaterialParameters);
+    constructor(parameters?: MeshToonNodeMaterialParameters);
 }

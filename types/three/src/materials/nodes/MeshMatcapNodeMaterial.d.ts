@@ -28,5 +28,5 @@ export default class MeshMatcapNodeMaterial extends NodeMaterial {
     flatShading: boolean;
     fog: boolean;
 
-    constructor(paramters: MeshMatcapNodeMaterialParameters);
+    constructor(parameters?: MeshMatcapNodeMaterialParameters);
 }

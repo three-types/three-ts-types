@@ -52,5 +52,5 @@ export default class MeshStandardNodeMaterial extends NodeMaterial {
     flatShading: boolean;
     fog: boolean;
 
-    constructor(paramters?: MeshStandardNodeMaterialParameters);
+    constructor(parameters?: MeshStandardNodeMaterialParameters);
 }
