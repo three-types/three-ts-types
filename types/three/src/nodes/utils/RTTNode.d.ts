@@ -42,4 +42,4 @@ export const convertToTexture: (
     width?: number | null,
     height?: number | null,
     options?: RTTNodeOptions,
-) => Node;
+) => ShaderNodeObject<RTTNode>;
