@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class CubeMapNode extends TempNode {
     envNode: Node;
@@ -8,6 +8,6 @@ declare class CubeMapNode extends TempNode {
     constructor(envNode: Node);
 }
 
-export const cubeMapNode: (envNode: NodeRepresentation) => ShaderNodeObject<CubeMapNode>;
-
 export default CubeMapNode;
+
+export const cubeMapNode: (envNode: NodeRepresentation) => ShaderNodeObject<CubeMapNode>;

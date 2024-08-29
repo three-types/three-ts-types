@@ -1,7 +1,7 @@
 import { Matrix4 } from "../../math/Matrix4.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class VelocityNode extends TempNode {
     previousProjectionMatrix: UniformNode<Matrix4>;

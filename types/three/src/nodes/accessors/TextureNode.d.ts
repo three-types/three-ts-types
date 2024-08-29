@@ -1,7 +1,7 @@
 import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class TextureNode extends UniformNode<Texture> {
     readonly isTextureNode: true;
@@ -56,10 +56,11 @@ export const texture: (
     levelNode?: NodeRepresentation,
     biasNode?: NodeRepresentation,
 ) => ShaderNodeObject<TextureNode>;
-export const sampler: (aTexture: Texture | TextureNode) => ShaderNodeObject<Node>;
+export const textureLoad: (
+    value: Texture,
+    uvNode?: NodeRepresentation,
+    levelNode?: NodeRepresentation,
+    biasNode?: NodeRepresentation,
+) => ShaderNodeObject<TextureNode>;
 
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        texture: typeof texture;
-    }
-}
+export const sampler: (aTexture: Texture | TextureNode) => ShaderNodeObject<Node>;

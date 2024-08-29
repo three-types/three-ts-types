@@ -1,5 +1,5 @@
 import OperatorNode from "../math/OperatorNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const rotateUV: (
     uv: NodeRepresentation,
@@ -12,10 +12,3 @@ export const spherizeUV: (
     strength: NodeRepresentation,
     center?: NodeRepresentation,
 ) => ShaderNodeObject<OperatorNode>;
-
-declare module "../shadernode/ShaderNode.js" {
-    interface NodeElements {
-        rotateUV: typeof rotateUV;
-        spherizeUV: typeof spherizeUV;
-    }
-}

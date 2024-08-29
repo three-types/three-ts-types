@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export type OperatorNodeOp =
     | "%"
@@ -57,7 +57,7 @@ export const bitXor: Operator;
 export const shiftLeft: Operator;
 export const shiftRight: Operator;
 
-declare module "../shadernode/ShaderNode.js" {
+declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         add: typeof add;
         sub: typeof sub;
@@ -87,7 +87,7 @@ declare module "../shadernode/ShaderNode.js" {
  */
 export const remainder: Operator;
 
-declare module "../shadernode/ShaderNode.js" {
+declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         /**
          * @deprecated .remainder() has been renamed to .modInt().

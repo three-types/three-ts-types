@@ -1,7 +1,7 @@
 import { Camera } from "../../cameras/Camera.js";
 import { StereoCamera } from "../../cameras/StereoCamera.js";
 import { Scene } from "../../scenes/Scene.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import PassNode from "./PassNode.js";
 
 declare class StereoPassNode extends PassNode {
@@ -12,6 +12,6 @@ declare class StereoPassNode extends PassNode {
     constructor(scene: Scene, camera: Camera);
 }
 
-export const stereoPass: (scene: Scene, camera: Camera) => ShaderNodeObject<StereoPassNode>;
-
 export default StereoPassNode;
+
+export const stereoPass: (scene: Scene, camera: Camera) => ShaderNodeObject<StereoPassNode>;

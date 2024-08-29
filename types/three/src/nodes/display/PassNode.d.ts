@@ -6,7 +6,7 @@ import TextureNode from "../accessors/TextureNode.js";
 import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;

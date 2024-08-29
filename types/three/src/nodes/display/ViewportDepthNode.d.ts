@@ -1,7 +1,7 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
-export default class ViewportDepthNode extends Node {
+declare class ViewportDepthNode extends Node {
     scope: ViewportDepthNodeScope;
     valueNode: Node;
 
@@ -18,6 +18,8 @@ export type ViewportDepthNodeScope =
     | typeof ViewportDepthNode.DEPTH_BASE
     | typeof ViewportDepthNode.DEPTH
     | typeof ViewportDepthNode.LINEAR_DEPTH;
+
+export default ViewportDepthNode;
 
 export const viewZToOrthographicDepth: (viewZ: Node, near: Node, far: Node) => Node;
 

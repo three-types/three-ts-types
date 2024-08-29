@@ -10,7 +10,9 @@ import { Color } from "../../math/Color.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
-import { ComputeNode, LightsNode, MRTNode } from "../../nodes/Nodes.js";
+import MRTNode from "../../nodes/core/MRTNode.js";
+import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
+import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { Scene } from "../../scenes/Scene.js";
 import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import { Texture } from "../../textures/Texture.js";
@@ -22,6 +24,7 @@ import Bindings from "./Bindings.js";
 import Color4 from "./Color4.js";
 import Geometries from "./Geometries.js";
 import Info from "./Info.js";
+import NodeLibrary from "./nodes/NodeLibrary.js";
 import Nodes from "./nodes/Nodes.js";
 import Pipelines from "./Pipelines.js";
 import QuadMesh from "./QuadMesh.js";
@@ -59,6 +62,9 @@ declare class Renderer {
     stencil: boolean;
     clippingPlanes: readonly Plane[];
     info: Info;
+    nodes: {
+        library: NodeLibrary;
+    };
     _getFallback: ((error: unknown) => Backend) | null;
     _pixelRatio: number;
     _width: number;
