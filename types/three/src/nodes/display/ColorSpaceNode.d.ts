@@ -3,16 +3,18 @@ import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
+export type ColorSpaceMethod = 'LinearTosRGB' | 'sRGBToLinear' | 'LinearToLinear' | 'sRGBTosRGB';
+
 export const getColorSpaceMethod: (
     source: typeof LinearSRGBColorSpace | typeof SRGBColorSpace,
     target: typeof LinearSRGBColorSpace | typeof SRGBColorSpace,
-) => string;
+) => ColorSpaceMethod;
 
 export default class ColorSpaceNode extends TempNode {
-    colorSpace: string;
+    colorSpace: ColorSpaceMethod;
     node: Node;
 
-    constructor(colorSpace: string, node: Node);
+    constructor(colorSpace: ColorSpaceMethod, node: Node);
 
     static LINEAR_TO_LINEAR: "LinearToLinear";
 }
