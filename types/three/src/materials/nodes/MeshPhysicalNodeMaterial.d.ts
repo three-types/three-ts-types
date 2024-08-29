@@ -1,7 +1,7 @@
 import { Color } from "../../math/Color.js";
 import { Vector2 } from "../../math/Vector2.js";
 import Node from "../../nodes/core/Node.js";
-import { ShaderNodeObject } from "../../nodes/shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
 import { Texture } from "../../textures/Texture.js";
 import { MeshPhysicalMaterialParameters } from "../MeshPhysicalMaterial.js";
 import MeshStandardNodeMaterial, { MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";

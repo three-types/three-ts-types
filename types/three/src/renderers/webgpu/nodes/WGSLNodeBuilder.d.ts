@@ -4,7 +4,7 @@ import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import NodeUniform from "../../../nodes/core/NodeUniform.js";
 import NodeVar from "../../../nodes/core/NodeVar.js";
 import StructTypeNode from "../../../nodes/core/StructTypeNode.js";
-import { ShaderNode } from "../../../nodes/shadernode/ShaderNode.js";
+import { ShaderNode } from "../../../nodes/tsl/TSLCore.js";
 import { Texture } from "../../../textures/Texture.js";
 import NodeUniformsGroup from "../../common/nodes/NodeUniformsGroup.js";
 

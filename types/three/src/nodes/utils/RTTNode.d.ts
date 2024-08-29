@@ -2,7 +2,7 @@ import { TextureDataType } from "../../constants.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export interface RTTNodeOptions {
     type: TextureDataType;

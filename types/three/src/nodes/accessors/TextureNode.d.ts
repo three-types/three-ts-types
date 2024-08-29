@@ -1,7 +1,7 @@
 import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class TextureNode extends UniformNode<Texture> {
     readonly isTextureNode: true;

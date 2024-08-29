@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class FogNode extends Node {
     isFogNode: true;

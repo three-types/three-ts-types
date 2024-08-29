@@ -1,7 +1,7 @@
 import { SkinnedMesh } from "../../objects/SkinnedMesh.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class SkinningNode extends Node {
     skinnedMesh: SkinnedMesh;

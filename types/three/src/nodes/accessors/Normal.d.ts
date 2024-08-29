@@ -1,6 +1,6 @@
 import AttributeNode from "../core/AttributeNode.js";
 import VarNode from "../core/VarNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const normalGeometry: ShaderNodeObject<AttributeNode>;
 

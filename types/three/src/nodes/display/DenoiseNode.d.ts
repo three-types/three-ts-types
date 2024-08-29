@@ -3,7 +3,7 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class DenoiseNode extends TempNode {
     textureNode: Node;

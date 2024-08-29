@@ -2,7 +2,7 @@ import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import NodeFunction from "../core/NodeFunction.js";
 import NodeFunctionInput from "../core/NodeFunctionInput.js";
-import { ProxiedObject, ProxiedTuple, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ProxiedObject, ProxiedTuple, ShaderNodeObject } from "../tsl/TSLCore.js";
 import CodeNode, { CodeNodeInclude } from "./CodeNode.js";
 import FunctionCallNode from "./FunctionCallNode.js";
 

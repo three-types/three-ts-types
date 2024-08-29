@@ -1,7 +1,7 @@
 import { Light } from "../../lights/Light.js";
 import Node from "../core/Node.js";
 import { NodeBuilder } from "../Nodes.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class LightsNode extends Node {
     constructor(lights?: Light[]);

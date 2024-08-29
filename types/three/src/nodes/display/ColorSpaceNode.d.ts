@@ -1,7 +1,7 @@
 import { ColorSpace, LinearSRGBColorSpace, SRGBColorSpace } from "../../constants.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const getColorSpaceMethod: (
     source: typeof LinearSRGBColorSpace | typeof SRGBColorSpace,
@@ -23,7 +23,7 @@ export const colorSpaceToLinear: (node: NodeRepresentation, colorSpace: ColorSpa
 export const linearTosRGB: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
 export const sRGBToLinear: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
 
-declare module "../shadernode/ShaderNode.js" {
+declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         linearToColorSpace: typeof linearToColorSpace;
         colorSpaceToLinear: typeof colorSpaceToLinear;

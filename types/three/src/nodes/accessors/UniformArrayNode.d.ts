@@ -1,5 +1,5 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import ArrayElementNode from "../utils/ArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 

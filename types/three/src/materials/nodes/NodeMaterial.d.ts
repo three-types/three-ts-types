@@ -4,7 +4,7 @@ import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
-import { ShaderNodeObject } from "../../nodes/shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
 import { Material, MaterialParameters } from "../Material.js";
 
 export interface NodeMaterialParameters extends MaterialParameters {

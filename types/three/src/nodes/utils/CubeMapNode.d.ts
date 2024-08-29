@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class CubeMapNode extends TempNode {
     envNode: Node;

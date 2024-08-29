@@ -1,7 +1,7 @@
 import { Vector2 } from "../../math/Vector2.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export type MaterialNodeScope =
     | typeof MaterialNode.ALPHA_TEST

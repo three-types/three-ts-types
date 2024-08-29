@@ -1,5 +1,5 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const positionGeometry: ShaderNodeObject<Node>;
 export const positionLocal: ShaderNodeObject<Node>;

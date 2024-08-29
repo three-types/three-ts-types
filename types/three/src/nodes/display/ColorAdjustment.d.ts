@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import MathNode from "../math/MathNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const grayscale: (color: NodeRepresentation) => ShaderNodeObject<Node>;
 

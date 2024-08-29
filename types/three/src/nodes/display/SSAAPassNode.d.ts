@@ -3,7 +3,7 @@ import { RenderTarget } from "../../core/RenderTarget.js";
 import { Color } from "../../math/Color.js";
 import { Scene } from "../../scenes/Scene.js";
 import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import PassNode from "./PassNode.js";
 
 declare class SSAAPassNode extends PassNode {

@@ -1,5 +1,5 @@
 import Node from "../core/Node.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 import ViewportTextureNode from "./ViewportTextureNode.js";
 
 declare class ViewportDepthTextureNode extends ViewportTextureNode {

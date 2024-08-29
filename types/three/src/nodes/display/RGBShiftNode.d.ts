@@ -1,7 +1,7 @@
 import TextureNode from "../accessors/TextureNode.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class RGBShiftNode extends TempNode {
     textureNode: TextureNode;

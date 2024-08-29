@@ -1,6 +1,6 @@
 import { Texture } from "../../textures/Texture.js";
 import { Node } from "../Nodes.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import OutputStructNode from "./OutputStructNode.js";
 
 export function getTextureIndex(textures: ReadonlyArray<Texture>, name: string): number;

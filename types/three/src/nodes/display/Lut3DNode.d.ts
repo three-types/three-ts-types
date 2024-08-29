@@ -3,7 +3,7 @@ import Texture3DNode from "../accessors/Texture3DNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class Lut3DNode extends TempNode {
     inputNode: Node;

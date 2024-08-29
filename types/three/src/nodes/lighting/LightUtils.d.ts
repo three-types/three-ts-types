@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import CondNode from "../math/CondNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const getDistanceAttenuation: (args: {
     lightDistance: Node;

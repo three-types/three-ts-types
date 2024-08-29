@@ -2,7 +2,7 @@ import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import TextureNode from "../accessors/TextureNode.js";
 import { NodeUpdateType } from "../core/constants.js";
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class ViewportTextureNode extends TextureNode {
     generateMipmaps: boolean;

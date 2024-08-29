@@ -1,6 +1,6 @@
 import TextureNode from "../accessors/TextureNode.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class SobelOperatorNode extends TempNode {
     textureNode: TextureNode;

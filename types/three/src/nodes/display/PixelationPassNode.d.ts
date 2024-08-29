@@ -1,7 +1,7 @@
 import { Camera } from "../../cameras/Camera.js";
 import { Scene } from "../../scenes/Scene.js";
 import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import PassNode from "./PassNode.js";
 
 declare class PixelationPassNode extends PassNode {

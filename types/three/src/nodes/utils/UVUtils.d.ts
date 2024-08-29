@@ -1,5 +1,5 @@
 import OperatorNode from "../math/OperatorNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../shadernode/ShaderNode.js";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const rotateUV: (
     uv: NodeRepresentation,
