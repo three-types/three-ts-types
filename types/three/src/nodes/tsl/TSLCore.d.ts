@@ -26,23 +26,14 @@ export interface NodeElements {
     toUvec4: typeof uvec4;
     toBvec4: typeof bvec4;
     toMat2: typeof mat2;
-    toImat2: typeof imat2;
-    toUmat2: typeof umat2;
-    toBmat2: typeof bmat2;
     toMat3: typeof mat3;
-    toImat3: typeof imat3;
-    toUmat3: typeof umat3;
-    toBmat3: typeof bmat3;
     toMat4: typeof mat4;
-    toImat4: typeof imat4;
-    toUmat4: typeof umat4;
-    toBmat4: typeof bmat4;
 
     element: typeof element;
     convert: typeof convert;
 }
 
-export function addNodeElement(name: string, nodeElement: unknown): void;
+export function addMethodChaining(name: string, nodeElement: unknown): void;
 
 export type SwizzleCharacter = "x" | "y" | "z" | "w" | "r" | "g" | "b" | "a" | "s" | "t" | "p" | "q";
 
@@ -272,19 +263,8 @@ export const uvec4: ConvertType;
 export const bvec4: ConvertType;
 
 export const mat2: ConvertType;
-export const imat2: ConvertType;
-export const umat2: ConvertType;
-export const bmat2: ConvertType;
-
 export const mat3: ConvertType;
-export const imat3: ConvertType;
-export const umat3: ConvertType;
-export const bmat3: ConvertType;
-
 export const mat4: ConvertType;
-export const imat4: ConvertType;
-export const umat4: ConvertType;
-export const bmat4: ConvertType;
 
 export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
