@@ -6532,31 +6532,32 @@ index bd94e11f..f57c897d 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index d631572a..b8acb423 100644
+index d631572a..dc0c0a05 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-@@ -1,4 +1,20 @@
+@@ -1,4 +1,21 @@
 +import { Material } from '../../../materials/Material.js';
 +import NodeMaterial from '../../../materials/nodes/NodeMaterial.js';
-+import { ColorSpace, ToneMapping } from '../../../constants.js';
++import { ToneMapping } from '../../../constants.js';
 +import { NodeRepresentation, ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
 +import Node from '../../../nodes/core/Node.js';
 +import { Light } from '../../../lights/Light.js';
 +import AnalyticLightNode from '../../../nodes/lighting/AnalyticLightNode.js';
++import { ColorSpaceMethod } from '../../../nodes/display/ColorSpaceNode.js';
 +
  class NodeLibrary {
-+    lightNodes: WeakMap<Light, { new (light: Light): AnalyticLightNode<Light> }>;
++    lightNodes: WeakMap<{ new (): Light }, { new (light: Light): AnalyticLightNode<Light> }>;
 +    materialNodes: Map<string, { new (): NodeMaterial }>;
 +    toneMappingNodes: Map<
 +        ToneMapping,
 +        (color: NodeRepresentation, exposure: NodeRepresentation) => ShaderNodeObject<Node>
 +    >;
-+    colorSpaceNodes: Map<ColorSpace, (color: NodeRepresentation) => ShaderNodeObject<Node>>;
++    colorSpaceNodes: Map<ColorSpaceMethod, (color: NodeRepresentation) => ShaderNodeObject<Node>>;
 +
      constructor() {
          this.lightNodes = new WeakMap();
          this.materialNodes = new Map();
-@@ -6,8 +22,8 @@ class NodeLibrary {
+@@ -6,8 +23,8 @@ class NodeLibrary {
          this.colorSpaceNodes = new Map();
      }
  
@@ -6567,17 +6568,17 @@ index d631572a..b8acb423 100644
  
          let nodeMaterial = null;
  
-@@ -24,35 +40,41 @@ class NodeLibrary {
+@@ -24,39 +41,52 @@ class NodeLibrary {
          return nodeMaterial;
      }
  
 -    addColorSpace(colorSpaceNode, colorSpace) {
-+    addColorSpace(colorSpaceNode: (color: NodeRepresentation) => ShaderNodeObject<Node>, colorSpace: ColorSpace) {
++    addColorSpace(colorSpaceNode: (color: NodeRepresentation) => ShaderNodeObject<Node>, colorSpace: ColorSpaceMethod) {
          this.addType(colorSpaceNode, colorSpace, this.colorSpaceNodes);
      }
  
 -    getColorSpaceFunction(colorSpace) {
-+    getColorSpaceFunction(colorSpace: ColorSpace) {
++    getColorSpaceFunction(colorSpace: ColorSpaceMethod) {
          return this.colorSpaceNodes.get(colorSpace) || null;
      }
  
@@ -6610,13 +6611,39 @@ index d631572a..b8acb423 100644
      }
  
 -    addLight(lightNodeClass, lightClass) {
+-        this.addClass(lightNodeClass, lightClass, this.lightNodes);
 +    addLight<TLight extends Light>(
 +        lightNodeClass: { new (light: TLight): AnalyticLightNode<TLight> },
 +        lightClass: { new (): TLight },
 +    ) {
-         this.addClass(lightNodeClass, lightClass, this.lightNodes);
++        this.addClass(
++            lightNodeClass,
++            lightClass,
++            this.lightNodes as unknown as WeakMap<
++                { new (): TLight },
++                { new (light: TLight): AnalyticLightNode<TLight> }
++            >,
++        );
      }
  
+-    addType(nodeClass, type, library) {
++    addType<TNodeClass, TType>(nodeClass: TNodeClass, type: TType, library: Map<TType, TNodeClass>) {
+         if (library.has(type)) {
+             console.warn(`Redefinition of node ${type}`);
+             return;
+@@ -69,7 +99,11 @@ class NodeLibrary {
+         library.set(type, nodeClass);
+     }
+ 
+-    addClass(nodeClass, baseClass, library) {
++    addClass<TNodeClass, TBaseClass extends object>(
++        nodeClass: TNodeClass,
++        baseClass: TBaseClass,
++        library: WeakMap<TBaseClass, TNodeClass>,
++    ) {
+         if (library.has(baseClass)) {
+             console.warn(`Redefinition of node ${baseClass.name}`);
+             return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
 index 659f5a82..d4f47579 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
