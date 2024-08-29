@@ -100,7 +100,6 @@ export * from "./loaders/KMZLoader.js";
 export * from "./loaders/KTX2Loader.js";
 export * from "./loaders/KTXLoader.js";
 export * from "./loaders/LDrawLoader.js";
-export * from "./loaders/LogLuvLoader.js";
 export * from "./loaders/LottieLoader.js";
 export * from "./loaders/LUT3dlLoader.js";
 export * from "./loaders/LUTCubeLoader.js";
