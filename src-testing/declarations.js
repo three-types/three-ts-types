@@ -19,6 +19,7 @@ const files = [
     'renderers/common/nodes/NodeLibrary',
     'renderers/common/nodes/NodeUniform',
     'renderers/common/nodes/NodeUniformsGroup',
+    'renderers/common/nodes/StandardNodeLibrary',
     'renderers/common/Animation',
     'renderers/common/Attributes',
     'renderers/common/Background',
