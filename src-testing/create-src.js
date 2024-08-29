@@ -73,6 +73,7 @@ const files = [
     'renderers/common/RenderPipeline',
     'renderers/common/SampledTexture',
     'renderers/common/Sampler',
+    'renderers/common/StandardRenderer',
     'renderers/common/StorageBuffer',
     'renderers/common/Textures',
     'renderers/common/Uniform',
