@@ -19,7 +19,7 @@ export default class WGSLNodeBuilder extends NodeBuilder {
     builtins: { [key in BuiltinStage]: Map<string, BuiltinType> };
     uniformGroups: { [key in NodeShaderStage]: NodeUniformsGroup };
 
-    needsColorSpaceToLinear(texture: Texture): boolean;
+    needsColorSpaceToLinearSRGB(texture: Texture): boolean;
     _generateTextureSample(
         texture: Texture,
         textureProperty: string,

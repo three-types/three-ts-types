@@ -9702,7 +9702,7 @@ index efd09cfc..e4832209 100644
              canvas.width = tileWidth;
              context.drawImage(image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);
 diff --git a/examples-testing/examples/webgl_panorama_equirectangular.ts b/examples-testing/examples/webgl_panorama_equirectangular.ts
-index 55274522..850cc6aa 100644
+index 40796f6e..6d631dee 100644
 --- a/examples-testing/examples/webgl_panorama_equirectangular.ts
 +++ b/examples-testing/examples/webgl_panorama_equirectangular.ts
 @@ -1,6 +1,6 @@
@@ -9722,43 +9722,7 @@ index 55274522..850cc6aa 100644
  
      camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
  
-@@ -48,15 +48,15 @@ function init() {
- 
-     document.addEventListener('dragover', function (event) {
-         event.preventDefault();
--        event.dataTransfer.dropEffect = 'copy';
-+        event.dataTransfer!.dropEffect = 'copy';
-     });
- 
-     document.addEventListener('dragenter', function () {
--        document.body.style.opacity = 0.5;
-+        document.body.style.opacity = '0.5';
-     });
- 
-     document.addEventListener('dragleave', function () {
--        document.body.style.opacity = 1;
-+        document.body.style.opacity = '1';
-     });
- 
-     document.addEventListener('drop', function (event) {
-@@ -64,12 +64,12 @@ function init() {
- 
-         const reader = new FileReader();
-         reader.addEventListener('load', function (event) {
--            material.map.image.src = event.target.result;
--            material.map.needsUpdate = true;
-+            material.map!.image.src = event.target!.result;
-+            material.map!.needsUpdate = true;
-         });
--        reader.readAsDataURL(event.dataTransfer.files[0]);
-+        reader.readAsDataURL(event.dataTransfer!.files[0]);
- 
--        document.body.style.opacity = 1;
-+        document.body.style.opacity = '1';
-     });
- 
-     //
-@@ -84,7 +84,7 @@ function onWindowResize() {
+@@ -54,7 +54,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -9767,7 +9731,7 @@ index 55274522..850cc6aa 100644
      if (event.isPrimary === false) return;
  
      isUserInteracting = true;
-@@ -99,14 +99,14 @@ function onPointerDown(event) {
+@@ -69,14 +69,14 @@ function onPointerDown(event) {
      document.addEventListener('pointerup', onPointerUp);
  }
  
@@ -9784,7 +9748,7 @@ index 55274522..850cc6aa 100644
      if (event.isPrimary === false) return;
  
      isUserInteracting = false;
-@@ -115,7 +115,7 @@ function onPointerUp() {
+@@ -85,7 +85,7 @@ function onPointerUp() {
      document.removeEventListener('pointerup', onPointerUp);
  }
  

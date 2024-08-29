@@ -11,23 +11,25 @@ export const getColorSpaceMethod: (
 ) => ColorSpaceMethod;
 
 export default class ColorSpaceNode extends TempNode {
-    colorSpace: ColorSpaceMethod;
-    node: Node;
+    colorNode: Node;
+    target: ColorSpace | null;
+    source: ColorSpace | null;
 
-    constructor(colorSpace: ColorSpaceMethod, node: Node);
-
-    static LINEAR_TO_LINEAR: "LinearToLinear";
+    constructor(colorNode: Node, target?: ColorSpace | null, source?: ColorSpace | null);
 }
 
-export const linearToColorSpace: (node: NodeRepresentation, colorSpace: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
-export const colorSpaceToLinear: (node: NodeRepresentation, colorSpace: ColorSpace) => ShaderNodeObject<ColorSpaceNode>;
-
-export const linearTosRGB: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
-export const sRGBToLinear: (node: NodeRepresentation) => ShaderNodeObject<ColorSpaceNode>;
+export const linearSRGBToColorSpace: (
+    node: NodeRepresentation,
+    colorSpace?: ColorSpace | null,
+) => ShaderNodeObject<ColorSpaceNode>;
+export const colorSpaceToLinearSRGB: (
+    node: NodeRepresentation,
+    colorSpace?: ColorSpace | null,
+) => ShaderNodeObject<ColorSpaceNode>;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
-        linearToColorSpace: typeof linearToColorSpace;
-        colorSpaceToLinear: typeof colorSpaceToLinear;
+        linearSRGBToColorSpace: typeof linearSRGBToColorSpace;
+        colorSpaceToLinearSRGB: typeof colorSpaceToLinearSRGB;
     }
 }

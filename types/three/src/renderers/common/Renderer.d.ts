@@ -206,6 +206,7 @@ declare class Renderer {
     clearColorAsync(): Promise<void>;
     clearDepthAsync(): Promise<void>;
     clearStencilAsync(): Promise<void>;
+    get currentToneMapping(): ToneMapping;
     get currentColorSpace(): ColorSpace;
     dispose(): void;
     setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
@@ -280,7 +281,6 @@ declare class Renderer {
         scene: Scene,
         camera: Camera,
         lightsNode: LightsNode,
-        group: GeometryGroup,
         passId?: string,
     ): void;
     get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;

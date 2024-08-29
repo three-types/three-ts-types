@@ -165,7 +165,7 @@ export * from "./display/BlendMode.js";
 export { bloom, default as BloomNode } from "./display/BloomNode.js";
 export { bumpMap, default as BumpMapNode } from "./display/BumpMapNode.js";
 export * from "./display/ColorAdjustment.js";
-export { colorSpaceToLinear, default as ColorSpaceNode, linearToColorSpace } from "./display/ColorSpaceNode.js";
+export { colorSpaceToLinearSRGB, default as ColorSpaceNode, linearSRGBToColorSpace } from "./display/ColorSpaceNode.js";
 export { default as DenoiseNode, denoise } from "./display/DenoiseNode.js";
 export { default as DepthOfFieldNode, dof } from "./display/DepthOfFieldNode.js";
 export { default as DotScreenNode, dotScreen } from "./display/DotScreenNode.js";
