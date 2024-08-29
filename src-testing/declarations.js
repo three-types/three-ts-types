@@ -16,6 +16,7 @@ const files = [
     'nodes/core/UniformNode',
     'renderers/common/nodes/NodeBuilderState',
     'renderers/common/nodes/Nodes',
+    'renderers/common/nodes/NodeLibrary',
     'renderers/common/nodes/NodeUniform',
     'renderers/common/nodes/NodeUniformsGroup',
     'renderers/common/Animation',

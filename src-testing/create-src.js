@@ -37,6 +37,7 @@ const files = [
     'nodes/Nodes',
     'renderers/common/extras/PMREMGenerator',
     'renderers/common/nodes/NodeBuilderState',
+    'renderers/common/nodes/NodeLibrary',
     'renderers/common/nodes/NodeUniform',
     'renderers/common/nodes/NodeUniformsGroup',
     'renderers/common/nodes/Nodes',
