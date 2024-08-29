@@ -2,7 +2,12 @@ import Node from "../../nodes/core/Node.js";
 import { LineDashedMaterialParameters } from "../LineDashedMaterial.js";
 import NodeMaterial, { NodeMaterialParameters } from "./NodeMaterial.js";
 
-export interface LineDashedNodeMaterialParameters extends NodeMaterialParameters, LineDashedMaterialParameters {}
+export interface LineDashedNodeMaterialParameters extends NodeMaterialParameters, LineDashedMaterialParameters {
+    offsetNode?: Node | null | undefined;
+    dashScaleNode?: Node | null | undefined;
+    dashSizeNode?: Node | null | undefined;
+    gapSizeNode?: Node | null | undefined;
+}
 
 declare class LineDashedNodeMaterial extends NodeMaterial {
     readonly isLineDashedNodeMaterial: true;
