@@ -33,7 +33,7 @@ const files = [
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightingContextNode',
     'nodes/lighting/LightsNode',
-    'nodes/shadernode/ShaderNode',
+    'nodes/tsl/TSLCore',
     'nodes/Nodes',
     'renderers/common/extras/PMREMGenerator',
     'renderers/common/nodes/NodeBuilderState',
