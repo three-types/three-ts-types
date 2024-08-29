@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import prettier from 'prettier';
 
 const files = [
+    'materials/nodes/NodeMaterial',
     'nodes/accessors/BufferAttributeNode',
     'nodes/accessors/TextureNode',
     'nodes/code/CodeNode',
@@ -32,7 +33,6 @@ const files = [
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightingContextNode',
     'nodes/lighting/LightsNode',
-    'nodes/materials/NodeMaterial',
     'nodes/shadernode/ShaderNode',
     'nodes/Nodes',
     'renderers/common/extras/PMREMGenerator',
