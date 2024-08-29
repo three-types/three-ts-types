@@ -28,15 +28,22 @@ export { default as FunctionOverloadingNode, overloadingFn } from "./utils/Funct
 export { Break, Continue, default as LoopNode, Loop } from "./utils/LoopNode.js";
 export { default as MatcapUVNode, matcapUV } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode, maxMipLevel } from "./utils/MaxMipLevelNode.js";
-export { default as OscNode, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
+export { default as OscNode, OscNodeMethod, oscSawtooth, oscSine, oscSquare, oscTriangle } from "./utils/OscNode.js";
 export * from "./utils/Packing.js";
-export { default as ReflectorNode, reflector } from "./utils/ReflectorNode.js";
+export { default as ReflectorNode, reflector, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
 export { default as RemapNode, remap, remapClamp } from "./utils/RemapNode.js";
 export { default as RotateNode, rotate } from "./utils/RotateNode.js";
-export { convertToTexture, default as RTTNode, rtt } from "./utils/RTTNode.js";
+export { convertToTexture, default as RTTNode, rtt, RTTNodeOptions } from "./utils/RTTNode.js";
 export { default as SpriteSheetUVNode, spritesheetUV } from "./utils/SpriteSheetUVNode.js";
 export * from "./utils/SpriteUtils.js";
-export { default as TimerNode, frameId, timerDelta, timerGlobal, timerLocal } from "./utils/TimerNode.js";
+export {
+    default as TimerNode,
+    frameId,
+    timerDelta,
+    timerGlobal,
+    timerLocal,
+    TimerNodeScope,
+} from "./utils/TimerNode.js";
 export {
     default as TriplanarTexturesNode,
     triplanarTexture,
@@ -85,6 +92,7 @@ export {
     materialLineScale,
     materialLineWidth,
     materialMetalness,
+    MaterialNodeScope,
     materialNormal,
     materialOpacity,
     materialPointWidth,
@@ -128,7 +136,12 @@ export * from "./accessors/Position.js";
 export { default as ReferenceNode, reference, referenceBuffer } from "./accessors/ReferenceNode.js";
 export * from "./accessors/ReflectVector.js";
 export { default as RendererReferenceNode, rendererReference } from "./accessors/RendererReferenceNode.js";
-export { backgroundBlurriness, backgroundIntensity, default as SceneNode } from "./accessors/SceneNode.js";
+export {
+    backgroundBlurriness,
+    backgroundIntensity,
+    default as SceneNode,
+    SceneNodeScope,
+} from "./accessors/SceneNode.js";
 export { default as SkinningNode, skinning, skinningReference } from "./accessors/SkinningNode.js";
 export { default as StorageBufferNode, storage, storageObject } from "./accessors/StorageBufferNode.js";
 export { default as StorageTextureNode, storageTexture, textureStore } from "./accessors/StorageTextureNode.js";
@@ -138,7 +151,7 @@ export * from "./accessors/TextureBicubic.js";
 export { default as TextureNode, /*textureLevel,*/ sampler, texture, textureLoad } from "./accessors/TextureNode.js";
 export { default as TextureSizeNode, textureSize } from "./accessors/TextureSizeNode.js";
 export { default as UniformArrayNode, uniformArray } from "./accessors/UniformArrayNode.js";
-export { default as UserDataNode, userData } from "./accessors/UserDataNode.js";
+export { default as UserDataNode, NodeUserData, userData } from "./accessors/UserDataNode.js";
 export * from "./accessors/UV.js";
 export * from "./accessors/VelocityNode.js";
 export { default as VertexColorNode, vertexColor } from "./accessors/VertexColorNode.js";
@@ -191,6 +204,7 @@ export {
     viewport,
     viewportBottomLeft,
     viewportCoordinate,
+    ViewportNodeScope,
     viewportResolution,
     viewportTopLeft,
     viewportUV,
@@ -198,7 +212,7 @@ export {
 export { default as ViewportSharedTextureNode, viewportSharedTexture } from "./display/ViewportSharedTextureNode.js";
 export { default as ViewportTextureNode, viewportMipTexture, viewportTexture } from "./display/ViewportTextureNode.js";
 
-export { default as PassNode, depthPass, pass, passTexture } from "./display/PassNode.js";
+export { default as PassNode, depthPass, pass, PassNodeScope, passTexture } from "./display/PassNode.js";
 
 import * as ColorSpaceFunctions from "./display/ColorSpaceFunctions.js";
 export { ColorSpaceFunctions };
@@ -207,7 +221,7 @@ import * as ToneMappingFunctions from "./display/ToneMappingFunctions.js";
 export { ToneMappingFunctions };
 
 // code
-export { code, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
+export { code, CodeNodeInclude, default as CodeNode, glsl, js, wgsl } from "./code/CodeNode.js";
 export { default as ExpressionNode, expression } from "./code/ExpressionNode.js";
 export { call, default as FunctionCallNode } from "./code/FunctionCallNode.js";
 export { default as FunctionNode, glslFn, wgslFn } from "./code/FunctionNode.js";
@@ -220,14 +234,14 @@ export { default as FogNode, fog } from "./fog/FogNode.js";
 export { default as FogRangeNode, rangeFog } from "./fog/FogRangeNode.js";
 
 // geometry
-export { default as RangeNode, range } from "./geometry/RangeNode.js";
+export { default as RangeNode, range, RangeModeBound } from "./geometry/RangeNode.js";
 
 // gpgpu
 export { compute, default as ComputeNode } from "./gpgpu/ComputeNode.js";
 
 // lighting
 export { default as LightingContextNode, lightingContext } from "./lighting/LightingContextNode.js";
-export { default as LightNode, lightTargetDirection } from "./lighting/LightNode.js";
+export { default as LightNode, LightNodeScope, lightTargetDirection } from "./lighting/LightNode.js";
 export { default as LightsNode, lights } from "./lighting/LightsNode.js";
 
 // pmrem
