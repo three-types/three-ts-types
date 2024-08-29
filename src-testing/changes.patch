@@ -6532,7 +6532,7 @@ index bd94e11f..f57c897d 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index d631572a..7c3f9f64 100644
+index d631572a..b8acb423 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 @@ -1,4 +1,20 @@
@@ -6542,10 +6542,10 @@ index d631572a..7c3f9f64 100644
 +import { NodeRepresentation, ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
 +import Node from '../../../nodes/core/Node.js';
 +import { Light } from '../../../lights/Light.js';
-+import LightingNode from '../../../nodes/lighting/LightingNode.js';
++import AnalyticLightNode from '../../../nodes/lighting/AnalyticLightNode.js';
 +
  class NodeLibrary {
-+    lightNodes: WeakMap<Light, { new (light: Light): LightingNode }>;
++    lightNodes: WeakMap<Light, { new (light: Light): AnalyticLightNode<Light> }>;
 +    materialNodes: Map<string, { new (): NodeMaterial }>;
 +    toneMappingNodes: Map<
 +        ToneMapping,
@@ -6567,7 +6567,7 @@ index d631572a..7c3f9f64 100644
  
          let nodeMaterial = null;
  
-@@ -24,35 +40,38 @@ class NodeLibrary {
+@@ -24,35 +40,41 @@ class NodeLibrary {
          return nodeMaterial;
      }
  
@@ -6610,7 +6610,10 @@ index d631572a..7c3f9f64 100644
      }
  
 -    addLight(lightNodeClass, lightClass) {
-+    addLight(lightNodeClass: { new (light: Light): LightingNode }, lightClass: { new (): Light }) {
++    addLight<TLight extends Light>(
++        lightNodeClass: { new (light: TLight): AnalyticLightNode<TLight> },
++        lightClass: { new (): TLight },
++    ) {
          this.addClass(lightNodeClass, lightClass, this.lightNodes);
      }
  
