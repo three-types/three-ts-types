@@ -2,6 +2,7 @@ import { Camera } from "../../../cameras/Camera.js";
 import { Object3D } from "../../../core/Object3D.js";
 import { Material } from "../../../materials/Material.js";
 import { Color } from "../../../math/Color.js";
+import Node from "../../../nodes/core/Node.js";
 import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import NodeFrame from "../../../nodes/core/NodeFrame.js";
 import UniformGroupNode from "../../../nodes/core/UniformGroupNode.js";
