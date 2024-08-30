@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 44078a78..c22db46f 100644
+index 6a3ebfa6..4b495b4d 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -5,10 +5,29 @@ import { varying } from '../core/VaryingNode.js';
@@ -127,7 +127,7 @@ index 44078a78..c22db46f 100644
          return this;
 @@ -121,14 +143,30 @@ export default BufferAttributeNode;
  
- registerNodeClass('BufferAttribute', BufferAttributeNode);
+ BufferAttributeNode.type = /*@__PURE__*/ registerNode('BufferAttribute', BufferAttributeNode);
  
 -export const bufferAttribute = (array, type, stride, offset) =>
 -    nodeObject(new BufferAttributeNode(array, type, stride, offset));
@@ -166,12 +166,12 @@ index 44078a78..c22db46f 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index c4619b46..2fb9e179 100644
+index 939c36eb..c48cb013 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -1,17 +1,43 @@
--import { registerNodeClass } from '../core/Node.js';
-+import Node, { registerNodeClass } from '../core/Node.js';
+-import { registerNode } from '../core/Node.js';
++import Node, { registerNode } from '../core/Node.js';
  import UniformNode, { uniform } from '../core/UniformNode.js';
  import { uv } from './UV.js';
  import { textureSize } from './TextureSizeNode.js';
@@ -183,15 +183,13 @@ index c4619b46..2fb9e179 100644
  import { NodeUpdateType } from '../core/constants.js';
  
  import { IntType, UnsignedIntType } from '../../constants.js';
--
--class TextureNode extends UniformNode {
--    constructor(value, uvNode = null, levelNode = null, biasNode = null) {
 +import { Texture } from '../../textures/Texture.js';
 +import { DepthTexture } from '../../textures/DepthTexture.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Matrix3 } from '../../math/Matrix3.js';
-+
-+class TextureNode extends UniformNode<Texture> {
+ 
+ class TextureNode extends UniformNode {
+-    constructor(value, uvNode = null, levelNode = null, biasNode = null) {
 +    readonly isTextureNode: true;
 +
 +    uvNode: ShaderNodeObject<Node> | null;
@@ -337,11 +335,11 @@ index c4619b46..2fb9e179 100644
          textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this.getSelf();
 diff --git a/src-testing/src/nodes/code/CodeNode.ts b/src-testing/src/nodes/code/CodeNode.ts
-index f2446d1e..677e9d37 100644
+index f970f056..49cd76dc 100644
 --- a/src-testing/src/nodes/code/CodeNode.ts
 +++ b/src-testing/src/nodes/code/CodeNode.ts
 @@ -1,7 +1,13 @@
- import Node, { registerNodeClass } from '../core/Node.js';
+ import Node, { registerNode } from '../core/Node.js';
  import { nodeProxy } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
@@ -369,11 +367,11 @@ index f2446d1e..677e9d37 100644
  
          for (const include of includes) {
 diff --git a/src-testing/src/nodes/code/FunctionNode.ts b/src-testing/src/nodes/code/FunctionNode.ts
-index 2132b75d..ff556801 100644
+index 0393a5d7..014e6ddb 100644
 --- a/src-testing/src/nodes/code/FunctionNode.ts
 +++ b/src-testing/src/nodes/code/FunctionNode.ts
 @@ -1,21 +1,22 @@
- import { registerNodeClass } from '../core/Node.js';
+ import { registerNode } from '../core/Node.js';
  import CodeNode from './CodeNode.js';
  import { nodeObject } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
@@ -409,7 +407,7 @@ index 2132b75d..ff556801 100644
          const nodeFunction = this.getNodeFunction(builder);
 @@ -63,7 +64,7 @@ export default FunctionNode;
  
- registerNodeClass('Function', FunctionNode);
+ FunctionNode.type = /*@__PURE__*/ registerNode('Function', FunctionNode);
  
 -const nativeFn = (code, includes = [], language = '') => {
 +const nativeFn = (code: string, includes = [], language = '') => {
@@ -425,11 +423,11 @@ index 2132b75d..ff556801 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 2aa16e3f..38bdcd5f 100644
+index 5b1078c7..85d534d6 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,8 +1,14 @@
- import Node, { registerNodeClass } from './Node.js';
+ import Node, { registerNode } from './Node.js';
 -import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
 +import { addMethodChaining, nodeProxy, NodeRepresentation } from '../tsl/TSLCore.js';
 +import NodeBuilder from './NodeBuilder.js';
@@ -475,20 +473,20 @@ index 2aa16e3f..38bdcd5f 100644
  
          builder.setContext({ ...builder.context, ...this.value });
 @@ -53,7 +59,7 @@ export default ContextNode;
- registerNodeClass('Context', ContextNode);
+ ContextNode.type = /*@__PURE__*/ registerNode('Context', ContextNode);
  
- export const context = nodeProxy(ContextNode);
+ export const context = /*@__PURE__*/ nodeProxy(ContextNode);
 -export const label = (node, name) => context(node, { label: name });
 +export const label = (node: NodeRepresentation, name: string) => context(node, { label: name });
  
  addMethodChaining('context', context);
  addMethodChaining('label', label);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
-index b3af8aba..80971af9 100644
+index 88d04238..41fdab61 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
 +++ b/src-testing/src/nodes/core/InputNode.ts
 @@ -1,8 +1,14 @@
- import Node, { registerNodeClass } from './Node.js';
+ import Node, { registerNode } from './Node.js';
  import { getValueType, getValueFromType, arrayBufferToBase64 } from './NodeUtils.js';
 +import NodeBuilder from './NodeBuilder.js';
  
@@ -539,7 +537,7 @@ index b3af8aba..80971af9 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index d5a51581..a0ba607a 100644
+index 951f597d..caa0206f 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,13 +3,91 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
@@ -549,8 +547,8 @@ index d5a51581..a0ba607a 100644
 +import NodeFrame from './NodeFrame.js';
 +import NodeBuilder from './NodeBuilder.js';
  
--const NodeClasses = new Map();
-+const NodeClasses = new Map<string, typeof Node>();
+-const Nodes = new Map();
++const Nodes = new Map<string, typeof Node>();
  
  let _nodeId = 0;
  
@@ -949,39 +947,35 @@ index d5a51581..a0ba607a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -395,7 +475,7 @@ class Node extends EventDispatcher {
+@@ -397,7 +477,7 @@ export default Node;
  
- export default Node;
+ Node.type = /*@__PURE__*/ registerNode('', Node);
  
--export function registerNodeClass(type, nodeClass) {
-+export function registerNodeClass(type: string, nodeClass: { new (...args: any[]): Node }) {
-     const nodeType = type + 'Node';
+-export function registerNode(type, nodeClass) {
++export function registerNode(type: string, nodeClass: { new (...args: any[]): Node }) {
+     const suffix = 'Node';
+     const nodeType = type + suffix;
  
-     if (typeof nodeClass !== 'function' || !type) throw new Error(`TSL.Node: Node class ${type} is not a class`);
-@@ -411,10 +491,10 @@ export function registerNodeClass(type, nodeClass) {
-     }
- 
-     NodeClasses.set(nodeType, nodeClass);
--    nodeClass.type = nodeType;
-+    (nodeClass as NodeConstructor).type = nodeType;
+@@ -419,15 +499,17 @@ export function registerNode(type, nodeClass) {
+     return nodeType;
  }
  
 -export function createNodeFromType(type) {
 +export function createNodeFromType(type: string) {
-     const Class = NodeClasses.get(type);
+     const Class = Nodes.get(type);
  
      if (Class !== undefined) {
-@@ -422,7 +502,10 @@ export function createNodeFromType(type) {
+         return new Class();
      }
  }
- 
+-
 -export function addNodeClass(type, nodeClass) {
 +/**
 + * @deprecated Function addNodeClass() is deprecated. Use registerNodeClass() instead.
 + */
 +export function addNodeClass(type: string, nodeClass: { new (...args: any[]): Node }) {
-     console.warn('TSL.Node: Function addNodeClass() is deprecated. Use registerNodeClass() instead.');
-     registerNodeClass(type.slice(0, -4), nodeClass);
+     console.warn('TSL.Node: Function addNodeClass() is deprecated. Use /*@__PURE__*/ registerNode() instead.');
+     /*@__PURE__*/ registerNode(type.slice(0, -4), nodeClass);
  }
 diff --git a/src-testing/src/nodes/core/NodeAttribute.ts b/src-testing/src/nodes/core/NodeAttribute.ts
 index 190fe8c5..d873bb24 100644
@@ -2237,11 +2231,11 @@ index a1482362..0a62b23d 100644
  
          this.needsInterpolation = false;
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 536ec085..5091d5ac 100644
+index a906da06..c861efc9 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,8 +1,18 @@
- import Node, { registerNodeClass } from './Node.js';
+ import Node, { registerNode } from './Node.js';
  import { select } from '../math/ConditionalNode.js';
 -import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack } from '../tsl/TSLBase.js';
 +import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack, ShaderNodeObject } from '../tsl/TSLBase.js';
@@ -2306,11 +2300,11 @@ index 536ec085..5091d5ac 100644
  
          setCurrentStack(this);
 diff --git a/src-testing/src/nodes/core/StructTypeNode.ts b/src-testing/src/nodes/core/StructTypeNode.ts
-index 7f70920f..bb630985 100644
+index 6781d2f4..fe74df88 100644
 --- a/src-testing/src/nodes/core/StructTypeNode.ts
 +++ b/src-testing/src/nodes/core/StructTypeNode.ts
 @@ -1,7 +1,10 @@
- import Node, { registerNodeClass } from './Node.js';
+ import Node, { registerNode } from './Node.js';
  
  class StructTypeNode extends Node {
 -    constructor(types) {
@@ -2322,12 +2316,12 @@ index 7f70920f..bb630985 100644
  
          this.types = types;
 diff --git a/src-testing/src/nodes/core/UniformGroupNode.ts b/src-testing/src/nodes/core/UniformGroupNode.ts
-index 14205853..07147e1e 100644
+index 43053dac..049a285b 100644
 --- a/src-testing/src/nodes/core/UniformGroupNode.ts
 +++ b/src-testing/src/nodes/core/UniformGroupNode.ts
 @@ -1,6 +1,10 @@
--import Node, { registerNodeClass } from './Node.js';
-+import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData, registerNodeClass } from './Node.js';
+-import Node, { registerNode } from './Node.js';
++import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData, registerNode } from './Node.js';
  
  class UniformGroupNode extends Node {
 +    shared: boolean;
@@ -2361,12 +2355,12 @@ index 14205853..07147e1e 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 007361a6..bd8a210f 100644
+index 764ed286..93997945 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,10 +1,18 @@
--import { registerNodeClass } from './Node.js';
-+import Node, { registerNodeClass } from './Node.js';
+-import { registerNode } from './Node.js';
++import Node, { registerNode } from './Node.js';
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
@@ -2443,7 +2437,7 @@ index 007361a6..bd8a210f 100644
          const propertyName = builder.getPropertyName(nodeUniform);
 @@ -80,11 +88,14 @@ export default UniformNode;
  
- registerNodeClass('Uniform', UniformNode);
+ UniformNode.type = /*@__PURE__*/ registerNode('Uniform', UniformNode);
  
 -export const uniform = (arg1, arg2) => {
 +export const uniform = <TValue>(arg1: InputNode<TValue> | TValue, arg2?: Node | string) => {
@@ -2496,11 +2490,11 @@ index 3b01a9a6..5ff6ad5f 100644
 +export const shaderStages: NodeShaderStage[] = [...defaultShaderStages, 'compute'];
  export const vectorComponents = ['x', 'y', 'z', 'w'];
 diff --git a/src-testing/src/nodes/fog/FogNode.ts b/src-testing/src/nodes/fog/FogNode.ts
-index 67df32f0..e05552a6 100644
+index abb601ff..57061db3 100644
 --- a/src-testing/src/nodes/fog/FogNode.ts
 +++ b/src-testing/src/nodes/fog/FogNode.ts
 @@ -1,6 +1,7 @@
- import Node, { registerNodeClass } from '../core/Node.js';
+ import Node, { registerNode } from '../core/Node.js';
  import { positionView } from '../accessors/Position.js';
  import { nodeProxy } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
@@ -2517,12 +2511,12 @@ index 67df32f0..e05552a6 100644
  
          const getViewZ = builder.context.getViewZ;
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index 120a5ef8..1dfade14 100644
+index 74e5bbac..efc04e64 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
 @@ -1,9 +1,30 @@
--import { registerNodeClass } from '../core/Node.js';
-+import Node, { registerNodeClass } from '../core/Node.js';
+-import { registerNode } from '../core/Node.js';
++import Node, { registerNode } from '../core/Node.js';
  import ContextNode from '../core/ContextNode.js';
 -import { nodeProxy, float, vec3 } from '../tsl/TSLBase.js';
 +import { nodeProxy, float, vec3, ShaderNodeObject } from '../tsl/TSLBase.js';
@@ -2574,7 +2568,7 @@ index 120a5ef8..1dfade14 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index e9054e41..86b27d73 100644
+index 4ac059f0..fcb1c9fd 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -7,11 +7,40 @@ import SetNode from '../utils/SetNode.js';
