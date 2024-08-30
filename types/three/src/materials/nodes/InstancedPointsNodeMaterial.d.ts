@@ -9,6 +9,7 @@ export interface InstancedPointsNodeMaterialParameters extends NodeMaterialParam
     useColor?: boolean | undefined;
     pointWidth?: number | undefined;
     pointColorNode?: Node | null | undefined;
+    pointWidthNode?: Node | null | undefined;
 }
 
 declare class InstancedPointsNodeMaterial extends NodeMaterial {
@@ -16,6 +17,7 @@ declare class InstancedPointsNodeMaterial extends NodeMaterial {
     useColor: boolean | undefined;
     pointWidth: number;
     pointColorNode: Node | null;
+    pointWidthNode: Node | null;
 
     // Properties from LineDashedMaterial
     readonly isPointsMaterial: true;
