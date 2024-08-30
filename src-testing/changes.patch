@@ -2355,7 +2355,7 @@ index 43053dac..049a285b 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 764ed286..0795ee03 100644
+index 764ed286..93997945 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,10 +1,18 @@
@@ -2445,7 +2445,7 @@ index 764ed286..0795ee03 100644
  
      // @TODO: get ConstNode from .traverse() in the future
 -    const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
-+    const value =
++    const value: TValue =
 +        arg1 && (arg1 as Node).isNode === true
 +            ? (arg1.node && arg1.node.value) || (arg1 as InputNode<TValue>).value
 +            : arg1;
