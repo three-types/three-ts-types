@@ -4,6 +4,7 @@ import * as path from 'node:path';
 import prettier from 'prettier';
 
 const files = [
+    'materials/nodes/NodeMaterial',
     'nodes/accessors/BufferAttributeNode',
     'nodes/accessors/TextureNode',
     'nodes/code/CodeNode',
@@ -18,7 +19,6 @@ const files = [
     'nodes/core/NodeCode',
     'nodes/core/NodeFrame',
     'nodes/core/NodeFunction',
-    'nodes/core/NodeKeywords',
     'nodes/core/NodeParser',
     'nodes/core/NodeUniform',
     'nodes/core/NodeUtils',
@@ -33,14 +33,15 @@ const files = [
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightingContextNode',
     'nodes/lighting/LightsNode',
-    'nodes/materials/NodeMaterial',
-    'nodes/shadernode/ShaderNode',
+    'nodes/tsl/TSLCore',
     'nodes/Nodes',
     'renderers/common/extras/PMREMGenerator',
     'renderers/common/nodes/NodeBuilderState',
+    'renderers/common/nodes/NodeLibrary',
     'renderers/common/nodes/NodeUniform',
     'renderers/common/nodes/NodeUniformsGroup',
     'renderers/common/nodes/Nodes',
+    'renderers/common/nodes/StandardNodeLibrary',
     'renderers/common/Animation',
     'renderers/common/Attributes',
     'renderers/common/Backend',
