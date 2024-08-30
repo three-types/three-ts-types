@@ -85,3 +85,7 @@ declare class NodeMaterial extends Material {
 }
 
 export default NodeMaterial;
+
+export function registerNodeMaterial(type: string, nodeMaterialClass: { new(): NodeMaterial }): string;
+
+export function createNodeMaterialFromType(type: string): NodeMaterial;
