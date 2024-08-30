@@ -108,9 +108,9 @@ declare class Node extends EventDispatcher<{
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
 export default Node;
-export declare function registerNodeClass(type: string, nodeClass: {
+export declare function registerNode(type: string, nodeClass: {
     new(...args: any[]): Node;
-}): void;
+}): string | undefined;
 export declare function createNodeFromType(type: string): Node | undefined;
 /**
  * @deprecated Function addNodeClass() is deprecated. Use registerNodeClass() instead.
