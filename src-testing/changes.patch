@@ -3426,6 +3426,21 @@ index 99ddcb48..e18679b1 100644
      const strideLength = 4;
  
      return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
+diff --git a/src-testing/src/renderers/common/BundleGroup.ts b/src-testing/src/renderers/common/BundleGroup.ts
+index 41ae6ddc..c872490a 100644
+--- a/src-testing/src/renderers/common/BundleGroup.ts
++++ b/src-testing/src/renderers/common/BundleGroup.ts
+@@ -1,6 +1,10 @@
+ import { Group } from '../../objects/Group.js';
+ 
+ class BundleGroup extends Group {
++    readonly isBundleGroup: true;
++
++    readonly type: string;
++
+     constructor() {
+         super();
+ 
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
 index b17e7080..e2b545b7 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
@@ -4253,39 +4268,29 @@ index e59e4937..ca572cea 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderBundles.ts b/src-testing/src/renderers/common/RenderBundles.ts
-index 29140365..165ece53 100644
+index 29140365..46f14369 100644
 --- a/src-testing/src/renderers/common/RenderBundles.ts
 +++ b/src-testing/src/renderers/common/RenderBundles.ts
 @@ -1,14 +1,18 @@
  import ChainMap from './ChainMap.js';
  import RenderBundle from './RenderBundle.js';
-+import { Object3D } from '../../core/Object3D.js';
 +import { Camera } from '../../cameras/Camera.js';
++import BundleGroup from './BundleGroup.js';
  
  class RenderBundles {
-+    lists: ChainMap<readonly [Object3D, Camera], RenderBundle>;
++    lists: ChainMap<readonly [BundleGroup, Camera], RenderBundle>;
 +
      constructor() {
--        this.lists = new ChainMap();
-+        this.lists = new ChainMap<readonly [Object3D, Camera], RenderBundle>();
+         this.lists = new ChainMap();
      }
  
 -    get(scene, camera) {
-+    get(scene: Object3D, camera: Camera) {
++    get(scene: BundleGroup, camera: Camera) {
          const lists = this.lists;
 -        const keys = [scene, camera];
 +        const keys = [scene, camera] as const;
  
          let list = lists.get(keys);
- 
-@@ -21,7 +25,7 @@ class RenderBundles {
-     }
- 
-     dispose() {
--        this.lists = new ChainMap();
-+        this.lists = new ChainMap<readonly [Object3D, Camera], RenderBundle>();
-     }
- }
  
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
 index 342029ea..ab04452a 100644
@@ -4398,18 +4403,20 @@ index e77308c1..a3556aa1 100644
  
      dispose() {
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
-index b9db4833..befdccd9 100644
+index b9db4833..b64a3247 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
 +++ b/src-testing/src/renderers/common/RenderList.ts
-@@ -1,32 +1,66 @@
+@@ -1,32 +1,67 @@
  import { LightsNode } from '../../nodes/Nodes.js';
+-
+-function painterSortStable(a, b) {
 +import { Object3D } from '../../core/Object3D.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import { BufferGeometry, GeometryGroup } from '../../core/BufferGeometry.js';
 +import { Material } from '../../materials/Material.js';
 +import { Light } from '../../lights/Light.js';
- 
--function painterSortStable(a, b) {
++import BundleGroup from './BundleGroup.js';
++
 +function painterSortStable(a: RenderItem, b: RenderItem) {
      if (a.groupOrder !== b.groupOrder) {
 -        return a.groupOrder - b.groupOrder;
@@ -4448,7 +4455,7 @@ index b9db4833..befdccd9 100644
  }
  
 +export interface Bundle {
-+    object: Object3D;
++    bundleGroup: BundleGroup;
 +    camera: Camera;
 +    renderList: RenderList;
 +}
@@ -4480,7 +4487,7 @@ index b9db4833..befdccd9 100644
      constructor() {
          this.renderItems = [];
          this.renderItemsIndex = 0;
-@@ -55,7 +89,14 @@ class RenderList {
+@@ -55,7 +90,14 @@ class RenderList {
          return this;
      }
  
@@ -4496,7 +4503,7 @@ index b9db4833..befdccd9 100644
          let renderItem = this.renderItems[this.renderItemsIndex];
  
          if (renderItem === undefined) {
-@@ -87,7 +128,14 @@ class RenderList {
+@@ -87,7 +129,14 @@ class RenderList {
          return renderItem;
      }
  
@@ -4512,7 +4519,7 @@ index b9db4833..befdccd9 100644
          const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group);
  
          if (object.occlusionTest === true) this.occlusionQueryCount++;
-@@ -95,25 +143,35 @@ class RenderList {
+@@ -95,25 +144,35 @@ class RenderList {
          (material.transparent === true || material.transmission > 0 ? this.transparent : this.opaque).push(renderItem);
      }
  
@@ -4864,7 +4871,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 98e8a43f..fabd1b2d 100644
+index d077a225..ff34bd8e 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -35,7 +35,36 @@ import {
@@ -5188,15 +5195,15 @@ index 98e8a43f..fabd1b2d 100644
  
 -    _renderBundle(bundle, sceneRef, lightsNode) {
 +    _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode) {
-         const { object, camera, renderList } = bundle;
+         const { bundleGroup, camera, renderList } = bundle;
  
 -        const renderContext = this._currentRenderContext;
 +        const renderContext = this._currentRenderContext!;
  
          //
  
--        const renderBundle = this._bundles.get(object, camera);
-+        const renderBundle = this._bundles!.get(object, camera);
+-        const renderBundle = this._bundles.get(bundleGroup, camera);
++        const renderBundle = this._bundles!.get(bundleGroup, camera);
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();

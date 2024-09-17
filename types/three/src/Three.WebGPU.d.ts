@@ -191,6 +191,7 @@ export { default as NodeObjectLoader } from "./loaders/nodes/NodeObjectLoader.js
 export * from "./materials/nodes/NodeMaterials.js";
 export * from "./nodes/Nodes.js";
 export * from "./nodes/TSL.js";
+export { default as BundleGroup } from "./renderers/common/BundleGroup.js";
 export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenerator.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
