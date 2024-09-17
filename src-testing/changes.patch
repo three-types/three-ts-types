@@ -6746,10 +6746,10 @@ index d2d92cb2..c022f814 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 7fb333a4..b95f5184 100644
+index 7fb333a4..e64d6c57 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
-@@ -15,14 +15,67 @@ import {
+@@ -15,14 +15,75 @@ import {
      normalWorld,
      pmremTexture,
      viewportUV,
@@ -6797,6 +6797,14 @@ index 7fb333a4..b95f5184 100644
 +    environment?: Texture | undefined;
 +    environmentNode?: Node | undefined;
 +}
++
++declare module '../../../scenes/Scene.js' {
++    interface Scene {
++        environmentNode?: Node | null | undefined;
++        backgroundNode?: Node | null | undefined;
++        fogNode?: Node | null | undefined;
++    }
++}
  
  const outputNodeMap = new WeakMap();
  
@@ -6819,7 +6827,7 @@ index 7fb333a4..b95f5184 100644
          super();
  
          this.renderer = renderer;
-@@ -33,7 +86,7 @@ class Nodes extends DataMap {
+@@ -33,7 +94,7 @@ class Nodes extends DataMap {
          this.groupsData = new ChainMap();
      }
  
@@ -6828,7 +6836,7 @@ index 7fb333a4..b95f5184 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -73,7 +126,7 @@ class Nodes extends DataMap {
+@@ -73,7 +134,7 @@ class Nodes extends DataMap {
  
          // other groups are updated just when groupNode.needsUpdate is true
  
@@ -6837,7 +6845,7 @@ index 7fb333a4..b95f5184 100644
  
          let groupData = this.groupsData.get(groupChain);
          if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -87,11 +140,11 @@ class Nodes extends DataMap {
+@@ -87,11 +148,11 @@ class Nodes extends DataMap {
          return false;
      }
  
@@ -6851,7 +6859,7 @@ index 7fb333a4..b95f5184 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -128,20 +181,20 @@ class Nodes extends DataMap {
+@@ -128,20 +189,20 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -6877,7 +6885,7 @@ index 7fb333a4..b95f5184 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -158,7 +211,7 @@ class Nodes extends DataMap {
+@@ -158,7 +219,7 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -6886,34 +6894,23 @@ index 7fb333a4..b95f5184 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -173,20 +226,28 @@ class Nodes extends DataMap {
+@@ -173,20 +234,20 @@ class Nodes extends DataMap {
          );
      }
  
 -    getEnvironmentNode(scene) {
--        return scene.environmentNode || this.get(scene).environmentNode || null;
 +    getEnvironmentNode(scene: Scene) {
-+        return (
-+            (scene as { environmentNode?: Node | null | undefined }).environmentNode ||
-+            this.get(scene).environmentNode ||
-+            null
-+        );
+         return scene.environmentNode || this.get(scene).environmentNode || null;
      }
  
 -    getBackgroundNode(scene) {
--        return scene.backgroundNode || this.get(scene).backgroundNode || null;
 +    getBackgroundNode(scene: Scene) {
-+        return (
-+            (scene as { backgroundNode?: Node | null | undefined }).backgroundNode ||
-+            this.get(scene).backgroundNode ||
-+            null
-+        );
+         return scene.backgroundNode || this.get(scene).backgroundNode || null;
      }
  
 -    getFogNode(scene) {
--        return scene.fogNode || this.get(scene).fogNode || null;
 +    getFogNode(scene: Scene) {
-+        return (scene as { fogNode?: Node | null | undefined }).fogNode || this.get(scene).fogNode || null;
+         return scene.fogNode || this.get(scene).fogNode || null;
      }
  
 -    getCacheKey(scene, lightsNode) {
