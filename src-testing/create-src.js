@@ -50,7 +50,7 @@ const files = [
     'renderers/common/Bindings',
     'renderers/common/Buffer',
     'renderers/common/BufferUtils',
-    'renderers/common/BundleGroup.js',
+    'renderers/common/BundleGroup',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',
     'renderers/common/Color4',
