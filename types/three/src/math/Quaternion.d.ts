@@ -137,7 +137,7 @@ export class Quaternion {
      * @param offset (optional) optional offset into the array.
      * @return The created or provided array.
      */
-    toArray(array?: number[], offset?: number): QuaternionTuple;
+    toArray(array?: number[], offset?: number): number[];
     toArray(array?: QuaternionTuple, offset?: 0): QuaternionTuple;
 
     /**
