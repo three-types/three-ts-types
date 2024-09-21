@@ -77,6 +77,11 @@ export interface WebGLRendererParameters {
     preserveDrawingBuffer?: boolean | undefined;
 
     /**
+     * default is false.
+     */
+    reverseDepthBuffer?: boolean | undefined;
+
+    /**
      * Can be "high-performance", "low-power" or "default"
      */
     powerPreference?: string | undefined;
