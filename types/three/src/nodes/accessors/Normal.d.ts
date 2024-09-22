@@ -22,4 +22,4 @@ export const transformedClearcoatNormalView: ShaderNodeObject<VarNode>;
 
 export const transformNormal: (normal: Node, matrix?: Node) => ShaderNodeObject<Node>;
 
-export const transformNormalToView: (normal: Node, matrix?: Node) => ShaderNodeObject<Node>;
+export const transformNormalToView: (normal: Node) => ShaderNodeObject<Node>;
