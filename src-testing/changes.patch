@@ -1,8 +1,8 @@
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 6a3ebfa6..4b495b4d 100644
+index 97456dbc..c99ecb8a 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-@@ -5,10 +5,29 @@ import { varying } from '../core/VaryingNode.js';
+@@ -4,14 +4,33 @@ import { varying } from '../core/VaryingNode.js';
  
  import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
  import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
@@ -13,8 +13,12 @@ index 6a3ebfa6..4b495b4d 100644
 +import NodeBuilder from '../core/NodeBuilder.js';
  
 -class BufferAttributeNode extends InputNode {
--    constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
 +class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
+     static get type() {
+         return 'BufferAttributeNode';
+     }
+ 
+-    constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
 +    readonly isBufferNode: true;
 +
 +    bufferType: string | null;
@@ -35,7 +39,7 @@ index 6a3ebfa6..4b495b4d 100644
          super(value, bufferType);
  
          this.isBufferNode = true;
-@@ -24,14 +43,14 @@ class BufferAttributeNode extends InputNode {
+@@ -27,14 +46,14 @@ class BufferAttributeNode extends InputNode {
  
          this.global = true;
  
@@ -55,7 +59,7 @@ index 6a3ebfa6..4b495b4d 100644
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
-@@ -49,7 +68,7 @@ class BufferAttributeNode extends InputNode {
+@@ -52,7 +71,7 @@ class BufferAttributeNode extends InputNode {
          return this.uuid;
      }
  
@@ -64,7 +68,7 @@ index 6a3ebfa6..4b495b4d 100644
          if (this.bufferType === null) {
              this.bufferType = builder.getTypeFromAttribute(this.attribute);
          }
-@@ -57,16 +76,19 @@ class BufferAttributeNode extends InputNode {
+@@ -60,16 +79,19 @@ class BufferAttributeNode extends InputNode {
          return this.bufferType;
      }
  
@@ -87,7 +91,7 @@ index 6a3ebfa6..4b495b4d 100644
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
  
          buffer.setUsage(this.usage);
-@@ -75,13 +97,13 @@ class BufferAttributeNode extends InputNode {
+@@ -78,13 +100,13 @@ class BufferAttributeNode extends InputNode {
          this.attribute.isInstancedBufferAttribute = this.instanced; // @TODO: Add a possible: InstancedInterleavedBufferAttribute
      }
  
@@ -103,7 +107,7 @@ index 6a3ebfa6..4b495b4d 100644
  
          if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
              this.name = propertyName;
-@@ -100,17 +122,17 @@ class BufferAttributeNode extends InputNode {
+@@ -103,17 +125,17 @@ class BufferAttributeNode extends InputNode {
          return 'bufferAttribute';
      }
  
@@ -125,9 +129,9 @@ index 6a3ebfa6..4b495b4d 100644
          this.instanced = value;
  
          return this;
-@@ -121,14 +143,30 @@ export default BufferAttributeNode;
+@@ -122,14 +144,30 @@ class BufferAttributeNode extends InputNode {
  
- BufferAttributeNode.type = /*@__PURE__*/ registerNode('BufferAttribute', BufferAttributeNode);
+ export default BufferAttributeNode;
  
 -export const bufferAttribute = (array, type, stride, offset) =>
 -    nodeObject(new BufferAttributeNode(array, type, stride, offset));
@@ -166,15 +170,10 @@ index 6a3ebfa6..4b495b4d 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index d74668bd..117b3776 100644
+index c6316689..80816c68 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
-@@ -1,17 +1,43 @@
--import { registerNode } from '../core/Node.js';
-+import Node, { registerNode } from '../core/Node.js';
- import UniformNode, { uniform } from '../core/UniformNode.js';
- import { uv } from './UV.js';
- import { textureSize } from './TextureSizeNode.js';
+@@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
  import { toWorkingColorSpace } from '../display/ColorSpaceNode.js';
  import { expression } from '../code/ExpressionNode.js';
  import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
@@ -183,12 +182,17 @@ index d74668bd..117b3776 100644
  import { NodeUpdateType } from '../core/constants.js';
  
  import { IntType, UnsignedIntType } from '../../constants.js';
++import Node from '../core/Node.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { DepthTexture } from '../../textures/DepthTexture.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Matrix3 } from '../../math/Matrix3.js';
  
  class TextureNode extends UniformNode {
+     static get type() {
+         return 'TextureNode';
+     }
+ 
 -    constructor(value, uvNode = null, levelNode = null, biasNode = null) {
 +    readonly isTextureNode: true;
 +
@@ -216,7 +220,7 @@ index d74668bd..117b3776 100644
          super(value);
  
          this.isTextureNode = true;
-@@ -35,7 +61,7 @@ class TextureNode extends UniformNode {
+@@ -38,7 +65,7 @@ class TextureNode extends UniformNode {
          this.setUpdateMatrix(uvNode === null);
      }
  
@@ -225,7 +229,7 @@ index d74668bd..117b3776 100644
          if (this.referenceNode) {
              this.referenceNode.value = value;
          } else {
-@@ -52,7 +78,7 @@ class TextureNode extends UniformNode {
+@@ -55,7 +82,7 @@ class TextureNode extends UniformNode {
      }
  
      getNodeType(/*builder*/) {
@@ -234,7 +238,7 @@ index d74668bd..117b3776 100644
  
          if (this.value.type === UnsignedIntType) {
              return 'uvec4';
-@@ -81,14 +107,14 @@ class TextureNode extends UniformNode {
+@@ -84,14 +111,14 @@ class TextureNode extends UniformNode {
          return this._matrixUniform.mul(vec3(uvNode, 1)).xy;
      }
  
@@ -251,7 +255,7 @@ index d74668bd..117b3776 100644
          const texture = this.value;
  
          if (
-@@ -103,7 +129,7 @@ class TextureNode extends UniformNode {
+@@ -106,7 +133,7 @@ class TextureNode extends UniformNode {
          return uvNode;
      }
  
@@ -260,7 +264,7 @@ index d74668bd..117b3776 100644
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -141,19 +167,19 @@ class TextureNode extends UniformNode {
+@@ -144,19 +171,19 @@ class TextureNode extends UniformNode {
          properties.depthNode = this.depthNode;
      }
  
@@ -289,7 +293,7 @@ index d74668bd..117b3776 100644
      ) {
          const texture = this.value;
  
-@@ -176,7 +202,7 @@ class TextureNode extends UniformNode {
+@@ -179,7 +206,7 @@ class TextureNode extends UniformNode {
          return snippet;
      }
  
@@ -298,7 +302,7 @@ index d74668bd..117b3776 100644
          const properties = builder.getNodeProperties(this);
  
          const texture = this.value;
-@@ -242,7 +268,7 @@ class TextureNode extends UniformNode {
+@@ -245,7 +272,7 @@ class TextureNode extends UniformNode {
          }
      }
  
@@ -307,7 +311,7 @@ index d74668bd..117b3776 100644
          this.sampler = value;
  
          return this;
-@@ -254,7 +280,7 @@ class TextureNode extends UniformNode {
+@@ -257,7 +284,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -316,7 +320,7 @@ index d74668bd..117b3776 100644
          const textureNode = this.clone();
          textureNode.uvNode = nodeObject(uvNode);
          textureNode.referenceNode = this.getSelf();
-@@ -262,7 +288,7 @@ class TextureNode extends UniformNode {
+@@ -265,7 +292,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -325,7 +329,7 @@ index d74668bd..117b3776 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -270,7 +296,7 @@ class TextureNode extends UniformNode {
+@@ -273,7 +300,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -335,15 +339,19 @@ index d74668bd..117b3776 100644
          textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this.getSelf();
 diff --git a/src-testing/src/nodes/code/CodeNode.ts b/src-testing/src/nodes/code/CodeNode.ts
-index f970f056..49cd76dc 100644
+index 2f4c6051..2560bdb8 100644
 --- a/src-testing/src/nodes/code/CodeNode.ts
 +++ b/src-testing/src/nodes/code/CodeNode.ts
-@@ -1,7 +1,13 @@
- import Node, { registerNode } from '../core/Node.js';
+@@ -1,11 +1,17 @@
+ import Node from '../core/Node.js';
  import { nodeProxy } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
  class CodeNode extends Node {
+     static get type() {
+         return 'CodeNode';
+     }
+ 
 +    readonly isCodeNode: true;
 +
 +    code: string;
@@ -352,7 +360,7 @@ index f970f056..49cd76dc 100644
      constructor(code = '', includes = [], language = '') {
          super('code');
  
-@@ -23,11 +29,11 @@ class CodeNode extends Node {
+@@ -27,11 +33,11 @@ class CodeNode extends Node {
          return this;
      }
  
@@ -367,17 +375,17 @@ index f970f056..49cd76dc 100644
  
          for (const include of includes) {
 diff --git a/src-testing/src/nodes/code/FunctionNode.ts b/src-testing/src/nodes/code/FunctionNode.ts
-index 0393a5d7..014e6ddb 100644
+index 54d8a5c5..6e1282b4 100644
 --- a/src-testing/src/nodes/code/FunctionNode.ts
 +++ b/src-testing/src/nodes/code/FunctionNode.ts
-@@ -1,21 +1,22 @@
- import { registerNode } from '../core/Node.js';
+@@ -1,5 +1,6 @@
  import CodeNode from './CodeNode.js';
  import { nodeObject } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
  class FunctionNode extends CodeNode {
-     constructor(code = '', includes = [], language = '') {
+     static get type() {
+@@ -10,15 +11,15 @@ class FunctionNode extends CodeNode {
          super(code, includes, language);
      }
  
@@ -396,7 +404,7 @@ index 0393a5d7..014e6ddb 100644
          const nodeData = builder.getDataFromNode(this);
  
          let nodeFunction = nodeData.nodeFunction;
-@@ -29,7 +30,7 @@ class FunctionNode extends CodeNode {
+@@ -32,7 +33,7 @@ class FunctionNode extends CodeNode {
          return nodeFunction;
      }
  
@@ -405,16 +413,16 @@ index 0393a5d7..014e6ddb 100644
          super.generate(builder);
  
          const nodeFunction = this.getNodeFunction(builder);
-@@ -63,7 +64,7 @@ export default FunctionNode;
+@@ -64,7 +65,7 @@ class FunctionNode extends CodeNode {
  
- FunctionNode.type = /*@__PURE__*/ registerNode('Function', FunctionNode);
+ export default FunctionNode;
  
 -const nativeFn = (code, includes = [], language = '') => {
 +const nativeFn = (code: string, includes = [], language = '') => {
      for (let i = 0; i < includes.length; i++) {
          const include = includes[i];
  
-@@ -82,5 +83,5 @@ const nativeFn = (code, includes = [], language = '') => {
+@@ -83,5 +84,5 @@ const nativeFn = (code, includes = [], language = '') => {
      return fn;
  };
  
@@ -423,18 +431,22 @@ index 0393a5d7..014e6ddb 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 5b1078c7..85d534d6 100644
+index 32b8ac0a..f61425de 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
-@@ -1,8 +1,14 @@
- import Node, { registerNode } from './Node.js';
+@@ -1,12 +1,18 @@
+ import Node from './Node.js';
 -import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
 +import { addMethodChaining, nodeProxy, NodeRepresentation } from '../tsl/TSLCore.js';
 +import NodeBuilder from './NodeBuilder.js';
  
 -class ContextNode extends Node {
--    constructor(node, value = {}) {
 +class ContextNode<TContext> extends Node {
+     static get type() {
+         return 'ContextNode';
+     }
+ 
+-    constructor(node, value = {}) {
 +    readonly isContextNode: true;
 +
 +    node: Node;
@@ -444,7 +456,7 @@ index 5b1078c7..85d534d6 100644
          super();
  
          this.isContextNode = true;
-@@ -15,15 +21,15 @@ class ContextNode extends Node {
+@@ -19,15 +25,15 @@ class ContextNode extends Node {
          return this.node.getScope();
      }
  
@@ -463,7 +475,7 @@ index 5b1078c7..85d534d6 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -35,7 +41,7 @@ class ContextNode extends Node {
+@@ -39,7 +45,7 @@ class ContextNode extends Node {
          return node;
      }
  
@@ -472,8 +484,8 @@ index 5b1078c7..85d534d6 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -53,7 +59,7 @@ export default ContextNode;
- ContextNode.type = /*@__PURE__*/ registerNode('Context', ContextNode);
+@@ -55,7 +61,7 @@ class ContextNode extends Node {
+ export default ContextNode;
  
  export const context = /*@__PURE__*/ nodeProxy(ContextNode);
 -export const label = (node, name) => context(node, { label: name });
@@ -482,17 +494,21 @@ index 5b1078c7..85d534d6 100644
  addMethodChaining('context', context);
  addMethodChaining('label', label);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
-index 88d04238..41fdab61 100644
+index 07af45dc..85bc5537 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
 +++ b/src-testing/src/nodes/core/InputNode.ts
-@@ -1,8 +1,14 @@
- import Node, { registerNode } from './Node.js';
+@@ -1,12 +1,18 @@
+ import Node from './Node.js';
  import { getValueType, getValueFromType, arrayBufferToBase64 } from './NodeUtils.js';
 +import NodeBuilder from './NodeBuilder.js';
  
 -class InputNode extends Node {
--    constructor(value, nodeType = null) {
 +class InputNode<TValue> extends Node {
+     static get type() {
+         return 'InputNode';
+     }
+ 
+-    constructor(value, nodeType = null) {
 +    readonly isInputNode: true;
 +
 +    value: TValue;
@@ -502,7 +518,7 @@ index 88d04238..41fdab61 100644
          super(nodeType);
  
          this.isInputNode = true;
-@@ -11,7 +17,7 @@ class InputNode extends Node {
+@@ -15,7 +21,7 @@ class InputNode extends Node {
          this.precision = null;
      }
  
@@ -511,7 +527,7 @@ index 88d04238..41fdab61 100644
          if (this.nodeType === null) {
              return getValueType(this.value);
          }
-@@ -19,11 +25,11 @@ class InputNode extends Node {
+@@ -23,11 +29,11 @@ class InputNode extends Node {
          return this.nodeType;
      }
  
@@ -525,7 +541,7 @@ index 88d04238..41fdab61 100644
          this.precision = precision;
  
          return this;
-@@ -54,10 +60,6 @@ class InputNode extends Node {
+@@ -58,10 +64,6 @@ class InputNode extends Node {
  
          if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
      }
@@ -537,23 +553,19 @@ index 88d04238..41fdab61 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 951f597d..caa0206f 100644
+index 061314ca..8c4b395b 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -3,13 +3,91 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
+@@ -3,15 +3,93 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
 +import NodeFrame from './NodeFrame.js';
 +import NodeBuilder from './NodeBuilder.js';
  
--const Nodes = new Map();
-+const Nodes = new Map<string, typeof Node>();
- 
  let _nodeId = 0;
  
 -class Node extends EventDispatcher {
--    constructor(nodeType = null) {
 +interface NodeConstructor {
 +    type?: string;
 +}
@@ -610,6 +622,11 @@ index 951f597d..caa0206f 100644
 +}
 +
 +class Node extends EventDispatcher<{ dispose: {} }> {
+     static get type() {
+         return 'Node';
+     }
+ 
+-    constructor(nodeType = null) {
 +    nodeType: string | null;
 +
 +    updateType: NodeUpdateType;
@@ -635,7 +652,7 @@ index 951f597d..caa0206f 100644
          super();
  
          this.nodeType = nodeType;
-@@ -32,36 +110,36 @@ class Node extends EventDispatcher {
+@@ -34,36 +112,36 @@ class Node extends EventDispatcher {
          Object.defineProperty(this, 'id', { value: _nodeId++ });
      }
  
@@ -679,7 +696,7 @@ index 951f597d..caa0206f 100644
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
-@@ -73,11 +151,11 @@ class Node extends EventDispatcher {
+@@ -75,11 +153,11 @@ class Node extends EventDispatcher {
          return this.self || this;
      }
  
@@ -693,7 +710,7 @@ index 951f597d..caa0206f 100644
          return this.global;
      }
  
-@@ -91,7 +169,7 @@ class Node extends EventDispatcher {
+@@ -93,7 +171,7 @@ class Node extends EventDispatcher {
          this.dispatchEvent({ type: 'dispose' });
      }
  
@@ -702,7 +719,7 @@ index 951f597d..caa0206f 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -114,7 +192,7 @@ class Node extends EventDispatcher {
+@@ -116,7 +194,7 @@ class Node extends EventDispatcher {
          return this;
      }
  
@@ -711,7 +728,7 @@ index 951f597d..caa0206f 100644
          return this.uuid;
      }
  
-@@ -130,14 +208,14 @@ class Node extends EventDispatcher {
+@@ -132,14 +210,14 @@ class Node extends EventDispatcher {
          return this.updateAfterType;
      }
  
@@ -728,7 +745,7 @@ index 951f597d..caa0206f 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -147,27 +225,27 @@ class Node extends EventDispatcher {
+@@ -149,27 +227,27 @@ class Node extends EventDispatcher {
          return this.nodeType;
      }
  
@@ -760,7 +777,7 @@ index 951f597d..caa0206f 100644
          const usageCount = builder.increaseUsage(this);
  
          if (usageCount === 1) {
-@@ -176,14 +254,14 @@ class Node extends EventDispatcher {
+@@ -178,14 +256,14 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -778,7 +795,7 @@ index 951f597d..caa0206f 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -191,19 +269,19 @@ class Node extends EventDispatcher {
+@@ -193,19 +271,19 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -802,7 +819,7 @@ index 951f597d..caa0206f 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -239,8 +317,8 @@ class Node extends EventDispatcher {
+@@ -241,8 +319,8 @@ class Node extends EventDispatcher {
                  }
  
                  for (const childNode of Object.values(properties)) {
@@ -813,7 +830,7 @@ index 951f597d..caa0206f 100644
                      }
                  }
              }
-@@ -276,10 +354,10 @@ class Node extends EventDispatcher {
+@@ -278,10 +356,10 @@ class Node extends EventDispatcher {
          return getNodeChildren(this);
      }
  
@@ -826,7 +843,7 @@ index 951f597d..caa0206f 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -287,7 +365,9 @@ class Node extends EventDispatcher {
+@@ -289,7 +367,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -837,7 +854,7 @@ index 951f597d..caa0206f 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -298,39 +378,39 @@ class Node extends EventDispatcher {
+@@ -300,39 +380,39 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -888,7 +905,7 @@ index 951f597d..caa0206f 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -339,18 +419,18 @@ class Node extends EventDispatcher {
+@@ -341,18 +421,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -910,7 +927,7 @@ index 951f597d..caa0206f 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -358,7 +438,7 @@ class Node extends EventDispatcher {
+@@ -360,7 +440,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -919,7 +936,7 @@ index 951f597d..caa0206f 100644
  
              this.serialize(data);
  
-@@ -367,12 +447,12 @@ class Node extends EventDispatcher {
+@@ -369,12 +449,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -934,7 +951,7 @@ index 951f597d..caa0206f 100644
                  values.push(data);
              }
  
-@@ -380,9 +460,9 @@ class Node extends EventDispatcher {
+@@ -382,9 +462,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -947,36 +964,6 @@ index 951f597d..caa0206f 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -397,7 +477,7 @@ export default Node;
- 
- Node.type = /*@__PURE__*/ registerNode('', Node);
- 
--export function registerNode(type, nodeClass) {
-+export function registerNode(type: string, nodeClass: { new (...args: any[]): Node }) {
-     const suffix = 'Node';
-     const nodeType = type + suffix;
- 
-@@ -419,15 +499,17 @@ export function registerNode(type, nodeClass) {
-     return nodeType;
- }
- 
--export function createNodeFromType(type) {
-+export function createNodeFromType(type: string) {
-     const Class = Nodes.get(type);
- 
-     if (Class !== undefined) {
-         return new Class();
-     }
- }
--
--export function addNodeClass(type, nodeClass) {
-+/**
-+ * @deprecated Function addNodeClass() is deprecated. Use registerNodeClass() instead.
-+ */
-+export function addNodeClass(type: string, nodeClass: { new (...args: any[]): Node }) {
-     console.warn('TSL.Node: Function addNodeClass() is deprecated. Use /*@__PURE__*/ registerNode() instead.');
-     /*@__PURE__*/ registerNode(type.slice(0, -4), nodeClass);
- }
 diff --git a/src-testing/src/nodes/core/NodeAttribute.ts b/src-testing/src/nodes/core/NodeAttribute.ts
 index 190fe8c5..d873bb24 100644
 --- a/src-testing/src/nodes/core/NodeAttribute.ts
@@ -2231,17 +2218,21 @@ index a1482362..0a62b23d 100644
  
          this.needsInterpolation = false;
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index a906da06..c861efc9 100644
+index 79313afa..c06474c2 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
-@@ -1,8 +1,18 @@
- import Node, { registerNode } from './Node.js';
+@@ -1,12 +1,22 @@
+ import Node from './Node.js';
  import { select } from '../math/ConditionalNode.js';
 -import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack } from '../tsl/TSLBase.js';
 +import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack, ShaderNodeObject } from '../tsl/TSLBase.js';
 +import NodeBuilder from './NodeBuilder.js';
  
  class StackNode extends Node {
+     static get type() {
+         return 'StackNode';
+     }
+ 
 +    nodes: Node[];
 +    outputNode: Node | null;
 +
@@ -2254,7 +2245,7 @@ index a906da06..c861efc9 100644
      constructor(parent = null) {
          super();
  
-@@ -16,24 +26,24 @@ class StackNode extends Node {
+@@ -20,24 +30,24 @@ class StackNode extends Node {
          this.isStackNode = true;
      }
  
@@ -2283,7 +2274,7 @@ index a906da06..c861efc9 100644
          const methodNode = new ShaderNode(method);
          const ifNode = select(boolNode, methodNode);
  
-@@ -43,13 +53,13 @@ class StackNode extends Node {
+@@ -47,13 +57,13 @@ class StackNode extends Node {
          return this;
      }
  
@@ -2300,13 +2291,13 @@ index a906da06..c861efc9 100644
  
          setCurrentStack(this);
 diff --git a/src-testing/src/nodes/core/StructTypeNode.ts b/src-testing/src/nodes/core/StructTypeNode.ts
-index 6781d2f4..fe74df88 100644
+index acadb07e..28f7f19f 100644
 --- a/src-testing/src/nodes/core/StructTypeNode.ts
 +++ b/src-testing/src/nodes/core/StructTypeNode.ts
-@@ -1,7 +1,10 @@
- import Node, { registerNode } from './Node.js';
+@@ -5,7 +5,10 @@ class StructTypeNode extends Node {
+         return 'StructTypeNode';
+     }
  
- class StructTypeNode extends Node {
 -    constructor(types) {
 +    types: string[];
 +    readonly isStructTypeNode: true;
@@ -2316,14 +2307,18 @@ index 6781d2f4..fe74df88 100644
  
          this.types = types;
 diff --git a/src-testing/src/nodes/core/UniformGroupNode.ts b/src-testing/src/nodes/core/UniformGroupNode.ts
-index 43053dac..049a285b 100644
+index dd6f17a1..06a915fc 100644
 --- a/src-testing/src/nodes/core/UniformGroupNode.ts
 +++ b/src-testing/src/nodes/core/UniformGroupNode.ts
-@@ -1,6 +1,10 @@
--import Node, { registerNode } from './Node.js';
-+import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData, registerNode } from './Node.js';
+@@ -1,10 +1,14 @@
+-import Node from './Node.js';
++import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData } from './Node.js';
  
  class UniformGroupNode extends Node {
+     static get type() {
+         return 'UniformGroupNode';
+     }
+ 
 +    shared: boolean;
 +
 +    readonly isUniformGroup: true;
@@ -2331,7 +2326,7 @@ index 43053dac..049a285b 100644
      constructor(name, shared = false) {
          super('string');
  
-@@ -12,11 +16,11 @@ class UniformGroupNode extends Node {
+@@ -16,11 +20,11 @@ class UniformGroupNode extends Node {
          this.isUniformGroup = true;
      }
  
@@ -2345,7 +2340,7 @@ index 43053dac..049a285b 100644
          super.serialize(data);
  
          data.name = this.name;
-@@ -24,7 +28,7 @@ class UniformGroupNode extends Node {
+@@ -28,7 +32,7 @@ class UniformGroupNode extends Node {
          data.shared = this.shared;
      }
  
@@ -2355,23 +2350,26 @@ index 43053dac..049a285b 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 764ed286..93997945 100644
+index ec9fa9ae..c6218c7f 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
-@@ -1,10 +1,18 @@
--import { registerNode } from './Node.js';
-+import Node, { registerNode } from './Node.js';
+@@ -1,13 +1,22 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
  import { nodeObject, getConstNodeType } from '../tsl/TSLCore.js';
++import Node from './Node.js';
 +import NodeBuilder from './NodeBuilder.js';
 +import NodeFrame from './NodeFrame.js';
 +import { NodeUpdateType } from './constants.js';
  
 -class UniformNode extends InputNode {
--    constructor(value, nodeType = null) {
 +class UniformNode<TValue> extends InputNode<TValue> {
+     static get type() {
+         return 'UniformNode';
+     }
+ 
+-    constructor(value, nodeType = null) {
 +    readonly isUniformNode: true;
 +
 +    name: string;
@@ -2381,7 +2379,7 @@ index 764ed286..93997945 100644
          super(value, nodeType);
  
          this.isUniformNode = true;
-@@ -13,13 +21,13 @@ class UniformNode extends InputNode {
+@@ -16,13 +25,13 @@ class UniformNode extends InputNode {
          this.groupNode = objectGroup;
      }
  
@@ -2397,7 +2395,7 @@ index 764ed286..93997945 100644
          this.groupNode = group;
  
          return this;
-@@ -29,11 +37,11 @@ class UniformNode extends InputNode {
+@@ -32,11 +41,11 @@ class UniformNode extends InputNode {
          return this.groupNode;
      }
  
@@ -2411,7 +2409,7 @@ index 764ed286..93997945 100644
          const self = this.getSelf();
  
          callback = callback.bind(self);
-@@ -47,12 +55,12 @@ class UniformNode extends InputNode {
+@@ -50,12 +59,12 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -2426,7 +2424,7 @@ index 764ed286..93997945 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -65,7 +73,7 @@ class UniformNode extends InputNode {
+@@ -68,7 +77,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -2435,9 +2433,9 @@ index 764ed286..93997945 100644
              this.name || builder.context.label,
          );
          const propertyName = builder.getPropertyName(nodeUniform);
-@@ -80,11 +88,14 @@ export default UniformNode;
+@@ -81,11 +90,14 @@ class UniformNode extends InputNode {
  
- UniformNode.type = /*@__PURE__*/ registerNode('Uniform', UniformNode);
+ export default UniformNode;
  
 -export const uniform = (arg1, arg2) => {
 +export const uniform = <TValue>(arg1: InputNode<TValue> | TValue, arg2?: Node | string) => {
@@ -2490,18 +2488,18 @@ index 3b01a9a6..5ff6ad5f 100644
 +export const shaderStages: NodeShaderStage[] = [...defaultShaderStages, 'compute'];
  export const vectorComponents = ['x', 'y', 'z', 'w'];
 diff --git a/src-testing/src/nodes/fog/FogNode.ts b/src-testing/src/nodes/fog/FogNode.ts
-index abb601ff..57061db3 100644
+index f08efb70..fdb3f470 100644
 --- a/src-testing/src/nodes/fog/FogNode.ts
 +++ b/src-testing/src/nodes/fog/FogNode.ts
 @@ -1,6 +1,7 @@
- import Node, { registerNode } from '../core/Node.js';
+ import Node from '../core/Node.js';
  import { positionView } from '../accessors/Position.js';
  import { nodeProxy } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
  class FogNode extends Node {
-     constructor(colorNode, factorNode) {
-@@ -12,7 +13,7 @@ class FogNode extends Node {
+     static get type() {
+@@ -16,7 +17,7 @@ class FogNode extends Node {
          this.factorNode = factorNode;
      }
  
@@ -2511,19 +2509,17 @@ index abb601ff..57061db3 100644
  
          const getViewZ = builder.context.getViewZ;
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index 74e5bbac..efc04e64 100644
+index f9dbf1a8..89e11615 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
-@@ -1,9 +1,30 @@
--import { registerNode } from '../core/Node.js';
-+import Node, { registerNode } from '../core/Node.js';
+@@ -1,12 +1,34 @@
  import ContextNode from '../core/ContextNode.js';
 -import { nodeProxy, float, vec3 } from '../tsl/TSLBase.js';
 +import { nodeProxy, float, vec3, ShaderNodeObject } from '../tsl/TSLBase.js';
++import Node from '../core/Node.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
 -class LightingContextNode extends ContextNode {
--    constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
 +interface LightingContext {
 +    radiance: ShaderNodeObject<Node>;
 +    irradiance: ShaderNodeObject<Node>;
@@ -2540,6 +2536,11 @@ index 74e5bbac..efc04e64 100644
 +}
 +
 +class LightingContextNode extends ContextNode<LightingContext> {
+     static get type() {
+         return 'LightingContextNode';
+     }
+ 
+-    constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
 +    backdropNode: Node | null;
 +    backdropAlphaNode: Node | null;
 +
@@ -2549,7 +2550,7 @@ index 74e5bbac..efc04e64 100644
          super(node);
  
          this.lightingModel = lightingModel;
-@@ -28,7 +49,7 @@ class LightingContextNode extends ContextNode {
+@@ -31,7 +53,7 @@ class LightingContextNode extends ContextNode {
              indirectSpecular,
          };
  
@@ -2558,7 +2559,7 @@ index 74e5bbac..efc04e64 100644
              radiance: vec3().toVar('radiance'),
              irradiance: vec3().toVar('irradiance'),
              iblIrradiance: vec3().toVar('iblIrradiance'),
-@@ -41,7 +62,7 @@ class LightingContextNode extends ContextNode {
+@@ -44,7 +66,7 @@ class LightingContextNode extends ContextNode {
          return context;
      }
  
