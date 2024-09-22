@@ -4871,7 +4871,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index d077a225..ff34bd8e 100644
+index b1af9168..89229eeb 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -35,7 +35,36 @@ import {
@@ -5793,7 +5793,7 @@ index d077a225..ff34bd8e 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1324,21 +1538,29 @@ class Renderer {
+@@ -1324,14 +1538,22 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5818,7 +5818,8 @@ index d077a225..ff34bd8e 100644
 +            this._currentRenderContext!,
              passId,
          );
-         renderObject.drawRange = group || object.geometry.drawRange;
+         renderObject.drawRange = object.geometry.drawRange;
+@@ -1339,7 +1561,7 @@ class Renderer {
  
          //
  
@@ -5827,7 +5828,7 @@ index d077a225..ff34bd8e 100644
  
          //
  
-@@ -1347,10 +1569,10 @@ class Renderer {
+@@ -1348,10 +1570,10 @@ class Renderer {
  
          //
  
@@ -5842,7 +5843,7 @@ index d077a225..ff34bd8e 100644
  
          //
  
-@@ -1362,33 +1584,40 @@ class Renderer {
+@@ -1363,33 +1585,40 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7087,7 +7088,7 @@ index 7fb333a4..e64d6c57 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 08b6964b..5fa92ab7 100644
+index 361b2da4..a3777b22 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -7098,7 +7099,7 @@ index 08b6964b..5fa92ab7 100644
  
  //
  
-@@ -652,7 +653,7 @@ class WebGLBackend extends Backend {
+@@ -672,7 +673,7 @@ class WebGLBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7504,10 +7505,10 @@ index 480df056..7509b1d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 1fe379d0..2477f45a 100644
+index 32192efc..799aa092 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -940,7 +940,7 @@ class WebGPUBackend extends Backend {
+@@ -973,7 +973,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  

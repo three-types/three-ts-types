@@ -13830,6 +13830,35 @@ index 04023326..05ee79b0 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_materials_arrays.ts b/examples-testing/examples/webgpu_materials_arrays.ts
+index 8db371e6..b893f2c0 100644
+--- a/examples-testing/examples/webgpu_materials_arrays.ts
++++ b/examples-testing/examples/webgpu_materials_arrays.ts
+@@ -1,11 +1,11 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera, controls;
+-let planeMesh, boxMesh, boxMeshWireframe, planeMeshWireframe;
+-let materials;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
++let planeMesh: THREE.Mesh, boxMesh: THREE.Mesh, boxMeshWireframe: THREE.Mesh, planeMeshWireframe: THREE.Mesh;
++let materials: THREE.MeshBasicMaterial[];
+ 
+ const api = {
+     webgpu: true,
+@@ -21,7 +21,7 @@ function init(forceWebGL = false) {
+     }
+ 
+     // renderer
+-    renderer = new THREE.WebGLRenderer({
++    renderer = new THREE.WebGPURenderer({
+         forceWebGL,
+         antialias: true,
+     });
 diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
 index 0161a9c7..590f668d 100644
 --- a/examples-testing/examples/webgpu_materials_basic.ts
