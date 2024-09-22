@@ -17,6 +17,10 @@ export interface EXRExporterParseOptions {
 }
 
 export class EXRExporter {
-    parse(renderer: WebGLRenderer, renderTarget: WebGLRenderTarget, options?: EXRExporterParseOptions): Uint8Array;
-    parse(dataTexture: DataTexture, options?: EXRExporterParseOptions): Uint8Array;
+    parse(
+        renderer: WebGLRenderer,
+        renderTarget: WebGLRenderTarget,
+        options?: EXRExporterParseOptions,
+    ): Promise<Uint8Array>;
+    parse(dataTexture: DataTexture, options?: EXRExporterParseOptions): Promise<Uint8Array>;
 }
