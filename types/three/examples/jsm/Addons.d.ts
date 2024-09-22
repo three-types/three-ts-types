@@ -274,7 +274,6 @@ export * as BufferGeometryUtils from "./utils/BufferGeometryUtils.js";
 export * as CameraUtils from "./utils/CameraUtils.js";
 export * as GeometryCompressionUtils from "./utils/GeometryCompressionUtils.js";
 export * as GeometryUtils from "./utils/GeometryUtils.js";
-export * from "./utils/GPUStatsPanel.js";
 export * from "./utils/LDrawUtils.js";
 export * from "./utils/PackedPhongMaterial.js";
 export * as SceneUtils from "./utils/SceneUtils.js";

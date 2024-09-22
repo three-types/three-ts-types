@@ -6235,17 +6235,17 @@ index 4849e7c3..4bddc484 100644
              object.rotation.y = 0.25 * time;
          }
 diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
-index 34c2e2d5..5e03987e 100644
+index 7c7fee65..ba63c722 100644
 --- a/examples-testing/examples/webgl_lines_fat.ts
 +++ b/examples-testing/examples/webgl_lines_fat.ts
-@@ -10,15 +10,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+@@ -9,15 +9,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
  import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
  
 -let line, renderer, scene, camera, camera2, controls;
 -let line1;
 -let matLine, matLineBasic, matLineDashed;
--let stats, gpuPanel;
+-let stats;
 -let gui;
 +let line: Line2,
 +    renderer: THREE.WebGLRenderer,
@@ -6255,7 +6255,7 @@ index 34c2e2d5..5e03987e 100644
 +    controls: OrbitControls;
 +let line1: THREE.Line;
 +let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
-+let stats: Stats, gpuPanel: GPUStatsPanel;
++let stats: Stats;
 +let gui: GUI;
  
  // viewport
@@ -6267,30 +6267,30 @@ index 34c2e2d5..5e03987e 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-index 75cef620..e72b18a5 100644
+index 872058e0..fb622394 100644
 --- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-@@ -11,12 +11,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
+@@ -10,12 +10,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
  import { Line2 } from 'three/addons/lines/Line2.js';
  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
  
 -let line, thresholdLine, segments, thresholdSegments;
 -let renderer, scene, camera, controls;
 -let sphereInter, sphereOnLine;
--let stats, gpuPanel;
+-let stats;
 -let gui;
 -let clock;
 +let line: Line2, thresholdLine: Line2, segments: LineSegments2, thresholdSegments: LineSegments2;
 +let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
 +let sphereInter: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
 +    sphereOnLine: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
-+let stats: Stats, gpuPanel: GPUStatsPanel;
++let stats: Stats;
 +let gui: GUI;
 +let clock: THREE.Clock;
  
  const color = new THREE.Color();
  
-@@ -24,8 +25,7 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
+@@ -23,8 +24,7 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
  
  const raycaster = new THREE.Raycaster();
  
@@ -6300,7 +6300,7 @@ index 75cef620..e72b18a5 100644
  
  const matLine = new LineMaterial({
      color: 0xffffff,
-@@ -173,7 +173,7 @@ function onWindowResize() {
+@@ -170,7 +170,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -6309,7 +6309,7 @@ index 75cef620..e72b18a5 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -202,9 +202,9 @@ function animate() {
+@@ -199,9 +199,9 @@ function animate() {
          sphereOnLine.visible = true;
  
          sphereInter.position.copy(intersects[0].point);
@@ -6321,7 +6321,7 @@ index 75cef620..e72b18a5 100644
          const colors = obj.geometry.getAttribute('instanceColorStart');
  
          color.fromBufferAttribute(colors, index);
-@@ -228,7 +228,7 @@ function animate() {
+@@ -223,7 +223,7 @@ function animate() {
  
  //
  
@@ -6330,7 +6330,7 @@ index 75cef620..e72b18a5 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -273,7 +273,7 @@ function initGui() {
+@@ -268,7 +268,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -6339,7 +6339,7 @@ index 75cef620..e72b18a5 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -281,8 +281,8 @@ function initGui() {
+@@ -276,8 +276,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
