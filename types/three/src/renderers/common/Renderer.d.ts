@@ -253,6 +253,7 @@ declare class Renderer {
         width: number,
         height: number,
         index?: number,
+        faceIndex?: number,
     ): Promise<import("../../core/BufferAttribute.js").TypedArray>;
     _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void;
     _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;

@@ -4872,7 +4872,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 1d948688..6561a466 100644
+index 19a2edd3..b1f209bf 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -35,7 +35,36 @@ import {
@@ -5593,7 +5593,7 @@ index 1d948688..6561a466 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1077,64 +1270,77 @@ class Renderer {
+@@ -1077,7 +1270,7 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -5601,9 +5601,8 @@ index 1d948688..6561a466 100644
 +    copyFramebufferToTexture(framebufferTexture: FramebufferTexture) {
          const renderContext = this._currentRenderContext;
  
--        this._textures.updateTexture(framebufferTexture);
-+        this._textures!.updateTexture(framebufferTexture);
- 
+         this._textures.updateTexture(framebufferTexture);
+@@ -1085,56 +1278,70 @@ class Renderer {
          this.backend.copyFramebufferToTexture(framebufferTexture, renderContext);
      }
  
@@ -5623,7 +5622,7 @@ index 1d948688..6561a466 100644
          this.backend.copyTextureToTexture(srcTexture, dstTexture, srcRegion, dstPosition, level);
      }
  
--    readRenderTargetPixelsAsync(renderTarget, x, y, width, height, index = 0) {
+-    readRenderTargetPixelsAsync(renderTarget, x, y, width, height, index = 0, faceIndex = 0) {
 +    readRenderTargetPixelsAsync(
 +        renderTarget: RenderTarget,
 +        x: number,
@@ -5631,8 +5630,9 @@ index 1d948688..6561a466 100644
 +        width: number,
 +        height: number,
 +        index = 0,
++        faceIndex = 0,
 +    ) {
-         return this.backend.copyTextureToBuffer(renderTarget.textures[index], x, y, width, height);
+         return this.backend.copyTextureToBuffer(renderTarget.textures[index], x, y, width, height, faceIndex);
      }
  
 -    _projectObject(object, camera, groupOrder, renderList) {
@@ -5692,7 +5692,7 @@ index 1d948688..6561a466 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1144,7 +1350,7 @@ class Renderer {
+@@ -1144,7 +1351,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5701,7 +5701,7 @@ index 1d948688..6561a466 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector4.z, group);
-@@ -1161,7 +1367,7 @@ class Renderer {
+@@ -1161,7 +1368,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5710,7 +5710,7 @@ index 1d948688..6561a466 100644
  
              renderList.begin();
  
-@@ -1181,13 +1387,13 @@ class Renderer {
+@@ -1181,13 +1388,13 @@ class Renderer {
          }
      }
  
@@ -5726,7 +5726,7 @@ index 1d948688..6561a466 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1198,42 +1404,50 @@ class Renderer {
+@@ -1198,42 +1405,50 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -5788,7 +5788,7 @@ index 1d948688..6561a466 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1318,14 +1532,22 @@ class Renderer {
+@@ -1318,14 +1533,22 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5814,7 +5814,7 @@ index 1d948688..6561a466 100644
              passId,
          );
          renderObject.drawRange = object.geometry.drawRange;
-@@ -1333,12 +1555,12 @@ class Renderer {
+@@ -1333,12 +1556,12 @@ class Renderer {
  
          //
  
@@ -5832,7 +5832,7 @@ index 1d948688..6561a466 100644
  
          //
  
-@@ -1350,31 +1572,38 @@ class Renderer {
+@@ -1350,31 +1573,38 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7092,7 +7092,7 @@ index 9405a1d4..fd9aed09 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 361b2da4..a3777b22 100644
+index a03c88ad..baf0ae06 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -7107,9 +7107,9 @@ index 361b2da4..a3777b22 100644
          this.textureUtils.destroyTexture(texture);
      }
  
--    copyTextureToBuffer(texture, x, y, width, height) {
-+    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
-         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+-    copyTextureToBuffer(texture, x, y, width, height, faceIndex) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number, faceIndex: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height, faceIndex);
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
@@ -7509,20 +7509,20 @@ index 480df056..7509b1d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 35b85d00..caadb1c5 100644
+index 2b0e1ea0..42869c3e 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -978,7 +978,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
--    copyTextureToBuffer(texture, x, y, width, height) {
-+    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number) {
-         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height);
+-    copyTextureToBuffer(texture, x, y, width, height, faceIndex) {
++    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number, faceIndex: number) {
+         return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height, faceIndex);
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 83cb6f99..70020012 100644
+index 45eed64a..47907e90 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7543,7 +7543,7 @@ index 83cb6f99..70020012 100644
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
  const GPUShaderStage = self.GPUShaderStage;
-@@ -183,7 +185,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -191,7 +193,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -7558,7 +7558,7 @@ index 83cb6f99..70020012 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -228,7 +236,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -236,7 +244,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `tsl_biquadraticTexture( ${textureProperty}, ${uvSnippet}, i32( ${levelSnippet} ) )`;
      }
  
@@ -7572,7 +7572,7 @@ index 83cb6f99..70020012 100644
          this._include('repeatWrapping');
  
          const dimension =
-@@ -239,7 +252,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -247,7 +260,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `textureLoad( ${textureProperty}, tsl_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
      }
  
@@ -7587,7 +7587,7 @@ index 83cb6f99..70020012 100644
          if (depthSnippet) {
              return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
          } else {
-@@ -274,11 +293,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -282,11 +301,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -7604,7 +7604,7 @@ index 83cb6f99..70020012 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -290,11 +309,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -298,11 +317,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -7621,7 +7621,7 @@ index 83cb6f99..70020012 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -307,11 +326,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -315,11 +334,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -7638,7 +7638,7 @@ index 83cb6f99..70020012 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -333,11 +352,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -341,11 +360,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureBias(
@@ -7655,7 +7655,7 @@ index 83cb6f99..70020012 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -347,7 +366,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -355,7 +374,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -7664,7 +7664,7 @@ index 83cb6f99..70020012 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -414,7 +433,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -422,7 +441,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -7678,7 +7678,7 @@ index 83cb6f99..70020012 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -526,7 +550,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -534,7 +558,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -7687,7 +7687,7 @@ index 83cb6f99..70020012 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -649,8 +673,8 @@ ${flowData.code}
+@@ -657,8 +681,8 @@ ${flowData.code}
          return snippets.join(',\n\t');
      }
  
@@ -7698,7 +7698,7 @@ index 83cb6f99..70020012 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -731,8 +755,8 @@ ${flowData.code}
+@@ -739,8 +763,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7709,7 +7709,7 @@ index 83cb6f99..70020012 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -768,7 +792,7 @@ ${flowData.code}
+@@ -776,7 +800,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
