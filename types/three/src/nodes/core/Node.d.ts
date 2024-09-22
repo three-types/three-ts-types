@@ -60,6 +60,7 @@ interface NodeJSONOutputData {
 declare class Node extends EventDispatcher<{
     dispose: {};
 }> {
+    static get type(): string;
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
@@ -108,13 +109,3 @@ declare class Node extends EventDispatcher<{
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
 export default Node;
-export declare function registerNode(type: string, nodeClass: {
-    new(...args: any[]): Node;
-}): string | undefined;
-export declare function createNodeFromType(type: string): Node | undefined;
-/**
- * @deprecated Function addNodeClass() is deprecated. Use registerNodeClass() instead.
- */
-export declare function addNodeClass(type: string, nodeClass: {
-    new(...args: any[]): Node;
-}): void;
