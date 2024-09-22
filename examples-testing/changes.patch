@@ -1119,7 +1119,7 @@ index 40a62fb1..cb9d3f59 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_exr.ts b/examples-testing/examples/misc_exporter_exr.ts
-index c239a65f..1b774b55 100644
+index f4a189bb..1cd5fb27 100644
 --- a/examples-testing/examples/misc_exporter_exr.ts
 +++ b/examples-testing/examples/misc_exporter_exr.ts
 @@ -5,7 +5,14 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
@@ -1138,7 +1138,7 @@ index c239a65f..1b774b55 100644
  
  const params = {
      target: 'pmrem',
-@@ -148,7 +155,7 @@ function exportFile() {
+@@ -148,7 +155,7 @@ async function exportFile() {
      saveArrayBuffer(result, params.target + '.exr');
  }
  
@@ -12749,7 +12749,7 @@ index 1ad6d264..10b32582 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_tonemapping.ts b/examples-testing/examples/webgl_tonemapping.ts
-index 08115cf3..f68d7a8d 100644
+index 9945826c..db817304 100644
 --- a/examples-testing/examples/webgl_tonemapping.ts
 +++ b/examples-testing/examples/webgl_tonemapping.ts
 @@ -1,22 +1,35 @@
@@ -12804,23 +12804,29 @@ index 08115cf3..f68d7a8d 100644
  
      render();
 @@ -99,7 +112,7 @@ async function init() {
-     const toneMappingFolder = gui.addFolder('tone mapping');
+     const toneMappingFolder = gui.addFolder('Tone Mapping');
  
      toneMappingFolder
 -        .add(params, 'toneMapping', Object.keys(toneMappingOptions))
 +        .add(params, 'toneMapping', Object.keys(toneMappingOptions) as ToneMapping[])
  
+         .name('type')
          .onChange(function () {
-             updateGUI(toneMappingFolder);
-@@ -131,7 +144,7 @@ async function init() {
+@@ -140,11 +153,11 @@ async function init() {
      gui.open();
  }
  
 -function updateGUI(folder) {
 +function updateGUI(folder: GUI) {
-     if (guiExposure !== null) {
-         guiExposure.destroy();
-         guiExposure = null;
+     if (params.toneMapping === 'None') {
+-        guiExposure.hide();
++        guiExposure!.hide();
+     } else {
+-        guiExposure.show();
++        guiExposure!.show();
+     }
+ }
+ 
 diff --git a/examples-testing/examples/webgl_ubo.ts b/examples-testing/examples/webgl_ubo.ts
 index 01064f11..814edd87 100644
 --- a/examples-testing/examples/webgl_ubo.ts
