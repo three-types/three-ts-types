@@ -26,8 +26,4 @@ declare function retargetClip(
 
 declare function clone(source: Object3D): Object3D;
 
-export {
-    retarget,
-    retargetClip,
-    clone,
-};
+export { clone, retarget, retargetClip };
