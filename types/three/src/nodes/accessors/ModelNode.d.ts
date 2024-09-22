@@ -1,8 +1,8 @@
 import { Matrix4 } from "../../math/Matrix4.js";
+import Node from "../core/Node.js";
 import { UniformNode } from "../Nodes.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Object3DNode from "./Object3DNode.js";
-import Node from '../core/Node.js';
 
 /**
  * Similar to {@link Object3DNode} but the object comes from {@link NodeFrame}
