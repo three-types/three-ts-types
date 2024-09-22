@@ -1,4 +1,4 @@
-import { Light, Renderer } from "three";
+import { Light, WebGPURenderer } from "three/webgpu";
 
 export interface Size {
     width: number;
@@ -16,7 +16,7 @@ declare class ShadowMapViewer {
     enabled: boolean;
     size: Size;
     position: Position;
-    render: (renderer: Renderer) => void;
+    render: (renderer: WebGPURenderer) => void;
     updateForWindowResize: () => void;
     update: () => void;
 
