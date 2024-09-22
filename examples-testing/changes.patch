@@ -4108,37 +4108,6 @@ index a603710b..74676e45 100644
      if (event.isPrimary === false) return;
  
      document.removeEventListener('pointermove', onPointerMove);
-diff --git a/examples-testing/examples/webgl_geometry_sdf.ts b/examples-testing/examples/webgl_geometry_sdf.ts
-index fa5dba10..9ce7da93 100644
---- a/examples-testing/examples/webgl_geometry_sdf.ts
-+++ b/examples-testing/examples/webgl_geometry_sdf.ts
-@@ -4,7 +4,16 @@ import { SDFGeometryGenerator } from 'three/addons/geometries/SDFGeometryGenerat
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
--let renderer, stats, meshFromSDF, scene, camera, clock, controls;
-+let renderer: THREE.WebGLRenderer,
-+    stats: Stats,
-+    meshFromSDF: THREE.Mesh<
-+        THREE.BufferGeometry,
-+        THREE.MeshBasicMaterial | THREE.MeshDepthMaterial | THREE.MeshNormalMaterial
-+    >,
-+    scene: THREE.Scene,
-+    camera: THREE.OrthographicCamera,
-+    clock: THREE.Clock,
-+    controls: OrbitControls;
- 
- const settings = {
-     res: 4,
-@@ -12,7 +21,7 @@ const settings = {
-     autoRotate: true,
-     wireframe: true,
-     material: 'depth',
--    vertexCount: '0',
-+    vertexCount: 0,
- };
- 
- // Example SDF from https://www.shadertoy.com/view/MdXSWn -->
 diff --git a/examples-testing/examples/webgl_geometry_shapes.ts b/examples-testing/examples/webgl_geometry_shapes.ts
 index f1d00f01..2042c353 100644
 --- a/examples-testing/examples/webgl_geometry_shapes.ts
