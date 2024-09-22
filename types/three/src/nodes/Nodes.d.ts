@@ -17,7 +17,7 @@ export {
     LightingModelReflectedLight,
 } from "./core/LightingModel.js";
 export { default as MRTNode } from "./core/MRTNode.js";
-export { default as Node, NodeJSONInputData, NodeJSONIntermediateOutputData, registerNode } from "./core/Node.js";
+export { default as Node, NodeJSONInputData, NodeJSONIntermediateOutputData } from "./core/Node.js";
 export { default as NodeAttribute } from "./core/NodeAttribute.js";
 export {
     BuildStageOption,
