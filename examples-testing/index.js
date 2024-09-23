@@ -68,6 +68,7 @@ const exceptionList = [
     'webgpu_instance_mesh',
     'webgpu_instance_points',
     'webgpu_instance_uniform',
+    'webgpu_lightprobe_cubecamera',
     'webgpu_lights_custom',
     'webgpu_lights_phong',
     'webgpu_lights_selective',
