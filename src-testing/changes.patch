@@ -6734,13 +6734,13 @@ index d2d92cb2..c022f814 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 9405a1d4..fd9aed09 100644
+index 3ebf6c48..b64e1942 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
      normalWorld,
      pmremTexture,
-     viewportUV,
+     screenUV,
 +    ShaderNodeObject,
  } from '../../../nodes/TSL.js';
  
@@ -6930,7 +6930,7 @@ index 9405a1d4..fd9aed09 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -239,28 +300,31 @@ class Nodes extends DataMap {
+@@ -239,7 +300,7 @@ class Nodes extends DataMap {
                  let backgroundNode = null;
  
                  if (
@@ -6939,14 +6939,7 @@ index 9405a1d4..fd9aed09 100644
                      background.mapping === EquirectangularReflectionMapping ||
                      background.mapping === EquirectangularRefractionMapping ||
                      background.mapping === CubeUVReflectionMapping
-                 ) {
--                    if (scene.backgroundBlurriness > 0 || background.mapping === CubeUVReflectionMapping) {
--                        backgroundNode = pmremTexture(background, normalWorld);
-+                    if (
-+                        scene.backgroundBlurriness > 0 ||
-+                        (background as CubeTexture).mapping === CubeUVReflectionMapping
-+                    ) {
-+                        backgroundNode = pmremTexture(background as CubeTexture, normalWorld);
+@@ -249,18 +310,18 @@ class Nodes extends DataMap {
                      } else {
                          let envMap;
  
@@ -6961,17 +6954,17 @@ index 9405a1d4..fd9aed09 100644
                          backgroundNode = cubeMapNode(envMap);
                      }
 -                } else if (background.isTexture === true) {
--                    backgroundNode = texture(background, viewportUV.flipY()).setUpdateMatrix(true);
+-                    backgroundNode = texture(background, screenUV.flipY()).setUpdateMatrix(true);
 -                } else if (background.isColor !== true) {
 -                    console.error('WebGPUNodes: Unsupported background configuration.', background);
 +                } else if ((background as Texture).isTexture === true) {
-+                    backgroundNode = texture(background as Texture, viewportUV.flipY()).setUpdateMatrix(true);
++                    backgroundNode = texture(background as Texture, screenUV.flipY()).setUpdateMatrix(true);
 +                } else if ((background as Color).isColor !== true) {
 +                    console.error('WebGPUNodes: Unsupported background configuration.', background as Color);
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -273,7 +337,7 @@ class Nodes extends DataMap {
+@@ -273,7 +334,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -6980,7 +6973,7 @@ index 9405a1d4..fd9aed09 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -281,9 +345,9 @@ class Nodes extends DataMap {
+@@ -281,9 +342,9 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -6992,7 +6985,7 @@ index 9405a1d4..fd9aed09 100644
                      fogNode = rangeFog(
                          reference('color', 'color', fog),
                          reference('near', 'float', fog),
-@@ -302,7 +366,7 @@ class Nodes extends DataMap {
+@@ -302,7 +363,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7001,7 +6994,7 @@ index 9405a1d4..fd9aed09 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -310,7 +374,7 @@ class Nodes extends DataMap {
+@@ -310,7 +371,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
@@ -7010,7 +7003,7 @@ index 9405a1d4..fd9aed09 100644
                      environmentNode = cubeTexture(environment);
                  } else if (environment.isTexture === true) {
                      environmentNode = texture(environment);
-@@ -327,7 +391,13 @@ class Nodes extends DataMap {
+@@ -327,7 +388,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7025,7 +7018,7 @@ index 9405a1d4..fd9aed09 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -338,7 +408,7 @@ class Nodes extends DataMap {
+@@ -338,7 +405,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -7034,7 +7027,7 @@ index 9405a1d4..fd9aed09 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -354,17 +424,17 @@ class Nodes extends DataMap {
+@@ -354,24 +421,27 @@ class Nodes extends DataMap {
          return renderer.toneMapping + ',' + renderer.currentColorSpace;
      }
  
@@ -7050,12 +7043,14 @@ index 9405a1d4..fd9aed09 100644
          const renderer = this.renderer;
          const cacheKey = this.getOutputCacheKey();
  
--        const output = texture(outputTexture, viewportUV).renderOutput(
-+        const output: ShaderNodeObject<Node> = texture(outputTexture, viewportUV).renderOutput(
-             renderer.toneMapping,
-             renderer.currentColorSpace,
-         );
-@@ -374,7 +444,7 @@ class Nodes extends DataMap {
+-        const output = texture(outputTexture, screenUV).renderOutput(renderer.toneMapping, renderer.currentColorSpace);
++        const output: ShaderNodeObject<Node> = texture(outputTexture, screenUV).renderOutput(
++            renderer.toneMapping,
++            renderer.currentColorSpace,
++        );
+ 
+         outputNodeMap.set(outputTexture, cacheKey);
+ 
          return output;
      }
  
@@ -7064,7 +7059,7 @@ index 9405a1d4..fd9aed09 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -384,7 +454,7 @@ class Nodes extends DataMap {
+@@ -381,7 +451,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7073,7 +7068,7 @@ index 9405a1d4..fd9aed09 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -394,7 +464,7 @@ class Nodes extends DataMap {
+@@ -391,7 +461,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7082,7 +7077,7 @@ index 9405a1d4..fd9aed09 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -403,7 +473,7 @@ class Nodes extends DataMap {
+@@ -400,7 +470,7 @@ class Nodes extends DataMap {
          }
      }
  
