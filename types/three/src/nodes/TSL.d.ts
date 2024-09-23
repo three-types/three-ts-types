@@ -107,6 +107,7 @@ export * from "./display/PixelationPassNode.js";
 export * from "./display/PosterizeNode.js";
 export * from "./display/RenderOutputNode.js";
 export * from "./display/RGBShiftNode.js";
+export * from "./display/ScreenNode.js";
 export * from "./display/Sepia.js";
 export * from "./display/SobelOperatorNode.js";
 export * from "./display/SSAAPassNode.js";
@@ -115,7 +116,6 @@ export * from "./display/ToneMappingNode.js";
 export * from "./display/TransitionNode.js";
 export * from "./display/ViewportDepthNode.js";
 export * from "./display/ViewportDepthTextureNode.js";
-export * from "./display/ViewportNode.js";
 export * from "./display/ViewportSharedTextureNode.js";
 export * from "./display/ViewportTextureNode.js";
 
