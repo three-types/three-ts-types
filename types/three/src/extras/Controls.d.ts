@@ -26,7 +26,7 @@ declare abstract class Controls<TEventMap extends {}> extends EventDispatcher<TE
      * @param object The object the controls should manage (usually the camera).
      * @param domElement The HTML element used for event listeners. (optional)
      */
-    constructor(object: Camera, domElement: HTMLElement | null);
+    constructor(object: Camera, domElement?: HTMLElement | null);
 
     /**
      * Connects the controls to the DOM. This method has so called "side effects" since it adds the module's event
