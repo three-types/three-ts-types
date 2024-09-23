@@ -35,6 +35,12 @@ export default class RenderObject {
     attributes: Array<BufferAttribute | InterleavedBufferAttribute> | null;
     pipeline: RenderPipeline | null;
     vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
+    drawParams: {
+        vertexCount: number;
+        firstVertex: number;
+        instanceCount: number;
+        firstInstance: number;
+    } | null;
     clippingContext: ClippingContext;
     clippingContextVersion: number;
     initialNodesCacheKey: string;
@@ -68,6 +74,12 @@ export default class RenderObject {
     ];
     getAttributes(): (InterleavedBufferAttribute | BufferAttribute)[];
     getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
+    getDrawParameters(): {
+        vertexCount: number;
+        firstVertex: number;
+        instanceCount: number;
+        firstInstance: number;
+    } | null;
     getMaterialCacheKey(): string;
     get needsUpdate(): boolean;
     getDynamicCacheKey(): string;

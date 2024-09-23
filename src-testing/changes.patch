@@ -4597,7 +4597,7 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 762a769a..a652f7ec 100644
+index f4204ef4..70069d29 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,24 @@
@@ -4626,7 +4626,7 @@ index 762a769a..a652f7ec 100644
      const keys = Object.keys(obj);
  
      let proto = Object.getPrototypeOf(obj);
-@@ -27,7 +43,55 @@ function getKeys(obj) {
+@@ -27,7 +43,56 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -4652,6 +4652,7 @@ index 762a769a..a652f7ec 100644
 +    attributes: Array<BufferAttribute | InterleavedBufferAttribute> | null;
 +    pipeline: RenderPipeline | null;
 +    vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
++    drawParams: { vertexCount: number; firstVertex: number; instanceCount: number; firstInstance: number } | null;
 +
 +    clippingContext!: ClippingContext;
 +
@@ -4683,16 +4684,16 @@ index 762a769a..a652f7ec 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -50,7 +114,7 @@ export default class RenderObject {
-         this.pipeline = null;
+@@ -51,7 +116,7 @@ export default class RenderObject {
          this.vertexBuffers = null;
+         this.drawParams = null;
  
 -        this.updateClipping(renderContext.clippingContext);
 +        this.updateClipping(renderContext.clippingContext!);
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -71,7 +135,7 @@ export default class RenderObject {
+@@ -72,7 +137,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -4701,7 +4702,7 @@ index 762a769a..a652f7ec 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -89,9 +153,9 @@ export default class RenderObject {
+@@ -90,9 +155,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -4713,7 +4714,7 @@ index 762a769a..a652f7ec 100644
  
          return true;
      }
-@@ -109,7 +173,7 @@ export default class RenderObject {
+@@ -110,7 +175,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -4722,7 +4723,7 @@ index 762a769a..a652f7ec 100644
      }
  
      getAttributes() {
-@@ -118,8 +182,8 @@ export default class RenderObject {
+@@ -119,8 +184,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -4733,7 +4734,7 @@ index 762a769a..a652f7ec 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -226,6 +290,6 @@ export default class RenderObject {
+@@ -288,6 +353,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -7087,7 +7088,7 @@ index 3ebf6c48..b64e1942 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index a03c88ad..baf0ae06 100644
+index 1b1e415b..6c9849b2 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -7098,7 +7099,7 @@ index a03c88ad..baf0ae06 100644
  
  //
  
-@@ -672,7 +673,7 @@ class WebGLBackend extends Backend {
+@@ -645,7 +646,7 @@ class WebGLBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7504,10 +7505,10 @@ index 480df056..7509b1d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 2b0e1ea0..42869c3e 100644
+index b5a0c604..2d3d1f1e 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -978,7 +978,7 @@ class WebGPUBackend extends Backend {
+@@ -942,7 +942,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
