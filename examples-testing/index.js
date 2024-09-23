@@ -43,7 +43,6 @@ const exceptionList = [
     'webgl_postprocessing_3dlut',
     'webgl_postprocessing_dof',
     'webgl_postprocessing_dof2',
-    'webgl_buffergeometry_compression',
     'webgl_rendertarget_texture2darray',
     'webgl_texture2darray',
     'webgl_worker_offscreencanvas',
