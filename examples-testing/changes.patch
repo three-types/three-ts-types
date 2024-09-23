@@ -13143,13 +13143,13 @@ index d0255e43..c924d666 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 1d9c5eab..5c4fc4c5 100644
+index efa241df..88a9be23 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -1,20 +1,20 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { color, viewportUV, reflector } from 'three/tsl';
+ import { color, screenUV, hue, timerLocal, reflector } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -13171,7 +13171,7 @@ index 1d9c5eab..5c4fc4c5 100644
          new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
      }),
  ]);
-@@ -94,7 +94,13 @@ gui.add(helpers, 'visible').name('helpers');
+@@ -96,7 +96,13 @@ gui.add(helpers, 'visible').name('helpers');
  
  //
  
@@ -13186,7 +13186,7 @@ index 1d9c5eab..5c4fc4c5 100644
      const clip = sourceModel.animations[0];
  
      const helper = new THREE.SkeletonHelper(sourceModel.scene);
-@@ -108,7 +114,7 @@ function getSource(sourceModel) {
+@@ -110,7 +116,7 @@ function getSource(sourceModel) {
      return { clip, skeleton, mixer };
  }
  
@@ -13196,7 +13196,7 @@ index 1d9c5eab..5c4fc4c5 100644
  
      const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index 97c224ce..579cb796 100644
+index 5ccf2fa1..72225c8d 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -1,4 +1,4 @@
@@ -14375,7 +14375,7 @@ index ea9f8658..b81d7761 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index 3737c463..de4ee03c 100644
+index a749bd6d..16bcee89 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
 @@ -1,4 +1,4 @@
@@ -14396,18 +14396,18 @@ index 3737c463..de4ee03c 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index ace1533a..52bd9288 100644
+index 989361b6..d324a37f 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 @@ -1,12 +1,31 @@
 -import * as THREE from 'three';
--import { mix, step, texture, viewportUV, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
+-import { mix, step, texture, screenUV, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
 +import {
 +    mix,
 +    step,
 +    texture,
-+    viewportUV,
++    screenUV,
 +    mrt,
 +    output,
 +    transformedNormalWorld,
@@ -14951,13 +14951,13 @@ index a4f56b17..ce7e7ad3 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index 7e86bb48..c5ac9f2e 100644
+index 1330953c..4f677d85 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, texture, motionBlur, uniform, output, mrt, mix, velocity, uv, viewportUV } from 'three/tsl';
+ import { pass, texture, motionBlur, uniform, output, mrt, mix, velocity, uv, screenUV } from 'three/tsl';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 @@ -9,11 +9,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -15284,13 +15284,13 @@ index 84e8ba9e..86560654 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
-index a410c04f..64814a2b 100644
+index 4ce8b0a7..d41bc6f4 100644
 --- a/examples-testing/examples/webgpu_refraction.ts
 +++ b/examples-testing/examples/webgpu_refraction.ts
 @@ -1,13 +1,13 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { viewportSafeUV, viewportSharedTexture, viewportUV, texture, uv } from 'three/tsl';
+ import { viewportSafeUV, viewportSharedTexture, screenUV, texture, uv } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
