@@ -23,7 +23,6 @@ export class LineMaterial extends ShaderMaterial {
     readonly isLineMaterial: true;
 
     /**
-     *
      * @param parameters (optional) an object with one or more properties defining the material's appearance. Any
      * property of the material (including any property inherited from {@link ShaderMaterial}) can be passed in here.
      *
