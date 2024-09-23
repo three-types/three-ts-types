@@ -13657,35 +13657,6 @@ index 66f9ffcb..0bcfb599 100644
          return [
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
-diff --git a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-index 612fade7..b7436e09 100644
---- a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-+++ b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-@@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
- import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
- 
--let renderer, scene, camera, cubeCamera;
-+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, cubeCamera: THREE.CubeCamera;
- 
--let lightProbe;
-+let lightProbe: THREE.LightProbe;
- 
- init();
- 
-@@ -40,7 +40,7 @@ function init() {
-     scene.add(lightProbe);
- 
-     // envmap
--    const genCubeUrls = function (prefix, postfix) {
-+    const genCubeUrls = function (prefix: string, postfix: string) {
-         return [
-             prefix + 'px' + postfix,
-             prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 index 41b56de8..8f7abe1f 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
