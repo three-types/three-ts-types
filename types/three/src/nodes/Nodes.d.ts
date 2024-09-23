@@ -116,7 +116,7 @@ export { default as PixelationPassNode } from "./display/PixelationPassNode.js";
 export { default as PosterizeNode } from "./display/PosterizeNode.js";
 export { default as RenderOutputNode } from "./display/RenderOutputNode.js";
 export { default as RGBShiftNode } from "./display/RGBShiftNode.js";
-export { default as ScreenNode, ScreenNodePass } from "./display/ScreenNode.js";
+export { default as ScreenNode, ScreenNodeScope } from "./display/ScreenNode.js";
 export { default as SobelOperatorNode } from "./display/SobelOperatorNode.js";
 export { default as SSAAPassNode } from "./display/SSAAPassNode.js";
 export { default as StereoPassNode } from "./display/StereoPassNode.js";
