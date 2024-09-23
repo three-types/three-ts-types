@@ -13142,6 +13142,59 @@ index d0255e43..c924d666 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
+index 1d9c5eab..5c4fc4c5 100644
+--- a/examples-testing/examples/webgpu_animation_retargeting.ts
++++ b/examples-testing/examples/webgpu_animation_retargeting.ts
+@@ -1,20 +1,20 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { color, viewportUV, reflector } from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
++import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+ 
+ const [sourceModel, targetModel] = await Promise.all([
+-    new Promise((resolve, reject) => {
++    new Promise<GLTF>((resolve, reject) => {
+         new GLTFLoader().load('./models/gltf/Michelle.glb', resolve, undefined, reject);
+     }),
+ 
+-    new Promise((resolve, reject) => {
++    new Promise<GLTF>((resolve, reject) => {
+         new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
+     }),
+ ]);
+@@ -94,7 +94,13 @@ gui.add(helpers, 'visible').name('helpers');
+ 
+ //
+ 
+-function getSource(sourceModel) {
++interface Source {
++    clip: THREE.AnimationClip;
++    skeleton: THREE.Skeleton;
++    mixer: THREE.AnimationMixer;
++}
++
++function getSource(sourceModel: GLTF) {
+     const clip = sourceModel.animations[0];
+ 
+     const helper = new THREE.SkeletonHelper(sourceModel.scene);
+@@ -108,7 +114,7 @@ function getSource(sourceModel) {
+     return { clip, skeleton, mixer };
+ }
+ 
+-function retargetModel(sourceModel, targetModel) {
++function retargetModel(sourceModel: Source, targetModel: GLTF) {
+     const targetSkin = targetModel.scene.children[0].children[0];
+ 
+     const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
 index 97c224ce..579cb796 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
