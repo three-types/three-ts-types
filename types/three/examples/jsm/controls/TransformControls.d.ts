@@ -124,10 +124,10 @@ declare class TransformControls extends Controls<TransformControlsEventMap> {
     constructor(camera: Camera, domElement?: HTMLElement);
 
     /**
-     * Returns the visual representation of the controls. Add the gizmo to your scene to visually transform the attached
-     * 3D object.
+     * Returns the visual representation of the controls. Add the helper to your scene to visually transform the
+     * attached 3D object.
      */
-    getGizmo(): TransformControlsRoot;
+    getHelper(): TransformControlsRoot;
 
     pointerHover(pointer: PointerEvent | null): void;
     pointerDown(pointer: PointerEvent | null): void;
