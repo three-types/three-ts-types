@@ -170,11 +170,11 @@ index 97456dbc..c99ecb8a 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index c6316689..80816c68 100644
+index 4924fbeb..4cc15e95 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
- import { toWorkingColorSpace } from '../display/ColorSpaceNode.js';
+ import { colorSpaceToWorking } from '../display/ColorSpaceNode.js';
  import { expression } from '../code/ExpressionNode.js';
  import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
 -import { nodeProxy, vec3, nodeObject } from '../tsl/TSLBase.js';
@@ -4873,7 +4873,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 19a2edd3..b1f209bf 100644
+index 3545da9a..b94633e7 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -35,7 +35,36 @@ import {
@@ -5071,7 +5071,7 @@ index 19a2edd3..b1f209bf 100644
          this.isRenderer = true;
  
          //
-@@ -170,12 +347,12 @@ class Renderer {
+@@ -172,12 +349,12 @@ class Renderer {
              getShaderAsync: async (scene, camera, object) => {
                  await this.compileAsync(scene, camera);
  
@@ -5088,7 +5088,7 @@ index 19a2edd3..b1f209bf 100644
                      object,
                      material,
                      scene,
-@@ -263,12 +440,12 @@ class Renderer {
+@@ -265,12 +442,12 @@ class Renderer {
          return this.backend.coordinateSystem;
      }
  
@@ -5103,7 +5103,7 @@ index 19a2edd3..b1f209bf 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -277,15 +454,15 @@ class Renderer {
+@@ -279,15 +456,15 @@ class Renderer {
  
          //
  
@@ -5122,7 +5122,7 @@ index 19a2edd3..b1f209bf 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -314,7 +491,7 @@ class Renderer {
+@@ -316,7 +493,7 @@ class Renderer {
  
          //
  
@@ -5131,7 +5131,7 @@ index 19a2edd3..b1f209bf 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -322,8 +499,8 @@ class Renderer {
+@@ -324,8 +501,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -5142,7 +5142,7 @@ index 19a2edd3..b1f209bf 100644
                  }
              });
          }
-@@ -333,12 +510,12 @@ class Renderer {
+@@ -335,12 +512,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5159,7 +5159,7 @@ index 19a2edd3..b1f209bf 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -346,11 +523,11 @@ class Renderer {
+@@ -348,11 +525,11 @@ class Renderer {
  
          //
  
@@ -5173,7 +5173,7 @@ index 19a2edd3..b1f209bf 100644
  
          // process render lists
  
-@@ -378,7 +555,7 @@ class Renderer {
+@@ -380,7 +557,7 @@ class Renderer {
          await Promise.all(compilationPromises);
      }
  
@@ -5182,7 +5182,7 @@ index 19a2edd3..b1f209bf 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -386,7 +563,7 @@ class Renderer {
+@@ -388,7 +565,7 @@ class Renderer {
          await this.backend.resolveTimestampAsync(renderContext, 'render');
      }
  
@@ -5191,7 +5191,7 @@ index 19a2edd3..b1f209bf 100644
          this._mrt = mrt;
  
          return this;
-@@ -396,14 +573,14 @@ class Renderer {
+@@ -398,14 +575,14 @@ class Renderer {
          return this._mrt;
      }
  
@@ -5209,7 +5209,7 @@ index 19a2edd3..b1f209bf 100644
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -441,19 +618,19 @@ class Renderer {
+@@ -443,19 +620,19 @@ class Renderer {
              for (let i = 0, l = renderObjects.length; i < l; i++) {
                  const renderObject = renderObjects[i];
  
@@ -5234,7 +5234,7 @@ index 19a2edd3..b1f209bf 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -508,12 +685,12 @@ class Renderer {
+@@ -510,12 +687,12 @@ class Renderer {
          return frameBufferTarget;
      }
  
@@ -5249,7 +5249,7 @@ index 19a2edd3..b1f209bf 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -542,7 +719,7 @@ class Renderer {
+@@ -544,7 +721,7 @@ class Renderer {
  
          //
  
@@ -5258,7 +5258,7 @@ index 19a2edd3..b1f209bf 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -614,7 +791,7 @@ class Renderer {
+@@ -616,7 +793,7 @@ class Renderer {
          _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
          _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
  
@@ -5267,7 +5267,7 @@ index 19a2edd3..b1f209bf 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList);
-@@ -628,14 +805,14 @@ class Renderer {
+@@ -630,14 +807,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -5288,7 +5288,7 @@ index 19a2edd3..b1f209bf 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -656,11 +833,11 @@ class Renderer {
+@@ -658,11 +835,11 @@ class Renderer {
  
          //
  
@@ -5302,7 +5302,7 @@ index 19a2edd3..b1f209bf 100644
  
          //
  
-@@ -697,8 +874,8 @@ class Renderer {
+@@ -696,8 +873,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -5313,7 +5313,7 @@ index 19a2edd3..b1f209bf 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -726,13 +903,13 @@ class Renderer {
+@@ -725,13 +902,13 @@ class Renderer {
          return this._activeMipmapLevel;
      }
  
@@ -5330,7 +5330,7 @@ index 19a2edd3..b1f209bf 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -744,11 +921,11 @@ class Renderer {
+@@ -743,11 +920,11 @@ class Renderer {
          return this._pixelRatio;
      }
  
@@ -5344,7 +5344,7 @@ index 19a2edd3..b1f209bf 100644
          return target.set(this._width, this._height);
      }
  
-@@ -758,7 +935,7 @@ class Renderer {
+@@ -757,7 +934,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -5353,7 +5353,7 @@ index 19a2edd3..b1f209bf 100644
          this._width = width;
          this._height = height;
  
-@@ -772,7 +949,7 @@ class Renderer {
+@@ -771,7 +948,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5362,7 +5362,7 @@ index 19a2edd3..b1f209bf 100644
          this._width = width;
          this._height = height;
  
-@@ -789,15 +966,15 @@ class Renderer {
+@@ -788,15 +965,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5381,7 +5381,7 @@ index 19a2edd3..b1f209bf 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -808,13 +985,15 @@ class Renderer {
+@@ -807,13 +984,15 @@ class Renderer {
          return target;
      }
  
@@ -5401,7 +5401,7 @@ index 19a2edd3..b1f209bf 100644
          }
      }
  
-@@ -822,34 +1001,36 @@ class Renderer {
+@@ -821,34 +1000,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -5446,7 +5446,7 @@ index 19a2edd3..b1f209bf 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -858,7 +1039,7 @@ class Renderer {
+@@ -857,7 +1038,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -5455,7 +5455,7 @@ index 19a2edd3..b1f209bf 100644
          this._clearColor.a = alpha;
      }
  
-@@ -866,7 +1047,7 @@ class Renderer {
+@@ -865,7 +1046,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -5464,7 +5464,7 @@ index 19a2edd3..b1f209bf 100644
          this._clearDepth = depth;
      }
  
-@@ -874,11 +1055,11 @@ class Renderer {
+@@ -873,11 +1054,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -5478,7 +5478,7 @@ index 19a2edd3..b1f209bf 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -898,9 +1079,9 @@ class Renderer {
+@@ -897,9 +1078,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -5490,7 +5490,7 @@ index 19a2edd3..b1f209bf 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -911,8 +1092,8 @@ class Renderer {
+@@ -910,8 +1091,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -5501,7 +5501,7 @@ index 19a2edd3..b1f209bf 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -961,20 +1142,20 @@ class Renderer {
+@@ -960,20 +1141,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -5531,7 +5531,7 @@ index 19a2edd3..b1f209bf 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -984,7 +1165,19 @@ class Renderer {
+@@ -983,7 +1164,19 @@ class Renderer {
          return this._renderTarget;
      }
  
@@ -5552,7 +5552,7 @@ index 19a2edd3..b1f209bf 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -992,10 +1185,10 @@ class Renderer {
+@@ -991,10 +1184,10 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -5565,7 +5565,7 @@ index 19a2edd3..b1f209bf 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -1010,9 +1203,9 @@ class Renderer {
+@@ -1009,9 +1202,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -5578,7 +5578,7 @@ index 19a2edd3..b1f209bf 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -1059,13 +1252,13 @@ class Renderer {
+@@ -1058,13 +1251,13 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -5594,7 +5594,7 @@ index 19a2edd3..b1f209bf 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1077,7 +1270,7 @@ class Renderer {
+@@ -1076,7 +1269,7 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -5603,13 +5603,11 @@ index 19a2edd3..b1f209bf 100644
          const renderContext = this._currentRenderContext;
  
          this._textures.updateTexture(framebufferTexture);
-@@ -1085,56 +1278,70 @@ class Renderer {
+@@ -1084,54 +1277,68 @@ class Renderer {
          this.backend.copyFramebufferToTexture(framebufferTexture, renderContext);
      }
  
 -    copyTextureToTexture(srcTexture, dstTexture, srcRegion = null, dstPosition = null, level = 0) {
--        this._textures.updateTexture(srcTexture);
--        this._textures.updateTexture(dstTexture);
 +    copyTextureToTexture(
 +        srcTexture: Texture,
 +        dstTexture: Texture,
@@ -5617,8 +5615,8 @@ index 19a2edd3..b1f209bf 100644
 +        dstPosition: Vector2 | null = null,
 +        level = 0,
 +    ) {
-+        this._textures!.updateTexture(srcTexture);
-+        this._textures!.updateTexture(dstTexture);
+         this._textures.updateTexture(srcTexture);
+         this._textures.updateTexture(dstTexture);
  
          this.backend.copyTextureToTexture(srcTexture, dstTexture, srcRegion, dstPosition, level);
      }
@@ -5644,14 +5642,15 @@ index 19a2edd3..b1f209bf 100644
  
          if (visible) {
 -            if (object.isGroup) {
-+            if ((object as Group).isGroup) {
-                 groupOrder = object.renderOrder;
+-                groupOrder = object.renderOrder;
 -            } else if (object.isLOD) {
 -                if (object.autoUpdate === true) object.update(camera);
 -            } else if (object.isLight) {
 -                renderList.pushLight(object);
 -            } else if (object.isSprite) {
 -                if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
++            if ((object as Group).isGroup) {
++                groupOrder = (object as Group).renderOrder;
 +            } else if ((object as LOD).isLOD) {
 +                if ((object as LOD).autoUpdate === true) (object as LOD).update(camera);
 +            } else if ((object as Light).isLight) {
@@ -5662,13 +5661,12 @@ index 19a2edd3..b1f209bf 100644
                          _vector4.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
                      }
  
--                    const geometry = object.geometry;
--                    const material = object.material;
-+                    const geometry = (object as Sprite).geometry;
-+                    const material = (object as Sprite).material;
+-                    const { geometry, material } = object;
++                    const { geometry, material } = object as Sprite;
  
                      if (material.visible) {
-                         renderList.push(object, geometry, material, groupOrder, _vector4.z, null);
+-                        renderList.push(object, geometry, material, groupOrder, _vector4.z, null);
++                        renderList.push(object as Sprite, geometry, material, groupOrder, _vector4.z, null);
                      }
                  }
 -            } else if (object.isLineLoop) {
@@ -5679,10 +5677,8 @@ index 19a2edd3..b1f209bf 100644
 -            } else if (object.isMesh || object.isLine || object.isPoints) {
 +            } else if ((object as Mesh).isMesh || (object as Line).isLine || (object as Points).isPoints) {
                  if (!object.frustumCulled || _frustum.intersectsObject(object)) {
--                    const geometry = object.geometry;
--                    const material = object.material;
-+                    const geometry = (object as Mesh | Line | Points).geometry;
-+                    const material = (object as Mesh | Line | Points).material;
+-                    const { geometry, material } = object;
++                    const { geometry, material } = object as Mesh | Line | Points;
  
                      if (this.sortObjects === true) {
                          if (geometry.boundingSphere === null) geometry.computeBoundingSphere();
@@ -5693,7 +5689,7 @@ index 19a2edd3..b1f209bf 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1144,7 +1351,7 @@ class Renderer {
+@@ -1141,7 +1348,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5702,7 +5698,7 @@ index 19a2edd3..b1f209bf 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector4.z, group);
-@@ -1161,7 +1368,7 @@ class Renderer {
+@@ -1158,7 +1365,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5711,7 +5707,7 @@ index 19a2edd3..b1f209bf 100644
  
              renderList.begin();
  
-@@ -1181,13 +1388,13 @@ class Renderer {
+@@ -1178,13 +1385,13 @@ class Renderer {
          }
      }
  
@@ -5727,7 +5723,7 @@ index 19a2edd3..b1f209bf 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1198,42 +1405,50 @@ class Renderer {
+@@ -1195,42 +1402,50 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -5789,7 +5785,7 @@ index 19a2edd3..b1f209bf 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1318,14 +1533,22 @@ class Renderer {
+@@ -1315,14 +1530,22 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5815,7 +5811,7 @@ index 19a2edd3..b1f209bf 100644
              passId,
          );
          renderObject.drawRange = object.geometry.drawRange;
-@@ -1333,12 +1556,12 @@ class Renderer {
+@@ -1330,12 +1553,12 @@ class Renderer {
  
          //
  
@@ -5833,7 +5829,7 @@ index 19a2edd3..b1f209bf 100644
  
          //
  
-@@ -1350,31 +1573,38 @@ class Renderer {
+@@ -1347,31 +1570,38 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7505,7 +7501,7 @@ index 480df056..7509b1d7 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index b5a0c604..2d3d1f1e 100644
+index 892759c1..814d0de2 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -942,7 +942,7 @@ class WebGPUBackend extends Backend {
@@ -7518,7 +7514,7 @@ index b5a0c604..2d3d1f1e 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 45eed64a..47907e90 100644
+index 99fef09e..019c5bd7 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7539,7 +7535,7 @@ index 45eed64a..47907e90 100644
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
  const GPUShaderStage = self.GPUShaderStage;
-@@ -191,7 +193,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -193,7 +195,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -7554,7 +7550,7 @@ index 45eed64a..47907e90 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -236,7 +244,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -238,7 +246,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `tsl_biquadraticTexture( ${textureProperty}, ${uvSnippet}, i32( ${levelSnippet} ) )`;
      }
  
@@ -7568,7 +7564,7 @@ index 45eed64a..47907e90 100644
          this._include('repeatWrapping');
  
          const dimension =
-@@ -247,7 +260,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -249,7 +262,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `textureLoad( ${textureProperty}, tsl_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
      }
  
@@ -7583,7 +7579,7 @@ index 45eed64a..47907e90 100644
          if (depthSnippet) {
              return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
          } else {
-@@ -282,11 +301,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -284,11 +303,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -7600,7 +7596,7 @@ index 45eed64a..47907e90 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -298,11 +317,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -300,11 +319,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -7617,7 +7613,7 @@ index 45eed64a..47907e90 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -315,11 +334,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -317,11 +336,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -7634,7 +7630,7 @@ index 45eed64a..47907e90 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -341,11 +360,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -343,11 +362,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureBias(
@@ -7651,7 +7647,7 @@ index 45eed64a..47907e90 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -355,7 +374,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -357,7 +376,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -7660,7 +7656,7 @@ index 45eed64a..47907e90 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -422,7 +441,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -424,7 +443,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -7674,7 +7670,7 @@ index 45eed64a..47907e90 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -534,7 +558,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -536,7 +560,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -7683,8 +7679,8 @@ index 45eed64a..47907e90 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -657,8 +681,8 @@ ${flowData.code}
-         return snippets.join(',\n\t');
+@@ -688,8 +712,8 @@ ${flowData.code}
+         return snippets.join('\n');
      }
  
 -    getAttributes(shaderStage) {
@@ -7694,7 +7690,7 @@ index 45eed64a..47907e90 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -739,8 +763,8 @@ ${flowData.code}
+@@ -770,8 +794,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7705,7 +7701,7 @@ index 45eed64a..47907e90 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -776,7 +800,7 @@ ${flowData.code}
+@@ -807,7 +831,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
