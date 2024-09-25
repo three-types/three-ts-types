@@ -881,7 +881,8 @@ ${flowData.code}
                 const bufferCount = bufferNode.bufferCount;
 
                 const bufferCountSnippet = bufferCount > 0 ? ', ' + bufferCount : '';
-                const bufferSnippet = `\t${uniform.name} : array< ${bufferType}${bufferCountSnippet} >\n`;
+                const bufferTypeSnippet = bufferNode.isAtomic ? `atomic<${bufferType}>` : `${bufferType}`;
+                const bufferSnippet = `\t${uniform.name} : array< ${bufferTypeSnippet}${bufferCountSnippet} >\n`;
                 const bufferAccessMode = bufferNode.isStorageBufferNode
                     ? `storage, ${this.getStorageAccess(bufferNode)}`
                     : 'uniform';

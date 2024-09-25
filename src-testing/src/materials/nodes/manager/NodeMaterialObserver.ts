@@ -55,6 +55,7 @@ class NodeMaterialObserver {
     constructor(builder) {
         this.renderObjects = new WeakMap();
         this.hasNode = this.containsNode(builder);
+        this.hasAnimation = builder.object.isSkinnedMesh === true;
         this.refreshUniforms = refreshUniforms;
         this.renderId = 0;
     }
@@ -79,6 +80,10 @@ class NodeMaterialObserver {
                 material: this.getMaterialData(renderObject.material),
                 worldMatrix: renderObject.object.matrixWorld.clone(),
             };
+
+            if (renderObject.object.morphTargetInfluences) {
+                data.morphTargetInfluences = renderObject.object.morphTargetInfluences.slice();
+            }
 
             if (renderObject.bundle !== null) {
                 data.version = renderObject.bundle.version;
@@ -126,12 +131,14 @@ class NodeMaterialObserver {
     }
 
     equals(renderObject) {
+        const { object, material } = renderObject;
+
         const renderObjectData = this.getRenderObjectData(renderObject);
 
         // world matrix
 
-        if (renderObjectData.worldMatrix.equals(renderObject.object.matrixWorld) !== true) {
-            renderObjectData.worldMatrix.copy(renderObject.object.matrixWorld);
+        if (renderObjectData.worldMatrix.equals(object.matrixWorld) !== true) {
+            renderObjectData.worldMatrix.copy(object.matrixWorld);
 
             return false;
         }
@@ -139,7 +146,6 @@ class NodeMaterialObserver {
         // material
 
         const materialData = renderObjectData.material;
-        const material = renderObject.material;
 
         for (const property in materialData) {
             const value = materialData[property];
@@ -165,6 +171,20 @@ class NodeMaterialObserver {
             }
         }
 
+        // morph targets
+
+        if (renderObjectData.morphTargetInfluences) {
+            let morphChanged = false;
+
+            for (let i = 0; i < renderObjectData.morphTargetInfluences.length; i++) {
+                if (renderObjectData.morphTargetInfluences[i] !== object.morphTargetInfluences[i]) {
+                    morphChanged = true;
+                }
+            }
+
+            if (morphChanged) return true;
+        }
+
         // bundle
 
         if (renderObject.bundle !== null) {
@@ -175,7 +195,7 @@ class NodeMaterialObserver {
     }
 
     needsRefresh(renderObject, nodeFrame) {
-        if (this.hasNode || this.firstInitialization(renderObject)) return true;
+        if (this.hasNode || this.hasAnimation || this.firstInitialization(renderObject)) return true;
 
         const { renderId } = nodeFrame;
 
