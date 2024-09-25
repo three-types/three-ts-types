@@ -18,4 +18,4 @@ declare class LensflareElement {
     constructor(texture: Texture, size?: number, distance?: number, color?: Color);
 }
 
-export { LensflareMesh, LensflareElement };
+export { LensflareElement, LensflareMesh };
