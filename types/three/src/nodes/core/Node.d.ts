@@ -87,7 +87,7 @@ declare class Node extends EventDispatcher<{
     getChildren(): Generator<Node, void, unknown>;
     dispose(): void;
     traverse(callback: (node: Node) => void): void;
-    getCacheKey(force?: boolean): string;
+    getCacheKey(force?: boolean): string | null;
     getScope(): this;
     getHash(builder: NodeBuilder): string;
     getUpdateType(): NodeUpdateType;
