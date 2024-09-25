@@ -1,4 +1,4 @@
-import { AnimationClip, Bone, Object3D, Skeleton, Vector3 } from 'three';
+import { AnimationClip, Bone, Object3D, Skeleton, Vector3 } from "three";
 
 export interface RetargetOptions {
     preserveBoneMatrix?: boolean | undefined;
