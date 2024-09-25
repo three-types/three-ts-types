@@ -13,8 +13,8 @@ export interface NodeChild {
 }
 
 export const hashString: (str: string) => number;
-export const hashArray: (array: readonly string[]) => number;
-export const hash: (...params: readonly string[]) => number;
+export const hashArray: (array: number[]) => number;
+export const hash: (...params: number[]) => number;
 
 export function getCacheKey(object: Node, force?: boolean): number;
 export function getNodeChildren(object: Node): Generator<NodeChild, void>;
