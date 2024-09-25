@@ -36,6 +36,12 @@ import RenderList, { Bundle, RenderItem } from "./RenderList.js";
 import RenderLists from "./RenderLists.js";
 import RenderObjects from "./RenderObjects.js";
 import Textures from "./Textures.js";
+interface Rectangle {
+    x: number;
+    y: number;
+    z: number;
+    w: number;
+}
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
@@ -238,7 +244,7 @@ declare class Renderer {
     computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
     hasFeatureAsync(name: string): Promise<void>;
     hasFeature(name: string): false | void;
-    copyFramebufferToTexture(framebufferTexture: FramebufferTexture): void;
+    copyFramebufferToTexture(framebufferTexture: FramebufferTexture, rectangle?: Rectangle | null): void;
     copyTextureToTexture(
         srcTexture: Texture,
         dstTexture: Texture,
