@@ -142,6 +142,19 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     getVisibleAt(instanceId: number): boolean;
 
     /**
+     * Get the range representing the subset of triangles related to the attached geometry, indicating the starting
+     * offset and count, or `null` if invalid.
+     *
+     * Return an object of the form: { start: Integer, count: Integer }
+     * @param geometryId The id of the geometry to get the range of.
+     * @param target Optional target object to copy the range in to.
+     */
+    getGeometryRangeAt(
+        geometryId: number,
+        target?: { start: number; count: number },
+    ): { start: number; count: number } | null;
+
+    /**
      * Get the geometryIndex of the defined instance.
      * @param instanceId The id of an instance to get the geometryIndex of.
      */
