@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index f55fc9fc..7be67da3 100644
+index f55fc9fc..dadead4e 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,9 @@
@@ -12,22 +12,30 @@ index f55fc9fc..7be67da3 100644
  const refreshUniforms = [
      'alphaMap',
      'alphaTest',
-@@ -51,15 +57,27 @@ const refreshUniforms = [
+@@ -49,17 +55,34 @@ const refreshUniforms = [
+     'thickness',
+     'transmission',
      'transmissionMap',
- ];
- 
-+interface MaterialData {}
+-];
++] as const;
++
++type RefreshUniform = (typeof refreshUniforms)[number];
++
++type MaterialData = {
++    [K in RefreshUniform]?: unknown;
++};
 +
 +interface RenderObjectData {
 +    material: MaterialData;
 +    worldMatrix: Matrix4;
++    version?: number;
 +}
-+
+ 
  class NodeMaterialObserver {
 -    constructor(builder) {
 +    renderObjects: WeakMap<RenderObject, RenderObjectData>;
 +    hasNode: boolean;
-+    refreshUniforms: string[];
++    refreshUniforms: readonly RefreshUniform[];
 +    renderId: number;
 +
 +    constructor(builder: NodeBuilder) {
@@ -42,7 +50,7 @@ index f55fc9fc..7be67da3 100644
          const hasInitialized = this.renderObjects.has(renderObject);
  
          if (hasInitialized === false) {
-@@ -71,7 +89,7 @@ class NodeMaterialObserver {
+@@ -71,7 +94,7 @@ class NodeMaterialObserver {
          return false;
      }
  
@@ -51,7 +59,7 @@ index f55fc9fc..7be67da3 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -90,7 +108,7 @@ class NodeMaterialObserver {
+@@ -90,7 +113,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -60,16 +68,18 @@ index f55fc9fc..7be67da3 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -103,7 +121,7 @@ class NodeMaterialObserver {
+@@ -103,8 +126,8 @@ class NodeMaterialObserver {
          return false;
      }
  
 -    getMaterialData(material) {
+-        const data = {};
 +    getMaterialData(material: Material) {
-         const data = {};
++        const data: MaterialData = {};
  
          for (const property of this.refreshUniforms) {
-@@ -121,7 +139,7 @@ class NodeMaterialObserver {
+             const value = material[property];
+@@ -121,7 +144,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -78,7 +88,7 @@ index f55fc9fc..7be67da3 100644
          const renderObjectData = this.getRenderObjectData(renderObject);
  
          // world matrix
-@@ -161,7 +179,7 @@ class NodeMaterialObserver {
+@@ -161,7 +184,7 @@ class NodeMaterialObserver {
          return true;
      }
  
@@ -3517,10 +3527,10 @@ index 99ddcb48..e18679b1 100644
  
      return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/src-testing/src/renderers/common/BundleGroup.ts b/src-testing/src/renderers/common/BundleGroup.ts
-index 1dd8e0a2..6aeb907d 100644
+index 1dd8e0a2..b0e36aaf 100644
 --- a/src-testing/src/renderers/common/BundleGroup.ts
 +++ b/src-testing/src/renderers/common/BundleGroup.ts
-@@ -1,6 +1,10 @@
+@@ -1,6 +1,13 @@
  import { Group } from '../../objects/Group.js';
  
  class BundleGroup extends Group {
@@ -3528,9 +3538,21 @@ index 1dd8e0a2..6aeb907d 100644
 +
 +    readonly type: string;
 +
++    static: boolean;
++    version: number;
++
      constructor() {
          super();
  
+@@ -12,7 +19,7 @@ class BundleGroup extends Group {
+         this.version = 0;
+     }
+ 
+-    set needsUpdate(value) {
++    set needsUpdate(value: boolean) {
+         if (value === true) this.version++;
+     }
+ }
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
 index b17e7080..e2b545b7 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
@@ -4686,10 +4708,10 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 5919f5d7..cb10d622 100644
+index 5919f5d7..ac759f65 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
-@@ -1,8 +1,25 @@
+@@ -1,8 +1,26 @@
  import ClippingContext from './ClippingContext.js';
 +import { Material } from '../../materials/Material.js';
 +import Nodes from './nodes/Nodes.js';
@@ -4708,6 +4730,7 @@ index 5919f5d7..cb10d622 100644
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
 +import BindGroup from './BindGroup.js';
 +import NodeMaterialObserver from '../../materials/nodes/manager/NodeMaterialObserver.js';
++import BundleGroup from './BundleGroup.js';
  
  let _id = 0;
  
@@ -4716,7 +4739,7 @@ index 5919f5d7..cb10d622 100644
      const keys = Object.keys(obj);
  
      let proto = Object.getPrototypeOf(obj);
-@@ -27,7 +44,59 @@ function getKeys(obj) {
+@@ -27,7 +45,59 @@ function getKeys(obj) {
  }
  
  export default class RenderObject {
@@ -4744,7 +4767,7 @@ index 5919f5d7..cb10d622 100644
 +    vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
 +    drawParams: { vertexCount: number; firstVertex: number; instanceCount: number; firstInstance: number } | null;
 +
-+    bundle: Object3D | null;
++    bundle: BundleGroup | null;
 +
 +    clippingContext!: ClippingContext;
 +
@@ -4777,7 +4800,7 @@ index 5919f5d7..cb10d622 100644
          this._nodes = nodes;
          this._geometries = geometries;
  
-@@ -53,7 +122,7 @@ export default class RenderObject {
+@@ -53,7 +123,7 @@ export default class RenderObject {
  
          this.bundle = null;
  
@@ -4786,7 +4809,7 @@ index 5919f5d7..cb10d622 100644
  
          this.clippingContextVersion = this.clippingContext.version;
  
-@@ -75,7 +144,7 @@ export default class RenderObject {
+@@ -75,7 +145,7 @@ export default class RenderObject {
          this.material.addEventListener('dispose', this.onMaterialDispose);
      }
  
@@ -4795,7 +4818,7 @@ index 5919f5d7..cb10d622 100644
          const material = this.material;
  
          let clippingContext = this.clippingContext;
-@@ -93,9 +162,9 @@ export default class RenderObject {
+@@ -93,9 +163,9 @@ export default class RenderObject {
      }
  
      get clippingNeedsUpdate() {
@@ -4807,7 +4830,7 @@ index 5919f5d7..cb10d622 100644
  
          return true;
      }
-@@ -117,7 +186,7 @@ export default class RenderObject {
+@@ -117,7 +187,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -4816,7 +4839,7 @@ index 5919f5d7..cb10d622 100644
      }
  
      getAttributes() {
-@@ -126,8 +195,8 @@ export default class RenderObject {
+@@ -126,8 +196,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -4827,7 +4850,7 @@ index 5919f5d7..cb10d622 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -298,6 +367,6 @@ export default class RenderObject {
+@@ -298,6 +368,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
