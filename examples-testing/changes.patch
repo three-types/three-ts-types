@@ -3401,7 +3401,7 @@ index 1b46a805..e5798e30 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_decals.ts b/examples-testing/examples/webgl_decals.ts
-index 23cdb4da..bbaddccc 100644
+index be346083..79d8dae6 100644
 --- a/examples-testing/examples/webgl_decals.ts
 +++ b/examples-testing/examples/webgl_decals.ts
 @@ -7,12 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -3458,13 +3458,13 @@ index 23cdb4da..bbaddccc 100644
          if (mesh === undefined) return;
  
          mouse.x = (x / window.innerWidth) * 2 - 1;
-@@ -143,12 +143,12 @@ function init() {
-             mouseHelper.position.copy(p);
-             intersection.point.copy(p);
+@@ -145,12 +145,12 @@ function init() {
+ 
+             const normalMatrix = new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
  
 -            const n = intersects[0].face.normal.clone();
 +            const n = intersects[0].face!.normal.clone();
-             n.transformDirection(mesh.matrixWorld);
+             n.applyNormalMatrix(normalMatrix);
              n.multiplyScalar(10);
              n.add(intersects[0].point);
  
@@ -3473,7 +3473,7 @@ index 23cdb4da..bbaddccc 100644
              mouseHelper.lookAt(n);
  
              const positions = line.geometry.attributes.position;
-@@ -182,7 +182,7 @@ function loadLeePerrySmith() {
+@@ -184,7 +184,7 @@ function loadLeePerrySmith() {
      const loader = new GLTFLoader();
  
      loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
@@ -13143,13 +13143,13 @@ index d0255e43..c924d666 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
-index 565aebb8..f5d6bf42 100644
+index b0aed613..8607a01a 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
 @@ -1,20 +1,20 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { screenUV, color, vec2, reflector } from 'three/tsl';
+ import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -13171,7 +13171,7 @@ index 565aebb8..f5d6bf42 100644
          new GLTFLoader().load('./models/gltf/readyplayer.me.glb', resolve, undefined, reject);
      }),
  ]);
-@@ -100,7 +100,13 @@ scene.add(floor);
+@@ -102,7 +102,13 @@ scene.add(floor);
  
  //
  
@@ -13186,7 +13186,7 @@ index 565aebb8..f5d6bf42 100644
      const clip = sourceModel.animations[0];
  
      const helper = new THREE.SkeletonHelper(sourceModel);
-@@ -112,10 +118,10 @@ function getSource(sourceModel) {
+@@ -114,10 +120,10 @@ function getSource(sourceModel) {
      return { clip, skeleton, mixer };
  }
  
@@ -13896,7 +13896,7 @@ index 04023326..05ee79b0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_arrays.ts b/examples-testing/examples/webgpu_materials_arrays.ts
-index 8db371e6..b893f2c0 100644
+index 35a25f77..b893f2c0 100644
 --- a/examples-testing/examples/webgpu_materials_arrays.ts
 +++ b/examples-testing/examples/webgpu_materials_arrays.ts
 @@ -1,11 +1,11 @@
@@ -13915,15 +13915,6 @@ index 8db371e6..b893f2c0 100644
  
  const api = {
      webgpu: true,
-@@ -21,7 +21,7 @@ function init(forceWebGL = false) {
-     }
- 
-     // renderer
--    renderer = new THREE.WebGLRenderer({
-+    renderer = new THREE.WebGPURenderer({
-         forceWebGL,
-         antialias: true,
-     });
 diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
 index 0161a9c7..590f668d 100644
 --- a/examples-testing/examples/webgpu_materials_basic.ts
