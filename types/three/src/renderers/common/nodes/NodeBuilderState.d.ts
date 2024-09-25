@@ -13,7 +13,6 @@ declare class NodeBuilderState {
     updateBeforeNodes: Node[];
     updateAfterNodes: Node[];
     monitor: NodeMaterialObserver;
-    instanceBindGroups: boolean;
     usedTimes: number;
     constructor(
         vertexShader: string | null,
@@ -25,7 +24,6 @@ declare class NodeBuilderState {
         updateBeforeNodes: Node[],
         updateAfterNodes: Node[],
         monitor: NodeMaterialObserver,
-        instanceBindGroups?: boolean,
         transforms?: never[],
     );
     createBindings(): BindGroup[];
