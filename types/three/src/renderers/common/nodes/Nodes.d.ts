@@ -108,6 +108,7 @@ declare class Nodes extends DataMap<{
     updateAfter(renderObject: RenderObject): void;
     updateForCompute(computeNode: ComputeNode): void;
     updateForRender(renderObject: RenderObject): void;
+    needsRefresh(renderObject: RenderObject): boolean;
     dispose(): void;
 }
 export default Nodes;

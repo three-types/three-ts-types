@@ -1,3 +1,4 @@
+import NodeMaterialObserver from "../../../materials/nodes/manager/NodeMaterialObserver.js";
 import Node from "../../../nodes/core/Node.js";
 import NodeAttribute from "../../../nodes/core/NodeAttribute.js";
 import BindGroup from "../BindGroup.js";
@@ -11,6 +12,7 @@ declare class NodeBuilderState {
     updateNodes: Node[];
     updateBeforeNodes: Node[];
     updateAfterNodes: Node[];
+    monitor: NodeMaterialObserver;
     instanceBindGroups: boolean;
     usedTimes: number;
     constructor(
@@ -22,6 +24,7 @@ declare class NodeBuilderState {
         updateNodes: Node[],
         updateBeforeNodes: Node[],
         updateAfterNodes: Node[],
+        monitor: NodeMaterialObserver,
         instanceBindGroups?: boolean,
         transforms?: never[],
     );
