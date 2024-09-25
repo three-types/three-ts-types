@@ -1,4 +1,4 @@
-import { AnimationClip, Object3D, Skeleton, Vector3 } from "three";
+import { AnimationClip, Bone, Object3D, Skeleton, Vector3 } from "three";
 
 export interface RetargetOptions {
     preserveBoneMatrix?: boolean | undefined;
@@ -8,6 +8,7 @@ export interface RetargetOptions {
     hipInfluence?: Vector3 | undefined;
     scale?: number | undefined;
     names?: { [boneName: string]: string } | undefined;
+    getBoneName?: ((bone: Bone) => string) | undefined;
     hipPosition?: Vector3 | undefined;
 }
 

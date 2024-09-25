@@ -1148,7 +1148,7 @@ index f4a189bb..1cd5fb27 100644
      const link = document.createElement('a');
  
 diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
-index e4172b85..3ceb9601 100644
+index fda0d4df..12e45bf4 100644
 --- a/examples-testing/examples/misc_exporter_gltf.ts
 +++ b/examples-testing/examples/misc_exporter_gltf.ts
 @@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
@@ -1200,7 +1200,7 @@ index e4172b85..3ceb9601 100644
  
  const params = {
      trs: false,
-@@ -388,8 +395,8 @@ function init() {
+@@ -387,8 +394,8 @@ function init() {
      const color = new THREE.Color();
      for (let i = 0; i < 50; i++) {
          matrix.setPosition(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
@@ -13142,6 +13142,63 @@ index d0255e43..c924d666 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
+index 565aebb8..f5d6bf42 100644
+--- a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
++++ b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
+@@ -1,20 +1,20 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { screenUV, color, vec2, reflector } from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
++import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js';
+ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+ 
+ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+ 
+ const [sourceModel, targetModel] = await Promise.all([
+-    new Promise((resolve, reject) => {
++    new Promise<THREE.Group>((resolve, reject) => {
+         new FBXLoader().load('./models/fbx/mixamo.fbx', resolve, undefined, reject);
+     }),
+ 
+-    new Promise((resolve, reject) => {
++    new Promise<GLTF>((resolve, reject) => {
+         new GLTFLoader().load('./models/gltf/readyplayer.me.glb', resolve, undefined, reject);
+     }),
+ ]);
+@@ -100,7 +100,13 @@ scene.add(floor);
+ 
+ //
+ 
+-function getSource(sourceModel) {
++interface Source {
++    clip: THREE.AnimationClip;
++    skeleton: THREE.Skeleton;
++    mixer: THREE.AnimationMixer;
++}
++
++function getSource(sourceModel: THREE.Group): Source {
+     const clip = sourceModel.animations[0];
+ 
+     const helper = new THREE.SkeletonHelper(sourceModel);
+@@ -112,10 +118,10 @@ function getSource(sourceModel) {
+     return { clip, skeleton, mixer };
+ }
+ 
+-function retargetModel(sourceModel, targetModel) {
++function retargetModel(sourceModel: Source, targetModel: GLTF) {
+     const targetSkin = targetModel.scene.children[0].children[1];
+ 
+-    const retargetOptions = {
++    const retargetOptions: SkeletonUtils.RetargetClipOptions = {
+         // specify the name of the source's hip bone.
+         hip: 'mixamorigHips',
+ 
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
 index 5ccf2fa1..72225c8d 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
@@ -14146,7 +14203,7 @@ index bd84aba0..f9d188c3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 48c6fad6..52624f42 100644
+index 17bc8440..1f7bc551 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -1,19 +1,19 @@
@@ -14176,7 +14233,7 @@ index 48c6fad6..52624f42 100644
  
  const matrix = new THREE.Matrix4();
  
-@@ -43,7 +43,7 @@ init();
+@@ -48,7 +48,7 @@ init();
  
  //
  
@@ -14185,7 +14242,7 @@ index 48c6fad6..52624f42 100644
      position.x = Math.random() * 40 - 20;
      position.y = Math.random() * 40 - 20;
      position.z = Math.random() * 40 - 20;
-@@ -59,7 +59,7 @@ function randomizeMatrix(matrix) {
+@@ -64,7 +64,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -14194,7 +14251,7 @@ index 48c6fad6..52624f42 100644
      rotation.x = Math.random() * 0.01;
      rotation.y = Math.random() * 0.01;
      rotation.z = Math.random() * 0.01;
-@@ -85,7 +85,7 @@ function createMaterial() {
+@@ -90,7 +90,7 @@ function createMaterial() {
  
  function cleanup() {
      if (mesh) {
@@ -14203,7 +14260,7 @@ index 48c6fad6..52624f42 100644
  
          if (mesh.dispose) {
              mesh.dispose();
-@@ -248,18 +248,26 @@ function init(forceWebGL = false) {
+@@ -254,18 +254,26 @@ function init(forceWebGL = false) {
  
  //
  
