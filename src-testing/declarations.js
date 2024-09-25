@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { argv } from 'node:process';
 
 const files = [
+    'materials/nodes/manager/NodeMaterialObserver',
     'nodes/accessors/BufferAttributeNode',
     'nodes/core/constants',
     'nodes/core/Node',
