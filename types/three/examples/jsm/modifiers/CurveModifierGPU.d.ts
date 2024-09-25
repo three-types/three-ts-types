@@ -1,11 +1,12 @@
 import { BufferGeometry, Curve, DataTexture, InstancedMesh, IUniform, Material, Mesh, Vector3 } from "three";
 
 export interface SplineUniform {
-    spineTexture: IUniform;
-    pathOffset: IUniform;
-    pathSegment: IUniform;
-    spineOffset: IUniform;
-    flow: IUniform;
+    spineTexture: DataTexture;
+    pathOffset: number;
+    pathSegment: number;
+    spineOffset: number;
+    spineLength: number;
+    flow: number;
 }
 export function initSplineTexture(numberOfCurves?: number): DataTexture;
 
@@ -13,7 +14,7 @@ export function updateSplineTexture(texture: DataTexture, splineCurve: Curve<Vec
 
 export function getUniforms(splineTexture: DataTexture): SplineUniform;
 
-export function modifyShader(material: Material, uniforms: SplineUniform, numberOfCurves?: number): void;
+export function modifyShader(material: Material, uniforms: SplineUniform, numberOfCurves: number): void;
 
 export class Flow {
     curveArray: number[];
@@ -24,18 +25,7 @@ export class Flow {
     uniforms: SplineUniform;
 
     constructor(mesh: Mesh, numberOfCurves?: number);
+
     updateCurve(index: number, curve: Curve<Vector3>): void;
     moveAlongCurve(amount: number): void;
-}
-
-export class InstancedFlow extends Flow {
-    object3D: InstancedMesh;
-
-    offsets: number[];
-    whichCurve: number[];
-
-    constructor(count: number, curveCount: number, geometry: BufferGeometry, material: Material);
-
-    moveIndividualAlongCurve(index: number, offset: number): void;
-    setCurve(index: number, curveNo: number): void;
 }
