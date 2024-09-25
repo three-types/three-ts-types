@@ -67,7 +67,7 @@ declare class Node extends EventDispatcher<{
     updateAfterType: NodeUpdateType;
     uuid: string;
     version: number;
-    _cacheKey: string | null;
+    _cacheKey: number | null;
     _cacheKeyVersion: number;
     global: boolean;
     readonly isNode: true;
@@ -87,7 +87,7 @@ declare class Node extends EventDispatcher<{
     getChildren(): Generator<Node, void, unknown>;
     dispose(): void;
     traverse(callback: (node: Node) => void): void;
-    getCacheKey(force?: boolean): string | null;
+    getCacheKey(force?: boolean): number;
     getScope(): this;
     getHash(builder: NodeBuilder): string;
     getUpdateType(): NodeUpdateType;
