@@ -5,6 +5,7 @@ import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
 import { Material } from "../../materials/Material.js";
+import NodeMaterialObserver from "../../materials/nodes/manager/NodeMaterialObserver.js";
 import { LightsNode } from "../../nodes/Nodes.js";
 import { Scene } from "../../scenes/Scene.js";
 import BindGroup from "./BindGroup.js";
@@ -41,12 +42,14 @@ export default class RenderObject {
         instanceCount: number;
         firstInstance: number;
     } | null;
+    bundle: Object3D | null;
     clippingContext: ClippingContext;
     clippingContextVersion: number;
     initialNodesCacheKey: string;
     initialCacheKey: string;
     _nodeBuilderState: NodeBuilderState | null;
     _bindings: BindGroup[] | null;
+    _monitor: NodeMaterialObserver | null;
     onDispose: (() => void) | null;
     readonly isRenderObject: true;
     onMaterialDispose: () => void;
@@ -64,6 +67,7 @@ export default class RenderObject {
     updateClipping(parent: ClippingContext): void;
     get clippingNeedsUpdate(): boolean;
     getNodeBuilderState(): NodeBuilderState;
+    getMonitor(): NodeMaterialObserver;
     getBindings(): BindGroup[];
     getIndex(): BufferAttribute | null;
     getChainArray(): readonly [
