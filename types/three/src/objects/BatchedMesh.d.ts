@@ -196,6 +196,13 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     addInstance(geometryId: number): number;
 
     /**
+     * Removes an existing instance from the BatchedMesh using the given instanceId.
+     * @param instanceId The id of an instance to remove from the BatchedMesh that was previously added via
+     * "addInstance".
+     */
+    deleteInstance(instanceId: number): this;
+
+    /**
      * Replaces the geometry at `geometryId` with the provided geometry. Throws an error if there is not enough space
      * reserved for geometry. Calling this will change all instances that are rendering that geometry.
      * @param geometryId Which geometry id to replace with this geometry.
