@@ -1,6 +1,6 @@
 import { Color, Mesh, Texture } from "three";
 
-declare class Lensflare extends Mesh {
+declare class LensflareMesh extends Mesh {
     readonly isLensflare: true;
 
     constructor();
@@ -18,4 +18,4 @@ declare class LensflareElement {
     constructor(texture: Texture, size?: number, distance?: number, color?: Color);
 }
 
-export { Lensflare, LensflareElement };
+export { LensflareMesh, LensflareElement };
