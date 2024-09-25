@@ -1,13 +1,14 @@
-import { AnimationClip, Object3D, Skeleton } from "three";
+import { AnimationClip, Object3D, Skeleton, Vector3 } from "three";
 
 export interface RetargetOptions {
     preserveBoneMatrix?: boolean | undefined;
-    preserveBonePositions?: boolean | undefined;
     preserveHipPosition?: boolean | undefined;
     useTargetMatrix?: boolean | undefined;
     hip?: string | undefined;
+    hipInfluence?: Vector3 | undefined;
     scale?: number | undefined;
     names?: { [boneName: string]: string } | undefined;
+    hipPosition?: Vector3 | undefined;
 }
 
 declare function retarget(target: Object3D | Skeleton, source: Object3D | Skeleton, options: {}): void;
