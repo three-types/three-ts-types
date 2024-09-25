@@ -85,6 +85,7 @@ export default class RenderObject {
         instanceCount: number;
         firstInstance: number;
     } | null;
+    getGeometryCacheKey(): string;
     getMaterialCacheKey(): string;
     get needsUpdate(): boolean;
     getDynamicCacheKey(): string;

@@ -67,6 +67,7 @@ interface RenderObjectData {
 declare class NodeMaterialObserver {
     renderObjects: WeakMap<RenderObject, RenderObjectData>;
     hasNode: boolean;
+    hasAnimation: boolean;
     refreshUniforms: readonly RefreshUniform[];
     renderId: number;
     constructor(builder: NodeBuilder);
