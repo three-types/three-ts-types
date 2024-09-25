@@ -11,18 +11,19 @@ export interface RetargetOptions {
     hipPosition?: Vector3 | undefined;
 }
 
-declare function retarget(target: Object3D | Skeleton, source: Object3D | Skeleton, options: {}): void;
+declare function retarget(target: Object3D | Skeleton, source: Object3D | Skeleton, options?: RetargetOptions): void;
 
 export interface RetargetClipOptions extends RetargetOptions {
     useFirstFramePosition?: boolean | undefined;
     fps?: number | undefined;
+    trim?: [number, number] | undefined;
 }
 
 declare function retargetClip(
     target: Skeleton | Object3D,
     source: Skeleton | Object3D,
     clip: AnimationClip,
-    options: {},
+    options?: RetargetClipOptions,
 ): AnimationClip;
 
 declare function clone(source: Object3D): Object3D;
