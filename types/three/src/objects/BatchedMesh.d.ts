@@ -142,6 +142,12 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
     getVisibleAt(instanceId: number): boolean;
 
     /**
+     * Get the geometryIndex of the defined instance.
+     * @param instanceId The id of an instance to get the geometryIndex of.
+     */
+    getGeometryIdAt(instanceId: number): number;
+
+    /**
      * Sets the given color to the defined geometry instance.
      * @param instanceId The id of the instance to set the color of.
      * @param color The color to set the instance to.
@@ -161,6 +167,13 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      * @param visible A boolean value indicating the visibility state.
      */
     setVisibleAt(instanceId: number, visible: boolean): this;
+
+    /**
+     * Sets the geometryIndex of the instance at the given index.
+     * @param instanceId The id of the instance to set the geometryIndex of.
+     * @param geometryId The geometryIndex to be use by the instance.
+     */
+    setGeometryIdAt(instanceId: number, geometryId: number): this;
 
     /**
      * Adds the given geometry to the {@link BatchedMesh} and returns the associated index referring to it.
