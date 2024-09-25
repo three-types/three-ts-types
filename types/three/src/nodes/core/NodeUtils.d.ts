@@ -12,7 +12,11 @@ export interface NodeChild {
     childNode: Node;
 }
 
-export function getCacheKey(object: Node, force?: boolean): string;
+export const hashString: (str: string) => number;
+export const hashArray: (array: readonly string[]) => number;
+export const hash: (...params: readonly string[]) => number;
+
+export function getCacheKey(object: Node, force?: boolean): number;
 export function getNodeChildren(object: Node): Generator<NodeChild, void>;
 export function getValueType(value: unknown): string | null;
 export function getValueFromType(
