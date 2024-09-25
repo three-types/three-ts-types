@@ -269,15 +269,15 @@ index 97456dbc..c99ecb8a 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 4924fbeb..4cc15e95 100644
+index f6a4d27e..624d767f 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
  import { colorSpaceToWorking } from '../display/ColorSpaceNode.js';
  import { expression } from '../code/ExpressionNode.js';
  import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
--import { nodeProxy, vec3, nodeObject } from '../tsl/TSLBase.js';
-+import { nodeProxy, vec3, nodeObject, ShaderNodeObject } from '../tsl/TSLBase.js';
+-import { nodeProxy, vec3, nodeObject, int } from '../tsl/TSLBase.js';
++import { nodeProxy, vec3, nodeObject, int, ShaderNodeObject } from '../tsl/TSLBase.js';
  import { NodeUpdateType } from '../core/constants.js';
  
  import { IntType, UnsignedIntType } from '../../constants.js';
@@ -287,7 +287,8 @@ index 4924fbeb..4cc15e95 100644
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Matrix3 } from '../../math/Matrix3.js';
  
- class TextureNode extends UniformNode {
+-class TextureNode extends UniformNode {
++class TextureNode extends UniformNode<Texture> {
      static get type() {
          return 'TextureNode';
      }
@@ -354,7 +355,7 @@ index 4924fbeb..4cc15e95 100644
          const texture = this.value;
  
          if (
-@@ -106,7 +133,7 @@ class TextureNode extends UniformNode {
+@@ -110,7 +137,7 @@ class TextureNode extends UniformNode {
          return uvNode;
      }
  
@@ -363,7 +364,7 @@ index 4924fbeb..4cc15e95 100644
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -144,19 +171,19 @@ class TextureNode extends UniformNode {
+@@ -148,19 +175,19 @@ class TextureNode extends UniformNode {
          properties.depthNode = this.depthNode;
      }
  
@@ -392,7 +393,7 @@ index 4924fbeb..4cc15e95 100644
      ) {
          const texture = this.value;
  
-@@ -179,7 +206,7 @@ class TextureNode extends UniformNode {
+@@ -183,7 +210,7 @@ class TextureNode extends UniformNode {
          return snippet;
      }
  
@@ -401,7 +402,7 @@ index 4924fbeb..4cc15e95 100644
          const properties = builder.getNodeProperties(this);
  
          const texture = this.value;
-@@ -245,7 +272,7 @@ class TextureNode extends UniformNode {
+@@ -249,7 +276,7 @@ class TextureNode extends UniformNode {
          }
      }
  
@@ -410,7 +411,7 @@ index 4924fbeb..4cc15e95 100644
          this.sampler = value;
  
          return this;
-@@ -257,7 +284,7 @@ class TextureNode extends UniformNode {
+@@ -261,7 +288,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -419,7 +420,7 @@ index 4924fbeb..4cc15e95 100644
          const textureNode = this.clone();
          textureNode.uvNode = nodeObject(uvNode);
          textureNode.referenceNode = this.getSelf();
-@@ -265,7 +292,7 @@ class TextureNode extends UniformNode {
+@@ -269,7 +296,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -428,7 +429,7 @@ index 4924fbeb..4cc15e95 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -273,7 +300,7 @@ class TextureNode extends UniformNode {
+@@ -277,7 +304,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
