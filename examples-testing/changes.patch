@@ -7354,7 +7354,7 @@ index c8bce4bf..a28a7f00 100644
  
          loader.load(`textures/equirectangular/spruit_sunrise_${resolution}.hdr.jpg`, function (texture) {
 diff --git a/examples-testing/examples/webgl_loader_tilt.ts b/examples-testing/examples/webgl_loader_tilt.ts
-index 2a583c2b..8e3e976b 100644
+index 843b3cfd..ea737c79 100644
 --- a/examples-testing/examples/webgl_loader_tilt.ts
 +++ b/examples-testing/examples/webgl_loader_tilt.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -9944,7 +9944,7 @@ index ecc9b28e..2e894236 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_advanced.ts b/examples-testing/examples/webgl_postprocessing_advanced.ts
-index adaef620..2b43e46a 100644
+index 82fc39be..1a14c2b9 100644
 --- a/examples-testing/examples/webgl_postprocessing_advanced.ts
 +++ b/examples-testing/examples/webgl_postprocessing_advanced.ts
 @@ -21,11 +21,21 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
@@ -13622,6 +13622,38 @@ index cfd72172..ae3271f9 100644
      }
  
      renderer.render(scene, camera);
+diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
+index 40478039..0abdb8f1 100644
+--- a/examples-testing/examples/webgpu_lensflares.ts
++++ b/examples-testing/examples/webgpu_lensflares.ts
+@@ -1,14 +1,14 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { FlyControls } from 'three/addons/controls/FlyControls.js';
+ import { LensflareMesh, LensflareElement } from 'three/addons/objects/LensflareMesh.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: FlyControls;
+ 
+ const clock = new THREE.Clock();
+ 
+@@ -73,7 +73,7 @@ function init() {
+     addLight(0.08, 0.8, 0.5, 0, 0, -1000);
+     addLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
+ 
+-    function addLight(h, s, l, x, y, z) {
++    function addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
+         const light = new THREE.PointLight(0xffffff, 1.5, 2000, 0);
+         light.color.setHSL(h, s, l);
+         light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
 index 66f9ffcb..0bcfb599 100644
 --- a/examples-testing/examples/webgpu_lightprobe.ts
