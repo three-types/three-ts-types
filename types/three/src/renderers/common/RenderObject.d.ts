@@ -9,6 +9,7 @@ import NodeMaterialObserver from "../../materials/nodes/manager/NodeMaterialObse
 import { LightsNode } from "../../nodes/Nodes.js";
 import { Scene } from "../../scenes/Scene.js";
 import BindGroup from "./BindGroup.js";
+import BundleGroup from "./BundleGroup.js";
 import ClippingContext from "./ClippingContext.js";
 import Geometries from "./Geometries.js";
 import NodeBuilderState from "./nodes/NodeBuilderState.js";
@@ -42,7 +43,7 @@ export default class RenderObject {
         instanceCount: number;
         firstInstance: number;
     } | null;
-    bundle: Object3D | null;
+    bundle: BundleGroup | null;
     clippingContext: ClippingContext;
     clippingContextVersion: number;
     initialNodesCacheKey: string;
