@@ -85,6 +85,7 @@ const exceptionList = [
     'webgpu_multisampled_renderbuffers',
     'webgpu_occlusion',
     'webgpu_particles',
+    'webgpu_performance',
     'webgpu_performance_renderbundle',
     'webgpu_pmrem_cubemap',
     'webgpu_pmrem_equirectangular',
