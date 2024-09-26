@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index d2ddcaba..4d19c2b3 100644
+index 0e940e65..edbafb5c 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,9 @@
@@ -61,7 +61,7 @@ index d2ddcaba..4d19c2b3 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -95,7 +119,7 @@ class NodeMaterialObserver {
+@@ -99,7 +123,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -70,7 +70,7 @@ index d2ddcaba..4d19c2b3 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -108,8 +132,8 @@ class NodeMaterialObserver {
+@@ -112,8 +136,8 @@ class NodeMaterialObserver {
          return false;
      }
  
@@ -81,7 +81,7 @@ index d2ddcaba..4d19c2b3 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -130,7 +154,7 @@ class NodeMaterialObserver {
+@@ -134,7 +158,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -90,7 +90,7 @@ index d2ddcaba..4d19c2b3 100644
          const { object, material } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -194,7 +218,7 @@ class NodeMaterialObserver {
+@@ -208,7 +232,7 @@ class NodeMaterialObserver {
          return true;
      }
  
@@ -271,7 +271,7 @@ index 97456dbc..c99ecb8a 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index f6a4d27e..624d767f 100644
+index f97a04d1..31307477 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
@@ -655,7 +655,7 @@ index 07af45dc..85bc5537 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 061314ca..fb1122e4 100644
+index 20ea15c5..a2b6bef7 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,15 +3,93 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
@@ -932,7 +932,7 @@ index 061314ca..fb1122e4 100644
                      }
                  }
              }
-@@ -278,10 +356,10 @@ class Node extends EventDispatcher {
+@@ -280,10 +358,10 @@ class Node extends EventDispatcher {
          return getNodeChildren(this);
      }
  
@@ -945,7 +945,7 @@ index 061314ca..fb1122e4 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -289,7 +367,9 @@ class Node extends EventDispatcher {
+@@ -291,7 +369,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -956,7 +956,7 @@ index 061314ca..fb1122e4 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -300,39 +380,39 @@ class Node extends EventDispatcher {
+@@ -302,39 +382,39 @@ class Node extends EventDispatcher {
          }
      }
  
@@ -1007,7 +1007,7 @@ index 061314ca..fb1122e4 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -341,18 +421,18 @@ class Node extends EventDispatcher {
+@@ -343,18 +423,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1029,7 +1029,7 @@ index 061314ca..fb1122e4 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -360,7 +440,7 @@ class Node extends EventDispatcher {
+@@ -362,7 +442,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1038,7 +1038,7 @@ index 061314ca..fb1122e4 100644
  
              this.serialize(data);
  
-@@ -369,12 +449,12 @@ class Node extends EventDispatcher {
+@@ -371,12 +451,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1053,7 +1053,7 @@ index 061314ca..fb1122e4 100644
                  values.push(data);
              }
  
-@@ -382,9 +462,9 @@ class Node extends EventDispatcher {
+@@ -384,9 +464,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1086,7 +1086,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 859035b9..a74b0777 100644
+index a8dff560..d4276a92 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -7,7 +7,7 @@ import NodeCache from './NodeCache.js';
@@ -1814,16 +1814,16 @@ index 859035b9..a74b0777 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -772,7 +935,7 @@ class NodeBuilder {
-         return nodeCode;
+@@ -803,7 +966,7 @@ class NodeBuilder {
+         codeBlock.set(nodeBlock, true);
      }
  
--    addLineFlowCode(code) {
-+    addLineFlowCode(code: string) {
+-    addLineFlowCode(code, node = null) {
++    addLineFlowCode(code: string, node = null) {
          if (code === '') return this;
  
-         code = this.tab + code;
-@@ -786,7 +949,7 @@ class NodeBuilder {
+         if (node !== null && this.context.nodeBlock) {
+@@ -821,7 +984,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -1832,7 +1832,7 @@ index 859035b9..a74b0777 100644
          this.flow.code += code;
  
          return this;
-@@ -804,11 +967,11 @@ class NodeBuilder {
+@@ -839,11 +1002,11 @@ class NodeBuilder {
          return this;
      }
  
@@ -1846,7 +1846,7 @@ index 859035b9..a74b0777 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -818,7 +981,9 @@ class NodeBuilder {
+@@ -853,7 +1016,9 @@ class NodeBuilder {
          return flowData;
      }
  
@@ -1857,7 +1857,7 @@ index 859035b9..a74b0777 100644
          const fn = new FunctionNode();
  
          const previous = this.currentFunctionNode;
-@@ -832,7 +997,7 @@ class NodeBuilder {
+@@ -867,7 +1032,7 @@ class NodeBuilder {
          return fn;
      }
  
@@ -1866,7 +1866,7 @@ index 859035b9..a74b0777 100644
          const layout = shaderNode.layout;
  
          const inputs = {
-@@ -848,7 +1013,7 @@ class NodeBuilder {
+@@ -883,7 +1048,7 @@ class NodeBuilder {
              },
          };
  
@@ -1875,7 +1875,7 @@ index 859035b9..a74b0777 100644
              inputs[input.name] = new ParameterNode(input.type, input.name);
          }
  
-@@ -864,14 +1029,14 @@ class NodeBuilder {
+@@ -899,14 +1064,14 @@ class NodeBuilder {
          return flowData;
      }
  
@@ -1892,7 +1892,7 @@ index 859035b9..a74b0777 100644
              code: '',
          };
  
-@@ -886,7 +1051,7 @@ class NodeBuilder {
+@@ -921,7 +1086,7 @@ class NodeBuilder {
              flow.result = node.build(this, output);
          }
  
@@ -1901,7 +1901,7 @@ index 859035b9..a74b0777 100644
  
          this.flow = previousFlow;
          this.vars = previousVars;
-@@ -902,10 +1067,10 @@ class NodeBuilder {
+@@ -937,10 +1102,10 @@ class NodeBuilder {
          return null;
      }
  
@@ -1914,7 +1914,7 @@ index 859035b9..a74b0777 100644
              code: '',
          };
  
-@@ -918,7 +1083,12 @@ class NodeBuilder {
+@@ -953,7 +1118,12 @@ class NodeBuilder {
          return flow;
      }
  
@@ -1928,7 +1928,7 @@ index 859035b9..a74b0777 100644
          const previousShaderStage = this.shaderStage;
  
          this.setShaderStage(shaderStage);
-@@ -940,19 +1110,15 @@ class NodeBuilder {
+@@ -975,19 +1145,15 @@ class NodeBuilder {
          return this.attributes.concat(this.bufferAttributes);
      }
  
@@ -1952,7 +1952,7 @@ index 859035b9..a74b0777 100644
          let snippet = '';
  
          const vars = this.vars[shaderStage];
-@@ -966,11 +1132,9 @@ class NodeBuilder {
+@@ -1001,11 +1167,9 @@ class NodeBuilder {
          return snippet;
      }
  
@@ -1966,7 +1966,7 @@ index 859035b9..a74b0777 100644
          const codes = this.codes[shaderStage];
  
          let code = '';
-@@ -985,10 +1149,10 @@ class NodeBuilder {
+@@ -1020,10 +1184,10 @@ class NodeBuilder {
      }
  
      getHash() {
@@ -1979,7 +1979,7 @@ index 859035b9..a74b0777 100644
          this.shaderStage = shaderStage;
      }
  
-@@ -996,7 +1160,7 @@ class NodeBuilder {
+@@ -1031,7 +1195,7 @@ class NodeBuilder {
          return this.shaderStage;
      }
  
@@ -1988,7 +1988,7 @@ index 859035b9..a74b0777 100644
          this.buildStage = buildStage;
      }
  
-@@ -1062,7 +1226,7 @@ class NodeBuilder {
+@@ -1097,7 +1261,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -1997,7 +1997,7 @@ index 859035b9..a74b0777 100644
          if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
          if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
          if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
-@@ -1080,7 +1244,7 @@ class NodeBuilder {
+@@ -1115,7 +1279,7 @@ class NodeBuilder {
          throw new Error(`THREE.NodeBuilder: createNodeMaterial() was deprecated. Use new ${type}() instead.`);
      }
  
@@ -6900,7 +6900,7 @@ index d2d92cb2..c022f814 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index d473e83c..4a4f7859 100644
+index f409c2b1..bb53c090 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
@@ -7078,7 +7078,7 @@ index d473e83c..4a4f7859 100644
          const callId = this.renderer.info.calls;
  
          let cacheKeyData = this.callHashCache.get(chain);
-@@ -217,7 +278,7 @@ class Nodes extends DataMap {
+@@ -219,7 +280,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -7087,7 +7087,7 @@ index d473e83c..4a4f7859 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -227,7 +288,7 @@ class Nodes extends DataMap {
+@@ -229,7 +290,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -7096,7 +7096,7 @@ index d473e83c..4a4f7859 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -240,7 +301,7 @@ class Nodes extends DataMap {
+@@ -242,7 +303,7 @@ class Nodes extends DataMap {
                  let backgroundNode = null;
  
                  if (
@@ -7105,7 +7105,7 @@ index d473e83c..4a4f7859 100644
                      background.mapping === EquirectangularReflectionMapping ||
                      background.mapping === EquirectangularRefractionMapping ||
                      background.mapping === CubeUVReflectionMapping
-@@ -250,18 +311,18 @@ class Nodes extends DataMap {
+@@ -252,18 +313,18 @@ class Nodes extends DataMap {
                      } else {
                          let envMap;
  
@@ -7130,7 +7130,7 @@ index d473e83c..4a4f7859 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -274,7 +335,7 @@ class Nodes extends DataMap {
+@@ -276,7 +337,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7139,7 +7139,7 @@ index d473e83c..4a4f7859 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -282,15 +343,15 @@ class Nodes extends DataMap {
+@@ -284,15 +345,15 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -7162,7 +7162,7 @@ index d473e83c..4a4f7859 100644
  
                      fogNode = rangeFog(color, near, far);
                  } else {
-@@ -306,7 +367,7 @@ class Nodes extends DataMap {
+@@ -308,7 +369,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7171,7 +7171,7 @@ index d473e83c..4a4f7859 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -314,7 +375,7 @@ class Nodes extends DataMap {
+@@ -316,7 +377,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
@@ -7180,7 +7180,7 @@ index d473e83c..4a4f7859 100644
                      environmentNode = cubeTexture(environment);
                  } else if (environment.isTexture === true) {
                      environmentNode = texture(environment);
-@@ -331,7 +392,13 @@ class Nodes extends DataMap {
+@@ -333,7 +394,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7195,7 +7195,7 @@ index d473e83c..4a4f7859 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -342,7 +409,7 @@ class Nodes extends DataMap {
+@@ -344,7 +411,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -7204,7 +7204,7 @@ index d473e83c..4a4f7859 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -358,24 +425,27 @@ class Nodes extends DataMap {
+@@ -360,24 +427,27 @@ class Nodes extends DataMap {
          return renderer.toneMapping + ',' + renderer.currentColorSpace;
      }
  
@@ -7236,7 +7236,7 @@ index d473e83c..4a4f7859 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -385,7 +455,7 @@ class Nodes extends DataMap {
+@@ -387,7 +457,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7245,7 +7245,7 @@ index d473e83c..4a4f7859 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -395,7 +465,7 @@ class Nodes extends DataMap {
+@@ -397,7 +467,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7254,7 +7254,7 @@ index d473e83c..4a4f7859 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -404,7 +474,7 @@ class Nodes extends DataMap {
+@@ -406,7 +476,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7263,7 +7263,7 @@ index d473e83c..4a4f7859 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -413,7 +483,7 @@ class Nodes extends DataMap {
+@@ -415,7 +485,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7294,7 +7294,7 @@ index ff8c34cf..b4f88f1d 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index 05d8424f..fa52e4e3 100644
+index b1e72064..40f26bf1 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7409,7 +7409,7 @@ index 05d8424f..fa52e4e3 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -257,7 +297,13 @@ ${flowData.code}
+@@ -260,7 +300,13 @@ ${flowData.code}
          return propertyName;
      }
  
@@ -7424,7 +7424,7 @@ index 05d8424f..fa52e4e3 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -265,7 +311,7 @@ ${flowData.code}
+@@ -268,7 +314,7 @@ ${flowData.code}
          }
      }
  
@@ -7433,7 +7433,7 @@ index 05d8424f..fa52e4e3 100644
          if (texture.isDepthTexture) {
              return `texture( ${textureProperty}, ${uvSnippet} ).x`;
          } else {
-@@ -275,24 +321,39 @@ ${flowData.code}
+@@ -278,24 +324,39 @@ ${flowData.code}
          }
      }
  
@@ -7481,7 +7481,7 @@ index 05d8424f..fa52e4e3 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -301,11 +362,12 @@ ${flowData.code}
+@@ -304,11 +365,12 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -7496,7 +7496,7 @@ index 05d8424f..fa52e4e3 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -318,7 +380,7 @@ ${flowData.code}
+@@ -321,7 +383,7 @@ ${flowData.code}
          return snippets.join('\n\t');
      }
  
@@ -7505,7 +7505,7 @@ index 05d8424f..fa52e4e3 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -400,7 +462,7 @@ ${flowData.code}
+@@ -403,7 +465,7 @@ ${flowData.code}
          return output;
      }
  
@@ -7514,7 +7514,7 @@ index 05d8424f..fa52e4e3 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -418,7 +480,7 @@ ${flowData.code}
+@@ -421,7 +483,7 @@ ${flowData.code}
          return nodeType;
      }
  
@@ -7523,7 +7523,7 @@ index 05d8424f..fa52e4e3 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -434,8 +496,8 @@ ${flowData.code}
+@@ -437,8 +499,8 @@ ${flowData.code}
          return snippet;
      }
  
@@ -7534,7 +7534,7 @@ index 05d8424f..fa52e4e3 100644
          const members = struct.getMemberTypes();
  
          for (let i = 0; i < members.length; i++) {
-@@ -446,7 +508,7 @@ ${flowData.code}
+@@ -449,7 +511,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -7543,7 +7543,7 @@ index 05d8424f..fa52e4e3 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -467,7 +529,7 @@ ${flowData.code}
+@@ -470,7 +532,7 @@ ${flowData.code}
          return snippets.join('\n\n');
      }
  
@@ -7552,7 +7552,7 @@ index 05d8424f..fa52e4e3 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -532,7 +594,7 @@ ${flowData.code}
+@@ -535,7 +597,7 @@ ${flowData.code}
          return 'gl_FragDepth';
      }
  
@@ -7561,7 +7561,7 @@ index 05d8424f..fa52e4e3 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -543,7 +605,7 @@ ${flowData.code}
+@@ -546,7 +608,7 @@ ${flowData.code}
          }
      }
  
@@ -7570,7 +7570,7 @@ index 05d8424f..fa52e4e3 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -566,7 +628,7 @@ ${flowData.code}
+@@ -569,7 +631,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -7579,7 +7579,7 @@ index 05d8424f..fa52e4e3 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -591,11 +653,11 @@ ${flowData.code}
+@@ -594,11 +656,11 @@ ${flowData.code}
          return true;
      }
  
@@ -7593,7 +7593,7 @@ index 05d8424f..fa52e4e3 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -611,14 +673,14 @@ ${flowData.code}
+@@ -614,14 +676,14 @@ ${flowData.code}
          return snippet;
      }
  
@@ -7610,7 +7610,7 @@ index 05d8424f..fa52e4e3 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -658,7 +720,7 @@ void main() {
+@@ -661,7 +723,7 @@ void main() {
  `;
      }
  
@@ -7619,7 +7619,7 @@ index 05d8424f..fa52e4e3 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -690,19 +752,20 @@ void main() {
+@@ -693,19 +755,20 @@ void main() {
      }
  
      buildCode() {
@@ -7644,7 +7644,7 @@ index 05d8424f..fa52e4e3 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -728,28 +791,33 @@ void main() {
+@@ -731,28 +794,33 @@ void main() {
                  }
              }
  
@@ -7705,7 +7705,7 @@ index f78f84c1..0f43556c 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index dd1536fe..214d7a59 100644
+index 8129c82f..b5f5283a 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7861,7 +7861,7 @@ index dd1536fe..214d7a59 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -537,7 +561,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -541,7 +565,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -7870,7 +7870,7 @@ index dd1536fe..214d7a59 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -689,8 +713,8 @@ ${flowData.code}
+@@ -699,8 +723,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -7881,7 +7881,7 @@ index dd1536fe..214d7a59 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -771,8 +795,8 @@ ${flowData.code}
+@@ -786,8 +810,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7892,7 +7892,7 @@ index dd1536fe..214d7a59 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -808,7 +832,7 @@ ${flowData.code}
+@@ -823,7 +847,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
