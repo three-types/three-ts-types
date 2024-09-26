@@ -121,7 +121,6 @@ export * from "./loaders/SVGLoader.js";
 export * from "./loaders/TDSLoader.js";
 export * from "./loaders/TGALoader.js";
 export * from "./loaders/TIFFLoader.js";
-export * from "./loaders/TiltLoader.js";
 export * from "./loaders/TTFLoader.js";
 export * from "./loaders/UltraHDRLoader.js";
 export * from "./loaders/USDZLoader.js";
