@@ -14042,7 +14042,7 @@ index 616645aa..288f6e84 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
-index 07ea501c..b15b7779 100644
+index 07ea501c..a4e420da 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
 +++ b/examples-testing/examples/webgpu_materials_toon.ts
 @@ -1,4 +1,4 @@
@@ -14051,7 +14051,7 @@ index 07ea501c..b15b7779 100644
  import { toonOutlinePass } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
-@@ -6,18 +6,19 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -6,18 +6,22 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { FontLoader } from 'three/addons/loaders/FontLoader.js';
  import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
@@ -14062,7 +14062,10 @@ index 07ea501c..b15b7779 100644
  
 -let camera, scene, renderer, postProcessing;
 -let particleLight;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, postProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing;
 +let particleLight: THREE.Mesh;
  
  const loader = new FontLoader();
@@ -14075,7 +14078,7 @@ index 07ea501c..b15b7779 100644
      container = document.createElement('div');
      document.body.appendChild(container);
  
-@@ -85,7 +86,7 @@ function init(font) {
+@@ -85,7 +89,7 @@ function init(font) {
          }
      }
  
