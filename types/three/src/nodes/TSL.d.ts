@@ -113,6 +113,7 @@ export * from "./display/SobelOperatorNode.js";
 export * from "./display/SSAAPassNode.js";
 export * from "./display/StereoPassNode.js";
 export * from "./display/ToneMappingNode.js";
+export * from "./display/ToonOutlinePassNode.js";
 export * from "./display/TransitionNode.js";
 export * from "./display/ViewportDepthNode.js";
 export * from "./display/ViewportDepthTextureNode.js";
