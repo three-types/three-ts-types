@@ -3401,7 +3401,7 @@ index 1b46a805..e5798e30 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_decals.ts b/examples-testing/examples/webgl_decals.ts
-index be346083..79d8dae6 100644
+index 8f77c30f..acc5b219 100644
 --- a/examples-testing/examples/webgl_decals.ts
 +++ b/examples-testing/examples/webgl_decals.ts
 @@ -7,12 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14042,15 +14042,16 @@ index 616645aa..288f6e84 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
-index 21746059..060404e7 100644
+index 07ea501c..b15b7779 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
 +++ b/examples-testing/examples/webgpu_materials_toon.ts
-@@ -1,22 +1,23 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
+ import { toonOutlinePass } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
- 
+@@ -6,18 +6,19 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { FontLoader } from 'three/addons/loaders/FontLoader.js';
  import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
@@ -14059,9 +14060,9 @@ index 21746059..060404e7 100644
 -let container, stats;
 +let container: HTMLDivElement, stats: Stats;
  
--let camera, scene, renderer;
+-let camera, scene, renderer, postProcessing;
 -let particleLight;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, postProcessing;
 +let particleLight: THREE.Mesh;
  
  const loader = new FontLoader();
@@ -14074,7 +14075,7 @@ index 21746059..060404e7 100644
      container = document.createElement('div');
      document.body.appendChild(container);
  
-@@ -78,7 +79,7 @@ function init(font) {
+@@ -85,7 +86,7 @@ function init(font) {
          }
      }
  
