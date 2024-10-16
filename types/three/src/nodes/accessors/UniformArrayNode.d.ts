@@ -17,7 +17,7 @@ declare class UniformArrayNode extends BufferNode {
 
     getElementLength(): number;
 
-    element(indexNode: number): ShaderNodeObject<UniformArrayElementNode>;
+    element(indexNode: number | ShaderNodeObject<Node>): ShaderNodeObject<UniformArrayElementNode>;
 }
 
 export default UniformArrayNode;
