@@ -1,9 +1,9 @@
-This repository is the home for the TypeScript types for three.js. Periodically the updates from this repository are pushed to DefinitelyTyped and released in the `@types/three` npm package.
+This repository is the home for the TypeScript types for Three.js. Periodically the updates from this repository are pushed to DefinitelyTyped and released in the `@types/three` npm package.
 
 We are using this repository as a home for the types instead of DefinitelyTyped because:
 
-- It is less daunting for users to raise issues or create PRs on a repository that is specific to three.js
-- It is easier to organize the process of making sure we're staying up-to-date with the changes in the three.js repository
+- It is less daunting for users to raise issues or create PRs on a repository that is specific to Three.js
+- It is easier to organize the process of making sure we're staying up-to-date with the changes in the Three.js repository
 - It gives us more freedom to use our own process
 
 ## Priorities and goals
@@ -20,11 +20,11 @@ The tests are split into two directories: `types/three/test/integration` and `ty
 
 ### Integration tests
 
-The integration tests are usually runnable three.js code that has just been translated to TypeScript to make sure the types work. The `three-examples` is a special directory that holds the examples from the three.js repository with matching file names. If you want to add a integration test, you can just create a new file in the `integration` directory.
+The integration tests are usually runnable Three.js code that has just been translated to TypeScript to make sure the types work. The `three-examples` is a special directory that holds the examples from the Three.js repository with matching file names. If you want to add a integration test, you can just create a new file in the `integration` directory.
 
 ### Unit tests
 
-The unit tests are more fine-grained tests that focus on testing the types for a single file from the source code (either from the three.js core or the JSM addons). The directory structure of the unit tests matches the directory structure of the source code. These tests often contain type assertions as well to test the result of calling a method or to verify that the types produce an error in certain situations.
+The unit tests are more fine-grained tests that focus on testing the types for a single file from the source code (either from the Three.js core or the JSM addons). The directory structure of the unit tests matches the directory structure of the source code. These tests often contain type assertions as well to test the result of calling a method or to verify that the types produce an error in certain situations.
 
 ## Contributing
 
