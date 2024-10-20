@@ -1,4 +1,6 @@
-This repository is the home for the TypeScript types for three.js. Periodically the updates from this repository are pushed to DefinitelyTyped and released in the `@types/three` npm package.
+# three-ts-types
+
+This repository is the home for the TypeScript types for [three.js](https://github.com/mrdoob/three.js/). Periodically the updates from this repository are pushed to [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped) and released in the `@types/three` npm package.
 
 We are using this repository as a home for the types instead of DefinitelyTyped because:
 
