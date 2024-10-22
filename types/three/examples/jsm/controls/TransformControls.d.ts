@@ -206,6 +206,8 @@ declare class TransformControlsRoot extends Object3D {
     controls: TransformControls;
 
     constructor(controls: TransformControls);
+
+    dispose(): void;
 }
 
 declare class TransformControlsGizmo extends Object3D {
