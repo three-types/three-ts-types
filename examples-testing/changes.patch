@@ -881,16 +881,16 @@ index b12b0421..c3b378aa 100644
              }
  
 diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
-index 5b25c489..1210a823 100644
+index 6326af66..e88957c0 100644
 --- a/examples-testing/examples/misc_controls_fly.ts
 +++ b/examples-testing/examples/misc_controls_fly.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, film } from 'three/tsl';
+ import { pass } from 'three/tsl';
+ import { film } from 'three/addons/tsl/display/FilmNode.js';
  
- import Stats from 'three/addons/libs/stats.module.js';
-@@ -15,11 +15,15 @@ const MARGIN = 0;
+@@ -16,11 +16,15 @@ const MARGIN = 0;
  let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
  let SCREEN_WIDTH = window.innerWidth;
  
@@ -910,7 +910,7 @@ index 5b25c489..1210a823 100644
  
  const textureLoader = new THREE.TextureLoader();
  
-@@ -51,7 +55,7 @@ function init() {
+@@ -52,7 +56,7 @@ function init() {
          // y scale is negated to compensate for normal map handedness.
          normalScale: new THREE.Vector2(0.85, -0.85),
      });
@@ -919,7 +919,7 @@ index 5b25c489..1210a823 100644
  
      // planet
  
-@@ -68,7 +72,7 @@ function init() {
+@@ -69,7 +73,7 @@ function init() {
          map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
          transparent: true,
      });
@@ -928,7 +928,7 @@ index 5b25c489..1210a823 100644
  
      meshClouds = new THREE.Mesh(geometry, materialClouds);
      meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
-@@ -80,7 +84,7 @@ function init() {
+@@ -81,7 +85,7 @@ function init() {
      const materialMoon = new THREE.MeshPhongMaterial({
          map: textureLoader.load('textures/planets/moon_1024.jpg'),
      });
@@ -13501,24 +13501,20 @@ index 4a2e6c80..22eeb6d0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 7eb45fa2..b2af0ebb 100644
+index aa8149e3..f9fd7f00 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,24 +1,37 @@
+@@ -1,26 +1,32 @@
 -import * as THREE from 'three';
--
--import { stereoPass, anaglyphPass, parallaxBarrierPass } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+
-+import {
-+    stereoPass,
-+    anaglyphPass,
-+    parallaxBarrierPass,
-+    ShaderNodeObject,
-+    StereoPassNode,
-+    AnaglyphPassNode,
-+    ParallaxBarrierPassNode,
-+} from 'three/tsl';
+ 
+-import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
+-import { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
+-import { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
++import { ShaderNodeObject } from 'three/tsl';
++import StereoPassNode, { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
++import AnaglyphPassNode, { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
++import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Timer } from 'three/addons/misc/Timer.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -13550,7 +13546,7 @@ index 7eb45fa2..b2af0ebb 100644
  
  init();
  
-@@ -90,7 +103,7 @@ function init() {
+@@ -92,7 +98,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -13559,7 +13555,7 @@ index 7eb45fa2..b2af0ebb 100644
      if (value === 'stereo') {
          postProcessing.outputNode = stereo;
      } else if (value === 'anaglyph') {
-@@ -109,7 +122,7 @@ function onWindowResize() {
+@@ -111,7 +117,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14595,13 +14591,15 @@ index 775399bf..1deb0cb1 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing.ts b/examples-testing/examples/webgpu_postprocessing.ts
-index 7ae63a39..31397439 100644
+index 59914331..d41eb81e 100644
 --- a/examples-testing/examples/webgpu_postprocessing.ts
 +++ b/examples-testing/examples/webgpu_postprocessing.ts
-@@ -1,8 +1,8 @@
+@@ -1,10 +1,10 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, dotScreen, rgbShift } from 'three/tsl';
+ import { pass } from 'three/tsl';
+ import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
+ import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
  
 -let camera, renderer, postProcessing;
 -let object;
@@ -14611,14 +14609,16 @@ index 7ae63a39..31397439 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index 27500a07..2401fa77 100644
+index de4144b4..afec7c7f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-@@ -1,20 +1,30 @@
+@@ -1,21 +1,31 @@
 -import * as THREE from 'three';
--import { pass, texture3D, uniform, lut3D, renderOutput } from 'three/tsl';
+-import { pass, texture3D, uniform, renderOutput } from 'three/tsl';
+-import { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, texture3D, uniform, lut3D, renderOutput, ShaderNodeObject, Lut3DNode } from 'three/tsl';
++import { pass, texture3D, uniform, renderOutput, ShaderNodeObject } from 'three/tsl';
++import Lut3DNode, { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14652,7 +14652,7 @@ index 27500a07..2401fa77 100644
      'Bourbon 64.CUBE': null,
      'Chemical 168.CUBE': null,
      'Clayton 33.CUBE': null,
-@@ -26,9 +36,9 @@ const lutMap = {
+@@ -27,9 +37,9 @@ const lutMap = {
      NightLUT: null,
  };
  
@@ -14665,7 +14665,7 @@ index 27500a07..2401fa77 100644
  
  init();
  
-@@ -61,11 +71,13 @@ async function init() {
+@@ -62,11 +72,13 @@ async function init() {
  
      for (const name in lutMap) {
          if (/\.CUBE$/i.test(name)) {
@@ -14682,7 +14682,7 @@ index 27500a07..2401fa77 100644
          }
      }
  
-@@ -73,7 +85,9 @@ async function init() {
+@@ -74,7 +86,9 @@ async function init() {
      await Promise.all(pendings);
  
      for (const name in lutMap) {
@@ -14693,7 +14693,7 @@ index 27500a07..2401fa77 100644
      }
  
      renderer = new THREE.WebGPURenderer();
-@@ -97,7 +111,7 @@ async function init() {
+@@ -98,7 +112,7 @@ async function init() {
      const scenePass = pass(scene, camera);
      const outputPass = renderOutput(scenePass);
  
@@ -14702,7 +14702,7 @@ index 27500a07..2401fa77 100644
      lutPass = lut3D(outputPass, texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
  
      postProcessing.outputNode = lutPass;
-@@ -111,7 +125,7 @@ async function init() {
+@@ -112,7 +126,7 @@ async function init() {
      controls.update();
  
      gui = new GUI();
@@ -14711,7 +14711,7 @@ index 27500a07..2401fa77 100644
      gui.add(params, 'intensity').min(0).max(1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -127,11 +141,11 @@ function onWindowResize() {
+@@ -128,11 +142,11 @@ function onWindowResize() {
  //
  
  function animate() {
@@ -14727,14 +14727,16 @@ index 27500a07..2401fa77 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index d0775d49..fed02565 100644
+index 06af5ab4..e543f68b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-@@ -1,10 +1,10 @@
+@@ -1,11 +1,11 @@
 -import * as THREE from 'three';
--import { pass, afterImage } from 'three/tsl';
+-import { pass } from 'three/tsl';
+-import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, afterImage, AfterImageNode, ShaderNodeObject } from 'three/tsl';
++import { pass, ShaderNodeObject } from 'three/tsl';
++import AfterImageNode, { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14745,7 +14747,7 @@ index d0775d49..fed02565 100644
  
  const params = {
      damp: 0.96,
-@@ -38,8 +38,7 @@ function init() {
+@@ -39,8 +39,7 @@ function init() {
      const scenePass = pass(scene, camera);
      const scenePassColor = scenePass.getTextureNode();
  
@@ -14756,30 +14758,22 @@ index d0775d49..fed02565 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 432d641a..801f1f31 100644
+index f95a72ff..4cdd6f1a 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
-@@ -1,5 +1,17 @@
+@@ -1,7 +1,7 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, texture, ao, denoise } from 'three/tsl';
+-import { pass, mrt, output, transformedNormalView, texture } from 'three/tsl';
+-import { ao } from 'three/addons/tsl/display/GTAONode.js';
+-import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 +import * as THREE from 'three/webgpu';
-+import {
-+    pass,
-+    mrt,
-+    output,
-+    transformedNormalView,
-+    texture,
-+    ao,
-+    denoise,
-+    ShaderNodeObject,
-+    GTAONode,
-+    DenoiseNode,
-+    Node,
-+} from 'three/tsl';
++import { pass, mrt, output, transformedNormalView, texture, Node, ShaderNodeObject } from 'three/tsl';
++import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
++import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -10,9 +22,20 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+@@ -12,9 +12,20 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14804,16 +14798,16 @@ index 432d641a..801f1f31 100644
  const params = {
      distanceExponent: 1,
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index d38a7abb..80478cf8 100644
+index ad2028b4..0d7d6e66 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, bloom } from 'three/tsl';
+ import { pass } from 'three/tsl';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
- import Stats from 'three/addons/libs/stats.module.js';
-@@ -7,8 +7,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -8,8 +8,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -14827,7 +14821,7 @@ index d38a7abb..80478cf8 100644
  
  const params = {
      threshold: 0,
-@@ -20,7 +23,7 @@ const params = {
+@@ -21,7 +24,7 @@ const params = {
  init();
  
  async function init() {
@@ -14837,16 +14831,16 @@ index d38a7abb..80478cf8 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index 7a6569f9..71cb1b29 100644
+index a1f885c6..15a5c3fe 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, mrt, output, bloom, emissive } from 'three/tsl';
+ import { pass, mrt, output, emissive } from 'three/tsl';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-@@ -8,8 +8,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14858,18 +14852,18 @@ index 7a6569f9..71cb1b29 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 55d6b6bb..851d9f30 100644
+index e4624db9..4e54e3bd 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 @@ -1,5 +1,5 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, float, bloom, uniform } from 'three/tsl';
+-import { pass, mrt, output, float, uniform } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, float, bloom, uniform, UniformNode } from 'three/tsl';
++import { pass, mrt, output, float, uniform, UniformNode } from 'three/tsl';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
-@@ -84,9 +84,10 @@ window.addEventListener('pointerdown', event => {
+@@ -85,9 +85,10 @@ window.addEventListener('pointerdown', event => {
      const intersects = raycaster.intersectObjects(scene.children, false);
  
      if (intersects.length > 0) {
@@ -14904,16 +14898,16 @@ index dc30eb60..2a156b13 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index 26d034fb..4c351e14 100644
+index 4ef10636..d3e5c3a7 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { cubeTexture, positionWorld, oscSine, timerGlobal, pass, dof, uniform } from 'three/tsl';
+ import { cubeTexture, positionWorld, oscSine, timerGlobal, pass, uniform } from 'three/tsl';
+ import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-@@ -7,7 +7,11 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -8,7 +8,11 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  //
  
@@ -14926,7 +14920,7 @@ index 26d034fb..4c351e14 100644
  
  let mouseX = 0,
      mouseY = 0;
-@@ -18,7 +22,7 @@ let windowHalfY = window.innerHeight / 2;
+@@ -19,7 +23,7 @@ let windowHalfY = window.innerHeight / 2;
  let width = window.innerWidth;
  let height = window.innerHeight;
  
@@ -14935,7 +14929,7 @@ index 26d034fb..4c351e14 100644
  
  init();
  
-@@ -125,7 +129,7 @@ function init() {
+@@ -126,7 +130,7 @@ function init() {
      gui.add(effectController.maxblur, 'value', 0.0, 0.01, 0.001).name('maxblur');
  }
  
@@ -14945,16 +14939,16 @@ index 26d034fb..4c351e14 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
-index 3221614b..ade3e809 100644
+index e5cd0791..8a310a42 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, fxaa, renderOutput } from 'three/tsl';
+ import { pass, renderOutput } from 'three/tsl';
+ import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-@@ -8,8 +8,12 @@ const params = {
+@@ -9,8 +9,12 @@ const params = {
      animated: false,
  };
  
@@ -14996,16 +14990,16 @@ index a4f56b17..ce7e7ad3 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index dc58e70b..1902b69d 100644
+index 14e45012..b4bdcf2f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, texture, motionBlur, uniform, output, mrt, mix, velocity, uv, screenUV } from 'three/tsl';
+ import { pass, texture, uniform, output, mrt, mix, velocity, uv, screenUV } from 'three/tsl';
+ import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js';
  
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -9,11 +9,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -10,11 +10,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -15022,7 +15016,7 @@ index dc58e70b..1902b69d 100644
  
  const params = {
      speed: 1.0,
-@@ -59,7 +59,7 @@ function init() {
+@@ -60,7 +60,7 @@ function init() {
          model.rotation.y = Math.PI / 2;
  
          model.traverse(function (child) {
@@ -15032,22 +15026,22 @@ index dc58e70b..1902b69d 100644
                  child.receiveShadow = true;
              }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index d7e51008..a9decd46 100644
+index ff53a4b4..4a0d8755 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-@@ -1,12 +1,23 @@
+@@ -1,13 +1,24 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--import { uniform, pixelationPass } from 'three/tsl';
--
+-import { uniform } from 'three/tsl';
++import { uniform, UniformNode } from 'three/tsl';
+ import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
+ 
 -let camera, scene, renderer, postProcessing, crystalMesh, clock;
 -let gui, effectController;
-+import { uniform, pixelationPass, UniformNode } from 'three/tsl';
-+
 +let camera: THREE.OrthographicCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -15064,7 +15058,7 @@ index d7e51008..a9decd46 100644
  
  init();
  
-@@ -34,7 +45,7 @@ function init() {
+@@ -35,7 +46,7 @@ function init() {
  
      const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
  
@@ -15073,7 +15067,7 @@ index d7e51008..a9decd46 100644
          const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
          mesh.castShadow = true;
          mesh.receiveShadow = true;
-@@ -172,7 +183,7 @@ function animate() {
+@@ -173,7 +184,7 @@ function animate() {
  
  // Helper functions
  
@@ -15082,7 +15076,7 @@ index d7e51008..a9decd46 100644
      texture.minFilter = THREE.NearestFilter;
      texture.magFilter = THREE.NearestFilter;
      texture.generateMipmaps = false;
-@@ -182,25 +193,30 @@ function pixelTexture(texture) {
+@@ -183,25 +194,30 @@ function pixelTexture(texture) {
      return texture;
  }
  
@@ -15118,15 +15112,16 @@ index d7e51008..a9decd46 100644
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-index 01aa16ec..4f45e231 100644
+index 84e7028d..527b5f3c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-@@ -1,12 +1,12 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass, sobel } from 'three/tsl';
+ import { pass } from 'three/tsl';
+ import { sobel } from 'three/addons/tsl/display/SobelOperatorNode.js';
  
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -15138,14 +15133,15 @@ index 01aa16ec..4f45e231 100644
  const params = {
      enable: true,
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 76e3a95c..7748d8f0 100644
+index 4aeb6e43..738b6580 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-@@ -1,13 +1,13 @@
+@@ -1,13 +1,14 @@
 -import * as THREE from 'three';
--import { ssaaPass } from 'three/tsl';
+-import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 +import * as THREE from 'three/webgpu';
-+import { ssaaPass, SSAAPassNode, ShaderNodeObject } from 'three/tsl';
++import { ShaderNodeObject } from 'three/tsl';
++import SSAAPassNode, { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
  
  import { Timer } from 'three/addons/misc/Timer.js';
  import Stats from 'three/addons/libs/stats.module.js';
@@ -15160,7 +15156,7 @@ index 76e3a95c..7748d8f0 100644
  
  const params = {
      sampleLevel: 3,
-@@ -148,7 +148,7 @@ function animate() {
+@@ -148,7 +149,7 @@ function animate() {
          mesh.rotation.y += delta * 0.5;
      }
  
@@ -15169,7 +15165,7 @@ index 76e3a95c..7748d8f0 100644
  
      switch (params.clearColor) {
          case 'blue':
-@@ -173,7 +173,7 @@ function animate() {
+@@ -173,7 +174,7 @@ function animate() {
  
      ssaaRenderPass.sampleLevel = params.sampleLevel;
  
@@ -15179,18 +15175,20 @@ index 76e3a95c..7748d8f0 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
-index b66bad12..babbe1a9 100644
+index dc70b8e9..8c9da56f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_transition.ts
-@@ -1,15 +1,30 @@
+@@ -1,16 +1,31 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
 -import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 +import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
--import { uniform, transition, pass } from 'three/tsl';
-+import { uniform, transition, pass, ShaderNodeObject, TransitionNode, UniformNode } from 'three/tsl';
+-import { uniform, pass } from 'three/tsl';
+-import { transition } from 'three/addons/tsl/display/TransitionNode.js';
++import { uniform, pass, ShaderNodeObject, UniformNode } from 'three/tsl';
++import TransitionNode, { transition } from 'three/addons/tsl/display/TransitionNode.js';
  
 -let renderer, postProcessing, transitionController, transitionPass;
 +let renderer: THREE.WebGPURenderer,
@@ -15219,7 +15217,7 @@ index b66bad12..babbe1a9 100644
      animateScene: true,
      animateTransition: true,
      transition: 0,
-@@ -21,7 +36,7 @@ const effectController = {
+@@ -22,7 +37,7 @@ const effectController = {
      threshold: uniform(0.1),
  };
  
@@ -15228,7 +15226,7 @@ index b66bad12..babbe1a9 100644
      const mesh = new THREE.InstancedMesh(geometry, material, count);
  
      const dummy = new THREE.Object3D();
-@@ -55,42 +70,54 @@ function generateInstancedMesh(geometry, material, count) {
+@@ -56,42 +71,54 @@ function generateInstancedMesh(geometry, material, count) {
      return mesh;
  }
  
@@ -15313,13 +15311,14 @@ index b66bad12..babbe1a9 100644
  
  const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
 diff --git a/examples-testing/examples/webgpu_procedural_texture.ts b/examples-testing/examples/webgpu_procedural_texture.ts
-index 84e8ba9e..86560654 100644
+index 4a085f2f..d0de6c2c 100644
 --- a/examples-testing/examples/webgpu_procedural_texture.ts
 +++ b/examples-testing/examples/webgpu_procedural_texture.ts
-@@ -1,9 +1,9 @@
+@@ -1,10 +1,10 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { checker, uv, uniform, gaussianBlur, convertToTexture } from 'three/tsl';
+ import { checker, uv, uniform, convertToTexture } from 'three/tsl';
+ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
