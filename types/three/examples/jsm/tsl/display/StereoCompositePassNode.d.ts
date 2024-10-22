@@ -1,5 +1,5 @@
 import { Camera, CoordinateSystem, Scene, StereoCamera } from "three";
-import PassNode from "three/tsl";
+import { PassNode } from "three/tsl";
 
 declare class StereoCompositePassNode extends PassNode {
     readonly isStereoCompositePassNode: true;
