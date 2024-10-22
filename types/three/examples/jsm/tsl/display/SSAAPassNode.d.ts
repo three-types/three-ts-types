@@ -1,10 +1,5 @@
-import { Camera } from "../../cameras/Camera.js";
-import { RenderTarget } from "../../core/RenderTarget.js";
-import { Color } from "../../math/Color.js";
-import { Scene } from "../../scenes/Scene.js";
-import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
-import PassNode from "./PassNode.js";
+import { Camera, Color, RenderTarget, Scene } from "three";
+import { PassNode, ShaderNodeObject, UniformNode } from "three/tsl";
 
 declare class SSAAPassNode extends PassNode {
     readonly isSSAAPassNode: boolean;

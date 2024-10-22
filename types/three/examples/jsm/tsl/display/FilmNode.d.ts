@@ -1,6 +1,4 @@
-import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Node, NodeRepresentation, ShaderNodeObject, TempNode } from "three/tsl";
 
 declare class FilmNode extends TempNode {
     inputNode: Node;

@@ -1,6 +1,5 @@
-import { Camera } from "../../cameras/Camera.js";
-import { Scene } from "../../scenes/Scene.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Camera, Scene } from "three";
+import { ShaderNodeObject } from "three/tsl";
 import StereoCompositePassNode from "./StereoCompositePassNode.js";
 
 declare class ParallaxBarrierPassNode extends StereoCompositePassNode {

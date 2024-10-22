@@ -1,8 +1,4 @@
-import TextureNode from "../accessors/TextureNode.js";
-import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
-import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Node, NodeRepresentation, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
 
 declare class BloomNode extends TempNode {
     inputNode: Node;

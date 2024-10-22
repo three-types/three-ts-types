@@ -1,8 +1,5 @@
-import { Camera } from "../../cameras/Camera.js";
-import { StereoCamera } from "../../cameras/StereoCamera.js";
-import { CoordinateSystem } from "../../constants.js";
-import { Scene } from "../../scenes/Scene.js";
-import PassNode from "./PassNode.js";
+import { Camera, CoordinateSystem, Scene, StereoCamera } from "three";
+import { PassNode } from "three/tsl";
 
 declare class StereoCompositePassNode extends PassNode {
     readonly isStereoCompositePassNode: true;

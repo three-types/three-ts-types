@@ -1,8 +1,5 @@
-import { Camera } from "../../cameras/Camera.js";
-import { StereoCamera } from "../../cameras/StereoCamera.js";
-import { Scene } from "../../scenes/Scene.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
-import PassNode from "./PassNode.js";
+import { Camera, Scene, StereoCamera } from "three";
+import { PassNode, ShaderNodeObject } from "three/tsl";
 
 declare class StereoPassNode extends PassNode {
     readonly isStereoPassNode: true;
