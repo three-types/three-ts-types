@@ -1,8 +1,4 @@
-import TextureNode from "../accessors/TextureNode.js";
-import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
-import UniformNode from "../core/UniformNode.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Node, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
 
 export default class AfterImageNode extends TempNode {
     textureNode: TextureNode;

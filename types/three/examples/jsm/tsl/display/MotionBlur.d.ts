@@ -1,5 +1,4 @@
-import Node from "../core/Node.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Node, NodeRepresentation, ShaderNodeObject } from "three/tsl";
 
 export const motionBlur: (
     inputNode: NodeRepresentation,

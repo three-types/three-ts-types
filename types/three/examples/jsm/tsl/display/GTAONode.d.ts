@@ -1,11 +1,5 @@
-import { Camera } from "../../cameras/Camera.js";
-import { Matrix4 } from "../../math/Matrix4.js";
-import { Vector2 } from "../../math/Vector2.js";
-import TextureNode from "../accessors/TextureNode.js";
-import Node from "../core/Node.js";
-import TempNode from "../core/TempNode.js";
-import UniformNode from "../core/UniformNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { Camera, Matrix4, Vector2 } from "three";
+import { Node, NodeRepresentation, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
 
 declare class GTAONode extends TempNode {
     depthNode: Node;
