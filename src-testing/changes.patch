@@ -2192,7 +2192,7 @@ index ca43958f..ae51479e 100644
  
          this.name = name;
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index 7ebac01f..ac710a55 100644
+index 7ebac01f..0662c6a0 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
 @@ -4,13 +4,14 @@ import { Matrix4 } from '../../math/Matrix4.js';
@@ -2253,8 +2253,8 @@ index 7ebac01f..ac710a55 100644
 +    childNode: Node | { toJSON: () => unknown };
 +}
 +
-+export function getNodeChildren(node: object): Generator<NodeChild, void>;
-+export function getNodeChildren(node: object, toJSON: boolean): Generator<NodeChildWithToJSON, void>;
++export function getNodeChildren(node: object): Generator<NodeChild, void, unknown>;
++export function getNodeChildren(node: object, toJSON: boolean): Generator<NodeChildWithToJSON, void, unknown>;
 +export function* getNodeChildren(node: object, toJSON = false) {
      for (const property in node) {
          // Ignore private properties.
