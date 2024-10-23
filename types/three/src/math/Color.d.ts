@@ -1,4 +1,3 @@
-import { ColorSpace } from "../constants.js";
 import { Matrix3 } from "./Matrix3.js";
 import { Vector3 } from "./Vector3.js";
 
@@ -213,7 +212,7 @@ export class Color {
     setFromVector3(vector: Vector3): this;
 
     setScalar(scalar: number): Color;
-    setHex(hex: number, colorSpace?: ColorSpace): Color;
+    setHex(hex: number, colorSpace?: string): Color;
 
     /**
      * Sets this color from RGB values.
@@ -221,7 +220,7 @@ export class Color {
      * @param g Green channel value between 0 and 1.
      * @param b Blue channel value between 0 and 1.
      */
-    setRGB(r: number, g: number, b: number, colorSpace?: ColorSpace): Color;
+    setRGB(r: number, g: number, b: number, colorSpace?: string): Color;
 
     /**
      * Sets this color from HSL values.
@@ -231,20 +230,20 @@ export class Color {
      * @param s Saturation value channel between 0 and 1.
      * @param l Value channel value between 0 and 1.
      */
-    setHSL(h: number, s: number, l: number, colorSpace?: ColorSpace): Color;
+    setHSL(h: number, s: number, l: number, colorSpace?: string): Color;
 
     /**
      * Sets this color from a CSS context style string.
      * @param contextStyle Color in CSS context style format.
      */
-    setStyle(style: string, colorSpace?: ColorSpace): Color;
+    setStyle(style: string, colorSpace?: string): Color;
 
     /**
      * Sets this color from a color name.
      * Faster than {@link Color#setStyle .setStyle()} method if you don't need the other CSS-style formats.
      * @param style Color name in X11 format.
      */
-    setColorName(style: string, colorSpace?: ColorSpace): Color;
+    setColorName(style: string, colorSpace?: string): Color;
 
     /**
      * Clones this color.
@@ -282,22 +281,22 @@ export class Color {
     /**
      * Returns the hexadecimal value of this color.
      */
-    getHex(colorSpace?: ColorSpace): number;
+    getHex(colorSpace?: string): number;
 
     /**
      * Returns the string formated hexadecimal value of this color.
      */
-    getHexString(colorSpace?: ColorSpace): string;
+    getHexString(colorSpace?: string): string;
 
-    getHSL(target: HSL, colorSpace?: ColorSpace): HSL;
+    getHSL(target: HSL, colorSpace?: string): HSL;
 
-    getRGB(target: RGB, colorSpace?: ColorSpace): RGB;
+    getRGB(target: RGB, colorSpace?: string): RGB;
 
     /**
      * Returns the value of this color in CSS context style.
      * Example: rgb(r, g, b)
      */
-    getStyle(colorSpace?: ColorSpace): string;
+    getStyle(colorSpace?: string): string;
 
     offsetHSL(h: number, s: number, l: number): this;
 

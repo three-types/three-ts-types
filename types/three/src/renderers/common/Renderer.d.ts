@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { ColorSpace, ShadowMapType, ToneMapping } from "../../constants.js";
+import { ShadowMapType, ToneMapping } from "../../constants.js";
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
@@ -60,7 +60,7 @@ declare class Renderer {
     autoClearStencil: boolean;
     alpha: boolean;
     logarithmicDepthBuffer: boolean;
-    outputColorSpace: ColorSpace;
+    outputColorSpace: string;
     toneMapping: ToneMapping;
     toneMappingExposure: number;
     sortObjects: boolean;
@@ -213,7 +213,7 @@ declare class Renderer {
     clearDepthAsync(): Promise<void>;
     clearStencilAsync(): Promise<void>;
     get currentToneMapping(): ToneMapping;
-    get currentColorSpace(): ColorSpace;
+    get currentColorSpace(): string;
     dispose(): void;
     setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
     getRenderTarget(): RenderTarget<Texture> | null;

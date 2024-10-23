@@ -1,5 +1,5 @@
 import { Camera } from "../cameras/Camera.js";
-import { ColorSpace, CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
+import { CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
 import { TypedArray } from "../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
@@ -183,8 +183,8 @@ export class WebGLRenderer implements Renderer {
      * {@link SRGBColorSpace} and {@link LinearSRGBColorSpace}.
      * @default THREE.SRGBColorSpace.
      */
-    get outputColorSpace(): ColorSpace;
-    set outputColorSpace(colorSpace: ColorSpace);
+    get outputColorSpace(): string;
+    set outputColorSpace(colorSpace: string);
 
     get coordinateSystem(): typeof WebGLCoordinateSystem;
 
