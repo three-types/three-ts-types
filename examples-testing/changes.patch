@@ -12486,10 +12486,10 @@ index 366a2791..74077e99 100644
 +    console.log('after', renderer.info.programs!.length);
  }
 diff --git a/examples-testing/examples/webgl_test_wide_gamut.ts b/examples-testing/examples/webgl_test_wide_gamut.ts
-index 693dd459..5e64e184 100644
+index 5988299e..6da2af6c 100644
 --- a/examples-testing/examples/webgl_test_wide_gamut.ts
 +++ b/examples-testing/examples/webgl_test_wide_gamut.ts
-@@ -2,12 +2,12 @@ import * as THREE from 'three';
+@@ -9,12 +9,12 @@ import {
  
  import WebGL from 'three/addons/capabilities/WebGL.js';
  
@@ -12503,9 +12503,9 @@ index 693dd459..5e64e184 100644
 -const slider = document.querySelector('.slider');
 +const slider = document.querySelector('.slider') as HTMLElement;
  
- const isP3Context = WebGL.isColorSpaceAvailable(THREE.DisplayP3ColorSpace);
+ const isP3Context = WebGL.isColorSpaceAvailable(DisplayP3ColorSpace);
  
-@@ -18,7 +18,7 @@ if (isP3Context) {
+@@ -30,7 +30,7 @@ if (isP3Context) {
  init();
  
  function init() {
@@ -12514,7 +12514,7 @@ index 693dd459..5e64e184 100644
  
      sceneL = new THREE.Scene();
      sceneR = new THREE.Scene();
-@@ -60,7 +60,7 @@ async function initTextures() {
+@@ -72,7 +72,7 @@ async function initTextures() {
  }
  
  function initSlider() {
@@ -12523,7 +12523,7 @@ index 693dd459..5e64e184 100644
          if (event.isPrimary === false) return;
  
          window.addEventListener('pointermove', onPointerMove);
-@@ -72,10 +72,10 @@ function initSlider() {
+@@ -84,10 +84,10 @@ function initSlider() {
          window.removeEventListener('pointerup', onPointerUp);
      }
  
@@ -12536,7 +12536,7 @@ index 693dd459..5e64e184 100644
      }
  
      updateSlider(sliderPos);
-@@ -84,7 +84,7 @@ function initSlider() {
+@@ -96,7 +96,7 @@ function initSlider() {
      slider.addEventListener('pointerdown', onPointerDown);
  }
  
@@ -12545,7 +12545,7 @@ index 693dd459..5e64e184 100644
      sliderPos = Math.max(10, Math.min(window.innerWidth - 10, offset));
  
      slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
-@@ -96,13 +96,13 @@ function onWindowResize() {
+@@ -108,13 +108,13 @@ function onWindowResize() {
  
      renderer.setSize(window.innerWidth, window.innerHeight);
  
@@ -12559,7 +12559,7 @@ index 693dd459..5e64e184 100644
  
 -function onGamutChange({ matches }) {
 +function onGamutChange({ matches }: MediaQueryListEvent) {
-     renderer.outputColorSpace = isP3Context && matches ? THREE.DisplayP3ColorSpace : THREE.SRGBColorSpace;
+     renderer.outputColorSpace = isP3Context && matches ? DisplayP3ColorSpace : THREE.SRGBColorSpace;
  
      textureL.needsUpdate = true;
 diff --git a/examples-testing/examples/webgl_texture2darray_compressed.ts b/examples-testing/examples/webgl_texture2darray_compressed.ts
