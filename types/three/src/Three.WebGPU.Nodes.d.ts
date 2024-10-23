@@ -99,7 +99,7 @@ export * from "./materials/nodes/NodeMaterials.js";
 export * from "./math/Box2.js";
 export * from "./math/Box3.js";
 export * from "./math/Color.js";
-export { ColorManagement } from "./math/ColorManagement.js";
+export { ColorManagement, ColorSpaceDefinition } from "./math/ColorManagement.js";
 export * from "./math/Cylindrical.js";
 export * from "./math/Euler.js";
 export * from "./math/Frustum.js";
