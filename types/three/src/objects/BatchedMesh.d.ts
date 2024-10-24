@@ -229,6 +229,12 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      */
     setGeometryAt(geometryId: number, geometry: BufferGeometry): number;
 
+    /**
+     * Repacks the sub geometries in [name] to remove any unused space remaining from previously deleted geometry,
+     * freeing up space to add new geometry.
+     */
+    optimize(): this;
+
     getBoundingBoxAt(geometryId: number, target: Box3): Box3 | null;
     getBoundingSphereAt(geometryId: number, target: Sphere): Sphere | null;
 }
