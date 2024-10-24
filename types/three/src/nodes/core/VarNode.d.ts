@@ -12,7 +12,7 @@ export default class VarNode extends Node {
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
-        toVar: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<Node>;
+        toVar: (node: NodeRepresentation, name?: string | null) => ShaderNodeObject<VarNode>;
     }
 }
 
