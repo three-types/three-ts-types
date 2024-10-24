@@ -1,12 +1,11 @@
-import { Mesh } from "three";
+import { Line2NodeMaterial, Mesh } from "three/webgpu";
 
-import { LineMaterial } from "../LineMaterial.js";
-import { LineSegmentsGeometry } from "../LineSegmentsGeometry.js";
+import { WireframeGeometry2 } from "../WireframeGeometry2.js";
 
 declare class Wireframe extends Mesh {
     readonly isWireframe: true;
 
-    constructor(geometry?: LineSegmentsGeometry, material?: LineMaterial);
+    constructor(geometry?: WireframeGeometry2, material?: Line2NodeMaterial);
 
     computeLineDistances(): this;
 }

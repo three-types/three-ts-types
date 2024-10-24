@@ -75,6 +75,7 @@ const exceptionList = [
     'webgpu_lights_phong',
     'webgpu_lights_selective',
     'webgpu_lines_fat',
+    'webgpu_lines_fat_wireframe',
     'webgpu_loader_materialx',
     'webgpu_materials',
     'webgpu_materials_matcap',
