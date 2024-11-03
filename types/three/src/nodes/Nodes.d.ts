@@ -55,7 +55,6 @@ export { default as JoinNode } from "./utils/JoinNode.js";
 export { default as LoopNode } from "./utils/LoopNode.js";
 export { default as MatcapUVNode } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode } from "./utils/MaxMipLevelNode.js";
-export { default as OscNode, OscNodeMethod } from "./utils/OscNode.js";
 export { default as ReflectorNode, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
 export { default as RemapNode } from "./utils/RemapNode.js";
 export { default as RotateNode } from "./utils/RotateNode.js";
@@ -64,7 +63,6 @@ export { default as SetNode } from "./utils/SetNode.js";
 export { default as SplitNode } from "./utils/SplitNode.js";
 export { default as SpriteSheetUVNode } from "./utils/SpriteSheetUVNode.js";
 export { default as StorageArrayElementNode } from "./utils/StorageArrayElementNode.js";
-export { default as TimerNode, TimerNodeScope } from "./utils/TimerNode.js";
 export { default as TriplanarTexturesNode } from "./utils/TriplanarTexturesNode.js";
 
 // accessors
