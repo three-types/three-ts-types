@@ -1211,6 +1211,35 @@ index fda0d4df..12e45bf4 100644
      }
  
      object.position.set(400, 0, 200);
+diff --git a/examples-testing/examples/misc_exporter_ktx2.ts b/examples-testing/examples/misc_exporter_ktx2.ts
+index 3a9f22ac..cc4b4655 100644
+--- a/examples-testing/examples/misc_exporter_ktx2.ts
++++ b/examples-testing/examples/misc_exporter_ktx2.ts
+@@ -5,7 +5,14 @@ import { KTX2Exporter } from 'three/addons/exporters/KTX2Exporter.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
++let scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGLRenderer,
++    exporter: KTX2Exporter,
++    mesh: THREE.Mesh,
++    controls: OrbitControls,
++    renderTarget: THREE.WebGLRenderTarget,
++    dataTexture: THREE.DataTexture;
+ 
+ const params = {
+     target: 'pmrem',
+@@ -135,7 +142,7 @@ async function exportFile() {
+     saveArrayBuffer(result, params.target + '.ktx2');
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: Uint8Array, filename: string) {
+     const blob = new Blob([buffer], { type: 'image/ktx2' });
+     const link = document.createElement('a');
+ 
 diff --git a/examples-testing/examples/misc_exporter_obj.ts b/examples-testing/examples/misc_exporter_obj.ts
 index 025034da..73638fff 100644
 --- a/examples-testing/examples/misc_exporter_obj.ts
@@ -13564,7 +13593,7 @@ index aa8149e3..f9fd7f00 100644
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
-index cfd72172..ae3271f9 100644
+index 2558f16b..8f914967 100644
 --- a/examples-testing/examples/webgpu_instancing_morph.ts
 +++ b/examples-testing/examples/webgpu_instancing_morph.ts
 @@ -1,10 +1,16 @@
@@ -13595,7 +13624,7 @@ index cfd72172..ae3271f9 100644
  
          mesh = new THREE.InstancedMesh(
              dummy.geometry,
-@@ -139,7 +145,7 @@ function animate() {
+@@ -140,7 +146,7 @@ function animate() {
              mesh.setMorphAt(i, dummy);
          }
  
@@ -15110,6 +15139,28 @@ index ff53a4b4..4a0d8755 100644
      // 0. Get Pixel Grid Units
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
+diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
+index 7040b08b..85db2b79 100644
+--- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
++++ b/examples-testing/examples/webgpu_postprocessing_smaa.ts
+@@ -1,11 +1,15 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass } from 'three/tsl';
+ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer, postProcessing, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    stats: Stats;
+ 
+ const params = {
+     enabled: true,
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 index 84e7028d..527b5f3c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
