@@ -45,6 +45,8 @@ interface Rectangle {
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
+    depth?: boolean | undefined;
+    stencil?: boolean | undefined;
     antialias?: boolean | undefined;
     samples?: number | undefined;
     getFallback?: ((error: unknown) => Backend) | null | undefined;
@@ -241,6 +243,7 @@ declare class Renderer {
             lightsNode: LightsNode,
         ) => void)
         | null;
+    compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> | undefined;
     computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
     hasFeatureAsync(name: string): Promise<void>;
     hasFeature(name: string): false | void;
@@ -290,7 +293,6 @@ declare class Renderer {
         lightsNode: LightsNode,
         passId?: string,
     ): void;
-    get compute(): (computeNodes: ComputeNode | ComputeNode[]) => Promise<void>;
     get compile(): (scene: Object3D, camera: Camera, targetScene?: Object3D | null) => Promise<void>;
 }
 export default Renderer;
