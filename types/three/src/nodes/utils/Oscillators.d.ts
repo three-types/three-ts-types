@@ -1,5 +1,5 @@
 import Node from "../core/Node.js";
-import { NodeRepresentation, ShaderNodeObject } from '../tsl/TSLCore.js';
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export const oscSine: (timeNode?: NodeRepresentation) => ShaderNodeObject<Node>;
 export const oscSquare: (timeNode?: NodeRepresentation) => ShaderNodeObject<Node>;
