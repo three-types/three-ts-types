@@ -41,11 +41,11 @@ export interface RendererState {
     scissorTest: boolean;
 }
 
-export function getRendererState(renderer: Renderer, state?: RendererState): RendererState;
+export function saveRendererState(renderer: Renderer, state?: RendererState): RendererState;
 
 export function resetRendererState(renderer: Renderer, state?: RendererState): RendererState;
 
-export function setRendererState(renderer: Renderer, state: RendererState): void;
+export function restoreRendererState(renderer: Renderer, state: RendererState): void;
 
 // renderer and scene state
 
@@ -55,7 +55,7 @@ export interface RendererAndSceneState extends RendererState {
     overrideMaterial: Material | null;
 }
 
-export function getRendererAndSceneState(
+export function saveRendererAndSceneState(
     renderer: RendererState,
     scene: Scene,
     state?: RendererAndSceneState,
@@ -63,4 +63,4 @@ export function getRendererAndSceneState(
 
 export function resetRendererAndSceneState(renderer: Renderer, state?: RendererAndSceneState): RendererAndSceneState;
 
-export function setRendererAndSceneState(renderer: Renderer, state: RendererAndSceneState): void;
+export function restoreRendererAndSceneState(renderer: Renderer, state: RendererAndSceneState): void;
