@@ -235,6 +235,22 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      */
     optimize(): this;
 
+    /**
+     * Resizes the available space in BatchedMesh's vertex and index buffer attributes to the provided sizes. If the
+     * provided arguments shrink the geometry buffers but there is not enough unused space at the end of the geometry
+     * attributes then an error is thrown.
+     * @param maxVertexCount the max number of vertices to be used by all unique geometries to resize to.
+     * @param maxIndexCount the max number of indices to be used by all unique geometries to resize to.
+     */
+    setGeometrySize(maxVertexCount: number, maxIndexCount: number): void;
+
+    /**
+     * Resizes the necessary buffers to support the provided number of instances. If the provided arguments shrink the
+     * number of instances but there are not enough unused ids at the end of the list then an error is thrown.
+     * @param maxInstanceCount the max number of individual instances that can be added and rendered by the BatchedMesh.
+     */
+    setInstanceCount(maxInstanceCount: number): void;
+
     getBoundingBoxAt(geometryId: number, target: Box3): Box3 | null;
     getBoundingSphereAt(geometryId: number, target: Sphere): Sphere | null;
 }
