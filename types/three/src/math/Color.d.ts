@@ -172,12 +172,30 @@ export interface RGB {
 }
 
 /**
- * Represents a color. See also {@link ColorUtils}.
+ * Class representing a color.
  *
- * see {@link https://github.com/mrdoob/three.js/blob/master/src/math/Color.js|src/math/Color.js}
+ * A Color instance is represented by RGB components in the linear <i>working color space</i>, which defaults to
+ * `LinearSRGBColorSpace`. Inputs conventionally using `SRGBColorSpace` (such as hexadecimals and CSS strings) are
+ * converted to the working color space automatically.
  *
- * @example
- * const color = new THREE.Color( 0xff0000 );
+ * ```
+ * // converted automatically from SRGBColorSpace to LinearSRGBColorSpace
+ * const color = new THREE.Color().setHex( 0x112233 );
+ * ```
+ *
+ * Source color spaces may be specified explicitly, to ensure correct conversions.
+ *
+ * ```
+ * // assumed already LinearSRGBColorSpace; no conversion
+ * const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5 );
+ *
+ * // converted explicitly from SRGBColorSpace to LinearSRGBColorSpace
+ * const color = new THREE.Color().setRGB( 0.5, 0.5, 0.5, SRGBColorSpace );
+ * ```
+ *
+ * If THREE.ColorManagement is disabled, no conversions occur. For details, see <i>Color management</i>.
+ *
+ * Iterating through a Color instance will yield its components (r, g, b) in the corresponding order.
  */
 export class Color {
     constructor(color?: ColorRepresentation);
@@ -186,19 +204,19 @@ export class Color {
     readonly isColor: true;
 
     /**
-     * Red channel value between 0 and 1. Default is 1.
+     * Red channel value between `0.0` and `1.0`. Default is `1`.
      * @default 1
      */
     r: number;
 
     /**
-     * Green channel value between 0 and 1. Default is 1.
+     * Green channel value between `0.0` and `1.0`. Default is `1`.
      * @default 1
      */
     g: number;
 
     /**
-     * Blue channel value between 0 and 1. Default is 1.
+     * Blue channel value between `0.0` and `1.0`. Default is `1`.
      * @default 1
      */
     b: number;
@@ -257,24 +275,24 @@ export class Color {
     copy(color: Color): this;
 
     /**
-     * Copies given color making conversion from sRGB to linear space.
+     * Copies given color making conversion from `SRGBColorSpace` to `LinearSRGBColorSpace`.
      * @param color Color to copy.
      */
     copySRGBToLinear(color: Color): Color;
 
     /**
-     * Copies given color making conversion from linear to sRGB space.
+     * Copies given color making conversion from `LinearSRGBColorSpace` to `SRGBColorSpace`.
      * @param color Color to copy.
      */
     copyLinearToSRGB(color: Color): Color;
 
     /**
-     * Converts this color from sRGB to linear space.
+     * Converts this color from `SRGBColorSpace` to `LinearSRGBColorSpace`.
      */
     convertSRGBToLinear(): Color;
 
     /**
-     * Converts this color from linear to sRGB space.
+     * Converts this color from `LinearSRGBColorSpace` to `SRGBColorSpace`.
      */
     convertLinearToSRGB(): Color;
 
