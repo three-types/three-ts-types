@@ -9,8 +9,6 @@ declare class SMAANode extends TempNode {
 
     setSize(width: number, height: number): void;
 
-    dispose(): void;
-
     getAreaTexture(): string;
 
     getSearchTexture(): string;
