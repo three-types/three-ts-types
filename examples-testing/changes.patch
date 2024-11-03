@@ -15054,15 +15054,15 @@ index 14e45012..b4bdcf2f 100644
                  child.receiveShadow = true;
              }
 diff --git a/examples-testing/examples/webgpu_postprocessing_outline.ts b/examples-testing/examples/webgpu_postprocessing_outline.ts
-index 5c0e5ede..a67441eb 100644
+index 55a91329..ac77cc1b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_outline.ts
 @@ -1,6 +1,6 @@
 -import * as THREE from 'three';
--import { pass } from 'three/tsl';
+-import { pass, uniform, time, oscSine } from 'three/tsl';
 -import { outline } from 'three/addons/tsl/display/OutlineNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, ShaderNodeObject } from 'three/tsl';
++import { pass, uniform, time, oscSine, ShaderNodeObject } from 'three/tsl';
 +import OutlineNode, { outline } from 'three/addons/tsl/display/OutlineNode.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -15083,34 +15083,7 @@ index 5c0e5ede..a67441eb 100644
  
  const raycaster = new THREE.Raycaster();
  const mouse = new THREE.Vector2();
-@@ -47,9 +47,14 @@ gui.add(params, 'pulsePeriod', 0.0, 5).onChange(function (value) {
-     outlinePass.pulsePeriod = Number(value);
- });
- 
--function Configuration() {
--    this.visibleEdgeColor = '#ffffff';
--    this.hiddenEdgeColor = '#190a05';
-+class Configuration {
-+    visibleEdgeColor: string;
-+    hiddenEdgeColor: string;
-+
-+    constructor() {
-+        this.visibleEdgeColor = '#ffffff';
-+        this.hiddenEdgeColor = '#190a05';
-+    }
- }
- 
- const conf = new Configuration();
-@@ -189,7 +194,7 @@ function init() {
- 
-     const scenePass = pass(scene, camera);
-     const scenePassColor = scenePass.getTextureNode('output');
--    outlinePass = outline(scene, camera, scene);
-+    outlinePass = outline(scene, camera, scene as unknown as THREE.Object3D[]);
- 
-     postProcessing.outputNode = outlinePass.getTextureNode().add(scenePassColor);
- 
-@@ -198,7 +203,7 @@ function init() {
+@@ -188,7 +188,7 @@ function init() {
      renderer.domElement.style.touchAction = 'none';
      renderer.domElement.addEventListener('pointermove', onPointerMove);
  
@@ -15119,7 +15092,7 @@ index 5c0e5ede..a67441eb 100644
          if (event.isPrimary === false) return;
  
          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-@@ -207,7 +212,7 @@ function init() {
+@@ -197,7 +197,7 @@ function init() {
          checkIntersection();
      }
  
