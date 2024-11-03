@@ -4545,7 +4545,7 @@ index e77308c1..a3556aa1 100644
  
      dispose() {
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
-index b9db4833..b64a3247 100644
+index 0a9c07da..4587e6da 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
 +++ b/src-testing/src/renderers/common/RenderList.ts
 @@ -1,32 +1,67 @@
@@ -4661,7 +4661,7 @@ index b9db4833..b64a3247 100644
          const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group);
  
          if (object.occlusionTest === true) this.occlusionQueryCount++;
-@@ -95,25 +144,35 @@ class RenderList {
+@@ -95,21 +144,31 @@ class RenderList {
          (material.transparent === true || material.transmission > 0 ? this.transparent : this.opaque).push(renderItem);
      }
  
@@ -4687,11 +4687,6 @@ index b9db4833..b64a3247 100644
 -    pushLight(light) {
 +    pushLight(light: Light) {
          this.lightsArray.push(light);
-     }
- 
-     getLightsNode() {
--        return this.lightsNode.fromLights(this.lightsArray);
-+        return new LightsNode(this.lightsArray);
      }
  
 -    sort(customOpaqueSort, customTransparentSort) {
@@ -4738,7 +4733,7 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 62c1c83b..3d24b62e 100644
+index 55fb4318..ea297bfd 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,9 +1,27 @@
@@ -4881,7 +4876,7 @@ index 62c1c83b..3d24b62e 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -334,6 +404,6 @@ export default class RenderObject {
+@@ -341,6 +411,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -5026,7 +5021,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 7a1b3b62..169391cf 100644
+index 03410828..1677575f 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -35,7 +35,35 @@ import {
@@ -5508,7 +5503,7 @@ index 7a1b3b62..169391cf 100644
          return target.set(this._width, this._height);
      }
  
-@@ -759,7 +944,7 @@ class Renderer {
+@@ -761,7 +946,7 @@ class Renderer {
          this.setSize(this._width, this._height, false);
      }
  
@@ -5517,7 +5512,7 @@ index 7a1b3b62..169391cf 100644
          this._width = width;
          this._height = height;
  
-@@ -773,7 +958,7 @@ class Renderer {
+@@ -775,7 +960,7 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5526,7 +5521,7 @@ index 7a1b3b62..169391cf 100644
          this._width = width;
          this._height = height;
  
-@@ -790,15 +975,15 @@ class Renderer {
+@@ -792,15 +977,15 @@ class Renderer {
          if (this._initialized) this.backend.updateSize();
      }
  
@@ -5545,7 +5540,7 @@ index 7a1b3b62..169391cf 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -809,13 +994,15 @@ class Renderer {
+@@ -811,13 +996,15 @@ class Renderer {
          return target;
      }
  
@@ -5565,7 +5560,7 @@ index 7a1b3b62..169391cf 100644
          }
      }
  
-@@ -823,34 +1010,36 @@ class Renderer {
+@@ -825,34 +1012,36 @@ class Renderer {
          return this._scissorTest;
      }
  
@@ -5610,7 +5605,7 @@ index 7a1b3b62..169391cf 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -859,7 +1048,7 @@ class Renderer {
+@@ -861,7 +1050,7 @@ class Renderer {
          return this._clearColor.a;
      }
  
@@ -5619,7 +5614,7 @@ index 7a1b3b62..169391cf 100644
          this._clearColor.a = alpha;
      }
  
-@@ -867,7 +1056,7 @@ class Renderer {
+@@ -869,7 +1058,7 @@ class Renderer {
          return this._clearDepth;
      }
  
@@ -5628,7 +5623,7 @@ index 7a1b3b62..169391cf 100644
          this._clearDepth = depth;
      }
  
-@@ -875,11 +1064,11 @@ class Renderer {
+@@ -877,11 +1066,11 @@ class Renderer {
          return this._clearStencil;
      }
  
@@ -5642,7 +5637,7 @@ index 7a1b3b62..169391cf 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -899,9 +1088,9 @@ class Renderer {
+@@ -901,9 +1090,9 @@ class Renderer {
          let renderTargetData = null;
  
          if (renderTarget !== null) {
@@ -5654,7 +5649,7 @@ index 7a1b3b62..169391cf 100644
          }
  
          this.backend.clear(color, depth, stencil, renderTargetData);
-@@ -912,8 +1101,8 @@ class Renderer {
+@@ -914,8 +1103,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -5665,7 +5660,7 @@ index 7a1b3b62..169391cf 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -962,20 +1151,20 @@ class Renderer {
+@@ -964,20 +1153,20 @@ class Renderer {
      dispose() {
          this.info.dispose();
  
@@ -5695,7 +5690,7 @@ index 7a1b3b62..169391cf 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -985,7 +1174,19 @@ class Renderer {
+@@ -987,7 +1176,19 @@ class Renderer {
          return this._renderTarget;
      }
  
@@ -5716,7 +5711,7 @@ index 7a1b3b62..169391cf 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -993,7 +1194,7 @@ class Renderer {
+@@ -995,7 +1196,7 @@ class Renderer {
          return this._renderObjectFunction;
      }
  
@@ -5725,7 +5720,7 @@ index 7a1b3b62..169391cf 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .compute() called before the backend is initialized. Try using .computeAsync() instead.',
-@@ -1004,7 +1205,7 @@ class Renderer {
+@@ -1006,7 +1207,7 @@ class Renderer {
  
          //
  
@@ -5734,7 +5729,7 @@ index 7a1b3b62..169391cf 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -1019,9 +1220,9 @@ class Renderer {
+@@ -1021,9 +1222,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -5747,7 +5742,7 @@ index 7a1b3b62..169391cf 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -1070,7 +1271,7 @@ class Renderer {
+@@ -1072,7 +1273,7 @@ class Renderer {
          nodeFrame.renderId = previousRenderId;
      }
  
@@ -5756,7 +5751,7 @@ index 7a1b3b62..169391cf 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes);
-@@ -1078,13 +1279,13 @@ class Renderer {
+@@ -1080,13 +1281,13 @@ class Renderer {
          await this.backend.resolveTimestampAsync(computeNodes, 'compute');
      }
  
@@ -5772,7 +5767,7 @@ index 7a1b3b62..169391cf 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1096,7 +1297,7 @@ class Renderer {
+@@ -1098,7 +1299,7 @@ class Renderer {
          return this.backend.hasFeature(name);
      }
  
@@ -5781,7 +5776,7 @@ index 7a1b3b62..169391cf 100644
          const renderContext = this._currentRenderContext;
  
          this._textures.updateTexture(framebufferTexture);
-@@ -1109,54 +1310,68 @@ class Renderer {
+@@ -1111,54 +1312,68 @@ class Renderer {
          this.backend.copyFramebufferToTexture(framebufferTexture, renderContext, rectangle);
      }
  
@@ -5867,7 +5862,7 @@ index 7a1b3b62..169391cf 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1166,7 +1381,7 @@ class Renderer {
+@@ -1168,7 +1383,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5876,7 +5871,7 @@ index 7a1b3b62..169391cf 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector4.z, group);
-@@ -1183,7 +1398,7 @@ class Renderer {
+@@ -1185,7 +1400,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5885,7 +5880,7 @@ index 7a1b3b62..169391cf 100644
  
              renderList.begin();
  
-@@ -1203,13 +1418,13 @@ class Renderer {
+@@ -1205,13 +1420,13 @@ class Renderer {
          }
      }
  
@@ -5901,7 +5896,7 @@ index 7a1b3b62..169391cf 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1220,42 +1435,50 @@ class Renderer {
+@@ -1222,42 +1437,50 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -5963,7 +5958,7 @@ index 7a1b3b62..169391cf 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1340,14 +1563,22 @@ class Renderer {
+@@ -1342,14 +1565,22 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -5989,7 +5984,7 @@ index 7a1b3b62..169391cf 100644
              passId,
          );
          renderObject.drawRange = object.geometry.drawRange;
-@@ -1355,18 +1586,18 @@ class Renderer {
+@@ -1357,18 +1588,18 @@ class Renderer {
  
          //
  
@@ -6014,7 +6009,7 @@ index 7a1b3b62..169391cf 100644
  
          //
  
-@@ -1380,32 +1611,39 @@ class Renderer {
+@@ -1382,32 +1613,39 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
