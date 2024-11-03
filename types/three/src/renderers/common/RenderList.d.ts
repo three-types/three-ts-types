@@ -57,7 +57,6 @@ declare class RenderList {
     ): void;
     pushBundle(group: Bundle): void;
     pushLight(light: Light): void;
-    getLightsNode(): LightsNode;
     sort(
         customOpaqueSort: ((a: RenderItem, b: RenderItem) => number) | null,
         customTransparentSort: ((a: RenderItem, b: RenderItem) => number) | null,
