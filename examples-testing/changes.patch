@@ -15272,6 +15272,44 @@ index 4aeb6e43..738b6580 100644
  
      postProcessing.render();
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
+index a6536f79..a7388db4 100644
+--- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
++++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
+@@ -1,6 +1,6 @@
+-import * as THREE from 'three';
+-import { pass, mrt, output, transformedNormalView, metalness, vec4 } from 'three/tsl';
+-import { ssr } from 'three/addons/tsl/display/SSRNode.js';
++import * as THREE from 'three/webgpu';
++import { pass, mrt, output, transformedNormalView, metalness, vec4, ShaderNodeObject } from 'three/tsl';
++import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -18,8 +18,12 @@ const params = {
+     autoRotate: false,
+ };
+ 
+-let camera, scene, renderer, postProcessing, ssrPass;
+-let gui, stats, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    ssrPass: ShaderNodeObject<SSRNode>;
++let gui: GUI, stats: Stats, controls: OrbitControls;
+ 
+ // Configure and create Draco decoder.
+ const dracoLoader = new DRACOLoader();
+@@ -64,7 +68,7 @@ function init() {
+         dracoLoader.dispose();
+     });
+ 
+-    let geometry, material, mesh;
++    let geometry: THREE.BufferGeometry, material: THREE.Material, mesh: THREE.Mesh;
+ 
+     geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
+     material = new THREE.MeshStandardMaterial({ color: 'green', metalness: 0.01 });
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
 index dc70b8e9..8c9da56f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
