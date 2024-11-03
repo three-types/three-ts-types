@@ -30,6 +30,7 @@ export * from "./utils/MatcapUVNode.js";
 export * from "./utils/MaxMipLevelNode.js";
 export * from "./utils/Oscillators.js";
 export * from "./utils/Packing.js";
+export * from "./utils/PostProcessingUtils.js";
 export * from "./utils/ReflectorNode.js";
 export * from "./utils/RemapNode.js";
 export * from "./utils/RotateNode.js";
