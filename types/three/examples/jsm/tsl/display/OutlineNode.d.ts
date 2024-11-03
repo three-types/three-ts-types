@@ -15,7 +15,7 @@ declare class OutlineNode extends TempNode {
 
     constructor(scene: Scene, camera: Camera, selectedObjects?: Object3D[]);
 
-    getTextureNode(): TextureNode;
+    getTextureNode(): ShaderNodeObject<TextureNode>;
 
     setSize(width: number, height: number): void;
 }
