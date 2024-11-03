@@ -193,6 +193,8 @@ export * from "./nodes/Nodes.js";
 export * from "./nodes/TSL.js";
 export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenerator.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
+import * as PostProcessingUtils from "./renderers/common/PostProcessingUtils.js";
+export { PostProcessingUtils };
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
 export type { default as Renderer } from "./renderers/common/Renderer.js";
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";
