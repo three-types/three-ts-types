@@ -1,10 +1,10 @@
-import { Node, ShaderNodeObject, TempNode, TextureNode } from "three/tsl";
+import { Node, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
 import { Camera, Object3D, Scene } from "three/webgpu";
 
 export interface OutlineNodeParams {
     selectedObjects?: Object3D[] | undefined;
-    edgeThickness?: ShaderNodeObject<Node> | undefined;
-    edgeGlow?: ShaderNodeObject<Node> | undefined;
+    edgeThickness?: ShaderNodeObject<UniformNode<number>> | undefined;
+    edgeGlow?: ShaderNodeObject<UniformNode<number>> | undefined;
     downSampleRatio?: number | undefined;
 }
 
@@ -13,8 +13,8 @@ declare class OutlineNode extends TempNode {
     camera: Camera;
     selectedObjects: Object3D[];
     downSampleRatio: number;
-    edgeThickness: ShaderNodeObject<Node>;
-    edgeGlow: ShaderNodeObject<Node>;
+    edgeThickness: ShaderNodeObject<UniformNode<number>>;
+    edgeGlow: ShaderNodeObject<UniformNode<number>>;
 
     constructor(scene: Scene, camera: Camera, params?: OutlineNodeParams);
 
@@ -29,4 +29,4 @@ declare class OutlineNode extends TempNode {
 
 export default OutlineNode;
 
-export const outline: (scene: Scene, camera: Camera, selectedObjects?: Object3D[]) => ShaderNodeObject<OutlineNode>;
+export const outline: (scene: Scene, camera: Camera, params?: OutlineNodeParams) => ShaderNodeObject<OutlineNode>;
