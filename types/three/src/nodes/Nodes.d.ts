@@ -142,6 +142,7 @@ export { default as LightProbeNode } from "./lighting/LightProbeNode.js";
 export { default as LightsNode } from "./lighting/LightsNode.js";
 export { default as PointLightNode } from "./lighting/PointLightNode.js";
 export { default as RectAreaLightNode, RectAreaLightTexturesLib } from "./lighting/RectAreaLightNode.js";
+export { default as ShadowNode } from "./lighting/ShadowNode.js";
 export { default as SpotLightNode } from "./lighting/SpotLightNode.js";
 
 // pmrem
