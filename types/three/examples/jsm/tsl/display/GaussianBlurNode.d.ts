@@ -8,7 +8,13 @@ declare class GaussianBlurNode extends TempNode {
 
     resolution: Vector2;
 
+    premultipliedAlpha: boolean;
+
     constructor(textureNode: TextureNode, directionNode?: Node | null, sigma?: number);
+
+    setPremultipliedAlpha(value: boolean): this;
+
+    getPremultipliedAlpha(): boolean;
 
     setSize(width: number, height: number): void;
 
@@ -18,6 +24,11 @@ declare class GaussianBlurNode extends TempNode {
 export default GaussianBlurNode;
 
 export const gaussianBlur: (
+    node: NodeRepresentation,
+    directionNode?: NodeRepresentation | null,
+    sigma?: number,
+) => ShaderNodeObject<GaussianBlurNode>;
+export const premultipliedGaussianBlur: (
     node: NodeRepresentation,
     directionNode?: NodeRepresentation | null,
     sigma?: number,
