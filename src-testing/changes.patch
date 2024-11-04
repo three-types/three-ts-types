@@ -3049,7 +3049,7 @@ index 0b00319a..c190633b 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/Attributes.ts b/src-testing/src/renderers/common/Attributes.ts
-index ad7de840..8cca219d 100644
+index 4631d528..a9edf948 100644
 --- a/src-testing/src/renderers/common/Attributes.ts
 +++ b/src-testing/src/renderers/common/Attributes.ts
 @@ -2,15 +2,25 @@ import DataMap from './DataMap.js';
@@ -3090,7 +3090,7 @@ index ad7de840..8cca219d 100644
          const data = this.get(attribute);
  
          if (data.version === undefined) {
-@@ -44,10 +54,11 @@ class Attributes extends DataMap {
+@@ -46,10 +56,11 @@ class Attributes extends DataMap {
          }
      }
  
@@ -3342,7 +3342,7 @@ index a12f3563..e7ae8d1c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 38dc9811..d6820e2f 100644
+index fee94385..0c13e27c 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,8 +1,42 @@
@@ -3408,7 +3408,7 @@ index 38dc9811..d6820e2f 100644
          const bindings = this.nodes.getForCompute(computeNode).bindings;
  
          for (const bindGroup of bindings) {
-@@ -53,33 +87,33 @@ class Bindings extends DataMap {
+@@ -53,26 +87,26 @@ class Bindings extends DataMap {
          return bindings;
      }
  
@@ -3440,9 +3440,10 @@ index 38dc9811..d6820e2f 100644
 +                this.textures.updateTexture((binding as SampledTexture).texture);
 +            } else if ((binding as StorageBuffer).isStorageBuffer) {
 +                const attribute = (binding as StorageBuffer).attribute;
- 
-                 this.attributes.update(attribute, AttributeType.STORAGE);
-             }
+                 const attributeType = attribute.isIndirectStorageBufferAttribute
+                     ? AttributeType.INDIRECT
+                     : AttributeType.STORAGE;
+@@ -82,7 +116,7 @@ class Bindings extends DataMap {
          }
      }
  
@@ -3451,7 +3452,7 @@ index 38dc9811..d6820e2f 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
-@@ -87,27 +121,31 @@ class Bindings extends DataMap {
+@@ -90,27 +124,31 @@ class Bindings extends DataMap {
          // iterate over all bindings and check if buffer updates or a new binding group is required
  
          for (const binding of bindGroup.bindings) {
@@ -3494,7 +3495,7 @@ index 38dc9811..d6820e2f 100644
  
                  if (updated) {
                      this.textures.updateTexture(texture);
-@@ -123,10 +161,10 @@ class Bindings extends DataMap {
+@@ -126,10 +164,10 @@ class Bindings extends DataMap {
                      // TODO: Remove this once we found why updated === false isn't bound to a texture in the WebGPU backend
                      console.error(
                          'Bindings._update: binding should be available:',
@@ -3507,7 +3508,7 @@ index 38dc9811..d6820e2f 100644
                          needsBindingsUpdate,
                      );
  
-@@ -137,7 +175,7 @@ class Bindings extends DataMap {
+@@ -140,7 +178,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true) {
                      const textureData = this.get(texture);
  
@@ -3792,13 +3793,13 @@ index 0fd3ca53..f6112ccf 100644
  
          this.computeProgram = computeProgram;
 diff --git a/src-testing/src/renderers/common/Constants.ts b/src-testing/src/renderers/common/Constants.ts
-index 0d0c35a2..f5a186e1 100644
+index c2dfad4c..02330947 100644
 --- a/src-testing/src/renderers/common/Constants.ts
 +++ b/src-testing/src/renderers/common/Constants.ts
-@@ -2,7 +2,9 @@ export const AttributeType = {
-     VERTEX: 1,
+@@ -3,7 +3,9 @@ export const AttributeType = {
      INDEX: 2,
-     STORAGE: 4,
+     STORAGE: 3,
+     INDIRECT: 4,
 -};
 +} as const;
 +
@@ -7723,7 +7724,7 @@ index b1e72064..40f26bf1 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index c14a3647..3b2d32e7 100644
+index 263ccfa4..840b556c 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -947,7 +947,7 @@ class WebGPUBackend extends Backend {
@@ -7736,7 +7737,7 @@ index c14a3647..3b2d32e7 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 9695019c..8d22fb34 100644
+index 1adea208..53774495 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7892,7 +7893,7 @@ index 9695019c..8d22fb34 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -541,7 +565,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -542,7 +566,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -7901,7 +7902,7 @@ index 9695019c..8d22fb34 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -699,8 +723,8 @@ ${flowData.code}
+@@ -700,8 +724,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -7912,7 +7913,7 @@ index 9695019c..8d22fb34 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -786,8 +810,8 @@ ${flowData.code}
+@@ -787,8 +811,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -7923,7 +7924,7 @@ index 9695019c..8d22fb34 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -823,7 +847,7 @@ ${flowData.code}
+@@ -824,7 +848,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
