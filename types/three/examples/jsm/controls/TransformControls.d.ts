@@ -38,6 +38,12 @@ export interface TransformControlsEventMap {
     "showX-changed": { value: unknown };
     "showY-changed": { value: unknown };
     "showZ-changed": { value: unknown };
+    "minX-changed": { value: unknown };
+    "maxX-changed": { value: unknown };
+    "minY-changed": { value: unknown };
+    "maxY-changed": { value: unknown };
+    "minZ-changed": { value: unknown };
+    "maxZ-changed": { value: unknown };
     "worldPosition-changed": { value: unknown };
     "worldPositionStart-changed": { value: unknown };
     "worldQuaternion-changed": { value: unknown };
@@ -115,6 +121,36 @@ declare class TransformControls extends Controls<TransformControlsEventMap> {
      * Whether or not the z-axis helper should be visible. Default is `true`.
      */
     showZ: boolean;
+
+    /**
+     * The minimum allowed X position during translation. Default is `-Infinity`.
+     */
+    minx: number;
+
+    /**
+     * The maximum allowed X position during translation. Default is `Infinity`.
+     */
+    maxX: number;
+
+    /**
+     * The minimum allowed Y position during translation. Default is `-Infinity`.
+     */
+    minY: number;
+
+    /**
+     * The maximum allowed Y position during translation. Default is `Infinity`.
+     */
+    maxY: number;
+
+    /**
+     * The minimum allowed Z position during translation. Default is `-Infinity`.
+     */
+    minZ: number;
+
+    /**
+     * The maximum allowed Z position during translation. Default is `Infinity`.
+     */
+    maxZ: number;
 
     /**
      * Creates a new instance of TransformControls.
