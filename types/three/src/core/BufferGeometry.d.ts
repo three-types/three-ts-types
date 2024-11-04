@@ -4,6 +4,7 @@ import { Quaternion } from "../math/Quaternion.js";
 import { Sphere } from "../math/Sphere.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Vector3, Vector3Tuple } from "../math/Vector3.js";
+import IndirectStorageBufferAttribute from "../renderers/common/IndirectStorageBufferAttribute.js";
 import { BufferAttribute, BufferAttributeJSON } from "./BufferAttribute.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 import { GLBufferAttribute } from "./GLBufferAttribute.js";
@@ -155,6 +156,8 @@ export class BufferGeometry<
      */
     index: BufferAttribute | null;
 
+    indirect: IndirectStorageBufferAttribute | null;
+
     /**
      * This hashmap has as id the name of the attribute to be set and as value the {@link THREE.BufferAttribute | buffer} to set it to. Rather than accessing this property directly,
      * use {@link setAttribute | .setAttribute} and {@link getAttribute | .getAttribute} to access attributes of this geometry.
@@ -232,6 +235,10 @@ export class BufferGeometry<
      * @param index
      */
     setIndex(index: BufferAttribute | number[] | null): this;
+
+    setIndirect(indirect: IndirectStorageBufferAttribute | null): this;
+
+    getIndirect(): IndirectStorageBufferAttribute | null;
 
     /**
      * Sets an {@link attributes | attribute} to this geometry with the specified name.
