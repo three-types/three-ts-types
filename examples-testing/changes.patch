@@ -13215,7 +13215,7 @@ index b0aed613..8607a01a 100644
          hip: 'mixamorigHips',
  
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index 5ccf2fa1..72225c8d 100644
+index 2f56ce28..1ec691e1 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -1,4 +1,4 @@
@@ -13223,8 +13223,8 @@ index 5ccf2fa1..72225c8d 100644
 +import * as THREE from 'three/webgpu';
  import {
      color,
-     linearDepth,
-@@ -18,8 +18,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+     positionWorld,
+@@ -20,8 +20,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -13235,7 +13235,7 @@ index 5ccf2fa1..72225c8d 100644
  
  init();
  
-@@ -137,13 +137,13 @@ function init() {
+@@ -127,13 +127,13 @@ function init() {
      };
  
      const gui = new GUI();
@@ -15273,20 +15273,20 @@ index 4aeb6e43..738b6580 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index a6536f79..a7388db4 100644
+index a8995b5c..9afd9009 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -1,6 +1,6 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, metalness, vec4 } from 'three/tsl';
+-import { pass, mrt, output, transformedNormalView, metalness, vec4 /*, uniform*/ } from 'three/tsl';
 -import { ssr } from 'three/addons/tsl/display/SSRNode.js';
 +import * as THREE from 'three/webgpu';
 +import { pass, mrt, output, transformedNormalView, metalness, vec4, ShaderNodeObject } from 'three/tsl';
 +import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
  
- import Stats from 'three/addons/libs/stats.module.js';
- 
-@@ -18,8 +18,12 @@ const params = {
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -16,8 +16,12 @@ const params = {
      autoRotate: false,
  };
  
@@ -15301,7 +15301,7 @@ index a6536f79..a7388db4 100644
  
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
-@@ -64,7 +68,7 @@ function init() {
+@@ -62,7 +66,7 @@ async function init() {
          dracoLoader.dispose();
      });
  
@@ -15309,7 +15309,7 @@ index a6536f79..a7388db4 100644
 +    let geometry: THREE.BufferGeometry, material: THREE.Material, mesh: THREE.Mesh;
  
      geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
-     material = new THREE.MeshStandardMaterial({ color: 'green', metalness: 0.01 });
+     material = new THREE.MeshStandardNodeMaterial({ color: 'green', metalness: 0.3 });
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
 index dc70b8e9..8c9da56f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
