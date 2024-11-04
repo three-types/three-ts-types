@@ -22,8 +22,6 @@ export default class ReflectorNode extends TextureNode {
 
     constructor(parameters?: ReflectorNodeParameters);
 
-    getTextureNode(): TextureNode;
-
     getVirtualCamera(camera: Camera): Camera;
 
     getRenderTarget(camera: Camera): RenderTarget;
