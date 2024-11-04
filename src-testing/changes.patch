@@ -3874,7 +3874,7 @@ index 006bc295..eb39fca8 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Geometries.ts b/src-testing/src/renderers/common/Geometries.ts
-index 9072f238..a8e29552 100644
+index 14c52f6f..2a170106 100644
 --- a/src-testing/src/renderers/common/Geometries.ts
 +++ b/src-testing/src/renderers/common/Geometries.ts
 @@ -1,9 +1,15 @@
@@ -3961,16 +3961,18 @@ index 9072f238..a8e29552 100644
          const geometry = renderObject.geometry;
          const geometryData = this.get(geometry);
  
-@@ -109,7 +125,7 @@ class Geometries extends DataMap {
+@@ -109,9 +125,8 @@ class Geometries extends DataMap {
          geometry.addEventListener('dispose', onDispose);
      }
  
 -    updateAttributes(renderObject) {
 +    updateAttributes(renderObject: RenderObject) {
+         // attributes
+-
          const attributes = renderObject.getAttributes();
  
          for (const attribute of attributes) {
-@@ -127,10 +143,10 @@ class Geometries extends DataMap {
+@@ -139,10 +154,10 @@ class Geometries extends DataMap {
          }
      }
  
@@ -3983,7 +3985,7 @@ index 9072f238..a8e29552 100644
              if (this.attributeCall.get(attribute) !== callId) {
                  this.attributes.update(attribute, type);
  
-@@ -141,17 +157,17 @@ class Geometries extends DataMap {
+@@ -153,21 +168,21 @@ class Geometries extends DataMap {
                  this.attributes.update(attribute, type);
  
                  this.attributeCall.set(attribute, callId);
@@ -3997,6 +3999,11 @@ index 9072f238..a8e29552 100644
                  this.attributeCall.set(attribute, callId);
              }
          }
+     }
+ 
+-    getIndirect(renderObject) {
++    getIndirect(renderObject: RenderObject) {
+         return renderObject.geometry.indirect;
      }
  
 -    getIndex(renderObject) {
@@ -4751,7 +4758,7 @@ index 3fc3134e..c002ed0c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 55fb4318..ea297bfd 100644
+index e46d3871..a978762a 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,9 +1,27 @@
@@ -4874,7 +4881,7 @@ index 55fb4318..ea297bfd 100644
  
          return true;
      }
-@@ -118,7 +188,7 @@ export default class RenderObject {
+@@ -122,7 +192,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -4883,7 +4890,7 @@ index 55fb4318..ea297bfd 100644
      }
  
      getAttributes() {
-@@ -127,8 +197,8 @@ export default class RenderObject {
+@@ -131,8 +201,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -4894,7 +4901,7 @@ index 55fb4318..ea297bfd 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -341,6 +411,6 @@ export default class RenderObject {
+@@ -345,6 +415,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -7724,10 +7731,10 @@ index b1e72064..40f26bf1 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 263ccfa4..840b556c 100644
+index f14d7df5..4fe783d9 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -947,7 +947,7 @@ class WebGPUBackend extends Backend {
+@@ -963,7 +963,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
