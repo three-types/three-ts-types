@@ -1,18 +1,19 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index 8ab1a6d6..71b7f68d 100644
+index 8ab1a6d6..dab659ab 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-@@ -1,3 +1,9 @@
+@@ -1,3 +1,10 @@
 +import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
 +import RenderObject from '../../../renderers/common/RenderObject.js';
 +import { Matrix4 } from '../../../math/Matrix4.js';
 +import { Material } from '../../Material.js';
 +import NodeFrame from '../../../nodes/core/NodeFrame.js';
++import { BufferAttribute } from '../../../core/BufferAttribute.js';
 +
  const refreshUniforms = [
      'alphaMap',
      'alphaTest',
-@@ -49,10 +55,28 @@ const refreshUniforms = [
+@@ -49,10 +56,33 @@ const refreshUniforms = [
      'thickness',
      'transmission',
      'transmissionMap',
@@ -25,8 +26,13 @@ index 8ab1a6d6..71b7f68d 100644
 +    [K in RefreshUniform]?: unknown;
 +};
 +
++interface AttributesData {
++    [name: string]: { version: number };
++}
++
 +interface RenderObjectData {
 +    material: MaterialData;
++    geometry: { attributes: AttributesData; indexVersion: number | null; drawRange: { start: number; count: number } };
 +    worldMatrix: Matrix4;
 +    version?: number;
 +}
@@ -43,7 +49,7 @@ index 8ab1a6d6..71b7f68d 100644
          this.renderObjects = new WeakMap();
          this.hasNode = this.containsNode(builder);
          this.hasAnimation = builder.object.isSkinnedMesh === true;
-@@ -60,7 +84,7 @@ class NodeMaterialObserver {
+@@ -60,7 +90,7 @@ class NodeMaterialObserver {
          this.renderId = 0;
      }
  
@@ -52,7 +58,7 @@ index 8ab1a6d6..71b7f68d 100644
          const hasInitialized = this.renderObjects.has(renderObject);
  
          if (hasInitialized === false) {
-@@ -72,7 +96,7 @@ class NodeMaterialObserver {
+@@ -72,7 +102,7 @@ class NodeMaterialObserver {
          return false;
      }
  
@@ -61,7 +67,18 @@ index 8ab1a6d6..71b7f68d 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -120,7 +144,7 @@ class NodeMaterialObserver {
+@@ -106,8 +136,8 @@ class NodeMaterialObserver {
+         return data;
+     }
+ 
+-    getAttributesData(attributes) {
+-        const attributesData = {};
++    getAttributesData(attributes: Record<string, BufferAttribute>) {
++        const attributesData: AttributesData = {};
+ 
+         for (const name in attributes) {
+             const attribute = attributes[name];
+@@ -120,7 +150,7 @@ class NodeMaterialObserver {
          return attributesData;
      }
  
@@ -70,7 +87,7 @@ index 8ab1a6d6..71b7f68d 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -133,8 +157,8 @@ class NodeMaterialObserver {
+@@ -133,8 +163,8 @@ class NodeMaterialObserver {
          return false;
      }
  
@@ -81,7 +98,7 @@ index 8ab1a6d6..71b7f68d 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -155,7 +179,7 @@ class NodeMaterialObserver {
+@@ -155,7 +185,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -90,7 +107,7 @@ index 8ab1a6d6..71b7f68d 100644
          const { object, material, geometry } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -280,7 +304,7 @@ class NodeMaterialObserver {
+@@ -280,7 +310,7 @@ class NodeMaterialObserver {
          return true;
      }
  
