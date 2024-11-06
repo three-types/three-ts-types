@@ -18,6 +18,8 @@ declare class ReflectorNode extends TextureNode {
     get reflector(): ReflectorBaseNode;
 
     get target(): Object3D;
+
+    getDepthNode(): ShaderNodeObject<ReflectorNode>;
 }
 
 declare class ReflectorBaseNode extends Node {
