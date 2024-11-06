@@ -92,6 +92,12 @@ declare class TransformControls extends Controls<TransformControlsEventMap> {
     rotationSnap: number | null;
 
     /**
+     * By default, 3D objects are continuously scaled. If you set this property to a numeric value, you can define in
+     * which steps the 3D object should be scaled. Default is `null`.
+     */
+    scaleSnap: number | null;
+
+    /**
      * Defines in which coordinate space transformations should be performed. Possible values are "world" and "local".
      * Default is `world`.
      */
