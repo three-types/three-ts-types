@@ -2,6 +2,7 @@ import { Camera } from "../../cameras/Camera.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import TextureNode from "../accessors/TextureNode.js";
+import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export interface ReflectorNodeParameters {
@@ -11,7 +12,17 @@ export interface ReflectorNodeParameters {
     bounces?: boolean | undefined;
 }
 
-export default class ReflectorNode extends TextureNode {
+declare class ReflectorNode extends TextureNode {
+    constructor(parameters?: ReflectorNodeParameters);
+
+    get reflector(): ReflectorBaseNode;
+
+    get target(): Object3D;
+}
+
+declare class ReflectorBaseNode extends Node {
+    textureNode: TextureNode;
+
     target: Object3D;
     resolution: number;
     generateMipmaps: boolean;
@@ -20,7 +31,7 @@ export default class ReflectorNode extends TextureNode {
     virtualCameras: WeakMap<Camera, Camera>;
     renderTargets: WeakMap<Camera, RenderTarget>;
 
-    constructor(parameters?: ReflectorNodeParameters);
+    constructor(textureNode: TextureNode, parameters?: ReflectorNodeParameters);
 
     getVirtualCamera(camera: Camera): Camera;
 
@@ -28,3 +39,5 @@ export default class ReflectorNode extends TextureNode {
 }
 
 export const reflector: (parameters?: ReflectorNodeParameters) => ShaderNodeObject<ReflectorNode>;
+
+export default ReflectorNode;
