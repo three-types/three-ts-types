@@ -15376,6 +15376,28 @@ index a8995b5c..9afd9009 100644
  
      geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
      material = new THREE.MeshStandardNodeMaterial({ color: 'green', metalness: 0.3 });
+diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
+index 9a5558e9..05dbf9db 100644
+--- a/examples-testing/examples/webgpu_postprocessing_traa.ts
++++ b/examples-testing/examples/webgpu_postprocessing_traa.ts
+@@ -1,11 +1,14 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { mrt, output, velocity } from 'three/tsl';
+ import { traaPass } from 'three/addons/tsl/display/TRAAPassNode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, postProcessing;
+-let stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing;
++let stats: Stats;
+ let index = 0;
+ 
+ init();
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
 index dc70b8e9..8c9da56f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
