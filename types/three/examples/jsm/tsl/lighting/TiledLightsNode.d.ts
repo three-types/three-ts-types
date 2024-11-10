@@ -1,4 +1,4 @@
-import { LightsNode, NodeRepresentation, ShaderNodeObject } from 'three/tsl';
+import { LightsNode, NodeRepresentation, ShaderNodeObject } from "three/tsl";
 
 export const circleIntersectsAABB: (
     circleCenter: NodeRepresentation,
@@ -9,6 +9,10 @@ export const circleIntersectsAABB: (
 
 declare class TiledLightsNode extends LightsNode {
     constructor(maxLights?: number, tileSize?: number);
+
+    updateLightsTexture(): void;
+
+    setSize(width: number, height: number): this;
 }
 
 export default TiledLightsNode;
