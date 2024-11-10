@@ -13215,7 +13215,7 @@ index b0aed613..8607a01a 100644
          hip: 'mixamorigHips',
  
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index 2f56ce28..1ec691e1 100644
+index 53517e80..1fd4c8e2 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -1,4 +1,4 @@
@@ -13763,6 +13763,72 @@ index 5638c902..a274a953 100644
      meshKnot.rotation.y = time / 1000;
  
      renderer.render(scene, camera);
+diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
+index 7b7249ec..1d3c11bb 100644
+--- a/examples-testing/examples/webgpu_lights_tiled.ts
++++ b/examples-testing/examples/webgpu_lights_tiled.ts
+@@ -1,8 +1,9 @@
+-import * as THREE from 'three';
+-import { texture, uv, pass, uniform } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { texture, uv, pass, uniform, Node, ShaderNodeObject, UniformNode } from 'three/tsl';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
+ 
+ import { TiledLighting } from 'three/addons/lighting/TiledLighting.js';
++import TiledLightsNode from 'three/addons/tsl/lighting/TiledLightsNode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -12,18 +13,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let camera,
+-    scene,
+-    renderer,
+-    lights,
+-    lightDummy,
+-    stats,
+-    controls,
+-    compose,
+-    tileInfluence,
+-    lighting,
+-    count,
+-    postProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    lights: THREE.Group,
++    lightDummy: THREE.InstancedMesh,
++    stats: Stats,
++    controls: OrbitControls,
++    compose: ShaderNodeObject<Node>,
++    tileInfluence: ShaderNodeObject<UniformNode<number>>,
++    lighting: TiledLighting,
++    count: number,
++    postProcessing: THREE.PostProcessing;
+ 
+ init();
+ 
+@@ -55,7 +56,7 @@ function init() {
+     lights = new THREE.Group();
+     scene.add(lights);
+ 
+-    const addLight = (hexColor, power = 10000, distance = 3) => {
++    const addLight = (hexColor: THREE.ColorRepresentation, power = 10000, distance = 3) => {
+         const light = new THREE.PointLight(hexColor, 1, distance);
+         light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
+         light.power = power;
+@@ -157,8 +158,7 @@ function init() {
+ function updatePostProcessing() {
+     // tile indexes debug, needs to be updated every time the renderer size changes
+ 
+-    const debugBlockIndexes = lighting
+-        .getNode(scene, camera)
++    const debugBlockIndexes = (lighting.getNode(scene, camera) as TiledLightsNode)
+         .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio)
+         .getBlock()
+         .toColor()
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
 index 64d1fda4..079b75d7 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
@@ -14926,7 +14992,7 @@ index dc30eb60..2a156b13 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index 281858ff..5b9879f0 100644
+index 7a89a8e4..ef11d62e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
 @@ -1,4 +1,4 @@
