@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { Light } from "../../lights/Light";
+import { Light } from "../../lights/Light.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { Scene } from "../../scenes/Scene.js";
 import ChainMap from "./ChainMap.js";
