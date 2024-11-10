@@ -13764,10 +13764,10 @@ index 5638c902..a274a953 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 7b7249ec..20acc46a 100644
+index 7b7249ec..1d3c11bb 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
-@@ -1,5 +1,5 @@
+@@ -1,8 +1,9 @@
 -import * as THREE from 'three';
 -import { texture, uv, pass, uniform } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
@@ -13775,7 +13775,11 @@ index 7b7249ec..20acc46a 100644
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
  import { TiledLighting } from 'three/addons/lighting/TiledLighting.js';
-@@ -12,18 +12,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
++import TiledLightsNode from 'three/addons/tsl/lighting/TiledLightsNode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -12,18 +13,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
@@ -13806,7 +13810,7 @@ index 7b7249ec..20acc46a 100644
  
  init();
  
-@@ -55,7 +55,7 @@ function init() {
+@@ -55,7 +56,7 @@ function init() {
      lights = new THREE.Group();
      scene.add(lights);
  
@@ -13815,6 +13819,16 @@ index 7b7249ec..20acc46a 100644
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
          light.power = power;
+@@ -157,8 +158,7 @@ function init() {
+ function updatePostProcessing() {
+     // tile indexes debug, needs to be updated every time the renderer size changes
+ 
+-    const debugBlockIndexes = lighting
+-        .getNode(scene, camera)
++    const debugBlockIndexes = (lighting.getNode(scene, camera) as TiledLightsNode)
+         .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio)
+         .getBlock()
+         .toColor()
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
 index 64d1fda4..079b75d7 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
