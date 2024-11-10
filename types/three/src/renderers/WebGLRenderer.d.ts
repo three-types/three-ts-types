@@ -431,11 +431,14 @@ export class WebGLRenderer implements Renderer {
     copyFramebufferToTexture(texture: Texture, position?: Vector2 | null, level?: number): void;
 
     /**
-     * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
-     * position. The `depthTexture` and `texture` property of render targets are supported as well.
+     * Copies the pixels of a texture in the bounds [srcRegion]{@link Box3} in the destination texture starting from the
+     * given position. 2D Texture, 3D Textures, or a mix of the two can be used as source and destination texture
+     * arguments for copying between layers of 3d textures
+     *
+     * The `depthTexture` and `texture` property of render targets are supported as well.
      *
      * When using render target textures as `srcTexture` and `dstTexture`, you must make sure both render targets are
-     * intitialized e.g. via {@link .initRenderTarget}().
+     * initialized e.g. via {@link .initRenderTarget}().
      *
      * @param srcTexture Specifies the source texture.
      * @param dstTexture Specifies the destination texture.
@@ -446,12 +449,14 @@ export class WebGLRenderer implements Renderer {
     copyTextureToTexture(
         srcTexture: Texture,
         dstTexture: Texture,
-        srcRegion?: Box2 | null,
-        dstPosition?: Vector2 | null,
+        srcRegion?: Box2 | Box3 | null,
+        dstPosition?: Vector2 | Vector3 | null,
         level?: number,
     ): void;
 
     /**
+     * @deprecated Use "copyTextureToTexture" instead.
+     *
      * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
      * position. The `depthTexture` and `texture` property of 3D render targets are supported as well.
      *
