@@ -47,7 +47,11 @@ export interface GLTFExporterOptions {
     includeCustomExtensions?: boolean;
 }
 
-type TextureUtils = { decompress: (texture: Texture, maxTextureSize?: number) => Promise<void> | void };
+type TextureUtils = {
+    decompress:
+        | ((texture: Texture, maxTextureSize?: number) => Promise<void>)
+        | ((texture: Texture, maxTextureSize?: number) => void);
+};
 
 declare class GLTFExporter {
     textureUtils: TextureUtils | null;
