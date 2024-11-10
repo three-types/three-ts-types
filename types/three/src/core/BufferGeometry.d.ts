@@ -359,8 +359,12 @@ export class BufferGeometry<
     center(): this;
 
     /**
-     * Sets the attributes for this BufferGeometry from an array of points.
-     * @param points
+     * Defines a geometry by creating a `position` attribute based on the given array of points. The array can hold
+     * instances of {@link Vector2} or {@link Vector3}. When using two-dimensional data, the `z` coordinate for all
+     * vertices is set to `0`.
+     *
+     * If the method is used with an existing `position` attribute, the vertex data are overwritten with the data from
+     * the array. The length of the array must match the vertex count.
      */
     setFromPoints(points: Vector3[] | Vector2[]): this;
 
