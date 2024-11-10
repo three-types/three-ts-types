@@ -4087,30 +4087,6 @@ index 4ede75de..38b7b9cd 100644
          if (this[type].timestampCalls === 0) {
              this[type].timestamp = 0;
          }
-diff --git a/src-testing/src/renderers/common/Lighting.d.ts b/src-testing/src/renderers/common/Lighting.d.ts
-index 76186e17..140f773f 100644
---- a/src-testing/src/renderers/common/Lighting.d.ts
-+++ b/src-testing/src/renderers/common/Lighting.d.ts
-@@ -1,15 +1,15 @@
- import { Camera } from "../../cameras/Camera.js";
--import { Light } from "../../lights/Light";
-+import { Light } from "../../lights/Light.js";
- import LightsNode from "../../nodes/lighting/LightsNode.js";
--import { Scene } from "../../scenes/Scene.js";
- import ChainMap from "./ChainMap.js";
-+import { Object3D } from '../../core/Object3D.js';
- 
--declare class Lighting extends ChainMap<[Scene, Camera], LightsNode> {
-+declare class Lighting extends ChainMap<[Object3D, Camera], LightsNode> {
-     constructor();
- 
-     createNode(lights?: Light[]): LightsNode;
- 
--    getNode(scene: Scene, camera: Camera): LightsNode;
-+    getNode(scene: Object3D, camera: Camera): LightsNode;
- }
- 
- export default Lighting;
 diff --git a/src-testing/src/renderers/common/Pipeline.ts b/src-testing/src/renderers/common/Pipeline.ts
 index 16017455..16b5276c 100644
 --- a/src-testing/src/renderers/common/Pipeline.ts
