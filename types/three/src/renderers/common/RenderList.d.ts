@@ -5,6 +5,7 @@ import { Light } from "../../lights/Light.js";
 import { Material } from "../../materials/Material.js";
 import { LightsNode } from "../../nodes/Nodes.js";
 import BundleGroup from "./BundleGroup.js";
+import Lighting from "./Lighting.js";
 export interface Bundle {
     bundleGroup: BundleGroup;
     camera: Camera;
@@ -28,8 +29,10 @@ declare class RenderList {
     bundles: Bundle[];
     lightsNode: LightsNode;
     lightsArray: Light[];
+    scene: Object3D;
+    camera: Camera;
     occlusionQueryCount: number;
-    constructor();
+    constructor(lighting: Lighting, scene: Object3D, camera: Camera);
     begin(): this;
     getNextRenderItem(
         object: Object3D,
