@@ -6705,10 +6705,10 @@ index 520a3c91..524d188c 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index 15931016..2128aa79 100644
+index b6738b95..6c1eaf57 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-@@ -1,4 +1,21 @@
+@@ -1,12 +1,29 @@
 +import { Material } from '../../../materials/Material.js';
 +import NodeMaterial from '../../../materials/nodes/NodeMaterial.js';
 +import { ToneMapping } from '../../../constants.js';
@@ -6730,8 +6730,7 @@ index 15931016..2128aa79 100644
      constructor() {
          this.lightNodes = new WeakMap();
          this.materialNodes = new Map();
-@@ -6,8 +23,8 @@ class NodeLibrary {
-         this.colorSpaceNodes = new Map();
+         this.toneMappingNodes = new Map();
      }
  
 -    fromMaterial(material) {
@@ -6741,18 +6740,8 @@ index 15931016..2128aa79 100644
  
          let nodeMaterial = null;
  
-@@ -24,39 +41,52 @@ class NodeLibrary {
+@@ -23,31 +40,44 @@ class NodeLibrary {
          return nodeMaterial;
-     }
- 
--    addColorSpace(colorSpaceNode, colorSpace) {
-+    addColorSpace(colorSpaceNode: (color: NodeRepresentation) => ShaderNodeObject<Node>, colorSpace: ColorSpaceMethod) {
-         this.addType(colorSpaceNode, colorSpace, this.colorSpaceNodes);
-     }
- 
--    getColorSpaceFunction(colorSpace) {
-+    getColorSpaceFunction(colorSpace: ColorSpaceMethod) {
-         return this.colorSpaceNodes.get(colorSpace) || null;
      }
  
 -    addToneMapping(toneMappingNode, toneMapping) {
@@ -6804,7 +6793,7 @@ index 15931016..2128aa79 100644
          if (library.has(type)) {
              console.warn(`Redefinition of node ${type}`);
              return;
-@@ -69,7 +99,11 @@ class NodeLibrary {
+@@ -60,7 +90,11 @@ class NodeLibrary {
          library.set(type, nodeClass);
      }
  
