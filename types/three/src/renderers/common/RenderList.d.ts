@@ -25,6 +25,7 @@ declare class RenderList {
     renderItems: RenderItem[];
     renderItemsIndex: number;
     opaque: RenderItem[];
+    transparentDoublePass: RenderItem[];
     transparent: RenderItem[];
     bundles: Bundle[];
     lightsNode: LightsNode;

@@ -267,7 +267,20 @@ declare class Renderer {
     ): Promise<import("../../core/BufferAttribute.js").TypedArray>;
     _projectObject(object: Object3D, camera: Camera, groupOrder: number, renderList: RenderList): void;
     _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
-    _renderObjects(renderList: RenderItem[], camera: Camera, scene: Scene, lightsNode: LightsNode): void;
+    _renderTransparents(
+        renderList: RenderItem[],
+        doublePassList: RenderItem[],
+        camera: Camera,
+        scene: Scene,
+        lightsNode: LightsNode,
+    ): void;
+    _renderObjects(
+        renderList: RenderItem[],
+        camera: Camera,
+        scene: Scene,
+        lightsNode: LightsNode,
+        passId?: string | null,
+    ): void;
     renderObject(
         object: Object3D,
         scene: Scene,
@@ -276,6 +289,7 @@ declare class Renderer {
         material: Material,
         group: GeometryGroup,
         lightsNode: LightsNode,
+        passId?: string | null,
     ): void;
     _renderObjectDirect(
         object: Object3D,
