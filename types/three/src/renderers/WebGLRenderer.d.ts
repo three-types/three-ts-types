@@ -432,7 +432,10 @@ export class WebGLRenderer implements Renderer {
 
     /**
      * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
-     * position.
+     * position. The `depthTexture` and `texture` property of render targets are supported as well.
+     *
+     * When using render target textures as `srcTexture` and `dstTexture`, you must make sure both render targets are
+     * intitialized e.g. via {@link .initRenderTarget}().
      *
      * @param srcTexture Specifies the source texture.
      * @param dstTexture Specifies the destination texture.
@@ -450,7 +453,10 @@ export class WebGLRenderer implements Renderer {
 
     /**
      * Copies the pixels of a texture in the bounds `srcRegion` in the destination texture starting from the given
-     * position.
+     * position. The `depthTexture` and `texture` property of 3D render targets are supported as well.
+     *
+     * When using render target textures as `srcTexture` and `dstTexture`, you must make sure both render targets are
+     * intitialized e.g. via {@link .initRenderTarget}().
      *
      * @param srcTexture Specifies the source texture.
      * @param dstTexture Specifies the destination texture.
