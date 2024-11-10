@@ -169,6 +169,7 @@ declare class Renderer {
     get coordinateSystem(): import("../../constants.js").CoordinateSystem;
     compileAsync(scene: Object3D, camera: Camera, targetScene?: Object3D | null): Promise<void>;
     renderAsync(scene: Scene, camera: Camera): Promise<void>;
+    waitForGPU(): Promise<void>;
     setMRT(mrt: MRTNode | null): this;
     getMRT(): MRTNode | null;
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
