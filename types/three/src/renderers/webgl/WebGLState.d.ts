@@ -43,7 +43,7 @@ declare class StencilBuffer {
     reset(): void;
 }
 
-export class WebGLState {
+declare class WebGLState {
     constructor(gl: WebGLRenderingContext, extensions: WebGLExtensions);
 
     buffers: {
@@ -115,3 +115,5 @@ export class WebGLState {
     viewport(viewport: Vector4): void;
     reset(): void;
 }
+
+export { WebGLState };
