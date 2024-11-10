@@ -91,6 +91,12 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      */
     get maxInstanceCount(): number;
 
+    get instanceCount(): number;
+
+    get unusedVertexCount(): number;
+
+    get unusedIndexCount(): number;
+
     /**
      * Read-only flag to check if a given object is of type {@link BatchedMesh}.
      */
