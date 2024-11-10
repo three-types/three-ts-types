@@ -182,6 +182,7 @@ export interface WebGLProgramParameters {
     toneMapping: ToneMapping;
 
     decodeVideoTexture: boolean;
+    decodeVideoTextureEmissive: boolean;
 
     premultipliedAlpha: boolean;
 
