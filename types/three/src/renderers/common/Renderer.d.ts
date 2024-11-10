@@ -24,6 +24,7 @@ import Bindings from "./Bindings.js";
 import Color4 from "./Color4.js";
 import Geometries from "./Geometries.js";
 import Info from "./Info.js";
+import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
 import Nodes from "./nodes/Nodes.js";
 import Pipelines from "./Pipelines.js";
@@ -70,9 +71,8 @@ declare class Renderer {
     stencil: boolean;
     clippingPlanes: readonly Plane[];
     info: Info;
-    nodes: {
-        library: NodeLibrary;
-    };
+    library: NodeLibrary;
+    lighting: Lighting;
     _getFallback: ((error: unknown) => Backend) | null;
     _pixelRatio: number;
     _width: number;
