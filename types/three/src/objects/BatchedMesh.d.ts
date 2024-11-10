@@ -7,6 +7,17 @@ import { Matrix4 } from "../math/Matrix4.js";
 import { Sphere } from "../math/Sphere.js";
 import { Mesh } from "./Mesh.js";
 
+export interface BatchedMeshGeometryRange {
+    vertexStart: number;
+    vertexCount: number;
+    reservedVertexCount: number;
+    indexStart: number;
+    indexCount: number;
+    reservedIndexCount: number;
+    start: number;
+    count: number;
+}
+
 /**
  * A special version of {@link Mesh} with multi draw batch rendering support. Use {@link BatchedMesh} if you have to
  * render a large number of objects with the same material but with different world transformations. The  usage of
@@ -151,8 +162,8 @@ declare class BatchedMesh extends Mesh<BufferGeometry, Material> {
      */
     getGeometryRangeAt(
         geometryId: number,
-        target?: { start: number; count: number },
-    ): { start: number; count: number } | null;
+        target?: BatchedMeshGeometryRange,
+    ): BatchedMeshGeometryRange | null;
 
     /**
      * Get the geometryIndex of the defined instance.
