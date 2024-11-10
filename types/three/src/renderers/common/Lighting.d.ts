@@ -1,8 +1,8 @@
 import { Camera } from "../../cameras/Camera.js";
+import { Object3D } from "../../core/Object3D.js";
 import { Light } from "../../lights/Light.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import ChainMap from "./ChainMap.js";
-import { Object3D } from '../../core/Object3D.js';
 
 declare class Lighting extends ChainMap<[Object3D, Camera], LightsNode> {
     constructor();
