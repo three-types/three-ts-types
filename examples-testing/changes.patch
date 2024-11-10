@@ -1148,19 +1148,19 @@ index f4a189bb..1cd5fb27 100644
      const link = document.createElement('a');
  
 diff --git a/examples-testing/examples/misc_exporter_gltf.ts b/examples-testing/examples/misc_exporter_gltf.ts
-index fda0d4df..12e45bf4 100644
+index 323c5c49..faef7421 100644
 --- a/examples-testing/examples/misc_exporter_gltf.ts
 +++ b/examples-testing/examples/misc_exporter_gltf.ts
-@@ -6,7 +6,7 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
- import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+@@ -7,7 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import * as TextureUtils from 'three/addons/utils/WebGLTextureUtils.js';
  
 -function exportGLTF(input) {
 +function exportGLTF(input: THREE.Object3D | THREE.Object3D[]) {
-     const gltfExporter = new GLTFExporter();
+     const gltfExporter = new GLTFExporter().setTextureUtils(TextureUtils);
  
      const options = {
-@@ -37,7 +37,7 @@ const link = document.createElement('a');
+@@ -38,7 +38,7 @@ const link = document.createElement('a');
  link.style.display = 'none';
  document.body.appendChild(link); // Firefox workaround, see #6594
  
@@ -1169,7 +1169,7 @@ index fda0d4df..12e45bf4 100644
      link.href = URL.createObjectURL(blob);
      link.download = filename;
      link.click();
-@@ -45,18 +45,25 @@ function save(blob, filename) {
+@@ -46,18 +46,25 @@ function save(blob, filename) {
      // URL.revokeObjectURL( url ); breaks Firefox...
  }
  
@@ -1200,7 +1200,7 @@ index fda0d4df..12e45bf4 100644
  
  const params = {
      trs: false,
-@@ -387,8 +394,8 @@ function init() {
+@@ -388,8 +395,8 @@ function init() {
      const color = new THREE.Color();
      for (let i = 0; i < 50; i++) {
          matrix.setPosition(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
@@ -6124,7 +6124,7 @@ index b841fa6b..f3051618 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_lights_spotlight.ts b/examples-testing/examples/webgl_lights_spotlight.ts
-index 894abaf6..342a70fb 100644
+index 43f70706..9668964e 100644
 --- a/examples-testing/examples/webgl_lights_spotlight.ts
 +++ b/examples-testing/examples/webgl_lights_spotlight.ts
 @@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6148,7 +6148,7 @@ index 894abaf6..342a70fb 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -155,8 +155,8 @@ function init() {
+@@ -156,8 +156,8 @@ function init() {
          renderer.shadowMap.enabled = val;
  
          scene.traverse(function (child) {
@@ -8600,7 +8600,7 @@ index d23c6843..5a190fab 100644
  
  function onWindowResize() {
 diff --git a/examples-testing/examples/webgl_materials_texture_filters.ts b/examples-testing/examples/webgl_materials_texture_filters.ts
-index 178c2ce4..fb67cabe 100644
+index 77b25468..b2ccb769 100644
 --- a/examples-testing/examples/webgl_materials_texture_filters.ts
 +++ b/examples-testing/examples/webgl_materials_texture_filters.ts
 @@ -3,9 +3,9 @@ import * as THREE from 'three';
@@ -8624,7 +8624,7 @@ index 178c2ce4..fb67cabe 100644
  
      imageCanvas.width = imageCanvas.height = 128;
  
-@@ -85,7 +85,7 @@ function init() {
+@@ -86,7 +86,7 @@ function init() {
          addPainting(scene, mesh);
          addPainting(scene2, mesh2);
  
@@ -8633,7 +8633,7 @@ index 178c2ce4..fb67cabe 100644
              zmesh.scale.x = image.width / 100;
              zmesh.scale.y = image.height / 100;
  
-@@ -140,7 +140,7 @@ function init() {
+@@ -141,7 +141,7 @@ function init() {
      document.addEventListener('mousemove', onDocumentMouseMove);
  }
  
@@ -10390,7 +10390,7 @@ index 4f16d155..ff12d709 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_masking.ts b/examples-testing/examples/webgl_postprocessing_masking.ts
-index f6e7310b..598a33dc 100644
+index a4d09866..238c37da 100644
 --- a/examples-testing/examples/webgl_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgl_postprocessing_masking.ts
 @@ -6,8 +6,8 @@ import { ClearPass } from 'three/addons/postprocessing/ClearPass.js';
@@ -12944,7 +12944,7 @@ index d846e144..85bcff4c 100644
      // Parameters for circular movement
      const radius = 5; // Smaller radius for individual circular movements
 diff --git a/examples-testing/examples/webgl_video_kinect.ts b/examples-testing/examples/webgl_video_kinect.ts
-index 4f0e2f11..7b4a3fab 100644
+index 8abc9391..dd637649 100644
 --- a/examples-testing/examples/webgl_video_kinect.ts
 +++ b/examples-testing/examples/webgl_video_kinect.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -12969,7 +12969,7 @@ index 4f0e2f11..7b4a3fab 100644
  
      const texture = new THREE.VideoTexture(video);
      texture.minFilter = THREE.NearestFilter;
-@@ -56,8 +56,8 @@ function init() {
+@@ -57,8 +57,8 @@ function init() {
              pointSize: { value: 2 },
              zOffset: { value: 1000 },
          },
@@ -12980,7 +12980,7 @@ index 4f0e2f11..7b4a3fab 100644
          blending: THREE.AdditiveBlending,
          depthTest: false,
          depthWrite: false,
-@@ -99,7 +99,7 @@ function onWindowResize() {
+@@ -100,7 +100,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -13764,7 +13764,7 @@ index 5638c902..a274a953 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 7b7249ec..1d3c11bb 100644
+index 414efb41..886afc93 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -1,8 +1,9 @@
@@ -13819,7 +13819,7 @@ index 7b7249ec..1d3c11bb 100644
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
          light.power = power;
-@@ -157,8 +158,7 @@ function init() {
+@@ -156,8 +157,7 @@ function init() {
  function updatePostProcessing() {
      // tile indexes debug, needs to be updated every time the renderer size changes
  
@@ -15058,7 +15058,7 @@ index e5cd0791..8a310a42 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index a4f56b17..ce7e7ad3 100644
+index fc87be20..54310173 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -1,8 +1,8 @@
@@ -15074,7 +15074,7 @@ index a4f56b17..ce7e7ad3 100644
  
  init();
  
-@@ -50,7 +50,7 @@ function init() {
+@@ -51,7 +51,7 @@ function init() {
      const sceneMask1 = pass(maskScene1, camera).a;
      const sceneMask2 = pass(maskScene2, camera).a;
  
@@ -15120,7 +15120,7 @@ index 14e45012..b4bdcf2f 100644
                  child.receiveShadow = true;
              }
 diff --git a/examples-testing/examples/webgpu_postprocessing_outline.ts b/examples-testing/examples/webgpu_postprocessing_outline.ts
-index 55a91329..ac77cc1b 100644
+index d25c12c5..a74590cf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_outline.ts
 @@ -1,6 +1,6 @@
@@ -15149,7 +15149,7 @@ index 55a91329..ac77cc1b 100644
  
  const raycaster = new THREE.Raycaster();
  const mouse = new THREE.Vector2();
-@@ -188,7 +188,7 @@ function init() {
+@@ -196,7 +196,7 @@ function init() {
      renderer.domElement.style.touchAction = 'none';
      renderer.domElement.addEventListener('pointermove', onPointerMove);
  
@@ -15158,7 +15158,7 @@ index 55a91329..ac77cc1b 100644
          if (event.isPrimary === false) return;
  
          mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-@@ -197,7 +197,7 @@ function init() {
+@@ -205,7 +205,7 @@ function init() {
          checkIntersection();
      }
  
