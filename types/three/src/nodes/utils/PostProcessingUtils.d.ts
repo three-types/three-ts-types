@@ -28,3 +28,18 @@ export const getScreenPosition: (
     viewPosition: NodeRepresentation,
     projectionMatrix: NodeRepresentation,
 ) => ShaderNodeObject<Node>;
+
+/**
+ * Computes a normal vector based on depth data. Can be used as a fallback when no normal render target is available or
+ * if flat surface normals are required.
+ *
+ * @param {vec2} uv - The texture coordinate.
+ * @param {DepthTexture} depthTexture - The depth texture.
+ * @param {mat4} projectionMatrixInverse - The camera's inverse projection matrix.
+ * @return {vec3} The computed normal vector.
+ */
+export const getNormalFromDepth: (
+    uv: NodeRepresentation,
+    depthTexture: NodeRepresentation,
+    projectionMatrixInverse: NodeRepresentation,
+) => ShaderNodeObject<Node>;
