@@ -1,4 +1,4 @@
-import { Camera, Light, LightShadow, Object3D } from "three";
+import { Camera, DirectionalLightShadow, Light, Object3D } from "three";
 import { Node } from "three/tsl";
 import { CSMFrustum } from "./CSMFrustum.js";
 
@@ -16,7 +16,7 @@ export interface CSMShadowNodeData {
 
 declare class LwLight extends Object3D {
     target: Object3D;
-    shadow?: LightShadow;
+    shadow?: DirectionalLightShadow;
 
     constructor();
 }
