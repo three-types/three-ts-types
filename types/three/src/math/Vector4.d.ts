@@ -1,6 +1,7 @@
 import { BufferAttribute } from "../core/BufferAttribute.js";
 import { Matrix4 } from "./Matrix4.js";
 import { QuaternionLike } from "./Quaternion.js";
+import { Vector3Like } from './Vector3.js';
 
 export type Vector4Tuple = [number, number, number, number];
 
@@ -118,6 +119,8 @@ export class Vector4 {
     multiplyScalar(s: number): this;
 
     applyMatrix4(m: Matrix4): this;
+
+    divide(v: Vector4Like): this;
 
     /**
      * Divides this vector by scalar s.
