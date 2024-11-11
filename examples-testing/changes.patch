@@ -15599,7 +15599,7 @@ index 4ce8b0a7..d41bc6f4 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_shadowmap_csm.ts b/examples-testing/examples/webgpu_shadowmap_csm.ts
-index fae69709..4460d46f 100644
+index fae69709..c503e42a 100644
 --- a/examples-testing/examples/webgpu_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_csm.ts
 @@ -1,13 +1,34 @@
@@ -15642,6 +15642,37 @@ index fae69709..4460d46f 100644
      orthographic: false,
      fade: false,
      shadows: true,
+@@ -87,8 +108,6 @@ function init() {
+ 
+     csmDirectionalLight.position.set(params.lightX, params.lightY, params.lightZ).normalize().multiplyScalar(-200);
+ 
+-    csmDirectionalLight.shadow.shadowNode = csm;
+-
+     scene.add(csmDirectionalLight);
+ 
+     csmHelper = new CSMHelper(csm);
+@@ -196,8 +215,8 @@ function init() {
+         .name('shadow near')
+         .onChange(function (value) {
+             for (let i = 0; i < csm.lights.length; i++) {
+-                csm.lights[i].shadow.camera.near = value;
+-                csm.lights[i].shadow.camera.updateProjectionMatrix();
++                csm.lights[i].shadow!.camera.near = value;
++                csm.lights[i].shadow!.camera.updateProjectionMatrix();
+             }
+         });
+ 
+@@ -205,8 +224,8 @@ function init() {
+         .name('shadow far')
+         .onChange(function (value) {
+             for (let i = 0; i < csm.lights.length; i++) {
+-                csm.lights[i].shadow.camera.far = value;
+-                csm.lights[i].shadow.camera.updateProjectionMatrix();
++                csm.lights[i].shadow!.camera.far = value;
++                csm.lights[i].shadow!.camera.updateProjectionMatrix();
+             }
+         });
+ 
 diff --git a/examples-testing/examples/webgpu_shadowmap_progressive.ts b/examples-testing/examples/webgpu_shadowmap_progressive.ts
 index 5290c670..3bf0ecf6 100644
 --- a/examples-testing/examples/webgpu_shadowmap_progressive.ts
