@@ -1,4 +1,4 @@
-import { Camera, Light, Object3D } from "three";
+import { Camera, Light, LightShadow, Object3D } from "three";
 import { Node } from "three/tsl";
 import { CSMFrustum } from "./CSMFrustum.js";
 
@@ -12,6 +12,13 @@ export interface CSMShadowNodeData {
     customSplitsCallback?:
         | ((cascades: number, cameraNear: number, cameraFar: number, breaks: number[]) => void)
         | undefined;
+}
+
+declare class LwLight extends Object3D {
+    target: Object3D;
+    shadow?: LightShadow;
+
+    constructor();
 }
 
 declare class CSMShadowNode extends Node {
@@ -29,9 +36,11 @@ declare class CSMShadowNode extends Node {
     mainFrustum: CSMFrustum | null;
     frustums: CSMFrustum[];
 
-    lights: Object3D[];
+    lights: LwLight[];
 
     constructor(light: Light, data?: CSMShadowNodeData);
+
+    updateFrustums(): void;
 }
 
 export { CSMShadowNode };
