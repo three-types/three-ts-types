@@ -12711,7 +12711,7 @@ index 977dbadb..fb1460ca 100644
      material.uniforms['u_renderthreshold'].value = volconfig.isothreshold; // For ISO renderstyle
      material.uniforms['u_cmdata'].value = cmtextures[volconfig.colormap];
 diff --git a/examples-testing/examples/webgl_texture3d_partialupdate.ts b/examples-testing/examples/webgl_texture3d_partialupdate.ts
-index 1ad6d264..10b32582 100644
+index 58615db8..1ae4e437 100644
 --- a/examples-testing/examples/webgl_texture3d_partialupdate.ts
 +++ b/examples-testing/examples/webgl_texture3d_partialupdate.ts
 @@ -6,14 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -12746,8 +12746,8 @@ index 1ad6d264..10b32582 100644
          const scaleFactor = (Math.random() + 0.5) * 0.5;
          const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
  
--        renderer.copyTextureToTexture3D(source, cloudTexture, box, position);
-+        renderer.copyTextureToTexture3D(source, cloudTexture!, box, position);
+-        renderer.copyTextureToTexture(source, cloudTexture, box, position);
++        renderer.copyTextureToTexture(source, cloudTexture!, box, position);
  
          prevTime = time;
  
@@ -13764,7 +13764,7 @@ index 5638c902..a274a953 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 414efb41..886afc93 100644
+index ed195757..7ee84406 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -1,8 +1,9 @@
@@ -13814,12 +13814,12 @@ index 414efb41..886afc93 100644
      lights = new THREE.Group();
      scene.add(lights);
  
--    const addLight = (hexColor, power = 10000, distance = 3) => {
-+    const addLight = (hexColor: THREE.ColorRepresentation, power = 10000, distance = 3) => {
+-    const addLight = (hexColor, power = 10, distance = 3) => {
++    const addLight = (hexColor: THREE.ColorRepresentation, power = 10, distance = 3) => {
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
          light.power = power;
-@@ -156,8 +157,7 @@ function init() {
+@@ -154,8 +155,7 @@ function init() {
  function updatePostProcessing() {
      // tile indexes debug, needs to be updated every time the renderer size changes
  
