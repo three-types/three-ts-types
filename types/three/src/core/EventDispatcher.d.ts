@@ -40,6 +40,27 @@ export type EventListener<TEventData, TEventType extends string, TTarget> = (
  */
 export class EventDispatcher<TEventMap extends {} = {}> {
     /**
+     * Maps event types to the list of their listeners.
+     * Only initialized when a listener is added.
+     * Event type entries are created when their first listener is added.
+     *
+     * @example
+     * ```typescript
+     * type MyDisp = EventDispatcher<{ a: { b: number }, c: { d: string } }>;
+     * const disp = new MyDisp();
+     * // typeof disp._listeners ==
+     * //     | undefined
+     * //     | {
+     * //         a?: EventListener<{ b: number }, 'a', this>[],
+     * //         c?: EventListener<{ d: string }, 'c', this>[],
+     * //     };
+     * ```
+     */
+    protected _listeners?: {
+        [Type in Extract<keyof TEventMap, string>]?: EventListener<TEventMap[Type], Type, this>[]
+    };
+
+    /**
      * Creates {@link THREE.EventDispatcher | EventDispatcher} object.
      */
     constructor();
