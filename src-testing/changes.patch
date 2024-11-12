@@ -5069,7 +5069,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index a1a3663e..7b57a284 100644
+index 8cca7359..ed778bba 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,35 @@ import {
@@ -5822,10 +5822,10 @@ index a1a3663e..7b57a284 100644
  
 -    copyFramebufferToTexture(framebufferTexture, rectangle = null) {
 +    copyFramebufferToTexture(framebufferTexture: FramebufferTexture, rectangle: Rectangle | null = null) {
-         const renderContext = this._currentRenderContext;
- 
-         this._textures.updateTexture(framebufferTexture);
-@@ -1125,54 +1327,68 @@ class Renderer {
+         if (rectangle !== null) {
+             if (rectangle.isVector2) {
+                 rectangle = _vector4
+@@ -1153,54 +1355,68 @@ class Renderer {
          this.backend.copyFramebufferToTexture(framebufferTexture, renderContext, rectangle);
      }
  
@@ -5911,7 +5911,7 @@ index a1a3663e..7b57a284 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1182,7 +1398,7 @@ class Renderer {
+@@ -1210,7 +1426,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -5920,7 +5920,7 @@ index a1a3663e..7b57a284 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(object, geometry, groupMaterial, groupOrder, _vector4.z, group);
-@@ -1199,7 +1415,7 @@ class Renderer {
+@@ -1227,7 +1443,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -5929,7 +5929,7 @@ index a1a3663e..7b57a284 100644
  
              renderList.begin();
  
-@@ -1219,13 +1435,19 @@ class Renderer {
+@@ -1247,13 +1463,19 @@ class Renderer {
          }
      }
  
@@ -5951,7 +5951,7 @@ index a1a3663e..7b57a284 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -1253,7 +1475,13 @@ class Renderer {
+@@ -1281,7 +1503,13 @@ class Renderer {
          }
      }
  
@@ -5966,7 +5966,7 @@ index a1a3663e..7b57a284 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1264,43 +1492,61 @@ class Renderer {
+@@ -1292,43 +1520,61 @@ class Renderer {
  
              const { object, geometry, material, group } = renderItem;
  
@@ -6039,7 +6039,7 @@ index a1a3663e..7b57a284 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1385,14 +1631,22 @@ class Renderer {
+@@ -1413,14 +1659,22 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -6065,7 +6065,7 @@ index a1a3663e..7b57a284 100644
              passId,
          );
          renderObject.drawRange = object.geometry.drawRange;
-@@ -1400,18 +1654,18 @@ class Renderer {
+@@ -1428,18 +1682,18 @@ class Renderer {
  
          //
  
@@ -6090,7 +6090,7 @@ index a1a3663e..7b57a284 100644
  
          //
  
-@@ -1425,32 +1679,39 @@ class Renderer {
+@@ -1453,32 +1707,39 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -6255,7 +6255,7 @@ index ef5d3e46..fb6acc45 100644
  
          this.attribute = attribute;
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 8d35f664..89e87264 100644
+index 32d88fb9..5d3bdfad 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -13,11 +13,56 @@ import {
@@ -6336,7 +6336,7 @@ index 8d35f664..89e87264 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -240,7 +285,7 @@ class Textures extends DataMap {
+@@ -239,7 +284,7 @@ class Textures extends DataMap {
          textureData.version = texture.version;
      }
  
@@ -6345,7 +6345,7 @@ index 8d35f664..89e87264 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -248,18 +293,18 @@ class Textures extends DataMap {
+@@ -247,18 +292,18 @@ class Textures extends DataMap {
  
              target.width = image.width;
              target.height = image.height;
@@ -6368,7 +6368,7 @@ index 8d35f664..89e87264 100644
              mipLevelCount = texture.mipmaps.length;
          } else {
              mipLevelCount = Math.floor(Math.log2(Math.max(width, height))) + 1;
-@@ -268,11 +313,15 @@ class Textures extends DataMap {
+@@ -267,11 +312,15 @@ class Textures extends DataMap {
          return mipLevelCount;
      }
  
@@ -6387,7 +6387,7 @@ index 8d35f664..89e87264 100644
          const mapping = texture.mapping;
  
          return (
-@@ -283,7 +332,7 @@ class Textures extends DataMap {
+@@ -282,7 +331,7 @@ class Textures extends DataMap {
          );
      }
  
@@ -7774,7 +7774,7 @@ index b1e72064..40f26bf1 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 930197a0..1760e4b2 100644
+index 38c2da10..1600e40b 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -968,7 +968,7 @@ class WebGPUBackend extends Backend {
