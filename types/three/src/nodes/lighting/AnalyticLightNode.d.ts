@@ -2,7 +2,7 @@ import { Light } from "../../lights/Light.js";
 import Node from "../core/Node.js";
 import LightingNode from "./LightingNode.js";
 
-declare module "../../lights/LightingNode.js" {
+declare module "../../lights/LightShadow.js" {
     export interface LightShadow {
         shadowNode?: Node;
     }
