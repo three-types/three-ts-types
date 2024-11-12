@@ -2,17 +2,17 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let mesh;
+let mesh: THREE.Mesh;
 
 init();
 animate();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -117,8 +117,8 @@ function init() {
         colors.push(color.r, color.g, color.b, alpha);
     }
 
-    function disposeArray() {
-        this.array = null;
+    function disposeArray(this: THREE.BufferAttribute) {
+        this.array = null as unknown as THREE.TypedArray;
     }
 
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3).onUpload(disposeArray));
