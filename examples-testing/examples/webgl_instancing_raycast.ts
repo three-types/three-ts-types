@@ -4,13 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    controls: OrbitControls,
-    stats: Stats;
+let camera, scene, renderer, controls, stats;
 
-let mesh: THREE.InstancedMesh;
+let mesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
 const count = Math.pow(amount, 3);
 
@@ -88,7 +84,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onMouseMove(event: MouseEvent) {
+function onMouseMove(event) {
     event.preventDefault();
 
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -103,14 +99,14 @@ function animate() {
     const intersection = raycaster.intersectObject(mesh);
 
     if (intersection.length > 0) {
-        const instanceId = intersection[0].instanceId!;
+        const instanceId = intersection[0].instanceId;
 
         mesh.getColorAt(instanceId, color);
 
         if (color.equals(white)) {
             mesh.setColorAt(instanceId, color.setHex(Math.random() * 0xffffff));
 
-            mesh.instanceColor!.needsUpdate = true;
+            mesh.instanceColor.needsUpdate = true;
         }
     }
 

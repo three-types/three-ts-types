@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-const container = document.querySelector('#container')!;
+const container = document.querySelector('#container');
 
 // Configure and create Draco decoder.
 const dracoLoader = new DRACOLoader();

@@ -7,12 +7,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DecalGeometry } from 'three/addons/geometries/DecalGeometry.js';
 
-const container = document.getElementById('container')!;
+const container = document.getElementById('container');
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
-let mesh: THREE.Mesh;
-let raycaster: THREE.Raycaster;
-let line: THREE.Line;
+let renderer, scene, camera, stats;
+let mesh;
+let raycaster;
+let line;
 
 const intersection = {
     intersects: false,
@@ -20,7 +20,7 @@ const intersection = {
     normal: new THREE.Vector3(),
 };
 const mouse = new THREE.Vector2();
-const intersects: THREE.Intersection[] = [];
+const intersects = [];
 
 const textureLoader = new THREE.TextureLoader();
 const decalDiffuse = textureLoader.load('textures/decal/decal-diffuse.png');
@@ -41,8 +41,8 @@ const decalMaterial = new THREE.MeshPhongMaterial({
     wireframe: false,
 });
 
-const decals: THREE.Mesh[] = [];
-let mouseHelper: THREE.Mesh;
+const decals = [];
+let mouseHelper;
 const position = new THREE.Vector3();
 const orientation = new THREE.Euler();
 const size = new THREE.Vector3(10, 10, 10);
@@ -123,13 +123,13 @@ function init() {
 
     window.addEventListener('pointermove', onPointerMove);
 
-    function onPointerMove(event: PointerEvent) {
+    function onPointerMove(event) {
         if (event.isPrimary) {
             checkIntersection(event.clientX, event.clientY);
         }
     }
 
-    function checkIntersection(x: number, y: number) {
+    function checkIntersection(x, y) {
         if (mesh === undefined) return;
 
         mouse.x = (x / window.innerWidth) * 2 - 1;
@@ -145,12 +145,12 @@ function init() {
 
             const normalMatrix = new THREE.Matrix3().getNormalMatrix(mesh.matrixWorld);
 
-            const n = intersects[0].face!.normal.clone();
+            const n = intersects[0].face.normal.clone();
             n.applyNormalMatrix(normalMatrix);
             n.multiplyScalar(10);
             n.add(intersects[0].point);
 
-            intersection.normal.copy(intersects[0].face!.normal);
+            intersection.normal.copy(intersects[0].face.normal);
             mouseHelper.lookAt(n);
 
             const positions = line.geometry.attributes.position;
@@ -184,7 +184,7 @@ function loadLeePerrySmith() {
     const loader = new GLTFLoader();
 
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        mesh = gltf.scene.children[0] as THREE.Mesh;
+        mesh = gltf.scene.children[0];
         mesh.material = new THREE.MeshPhongMaterial({
             specular: 0x111111,
             map: map,

@@ -8,7 +8,7 @@ let mouseX = 0,
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 
@@ -110,7 +110,7 @@ function init() {
     const scale = 0.3,
         d = 225;
 
-    const parameters: [THREE.Material, number, [number, number, number], THREE.BufferGeometry][] = [
+    const parameters = [
         [material, scale * 1.5, [-d, -d / 2, 0], geometry1],
         [material, scale * 1.5, [0, -d / 2, 0], geometry2],
         [material, scale * 1.5, [d, -d / 2, 0], geometry3],
@@ -152,7 +152,7 @@ function onWindowResize() {
 
 //
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;
@@ -172,7 +172,7 @@ function animate() {
     for (let i = 0; i < scene.children.length; i++) {
         const object = scene.children[i];
 
-        if ((object as THREE.Line).isLine) {
+        if (object.isLine) {
             object.rotation.y = time * (i % 2 ? 1 : -1);
         }
     }

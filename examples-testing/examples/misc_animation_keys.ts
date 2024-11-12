@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let stats: Stats, clock: THREE.Clock;
-let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+let stats, clock;
+let scene, camera, renderer, mixer;
 
 init();
 
@@ -24,10 +24,7 @@ function init() {
     //
 
     const geometry = new THREE.BoxGeometry(5, 5, 5);
-    const material = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-    });
+    const material = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true });
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 

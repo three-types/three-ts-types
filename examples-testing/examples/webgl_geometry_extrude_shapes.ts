@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: TrackballControls;
+let camera, scene, renderer, controls;
 
 init();
 
@@ -13,7 +13,7 @@ function init() {
     info.style.width = '100%';
     info.style.textAlign = 'center';
     info.style.color = '#fff';
-    (info.style as any).link = '#f80';
+    info.style.link = '#f80';
     info.innerHTML =
         '<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - geometry extrude shapes';
     document.body.appendChild(info);

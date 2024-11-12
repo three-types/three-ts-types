@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let stats: Stats;
-let camera: THREE.OrthographicCamera, scene: THREE.Scene, raycaster: THREE.Raycaster, renderer: THREE.WebGLRenderer;
+let stats;
+let camera, scene, raycaster, renderer;
 
 let theta = 0;
-let INTERSECTED: (THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial> & { currentHex?: number }) | null;
+let INTERSECTED;
 
 const pointer = new THREE.Vector2();
 const radius = 25;
@@ -83,7 +83,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
@@ -113,14 +113,14 @@ function render() {
 
     if (intersects.length > 0) {
         if (INTERSECTED != intersects[0].object) {
-            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+            if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
 
-            INTERSECTED = intersects[0].object as THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>;
+            INTERSECTED = intersects[0].object;
             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
             INTERSECTED.material.emissive.setHex(0xff0000);
         }
     } else {
-        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex!);
+        if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
 
         INTERSECTED = null;
     }
