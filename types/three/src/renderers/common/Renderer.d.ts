@@ -43,6 +43,12 @@ interface Rectangle {
     z: number;
     w: number;
 }
+interface DeviceLostInfo {
+    api: "WebGL" | "WebGPU";
+    message: string;
+    reason: string | null;
+    originalEvent: unknown;
+}
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
@@ -136,6 +142,8 @@ declare class Renderer {
         group: GeometryGroup,
         passId?: string,
     ) => void;
+    _isDeviceLost: boolean;
+    onDeviceLost: (info: DeviceLostInfo) => void;
     _initialized: boolean;
     _initPromise: Promise<void> | null;
     _compilationPromises: Promise<void>[] | null;
@@ -172,10 +180,11 @@ declare class Renderer {
     waitForGPU(): Promise<void>;
     setMRT(mrt: MRTNode | null): this;
     getMRT(): MRTNode | null;
+    _onDeviceLost(info: DeviceLostInfo): void;
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
     render(scene: Scene, camera: Camera): Promise<void> | undefined;
     _getFrameBufferTarget(): RenderTarget<Texture> | null;
-    _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext;
+    _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext | undefined;
     getMaxAnisotropy(): number;
     getActiveCubeFace(): number;
     getActiveMipmapLevel(): number;
