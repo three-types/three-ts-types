@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index 8ab1a6d6..dab659ab 100644
+index d25cf47f..640ec98d 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,10 @@
@@ -67,7 +67,7 @@ index 8ab1a6d6..dab659ab 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -106,8 +136,8 @@ class NodeMaterialObserver {
+@@ -113,8 +143,8 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -78,7 +78,7 @@ index 8ab1a6d6..dab659ab 100644
  
          for (const name in attributes) {
              const attribute = attributes[name];
-@@ -120,7 +150,7 @@ class NodeMaterialObserver {
+@@ -127,7 +157,7 @@ class NodeMaterialObserver {
          return attributesData;
      }
  
@@ -87,7 +87,7 @@ index 8ab1a6d6..dab659ab 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -133,8 +163,8 @@ class NodeMaterialObserver {
+@@ -140,8 +170,8 @@ class NodeMaterialObserver {
          return false;
      }
  
@@ -98,7 +98,7 @@ index 8ab1a6d6..dab659ab 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -155,7 +185,7 @@ class NodeMaterialObserver {
+@@ -162,7 +192,7 @@ class NodeMaterialObserver {
          return data;
      }
  
@@ -107,7 +107,7 @@ index 8ab1a6d6..dab659ab 100644
          const { object, material, geometry } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -280,7 +310,7 @@ class NodeMaterialObserver {
+@@ -298,7 +328,7 @@ class NodeMaterialObserver {
          return true;
      }
  
@@ -3246,10 +3246,10 @@ index edd4fcf9..28f354e9 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index b56dd372..c9935ed7 100644
+index 39d66fd0..e12e4cb1 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
-@@ -13,18 +13,33 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
+@@ -14,18 +14,33 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
  import { Mesh } from '../../objects/Mesh.js';
  import { SphereGeometry } from '../../geometries/SphereGeometry.js';
  import { BackSide, LinearSRGBColorSpace } from '../../constants.js';
@@ -6982,18 +6982,18 @@ index d2d92cb2..c022f814 100644
          for (const uniform of this.uniforms) {
              const node = uniform.nodeUniform.node;
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index f409c2b1..bb53c090 100644
+index 3b16e861..99874f36 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
-@@ -15,6 +15,7 @@ import {
-     normalWorld,
+@@ -14,6 +14,7 @@ import {
+     reference,
      pmremTexture,
      screenUV,
 +    ShaderNodeObject,
  } from '../../../nodes/TSL.js';
  
  import {
-@@ -23,11 +24,71 @@ import {
+@@ -22,11 +23,71 @@ import {
      EquirectangularRefractionMapping,
  } from '../../../constants.js';
  import { hashArray } from '../../../nodes/core/NodeUtils.js';
@@ -7067,7 +7067,7 @@ index f409c2b1..bb53c090 100644
          super();
  
          this.renderer = renderer;
-@@ -38,7 +99,7 @@ class Nodes extends DataMap {
+@@ -37,7 +98,7 @@ class Nodes extends DataMap {
          this.groupsData = new ChainMap();
      }
  
@@ -7076,7 +7076,7 @@ index f409c2b1..bb53c090 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -78,7 +139,7 @@ class Nodes extends DataMap {
+@@ -77,7 +138,7 @@ class Nodes extends DataMap {
  
          // other groups are updated just when groupNode.needsUpdate is true
  
@@ -7085,7 +7085,7 @@ index f409c2b1..bb53c090 100644
  
          let groupData = this.groupsData.get(groupChain);
          if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -92,11 +153,11 @@ class Nodes extends DataMap {
+@@ -91,11 +152,11 @@ class Nodes extends DataMap {
          return false;
      }
  
@@ -7099,7 +7099,7 @@ index f409c2b1..bb53c090 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -133,20 +194,20 @@ class Nodes extends DataMap {
+@@ -132,20 +193,20 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -7125,7 +7125,7 @@ index f409c2b1..bb53c090 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -163,7 +224,7 @@ class Nodes extends DataMap {
+@@ -162,7 +223,7 @@ class Nodes extends DataMap {
          return nodeBuilderState;
      }
  
@@ -7134,7 +7134,7 @@ index f409c2b1..bb53c090 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -178,20 +239,20 @@ class Nodes extends DataMap {
+@@ -177,20 +238,20 @@ class Nodes extends DataMap {
          );
      }
  
@@ -7160,7 +7160,7 @@ index f409c2b1..bb53c090 100644
          const callId = this.renderer.info.calls;
  
          let cacheKeyData = this.callHashCache.get(chain);
-@@ -219,7 +280,7 @@ class Nodes extends DataMap {
+@@ -218,7 +279,7 @@ class Nodes extends DataMap {
          return cacheKeyData.cacheKey;
      }
  
@@ -7169,7 +7169,7 @@ index f409c2b1..bb53c090 100644
          this.updateEnvironment(scene);
          this.updateFog(scene);
          this.updateBackground(scene);
-@@ -229,7 +290,7 @@ class Nodes extends DataMap {
+@@ -228,7 +289,7 @@ class Nodes extends DataMap {
          return this.renderer.getRenderTarget() ? false : true;
      }
  
@@ -7178,7 +7178,7 @@ index f409c2b1..bb53c090 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -242,7 +303,7 @@ class Nodes extends DataMap {
+@@ -241,7 +302,7 @@ class Nodes extends DataMap {
                  let backgroundNode = null;
  
                  if (
@@ -7187,7 +7187,7 @@ index f409c2b1..bb53c090 100644
                      background.mapping === EquirectangularReflectionMapping ||
                      background.mapping === EquirectangularRefractionMapping ||
                      background.mapping === CubeUVReflectionMapping
-@@ -252,18 +313,18 @@ class Nodes extends DataMap {
+@@ -251,18 +312,18 @@ class Nodes extends DataMap {
                      } else {
                          let envMap;
  
@@ -7212,7 +7212,7 @@ index f409c2b1..bb53c090 100644
                  }
  
                  sceneData.backgroundNode = backgroundNode;
-@@ -276,7 +337,7 @@ class Nodes extends DataMap {
+@@ -275,7 +336,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7221,7 +7221,7 @@ index f409c2b1..bb53c090 100644
          const sceneData = this.get(scene);
          const fog = scene.fog;
  
-@@ -284,15 +345,15 @@ class Nodes extends DataMap {
+@@ -283,15 +344,15 @@ class Nodes extends DataMap {
              if (sceneData.fog !== fog) {
                  let fogNode = null;
  
@@ -7244,7 +7244,7 @@ index f409c2b1..bb53c090 100644
  
                      fogNode = rangeFog(color, near, far);
                  } else {
-@@ -308,7 +369,7 @@ class Nodes extends DataMap {
+@@ -307,7 +368,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7253,7 +7253,7 @@ index f409c2b1..bb53c090 100644
          const sceneData = this.get(scene);
          const environment = scene.environment;
  
-@@ -316,7 +377,7 @@ class Nodes extends DataMap {
+@@ -315,7 +376,7 @@ class Nodes extends DataMap {
              if (sceneData.environment !== environment) {
                  let environmentNode = null;
  
@@ -7262,7 +7262,7 @@ index f409c2b1..bb53c090 100644
                      environmentNode = cubeTexture(environment);
                  } else if (environment.isTexture === true) {
                      environmentNode = texture(environment);
-@@ -333,7 +394,13 @@ class Nodes extends DataMap {
+@@ -332,7 +393,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7277,7 +7277,7 @@ index f409c2b1..bb53c090 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -344,7 +411,7 @@ class Nodes extends DataMap {
+@@ -343,7 +410,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -7286,7 +7286,7 @@ index f409c2b1..bb53c090 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -360,24 +427,27 @@ class Nodes extends DataMap {
+@@ -359,24 +426,27 @@ class Nodes extends DataMap {
          return renderer.toneMapping + ',' + renderer.currentColorSpace;
      }
  
@@ -7318,7 +7318,7 @@ index f409c2b1..bb53c090 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -387,7 +457,7 @@ class Nodes extends DataMap {
+@@ -386,7 +456,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7327,7 +7327,7 @@ index f409c2b1..bb53c090 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -397,7 +467,7 @@ class Nodes extends DataMap {
+@@ -396,7 +466,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7336,7 +7336,7 @@ index f409c2b1..bb53c090 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -406,7 +476,7 @@ class Nodes extends DataMap {
+@@ -405,7 +475,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7345,7 +7345,7 @@ index f409c2b1..bb53c090 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -415,7 +485,7 @@ class Nodes extends DataMap {
+@@ -414,7 +484,7 @@ class Nodes extends DataMap {
          }
      }
  
@@ -7984,10 +7984,10 @@ index 2b4d0266..f967399c 100644
  
          const bindingSnippets = [];
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-index 33b0d268..626e3cc1 100644
+index 3ca6af82..153ff517 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-@@ -122,7 +122,7 @@ const parse = source => {
+@@ -124,7 +124,7 @@ const parse = source => {
  };
  
  class WGSLNodeFunction extends NodeFunction {
