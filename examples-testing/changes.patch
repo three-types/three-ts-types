@@ -11301,37 +11301,6 @@ index 72c7054d..0e584dc0 100644
      circleTexture.wrapT = value;
      circleTexture.needsUpdate = true;
  }
-diff --git a/examples-testing/examples/webgl_raymarching_reflect.ts b/examples-testing/examples/webgl_raymarching_reflect.ts
-index e5448ebb..58fe2f1c 100644
---- a/examples-testing/examples/webgl_raymarching_reflect.ts
-+++ b/examples-testing/examples/webgl_raymarching_reflect.ts
-@@ -5,11 +5,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
--let dolly, camera, scene, renderer;
--let geometry, material, mesh;
--let stats, clock;
-+let dolly: THREE.Group, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let geometry: THREE.PlaneGeometry, material: THREE.RawShaderMaterial, mesh;
-+let stats: Stats, clock: THREE.Clock;
- 
--const canvas = document.querySelector('#canvas');
-+const canvas = document.querySelector('#canvas') as HTMLCanvasElement;
- 
- const config = {
-     saveImage: function () {
-@@ -48,8 +48,8 @@ function init() {
-             cameraWorldMatrix: { value: camera.matrixWorld },
-             cameraProjectionMatrixInverse: { value: camera.projectionMatrixInverse.clone() },
-         },
--        vertexShader: document.getElementById('vertex_shader').textContent,
--        fragmentShader: document.getElementById('fragment_shader').textContent,
-+        vertexShader: document.getElementById('vertex_shader')!.textContent!,
-+        fragmentShader: document.getElementById('fragment_shader')!.textContent!,
-     });
-     mesh = new THREE.Mesh(geometry, material);
-     mesh.frustumCulled = false;
 diff --git a/examples-testing/examples/webgl_read_float_buffer.ts b/examples-testing/examples/webgl_read_float_buffer.ts
 index 68452a12..51fbce5e 100644
 --- a/examples-testing/examples/webgl_read_float_buffer.ts
