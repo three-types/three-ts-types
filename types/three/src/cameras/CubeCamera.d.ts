@@ -2,7 +2,6 @@ import { CoordinateSystem } from "../constants.js";
 import { Object3D } from "../core/Object3D.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
-import WebGPURenderer from "../renderers/webgpu/WebGPURenderer.js";
 
 /**
  * Creates **6** {@link THREE.PerspectiveCamera | cameras} that render to a {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}.
@@ -65,5 +64,5 @@ export class CubeCamera extends Object3D {
      * @param renderer The current WebGL renderer
      * @param scene The current scene
      */
-    update(renderer: WebGLRenderer | WebGPURenderer, scene: Object3D): void;
+    update(renderer: WebGLRenderer, scene: Object3D): void;
 }
