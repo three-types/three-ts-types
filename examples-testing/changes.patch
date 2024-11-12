@@ -14131,6 +14131,31 @@ index 012a5065..6ca474e3 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
+index 2e466f0c..c3218846 100644
+--- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
++++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     bumpMap,
+     float,
+@@ -15,11 +15,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+ import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+-let controls, cubeCamera;
++let controls: OrbitControls, cubeCamera: THREE.CubeCamera;
+ 
+-let groundPlane, wallMat;
++let groundPlane: THREE.Mesh, wallMat: THREE.MeshStandardNodeMaterial;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
 index 616645aa..288f6e84 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
@@ -16589,3 +16614,22 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/cameras/CubeCamera.d.ts b/types/three/src/cameras/CubeCamera.d.ts
+index e6e82fb1..861dfb87 100644
+--- a/types/three/src/cameras/CubeCamera.d.ts
++++ b/types/three/src/cameras/CubeCamera.d.ts
+@@ -2,6 +2,7 @@ import { CoordinateSystem } from "../constants.js";
+ import { Object3D } from "../core/Object3D.js";
+ import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
+ import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
++import WebGPURenderer from "../renderers/webgpu/WebGPURenderer.js";
+ 
+ /**
+  * Creates **6** {@link THREE.PerspectiveCamera | cameras} that render to a {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}.
+@@ -64,5 +65,5 @@ export class CubeCamera extends Object3D {
+      * @param renderer The current WebGL renderer
+      * @param scene The current scene
+      */
+-    update(renderer: WebGLRenderer, scene: Object3D): void;
++    update(renderer: WebGLRenderer | WebGPURenderer, scene: Object3D): void;
+ }
