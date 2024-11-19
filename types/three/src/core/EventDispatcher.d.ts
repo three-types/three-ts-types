@@ -57,7 +57,7 @@ export class EventDispatcher<TEventMap extends {} = {}> {
      * ```
      */
     protected _listeners?: {
-        [Type in Extract<keyof TEventMap, string>]?: EventListener<TEventMap[Type], Type, this>[]
+        [Type in Extract<keyof TEventMap, string>]?: EventListener<TEventMap[Type], Type, this>[];
     };
 
     /**
