@@ -107,11 +107,26 @@ declare class GLTFExporter {
 declare class GLTFWriter {
     textureUtils: TextureUtils | null;
 
+    extensionsUsed: { [key: string]: boolean };
+
     constructor();
 
     setPlugins(plugins: GLTFExporterPlugin[]): void;
 
     setTextureUtils(utils: TextureUtils | null): this;
+
+    /**
+     * Process texture
+     * @param map Map to process
+     * @return Index of the processed texture in the "textures" array
+     */
+    processTextureAsync(map: Texture): Promise<number>
+
+    /**
+     * Applies a texture transform, if present, to the map definition. Requires
+     * the KHR_texture_transform extension.
+     */
+    applyTextureTransform(mapDef: { [key: string]: any }, texture: Texture): void
 
     /**
      * Parse scenes and generate GLTF output
@@ -129,7 +144,7 @@ declare class GLTFWriter {
 
 export interface GLTFExporterPlugin {
     writeTexture?: (map: Texture, textureDef: { [key: string]: any }) => void;
-    writeMaterial?: (material: Material, materialDef: { [key: string]: any }) => void;
+    writeMaterialAsync?: (material: Material, materialDef: { [key: string]: any }) => Promise<void>;
     writeMesh?: (mesh: Mesh, meshDef: { [key: string]: any }) => void;
     writeNode?: (object: Object3D, nodeDef: { [key: string]: any }) => void;
     beforeParse?: (input: Object3D | Object3D[]) => void;
