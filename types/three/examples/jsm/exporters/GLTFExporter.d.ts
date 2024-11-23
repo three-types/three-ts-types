@@ -120,13 +120,13 @@ declare class GLTFWriter {
      * @param map Map to process
      * @return Index of the processed texture in the "textures" array
      */
-    processTextureAsync(map: Texture): Promise<number>
+    processTextureAsync(map: Texture): Promise<number>;
 
     /**
      * Applies a texture transform, if present, to the map definition. Requires
      * the KHR_texture_transform extension.
      */
-    applyTextureTransform(mapDef: { [key: string]: any }, texture: Texture): void
+    applyTextureTransform(mapDef: { [key: string]: any }, texture: Texture): void;
 
     /**
      * Parse scenes and generate GLTF output
