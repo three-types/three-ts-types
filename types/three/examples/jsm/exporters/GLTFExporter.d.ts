@@ -87,7 +87,7 @@ declare class GLTFExporter {
      */
     parse(
         input: Object3D | Object3D[],
-        onDone: (gltf: ArrayBuffer | { [key: string]: any }) => void,
+        onDone: (gltf: ArrayBuffer | { [key: string]: unknown }) => void,
         onError: (error: ErrorEvent) => void,
         options?: GLTFExporterOptions,
     ): void;
@@ -101,13 +101,14 @@ declare class GLTFExporter {
     parseAsync(
         input: Object3D | Object3D[],
         options?: GLTFExporterOptions,
-    ): Promise<ArrayBuffer | { [key: string]: any }>;
+    ): Promise<ArrayBuffer | { [key: string]: unknown }>;
 }
 
 declare class GLTFWriter {
     textureUtils: TextureUtils | null;
 
-    extensionsUsed: { [key: string]: boolean };
+    extensionsUsed: { [name: string]: boolean };
+    extensionsRequired: { [name: string]: boolean };
 
     constructor();
 
@@ -126,7 +127,7 @@ declare class GLTFWriter {
      * Applies a texture transform, if present, to the map definition. Requires
      * the KHR_texture_transform extension.
      */
-    applyTextureTransform(mapDef: { [key: string]: any }, texture: Texture): void;
+    applyTextureTransform(mapDef: { [key: string]: unknown }, texture: Texture): void;
 
     /**
      * Parse scenes and generate GLTF output
@@ -137,16 +138,16 @@ declare class GLTFWriter {
      */
     writeAsync(
         input: Object3D | Object3D[],
-        onDone: (gltf: ArrayBuffer | { [key: string]: any }) => void,
+        onDone: (gltf: ArrayBuffer | { [key: string]: unknown }) => void,
         options?: GLTFExporterOptions,
     ): Promise<void>;
 }
 
 export interface GLTFExporterPlugin {
-    writeTexture?: (map: Texture, textureDef: { [key: string]: any }) => void;
-    writeMaterialAsync?: (material: Material, materialDef: { [key: string]: any }) => Promise<void>;
-    writeMesh?: (mesh: Mesh, meshDef: { [key: string]: any }) => void;
-    writeNode?: (object: Object3D, nodeDef: { [key: string]: any }) => void;
+    writeTexture?: (map: Texture, textureDef: { [key: string]: unknown }) => void;
+    writeMaterialAsync?: (material: Material, materialDef: { [key: string]: unknown }) => Promise<void>;
+    writeMesh?: (mesh: Mesh, meshDef: { [key: string]: unknown }) => void;
+    writeNode?: (object: Object3D, nodeDef: { [key: string]: unknown }) => void;
     beforeParse?: (input: Object3D | Object3D[]) => void;
     afterParse?: (input: Object3D | Object3D[]) => void;
 }
