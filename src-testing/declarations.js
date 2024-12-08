@@ -31,6 +31,7 @@ const files = [
     'renderers/common/BundleGroup',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',
+    'renderers/common/ClippingGroup',
     'renderers/common/Color4',
     'renderers/common/ComputePipeline',
     'renderers/common/Constants',
