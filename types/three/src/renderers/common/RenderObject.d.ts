@@ -44,8 +44,8 @@ export default class RenderObject {
         firstInstance: number;
     } | null;
     bundle: BundleGroup | null;
-    clippingContext: ClippingContext;
-    clippingContextVersion: number;
+    clippingContext: ClippingContext | null;
+    clippingContextCacheKey: string;
     initialNodesCacheKey: string;
     initialCacheKey: string;
     _nodeBuilderState: NodeBuilderState | null;
@@ -64,6 +64,7 @@ export default class RenderObject {
         camera: Camera,
         lightsNode: LightsNode,
         renderContext: RenderContext,
+        clippingContext: ClippingContext | null,
     );
     updateClipping(parent: ClippingContext): void;
     get clippingNeedsUpdate(): boolean;
