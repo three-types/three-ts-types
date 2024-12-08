@@ -13426,7 +13426,7 @@ index 0d5b70a2..0c147364 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index e57a7e96..cd6362e3 100644
+index 3331adc8..17d73367 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
 @@ -1,4 +1,4 @@
@@ -13449,25 +13449,7 @@ index e57a7e96..cd6362e3 100644
  
  init();
  
-@@ -101,7 +106,7 @@ function init() {
- 
-     // ***** Clipping setup (renderer): *****
-     const globalPlanes = [globalPlane];
--    const Empty = Object.freeze([]);
-+    const Empty: readonly THREE.Plane[] = Object.freeze([]);
- 
-     renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-     renderer.localClippingEnabled = true;
-@@ -120,7 +125,7 @@ function init() {
-         folderLocal = gui.addFolder('Local Clipping'),
-         propsLocal = {
-             get Enabled() {
--                return renderer.localClippingEnabled;
-+                return renderer.localClippingEnabled!;
-             },
-             set Enabled(v) {
-                 renderer.localClippingEnabled = v;
-@@ -193,7 +198,7 @@ function onWindowResize() {
+@@ -196,7 +201,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
