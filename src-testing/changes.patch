@@ -3675,7 +3675,7 @@ index b17e7080..e2b545b7 100644
              if (map === undefined) return false;
          }
 diff --git a/src-testing/src/renderers/common/ClippingContext.ts b/src-testing/src/renderers/common/ClippingContext.ts
-index 1488999a..2de7e35d 100644
+index f7ac6960..5b8b4893 100644
 --- a/src-testing/src/renderers/common/ClippingContext.ts
 +++ b/src-testing/src/renderers/common/ClippingContext.ts
 @@ -1,11 +1,33 @@
@@ -4880,7 +4880,7 @@ index 0486f793..5c8d620c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index bceef2c6..2acb1ac3 100644
+index 4d179411..4e41a679 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5000,7 +5000,7 @@ index bceef2c6..2acb1ac3 100644
  
          return true;
      }
-@@ -119,7 +180,7 @@ export default class RenderObject {
+@@ -123,7 +184,7 @@ export default class RenderObject {
      }
  
      getChainArray() {
@@ -5009,7 +5009,7 @@ index bceef2c6..2acb1ac3 100644
      }
  
      getAttributes() {
-@@ -128,8 +189,8 @@ export default class RenderObject {
+@@ -132,8 +193,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -5020,7 +5020,7 @@ index bceef2c6..2acb1ac3 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -342,6 +403,6 @@ export default class RenderObject {
+@@ -346,6 +407,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -7503,7 +7503,7 @@ index 3b16e861..99874f36 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index b9713fd2..e52f74d8 100644
+index 7db9864a..bb852529 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -7524,7 +7524,7 @@ index b9713fd2..e52f74d8 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index b1e72064..40f26bf1 100644
+index 2ac9e7c4..beef6e0e 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7594,7 +7594,7 @@ index b1e72064..40f26bf1 100644
          super(object, renderer, new GLSLNodeParser());
  
          this.uniformGroups = {};
-@@ -82,7 +122,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -83,7 +123,7 @@ class GLSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -7603,7 +7603,7 @@ index b1e72064..40f26bf1 100644
          return glslMethods[method] || method;
      }
  
-@@ -90,7 +130,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -91,7 +131,7 @@ class GLSLNodeBuilder extends NodeBuilder {
          return '';
      }
  
@@ -7612,7 +7612,7 @@ index b1e72064..40f26bf1 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -116,7 +156,7 @@ ${flowData.code}
+@@ -117,7 +157,7 @@ ${flowData.code}
          return code;
      }
  
@@ -7621,7 +7621,7 @@ index b1e72064..40f26bf1 100644
          const attribute = storageBufferNode.value;
  
          if (attribute.pbo === undefined) {
-@@ -180,7 +220,7 @@ ${flowData.code}
+@@ -181,7 +221,7 @@ ${flowData.code}
          }
      }
  
@@ -7630,7 +7630,7 @@ index b1e72064..40f26bf1 100644
          if (node.isNodeUniform && node.node.isTextureNode !== true && node.node.isBufferNode !== true) {
              return shaderStage.charAt(0) + '_' + node.name;
          }
-@@ -188,7 +228,7 @@ ${flowData.code}
+@@ -189,7 +229,7 @@ ${flowData.code}
          return super.getPropertyName(node, shaderStage);
      }
  
@@ -7639,7 +7639,7 @@ index b1e72064..40f26bf1 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -260,7 +300,13 @@ ${flowData.code}
+@@ -261,7 +301,13 @@ ${flowData.code}
          return propertyName;
      }
  
@@ -7654,7 +7654,7 @@ index b1e72064..40f26bf1 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -268,7 +314,7 @@ ${flowData.code}
+@@ -269,7 +315,7 @@ ${flowData.code}
          }
      }
  
@@ -7663,7 +7663,7 @@ index b1e72064..40f26bf1 100644
          if (texture.isDepthTexture) {
              return `texture( ${textureProperty}, ${uvSnippet} ).x`;
          } else {
-@@ -278,24 +324,39 @@ ${flowData.code}
+@@ -279,24 +325,39 @@ ${flowData.code}
          }
      }
  
@@ -7711,7 +7711,7 @@ index b1e72064..40f26bf1 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -304,11 +365,12 @@ ${flowData.code}
+@@ -305,11 +366,12 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -7726,7 +7726,7 @@ index b1e72064..40f26bf1 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -321,7 +383,7 @@ ${flowData.code}
+@@ -322,7 +384,7 @@ ${flowData.code}
          return snippets.join('\n\t');
      }
  
@@ -7735,7 +7735,7 @@ index b1e72064..40f26bf1 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -403,7 +465,7 @@ ${flowData.code}
+@@ -404,7 +466,7 @@ ${flowData.code}
          return output;
      }
  
@@ -7744,7 +7744,7 @@ index b1e72064..40f26bf1 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -421,7 +483,7 @@ ${flowData.code}
+@@ -422,7 +484,7 @@ ${flowData.code}
          return nodeType;
      }
  
@@ -7753,7 +7753,7 @@ index b1e72064..40f26bf1 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -437,8 +499,8 @@ ${flowData.code}
+@@ -438,8 +500,8 @@ ${flowData.code}
          return snippet;
      }
  
@@ -7764,7 +7764,7 @@ index b1e72064..40f26bf1 100644
          const members = struct.getMemberTypes();
  
          for (let i = 0; i < members.length; i++) {
-@@ -449,7 +511,7 @@ ${flowData.code}
+@@ -450,7 +512,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -7773,7 +7773,7 @@ index b1e72064..40f26bf1 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -470,7 +532,7 @@ ${flowData.code}
+@@ -471,7 +533,7 @@ ${flowData.code}
          return snippets.join('\n\n');
      }
  
@@ -7782,7 +7782,7 @@ index b1e72064..40f26bf1 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -535,7 +597,7 @@ ${flowData.code}
+@@ -540,7 +602,7 @@ ${flowData.code}
          return 'gl_FragDepth';
      }
  
@@ -7791,7 +7791,7 @@ index b1e72064..40f26bf1 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -546,7 +608,7 @@ ${flowData.code}
+@@ -551,7 +613,7 @@ ${flowData.code}
          }
      }
  
@@ -7800,8 +7800,8 @@ index b1e72064..40f26bf1 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -569,7 +631,7 @@ ${flowData.code}
-         return snippets.join('\n');
+@@ -578,7 +640,7 @@ ${flowData.code}
+         return 'gl_ClipDistance';
      }
  
 -    isAvailable(name) {
@@ -7809,8 +7809,8 @@ index b1e72064..40f26bf1 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -594,11 +656,11 @@ ${flowData.code}
-         return true;
+@@ -621,11 +683,11 @@ ${flowData.code}
+         this.builtins['vertex'].push(`out float gl_ClipDistance[ ${planeCount} ]`);
      }
  
 -    registerTransform(varyingName, attributeNode) {
@@ -7823,7 +7823,7 @@ index b1e72064..40f26bf1 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -614,14 +676,14 @@ ${flowData.code}
+@@ -641,14 +703,14 @@ ${flowData.code}
          return snippet;
      }
  
@@ -7840,7 +7840,7 @@ index b1e72064..40f26bf1 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -661,7 +723,7 @@ void main() {
+@@ -688,7 +750,7 @@ void main() {
  `;
      }
  
@@ -7849,7 +7849,7 @@ index b1e72064..40f26bf1 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -693,19 +755,20 @@ void main() {
+@@ -720,19 +782,20 @@ void main() {
      }
  
      buildCode() {
@@ -7874,7 +7874,7 @@ index b1e72064..40f26bf1 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -731,28 +794,33 @@ void main() {
+@@ -758,28 +821,33 @@ void main() {
                  }
              }
  
@@ -7935,7 +7935,7 @@ index 36f987a9..8c774ec4 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 2b4d0266..f967399c 100644
+index 615f446e..fa8d418a 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -8100,7 +8100,7 @@ index 2b4d0266..f967399c 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -689,8 +713,8 @@ ${flowData.code}
+@@ -698,8 +722,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -8111,7 +8111,7 @@ index 2b4d0266..f967399c 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -776,8 +800,8 @@ ${flowData.code}
+@@ -785,8 +809,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -8122,7 +8122,7 @@ index 2b4d0266..f967399c 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -813,7 +837,7 @@ ${flowData.code}
+@@ -822,7 +846,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
