@@ -68,6 +68,7 @@ export default class RenderObject {
     );
     updateClipping(parent: ClippingContext): void;
     get clippingNeedsUpdate(): boolean;
+    get hardwareClippingPlanes(): number;
     getNodeBuilderState(): NodeBuilderState;
     getMonitor(): NodeMaterialObserver;
     getBindings(): BindGroup[];
