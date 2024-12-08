@@ -42,6 +42,7 @@ declare class NodeMaterial extends Material {
 
     fog: boolean;
     lights: boolean;
+    hardwareClipping: boolean;
 
     lightsNode: LightsNode | null;
     envNode: Node | null;
@@ -72,6 +73,7 @@ declare class NodeMaterial extends Material {
     build(builder: NodeBuilder): void;
     setup(builder: NodeBuilder): void;
     setupClipping(builder: NodeBuilder): ClippingNode | null;
+    setupHardwareClipping(builder: NodeBuilder): void;
     setupDepth(builder: NodeBuilder): void;
     setupPosition(builder: NodeBuilder): Node;
     setupDiffuseColor(builder: NodeBuilder): void;

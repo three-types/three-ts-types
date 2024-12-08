@@ -21,5 +21,6 @@ declare class ClippingContext {
     updateGlobal(scene: Scene, camera: Camera): void;
     update(parentContext: ClippingContext, clippingGroup: ClippingGroup): void;
     getGroupContext(clippingGroup: ClippingGroup): ClippingContext;
+    get unionClippingCount(): number;
 }
 export default ClippingContext;
