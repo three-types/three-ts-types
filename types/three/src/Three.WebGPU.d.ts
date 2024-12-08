@@ -196,6 +196,7 @@ export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenera
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 import * as PostProcessingUtils from "./renderers/common/PostProcessingUtils.js";
 export { PostProcessingUtils };
+export { default as ClippingGroup } from "./renderers/common/ClippingGroup.js";
 export { default as IndirectStorageBufferAttribute } from "./renderers/common/IndirectStorageBufferAttribute.js";
 export { default as Lighting } from "./renderers/common/Lighting.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
