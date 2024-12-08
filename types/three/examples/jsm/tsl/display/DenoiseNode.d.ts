@@ -7,7 +7,6 @@ declare class DenoiseNode extends TempNode {
     normalNode: Node;
     noiseNode: Node;
 
-    cameraProjectionMatrixInversion: UniformNode<Matrix4>;
     lumaPhi: UniformNode<number>;
     depthPhi: UniformNode<number>;
     normalPhi: UniformNode<number>;
