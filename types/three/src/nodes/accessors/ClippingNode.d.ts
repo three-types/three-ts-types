@@ -1,7 +1,7 @@
+import { Plane } from "../../math/Plane.js";
 import Node from "../core/Node.js";
+import NodeBuilder from "../core/NodeBuilder.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
-import { Plane } from '../../math/Plane.js';
-import NodeBuilder from '../core/NodeBuilder.js';
 
 export type ClippingNodeScope = typeof ClippingNode.ALPHA_TO_COVERAGE | typeof ClippingNode.DEFAULT;
 
