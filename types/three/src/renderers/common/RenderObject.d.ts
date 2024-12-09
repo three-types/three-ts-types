@@ -80,6 +80,7 @@ export default class RenderObject {
         RenderContext,
         LightsNode,
     ];
+    setGeometry(geometry: BufferGeometry): void;
     getAttributes(): (InterleavedBufferAttribute | BufferAttribute)[];
     getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
     getDrawParameters(): {
@@ -90,6 +91,7 @@ export default class RenderObject {
     } | null;
     getGeometryCacheKey(): string;
     getMaterialCacheKey(): number;
+    get needsGeometryUpdate(): boolean;
     get needsUpdate(): boolean;
     getDynamicCacheKey(): string;
     getCacheKey(): string;
