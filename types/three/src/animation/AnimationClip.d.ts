@@ -47,7 +47,7 @@ export class AnimationClip {
         fps: number,
         noLoop: boolean,
     ): AnimationClip;
-    static findByName(clipArray: AnimationClip[], name: string): AnimationClip;
+    static findByName(objectOrClipArray: AnimationClip[] | Object3D | Mesh, name: string): AnimationClip;
     static CreateClipsFromMorphTargetSequences(
         morphTargets: MorphTarget[],
         fps: number,
