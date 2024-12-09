@@ -10,3 +10,4 @@ declare class ShadowNode extends Node {
 export default ShadowNode;
 
 export const shadow: (light: Light, shadow: LightShadow) => ShaderNodeObject<ShadowNode>;
+export const shadows: ShaderNodeObject<Node>;
