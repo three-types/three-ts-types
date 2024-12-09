@@ -1,9 +1,9 @@
 import { AnimationBlendMode } from "../constants.js";
+import { Object3D } from "../core/Object3D.js";
 import { Vector3 } from "../math/Vector3.js";
 import { Bone } from "../objects/Bone.js";
+import { Mesh } from "../objects/Mesh.js";
 import { KeyframeTrack, KeyframeTrackJSON } from "./KeyframeTrack.js";
-import { Object3D } from '../core/Object3D.js';
-import { Mesh } from '../objects/Mesh.js';
 
 export interface AnimationClipJSON {
     name: string;
