@@ -16,6 +16,7 @@ export { default as NodeMaterialLoader } from "./loaders/nodes/NodeMaterialLoade
 export { default as NodeObjectLoader } from "./loaders/nodes/NodeObjectLoader.js";
 export * from "./nodes/Nodes.js";
 export * from "./nodes/TSL.js";
+export { default as ClippingGroup } from "./renderers/common/ClippingGroup.js";
 export { default as IndirectStorageBufferAttribute } from "./renderers/common/IndirectStorageBufferAttribute.js";
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";
 export { default as StorageInstancedBufferAttribute } from "./renderers/common/StorageInstancedBufferAttribute.js";
