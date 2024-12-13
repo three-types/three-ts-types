@@ -59,8 +59,9 @@ declare class NodeMaterial extends Material {
     geometryNode: Node | null;
 
     depthNode: Node | null;
-    shadowNode: Node | null;
     shadowPositionNode: Node | null;
+    receivedShadowNode: Node | null;
+    castShadowNode: Node | null;
 
     outputNode: Node | null;
     mrtNode: MRTNode | null;
