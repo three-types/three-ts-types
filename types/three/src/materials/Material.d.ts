@@ -247,7 +247,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * Value is the string 'Material'. This shouldn't be changed, and can be used to find all objects of this type in a
      * scene.
      */
-    readonly type: string;
+    type: string;
 
     /**
      * Enables alpha hashed transparency, an alternative to {@link .transparent} or {@link .alphaTest}. The material
