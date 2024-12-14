@@ -84,7 +84,7 @@ export * from "./accessors/VelocityNode.js";
 export * from "./accessors/VertexColorNode.js";
 
 // display
-export * from "./display/BlendMode.js";
+export * from "./display/BlendModes.js";
 export * from "./display/BumpMapNode.js";
 export * from "./display/ColorAdjustment.js";
 export * from "./display/ColorSpaceNode.js";
