@@ -523,3 +523,5 @@ export const workgroupBarrier: typeof TSL.workgroupBarrier;
 export const workgroupId: typeof TSL.workgroupId;
 export const workingToColorSpace: typeof TSL.workingToColorSpace;
 export const xor: typeof TSL.xor;
+
+export type { NodeRepresentation, ShaderNodeObject } from './nodes/TSL.js';
