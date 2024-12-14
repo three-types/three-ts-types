@@ -127,8 +127,8 @@ export * from "./gpgpu/AtomicFunctionNode.js";
 export * from "./gpgpu/ComputeNode.js";
 
 // lighting
+export * from "./accessors/Lights.js";
 export * from "./lighting/LightingContextNode.js";
-export * from "./lighting/LightNode.js";
 export * from "./lighting/LightsNode.js";
 export * from "./lighting/PointLightNode.js";
 export * from "./lighting/ShadowNode.js";

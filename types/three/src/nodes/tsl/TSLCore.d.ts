@@ -172,6 +172,8 @@ type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends 
 
 export type NodeOrType = Node | string;
 
+export const defined: (v: unknown) => unknown;
+
 export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
