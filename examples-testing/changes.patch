@@ -13673,6 +13673,70 @@ index 41b56de8..8f7abe1f 100644
      time = (time / 1000) * 2.0;
  
      for (let i = 0; i < lights.length; i++) {
+diff --git a/examples-testing/examples/webgpu_lights_physical.ts b/examples-testing/examples/webgpu_lights_physical.ts
+index 6a050726..7af6c37e 100644
+--- a/examples-testing/examples/webgpu_lights_physical.ts
++++ b/examples-testing/examples/webgpu_lights_physical.ts
+@@ -1,12 +1,18 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, bulbLight, bulbMat, hemiLight, stats;
+-let ballMat, cubeMat, floorMat;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    bulbLight: THREE.PointLight,
++    bulbMat: THREE.MeshStandardMaterial,
++    hemiLight: THREE.HemisphereLight,
++    stats: Stats;
++let ballMat: THREE.MeshStandardMaterial, cubeMat: THREE.MeshStandardMaterial, floorMat: THREE.MeshStandardMaterial;
+ 
+ let previousShadowMap = false;
+ 
+@@ -37,17 +43,22 @@ const hemiLuminousIrradiances = {
+     '50000 lx (Direct Sun)': 50000,
+ };
+ 
+-const params = {
++const params: {
++    shadows: boolean;
++    exposure: number;
++    bulbPower: keyof typeof bulbLuminousPowers;
++    hemiIrradiance: keyof typeof hemiLuminousIrradiances;
++} = {
+     shadows: true,
+     exposure: 0.68,
+-    bulbPower: Object.keys(bulbLuminousPowers)[4],
+-    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0],
++    bulbPower: Object.keys(bulbLuminousPowers)[4] as keyof typeof bulbLuminousPowers,
++    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0] as keyof typeof hemiLuminousIrradiances,
+ };
+ 
+ init();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     stats = new Stats();
+     container.appendChild(stats.dom);
+@@ -201,8 +212,8 @@ function init() {
+ 
+     const gui = new GUI();
+ 
+-    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances));
+-    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers));
++    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances) as (keyof typeof hemiLuminousIrradiances)[]);
++    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers) as (keyof typeof bulbLuminousPowers)[]);
+     gui.add(params, 'exposure', 0, 1);
+     gui.add(params, 'shadows');
+     gui.open();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
 index 5638c902..a274a953 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts
