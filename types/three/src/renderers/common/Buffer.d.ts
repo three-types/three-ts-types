@@ -5,7 +5,7 @@ declare class Buffer extends Binding {
     _buffer: Float32Array | null;
     constructor(name?: string, buffer?: Float32Array | null);
     get byteLength(): number;
-    get buffer(): Float32Array | null;
+    get buffer(): Float32Array<ArrayBufferLike> | null;
     update(): boolean;
 }
 export default Buffer;
