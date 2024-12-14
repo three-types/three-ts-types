@@ -1,8 +1,7 @@
-import { Camera, Matrix4, Vector2 } from "three";
+import { Camera, Vector2 } from "three";
 import {
     Node,
     NodeRepresentation,
-    ReferenceNode,
     ShaderNodeObject,
     TempNode,
     TextureNode,
@@ -14,9 +13,6 @@ declare class GTAONode extends TempNode {
     normalNode: Node;
 
     resolutionScale: number;
-
-    cameraNear: ShaderNodeObject<ReferenceNode<Camera>>;
-    cameraFar: ShaderNodeObject<ReferenceNode<Camera>>;
 
     radius: ShaderNodeObject<UniformNode<number>>;
     resolution: ShaderNodeObject<UniformNode<Vector2>>;
