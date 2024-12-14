@@ -7971,7 +7971,7 @@ index 254eeefb..62228080 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 8c21a98a..55252c3b 100644
+index 5feea7a9..6fcb484c 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -8034,10 +8034,10 @@ index 8c21a98a..55252c3b 100644
 +        depthSnippet: string | null,
 +        levelSnippet = '0u',
 +    ) {
-         if (depthSnippet) {
-             return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, u32( ${levelSnippet} ) )`;
-         } else {
-@@ -375,11 +395,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+         if (texture.isVideoTexture === true || texture.isStorageTexture === true) {
+             return `textureLoad( ${textureProperty}, ${uvIndexSnippet} )`;
+         } else if (depthSnippet) {
+@@ -377,11 +397,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -8054,7 +8054,7 @@ index 8c21a98a..55252c3b 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -391,11 +411,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -393,11 +413,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -8071,7 +8071,7 @@ index 8c21a98a..55252c3b 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -408,11 +428,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -410,11 +430,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -8088,7 +8088,7 @@ index 8c21a98a..55252c3b 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -434,11 +454,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -436,11 +456,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureBias(
@@ -8105,7 +8105,7 @@ index 8c21a98a..55252c3b 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -448,7 +468,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -450,7 +470,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -8114,7 +8114,7 @@ index 8c21a98a..55252c3b 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -499,7 +519,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -501,7 +521,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          return accessNames[this.getNodeAccess(node, shaderStage)];
      }
  
@@ -8128,7 +8128,7 @@ index 8c21a98a..55252c3b 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -603,7 +628,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -605,7 +630,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -8137,7 +8137,7 @@ index 8c21a98a..55252c3b 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -770,8 +795,8 @@ ${flowData.code}
+@@ -772,8 +797,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -8148,7 +8148,7 @@ index 8c21a98a..55252c3b 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -857,8 +882,8 @@ ${flowData.code}
+@@ -859,8 +884,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -8159,7 +8159,7 @@ index 8c21a98a..55252c3b 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -894,7 +919,7 @@ ${flowData.code}
+@@ -896,7 +921,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
