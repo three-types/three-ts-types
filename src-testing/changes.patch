@@ -3529,7 +3529,7 @@ index 531a6a5b..aed28f85 100644
                      } else if (this.textures.needsMipmaps(texture) && textureData.needsMipmap === true) {
                          this.backend.generateMipmaps(texture);
 diff --git a/src-testing/src/renderers/common/Buffer.ts b/src-testing/src/renderers/common/Buffer.ts
-index 17013c6d..830dc0a8 100644
+index 17013c6d..95cce1f6 100644
 --- a/src-testing/src/renderers/common/Buffer.ts
 +++ b/src-testing/src/renderers/common/Buffer.ts
 @@ -2,7 +2,13 @@ import Binding from './Binding.js';
@@ -3547,7 +3547,7 @@ index 17013c6d..830dc0a8 100644
          super(name);
  
          this.isBuffer = true;
-@@ -13,7 +19,7 @@ class Buffer extends Binding {
+@@ -13,10 +19,10 @@ class Buffer extends Binding {
      }
  
      get byteLength() {
@@ -3555,7 +3555,11 @@ index 17013c6d..830dc0a8 100644
 +        return getFloatLength(this._buffer!.byteLength);
      }
  
-     get buffer() {
+-    get buffer() {
++    get buffer(): Float32Array | null {
+         return this._buffer;
+     }
+ 
 diff --git a/src-testing/src/renderers/common/BufferUtils.ts b/src-testing/src/renderers/common/BufferUtils.ts
 index 99ddcb48..e18679b1 100644
 --- a/src-testing/src/renderers/common/BufferUtils.ts
@@ -6672,7 +6676,7 @@ index 28aac0d7..2479d00d 100644
  
          this.isUniformBuffer = true;
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index e2b62671..5c48602e 100644
+index e2b62671..55209311 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,8 +1,24 @@
@@ -6717,6 +6721,15 @@ index e2b62671..5c48602e 100644
          const index = this.uniforms.indexOf(uniform);
  
          if (index !== -1) {
+@@ -38,7 +54,7 @@ class UniformsGroup extends UniformBuffer {
+         return this._values;
+     }
+ 
+-    get buffer() {
++    get buffer(): Float32Array {
+         let buffer = this._buffer;
+ 
+         if (buffer === null) {
 @@ -97,19 +113,19 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
