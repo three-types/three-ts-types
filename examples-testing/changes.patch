@@ -14836,37 +14836,34 @@ index 06af5ab4..e543f68b 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index f95a72ff..4cdd6f1a 100644
+index 1957d7a9..34c14633 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, texture } from 'three/tsl';
+-import { pass, mrt, output, normalView } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, transformedNormalView, texture, Node, ShaderNodeObject } from 'three/tsl';
++import { pass, mrt, output, normalView, Node, ShaderNodeObject } from 'three/tsl';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
 +import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -12,9 +12,20 @@ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+@@ -11,9 +11,18 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer, postProcessing, controls, clock, stats, mixer;
--
--let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
+-let camera, scene, renderer, postProcessing, controls, stats;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.PostProcessing,
 +    controls: OrbitControls,
-+    clock: THREE.Clock,
-+    stats: Stats,
-+    mixer: THREE.AnimationMixer;
-+
++    stats: Stats;
+ 
+-let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
 +let aoPass: ShaderNodeObject<GTAONode>,
 +    denoisePass: ShaderNodeObject<DenoiseNode>,
 +    blendPassAO: ShaderNodeObject<Node>,
@@ -14875,6 +14872,16 @@ index f95a72ff..4cdd6f1a 100644
  
  const params = {
      distanceExponent: 1,
+@@ -118,7 +127,8 @@ async function init() {
+         // first place. Besides, normal estimation is computationally more expensive than just sampling a
+         // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
+ 
+-        if (o.material) o.material.depthWrite = true;
++        if ((o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
++            (o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.depthWrite = true;
+     });
+ 
+     window.addEventListener('resize', onWindowResize);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 index ad2028b4..0d7d6e66 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts

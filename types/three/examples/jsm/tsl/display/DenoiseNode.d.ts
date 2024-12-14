@@ -5,6 +5,7 @@ declare class DenoiseNode extends TempNode {
     textureNode: Node;
     depthNode: Node;
     normalNode: Node;
+
     noiseNode: Node;
 
     lumaPhi: UniformNode<number>;
@@ -22,6 +23,5 @@ export const denoise: (
     node: NodeRepresentation,
     depthNode: NodeRepresentation,
     normalNode: NodeRepresentation,
-    noiseNode: NodeRepresentation,
     camera: Camera,
 ) => ShaderNodeObject<DenoiseNode>;
