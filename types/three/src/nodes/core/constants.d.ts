@@ -19,6 +19,11 @@ export declare const NodeType: {
     readonly MATRIX3: "mat3";
     readonly MATRIX4: "mat4";
 };
+export declare const NodeAccess: {
+    readonly READ_ONLY: "readOnly";
+    readonly WRITE_ONLY: "writeOnly";
+    readonly READ_WRITE: "readWrite";
+};
 export type NodeShaderStage = "vertex" | "fragment" | "compute";
 export type NodeUpdateType = "none" | "frame" | "render" | "object";
 export declare const defaultShaderStages: NodeShaderStage[];
