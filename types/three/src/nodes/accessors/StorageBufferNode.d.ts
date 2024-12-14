@@ -7,9 +7,12 @@ import BufferNode from "./BufferNode.js";
 
 export default class StorageBufferNode extends BufferNode {
     readonly isStorageBufferNode: true;
-    bufferObject: boolean;
 
     access: NodeAccess;
+    isAtomic: boolean;
+    isPBO: boolean;
+
+    bufferObject: boolean;
 
     constructor(
         value: StorageBufferAttribute | StorageInstancedBufferAttribute,
@@ -19,7 +22,9 @@ export default class StorageBufferNode extends BufferNode {
 
     element(indexNode: NodeRepresentation): ShaderNodeObject<StorageArrayElementNode>;
 
-    setBufferObject(value: boolean): this;
+    setPBO(value: boolean): this;
+
+    getPBO(): boolean;
 
     setAccess(value: NodeAccess): this;
 
@@ -31,6 +36,10 @@ export const storage: (
     type?: string | null,
     count?: number,
 ) => ShaderNodeObject<StorageBufferNode>;
+
+/**
+ * @deprecated
+ */
 export const storageObject: (
     value: StorageBufferAttribute | StorageInstancedBufferAttribute,
     type?: string | null,
