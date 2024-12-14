@@ -6701,7 +6701,7 @@ index 28aac0d7..2479d00d 100644
  
          this.isUniformBuffer = true;
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index e2b62671..55209311 100644
+index aa27776a..a31eb060 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,8 +1,24 @@
@@ -6784,7 +6784,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -126,7 +142,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -127,7 +143,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6793,7 +6793,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -145,7 +161,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -147,7 +163,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6802,7 +6802,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -165,7 +181,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -168,7 +184,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6811,7 +6811,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -186,7 +202,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -190,7 +206,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6820,7 +6820,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -206,7 +222,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -210,7 +226,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6829,7 +6829,7 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -242,7 +258,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -246,7 +262,7 @@ class UniformsGroup extends UniformBuffer {
          return updated;
      }
  
@@ -6838,7 +6838,16 @@ index e2b62671..55209311 100644
          let updated = false;
  
          const a = this.values;
-@@ -260,13 +276,13 @@ class UniformsGroup extends UniformBuffer {
+@@ -263,7 +279,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    _getBufferForType(type) {
++    _getBufferForType(type: string | null): Int32Array | Uint32Array | Float32Array {
+         if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
+             return new Int32Array(this.buffer.buffer);
+         if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
+@@ -272,13 +288,13 @@ class UniformsGroup extends UniformBuffer {
      }
  }
  
@@ -7025,7 +7034,7 @@ index e3bbbe44..8b8312fc 100644
              console.warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 659f5a82..d4f47579 100644
+index 6412da90..02408606 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
 @@ -7,9 +7,18 @@ import {
@@ -7048,7 +7057,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -21,7 +30,9 @@ class NumberNodeUniform extends NumberUniform {
+@@ -25,7 +34,9 @@ class NumberNodeUniform extends NumberUniform {
  }
  
  class Vector2NodeUniform extends Vector2Uniform {
@@ -7059,7 +7068,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -33,7 +44,9 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -41,7 +52,9 @@ class Vector2NodeUniform extends Vector2Uniform {
  }
  
  class Vector3NodeUniform extends Vector3Uniform {
@@ -7070,7 +7079,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -45,7 +58,9 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -57,7 +70,9 @@ class Vector3NodeUniform extends Vector3Uniform {
  }
  
  class Vector4NodeUniform extends Vector4Uniform {
@@ -7081,7 +7090,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -57,7 +72,9 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -73,7 +88,9 @@ class Vector4NodeUniform extends Vector4Uniform {
  }
  
  class ColorNodeUniform extends ColorUniform {
@@ -7092,7 +7101,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -69,7 +86,9 @@ class ColorNodeUniform extends ColorUniform {
+@@ -89,7 +106,9 @@ class ColorNodeUniform extends ColorUniform {
  }
  
  class Matrix3NodeUniform extends Matrix3Uniform {
@@ -7103,7 +7112,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -81,7 +100,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -105,7 +124,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
  }
  
  class Matrix4NodeUniform extends Matrix4Uniform {
@@ -7114,7 +7123,7 @@ index 659f5a82..d4f47579 100644
          super(nodeUniform.name, nodeUniform.value);
  
          this.nodeUniform = nodeUniform;
-@@ -101,3 +122,11 @@ export {
+@@ -129,3 +150,11 @@ export {
      Matrix3NodeUniform,
      Matrix4NodeUniform,
  };
@@ -7949,7 +7958,7 @@ index 9de87c2f..77fb975a 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index d29fe26c..7c98ca73 100644
+index 5d45dac4..3367d544 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -984,7 +984,7 @@ class WebGPUBackend extends Backend {
