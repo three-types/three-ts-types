@@ -26,6 +26,7 @@ export declare const NodeAccess: {
 };
 export type NodeShaderStage = "vertex" | "fragment" | "compute";
 export type NodeUpdateType = "none" | "frame" | "render" | "object";
+export type NodeAccess = "readOnly" | "writeOnly" | "readWrite";
 export declare const defaultShaderStages: NodeShaderStage[];
 export declare const defaultBuildStages: string[];
 export declare const shaderStages: NodeShaderStage[];
