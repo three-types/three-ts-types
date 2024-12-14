@@ -7551,7 +7551,7 @@ index 07bcda18..6ebfd686 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index 1f3f5b5b..34c4e17d 100644
+index 9de87c2f..77fb975a 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7949,10 +7949,10 @@ index 1f3f5b5b..34c4e17d 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 2cb79b70..6b5b60e0 100644
+index d29fe26c..7c98ca73 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -983,7 +983,7 @@ class WebGPUBackend extends Backend {
+@@ -984,7 +984,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7962,7 +7962,7 @@ index 2cb79b70..6b5b60e0 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 99e8cfef..37812056 100644
+index 8c21a98a..55252c3b 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7982,7 +7982,7 @@ index 99e8cfef..37812056 100644
 +import UniformNode from '../../../nodes/core/UniformNode.js';
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
- const GPUShaderStage = self.GPUShaderStage;
+ const GPUShaderStage = typeof self !== 'undefined' ? self.GPUShaderStage : { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
 @@ -204,7 +206,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }

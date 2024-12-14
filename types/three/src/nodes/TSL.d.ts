@@ -123,11 +123,15 @@ export * from "./fog/FogRangeNode.js";
 export * from "./geometry/RangeNode.js";
 
 // gpgpu
+export * from "./gpgpu/AtomicFunctionNode.js";
+export * from "./gpgpu/BarrierNode.js";
+export * from "./gpgpu/ComputeBuiltinNode.js";
 export * from "./gpgpu/ComputeNode.js";
+export * from "./gpgpu/WorkgroupInfoNode.js";
 
 // lighting
+export * from "./accessors/Lights.js";
 export * from "./lighting/LightingContextNode.js";
-export * from "./lighting/LightNode.js";
 export * from "./lighting/LightsNode.js";
 export * from "./lighting/PointLightNode.js";
 export * from "./lighting/ShadowNode.js";

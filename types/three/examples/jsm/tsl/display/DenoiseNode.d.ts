@@ -1,5 +1,5 @@
-import { Camera, Matrix4 } from "three";
-import { Node, NodeRepresentation, ShaderNodeObject, TempNode, UniformNode } from "three/tsl";
+import { NodeRepresentation, ShaderNodeObject } from "three/tsl";
+import { Camera, Node, TempNode, UniformNode } from "three/webgpu";
 
 declare class DenoiseNode extends TempNode {
     textureNode: Node;
