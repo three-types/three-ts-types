@@ -70,6 +70,7 @@ export { default as BatchNode } from "./accessors/BatchNode.js";
 export { default as BufferAttributeNode } from "./accessors/BufferAttributeNode.js";
 export { default as BufferNode } from "./accessors/BufferNode.js";
 export { default as CubeTextureNode } from "./accessors/CubeTextureNode.js";
+export { default as InstancedMeshNode } from "./accessors/InstancedMeshNode.js";
 export { default as InstanceNode } from "./accessors/InstanceNode.js";
 export { default as MaterialNode, MaterialNodeScope } from "./accessors/MaterialNode.js";
 export { default as MaterialReferenceNode } from "./accessors/MaterialReferenceNode.js";
