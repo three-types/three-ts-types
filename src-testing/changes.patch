@@ -288,7 +288,7 @@ index 97456dbc..c99ecb8a 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index f97a04d1..31307477 100644
+index a3c00279..5503218c 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
@@ -374,7 +374,7 @@ index f97a04d1..31307477 100644
          const texture = this.value;
  
          if (
-@@ -110,7 +137,7 @@ class TextureNode extends UniformNode {
+@@ -111,7 +138,7 @@ class TextureNode extends UniformNode {
          return uvNode;
      }
  
@@ -383,7 +383,7 @@ index f97a04d1..31307477 100644
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -148,19 +175,19 @@ class TextureNode extends UniformNode {
+@@ -149,19 +176,19 @@ class TextureNode extends UniformNode {
          properties.depthNode = this.depthNode;
      }
  
@@ -412,7 +412,7 @@ index f97a04d1..31307477 100644
      ) {
          const texture = this.value;
  
-@@ -183,7 +210,7 @@ class TextureNode extends UniformNode {
+@@ -184,7 +211,7 @@ class TextureNode extends UniformNode {
          return snippet;
      }
  
@@ -421,7 +421,7 @@ index f97a04d1..31307477 100644
          const properties = builder.getNodeProperties(this);
  
          const texture = this.value;
-@@ -249,7 +276,7 @@ class TextureNode extends UniformNode {
+@@ -250,7 +277,7 @@ class TextureNode extends UniformNode {
          }
      }
  
@@ -430,7 +430,7 @@ index f97a04d1..31307477 100644
          this.sampler = value;
  
          return this;
-@@ -261,7 +288,7 @@ class TextureNode extends UniformNode {
+@@ -262,7 +289,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -439,7 +439,7 @@ index f97a04d1..31307477 100644
          const textureNode = this.clone();
          textureNode.uvNode = nodeObject(uvNode);
          textureNode.referenceNode = this.getSelf();
-@@ -269,7 +296,7 @@ class TextureNode extends UniformNode {
+@@ -270,7 +297,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -448,7 +448,7 @@ index f97a04d1..31307477 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -277,7 +304,7 @@ class TextureNode extends UniformNode {
+@@ -278,7 +305,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -3354,7 +3354,7 @@ index a12f3563..e7ae8d1c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 1414c94f..9a3e8e39 100644
+index 531a6a5b..aed28f85 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,8 +1,42 @@
@@ -3464,7 +3464,7 @@ index 1414c94f..9a3e8e39 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
-@@ -90,27 +124,31 @@ class Bindings extends DataMap {
+@@ -93,28 +127,29 @@ class Bindings extends DataMap {
          // iterate over all bindings and check if buffer updates or a new binding group is required
  
          for (const binding of bindGroup.bindings) {
@@ -3488,16 +3488,15 @@ index 1414c94f..9a3e8e39 100644
 -            } else if (binding.isSampler) {
 -                binding.update();
 -            } else if (binding.isSampledTexture) {
--                if (binding.needsBindingsUpdate(this.textures.get(binding.texture).generation))
+-                const texturesTextureData = this.textures.get(binding.texture);
 +            } else if ((binding as Sampler).isSampler) {
 +                (binding as Sampler).update();
 +            } else if ((binding as SampledTexture).isSampledTexture) {
-+                if (
-+                    (binding as SampledTexture).needsBindingsUpdate(
-+                        this.textures.get((binding as SampledTexture).texture).generation,
-+                    )
-+                )
-                     needsBindingsUpdate = true;
++                const texturesTextureData = this.textures.get((binding as SampledTexture).texture);
+ 
+-                if (binding.needsBindingsUpdate(texturesTextureData.generation)) needsBindingsUpdate = true;
++                if ((binding as SampledTexture).needsBindingsUpdate(texturesTextureData.generation))
++                    needsBindingsUpdate = true;
  
 -                const updated = binding.update();
 +                const updated = (binding as SampledTexture).update();
@@ -3507,7 +3506,7 @@ index 1414c94f..9a3e8e39 100644
  
                  if (updated) {
                      this.textures.updateTexture(texture);
-@@ -126,10 +164,10 @@ class Bindings extends DataMap {
+@@ -137,10 +172,10 @@ class Bindings extends DataMap {
                      // TODO: Remove this once we found why updated === false isn't bound to a texture in the WebGPU backend
                      console.error(
                          'Bindings._update: binding should be available:',
@@ -3520,7 +3519,7 @@ index 1414c94f..9a3e8e39 100644
                          needsBindingsUpdate,
                      );
  
-@@ -140,7 +178,7 @@ class Bindings extends DataMap {
+@@ -151,7 +186,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true) {
                      const textureData = this.get(texture);
  
@@ -5019,7 +5018,7 @@ index 263e2064..c31b699e 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index f0af8d95..9f8d6aa9 100644
+index 72ed13fb..8cc4f7b4 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
 @@ -1,10 +1,44 @@
@@ -5095,9 +5094,9 @@ index f0af8d95..9f8d6aa9 100644
 -            renderObject.updateClipping(clippingContext);
 +            renderObject.updateClipping(clippingContext!);
  
-             const needsGeometryUpdate = renderObject.needsGeometryUpdate;
- 
-@@ -75,7 +118,13 @@ class RenderObjects {
+             if (renderObject.needsGeometryUpdate) {
+                 renderObject.setGeometry(object.geometry);
+@@ -73,7 +116,13 @@ class RenderObjects {
      }
  
      getChainMap(passId = 'default') {
@@ -5112,7 +5111,7 @@ index f0af8d95..9f8d6aa9 100644
      }
  
      dispose() {
-@@ -83,17 +132,17 @@ class RenderObjects {
+@@ -81,17 +130,17 @@ class RenderObjects {
      }
  
      createRenderObject(
@@ -7912,7 +7911,7 @@ index 2ac9e7c4..beef6e0e 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 729edf96..f6d9dd5b 100644
+index 2cb79b70..6b5b60e0 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -983,7 +983,7 @@ class WebGPUBackend extends Backend {

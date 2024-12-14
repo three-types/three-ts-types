@@ -15355,21 +15355,31 @@ index 4aeb6e43..738b6580 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index a8995b5c..9afd9009 100644
+index 8f8946ae..73ed7fa3 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-@@ -1,6 +1,6 @@
+@@ -1,6 +1,16 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, metalness, vec4 /*, uniform*/ } from 'three/tsl';
+-import { pass, mrt, output, transformedNormalView, metalness, vec4, screenUV, color } from 'three/tsl';
 -import { ssr } from 'three/addons/tsl/display/SSRNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, transformedNormalView, metalness, vec4, ShaderNodeObject } from 'three/tsl';
++import {
++    pass,
++    mrt,
++    output,
++    transformedNormalView,
++    metalness,
++    vec4,
++    screenUV,
++    color,
++    ShaderNodeObject,
++} from 'three/tsl';
 +import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -16,8 +16,12 @@ const params = {
-     autoRotate: false,
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -16,8 +26,12 @@ const params = {
+     enabled: true,
  };
  
 -let camera, scene, renderer, postProcessing, ssrPass;
@@ -15381,17 +15391,8 @@ index a8995b5c..9afd9009 100644
 +    ssrPass: ShaderNodeObject<SSRNode>;
 +let gui: GUI, stats: Stats, controls: OrbitControls;
  
- // Configure and create Draco decoder.
- const dracoLoader = new DRACOLoader();
-@@ -62,7 +66,7 @@ async function init() {
-         dracoLoader.dispose();
-     });
+ init();
  
--    let geometry, material, mesh;
-+    let geometry: THREE.BufferGeometry, material: THREE.Material, mesh: THREE.Mesh;
- 
-     geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
-     material = new THREE.MeshStandardNodeMaterial({ color: 'green', metalness: 0.3 });
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
 index 9a5558e9..05dbf9db 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
