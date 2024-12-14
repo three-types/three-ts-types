@@ -6701,7 +6701,7 @@ index 28aac0d7..2479d00d 100644
  
          this.isUniformBuffer = true;
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index aa27776a..b91c593c 100644
+index aa27776a..a31eb060 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,8 +1,24 @@
@@ -6838,6 +6838,15 @@ index aa27776a..b91c593c 100644
          let updated = false;
  
          const a = this.values;
+@@ -263,7 +279,7 @@ class UniformsGroup extends UniformBuffer {
+         return updated;
+     }
+ 
+-    _getBufferForType(type) {
++    _getBufferForType(type: string | null): Int32Array | Uint32Array | Float32Array {
+         if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
+             return new Int32Array(this.buffer.buffer);
+         if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
 @@ -272,13 +288,13 @@ class UniformsGroup extends UniformBuffer {
      }
  }
