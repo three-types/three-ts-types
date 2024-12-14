@@ -124,6 +124,7 @@ export * from "./geometry/RangeNode.js";
 
 // gpgpu
 export * from "./gpgpu/AtomicFunctionNode.js";
+export * from "./gpgpu/ComputeBuiltinNode.js";
 export * from "./gpgpu/ComputeNode.js";
 
 // lighting
