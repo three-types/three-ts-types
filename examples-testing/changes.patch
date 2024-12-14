@@ -763,7 +763,7 @@ index e7079c40..89676cd4 100644
      }
  });
 diff --git a/examples-testing/examples/misc_controls_arcball.ts b/examples-testing/examples/misc_controls_arcball.ts
-index fbef3318..be69ca7b 100644
+index 97653ede..c1d5378a 100644
 --- a/examples-testing/examples/misc_controls_arcball.ts
 +++ b/examples-testing/examples/misc_controls_arcball.ts
 @@ -12,8 +12,12 @@ const cameraType = { type: 'Perspective' };
@@ -781,7 +781,7 @@ index fbef3318..be69ca7b 100644
  
  const arcballGui = {
      gizmoVisible: true,
-@@ -97,8 +101,8 @@ function init() {
+@@ -98,8 +102,8 @@ function init() {
          material.normalMap.wrapS = THREE.RepeatWrapping;
  
          group.traverse(function (child) {
@@ -792,7 +792,7 @@ index fbef3318..be69ca7b 100644
              }
          });
  
-@@ -164,12 +168,12 @@ function onWindowResize() {
+@@ -165,12 +169,12 @@ function onWindowResize() {
  
          const halfW = perspectiveDistance * Math.tan(halfFovH);
          const halfH = perspectiveDistance * Math.tan(halfFovV);
@@ -810,7 +810,7 @@ index fbef3318..be69ca7b 100644
      }
  
      camera.updateProjectionMatrix();
-@@ -183,7 +187,7 @@ function render() {
+@@ -184,7 +188,7 @@ function render() {
      renderer.render(scene, camera);
  }
  
@@ -819,7 +819,7 @@ index fbef3318..be69ca7b 100644
      if (event.key === 'c') {
          if (event.ctrlKey || event.metaKey) {
              controls.copyState();
-@@ -195,7 +199,7 @@ function onKeyDown(event) {
+@@ -196,7 +200,7 @@ function onKeyDown(event) {
      }
  }
  
@@ -14650,13 +14650,13 @@ index 9eb9922d..b75024ec 100644
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
-index 775399bf..1deb0cb1 100644
+index 927a4661..9296a108 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
 +++ b/examples-testing/examples/webgpu_parallax_uv.ts
 @@ -1,11 +1,11 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { texture, parallaxUV, overlay, uv } from 'three/tsl';
+ import { texture, parallaxUV, blendOverlay, uv } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15355,12 +15355,12 @@ index 4aeb6e43..738b6580 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 26ac69d9..6a1cd1e8 100644
+index 188581a5..ab9f2367 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -1,6 +1,16 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, metalness, blendNormal, screenUV, color } from 'three/tsl';
+-import { pass, mrt, output, transformedNormalView, metalness, blendColor, screenUV, color } from 'three/tsl';
 -import { ssr } from 'three/addons/tsl/display/SSRNode.js';
 +import * as THREE from 'three/webgpu';
 +import {
@@ -15369,7 +15369,7 @@ index 26ac69d9..6a1cd1e8 100644
 +    output,
 +    transformedNormalView,
 +    metalness,
-+    blendNormal,
++    blendColor,
 +    screenUV,
 +    color,
 +    ShaderNodeObject,
