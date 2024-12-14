@@ -273,3 +273,4 @@ export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<Arr
 
 export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
 export const convert: (node: NodeRepresentation, types: string) => ShaderNodeObject<Node>;
+export const split: (node: NodeRepresentation, channels?: string) => ShaderNodeObject<Node>;

@@ -138,7 +138,6 @@ export { default as IESSpotLightNode } from "./lighting/IESSpotLightNode.js";
 export { default as IrradianceNode } from "./lighting/IrradianceNode.js";
 export { default as LightingContextNode } from "./lighting/LightingContextNode.js";
 export { default as LightingNode } from "./lighting/LightingNode.js";
-export { default as LightNode, LightNodeScope } from "./lighting/LightNode.js";
 export { default as LightProbeNode } from "./lighting/LightProbeNode.js";
 export { default as LightsNode } from "./lighting/LightsNode.js";
 export { default as PointLightNode } from "./lighting/PointLightNode.js";
