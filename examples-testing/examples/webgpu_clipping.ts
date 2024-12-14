@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
+
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -27,8 +28,10 @@ function init() {
     spotLight.castShadow = true;
     spotLight.shadow.camera.near = 3;
     spotLight.shadow.camera.far = 10;
-    spotLight.shadow.mapSize.width = 1024;
-    spotLight.shadow.mapSize.height = 1024;
+    spotLight.shadow.mapSize.width = 2048;
+    spotLight.shadow.mapSize.height = 2048;
+    spotLight.shadow.bias = -0.002;
+    spotLight.shadow.radius = 4;
     scene.add(spotLight);
 
     const dirLight = new THREE.DirectionalLight(0x55505a, 3);
@@ -46,22 +49,32 @@ function init() {
     dirLight.shadow.mapSize.height = 1024;
     scene.add(dirLight);
 
-    // ***** Clipping planes: *****
+    // Clipping planes
 
-    const localPlane = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.8);
     const globalPlane = new THREE.Plane(new THREE.Vector3(-1, 0, 0), 0.1);
+    const localPlane1 = new THREE.Plane(new THREE.Vector3(0, -1, 0), 0.8);
+    const localPlane2 = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0.1);
+
+    // Clipping Groups
+
+    const globalClippingGroup = new THREE.ClippingGroup();
+    globalClippingGroup.clippingPlanes = [globalPlane];
+
+    const knotClippingGroup = new THREE.ClippingGroup();
+    knotClippingGroup.clippingPlanes = [localPlane1, localPlane2];
+    knotClippingGroup.clipIntersection = true;
+
+    scene.add(globalClippingGroup);
+    globalClippingGroup.add(knotClippingGroup);
 
     // Geometry
 
-    const material = new THREE.MeshPhongMaterial({
+    const material = new THREE.MeshPhongNodeMaterial({
         color: 0x80ee10,
-        shininess: 100,
+        shininess: 0,
         side: THREE.DoubleSide,
 
         // ***** Clipping setup (material): *****
-        clippingPlanes: [localPlane],
-        clipShadows: true,
-
         alphaToCoverage: true,
     });
 
@@ -69,38 +82,31 @@ function init() {
 
     object = new THREE.Mesh(geometry, material);
     object.castShadow = true;
-    scene.add(object);
+    knotClippingGroup.add(object);
 
     const ground = new THREE.Mesh(
         new THREE.PlaneGeometry(9, 9, 1, 1),
-        new THREE.MeshPhongMaterial({ color: 0xa0adaf, shininess: 150 }),
+        new THREE.MeshPhongNodeMaterial({ color: 0xa0adaf, shininess: 150, alphaToCoverage: true }),
     );
 
     ground.rotation.x = -Math.PI / 2; // rotates X/Y to X/Z
     ground.receiveShadow = true;
-    scene.add(ground);
-
-    // Renderer
-
-    renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setAnimationLoop(animate);
-    renderer.shadowMap.enabled = true;
-    document.body.appendChild(renderer.domElement);
-
-    window.addEventListener('resize', onWindowResize);
-
-    // ***** Clipping setup (renderer): *****
-    const globalPlanes = [globalPlane],
-        Empty = Object.freeze([]);
-    renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
-    renderer.localClippingEnabled = true;
+    globalClippingGroup.add(ground);
 
     // Stats
 
     stats = new Stats();
     document.body.appendChild(stats.dom);
+
+    // Renderer
+
+    renderer = new THREE.WebGPURenderer({ antialias: true });
+    renderer.shadowMap.enabled = true;
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setAnimationLoop(animate);
+    window.addEventListener('resize', onWindowResize);
+    document.body.appendChild(renderer.domElement);
 
     // Controls
 
@@ -114,36 +120,44 @@ function init() {
         props = {
             alphaToCoverage: true,
         },
-        folderLocal = gui.addFolder('Local Clipping'),
-        propsLocal = {
+        folderKnot = gui.addFolder('Knot Clipping Group'),
+        propsKnot = {
             get Enabled() {
-                return renderer.localClippingEnabled;
+                return knotClippingGroup.enabled;
             },
             set Enabled(v) {
-                renderer.localClippingEnabled = v;
+                knotClippingGroup.enabled = v;
             },
 
             get Shadows() {
-                return material.clipShadows;
+                return knotClippingGroup.clipShadows;
             },
             set Shadows(v) {
-                material.clipShadows = v;
+                knotClippingGroup.clipShadows = v;
+            },
+
+            get Intersection() {
+                return knotClippingGroup.clipIntersection;
+            },
+
+            set Intersection(v) {
+                knotClippingGroup.clipIntersection = v;
             },
 
             get Plane() {
-                return localPlane.constant;
+                return localPlane1.constant;
             },
             set Plane(v) {
-                localPlane.constant = v;
+                localPlane1.constant = v;
             },
         },
-        folderGlobal = gui.addFolder('Global Clipping'),
+        folderGlobal = gui.addFolder('Global Clipping Group'),
         propsGlobal = {
             get Enabled() {
-                return renderer.clippingPlanes !== Empty;
+                return globalClippingGroup.enabled;
             },
             set Enabled(v) {
-                renderer.clippingPlanes = v ? globalPlanes : Empty;
+                globalClippingGroup.enabled = v;
             },
 
             get Plane() {
@@ -161,9 +175,11 @@ function init() {
         material.alphaToCoverage = value;
         material.needsUpdate = true;
     });
-    folderLocal.add(propsLocal, 'Enabled');
-    folderLocal.add(propsLocal, 'Shadows');
-    folderLocal.add(propsLocal, 'Plane', 0.3, 1.25);
+
+    folderKnot.add(propsKnot, 'Enabled');
+    folderKnot.add(propsKnot, 'Shadows');
+    folderKnot.add(propsKnot, 'Intersection');
+    folderKnot.add(propsKnot, 'Plane', 0.3, 1.25);
 
     folderGlobal.add(propsGlobal, 'Enabled');
     folderGlobal.add(propsGlobal, 'Plane', -0.4, 3);
@@ -180,8 +196,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate() {
-    const currentTime = Date.now();
+function animate(currentTime) {
     const time = (currentTime - startTime) / 1000;
 
     object.position.y = 0.8;
