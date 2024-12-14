@@ -81,8 +81,8 @@ export default class RenderObject {
         LightsNode,
     ];
     setGeometry(geometry: BufferGeometry): void;
-    getAttributes(): (InterleavedBufferAttribute | BufferAttribute)[];
-    getVertexBuffers(): (InterleavedBuffer | BufferAttribute)[] | null;
+    getAttributes(): (BufferAttribute | InterleavedBufferAttribute)[];
+    getVertexBuffers(): (BufferAttribute | InterleavedBuffer)[] | null;
     getDrawParameters(): {
         vertexCount: number;
         firstVertex: number;

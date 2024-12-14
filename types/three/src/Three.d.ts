@@ -1,4 +1,4 @@
-export * from "./Three.core.js";
+export * from "./Three.Core.js";
 
 export * from "./extras/PMREMGenerator.js";
 export * from "./renderers/shaders/ShaderChunk.js";

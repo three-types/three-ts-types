@@ -1,1 +1,1 @@
-export * from "../src/Three.core.js";
+export * from "../src/Three.Core.js";
