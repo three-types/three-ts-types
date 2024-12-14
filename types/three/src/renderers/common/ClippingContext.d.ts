@@ -3,8 +3,8 @@ import { Matrix3 } from "../../math/Matrix3.js";
 import { Matrix4 } from "../../math/Matrix4.js";
 import { Plane } from "../../math/Plane.js";
 import { Vector4 } from "../../math/Vector4.js";
+import { ClippingGroup } from "../../objects/ClippingGroup.js";
 import { Scene } from "../../scenes/Scene.js";
-import ClippingGroup from "./ClippingGroup.js";
 declare class ClippingContext {
     version: number;
     clipIntersection: boolean | null;

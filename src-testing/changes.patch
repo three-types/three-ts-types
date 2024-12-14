@@ -3675,18 +3675,17 @@ index b17e7080..e2b545b7 100644
              if (map === undefined) return false;
          }
 diff --git a/src-testing/src/renderers/common/ClippingContext.ts b/src-testing/src/renderers/common/ClippingContext.ts
-index f7ac6960..5b8b4893 100644
+index f7ac6960..b09d632b 100644
 --- a/src-testing/src/renderers/common/ClippingContext.ts
 +++ b/src-testing/src/renderers/common/ClippingContext.ts
-@@ -1,11 +1,33 @@
+@@ -1,11 +1,32 @@
  import { Matrix3 } from '../../math/Matrix3.js';
  import { Plane } from '../../math/Plane.js';
  import { Vector4 } from '../../math/Vector4.js';
 +import { Matrix4 } from '../../math/Matrix4.js';
-+import Renderer from './Renderer.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import { Scene } from '../../scenes/Scene.js';
-+import ClippingGroup from './ClippingGroup.js';
++import { ClippingGroup } from '../../objects/ClippingGroup.js';
  
  const _plane = /*@__PURE__*/ new Plane();
  
@@ -3713,7 +3712,7 @@ index f7ac6960..5b8b4893 100644
          this.version = 0;
  
          this.clipIntersection = null;
-@@ -31,11 +53,11 @@ class ClippingContext {
+@@ -31,11 +52,11 @@ class ClippingContext {
          this.parentVersion = null;
      }
  
@@ -3727,7 +3726,7 @@ index f7ac6960..5b8b4893 100644
  
              const v = destination[offset + i];
              const normal = _plane.normal;
-@@ -47,19 +69,19 @@ class ClippingContext {
+@@ -47,19 +68,19 @@ class ClippingContext {
          }
      }
  
@@ -3751,7 +3750,7 @@ index f7ac6960..5b8b4893 100644
              this.parentVersion = parentContext.version;
          }
  
-@@ -67,24 +89,24 @@ class ClippingContext {
+@@ -67,24 +88,24 @@ class ClippingContext {
              this.clipIntersection = clippingGroup.clipIntersection;
  
              if (this.clipIntersection) {
@@ -3783,7 +3782,7 @@ index f7ac6960..5b8b4893 100644
          }
  
          if (dstClippingPlanes.length !== offset + l) {
-@@ -97,15 +119,15 @@ class ClippingContext {
+@@ -97,15 +118,15 @@ class ClippingContext {
              update = true;
          }
  
@@ -3802,27 +3801,14 @@ index f7ac6960..5b8b4893 100644
          if (this.shadowPass && !clippingGroup.clipShadows) return this;
  
          let context = this.clippingGroupContexts.get(clippingGroup);
-diff --git a/src-testing/src/renderers/common/ClippingGroup.ts b/src-testing/src/renderers/common/ClippingGroup.ts
-index 20a21c5c..9c3d0e7a 100644
---- a/src-testing/src/renderers/common/ClippingGroup.ts
-+++ b/src-testing/src/renderers/common/ClippingGroup.ts
-@@ -1,6 +1,17 @@
- import { Group } from '../../objects/Group.js';
-+import { Plane } from '../../math/Plane.js';
+@@ -121,7 +142,7 @@ class ClippingContext {
+     }
  
- class ClippingGroup extends Group {
-+    readonly isClippingGroup: true;
-+
-+    clippingPlanes: Plane[];
-+
-+    enabled: boolean;
-+
-+    clipIntersection: boolean;
-+
-+    clipShadows: boolean;
-+
-     constructor() {
-         super();
+     get unionClippingCount() {
+-        return this.unionPlanes.length;
++        return this.unionPlanes!.length;
+     }
+ }
  
 diff --git a/src-testing/src/renderers/common/Color4.ts b/src-testing/src/renderers/common/Color4.ts
 index 77caa31e..8ec327a7 100644
@@ -5173,7 +5159,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index e7d921c8..0011c698 100644
+index 1fca91ca..794c1e59 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,35 @@ import {
@@ -7926,10 +7912,10 @@ index 2ac9e7c4..beef6e0e 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 36f987a9..8c774ec4 100644
+index 729edf96..f6d9dd5b 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -979,7 +979,7 @@ class WebGPUBackend extends Backend {
+@@ -983,7 +983,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7939,7 +7925,7 @@ index 36f987a9..8c774ec4 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 87bc0e9a..6adf85a2 100644
+index 088d0565..02da8cea 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7975,7 +7961,7 @@ index 87bc0e9a..6adf85a2 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -315,7 +323,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -317,7 +325,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `tsl_biquadraticTexture( ${textureProperty}, ${wrapFunction}( ${uvSnippet} ), ${textureDimension}, i32( ${levelSnippet} ) )`;
      }
  
@@ -7989,7 +7975,7 @@ index 87bc0e9a..6adf85a2 100644
          this._include('repeatWrapping');
  
          const dimension =
-@@ -326,7 +339,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -328,7 +341,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return `textureLoad( ${textureProperty}, tsl_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
      }
  
@@ -8004,7 +7990,7 @@ index 87bc0e9a..6adf85a2 100644
          if (depthSnippet) {
              return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
          } else {
-@@ -361,11 +380,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -363,11 +382,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -8021,7 +8007,7 @@ index 87bc0e9a..6adf85a2 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -377,11 +396,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -379,11 +398,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -8038,7 +8024,7 @@ index 87bc0e9a..6adf85a2 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -394,11 +413,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -396,11 +415,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -8055,7 +8041,7 @@ index 87bc0e9a..6adf85a2 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -420,11 +439,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -422,11 +441,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureBias(
@@ -8072,7 +8058,7 @@ index 87bc0e9a..6adf85a2 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -434,7 +453,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -436,7 +455,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -8081,7 +8067,7 @@ index 87bc0e9a..6adf85a2 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -501,7 +520,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -503,7 +522,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -8095,7 +8081,7 @@ index 87bc0e9a..6adf85a2 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -618,7 +642,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -620,7 +644,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -8104,7 +8090,7 @@ index 87bc0e9a..6adf85a2 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -785,8 +809,8 @@ ${flowData.code}
+@@ -787,8 +811,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -8115,7 +8101,7 @@ index 87bc0e9a..6adf85a2 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -872,8 +896,8 @@ ${flowData.code}
+@@ -874,8 +898,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -8126,7 +8112,7 @@ index 87bc0e9a..6adf85a2 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -909,7 +933,7 @@ ${flowData.code}
+@@ -911,7 +935,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
