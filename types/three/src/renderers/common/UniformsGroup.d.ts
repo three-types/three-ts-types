@@ -17,7 +17,7 @@ declare class UniformsGroup extends UniformBuffer {
     addUniform(uniform: NodeUniformGPU): this;
     removeUniform(uniform: NodeUniformGPU): this;
     get values(): number[];
-    get buffer(): Float32Array<ArrayBufferLike>;
+    get buffer(): Float32Array;
     get byteLength(): number;
     update(): boolean;
     updateByType(uniform: NodeUniformGPU): boolean | undefined;
