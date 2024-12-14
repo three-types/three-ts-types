@@ -1,5 +1,5 @@
-import { Camera, Vector2 } from "three";
-import { Node, NodeRepresentation, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
+import { NodeRepresentation, ShaderNodeObject } from "three/tsl";
+import { Camera, Node, TempNode, TextureNode, UniformNode, Vector2 } from "three/webgpu";
 
 declare class GTAONode extends TempNode {
     depthNode: Node;

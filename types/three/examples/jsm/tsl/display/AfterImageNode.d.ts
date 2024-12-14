@@ -1,4 +1,4 @@
-import { Node, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
+import { Node, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
 export default class AfterImageNode extends TempNode {
     textureNode: TextureNode;

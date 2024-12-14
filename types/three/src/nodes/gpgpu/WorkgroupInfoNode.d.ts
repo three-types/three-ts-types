@@ -1,5 +1,5 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from '../tsl/TSLCore.js';
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class WorkgroupInfoNode extends Node {
     bufferType: string;
