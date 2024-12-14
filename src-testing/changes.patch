@@ -5158,7 +5158,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 1fca91ca..794c1e59 100644
+index 657c7321..2122eac8 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,35 @@ import {
@@ -5928,8 +5928,8 @@ index 1fca91ca..794c1e59 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -1135,7 +1347,7 @@ class Renderer {
-         return this.backend.hasFeature(name);
+@@ -1139,7 +1351,7 @@ class Renderer {
+         return this._initialized;
      }
  
 -    copyFramebufferToTexture(framebufferTexture, rectangle = null) {
@@ -5937,7 +5937,7 @@ index 1fca91ca..794c1e59 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -1176,56 +1388,84 @@ class Renderer {
+@@ -1180,56 +1392,84 @@ class Renderer {
          this.backend.copyFramebufferToTexture(framebufferTexture, renderContext, rectangle);
      }
  
@@ -6039,7 +6039,7 @@ index 1fca91ca..794c1e59 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -1235,7 +1475,7 @@ class Renderer {
+@@ -1239,7 +1479,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -6048,7 +6048,7 @@ index 1fca91ca..794c1e59 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -1260,7 +1500,7 @@ class Renderer {
+@@ -1264,7 +1504,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -6057,7 +6057,7 @@ index 1fca91ca..794c1e59 100644
  
              renderList.begin();
  
-@@ -1280,13 +1520,19 @@ class Renderer {
+@@ -1284,13 +1524,19 @@ class Renderer {
          }
      }
  
@@ -6079,7 +6079,7 @@ index 1fca91ca..794c1e59 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -1314,7 +1560,13 @@ class Renderer {
+@@ -1318,7 +1564,13 @@ class Renderer {
          }
      }
  
@@ -6094,7 +6094,7 @@ index 1fca91ca..794c1e59 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -1325,31 +1577,31 @@ class Renderer {
+@@ -1329,31 +1581,31 @@ class Renderer {
  
              const { object, geometry, material, group, clippingContext } = renderItem;
  
@@ -6135,7 +6135,7 @@ index 1fca91ca..794c1e59 100644
                              lightsNode,
                              clippingContext,
                              passId,
-@@ -1357,13 +1609,13 @@ class Renderer {
+@@ -1361,13 +1613,13 @@ class Renderer {
                      }
                  }
              } else {
@@ -6154,7 +6154,7 @@ index 1fca91ca..794c1e59 100644
                      lightsNode,
                      clippingContext,
                      passId,
-@@ -1372,7 +1624,17 @@ class Renderer {
+@@ -1376,7 +1628,17 @@ class Renderer {
          }
      }
  
@@ -6173,7 +6173,7 @@ index 1fca91ca..794c1e59 100644
          let overridePositionNode;
          let overrideFragmentNode;
          let overrideDepthNode;
-@@ -1441,14 +1703,23 @@ class Renderer {
+@@ -1445,14 +1707,23 @@ class Renderer {
          object.onAfterRender(this, scene, camera, geometry, material, group);
      }
  
@@ -6200,7 +6200,7 @@ index 1fca91ca..794c1e59 100644
              clippingContext,
              passId,
          );
-@@ -1457,18 +1728,18 @@ class Renderer {
+@@ -1461,18 +1732,18 @@ class Renderer {
  
          //
  
@@ -6225,7 +6225,7 @@ index 1fca91ca..794c1e59 100644
  
          //
  
-@@ -1482,33 +1753,41 @@ class Renderer {
+@@ -1486,33 +1757,41 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
