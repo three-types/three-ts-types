@@ -17,6 +17,7 @@ export const Loop: typeof TSL.Loop;
 export const NodeShaderStage: typeof TSL.NodeShaderStage;
 export const NodeType: typeof TSL.NodeType;
 export const NodeUpdateType: typeof TSL.NodeUpdateType;
+export const NodeAccess: typeof TSL.NodeAccess;
 export const PCFShadowFilter: typeof TSL.PCFShadowFilter;
 export const PCFSoftShadowFilter: typeof TSL.PCFSoftShadowFilter;
 export const PI: typeof TSL.PI;
