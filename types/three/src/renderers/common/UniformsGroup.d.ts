@@ -28,8 +28,6 @@ declare class UniformsGroup extends UniformBuffer {
     updateColor(uniform: ColorNodeUniform): boolean;
     updateMatrix3(uniform: Matrix3NodeUniform): boolean;
     updateMatrix4(uniform: Matrix4NodeUniform): boolean;
-    _getBufferForType(
-        type: any,
-    ): Int32Array<ArrayBufferLike> | Uint32Array<ArrayBufferLike> | Float32Array<ArrayBufferLike>;
+    _getBufferForType(type: string | null): Int32Array | Uint32Array | Float32Array;
 }
 export default UniformsGroup;
