@@ -1,12 +1,5 @@
 import { Camera, Vector2 } from "three";
-import {
-    Node,
-    NodeRepresentation,
-    ShaderNodeObject,
-    TempNode,
-    TextureNode,
-    UniformNode,
-} from "three/tsl";
+import { Node, NodeRepresentation, ShaderNodeObject, TempNode, TextureNode, UniformNode } from "three/tsl";
 
 declare class GTAONode extends TempNode {
     depthNode: Node;
