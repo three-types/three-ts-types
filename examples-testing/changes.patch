@@ -881,15 +881,9 @@ index b12b0421..c3b378aa 100644
              }
  
 diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
-index 6326af66..e88957c0 100644
+index a8a603bb..e88957c0 100644
 --- a/examples-testing/examples/misc_controls_fly.ts
 +++ b/examples-testing/examples/misc_controls_fly.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass } from 'three/tsl';
- import { film } from 'three/addons/tsl/display/FilmNode.js';
- 
 @@ -16,11 +16,15 @@ const MARGIN = 0;
  let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
  let SCREEN_WIDTH = window.innerWidth;
@@ -13768,14 +13762,14 @@ index 5638c902..a274a953 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index ed195757..7ee84406 100644
+index ed195757..84114277 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -1,8 +1,9 @@
 -import * as THREE from 'three';
 -import { texture, uv, pass, uniform } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { texture, uv, pass, uniform, Node, ShaderNodeObject, UniformNode } from 'three/tsl';
++import { texture, uv, pass, uniform, ShaderNodeObject } from 'three/tsl';
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
  import { TiledLighting } from 'three/addons/lighting/TiledLighting.js';
@@ -13806,8 +13800,8 @@ index ed195757..7ee84406 100644
 +    lightDummy: THREE.InstancedMesh,
 +    stats: Stats,
 +    controls: OrbitControls,
-+    compose: ShaderNodeObject<Node>,
-+    tileInfluence: ShaderNodeObject<UniformNode<number>>,
++    compose: ShaderNodeObject<THREE.Node>,
++    tileInfluence: ShaderNodeObject<THREE.UniformNode<number>>,
 +    lighting: TiledLighting,
 +    count: number,
 +    postProcessing: THREE.PostProcessing;
@@ -14587,10 +14581,10 @@ index a749bd6d..16bcee89 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 989361b6..d324a37f 100644
+index 989361b6..491df42d 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-@@ -1,12 +1,31 @@
+@@ -1,12 +1,30 @@
 -import * as THREE from 'three';
 -import { mix, step, texture, screenUV, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
@@ -14605,7 +14599,6 @@ index 989361b6..d324a37f 100644
 +    uv,
 +    vec2,
 +    ShaderNodeObject,
-+    MRTNode,
 +} from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14616,7 +14609,7 @@ index 989361b6..d324a37f 100644
 -let quadMesh, sceneMRT, renderTarget, readbackTarget, material, readbackMaterial, pixelBuffer, pixelBufferTexture;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
 +let quadMesh: THREE.QuadMesh,
-+    sceneMRT: ShaderNodeObject<MRTNode>,
++    sceneMRT: ShaderNodeObject<THREE.MRTNode>,
 +    renderTarget: THREE.RenderTarget,
 +    readbackTarget: THREE.RenderTarget,
 +    material: THREE.NodeMaterial,
@@ -14626,7 +14619,7 @@ index 989361b6..d324a37f 100644
  
  const gui = new GUI();
  
-@@ -109,7 +128,7 @@ function onWindowResize() {
+@@ -109,7 +127,7 @@ function onWindowResize() {
      renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
  }
  
@@ -14635,7 +14628,7 @@ index 989361b6..d324a37f 100644
      const selection = options.selection;
  
      torus.rotation.y = (time / 1000) * 0.4;
-@@ -143,12 +162,26 @@ async function readback() {
+@@ -143,12 +161,26 @@ async function readback() {
      const selection = options.selection;
  
      if (selection === 'diffuse') {
@@ -14889,7 +14882,7 @@ index 06af5ab4..e543f68b 100644
      postProcessing.outputNode = combinedPass;
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 1957d7a9..34c14633 100644
+index 1957d7a9..d76a7142 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
@@ -14898,7 +14891,7 @@ index 1957d7a9..34c14633 100644
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, normalView, Node, ShaderNodeObject } from 'three/tsl';
++import { pass, mrt, output, normalView, ShaderNodeObject } from 'three/tsl';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
 +import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
  
@@ -14919,9 +14912,9 @@ index 1957d7a9..34c14633 100644
 -let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
 +let aoPass: ShaderNodeObject<GTAONode>,
 +    denoisePass: ShaderNodeObject<DenoiseNode>,
-+    blendPassAO: ShaderNodeObject<Node>,
-+    blendPassDenoise: ShaderNodeObject<Node>,
-+    scenePassColor: ShaderNodeObject<Node>;
++    blendPassAO: ShaderNodeObject<THREE.Node>,
++    blendPassDenoise: ShaderNodeObject<THREE.Node>,
++    scenePassColor: ShaderNodeObject<THREE.Node>;
  
  const params = {
      distanceExponent: 1,
@@ -14990,17 +14983,15 @@ index a1f885c6..15a5c3fe 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index e4624db9..4e54e3bd 100644
+index e4624db9..0cf7cf09 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-@@ -1,5 +1,5 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, float, uniform } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, float, uniform, UniformNode } from 'three/tsl';
+ import { pass, mrt, output, float, uniform } from 'three/tsl';
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -85,9 +85,10 @@ window.addEventListener('pointerdown', event => {
      const intersects = raycaster.intersectObjects(scene.children, false);
  
@@ -15010,7 +15001,7 @@ index e4624db9..4e54e3bd 100644
 +            .material;
  
 -        const bloomIntensity = material.mrtNode.get('bloomIntensity');
-+        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as UniformNode<number>;
++        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<number>;
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
@@ -15127,14 +15118,13 @@ index d0a1b51e..bfe5d434 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index fc87be20..54310173 100644
+index fc87be20..5f8ab8b3 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -1,8 +1,8 @@
 -import * as THREE from 'three';
--import { pass, texture } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { Node, pass, texture } from 'three/tsl';
+ import { pass, texture } from 'three/tsl';
  
 -let camera, postProcessing, renderer;
 -let box, torus;
@@ -15148,7 +15138,7 @@ index fc87be20..54310173 100644
      const sceneMask2 = pass(maskScene2, camera).a;
  
 -    let compose = base;
-+    let compose: Node = base;
++    let compose: THREE.Node = base;
      compose = sceneMask1.mix(compose, texture(texture1));
      compose = sceneMask2.mix(compose, texture(texture2));
  
@@ -15237,18 +15227,17 @@ index d25c12c5..a74590cf 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index ff53a4b4..4a0d8755 100644
+index ff53a4b4..ee8bb78b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-@@ -1,13 +1,24 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
--import { uniform } from 'three/tsl';
-+import { uniform, UniformNode } from 'three/tsl';
+@@ -6,8 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { uniform } from 'three/tsl';
  import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
  
 -let camera, scene, renderer, postProcessing, crystalMesh, clock;
@@ -15261,9 +15250,9 @@ index ff53a4b4..4a0d8755 100644
 +    clock: THREE.Clock;
 +let gui: GUI,
 +    effectController: {
-+        pixelSize: UniformNode<number>;
-+        normalEdgeStrength: UniformNode<number>;
-+        depthEdgeStrength: UniformNode<number>;
++        pixelSize: THREE.UniformNode<number>;
++        normalEdgeStrength: THREE.UniformNode<number>;
++        depthEdgeStrength: THREE.UniformNode<number>;
 +        pixelAlignedPanning: boolean;
 +    };
  
@@ -15478,7 +15467,7 @@ index 9a5558e9..05dbf9db 100644
  
  init();
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
-index dc70b8e9..8c9da56f 100644
+index dc70b8e9..ae7a2ade 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_transition.ts
 @@ -1,16 +1,31 @@
@@ -15490,7 +15479,7 @@ index dc70b8e9..8c9da56f 100644
  import TWEEN from 'three/addons/libs/tween.module.js';
 -import { uniform, pass } from 'three/tsl';
 -import { transition } from 'three/addons/tsl/display/TransitionNode.js';
-+import { uniform, pass, ShaderNodeObject, UniformNode } from 'three/tsl';
++import { uniform, pass, ShaderNodeObject } from 'three/tsl';
 +import TransitionNode, { transition } from 'three/addons/tsl/display/TransitionNode.js';
  
 -let renderer, postProcessing, transitionController, transitionPass;
@@ -15508,12 +15497,12 @@ index dc70b8e9..8c9da56f 100644
 +    animateScene: boolean;
 +    animateTransition: boolean;
 +    transition: number;
-+    _transition: UniformNode<number>;
++    _transition: THREE.UniformNode<number>;
 +    useTexture: boolean;
-+    _useTexture: UniformNode<number>;
++    _useTexture: THREE.UniformNode<number>;
 +    texture: number;
 +    cycle: boolean;
-+    threshold: UniformNode<number>;
++    threshold: THREE.UniformNode<number>;
 +}
 +
 +const effectController: EffectController = {
