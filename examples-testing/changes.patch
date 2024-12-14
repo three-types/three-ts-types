@@ -2058,7 +2058,7 @@ index 28b2c96a..6a802ab6 100644
  
      geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3).onUpload(disposeArray));
 diff --git a/examples-testing/examples/webgl_buffergeometry_attributes_integer.ts b/examples-testing/examples/webgl_buffergeometry_attributes_integer.ts
-index 96926c2c..76e6c251 100644
+index 00490b71..c553afe5 100644
 --- a/examples-testing/examples/webgl_buffergeometry_attributes_integer.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_attributes_integer.ts
 @@ -1,6 +1,6 @@
@@ -2078,17 +2078,6 @@ index 96926c2c..76e6c251 100644
  
      geometry.computeBoundingSphere();
  
-@@ -83,8 +83,8 @@ function init() {
-                 value: [map1, map2, map3],
-             },
-         },
--        vertexShader: document.getElementById('vertexShader').textContent,
--        fragmentShader: document.getElementById('fragmentShader').textContent,
-+        vertexShader: document.getElementById('vertexShader')!.textContent!,
-+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
-         side: THREE.DoubleSide,
-         glslVersion: THREE.GLSL3,
-     });
 diff --git a/examples-testing/examples/webgl_buffergeometry_attributes_none.ts b/examples-testing/examples/webgl_buffergeometry_attributes_none.ts
 index a1424e87..f7fcf29f 100644
 --- a/examples-testing/examples/webgl_buffergeometry_attributes_none.ts
@@ -15292,26 +15281,35 @@ index 7040b08b..85db2b79 100644
  const params = {
      enabled: true,
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-index 84e7028d..527b5f3c 100644
+index 1ee744c8..9e213114 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { pass } from 'three/tsl';
+ import { pass, renderOutput } from 'three/tsl';
  import { sobel } from 'three/addons/tsl/display/SobelOperatorNode.js';
  
-@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -8,8 +8,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer;
+-let camera, scene, renderer, controls;
 -let postProcessing;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 +let postProcessing: THREE.PostProcessing;
  
  const params = {
-     enable: true,
+     enabled: true,
+@@ -27,7 +27,7 @@ async function init() {
+ 
+     const loader = new GLTFLoader();
+     const gltf = await loader.loadAsync('models/gltf/DragonAttenuation.glb');
+-    const model = gltf.scene.children[1];
++    const model = gltf.scene.children[1] as THREE.Mesh;
+     model.material = new THREE.MeshStandardNodeMaterial();
+ 
+     scene.add(model);
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 index 4aeb6e43..738b6580 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts

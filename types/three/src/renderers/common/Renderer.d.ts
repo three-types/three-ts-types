@@ -258,6 +258,7 @@ declare class Renderer {
     computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
     hasFeatureAsync(name: string): Promise<void>;
     hasFeature(name: string): false | void;
+    hasInitialized(): boolean;
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture, rectangle?: Rectangle | null): void;
     copyTextureToTexture(
         srcTexture: Texture,
