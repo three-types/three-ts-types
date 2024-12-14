@@ -5,9 +5,21 @@ import Renderer from "../Renderer.js";
 declare class PMREMGenerator {
     constructor(renderer: Renderer);
 
-    fromScene(scene: Scene, sigma?: number, near?: number, far?: number): RenderTarget | Promise<RenderTarget>;
+    fromScene(
+        scene: Scene,
+        sigma?: number,
+        near?: number,
+        far?: number,
+        renderTarget?: RenderTarget | null,
+    ): RenderTarget;
 
-    fromSceneAsync(scene: Scene, sigma?: number, near?: number, far?: number): Promise<RenderTarget>;
+    fromSceneAsync(
+        scene: Scene,
+        sigma?: number,
+        near?: number,
+        far?: number,
+        renderTarget?: RenderTarget | null,
+    ): Promise<RenderTarget>;
 
     dispose(): void;
 }
