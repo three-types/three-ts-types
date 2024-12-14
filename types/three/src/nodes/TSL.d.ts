@@ -53,6 +53,7 @@ export * from "./accessors/BufferAttributeNode.js";
 export * from "./accessors/BufferNode.js";
 export * from "./accessors/Camera.js";
 export * from "./accessors/CubeTextureNode.js";
+export * from "./accessors/InstancedMeshNode.js";
 export * from "./accessors/InstanceNode.js";
 export * from "./accessors/MaterialNode.js";
 export * from "./accessors/MaterialProperties.js";
