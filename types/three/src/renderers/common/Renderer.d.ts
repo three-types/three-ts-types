@@ -259,6 +259,8 @@ declare class Renderer {
     hasFeatureAsync(name: string): Promise<void>;
     hasFeature(name: string): false | void;
     hasInitialized(): boolean;
+    initTextureAsync(texture: Texture): Promise<void>;
+    initTexture(texture: Texture): false | undefined;
     copyFramebufferToTexture(framebufferTexture: FramebufferTexture, rectangle?: Rectangle | null): void;
     copyTextureToTexture(
         srcTexture: Texture,
