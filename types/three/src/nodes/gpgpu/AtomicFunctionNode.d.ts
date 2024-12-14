@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore";
+import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export type AtomicMethod =
     | typeof AtomicFunctionNode.ATOMIC_LOAD
