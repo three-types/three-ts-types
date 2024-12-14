@@ -8,3 +8,5 @@ export const dodge: (base: NodeRepresentation, blend: NodeRepresentation) => Sha
 export const screen: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
 export const overlay: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
+
+export const blendNormal: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
