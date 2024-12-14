@@ -1103,7 +1103,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 3003d168..b8f0f8ee 100644
+index 3003d168..11c07746 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -7,7 +7,7 @@ import NodeCache from './NodeCache.js';
@@ -1515,8 +1515,8 @@ index 3003d168..b8f0f8ee 100644
 +        texture: Texture,
 +        textureProperty: string,
 +        uvSnippet: string | null,
-+        levelSnippet: string | null,
 +        depthSnippet: string | null,
++        levelSnippet: string | null,
 +    ): string;
 +
 +    abstract generateTextureGrad(
@@ -7492,7 +7492,7 @@ index 3b16e861..99874f36 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 7db9864a..bb852529 100644
+index 07bcda18..6ebfd686 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -7503,7 +7503,7 @@ index 7db9864a..bb852529 100644
  
  //
  
-@@ -687,7 +688,7 @@ class WebGLBackend extends Backend {
+@@ -692,7 +693,7 @@ class WebGLBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
@@ -7924,7 +7924,7 @@ index 2cb79b70..6b5b60e0 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 088d0565..02da8cea 100644
+index ed81924a..57d481ec 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -7936,16 +7936,16 @@ index 088d0565..02da8cea 100644
  
  import { getFormat } from '../utils/WebGPUTextureUtils.js';
  
-@@ -24,6 +24,8 @@ import {
-     ClampToEdgeWrapping,
+@@ -28,6 +28,8 @@ import {
      MirroredRepeatWrapping,
+     NearestFilter,
  } from '../../../constants.js';
 +import { Texture } from '../../../textures/Texture.js';
 +import UniformNode from '../../../nodes/core/UniformNode.js';
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
  const GPUShaderStage = self.GPUShaderStage;
-@@ -203,7 +205,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -198,7 +200,13 @@ class WGSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -7960,22 +7960,23 @@ index 088d0565..02da8cea 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -317,7 +325,12 @@ class WGSLNodeBuilder extends NodeBuilder {
-         return `tsl_biquadraticTexture( ${textureProperty}, ${wrapFunction}( ${uvSnippet} ), ${textureDimension}, i32( ${levelSnippet} ) )`;
+@@ -318,7 +326,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+         return `tsl_biquadraticTexture( ${textureProperty}, ${wrapFunction}( ${uvSnippet} ), ${textureDimension}, u32( ${levelSnippet} ) )`;
      }
  
--    generateTextureLod(texture, textureProperty, uvSnippet, levelSnippet = '0') {
+-    generateTextureLod(texture, textureProperty, uvSnippet, depthSnippet, levelSnippet = '0u') {
 +    generateTextureLod(
 +        texture: Texture,
 +        textureProperty: string,
 +        uvSnippet: string | null,
-+        levelSnippet: string | null = '0',
++        depthSnippet: string | null,
++        levelSnippet: string | null = '0u',
 +    ) {
-         this._include('repeatWrapping');
+         const wrapFunction = this.generateWrapFunction(texture);
+         const textureDimension = this.generateTextureDimension(texture, textureProperty, levelSnippet);
  
-         const dimension =
-@@ -328,7 +341,13 @@ class WGSLNodeBuilder extends NodeBuilder {
-         return `textureLoad( ${textureProperty}, tsl_repeatWrapping( ${uvSnippet}, ${dimension} ), i32( ${levelSnippet} ) )`;
+@@ -327,7 +341,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+         return this.generateTextureLoad(texture, textureProperty, coordSnippet, depthSnippet, levelSnippet);
      }
  
 -    generateTextureLoad(texture, textureProperty, uvIndexSnippet, depthSnippet, levelSnippet = '0u') {
@@ -7987,9 +7988,9 @@ index 088d0565..02da8cea 100644
 +        levelSnippet = '0u',
 +    ) {
          if (depthSnippet) {
-             return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, ${levelSnippet} )`;
+             return `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, u32( ${levelSnippet} ) )`;
          } else {
-@@ -363,11 +382,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -369,11 +389,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureGrad(
@@ -8006,7 +8007,7 @@ index 088d0565..02da8cea 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -379,11 +398,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -385,11 +405,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureCompare(
@@ -8023,7 +8024,7 @@ index 088d0565..02da8cea 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -396,11 +415,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -402,11 +422,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureLevel(
@@ -8040,7 +8041,7 @@ index 088d0565..02da8cea 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -422,11 +441,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -428,11 +448,11 @@ class WGSLNodeBuilder extends NodeBuilder {
      }
  
      generateTextureBias(
@@ -8057,7 +8058,7 @@ index 088d0565..02da8cea 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -436,7 +455,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -442,7 +462,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -8066,7 +8067,7 @@ index 088d0565..02da8cea 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -503,7 +522,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -509,7 +529,12 @@ class WGSLNodeBuilder extends NodeBuilder {
          }
      }
  
@@ -8080,7 +8081,7 @@ index 088d0565..02da8cea 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -620,7 +644,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -626,7 +651,7 @@ class WGSLNodeBuilder extends NodeBuilder {
          return 'vertexIndex';
      }
  
@@ -8089,7 +8090,7 @@ index 088d0565..02da8cea 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -787,8 +811,8 @@ ${flowData.code}
+@@ -793,8 +818,8 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -8100,7 +8101,7 @@ index 088d0565..02da8cea 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
-@@ -874,8 +898,8 @@ ${flowData.code}
+@@ -880,8 +905,8 @@ ${flowData.code}
          return `\n${snippets.join('\n')}\n`;
      }
  
@@ -8111,7 +8112,7 @@ index 088d0565..02da8cea 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -911,7 +935,7 @@ ${flowData.code}
+@@ -917,7 +942,7 @@ ${flowData.code}
          return shaderStage === 'vertex' ? this._getWGSLStruct('VaryingsStruct', '\t' + code) : code;
      }
  
