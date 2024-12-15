@@ -262,7 +262,7 @@ declare class Node extends EventDispatcher<{
     setup(builder: NodeBuilder): unknown;
     /**
      * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
-     * This stage anaylzes the node hierarchy and ensures descendent nodes are built.
+     * This stage analyzes the node hierarchy and ensures descendent nodes are built.
      *
      * @param {NodeBuilder} builder - The current node builder.
      */
@@ -281,6 +281,7 @@ declare class Node extends EventDispatcher<{
      * The {@link Node#updateBeforeType} property defines how often the update is executed.
      *
      * @param {NodeFrame} frame - A reference to the current node frame.
+     * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
      */
     updateBefore(frame: NodeFrame): void;
     /**
@@ -288,6 +289,7 @@ declare class Node extends EventDispatcher<{
      * The {@link Node#updateAfterType} property defines how often the update is executed.
      *
      * @param {NodeFrame} frame - A reference to the current node frame.
+     * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
      */
     updateAfter(frame: NodeFrame): void;
     /**
@@ -295,6 +297,7 @@ declare class Node extends EventDispatcher<{
      * The {@link Node#updateType} property defines how often the update is executed.
      *
      * @param {NodeFrame} frame - A reference to the current node frame.
+     * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
      */
     update(frame: NodeFrame): void;
     /**

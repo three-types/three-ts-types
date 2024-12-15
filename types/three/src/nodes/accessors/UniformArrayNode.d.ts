@@ -10,12 +10,13 @@ declare class UniformArrayElementNode extends ArrayElementNode {
 declare class UniformArrayNode extends BufferNode {
     array: unknown[];
     elementType: string | null;
+    paddedType: string;
 
     readonly isArrayBufferNode: true;
 
     constructor(value: unknown[], elementType?: string | null);
 
-    getElementLength(): number;
+    getPaddedType(): string;
 
     element(indexNode: NodeRepresentation): ShaderNodeObject<UniformArrayElementNode>;
 }
