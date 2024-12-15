@@ -15,7 +15,7 @@ declare class UniformArrayNode extends BufferNode {
 
     constructor(value: unknown[], elementType?: string | null);
 
-    getElementLength(): number;
+    getPaddedType(): string;
 
     element(indexNode: NodeRepresentation): ShaderNodeObject<UniformArrayElementNode>;
 }
