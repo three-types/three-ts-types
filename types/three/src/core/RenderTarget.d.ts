@@ -83,7 +83,7 @@ export class RenderTarget<TTexture extends Texture | Texture[] = Texture> extend
     get texture(): TTexture;
     set texture(value: TTexture);
 
-    set depthTexture(current: DepthTexture);
+    set depthTexture(current: DepthTexture | null);
     get depthTexture(): DepthTexture | null;
 
     setSize(width: number, height: number, depth?: number): void;
