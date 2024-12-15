@@ -15,6 +15,7 @@ import { Vector2 } from "../math/Vector2.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
 import { Source } from "./Source.js";
+import { RenderTarget } from '../core/RenderTarget.js';
 
 export interface TextureJSON {
     metadata: { version: number; type: string; generator: string };
@@ -425,6 +426,8 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      * @defaultValue {@link THREE.UVMapping}
      */
     static DEFAULT_MAPPING: Mapping;
+
+    renderTarget: RenderTarget | null;
 
     /**
      * A callback function, called when the texture is updated _(e.g., when needsUpdate has been set to true and then the texture is used)_.
