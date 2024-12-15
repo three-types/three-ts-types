@@ -458,7 +458,7 @@ index 4841d46c..d69010bc 100644
          textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this.getSelf();
 diff --git a/src-testing/src/nodes/code/CodeNode.ts b/src-testing/src/nodes/code/CodeNode.ts
-index 04762469..c62335d9 100644
+index ba31bcab..f564d2c4 100644
 --- a/src-testing/src/nodes/code/CodeNode.ts
 +++ b/src-testing/src/nodes/code/CodeNode.ts
 @@ -1,5 +1,6 @@
@@ -559,7 +559,7 @@ index 75c17de0..dcea81cc 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index c7f478be..9bc47f27 100644
+index c8f9e293..1bb9e4c4 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,5 +1,6 @@
@@ -598,7 +598,7 @@ index c7f478be..9bc47f27 100644
          /**
 @@ -67,15 +73,15 @@ class ContextNode extends Node {
       * @param {NodeBuilder} builder - The current node builder.
-      * @return {String} The type of {@link ContextNode#node}.
+      * @return {String} The node type.
       */
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder) {
@@ -2669,7 +2669,7 @@ index 8a291b92..39c864a4 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 7da88417..01d12e80 100644
+index eb1dadc7..36ade03e 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,7 @@
@@ -2812,7 +2812,7 @@ index 2efc188e..8fe0929f 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index c086bae5..ce0f8a5c 100644
+index ed22aef6..35e8ae47 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,6 +1,10 @@
@@ -2975,7 +2975,7 @@ index 49c06f8f..eb4ac132 100644
 +export const shaderStages: NodeShaderStage[] = [...defaultShaderStages, 'compute'];
  export const vectorComponents = ['x', 'y', 'z', 'w'];
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index 65534abd..d6fc481f 100644
+index 1aa67531..25a4bd72 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
 @@ -1,5 +1,23 @@
@@ -3002,7 +3002,7 @@ index 65534abd..d6fc481f 100644
 +}
  
  /**
-  * `LightingContextNode` represents an extension of the {@link ContextNode} module
+  * `LightingContextNode` represents an extension of the {@link module:ContextNode~ContextNode} module
 @@ -8,11 +26,17 @@ import { nodeProxy, float, vec3 } from '../tsl/TSLBase.js';
   *
   * @augments ContextNode
@@ -3023,8 +3023,8 @@ index 65534abd..d6fc481f 100644
       * Constructs a new lighting context node.
       *
 @@ -21,7 +45,12 @@ class LightingContextNode extends ContextNode {
-      * @param {Node<vec3>} [backdropNode=null] - A backdrop node.
-      * @param {Node<float>} [backdropAlphaNode=null] - A backdrop alpha node.
+      * @param {Node<vec3>?} [backdropNode=null] - A backdrop node.
+      * @param {Node<float>?} [backdropAlphaNode=null] - A backdrop alpha node.
       */
 -    constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
 +    constructor(
@@ -3599,7 +3599,7 @@ index 2297154c..130b71de 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 8d112d45..513560a7 100644
+index ab1f8b70..2ce6dfae 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -14,18 +14,33 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
@@ -8505,10 +8505,10 @@ index 7fd09a8c..88989e12 100644
  
          const bindingSnippets = [];
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-index cfee02b6..f4de8500 100644
+index bf309808..fbd5a26a 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-@@ -134,7 +134,7 @@ class WGSLNodeFunction extends NodeFunction {
+@@ -135,7 +135,7 @@ class WGSLNodeFunction extends NodeFunction {
       *
       * @param {String} source - The WGSL source.
       */

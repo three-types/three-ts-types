@@ -55,7 +55,7 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
 }
 export default UniformNode;
 /**
- * TSL function for creating a uniform node with the given paramters.
+ * TSL function for creating a uniform node.
  *
  * @function
  * @param {Any} arg1 - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
