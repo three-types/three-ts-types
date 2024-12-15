@@ -288,7 +288,7 @@ index 97456dbc..c99ecb8a 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index a3c00279..5503218c 100644
+index 4841d46c..d69010bc 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
@@ -436,10 +436,10 @@ index a3c00279..5503218c 100644
  
 -    uv(uvNode) {
 +    uv(uvNode: ShaderNodeObject<Node> | null) {
-         const textureNode = this.clone();
-         textureNode.uvNode = nodeObject(uvNode);
-         textureNode.referenceNode = this.getSelf();
-@@ -270,7 +297,7 @@ class TextureNode extends UniformNode {
+         // @deprecated, r172
+ 
+         console.warn('THREE.TextureNode: .uv() has been renamed. Use .sample() instead.');
+@@ -278,7 +305,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
@@ -448,7 +448,7 @@ index a3c00279..5503218c 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -278,7 +305,7 @@ class TextureNode extends UniformNode {
+@@ -286,7 +313,7 @@ class TextureNode extends UniformNode {
          return nodeObject(textureNode);
      }
  
