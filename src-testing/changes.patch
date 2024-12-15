@@ -5502,7 +5502,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index bfb2ca00..43523339 100644
+index 19153b35..b8930541 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -6587,7 +6587,7 @@ index bfb2ca00..43523339 100644
  
          //
  
-@@ -1508,33 +1776,41 @@ class Renderer {
+@@ -1508,17 +1776,26 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -6595,7 +6595,7 @@ index bfb2ca00..43523339 100644
 +        if (needsRefresh) this._nodes!.updateAfter(renderObject);
      }
  
--    _createObjectPipeline(object, material, scene, camera, lightsNode, clippingContext, passId) {
+-    _createObjectPipeline(object, material, scene, camera, lightsNode, group, clippingContext, passId) {
 -        const renderObject = this._objects.get(
 +    _createObjectPipeline(
 +        object: Object3D,
@@ -6603,6 +6603,7 @@ index bfb2ca00..43523339 100644
 +        scene: Scene,
 +        camera: Camera,
 +        lightsNode: LightsNode,
++        group: Group,
 +        clippingContext: ClippingContext | null,
 +        passId?: string,
 +    ) {
@@ -6617,6 +6618,7 @@ index bfb2ca00..43523339 100644
              clippingContext,
              passId,
          );
+@@ -1527,16 +1804,16 @@ class Renderer {
  
          //
  
@@ -8291,10 +8293,10 @@ index 9de87c2f..77fb975a 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 3864bb3a..ee443930 100644
+index 8c191373..b960fd6c 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -984,7 +984,7 @@ class WebGPUBackend extends Backend {
+@@ -992,7 +992,7 @@ class WebGPUBackend extends Backend {
          this.textureUtils.destroyTexture(texture);
      }
  
