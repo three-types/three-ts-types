@@ -29,7 +29,6 @@ const files = [
     'nodes/core/StructTypeNode',
     'nodes/core/UniformGroupNode',
     'nodes/core/UniformNode',
-    'nodes/fog/FogNode',
     'nodes/gpgpu/ComputeNode',
     'nodes/lighting/EnvironmentNode',
     'nodes/lighting/LightingContextNode',
