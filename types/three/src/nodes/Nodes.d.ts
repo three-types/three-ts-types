@@ -75,7 +75,6 @@ export { default as InstanceNode } from "./accessors/InstanceNode.js";
 export { default as MaterialNode, MaterialNodeScope } from "./accessors/MaterialNode.js";
 export { default as MaterialReferenceNode } from "./accessors/MaterialReferenceNode.js";
 export { default as ModelNode } from "./accessors/ModelNode.js";
-export { default as ModelViewProjectionNode } from "./accessors/ModelViewProjectionNode.js";
 export { default as MorphNode } from "./accessors/MorphNode.js";
 export { default as Object3DNode } from "./accessors/Object3DNode.js";
 export { default as PointUVNode } from "./accessors/PointUVNode.js";
