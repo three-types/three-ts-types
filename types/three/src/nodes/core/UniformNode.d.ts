@@ -4,6 +4,7 @@ import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 import UniformGroupNode from "./UniformGroupNode.js";
+/** @module UniformNode **/
 /**
  * Class for representing a uniform.
  *
@@ -53,6 +54,14 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
     generate(builder: NodeBuilder, output: string | null): string;
 }
 export default UniformNode;
+/**
+ * TSL function for creating a uniform node with the given paramters.
+ *
+ * @function
+ * @param {Any} arg1 - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+ * @param {String?} arg2 - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+ * @returns {UniformNode}
+ */
 export declare const uniform: <TValue>(
     arg1: InputNode<TValue> | TValue,
     arg2?: Node | string,
