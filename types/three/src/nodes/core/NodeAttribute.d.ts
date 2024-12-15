@@ -15,7 +15,7 @@ declare class NodeAttribute {
      *
      * @param {String} name - The name of the attribute.
      * @param {String} type - The type of the attribute.
-     * @param {Node?} node - An optinal reference to the node.
+     * @param {Node?} node - An optional reference to the node.
      */
     constructor(name: string, type: string | null, node?: Node | null);
 }

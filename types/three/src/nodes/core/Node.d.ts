@@ -154,7 +154,7 @@ declare class Node extends EventDispatcher<{
     updateReference(state: NodeBuilder | NodeFrame): unknown;
     /**
      * By default this method returns the value of the {@link Node#global} flag. This method
-     * can be overwritten in dervied classes if an analytical way is required to determine the
+     * can be overwritten in derived classes if an analytical way is required to determine the
      * global status.
      *
      * @param {NodeBuilder} builder - The current node builder.
@@ -162,9 +162,10 @@ declare class Node extends EventDispatcher<{
      */
     isGlobal(builder: NodeBuilder): boolean;
     /**
-     * Returns a generator that can be used to iterate over the child nodes.
+     * Generator function that can be used to iterate over the child nodes.
      *
-     * @return {Generator} The generator.
+     * @generator
+     * @yields {Node} A child node.
      */
     getChildren(): Generator<Node, void, unknown>;
     /**
@@ -187,7 +188,7 @@ declare class Node extends EventDispatcher<{
     /**
      * Returns the cache key for this node.
      *
-     * @param {Boolean} [force=false] - When set to `true`, a recompuatation of the cache key is forced.
+     * @param {Boolean} [force=false] - When set to `true`, a recomputation of the cache key is forced.
      * @return {Number} The cache key of the node.
      */
     getCacheKey(force?: boolean): number;
@@ -242,7 +243,7 @@ declare class Node extends EventDispatcher<{
     getNodeType(builder: NodeBuilder): string | null;
     /**
      * This method is used during the build process of a node and ensures
-     * equal nodes are not built multiple times but just once. For exmaple if
+     * equal nodes are not built multiple times but just once. For example if
      * `attribute( 'uv' )` is used multiple times by the user, the build
      * process makes sure to process just the first node.
      *
@@ -308,7 +309,7 @@ declare class Node extends EventDispatcher<{
     /**
      * Returns the child nodes as a JSON object.
      *
-     * @return {Object} The serialiezed child objects as JSON.
+     * @return {Object} The serialized child objects as JSON.
      */
     getSerializeChildren(): Generator<import("./NodeUtils.js").NodeChild, void, unknown>;
     /**
@@ -318,13 +319,13 @@ declare class Node extends EventDispatcher<{
      */
     serialize(json: NodeJSONIntermediateOutputData): void;
     /**
-     * Deerializes the node from the given JSON.
+     * Deserializes the node from the given JSON.
      *
      * @param {Object} json - The JSON object.
      */
     deserialize(json: NodeJSONInputData): void;
     /**
-     * Seralizes the node into the three.js JSON Object/Scene format.
+     * Serializes the node into the three.js JSON Object/Scene format.
      *
      * @param {Object?} meta - An optional JSON object that already holds serialized data from other scene objects.
      * @return {Object} The serialized node.
