@@ -1,4 +1,4 @@
-import { Light } from "../../lights/Light";
+import { Light } from "../../lights/Light.js";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
