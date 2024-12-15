@@ -10,12 +10,12 @@ import {
     Wrapping,
 } from "../constants.js";
 import { EventDispatcher } from "../core/EventDispatcher.js";
+import { RenderTarget } from "../core/RenderTarget.js";
 import { Matrix3 } from "../math/Matrix3.js";
 import { Vector2 } from "../math/Vector2.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
 import { Source } from "./Source.js";
-import { RenderTarget } from '../core/RenderTarget.js';
 
 export interface TextureJSON {
     metadata: { version: number; type: string; generator: string };
