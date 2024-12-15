@@ -12,6 +12,7 @@ import { Vector4 } from "../../math/Vector4.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { Group } from "../../objects/Group.js";
 import { Scene } from "../../scenes/Scene.js";
 import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import { Texture } from "../../textures/Texture.js";
@@ -325,6 +326,7 @@ declare class Renderer {
         scene: Scene,
         camera: Camera,
         lightsNode: LightsNode,
+        group: Group,
         clippingContext: ClippingContext | null,
         passId?: string,
     ): void;
