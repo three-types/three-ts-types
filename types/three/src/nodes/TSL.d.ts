@@ -134,6 +134,7 @@ export * from "./accessors/Lights.js";
 export * from "./lighting/LightingContextNode.js";
 export * from "./lighting/LightsNode.js";
 export * from "./lighting/PointLightNode.js";
+export * from "./lighting/ShadowBaseNode.js";
 export * from "./lighting/ShadowNode.js";
 
 // pmrem
