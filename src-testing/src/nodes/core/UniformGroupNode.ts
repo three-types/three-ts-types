@@ -1,4 +1,4 @@
-import Node from './Node.js';
+import Node, { NodeJSONInputData, NodeJSONIntermediateOutputData } from './Node.js';
 
 /** @module UniformGroupNode **/
 
@@ -19,6 +19,10 @@ class UniformGroupNode extends Node {
     static get type() {
         return 'UniformGroupNode';
     }
+
+    shared: boolean;
+    order: number;
+    readonly isUniformGroup: true;
 
     /**
      * Constructs a new uniform group node.
@@ -64,7 +68,7 @@ class UniformGroupNode extends Node {
         this.isUniformGroup = true;
     }
 
-    serialize(data) {
+    serialize(data: NodeJSONIntermediateOutputData) {
         super.serialize(data);
 
         data.name = this.name;
@@ -72,7 +76,7 @@ class UniformGroupNode extends Node {
         data.shared = this.shared;
     }
 
-    deserialize(data) {
+    deserialize(data: NodeJSONInputData) {
         super.deserialize(data);
 
         this.name = data.name;
