@@ -458,16 +458,17 @@ index a3c00279..5503218c 100644
          textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this.getSelf();
 diff --git a/src-testing/src/nodes/code/CodeNode.ts b/src-testing/src/nodes/code/CodeNode.ts
-index 2f4c6051..2560bdb8 100644
+index 140e564d..c01f9349 100644
 --- a/src-testing/src/nodes/code/CodeNode.ts
 +++ b/src-testing/src/nodes/code/CodeNode.ts
-@@ -1,11 +1,17 @@
+@@ -1,5 +1,6 @@
  import Node from '../core/Node.js';
  import { nodeProxy } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
- class CodeNode extends Node {
-     static get type() {
+ /**
+  * This class represents native code sections. It is the base
+@@ -13,6 +14,11 @@ class CodeNode extends Node {
          return 'CodeNode';
      }
  
@@ -476,13 +477,13 @@ index 2f4c6051..2560bdb8 100644
 +    code: string;
 +    language: string;
 +
-     constructor(code = '', includes = [], language = '') {
-         super('code');
- 
-@@ -27,11 +33,11 @@ class CodeNode extends Node {
-         return this;
-     }
- 
+     /**
+      * Constructs a new code node.
+      *
+@@ -84,11 +90,11 @@ class CodeNode extends Node {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Array<Node>} The includes.
+      */
 -    getIncludes(/*builder*/) {
 +    getIncludes(builder: NodeBuilder) {
          return this.includes;
@@ -550,35 +551,47 @@ index 54d8a5c5..6e1282b4 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 32b8ac0a..f61425de 100644
+index dd4b5cba..5a997eef 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
-@@ -1,12 +1,18 @@
+@@ -1,5 +1,6 @@
  import Node from './Node.js';
 -import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
 +import { addMethodChaining, nodeProxy, NodeRepresentation } from '../tsl/TSLCore.js';
 +import NodeBuilder from './NodeBuilder.js';
  
+ /**
+  * This node can be used as a context management component for another node.
+@@ -11,18 +12,23 @@ import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
+  *```
+  * @augments Node
+  */
 -class ContextNode extends Node {
 +class ContextNode<TContext> extends Node {
      static get type() {
          return 'ContextNode';
      }
  
--    constructor(node, value = {}) {
 +    readonly isContextNode: true;
 +
 +    node: Node;
 +    value: TContext;
 +
+     /**
+      * Constructs a new context node.
+      *
+      * @param {Node} node - The node whose context should be modified.
+      * @param {Object} [value={}] - The modified context data.
+      */
+-    constructor(node, value = {}) {
 +    constructor(node: Node, value: TContext = {} as TContext) {
          super();
  
-         this.isContextNode = true;
-@@ -19,15 +25,15 @@ class ContextNode extends Node {
-         return this.node.getScope();
-     }
- 
+         /**
+@@ -65,15 +71,15 @@ class ContextNode extends Node {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The type of {@link ContextNode#node}.
+      */
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder) {
          return this.node.getNodeType(builder);
@@ -594,7 +607,7 @@ index 32b8ac0a..f61425de 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -39,7 +45,7 @@ class ContextNode extends Node {
+@@ -85,7 +91,7 @@ class ContextNode extends Node {
          return node;
      }
  
@@ -603,7 +616,7 @@ index 32b8ac0a..f61425de 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -55,7 +61,7 @@ class ContextNode extends Node {
+@@ -101,7 +107,7 @@ class ContextNode extends Node {
  export default ContextNode;
  
  export const context = /*@__PURE__*/ nodeProxy(ContextNode);
@@ -1183,7 +1196,7 @@ index 59326d9a..5a9c5570 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 80fe35d5..a7b33265 100644
+index 75be3f1e..9c05d4e3 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import ParameterNode from './ParameterNode.js';
@@ -1378,7 +1391,7 @@ index 80fe35d5..a7b33265 100644
          this.renderer = renderer;
          this.parser = parser;
          this.scene = null;
-@@ -162,7 +273,7 @@ class NodeBuilder {
+@@ -169,7 +280,7 @@ class NodeBuilder {
          this.cache = new NodeCache();
          this.globalCache = this.cache;
  
@@ -1387,7 +1400,7 @@ index 80fe35d5..a7b33265 100644
  
          this.shaderStage = null;
          this.buildStage = null;
-@@ -182,11 +293,11 @@ class NodeBuilder {
+@@ -189,11 +300,11 @@ class NodeBuilder {
          return bindGroupsCache;
      }
  
@@ -1401,7 +1414,7 @@ index 80fe35d5..a7b33265 100644
          return new CubeRenderTarget(size, options);
      }
  
-@@ -196,16 +307,16 @@ class NodeBuilder {
+@@ -203,16 +314,16 @@ class NodeBuilder {
          return new PMREMGenerator(this.renderer);
      }
  
@@ -1421,7 +1434,7 @@ index 80fe35d5..a7b33265 100644
  
          let sharedGroup = true;
  
-@@ -220,26 +331,26 @@ class NodeBuilder {
+@@ -227,26 +338,26 @@ class NodeBuilder {
          let bindGroup;
  
          if (sharedGroup) {
@@ -1452,7 +1465,7 @@ index 80fe35d5..a7b33265 100644
          const bindings = this.bindings[shaderStage];
  
          let bindGroup = bindings[groupName];
-@@ -259,12 +370,12 @@ class NodeBuilder {
+@@ -266,12 +377,12 @@ class NodeBuilder {
          let bindingsGroups = this.bindGroups;
  
          if (bindingsGroups === null) {
@@ -1467,7 +1480,7 @@ index 80fe35d5..a7b33265 100644
  
                      const groupUniforms = groups[groupName] || (groups[groupName] = []);
                      groupUniforms.push(...uniforms);
-@@ -274,7 +385,7 @@ class NodeBuilder {
+@@ -281,7 +392,7 @@ class NodeBuilder {
              bindingsGroups = [];
  
              for (const groupName in groups) {
@@ -1476,7 +1489,7 @@ index 80fe35d5..a7b33265 100644
  
                  const bindingsGroup = this._getBindGroup(groupName, group);
  
-@@ -300,11 +411,11 @@ class NodeBuilder {
+@@ -307,11 +418,11 @@ class NodeBuilder {
          }
      }
  
@@ -1490,7 +1503,7 @@ index 80fe35d5..a7b33265 100644
          if (this.nodes.includes(node) === false) {
              this.nodes.push(node);
  
-@@ -345,7 +456,7 @@ class NodeBuilder {
+@@ -352,7 +463,7 @@ class NodeBuilder {
          return this.chaining[this.chaining.length - 1];
      }
  
@@ -1499,7 +1512,7 @@ index 80fe35d5..a7b33265 100644
          return (
              texture.magFilter === LinearFilter ||
              texture.magFilter === LinearMipmapNearestFilter ||
-@@ -358,7 +469,7 @@ class NodeBuilder {
+@@ -365,7 +476,7 @@ class NodeBuilder {
          );
      }
  
@@ -1508,7 +1521,7 @@ index 80fe35d5..a7b33265 100644
          /*
  		if ( this.chaining.indexOf( node ) !== - 1 ) {
  
-@@ -370,7 +481,7 @@ class NodeBuilder {
+@@ -377,7 +488,7 @@ class NodeBuilder {
          this.chaining.push(node);
      }
  
@@ -1517,7 +1530,7 @@ index 80fe35d5..a7b33265 100644
          const lastChain = this.chaining.pop();
  
          if (lastChain !== node) {
-@@ -378,21 +489,21 @@ class NodeBuilder {
+@@ -385,21 +496,21 @@ class NodeBuilder {
          }
      }
  
@@ -1543,7 +1556,7 @@ index 80fe35d5..a7b33265 100644
          this.context = context;
      }
  
-@@ -408,7 +519,7 @@ class NodeBuilder {
+@@ -415,7 +526,7 @@ class NodeBuilder {
          return this.context;
      }
  
@@ -1552,7 +1565,7 @@ index 80fe35d5..a7b33265 100644
          this.cache = cache;
      }
  
-@@ -416,14 +527,14 @@ class NodeBuilder {
+@@ -423,14 +534,14 @@ class NodeBuilder {
          return this.cache;
      }
  
@@ -1569,7 +1582,7 @@ index 80fe35d5..a7b33265 100644
          return false;
      }
  
-@@ -458,15 +569,53 @@ class NodeBuilder {
+@@ -465,15 +576,53 @@ class NodeBuilder {
          return nodeData.usageCount;
      }
  
@@ -1632,7 +1645,7 @@ index 80fe35d5..a7b33265 100644
          if (value === null) {
              if (type === 'float' || type === 'int' || type === 'uint') value = 0;
              else if (type === 'bool') value = false;
-@@ -477,26 +626,26 @@ class NodeBuilder {
+@@ -484,26 +633,26 @@ class NodeBuilder {
          }
  
          if (type === 'float') return toFloat(value);
@@ -1668,7 +1681,7 @@ index 80fe35d5..a7b33265 100644
          } else if (typeLength > 4) {
              return `${this.getType(type)}()`;
          }
-@@ -504,17 +653,17 @@ class NodeBuilder {
+@@ -511,17 +660,17 @@ class NodeBuilder {
          throw new Error(`NodeBuilder: Type '${type}' not found in generate constant attempt.`);
      }
  
@@ -1689,7 +1702,7 @@ index 80fe35d5..a7b33265 100644
          const attributes = this.attributes;
  
          // find attribute
-@@ -534,19 +683,19 @@ class NodeBuilder {
+@@ -541,19 +690,19 @@ class NodeBuilder {
          return attribute;
      }
  
@@ -1716,7 +1729,7 @@ index 80fe35d5..a7b33265 100644
          return (
              type === 'void' ||
              type === 'property' ||
-@@ -563,10 +712,10 @@ class NodeBuilder {
+@@ -570,10 +719,10 @@ class NodeBuilder {
          return false;
      }
  
@@ -1729,7 +1742,7 @@ index 80fe35d5..a7b33265 100644
              if (type === IntType) return 'int';
              if (type === UnsignedIntType) return 'uint';
          }
-@@ -574,7 +723,7 @@ class NodeBuilder {
+@@ -581,7 +730,7 @@ class NodeBuilder {
          return 'float';
      }
  
@@ -1738,7 +1751,7 @@ index 80fe35d5..a7b33265 100644
          if (type === 'mat2') return 'vec2';
          if (type === 'mat3') return 'vec3';
          if (type === 'mat4') return 'vec4';
-@@ -582,7 +731,7 @@ class NodeBuilder {
+@@ -589,7 +738,7 @@ class NodeBuilder {
          return this.getComponentType(type);
      }
  
@@ -1747,7 +1760,7 @@ index 80fe35d5..a7b33265 100644
          type = this.getVectorType(type);
  
          if (type === 'float' || type === 'bool' || type === 'int' || type === 'uint') return type;
-@@ -598,7 +747,7 @@ class NodeBuilder {
+@@ -605,7 +754,7 @@ class NodeBuilder {
          return 'float';
      }
  
@@ -1756,7 +1769,7 @@ index 80fe35d5..a7b33265 100644
          if (type === 'color') return 'vec3';
          if (type === 'texture' || type === 'cubeTexture' || type === 'storageTexture' || type === 'texture3D')
              return 'vec4';
-@@ -606,23 +755,23 @@ class NodeBuilder {
+@@ -613,23 +762,23 @@ class NodeBuilder {
          return type;
      }
  
@@ -1788,7 +1801,7 @@ index 80fe35d5..a7b33265 100644
  
          const array = dataAttribute.array;
          const itemSize = attribute.itemSize;
-@@ -637,28 +786,28 @@ class NodeBuilder {
+@@ -644,28 +793,28 @@ class NodeBuilder {
          return this.getTypeFromLength(itemSize, arrayType);
      }
  
@@ -1825,7 +1838,7 @@ index 80fe35d5..a7b33265 100644
          const componentType = this.getComponentType(type);
  
          if (componentType === 'int' || componentType === 'uint') return type;
-@@ -684,7 +833,11 @@ class NodeBuilder {
+@@ -691,7 +840,11 @@ class NodeBuilder {
          return lastStack;
      }
  
@@ -1838,7 +1851,7 @@ index 80fe35d5..a7b33265 100644
          cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
  
          let nodeData = cache.getData(node);
-@@ -697,16 +850,16 @@ class NodeBuilder {
+@@ -704,16 +857,16 @@ class NodeBuilder {
  
          if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};
  
@@ -1858,7 +1871,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node);
  
          let bufferAttribute = nodeData.bufferAttribute;
-@@ -724,7 +877,7 @@ class NodeBuilder {
+@@ -731,7 +884,7 @@ class NodeBuilder {
          return bufferAttribute;
      }
  
@@ -1867,7 +1880,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          if (nodeData.structType === undefined) {
-@@ -739,7 +892,12 @@ class NodeBuilder {
+@@ -746,7 +899,12 @@ class NodeBuilder {
          return node;
      }
  
@@ -1881,7 +1894,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let nodeUniform = nodeData.uniform;
-@@ -757,7 +915,12 @@ class NodeBuilder {
+@@ -764,7 +922,12 @@ class NodeBuilder {
          return nodeUniform;
      }
  
@@ -1895,7 +1908,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          let nodeVar = nodeData.variable;
-@@ -777,7 +940,7 @@ class NodeBuilder {
+@@ -784,7 +947,7 @@ class NodeBuilder {
          return nodeVar;
      }
  
@@ -1904,7 +1917,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node, 'any');
  
          let nodeVarying = nodeData.varying;
-@@ -798,7 +961,7 @@ class NodeBuilder {
+@@ -805,7 +968,7 @@ class NodeBuilder {
          return nodeVarying;
      }
  
@@ -1913,7 +1926,7 @@ index 80fe35d5..a7b33265 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -848,7 +1011,7 @@ class NodeBuilder {
+@@ -855,7 +1018,7 @@ class NodeBuilder {
          codeBlock.set(nodeBlock, true);
      }
  
@@ -1922,7 +1935,7 @@ index 80fe35d5..a7b33265 100644
          if (code === '') return this;
  
          if (node !== null && this.context.nodeBlock) {
-@@ -866,7 +1029,7 @@ class NodeBuilder {
+@@ -873,7 +1036,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -1931,7 +1944,7 @@ index 80fe35d5..a7b33265 100644
          this.flow.code += code;
  
          return this;
-@@ -884,11 +1047,11 @@ class NodeBuilder {
+@@ -891,11 +1054,11 @@ class NodeBuilder {
          return this;
      }
  
@@ -1945,7 +1958,7 @@ index 80fe35d5..a7b33265 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -898,7 +1061,9 @@ class NodeBuilder {
+@@ -905,7 +1068,9 @@ class NodeBuilder {
          return flowData;
      }
  
@@ -1956,7 +1969,7 @@ index 80fe35d5..a7b33265 100644
          const fn = new FunctionNode();
  
          const previous = this.currentFunctionNode;
-@@ -912,7 +1077,7 @@ class NodeBuilder {
+@@ -919,7 +1084,7 @@ class NodeBuilder {
          return fn;
      }
  
@@ -1965,7 +1978,7 @@ index 80fe35d5..a7b33265 100644
          const layout = shaderNode.layout;
  
          const inputs = {
-@@ -928,7 +1093,7 @@ class NodeBuilder {
+@@ -935,7 +1100,7 @@ class NodeBuilder {
              },
          };
  
@@ -1974,7 +1987,7 @@ index 80fe35d5..a7b33265 100644
              inputs[input.name] = new ParameterNode(input.type, input.name);
          }
  
-@@ -944,14 +1109,14 @@ class NodeBuilder {
+@@ -951,14 +1116,14 @@ class NodeBuilder {
          return flowData;
      }
  
@@ -1991,7 +2004,7 @@ index 80fe35d5..a7b33265 100644
              code: '',
          };
  
-@@ -966,7 +1131,7 @@ class NodeBuilder {
+@@ -973,7 +1138,7 @@ class NodeBuilder {
              flow.result = node.build(this, output);
          }
  
@@ -2000,7 +2013,7 @@ index 80fe35d5..a7b33265 100644
  
          this.flow = previousFlow;
          this.vars = previousVars;
-@@ -982,10 +1147,10 @@ class NodeBuilder {
+@@ -989,10 +1154,10 @@ class NodeBuilder {
          return null;
      }
  
@@ -2013,7 +2026,7 @@ index 80fe35d5..a7b33265 100644
              code: '',
          };
  
-@@ -998,7 +1163,12 @@ class NodeBuilder {
+@@ -1005,7 +1170,12 @@ class NodeBuilder {
          return flow;
      }
  
@@ -2027,7 +2040,7 @@ index 80fe35d5..a7b33265 100644
          const previousShaderStage = this.shaderStage;
  
          this.setShaderStage(shaderStage);
-@@ -1020,19 +1190,15 @@ class NodeBuilder {
+@@ -1027,19 +1197,15 @@ class NodeBuilder {
          return this.attributes.concat(this.bufferAttributes);
      }
  
@@ -2051,7 +2064,7 @@ index 80fe35d5..a7b33265 100644
          let snippet = '';
  
          const vars = this.vars[shaderStage];
-@@ -1046,11 +1212,9 @@ class NodeBuilder {
+@@ -1053,11 +1219,9 @@ class NodeBuilder {
          return snippet;
      }
  
@@ -2065,7 +2078,7 @@ index 80fe35d5..a7b33265 100644
          const codes = this.codes[shaderStage];
  
          let code = '';
-@@ -1065,10 +1229,10 @@ class NodeBuilder {
+@@ -1072,10 +1236,10 @@ class NodeBuilder {
      }
  
      getHash() {
@@ -2078,7 +2091,7 @@ index 80fe35d5..a7b33265 100644
          this.shaderStage = shaderStage;
      }
  
-@@ -1076,7 +1240,7 @@ class NodeBuilder {
+@@ -1083,7 +1247,7 @@ class NodeBuilder {
          return this.shaderStage;
      }
  
@@ -2087,7 +2100,7 @@ index 80fe35d5..a7b33265 100644
          this.buildStage = buildStage;
      }
  
-@@ -1142,7 +1306,7 @@ class NodeBuilder {
+@@ -1149,7 +1313,7 @@ class NodeBuilder {
          return this;
      }
  
@@ -2096,7 +2109,7 @@ index 80fe35d5..a7b33265 100644
          if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
          if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
          if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
-@@ -1160,7 +1324,7 @@ class NodeBuilder {
+@@ -1167,7 +1331,7 @@ class NodeBuilder {
          throw new Error(`THREE.NodeBuilder: createNodeMaterial() was deprecated. Use new ${type}() instead.`);
      }
  
@@ -2106,10 +2119,10 @@ index 80fe35d5..a7b33265 100644
          toType = this.getVectorType(toType);
  
 diff --git a/src-testing/src/nodes/core/NodeCache.ts b/src-testing/src/nodes/core/NodeCache.ts
-index ad72d50c..a7a5a966 100644
+index b3a699f6..b8106abe 100644
 --- a/src-testing/src/nodes/core/NodeCache.ts
 +++ b/src-testing/src/nodes/core/NodeCache.ts
-@@ -1,24 +1,75 @@
+@@ -1,16 +1,63 @@
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
 +import NodeVar from './NodeVar.js';
@@ -2120,7 +2133,7 @@ index ad72d50c..a7a5a966 100644
 +import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
 +import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 +
- let id = 0;
+ let _id = 0;
  
 +export interface ShaderStageNodeData {
 +    properties?:
@@ -2154,20 +2167,30 @@ index ad72d50c..a7a5a966 100644
 +    node: BufferAttributeNode;
 +}
 +
+ /**
+  * This utility class is used in {@link NodeBuilder} as an internal
+  * cache data structure for node data.
+  */
  class NodeCache {
--    constructor(parent = null) {
 +    id: number;
 +    nodesData: WeakMap<Node | TypedArray | InterleavedBuffer | BufferAttribute, NodeData | BufferAttributeData>;
 +
 +    parent: NodeCache | null;
 +
+     /**
+      * Constructs a new node cache.
+      *
+      * @param {NodeCache?} parent - A reference to a parent cache.
+      */
+-    constructor(parent = null) {
 +    constructor(parent: NodeCache | null = null) {
-         this.id = id++;
-         this.nodesData = new WeakMap();
- 
-         this.parent = parent;
-     }
- 
+         /**
+          * The id of the cache.
+          *
+@@ -41,11 +88,13 @@ class NodeCache {
+      * @param {Node} node - The node.
+      * @return {Object?} The data for the node.
+      */
 -    getData(node) {
 +    getData(node: Node): NodeData | undefined;
 +    getData(node: TypedArray | InterleavedBuffer | BufferAttribute): BufferAttributeData | undefined;
@@ -2180,8 +2203,10 @@ index ad72d50c..a7a5a966 100644
          }
  
          return data;
-     }
- 
+@@ -57,7 +106,9 @@ class NodeCache {
+      * @param {Node} node - The node.
+      * @param {Object} data - The data that should be cached.
+      */
 -    setData(node, data) {
 +    setData(node: Node, data: NodeData): void;
 +    setData(node: TypedArray | InterleavedBuffer | BufferAttribute, data: BufferAttributeData): void;
@@ -2190,20 +2215,29 @@ index ad72d50c..a7a5a966 100644
      }
  }
 diff --git a/src-testing/src/nodes/core/NodeCode.ts b/src-testing/src/nodes/core/NodeCode.ts
-index 2ee50903..0c0d8c87 100644
+index 76642daa..f58273bc 100644
 --- a/src-testing/src/nodes/core/NodeCode.ts
 +++ b/src-testing/src/nodes/core/NodeCode.ts
-@@ -1,5 +1,9 @@
+@@ -5,6 +5,10 @@
+  * for this purpose.
+  */
  class NodeCode {
--    constructor(name, type, code = '') {
 +    name: string;
 +    type: string | null;
 +    code: string;
 +
+     /**
+      * Constructs a new code node.
+      *
+@@ -12,7 +16,7 @@ class NodeCode {
+      * @param {String} type - The node type.
+      * @param {String} [code=''] - The native shader code.
+      */
+-    constructor(name, type, code = '') {
 +    constructor(name: string, type: string | null, code = '') {
-         this.name = name;
-         this.type = type;
-         this.code = code;
+         /**
+          * The name of the code.
+          *
 diff --git a/src-testing/src/nodes/core/NodeFrame.ts b/src-testing/src/nodes/core/NodeFrame.ts
 index ee64620c..14eb7f75 100644
 --- a/src-testing/src/nodes/core/NodeFrame.ts
