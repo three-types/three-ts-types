@@ -6,8 +6,7 @@ import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import { Material } from "../../materials/Material.js";
 import { Box2 } from "../../math/Box2.js";
-import { Color } from "../../math/Color.js";
-import { Plane } from "../../math/Plane.js";
+import { ColorRepresentation } from "../../math/Color.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector4 } from "../../math/Vector4.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
@@ -76,7 +75,6 @@ declare class Renderer {
     sortObjects: boolean;
     depth: boolean;
     stencil: boolean;
-    clippingPlanes: readonly Plane[];
     info: Info;
     library: NodeLibrary;
     lighting: Lighting;
@@ -209,7 +207,7 @@ declare class Renderer {
     setViewport(x: Vector4): void;
     setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
     getClearColor(target: Color4): Color4;
-    setClearColor(color: Color, alpha?: number): void;
+    setClearColor(color: ColorRepresentation, alpha?: number): void;
     getClearAlpha(): number;
     setClearAlpha(alpha: number): void;
     getClearDepth(): number;
