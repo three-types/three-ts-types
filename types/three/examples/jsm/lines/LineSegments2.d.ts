@@ -1,4 +1,4 @@
-import { Mesh, Vector2, WebGLRenderer } from 'three';
+import { Mesh, Vector2, WebGLRenderer } from "three";
 
 import { LineMaterial } from "./LineMaterial.js";
 import { LineSegmentsGeometry } from "./LineSegmentsGeometry.js";
