@@ -10,6 +10,7 @@ declare class UniformArrayElementNode extends ArrayElementNode {
 declare class UniformArrayNode extends BufferNode {
     array: unknown[];
     elementType: string | null;
+    paddedType: string;
 
     readonly isArrayBufferNode: true;
 
