@@ -407,6 +407,7 @@ export const select: typeof TSL.select;
 export const setCurrentStack: typeof TSL.setCurrentStack;
 export const shaderStages: typeof TSL.shaderStages;
 export const shadow: typeof TSL.shadow;
+export const shadowWorldPosition: typeof TSL.shadowWorldPosition;
 export const sharedUniformGroup: typeof TSL.sharedUniformGroup;
 export const sheen: typeof TSL.sheen;
 export const sheenRoughness: typeof TSL.sheenRoughness;
