@@ -672,10 +672,10 @@ index 07af45dc..85bc5537 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 2e54fce0..a310f09c 100644
+index f4cf577b..8bc690a7 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -3,15 +3,93 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
+@@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
  
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
@@ -684,7 +684,6 @@ index 2e54fce0..a310f09c 100644
  
  let _nodeId = 0;
  
--class Node extends EventDispatcher {
 +interface NodeConstructor {
 +    type?: string;
 +}
@@ -740,12 +739,17 @@ index 2e54fce0..a310f09c 100644
 +    nodes?: NodeJSONOutputData[];
 +}
 +
+ /**
+  * Base class for all nodes.
+  *
+  * @augments EventDispatcher
+  */
+-class Node extends EventDispatcher {
 +class Node extends EventDispatcher<{ dispose: {} }> {
      static get type() {
          return 'Node';
      }
  
--    constructor(nodeType = null) {
 +    nodeType: string | null;
 +
 +    updateType: NodeUpdateType;
@@ -767,115 +771,146 @@ index 2e54fce0..a310f09c 100644
 +
 +    self?: this;
 +
+     /**
+      * Constructs a new node.
+      *
+      * @param {String?} nodeType - The node type.
+      */
+-    constructor(nodeType = null) {
 +    constructor(nodeType: string | null = null) {
          super();
  
-         this.nodeType = nodeType;
-@@ -34,36 +112,36 @@ class Node extends EventDispatcher {
-         Object.defineProperty(this, 'id', { value: _nodeId++ });
-     }
- 
+         /**
+@@ -106,7 +184,7 @@ class Node extends EventDispatcher {
+      * @type {Boolean}
+      * @default false
+      */
 -    set needsUpdate(value) {
 +    set needsUpdate(value: boolean) {
          if (value === true) {
              this.version++;
          }
-     }
- 
+@@ -119,7 +197,7 @@ class Node extends EventDispatcher {
+      * @readonly
+      */
      get type() {
 -        return this.constructor.type;
 +        return (this.constructor as NodeConstructor).type;
      }
  
+     /**
+@@ -129,7 +207,7 @@ class Node extends EventDispatcher {
+      * @param {String} updateType - The update type.
+      * @return {Node} A reference to this node.
+      */
 -    onUpdate(callback, updateType) {
 +    onUpdate(callback: (this: this, frame: NodeFrame) => unknown, updateType: NodeUpdateType) {
          this.updateType = updateType;
          this.update = callback.bind(this.getSelf());
  
-         return this;
-     }
- 
+@@ -143,7 +221,7 @@ class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
 -    onFrameUpdate(callback) {
 +    onFrameUpdate(callback: (this: this, frame: NodeFrame) => void) {
          return this.onUpdate(callback, NodeUpdateType.FRAME);
      }
  
+@@ -154,7 +232,7 @@ class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
 -    onRenderUpdate(callback) {
 +    onRenderUpdate(callback: (this: this, frame: NodeFrame) => void) {
          return this.onUpdate(callback, NodeUpdateType.RENDER);
      }
  
+@@ -165,7 +243,7 @@ class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
 -    onObjectUpdate(callback) {
 +    onObjectUpdate(callback: (this: this, frame: NodeFrame) => void) {
          return this.onUpdate(callback, NodeUpdateType.OBJECT);
      }
  
+@@ -175,7 +253,7 @@ class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
 -    onReference(callback) {
 +    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown) {
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
-@@ -75,11 +153,11 @@ class Node extends EventDispatcher {
-         return this.self || this;
-     }
- 
+@@ -200,7 +278,7 @@ class Node extends EventDispatcher {
+      * @param {Any} state - This method can be invocated in different contexts so `state` can refer to any object type.
+      * @return {Any} The updated reference.
+      */
 -    updateReference(/*state*/) {
 +    updateReference(state: NodeBuilder | NodeFrame): unknown {
          return this;
      }
  
+@@ -212,7 +290,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Boolean} Whether this node is global or not.
+      */
 -    isGlobal(/*builder*/) {
 +    isGlobal(builder: NodeBuilder) {
          return this.global;
      }
  
-@@ -93,7 +171,7 @@ class Node extends EventDispatcher {
-         this.dispatchEvent({ type: 'dispose' });
-     }
- 
+@@ -247,7 +325,7 @@ class Node extends EventDispatcher {
+      *
+      * @param {traverseCallback} callback - A callback that is executed per node.
+      */
 -    traverse(callback) {
 +    traverse(callback: (node: Node) => void) {
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -116,7 +194,7 @@ class Node extends EventDispatcher {
-         return this;
-     }
- 
+@@ -289,7 +367,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The hash.
+      */
 -    getHash(/*builder*/) {
 +    getHash(builder: NodeBuilder) {
          return this.uuid;
      }
  
-@@ -132,14 +210,14 @@ class Node extends EventDispatcher {
-         return this.updateAfterType;
-     }
- 
+@@ -328,7 +406,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The type of the node.
+      */
 -    getElementType(builder) {
 +    getElementType(builder: NodeBuilder) {
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-         return elementType;
-     }
- 
+@@ -341,7 +419,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The type of the node.
+      */
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder): string | null {
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -149,27 +227,27 @@ class Node extends EventDispatcher {
-         return this.nodeType;
-     }
- 
+@@ -360,7 +438,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node} The shared node if possible. Otherwise `this` is returned.
+      */
 -    getShared(builder) {
 +    getShared(builder: NodeBuilder) {
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-         return nodeFromHash || this;
-     }
- 
+@@ -375,13 +453,13 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node?} The output node.
+      */
 -    setup(builder) {
 +    setup(builder: NodeBuilder): unknown {
          const nodeProperties = builder.getNodeProperties(this);
@@ -888,15 +923,16 @@ index 2e54fce0..a310f09c 100644
          }
  
          // return a outputNode if exists
-         return null;
-     }
- 
+@@ -394,7 +472,7 @@ class Node extends EventDispatcher {
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      */
 -    analyze(builder) {
 +    analyze(builder: NodeBuilder) {
          const usageCount = builder.increaseUsage(this);
  
          if (usageCount === 1) {
-@@ -178,14 +256,14 @@ class Node extends EventDispatcher {
+@@ -403,8 +481,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -907,38 +943,52 @@ index 2e54fce0..a310f09c 100644
                  }
              }
          }
-     }
- 
+@@ -418,7 +496,7 @@ class Node extends EventDispatcher {
+      * @param {String?} output - Can be used to define the output type.
+      * @return {String?} The generated shader string.
+      */
 -    generate(builder, output) {
 +    generate(builder: NodeBuilder, output?: string | null): string | null | undefined {
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -193,19 +271,19 @@ class Node extends EventDispatcher {
-         }
-     }
- 
+@@ -432,7 +510,7 @@ class Node extends EventDispatcher {
+      *
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      */
 -    updateBefore(/*frame*/) {
 +    updateBefore(frame: NodeFrame) {
          console.warn('Abstract function.');
      }
  
+@@ -442,7 +520,7 @@ class Node extends EventDispatcher {
+      *
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      */
 -    updateAfter(/*frame*/) {
 +    updateAfter(frame: NodeFrame) {
          console.warn('Abstract function.');
      }
  
+@@ -452,7 +530,7 @@ class Node extends EventDispatcher {
+      *
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      */
 -    update(/*frame*/) {
 +    update(frame: NodeFrame) {
          console.warn('Abstract function.');
      }
  
+@@ -464,7 +542,7 @@ class Node extends EventDispatcher {
+      * @param {String?} output - Can be used to define the output type.
+      * @return {String?} When this method is executed in the setup or analyze stage, `null` is returned. In the generate stage, the generated shader string.
+      */
 -    build(builder, output = null) {
 +    build(builder: NodeBuilder, output: string | null = null): string | null {
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -241,8 +319,8 @@ class Node extends EventDispatcher {
+@@ -500,8 +578,8 @@ class Node extends EventDispatcher {
                  }
  
                  for (const childNode of Object.values(properties)) {
@@ -949,10 +999,10 @@ index 2e54fce0..a310f09c 100644
                      }
                  }
              }
-@@ -281,10 +359,10 @@ class Node extends EventDispatcher {
-         return getNodeChildren(this);
-     }
- 
+@@ -550,10 +628,10 @@ class Node extends EventDispatcher {
+      *
+      * @param {Object} json - The output JSON object.
+      */
 -    serialize(json) {
 +    serialize(json: NodeJSONIntermediateOutputData) {
          const nodeChildren = this.getSerializeChildren();
@@ -962,7 +1012,7 @@ index 2e54fce0..a310f09c 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -292,7 +370,9 @@ class Node extends EventDispatcher {
+@@ -561,7 +639,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -973,10 +1023,10 @@ index 2e54fce0..a310f09c 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -303,39 +383,39 @@ class Node extends EventDispatcher {
-         }
-     }
- 
+@@ -577,33 +657,33 @@ class Node extends EventDispatcher {
+      *
+      * @param {Object} json - The JSON object.
+      */
 -    deserialize(json) {
 +    deserialize(json: NodeJSONInputData) {
          if (json.inputNodes !== undefined) {
@@ -1017,14 +1067,16 @@ index 2e54fce0..a310f09c 100644
                  }
              }
          }
-     }
- 
+@@ -615,7 +695,7 @@ class Node extends EventDispatcher {
+      * @param {Object?} meta - An optional JSON object that already holds serialized data from other scene objects.
+      * @return {Object} The serialized node.
+      */
 -    toJSON(meta) {
 +    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData {
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -344,18 +424,18 @@ class Node extends EventDispatcher {
+@@ -624,18 +704,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1046,7 +1098,7 @@ index 2e54fce0..a310f09c 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -363,7 +443,7 @@ class Node extends EventDispatcher {
+@@ -643,7 +723,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1055,7 +1107,7 @@ index 2e54fce0..a310f09c 100644
  
              this.serialize(data);
  
-@@ -372,12 +452,12 @@ class Node extends EventDispatcher {
+@@ -652,12 +732,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1070,7 +1122,7 @@ index 2e54fce0..a310f09c 100644
                  values.push(data);
              }
  
-@@ -385,9 +465,9 @@ class Node extends EventDispatcher {
+@@ -665,9 +745,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1103,7 +1155,7 @@ index 190fe8c5..d873bb24 100644
  
          this.name = name;
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index cc8303eb..cfe01aca 100644
+index e87b93e4..a3e74592 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -8,7 +8,7 @@ import ParameterNode from './ParameterNode.js';
@@ -1126,25 +1178,17 @@ index cc8303eb..cfe01aca 100644
  
  import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
-@@ -31,12 +31,12 @@ import PMREMGenerator from '../../renderers/common/extras/PMREMGenerator.js';
- import BindGroup from '../../renderers/common/BindGroup.js';
- 
- import { REVISION } from '../../constants.js';
+@@ -39,16 +39,49 @@ import {
+     NearestMipmapLinearFilter,
+     LinearMipmapLinearFilter,
+ } from '../../constants.js';
 -import { RenderTarget } from '../../core/RenderTarget.js';
 +import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
  import { Color } from '../../math/Color.js';
  import { Vector2 } from '../../math/Vector2.js';
  import { Vector3 } from '../../math/Vector3.js';
  import { Vector4 } from '../../math/Vector4.js';
--import { Float16BufferAttribute } from '../../core/BufferAttribute.js';
-+import { BufferAttribute, Float16BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
- import {
-     IntType,
-     UnsignedIntType,
-@@ -45,10 +45,43 @@ import {
-     NearestMipmapLinearFilter,
-     LinearMipmapLinearFilter,
- } from '../../constants.js';
+ import { Float16BufferAttribute } from '../../core/BufferAttribute.js';
 -
 -const rendererCache = new WeakMap();
 -
@@ -2592,18 +2636,19 @@ index ec9fa9ae..c6218c7f 100644
      return nodeObject(new UniformNode(value, nodeType));
  };
 diff --git a/src-testing/src/nodes/core/constants.ts b/src-testing/src/nodes/core/constants.ts
-index 9e37db43..91e24444 100644
+index 3ff4decd..c99e445d 100644
 --- a/src-testing/src/nodes/core/constants.ts
 +++ b/src-testing/src/nodes/core/constants.ts
-@@ -1,14 +1,14 @@
+@@ -1,7 +1,7 @@
  export const NodeShaderStage = {
      VERTEX: 'vertex',
      FRAGMENT: 'fragment',
 -};
 +} as const;
  
- export const NodeUpdateType = {
-     NONE: 'none',
+ /**
+  * Update types of a node.
+@@ -16,7 +16,7 @@ export const NodeUpdateType = {
      FRAME: 'frame',
      RENDER: 'render',
      OBJECT: 'object',
@@ -2612,7 +2657,7 @@ index 9e37db43..91e24444 100644
  
  export const NodeType = {
      BOOLEAN: 'bool',
-@@ -20,15 +20,19 @@ export const NodeType = {
+@@ -28,15 +28,19 @@ export const NodeType = {
      MATRIX2: 'mat2',
      MATRIX3: 'mat3',
      MATRIX4: 'mat4',
