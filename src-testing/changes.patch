@@ -117,10 +117,10 @@ index 6f0da365..95fd6f4f 100644
  
          const { renderId } = nodeFrame;
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 97456dbc..c99ecb8a 100644
+index c552cd0b..c1eb85bc 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-@@ -4,14 +4,33 @@ import { varying } from '../core/VaryingNode.js';
+@@ -4,7 +4,10 @@ import { varying } from '../core/VaryingNode.js';
  
  import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
  import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
@@ -130,13 +130,18 @@ index 97456dbc..c99ecb8a 100644
 +import { InstancedBufferAttribute } from '../../core/InstancedBufferAttribute.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
+ /** @module BufferAttributeNode **/
+ 
+@@ -30,11 +33,22 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
+  * ```
+  * @augments InputNode
+  */
 -class BufferAttributeNode extends InputNode {
 +class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
      static get type() {
          return 'BufferAttributeNode';
      }
  
--    constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
 +    readonly isBufferNode: true;
 +
 +    bufferType: string | null;
@@ -148,6 +153,14 @@ index 97456dbc..c99ecb8a 100644
 +
 +    attribute: BufferAttribute | InterleavedBufferAttribute | null;
 +
+     /**
+      * Constructs a new buffer attribute node.
+      *
+@@ -43,7 +57,12 @@ class BufferAttributeNode extends InputNode {
+      * @param {Number} [bufferStride=0] - The buffer stride.
+      * @param {Number} [bufferOffset=0] - The buffer offset.
+      */
+-    constructor(value, bufferType = null, bufferStride = 0, bufferOffset = 0) {
 +    constructor(
 +        value: TypedArray | InterleavedBuffer | BufferAttribute,
 +        bufferType: string | null = null,
@@ -156,9 +169,9 @@ index 97456dbc..c99ecb8a 100644
 +    ) {
          super(value, bufferType);
  
-         this.isBufferNode = true;
-@@ -27,14 +46,14 @@ class BufferAttributeNode extends InputNode {
- 
+         /**
+@@ -112,10 +131,10 @@ class BufferAttributeNode extends InputNode {
+          */
          this.global = true;
  
 -        if (value && value.isBufferAttribute === true) {
@@ -172,24 +185,28 @@ index 97456dbc..c99ecb8a 100644
          }
      }
  
+@@ -126,7 +145,7 @@ class BufferAttributeNode extends InputNode {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The hash.
+      */
 -    getHash(builder) {
 +    getHash(builder: NodeBuilder) {
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
-@@ -52,7 +71,7 @@ class BufferAttributeNode extends InputNode {
-         return this.uuid;
-     }
- 
+@@ -151,7 +170,7 @@ class BufferAttributeNode extends InputNode {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The node type.
+      */
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder) {
          if (this.bufferType === null) {
              this.bufferType = builder.getTypeFromAttribute(this.attribute);
          }
-@@ -60,16 +79,19 @@ class BufferAttributeNode extends InputNode {
-         return this.bufferType;
-     }
- 
+@@ -166,16 +185,19 @@ class BufferAttributeNode extends InputNode {
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      */
 -    setup(builder) {
 +    setup(builder: NodeBuilder) {
          if (this.attribute !== null) return;
@@ -209,10 +226,10 @@ index 97456dbc..c99ecb8a 100644
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
  
          buffer.setUsage(this.usage);
-@@ -78,13 +100,13 @@ class BufferAttributeNode extends InputNode {
-         this.attribute.isInstancedBufferAttribute = this.instanced; // @TODO: Add a possible: InstancedInterleavedBufferAttribute
-     }
- 
+@@ -190,13 +212,13 @@ class BufferAttributeNode extends InputNode {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {String} The generated code snippet.
+      */
 -    generate(builder) {
 +    generate(builder: NodeBuilder) {
          const nodeType = this.getNodeType(builder);
@@ -225,10 +242,10 @@ index 97456dbc..c99ecb8a 100644
  
          if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
              this.name = propertyName;
-@@ -103,17 +125,17 @@ class BufferAttributeNode extends InputNode {
-         return 'bufferAttribute';
-     }
- 
+@@ -227,11 +249,11 @@ class BufferAttributeNode extends InputNode {
+      * @param {Number} value - The usage to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
 -    setUsage(value) {
 +    setUsage(value: Usage) {
          this.usage = value;
@@ -240,58 +257,79 @@ index 97456dbc..c99ecb8a 100644
          }
  
          return this;
-     }
- 
+@@ -243,7 +265,7 @@ class BufferAttributeNode extends InputNode {
+      * @param {Number} value - The value to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
 -    setInstanced(value) {
 +    setInstanced(value: boolean) {
          this.instanced = value;
  
          return this;
-@@ -122,14 +144,30 @@ class BufferAttributeNode extends InputNode {
- 
- export default BufferAttributeNode;
- 
--export const bufferAttribute = (array, type, stride, offset) =>
+@@ -262,8 +284,12 @@ export default BufferAttributeNode;
+  * @param {Number} [offset=0] - The buffer offset.
+  * @returns {BufferAttributeNode}
+  */
+-export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    nodeObject(new BufferAttributeNode(array, type, stride, offset));
--export const dynamicBufferAttribute = (array, type, stride, offset) =>
--    bufferAttribute(array, type, stride, offset).setUsage(DynamicDrawUsage);
--
--export const instancedBufferAttribute = (array, type, stride, offset) =>
--    bufferAttribute(array, type, stride, offset).setInstanced(true);
--export const instancedDynamicBufferAttribute = (array, type, stride, offset) =>
--    dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 +export const bufferAttribute = (
 +    array: TypedArray | InterleavedBuffer | BufferAttribute,
-+    type?: string | null,
-+    stride?: number,
-+    offset?: number,
++    type: string | null = null,
++    stride: number = 0,
++    offset: number = 0,
 +) => nodeObject(new BufferAttributeNode(array, type, stride, offset));
+ 
+ /**
+  * TSL function for creating a buffer attribute node but with dynamic draw usage.
+@@ -276,8 +302,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+  * @param {Number} [offset=0] - The buffer offset.
+  * @returns {BufferAttributeNode}
+  */
+-export const dynamicBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+-    bufferAttribute(array, type, stride, offset).setUsage(DynamicDrawUsage);
 +export const dynamicBufferAttribute = (
 +    array: TypedArray | InterleavedBuffer | BufferAttribute,
-+    type?: string | null,
-+    stride?: number,
-+    offset?: number,
++    type: string | null = null,
++    stride: number = 0,
++    offset: number = 0,
 +) => bufferAttribute(array, type, stride, offset).setUsage(DynamicDrawUsage);
-+
+ 
+ /**
+  * TSL function for creating a buffer attribute node but with enabled instancing
+@@ -289,8 +319,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+  * @param {Number} [offset=0] - The buffer offset.
+  * @returns {BufferAttributeNode}
+  */
+-export const instancedBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+-    bufferAttribute(array, type, stride, offset).setInstanced(true);
 +export const instancedBufferAttribute = (
 +    array: TypedArray | InterleavedBuffer | BufferAttribute,
-+    type?: string | null,
-+    stride?: number,
-+    offset?: number,
++    type: string | null = null,
++    stride: number = 0,
++    offset: number = 0,
 +) => bufferAttribute(array, type, stride, offset).setInstanced(true);
+ 
+ /**
+  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
+@@ -302,7 +336,11 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+  * @param {Number} [offset=0] - The buffer offset.
+  * @returns {BufferAttributeNode}
+  */
+-export const instancedDynamicBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+-    dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
 +export const instancedDynamicBufferAttribute = (
 +    array: TypedArray | InterleavedBuffer | BufferAttribute,
-+    type?: string | null,
-+    stride?: number,
-+    offset?: number,
++    type: string | null = null,
++    stride: number = 0,
++    offset: number = 0,
 +) => dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 4841d46c..d69010bc 100644
+index fa570c1d..771b42cf 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
-@@ -4,17 +4,44 @@ import { textureSize } from './TextureSizeNode.js';
+@@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
  import { colorSpaceToWorking } from '../display/ColorSpaceNode.js';
  import { expression } from '../code/ExpressionNode.js';
  import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
@@ -306,13 +344,18 @@ index 4841d46c..d69010bc 100644
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Matrix3 } from '../../math/Matrix3.js';
  
+ /** @module TextureNode **/
+ 
+@@ -16,11 +21,28 @@ import { IntType, UnsignedIntType } from '../../constants.js';
+  *
+  * @augments module:UniformNode~UniformNode
+  */
 -class TextureNode extends UniformNode {
 +class TextureNode extends UniformNode<Texture> {
      static get type() {
          return 'TextureNode';
      }
  
--    constructor(value, uvNode = null, levelNode = null, biasNode = null) {
 +    readonly isTextureNode: true;
 +
 +    uvNode: ShaderNodeObject<Node> | null;
@@ -330,6 +373,14 @@ index 4841d46c..d69010bc 100644
 +    _value: Texture;
 +    _matrixUniform: ShaderNodeObject<UniformNode<Matrix3>> | null;
 +
+     /**
+      * Constructs a new texture node.
+      *
+@@ -29,7 +51,12 @@ class TextureNode extends UniformNode {
+      * @param {Node<int>?} [levelNode=null] - The level node.
+      * @param {Node<float>?} [biasNode=null] - The bias node.
+      */
+-    constructor(value, uvNode = null, levelNode = null, biasNode = null) {
 +    constructor(
 +        value: Texture,
 +        uvNode: ShaderNodeObject<Node> | null = null,
@@ -338,8 +389,8 @@ index 4841d46c..d69010bc 100644
 +    ) {
          super(value);
  
-         this.isTextureNode = true;
-@@ -38,7 +65,7 @@ class TextureNode extends UniformNode {
+         /**
+@@ -144,7 +171,7 @@ class TextureNode extends UniformNode {
          this.setUpdateMatrix(uvNode === null);
      }
  
@@ -348,50 +399,54 @@ index 4841d46c..d69010bc 100644
          if (this.referenceNode) {
              this.referenceNode.value = value;
          } else {
-@@ -55,7 +82,7 @@ class TextureNode extends UniformNode {
-     }
- 
+@@ -178,7 +205,7 @@ class TextureNode extends UniformNode {
+      * @return {String} The node type.
+      */
      getNodeType(/*builder*/) {
 -        if (this.value.isDepthTexture === true) return 'float';
 +        if ((this.value as DepthTexture).isDepthTexture === true) return 'float';
  
          if (this.value.type === UnsignedIntType) {
              return 'uvec4';
-@@ -84,14 +111,14 @@ class TextureNode extends UniformNode {
-         return this._matrixUniform.mul(vec3(uvNode, 1)).xy;
-     }
- 
+@@ -236,7 +263,7 @@ class TextureNode extends UniformNode {
+      * @param {Boolean} value - The update toggle.
+      * @return {TextureNode} A reference to this node.
+      */
 -    setUpdateMatrix(value) {
 +    setUpdateMatrix(value: boolean) {
          this.updateMatrix = value;
          this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
  
-         return this;
-     }
- 
+@@ -251,7 +278,7 @@ class TextureNode extends UniformNode {
+      * @param {Node} uvNode - The uv node to setup.
+      * @return {Node} The updated uv node.
+      */
 -    setupUV(builder, uvNode) {
 +    setupUV(builder: NodeBuilder, uvNode) {
          const texture = this.value;
  
          if (
-@@ -111,7 +138,7 @@ class TextureNode extends UniformNode {
-         return uvNode;
-     }
- 
+@@ -276,7 +303,7 @@ class TextureNode extends UniformNode {
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      */
 -    setup(builder) {
 +    setup(builder: NodeBuilder) {
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -149,19 +176,19 @@ class TextureNode extends UniformNode {
-         properties.depthNode = this.depthNode;
-     }
- 
+@@ -321,7 +348,7 @@ class TextureNode extends UniformNode {
+      * @param {Node} uvNode - The uv node to generate code for.
+      * @return {String} The generated code snippet.
+      */
 -    generateUV(builder, uvNode) {
 +    generateUV(builder: NodeBuilder, uvNode: Node) {
          return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
      }
  
+@@ -339,14 +366,14 @@ class TextureNode extends UniformNode {
+      * @return {String} The generated code snippet.
+      */
      generateSnippet(
 -        builder,
 -        textureProperty,
@@ -412,25 +467,25 @@ index 4841d46c..d69010bc 100644
      ) {
          const texture = this.value;
  
-@@ -184,7 +211,7 @@ class TextureNode extends UniformNode {
-         return snippet;
-     }
- 
+@@ -376,7 +403,7 @@ class TextureNode extends UniformNode {
+      * @param {String} output - The current output.
+      * @return {String} The generated code snippet.
+      */
 -    generate(builder, output) {
 +    generate(builder: NodeBuilder, output) {
          const properties = builder.getNodeProperties(this);
  
          const texture = this.value;
-@@ -250,7 +277,7 @@ class TextureNode extends UniformNode {
-         }
-     }
- 
+@@ -448,7 +475,7 @@ class TextureNode extends UniformNode {
+      * @param {Boolean} value - The sampler value to set.
+      * @return {TextureNode} A reference to this texture node.
+      */
 -    setSampler(value) {
 +    setSampler(value: boolean) {
          this.sampler = value;
  
          return this;
-@@ -262,7 +289,7 @@ class TextureNode extends UniformNode {
+@@ -465,7 +492,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -439,19 +494,19 @@ index 4841d46c..d69010bc 100644
          // @deprecated, r172
  
          console.warn('THREE.TextureNode: .uv() has been renamed. Use .sample() instead.');
-@@ -278,7 +305,7 @@ class TextureNode extends UniformNode {
-         return nodeObject(textureNode);
-     }
- 
+@@ -493,7 +520,7 @@ class TextureNode extends UniformNode {
+      * @param {Node<float>} amountNode - How blurred the texture should be.
+      * @return {TextureNode} A texture node representing the texture sample.
+      */
 -    blur(amountNode) {
 +    blur(amountNode: ShaderNodeObject<Node>) {
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -286,7 +313,7 @@ class TextureNode extends UniformNode {
-         return nodeObject(textureNode);
-     }
- 
+@@ -507,7 +534,7 @@ class TextureNode extends UniformNode {
+      * @param {Node<int>} levelNode - The mip level to sample.
+      * @return {TextureNode} A texture node representing the texture sample.
+      */
 -    level(levelNode) {
 +    level(levelNode: ShaderNodeObject<Node> | null) {
          const textureNode = this.clone();
