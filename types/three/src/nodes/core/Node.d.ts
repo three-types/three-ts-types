@@ -193,6 +193,13 @@ declare class Node extends EventDispatcher<{
      */
     getCacheKey(force?: boolean): number;
     /**
+     * Generate a custom cache key for this node.
+     *
+     * @return {Number} The cache key of the node.
+     * @default 0
+     */
+    customCacheKey(): number;
+    /**
      * Returns the references to this node which is by default `this`.
      *
      * @return {Node} A reference to this node.

@@ -708,10 +708,10 @@ index 91d31e90..3f080c9a 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 21460218..ffe3f89f 100644
+index d6822b1d..3a0d9705 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey } from './NodeUtils.js';
+@@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
  
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
@@ -907,7 +907,7 @@ index 21460218..ffe3f89f 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -305,7 +383,7 @@ class Node extends EventDispatcher {
+@@ -315,7 +393,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {String} The hash.
       */
@@ -916,7 +916,7 @@ index 21460218..ffe3f89f 100644
          return this.uuid;
      }
  
-@@ -344,7 +422,7 @@ class Node extends EventDispatcher {
+@@ -354,7 +432,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {String} The type of the node.
       */
@@ -925,7 +925,7 @@ index 21460218..ffe3f89f 100644
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-@@ -357,7 +435,7 @@ class Node extends EventDispatcher {
+@@ -367,7 +445,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {String} The type of the node.
       */
@@ -934,7 +934,7 @@ index 21460218..ffe3f89f 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -376,7 +454,7 @@ class Node extends EventDispatcher {
+@@ -386,7 +464,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node} The shared node if possible. Otherwise `this` is returned.
       */
@@ -943,7 +943,7 @@ index 21460218..ffe3f89f 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -391,13 +469,13 @@ class Node extends EventDispatcher {
+@@ -401,13 +479,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node?} The output node.
       */
@@ -959,7 +959,7 @@ index 21460218..ffe3f89f 100644
          }
  
          // return a outputNode if exists
-@@ -410,7 +488,7 @@ class Node extends EventDispatcher {
+@@ -420,7 +498,7 @@ class Node extends EventDispatcher {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -968,7 +968,7 @@ index 21460218..ffe3f89f 100644
          const usageCount = builder.increaseUsage(this);
  
          if (usageCount === 1) {
-@@ -419,8 +497,8 @@ class Node extends EventDispatcher {
+@@ -429,8 +507,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -979,7 +979,7 @@ index 21460218..ffe3f89f 100644
                  }
              }
          }
-@@ -434,7 +512,7 @@ class Node extends EventDispatcher {
+@@ -444,7 +522,7 @@ class Node extends EventDispatcher {
       * @param {String?} output - Can be used to define the output type.
       * @return {String?} The generated shader string.
       */
@@ -988,7 +988,7 @@ index 21460218..ffe3f89f 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -449,7 +527,7 @@ class Node extends EventDispatcher {
+@@ -459,7 +537,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -997,7 +997,7 @@ index 21460218..ffe3f89f 100644
          console.warn('Abstract function.');
      }
  
-@@ -460,7 +538,7 @@ class Node extends EventDispatcher {
+@@ -470,7 +548,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1006,7 +1006,7 @@ index 21460218..ffe3f89f 100644
          console.warn('Abstract function.');
      }
  
-@@ -471,7 +549,7 @@ class Node extends EventDispatcher {
+@@ -481,7 +559,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {Boolean?} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1015,7 +1015,7 @@ index 21460218..ffe3f89f 100644
          console.warn('Abstract function.');
      }
  
-@@ -483,7 +561,7 @@ class Node extends EventDispatcher {
+@@ -493,7 +571,7 @@ class Node extends EventDispatcher {
       * @param {String?} output - Can be used to define the output type.
       * @return {String?} When this method is executed in the setup or analyze stage, `null` is returned. In the generate stage, the generated shader string.
       */
@@ -1024,7 +1024,7 @@ index 21460218..ffe3f89f 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -519,8 +597,8 @@ class Node extends EventDispatcher {
+@@ -529,8 +607,8 @@ class Node extends EventDispatcher {
                  }
  
                  for (const childNode of Object.values(properties)) {
@@ -1035,7 +1035,7 @@ index 21460218..ffe3f89f 100644
                      }
                  }
              }
-@@ -569,10 +647,10 @@ class Node extends EventDispatcher {
+@@ -579,10 +657,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1048,7 +1048,7 @@ index 21460218..ffe3f89f 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -580,7 +658,9 @@ class Node extends EventDispatcher {
+@@ -590,7 +668,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1059,7 +1059,7 @@ index 21460218..ffe3f89f 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -596,33 +676,33 @@ class Node extends EventDispatcher {
+@@ -606,33 +686,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1103,7 +1103,7 @@ index 21460218..ffe3f89f 100644
                  }
              }
          }
-@@ -634,7 +714,7 @@ class Node extends EventDispatcher {
+@@ -644,7 +724,7 @@ class Node extends EventDispatcher {
       * @param {Object?} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1112,7 +1112,7 @@ index 21460218..ffe3f89f 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -643,18 +723,18 @@ class Node extends EventDispatcher {
+@@ -653,18 +733,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1134,7 +1134,7 @@ index 21460218..ffe3f89f 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -662,7 +742,7 @@ class Node extends EventDispatcher {
+@@ -672,7 +752,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1143,7 +1143,7 @@ index 21460218..ffe3f89f 100644
  
              this.serialize(data);
  
-@@ -671,12 +751,12 @@ class Node extends EventDispatcher {
+@@ -681,12 +761,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1158,7 +1158,7 @@ index 21460218..ffe3f89f 100644
                  values.push(data);
              }
  
-@@ -684,9 +764,9 @@ class Node extends EventDispatcher {
+@@ -694,9 +774,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -8307,7 +8307,7 @@ index 3864bb3a..ee443930 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 0944b98c..b3ddfba6 100644
+index 7fd09a8c..88989e12 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
