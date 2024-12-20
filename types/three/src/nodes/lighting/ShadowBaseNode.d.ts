@@ -10,6 +10,6 @@ declare class ShadowBaseNode extends Node {
     constructor(light: Light);
 }
 
-export const shadowWorldPosition: ShaderNodeObject<Node>;
+export const shadowPositionWorld: ShaderNodeObject<Node>;
 
 export default ShadowBaseNode;
