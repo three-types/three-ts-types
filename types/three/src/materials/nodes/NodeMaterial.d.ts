@@ -77,6 +77,7 @@ declare class NodeMaterial extends Material {
     setupHardwareClipping(builder: NodeBuilder): void;
     setupDepth(builder: NodeBuilder): void;
     setupPositionView(): Node;
+    setupModelViewProjection(): Node;
     setupVertex(builder: NodeBuilder): Node;
     setupPosition(builder: NodeBuilder): Node;
     setupDiffuseColor(builder: NodeBuilder): void;
