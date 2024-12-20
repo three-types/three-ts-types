@@ -155,6 +155,7 @@ export const exp2: typeof TSL.exp2;
 export const expression: typeof TSL.expression;
 export const faceDirection: typeof TSL.faceDirection;
 export const faceForward: typeof TSL.faceForward;
+export const faceforward: typeof TSL.faceforward;
 export const float: typeof TSL.float;
 export const floor: typeof TSL.floor;
 export const fog: typeof TSL.fog;
@@ -194,6 +195,7 @@ export const instancedDynamicBufferAttribute: typeof TSL.instancedDynamicBufferA
 export const instancedMesh: typeof TSL.instancedMesh;
 export const int: typeof TSL.int;
 export const inverseSqrt: typeof TSL.inverseSqrt;
+export const inversesqrt: typeof TSL.inversesqrt;
 export const invocationLocalIndex: typeof TSL.invocationLocalIndex;
 export const invocationSubgroupIndex: typeof TSL.invocationSubgroupIndex;
 export const ior: typeof TSL.ior;
