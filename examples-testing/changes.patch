@@ -8746,7 +8746,7 @@ index 90b9416d..e6034b82 100644
      if (texture.matrixAutoUpdate === true) {
          texture.offset.set(API.offsetX, API.offsetY);
 diff --git a/examples-testing/examples/webgl_materials_toon.ts b/examples-testing/examples/webgl_materials_toon.ts
-index 03db286a..883244f5 100644
+index 46c6a7e9..e89fc8cf 100644
 --- a/examples-testing/examples/webgl_materials_toon.ts
 +++ b/examples-testing/examples/webgl_materials_toon.ts
 @@ -4,20 +4,20 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -14331,7 +14331,7 @@ index 616645aa..288f6e84 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
-index 07ea501c..a4e420da 100644
+index 1e9a2304..5f5dfef0 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
 +++ b/examples-testing/examples/webgpu_materials_toon.ts
 @@ -1,4 +1,4 @@
@@ -15324,7 +15324,7 @@ index fc87be20..5f8ab8b3 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index 14e45012..b4bdcf2f 100644
+index 94099064..ed1a095d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 @@ -1,4 +1,4 @@
@@ -15587,7 +15587,7 @@ index 4aeb6e43..738b6580 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 188581a5..ab9f2367 100644
+index 4b529442..b829e66b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -1,6 +1,16 @@
@@ -15607,10 +15607,10 @@ index 188581a5..ab9f2367 100644
 +    ShaderNodeObject,
 +} from 'three/tsl';
 +import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
+ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -16,8 +26,12 @@ const params = {
+@@ -17,8 +27,12 @@ const params = {
      enabled: true,
  };
  
@@ -15624,6 +15624,18 @@ index 188581a5..ab9f2367 100644
 +let gui: GUI, stats: Stats, controls: OrbitControls;
  
  init();
+ 
+@@ -37,9 +51,9 @@ async function init() {
+     loader.setDRACOLoader(dracoLoader);
+     loader.load('models/gltf/steampunk_camera.glb', function (gltf) {
+         gltf.scene.traverse(function (object) {
+-            if (object.material) {
++            if ((object as THREE.Mesh).material) {
+                 // Avoid overdrawing
+-                object.material.side = THREE.FrontSide;
++                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.side = THREE.FrontSide;
+             }
+         });
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
 index 9a5558e9..05dbf9db 100644
