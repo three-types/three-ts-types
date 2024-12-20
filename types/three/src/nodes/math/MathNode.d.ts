@@ -212,6 +212,13 @@ export const smoothstepElement: Ternary;
  */
 export const atan2: Binary;
 
+// GLSL alias function
+
+export const faceforward: typeof faceForward;
+export const inversesqrt: typeof inverseSqrt;
+
+// Method chaining
+
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         all: typeof all;
