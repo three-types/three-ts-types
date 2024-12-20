@@ -3916,7 +3916,7 @@ index 7428aee3..386e8d57 100644
          '<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - geometry extrude shapes';
      document.body.appendChild(info);
 diff --git a/examples-testing/examples/webgl_geometry_extrude_splines.ts b/examples-testing/examples/webgl_geometry_extrude_splines.ts
-index 0741083d..e988b543 100644
+index 8636812f..90e2b7b0 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_splines.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_splines.ts
 @@ -6,9 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -8333,7 +8333,7 @@ index b4c6f64e..48b6c01c 100644
          metalness: params.metalness,
          roughness: params.roughness,
 diff --git a/examples-testing/examples/webgl_materials_modified.ts b/examples-testing/examples/webgl_materials_modified.ts
-index c6ee5af3..a1a808a7 100644
+index de36aeb7..778aedd5 100644
 --- a/examples-testing/examples/webgl_materials_modified.ts
 +++ b/examples-testing/examples/webgl_materials_modified.ts
 @@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -8721,7 +8721,7 @@ index 5adfc8e6..55d802e3 100644
      const data = texture.image.data;
  
 diff --git a/examples-testing/examples/webgl_materials_texture_rotation.ts b/examples-testing/examples/webgl_materials_texture_rotation.ts
-index 2666d09d..b284d9ff 100644
+index 90b9416d..e6034b82 100644
 --- a/examples-testing/examples/webgl_materials_texture_rotation.ts
 +++ b/examples-testing/examples/webgl_materials_texture_rotation.ts
 @@ -3,7 +3,10 @@ import * as THREE from 'three';
@@ -10131,7 +10131,7 @@ index f846c0ce..5eaa953f 100644
  
      updateOptions();
 diff --git a/examples-testing/examples/webgl_postprocessing_godrays.ts b/examples-testing/examples/webgl_postprocessing_godrays.ts
-index fb760441..73c8beb2 100644
+index d2fb0d25..e263a672 100644
 --- a/examples-testing/examples/webgl_postprocessing_godrays.ts
 +++ b/examples-testing/examples/webgl_postprocessing_godrays.ts
 @@ -11,16 +11,37 @@ import {
@@ -13203,6 +13203,44 @@ index 53517e80..1fd4c8e2 100644
          box.material = materials[name];
      });
  }
+diff --git a/examples-testing/examples/webgpu_camera.ts b/examples-testing/examples/webgpu_camera.ts
+index 45619da3..97df59b3 100644
+--- a/examples-testing/examples/webgpu_camera.ts
++++ b/examples-testing/examples/webgpu_camera.ts
+@@ -1,16 +1,16 @@
+-import * as THREE from 'three';
+-import { color } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { color, ShaderNodeObject } from 'three/tsl';
+ 
+ let SCREEN_WIDTH = window.innerWidth;
+ let SCREEN_HEIGHT = window.innerHeight;
+ let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
+ 
+-let container;
+-let camera, scene, renderer, mesh;
+-let cameraRig, activeCamera, activeHelper;
+-let cameraPerspective, cameraOrtho;
+-let cameraPerspectiveHelper, cameraOrthoHelper;
+-let backgroundNode;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, mesh: THREE.Mesh;
++let cameraRig: THREE.Group, activeCamera: THREE.Camera, activeHelper: THREE.CameraHelper;
++let cameraPerspective: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera;
++let cameraPerspectiveHelper: THREE.CameraHelper, cameraOrthoHelper: THREE.CameraHelper;
++let backgroundNode: ShaderNodeObject<THREE.Node>;
+ const frustumSize = 600;
+ 
+ init();
+@@ -119,7 +119,7 @@ function init() {
+ 
+ //
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     switch (event.keyCode) {
+         case 79 /*O*/:
+             activeCamera = cameraOrtho;
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 index 15527632..58f5cc14 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
@@ -14839,7 +14877,7 @@ index 9eb9922d..b75024ec 100644
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
-index 927a4661..9296a108 100644
+index 478c5bae..adbea486 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
 +++ b/examples-testing/examples/webgpu_parallax_uv.ts
 @@ -1,11 +1,11 @@
