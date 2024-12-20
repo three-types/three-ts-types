@@ -37,7 +37,6 @@ export type MathNodeMethod1 =
     | typeof MathNode.TRANSPOSE;
 
 export type MathNodeMethod2 =
-    | typeof MathNode.ATAN2
     | typeof MathNode.MIN
     | typeof MathNode.MAX
     | typeof MathNode.MOD
@@ -99,7 +98,6 @@ export default class MathNode extends TempNode {
 
     // 2 inputs
 
-    static ATAN2: "atan2";
     static MIN: "min";
     static MAX: "max";
     static MOD: "mod";
@@ -174,7 +172,6 @@ export const transpose: Unary;
 
 type Binary = (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
-export const atan2: Binary;
 export const min: Binary;
 export const max: Binary;
 export const mod: Binary;
@@ -209,6 +206,11 @@ export const rand: (uv: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 
 export const mixElement: Ternary;
 export const smoothstepElement: Ternary;
+
+/**
+ * @deprecated
+ */
+export const atan2: Binary;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {

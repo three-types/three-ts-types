@@ -326,7 +326,7 @@ index c552cd0b..c1eb85bc 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index fa570c1d..771b42cf 100644
+index c47e04de..cc4212bd 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
@@ -7951,7 +7951,7 @@ index 07bcda18..6ebfd686 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index 9de87c2f..77fb975a 100644
+index c643df5a..ae36ba39 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -7979,10 +7979,10 @@ index 9de87c2f..77fb975a 100644
 +import StorageArrayElementNode from '../../../nodes/utils/StorageArrayElementNode.js';
 +
 +const glslMethods: { [method: string]: string } = {
-     atan2: 'atan',
      textureDimensions: 'textureSize',
      equals: 'equal',
-@@ -67,8 +78,37 @@ precision highp isampler2DArray;
+ };
+@@ -66,8 +77,37 @@ precision highp isampler2DArray;
  precision lowp sampler2DShadow;
  `;
  
@@ -8021,7 +8021,7 @@ index 9de87c2f..77fb975a 100644
          super(object, renderer, new GLSLNodeParser());
  
          this.uniformGroups = {};
-@@ -83,7 +123,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -82,7 +122,7 @@ class GLSLNodeBuilder extends NodeBuilder {
          return texture.isVideoTexture === true && texture.colorSpace !== NoColorSpace;
      }
  
@@ -8030,7 +8030,7 @@ index 9de87c2f..77fb975a 100644
          return glslMethods[method] || method;
      }
  
-@@ -91,7 +131,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -90,7 +130,7 @@ class GLSLNodeBuilder extends NodeBuilder {
          return '';
      }
  
@@ -8039,7 +8039,7 @@ index 9de87c2f..77fb975a 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -117,7 +157,7 @@ ${flowData.code}
+@@ -116,7 +156,7 @@ ${flowData.code}
          return code;
      }
  
@@ -8048,7 +8048,7 @@ index 9de87c2f..77fb975a 100644
          const attribute = storageBufferNode.value;
  
          if (attribute.pbo === undefined) {
-@@ -181,7 +221,7 @@ ${flowData.code}
+@@ -180,7 +220,7 @@ ${flowData.code}
          }
      }
  
@@ -8057,7 +8057,7 @@ index 9de87c2f..77fb975a 100644
          if (node.isNodeUniform && node.node.isTextureNode !== true && node.node.isBufferNode !== true) {
              return shaderStage.charAt(0) + '_' + node.name;
          }
-@@ -189,7 +229,7 @@ ${flowData.code}
+@@ -188,7 +228,7 @@ ${flowData.code}
          return super.getPropertyName(node, shaderStage);
      }
  
@@ -8066,7 +8066,7 @@ index 9de87c2f..77fb975a 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -261,7 +301,13 @@ ${flowData.code}
+@@ -260,7 +300,13 @@ ${flowData.code}
          return propertyName;
      }
  
@@ -8081,7 +8081,7 @@ index 9de87c2f..77fb975a 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -269,7 +315,7 @@ ${flowData.code}
+@@ -268,7 +314,7 @@ ${flowData.code}
          }
      }
  
@@ -8090,7 +8090,7 @@ index 9de87c2f..77fb975a 100644
          if (texture.isDepthTexture) {
              return `texture( ${textureProperty}, ${uvSnippet} ).x`;
          } else {
-@@ -279,24 +325,39 @@ ${flowData.code}
+@@ -278,24 +324,39 @@ ${flowData.code}
          }
      }
  
@@ -8138,7 +8138,7 @@ index 9de87c2f..77fb975a 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -305,11 +366,12 @@ ${flowData.code}
+@@ -304,11 +365,12 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -8153,7 +8153,7 @@ index 9de87c2f..77fb975a 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -322,7 +384,7 @@ ${flowData.code}
+@@ -321,7 +383,7 @@ ${flowData.code}
          return snippets.join('\n\t');
      }
  
@@ -8162,7 +8162,7 @@ index 9de87c2f..77fb975a 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -404,7 +466,7 @@ ${flowData.code}
+@@ -403,7 +465,7 @@ ${flowData.code}
          return output;
      }
  
@@ -8171,7 +8171,7 @@ index 9de87c2f..77fb975a 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -422,7 +484,7 @@ ${flowData.code}
+@@ -421,7 +483,7 @@ ${flowData.code}
          return nodeType;
      }
  
@@ -8180,7 +8180,7 @@ index 9de87c2f..77fb975a 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -438,8 +500,8 @@ ${flowData.code}
+@@ -437,8 +499,8 @@ ${flowData.code}
          return snippet;
      }
  
@@ -8191,7 +8191,7 @@ index 9de87c2f..77fb975a 100644
          const members = struct.getMemberTypes();
  
          for (let i = 0; i < members.length; i++) {
-@@ -450,7 +512,7 @@ ${flowData.code}
+@@ -449,7 +511,7 @@ ${flowData.code}
          return snippets.join('\n');
      }
  
@@ -8200,7 +8200,7 @@ index 9de87c2f..77fb975a 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -471,7 +533,7 @@ ${flowData.code}
+@@ -470,7 +532,7 @@ ${flowData.code}
          return snippets.join('\n\n');
      }
  
@@ -8209,7 +8209,7 @@ index 9de87c2f..77fb975a 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -540,7 +602,7 @@ ${flowData.code}
+@@ -539,7 +601,7 @@ ${flowData.code}
          return 'gl_FragDepth';
      }
  
@@ -8218,7 +8218,7 @@ index 9de87c2f..77fb975a 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -551,7 +613,7 @@ ${flowData.code}
+@@ -550,7 +612,7 @@ ${flowData.code}
          }
      }
  
@@ -8227,7 +8227,7 @@ index 9de87c2f..77fb975a 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -578,7 +640,7 @@ ${flowData.code}
+@@ -577,7 +639,7 @@ ${flowData.code}
          return 'gl_ClipDistance';
      }
  
@@ -8236,7 +8236,7 @@ index 9de87c2f..77fb975a 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -621,11 +683,11 @@ ${flowData.code}
+@@ -620,11 +682,11 @@ ${flowData.code}
          this.builtins['vertex'].push(`out float gl_ClipDistance[ ${planeCount} ]`);
      }
  
@@ -8250,7 +8250,7 @@ index 9de87c2f..77fb975a 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -641,14 +703,14 @@ ${flowData.code}
+@@ -640,14 +702,14 @@ ${flowData.code}
          return snippet;
      }
  
@@ -8267,7 +8267,7 @@ index 9de87c2f..77fb975a 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -688,7 +750,7 @@ void main() {
+@@ -687,7 +749,7 @@ void main() {
  `;
      }
  
@@ -8276,7 +8276,7 @@ index 9de87c2f..77fb975a 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -720,19 +782,20 @@ void main() {
+@@ -719,19 +781,20 @@ void main() {
      }
  
      buildCode() {
@@ -8301,7 +8301,7 @@ index 9de87c2f..77fb975a 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -758,28 +821,33 @@ void main() {
+@@ -757,28 +820,33 @@ void main() {
                  }
              }
  
