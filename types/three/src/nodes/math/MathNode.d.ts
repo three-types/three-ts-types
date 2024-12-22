@@ -155,7 +155,7 @@ export const cos: Unary;
 export const tan: Unary;
 export const asin: Unary;
 export const acos: Unary;
-export const atan: Unary;
+export const atan: (a: NodeRepresentation, b?: NodeRepresentation) => ShaderNodeObject<MathNode>;
 export const abs: Unary;
 export const sign: Unary;
 export const length: Unary;

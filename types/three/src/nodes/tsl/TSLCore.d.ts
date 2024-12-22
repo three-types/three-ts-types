@@ -215,20 +215,20 @@ interface Layout {
     inputs: { name: string; type: string }[];
 }
 
-interface ShaderNodeFn<R extends Node = ShaderNodeObject<Node>> {
-    (): R;
+interface ShaderNodeFn<Args extends readonly unknown[], R extends Node = ShaderNodeObject<Node>> {
+    (...args: Args): R;
     shaderNode: R;
-    setLayout: (layout: Layout) => ShaderNodeFn<R>;
-    once: () => ShaderNodeFn<R>;
+    setLayout: (layout: Layout) => ShaderNodeFn<Args, R>;
+    once: () => ShaderNodeFn<Args, R>;
 }
 
-export function Fn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): ShaderNodeFn<R>;
+export function Fn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): ShaderNodeFn<[], R>;
 export function Fn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): ((...args: ProxiedTuple<T>) => R) & ShaderNodeFn<R>;
+): ShaderNodeFn<ProxiedTuple<T>, R>;
 export function Fn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): ((args: ProxiedObject<T>) => R) & ShaderNodeFn<R>;
+): ShaderNodeFn<[ProxiedObject<T>], R>;
 
 /**
  * @deprecated tslFn() has been renamed to Fn()
