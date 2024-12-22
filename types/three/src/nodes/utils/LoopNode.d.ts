@@ -4,7 +4,7 @@ import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 interface LoopNodeObjectParameter {
     // TODO Expand to other types and update loop function types appropriately
-    type?: 'int' | 'uint';
+    type?: "int" | "uint";
     // TODO The variable name should affect the type of the loop function
     // name?: string;
     start: number | Node;
