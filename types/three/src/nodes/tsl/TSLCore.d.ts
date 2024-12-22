@@ -227,12 +227,12 @@ interface ShaderNodeFn<Args extends readonly unknown[]> {
     once: () => this;
 }
 
-export function Fn<R extends Node | void = ShaderNodeObject<Node>>(jsFunc: () => R): ShaderNodeFn<[]>;
-export function Fn<T extends any[], R extends Node | void = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
+export function Fn(jsFunc: () => void): ShaderNodeFn<[]>;
+export function Fn<T extends readonly unknown[]>(
+    jsFunc: (args: T) => void,
 ): ShaderNodeFn<ProxiedTuple<T>>;
-export function Fn<T extends { [key: string]: unknown }, R extends Node | void = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
+export function Fn<T extends { readonly [key: string]: unknown }>(
+    jsFunc: (args: T) => void,
 ): ShaderNodeFn<[ProxiedObject<T>]>;
 
 /**
