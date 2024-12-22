@@ -6,7 +6,10 @@ import { RenderTarget } from "../../core/RenderTarget.js";
 import { Material } from "../../materials/Material.js";
 import { Color } from "../../math/Color.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
+import Node from "../../nodes/core/Node.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
+import { Fog } from "../../scenes/Fog.js";
+import { FogExp2 } from "../../scenes/FogExp2.js";
 import { Scene } from "../../scenes/Scene.js";
 import { CubeTexture } from "../../textures/CubeTexture.js";
 import { Texture } from "../../textures/Texture.js";
@@ -52,6 +55,8 @@ export function restoreRendererState(renderer: Renderer, state: RendererState): 
 export interface SceneState {
     background: Color | Texture | CubeTexture | null;
     backgroundNode: Node | null | undefined;
+    fog: Fog | FogExp2 | null;
+    fogNode: Node | null | undefined;
     overrideMaterial: Material | null;
 }
 
