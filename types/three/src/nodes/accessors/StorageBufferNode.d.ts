@@ -5,7 +5,7 @@ import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
-export default class StorageBufferNode extends BufferNode {
+export default class StorageBufferNode extends BufferNode<StorageBufferAttribute | StorageInstancedBufferAttribute> {
     readonly isStorageBufferNode: true;
 
     access: NodeAccess;
