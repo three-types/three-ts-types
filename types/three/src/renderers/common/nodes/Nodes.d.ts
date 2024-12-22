@@ -75,6 +75,9 @@ declare class Nodes extends DataMap<{
     groupsData: ChainMap<readonly [UniformGroupNode, NodeUniformsGroup], {
         version?: number;
     }>;
+    cacheLib: {
+        [type: string]: WeakMap<object, Node | undefined>;
+    };
     constructor(renderer: Renderer, backend: Backend);
     updateGroup(nodeUniformsGroup: NodeUniformsGroup): boolean;
     getForRenderCacheKey(renderObject: RenderObject): string;
@@ -88,9 +91,14 @@ declare class Nodes extends DataMap<{
     getBackgroundNode(scene: Scene): Node | null;
     getFogNode(scene: Scene): Node | null;
     getCacheKey(scene: Scene, lightsNode: LightsNode): string;
-    updateScene(scene: Scene): void;
     get isToneMappingState(): boolean;
     updateBackground(scene: Scene): void;
+    getCacheNode(
+        type: string,
+        object: object,
+        callback: () => Node | undefined,
+        forceUpdate?: boolean,
+    ): Node | undefined;
     updateFog(scene: Scene): void;
     updateEnvironment(scene: Scene): void;
     getNodeFrame(
