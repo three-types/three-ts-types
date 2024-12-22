@@ -172,6 +172,11 @@ type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends 
 
 export type NodeOrType = Node | string;
 
+declare class ShaderCallNodeInternal extends Node {
+}
+
+declare class ShaderNodeInternal extends Node {}
+
 export const defined: (v: unknown) => unknown;
 
 export const getConstNodeType: (value: NodeOrType) => string | null;
@@ -215,20 +220,20 @@ interface Layout {
     inputs: { name: string; type: string }[];
 }
 
-interface ShaderNodeFn<Args extends readonly unknown[], R extends Node = ShaderNodeObject<Node>> {
-    (...args: Args): R;
-    shaderNode: R;
-    setLayout: (layout: Layout) => ShaderNodeFn<Args, R>;
-    once: () => ShaderNodeFn<Args, R>;
+interface ShaderNodeFn<Args extends readonly unknown[]> {
+    (...args: Args): ShaderNodeObject<ShaderCallNodeInternal>;
+    shaderNode: ShaderNodeObject<ShaderNodeInternal>;
+    setLayout: (layout: Layout) => this;
+    once: () => this;
 }
 
-export function Fn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): ShaderNodeFn<[], R>;
-export function Fn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): ShaderNodeFn<ProxiedTuple<T>, R>;
-export function Fn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): ShaderNodeFn<[ProxiedObject<T>], R>;
+export function Fn(jsFunc: () => void): ShaderNodeFn<[]>;
+export function Fn<T extends readonly unknown[]>(
+    jsFunc: (args: T) => void,
+): ShaderNodeFn<ProxiedTuple<T>>;
+export function Fn<T extends { readonly [key: string]: unknown }>(
+    jsFunc: (args: T) => void,
+): ShaderNodeFn<[ProxiedObject<T>]>;
 
 /**
  * @deprecated tslFn() has been renamed to Fn()
