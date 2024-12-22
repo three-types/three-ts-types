@@ -3,9 +3,10 @@ import NodeBuilder from "../core/NodeBuilder.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 interface LoopNodeObjectParameter {
-    // TODO The variable type and name should affect the type of the loop function
-    type?: string;
-    name?: string;
+    // TODO Expand to other types and update loop function types appropriately
+    type?: 'int' | 'uint';
+    // TODO The variable name should affect the type of the loop function
+    // name?: string;
     start: number | Node;
     end: number | Node;
     condition: string;
