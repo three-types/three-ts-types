@@ -209,13 +209,26 @@ export function nodeImmutable<T>(
     ...params: ProxiedTuple<GetConstructors<T>>
 ): ShaderNodeObject<ConstructedNode<T>>;
 
-export function Fn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
+interface Layout {
+    name: string;
+    type: string;
+    inputs: { name: string; type: string }[];
+}
+
+interface ShaderNodeFn<R extends Node = ShaderNodeObject<Node>> {
+    (): R;
+    shaderNode: R;
+    setLayout: (layout: Layout) => ShaderNodeFn<R>;
+    once: () => ShaderNodeFn<R>;
+}
+
+export function Fn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): ShaderNodeFn<R>;
 export function Fn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): (...args: ProxiedTuple<T>) => R;
+): ((...args: ProxiedTuple<T>) => R) & ShaderNodeFn<R>;
 export function Fn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
     jsFunc: (args: T) => R,
-): (args: ProxiedObject<T>) => R;
+): ((args: ProxiedObject<T>) => R) & ShaderNodeFn<R>;
 
 /**
  * @deprecated tslFn() has been renamed to Fn()
