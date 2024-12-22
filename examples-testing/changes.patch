@@ -13549,6 +13549,65 @@ index 3331adc8..17d73367 100644
      const time = (currentTime - startTime) / 1000;
  
      object.position.y = 0.8;
+diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
+index 4e567e9c..847c42ef 100644
+--- a/examples-testing/examples/webgpu_compute_audio.ts
++++ b/examples-testing/examples/webgpu_compute_audio.ts
+@@ -1,17 +1,27 @@
+-import * as THREE from 'three';
+-import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, color } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import {
++    Fn,
++    uniform,
++    instanceIndex,
++    instancedArray,
++    float,
++    texture,
++    screenUV,
++    color,
++    ShaderNodeObject,
++} from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let computeNode;
+-let waveBuffer, sampleRate;
+-let waveArray;
+-let currentAudio, currentAnalyser;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let computeNode: ShaderNodeObject<THREE.ComputeNode>;
++let waveBuffer: Float32Array, sampleRate: number;
++let waveArray: ShaderNodeObject<THREE.StorageBufferNode>;
++let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
+ const analyserBuffer = new Uint8Array(1024);
+-let analyserTexture;
++let analyserTexture: THREE.DataTexture;
+ 
+-const startButton = document.getElementById('startButton');
++const startButton = document.getElementById('startButton')!;
+ startButton.addEventListener('click', init);
+ 
+ async function playAudioBuffer() {
+@@ -46,7 +56,7 @@ async function playAudioBuffer() {
+ }
+ 
+ async function init() {
+-    const overlay = document.getElementById('overlay');
++    const overlay = document.getElementById('overlay')!;
+     overlay.remove();
+ 
+     // audio buffer
+@@ -92,7 +102,7 @@ async function init() {
+ 
+         const time = index.mul(pitch);
+ 
+-        let wave = originalWave.element(time);
++        let wave: ShaderNodeObject<THREE.Node> = originalWave.element(time);
+ 
+         // delay
+ 
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index baca16cb..b01cd750 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
