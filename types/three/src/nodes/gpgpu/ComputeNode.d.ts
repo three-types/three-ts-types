@@ -19,7 +19,7 @@ export default class ComputeNode extends Node {
 export const compute: (
     node: NodeRepresentation,
     count: number,
-    workgroupSize: number[],
+    workgroupSize?: number[],
 ) => ShaderNodeObject<ComputeNode>;
 
 declare module "../tsl/TSLCore.js" {
