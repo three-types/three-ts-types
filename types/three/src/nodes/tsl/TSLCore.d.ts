@@ -210,9 +210,9 @@ export function nodeImmutable<T>(
 ): ShaderNodeObject<ConstructedNode<T>>;
 
 interface Layout {
-    name: string,
-    type: string,
-    inputs: { name: string, type: string }[],
+    name: string;
+    type: string;
+    inputs: { name: string, type: string }[];
 }
 
 interface ShaderNodeFn<R extends Node = ShaderNodeObject<Node>> {
