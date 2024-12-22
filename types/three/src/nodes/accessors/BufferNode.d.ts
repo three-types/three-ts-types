@@ -10,8 +10,8 @@ export default class BufferNode<TValue> extends UniformNode<TValue> {
     constructor(value: TValue, bufferType: string, bufferCount?: number);
 }
 
-export const buffer: (
+export const buffer: <TValue>(
     value: unknown,
     nodeOrType: NodeOrType,
     count: number,
-) => ShaderNodeObject<BufferNode>;
+) => ShaderNodeObject<BufferNode<TValue>>;
