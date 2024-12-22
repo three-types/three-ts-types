@@ -212,7 +212,7 @@ export function nodeImmutable<T>(
 interface Layout {
     name: string;
     type: string;
-    inputs: { name: string; type: string; }[];
+    inputs: { name: string; type: string }[];
 }
 
 interface ShaderNodeFn<R extends Node = ShaderNodeObject<Node>> {
