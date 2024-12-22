@@ -88,9 +88,9 @@ declare class Nodes extends DataMap<{
     getBackgroundNode(scene: Scene): Node | null;
     getFogNode(scene: Scene): Node | null;
     getCacheKey(scene: Scene, lightsNode: LightsNode): string;
-    updateScene(scene: Scene): void;
     get isToneMappingState(): boolean;
     updateBackground(scene: Scene): void;
+    getCacheNode(type: any, object: any, callback: any, forceUpdate?: boolean): any;
     updateFog(scene: Scene): void;
     updateEnvironment(scene: Scene): void;
     getNodeFrame(
