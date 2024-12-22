@@ -42,7 +42,6 @@ const exceptionList = [
     'webgl_rendertarget_texture2darray',
     'webgl_texture2darray',
     'webgl_worker_offscreencanvas',
-    'webgpu_animation_retargeting',
     'webgpu_backdrop',
     'webgpu_backdrop_water',
     'webgpu_compute_audio',
