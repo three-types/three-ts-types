@@ -13109,6 +13109,76 @@ index d0255e43..c924d666 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
+index b9c69307..3b7039b5 100644
+--- a/examples-testing/examples/webgpu_animation_retargeting.ts
++++ b/examples-testing/examples/webgpu_animation_retargeting.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     color,
+     screenUV,
+@@ -18,22 +18,23 @@ import {
+     pow,
+     blendDodge,
+     normalWorld,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
++import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
+ 
+ const [sourceModel, targetModel] = await Promise.all([
+-    new Promise((resolve, reject) => {
++    new Promise<GLTF>((resolve, reject) => {
+         new GLTFLoader().load('./models/gltf/Michelle.glb', resolve, undefined, reject);
+     }),
+ 
+-    new Promise((resolve, reject) => {
++    new Promise<GLTF>((resolve, reject) => {
+         new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
+     }),
+ ]);
+@@ -45,7 +46,7 @@ const clock = new THREE.Clock();
+ const stats = new Stats();
+ document.body.appendChild(stats.dom);
+ 
+-export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
++export const lightSpeed = /*#__PURE__*/ Fn<[ShaderNodeObject<THREE.Node>]>(([suv_immutable]) => {
+     // forked from https://www.shadertoy.com/view/7ly3D1
+ 
+     const suv = vec2(suv_immutable);
+@@ -170,7 +171,13 @@ gui.add(helpers, 'visible').name('helpers');
+ 
+ //
+ 
+-function getSource(sourceModel) {
++interface Source {
++    clip: THREE.AnimationClip;
++    skeleton: THREE.Skeleton;
++    mixer: THREE.AnimationMixer;
++}
++
++function getSource(sourceModel: GLTF): Source {
+     const clip = sourceModel.animations[0];
+ 
+     const helper = new THREE.SkeletonHelper(sourceModel.scene);
+@@ -184,7 +191,7 @@ function getSource(sourceModel) {
+     return { clip, skeleton, mixer };
+ }
+ 
+-function retargetModel(sourceModel, targetModel) {
++function retargetModel(sourceModel: Source, targetModel: GLTF) {
+     const targetSkin = targetModel.scene.children[0].children[0];
+ 
+     const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);
 diff --git a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
 index b0aed613..8607a01a 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
@@ -13166,6 +13236,143 @@ index b0aed613..8607a01a 100644
          // specify the name of the source's hip bone.
          hip: 'mixamorigHips',
  
+diff --git a/examples-testing/examples/webgpu_backdrop.ts b/examples-testing/examples/webgpu_backdrop.ts
+deleted file mode 100644
+index dc3024a9..00000000
+--- a/examples-testing/examples/webgpu_backdrop.ts
++++ /dev/null
+@@ -1,131 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    float,
+-    vec3,
+-    color,
+-    viewportSharedTexture,
+-    hue,
+-    blendOverlay,
+-    posterize,
+-    grayscale,
+-    saturation,
+-    viewportSafeUV,
+-    screenUV,
+-    checker,
+-    uv,
+-    time,
+-    oscSine,
+-    output,
+-} from 'three/tsl';
+-
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-let camera, scene, renderer;
+-let portals,
+-    rotate = true;
+-let mixer, clock;
+-
+-init();
+-
+-function init() {
+-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 100);
+-    camera.position.set(1, 2, 3);
+-
+-    scene = new THREE.Scene();
+-    scene.backgroundNode = screenUV.y.mix(color(0x66bbff), color(0x4466ff));
+-    camera.lookAt(0, 1, 0);
+-
+-    clock = new THREE.Clock();
+-
+-    // lights
+-
+-    const light = new THREE.SpotLight(0xffffff, 1);
+-    light.power = 2000;
+-    camera.add(light);
+-    scene.add(camera);
+-
+-    const loader = new GLTFLoader();
+-    loader.load('models/gltf/Michelle.glb', function (gltf) {
+-        const object = gltf.scene;
+-        mixer = new THREE.AnimationMixer(object);
+-
+-        const material = object.children[0].children[0].material;
+-        material.outputNode = oscSine(time.mul(0.1)).mix(output, posterize(output.add(0.1), 4).mul(2));
+-
+-        const action = mixer.clipAction(gltf.animations[0]);
+-        action.play();
+-
+-        scene.add(object);
+-    });
+-
+-    // portals
+-
+-    const geometry = new THREE.SphereGeometry(0.3, 32, 16);
+-
+-    portals = new THREE.Group();
+-    scene.add(portals);
+-
+-    function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
+-        const distance = 1;
+-        const id = portals.children.length;
+-        const rotation = THREE.MathUtils.degToRad(id * 45);
+-
+-        const material = new THREE.MeshStandardNodeMaterial({ color: 0x0066ff });
+-        material.roughnessNode = float(0.2);
+-        material.metalnessNode = float(0);
+-        material.backdropNode = backdropNode;
+-        material.backdropAlphaNode = backdropAlphaNode;
+-        material.transparent = true;
+-
+-        const mesh = new THREE.Mesh(geometry, material);
+-        mesh.position.set(Math.cos(rotation) * distance, 1, Math.sin(rotation) * distance);
+-
+-        portals.add(mesh);
+-    }
+-
+-    addBackdropSphere(hue(viewportSharedTexture().bgr, oscSine().mul(Math.PI)));
+-    addBackdropSphere(viewportSharedTexture().rgb.oneMinus());
+-    addBackdropSphere(grayscale(viewportSharedTexture().rgb));
+-    addBackdropSphere(saturation(viewportSharedTexture().rgb, 10), oscSine());
+-    addBackdropSphere(blendOverlay(viewportSharedTexture().rgb, checker(uv().mul(10))));
+-    addBackdropSphere(viewportSharedTexture(viewportSafeUV(screenUV.mul(40).floor().div(40))));
+-    addBackdropSphere(viewportSharedTexture(viewportSafeUV(screenUV.mul(80).floor().div(80))).add(color(0x0033ff)));
+-    addBackdropSphere(vec3(0, 0, viewportSharedTexture().b));
+-
+-    // renderer
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: false });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    renderer.toneMapping = THREE.NeutralToneMapping;
+-    renderer.toneMappingExposure = 0.3;
+-    document.body.appendChild(renderer.domElement);
+-
+-    const controls = new OrbitControls(camera, renderer.domElement);
+-    controls.target.set(0, 1, 0);
+-    controls.addEventListener('start', () => (rotate = false));
+-    controls.addEventListener('end', () => (rotate = true));
+-    controls.update();
+-
+-    window.addEventListener('resize', onWindowResize);
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function animate() {
+-    const delta = clock.getDelta();
+-
+-    if (mixer) mixer.update(delta);
+-
+-    if (rotate) portals.rotation.y += delta * 0.5;
+-
+-    renderer.render(scene, camera);
+-}
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
 index 53517e80..1fd4c8e2 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
@@ -13203,6 +13410,270 @@ index 53517e80..1fd4c8e2 100644
          box.material = materials[name];
      });
  }
+diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
+deleted file mode 100644
+index ecec17b0..00000000
+--- a/examples-testing/examples/webgpu_backdrop_water.ts
++++ /dev/null
+@@ -1,258 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    color,
+-    vec2,
+-    pass,
+-    linearDepth,
+-    normalWorld,
+-    triplanarTexture,
+-    texture,
+-    objectPosition,
+-    screenUV,
+-    viewportLinearDepth,
+-    viewportDepthTexture,
+-    viewportSharedTexture,
+-    mx_worley_noise_float,
+-    positionWorld,
+-    time,
+-} from 'three/tsl';
+-import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+-
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-import Stats from 'three/addons/libs/stats.module.js';
+-
+-let camera, scene, renderer;
+-let mixer, objects, clock;
+-let model, floor, floorPosition;
+-let postProcessing;
+-let controls;
+-let stats;
+-
+-init();
+-
+-function init() {
+-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.25, 30);
+-    camera.position.set(3, 2, 4);
+-
+-    scene = new THREE.Scene();
+-    scene.fog = new THREE.Fog(0x0487e2, 7, 25);
+-    scene.backgroundNode = normalWorld.y.mix(color(0x0487e2), color(0x0066ff));
+-    camera.lookAt(0, 1, 0);
+-
+-    const sunLight = new THREE.DirectionalLight(0xffe499, 5);
+-    sunLight.castShadow = true;
+-    sunLight.shadow.camera.near = 0.1;
+-    sunLight.shadow.camera.far = 5;
+-    sunLight.shadow.camera.right = 2;
+-    sunLight.shadow.camera.left = -2;
+-    sunLight.shadow.camera.top = 1;
+-    sunLight.shadow.camera.bottom = -2;
+-    sunLight.shadow.mapSize.width = 2048;
+-    sunLight.shadow.mapSize.height = 2048;
+-    sunLight.shadow.bias = -0.001;
+-    sunLight.position.set(0.5, 3, 0.5);
+-
+-    const waterAmbientLight = new THREE.HemisphereLight(0x333366, 0x74ccf4, 5);
+-    const skyAmbientLight = new THREE.HemisphereLight(0x74ccf4, 0, 1);
+-
+-    scene.add(sunLight);
+-    scene.add(skyAmbientLight);
+-    scene.add(waterAmbientLight);
+-
+-    clock = new THREE.Clock();
+-
+-    // animated model
+-
+-    const loader = new GLTFLoader();
+-    loader.load('models/gltf/Michelle.glb', function (gltf) {
+-        model = gltf.scene;
+-        model.children[0].children[0].castShadow = true;
+-
+-        mixer = new THREE.AnimationMixer(model);
+-
+-        const action = mixer.clipAction(gltf.animations[0]);
+-        action.play();
+-
+-        scene.add(model);
+-    });
+-
+-    // objects
+-
+-    const textureLoader = new THREE.TextureLoader();
+-    const iceDiffuse = textureLoader.load('./textures/water.jpg');
+-    iceDiffuse.wrapS = THREE.RepeatWrapping;
+-    iceDiffuse.wrapT = THREE.RepeatWrapping;
+-    iceDiffuse.colorSpace = THREE.NoColorSpace;
+-
+-    const iceColorNode = triplanarTexture(texture(iceDiffuse)).add(color(0x0066ff)).mul(0.8);
+-
+-    const geometry = new THREE.IcosahedronGeometry(1, 3);
+-    const material = new THREE.MeshStandardNodeMaterial({ colorNode: iceColorNode });
+-
+-    const count = 100;
+-    const scale = 3.5;
+-    const column = 10;
+-
+-    objects = new THREE.Group();
+-
+-    for (let i = 0; i < count; i++) {
+-        const x = i % column;
+-        const y = i / column;
+-
+-        const mesh = new THREE.Mesh(geometry, material);
+-        mesh.position.set(x * scale, 0, y * scale);
+-        mesh.rotation.set(Math.random(), Math.random(), Math.random());
+-        objects.add(mesh);
+-    }
+-
+-    objects.position.set((column - 1) * scale * -0.5, -1, (count / column) * scale * -0.5);
+-
+-    scene.add(objects);
+-
+-    // water
+-
+-    const timer = time.mul(0.8);
+-    const floorUV = positionWorld.xzy;
+-
+-    const waterLayer0 = mx_worley_noise_float(floorUV.mul(4).add(timer));
+-    const waterLayer1 = mx_worley_noise_float(floorUV.mul(2).add(timer));
+-
+-    const waterIntensity = waterLayer0.mul(waterLayer1);
+-    const waterColor = waterIntensity.mul(1.4).mix(color(0x0487e2), color(0x74ccf4));
+-
+-    // linearDepth() returns the linear depth of the mesh
+-    const depth = linearDepth();
+-    const depthWater = viewportLinearDepth.sub(depth);
+-    const depthEffect = depthWater.remapClamp(-0.002, 0.04);
+-
+-    const refractionUV = screenUV.add(vec2(0, waterIntensity.mul(0.1)));
+-
+-    // linearDepth( viewportDepthTexture( uv ) ) return the linear depth of the scene
+-    const depthTestForRefraction = linearDepth(viewportDepthTexture(refractionUV)).sub(depth);
+-
+-    const depthRefraction = depthTestForRefraction.remapClamp(0, 0.1);
+-
+-    const finalUV = depthTestForRefraction.lessThan(0).select(screenUV, refractionUV);
+-
+-    const viewportTexture = viewportSharedTexture(finalUV);
+-
+-    const waterMaterial = new THREE.MeshBasicNodeMaterial();
+-    waterMaterial.colorNode = waterColor;
+-    waterMaterial.backdropNode = depthEffect.mix(
+-        viewportSharedTexture(),
+-        viewportTexture.mul(depthRefraction.mix(1, waterColor)),
+-    );
+-    waterMaterial.backdropAlphaNode = depthRefraction.oneMinus();
+-    waterMaterial.transparent = true;
+-
+-    const water = new THREE.Mesh(new THREE.BoxGeometry(50, 0.001, 50), waterMaterial);
+-    water.position.set(0, 0, 0);
+-    scene.add(water);
+-
+-    // floor
+-
+-    floor = new THREE.Mesh(
+-        new THREE.CylinderGeometry(1.1, 1.1, 10),
+-        new THREE.MeshStandardNodeMaterial({ colorNode: iceColorNode }),
+-    );
+-    floor.position.set(0, -5, 0);
+-    scene.add(floor);
+-
+-    // caustics
+-
+-    const waterPosY = positionWorld.y.sub(water.position.y);
+-
+-    let transition = waterPosY.add(0.1).saturate().oneMinus();
+-    transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
+-
+-    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
+-
+-    //material.colorNode = colorNode;
+-    floor.material.colorNode = colorNode;
+-
+-    // renderer
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-
+-    stats = new Stats();
+-    document.body.appendChild(stats.dom);
+-
+-    controls = new OrbitControls(camera, renderer.domElement);
+-    controls.minDistance = 1;
+-    controls.maxDistance = 10;
+-    controls.maxPolarAngle = Math.PI * 0.9;
+-    controls.autoRotate = true;
+-    controls.autoRotateSpeed = 1;
+-    controls.target.set(0, 0.2, 0);
+-    controls.update();
+-
+-    // gui
+-
+-    const gui = new GUI();
+-
+-    floorPosition = new THREE.Vector3(0, 0.2, 0);
+-
+-    gui.add(floorPosition, 'y', -1, 1, 0.001).name('position');
+-
+-    // post processing
+-
+-    const scenePass = pass(scene, camera);
+-    const scenePassColor = scenePass.getTextureNode();
+-    const scenePassDepth = scenePass.getLinearDepthNode().remapClamp(0.3, 0.5);
+-
+-    const waterMask = objectPosition(camera).y.greaterThan(screenUV.y.sub(0.5).mul(camera.near));
+-
+-    const scenePassColorBlurred = gaussianBlur(scenePassColor);
+-    scenePassColorBlurred.directionNode = waterMask.select(scenePassDepth, scenePass.getLinearDepthNode().mul(5));
+-
+-    const vignette = screenUV.distance(0.5).mul(1.35).clamp().oneMinus();
+-
+-    postProcessing = new THREE.PostProcessing(renderer);
+-    postProcessing.outputNode = waterMask.select(
+-        scenePassColorBlurred,
+-        scenePassColorBlurred.mul(color(0x74ccf4)).mul(vignette),
+-    );
+-
+-    //
+-
+-    window.addEventListener('resize', onWindowResize);
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function animate() {
+-    stats.update();
+-
+-    controls.update();
+-
+-    const delta = clock.getDelta();
+-
+-    floor.position.y = floorPosition.y - 5;
+-
+-    if (model) {
+-        mixer.update(delta);
+-
+-        model.position.y = floorPosition.y;
+-    }
+-
+-    for (const object of objects.children) {
+-        object.position.y = Math.sin(clock.elapsedTime + object.id) * 0.3;
+-        object.rotation.y += delta * 0.3;
+-    }
+-
+-    postProcessing.render();
+-}
 diff --git a/examples-testing/examples/webgpu_camera.ts b/examples-testing/examples/webgpu_camera.ts
 index 45619da3..97df59b3 100644
 --- a/examples-testing/examples/webgpu_camera.ts
@@ -13479,6 +13950,3058 @@ index 3331adc8..17d73367 100644
      const time = (currentTime - startTime) / 1000;
  
      object.position.y = 0.8;
+diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
+deleted file mode 100644
+index 4e567e9c..00000000
+--- a/examples-testing/examples/webgpu_compute_audio.ts
++++ /dev/null
+@@ -1,173 +0,0 @@
+-import * as THREE from 'three';
+-import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, color } from 'three/tsl';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-let camera, scene, renderer;
+-let computeNode;
+-let waveBuffer, sampleRate;
+-let waveArray;
+-let currentAudio, currentAnalyser;
+-const analyserBuffer = new Uint8Array(1024);
+-let analyserTexture;
+-
+-const startButton = document.getElementById('startButton');
+-startButton.addEventListener('click', init);
+-
+-async function playAudioBuffer() {
+-    if (currentAudio) currentAudio.stop();
+-
+-    // compute audio
+-
+-    await renderer.computeAsync(computeNode);
+-
+-    const wave = new Float32Array(await renderer.getArrayBufferAsync(waveArray.value));
+-
+-    // play result
+-
+-    const audioOutputContext = new AudioContext({ sampleRate });
+-    const audioOutputBuffer = audioOutputContext.createBuffer(1, wave.length, sampleRate);
+-
+-    audioOutputBuffer.copyToChannel(wave, 0);
+-
+-    const source = audioOutputContext.createBufferSource();
+-    source.connect(audioOutputContext.destination);
+-    source.buffer = audioOutputBuffer;
+-    source.start();
+-
+-    currentAudio = source;
+-
+-    // visual feedback
+-
+-    currentAnalyser = audioOutputContext.createAnalyser();
+-    currentAnalyser.fftSize = 2048;
+-
+-    source.connect(currentAnalyser);
+-}
+-
+-async function init() {
+-    const overlay = document.getElementById('overlay');
+-    overlay.remove();
+-
+-    // audio buffer
+-
+-    const soundBuffer = await fetch('sounds/webgpu-audio-processing.mp3').then(res => res.arrayBuffer());
+-    const audioContext = new AudioContext();
+-
+-    const audioBuffer = await audioContext.decodeAudioData(soundBuffer);
+-
+-    waveBuffer = audioBuffer.getChannelData(0);
+-
+-    // adding extra silence to delay and pitch
+-    waveBuffer = new Float32Array([...waveBuffer, ...new Float32Array(200000)]);
+-
+-    sampleRate = audioBuffer.sampleRate / audioBuffer.numberOfChannels;
+-
+-    // create webgpu buffers
+-
+-    waveArray = instancedArray(waveBuffer);
+-
+-    // read-only buffer
+-
+-    const originalWave = instancedArray(waveBuffer).toReadOnly();
+-
+-    // The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
+-    // As used in `renderer.getArrayBufferAsync( waveArray.value )`.
+-
+-    originalWave.setPBO(true);
+-    waveArray.setPBO(true);
+-
+-    // params
+-
+-    const pitch = uniform(1.5);
+-    const delayVolume = uniform(0.2);
+-    const delayOffset = uniform(0.55);
+-
+-    // compute (shader-node)
+-
+-    const computeShaderFn = Fn(() => {
+-        const index = float(instanceIndex);
+-
+-        // pitch
+-
+-        const time = index.mul(pitch);
+-
+-        let wave = originalWave.element(time);
+-
+-        // delay
+-
+-        for (let i = 1; i < 7; i++) {
+-            const waveOffset = originalWave.element(index.sub(delayOffset.mul(sampleRate).mul(i)).mul(pitch));
+-            const waveOffsetVolume = waveOffset.mul(delayVolume.div(i * i));
+-
+-            wave = wave.add(waveOffsetVolume);
+-        }
+-
+-        // store
+-
+-        const waveStorageElementNode = waveArray.element(instanceIndex);
+-
+-        waveStorageElementNode.assign(wave);
+-    });
+-
+-    // compute
+-
+-    computeNode = computeShaderFn().compute(waveBuffer.length);
+-
+-    // gui
+-
+-    const gui = new GUI();
+-
+-    gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
+-    gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
+-    gui.add(delayOffset, 'value', 0.1, 1, 0.01).name('delayOffset');
+-
+-    // renderer
+-
+-    const container = document.createElement('div');
+-    document.body.appendChild(container);
+-
+-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 30);
+-
+-    // nodes
+-
+-    analyserTexture = new THREE.DataTexture(analyserBuffer, analyserBuffer.length, 1, THREE.RedFormat);
+-
+-    const spectrum = texture(analyserTexture, screenUV.x).x.mul(screenUV.y);
+-    const backgroundNode = color(0x0000ff).mul(spectrum);
+-
+-    // scene
+-
+-    scene = new THREE.Scene();
+-    scene.backgroundNode = backgroundNode;
+-
+-    // renderer
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(render);
+-    container.appendChild(renderer.domElement);
+-
+-    window.addEventListener('resize', onWindowResize);
+-    document.addEventListener('click', playAudioBuffer);
+-
+-    playAudioBuffer();
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function render() {
+-    if (currentAnalyser) {
+-        currentAnalyser.getByteFrequencyData(analyserBuffer);
+-
+-        analyserTexture.needsUpdate = true;
+-    }
+-
+-    renderer.render(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
+deleted file mode 100644
+index b9f971f4..00000000
+--- a/examples-testing/examples/webgpu_compute_birds.ts
++++ /dev/null
+@@ -1,428 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    uniform,
+-    varying,
+-    vec4,
+-    add,
+-    sub,
+-    max,
+-    dot,
+-    sin,
+-    mat3,
+-    uint,
+-    negate,
+-    attributeArray,
+-    cameraProjectionMatrix,
+-    cameraViewMatrix,
+-    positionLocal,
+-    modelWorldMatrix,
+-    sqrt,
+-    attribute,
+-    property,
+-    float,
+-    Fn,
+-    If,
+-    cos,
+-    Loop,
+-    Continue,
+-    normalize,
+-    instanceIndex,
+-    length,
+-} from 'three/tsl';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-import Stats from 'three/addons/libs/stats.module.js';
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-let container, stats;
+-let camera, scene, renderer;
+-
+-let last = performance.now();
+-
+-let pointer, raycaster;
+-let computeVelocity, computePosition, effectController;
+-
+-const BIRDS = 16384;
+-const SPEED_LIMIT = 9.0;
+-const BOUNDS = 800,
+-    BOUNDS_HALF = BOUNDS / 2;
+-
+-// Custom Geometry - using 3 triangles each. No normals currently.
+-class BirdGeometry extends THREE.BufferGeometry {
+-    constructor() {
+-        super();
+-
+-        const trianglesPerBird = 3;
+-        const triangles = BIRDS * trianglesPerBird;
+-        const points = triangles * 3;
+-
+-        const vertices = new THREE.BufferAttribute(new Float32Array(points * 3), 3);
+-        const references = new THREE.BufferAttribute(new Uint32Array(points), 1);
+-        const birdVertex = new THREE.BufferAttribute(new Uint32Array(points), 1);
+-
+-        this.setAttribute('position', vertices);
+-        this.setAttribute('reference', references);
+-        this.setAttribute('birdVertex', birdVertex);
+-
+-        let v = 0;
+-
+-        function verts_push() {
+-            for (let i = 0; i < arguments.length; i++) {
+-                vertices.array[v++] = arguments[i];
+-            }
+-        }
+-
+-        const wingsSpan = 20;
+-
+-        for (let f = 0; f < BIRDS; f++) {
+-            // Body
+-            verts_push(0, 0, -20, 0, -8, 10, 0, 0, 30);
+-
+-            // Wings
+-            verts_push(0, 0, -15, -wingsSpan, 0, 5, 0, 0, 15);
+-
+-            verts_push(0, 0, 15, wingsSpan, 0, 5, 0, 0, -15);
+-        }
+-
+-        for (let v = 0; v < triangles * 3; v++) {
+-            const triangleIndex = ~~(v / 3);
+-            const birdIndex = ~~(triangleIndex / trianglesPerBird);
+-
+-            references.array[v] = birdIndex;
+-
+-            birdVertex.array[v] = v % 9;
+-        }
+-
+-        this.scale(0.2, 0.2, 0.2);
+-    }
+-}
+-
+-function init() {
+-    container = document.createElement('div');
+-    document.body.appendChild(container);
+-
+-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 5000);
+-    camera.position.z = 1000;
+-
+-    scene = new THREE.Scene();
+-    scene.fog = new THREE.Fog(0xffffff, 700, 3000);
+-
+-    // Pointer
+-
+-    pointer = new THREE.Vector2();
+-    raycaster = new THREE.Raycaster();
+-
+-    // Sky
+-
+-    const geometry = new THREE.IcosahedronGeometry(1, 6);
+-    const material = new THREE.MeshBasicNodeMaterial({
+-        // Use vertex positions to create atmosphere colors
+-        colorNode: varying(
+-            vec4(sub(0.25, positionLocal.y), sub(-0.25, positionLocal.y), add(1.5, positionLocal.y), 1.0),
+-        ),
+-        side: THREE.BackSide,
+-    });
+-
+-    const mesh = new THREE.Mesh(geometry, material);
+-    mesh.rotation.z = 0.75;
+-    mesh.scale.setScalar(1200);
+-    scene.add(mesh);
+-
+-    //
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    renderer.toneMapping = THREE.NeutralToneMapping;
+-    container.appendChild(renderer.domElement);
+-
+-    const controls = new OrbitControls(camera, renderer.domElement);
+-    controls.connect(/* renderer.domElement */);
+-
+-    // Initialize position, velocity, and phase values
+-
+-    const positionArray = new Float32Array(BIRDS * 3);
+-    const velocityArray = new Float32Array(BIRDS * 3);
+-    const phaseArray = new Float32Array(BIRDS);
+-
+-    for (let i = 0; i < BIRDS; i++) {
+-        const posX = Math.random() * BOUNDS - BOUNDS_HALF;
+-        const posY = Math.random() * BOUNDS - BOUNDS_HALF;
+-        const posZ = Math.random() * BOUNDS - BOUNDS_HALF;
+-
+-        positionArray[i * 3 + 0] = posX;
+-        positionArray[i * 3 + 1] = posY;
+-        positionArray[i * 3 + 2] = posZ;
+-
+-        const velX = Math.random() - 0.5;
+-        const velY = Math.random() - 0.5;
+-        const velZ = Math.random() - 0.5;
+-
+-        velocityArray[i * 3 + 0] = velX * 10;
+-        velocityArray[i * 3 + 1] = velY * 10;
+-        velocityArray[i * 3 + 2] = velZ * 10;
+-
+-        phaseArray[i] = 1;
+-    }
+-
+-    // Labels applied to storage nodes and uniform nodes are reflected within the shader output,
+-    // and are useful for debugging purposes.
+-
+-    const positionStorage = attributeArray(positionArray, 'vec3').label('positionStorage');
+-    const velocityStorage = attributeArray(velocityArray, 'vec3').label('velocityStorage');
+-    const phaseStorage = attributeArray(phaseArray, 'float').label('phaseStorage');
+-
+-    // The Pixel Buffer Object (PBO) is required to get the GPU computed data in the WebGL2 fallback.
+-
+-    positionStorage.setPBO(true);
+-    velocityStorage.setPBO(true);
+-    phaseStorage.setPBO(true);
+-
+-    // Define Uniforms. Uniforms only need to be defined once rather than per shader.
+-
+-    effectController = {
+-        separation: uniform(15.0).label('separation'),
+-        alignment: uniform(20.0).label('alignment'),
+-        cohesion: uniform(20.0).label('cohesion'),
+-        freedom: uniform(0.75).label('freedom'),
+-        now: uniform(0.0),
+-        deltaTime: uniform(0.0).label('deltaTime'),
+-        rayOrigin: uniform(new THREE.Vector3()).label('rayOrigin'),
+-        rayDirection: uniform(new THREE.Vector3()).label('rayDirection'),
+-    };
+-
+-    // Create geometry
+-
+-    const birdGeometry = new BirdGeometry();
+-    const birdMaterial = new THREE.NodeMaterial();
+-
+-    // Animate bird mesh within vertex shader, then apply position offset to vertices.
+-
+-    const birdVertexTSL = Fn(() => {
+-        const reference = attribute('reference');
+-        const birdVertex = attribute('birdVertex');
+-
+-        const position = positionLocal.toVar();
+-        const newPhase = phaseStorage.element(reference).toVar();
+-        const newVelocity = normalize(velocityStorage.element(reference)).toVar();
+-
+-        If(birdVertex.equal(4).or(birdVertex.equal(7)), () => {
+-            // flap wings
+-            position.y = sin(newPhase).mul(5.0);
+-        });
+-
+-        const newPosition = modelWorldMatrix.mul(position);
+-
+-        newVelocity.z.mulAssign(-1.0);
+-        const xz = length(newVelocity.xz);
+-        const xyz = float(1.0);
+-        const x = sqrt(newVelocity.y.mul(newVelocity.y).oneMinus());
+-
+-        const cosry = newVelocity.x.div(xz).toVar();
+-        const sinry = newVelocity.z.div(xz).toVar();
+-
+-        const cosrz = x.div(xyz);
+-        const sinrz = newVelocity.y.div(xyz).toVar();
+-
+-        // Nodes must be negated with negate(). Using '-', their values will resolve to NaN.
+-        const maty = mat3(cosry, 0, negate(sinry), 0, 1, 0, sinry, 0, cosry);
+-
+-        const matz = mat3(cosrz, sinrz, 0, negate(sinrz), cosrz, 0, 0, 0, 1);
+-
+-        const finalVert = maty.mul(matz).mul(newPosition);
+-        finalVert.addAssign(positionStorage.element(reference));
+-
+-        return cameraProjectionMatrix.mul(cameraViewMatrix).mul(finalVert);
+-    });
+-
+-    birdMaterial.vertexNode = birdVertexTSL();
+-    birdMaterial.side = THREE.DoubleSide;
+-
+-    const birdMesh = new THREE.Mesh(birdGeometry, birdMaterial);
+-    birdMesh.rotation.y = Math.PI / 2;
+-    birdMesh.matrixAutoUpdate = false;
+-    birdMesh.frustumCulled = false;
+-    birdMesh.updateMatrix();
+-
+-    // Define GPU Compute shaders.
+-    // Shaders are computationally identical to their GLSL counterparts outside of texture destructuring.
+-
+-    computeVelocity = Fn(() => {
+-        // Define consts
+-        const PI = float(3.141592653589793);
+-        const PI_2 = PI.mul(2.0);
+-        const limit = property('float', 'limit').assign(SPEED_LIMIT);
+-
+-        // Destructure uniforms
+-        const { alignment, separation, cohesion, deltaTime, rayOrigin, rayDirection } = effectController;
+-
+-        const zoneRadius = separation.add(alignment).add(cohesion);
+-        const separationThresh = separation.div(zoneRadius);
+-        const alignmentThresh = separation.add(alignment).div(zoneRadius);
+-        const zoneRadiusSq = zoneRadius.mul(zoneRadius);
+-
+-        const position = positionStorage.element(instanceIndex);
+-        const velocity = velocityStorage.element(instanceIndex);
+-
+-        // Add influence of pointer position to velocity.
+-        const directionToRay = rayOrigin.sub(position);
+-        const projectionLength = dot(directionToRay, rayDirection);
+-
+-        const closestPoint = rayOrigin.sub(rayDirection.mul(projectionLength));
+-
+-        const directionToClosestPoint = closestPoint.sub(position);
+-        const distanceToClosestPoint = length(directionToClosestPoint);
+-        const distanceToClosestPointSq = distanceToClosestPoint.mul(distanceToClosestPoint);
+-
+-        const rayRadius = float(150.0);
+-        const rayRadiusSq = rayRadius.mul(rayRadius);
+-
+-        If(distanceToClosestPointSq.lessThan(rayRadiusSq), () => {
+-            // Scale bird velocity inversely with distance from prey radius center.
+-            const velocityAdjust = distanceToClosestPointSq.div(rayRadiusSq).sub(1.0).mul(deltaTime).mul(100.0);
+-            velocity.addAssign(normalize(directionToClosestPoint).mul(velocityAdjust));
+-            limit.addAssign(5.0);
+-        });
+-
+-        // Attract flocks to center
+-        const dirToCenter = position.toVar();
+-        dirToCenter.y.mulAssign(2.5);
+-        velocity.subAssign(normalize(dirToCenter).mul(deltaTime).mul(5.0));
+-
+-        Loop({ start: uint(0), end: uint(BIRDS), type: 'uint', condition: '<' }, ({ i }) => {
+-            const birdPosition = positionStorage.element(i);
+-            const dirToBird = birdPosition.sub(position);
+-            const distToBird = length(dirToBird);
+-
+-            // Don't apply any changes to velocity if the distance to this bird is negligible.
+-            If(distToBird.lessThan(0.0001), () => {
+-                Continue();
+-            });
+-
+-            const distToBirdSq = distToBird.mul(distToBird);
+-
+-            // Don't apply any changes to velocity if changes if the bird is outsize the zone's radius.
+-            If(distToBirdSq.greaterThan(zoneRadiusSq), () => {
+-                Continue();
+-            });
+-
+-            // Determine which threshold the bird is flying within and adjust its velocity accordingly
+-
+-            const percent = distToBirdSq.div(zoneRadiusSq);
+-
+-            If(percent.lessThan(separationThresh), () => {
+-                // Separation - Move apart for comfort
+-                const velocityAdjust = separationThresh.div(percent).sub(1.0).mul(deltaTime);
+-                velocity.subAssign(normalize(dirToBird).mul(velocityAdjust));
+-            })
+-                .ElseIf(percent.lessThan(alignmentThresh), () => {
+-                    // Alignment - fly the same direction
+-                    const threshDelta = alignmentThresh.sub(separationThresh);
+-                    const adjustedPercent = percent.sub(separationThresh).div(threshDelta);
+-                    const birdVelocity = velocityStorage.element(i);
+-
+-                    const cosRange = cos(adjustedPercent.mul(PI_2));
+-                    const cosRangeAdjust = float(0.5).sub(cosRange.mul(0.5)).add(0.5);
+-                    const velocityAdjust = cosRangeAdjust.mul(deltaTime);
+-                    velocity.addAssign(normalize(birdVelocity).mul(velocityAdjust));
+-                })
+-                .Else(() => {
+-                    // Attraction / Cohesion - move closer
+-                    const threshDelta = alignmentThresh.oneMinus();
+-                    const adjustedPercent = threshDelta
+-                        .equal(0.0)
+-                        .select(1.0, percent.sub(alignmentThresh).div(threshDelta));
+-
+-                    const cosRange = cos(adjustedPercent.mul(PI_2));
+-                    const adj1 = cosRange.mul(-0.5);
+-                    const adj2 = adj1.add(0.5);
+-                    const adj3 = float(0.5).sub(adj2);
+-
+-                    const velocityAdjust = adj3.mul(deltaTime);
+-                    velocity.addAssign(normalize(dirToBird).mul(velocityAdjust));
+-                });
+-        });
+-
+-        If(length(velocity).greaterThan(limit), () => {
+-            velocity.assign(normalize(velocity).mul(limit));
+-        });
+-    })().compute(BIRDS);
+-
+-    computePosition = Fn(() => {
+-        const { deltaTime } = effectController;
+-        positionStorage
+-            .element(instanceIndex)
+-            .addAssign(velocityStorage.element(instanceIndex).mul(deltaTime).mul(15.0));
+-
+-        const velocity = velocityStorage.element(instanceIndex);
+-        const phase = phaseStorage.element(instanceIndex);
+-
+-        const modValue = phase
+-            .add(deltaTime)
+-            .add(length(velocity.xz).mul(deltaTime).mul(3.0))
+-            .add(max(velocity.y, 0.0).mul(deltaTime).mul(6.0));
+-        phaseStorage.element(instanceIndex).assign(modValue.mod(62.83));
+-    })().compute(BIRDS);
+-
+-    scene.add(birdMesh);
+-
+-    stats = new Stats();
+-    container.appendChild(stats.dom);
+-
+-    container.style.touchAction = 'none';
+-    container.addEventListener('pointermove', onPointerMove);
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    const gui = new GUI();
+-
+-    gui.add(effectController.separation, 'value', 0.0, 100.0, 1.0).name('Separation');
+-    gui.add(effectController.alignment, 'value', 0.0, 100, 0.001).name('Alignment ');
+-    gui.add(effectController.cohesion, 'value', 0.0, 100, 0.025).name('Cohesion');
+-    gui.close();
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function onPointerMove(event) {
+-    if (event.isPrimary === false) return;
+-
+-    pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
+-    pointer.y = 1.0 - (event.clientY / window.innerHeight) * 2.0;
+-}
+-
+-function animate() {
+-    render();
+-    stats.update();
+-}
+-
+-function render() {
+-    const now = performance.now();
+-    let deltaTime = (now - last) / 1000;
+-
+-    if (deltaTime > 1) deltaTime = 1; // safety cap on large deltas
+-    last = now;
+-
+-    raycaster.setFromCamera(pointer, camera);
+-
+-    effectController.now.value = now;
+-    effectController.deltaTime.value = deltaTime;
+-    effectController.rayOrigin.value.copy(raycaster.ray.origin);
+-    effectController.rayDirection.value.copy(raycaster.ray.direction);
+-
+-    renderer.compute(computeVelocity);
+-    renderer.compute(computePosition);
+-    renderer.render(scene, camera);
+-
+-    // Move pointer away so we only affect birds when moving the mouse
+-    pointer.y = 10;
+-}
+-
+-init();
+diff --git a/examples-testing/examples/webgpu_compute_geometry.ts b/examples-testing/examples/webgpu_compute_geometry.ts
+deleted file mode 100644
+index d527fbd2..00000000
+--- a/examples-testing/examples/webgpu_compute_geometry.ts
++++ /dev/null
+@@ -1,190 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    vec4,
+-    storage,
+-    Fn,
+-    If,
+-    uniform,
+-    instanceIndex,
+-    objectWorldMatrix,
+-    color,
+-    screenUV,
+-    attribute,
+-} from 'three/tsl';
+-
+-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-import Stats from 'three/addons/libs/stats.module.js';
+-
+-let camera, scene, renderer;
+-let raycaster, pointer;
+-let stats;
+-
+-const pointerPosition = uniform(vec4(0));
+-const elasticity = uniform(0.4); // elasticity ( how "strong" the spring is )
+-const damping = uniform(0.94); // damping factor ( energy loss )
+-const brushSize = uniform(0.25);
+-const brushStrength = uniform(0.22);
+-
+-init();
+-
+-const jelly = Fn(({ renderer, geometry, object }) => {
+-    const count = geometry.attributes.position.count;
+-
+-    // replace geometry attributes for storage buffer attributes
+-
+-    const positionBaseAttribute = geometry.attributes.position;
+-    const positionStorageBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
+-    const speedBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
+-
+-    geometry.setAttribute('storagePosition', positionStorageBufferAttribute);
+-
+-    // attributes
+-
+-    const positionAttribute = storage(positionBaseAttribute, 'vec3', count);
+-    const positionStorageAttribute = storage(positionStorageBufferAttribute, 'vec3', count);
+-
+-    const speedAttribute = storage(speedBufferAttribute, 'vec3', count);
+-
+-    // vectors
+-
+-    const basePosition = positionAttribute.element(instanceIndex);
+-    const currentPosition = positionStorageAttribute.element(instanceIndex);
+-    const currentSpeed = speedAttribute.element(instanceIndex);
+-
+-    //
+-
+-    const computeInit = Fn(() => {
+-        // copy position to storage
+-
+-        currentPosition.assign(basePosition);
+-    })().compute(count);
+-
+-    //
+-
+-    const computeUpdate = Fn(() => {
+-        // pinch
+-
+-        If(pointerPosition.w.equal(1), () => {
+-            const worldPosition = objectWorldMatrix(object).mul(currentPosition);
+-
+-            const dist = worldPosition.distance(pointerPosition.xyz);
+-            const direction = pointerPosition.xyz.sub(worldPosition).normalize();
+-
+-            const power = brushSize.sub(dist).max(0).mul(brushStrength);
+-
+-            currentPosition.addAssign(direction.mul(power));
+-        });
+-
+-        // compute ( jelly )
+-
+-        const distance = basePosition.distance(currentPosition);
+-        const force = elasticity.mul(distance).mul(basePosition.sub(currentPosition));
+-
+-        currentSpeed.addAssign(force);
+-        currentSpeed.mulAssign(damping);
+-
+-        currentPosition.addAssign(currentSpeed);
+-    })().compute(count);
+-
+-    // initialize the storage buffer with the base position
+-
+-    computeUpdate.onInit(() => renderer.compute(computeInit));
+-
+-    //
+-
+-    return computeUpdate;
+-});
+-
+-function init() {
+-    camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 10);
+-    camera.position.set(0, 0, 1);
+-
+-    scene = new THREE.Scene();
+-
+-    raycaster = new THREE.Raycaster();
+-    pointer = new THREE.Vector2();
+-
+-    // background
+-
+-    const bgColor = screenUV.y.mix(color(0x9f87f7), color(0xf2cdcd));
+-    const bgVignette = screenUV.distance(0.5).remapClamp(0.3, 0.8).oneMinus();
+-    const bgIntensity = 4;
+-
+-    scene.backgroundNode = bgColor.mul(bgVignette.mul(color(0xa78ff6).mul(bgIntensity)));
+-
+-    // model
+-
+-    new GLTFLoader().load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        // create jelly effect material
+-
+-        const material = new THREE.MeshNormalNodeMaterial();
+-        material.geometryNode = jelly();
+-        material.positionNode = attribute('storagePosition');
+-
+-        // apply the material to the mesh
+-
+-        const mesh = gltf.scene.children[0];
+-        mesh.scale.setScalar(0.1);
+-        mesh.material = material;
+-        scene.add(mesh);
+-    });
+-
+-    // renderer
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-
+-    const controls = new OrbitControls(camera, renderer.domElement);
+-    controls.minDistance = 0.7;
+-    controls.maxDistance = 2;
+-
+-    const gui = new GUI();
+-    gui.add(elasticity, 'value', 0, 0.5).name('elasticity');
+-    gui.add(damping, 'value', 0.9, 0.98).name('damping');
+-    gui.add(brushSize, 'value', 0.1, 0.5).name('brush size');
+-    gui.add(brushStrength, 'value', 0.1, 0.3).name('brush strength');
+-
+-    stats = new Stats();
+-    document.body.appendChild(stats.dom);
+-
+-    window.addEventListener('resize', onWindowResize);
+-    window.addEventListener('pointermove', onPointerMove);
+-}
+-
+-function onPointerMove(event) {
+-    pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+-
+-    raycaster.setFromCamera(pointer, camera);
+-
+-    const intersects = raycaster.intersectObject(scene);
+-
+-    if (intersects.length > 0) {
+-        const intersect = intersects[0];
+-
+-        pointerPosition.value.copy(intersect.point);
+-        pointerPosition.value.w = 1; // enable
+-    } else {
+-        pointerPosition.value.w = 0; // disable
+-    }
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-async function animate() {
+-    stats.update();
+-
+-    renderer.render(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_particles.ts b/examples-testing/examples/webgpu_compute_particles.ts
+deleted file mode 100644
+index c8da32d1..00000000
+--- a/examples-testing/examples/webgpu_compute_particles.ts
++++ /dev/null
+@@ -1,228 +0,0 @@
+-import * as THREE from 'three';
+-import { Fn, uniform, texture, instancedArray, instanceIndex, float, hash, vec3, If } from 'three/tsl';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import Stats from 'three/addons/libs/stats.module.js';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-const particleCount = 1000000;
+-
+-const gravity = uniform(-0.0098);
+-const bounce = uniform(0.8);
+-const friction = uniform(0.99);
+-const size = uniform(0.12);
+-
+-const clickPosition = uniform(new THREE.Vector3());
+-
+-let camera, scene, renderer;
+-let controls, stats;
+-let computeParticles;
+-
+-const timestamps = document.getElementById('timestamps');
+-
+-init();
+-
+-function init() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 1000);
+-    camera.position.set(15, 30, 15);
+-
+-    scene = new THREE.Scene();
+-
+-    // textures
+-
+-    const textureLoader = new THREE.TextureLoader();
+-    const map = textureLoader.load('textures/sprite1.png');
+-
+-    //
+-
+-    const positionBuffer = instancedArray(particleCount, 'vec3');
+-    const velocityBuffer = instancedArray(particleCount, 'vec3');
+-    const colorBuffer = instancedArray(particleCount, 'vec3');
+-
+-    // compute
+-
+-    const computeInit = Fn(() => {
+-        const position = positionBuffer.element(instanceIndex);
+-        const color = colorBuffer.element(instanceIndex);
+-
+-        const randX = hash(instanceIndex);
+-        const randY = hash(instanceIndex.add(2));
+-        const randZ = hash(instanceIndex.add(3));
+-
+-        position.x = randX.mul(100).add(-50);
+-        position.y = 0; // randY.mul( 10 );
+-        position.z = randZ.mul(100).add(-50);
+-
+-        color.assign(vec3(randX, randY, randZ));
+-    })().compute(particleCount);
+-
+-    //
+-
+-    const computeUpdate = Fn(() => {
+-        const position = positionBuffer.element(instanceIndex);
+-        const velocity = velocityBuffer.element(instanceIndex);
+-
+-        velocity.addAssign(vec3(0.0, gravity, 0.0));
+-        position.addAssign(velocity);
+-
+-        velocity.mulAssign(friction);
+-
+-        // floor
+-
+-        If(position.y.lessThan(0), () => {
+-            position.y = 0;
+-            velocity.y = velocity.y.negate().mul(bounce);
+-
+-            // floor friction
+-
+-            velocity.x = velocity.x.mul(0.9);
+-            velocity.z = velocity.z.mul(0.9);
+-        });
+-    });
+-
+-    computeParticles = computeUpdate().compute(particleCount);
+-
+-    // create nodes
+-
+-    const textureNode = texture(map);
+-
+-    // create particles
+-
+-    const particleMaterial = new THREE.SpriteNodeMaterial();
+-    particleMaterial.colorNode = textureNode.mul(colorBuffer.element(instanceIndex));
+-    particleMaterial.positionNode = positionBuffer.toAttribute();
+-    particleMaterial.scaleNode = size;
+-    particleMaterial.depthWrite = false;
+-    particleMaterial.depthTest = true;
+-    particleMaterial.transparent = true;
+-
+-    const particles = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), particleMaterial);
+-    particles.count = particleCount;
+-    particles.frustumCulled = false;
+-    scene.add(particles);
+-
+-    //
+-
+-    const helper = new THREE.GridHelper(60, 40, 0x303030, 0x303030);
+-    scene.add(helper);
+-
+-    const geometry = new THREE.PlaneGeometry(1000, 1000);
+-    geometry.rotateX(-Math.PI / 2);
+-
+-    const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({ visible: false }));
+-    scene.add(plane);
+-
+-    const raycaster = new THREE.Raycaster();
+-    const pointer = new THREE.Vector2();
+-
+-    //
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true, trackTimestamp: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-
+-    stats = new Stats();
+-    document.body.appendChild(stats.dom);
+-
+-    //
+-
+-    renderer.computeAsync(computeInit);
+-
+-    // click event
+-
+-    const computeHit = Fn(() => {
+-        const position = positionBuffer.element(instanceIndex);
+-        const velocity = velocityBuffer.element(instanceIndex);
+-
+-        const dist = position.distance(clickPosition);
+-        const direction = position.sub(clickPosition).normalize();
+-        const distArea = float(6).sub(dist).max(0);
+-
+-        const power = distArea.mul(0.01);
+-        const relativePower = power.mul(hash(instanceIndex).mul(0.5).add(0.5));
+-
+-        velocity.assign(velocity.add(direction.mul(relativePower)));
+-    })().compute(particleCount);
+-
+-    //
+-
+-    function onMove(event) {
+-        pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+-
+-        raycaster.setFromCamera(pointer, camera);
+-
+-        const intersects = raycaster.intersectObjects([plane], false);
+-
+-        if (intersects.length > 0) {
+-            const { point } = intersects[0];
+-
+-            // move to uniform
+-
+-            clickPosition.value.copy(point);
+-            clickPosition.value.y = -1;
+-
+-            // compute
+-
+-            renderer.computeAsync(computeHit);
+-        }
+-    }
+-
+-    // events
+-
+-    renderer.domElement.addEventListener('pointermove', onMove);
+-    //
+-
+-    controls = new OrbitControls(camera, renderer.domElement);
+-    controls.minDistance = 5;
+-    controls.maxDistance = 200;
+-    controls.target.set(0, 0, 0);
+-    controls.update();
+-
+-    //
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    // gui
+-
+-    const gui = new GUI();
+-
+-    gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
+-    gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
+-    gui.add(friction, 'value', 0.96, 0.99, 0.01).name('friction');
+-    gui.add(size, 'value', 0.12, 0.5, 0.01).name('size');
+-}
+-
+-function onWindowResize() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera.aspect = innerWidth / innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(innerWidth, innerHeight);
+-}
+-
+-async function animate() {
+-    stats.update();
+-
+-    await renderer.computeAsync(computeParticles);
+-
+-    await renderer.renderAsync(scene, camera);
+-
+-    // throttle the logging
+-
+-    if (renderer.hasFeature('timestamp-query')) {
+-        if (renderer.info.render.calls % 5 === 0) {
+-            timestamps.innerHTML = `
+-
+-							Compute ${renderer.info.compute.frameCalls} pass in ${renderer.info.compute.timestamp.toFixed(6)}ms<br>
+-							Draw ${renderer.info.render.drawCalls} pass in ${renderer.info.render.timestamp.toFixed(6)}ms`;
+-        }
+-    } else {
+-        timestamps.innerHTML = 'Timestamp queries not supported';
+-    }
+-}
+diff --git a/examples-testing/examples/webgpu_compute_particles_rain.ts b/examples-testing/examples/webgpu_compute_particles_rain.ts
+deleted file mode 100644
+index af1199c6..00000000
+--- a/examples-testing/examples/webgpu_compute_particles_rain.ts
++++ /dev/null
+@@ -1,340 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    Fn,
+-    texture,
+-    uv,
+-    uint,
+-    instancedArray,
+-    positionWorld,
+-    billboarding,
+-    time,
+-    hash,
+-    deltaTime,
+-    vec2,
+-    instanceIndex,
+-    positionGeometry,
+-    If,
+-} from 'three/tsl';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-import Stats from 'three/addons/libs/stats.module.js';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+-
+-const maxParticleCount = 50000;
+-const instanceCount = maxParticleCount / 2;
+-
+-let camera, scene, renderer;
+-let controls, stats;
+-let computeParticles;
+-let monkey;
+-let clock;
+-
+-let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
+-let collisionBoxPos, collisionBoxPosUI;
+-
+-init();
+-
+-function init() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 110);
+-    camera.position.set(40, 8, 0);
+-    camera.lookAt(0, 0, 0);
+-
+-    scene = new THREE.Scene();
+-
+-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+-    dirLight.castShadow = true;
+-    dirLight.position.set(3, 17, 17);
+-    dirLight.castShadow = true;
+-    dirLight.shadow.camera.near = 1;
+-    dirLight.shadow.camera.far = 50;
+-    dirLight.shadow.camera.right = 25;
+-    dirLight.shadow.camera.left = -25;
+-    dirLight.shadow.camera.top = 25;
+-    dirLight.shadow.camera.bottom = -25;
+-    dirLight.shadow.mapSize.width = 2048;
+-    dirLight.shadow.mapSize.height = 2048;
+-    dirLight.shadow.bias = -0.01;
+-
+-    scene.add(dirLight);
+-    scene.add(new THREE.AmbientLight(0x111111));
+-
+-    //
+-
+-    collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+-    collisionCamera.position.y = 50;
+-    collisionCamera.lookAt(0, 0, 0);
+-    collisionCamera.layers.disableAll();
+-    collisionCamera.layers.enable(1);
+-
+-    collisionPosRT = new THREE.RenderTarget(1024, 1024);
+-    collisionPosRT.texture.type = THREE.HalfFloatType;
+-    collisionPosRT.texture.magFilter = THREE.NearestFilter;
+-    collisionPosRT.texture.minFilter = THREE.NearestFilter;
+-    collisionPosRT.texture.generateMipmaps = false;
+-
+-    collisionPosMaterial = new THREE.MeshBasicNodeMaterial();
+-    collisionPosMaterial.colorNode = positionWorld;
+-
+-    //
+-
+-    const positionBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const velocityBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const ripplePositionBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const rippleTimeBuffer = instancedArray(maxParticleCount, 'vec3');
+-
+-    // compute
+-
+-    const randUint = () => uint(Math.random() * 0xffffff);
+-
+-    const computeInit = Fn(() => {
+-        const position = positionBuffer.element(instanceIndex);
+-        const velocity = velocityBuffer.element(instanceIndex);
+-        const rippleTime = rippleTimeBuffer.element(instanceIndex);
+-
+-        const randX = hash(instanceIndex);
+-        const randY = hash(instanceIndex.add(randUint()));
+-        const randZ = hash(instanceIndex.add(randUint()));
+-
+-        position.x = randX.mul(100).add(-50);
+-        position.y = randY.mul(25);
+-        position.z = randZ.mul(100).add(-50);
+-
+-        velocity.y = randX.mul(-0.04).add(-0.2);
+-
+-        rippleTime.x = 1000;
+-    })().compute(maxParticleCount);
+-
+-    //
+-
+-    const computeUpdate = Fn(() => {
+-        const getCoord = pos => pos.add(50).div(100);
+-
+-        const position = positionBuffer.element(instanceIndex);
+-        const velocity = velocityBuffer.element(instanceIndex);
+-        const ripplePosition = ripplePositionBuffer.element(instanceIndex);
+-        const rippleTime = rippleTimeBuffer.element(instanceIndex);
+-
+-        position.addAssign(velocity);
+-
+-        rippleTime.x = rippleTime.x.add(deltaTime.mul(4));
+-
+-        //
+-
+-        const collisionArea = texture(collisionPosRT.texture, getCoord(position.xz));
+-
+-        const surfaceOffset = 0.05;
+-
+-        const floorPosition = collisionArea.y.add(surfaceOffset);
+-
+-        // floor
+-
+-        const ripplePivotOffsetY = -0.9;
+-
+-        If(position.y.add(ripplePivotOffsetY).lessThan(floorPosition), () => {
+-            position.y = 25;
+-
+-            ripplePosition.xz = position.xz;
+-            ripplePosition.y = floorPosition;
+-
+-            // reset hit time: x = time
+-
+-            rippleTime.x = 1;
+-
+-            // next drops will not fall in the same place
+-
+-            position.x = hash(instanceIndex.add(time)).mul(100).add(-50);
+-            position.z = hash(instanceIndex.add(time.add(randUint())))
+-                .mul(100)
+-                .add(-50);
+-        });
+-
+-        const rippleOnSurface = texture(collisionPosRT.texture, getCoord(ripplePosition.xz));
+-
+-        const rippleFloorArea = rippleOnSurface.y.add(surfaceOffset);
+-
+-        If(ripplePosition.y.greaterThan(rippleFloorArea), () => {
+-            rippleTime.x = 1000;
+-        });
+-    });
+-
+-    computeParticles = computeUpdate().compute(maxParticleCount);
+-
+-    // rain
+-
+-    const rainMaterial = new THREE.MeshBasicNodeMaterial();
+-    rainMaterial.colorNode = uv().distance(vec2(0.5, 0)).oneMinus().mul(3).exp().mul(0.1);
+-    rainMaterial.vertexNode = billboarding({ position: positionBuffer.toAttribute() });
+-    rainMaterial.opacity = 0.2;
+-    rainMaterial.side = THREE.DoubleSide;
+-    rainMaterial.forceSinglePass = true;
+-    rainMaterial.depthWrite = false;
+-    rainMaterial.depthTest = true;
+-    rainMaterial.transparent = true;
+-
+-    const rainParticles = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 2), rainMaterial);
+-    rainParticles.count = instanceCount;
+-    scene.add(rainParticles);
+-
+-    // ripple
+-
+-    const rippleTime = rippleTimeBuffer.element(instanceIndex).x;
+-
+-    const rippleEffect = Fn(() => {
+-        const center = uv().add(vec2(-0.5)).length().mul(7);
+-        const distance = rippleTime.sub(center);
+-
+-        return distance.min(1).sub(distance.max(1).sub(1));
+-    });
+-
+-    const rippleMaterial = new THREE.MeshBasicNodeMaterial();
+-    rippleMaterial.colorNode = rippleEffect();
+-    rippleMaterial.positionNode = positionGeometry.add(ripplePositionBuffer.toAttribute());
+-    rippleMaterial.opacityNode = rippleTime.mul(0.3).oneMinus().max(0).mul(0.5);
+-    rippleMaterial.side = THREE.DoubleSide;
+-    rippleMaterial.forceSinglePass = true;
+-    rippleMaterial.depthWrite = false;
+-    rippleMaterial.depthTest = true;
+-    rippleMaterial.transparent = true;
+-
+-    // ripple geometry
+-
+-    const surfaceRippleGeometry = new THREE.PlaneGeometry(2.5, 2.5);
+-    surfaceRippleGeometry.rotateX(-Math.PI / 2);
+-
+-    const xRippleGeometry = new THREE.PlaneGeometry(1, 2);
+-    xRippleGeometry.rotateY(-Math.PI / 2);
+-
+-    const zRippleGeometry = new THREE.PlaneGeometry(1, 2);
+-
+-    const rippleGeometry = BufferGeometryUtils.mergeGeometries([
+-        surfaceRippleGeometry,
+-        xRippleGeometry,
+-        zRippleGeometry,
+-    ]);
+-
+-    const rippleParticles = new THREE.Mesh(rippleGeometry, rippleMaterial);
+-    rippleParticles.count = instanceCount;
+-    scene.add(rippleParticles);
+-
+-    // floor geometry
+-
+-    const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
+-    floorGeometry.rotateX(-Math.PI / 2);
+-
+-    const plane = new THREE.Mesh(floorGeometry, new THREE.MeshBasicMaterial({ color: 0x050505 }));
+-    scene.add(plane);
+-
+-    //
+-
+-    collisionBox = new THREE.Mesh(new THREE.BoxGeometry(30, 1, 15), new THREE.MeshStandardMaterial());
+-    collisionBox.material.color.set(0x333333);
+-    collisionBox.position.y = 12;
+-    collisionBox.scale.x = 3.5;
+-    collisionBox.layers.enable(1);
+-    collisionBox.castShadow = true;
+-    scene.add(collisionBox);
+-
+-    //
+-
+-    const loader = new THREE.BufferGeometryLoader();
+-    loader.load('models/json/suzanne_buffergeometry.json', function (geometry) {
+-        geometry.computeVertexNormals();
+-
+-        monkey = new THREE.Mesh(geometry, new THREE.MeshStandardMaterial({ roughness: 1, metalness: 0 }));
+-        monkey.receiveShadow = true;
+-        monkey.scale.setScalar(5);
+-        monkey.rotation.y = Math.PI / 2;
+-        monkey.position.y = 4.5;
+-        monkey.layers.enable(1); // add to collision layer
+-
+-        scene.add(monkey);
+-    });
+-
+-    //
+-
+-    clock = new THREE.Clock();
+-
+-    //
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-    stats = new Stats();
+-    document.body.appendChild(stats.dom);
+-
+-    //
+-
+-    renderer.computeAsync(computeInit);
+-
+-    //
+-
+-    controls = new OrbitControls(camera, renderer.domElement);
+-    controls.minDistance = 5;
+-    controls.maxDistance = 50;
+-    controls.update();
+-
+-    //
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    // gui
+-
+-    const gui = new GUI();
+-
+-    // use lerp to smooth the movement
+-    collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
+-    collisionBoxPos = new THREE.Vector3();
+-
+-    gui.add(collisionBoxPosUI, 'z', -50, 50, 0.001).name('position');
+-    gui.add(collisionBox.scale, 'x', 0.1, 3.5, 0.01).name('scale');
+-    gui.add(rainParticles, 'count', 200, maxParticleCount, 1)
+-        .name('drop count')
+-        .onChange(v => (rippleParticles.count = v));
+-}
+-
+-function onWindowResize() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera.aspect = innerWidth / innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(innerWidth, innerHeight);
+-}
+-
+-function animate() {
+-    stats.update();
+-
+-    const delta = clock.getDelta();
+-
+-    if (monkey) {
+-        monkey.rotation.y += delta;
+-    }
+-
+-    collisionBoxPos.set(collisionBoxPosUI.x, collisionBoxPosUI.y, -collisionBoxPosUI.z);
+-
+-    collisionBox.position.lerp(collisionBoxPos, 10 * delta);
+-
+-    // position
+-
+-    scene.overrideMaterial = collisionPosMaterial;
+-    renderer.setRenderTarget(collisionPosRT);
+-    renderer.render(scene, collisionCamera);
+-
+-    // compute
+-
+-    renderer.compute(computeParticles);
+-
+-    // result
+-
+-    scene.overrideMaterial = null;
+-    renderer.setRenderTarget(null);
+-    renderer.render(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
+deleted file mode 100644
+index bdc0a753..00000000
+--- a/examples-testing/examples/webgpu_compute_particles_snow.ts
++++ /dev/null
+@@ -1,335 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    Fn,
+-    texture,
+-    vec3,
+-    pass,
+-    color,
+-    uint,
+-    screenUV,
+-    instancedArray,
+-    positionWorld,
+-    positionLocal,
+-    time,
+-    vec2,
+-    hash,
+-    instanceIndex,
+-    If,
+-} from 'three/tsl';
+-import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+-
+-import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
+-
+-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-
+-import Stats from 'stats-gl';
+-
+-const maxParticleCount = 100000;
+-
+-let camera, scene, renderer;
+-let controls, stats;
+-let computeParticles;
+-let postProcessing;
+-
+-let collisionCamera, collisionPosRT, collisionPosMaterial;
+-
+-init();
+-
+-async function init() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera = new THREE.PerspectiveCamera(60, innerWidth / innerHeight, 0.1, 100);
+-    camera.position.set(20, 2, 20);
+-    camera.layers.enable(2);
+-    camera.lookAt(0, 40, 0);
+-
+-    scene = new THREE.Scene();
+-    scene.fog = new THREE.Fog(0x0f3c37, 5, 40);
+-
+-    const dirLight = new THREE.DirectionalLight(0xf9ff9b, 9);
+-    dirLight.castShadow = true;
+-    dirLight.position.set(10, 10, 0);
+-    dirLight.castShadow = true;
+-    dirLight.shadow.camera.near = 1;
+-    dirLight.shadow.camera.far = 30;
+-    dirLight.shadow.camera.right = 30;
+-    dirLight.shadow.camera.left = -30;
+-    dirLight.shadow.camera.top = 30;
+-    dirLight.shadow.camera.bottom = -30;
+-    dirLight.shadow.mapSize.width = 2048;
+-    dirLight.shadow.mapSize.height = 2048;
+-    dirLight.shadow.bias = -0.009;
+-    scene.add(dirLight);
+-
+-    scene.add(new THREE.HemisphereLight(0x0f3c37, 0x080d10, 100));
+-
+-    //
+-
+-    collisionCamera = new THREE.OrthographicCamera(-50, 50, 50, -50, 0.1, 50);
+-    collisionCamera.position.y = 50;
+-    collisionCamera.lookAt(0, 0, 0);
+-    collisionCamera.layers.enable(1);
+-
+-    collisionPosRT = new THREE.RenderTarget(1024, 1024);
+-    collisionPosRT.texture.type = THREE.HalfFloatType;
+-    collisionPosRT.texture.magFilter = THREE.NearestFilter;
+-    collisionPosRT.texture.minFilter = THREE.NearestFilter;
+-    collisionPosRT.texture.generateMipmaps = false;
+-
+-    collisionPosMaterial = new THREE.MeshBasicNodeMaterial();
+-    collisionPosMaterial.fog = false;
+-    collisionPosMaterial.toneMapped = false;
+-    collisionPosMaterial.colorNode = positionWorld.y;
+-
+-    //
+-
+-    const positionBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const scaleBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const staticPositionBuffer = instancedArray(maxParticleCount, 'vec3');
+-    const dataBuffer = instancedArray(maxParticleCount, 'vec4');
+-
+-    // compute
+-
+-    const randUint = () => uint(Math.random() * 0xffffff);
+-
+-    const computeInit = Fn(() => {
+-        const position = positionBuffer.element(instanceIndex);
+-        const scale = scaleBuffer.element(instanceIndex);
+-        const particleData = dataBuffer.element(instanceIndex);
+-
+-        const randX = hash(instanceIndex);
+-        const randY = hash(instanceIndex.add(randUint()));
+-        const randZ = hash(instanceIndex.add(randUint()));
+-
+-        position.x = randX.mul(100).add(-50);
+-        position.y = randY.mul(500).add(3);
+-        position.z = randZ.mul(100).add(-50);
+-
+-        scale.xyz = hash(instanceIndex.add(Math.random())).mul(0.8).add(0.2);
+-
+-        staticPositionBuffer.element(instanceIndex).assign(vec3(1000, 10000, 1000));
+-
+-        particleData.y = randY.mul(-0.1).add(-0.02);
+-
+-        particleData.x = position.x;
+-        particleData.z = position.z;
+-        particleData.w = randX;
+-    })().compute(maxParticleCount);
+-
+-    //
+-
+-    const surfaceOffset = 0.2;
+-    const speed = 0.4;
+-
+-    const computeUpdate = Fn(() => {
+-        const getCoord = pos => pos.add(50).div(100);
+-
+-        const position = positionBuffer.element(instanceIndex);
+-        const scale = scaleBuffer.element(instanceIndex);
+-        const particleData = dataBuffer.element(instanceIndex);
+-
+-        const velocity = particleData.y;
+-        const random = particleData.w;
+-
+-        const rippleOnSurface = texture(collisionPosRT.texture, getCoord(position.xz));
+-        const rippleFloorArea = rippleOnSurface.y.add(scale.x.mul(surfaceOffset));
+-
+-        If(position.y.greaterThan(rippleFloorArea), () => {
+-            position.x = particleData.x.add(time.mul(random.mul(random)).mul(speed).sin().mul(3));
+-            position.z = particleData.z.add(time.mul(random).mul(speed).cos().mul(random.mul(10)));
+-
+-            position.y = position.y.add(velocity);
+-        }).Else(() => {
+-            staticPositionBuffer.element(instanceIndex).assign(position);
+-        });
+-    });
+-
+-    computeParticles = computeUpdate().compute(maxParticleCount);
+-
+-    // rain
+-
+-    const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
+-
+-    function particle(staticParticles) {
+-        const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
+-        const layer = staticParticles ? 1 : 2;
+-
+-        const staticMaterial = new THREE.MeshStandardNodeMaterial({
+-            color: 0xeeeeee,
+-            roughness: 0.9,
+-            metalness: 0,
+-        });
+-
+-        staticMaterial.positionNode = positionLocal.mul(scaleBuffer.toAttribute()).add(posBuffer.toAttribute());
+-
+-        const rainParticles = new THREE.Mesh(geometry, staticMaterial);
+-        rainParticles.count = maxParticleCount;
+-        rainParticles.castShadow = true;
+-        rainParticles.layers.disableAll();
+-        rainParticles.layers.enable(layer);
+-
+-        return rainParticles;
+-    }
+-
+-    const dynamicParticles = particle();
+-    const staticParticles = particle(true);
+-
+-    scene.add(dynamicParticles);
+-    scene.add(staticParticles);
+-
+-    // floor geometry
+-
+-    const floorGeometry = new THREE.PlaneGeometry(100, 100);
+-    floorGeometry.rotateX(-Math.PI / 2);
+-
+-    const plane = new THREE.Mesh(
+-        floorGeometry,
+-        new THREE.MeshStandardMaterial({
+-            color: 0x0c1e1e,
+-            roughness: 0.5,
+-            metalness: 0,
+-            transparent: true,
+-        }),
+-    );
+-
+-    plane.material.opacityNode = positionLocal.xz.mul(0.05).distance(0).saturate().oneMinus();
+-
+-    scene.add(plane);
+-
+-    // tree
+-
+-    function tree(count = 8) {
+-        const coneMaterial = new THREE.MeshStandardNodeMaterial({
+-            color: 0x0d492c,
+-            roughness: 0.6,
+-            metalness: 0,
+-        });
+-
+-        const object = new THREE.Group();
+-
+-        for (let i = 0; i < count; i++) {
+-            const radius = 1 + i;
+-
+-            const coneGeometry = new THREE.ConeGeometry(radius * 0.95, radius * 1.25, 32);
+-
+-            const cone = new THREE.Mesh(coneGeometry, coneMaterial);
+-            cone.castShadow = true;
+-            cone.position.y = (count - i) * 1.5 + count * 0.6;
+-            object.add(cone);
+-        }
+-
+-        const geometry = new THREE.CylinderGeometry(1, 1, count, 32);
+-        const cone = new THREE.Mesh(geometry, coneMaterial);
+-        cone.position.y = count / 2;
+-        object.add(cone);
+-
+-        return object;
+-    }
+-
+-    const teapotTree = new THREE.Mesh(
+-        new TeapotGeometry(0.5, 18),
+-        new THREE.MeshBasicNodeMaterial({
+-            color: 0xfcfb9e,
+-        }),
+-    );
+-
+-    teapotTree.position.y = 18;
+-
+-    scene.add(tree());
+-    scene.add(teapotTree);
+-
+-    //
+-
+-    scene.backgroundNode = screenUV.distance(0.5).mul(2).mix(color(0x0f4140), color(0x060a0d));
+-
+-    //
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-
+-    stats = new Stats({
+-        precision: 3,
+-        horizontal: false,
+-    });
+-    stats.init(renderer);
+-    document.body.appendChild(stats.dom);
+-
+-    //
+-
+-    controls = new OrbitControls(camera, renderer.domElement);
+-    controls.target.set(0, 10, 0);
+-    controls.minDistance = 25;
+-    controls.maxDistance = 35;
+-    controls.maxPolarAngle = Math.PI / 1.7;
+-    controls.autoRotate = true;
+-    controls.autoRotateSpeed = -0.7;
+-    controls.update();
+-
+-    // post processing
+-
+-    const scenePass = pass(scene, camera);
+-    const scenePassColor = scenePass.getTextureNode();
+-    const vignette = screenUV.distance(0.5).mul(1.35).clamp().oneMinus();
+-
+-    const teapotTreePass = pass(teapotTree, camera).getTextureNode();
+-    const teapotTreePassBlurred = gaussianBlur(teapotTreePass, vec2(1), 3);
+-    teapotTreePassBlurred.resolution = new THREE.Vector2(0.2, 0.2);
+-
+-    const scenePassColorBlurred = gaussianBlur(scenePassColor);
+-    scenePassColorBlurred.resolution = new THREE.Vector2(0.5, 0.5);
+-    scenePassColorBlurred.directionNode = vec2(1);
+-
+-    // compose
+-
+-    let totalPass = scenePass;
+-    totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
+-    totalPass = totalPass.mul(vignette);
+-    totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred));
+-
+-    postProcessing = new THREE.PostProcessing(renderer);
+-    postProcessing.outputNode = totalPass;
+-
+-    //
+-
+-    await renderer.computeAsync(computeInit);
+-
+-    //
+-
+-    window.addEventListener('resize', onWindowResize);
+-}
+-
+-function onWindowResize() {
+-    const { innerWidth, innerHeight } = window;
+-
+-    camera.aspect = innerWidth / innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(innerWidth, innerHeight);
+-}
+-
+-async function animate() {
+-    controls.update();
+-
+-    // position
+-
+-    scene.overrideMaterial = collisionPosMaterial;
+-    renderer.setRenderTarget(collisionPosRT);
+-    await renderer.renderAsync(scene, collisionCamera);
+-
+-    // compute
+-
+-    await renderer.computeAsync(computeParticles);
+-
+-    // result
+-
+-    scene.overrideMaterial = null;
+-    renderer.setRenderTarget(null);
+-
+-    await postProcessing.renderAsync();
+-
+-    stats.update();
+-}
+diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
+deleted file mode 100644
+index 382245dc..00000000
+--- a/examples-testing/examples/webgpu_compute_points.ts
++++ /dev/null
+@@ -1,120 +0,0 @@
+-import * as THREE from 'three';
+-import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex } from 'three/tsl';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-let camera, scene, renderer;
+-let computeNode;
+-
+-const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
+-const scaleVector = new THREE.Vector2(1, 1);
+-
+-init();
+-
+-function init() {
+-    camera = new THREE.OrthographicCamera(-1.0, 1.0, 1.0, -1.0, 0, 1);
+-    camera.position.z = 1;
+-
+-    scene = new THREE.Scene();
+-
+-    // initialize particles
+-
+-    const particlesCount = 300000;
+-
+-    const particleArray = instancedArray(particlesCount, 'vec2');
+-    const velocityArray = instancedArray(particlesCount, 'vec2');
+-
+-    // create function
+-
+-    const computeShaderFn = Fn(() => {
+-        const particle = particleArray.element(instanceIndex);
+-        const velocity = velocityArray.element(instanceIndex);
+-
+-        const pointer = uniform(pointerVector);
+-        const limit = uniform(scaleVector);
+-
+-        const position = particle.add(velocity).toVar();
+-
+-        velocity.x = position.x.abs().greaterThanEqual(limit.x).select(velocity.x.negate(), velocity.x);
+-        velocity.y = position.y.abs().greaterThanEqual(limit.y).select(velocity.y.negate(), velocity.y);
+-
+-        position.assign(position.min(limit).max(limit.negate()));
+-
+-        const pointerSize = 0.1;
+-        const distanceFromPointer = pointer.sub(position).length();
+-
+-        particle.assign(distanceFromPointer.lessThanEqual(pointerSize).select(vec3(), position));
+-    });
+-
+-    // compute
+-
+-    computeNode = computeShaderFn().compute(particlesCount);
+-    computeNode.onInit(({ renderer }) => {
+-        const precomputeShaderNode = Fn(() => {
+-            const particleIndex = float(instanceIndex);
+-
+-            const randomAngle = particleIndex.mul(0.005).mul(Math.PI * 2);
+-            const randomSpeed = particleIndex.mul(0.00000001).add(0.0000001);
+-
+-            const velX = randomAngle.sin().mul(randomSpeed);
+-            const velY = randomAngle.cos().mul(randomSpeed);
+-
+-            const velocity = velocityArray.element(instanceIndex);
+-
+-            velocity.xy = vec2(velX, velY);
+-        });
+-
+-        renderer.computeAsync(precomputeShaderNode().compute(particlesCount));
+-    });
+-
+-    // use a compute shader to animate the point cloud's vertex data.
+-
+-    const pointsGeometry = new THREE.BufferGeometry();
+-    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3), 3)); // single vertex ( not triangle )
+-    pointsGeometry.drawRange.count = 1; // force render points as instances ( not triangle )
+-
+-    const pointsMaterial = new THREE.PointsNodeMaterial();
+-    pointsMaterial.colorNode = particleArray.element(instanceIndex).add(color(0xffffff));
+-    pointsMaterial.positionNode = particleArray.element(instanceIndex);
+-
+-    const mesh = new THREE.Points(pointsGeometry, pointsMaterial);
+-    mesh.count = particlesCount;
+-    scene.add(mesh);
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    document.body.appendChild(renderer.domElement);
+-
+-    window.addEventListener('resize', onWindowResize);
+-    window.addEventListener('mousemove', onMouseMove);
+-
+-    // gui
+-
+-    const gui = new GUI();
+-
+-    gui.add(scaleVector, 'x', 0, 1, 0.01);
+-    gui.add(scaleVector, 'y', 0, 1, 0.01);
+-}
+-
+-function onWindowResize() {
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function onMouseMove(event) {
+-    const x = event.clientX;
+-    const y = event.clientY;
+-
+-    const width = window.innerWidth;
+-    const height = window.innerHeight;
+-
+-    pointerVector.set((x / width - 0.5) * 2.0, (-y / height + 0.5) * 2.0);
+-}
+-
+-function animate() {
+-    renderer.compute(computeNode);
+-    renderer.render(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
+deleted file mode 100644
+index e196c0e5..00000000
+--- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
++++ /dev/null
+@@ -1,443 +0,0 @@
+-import * as THREE from 'three';
+-import {
+-    storage,
+-    If,
+-    vec3,
+-    not,
+-    uniform,
+-    uv,
+-    uint,
+-    float,
+-    Fn,
+-    vec2,
+-    abs,
+-    int,
+-    invocationLocalIndex,
+-    workgroupArray,
+-    uvec2,
+-    floor,
+-    instanceIndex,
+-    workgroupBarrier,
+-    atomicAdd,
+-    atomicStore,
+-    workgroupId,
+-} from 'three/tsl';
+-
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-const StepType = {
+-    NONE: 0,
+-    // Swap values within workgroup local buffer.
+-    FLIP_LOCAL: 1,
+-    DISPERSE_LOCAL: 2,
+-    // Swap values within global data buffer.
+-    FLIP_GLOBAL: 3,
+-    DISPERSE_GLOBAL: 4,
+-};
+-
+-const timestamps = {
+-    local_swap: document.getElementById('local_swap'),
+-    global_swap: document.getElementById('global_swap'),
+-};
+-
+-const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
+-const globalColors = ['rgb(1, 150, 1)', 'red'];
+-
+-// Total number of elements and the dimensions of the display grid.
+-const size = 16384;
+-const gridDim = Math.sqrt(size);
+-
+-const getNumSteps = () => {
+-    const n = Math.log2(size);
+-    return (n * (n + 1)) / 2;
+-};
+-
+-// Total number of steps in a bitonic sort with 'size' elements.
+-const MAX_STEPS = getNumSteps();
+-const WORKGROUP_SIZE = [64];
+-
+-const effectController = {
+-    // Sqr root of 16834
+-    gridWidth: uniform(gridDim),
+-    gridHeight: uniform(gridDim),
+-    highlight: uniform(1),
+-    'Display Mode': 'Swap Zone Highlight',
+-};
+-
+-const gui = new GUI();
+-gui.add(effectController, 'Display Mode', ['Elements', 'Swap Zone Highlight']).onChange(() => {
+-    if (effectController['Display Mode'] === 'Elements') {
+-        effectController.highlight.value = 0;
+-    } else {
+-        effectController.highlight.value = 1;
+-    }
+-});
+-
+-// Allow Workgroup Array Swaps
+-init();
+-
+-// Global Swaps Only
+-init(true);
+-
+-// When forceGlobalSwap is true, force all valid local swaps to be global swaps.
+-async function init(forceGlobalSwap = false) {
+-    let currentStep = 0;
+-    let nextStepGlobal = false;
+-
+-    const aspect = window.innerWidth / 2 / window.innerHeight;
+-    const camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+-    camera.position.z = 1;
+-
+-    const scene = new THREE.Scene();
+-
+-    const nextAlgoBuffer = new THREE.StorageInstancedBufferAttribute(
+-        new Uint32Array(1).fill(forceGlobalSwap ? StepType.FLIP_GLOBAL : StepType.FLIP_LOCAL),
+-        1,
+-    );
+-
+-    const nextAlgoStorage = storage(nextAlgoBuffer, 'uint', nextAlgoBuffer.count).setPBO(true).label('NextAlgo');
+-
+-    const nextBlockHeightBuffer = new THREE.StorageInstancedBufferAttribute(new Uint32Array(1).fill(2), 1);
+-    const nextBlockHeightStorage = storage(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
+-        .setPBO(true)
+-        .label('NextBlockHeight');
+-    const nextBlockHeightRead = storage(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
+-        .setPBO(true)
+-        .label('NextBlockHeight')
+-        .toReadOnly();
+-
+-    const highestBlockHeightBuffer = new THREE.StorageInstancedBufferAttribute(new Uint32Array(1).fill(2), 1);
+-    const highestBlockHeightStorage = storage(highestBlockHeightBuffer, 'uint', highestBlockHeightBuffer.count)
+-        .setPBO(true)
+-        .label('HighestBlockHeight');
+-
+-    const counterBuffer = new THREE.StorageBufferAttribute(1, 1);
+-    const counterStorage = storage(counterBuffer, 'uint', counterBuffer.count).setPBO(true).toAtomic().label('Counter');
+-
+-    const array = new Uint32Array(
+-        Array.from({ length: size }, (_, i) => {
+-            return i;
+-        }),
+-    );
+-
+-    const randomizeDataArray = () => {
+-        let currentIndex = array.length;
+-        while (currentIndex !== 0) {
+-            const randomIndex = Math.floor(Math.random() * currentIndex);
+-            currentIndex -= 1;
+-            [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+-        }
+-    };
+-
+-    randomizeDataArray();
+-
+-    const currentElementsBuffer = new THREE.StorageInstancedBufferAttribute(array, 1);
+-    const currentElementsStorage = storage(currentElementsBuffer, 'uint', size).setPBO(true).label('Elements');
+-    const tempBuffer = new THREE.StorageInstancedBufferAttribute(array, 1);
+-    const tempStorage = storage(tempBuffer, 'uint', size).setPBO(true).label('Temp');
+-    const randomizedElementsBuffer = new THREE.StorageInstancedBufferAttribute(size, 1);
+-    const randomizedElementsStorage = storage(randomizedElementsBuffer, 'uint', size)
+-        .setPBO(true)
+-        .label('RandomizedElements');
+-
+-    const getFlipIndices = (index, blockHeight) => {
+-        const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
+-        const halfHeight = blockHeight.div(2);
+-        const idx = uvec2(index.modInt(halfHeight), blockHeight.sub(index.modInt(halfHeight)).sub(1));
+-        idx.x.addAssign(blockOffset);
+-        idx.y.addAssign(blockOffset);
+-
+-        return idx;
+-    };
+-
+-    const getDisperseIndices = (index, blockHeight) => {
+-        const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
+-        const halfHeight = blockHeight.div(2);
+-        const idx = uvec2(index.modInt(halfHeight), index.modInt(halfHeight).add(halfHeight));
+-
+-        idx.x.addAssign(blockOffset);
+-        idx.y.addAssign(blockOffset);
+-
+-        return idx;
+-    };
+-
+-    const localStorage = workgroupArray('uint', 64 * 2);
+-
+-    // Swap the elements in local storage
+-    const localCompareAndSwap = (idxBefore, idxAfter) => {
+-        If(localStorage.element(idxAfter).lessThan(localStorage.element(idxBefore)), () => {
+-            atomicAdd(counterStorage.element(0), 1);
+-            const temp = localStorage.element(idxBefore).toVar();
+-            localStorage.element(idxBefore).assign(localStorage.element(idxAfter));
+-            localStorage.element(idxAfter).assign(temp);
+-        });
+-    };
+-
+-    const globalCompareAndSwap = (idxBefore, idxAfter) => {
+-        // If the later element is less than the current element
+-        If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
+-            // Apply the swapped values to temporary storage.
+-            atomicAdd(counterStorage.element(0), 1);
+-            tempStorage.element(idxBefore).assign(currentElementsStorage.element(idxAfter));
+-            tempStorage.element(idxAfter).assign(currentElementsStorage.element(idxBefore));
+-        }).Else(() => {
+-            // Otherwise apply the existing values to temporary storage.
+-            tempStorage.element(idxBefore).assign(currentElementsStorage.element(idxBefore));
+-            tempStorage.element(idxAfter).assign(currentElementsStorage.element(idxAfter));
+-        });
+-    };
+-
+-    const computeInitFn = Fn(() => {
+-        randomizedElementsStorage.element(instanceIndex).assign(currentElementsStorage.element(instanceIndex));
+-    });
+-
+-    const computeBitonicStepFn = Fn(() => {
+-        const nextBlockHeight = nextBlockHeightStorage.element(0).toVar();
+-        const nextAlgo = nextAlgoStorage.element(0).toVar();
+-
+-        // Get ids of indices needed to populate workgroup local buffer.
+-        // Use .toVar() to prevent these values from being recalculated multiple times.
+-        const localOffset = uint(WORKGROUP_SIZE[0]).mul(2).mul(workgroupId.x).toVar();
+-
+-        const localID1 = invocationLocalIndex.mul(2);
+-        const localID2 = invocationLocalIndex.mul(2).add(1);
+-
+-        // If we will perform a local swap, then populate the local data
+-        If(nextAlgo.lessThanEqual(uint(StepType.DISPERSE_LOCAL)), () => {
+-            localStorage.element(localID1).assign(currentElementsStorage.element(localOffset.add(localID1)));
+-            localStorage.element(localID2).assign(currentElementsStorage.element(localOffset.add(localID2)));
+-        });
+-
+-        workgroupBarrier();
+-
+-        // TODO: Convert to switch block.
+-        If(nextAlgo.equal(uint(StepType.FLIP_LOCAL)), () => {
+-            const idx = getFlipIndices(invocationLocalIndex, nextBlockHeight);
+-            localCompareAndSwap(idx.x, idx.y);
+-        })
+-            .ElseIf(nextAlgo.equal(uint(StepType.DISPERSE_LOCAL)), () => {
+-                const idx = getDisperseIndices(invocationLocalIndex, nextBlockHeight);
+-                localCompareAndSwap(idx.x, idx.y);
+-            })
+-            .ElseIf(nextAlgo.equal(uint(StepType.FLIP_GLOBAL)), () => {
+-                const idx = getFlipIndices(instanceIndex, nextBlockHeight);
+-                globalCompareAndSwap(idx.x, idx.y);
+-            })
+-            .ElseIf(nextAlgo.equal(uint(StepType.DISPERSE_GLOBAL)), () => {
+-                const idx = getDisperseIndices(instanceIndex, nextBlockHeight);
+-                globalCompareAndSwap(idx.x, idx.y);
+-            });
+-
+-        // Ensure that all invocations have swapped their own regions of data
+-        workgroupBarrier();
+-
+-        // Populate output data with the results from our swaps
+-        If(nextAlgo.lessThanEqual(uint(StepType.DISPERSE_LOCAL)), () => {
+-            currentElementsStorage.element(localOffset.add(localID1)).assign(localStorage.element(localID1));
+-            currentElementsStorage.element(localOffset.add(localID2)).assign(localStorage.element(localID2));
+-        });
+-
+-        // If the previous algorithm was global, we execute an additional compute step to sync the current buffer with the output buffer.
+-    });
+-
+-    const computeSetAlgoFn = Fn(() => {
+-        const nextBlockHeight = nextBlockHeightStorage.element(0).toVar();
+-        const nextAlgo = nextAlgoStorage.element(0);
+-        const highestBlockHeight = highestBlockHeightStorage.element(0).toVar();
+-
+-        nextBlockHeight.divAssign(2);
+-
+-        If(nextBlockHeight.equal(1), () => {
+-            highestBlockHeight.mulAssign(2);
+-
+-            if (forceGlobalSwap) {
+-                If(highestBlockHeight.equal(size * 2), () => {
+-                    nextAlgo.assign(StepType.NONE);
+-                    nextBlockHeight.assign(0);
+-                }).Else(() => {
+-                    nextAlgo.assign(StepType.FLIP_GLOBAL);
+-                    nextBlockHeight.assign(highestBlockHeight);
+-                });
+-            } else {
+-                If(highestBlockHeight.equal(size * 2), () => {
+-                    nextAlgo.assign(StepType.NONE);
+-                    nextBlockHeight.assign(0);
+-                })
+-                    .ElseIf(highestBlockHeight.greaterThan(WORKGROUP_SIZE[0] * 2), () => {
+-                        nextAlgo.assign(StepType.FLIP_GLOBAL);
+-                        nextBlockHeight.assign(highestBlockHeight);
+-                    })
+-                    .Else(() => {
+-                        nextAlgo.assign(forceGlobalSwap ? StepType.FLIP_GLOBAL : StepType.FLIP_LOCAL);
+-                        nextBlockHeight.assign(highestBlockHeight);
+-                    });
+-            }
+-        }).Else(() => {
+-            if (forceGlobalSwap) {
+-                nextAlgo.assign(StepType.DISPERSE_GLOBAL);
+-            } else {
+-                nextAlgo.assign(
+-                    nextBlockHeight
+-                        .greaterThan(WORKGROUP_SIZE[0] * 2)
+-                        .select(StepType.DISPERSE_GLOBAL, StepType.DISPERSE_LOCAL),
+-                );
+-            }
+-        });
+-
+-        nextBlockHeightStorage.element(0).assign(nextBlockHeight);
+-        highestBlockHeightStorage.element(0).assign(highestBlockHeight);
+-    });
+-
+-    const computeAlignCurrentFn = Fn(() => {
+-        currentElementsStorage.element(instanceIndex).assign(tempStorage.element(instanceIndex));
+-    });
+-
+-    const computeResetBuffersFn = Fn(() => {
+-        currentElementsStorage.element(instanceIndex).assign(randomizedElementsStorage.element(instanceIndex));
+-    });
+-
+-    const computeResetAlgoFn = Fn(() => {
+-        nextAlgoStorage.element(0).assign(forceGlobalSwap ? StepType.FLIP_GLOBAL : StepType.FLIP_LOCAL);
+-        nextBlockHeightStorage.element(0).assign(2);
+-        highestBlockHeightStorage.element(0).assign(2);
+-        atomicStore(counterStorage.element(0), 0);
+-    });
+-
+-    // Initialize each value in the elements buffer.
+-    const computeInit = computeInitFn().compute(size);
+-    // Swap a pair of elements in the elements buffer.
+-    const computeBitonicStep = computeBitonicStepFn().compute(size / 2);
+-    // Set the conditions for the next swap.
+-    const computeSetAlgo = computeSetAlgoFn().compute(1);
+-    // Align the current buffer with the temp buffer if the previous sort was executed in a global scope.
+-    const computeAlignCurrent = computeAlignCurrentFn().compute(size);
+-    // Reset the buffers and algorithm information after a full bitonic sort has been completed.
+-    const computeResetBuffers = computeResetBuffersFn().compute(size);
+-    const computeResetAlgo = computeResetAlgoFn().compute(1);
+-
+-    const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
+-
+-    const display = Fn(() => {
+-        const { gridWidth, gridHeight, highlight } = effectController;
+-
+-        const newUV = uv().mul(vec2(gridWidth, gridHeight));
+-
+-        const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
+-
+-        const elementIndex = uint(gridWidth).mul(pixel.y).add(pixel.x);
+-
+-        const colorChanger = currentElementsStorage.element(elementIndex);
+-
+-        const subtracter = float(colorChanger).div(gridWidth.mul(gridHeight));
+-
+-        const color = vec3(subtracter.oneMinus()).toVar();
+-
+-        If(highlight.equal(1).and(not(nextAlgoStorage.element(0).equal(StepType.NONE))), () => {
+-            const boolCheck = int(
+-                elementIndex.modInt(nextBlockHeightRead.element(0)).lessThan(nextBlockHeightRead.element(0).div(2)),
+-            );
+-            color.z.assign(nextAlgoStorage.element(0).lessThanEqual(StepType.DISPERSE_LOCAL));
+-            color.x.mulAssign(boolCheck);
+-            color.y.mulAssign(abs(boolCheck.sub(1)));
+-        });
+-
+-        return color;
+-    });
+-
+-    material.colorNode = display();
+-
+-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+-    scene.add(plane);
+-
+-    const renderer = new THREE.WebGPURenderer({ antialias: false, trackTimestamp: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth / 2, window.innerHeight);
+-
+-    const animate = () => {
+-        renderer.render(scene, camera);
+-    };
+-
+-    renderer.setAnimationLoop(animate);
+-
+-    document.body.appendChild(renderer.domElement);
+-    renderer.domElement.style.position = 'absolute';
+-    renderer.domElement.style.top = '0';
+-    renderer.domElement.style.left = '0';
+-    renderer.domElement.style.width = '50%';
+-    renderer.domElement.style.height = '100%';
+-
+-    if (forceGlobalSwap) {
+-        renderer.domElement.style.left = '50%';
+-
+-        scene.background = new THREE.Color(0x212121);
+-    } else {
+-        scene.background = new THREE.Color(0x313131);
+-    }
+-
+-    await renderer.computeAsync(computeInit);
+-
+-    renderer.info.autoReset = false;
+-
+-    const stepAnimation = async function () {
+-        renderer.info.reset();
+-
+-        if (currentStep !== MAX_STEPS) {
+-            renderer.compute(computeBitonicStep);
+-
+-            if (nextStepGlobal) {
+-                renderer.compute(computeAlignCurrent);
+-            }
+-
+-            renderer.compute(computeSetAlgo);
+-
+-            currentStep++;
+-        } else {
+-            renderer.compute(computeResetBuffers);
+-            renderer.compute(computeResetAlgo);
+-
+-            currentStep = 0;
+-        }
+-
+-        const algo = new Uint32Array(await renderer.getArrayBufferAsync(nextAlgoBuffer));
+-        algo > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
+-        const totalSwaps = new Uint32Array(await renderer.getArrayBufferAsync(counterBuffer));
+-
+-        renderer.render(scene, camera);
+-
+-        timestamps[forceGlobalSwap ? 'global_swap' : 'local_swap'].innerHTML = `
+-
+-							Compute ${forceGlobalSwap ? 'Global' : 'Local'}: ${renderer.info.compute.frameCalls} pass in ${renderer.info.compute.timestamp.toFixed(6)}ms<br>
+-							Total Swaps: ${totalSwaps}<br>
+-								<div style="display: flex; flex-direction:row; justify-content: center; align-items: center;">
+-									${forceGlobalSwap ? 'Global Swaps' : 'Local Swaps'} Compare Region&nbsp;
+-									<div style="background-color: ${forceGlobalSwap ? globalColors[0] : localColors[0]}; width:12.5px; height: 1em; border-radius: 20%;"></div>
+-									&nbsp;to Region&nbsp;
+-									<div style="background-color: ${forceGlobalSwap ? globalColors[1] : localColors[1]}; width:12.5px; height: 1em; border-radius: 20%;"></div>
+-								</div>`;
+-
+-        if (currentStep === MAX_STEPS) {
+-            setTimeout(stepAnimation, 1000);
+-        } else {
+-            setTimeout(stepAnimation, 50);
+-        }
+-    };
+-
+-    stepAnimation();
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    function onWindowResize() {
+-        renderer.setSize(window.innerWidth / 2, window.innerHeight);
+-
+-        const aspect = window.innerWidth / 2 / window.innerHeight;
+-
+-        const frustumHeight = camera.top - camera.bottom;
+-
+-        camera.left = (-frustumHeight * aspect) / 2;
+-        camera.right = (frustumHeight * aspect) / 2;
+-
+-        camera.updateProjectionMatrix();
+-
+-        renderer.render(scene, camera);
+-    }
+-}
+diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
+deleted file mode 100644
+index f9caa443..00000000
+--- a/examples-testing/examples/webgpu_compute_texture.ts
++++ /dev/null
+@@ -1,95 +0,0 @@
+-import * as THREE from 'three';
+-import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
+-
+-import WebGPU from 'three/addons/capabilities/WebGPU.js';
+-
+-let camera, scene, renderer;
+-
+-init();
+-render();
+-
+-function init() {
+-    if (WebGPU.isAvailable() === false) {
+-        document.body.appendChild(WebGPU.getErrorMessage());
+-
+-        throw new Error('No WebGPU support');
+-    }
+-
+-    const aspect = window.innerWidth / window.innerHeight;
+-    camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+-    camera.position.z = 1;
+-
+-    scene = new THREE.Scene();
+-
+-    // texture
+-
+-    const width = 512,
+-        height = 512;
+-
+-    const storageTexture = new THREE.StorageTexture(width, height);
+-    //storageTexture.minFilter = THREE.LinearMipMapLinearFilter;
+-
+-    // create function
+-
+-    const computeTexture = Fn(({ storageTexture }) => {
+-        const posX = instanceIndex.modInt(width);
+-        const posY = instanceIndex.div(width);
+-        const indexUV = uvec2(posX, posY);
+-
+-        // https://www.shadertoy.com/view/Xst3zN
+-
+-        const x = float(posX).div(50.0);
+-        const y = float(posY).div(50.0);
+-
+-        const v1 = x.sin();
+-        const v2 = y.sin();
+-        const v3 = x.add(y).sin();
+-        const v4 = x.mul(x).add(y.mul(y)).sqrt().add(5.0).sin();
+-        const v = v1.add(v2, v3, v4);
+-
+-        const r = v.sin();
+-        const g = v.add(Math.PI).sin();
+-        const b = v.add(Math.PI).sub(0.5).sin();
+-
+-        textureStore(storageTexture, indexUV, vec4(r, g, b, 1)).toWriteOnly();
+-    });
+-
+-    // compute
+-
+-    const computeNode = computeTexture({ storageTexture }).compute(width * height);
+-
+-    const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
+-    material.colorNode = texture(storageTexture);
+-
+-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+-    scene.add(plane);
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    document.body.appendChild(renderer.domElement);
+-
+-    // compute texture
+-    renderer.computeAsync(computeNode);
+-
+-    window.addEventListener('resize', onWindowResize);
+-}
+-
+-function onWindowResize() {
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-
+-    const aspect = window.innerWidth / window.innerHeight;
+-
+-    const frustumHeight = camera.top - camera.bottom;
+-
+-    camera.left = (-frustumHeight * aspect) / 2;
+-    camera.right = (frustumHeight * aspect) / 2;
+-
+-    camera.updateProjectionMatrix();
+-
+-    render();
+-}
+-
+-function render() {
+-    renderer.renderAsync(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
+deleted file mode 100644
+index a3922dc7..00000000
+--- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
++++ /dev/null
+@@ -1,194 +0,0 @@
+-import * as THREE from 'three';
+-import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess } from 'three/tsl';
+-
+-import WebGPU from 'three/addons/capabilities/WebGPU.js';
+-
+-let camera, scene, renderer;
+-let computeInitNode, computeToPing, computeToPong;
+-let pingTexture, pongTexture;
+-let material;
+-let phase = true;
+-let lastUpdate = -1;
+-
+-const seed = uniform(new THREE.Vector2());
+-
+-init();
+-
+-function init() {
+-    if (WebGPU.isAvailable() === false) {
+-        document.body.appendChild(WebGPU.getErrorMessage());
+-
+-        throw new Error('No WebGPU support');
+-    }
+-
+-    const aspect = window.innerWidth / window.innerHeight;
+-    camera = new THREE.OrthographicCamera(-aspect, aspect, 1, -1, 0, 2);
+-    camera.position.z = 1;
+-
+-    scene = new THREE.Scene();
+-
+-    // texture
+-
+-    const hdr = true;
+-    const width = 512,
+-        height = 512;
+-
+-    pingTexture = new THREE.StorageTexture(width, height);
+-    pongTexture = new THREE.StorageTexture(width, height);
+-
+-    if (hdr) {
+-        pingTexture.type = THREE.HalfFloatType;
+-        pongTexture.type = THREE.HalfFloatType;
+-    }
+-
+-    const wgslFormat = hdr ? 'rgba16float' : 'rgba8unorm';
+-
+-    const readPing = storageTexture(pingTexture).setAccess(NodeAccess.READ_ONLY);
+-    const writePing = storageTexture(pingTexture).setAccess(NodeAccess.WRITE_ONLY);
+-    const readPong = storageTexture(pongTexture).setAccess(NodeAccess.READ_ONLY);
+-    const writePong = storageTexture(pongTexture).setAccess(NodeAccess.WRITE_ONLY);
+-
+-    // compute init
+-
+-    const rand2 = code(`
+-					fn rand2( n: vec2f ) -> f32 {
+-
+-						return fract( sin( dot( n, vec2f( 12.9898, 4.1414 ) ) ) * 43758.5453 );
+-
+-					}
+-
+-					fn blur( image : texture_storage_2d<${wgslFormat}, read>, uv : vec2i ) -> vec4f {
+-
+-						var color = vec4f( 0.0 );
+-
+-						color += textureLoad( image, uv + vec2i( - 1, 1 ));
+-						color += textureLoad( image, uv + vec2i( - 1, - 1 ));
+-						color += textureLoad( image, uv + vec2i( 0, 0 ));
+-						color += textureLoad( image, uv + vec2i( 1, - 1 ));
+-						color += textureLoad( image, uv + vec2i( 1, 1 ));
+-
+-						return color / 5.0; 
+-					}
+-
+-					fn getUV( posX: u32, posY: u32 ) -> vec2f {
+-
+-						let uv = vec2f( f32( posX ) / ${width}.0, f32( posY ) / ${height}.0 );
+-
+-						return uv;
+-
+-					}
+-				`);
+-
+-    const computeInitWGSL = wgslFn(
+-        `
+-					fn computeInitWGSL( writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32, seed: vec2f ) -> void {
+-
+-						let posX = index % ${width};
+-						let posY = index / ${width};
+-						let indexUV = vec2u( posX, posY );
+-						let uv = getUV( posX, posY );
+-
+-						let r = rand2( uv + seed * 100 ) - rand2( uv + seed * 300 );
+-						let g = rand2( uv + seed * 200 ) - rand2( uv + seed * 300 );
+-						let b = rand2( uv + seed * 200 ) - rand2( uv + seed * 100 );
+-
+-						textureStore( writeTex, indexUV, vec4( r, g, b, 1 ) );
+-
+-					}
+-				`,
+-        [rand2],
+-    );
+-
+-    computeInitNode = computeInitWGSL({ writeTex: storageTexture(pingTexture), index: instanceIndex, seed }).compute(
+-        width * height,
+-    );
+-
+-    // compute loop
+-
+-    const computePingPongWGSL = wgslFn(
+-        `
+-					fn computePingPongWGSL( readTex: texture_storage_2d<${wgslFormat}, read>, writeTex: texture_storage_2d<${wgslFormat}, write>, index: u32 ) -> void {
+-
+-						let posX = index % ${width};
+-						let posY = index / ${width};
+-						let indexUV = vec2i( i32( posX ), i32( posY ) );
+-
+-						let color = blur( readTex, indexUV ).rgb;
+-
+-						textureStore( writeTex, indexUV, vec4f( color * 1.05, 1 ) );
+-
+-					}
+-				`,
+-        [rand2],
+-    );
+-
+-    //
+-
+-    computeToPong = computePingPongWGSL({ readTex: readPing, writeTex: writePong, index: instanceIndex }).compute(
+-        width * height,
+-    );
+-    computeToPing = computePingPongWGSL({ readTex: readPong, writeTex: writePing, index: instanceIndex }).compute(
+-        width * height,
+-    );
+-
+-    //
+-
+-    material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: pongTexture });
+-
+-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+-    scene.add(plane);
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(render);
+-    document.body.appendChild(renderer.domElement);
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    // compute init
+-
+-    renderer.computeAsync(computeInitNode);
+-}
+-
+-function onWindowResize() {
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-
+-    const aspect = window.innerWidth / window.innerHeight;
+-
+-    const frustumHeight = camera.top - camera.bottom;
+-
+-    camera.left = (-frustumHeight * aspect) / 2;
+-    camera.right = (frustumHeight * aspect) / 2;
+-
+-    camera.updateProjectionMatrix();
+-}
+-
+-function render() {
+-    const time = performance.now();
+-    const seconds = Math.floor(time / 1000);
+-
+-    // reset every second
+-
+-    if (phase && seconds !== lastUpdate) {
+-        seed.value.set(Math.random(), Math.random());
+-
+-        renderer.compute(computeInitNode);
+-
+-        lastUpdate = seconds;
+-    }
+-
+-    // compute step
+-
+-    renderer.compute(phase ? computeToPong : computeToPing);
+-
+-    material.map = phase ? pongTexture : pingTexture;
+-
+-    phase = !phase;
+-
+-    // render step
+-
+-    // update material texture node
+-
+-    renderer.render(scene, camera);
+-}
+diff --git a/examples-testing/examples/webgpu_compute_water.ts b/examples-testing/examples/webgpu_compute_water.ts
+deleted file mode 100644
+index 345c3423..00000000
+--- a/examples-testing/examples/webgpu_compute_water.ts
++++ /dev/null
+@@ -1,440 +0,0 @@
+-import * as THREE from 'three';
+-
+-import {
+-    color,
+-    instanceIndex,
+-    If,
+-    varyingProperty,
+-    uint,
+-    int,
+-    negate,
+-    floor,
+-    float,
+-    length,
+-    clamp,
+-    vec2,
+-    cos,
+-    vec3,
+-    vertexIndex,
+-    Fn,
+-    uniform,
+-    instancedArray,
+-    min,
+-    max,
+-    positionLocal,
+-    transformNormalToView,
+-} from 'three/tsl';
+-import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-import Stats from 'three/addons/libs/stats.module.js';
+-
+-// Dimensions of simulation grid.
+-const WIDTH = 128;
+-
+-// Water size in system units.
+-const BOUNDS = 512;
+-const BOUNDS_HALF = BOUNDS * 0.5;
+-
+-const waterMaxHeight = 10;
+-
+-let container, stats;
+-let camera, scene, renderer;
+-let mouseMoved = false;
+-const mouseCoords = new THREE.Vector2();
+-const raycaster = new THREE.Raycaster();
+-let effectController;
+-
+-let waterMesh, meshRay;
+-let computeHeight, computeSmooth, computeSphere;
+-
+-const NUM_SPHERES = 100;
+-
+-const simplex = new SimplexNoise();
+-
+-init();
+-
+-function noise(x, y) {
+-    let multR = waterMaxHeight;
+-    let mult = 0.025;
+-    let r = 0;
+-    for (let i = 0; i < 15; i++) {
+-        r += multR * simplex.noise(x * mult, y * mult);
+-        multR *= 0.53 + 0.025 * i;
+-        mult *= 1.25;
+-    }
+-
+-    return r;
+-}
+-
+-function init() {
+-    container = document.createElement('div');
+-    document.body.appendChild(container);
+-
+-    camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 3000);
+-    camera.position.set(0, 200, 350);
+-    camera.lookAt(0, 0, 0);
+-
+-    scene = new THREE.Scene();
+-
+-    const sun = new THREE.DirectionalLight(0xffffff, 3.0);
+-    sun.position.set(300, 400, 175);
+-    scene.add(sun);
+-
+-    const sun2 = new THREE.DirectionalLight(0x40a040, 2.0);
+-    sun2.position.set(-100, 350, -200);
+-    scene.add(sun2);
+-
+-    //
+-
+-    effectController = {
+-        mousePos: uniform(new THREE.Vector2(10000, 10000)).label('mousePos'),
+-        mouseSize: uniform(30.0).label('mouseSize'),
+-        viscosity: uniform(0.95).label('viscosity'),
+-        spheresEnabled: true,
+-        wireframe: false,
+-    };
+-
+-    // Initialize height storage buffers
+-    const heightArray = new Float32Array(WIDTH * WIDTH);
+-    const prevHeightArray = new Float32Array(WIDTH * WIDTH);
+-
+-    let p = 0;
+-    for (let j = 0; j < WIDTH; j++) {
+-        for (let i = 0; i < WIDTH; i++) {
+-            const x = (i * 128) / WIDTH;
+-            const y = (j * 128) / WIDTH;
+-
+-            const height = noise(x, y);
+-
+-            heightArray[p] = height;
+-            prevHeightArray[p] = height;
+-
+-            p++;
+-        }
+-    }
+-
+-    const heightStorage = instancedArray(heightArray).label('Height');
+-    const prevHeightStorage = instancedArray(prevHeightArray).label('PrevHeight');
+-
+-    // Get Indices of Neighbor Values of an Index in the Simulation Grid
+-    const getNeighborIndicesTSL = index => {
+-        const width = uint(WIDTH);
+-
+-        // Get 2-D compute coordinate from one-dimensional instanceIndex. The calculation will
+-        // still work even if you dispatch your compute shader 2-dimensionally, since within a compute
+-        // context, instanceIndex is a 1-dimensional value derived from the workgroup dimensions.
+-
+-        // Cast to int to prevent unintended index overflow upon subtraction.
+-        const x = int(index.modInt(WIDTH));
+-        const y = int(index.div(WIDTH));
+-
+-        // The original shader accesses height via texture uvs. However, unlike with textures, we can't
+-        // access areas that are out of bounds. Accordingly, we emulate the Clamp to Edge Wrapping
+-        // behavior of accessing a DataTexture with out of bounds uvs.
+-
+-        const leftX = max(0, x.sub(1));
+-        const rightX = min(x.add(1), width.sub(1));
+-
+-        const bottomY = max(0, y.sub(1));
+-        const topY = min(y.add(1), width.sub(1));
+-
+-        const westIndex = y.mul(width).add(leftX);
+-        const eastIndex = y.mul(width).add(rightX);
+-
+-        const southIndex = bottomY.mul(width).add(x);
+-        const northIndex = topY.mul(width).add(x);
+-
+-        return { northIndex, southIndex, eastIndex, westIndex };
+-    };
+-
+-    // Get simulation index neighbor values
+-    const getNeighborValuesTSL = (index, store) => {
+-        const { northIndex, southIndex, eastIndex, westIndex } = getNeighborIndicesTSL(index);
+-
+-        const north = store.element(northIndex);
+-        const south = store.element(southIndex);
+-        const east = store.element(eastIndex);
+-        const west = store.element(westIndex);
+-
+-        return { north, south, east, west };
+-    };
+-
+-    // Get new normals of simulation area.
+-    const getNormalsFromHeightTSL = (index, store) => {
+-        const { north, south, east, west } = getNeighborValuesTSL(index, store);
+-
+-        const normalX = west.sub(east).mul(WIDTH / BOUNDS);
+-        const normalY = south.sub(north).mul(WIDTH / BOUNDS);
+-
+-        return { normalX, normalY };
+-    };
+-
+-    computeHeight = Fn(() => {
+-        const { viscosity, mousePos, mouseSize } = effectController;
+-
+-        const height = heightStorage.element(instanceIndex).toVar();
+-        const prevHeight = prevHeightStorage.element(instanceIndex).toVar();
+-
+-        const { north, south, east, west } = getNeighborValuesTSL(instanceIndex, heightStorage);
+-
+-        const neighborHeight = north.add(south).add(east).add(west);
+-        neighborHeight.mulAssign(0.5);
+-        neighborHeight.subAssign(prevHeight);
+-
+-        const newHeight = neighborHeight.mul(viscosity);
+-
+-        // Get 2-D compute coordinate from one-dimensional instanceIndex.
+-        const x = float(instanceIndex.modInt(WIDTH)).mul(1 / WIDTH);
+-        const y = float(instanceIndex.div(WIDTH)).mul(1 / WIDTH);
+-
+-        // Mouse influence
+-        const centerVec = vec2(0.5);
+-        // Get length of position in range [ -BOUNDS / 2, BOUNDS / 2 ], offset by mousePos, then scale.
+-        const mousePhase = clamp(
+-            length(vec2(x, y).sub(centerVec).mul(BOUNDS).sub(mousePos)).mul(Math.PI).div(mouseSize),
+-            0.0,
+-            Math.PI,
+-        );
+-
+-        newHeight.addAssign(cos(mousePhase).add(1.0).mul(0.28));
+-
+-        prevHeightStorage.element(instanceIndex).assign(height);
+-        heightStorage.element(instanceIndex).assign(newHeight);
+-    })().compute(WIDTH * WIDTH);
+-
+-    computeSmooth = Fn(() => {
+-        const height = heightStorage.element(instanceIndex).toVar();
+-        const prevHeight = prevHeightStorage.element(instanceIndex).toVar();
+-
+-        // Get neighboring height values.
+-        const {
+-            north: northH,
+-            south: southH,
+-            east: eastH,
+-            west: westH,
+-        } = getNeighborValuesTSL(instanceIndex, heightStorage);
+-
+-        // Get neighboring prev height values.
+-        const {
+-            north: northP,
+-            south: southP,
+-            east: eastP,
+-            west: westP,
+-        } = getNeighborValuesTSL(instanceIndex, prevHeightStorage);
+-
+-        height.addAssign(northH.add(southH).add(eastH).add(westH));
+-        prevHeight.addAssign(northP.add(southP).add(eastP).add(westP));
+-
+-        heightStorage.element(instanceIndex).assign(height.div(5));
+-        prevHeightStorage.element(instanceIndex).assign(height.div(5));
+-    })().compute(WIDTH * WIDTH /*, [ 8, 8 ]*/);
+-
+-    // Water Geometry corresponds with buffered compute grid.
+-    const waterGeometry = new THREE.PlaneGeometry(BOUNDS, BOUNDS, WIDTH - 1, WIDTH - 1);
+-    // material: make a THREE.ShaderMaterial clone of THREE.MeshPhongMaterial, with customized position shader.
+-    const waterMaterial = new THREE.MeshPhongNodeMaterial();
+-
+-    waterMaterial.lights = true;
+-    waterMaterial.colorNode = color(0x0040c0);
+-    waterMaterial.specularNode = color(0x111111);
+-    waterMaterial.shininess = Math.max(50, 1e-4);
+-    waterMaterial.positionNode = Fn(() => {
+-        // To correct the lighting as our mesh undulates, we have to reassign the normals in the position shader.
+-        const { normalX, normalY } = getNormalsFromHeightTSL(vertexIndex, heightStorage);
+-
+-        varyingProperty('vec3', 'v_normalView').assign(transformNormalToView(vec3(normalX, negate(normalY), 1.0)));
+-
+-        return vec3(positionLocal.x, positionLocal.y, heightStorage.element(vertexIndex));
+-    })();
+-
+-    waterMesh = new THREE.Mesh(waterGeometry, waterMaterial);
+-    waterMesh.rotation.x = -Math.PI / 2;
+-    waterMesh.matrixAutoUpdate = false;
+-    waterMesh.updateMatrix();
+-
+-    scene.add(waterMesh);
+-
+-    // THREE.Mesh just for mouse raycasting
+-    const geometryRay = new THREE.PlaneGeometry(BOUNDS, BOUNDS, 1, 1);
+-    meshRay = new THREE.Mesh(geometryRay, new THREE.MeshBasicMaterial({ color: 0xffffff, visible: false }));
+-    meshRay.rotation.x = -Math.PI / 2;
+-    meshRay.matrixAutoUpdate = false;
+-    meshRay.updateMatrix();
+-    scene.add(meshRay);
+-
+-    // Create sphere THREE.InstancedMesh
+-    const sphereGeometry = new THREE.SphereGeometry(4, 24, 12);
+-    const sphereMaterial = new THREE.MeshPhongMaterial({ color: 0xffff00 });
+-
+-    // Initialize sphere mesh instance position and velocity.
+-    const spherePositionArray = new Float32Array(NUM_SPHERES * 3);
+-
+-    // Only hold velocity in x and z directions.
+-    // The sphere is wedded to the surface of the water, and will only move vertically with the water.
+-    const sphereVelocityArray = new Float32Array(NUM_SPHERES * 2);
+-
+-    for (let i = 0; i < NUM_SPHERES; i++) {
+-        spherePositionArray[i * 3 + 0] = (Math.random() - 0.5) * BOUNDS * 0.7;
+-        spherePositionArray[i * 3 + 1] = 0;
+-        spherePositionArray[i * 3 + 2] = (Math.random() - 0.5) * BOUNDS * 0.7;
+-    }
+-
+-    sphereVelocityArray.fill(0.0);
+-
+-    // Sphere Instance Storage
+-    const sphereInstancePositionStorage = instancedArray(spherePositionArray, 'vec3').label('SpherePosition');
+-    const sphereVelocityStorage = instancedArray(sphereVelocityArray, 'vec2').label('SphereVelocity');
+-
+-    computeSphere = Fn(() => {
+-        const instancePosition = sphereInstancePositionStorage.element(instanceIndex);
+-        const velocity = sphereVelocityStorage.element(instanceIndex);
+-
+-        // Bring position from range of [ -BOUNDS/2, BOUNDS/2 ] to [ 0, BOUNDS ]
+-        const tempX = instancePosition.x.add(BOUNDS_HALF);
+-        const tempZ = instancePosition.z.add(BOUNDS_HALF);
+-
+-        // Bring position from range [ 0, BOUNDS ] to [ 0, WIDTH ]
+-        // ( i.e bring geometry range into 'heightmap' range )
+-        // WIDTH = 128, BOUNDS = 512... same as dividing by 4
+-        tempX.mulAssign(WIDTH / BOUNDS);
+-        tempZ.mulAssign(WIDTH / BOUNDS);
+-
+-        // Can only access storage buffers with uints
+-        const xCoord = uint(floor(tempX));
+-        const zCoord = uint(floor(tempZ));
+-
+-        // Get one dimensional index
+-        const heightInstanceIndex = zCoord.mul(WIDTH).add(xCoord);
+-
+-        // Set to read-only to be safe, even if it's not strictly necessary for compute access.
+-        const height = heightStorage.element(heightInstanceIndex);
+-
+-        // Assign height to sphere position
+-        instancePosition.y.assign(height);
+-
+-        // Calculate normal of the water mesh at this location.
+-        const { normalX, normalY } = getNormalsFromHeightTSL(heightInstanceIndex, heightStorage);
+-
+-        normalX.mulAssign(0.1);
+-        normalY.mulAssign(0.1);
+-
+-        const waterNormal = vec3(normalX, 0.0, negate(normalY));
+-
+-        const newVelocity = vec3(velocity.x, 0.0, velocity.y).add(waterNormal);
+-        newVelocity.mulAssign(0.998);
+-
+-        const newPosition = instancePosition.add(newVelocity).toVar();
+-
+-        // Reverse velocity and reset position when exceeding bounds.
+-        If(newPosition.x.lessThan(-BOUNDS_HALF), () => {
+-            newPosition.x = float(-BOUNDS_HALF).add(0.001);
+-            newVelocity.x.mulAssign(-0.3);
+-        }).ElseIf(newPosition.x.greaterThan(BOUNDS_HALF), () => {
+-            newPosition.x = float(BOUNDS_HALF).sub(0.001);
+-            newVelocity.x.mulAssign(-0.3);
+-        });
+-
+-        If(newPosition.z.lessThan(-BOUNDS_HALF), () => {
+-            newPosition.z = float(-BOUNDS_HALF).add(0.001);
+-            newVelocity.z.mulAssign(-0.3);
+-        }).ElseIf(newPosition.z.greaterThan(BOUNDS_HALF), () => {
+-            newPosition.z = float(BOUNDS_HALF).sub(0.001);
+-            newVelocity.z.mulAssign(-0.3);
+-        });
+-
+-        instancePosition.assign(newPosition);
+-        velocity.assign(vec2(newVelocity.x, newVelocity.z));
+-    })().compute(NUM_SPHERES);
+-
+-    sphereMaterial.positionNode = Fn(() => {
+-        const instancePosition = sphereInstancePositionStorage.element(instanceIndex);
+-
+-        const newPosition = positionLocal.add(instancePosition);
+-
+-        return newPosition;
+-    })();
+-
+-    const sphereMesh = new THREE.InstancedMesh(sphereGeometry, sphereMaterial, NUM_SPHERES);
+-    scene.add(sphereMesh);
+-
+-    renderer = new THREE.WebGPURenderer({ antialias: true });
+-    renderer.setPixelRatio(window.devicePixelRatio);
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-    renderer.setAnimationLoop(animate);
+-    container.appendChild(renderer.domElement);
+-
+-    stats = new Stats();
+-    container.appendChild(stats.dom);
+-
+-    container.style.touchAction = 'none';
+-    container.addEventListener('pointermove', onPointerMove);
+-
+-    window.addEventListener('resize', onWindowResize);
+-
+-    const gui = new GUI();
+-    gui.add(effectController.mouseSize, 'value', 1.0, 100.0, 1.0).name('Mouse Size');
+-    gui.add(effectController.viscosity, 'value', 0.9, 0.999, 0.001).name('viscosity');
+-    const buttonCompute = {
+-        smoothWater: function () {
+-            renderer.computeAsync(computeSmooth);
+-        },
+-    };
+-    gui.add(buttonCompute, 'smoothWater');
+-    gui.add(effectController, 'spheresEnabled').onChange(() => {
+-        sphereMesh.visible = effectController.spheresEnabled;
+-    });
+-    gui.add(effectController, 'wireframe').onChange(() => {
+-        waterMesh.material.wireframe = !waterMesh.material.wireframe;
+-        waterMesh.material.needsUpdate = true;
+-    });
+-}
+-
+-function onWindowResize() {
+-    camera.aspect = window.innerWidth / window.innerHeight;
+-    camera.updateProjectionMatrix();
+-
+-    renderer.setSize(window.innerWidth, window.innerHeight);
+-}
+-
+-function setMouseCoords(x, y) {
+-    mouseCoords.set((x / renderer.domElement.clientWidth) * 2 - 1, -(y / renderer.domElement.clientHeight) * 2 + 1);
+-    mouseMoved = true;
+-}
+-
+-function onPointerMove(event) {
+-    if (event.isPrimary === false) return;
+-
+-    setMouseCoords(event.clientX, event.clientY);
+-}
+-
+-function animate() {
+-    render();
+-    stats.update();
+-}
+-
+-function render() {
+-    if (mouseMoved) {
+-        raycaster.setFromCamera(mouseCoords, camera);
+-
+-        const intersects = raycaster.intersectObject(meshRay);
+-
+-        if (intersects.length > 0) {
+-            const point = intersects[0].point;
+-            effectController.mousePos.value.set(point.x, point.z);
+-        } else {
+-            effectController.mousePos.value.set(10000, 10000);
+-        }
+-
+-        mouseMoved = false;
+-    } else {
+-        effectController.mousePos.value.set(10000, 10000);
+-    }
+-
+-    renderer.computeAsync(computeHeight);
+-
+-    if (effectController.spheresEnabled) {
+-        renderer.computeAsync(computeSphere);
+-    }
+-
+-    renderer.render(scene, camera);
+-}
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index baca16cb..b01cd750 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
