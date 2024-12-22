@@ -1,6 +1,17 @@
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
+
+interface LoopNodeObjectParameter {
+    // TODO The variable type and name should affect the type of the loop function
+    type?: string;
+    name?: string;
+    start: number | Node;
+    end: number | Node;
+    condition: string;
+}
+
+type LoopNodeParameter = number | LoopNodeObjectParameter;
 
 declare class LoopNode extends Node {
     params: unknown[];
@@ -12,7 +23,16 @@ declare class LoopNode extends Node {
 
 export default LoopNode;
 
-export const Loop: (...params: unknown[]) => ShaderNodeObject<Node>;
+interface Loop {
+    (i: LoopNodeParameter, func: (inputs: { readonly i: number }) => void): ShaderNodeObject<Node>;
+    (
+        i: LoopNodeParameter,
+        j: LoopNodeParameter,
+        func: (inputs: { readonly i: number; readonly j: number }) => void,
+    ): ShaderNodeObject<Node>;
+}
+
+export const Loop: Loop;
 export const Continue: () => ShaderNodeObject<Node>;
 export const Break: () => ShaderNodeObject<Node>;
 
