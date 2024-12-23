@@ -42,5 +42,4 @@ export default class LightingModel {
     direct(input: LightingModelDirectInput, stack: StackNode, builder: NodeBuilder): void;
     directRectArea(input: LightingModelDirectRectAreaInput, stack: StackNode, builder: NodeBuilder): void;
     indirect(input: LightingModelIndirectInput, stack: StackNode, builder: NodeBuilder): void;
-    ambientOcclusion(input: LightingModelIndirectInput, stack: StackNode, builder: NodeBuilder): void;
 }
