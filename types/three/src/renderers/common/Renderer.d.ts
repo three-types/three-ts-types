@@ -263,7 +263,7 @@ declare class Renderer {
      * Renders the given render bundle.
      *
      * @private
-     * @param {RenderBundle} bundle - The render bundle.
+     * @param {Object} bundle - Render bundle data.
      * @param {Scene} sceneRef - The scene the render bundle belongs to.
      * @param {LightsNode} lightsNode - The current lights node.
      */
@@ -786,7 +786,7 @@ declare class Renderer {
      * Renders the given render bundles.
      *
      * @private
-     * @param {Array<RenderBundle>} bundles - The render bundles.
+     * @param {Array<Object>} bundles - Array with render bundle data.
      * @param {Scene} sceneRef - The scene the render bundles belong to.
      * @param {LightsNode} lightsNode - The current lights node.
      */
