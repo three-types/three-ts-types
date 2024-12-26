@@ -3404,10 +3404,10 @@ index 4ac059f0..fcb1c9fd 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index f28fb61e..3ae7a527 100644
+index 171722d7..710fe73f 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
-@@ -1,5 +1,20 @@
+@@ -1,16 +1,31 @@
 +import Nodes from './nodes/Nodes.js';
 +import Info from './Info.js';
 +
@@ -3416,8 +3416,12 @@ index f28fb61e..3ae7a527 100644
 +    cancelAnimationFrame(handle: number): void;
 +}
 +
+ /**
+  * This module manages the internal animation loop of the renderer.
+  *
+  * @private
+  */
  class Animation {
--    constructor(nodes, info) {
 +    nodes: Nodes;
 +    info: Info;
 +
@@ -3425,20 +3429,27 @@ index f28fb61e..3ae7a527 100644
 +    _animationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
 +    _requestId: number | null;
 +
+     /**
+      * Constructs a new animation loop management component.
+      *
+      * @param {Nodes} nodes - Renderer component for managing nodes relatd logic.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(nodes, info) {
 +    constructor(nodes: Nodes, info: Info) {
-         this.nodes = nodes;
-         this.info = info;
- 
-@@ -9,7 +24,7 @@ class Animation {
-     }
- 
+         /**
+          * Renderer component for managing nodes relatd logic.
+          *
+@@ -55,7 +70,7 @@ class Animation {
+      * Starts the internal animation loop.
+      */
      start() {
 -        const update = (time, frame) => {
 +        const update = (time?: DOMHighResTimeStamp, frame?: XRFrame) => {
              this._requestId = this._context.requestAnimationFrame(update);
  
              if (this.info.autoReset === true) this.info.reset();
-@@ -18,23 +33,23 @@ class Animation {
+@@ -64,7 +79,7 @@ class Animation {
  
              this.info.frame = this.nodes.nodeFrame.frameId;
  
@@ -3447,30 +3458,38 @@ index f28fb61e..3ae7a527 100644
          };
  
          update();
-     }
- 
+@@ -74,7 +89,7 @@ class Animation {
+      * Stops the internal animation loop.
+      */
      stop() {
 -        this._context.cancelAnimationFrame(this._requestId);
 +        this._context.cancelAnimationFrame(this._requestId!);
  
          this._requestId = null;
      }
- 
+@@ -84,7 +99,7 @@ class Animation {
+      *
+      * @param {Function} callback - The animation loop.
+      */
 -    setAnimationLoop(callback) {
 +    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null) {
          this._animationLoop = callback;
      }
  
+@@ -93,7 +108,7 @@ class Animation {
+      *
+      * @param {Window|XRSession} context - The context to set.
+      */
 -    setContext(context) {
 +    setContext(context: AnimationContext) {
          this._context = context;
      }
  
 diff --git a/src-testing/src/renderers/common/Attributes.ts b/src-testing/src/renderers/common/Attributes.ts
-index 4631d528..a9edf948 100644
+index 7b2018e4..6ea269a6 100644
 --- a/src-testing/src/renderers/common/Attributes.ts
 +++ b/src-testing/src/renderers/common/Attributes.ts
-@@ -2,15 +2,25 @@ import DataMap from './DataMap.js';
+@@ -2,6 +2,14 @@ import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
  
  import { DynamicDrawUsage } from '../../constants.js';
@@ -3478,40 +3497,53 @@ index 4631d528..a9edf948 100644
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 +import Backend from './Backend.js';
 +import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
- 
--class Attributes extends DataMap {
--    constructor(backend) {
++
 +interface Data {
 +    version?: number | undefined;
 +}
-+
+ 
+ /**
+  * This renderer module manages geometry attributes.
+@@ -9,13 +17,15 @@ import { DynamicDrawUsage } from '../../constants.js';
+  * @private
+  * @augments DataMap
+  */
+-class Attributes extends DataMap {
 +class Attributes extends DataMap<{ attribute: { key: BufferAttribute | InterleavedBufferAttribute; value: Data } }> {
 +    backend: Backend;
 +
+     /**
+      * Constructs a new attribute management component.
+      *
+      * @param {Backend} backend - The renderer's backend.
+      */
+-    constructor(backend) {
 +    constructor(backend: Backend) {
          super();
  
-         this.backend = backend;
-     }
- 
+         /**
+@@ -32,7 +42,7 @@ class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute.
+      * @return {Object} The deleted attribute data.
+      */
 -    delete(attribute) {
 +    delete(attribute: BufferAttribute | InterleavedBufferAttribute) {
          const attributeData = super.delete(attribute);
  
          if (attributeData !== undefined) {
-@@ -20,7 +30,7 @@ class Attributes extends DataMap {
-         return attributeData;
-     }
- 
+@@ -49,7 +59,7 @@ class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute to update.
+      * @param {Number} type - The attribute type.
+      */
 -    update(attribute, type) {
 +    update(attribute: BufferAttribute | InterleavedBufferAttribute, type: AttributeType) {
          const data = this.get(attribute);
  
          if (data.version === undefined) {
-@@ -46,10 +56,11 @@ class Attributes extends DataMap {
-         }
-     }
- 
+@@ -82,10 +92,11 @@ class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute.
+      * @return {BufferAttribute|InterleavedBuffer}
+      */
 -    _getBufferAttribute(attribute) {
 -        if (attribute.isInterleavedBufferAttribute) attribute = attribute.data;
 +    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute) {
@@ -3664,10 +3696,10 @@ index 2297154c..130b71de 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index ab1f8b70..2ce6dfae 100644
+index 8ac2e11b..02e3e265 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
-@@ -14,18 +14,33 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
+@@ -14,23 +14,38 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
  import { Mesh } from '../../objects/Mesh.js';
  import { SphereGeometry } from '../../geometries/SphereGeometry.js';
  import { BackSide, LinearSRGBColorSpace } from '../../constants.js';
@@ -3679,8 +3711,6 @@ index ab1f8b70..2ce6dfae 100644
  
  const _clearColor = /*@__PURE__*/ new Color4();
  
--class Background extends DataMap {
--    constructor(renderer, nodes) {
 +interface SceneData {
 +    backgroundMesh?: Mesh;
 +    // TODO
@@ -3688,17 +3718,32 @@ index ab1f8b70..2ce6dfae 100644
 +    backgroundCacheKey: string;
 +}
 +
+ /**
+  * This renderer module manages the background.
+  *
+  * @private
+  * @augments DataMap
+  */
+-class Background extends DataMap {
 +class Background extends DataMap<{ scene: { key: Scene; value: SceneData } }> {
 +    renderer: Renderer;
 +    nodes: Nodes;
 +
+     /**
+      * Constructs a new background management component.
+      *
+      * @param {Renderer} renderer - The renderer.
+      * @param {Nodes} nodes - Renderer component for managing nodes relatd logic.
+      */
+-    constructor(renderer, nodes) {
 +    constructor(renderer: Renderer, nodes: Nodes) {
          super();
  
-         this.renderer = renderer;
-         this.nodes = nodes;
-     }
- 
+         /**
+@@ -58,7 +73,7 @@ class Background extends DataMap {
+      * @param {RenderList} renderList - The current render list.
+      * @param {RenderContext} renderContext - The current render context.
+      */
 -    update(scene, renderList, renderContext) {
 +    update(scene: Scene, renderList: RenderList, renderContext: RenderContext) {
          const renderer = this.renderer;
@@ -3995,12 +4040,12 @@ index 99ddcb48..e18679b1 100644
  
      return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/src-testing/src/renderers/common/BundleGroup.ts b/src-testing/src/renderers/common/BundleGroup.ts
-index 1dd8e0a2..b0e36aaf 100644
+index e9f6f2e0..dd7ea2d4 100644
 --- a/src-testing/src/renderers/common/BundleGroup.ts
 +++ b/src-testing/src/renderers/common/BundleGroup.ts
-@@ -1,6 +1,13 @@
- import { Group } from '../../objects/Group.js';
- 
+@@ -13,6 +13,13 @@ import { Group } from '../../objects/Group.js';
+  * @augments Group
+  */
  class BundleGroup extends Group {
 +    readonly isBundleGroup: true;
 +
@@ -4009,34 +4054,52 @@ index 1dd8e0a2..b0e36aaf 100644
 +    static: boolean;
 +    version: number;
 +
-     constructor() {
-         super();
- 
-@@ -12,7 +19,7 @@ class BundleGroup extends Group {
-         this.version = 0;
-     }
- 
+     /**
+      * Constructs a new bundle group.
+      */
+@@ -69,7 +76,7 @@ class BundleGroup extends Group {
+      * @default false
+      * @param {Boolean} value
+      */
 -    set needsUpdate(value) {
 +    set needsUpdate(value: boolean) {
          if (value === true) this.version++;
      }
  }
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
-index b17e7080..e2b545b7 100644
+index f65857cb..ddae3243 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
 +++ b/src-testing/src/renderers/common/ChainMap.ts
-@@ -1,39 +1,43 @@
--export default class ChainMap {
+@@ -1,3 +1,5 @@
 +type RecursiveWeakMap<K extends readonly object[], V> = WeakMap<K[number], V | RecursiveWeakMap<K, V>>;
 +
+ /**
+  * Data structure for the renderer. It allows defining values
+  * with chained, hierarchical keys. Keys are meant to be
+@@ -6,7 +8,9 @@
+  *
+  * @private
+  */
+-export default class ChainMap {
 +export default class ChainMap<K extends readonly object[], V> {
 +    weakMap: RecursiveWeakMap<K, V>;
 +
-     constructor() {
+     /**
+      * Constructs a new chained map.
+      */
+@@ -16,7 +20,7 @@ export default class ChainMap {
+          *
+          * @type {WeakMap}
+          */
 -        this.weakMap = new WeakMap();
 +        this.weakMap = new WeakMap<K[number], V | RecursiveWeakMap<K, V>>();
      }
  
+     /**
+@@ -25,16 +29,16 @@ export default class ChainMap {
+      * @param {Array<Object>} keys - List of keys.
+      * @return {Any} The value. Returns `undefined` if no value was found.
+      */
 -    get(keys) {
 -        let map = this.weakMap;
 +    get(keys: K): V | undefined {
@@ -4053,6 +4116,11 @@ index b17e7080..e2b545b7 100644
 +        return map.get(keys[keys.length - 1]) as V | undefined;
      }
  
+     /**
+@@ -44,18 +48,18 @@ export default class ChainMap {
+      * @param {Any} value - The value to set.
+      * @return {ChainMap} A reference to this chain map.
+      */
 -    set(keys, value) {
 -        let map = this.weakMap;
 +    set(keys: K, value: V) {
@@ -4068,10 +4136,15 @@ index b17e7080..e2b545b7 100644
 +            map = map.get(key) as RecursiveWeakMap<K, V>;
          }
  
--        return map.set(keys[keys.length - 1], value);
-+        return map.set(keys[keys.length - 1], value) as V;
-     }
+-        map.set(keys[keys.length - 1], value);
++        map.set(keys[keys.length - 1], value) as V;
  
+         return this;
+     }
+@@ -66,11 +70,11 @@ export default class ChainMap {
+      * @param {Array<Object>} keys - The keys.
+      * @return {Boolean} Returns `true` if the value has been removed successfully and `false` if the value has not be found.
+      */
 -    delete(keys) {
 -        let map = this.weakMap;
 +    delete(keys: K) {
@@ -4220,18 +4293,30 @@ index f7ac6960..b09d632b 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Color4.ts b/src-testing/src/renderers/common/Color4.ts
-index 77caa31e..8ec327a7 100644
+index fc7845fd..414a8b9a 100644
 --- a/src-testing/src/renderers/common/Color4.ts
 +++ b/src-testing/src/renderers/common/Color4.ts
-@@ -1,26 +1,31 @@
+@@ -1,4 +1,4 @@
 -import { Color } from '../../math/Color.js';
 +import { Color, ColorRepresentation } from '../../math/Color.js';
  
+ /**
+  * A four-component version of {@link Color} which is internally
+@@ -9,6 +9,8 @@ import { Color } from '../../math/Color.js';
+  * @augments Color
+  */
  class Color4 extends Color {
--    constructor(r, g, b, a = 1) {
--        super(r, g, b);
 +    a: number;
 +
+     /**
+      * Constructs a new four-component color.
+      *
+@@ -17,8 +19,10 @@ class Color4 extends Color {
+      * @param {Number} b - The blue value.
+      * @param {Number} [a=1] - The alpha value.
+      */
+-    constructor(r, g, b, a = 1) {
+-        super(r, g, b);
 +    constructor(color?: ColorRepresentation);
 +    constructor(r: number, g: number, b: number, a?: number);
 +    constructor(r?: number, g?: number, b?: number, a = 1) {
@@ -4239,15 +4324,20 @@ index 77caa31e..8ec327a7 100644
  
          this.a = a;
      }
- 
+@@ -32,7 +36,8 @@ class Color4 extends Color {
+      * @param {Number} [a=1] - The alpha value.
+      * @return {Color4} A reference to this object.
+      */
 -    set(r, g, b, a = 1) {
 +    set(...args: [color: ColorRepresentation] | [r: number, g: number, b: number, a?: number]): this;
 +    set(r: number, g: number, b: number, a = 1) {
          this.a = a;
  
          return super.set(r, g, b);
-     }
- 
+@@ -44,8 +49,8 @@ class Color4 extends Color {
+      * @param {Color4} color - The color to copy.
+      * @return {Color4} A reference to this object.
+      */
 -    copy(color) {
 -        if (color.a !== undefined) this.a = color.a;
 +    copy(color: Color) {
@@ -4255,7 +4345,10 @@ index 77caa31e..8ec327a7 100644
  
          return super.copy(color);
      }
- 
+@@ -55,8 +60,8 @@ class Color4 extends Color {
+      *
+      * @return {Color4} The cloned color.
+      */
 -    clone() {
 -        return new this.constructor(this.r, this.g, this.b, this.a);
 +    clone(): this {
@@ -4326,37 +4419,51 @@ index 00c0fd8c..50f7e146 100644
          const currentGenerateMipmaps = texture.generateMipmaps;
  
 diff --git a/src-testing/src/renderers/common/DataMap.ts b/src-testing/src/renderers/common/DataMap.ts
-index 006bc295..eb39fca8 100644
+index 775be63e..37d044b1 100644
 --- a/src-testing/src/renderers/common/DataMap.ts
 +++ b/src-testing/src/renderers/common/DataMap.ts
-@@ -1,9 +1,11 @@
+@@ -4,7 +4,9 @@
+  *
+  * @private
+  */
 -class DataMap {
 +class DataMap<M extends { [key: string]: { key: object; value: unknown } }> {
 +    data: WeakMap<M[keyof M]['key'], M[keyof M]['value']>;
 +
-     constructor() {
+     /**
+      * Constructs a new data map.
+      */
+@@ -15,7 +17,7 @@ class DataMap {
+          *
+          * @type {WeakMap}
+          */
 -        this.data = new WeakMap();
 +        this.data = new WeakMap<M[keyof M]['key'], M[keyof M]['value']>();
      }
  
+     /**
+@@ -24,7 +26,7 @@ class DataMap {
+      * @param {Object} object - The object.
+      * @return {Object} The dictionary.
+      */
 -    get(object) {
 +    get<K extends M[keyof M]['key']>(object: K): Extract<M[keyof M], { key: K }>['value'] {
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -14,7 +16,7 @@ class DataMap {
-         return map;
-     }
- 
+@@ -41,7 +43,7 @@ class DataMap {
+      * @param {Object} object - The object.
+      * @return {Object?} The deleted dictionary.
+      */
 -    delete(object) {
 +    delete<K extends M[keyof M]['key']>(object: K): Extract<M[keyof M], { key: K }>['value'] {
-         let map;
+         let map = null;
  
          if (this.data.has(object)) {
-@@ -26,7 +28,7 @@ class DataMap {
-         return map;
-     }
- 
+@@ -59,7 +61,7 @@ class DataMap {
+      * @param {Object} object - The object to test.
+      * @return {Boolean} Whether a dictionary is defined or not.
+      */
 -    has(object) {
 +    has(object: M[keyof M]['key']) {
          return this.data.has(object);
@@ -4899,53 +5006,66 @@ index a684e444..62ebf0a0 100644
  
          this.code = code;
 diff --git a/src-testing/src/renderers/common/RenderBundle.ts b/src-testing/src/renderers/common/RenderBundle.ts
-index e59e4937..ca572cea 100644
+index ffa28996..f690315a 100644
 --- a/src-testing/src/renderers/common/RenderBundle.ts
 +++ b/src-testing/src/renderers/common/RenderBundle.ts
-@@ -1,11 +1,17 @@
-+import { Object3D } from '../../core/Object3D.js';
+@@ -1,3 +1,6 @@
 +import { Camera } from '../../cameras/Camera.js';
++import BundleGroup from './BundleGroup.js';
 +
+ /**
+  * This module is used to represent render bundles inside the renderer
+  * for further processing.
+@@ -5,13 +8,16 @@
+  * @private
+  */
  class RenderBundle {
--    constructor(scene, camera) {
-+    scene: Object3D;
++    bundleGroup: BundleGroup;
 +    camera: Camera;
 +
-+    constructor(scene: Object3D, camera: Camera) {
-         this.scene = scene;
+     /**
+      * Constructs a new bundle group.
+      *
+      * @param {BundleGroup} bundleGroup - The bundle group.
+      * @param {Camera} camera - The camera the bundle group is rendered with.
+      */
+-    constructor(bundleGroup, camera) {
++    constructor(bundleGroup: BundleGroup, camera: Camera) {
+         this.bundleGroup = bundleGroup;
          this.camera = camera;
      }
- 
-     clone() {
--        return Object.assign(new this.constructor(), this);
-+        return Object.assign(new (this.constructor as { new (): RenderBundle })(), this);
-     }
- }
- 
 diff --git a/src-testing/src/renderers/common/RenderBundles.ts b/src-testing/src/renderers/common/RenderBundles.ts
-index 29140365..46f14369 100644
+index 70b91e79..7278463e 100644
 --- a/src-testing/src/renderers/common/RenderBundles.ts
 +++ b/src-testing/src/renderers/common/RenderBundles.ts
-@@ -1,14 +1,18 @@
+@@ -1,5 +1,7 @@
  import ChainMap from './ChainMap.js';
  import RenderBundle from './RenderBundle.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import BundleGroup from './BundleGroup.js';
  
+ /**
+  * This renderer module manages render bundles.
+@@ -7,6 +9,8 @@ import RenderBundle from './RenderBundle.js';
+  * @private
+  */
  class RenderBundles {
-+    lists: ChainMap<readonly [BundleGroup, Camera], RenderBundle>;
++    bundles: ChainMap<readonly [BundleGroup, Camera], RenderBundle>;
 +
-     constructor() {
-         this.lists = new ChainMap();
-     }
+     /**
+      * Constructs a new render bundle management component.
+      */
+@@ -26,9 +30,9 @@ class RenderBundles {
+      * @param {Camera} camera - The camera the bundle group is rendered with.
+      * @return {RenderBundle} The render bundle.
+      */
+-    get(bundleGroup, camera) {
++    get(bundleGroup: BundleGroup, camera: Camera) {
+         const bundles = this.bundles;
+-        const keys = [bundleGroup, camera];
++        const keys = [bundleGroup, camera] as const;
  
--    get(scene, camera) {
-+    get(scene: BundleGroup, camera: Camera) {
-         const lists = this.lists;
--        const keys = [scene, camera];
-+        const keys = [scene, camera] as const;
- 
-         let list = lists.get(keys);
+         let bundle = bundles.get(keys);
  
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
 index 9b5ee3a2..1a937652 100644
@@ -5568,7 +5688,7 @@ index 0ec34b04..573cae2b 100644
  
          this.vertexProgram = vertexProgram;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index d19ce533..ecbccb56 100644
+index 80319541..44da34f9 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
