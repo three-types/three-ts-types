@@ -875,7 +875,7 @@ declare class Renderer {
         passId?: string,
     ): void;
     /**
-     * A different implementation for `_handleObjectFunction` which only creates the creates the render object pipeline.
+     * A different implementation for `_handleObjectFunction` which only makes sure the object is ready for rendering.
      * Used in `compileAsync()`.
      *
      * @private

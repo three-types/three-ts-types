@@ -8,10 +8,15 @@ export default class ComputeNode extends Node {
     count: number;
     workgroupSize: number[];
     dispatchCount: number;
+    name: string;
 
     onInitFunction: ((args: { renderer: Renderer }) => void) | null;
 
     constructor(computeNode: Node, count: number, workgroupSize?: number[]);
+
+    label(name: string): void;
+
+    updateDispatchCount(): void;
 
     onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
 }
