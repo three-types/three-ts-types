@@ -18,7 +18,7 @@ declare class Animation {
     /**
      * Constructs a new animation loop management component.
      *
-     * @param {Nodes} nodes - Renderer component for managing nodes relatd logic.
+     * @param {Nodes} nodes - Renderer component for managing nodes related logic.
      * @param {Info} info - Renderer component for managing metrics and monitoring data.
      */
     constructor(nodes: Nodes, info: Info);
