@@ -336,7 +336,7 @@ index c552cd0b..c1eb85bc 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index c47e04de..cc4212bd 100644
+index 89d91834..c811acbc 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
@@ -425,7 +425,7 @@ index c47e04de..cc4212bd 100644
 -    setUpdateMatrix(value) {
 +    setUpdateMatrix(value: boolean) {
          this.updateMatrix = value;
-         this.updateType = value ? NodeUpdateType.FRAME : NodeUpdateType.NONE;
+         this.updateType = value ? NodeUpdateType.RENDER : NodeUpdateType.NONE;
  
 @@ -251,7 +278,7 @@ class TextureNode extends UniformNode {
       * @param {Node} uvNode - The uv node to setup.
@@ -3120,7 +3120,7 @@ index 1aa67531..25a4bd72 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 4ac059f0..fcb1c9fd 100644
+index 816b2f53..ffbf7fb5 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -7,11 +7,40 @@ import SetNode from '../utils/SetNode.js';
@@ -3164,8 +3164,8 @@ index 4ac059f0..fcb1c9fd 100644
  const NodeElements = new Map();
  
  export function addMethodChaining(name, nodeElement) {
-@@ -25,6 +54,141 @@ export function addMethodChaining(name, nodeElement) {
-     NodeElements.set(name, nodeElement);
+@@ -31,6 +60,141 @@ export function addMethodsChaining(object) {
+     }
  }
  
 +export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
@@ -3306,7 +3306,7 @@ index 4ac059f0..fcb1c9fd 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -117,7 +281,7 @@ const shaderNodeHandler = {
+@@ -123,7 +287,7 @@ const shaderNodeHandler = {
  const nodeObjectsCacheMap = new WeakMap();
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3315,7 +3315,7 @@ index 4ac059f0..fcb1c9fd 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -186,18 +350,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -192,18 +356,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3339,7 +3339,7 @@ index 4ac059f0..fcb1c9fd 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -272,7 +438,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -278,7 +444,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3355,7 +3355,7 @@ index 4ac059f0..fcb1c9fd 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -284,7 +458,7 @@ class ShaderNodeInternal extends Node {
+@@ -290,7 +464,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3364,7 +3364,7 @@ index 4ac059f0..fcb1c9fd 100644
          this.layout = layout;
  
          return this;
-@@ -301,6 +475,8 @@ class ShaderNodeInternal extends Node {
+@@ -307,6 +481,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3373,7 +3373,7 @@ index 4ac059f0..fcb1c9fd 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -394,10 +570,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -400,10 +576,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -3404,7 +3404,7 @@ index 4ac059f0..fcb1c9fd 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index 171722d7..710fe73f 100644
+index e7b0be6d..29e31e02 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
@@ -3432,13 +3432,13 @@ index 171722d7..710fe73f 100644
      /**
       * Constructs a new animation loop management component.
       *
-      * @param {Nodes} nodes - Renderer component for managing nodes relatd logic.
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
 -    constructor(nodes, info) {
 +    constructor(nodes: Nodes, info: Info) {
          /**
-          * Renderer component for managing nodes relatd logic.
+          * Renderer component for managing nodes related logic.
           *
 @@ -55,7 +70,7 @@ class Animation {
       * Starts the internal animation loop.
@@ -3696,7 +3696,7 @@ index 2297154c..130b71de 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 8ac2e11b..02e3e265 100644
+index 19df2d3f..cf8e7a4a 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -14,23 +14,38 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
@@ -3733,7 +3733,7 @@ index 8ac2e11b..02e3e265 100644
       * Constructs a new background management component.
       *
       * @param {Renderer} renderer - The renderer.
-      * @param {Nodes} nodes - Renderer component for managing nodes relatd logic.
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
       */
 -    constructor(renderer, nodes) {
 +    constructor(renderer: Renderer, nodes: Nodes) {
@@ -4667,10 +4667,10 @@ index 89d6ba7f..385c2d32 100644
  
          let index = geometry.index;
 diff --git a/src-testing/src/renderers/common/Info.ts b/src-testing/src/renderers/common/Info.ts
-index 4ede75de..38b7b9cd 100644
+index 25a949f3..2c80ed7c 100644
 --- a/src-testing/src/renderers/common/Info.ts
 +++ b/src-testing/src/renderers/common/Info.ts
-@@ -1,4 +1,41 @@
+@@ -1,9 +1,46 @@
 +import { Object3D } from '../../core/Object3D.js';
 +import { Mesh } from '../../objects/Mesh.js';
 +import { Sprite } from '../../objects/Sprite.js';
@@ -4678,6 +4678,11 @@ index 4ede75de..38b7b9cd 100644
 +import { LineSegments } from '../../objects/LineSegments.js';
 +import { Line } from '../../objects/Line.js';
 +
+ /**
+  * This renderer module provides a series of statistical information
+  * about the GPU memory and the rendering process. Useful for debugging
+  * and monitoring.
+  */
  class Info {
 +    autoReset: boolean;
 +
@@ -4709,13 +4714,13 @@ index 4ede75de..38b7b9cd 100644
 +        textures: number;
 +    };
 +
-     constructor() {
-         this.autoReset = true;
- 
-@@ -31,23 +68,23 @@ class Info {
-         };
-     }
- 
+     /**
+      * Constructs a new info component.
+      */
+@@ -106,16 +143,16 @@ class Info {
+      * @param {Number} count - The vertex or index count.
+      * @param {Number} instanceCount - The instance count.
+      */
 -    update(object, count, instanceCount) {
 +    update(object: Object3D, count: number, instanceCount: number) {
          this.render.drawCalls++;
@@ -4734,9 +4739,10 @@ index 4ede75de..38b7b9cd 100644
              this.render.lines += instanceCount * (count - 1);
          } else {
              console.error('THREE.WebGPUInfo: Unknown object type.');
-         }
-     }
- 
+@@ -128,7 +165,7 @@ class Info {
+      * @param {('render'|'compute')} type - The type of render call.
+      * @param {Number} time - The duration of the compute/render call in milliseconds.
+      */
 -    updateTimestamp(type, time) {
 +    updateTimestamp(type: 'render' | 'compute', time: number) {
          if (this[type].timestampCalls === 0) {
@@ -4765,10 +4771,10 @@ index 0336ccac..0c6fb271 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index 68c8f223..104bf8c9 100644
+index 71a5e29b..a28ffafd 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
-@@ -2,9 +2,40 @@ import DataMap from './DataMap.js';
+@@ -2,20 +2,51 @@ import DataMap from './DataMap.js';
  import RenderPipeline from './RenderPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
@@ -4788,7 +4794,13 @@ index 68c8f223..104bf8c9 100644
 +interface RenderObjectData {
 +    pipeline: RenderPipeline;
 +}
-+
+ 
+ /**
+  * This renderer module manages the pipelines of the renderer.
+  *
+  * @private
+  */
+-class Pipelines extends DataMap {
 +class Pipelines extends DataMap<{
 +    computeNode: { key: ComputeNode; value: ComputeNodeData };
 +    renderObject: { key: RenderObject; value: RenderObjectData };
@@ -4797,9 +4809,7 @@ index 68c8f223..104bf8c9 100644
 +    nodes: Nodes;
 +
 +    bindings: Bindings | null;
- 
--class Pipelines extends DataMap {
--    constructor(backend, nodes) {
++
 +    caches: Map<string, Pipeline>;
 +    programs: {
 +        vertex: Map<string, ProgrammableStage>;
@@ -4807,16 +4817,29 @@ index 68c8f223..104bf8c9 100644
 +        compute: Map<string, ProgrammableStage>;
 +    };
 +
+     /**
+      * Constructs a new pipeline management component.
+      *
+      * @param {Backend} backend - The renderer's backend.
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
+      */
+-    constructor(backend, nodes) {
 +    constructor(backend: Backend, nodes: Nodes) {
          super();
  
-         this.backend = backend;
-@@ -12,15 +43,15 @@ class Pipelines extends DataMap {
- 
-         this.bindings = null; // set by the bindings
- 
+         /**
+@@ -48,7 +79,7 @@ class Pipelines extends DataMap {
+          *
+          * @type {Map<String,Pipeline>}
+          */
 -        this.caches = new Map();
 +        this.caches = new Map<string, Pipeline>();
+ 
+         /**
+          * This dictionary maintains for each shader stage type (vertex,
+@@ -58,9 +89,9 @@ class Pipelines extends DataMap {
+          * @type {Object<String,Map>}
+          */
          this.programs = {
 -            vertex: new Map(),
 -            fragment: new Map(),
@@ -4827,12 +4850,16 @@ index 68c8f223..104bf8c9 100644
          };
      }
  
+@@ -71,7 +102,7 @@ class Pipelines extends DataMap {
+      * @param {Array<BindGroup>} bindings - The bindings.
+      * @return {ComputePipeline} The compute pipeline.
+      */
 -    getForCompute(computeNode, bindings) {
 +    getForCompute(computeNode: ComputeNode, bindings: Binding[]) {
          const { backend } = this;
  
          const data = this.get(computeNode);
-@@ -39,19 +70,19 @@ class Pipelines extends DataMap {
+@@ -90,20 +121,20 @@ class Pipelines extends DataMap {
  
              // programmable stage
  
@@ -4847,6 +4874,7 @@ index 68c8f223..104bf8c9 100644
 -                    nodeBuilderState.computeShader,
 +                    nodeBuilderState.computeShader!,
                      'compute',
+                     computeNode.name,
                      nodeBuilderState.transforms,
                      nodeBuilderState.nodeAttributes,
                  );
@@ -4855,7 +4883,7 @@ index 68c8f223..104bf8c9 100644
  
                  backend.createProgram(stageCompute);
              }
-@@ -60,7 +91,7 @@ class Pipelines extends DataMap {
+@@ -112,7 +143,7 @@ class Pipelines extends DataMap {
  
              const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
  
@@ -4864,16 +4892,16 @@ index 68c8f223..104bf8c9 100644
  
              if (pipeline === undefined) {
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
-@@ -82,7 +113,7 @@ class Pipelines extends DataMap {
-         return data.pipeline;
-     }
- 
+@@ -141,7 +172,7 @@ class Pipelines extends DataMap {
+      * @param {Array<Promise>?} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
+      * @return {RenderPipeline} The render pipeline.
+      */
 -    getForRender(renderObject, promises = null) {
 +    getForRender(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
          const { backend } = this;
  
          const data = this.get(renderObject);
-@@ -102,26 +133,26 @@ class Pipelines extends DataMap {
+@@ -163,26 +194,26 @@ class Pipelines extends DataMap {
  
              // programmable stages
  
@@ -4884,9 +4912,9 @@ index 68c8f223..104bf8c9 100644
                  if (previousPipeline && previousPipeline.vertexProgram.usedTimes === 0)
                      this._releaseProgram(previousPipeline.vertexProgram);
  
--                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, 'vertex');
+-                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader, 'vertex', name);
 -                this.programs.vertex.set(nodeBuilderState.vertexShader, stageVertex);
-+                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader!, 'vertex');
++                stageVertex = new ProgrammableStage(nodeBuilderState.vertexShader!, 'vertex', name);
 +                this.programs.vertex.set(nodeBuilderState.vertexShader!, stageVertex);
  
                  backend.createProgram(stageVertex);
@@ -4899,14 +4927,14 @@ index 68c8f223..104bf8c9 100644
                  if (previousPipeline && previousPipeline.fragmentProgram.usedTimes === 0)
                      this._releaseProgram(previousPipeline.fragmentProgram);
  
--                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, 'fragment');
+-                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader, 'fragment', name);
 -                this.programs.fragment.set(nodeBuilderState.fragmentShader, stageFragment);
-+                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader!, 'fragment');
++                stageFragment = new ProgrammableStage(nodeBuilderState.fragmentShader!, 'fragment', name);
 +                this.programs.fragment.set(nodeBuilderState.fragmentShader!, stageFragment);
  
                  backend.createProgram(stageFragment);
              }
-@@ -130,7 +161,7 @@ class Pipelines extends DataMap {
+@@ -191,7 +222,7 @@ class Pipelines extends DataMap {
  
              const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
  
@@ -4915,16 +4943,16 @@ index 68c8f223..104bf8c9 100644
  
              if (pipeline === undefined) {
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
-@@ -154,7 +185,7 @@ class Pipelines extends DataMap {
-         return data.pipeline;
-     }
- 
+@@ -221,7 +252,7 @@ class Pipelines extends DataMap {
+      * @param {RenderObject} object - The render object.
+      * @return {Object?} The deleted dictionary.
+      */
 -    delete(object) {
 +    delete(object: ComputeNode | RenderObject): never {
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
-@@ -166,20 +197,23 @@ class Pipelines extends DataMap {
+@@ -233,20 +264,23 @@ class Pipelines extends DataMap {
  
              // programs
  
@@ -4955,16 +4983,20 @@ index 68c8f223..104bf8c9 100644
 +        return super.delete(object) as never;
      }
  
-     dispose() {
-@@ -193,16 +227,21 @@ class Pipelines extends DataMap {
-         };
-     }
- 
+     /**
+@@ -268,7 +302,7 @@ class Pipelines extends DataMap {
+      *
+      * @param {RenderObject} renderObject - The render object.
+      */
 -    updateForRender(renderObject) {
 +    updateForRender(renderObject: RenderObject) {
          this.getForRender(renderObject);
      }
  
+@@ -282,12 +316,17 @@ class Pipelines extends DataMap {
+      * @param {Array<BindGroup>} bindings - The bindings.
+      * @return {ComputePipeline} The compute pipeline.
+      */
 -    _getComputePipeline(computeNode, stageCompute, cacheKey, bindings) {
 +    _getComputePipeline(
 +        computeNode: ComputeNode,
@@ -4981,10 +5013,10 @@ index 68c8f223..104bf8c9 100644
  
          if (pipeline === undefined) {
              pipeline = new ComputePipeline(cacheKey, stageCompute);
-@@ -215,12 +254,18 @@ class Pipelines extends DataMap {
-         return pipeline;
-     }
- 
+@@ -311,12 +350,18 @@ class Pipelines extends DataMap {
+      * @param {Array} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
+      * @return {ComputePipeline} The compute pipeline.
+      */
 -    _getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises) {
 +    _getRenderPipeline(
 +        renderObject: RenderObject,
@@ -5002,47 +5034,62 @@ index 68c8f223..104bf8c9 100644
  
          if (pipeline === undefined) {
              pipeline = new RenderPipeline(cacheKey, stageVertex, stageFragment);
-@@ -235,32 +280,32 @@ class Pipelines extends DataMap {
-         return pipeline;
-     }
- 
+@@ -343,7 +388,7 @@ class Pipelines extends DataMap {
+      * @param {ProgrammableStage} stageCompute - The programmable stage representing the compute shader.
+      * @return {String} The cache key.
+      */
 -    _getComputeCacheKey(computeNode, stageCompute) {
 +    _getComputeCacheKey(computeNode: ComputeNode, stageCompute: ProgrammableStage) {
          return computeNode.id + ',' + stageCompute.id;
      }
  
+@@ -356,7 +401,7 @@ class Pipelines extends DataMap {
+      * @param {ProgrammableStage} stageFragment - The programmable stage representing the fragment shader.
+      * @return {String} The cache key.
+      */
 -    _getRenderCacheKey(renderObject, stageVertex, stageFragment) {
 +    _getRenderCacheKey(renderObject: RenderObject, stageVertex: ProgrammableStage, stageFragment: ProgrammableStage) {
          return stageVertex.id + ',' + stageFragment.id + ',' + this.backend.getRenderCacheKey(renderObject);
      }
  
+@@ -366,7 +411,7 @@ class Pipelines extends DataMap {
+      * @private
+      * @param {Pipeline} pipeline - The pipeline to release.
+      */
 -    _releasePipeline(pipeline) {
 +    _releasePipeline(pipeline: Pipeline) {
          this.caches.delete(pipeline.cacheKey);
      }
  
+@@ -376,7 +421,7 @@ class Pipelines extends DataMap {
+      * @private
+      * @param {Object} program - The shdaer program to release.
+      */
 -    _releaseProgram(program) {
 +    _releaseProgram(program: ProgrammableStage) {
          const code = program.code;
          const stage = program.stage;
  
-         this.programs[stage].delete(code);
-     }
- 
+@@ -390,7 +435,7 @@ class Pipelines extends DataMap {
+      * @param {Node} computeNode - The compute node.
+      * @return {Boolean} Whether the compute pipeline for the given compute node requires an update or not.
+      */
 -    _needsComputeUpdate(computeNode) {
 +    _needsComputeUpdate(computeNode: ComputeNode) {
          const data = this.get(computeNode);
  
          return data.pipeline === undefined || data.version !== computeNode.version;
-     }
- 
+@@ -403,7 +448,7 @@ class Pipelines extends DataMap {
+      * @param {RenderObject} renderObject - The render object.
+      * @return {Boolean} Whether the render object for the given render object requires an update or not.
+      */
 -    _needsRenderUpdate(renderObject) {
 +    _needsRenderUpdate(renderObject: RenderObject) {
          const data = this.get(renderObject);
  
          return data.pipeline === undefined || this.backend.needsRenderUpdate(renderObject);
 diff --git a/src-testing/src/renderers/common/ProgrammableStage.ts b/src-testing/src/renderers/common/ProgrammableStage.ts
-index 761f17b8..59b3183f 100644
+index f16fca32..35884d4c 100644
 --- a/src-testing/src/renderers/common/ProgrammableStage.ts
 +++ b/src-testing/src/renderers/common/ProgrammableStage.ts
 @@ -1,3 +1,5 @@
@@ -5051,7 +5098,7 @@ index 761f17b8..59b3183f 100644
  let _id = 0;
  
  /**
-@@ -8,6 +10,16 @@ let _id = 0;
+@@ -8,6 +10,17 @@ let _id = 0;
   * @private
   */
  class ProgrammableStage {
@@ -5059,6 +5106,7 @@ index 761f17b8..59b3183f 100644
 +
 +    code: string;
 +    stage: 'compute' | 'vertex' | 'fragment';
++    name: string;
 +    // TODO
 +    // transforms
 +    attributes: NodeAttribute[] | null;
@@ -5068,14 +5116,15 @@ index 761f17b8..59b3183f 100644
      /**
       * Constructs a new programmable stage.
       *
-@@ -16,7 +28,12 @@ class ProgrammableStage {
+@@ -17,7 +30,13 @@ class ProgrammableStage {
       * @param {Array<Object>?} [transforms=null] - The transforms (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
       * @param {Array<Object>?} [attributes=null] - The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
       */
--    constructor(code, stage, transforms = null, attributes = null) {
+-    constructor(code, stage, name, transforms = null, attributes = null) {
 +    constructor(
 +        code: string,
 +        stage: 'compute' | 'vertex' | 'fragment',
++        name: string,
 +        transforms = null,
 +        attributes: NodeAttribute[] | null = null,
 +    ) {
@@ -5145,10 +5194,10 @@ index 70b91e79..7278463e 100644
          let bundle = bundles.get(keys);
  
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 9b5ee3a2..1a937652 100644
+index e70a328d..b805b43e 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
-@@ -1,9 +1,52 @@
+@@ -1,5 +1,9 @@
  import { Vector4 } from '../../math/Vector4.js';
  import { hashArray } from '../../nodes/core/NodeUtils.js';
 +import { Texture } from '../../textures/Texture.js';
@@ -5156,8 +5205,11 @@ index 9b5ee3a2..1a937652 100644
 +import ClippingContext from './ClippingContext.js';
 +import { RenderTarget } from '../../core/RenderTarget.js';
  
- let id = 0;
+ let _id = 0;
  
+@@ -12,6 +16,45 @@ let _id = 0;
+  * @private
+  */
  class RenderContext {
 +    id: number;
 +
@@ -5198,13 +5250,13 @@ index 9b5ee3a2..1a937652 100644
 +    activeMipmapLevel?: number | undefined;
 +    occlusionQueryCount?: number | undefined;
 +
-     constructor() {
-         this.id = id++;
- 
-@@ -41,12 +84,12 @@ class RenderContext {
-     }
- }
- 
+     /**
+      * Constructs a new render context.
+      */
+@@ -206,12 +249,12 @@ class RenderContext {
+  * @param {RenderContext} renderContext - The render context.
+  * @return {Number} The cache key.
+  */
 -export function getCacheKey(renderContext) {
 +export function getCacheKey(renderContext: RenderContext) {
      const { textures, activeCubeFace } = renderContext;
@@ -5217,16 +5269,21 @@ index 9b5ee3a2..1a937652 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index 8abe15dc..db5cb0d7 100644
+index dc3f8138..77d641ef 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
-@@ -1,12 +1,21 @@
+@@ -1,5 +1,8 @@
  import ChainMap from './ChainMap.js';
  import RenderContext from './RenderContext.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import { RenderTarget } from '../../core/RenderTarget.js';
 +import { Object3D } from '../../core/Object3D.js';
  
+ /**
+  * This module manages the render contexts of the renderer.
+@@ -7,6 +10,12 @@ import RenderContext from './RenderContext.js';
+  * @private
+  */
  class RenderContexts {
 +    chainMaps: {
 +        [attachmentState: string]:
@@ -5234,19 +5291,22 @@ index 8abe15dc..db5cb0d7 100644
 +            | undefined;
 +    };
 +
-     constructor() {
-         this.chainMaps = {};
-     }
- 
+     /**
+      * Constructs a new render context management component.
+      */
+@@ -28,7 +37,7 @@ class RenderContexts {
+      * @param {RenderTarget?} [renderTarget=null] - The active render target.
+      * @return {RenderContext} The render context.
+      */
 -    get(scene = null, camera = null, renderTarget = null) {
 +    get(scene: Object3D | null = null, camera: Camera | null = null, renderTarget: RenderTarget | null = null) {
          const chainKey = [];
          if (scene !== null) chainKey.push(scene);
          if (camera !== null) chainKey.push(camera);
-@@ -41,8 +50,11 @@ class RenderContexts {
-         return renderState;
-     }
- 
+@@ -69,8 +78,11 @@ class RenderContexts {
+      * @param {String} attachmentState - The attachment state.
+      * @return {ChainMap} The chain map.
+      */
 -    getChainMap(attachmentState) {
 -        return this.chainMaps[attachmentState] || (this.chainMaps[attachmentState] = new ChainMap());
 +    getChainMap(attachmentState: string) {
@@ -5256,7 +5316,7 @@ index 8abe15dc..db5cb0d7 100644
 +        );
      }
  
-     dispose() {
+     /**
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
 index 798a149f..d0006a7e 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
@@ -5526,7 +5586,7 @@ index f4355548..cb1756ad 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index c5e034fe..ff03d921 100644
+index 7284e730..4e9dbde0 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5558,9 +5618,9 @@ index c5e034fe..ff03d921 100644
      const keys = Object.keys(obj);
  
      let proto = Object.getPrototypeOf(obj);
-@@ -27,17 +46,59 @@ function getKeys(obj) {
- }
- 
+@@ -45,6 +64,48 @@ function getKeys(obj) {
+  * @private
+  */
  export default class RenderObject {
 +    _nodes: Nodes;
 +    _geometries: Geometries;
@@ -5604,6 +5664,12 @@ index c5e034fe..ff03d921 100644
 +
 +    onMaterialDispose: () => void;
 +
+     /**
+      * Constructs a new render object.
+      *
+@@ -60,16 +121,16 @@ export default class RenderObject {
+      * @param {ClippingContext} clippingContext - The clipping context.
+      */
      constructor(
 -        nodes,
 -        geometries,
@@ -5626,18 +5692,18 @@ index c5e034fe..ff03d921 100644
 +        renderContext: RenderContext,
 +        clippingContext: ClippingContext | null,
      ) {
-         this._nodes = nodes;
-         this._geometries = geometries;
-@@ -85,7 +146,7 @@ export default class RenderObject {
-         this.material.addEventListener('dispose', this.onMaterialDispose);
+         this.id = _id++;
+ 
+@@ -295,7 +356,7 @@ export default class RenderObject {
+      *
+      * @param {ClippingContext} context - The clipping context to set.
+      */
+-    updateClipping(context) {
++    updateClipping(context: ClippingContext) {
+         this.clippingContext = context;
      }
  
--    updateClipping(parent) {
-+    updateClipping(parent: ClippingContext) {
-         this.clippingContext = parent;
-     }
- 
-@@ -93,7 +154,7 @@ export default class RenderObject {
+@@ -309,7 +370,7 @@ export default class RenderObject {
          if (this.clippingContext === null || this.clippingContext.cacheKey === this.clippingContextCacheKey)
              return false;
  
@@ -5646,20 +5712,25 @@ index c5e034fe..ff03d921 100644
  
          return true;
      }
-@@ -123,10 +184,10 @@ export default class RenderObject {
-     }
- 
+@@ -375,7 +436,7 @@ export default class RenderObject {
+      * @return {Array<Object>} An array with object references.
+      */
      getChainArray() {
 -        return [this.object, this.material, this.context, this.lightsNode];
 +        return [this.object, this.material, this.context, this.lightsNode] as const;
      }
  
+     /**
+@@ -384,7 +445,7 @@ export default class RenderObject {
+      *
+      * @param {BufferGeometry} geometry - The geometry to set.
+      */
 -    setGeometry(geometry) {
 +    setGeometry(geometry: BufferGeometry) {
          this.geometry = geometry;
          this.attributes = null;
      }
-@@ -137,8 +198,8 @@ export default class RenderObject {
+@@ -401,8 +462,8 @@ export default class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -5670,7 +5741,7 @@ index c5e034fe..ff03d921 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -357,6 +418,6 @@ export default class RenderObject {
+@@ -681,6 +742,6 @@ export default class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -5679,14 +5750,12 @@ index c5e034fe..ff03d921 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index 72ed13fb..8cc4f7b4 100644
+index c5a7a0b2..8f71a22b 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
-@@ -1,10 +1,44 @@
+@@ -1,7 +1,25 @@
  import ChainMap from './ChainMap.js';
  import RenderObject from './RenderObject.js';
--
--const chainArray = [];
 +import Renderer from './Renderer.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
@@ -5700,16 +5769,21 @@ index 72ed13fb..8cc4f7b4 100644
 +import { Scene } from '../../scenes/Scene.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import ClippingContext from './ClippingContext.js';
-+
-+const chainArray: [Object3D, Material, RenderContext, LightsNode] = [] as unknown as [
+ 
+-const _chainArray = [];
++const _chainArray: [Object3D, Material, RenderContext, LightsNode] = [] as unknown as [
 +    Object3D,
 +    Material,
 +    RenderContext,
 +    LightsNode,
 +];
  
+ /**
+  * This module manages the render objects of the renderer.
+@@ -9,6 +27,15 @@ const _chainArray = [];
+  * @private
+  */
  class RenderObjects {
--    constructor(renderer, nodes, geometries, pipelines, bindings, info) {
 +    renderer: Renderer;
 +    nodes: Nodes;
 +    geometries: Geometries;
@@ -5719,6 +5793,14 @@ index 72ed13fb..8cc4f7b4 100644
 +
 +    chainMaps: { [passId: string]: ChainMap<readonly [Object3D, Material, RenderContext, LightsNode], RenderObject> };
 +
+     /**
+      * Constructs a new render object management component.
+      *
+@@ -19,7 +46,14 @@ class RenderObjects {
+      * @param {Bindings} bindings - Renderer component for managing bindings.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(renderer, nodes, geometries, pipelines, bindings, info) {
 +    constructor(
 +        renderer: Renderer,
 +        nodes: Nodes,
@@ -5727,13 +5809,13 @@ index 72ed13fb..8cc4f7b4 100644
 +        bindings: Bindings,
 +        info: Info,
 +    ) {
-         this.renderer = renderer;
-         this.nodes = nodes;
-         this.geometries = geometries;
-@@ -15,7 +49,16 @@ class RenderObjects {
-         this.chainMaps = {};
-     }
- 
+         /**
+          * The renderer.
+          *
+@@ -84,7 +118,16 @@ class RenderObjects {
+      * @param {String?} passId - An optional ID for identifying the pass.
+      * @return {RenderObject} The render object.
+      */
 -    get(object, material, scene, camera, lightsNode, renderContext, clippingContext, passId) {
 +    get(
 +        object: Object3D,
@@ -5748,18 +5830,18 @@ index 72ed13fb..8cc4f7b4 100644
          const chainMap = this.getChainMap(passId);
  
          // reuse chainArray
-@@ -43,7 +86,7 @@ class RenderObjects {
+@@ -112,7 +155,7 @@ class RenderObjects {
  
-             chainMap.set(chainArray, renderObject);
+             chainMap.set(_chainArray, renderObject);
          } else {
 -            renderObject.updateClipping(clippingContext);
 +            renderObject.updateClipping(clippingContext!);
  
              if (renderObject.needsGeometryUpdate) {
                  renderObject.setGeometry(object.geometry);
-@@ -73,7 +116,13 @@ class RenderObjects {
-     }
- 
+@@ -148,7 +191,13 @@ class RenderObjects {
+      * @return {ChainMap} The chain map.
+      */
      getChainMap(passId = 'default') {
 -        return this.chainMaps[passId] || (this.chainMaps[passId] = new ChainMap());
 +        return (
@@ -5771,10 +5853,10 @@ index 72ed13fb..8cc4f7b4 100644
 +        );
      }
  
-     dispose() {
-@@ -81,17 +130,17 @@ class RenderObjects {
-     }
- 
+     /**
+@@ -175,17 +224,17 @@ class RenderObjects {
+      * @return {RenderObject} The render object.
+      */
      createRenderObject(
 -        nodes,
 -        geometries,
@@ -5831,7 +5913,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index eb106b58..3ad6a69f 100644
+index 21af5ed1..a7ca1d80 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -8692,7 +8774,7 @@ index c643df5a..ae36ba39 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index f2296a9f..c3b7ff88 100644
+index 00ee665e..6fff69c9 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -999,7 +999,7 @@ class WebGPUBackend extends Backend {
