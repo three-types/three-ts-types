@@ -35,6 +35,8 @@ export interface NodeElements {
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
+export function addMethodsChaining(object: { readonly [key: string]: unknown }): void;
+
 export type SwizzleCharacter = "x" | "y" | "z" | "w" | "r" | "g" | "b" | "a" | "s" | "t" | "p" | "q";
 
 export type SwizzleOption = Exclude<
