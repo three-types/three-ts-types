@@ -89,7 +89,7 @@ const exceptionList = [
     'webgpu_portal',
     'webgpu_postprocessing_anamorphic',
     'webgpu_reflection',
-  'webgpu_rendertarget_2d-array_3d',
+    'webgpu_rendertarget_2d-array_3d',
     'webgpu_rtt',
     'webgpu_sandbox',
     'webgpu_shadertoy',
