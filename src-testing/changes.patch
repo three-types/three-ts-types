@@ -336,7 +336,7 @@ index c552cd0b..c1eb85bc 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 89d91834..c811acbc 100644
+index 4e41bb4f..480397d1 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
@@ -445,7 +445,7 @@ index 89d91834..c811acbc 100644
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -321,7 +348,7 @@ class TextureNode extends UniformNode {
+@@ -329,7 +356,7 @@ class TextureNode extends UniformNode {
       * @param {Node} uvNode - The uv node to generate code for.
       * @return {String} The generated code snippet.
       */
@@ -454,7 +454,7 @@ index 89d91834..c811acbc 100644
          return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
      }
  
-@@ -339,14 +366,14 @@ class TextureNode extends UniformNode {
+@@ -347,14 +374,14 @@ class TextureNode extends UniformNode {
       * @return {String} The generated code snippet.
       */
      generateSnippet(
@@ -477,16 +477,18 @@ index 89d91834..c811acbc 100644
      ) {
          const texture = this.value;
  
-@@ -376,7 +403,7 @@ class TextureNode extends UniformNode {
+@@ -384,9 +411,8 @@ class TextureNode extends UniformNode {
       * @param {String} output - The current output.
       * @return {String} The generated code snippet.
       */
 -    generate(builder, output) {
 +    generate(builder: NodeBuilder, output) {
-         const properties = builder.getNodeProperties(this);
- 
          const texture = this.value;
-@@ -448,7 +475,7 @@ class TextureNode extends UniformNode {
+-
+         const properties = builder.getNodeProperties(this);
+         const textureProperty = super.generate(builder, 'property');
+ 
+@@ -451,7 +477,7 @@ class TextureNode extends UniformNode {
       * @param {Boolean} value - The sampler value to set.
       * @return {TextureNode} A reference to this texture node.
       */
@@ -495,7 +497,7 @@ index 89d91834..c811acbc 100644
          this.sampler = value;
  
          return this;
-@@ -465,7 +492,7 @@ class TextureNode extends UniformNode {
+@@ -468,7 +494,7 @@ class TextureNode extends UniformNode {
  
      // @TODO: Move to TSL
  
@@ -504,7 +506,7 @@ index 89d91834..c811acbc 100644
          // @deprecated, r172
  
          console.warn('THREE.TextureNode: .uv() has been renamed. Use .sample() instead.');
-@@ -493,7 +520,7 @@ class TextureNode extends UniformNode {
+@@ -496,7 +522,7 @@ class TextureNode extends UniformNode {
       * @param {Node<float>} amountNode - How blurred the texture should be.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -513,7 +515,7 @@ index 89d91834..c811acbc 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -507,7 +534,7 @@ class TextureNode extends UniformNode {
+@@ -510,7 +536,7 @@ class TextureNode extends UniformNode {
       * @param {Node<int>} levelNode - The mip level to sample.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -3120,7 +3122,7 @@ index 1aa67531..25a4bd72 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 816b2f53..ffbf7fb5 100644
+index 4ac059f0..fcb1c9fd 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -7,11 +7,40 @@ import SetNode from '../utils/SetNode.js';
@@ -3164,8 +3166,8 @@ index 816b2f53..ffbf7fb5 100644
  const NodeElements = new Map();
  
  export function addMethodChaining(name, nodeElement) {
-@@ -31,6 +60,141 @@ export function addMethodsChaining(object) {
-     }
+@@ -25,6 +54,141 @@ export function addMethodChaining(name, nodeElement) {
+     NodeElements.set(name, nodeElement);
  }
  
 +export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
@@ -3306,7 +3308,7 @@ index 816b2f53..ffbf7fb5 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -123,7 +287,7 @@ const shaderNodeHandler = {
+@@ -117,7 +281,7 @@ const shaderNodeHandler = {
  const nodeObjectsCacheMap = new WeakMap();
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3315,7 +3317,7 @@ index 816b2f53..ffbf7fb5 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -192,18 +356,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -186,18 +350,20 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3339,7 +3341,7 @@ index 816b2f53..ffbf7fb5 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -278,7 +444,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -272,7 +438,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3355,7 +3357,7 @@ index 816b2f53..ffbf7fb5 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -290,7 +464,7 @@ class ShaderNodeInternal extends Node {
+@@ -284,7 +458,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3364,7 +3366,7 @@ index 816b2f53..ffbf7fb5 100644
          this.layout = layout;
  
          return this;
-@@ -307,6 +481,8 @@ class ShaderNodeInternal extends Node {
+@@ -301,6 +475,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3373,7 +3375,7 @@ index 816b2f53..ffbf7fb5 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -400,10 +576,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -394,10 +570,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
