@@ -33,7 +33,6 @@ export const abs: typeof TSL.abs;
 export const acesFilmicToneMapping: typeof TSL.acesFilmicToneMapping;
 export const acos: typeof TSL.acos;
 export const add: typeof TSL.add;
-export const addMethodChaining: typeof TSL.addMethodChaining;
 export const addNodeElement: typeof TSL.addNodeElement;
 export const agxToneMapping: typeof TSL.agxToneMapping;
 export const all: typeof TSL.all;
