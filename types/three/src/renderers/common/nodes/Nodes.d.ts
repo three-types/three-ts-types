@@ -33,17 +33,17 @@ interface ComputeNodeData {
 }
 interface SceneData {
     background?: Color | Texture | CubeTexture | undefined;
-    backgroundNode?: Node | undefined;
+    backgroundNode?: ShaderNodeObject<Node> | undefined;
     fog?: Fog | FogExp2 | undefined;
-    fogNode?: Node | undefined;
+    fogNode?: ShaderNodeObject<Node> | undefined;
     environment?: Texture | undefined;
-    environmentNode?: Node | undefined;
+    environmentNode?: ShaderNodeObject<Node> | undefined;
 }
 declare module "../../../scenes/Scene.js" {
     interface Scene {
-        environmentNode?: Node | null | undefined;
-        backgroundNode?: Node | null | undefined;
-        fogNode?: Node | null | undefined;
+        environmentNode?: ShaderNodeObject<Node> | null | undefined;
+        backgroundNode?: ShaderNodeObject<Node> | null | undefined;
+        fogNode?: ShaderNodeObject<Node> | null | undefined;
     }
 }
 declare class Nodes extends DataMap<{
@@ -76,7 +76,7 @@ declare class Nodes extends DataMap<{
         version?: number;
     }>;
     cacheLib: {
-        [type: string]: WeakMap<object, Node | undefined>;
+        [type: string]: WeakMap<object, ShaderNodeObject<Node> | undefined>;
     };
     constructor(renderer: Renderer, backend: Backend);
     updateGroup(nodeUniformsGroup: NodeUniformsGroup): boolean;
@@ -87,18 +87,18 @@ declare class Nodes extends DataMap<{
     ): SceneData | RenderObjectData | NodeUniformsGroupData | ComputeNodeData;
     getForCompute(computeNode: ComputeNode): NodeBuilderState;
     _createNodeBuilderState(nodeBuilder: NodeBuilder): NodeBuilderState;
-    getEnvironmentNode(scene: Scene): Node | null;
-    getBackgroundNode(scene: Scene): Node | null;
-    getFogNode(scene: Scene): Node | null;
+    getEnvironmentNode(scene: Scene): ShaderNodeObject<Node> | null;
+    getBackgroundNode(scene: Scene): ShaderNodeObject<Node> | null;
+    getFogNode(scene: Scene): ShaderNodeObject<Node> | null;
     getCacheKey(scene: Scene, lightsNode: LightsNode): string;
     get isToneMappingState(): boolean;
     updateBackground(scene: Scene): void;
     getCacheNode(
         type: string,
         object: object,
-        callback: () => Node | undefined,
+        callback: () => ShaderNodeObject<Node> | undefined,
         forceUpdate?: boolean,
-    ): Node | undefined;
+    ): ShaderNodeObject<Node> | undefined;
     updateFog(scene: Scene): void;
     updateEnvironment(scene: Scene): void;
     getNodeFrame(
