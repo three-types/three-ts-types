@@ -13679,6 +13679,161 @@ index b9f971f4..64fbf56e 100644
      if (event.isPrimary === false) return;
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
+diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
+index 382245dc..c86e4c54 100644
+--- a/examples-testing/examples/webgpu_compute_points.ts
++++ b/examples-testing/examples/webgpu_compute_points.ts
+@@ -1,10 +1,10 @@
+-import * as THREE from 'three';
+-import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex, ShaderNodeObject } from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let computeNode;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let computeNode: ShaderNodeObject<THREE.ComputeNode>;
+ 
+ const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
+ const scaleVector = new THREE.Vector2(1, 1);
+@@ -104,7 +104,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function onMouseMove(event) {
++function onMouseMove(event: MouseEvent) {
+     const x = event.clientX;
+     const y = event.clientY;
+ 
+diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
+index e196c0e5..829ca1f7 100644
+--- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
++++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     storage,
+     If,
+@@ -21,6 +21,7 @@ import {
+     atomicAdd,
+     atomicStore,
+     workgroupId,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -36,8 +37,8 @@ const StepType = {
+ };
+ 
+ const timestamps = {
+-    local_swap: document.getElementById('local_swap'),
+-    global_swap: document.getElementById('global_swap'),
++    local_swap: document.getElementById('local_swap')!,
++    global_swap: document.getElementById('global_swap')!,
+ };
+ 
+ const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
+@@ -140,7 +141,7 @@ async function init(forceGlobalSwap = false) {
+         .setPBO(true)
+         .label('RandomizedElements');
+ 
+-    const getFlipIndices = (index, blockHeight) => {
++    const getFlipIndices = (index: ShaderNodeObject<THREE.IndexNode>, blockHeight: ShaderNodeObject<THREE.VarNode>) => {
+         const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
+         const halfHeight = blockHeight.div(2);
+         const idx = uvec2(index.modInt(halfHeight), blockHeight.sub(index.modInt(halfHeight)).sub(1));
+@@ -150,7 +151,10 @@ async function init(forceGlobalSwap = false) {
+         return idx;
+     };
+ 
+-    const getDisperseIndices = (index, blockHeight) => {
++    const getDisperseIndices = (
++        index: ShaderNodeObject<THREE.IndexNode>,
++        blockHeight: ShaderNodeObject<THREE.VarNode>,
++    ) => {
+         const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
+         const halfHeight = blockHeight.div(2);
+         const idx = uvec2(index.modInt(halfHeight), index.modInt(halfHeight).add(halfHeight));
+@@ -164,7 +168,7 @@ async function init(forceGlobalSwap = false) {
+     const localStorage = workgroupArray('uint', 64 * 2);
+ 
+     // Swap the elements in local storage
+-    const localCompareAndSwap = (idxBefore, idxAfter) => {
++    const localCompareAndSwap = (idxBefore: ShaderNodeObject<THREE.Node>, idxAfter: ShaderNodeObject<THREE.Node>) => {
+         If(localStorage.element(idxAfter).lessThan(localStorage.element(idxBefore)), () => {
+             atomicAdd(counterStorage.element(0), 1);
+             const temp = localStorage.element(idxBefore).toVar();
+@@ -173,7 +177,7 @@ async function init(forceGlobalSwap = false) {
+         });
+     };
+ 
+-    const globalCompareAndSwap = (idxBefore, idxAfter) => {
++    const globalCompareAndSwap = (idxBefore: ShaderNodeObject<THREE.Node>, idxAfter: ShaderNodeObject<THREE.Node>) => {
+         // If the later element is less than the current element
+         If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
+             // Apply the swapped values to temporary storage.
+@@ -399,7 +403,7 @@ async function init(forceGlobalSwap = false) {
+         }
+ 
+         const algo = new Uint32Array(await renderer.getArrayBufferAsync(nextAlgoBuffer));
+-        algo > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
++        (algo as unknown as number) > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
+         const totalSwaps = new Uint32Array(await renderer.getArrayBufferAsync(counterBuffer));
+ 
+         renderer.render(scene, camera);
+diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
+index f9caa443..1994271a 100644
+--- a/examples-testing/examples/webgpu_compute_texture.ts
++++ b/examples-testing/examples/webgpu_compute_texture.ts
+@@ -1,9 +1,9 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ render();
+@@ -31,7 +31,7 @@ function init() {
+ 
+     // create function
+ 
+-    const computeTexture = Fn(({ storageTexture }) => {
++    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
+         const posX = instanceIndex.modInt(width);
+         const posY = instanceIndex.div(width);
+         const indexUV = uvec2(posX, posY);
+diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
+index a3922dc7..0fd65713 100644
+--- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
++++ b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
+@@ -1,12 +1,14 @@
+-import * as THREE from 'three';
+-import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess, ShaderNodeObject } from 'three/tsl';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let camera, scene, renderer;
+-let computeInitNode, computeToPing, computeToPong;
+-let pingTexture, pongTexture;
+-let material;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let computeInitNode: ShaderNodeObject<THREE.ComputeNode>,
++    computeToPing: ShaderNodeObject<THREE.ComputeNode>,
++    computeToPong: ShaderNodeObject<THREE.ComputeNode>;
++let pingTexture: THREE.StorageTexture, pongTexture: THREE.StorageTexture;
++let material: THREE.MeshBasicMaterial;
+ let phase = true;
+ let lastUpdate = -1;
+ 
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index baca16cb..b01cd750 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
