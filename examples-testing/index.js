@@ -53,7 +53,6 @@ const exceptionList = [
     'webgpu_depth_texture',
     'webgpu_equirectangular',
     'webgpu_instance_mesh',
-    'webgpu_instance_points',
     'webgpu_instance_sprites',
     'webgpu_instance_uniform',
     'webgpu_lightprobe_cubecamera',

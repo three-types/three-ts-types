@@ -14013,6 +14013,68 @@ index aa8149e3..f9fd7f00 100644
      position.x = matrix.elements[12];
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
+diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
+index fdc3d614..9a660e06 100644
+--- a/examples-testing/examples/webgpu_instance_points.ts
++++ b/examples-testing/examples/webgpu_instance_points.ts
+@@ -1,5 +1,18 @@
+-import * as THREE from 'three';
+-import { color, storage, Fn, instanceIndex, sin, time, float, uniform, attribute, mix, vec3 } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import {
++    color,
++    storage,
++    Fn,
++    instanceIndex,
++    sin,
++    time,
++    float,
++    uniform,
++    attribute,
++    mix,
++    vec3,
++    ShaderNodeObject,
++} from 'three/tsl';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -11,18 +24,28 @@ import InstancedPointsGeometry from 'three/addons/geometries/InstancedPointsGeom
+ 
+ import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
+ 
+-let renderer, scene, camera, camera2, controls, backgroundNode;
+-let material;
+-let stats;
+-let gui;
+-let effectController;
++let renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera,
++    camera2: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    backgroundNode: ShaderNodeObject<THREE.Node>;
++let material: THREE.InstancedPointsNodeMaterial;
++let stats: Stats;
++let gui: GUI;
++let effectController: {
++    pulseSpeed: ShaderNodeObject<THREE.UniformNode<number>>;
++    minWidth: ShaderNodeObject<THREE.UniformNode<number>>;
++    maxWidth: ShaderNodeObject<THREE.UniformNode<number>>;
++    alphaToCoverage: boolean;
++};
+ 
+ // viewport
+-let insetWidth;
+-let insetHeight;
++let insetWidth: number;
++let insetHeight: number;
+ 
+ // compute
+-let computeSize;
++let computeSize: ShaderNodeObject<THREE.ComputeNode>;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
 index 2558f16b..8f914967 100644
 --- a/examples-testing/examples/webgpu_instancing_morph.ts
