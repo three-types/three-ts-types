@@ -13834,6 +13834,100 @@ index a3922dc7..0fd65713 100644
  let phase = true;
  let lastUpdate = -1;
  
+diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
+index 46419734..73447d66 100644
+--- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
++++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     uniform,
+     mix,
+@@ -11,6 +11,7 @@ import {
+     normalWorld,
+     positionWorldDirection,
+     reflectVector,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -20,7 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ 
+@@ -71,7 +72,10 @@ async function init() {
+     const rotateY1Matrix = new THREE.Matrix4();
+     const rotateY2Matrix = new THREE.Matrix4();
+ 
+-    const getEnvironmentNode = (reflectNode, positionNode) => {
++    const getEnvironmentNode = (
++        reflectNode: ShaderNodeObject<THREE.Node>,
++        positionNode: ShaderNodeObject<THREE.Node>,
++    ) => {
+         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
+         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
+         const mixCubeMaps = mix(
+diff --git a/examples-testing/examples/webgpu_cubemap_dynamic.ts b/examples-testing/examples/webgpu_cubemap_dynamic.ts
+index 91444a1a..f1c80ef1 100644
+--- a/examples-testing/examples/webgpu_cubemap_dynamic.ts
++++ b/examples-testing/examples/webgpu_cubemap_dynamic.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -6,12 +6,12 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let cube, sphere, torus, material;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
++let cube: THREE.Mesh, sphere: THREE.Mesh, torus: THREE.Mesh, material: THREE.MeshStandardNodeMaterial;
+ 
+-let cubeCamera, cubeRenderTarget;
++let cubeCamera: THREE.CubeCamera, cubeRenderTarget: THREE.WebGLCubeRenderTarget;
+ 
+-let controls;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -108,7 +108,7 @@ function onWindowResized() {
+     camera.updateProjectionMatrix();
+ }
+ 
+-function animation(msTime) {
++function animation(msTime: DOMHighResTimeStamp) {
+     const time = msTime / 1000;
+ 
+     cube.position.x = Math.cos(time) * 30;
+diff --git a/examples-testing/examples/webgpu_cubemap_mix.ts b/examples-testing/examples/webgpu_cubemap_mix.ts
+index a0eb4509..fe906f73 100644
+--- a/examples-testing/examples/webgpu_cubemap_mix.ts
++++ b/examples-testing/examples/webgpu_cubemap_mix.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { mix, oscSine, time, pmremTexture, float } from 'three/tsl';
+ 
+ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -6,7 +6,7 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index baca16cb..b01cd750 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
