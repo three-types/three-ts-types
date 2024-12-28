@@ -12,7 +12,7 @@ interface CubeCameraRenderer {
     xr: {
         enabled: boolean;
     };
-    setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
+    setRenderTarget(renderTarget: WebGLCubeRenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
     render(scene: Object3D, camera: Camera): void;
 }
 
