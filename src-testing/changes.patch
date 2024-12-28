@@ -127,7 +127,7 @@ index a4dfe6b4..2d68722b 100644
  
          const { renderId } = nodeFrame;
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index c552cd0b..c1eb85bc 100644
+index d3ab54f8..1fdb5cf0 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,10 @@ import { varying } from '../core/VaryingNode.js';
@@ -3780,26 +3780,32 @@ index ae78d478..8ed6febb 100644
          this.bindings = bindings;
          this.index = index;
 diff --git a/src-testing/src/renderers/common/Binding.ts b/src-testing/src/renderers/common/Binding.ts
-index a12f3563..e7ae8d1c 100644
+index 4417e9b8..559cc30c 100644
 --- a/src-testing/src/renderers/common/Binding.ts
 +++ b/src-testing/src/renderers/common/Binding.ts
-@@ -1,16 +1,20 @@
+@@ -8,6 +8,10 @@
+  * @private
+  */
  class Binding {
 +    name: string;
 +
 +    visibility: number;
 +
-     constructor(name = '') {
-         this.name = name;
- 
-         this.visibility = 0;
-     }
- 
+     /**
+      * Constructs a new binding.
+      *
+@@ -35,7 +39,7 @@ class Binding {
+      *
+      * @param {Number} visibility - The shader stage.
+      */
 -    setVisibility(visibility) {
 +    setVisibility(visibility: number) {
          this.visibility |= visibility;
      }
  
+@@ -45,7 +49,7 @@ class Binding {
+      * @return {Binding} The cloned binding.
+      */
      clone() {
 -        return Object.assign(new this.constructor(), this);
 +        return Object.assign(new (this.constructor as typeof Binding)(), this);
@@ -3982,32 +3988,43 @@ index 531a6a5b..aed28f85 100644
                      } else if (this.textures.needsMipmaps(texture) && textureData.needsMipmap === true) {
                          this.backend.generateMipmaps(texture);
 diff --git a/src-testing/src/renderers/common/Buffer.ts b/src-testing/src/renderers/common/Buffer.ts
-index 17013c6d..95cce1f6 100644
+index 3dc0432d..ffe399ed 100644
 --- a/src-testing/src/renderers/common/Buffer.ts
 +++ b/src-testing/src/renderers/common/Buffer.ts
-@@ -2,7 +2,13 @@ import Binding from './Binding.js';
- import { getFloatLength } from './BufferUtils.js';
- 
+@@ -9,13 +9,19 @@ import { getFloatLength } from './BufferUtils.js';
+  * @augments Binding
+  */
  class Buffer extends Binding {
--    constructor(name, buffer = null) {
 +    readonly isBuffer: true;
 +
 +    bytesPerElement: number;
 +
 +    _buffer: Float32Array | null;
 +
+     /**
+      * Constructs a new buffer.
+      *
+      * @param {String} name - The buffer's name.
+      * @param {TypedArray} [buffer=null] - The buffer.
+      */
+-    constructor(name, buffer = null) {
 +    constructor(name?: string, buffer: Float32Array | null = null) {
          super(name);
  
-         this.isBuffer = true;
-@@ -13,10 +19,10 @@ class Buffer extends Binding {
-     }
- 
+         /**
+@@ -50,7 +56,7 @@ class Buffer extends Binding {
+      * @readonly
+      */
      get byteLength() {
 -        return getFloatLength(this._buffer.byteLength);
 +        return getFloatLength(this._buffer!.byteLength);
      }
  
+     /**
+@@ -59,7 +65,7 @@ class Buffer extends Binding {
+      * @type {Number}
+      * @readonly
+      */
 -    get buffer() {
 +    get buffer(): Float32Array | null {
          return this._buffer;
@@ -4162,10 +4179,10 @@ index f65857cb..ddae3243 100644
              if (map === undefined) return false;
          }
 diff --git a/src-testing/src/renderers/common/ClippingContext.ts b/src-testing/src/renderers/common/ClippingContext.ts
-index f7ac6960..b09d632b 100644
+index a7c62000..a41ae955 100644
 --- a/src-testing/src/renderers/common/ClippingContext.ts
 +++ b/src-testing/src/renderers/common/ClippingContext.ts
-@@ -1,11 +1,32 @@
+@@ -1,6 +1,10 @@
  import { Matrix3 } from '../../math/Matrix3.js';
  import { Plane } from '../../math/Plane.js';
  import { Vector4 } from '../../math/Vector4.js';
@@ -4176,8 +4193,10 @@ index f7ac6960..b09d632b 100644
  
  const _plane = /*@__PURE__*/ new Plane();
  
+@@ -13,12 +17,29 @@ const _plane = /*@__PURE__*/ new Plane();
+  * @private
+  */
  class ClippingContext {
--    constructor(parentContext = null) {
 +    version: number;
 +
 +    clipIntersection: boolean | null;
@@ -4195,14 +4214,20 @@ index f7ac6960..b09d632b 100644
 +
 +    parentVersion: number | null;
 +
+     /**
+      * Constructs a new clipping context.
+      *
+      * @param {ClippingContext?} [parentContext=null] - A reference to the parent clipping context.
+      */
+-    constructor(parentContext = null) {
 +    constructor(parentContext: ClippingContext | null = null) {
-         this.version = 0;
- 
-         this.clipIntersection = null;
-@@ -31,11 +52,11 @@ class ClippingContext {
-         this.parentVersion = null;
-     }
- 
+         /**
+          * The clipping context's version.
+          *
+@@ -103,11 +124,11 @@ class ClippingContext {
+      * @param {Array<Vector4>} destination - The destination.
+      * @param {Number} offset - The offset.
+      */
 -    projectPlanes(source, destination, offset) {
 +    projectPlanes(source: readonly Plane[], destination: readonly Vector4[], offset: number) {
          const l = source.length;
@@ -4213,18 +4238,19 @@ index f7ac6960..b09d632b 100644
  
              const v = destination[offset + i];
              const normal = _plane.normal;
-@@ -47,19 +68,19 @@ class ClippingContext {
-         }
-     }
- 
+@@ -125,7 +146,7 @@ class ClippingContext {
+      * @param {Scene} scene - The scene.
+      * @param {Camera} camera - The camera that is used to render the scene.
+      */
 -    updateGlobal(scene, camera) {
 +    updateGlobal(scene: Scene, camera: Camera) {
          this.shadowPass = scene.overrideMaterial !== null && scene.overrideMaterial.isShadowNodeMaterial;
          this.viewMatrix = camera.matrixWorldInverse;
  
-         this.viewNormalMatrix.getNormalMatrix(this.viewMatrix);
-     }
- 
+@@ -138,12 +159,12 @@ class ClippingContext {
+      * @param {ClippingContext} parentContext - The parent context.
+      * @param {ClippingGroup} clippingGroup - The clipping group this context belongs to.
+      */
 -    update(parentContext, clippingGroup) {
 +    update(parentContext: ClippingContext, clippingGroup: ClippingGroup) {
          let update = false;
@@ -4237,7 +4263,7 @@ index f7ac6960..b09d632b 100644
              this.parentVersion = parentContext.version;
          }
  
-@@ -67,24 +88,24 @@ class ClippingContext {
+@@ -151,24 +172,24 @@ class ClippingContext {
              this.clipIntersection = clippingGroup.clipIntersection;
  
              if (this.clipIntersection) {
@@ -4269,7 +4295,7 @@ index f7ac6960..b09d632b 100644
          }
  
          if (dstClippingPlanes.length !== offset + l) {
-@@ -97,15 +118,15 @@ class ClippingContext {
+@@ -181,11 +202,11 @@ class ClippingContext {
              update = true;
          }
  
@@ -4283,14 +4309,18 @@ index f7ac6960..b09d632b 100644
          }
      }
  
+@@ -195,7 +216,7 @@ class ClippingContext {
+      * @param {ClippingGroup} clippingGroup - The clipping group.
+      * @return {ClippingContext} The clipping context.
+      */
 -    getGroupContext(clippingGroup) {
 +    getGroupContext(clippingGroup: ClippingGroup) {
          if (this.shadowPass && !clippingGroup.clipShadows) return this;
  
          let context = this.clippingGroupContexts.get(clippingGroup);
-@@ -121,7 +142,7 @@ class ClippingContext {
-     }
- 
+@@ -217,7 +238,7 @@ class ClippingContext {
+      * @readonly
+      */
      get unionClippingCount() {
 -        return this.unionPlanes.length;
 +        return this.unionPlanes!.length;
@@ -4406,10 +4436,10 @@ index c2dfad4c..02330947 100644
  // size of a chunk in bytes (STD140 layout)
  
 diff --git a/src-testing/src/renderers/common/CubeRenderTarget.ts b/src-testing/src/renderers/common/CubeRenderTarget.ts
-index 00c0fd8c..50f7e146 100644
+index 3fafd130..034c73f0 100644
 --- a/src-testing/src/renderers/common/CubeRenderTarget.ts
 +++ b/src-testing/src/renderers/common/CubeRenderTarget.ts
-@@ -9,17 +9,22 @@ import { CubeCamera } from '../../cameras/CubeCamera.js';
+@@ -9,6 +9,9 @@ import { CubeCamera } from '../../cameras/CubeCamera.js';
  import { BoxGeometry } from '../../geometries/BoxGeometry.js';
  import { Mesh } from '../../objects/Mesh.js';
  import { BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '../../constants.js';
@@ -4419,6 +4449,9 @@ index 00c0fd8c..50f7e146 100644
  
  // @TODO: Consider rename WebGLCubeRenderTarget to just CubeRenderTarget
  
+@@ -19,7 +22,9 @@ import { BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '..
+  * @augments WebGLCubeRenderTarget
+  */
  class CubeRenderTarget extends WebGLCubeRenderTarget {
 -    constructor(size = 1, options = {}) {
 +    readonly isCubeRenderTarget: true;
@@ -4427,8 +4460,10 @@ index 00c0fd8c..50f7e146 100644
          super(size, options);
  
          this.isCubeRenderTarget = true;
-     }
- 
+@@ -32,7 +37,7 @@ class CubeRenderTarget extends WebGLCubeRenderTarget {
+      * @param {Texture} texture - The equirectangular texture.
+      * @return {CubeRenderTarget} A reference to this cube render target.
+      */
 -    fromEquirectangularTexture(renderer, texture) {
 +    fromEquirectangularTexture(renderer: WebGLRenderer, texture: Texture) {
          const currentMinFilter = texture.minFilter;
@@ -7112,18 +7147,20 @@ index 21af5ed1..a7ca1d80 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/SampledTexture.ts b/src-testing/src/renderers/common/SampledTexture.ts
-index 841e6a85..542d5dd8 100644
+index d47b7267..0012f0d4 100644
 --- a/src-testing/src/renderers/common/SampledTexture.ts
 +++ b/src-testing/src/renderers/common/SampledTexture.ts
-@@ -1,9 +1,20 @@
+@@ -1,4 +1,6 @@
  import Binding from './Binding.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { VideoTexture } from '../../textures/VideoTexture.js';
  
  let _id = 0;
  
+@@ -9,13 +11,22 @@ let _id = 0;
+  * @augments Binding
+  */
  class SampledTexture extends Binding {
--    constructor(name, texture) {
 +    id: number;
 +
 +    texture: Texture;
@@ -7133,20 +7170,27 @@ index 841e6a85..542d5dd8 100644
 +
 +    readonly isSampledTexture: true;
 +
+     /**
+      * Constructs a new sampled texture.
+      *
+      * @param {String} name - The sampled texture's name.
+      * @param {Texture?} texture - The texture this binding is referring to.
+      */
+-    constructor(name, texture) {
 +    constructor(name: string, texture: Texture) {
          super(name);
  
-         this.id = _id++;
-@@ -16,7 +27,7 @@ class SampledTexture extends Binding {
-         this.isSampledTexture = true;
-     }
- 
+         /**
+@@ -73,7 +84,7 @@ class SampledTexture extends Binding {
+      * @param {Number} generation - The generation.
+      * @return {Boolean} Whether an update is required or not.
+      */
 -    needsBindingsUpdate(generation) {
 +    needsBindingsUpdate(generation: number) {
          const { texture } = this;
  
          if (generation !== this.generation) {
-@@ -25,7 +36,7 @@ class SampledTexture extends Binding {
+@@ -82,7 +93,7 @@ class SampledTexture extends Binding {
              return true;
          }
  
@@ -7154,59 +7198,83 @@ index 841e6a85..542d5dd8 100644
 +        return (texture as VideoTexture).isVideoTexture;
      }
  
-     update() {
-@@ -42,7 +53,9 @@ class SampledTexture extends Binding {
- }
- 
+     /**
+@@ -112,13 +123,15 @@ class SampledTexture extends Binding {
+  * @augments SampledTexture
+  */
  class SampledArrayTexture extends SampledTexture {
--    constructor(name, texture) {
 +    readonly isSampledArrayTexture: true;
 +
+     /**
+      * Constructs a new sampled array texture.
+      *
+      * @param {String} name - The sampled array texture's name.
+      * @param {(DataArrayTexture|CompressedArrayTexture)?} texture - The texture this binding is referring to.
+      */
+-    constructor(name, texture) {
 +    constructor(name: string, texture) {
          super(name, texture);
  
-         this.isSampledArrayTexture = true;
-@@ -50,7 +63,9 @@ class SampledArrayTexture extends SampledTexture {
- }
- 
+         /**
+@@ -139,13 +152,15 @@ class SampledArrayTexture extends SampledTexture {
+  * @augments SampledTexture
+  */
  class Sampled3DTexture extends SampledTexture {
--    constructor(name, texture) {
 +    readonly isSampled3DTexture: true;
 +
+     /**
+      * Constructs a new sampled 3D texture.
+      *
+      * @param {String} name - The sampled 3D texture's name.
+      * @param {Data3DTexture?} texture - The texture this binding is referring to.
+      */
+-    constructor(name, texture) {
 +    constructor(name: string, texture) {
          super(name, texture);
  
-         this.isSampled3DTexture = true;
-@@ -58,7 +73,9 @@ class Sampled3DTexture extends SampledTexture {
- }
- 
+         /**
+@@ -166,13 +181,15 @@ class Sampled3DTexture extends SampledTexture {
+  * @augments SampledTexture
+  */
  class SampledCubeTexture extends SampledTexture {
--    constructor(name, texture) {
 +    readonly isSampledCubeTexture: true;
 +
+     /**
+      * Constructs a new sampled cube texture.
+      *
+      * @param {String} name - The sampled cube texture's name.
+      * @param {(CubeTexture|CompressedCubeTexture)?} texture - The texture this binding is referring to.
+      */
+-    constructor(name, texture) {
 +    constructor(name: string, texture) {
          super(name, texture);
  
-         this.isSampledCubeTexture = true;
+         /**
 diff --git a/src-testing/src/renderers/common/Sampler.ts b/src-testing/src/renderers/common/Sampler.ts
-index 8cd20d04..86e6f45e 100644
+index aee5c92d..98e173b0 100644
 --- a/src-testing/src/renderers/common/Sampler.ts
 +++ b/src-testing/src/renderers/common/Sampler.ts
-@@ -1,7 +1,13 @@
- import Binding from './Binding.js';
- 
+@@ -7,13 +7,19 @@ import Binding from './Binding.js';
+  * @augments Binding
+  */
  class Sampler extends Binding {
--    constructor(name, texture) {
 +    // TODO
 +    // texture
 +    version: number;
 +
 +    readonly isSampler: true;
 +
+     /**
+      * Constructs a new sampler.
+      *
+      * @param {String} name - The samplers's name.
+      * @param {Texture?} texture - The texture this binding is referring to.
+      */
+-    constructor(name, texture) {
 +    constructor(name: string, texture) {
          super(name);
  
-         this.texture = texture;
+         /**
 diff --git a/src-testing/src/renderers/common/StorageBuffer.ts b/src-testing/src/renderers/common/StorageBuffer.ts
 index ef5d3e46..fb6acc45 100644
 --- a/src-testing/src/renderers/common/StorageBuffer.ts
@@ -7226,10 +7294,10 @@ index ef5d3e46..fb6acc45 100644
  
          this.attribute = attribute;
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index d8078c35..3ec18fe2 100644
+index 6f0af4b5..2fd4bc11 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
-@@ -13,11 +13,56 @@ import {
+@@ -13,15 +13,60 @@ import {
      CubeRefractionMapping,
      UnsignedByteType,
  } from '../../constants.js';
@@ -7275,8 +7343,12 @@ index d8078c35..3ec18fe2 100644
 +    levels?: number;
 +}
  
+ /**
+  * This module manages the textures of the renderer.
+  *
+  * @private
+  */
 -class Textures extends DataMap {
--    constructor(renderer, backend, info) {
 +class Textures extends DataMap<{
 +    renderTarget: { key: RenderTarget; value: RenderTargetData };
 +    texture: { key: Texture; value: TextureData };
@@ -7285,38 +7357,46 @@ index d8078c35..3ec18fe2 100644
 +    backend: Backend;
 +    info: Info;
 +
+     /**
+      * Constructs a new texture management component.
+      *
+@@ -29,7 +74,7 @@ class Textures extends DataMap {
+      * @param {Backend} backend - The renderer's backend.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(renderer, backend, info) {
 +    constructor(renderer: Renderer, backend: Backend, info: Info) {
          super();
  
-         this.renderer = renderer;
-@@ -25,7 +70,7 @@ class Textures extends DataMap {
-         this.info = info;
-     }
- 
+         /**
+@@ -61,7 +106,7 @@ class Textures extends DataMap {
+      * @param {RenderTarget} renderTarget - The render target to update.
+      * @param {Number} [activeMipmapLevel=0] - The active mipmap level.
+      */
 -    updateRenderTarget(renderTarget, activeMipmapLevel = 0) {
 +    updateRenderTarget(renderTarget: RenderTarget, activeMipmapLevel = 0) {
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -122,7 +167,7 @@ class Textures extends DataMap {
-         }
-     }
- 
+@@ -166,7 +211,7 @@ class Textures extends DataMap {
+      * @param {Texture} texture - The texture to update.
+      * @param {Object} [options={}] - The options.
+      */
 -    updateTexture(texture, options = {}) {
 +    updateTexture(texture: Texture, options: TextureOptions = {}) {
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -239,7 +284,7 @@ class Textures extends DataMap {
-         textureData.version = texture.version;
-     }
- 
+@@ -295,7 +340,7 @@ class Textures extends DataMap {
+      * @param {Vector3} target - The target vector.
+      * @return {Vector3} The target vector.
+      */
 -    getSize(texture, target = _size) {
 +    getSize(texture: Texture, target = _size) {
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -247,18 +292,18 @@ class Textures extends DataMap {
+@@ -303,12 +348,12 @@ class Textures extends DataMap {
  
              target.width = image.width || 1;
              target.height = image.height || 1;
@@ -7330,6 +7410,11 @@ index d8078c35..3ec18fe2 100644
 +        return target as SizeVector3;
      }
  
+     /**
+@@ -319,10 +364,10 @@ class Textures extends DataMap {
+      * @param {Number} height - The texture's height.
+      * @return {Number} The number of mipmap levels.
+      */
 -    getMipLevels(texture, width, height) {
 +    getMipLevels(texture: Texture, width: number, height: number) {
          let mipLevelCount;
@@ -7339,10 +7424,10 @@ index d8078c35..3ec18fe2 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -271,11 +316,15 @@ class Textures extends DataMap {
-         return mipLevelCount;
-     }
- 
+@@ -341,8 +386,12 @@ class Textures extends DataMap {
+      * @param {Texture} texture - The texture.
+      * @return {Boolean} Whether mipmaps are required or not.
+      */
 -    needsMipmaps(texture) {
 -        return this.isEnvironmentTexture(texture) || texture.isCompressedTexture === true || texture.generateMipmaps;
 +    needsMipmaps(texture: Texture) {
@@ -7353,15 +7438,20 @@ index d8078c35..3ec18fe2 100644
 +        );
      }
  
+     /**
+@@ -351,7 +400,7 @@ class Textures extends DataMap {
+      * @param {Texture} texture - The texture.
+      * @return {Boolean} Whether the given texture is an environment map or not.
+      */
 -    isEnvironmentTexture(texture) {
 +    isEnvironmentTexture(texture: Texture) {
          const mapping = texture.mapping;
  
          return (
-@@ -286,7 +335,7 @@ class Textures extends DataMap {
-         );
-     }
- 
+@@ -368,7 +417,7 @@ class Textures extends DataMap {
+      *
+      * @param {Texture} texture - The texture to destroy.
+      */
 -    _destroyTexture(texture) {
 +    _destroyTexture(texture: Texture) {
          this.backend.destroySampler(texture);
@@ -7491,20 +7581,26 @@ index 80c13149..dcecc0e2 100644
  
          this.isMatrix4Uniform = true;
 diff --git a/src-testing/src/renderers/common/UniformBuffer.ts b/src-testing/src/renderers/common/UniformBuffer.ts
-index 28aac0d7..2479d00d 100644
+index dba46fd8..69a96404 100644
 --- a/src-testing/src/renderers/common/UniformBuffer.ts
 +++ b/src-testing/src/renderers/common/UniformBuffer.ts
-@@ -1,7 +1,9 @@
- import Buffer from './Buffer.js';
- 
+@@ -7,13 +7,15 @@ import Buffer from './Buffer.js';
+  * @augments Buffer
+  */
  class UniformBuffer extends Buffer {
--    constructor(name, buffer = null) {
 +    readonly isUniformBuffer: true;
 +
+     /**
+      * Constructs a new uniform buffer.
+      *
+      * @param {String} name - The buffer's name.
+      * @param {TypedArray} [buffer=null] - The buffer.
+      */
+-    constructor(name, buffer = null) {
 +    constructor(name?: string, buffer = null) {
          super(name, buffer);
  
-         this.isUniformBuffer = true;
+         /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
 index aa27776a..a31eb060 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
