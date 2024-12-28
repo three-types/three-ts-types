@@ -47,6 +47,7 @@ interface TextureOptions {
  * This module manages the textures of the renderer.
  *
  * @private
+ * @augments DataMap
  */
 declare class Textures extends DataMap<{
     renderTarget: {
