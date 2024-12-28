@@ -1,7 +1,20 @@
-import { CoordinateSystem } from "../constants.js";
+import { CoordinateSystem } from '../constants.js';
 import { Object3D } from "../core/Object3D.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
-import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
+import { RenderTarget } from '../core/RenderTarget.js';
+import { Camera } from './Camera.js';
+
+interface CubeCameraRenderer {
+    coordinateSystem: CoordinateSystem;
+    getRenderTarget(): RenderTarget | null;
+    getActiveCubeFace(): number;
+    getActiveMipmapLevel(): number;
+    xr: {
+        enabled: boolean;
+    };
+    setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
+    render(scene: Object3D, camera: Camera): void;
+}
 
 /**
  * Creates **6** {@link THREE.PerspectiveCamera | cameras} that render to a {@link THREE.WebGLCubeRenderTarget | WebGLCubeRenderTarget}.
@@ -64,5 +77,5 @@ export class CubeCamera extends Object3D {
      * @param renderer The current WebGL renderer
      * @param scene The current scene
      */
-    update(renderer: WebGLRenderer, scene: Object3D): void;
+    update(renderer: CubeCameraRenderer, scene: Object3D): void;
 }
