@@ -4,7 +4,7 @@ import { RenderTarget } from "../core/RenderTarget.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 import { Camera } from "./Camera.js";
 
-interface CubeCameraRenderer {
+export interface CubeCameraRenderer {
     coordinateSystem: CoordinateSystem;
     getRenderTarget(): RenderTarget | null;
     getActiveCubeFace(): number;
