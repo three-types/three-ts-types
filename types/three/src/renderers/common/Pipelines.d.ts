@@ -20,6 +20,7 @@ interface RenderObjectData {
  * This renderer module manages the pipelines of the renderer.
  *
  * @private
+ * @augments DataMap
  */
 declare class Pipelines extends DataMap<{
     computeNode: {
