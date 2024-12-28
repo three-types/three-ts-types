@@ -29,6 +29,10 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
     setAccess(value: NodeAccess): this;
 
     toReadOnly(): this;
+
+    setAtmoic(value: boolean): this;
+
+    toAtomic(): this;
 }
 
 export const storage: (
