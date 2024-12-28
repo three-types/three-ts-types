@@ -2544,7 +2544,7 @@ index 2e8a372c..0dd736ec 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index 41f0cf8a..23b9b475 100644
+index 0fc08ddc..a3a7fc7e 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
 @@ -4,6 +4,7 @@ import { Matrix4 } from '../../math/Matrix4.js';
@@ -2679,7 +2679,7 @@ index 41f0cf8a..23b9b475 100644
                  }
              }
          }
-@@ -173,7 +195,7 @@ export function getLengthFromType(type) {
+@@ -202,7 +224,7 @@ export function getLengthFromType(type) {
   * @param {Any} value - The value.
   * @return {String?} The data type.
   */
@@ -3752,17 +3752,20 @@ index 19df2d3f..cf8e7a4a 100644
          const background = this.nodes.getBackgroundNode(scene) || scene.background;
  
 diff --git a/src-testing/src/renderers/common/BindGroup.ts b/src-testing/src/renderers/common/BindGroup.ts
-index ae78d478..8ed6febb 100644
+index ba686ca3..57819718 100644
 --- a/src-testing/src/renderers/common/BindGroup.ts
 +++ b/src-testing/src/renderers/common/BindGroup.ts
-@@ -1,7 +1,22 @@
+@@ -1,3 +1,6 @@
 +import NodeUniformsGroup from './nodes/NodeUniformsGroup.js';
 +import Binding from './Binding.js';
 +
  let _id = 0;
  
+ /**
+@@ -6,6 +9,13 @@ let _id = 0;
+  * @private
+  */
  class BindGroup {
--    constructor(name = '', bindings = [], index = 0, bindingsReference = []) {
 +    name: string;
 +    bindings: NodeUniformsGroup[] | Binding[];
 +    index: number;
@@ -3770,15 +3773,23 @@ index ae78d478..8ed6febb 100644
 +
 +    id: number;
 +
+     /**
+      * Constructs a new bind group.
+      *
+@@ -14,7 +24,12 @@ class BindGroup {
+      * @param {Number} index - The group index.
+      * @param {Array<Binding>} bindingsReference - An array of reference bindings.
+      */
+-    constructor(name = '', bindings = [], index = 0, bindingsReference = []) {
 +    constructor(
 +        name = '',
 +        bindings: NodeUniformsGroup[] = [],
 +        index = 0,
 +        bindingsReference: NodeUniformsGroup[] | BindGroup = [],
 +    ) {
-         this.name = name;
-         this.bindings = bindings;
-         this.index = index;
+         /**
+          * The bind group's name.
+          *
 diff --git a/src-testing/src/renderers/common/Binding.ts b/src-testing/src/renderers/common/Binding.ts
 index 4417e9b8..559cc30c 100644
 --- a/src-testing/src/renderers/common/Binding.ts
@@ -3813,10 +3824,10 @@ index 4417e9b8..559cc30c 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 531a6a5b..aed28f85 100644
+index e7db74b2..e13ad8dd 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
-@@ -1,8 +1,42 @@
+@@ -1,5 +1,23 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
 +import Backend from './Backend.js';
@@ -3838,9 +3849,22 @@ index 531a6a5b..aed28f85 100644
 +    bindGroup?: BindGroup | undefined;
 +}
  
+ /**
+  * This renderer module manages the bindings of the renderer.
+@@ -7,7 +25,7 @@ import { AttributeType } from './Constants.js';
+  * @private
+  * @augments DataMap
+  */
 -class Bindings extends DataMap {
--    constructor(backend, nodes, textures, attributes, pipelines, info) {
 +class Bindings extends DataMap<{
+     /**
+      * Constructs a new bindings management component.
+      *
+@@ -18,7 +36,23 @@ class Bindings extends DataMap {
+      * @param {Pipelines} pipelines - Renderer component for managing pipelines.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(backend, nodes, textures, attributes, pipelines, info) {
 +    bindGroup: { key: BindGroup; value: BindGroupData };
 +}> {
 +    backend: Backend;
@@ -3860,46 +3884,56 @@ index 531a6a5b..aed28f85 100644
 +    ) {
          super();
  
-         this.backend = backend;
-@@ -15,7 +49,7 @@ class Bindings extends DataMap {
-         this.pipelines.bindings = this; // assign bindings to pipelines
-     }
- 
+         /**
+@@ -72,7 +106,7 @@ class Bindings extends DataMap {
+      * @param {RenderObject} renderObject - The render object.
+      * @return {Array<BindGroup>} The bind groups.
+      */
 -    getForRender(renderObject) {
 +    getForRender(renderObject: RenderObject) {
          const bindings = renderObject.getBindings();
  
          for (const bindGroup of bindings) {
-@@ -35,7 +69,7 @@ class Bindings extends DataMap {
-         return bindings;
-     }
- 
+@@ -98,7 +132,7 @@ class Bindings extends DataMap {
+      * @param {Node} computeNode - The compute node.
+      * @return {Array<BindGroup>} The bind groups.
+      */
 -    getForCompute(computeNode) {
 +    getForCompute(computeNode: ComputeNode) {
          const bindings = this.nodes.getForCompute(computeNode).bindings;
  
          for (const bindGroup of bindings) {
-@@ -53,26 +87,26 @@ class Bindings extends DataMap {
-         return bindings;
-     }
- 
+@@ -121,7 +155,7 @@ class Bindings extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
 -    updateForCompute(computeNode) {
 +    updateForCompute(computeNode: ComputeNode) {
          this._updateBindings(this.getForCompute(computeNode));
      }
  
+@@ -130,7 +164,7 @@ class Bindings extends DataMap {
+      *
+      * @param {RenderObject} renderObject - The render object.
+      */
 -    updateForRender(renderObject) {
 +    updateForRender(renderObject: RenderObject) {
          this._updateBindings(this.getForRender(renderObject));
      }
  
+@@ -139,7 +173,7 @@ class Bindings extends DataMap {
+      *
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
 -    _updateBindings(bindings) {
 +    _updateBindings(bindings: BindGroup[]) {
          for (const bindGroup of bindings) {
              this._update(bindGroup, bindings);
          }
-     }
- 
+@@ -150,12 +184,12 @@ class Bindings extends DataMap {
+      *
+      * @param {BindGroup} bindGroup - The bind group to initialize.
+      */
 -    _init(bindGroup) {
 +    _init(bindGroup: BindGroup) {
          for (const binding of bindGroup.bindings) {
@@ -3914,16 +3948,16 @@ index 531a6a5b..aed28f85 100644
                  const attributeType = attribute.isIndirectStorageBufferAttribute
                      ? AttributeType.INDIRECT
                      : AttributeType.STORAGE;
-@@ -82,7 +116,7 @@ class Bindings extends DataMap {
-         }
-     }
- 
+@@ -171,7 +205,7 @@ class Bindings extends DataMap {
+      * @param {BindGroup} bindGroup - The bind group to update.
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
 -    _update(bindGroup, bindings) {
 +    _update(bindGroup: BindGroup, bindings: BindGroup[]) {
          const { backend } = this;
  
          let needsBindingsUpdate = false;
-@@ -93,28 +127,29 @@ class Bindings extends DataMap {
+@@ -182,28 +216,29 @@ class Bindings extends DataMap {
          // iterate over all bindings and check if buffer updates or a new binding group is required
  
          for (const binding of bindGroup.bindings) {
@@ -3965,7 +3999,7 @@ index 531a6a5b..aed28f85 100644
  
                  if (updated) {
                      this.textures.updateTexture(texture);
-@@ -137,10 +172,10 @@ class Bindings extends DataMap {
+@@ -226,10 +261,10 @@ class Bindings extends DataMap {
                      // TODO: Remove this once we found why updated === false isn't bound to a texture in the WebGPU backend
                      console.error(
                          'Bindings._update: binding should be available:',
@@ -3978,7 +4012,7 @@ index 531a6a5b..aed28f85 100644
                          needsBindingsUpdate,
                      );
  
-@@ -151,7 +186,7 @@ class Bindings extends DataMap {
+@@ -240,7 +275,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true) {
                      const textureData = this.get(texture);
  
@@ -3988,7 +4022,7 @@ index 531a6a5b..aed28f85 100644
                      } else if (this.textures.needsMipmaps(texture) && textureData.needsMipmap === true) {
                          this.backend.generateMipmaps(texture);
 diff --git a/src-testing/src/renderers/common/Buffer.ts b/src-testing/src/renderers/common/Buffer.ts
-index 3dc0432d..ffe399ed 100644
+index 5f6246d6..676f860d 100644
 --- a/src-testing/src/renderers/common/Buffer.ts
 +++ b/src-testing/src/renderers/common/Buffer.ts
 @@ -9,13 +9,19 @@ import { getFloatLength } from './BufferUtils.js';
@@ -4022,7 +4056,7 @@ index 3dc0432d..ffe399ed 100644
  
      /**
 @@ -59,7 +65,7 @@ class Buffer extends Binding {
-      * @type {Number}
+      * @type {Float32Array}
       * @readonly
       */
 -    get buffer() {
@@ -4808,10 +4842,10 @@ index 0336ccac..0c6fb271 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index 71a5e29b..a28ffafd 100644
+index eed654b7..6c6268cc 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
-@@ -2,20 +2,51 @@ import DataMap from './DataMap.js';
+@@ -2,6 +2,22 @@ import DataMap from './DataMap.js';
  import RenderPipeline from './RenderPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
@@ -4834,8 +4868,9 @@ index 71a5e29b..a28ffafd 100644
  
  /**
   * This renderer module manages the pipelines of the renderer.
-  *
+@@ -9,14 +25,29 @@ import ProgrammableStage from './ProgrammableStage.js';
   * @private
+  * @augments DataMap
   */
 -class Pipelines extends DataMap {
 +class Pipelines extends DataMap<{
@@ -4865,7 +4900,7 @@ index 71a5e29b..a28ffafd 100644
          super();
  
          /**
-@@ -48,7 +79,7 @@ class Pipelines extends DataMap {
+@@ -49,7 +80,7 @@ class Pipelines extends DataMap {
           *
           * @type {Map<String,Pipeline>}
           */
@@ -4874,7 +4909,7 @@ index 71a5e29b..a28ffafd 100644
  
          /**
           * This dictionary maintains for each shader stage type (vertex,
-@@ -58,9 +89,9 @@ class Pipelines extends DataMap {
+@@ -59,9 +90,9 @@ class Pipelines extends DataMap {
           * @type {Object<String,Map>}
           */
          this.programs = {
@@ -4887,7 +4922,7 @@ index 71a5e29b..a28ffafd 100644
          };
      }
  
-@@ -71,7 +102,7 @@ class Pipelines extends DataMap {
+@@ -72,7 +103,7 @@ class Pipelines extends DataMap {
       * @param {Array<BindGroup>} bindings - The bindings.
       * @return {ComputePipeline} The compute pipeline.
       */
@@ -4896,7 +4931,7 @@ index 71a5e29b..a28ffafd 100644
          const { backend } = this;
  
          const data = this.get(computeNode);
-@@ -90,20 +121,20 @@ class Pipelines extends DataMap {
+@@ -91,20 +122,20 @@ class Pipelines extends DataMap {
  
              // programmable stage
  
@@ -4920,7 +4955,7 @@ index 71a5e29b..a28ffafd 100644
  
                  backend.createProgram(stageCompute);
              }
-@@ -112,7 +143,7 @@ class Pipelines extends DataMap {
+@@ -113,7 +144,7 @@ class Pipelines extends DataMap {
  
              const cacheKey = this._getComputeCacheKey(computeNode, stageCompute);
  
@@ -4929,7 +4964,7 @@ index 71a5e29b..a28ffafd 100644
  
              if (pipeline === undefined) {
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
-@@ -141,7 +172,7 @@ class Pipelines extends DataMap {
+@@ -142,7 +173,7 @@ class Pipelines extends DataMap {
       * @param {Array<Promise>?} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
       * @return {RenderPipeline} The render pipeline.
       */
@@ -4938,7 +4973,7 @@ index 71a5e29b..a28ffafd 100644
          const { backend } = this;
  
          const data = this.get(renderObject);
-@@ -163,26 +194,26 @@ class Pipelines extends DataMap {
+@@ -164,26 +195,26 @@ class Pipelines extends DataMap {
  
              // programmable stages
  
@@ -4971,7 +5006,7 @@ index 71a5e29b..a28ffafd 100644
  
                  backend.createProgram(stageFragment);
              }
-@@ -191,7 +222,7 @@ class Pipelines extends DataMap {
+@@ -192,7 +223,7 @@ class Pipelines extends DataMap {
  
              const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
  
@@ -4980,7 +5015,7 @@ index 71a5e29b..a28ffafd 100644
  
              if (pipeline === undefined) {
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
-@@ -221,7 +252,7 @@ class Pipelines extends DataMap {
+@@ -222,7 +253,7 @@ class Pipelines extends DataMap {
       * @param {RenderObject} object - The render object.
       * @return {Object?} The deleted dictionary.
       */
@@ -4989,7 +5024,7 @@ index 71a5e29b..a28ffafd 100644
          const pipeline = this.get(object).pipeline;
  
          if (pipeline) {
-@@ -233,20 +264,23 @@ class Pipelines extends DataMap {
+@@ -234,20 +265,23 @@ class Pipelines extends DataMap {
  
              // programs
  
@@ -5021,7 +5056,7 @@ index 71a5e29b..a28ffafd 100644
      }
  
      /**
-@@ -268,7 +302,7 @@ class Pipelines extends DataMap {
+@@ -269,7 +303,7 @@ class Pipelines extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -5030,7 +5065,7 @@ index 71a5e29b..a28ffafd 100644
          this.getForRender(renderObject);
      }
  
-@@ -282,12 +316,17 @@ class Pipelines extends DataMap {
+@@ -283,12 +317,17 @@ class Pipelines extends DataMap {
       * @param {Array<BindGroup>} bindings - The bindings.
       * @return {ComputePipeline} The compute pipeline.
       */
@@ -5050,7 +5085,7 @@ index 71a5e29b..a28ffafd 100644
  
          if (pipeline === undefined) {
              pipeline = new ComputePipeline(cacheKey, stageCompute);
-@@ -311,12 +350,18 @@ class Pipelines extends DataMap {
+@@ -312,12 +351,18 @@ class Pipelines extends DataMap {
       * @param {Array} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
       * @return {ComputePipeline} The compute pipeline.
       */
@@ -5071,7 +5106,7 @@ index 71a5e29b..a28ffafd 100644
  
          if (pipeline === undefined) {
              pipeline = new RenderPipeline(cacheKey, stageVertex, stageFragment);
-@@ -343,7 +388,7 @@ class Pipelines extends DataMap {
+@@ -344,7 +389,7 @@ class Pipelines extends DataMap {
       * @param {ProgrammableStage} stageCompute - The programmable stage representing the compute shader.
       * @return {String} The cache key.
       */
@@ -5080,7 +5115,7 @@ index 71a5e29b..a28ffafd 100644
          return computeNode.id + ',' + stageCompute.id;
      }
  
-@@ -356,7 +401,7 @@ class Pipelines extends DataMap {
+@@ -357,7 +402,7 @@ class Pipelines extends DataMap {
       * @param {ProgrammableStage} stageFragment - The programmable stage representing the fragment shader.
       * @return {String} The cache key.
       */
@@ -5089,7 +5124,7 @@ index 71a5e29b..a28ffafd 100644
          return stageVertex.id + ',' + stageFragment.id + ',' + this.backend.getRenderCacheKey(renderObject);
      }
  
-@@ -366,7 +411,7 @@ class Pipelines extends DataMap {
+@@ -367,7 +412,7 @@ class Pipelines extends DataMap {
       * @private
       * @param {Pipeline} pipeline - The pipeline to release.
       */
@@ -5098,7 +5133,7 @@ index 71a5e29b..a28ffafd 100644
          this.caches.delete(pipeline.cacheKey);
      }
  
-@@ -376,7 +421,7 @@ class Pipelines extends DataMap {
+@@ -377,7 +422,7 @@ class Pipelines extends DataMap {
       * @private
       * @param {Object} program - The shdaer program to release.
       */
@@ -5107,7 +5142,7 @@ index 71a5e29b..a28ffafd 100644
          const code = program.code;
          const stage = program.stage;
  
-@@ -390,7 +435,7 @@ class Pipelines extends DataMap {
+@@ -391,7 +436,7 @@ class Pipelines extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {Boolean} Whether the compute pipeline for the given compute node requires an update or not.
       */
@@ -5116,7 +5151,7 @@ index 71a5e29b..a28ffafd 100644
          const data = this.get(computeNode);
  
          return data.pipeline === undefined || data.version !== computeNode.version;
-@@ -403,7 +448,7 @@ class Pipelines extends DataMap {
+@@ -404,7 +449,7 @@ class Pipelines extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Boolean} Whether the render object for the given render object requires an update or not.
       */
@@ -7276,28 +7311,34 @@ index aee5c92d..98e173b0 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/StorageBuffer.ts b/src-testing/src/renderers/common/StorageBuffer.ts
-index ef5d3e46..fb6acc45 100644
+index 4aa40873..8889e32a 100644
 --- a/src-testing/src/renderers/common/StorageBuffer.ts
 +++ b/src-testing/src/renderers/common/StorageBuffer.ts
-@@ -1,7 +1,12 @@
- import Buffer from './Buffer.js';
- 
+@@ -7,13 +7,18 @@ import Buffer from './Buffer.js';
+  * @augments Buffer
+  */
  class StorageBuffer extends Buffer {
--    constructor(name, attribute) {
 +    // TODO
 +    // attribute
 +
 +    readonly isStorageBuffer: true;
 +
+     /**
+      * Constructs a new uniform buffer.
+      *
+      * @param {String} name - The buffer's name.
+      * @param {BufferAttribute} attribute - The buffer attribute.
+      */
+-    constructor(name, attribute) {
 +    constructor(name: string, attribute) {
          super(name, attribute ? attribute.array : null);
  
-         this.attribute = attribute;
+         /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 6f0af4b5..2fd4bc11 100644
+index 5288e135..b4e8495d 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
-@@ -13,15 +13,60 @@ import {
+@@ -13,8 +13,46 @@ import {
      CubeRefractionMapping,
      UnsignedByteType,
  } from '../../constants.js';
@@ -7345,8 +7386,9 @@ index 6f0af4b5..2fd4bc11 100644
  
  /**
   * This module manages the textures of the renderer.
-  *
+@@ -22,7 +60,14 @@ const _size = /*@__PURE__*/ new Vector3();
   * @private
+  * @augments DataMap
   */
 -class Textures extends DataMap {
 +class Textures extends DataMap<{
@@ -7360,7 +7402,7 @@ index 6f0af4b5..2fd4bc11 100644
      /**
       * Constructs a new texture management component.
       *
-@@ -29,7 +74,7 @@ class Textures extends DataMap {
+@@ -30,7 +75,7 @@ class Textures extends DataMap {
       * @param {Backend} backend - The renderer's backend.
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
@@ -7369,7 +7411,7 @@ index 6f0af4b5..2fd4bc11 100644
          super();
  
          /**
-@@ -61,7 +106,7 @@ class Textures extends DataMap {
+@@ -62,7 +107,7 @@ class Textures extends DataMap {
       * @param {RenderTarget} renderTarget - The render target to update.
       * @param {Number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -7378,7 +7420,7 @@ index 6f0af4b5..2fd4bc11 100644
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -166,7 +211,7 @@ class Textures extends DataMap {
+@@ -167,7 +212,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update.
       * @param {Object} [options={}] - The options.
       */
@@ -7387,7 +7429,7 @@ index 6f0af4b5..2fd4bc11 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -295,7 +340,7 @@ class Textures extends DataMap {
+@@ -296,7 +341,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -7396,7 +7438,7 @@ index 6f0af4b5..2fd4bc11 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -303,12 +348,12 @@ class Textures extends DataMap {
+@@ -304,12 +349,12 @@ class Textures extends DataMap {
  
              target.width = image.width || 1;
              target.height = image.height || 1;
@@ -7411,7 +7453,7 @@ index 6f0af4b5..2fd4bc11 100644
      }
  
      /**
-@@ -319,10 +364,10 @@ class Textures extends DataMap {
+@@ -320,10 +365,10 @@ class Textures extends DataMap {
       * @param {Number} height - The texture's height.
       * @return {Number} The number of mipmap levels.
       */
@@ -7424,7 +7466,7 @@ index 6f0af4b5..2fd4bc11 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -341,8 +386,12 @@ class Textures extends DataMap {
+@@ -342,8 +387,12 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {Boolean} Whether mipmaps are required or not.
       */
@@ -7439,7 +7481,7 @@ index 6f0af4b5..2fd4bc11 100644
      }
  
      /**
-@@ -351,7 +400,7 @@ class Textures extends DataMap {
+@@ -352,7 +401,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {Boolean} Whether the given texture is an environment map or not.
       */
@@ -7448,7 +7490,7 @@ index 6f0af4b5..2fd4bc11 100644
          const mapping = texture.mapping;
  
          return (
-@@ -368,7 +417,7 @@ class Textures extends DataMap {
+@@ -369,7 +418,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -7458,15 +7500,14 @@ index 6f0af4b5..2fd4bc11 100644
          this.backend.destroyTexture(texture);
  
 diff --git a/src-testing/src/renderers/common/Uniform.ts b/src-testing/src/renderers/common/Uniform.ts
-index 80c13149..dcecc0e2 100644
+index 216321f1..45b6771a 100644
 --- a/src-testing/src/renderers/common/Uniform.ts
 +++ b/src-testing/src/renderers/common/Uniform.ts
-@@ -5,8 +5,16 @@ import { Vector2 } from '../../math/Vector2.js';
- import { Vector3 } from '../../math/Vector3.js';
- import { Vector4 } from '../../math/Vector4.js';
- 
+@@ -11,14 +11,22 @@ import { Vector4 } from '../../math/Vector4.js';
+  * @abstract
+  * @private
+  */
 -class Uniform {
--    constructor(name, value) {
 +class Uniform<TValue> {
 +    name: string;
 +    value: TValue;
@@ -7476,110 +7517,159 @@ index 80c13149..dcecc0e2 100644
 +
 +    offset: number;
 +
+     /**
+      * Constructs a new uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Any} value - The uniform's value.
+      */
+-    constructor(name, value) {
 +    constructor(name: string, value: TValue) {
-         this.name = name;
-         this.value = value;
- 
-@@ -16,7 +24,7 @@ class Uniform {
-         this.offset = 0; // this property is set by WebGPUUniformsGroup and marks the start position in the uniform buffer
-     }
- 
+         /**
+          * The uniform's name.
+          *
+@@ -64,7 +72,7 @@ class Uniform {
+      *
+      * @param {Any} value - The value to set.
+      */
 -    setValue(value) {
 +    setValue(value: TValue) {
          this.value = value;
      }
  
-@@ -25,8 +33,10 @@ class Uniform {
-     }
- }
- 
+@@ -84,14 +92,16 @@ class Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class NumberUniform extends Uniform {
--    constructor(name, value = 0) {
 +class NumberUniform extends Uniform<number> {
 +    readonly isNumberUniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Number} value - The uniform's value.
+      */
+-    constructor(name, value = 0) {
 +    constructor(name: string, value = 0) {
          super(name, value);
  
-         this.isNumberUniform = true;
-@@ -36,8 +46,10 @@ class NumberUniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -114,14 +124,16 @@ class NumberUniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class Vector2Uniform extends Uniform {
--    constructor(name, value = new Vector2()) {
 +class Vector2Uniform extends Uniform<Vector2> {
 +    readonly isVector2Uniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Vector2} value - The uniform's value.
+      */
+-    constructor(name, value = new Vector2()) {
 +    constructor(name: string, value = new Vector2()) {
          super(name, value);
  
-         this.isVector2Uniform = true;
-@@ -47,8 +59,10 @@ class Vector2Uniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -144,14 +156,16 @@ class Vector2Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class Vector3Uniform extends Uniform {
--    constructor(name, value = new Vector3()) {
 +class Vector3Uniform extends Uniform<Vector3> {
 +    readonly isVector3Uniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Vector3} value - The uniform's value.
+      */
+-    constructor(name, value = new Vector3()) {
 +    constructor(name: string, value = new Vector3()) {
          super(name, value);
  
-         this.isVector3Uniform = true;
-@@ -58,8 +72,10 @@ class Vector3Uniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -174,14 +188,16 @@ class Vector3Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class Vector4Uniform extends Uniform {
--    constructor(name, value = new Vector4()) {
 +class Vector4Uniform extends Uniform<Vector4> {
 +    readonly isVector4Uniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Vector4} value - The uniform's value.
+      */
+-    constructor(name, value = new Vector4()) {
 +    constructor(name: string, value = new Vector4()) {
          super(name, value);
  
-         this.isVector4Uniform = true;
-@@ -69,8 +85,10 @@ class Vector4Uniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -204,14 +220,16 @@ class Vector4Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class ColorUniform extends Uniform {
--    constructor(name, value = new Color()) {
 +class ColorUniform extends Uniform<Color> {
 +    readonly isColorUniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Color} value - The uniform's value.
+      */
+-    constructor(name, value = new Color()) {
 +    constructor(name: string, value = new Color()) {
          super(name, value);
  
-         this.isColorUniform = true;
-@@ -80,8 +98,10 @@ class ColorUniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -234,14 +252,16 @@ class ColorUniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class Matrix3Uniform extends Uniform {
--    constructor(name, value = new Matrix3()) {
 +class Matrix3Uniform extends Uniform<Matrix3> {
 +    readonly isMatrix3Uniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Matrix3} value - The uniform's value.
+      */
+-    constructor(name, value = new Matrix3()) {
 +    constructor(name: string, value = new Matrix3()) {
          super(name, value);
  
-         this.isMatrix3Uniform = true;
-@@ -91,8 +111,10 @@ class Matrix3Uniform extends Uniform {
-     }
- }
- 
+         /**
+@@ -264,14 +284,16 @@ class Matrix3Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
 -class Matrix4Uniform extends Uniform {
--    constructor(name, value = new Matrix4()) {
 +class Matrix4Uniform extends Uniform<Matrix4> {
 +    readonly isMatrix4Uniform: true;
 +
+     /**
+      * Constructs a new Number uniform.
+      *
+      * @param {String} name - The uniform's name.
+      * @param {Matrix4} value - The uniform's value.
+      */
+-    constructor(name, value = new Matrix4()) {
 +    constructor(name: string, value = new Matrix4()) {
          super(name, value);
  
-         this.isMatrix4Uniform = true;
+         /**
 diff --git a/src-testing/src/renderers/common/UniformBuffer.ts b/src-testing/src/renderers/common/UniformBuffer.ts
 index dba46fd8..69a96404 100644
 --- a/src-testing/src/renderers/common/UniformBuffer.ts
@@ -7602,10 +7692,10 @@ index dba46fd8..69a96404 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index aa27776a..a31eb060 100644
+index bbc6dc77..186ab14f 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
-@@ -1,8 +1,24 @@
+@@ -1,5 +1,15 @@
  import UniformBuffer from './UniformBuffer.js';
  import { GPU_CHUNK_BYTES } from './Constants.js';
 +import {
@@ -7619,47 +7709,59 @@ index aa27776a..a31eb060 100644
 +    Vector4NodeUniform,
 +} from './nodes/NodeUniform.js';
  
+ /**
+  * This class represents a uniform buffer binding but with
+@@ -9,12 +19,18 @@ import { GPU_CHUNK_BYTES } from './Constants.js';
+  * @augments UniformBuffer
+  */
  class UniformsGroup extends UniformBuffer {
--    constructor(name) {
 +    readonly isUniformsGroup: true;
 +
 +    _values: number[] | null;
 +
 +    uniforms: NodeUniformGPU[];
 +
+     /**
+      * Constructs a new uniforms group.
+      *
+      * @param {String} name - The group's name.
+      */
+-    constructor(name) {
 +    constructor(name?: string) {
          super(name);
  
-         this.isUniformsGroup = true;
-@@ -14,13 +30,13 @@ class UniformsGroup extends UniformBuffer {
-         this.uniforms = [];
-     }
- 
+         /**
+@@ -51,7 +67,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Uniform} uniform - The uniform to add.
+      * @return {UniformsGroup} A reference to this group.
+      */
 -    addUniform(uniform) {
 +    addUniform(uniform: NodeUniformGPU) {
          this.uniforms.push(uniform);
  
          return this;
-     }
- 
+@@ -63,7 +79,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Uniform} uniform - The uniform to remove.
+      * @return {UniformsGroup} A reference to this group.
+      */
 -    removeUniform(uniform) {
 +    removeUniform(uniform: NodeUniformGPU) {
          const index = this.uniforms.indexOf(uniform);
  
          if (index !== -1) {
-@@ -38,7 +54,7 @@ class UniformsGroup extends UniformBuffer {
-         return this._values;
-     }
- 
+@@ -91,7 +107,7 @@ class UniformsGroup extends UniformBuffer {
+      *
+      * @type {Float32Array}
+      */
 -    get buffer() {
 +    get buffer(): Float32Array {
          let buffer = this._buffer;
  
          if (buffer === null) {
-@@ -97,19 +113,19 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -171,14 +187,14 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Uniform} uniform - The uniform to update.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateByType(uniform) {
 -        if (uniform.isNumberUniform) return this.updateNumber(uniform);
 -        if (uniform.isVector2Uniform) return this.updateVector2(uniform);
@@ -7679,86 +7781,91 @@ index aa27776a..a31eb060 100644
  
          console.error('THREE.WebGPUUniformsGroup: Unsupported uniform type.', uniform);
      }
- 
+@@ -189,7 +205,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {NumberUniform} uniform - The Number uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateNumber(uniform) {
 +    updateNumber(uniform: NumberNodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -127,7 +143,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -213,7 +229,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Vector2Uniform} uniform - The Vector2 uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateVector2(uniform) {
 +    updateVector2(uniform: Vector2NodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -147,7 +163,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -239,7 +255,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Vector3Uniform} uniform - The Vector3 uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateVector3(uniform) {
 +    updateVector3(uniform: Vector3NodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -168,7 +184,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -266,7 +282,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Vector4Uniform} uniform - The Vector4 uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateVector4(uniform) {
 +    updateVector4(uniform: Vector4NodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -190,7 +206,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -294,7 +310,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {ColorUniform} uniform - The Color uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateColor(uniform) {
 +    updateColor(uniform: ColorNodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -210,7 +226,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -320,7 +336,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateMatrix3(uniform) {
 +    updateMatrix3(uniform: Matrix3NodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -246,7 +262,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -362,7 +378,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
+      * @return {Boolean} Whether the uniform has been updated or not.
+      */
 -    updateMatrix4(uniform) {
 +    updateMatrix4(uniform: Matrix4NodeUniform) {
          let updated = false;
  
          const a = this.values;
-@@ -263,7 +279,7 @@ class UniformsGroup extends UniformBuffer {
-         return updated;
-     }
- 
+@@ -385,7 +401,7 @@ class UniformsGroup extends UniformBuffer {
+      * @param {String} type - The data type.
+      * @return {TypedArray} The typed array.
+      */
 -    _getBufferForType(type) {
 +    _getBufferForType(type: string | null): Int32Array | Uint32Array | Float32Array {
          if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
              return new Int32Array(this.buffer.buffer);
          if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
-@@ -272,13 +288,13 @@ class UniformsGroup extends UniformBuffer {
-     }
- }
- 
+@@ -401,7 +417,7 @@ class UniformsGroup extends UniformBuffer {
+  * @param {TypedArray} b - The second array.
+  * @param {Number} offset - An index offset for the first array.
+  */
 -function setArray(a, b, offset) {
 +function setArray(a: number[], b: number[], offset: number) {
      for (let i = 0, l = b.length; i < l; i++) {
          a[offset + i] = b[i];
      }
- }
- 
+@@ -415,7 +431,7 @@ function setArray(a, b, offset) {
+  * @param {Number} offset - An index offset for the first array.
+  * @return {Boolean} Whether the given arrays are equal or not.
+  */
 -function arraysEqual(a, b, offset) {
 +function arraysEqual(a: number[], b: number[], offset: number) {
      for (let i = 0, l = b.length; i < l; i++) {
@@ -7935,10 +8042,10 @@ index e3bbbe44..8b8312fc 100644
              console.warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 6412da90..02408606 100644
+index 91563356..6ccc8760 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-@@ -7,9 +7,18 @@ import {
+@@ -7,6 +7,13 @@ import {
      Matrix3Uniform,
      Matrix4Uniform,
  } from '../Uniform.js';
@@ -7950,81 +8057,121 @@ index 6412da90..02408606 100644
 +import { Matrix3 } from '../../../math/Matrix3.js';
 +import { Matrix4 } from '../../../math/Matrix4.js';
  
+ /**
+  * A special form of Number uniform binding type.
+@@ -16,12 +23,14 @@ import {
+  * @augments NumberUniform
+  */
  class NumberNodeUniform extends NumberUniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<number>;
 +
+     /**
+      * Constructs a new node-based Number uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<number>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -25,7 +34,9 @@ class NumberNodeUniform extends NumberUniform {
- }
- 
+         /**
+@@ -59,12 +68,14 @@ class NumberNodeUniform extends NumberUniform {
+  * @augments Vector2Uniform
+  */
  class Vector2NodeUniform extends Vector2Uniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Vector2>;
 +
+     /**
+      * Constructs a new node-based Vector2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Vector2>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -41,7 +52,9 @@ class Vector2NodeUniform extends Vector2Uniform {
- }
- 
+         /**
+@@ -102,12 +113,14 @@ class Vector2NodeUniform extends Vector2Uniform {
+  * @augments Vector3Uniform
+  */
  class Vector3NodeUniform extends Vector3Uniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Vector3>;
 +
+     /**
+      * Constructs a new node-based Vector3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Vector3>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -57,7 +70,9 @@ class Vector3NodeUniform extends Vector3Uniform {
- }
- 
+         /**
+@@ -145,12 +158,14 @@ class Vector3NodeUniform extends Vector3Uniform {
+  * @augments Vector4Uniform
+  */
  class Vector4NodeUniform extends Vector4Uniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Vector4>;
 +
+     /**
+      * Constructs a new node-based Vector4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Vector4>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -73,7 +88,9 @@ class Vector4NodeUniform extends Vector4Uniform {
- }
- 
+         /**
+@@ -188,12 +203,14 @@ class Vector4NodeUniform extends Vector4Uniform {
+  * @augments ColorUniform
+  */
  class ColorNodeUniform extends ColorUniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Color>;
 +
+     /**
+      * Constructs a new node-based Color uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Color>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -89,7 +106,9 @@ class ColorNodeUniform extends ColorUniform {
- }
- 
+         /**
+@@ -231,12 +248,14 @@ class ColorNodeUniform extends ColorUniform {
+  * @augments Matrix3Uniform
+  */
  class Matrix3NodeUniform extends Matrix3Uniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Matrix3>;
 +
+     /**
+      * Constructs a new node-based Matrix3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Matrix3>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -105,7 +124,9 @@ class Matrix3NodeUniform extends Matrix3Uniform {
- }
- 
+         /**
+@@ -274,12 +293,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+  * @augments Matrix4Uniform
+  */
  class Matrix4NodeUniform extends Matrix4Uniform {
--    constructor(nodeUniform) {
 +    nodeUniform: NodeUniform<Matrix4>;
 +
+     /**
+      * Constructs a new node-based Matrix4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
 +    constructor(nodeUniform: NodeUniform<Matrix4>) {
          super(nodeUniform.name, nodeUniform.value);
  
-         this.nodeUniform = nodeUniform;
-@@ -129,3 +150,11 @@ export {
+         /**
+@@ -318,3 +339,11 @@ export {
      Matrix3NodeUniform,
      Matrix4NodeUniform,
  };
@@ -8037,35 +8184,35 @@ index 6412da90..02408606 100644
 +    | Matrix3NodeUniform
 +    | Matrix4NodeUniform;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts b/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
-index d2d92cb2..c022f814 100644
+index d0934d34..9066b3ed 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
-@@ -1,9 +1,15 @@
+@@ -1,4 +1,5 @@
  import UniformsGroup from '../UniformsGroup.js';
 +import { UniformGroupNode, UniformNode } from '../../../nodes/Nodes.js';
  
  let _id = 0;
  
+@@ -10,13 +11,18 @@ let _id = 0;
+  * @augments UniformsGroup
+  */
  class NodeUniformsGroup extends UniformsGroup {
--    constructor(name, groupNode) {
 +    id: number;
 +    groupNode: UniformGroupNode;
 +
 +    readonly isNodeUniformsGroup: true;
 +
+     /**
+      * Constructs a new node-based uniforms group.
+      *
+      * @param {String} name - The group's name.
+      * @param {UniformGroupNode} groupNode - The uniform group node.
+      */
+-    constructor(name, groupNode) {
 +    constructor(name: string, groupNode: UniformGroupNode) {
          super(name);
  
-         this.id = _id++;
-@@ -13,7 +19,7 @@ class NodeUniformsGroup extends UniformsGroup {
-     }
- 
-     getNodes() {
--        const nodes = [];
-+        const nodes: UniformNode<unknown>[] = [];
- 
-         for (const uniform of this.uniforms) {
-             const node = uniform.nodeUniform.node;
+         /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
 index d30b48d8..0d6cb16f 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
