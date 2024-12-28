@@ -21,7 +21,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * material.colorNode = bufferAttribute( new THREE.Float32BufferAttribute( colors, 3 ) );
  * ```
  * This new approach is especially interesting when geometry data are generated via
- * compute shaders. The below line converts a storage buffer into an attribute.
+ * compute shaders. The below line converts a storage buffer into an attribute node.
  * ```js
  * material.positionNode = positionBuffer.toAttribute();
  * ```
