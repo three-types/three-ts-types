@@ -1,7 +1,9 @@
 import Binding from "./Binding.js";
 import NodeUniformsGroup from "./nodes/NodeUniformsGroup.js";
 /**
- * Represents a bind group.
+ * A bind group represents a collection of bindings and thus a collection
+ * or resources. Bind groups are assigned to pipelines to provide them
+ * with the required resources (like uniform buffers or textures).
  *
  * @private
  */
