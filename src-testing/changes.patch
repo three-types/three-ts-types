@@ -3553,7 +3553,7 @@ index 7b2018e4..6ea269a6 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index bf7ddb14..7a8757df 100644
+index 4ec58d84..2abf6112 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,37 @@
@@ -3634,7 +3634,7 @@ index bf7ddb14..7a8757df 100644
  
          /**
           * A reference to the renderer.
-@@ -66,10 +104,18 @@ class Backend {
+@@ -66,7 +104,7 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {Promise} A Promise that resolves when the backend has been initialized.
       */
@@ -3643,18 +3643,18 @@ index bf7ddb14..7a8757df 100644
          this.renderer = renderer;
      }
  
+@@ -77,7 +115,9 @@ class Backend {
+      * @type {Number}
+      * @readonly
+      */
+-    get coordinateSystem() {}
 +    abstract get coordinateSystem(): CoordinateSystem;
 +
 +    abstract getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
-+
-+    abstract isOccluded(renderContext: RenderContext, object: Object): boolean;
-+
-+    abstract getMaxAnisotropy(): number;
-+
-     // render object
  
-     /**
-@@ -173,7 +219,11 @@ class Backend {
+     // render context
+ 
+@@ -245,7 +285,11 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {NodeBuilder} The node builder.
       */
@@ -3667,22 +3667,62 @@ index bf7ddb14..7a8757df 100644
  
      // textures
  
-@@ -223,7 +273,13 @@ class Backend {
-      * @param {Number} height - The height of the copy.
+@@ -320,7 +364,14 @@ class Backend {
+      * @param {Number} faceIndex - The face index.
       * @return {TypedArray} The texture data as a typed array.
       */
--    copyTextureToBuffer(/*texture, x, y, width, height*/) {}
+-    copyTextureToBuffer(/*texture, x, y, width, height, faceIndex*/) {}
 +    abstract copyTextureToBuffer(
 +        texture: Texture,
 +        x: number,
 +        y: number,
 +        width: number,
 +        height: number,
++        faceIndex: number,
 +    ): Promise<TypedArray>;
  
-     // attributes
+     /**
+      * Copies data of the given source texture to the given destination texture.
+@@ -424,7 +475,7 @@ class Backend {
+      * @param {Object3D} object - The 3D object to test.
+      * @return {Boolean} Whether the 3D object is fully occluded or not.
+      */
+-    isOccluded(/*renderContext, object*/) {}
++    abstract isOccluded(/*renderContext, object*/): boolean;
  
-@@ -384,7 +440,11 @@ class Backend {
+     /**
+      * Resolves the time stamp for the given render context and type.
+@@ -472,7 +523,7 @@ class Backend {
+      * @abstract
+      * @return {Number} The maximum anisotropy texture filtering value.
+      */
+-    getMaxAnisotropy() {}
++    abstract getMaxAnisotropy(): number;
+ 
+     /**
+      * Returns the drawing buffer size.
+@@ -482,7 +533,7 @@ class Backend {
+     getDrawingBufferSize() {
+         _vector2 = _vector2 || new Vector2();
+ 
+-        return this.renderer.getDrawingBufferSize(_vector2);
++        return this.renderer!.getDrawingBufferSize(_vector2);
+     }
+ 
+     /**
+@@ -504,9 +555,9 @@ class Backend {
+ 
+         _color4 = _color4 || new Color4();
+ 
+-        renderer.getClearColor(_color4);
++        renderer!.getClearColor(_color4);
+ 
+-        _color4.getRGB(_color4, this.renderer.currentColorSpace);
++        _color4.getRGB(_color4, this.renderer!.currentColorSpace);
+ 
+         return _color4;
+     }
+@@ -549,7 +600,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
       */
@@ -3695,7 +3735,7 @@ index bf7ddb14..7a8757df 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -402,7 +462,7 @@ class Backend {
+@@ -567,7 +622,7 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Boolean} Whether a dictionary for the given object as been defined or not.
       */
@@ -3704,7 +3744,7 @@ index bf7ddb14..7a8757df 100644
          return this.data.has(object);
      }
  
-@@ -411,7 +471,7 @@ class Backend {
+@@ -576,7 +631,7 @@ class Backend {
       *
       * @param {Object} object - The object to delete.
       */
@@ -8689,7 +8729,7 @@ index c784bdf3..05367243 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index d9f27f54..58e032f8 100644
+index 37b6df5d..03c2020f 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -8698,12 +8738,12 @@ index d9f27f54..58e032f8 100644
  import { WebGLCoordinateSystem } from '../../constants.js';
 +import { Texture } from '../../textures/Texture.js';
  
- //
- 
-@@ -692,7 +693,7 @@ class WebGLBackend extends Backend {
-         this.textureUtils.destroyTexture(texture);
-     }
- 
+ /**
+  * A backend implementation targeting WebGL 2.
+@@ -1016,7 +1017,7 @@ class WebGLBackend extends Backend {
+      * @param {Number} faceIndex - The face index.
+      * @return {TypedArray} The texture data as a typed array.
+      */
 -    copyTextureToBuffer(texture, x, y, width, height, faceIndex) {
 +    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number, faceIndex: number) {
          return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height, faceIndex);
@@ -9108,13 +9148,13 @@ index c643df5a..ae36ba39 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 00ee665e..6fff69c9 100644
+index d4fef1a6..c8e95955 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -999,7 +999,7 @@ class WebGPUBackend extends Backend {
-         this.textureUtils.destroyTexture(texture);
-     }
- 
+@@ -1276,7 +1276,7 @@ class WebGPUBackend extends Backend {
+      * @param {Number} faceIndex - The face index.
+      * @return {TypedArray} The texture data as a typed array.
+      */
 -    copyTextureToBuffer(texture, x, y, width, height, faceIndex) {
 +    copyTextureToBuffer(texture: Texture, x: number, y: number, width: number, height: number, faceIndex: number) {
          return this.textureUtils.copyTextureToBuffer(texture, x, y, width, height, faceIndex);
