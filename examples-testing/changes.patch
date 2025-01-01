@@ -15891,6 +15891,44 @@ index d105b77c..2cdd4ba7 100644
      mouse.x = e.offsetX / window.innerWidth;
      mouse.y = e.offsetY / window.innerHeight;
  }
+diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
+index 85dbc6f0..b641b745 100644
+--- a/examples-testing/examples/webgpu_occlusion.ts
++++ b/examples-testing/examples/webgpu_occlusion.ts
+@@ -1,12 +1,18 @@
+-import * as THREE from 'three';
+-import { nodeObject, uniform } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { nodeObject, uniform, ShaderNodeObject } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+ 
+ class OcclusionNode extends THREE.Node {
+-    constructor(testObject, normalColor, occludedColor) {
++    uniformNode: ShaderNodeObject<THREE.UniformNode<THREE.Color>>;
++
++    testObject: THREE.Mesh;
++    normalColor: THREE.Color;
++    occludedColor: THREE.Color;
++
++    constructor(testObject: THREE.Mesh, normalColor: THREE.Color, occludedColor: THREE.Color) {
+         super('vec3');
+ 
+         this.updateType = THREE.NodeUpdateType.OBJECT;
+@@ -18,8 +24,8 @@ class OcclusionNode extends THREE.Node {
+         this.occludedColor = occludedColor;
+     }
+ 
+-    async update(frame) {
+-        const isOccluded = frame.renderer.isOccluded(this.testObject);
++    async update(frame: THREE.NodeFrame) {
++        const isOccluded = frame.renderer!.isOccluded(this.testObject);
+ 
+         this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
+     }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
 index 9eb9922d..b75024ec 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
@@ -15945,6 +15983,214 @@ index 478c5bae..adbea486 100644
  
 -let controls;
 +let controls: OrbitControls;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
+index 91d60371..24a769e9 100644
+--- a/examples-testing/examples/webgpu_particles.ts
++++ b/examples-testing/examples/webgpu_particles.ts
+@@ -1,12 +1,12 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { range, texture, mix, uv, color, rotateUV, positionLocal, time, uniform } from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -84,7 +84,7 @@ function init() {
+     // indirect draw ( optional )
+     // each indirect draw call is 5 uint32 values for indexes ( different structure for non-indexed draw calls using 4 uint32 values )
+ 
+-    const indexCount = fireGeometry.index.array.length;
++    const indexCount = fireGeometry.index!.array.length;
+ 
+     const uint32 = new Uint32Array(5);
+     uint32[0] = indexCount; // indexCount
+diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
+index b9642ce0..e92b2903 100644
+--- a/examples-testing/examples/webgpu_performance.ts
++++ b/examples-testing/examples/webgpu_performance.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+@@ -10,17 +10,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let camera, scene, renderer, stats;
+-let model;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
++let model: THREE.Group;
+ 
+ const options = { static: true };
+ 
+ init();
+ 
+-function setStatic(object, value) {
++function setStatic(object: THREE.Group, value: boolean) {
+     object.traverse(child => {
+-        if (child.isMesh) {
+-            child.static = value;
++        if ((child as THREE.Mesh).isMesh) {
++            (child as THREE.Mesh).static = value;
+         }
+     });
+ }
+diff --git a/examples-testing/examples/webgpu_performance_renderbundle.ts b/examples-testing/examples/webgpu_performance_renderbundle.ts
+index cfd8ec83..785d875b 100644
+--- a/examples-testing/examples/webgpu_performance_renderbundle.ts
++++ b/examples-testing/examples/webgpu_performance_renderbundle.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'stats-gl';
+ 
+@@ -6,12 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
+-let controls, stats;
+-let gui;
+-let geometries, group;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls, stats: Stats;
++let gui: GUI;
++let geometries: THREE.BufferGeometry[], group: THREE.Group;
+ 
+-let renderTimeAverages = [];
++let renderTimeAverages: number[] = [];
+ //
+ 
+ const position = new THREE.Vector3();
+@@ -35,7 +35,7 @@ init(!api.webgpu);
+ 
+ //
+ 
+-function randomizeMatrix(matrix) {
++function randomizeMatrix(matrix: THREE.Matrix4) {
+     position.x = Math.random() * 80 - 40;
+     position.y = Math.random() * 80 - 40;
+     position.z = Math.random() * 80 - 40;
+@@ -52,7 +52,7 @@ function randomizeMatrix(matrix) {
+     return matrix.compose(position, quaternion, scale);
+ }
+ 
+-function randomizeRotationSpeed(rotation) {
++function randomizeRotationSpeed(rotation: THREE.Euler) {
+     rotation.x = Math.random() * 0.05;
+     rotation.y = Math.random() * 0.05;
+     rotation.z = Math.random() * 0.05;
+@@ -81,20 +81,20 @@ function initGeometries() {
+ 
+ function cleanup() {
+     if (group) {
+-        group.parent.remove(group);
++        group.parent!.remove(group);
+ 
+-        if (group.dispose) {
+-            group.dispose();
++        if ((group as unknown as { dispose(): void }).dispose) {
++            (group as unknown as { dispose(): void }).dispose();
+         }
+     }
+ }
+ 
+-function initMesh(count) {
++function initMesh(count: number) {
+     cleanup();
+     initRegularMesh(count);
+ }
+ 
+-function initRegularMesh(count) {
++function initRegularMesh(count: number) {
+     group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
+ 
+     for (let i = 0; i < count; i++) {
+@@ -197,7 +197,7 @@ async function init(forceWebGL = false) {
+         camera.updateProjectionMatrix();
+ 
+         renderer.setSize(width, height);
+-        group.needsUpdate = true;
++        (group as THREE.BundleGroup).needsUpdate = true;
+     }
+ 
+     async function animate() {
+@@ -215,7 +215,7 @@ async function init(forceWebGL = false) {
+         const average = renderTimeAverages.reduce((a, b) => a + b, 0) / renderTimeAverages.length;
+         stats.update();
+ 
+-        document.getElementById('backend').innerText =
++        document.getElementById('backend')!.innerText =
+             `Average Render Time ${api.renderBundle ? '(Bundle)' : ''}: ` + average.toFixed(2) + 'ms';
+     }
+ 
+diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
+index ac86d2aa..f32d5ec9 100644
+--- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
++++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture } from 'three/tsl';
+ 
+ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
+index 79c23704..6a3d89db 100644
+--- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
++++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture } from 'three/tsl';
+ 
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgpu_pmrem_scene.ts b/examples-testing/examples/webgpu_pmrem_scene.ts
+index 7c47aeee..8d638554 100644
+--- a/examples-testing/examples/webgpu_pmrem_scene.ts
++++ b/examples-testing/examples/webgpu_pmrem_scene.ts
+@@ -1,11 +1,11 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { normalWorld, uniform, pmremTexture } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
  init();
  
@@ -16114,6 +16360,27 @@ index 06af5ab4..e543f68b 100644
 +    combinedPass = afterImage(scenePassColor, params.damp);
  
      postProcessing.outputNode = combinedPass;
+ 
+diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
+index f20978b8..46c08191 100644
+--- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
++++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, cubeTexture, screenUV, grayscale, uniform } from 'three/tsl';
+ import { anamorphic } from 'three/addons/tsl/display/AnamorphicNode.js';
+ 
+@@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let postProcessing: THREE.PostProcessing;
+ 
+ init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
 index 1957d7a9..d76a7142 100644
