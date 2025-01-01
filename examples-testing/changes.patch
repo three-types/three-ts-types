@@ -15022,6 +15022,31 @@ index 012a5065..6ca474e3 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
+index 2e466f0c..c3218846 100644
+--- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
++++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     bumpMap,
+     float,
+@@ -15,11 +15,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
+ import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+-let controls, cubeCamera;
++let controls: OrbitControls, cubeCamera: THREE.CubeCamera;
+ 
+-let groundPlane, wallMat;
++let groundPlane: THREE.Mesh, wallMat: THREE.MeshStandardNodeMaterial;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
 index 616645aa..288f6e84 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
@@ -15041,6 +15066,161 @@ index 616645aa..288f6e84 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
  init();
+ 
+diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
+index d19b1196..267d0cc5 100644
+--- a/examples-testing/examples/webgpu_materials_matcap.ts
++++ b/examples-testing/examples/webgpu_materials_matcap.ts
+@@ -1,11 +1,14 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
+ 
+-let mesh, renderer, scene, camera;
++let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapNodeMaterial>,
++    renderer: THREE.WebGPURenderer,
++    scene: THREE.Scene,
++    camera: THREE.PerspectiveCamera;
+ 
+ const API = {
+     color: 0xffffff, // sRGB
+@@ -52,7 +55,7 @@ function init() {
+ 
+     // model
+     new GLTFLoader(manager).load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        mesh = gltf.scene.children[0];
++        mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapNodeMaterial>;
+         mesh.position.y = -0.25;
+ 
+         mesh.material = new THREE.MeshMatcapNodeMaterial({
+@@ -104,7 +107,7 @@ function render() {
+ // drag and drop anywhere in document
+ //
+ 
+-function updateMatcap(texture) {
++function updateMatcap(texture: THREE.Texture) {
+     if (mesh.material.matcap) {
+         mesh.material.matcap.dispose();
+     }
+@@ -118,11 +121,11 @@ function updateMatcap(texture) {
+     render();
+ }
+ 
+-function handleJPG(event) {
++function handleJPG(event: ProgressEvent<FileReader>) {
+     // PNG, WebP, AVIF, too
+ 
+-    function imgCallback(event) {
+-        const texture = new THREE.Texture(event.target);
++    function imgCallback(event: Event) {
++        const texture = new THREE.Texture(event.target!);
+ 
+         texture.colorSpace = THREE.SRGBColorSpace;
+ 
+@@ -133,11 +136,11 @@ function handleJPG(event) {
+ 
+     img.onload = imgCallback;
+ 
+-    img.src = event.target.result;
++    img.src = event.target!.result as string;
+ }
+ 
+-function handleEXR(event) {
+-    const contents = event.target.result;
++function handleEXR(event: ProgressEvent<FileReader>) {
++    const contents = event.target!.result as ArrayBuffer;
+ 
+     const loader = new EXRLoader();
+ 
+@@ -162,9 +165,9 @@ function handleEXR(event) {
+     updateMatcap(texture);
+ }
+ 
+-function loadFile(file) {
++function loadFile(file: File) {
+     const filename = file.name;
+-    const extension = filename.split('.').pop().toLowerCase();
++    const extension = filename.split('.').pop()!.toLowerCase();
+ 
+     if (extension === 'exr') {
+         const reader = new FileReader();
+@@ -190,12 +193,12 @@ function loadFile(file) {
+ function initDragAndDrop() {
+     document.addEventListener('dragover', function (event) {
+         event.preventDefault();
+-        event.dataTransfer.dropEffect = 'copy';
++        event.dataTransfer!.dropEffect = 'copy';
+     });
+ 
+     document.addEventListener('drop', function (event) {
+         event.preventDefault();
+ 
+-        loadFile(event.dataTransfer.files[0]);
++        loadFile(event.dataTransfer!.files[0]);
+     });
+ }
+diff --git a/examples-testing/examples/webgpu_materials_sss.ts b/examples-testing/examples/webgpu_materials_sss.ts
+index 7a493c71..74e8e0d9 100644
+--- a/examples-testing/examples/webgpu_materials_sss.ts
++++ b/examples-testing/examples/webgpu_materials_sss.ts
+@@ -7,9 +7,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+ 
+-let container, stats;
+-let camera, scene, renderer;
+-let model;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let model: THREE.Mesh;
+ 
+ init();
+ 
+@@ -92,7 +92,7 @@ function initMaterial() {
+ 
+     const loaderFBX = new FBXLoader();
+     loaderFBX.load('models/fbx/stanford-bunny.fbx', function (object) {
+-        model = object.children[0];
++        model = object.children[0] as THREE.Mesh;
+         model.position.set(0, 0, 10);
+         model.scale.setScalar(1);
+         model.material = material;
+@@ -102,16 +102,24 @@ function initMaterial() {
+     initGUI(material);
+ }
+ 
+-function initGUI(material) {
++function initGUI(material: THREE.MeshSSSNodeMaterial) {
+     const gui = new GUI({ title: 'Thickness Control' });
+ 
+-    const ThicknessControls = function () {
+-        this.distortion = material.thicknessDistortionNode.value;
+-        this.ambient = material.thicknessAmbientNode.value;
+-        this.attenuation = material.thicknessAttenuationNode.value;
+-        this.power = material.thicknessPowerNode.value;
+-        this.scale = material.thicknessScaleNode.value;
+-    };
++    class ThicknessControls {
++        distortion: number;
++        ambient: number;
++        attenuation: number;
++        power: number;
++        scale: number;
++
++        constructor() {
++            this.distortion = material.thicknessDistortionNode.value;
++            this.ambient = material.thicknessAmbientNode.value;
++            this.attenuation = material.thicknessAttenuationNode.value;
++            this.power = material.thicknessPowerNode.value;
++            this.scale = material.thicknessScaleNode.value;
++        }
++    }
+ 
+     const thicknessControls = new ThicknessControls();
  
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
 index 1e9a2304..5f5dfef0 100644
@@ -15230,6 +15410,33 @@ index bd84aba0..f9d188c3 100644
          }
      }
  
+diff --git a/examples-testing/examples/webgpu_materialx_noise.ts b/examples-testing/examples/webgpu_materialx_noise.ts
+index ea14773f..0fd147cd 100644
+--- a/examples-testing/examples/webgpu_materialx_noise.ts
++++ b/examples-testing/examples/webgpu_materialx_noise.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     normalWorld,
+     time,
+@@ -13,12 +13,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
+ 
+-let container, stats;
++let container: HTMLDivElement, stats: Stats;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+-let particleLight;
+-let group;
++let particleLight: THREE.Mesh;
++let group: THREE.Group;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
 index 17bc8440..1f7bc551 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
@@ -15319,6 +15526,39 @@ index 17bc8440..1f7bc551 100644
      for (let i = 0, l = list.length; i < l; i++) {
          list[i].z *= factor;
      }
+diff --git a/examples-testing/examples/webgpu_mirror.ts b/examples-testing/examples/webgpu_mirror.ts
+index 989dd4d5..5e150190 100644
+--- a/examples-testing/examples/webgpu_mirror.ts
++++ b/examples-testing/examples/webgpu_mirror.ts
+@@ -1,13 +1,13 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { reflector, uv, texture, color } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+-let cameraControls;
++let cameraControls: OrbitControls;
+ 
+-let sphereGroup, smallSphere;
++let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
+ 
+ init();
+ 
+@@ -72,8 +72,8 @@ function init() {
+     const groundUVOffset = texture(decalNormal).xy.mul(2).sub(1).mul(groundNormalScale);
+     const verticalUVOffset = texture(floorNormal, uv().mul(5)).xy.mul(2).sub(1).mul(verticalNormalScale);
+ 
+-    groundReflector.uvNode = groundReflector.uvNode.add(groundUVOffset);
+-    verticalReflector.uvNode = verticalReflector.uvNode.add(verticalUVOffset);
++    groundReflector.uvNode = groundReflector.uvNode!.add(groundUVOffset);
++    verticalReflector.uvNode = verticalReflector.uvNode!.add(verticalUVOffset);
+ 
+     const groundNode = texture(decalDiffuse).a.mix(color(0xffffff), groundReflector);
+     const verticalNode = color(0x0000ff).mul(0.1).add(verticalReflector);
 diff --git a/examples-testing/examples/webgpu_modifier_curve.ts b/examples-testing/examples/webgpu_modifier_curve.ts
 index 4879a9e5..66fee55f 100644
 --- a/examples-testing/examples/webgpu_modifier_curve.ts
@@ -15473,6 +15713,33 @@ index a749bd6d..16bcee89 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_multiple_rendertargets.ts b/examples-testing/examples/webgpu_multiple_rendertargets.ts
+index d6a60fc2..8fac5871 100644
+--- a/examples-testing/examples/webgpu_multiple_rendertargets.ts
++++ b/examples-testing/examples/webgpu_multiple_rendertargets.ts
+@@ -1,10 +1,10 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { mix, vec2, step, texture, uv, screenUV, normalWorld, output, mrt } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, torus;
+-let postProcessing, renderTarget;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
++let postProcessing: THREE.PostProcessing, renderTarget: THREE.RenderTarget;
+ 
+ init();
+ 
+@@ -84,7 +84,7 @@ function onWindowResize() {
+     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
+ }
+ 
+-function render(time) {
++function render(time: DOMHighResTimeStamp) {
+     torus.rotation.y = (time / 1000) * 0.4;
+ 
+     // render scene into target
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 index 989361b6..491df42d 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
@@ -15550,6 +15817,56 @@ index 989361b6..491df42d 100644
  
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
+diff --git a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
+index d105b77c..2cdd4ba7 100644
+--- a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
++++ b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
+@@ -1,14 +1,14 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { texture } from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ const mouse = new THREE.Vector2();
+ 
+-let quadMesh, renderTarget;
++let quadMesh: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
+ 
+-let box, box2;
++let box: THREE.InstancedMesh, box2: THREE.InstancedMesh;
+ 
+ const dpr = 1;
+ 
+@@ -22,7 +22,7 @@ const mat4 = new THREE.Matrix4();
+ const count = 50;
+ const fullRadius = 20; // Radius of the sphere
+ const halfRadius = 10; // Radius of the sphere
+-const positions = new Array(count).fill().map((_, i) => {
++const positions = new Array(count).fill(undefined).map((_, i) => {
+     const radius = i % 2 === 0 ? fullRadius : halfRadius;
+ 
+     const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
+@@ -41,7 +41,7 @@ init();
+ function initGUI() {
+     const gui = new GUI();
+     gui.add(params, 'samples', 0, 4).step(1);
+-    gui.add(params, 'animated', true);
++    gui.add(params, 'animated');
+ }
+ 
+ function init() {
+@@ -97,7 +97,7 @@ function init() {
+     quadMesh = new THREE.QuadMesh(materialFX);
+ }
+ 
+-function onWindowMouseMove(e) {
++function onWindowMouseMove(e: MouseEvent) {
+     mouse.x = e.offsetX / window.innerWidth;
+     mouse.y = e.offsetY / window.innerHeight;
+ }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
 index 9eb9922d..b75024ec 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
