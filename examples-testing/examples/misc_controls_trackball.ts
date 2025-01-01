@@ -5,12 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-let perspectiveCamera: THREE.PerspectiveCamera,
-    orthographicCamera: THREE.OrthographicCamera,
-    controls: TrackballControls,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    stats: Stats;
+let perspectiveCamera, orthographicCamera, controls, scene, renderer, stats;
 
 const params = {
     orthographicCamera: false,
@@ -97,7 +92,7 @@ function init() {
     createControls(perspectiveCamera);
 }
 
-function createControls(camera: THREE.Camera) {
+function createControls(camera) {
     controls = new TrackballControls(camera, renderer.domElement);
 
     controls.rotateSpeed = 1.0;
