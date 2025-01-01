@@ -57,7 +57,6 @@ const exceptionList = [
     'webgpu_instance_uniform',
     'webgpu_lights_custom',
     'webgpu_lines_fat_wireframe',
-    // 'webgpu_materials',
     // 'webgpu_materials_envmaps_bpcem',
     // 'webgpu_materials_matcap',
     // 'webgpu_materials_sss',
