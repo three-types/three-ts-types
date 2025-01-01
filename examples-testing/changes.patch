@@ -4608,7 +4608,7 @@ index 9a198325..e47d7b66 100644
              if (shape.holes && shape.holes.length > 0) {
                  for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_gpgpu_birds.ts b/examples-testing/examples/webgl_gpgpu_birds.ts
-index 20a5e0d9..5bb4ed25 100644
+index 20a5e0d9..e9293211 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -4689,24 +4689,28 @@ index 20a5e0d9..5bb4ed25 100644
          side: THREE.DoubleSide,
      });
  
-@@ -231,7 +231,7 @@ function initBirds() {
+@@ -231,8 +231,8 @@ function initBirds() {
      scene.add(birdMesh);
  }
  
 -function fillPositionTexture(texture) {
+-    const theArray = texture.image.data;
 +function fillPositionTexture(texture: THREE.DataTexture) {
-     const theArray = texture.image.data;
++    const theArray = texture.image.data as Float32Array;
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
-@@ -246,7 +246,7 @@ function fillPositionTexture(texture) {
+         const x = Math.random() * BOUNDS - BOUNDS_HALF;
+@@ -246,8 +246,8 @@ function fillPositionTexture(texture) {
      }
  }
  
 -function fillVelocityTexture(texture) {
+-    const theArray = texture.image.data;
 +function fillVelocityTexture(texture: THREE.DataTexture) {
-     const theArray = texture.image.data;
++    const theArray = texture.image.data as Float32Array;
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+         const x = Math.random() - 0.5;
 @@ -271,7 +271,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -4717,7 +4721,7 @@ index 20a5e0d9..5bb4ed25 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
-index 3176b95a..df84fb25 100644
+index 3176b95a..2463484a 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -4863,24 +4867,28 @@ index 3176b95a..df84fb25 100644
      const geometry = BirdGeometry;
  
      const m = new THREE.MeshStandardMaterial({
-@@ -331,7 +344,7 @@ function initBirds(effectController) {
+@@ -331,8 +344,8 @@ function initBirds(effectController) {
      scene.add(birdMesh);
  }
  
 -function fillPositionTexture(texture) {
+-    const theArray = texture.image.data;
 +function fillPositionTexture(texture: THREE.DataTexture) {
-     const theArray = texture.image.data;
++    const theArray = texture.image.data as Float32Array;
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
-@@ -346,7 +359,7 @@ function fillPositionTexture(texture) {
+         const x = Math.random() * BOUNDS - BOUNDS_HALF;
+@@ -346,8 +359,8 @@ function fillPositionTexture(texture) {
      }
  }
  
 -function fillVelocityTexture(texture) {
+-    const theArray = texture.image.data;
 +function fillVelocityTexture(texture: THREE.DataTexture) {
-     const theArray = texture.image.data;
++    const theArray = texture.image.data as Float32Array;
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
+         const x = Math.random() - 0.5;
 @@ -371,7 +384,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -4891,7 +4899,7 @@ index 3176b95a..df84fb25 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_protoplanet.ts b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
-index 30444ddb..158350b0 100644
+index 30444ddb..e1c40aef 100644
 --- a/examples-testing/examples/webgl_gpgpu_protoplanet.ts
 +++ b/examples-testing/examples/webgl_gpgpu_protoplanet.ts
 @@ -4,22 +4,32 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -4962,15 +4970,19 @@ index 30444ddb..158350b0 100644
      });
  
      const particles = new THREE.Points(geometry, material);
-@@ -164,7 +174,7 @@ function initProtoplanets() {
+@@ -164,9 +174,9 @@ function initProtoplanets() {
      scene.add(particles);
  }
  
 -function fillTextures(texturePosition, textureVelocity) {
+-    const posArray = texturePosition.image.data;
+-    const velArray = textureVelocity.image.data;
 +function fillTextures(texturePosition: THREE.DataTexture, textureVelocity: THREE.DataTexture) {
-     const posArray = texturePosition.image.data;
-     const velArray = textureVelocity.image.data;
++    const posArray = texturePosition.image.data as Float32Array;
++    const velArray = textureVelocity.image.data as Float32Array;
  
+     const radius = effectController.radius;
+     const height = effectController.height;
 @@ -261,7 +271,7 @@ function initGUI() {
      folder2.open();
  }
@@ -4981,7 +4993,7 @@ index 30444ddb..158350b0 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 00c32f22..57e7c212 100644
+index 00c32f22..e1655f04 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -5078,6 +5090,15 @@ index 00c32f22..57e7c212 100644
          let multR = waterMaxHeight;
          let mult = 0.025;
          let r = 0;
+@@ -234,7 +234,7 @@ function fillTexture(texture) {
+         return r;
+     }
+ 
+-    const pixels = texture.image.data;
++    const pixels = texture.image.data as Float32Array;
+ 
+     let p = 0;
+     for (let j = 0; j < WIDTH; j++) {
 @@ -346,12 +346,12 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -8695,7 +8716,7 @@ index 24bd4eb9..2dad75e8 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgl_materials_texture_partialupdate.ts b/examples-testing/examples/webgl_materials_texture_partialupdate.ts
-index 5adfc8e6..55d802e3 100644
+index 5adfc8e6..6f3772f0 100644
 --- a/examples-testing/examples/webgl_materials_texture_partialupdate.ts
 +++ b/examples-testing/examples/webgl_materials_texture_partialupdate.ts
 @@ -1,6 +1,11 @@
@@ -8711,14 +8732,17 @@ index 5adfc8e6..55d802e3 100644
  
  let last = 0;
  const position = new THREE.Vector2();
-@@ -77,7 +82,7 @@ function animate() {
+@@ -77,9 +82,9 @@ function animate() {
      renderer.render(scene, camera);
  }
  
 -function updateDataTexture(texture) {
 +function updateDataTexture(texture: THREE.DataTexture) {
      const size = texture.image.width * texture.image.height;
-     const data = texture.image.data;
+-    const data = texture.image.data;
++    const data = texture.image.data as Uint8Array;
+ 
+     // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgl_materials_texture_rotation.ts b/examples-testing/examples/webgl_materials_texture_rotation.ts
 index 90b9416d..e6034b82 100644
@@ -17115,7 +17139,7 @@ index 7eb0ce1b..7528f59f 100644
      const windowHalfY = window.innerHeight / 2;
  
 diff --git a/examples-testing/examples/webgpu_textures_partialupdate.ts b/examples-testing/examples/webgpu_textures_partialupdate.ts
-index e8ebe87d..9fae06bd 100644
+index e8ebe87d..bc6886f0 100644
 --- a/examples-testing/examples/webgpu_textures_partialupdate.ts
 +++ b/examples-testing/examples/webgpu_textures_partialupdate.ts
 @@ -1,6 +1,11 @@
@@ -17132,14 +17156,17 @@ index e8ebe87d..9fae06bd 100644
  
  let last = 0;
  const position = new THREE.Vector2();
-@@ -78,7 +83,7 @@ async function animate() {
+@@ -78,9 +83,9 @@ async function animate() {
      }
  }
  
 -function updateDataTexture(texture) {
 +function updateDataTexture(texture: THREE.DataTexture) {
      const size = texture.image.width * texture.image.height;
-     const data = texture.image.data;
+-    const data = texture.image.data;
++    const data = texture.image.data as Uint8Array;
+ 
+     // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
 index 07fb8d27..ea32b4d6 100644
