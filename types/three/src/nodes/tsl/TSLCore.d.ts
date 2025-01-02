@@ -234,7 +234,7 @@ export function nodeImmutable<T>(
 interface Layout {
     name: string;
     type: string;
-    inputs: { name: string; type: string }[];
+    inputs: { name: string; type: "bool" | "int" | "float" | "vec2" | "vec3" | "vec4"; qualifier?: "in" | "out" | "inout" }[];
 }
 
 interface ShaderNodeFn<Args extends readonly unknown[]> {
