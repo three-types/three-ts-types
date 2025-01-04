@@ -4,6 +4,7 @@ import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import ConvertNode from '../utils/ConvertNode.js';
+import { Vector3 } from '../../math/Vector3.js';
 
 export interface NodeElements {
     toGlobal: (node: Node) => Node;
@@ -86,7 +87,7 @@ export type ShaderNodeObject<T extends Node> =
     & Swizzable<T>;
 
 /** anything that can be passed to {@link nodeObject} and returns a proxy */
-export type NodeRepresentation<T extends Node = Node> = number | boolean | Node | ShaderNodeObject<T>;
+export type NodeRepresentation<T extends Node = Node> = number | boolean | Vector3 | Node | ShaderNodeObject<T>;
 
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = NodeRepresentation | string;
