@@ -115,7 +115,7 @@ export { default as ScriptableNode } from "./code/ScriptableNode.js";
 export { default as ScriptableValueNode } from "./code/ScriptableValueNode.js";
 
 // geometry
-export { default as RangeNode, RangeModeBound } from "./geometry/RangeNode.js";
+export { default as RangeNode } from "./geometry/RangeNode.js";
 
 // gpgpu
 export { default as ComputeNode } from "./gpgpu/ComputeNode.js";
