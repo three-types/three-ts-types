@@ -3,6 +3,7 @@ import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
+import ConvertNode from '../utils/ConvertNode.js';
 
 export interface NodeElements {
     toGlobal: (node: Node) => Node;
@@ -278,6 +279,7 @@ export function append(node: Node): Node;
 interface ColorFunction {
     (color?: ColorRepresentation): ShaderNodeObject<ConstNode<Color>>;
     (r: number, g: number, b: number): ShaderNodeObject<ConstNode<Color>>;
+    (node: Node): ShaderNodeObject<ConvertNode>;
 }
 
 export const color: ColorFunction;
