@@ -1,3 +1,4 @@
+import { Color, ColorRepresentation } from "../../math/Color.js";
 import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
@@ -274,7 +275,12 @@ export const If: (boolNode: Node, method: () => void) => StackNode;
 
 export function append(node: Node): Node;
 
-export const color: ConvertType;
+interface ColorFunction {
+    (color?: ColorRepresentation): ShaderNodeObject<ConstNode<Color>>;
+    (r: number, g: number, b: number): ShaderNodeObject<ConstNode<Color>>;
+}
+
+export const color: ColorFunction;
 
 export const float: ConvertType;
 export const int: ConvertType;
