@@ -1,10 +1,10 @@
 import { Color, ColorRepresentation } from "../../math/Color.js";
+import { Vector3 } from "../../math/Vector3.js";
 import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
-import ConvertNode from '../utils/ConvertNode.js';
-import { Vector3 } from '../../math/Vector3.js';
+import ConvertNode from "../utils/ConvertNode.js";
 
 export interface NodeElements {
     toGlobal: (node: Node) => Node;
