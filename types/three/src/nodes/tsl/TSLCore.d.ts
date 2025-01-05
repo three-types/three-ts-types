@@ -1,5 +1,10 @@
 import { Color, ColorRepresentation } from "../../math/Color.js";
+import { Matrix2 } from "../../math/Matrix2.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
@@ -184,8 +189,6 @@ type GetConstructorsByScope<T, S> = ConstructorUnion<FilterConstructorsByScope<O
 type GetConstructors<T> = ConstructorUnion<OverloadedConstructorsOf<T>>;
 type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
 
-export type ConvertType = (...params: unknown[]) => ShaderNodeObject<Node>;
-
 type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
 type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
 type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends Node ? R : never) : never;
@@ -283,29 +286,112 @@ interface ColorFunction {
 
 export const color: ColorFunction;
 
-export const float: ConvertType;
-export const int: ConvertType;
-export const uint: ConvertType;
-export const bool: ConvertType;
+interface NumberFunction {
+    (value?: number): ShaderNodeObject<ConstNode<number>>;
+    (node: Node): ShaderNodeObject<Node>;
+}
 
-export const vec2: ConvertType;
-export const ivec2: ConvertType;
-export const uvec2: ConvertType;
-export const bvec2: ConvertType;
+export const float: NumberFunction;
+export const int: NumberFunction;
+export const uint: NumberFunction;
 
-export const vec3: ConvertType;
-export const ivec3: ConvertType;
-export const uvec3: ConvertType;
-export const bvec3: ConvertType;
+interface BooleanFunction {
+    (value?: boolean): ShaderNodeObject<ConstNode<boolean>>;
+    (node: Node): ShaderNodeObject<Node>;
+}
 
-export const vec4: ConvertType;
-export const ivec4: ConvertType;
-export const uvec4: ConvertType;
-export const bvec4: ConvertType;
+export const bool: BooleanFunction;
 
-export const mat2: ConvertType;
-export const mat3: ConvertType;
-export const mat4: ConvertType;
+interface Vector2Function {
+    (value: Vector2): ShaderNodeObject<ConstNode<Vector2>>;
+    (xy: number): ShaderNodeObject<ConstNode<Vector2>>;
+    (x?: number, y?: number): ShaderNodeObject<ConstNode<Vector2>>;
+    (node: Node): ShaderNodeObject<ConvertNode>;
+    (x: Node, y: Node): ShaderNodeObject<Node>;
+}
+
+export const vec2: Vector2Function;
+export const ivec2: Vector2Function;
+export const uvec2: Vector2Function;
+export const bvec2: (node: Node) => ShaderNodeObject<Node>;
+
+interface Vector3Function {
+    (value: Vector3): ShaderNodeObject<ConstNode<Vector3>>;
+    (xyz: number): ShaderNodeObject<ConstNode<Vector3>>;
+    (x?: number, y?: number, z?: number): ShaderNodeObject<ConstNode<Vector3>>;
+    (node: Node): ShaderNodeObject<Node>;
+    (x: Node, y: Node, z: Node): ShaderNodeObject<Node>;
+}
+
+export const vec3: Vector3Function;
+export const ivec3: Vector3Function;
+export const uvec3: Vector3Function;
+export const bvec3: (node: Node) => ShaderNodeObject<Node>;
+
+interface Vector4Function {
+    (value: Vector4): ShaderNodeObject<ConstNode<Vector4>>;
+    (xyz: number): ShaderNodeObject<ConstNode<Vector4>>;
+    (x?: number, y?: number, z?: number, w?: number): ShaderNodeObject<ConstNode<Vector4>>;
+    (node: Node): ShaderNodeObject<ConvertNode>;
+    (x: Node, y: Node, z: Node, w: Node): ShaderNodeObject<Node>;
+}
+
+export const vec4: Vector4Function;
+export const ivec4: Vector4Function;
+export const uvec4: Vector4Function;
+export const bvec4: (node: Node) => ShaderNodeObject<Node>;
+
+interface Matrix2Function {
+    (value: Matrix2): ShaderNodeObject<ConstNode<Matrix2>>;
+    (node: Node): ShaderNodeObject<Node>;
+}
+
+export const mat2: Matrix2Function;
+
+interface Matrix3Function {
+    (value: Matrix3): ShaderNodeObject<ConstNode<Matrix3>>;
+    (
+        n11: number,
+        n12: number,
+        n13: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n31: number,
+        n32: number,
+        n33: number,
+    ): ShaderNodeObject<ConstNode<Matrix3>>;
+    (): ShaderNodeObject<ConstNode<Matrix3>>;
+    (node: Node): ShaderNodeObject<Node>;
+}
+
+export const mat3: Matrix3Function;
+
+interface Matrix4Function {
+    (value: Matrix4): ShaderNodeObject<ConstNode<Matrix4>>;
+    (
+        n11: number,
+        n12: number,
+        n13: number,
+        n14: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n24: number,
+        n31: number,
+        n32: number,
+        n33: number,
+        n34: number,
+        n41: number,
+        n42: number,
+        n43: number,
+        n44: number,
+    ): ShaderNodeObject<ConstNode<Matrix4>>;
+    (): ShaderNodeObject<ConstNode<Matrix4>>;
+    (node: Node): ShaderNodeObject<Node>;
+}
+
+export const mat4: Matrix4Function;
 
 export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
