@@ -9,7 +9,6 @@ import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
-import ConvertNode from "../utils/ConvertNode.js";
 import JoinNode from "../utils/JoinNode.js";
 
 export interface NodeElements {
@@ -96,7 +95,7 @@ export type ShaderNodeObject<T extends Node> =
     & Swizzable<T>;
 
 /** anything that can be passed to {@link nodeObject} and returns a proxy */
-export type NodeRepresentation<T extends Node = Node> = number | boolean | Vector3 | Node | ShaderNodeObject<T>;
+export type NodeRepresentation = Node;
 
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = NodeRepresentation | string;
@@ -107,7 +106,7 @@ export type NodeObject<T> = T extends Node ? ShaderNodeObject<T>
     : T;
 
 // opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
-type Proxied<T> = T extends Node ? NodeRepresentation<T> : T;
+type Proxied<T> = T extends Node ? NodeRepresentation : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
