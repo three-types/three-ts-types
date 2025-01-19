@@ -8320,7 +8320,7 @@ index d0934d34..9066b3ed 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 9c134938..52c86f5e 100644
+index 9c134938..9dc21023 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
@@ -8331,7 +8331,7 @@ index 9c134938..52c86f5e 100644
  } from '../../../nodes/TSL.js';
  
  import {
-@@ -23,9 +24,62 @@ import {
+@@ -23,10 +24,63 @@ import {
      EquirectangularRefractionMapping,
  } from '../../../constants.js';
  import { hashArray } from '../../../nodes/core/NodeUtils.js';
@@ -8391,10 +8391,12 @@ index 9c134938..52c86f5e 100644
  
  const _outputNodeMap = new WeakMap();
 -const _chainKeys = [];
+-const _cacheKeyValues = [];
 +const _chainKeys = [] as unknown as [UniformGroupNode, NodeUniformsGroup] | [Scene, LightsNode];
- const _cacheKeyValues = [];
++const _cacheKeyValues: number[] = [];
  
  /**
+  * This renderer module manages node-related objects and is the
 @@ -35,14 +89,27 @@ const _cacheKeyValues = [];
   * @private
   * @augments DataMap
@@ -8537,6 +8539,15 @@ index 9c134938..52c86f5e 100644
  
          if (cacheKeyData.callId !== callId) {
              const environmentNode = this.getEnvironmentNode(scene);
+@@ -369,7 +433,7 @@ class Nodes extends DataMap {
+             cacheKeyData.callId = callId;
+             cacheKeyData.cacheKey = hashArray(_cacheKeyValues);
+ 
+-            this.callHashCache.set(_chainKeys, cacheKeyData);
++            this.callHashCache.set(_chainKeys as readonly [Scene, LightsNode], cacheKeyData);
+ 
+             _cacheKeyValues.length = 0;
+         }
 @@ -395,7 +459,7 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
