@@ -5292,18 +5292,21 @@ index ffa28996..f690315a 100644
          this.camera = camera;
      }
 diff --git a/src-testing/src/renderers/common/RenderBundles.ts b/src-testing/src/renderers/common/RenderBundles.ts
-index 70b91e79..7278463e 100644
+index d6c72696..3ae4005b 100644
 --- a/src-testing/src/renderers/common/RenderBundles.ts
 +++ b/src-testing/src/renderers/common/RenderBundles.ts
-@@ -1,5 +1,7 @@
+@@ -1,7 +1,9 @@
  import ChainMap from './ChainMap.js';
  import RenderBundle from './RenderBundle.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import BundleGroup from './BundleGroup.js';
  
+-const _chainKeys = [];
++const _chainKeys = [] as unknown as [BundleGroup, Camera];
+ 
  /**
   * This renderer module manages render bundles.
-@@ -7,6 +9,8 @@ import RenderBundle from './RenderBundle.js';
+@@ -9,6 +11,8 @@ const _chainKeys = [];
   * @private
   */
  class RenderBundles {
@@ -5312,18 +5315,15 @@ index 70b91e79..7278463e 100644
      /**
       * Constructs a new render bundle management component.
       */
-@@ -26,9 +30,9 @@ class RenderBundles {
+@@ -28,7 +32,7 @@ class RenderBundles {
       * @param {Camera} camera - The camera the bundle group is rendered with.
       * @return {RenderBundle} The render bundle.
       */
 -    get(bundleGroup, camera) {
 +    get(bundleGroup: BundleGroup, camera: Camera) {
          const bundles = this.bundles;
--        const keys = [bundleGroup, camera];
-+        const keys = [bundleGroup, camera] as const;
  
-         let bundle = bundles.get(keys);
- 
+         _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
 index e70a328d..b805b43e 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
@@ -5400,19 +5400,22 @@ index e70a328d..b805b43e 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index dc3f8138..77d641ef 100644
+index 3bbb7bf3..4222fbb7 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
-@@ -1,5 +1,8 @@
+@@ -1,7 +1,10 @@
  import ChainMap from './ChainMap.js';
  import RenderContext from './RenderContext.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import { RenderTarget } from '../../core/RenderTarget.js';
 +import { Object3D } from '../../core/Object3D.js';
  
+-const _chainKeys = [];
++const _chainKeys = [] as unknown as [Object3D, Camera] | [Object3D, Camera, { id: 'default' }];
+ 
  /**
   * This module manages the render contexts of the renderer.
-@@ -7,6 +10,12 @@ import RenderContext from './RenderContext.js';
+@@ -9,6 +12,12 @@ const _chainKeys = [];
   * @private
   */
  class RenderContexts {
@@ -5425,16 +5428,16 @@ index dc3f8138..77d641ef 100644
      /**
       * Constructs a new render context management component.
       */
-@@ -28,7 +37,7 @@ class RenderContexts {
+@@ -30,7 +39,7 @@ class RenderContexts {
       * @param {RenderTarget?} [renderTarget=null] - The active render target.
       * @return {RenderContext} The render context.
       */
 -    get(scene = null, camera = null, renderTarget = null) {
 +    get(scene: Object3D | null = null, camera: Camera | null = null, renderTarget: RenderTarget | null = null) {
-         const chainKey = [];
-         if (scene !== null) chainKey.push(scene);
-         if (camera !== null) chainKey.push(camera);
-@@ -69,8 +78,11 @@ class RenderContexts {
+         if (scene !== null) _chainKeys.push(scene);
+         if (camera !== null) _chainKeys.push(camera);
+ 
+@@ -72,8 +81,11 @@ class RenderContexts {
       * @param {String} attachmentState - The attachment state.
       * @return {ChainMap} The chain map.
       */
@@ -5656,19 +5659,22 @@ index 798a149f..d0006a7e 100644
          if (this.transparentDoublePass.length > 1)
              this.transparentDoublePass.sort(customTransparentSort || reversePainterSortStable);
 diff --git a/src-testing/src/renderers/common/RenderLists.ts b/src-testing/src/renderers/common/RenderLists.ts
-index f4355548..cb1756ad 100644
+index d12ad583..ef6e14ec 100644
 --- a/src-testing/src/renderers/common/RenderLists.ts
 +++ b/src-testing/src/renderers/common/RenderLists.ts
-@@ -1,5 +1,8 @@
+@@ -1,7 +1,10 @@
  import ChainMap from './ChainMap.js';
  import RenderList from './RenderList.js';
 +import { Object3D } from '../../core/Object3D.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import Lighting from './Lighting.js';
  
+-const _chainKeys = [];
++const _chainKeys = [] as unknown as [Object3D, Camera];
+ 
  /**
   * This renderer module manages the render lists which are unique
-@@ -8,12 +11,16 @@ import RenderList from './RenderList.js';
+@@ -10,12 +13,16 @@ const _chainKeys = [];
   * @private
   */
  class RenderLists {
@@ -5686,7 +5692,7 @@ index f4355548..cb1756ad 100644
          /**
           * The lighting management component.
           *
-@@ -26,7 +33,7 @@ class RenderLists {
+@@ -28,7 +35,7 @@ class RenderLists {
           *
           * @type {ChainMap}
           */
@@ -5695,19 +5701,16 @@ index f4355548..cb1756ad 100644
      }
  
      /**
-@@ -36,9 +43,9 @@ class RenderLists {
+@@ -38,7 +45,7 @@ class RenderLists {
       * @param {Camera} camera - The camera.
       * @return {RenderList} The render list.
       */
 -    get(scene, camera) {
 +    get(scene: Object3D, camera: Camera) {
          const lists = this.lists;
--        const keys = [scene, camera];
-+        const keys = [scene, camera] as const;
  
-         let list = lists.get(keys);
- 
-@@ -54,7 +61,7 @@ class RenderLists {
+         _chainKeys[0] = scene;
+@@ -60,7 +67,7 @@ class RenderLists {
       * Frees all internal resources.
       */
      dispose() {
@@ -5881,10 +5884,10 @@ index 7284e730..4e9dbde0 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index c5a7a0b2..8f71a22b 100644
+index d9a10284..2f536d3f 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
-@@ -1,7 +1,25 @@
+@@ -1,7 +1,20 @@
  import ChainMap from './ChainMap.js';
  import RenderObject from './RenderObject.js';
 +import Renderer from './Renderer.js';
@@ -5901,17 +5904,12 @@ index c5a7a0b2..8f71a22b 100644
 +import { Camera } from '../../cameras/Camera.js';
 +import ClippingContext from './ClippingContext.js';
  
--const _chainArray = [];
-+const _chainArray: [Object3D, Material, RenderContext, LightsNode] = [] as unknown as [
-+    Object3D,
-+    Material,
-+    RenderContext,
-+    LightsNode,
-+];
+-const _chainKeys = [];
++const _chainKeys = [] as unknown as [Object3D, Material, RenderContext, LightsNode];
  
  /**
   * This module manages the render objects of the renderer.
-@@ -9,6 +27,15 @@ const _chainArray = [];
+@@ -9,6 +22,15 @@ const _chainKeys = [];
   * @private
   */
  class RenderObjects {
@@ -5927,7 +5925,7 @@ index c5a7a0b2..8f71a22b 100644
      /**
       * Constructs a new render object management component.
       *
-@@ -19,7 +46,14 @@ class RenderObjects {
+@@ -19,7 +41,14 @@ class RenderObjects {
       * @param {Bindings} bindings - Renderer component for managing bindings.
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
@@ -5943,7 +5941,7 @@ index c5a7a0b2..8f71a22b 100644
          /**
           * The renderer.
           *
-@@ -84,7 +118,16 @@ class RenderObjects {
+@@ -84,7 +113,16 @@ class RenderObjects {
       * @param {String?} passId - An optional ID for identifying the pass.
       * @return {RenderObject} The render object.
       */
@@ -5961,16 +5959,16 @@ index c5a7a0b2..8f71a22b 100644
          const chainMap = this.getChainMap(passId);
  
          // reuse chainArray
-@@ -112,7 +155,7 @@ class RenderObjects {
+@@ -112,7 +150,7 @@ class RenderObjects {
  
-             chainMap.set(_chainArray, renderObject);
+             chainMap.set(_chainKeys, renderObject);
          } else {
 -            renderObject.updateClipping(clippingContext);
 +            renderObject.updateClipping(clippingContext!);
  
              if (renderObject.needsGeometryUpdate) {
                  renderObject.setGeometry(object.geometry);
-@@ -148,7 +191,13 @@ class RenderObjects {
+@@ -150,7 +188,13 @@ class RenderObjects {
       * @return {ChainMap} The chain map.
       */
      getChainMap(passId = 'default') {
@@ -5985,7 +5983,7 @@ index c5a7a0b2..8f71a22b 100644
      }
  
      /**
-@@ -175,17 +224,17 @@ class RenderObjects {
+@@ -177,17 +221,17 @@ class RenderObjects {
       * @return {RenderObject} The render object.
       */
      createRenderObject(
@@ -8316,7 +8314,7 @@ index d0934d34..9066b3ed 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index c784bdf3..05367243 100644
+index 8b398869..2d7bdea8 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
@@ -8327,7 +8325,7 @@ index c784bdf3..05367243 100644
  } from '../../../nodes/TSL.js';
  
  import {
-@@ -23,6 +24,54 @@ import {
+@@ -23,9 +24,57 @@ import {
      EquirectangularRefractionMapping,
  } from '../../../constants.js';
  import { hashArray } from '../../../nodes/core/NodeUtils.js';
@@ -8381,8 +8379,12 @@ index c784bdf3..05367243 100644
 +}
  
  const _outputNodeMap = new WeakMap();
+-const _chainKeys = [];
++const _chainKeys = [] as unknown as [UniformGroupNode, NodeUniformsGroup] | [Scene, LightsNode];
  
-@@ -33,14 +82,27 @@ const _outputNodeMap = new WeakMap();
+ /**
+  * This renderer module manages node-related objects and is the
+@@ -34,14 +83,27 @@ const _chainKeys = [];
   * @private
   * @augments DataMap
   */
@@ -8412,7 +8414,7 @@ index c784bdf3..05367243 100644
          super();
  
          /**
-@@ -100,7 +162,7 @@ class Nodes extends DataMap {
+@@ -101,7 +163,7 @@ class Nodes extends DataMap {
       * @param {NodeUniformsGroup} nodeUniformsGroup - The node uniforms group.
       * @return {Boolean} Whether the node uniforms group requires an update or not.
       */
@@ -8421,16 +8423,7 @@ index c784bdf3..05367243 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -140,7 +202,7 @@ class Nodes extends DataMap {
- 
-         // other groups are updated just when groupNode.needsUpdate is true
- 
--        const groupChain = [groupNode, nodeUniformsGroup];
-+        const groupChain = [groupNode, nodeUniformsGroup] as const;
- 
-         let groupData = this.groupsData.get(groupChain);
-         if (groupData === undefined) this.groupsData.set(groupChain, (groupData = {}));
-@@ -160,7 +222,7 @@ class Nodes extends DataMap {
+@@ -164,7 +226,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Number} The cache key.
       */
@@ -8439,7 +8432,7 @@ index c784bdf3..05367243 100644
          return renderObject.initialCacheKey;
      }
  
-@@ -170,7 +232,7 @@ class Nodes extends DataMap {
+@@ -174,7 +236,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8448,7 +8441,7 @@ index c784bdf3..05367243 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -213,13 +275,13 @@ class Nodes extends DataMap {
+@@ -217,13 +279,13 @@ class Nodes extends DataMap {
       * @param {Any} object - The object to delete.
       * @return {Object?} The deleted dictionary.
       */
@@ -8466,7 +8459,7 @@ index c784bdf3..05367243 100644
              }
          }
  
-@@ -232,7 +294,7 @@ class Nodes extends DataMap {
+@@ -236,7 +298,7 @@ class Nodes extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8475,7 +8468,7 @@ index c784bdf3..05367243 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -256,7 +318,7 @@ class Nodes extends DataMap {
+@@ -260,7 +322,7 @@ class Nodes extends DataMap {
       * @param {NodeBuilder} nodeBuilder - The node builder.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8484,7 +8477,7 @@ index c784bdf3..05367243 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -278,9 +340,8 @@ class Nodes extends DataMap {
+@@ -282,9 +344,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene environment.
       */
@@ -8495,7 +8488,7 @@ index c784bdf3..05367243 100644
          let environmentNode = null;
  
          if (scene.environmentNode && scene.environmentNode.isNode) {
-@@ -303,9 +364,8 @@ class Nodes extends DataMap {
+@@ -307,9 +368,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene background.
       */
@@ -8506,7 +8499,7 @@ index c784bdf3..05367243 100644
          let backgroundNode = null;
  
          if (scene.backgroundNode && scene.backgroundNode.isNode) {
-@@ -327,9 +387,8 @@ class Nodes extends DataMap {
+@@ -331,9 +391,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene fog.
       */
@@ -8517,18 +8510,16 @@ index c784bdf3..05367243 100644
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
-@@ -343,8 +402,8 @@ class Nodes extends DataMap {
+@@ -347,7 +406,7 @@ class Nodes extends DataMap {
       * @param {LightsNode} lightsNode - The lights node.
       * @return {Number} The cache key.
       */
 -    getCacheKey(scene, lightsNode) {
--        const chain = [scene, lightsNode];
 +    getCacheKey(scene: Scene, lightsNode: LightsNode) {
-+        const chain = [scene, lightsNode] as const;
-         const callId = this.renderer.info.calls;
+         _chainKeys[0] = scene;
+         _chainKeys[1] = lightsNode;
  
-         let cacheKeyData = this.callHashCache.get(chain);
-@@ -388,7 +447,7 @@ class Nodes extends DataMap {
+@@ -396,7 +455,7 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8537,7 +8528,7 @@ index c784bdf3..05367243 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -403,7 +462,7 @@ class Nodes extends DataMap {
+@@ -411,7 +470,7 @@ class Nodes extends DataMap {
                      background,
                      () => {
                          if (
@@ -8546,7 +8537,7 @@ index c784bdf3..05367243 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -413,18 +472,18 @@ class Nodes extends DataMap {
+@@ -421,18 +480,18 @@ class Nodes extends DataMap {
                              } else {
                                  let envMap;
  
@@ -8571,7 +8562,7 @@ index c784bdf3..05367243 100644
                          }
                      },
                      forceUpdate,
-@@ -450,7 +509,12 @@ class Nodes extends DataMap {
+@@ -458,7 +517,12 @@ class Nodes extends DataMap {
       * @param {Boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -8585,7 +8576,7 @@ index c784bdf3..05367243 100644
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -469,22 +533,22 @@ class Nodes extends DataMap {
+@@ -477,22 +541,22 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8616,7 +8607,7 @@ index c784bdf3..05367243 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -507,14 +571,14 @@ class Nodes extends DataMap {
+@@ -515,14 +579,14 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8633,7 +8624,7 @@ index c784bdf3..05367243 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -532,7 +596,13 @@ class Nodes extends DataMap {
+@@ -540,7 +604,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -8648,7 +8639,7 @@ index c784bdf3..05367243 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -543,7 +613,7 @@ class Nodes extends DataMap {
+@@ -551,7 +621,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -8657,7 +8648,7 @@ index c784bdf3..05367243 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -571,7 +641,7 @@ class Nodes extends DataMap {
+@@ -579,7 +649,7 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Boolean} Whether the output configuration has changed or not.
       */
@@ -8666,7 +8657,7 @@ index c784bdf3..05367243 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -584,11 +654,14 @@ class Nodes extends DataMap {
+@@ -592,11 +662,14 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -8683,7 +8674,7 @@ index c784bdf3..05367243 100644
  
          _outputNodeMap.set(outputTarget, cacheKey);
  
-@@ -601,7 +674,7 @@ class Nodes extends DataMap {
+@@ -609,7 +682,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8692,7 +8683,7 @@ index c784bdf3..05367243 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -617,7 +690,7 @@ class Nodes extends DataMap {
+@@ -625,7 +698,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8701,7 +8692,7 @@ index c784bdf3..05367243 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -633,7 +706,7 @@ class Nodes extends DataMap {
+@@ -641,7 +714,7 @@ class Nodes extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -8710,7 +8701,7 @@ index c784bdf3..05367243 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -648,7 +721,7 @@ class Nodes extends DataMap {
+@@ -656,7 +729,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8719,7 +8710,7 @@ index c784bdf3..05367243 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -663,7 +736,7 @@ class Nodes extends DataMap {
+@@ -671,7 +744,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Boolean} Whether the given render object requires a refresh or not.
       */
