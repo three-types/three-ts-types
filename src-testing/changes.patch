@@ -336,7 +336,7 @@ index d3ab54f8..1fdb5cf0 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 4e41bb4f..480397d1 100644
+index d6d8b80a..0603c8c2 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
@@ -497,16 +497,16 @@ index 4e41bb4f..480397d1 100644
          this.sampler = value;
  
          return this;
-@@ -468,7 +494,7 @@ class TextureNode extends UniformNode {
- 
-     // @TODO: Move to TSL
- 
+@@ -475,7 +501,7 @@ class TextureNode extends UniformNode {
+      * @param {Node} uvNode - The uv node.
+      * @return {TextureNode} A texture node representing the texture sample.
+      */
 -    uv(uvNode) {
 +    uv(uvNode: ShaderNodeObject<Node> | null) {
          // @deprecated, r172
  
          console.warn('THREE.TextureNode: .uv() has been renamed. Use .sample() instead.');
-@@ -496,7 +522,7 @@ class TextureNode extends UniformNode {
+@@ -503,7 +529,7 @@ class TextureNode extends UniformNode {
       * @param {Node<float>} amountNode - How blurred the texture should be.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -515,7 +515,7 @@ index 4e41bb4f..480397d1 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getSelf();
-@@ -510,7 +536,7 @@ class TextureNode extends UniformNode {
+@@ -517,7 +543,7 @@ class TextureNode extends UniformNode {
       * @param {Node<int>} levelNode - The mip level to sample.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -1271,7 +1271,7 @@ index b1a5c99b..df827f78 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 0736b400..345d0f7f 100644
+index 30598127..e9ddf0f1 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructTypeNode from './StructTypeNode.js';
@@ -2736,7 +2736,7 @@ index 8a291b92..39c864a4 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index eb1dadc7..36ade03e 100644
+index 8cd4175a..68f7a383 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,7 @@
@@ -3122,7 +3122,7 @@ index 1aa67531..25a4bd72 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 4ac059f0..fcb1c9fd 100644
+index 227dc9db..549cbbb7 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -7,11 +7,40 @@ import SetNode from '../utils/SetNode.js';
@@ -3131,7 +3131,7 @@ index 4ac059f0..fcb1c9fd 100644
  import { getValueFromType, getValueType } from '../core/NodeUtils.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
- //
+ /** @module TSLCore **/
  
  let currentStack = null;
  
@@ -3341,7 +3341,7 @@ index 4ac059f0..fcb1c9fd 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -272,7 +438,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -273,7 +439,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3357,7 +3357,7 @@ index 4ac059f0..fcb1c9fd 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -284,7 +458,7 @@ class ShaderNodeInternal extends Node {
+@@ -285,7 +459,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3366,7 +3366,7 @@ index 4ac059f0..fcb1c9fd 100644
          this.layout = layout;
  
          return this;
-@@ -301,6 +475,8 @@ class ShaderNodeInternal extends Node {
+@@ -302,6 +476,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3375,7 +3375,7 @@ index 4ac059f0..fcb1c9fd 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -394,10 +570,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -395,10 +571,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -5329,7 +5329,7 @@ index d6c72696..3ae4005b 100644
  
          _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 3db4ccbe..9b0c7493 100644
+index 17124b62..ed67c412 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
 @@ -1,5 +1,9 @@
@@ -8751,7 +8751,7 @@ index 51bd2e13..74f42846 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 6dbffadb..eb121811 100644
+index 6a453fd4..00ac75fb 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9213,7 +9213,7 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index bc8b4ef5..28495763 100644
+index e2124b43..5d7d74f1 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -1279,7 +1279,14 @@ class WebGPUBackend extends Backend {
