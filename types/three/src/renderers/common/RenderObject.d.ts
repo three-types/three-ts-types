@@ -35,7 +35,7 @@ import RenderPipeline from "./RenderPipeline.js";
  *
  * @private
  */
-export default class RenderObject {
+declare class RenderObject {
     _nodes: Nodes;
     _geometries: Geometries;
     id: number;
@@ -248,3 +248,4 @@ export default class RenderObject {
      */
     dispose(): void;
 }
+export default RenderObject;
