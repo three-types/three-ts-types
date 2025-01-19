@@ -13335,6 +13335,28 @@ index 45619da3..97df59b3 100644
      switch (event.keyCode) {
          case 79 /*O*/:
              activeCamera = cameraOrtho;
+diff --git a/examples-testing/examples/webgpu_camera_array.ts b/examples-testing/examples/webgpu_camera_array.ts
+index 2e8218be..92051ebc 100644
+--- a/examples-testing/examples/webgpu_camera_array.ts
++++ b/examples-testing/examples/webgpu_camera_array.ts
+@@ -1,6 +1,6 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+-let camera, scene, renderer;
++let camera: THREE.ArrayCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ let mesh;
+ const AMOUNT = 6;
+ 
+@@ -87,7 +87,7 @@ function onWindowResize() {
+         for (let x = 0; x < AMOUNT; x++) {
+             const subcamera = camera.cameras[AMOUNT * y + x];
+ 
+-            subcamera.viewport.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
++            subcamera.viewport!.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
+ 
+             subcamera.aspect = ASPECT_RATIO;
+             subcamera.updateProjectionMatrix();
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 index 15527632..58f5cc14 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
@@ -15894,7 +15916,7 @@ index 6e69c3be..2cdd4ba7 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index 85dbc6f0..b641b745 100644
+index d9eb32a2..02b0c1d9 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -1,12 +1,18 @@
