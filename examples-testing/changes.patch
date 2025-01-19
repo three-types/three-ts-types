@@ -14241,10 +14241,10 @@ index 612fade7..b7436e09 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
-index 41b56de8..8f7abe1f 100644
+index 639418a7..af4696a1 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
-@@ -1,11 +1,11 @@
+@@ -1,13 +1,13 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
@@ -14253,6 +14253,8 @@ index 41b56de8..8f7abe1f 100644
  
  import { IESLoader } from 'three/addons/loaders/IESLoader.js';
  
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
 -let renderer, scene, camera;
 -let lights;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
@@ -14260,13 +14262,22 @@ index 41b56de8..8f7abe1f 100644
  
  async function init() {
      const iesLoader = new IESLoader().setPath('./ies/');
-@@ -104,7 +104,7 @@ function onWindowResize() {
+@@ -122,7 +122,7 @@ async function init() {
+ 
+     //
+ 
+-    function setHelperVisible(value) {
++    function setHelperVisible(value: boolean) {
+         for (let i = 0; i < lights.length; i++) {
+             lights[i].userData.helper.visible = value;
+         }
+@@ -150,7 +150,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
 -function render(time) {
 +function render(time: number) {
-     time = (time / 1000) * 2.0;
+     time = time / 1000;
  
      for (let i = 0; i < lights.length; i++) {
 diff --git a/examples-testing/examples/webgpu_lights_phong.ts b/examples-testing/examples/webgpu_lights_phong.ts
