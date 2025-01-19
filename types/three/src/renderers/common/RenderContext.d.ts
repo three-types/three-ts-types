@@ -31,19 +31,19 @@ declare class RenderContext {
     viewportValue: Vector4;
     scissor: boolean;
     scissorValue: Vector4;
+    renderTarget: RenderTarget | null;
     textures: Texture[] | null;
     depthTexture: DepthTexture | null;
     activeCubeFace: number;
     sampleCount: number;
     width: number;
     height: number;
+    occlusionQueryCount: number;
+    clippingContext: ClippingContext | null;
     readonly isRenderContext: true;
-    clippingContext?: ClippingContext | undefined;
     depthClearValue?: number | undefined;
     stencilClearValue?: number | undefined;
-    renderTarget?: RenderTarget | undefined;
     activeMipmapLevel?: number | undefined;
-    occlusionQueryCount?: number | undefined;
     /**
      * Constructs a new render context.
      */
