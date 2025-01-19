@@ -236,13 +236,13 @@ export default class RenderObject {
      *
      * @return {String} The cache key.
      */
-    getDynamicCacheKey(): string;
+    getDynamicCacheKey(): number;
     /**
      * Returns the render object's cache key.
      *
      * @return {String} The cache key.
      */
-    getCacheKey(): string;
+    getCacheKey(): number;
     /**
      * Frees internal resources.
      */

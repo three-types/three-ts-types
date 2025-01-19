@@ -4182,7 +4182,7 @@ index e9f6f2e0..dd7ea2d4 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
-index f65857cb..ddae3243 100644
+index 24789e1e..224e5456 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
 +++ b/src-testing/src/renderers/common/ChainMap.ts
 @@ -1,3 +1,5 @@
@@ -4220,7 +4220,7 @@ index f65857cb..ddae3243 100644
 +    get(keys: K): V | undefined {
 +        let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
  
-         for (let i = 0; i < keys.length; i++) {
+         for (let i = 0; i < keys.length - 1; i++) {
 -            map = map.get(keys[i]);
 +            map = map.get(keys[i]) as RecursiveWeakMap<K, V> | undefined;
  
@@ -4241,7 +4241,7 @@ index f65857cb..ddae3243 100644
 +    set(keys: K, value: V) {
 +        let map: RecursiveWeakMap<K, V> = this.weakMap;
  
-         for (let i = 0; i < keys.length; i++) {
+         for (let i = 0; i < keys.length - 1; i++) {
              const key = keys[i];
  
 -            if (map.has(key) === false) map.set(key, new WeakMap());
@@ -4265,7 +4265,7 @@ index f65857cb..ddae3243 100644
 +    delete(keys: K) {
 +        let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
  
-         for (let i = 0; i < keys.length; i++) {
+         for (let i = 0; i < keys.length - 1; i++) {
 -            map = map.get(keys[i]);
 +            map = map.get(keys[i]) as RecursiveWeakMap<K, V> | undefined;
  
@@ -8320,7 +8320,7 @@ index d0934d34..9066b3ed 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 8b398869..2d7bdea8 100644
+index 9c134938..9dc21023 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
@@ -8331,7 +8331,7 @@ index 8b398869..2d7bdea8 100644
  } from '../../../nodes/TSL.js';
  
  import {
-@@ -23,9 +24,57 @@ import {
+@@ -23,10 +24,63 @@ import {
      EquirectangularRefractionMapping,
  } from '../../../constants.js';
  import { hashArray } from '../../../nodes/core/NodeUtils.js';
@@ -8376,6 +8376,11 @@ index 8b398869..2d7bdea8 100644
 +    environmentNode?: ShaderNodeObject<Node> | undefined;
 +}
 +
++interface CacheKeyData {
++    callId: number;
++    cacheKey: number;
++}
++
 +declare module '../../../scenes/Scene.js' {
 +    interface Scene {
 +        environmentNode?: ShaderNodeObject<Node> | null | undefined;
@@ -8386,11 +8391,13 @@ index 8b398869..2d7bdea8 100644
  
  const _outputNodeMap = new WeakMap();
 -const _chainKeys = [];
+-const _cacheKeyValues = [];
 +const _chainKeys = [] as unknown as [UniformGroupNode, NodeUniformsGroup] | [Scene, LightsNode];
++const _cacheKeyValues: number[] = [];
  
  /**
   * This renderer module manages node-related objects and is the
-@@ -34,14 +83,27 @@ const _chainKeys = [];
+@@ -35,14 +89,27 @@ const _cacheKeyValues = [];
   * @private
   * @augments DataMap
   */
@@ -8412,7 +8419,7 @@ index 8b398869..2d7bdea8 100644
 +    backend: Backend;
 +    nodeFrame: NodeFrame;
 +    nodeBuilderCache: Map<string, NodeBuilderState>;
-+    callHashCache: ChainMap<readonly [Scene, LightsNode], { callId: number; cacheKey: string }>;
++    callHashCache: ChainMap<readonly [Scene, LightsNode], CacheKeyData>;
 +    groupsData: ChainMap<readonly [UniformGroupNode, NodeUniformsGroup], { version?: number }>;
 +    cacheLib: { [type: string]: WeakMap<object, ShaderNodeObject<Node> | undefined> };
 +
@@ -8420,7 +8427,7 @@ index 8b398869..2d7bdea8 100644
          super();
  
          /**
-@@ -101,7 +163,7 @@ class Nodes extends DataMap {
+@@ -102,7 +169,7 @@ class Nodes extends DataMap {
       * @param {NodeUniformsGroup} nodeUniformsGroup - The node uniforms group.
       * @return {Boolean} Whether the node uniforms group requires an update or not.
       */
@@ -8429,7 +8436,7 @@ index 8b398869..2d7bdea8 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -164,7 +226,7 @@ class Nodes extends DataMap {
+@@ -165,7 +232,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Number} The cache key.
       */
@@ -8438,7 +8445,7 @@ index 8b398869..2d7bdea8 100644
          return renderObject.initialCacheKey;
      }
  
-@@ -174,7 +236,7 @@ class Nodes extends DataMap {
+@@ -175,7 +242,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8447,7 +8454,7 @@ index 8b398869..2d7bdea8 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -217,13 +279,13 @@ class Nodes extends DataMap {
+@@ -218,13 +285,13 @@ class Nodes extends DataMap {
       * @param {Any} object - The object to delete.
       * @return {Object?} The deleted dictionary.
       */
@@ -8465,7 +8472,7 @@ index 8b398869..2d7bdea8 100644
              }
          }
  
-@@ -236,7 +298,7 @@ class Nodes extends DataMap {
+@@ -237,7 +304,7 @@ class Nodes extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8474,7 +8481,7 @@ index 8b398869..2d7bdea8 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -260,7 +322,7 @@ class Nodes extends DataMap {
+@@ -261,7 +328,7 @@ class Nodes extends DataMap {
       * @param {NodeBuilder} nodeBuilder - The node builder.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -8483,7 +8490,7 @@ index 8b398869..2d7bdea8 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -282,9 +344,8 @@ class Nodes extends DataMap {
+@@ -283,9 +350,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene environment.
       */
@@ -8494,7 +8501,7 @@ index 8b398869..2d7bdea8 100644
          let environmentNode = null;
  
          if (scene.environmentNode && scene.environmentNode.isNode) {
-@@ -307,9 +368,8 @@ class Nodes extends DataMap {
+@@ -308,9 +374,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene background.
       */
@@ -8505,7 +8512,7 @@ index 8b398869..2d7bdea8 100644
          let backgroundNode = null;
  
          if (scene.backgroundNode && scene.backgroundNode.isNode) {
-@@ -331,9 +391,8 @@ class Nodes extends DataMap {
+@@ -332,9 +397,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene fog.
       */
@@ -8516,7 +8523,7 @@ index 8b398869..2d7bdea8 100644
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
-@@ -347,7 +406,7 @@ class Nodes extends DataMap {
+@@ -348,13 +412,13 @@ class Nodes extends DataMap {
       * @param {LightsNode} lightsNode - The lights node.
       * @return {Number} The cache key.
       */
@@ -8525,7 +8532,23 @@ index 8b398869..2d7bdea8 100644
          _chainKeys[0] = scene;
          _chainKeys[1] = lightsNode;
  
-@@ -396,7 +455,7 @@ class Nodes extends DataMap {
+         const callId = this.renderer.info.calls;
+ 
+-        const cacheKeyData = this.callHashCache.get(_chainKeys) || {};
++        const cacheKeyData = this.callHashCache.get(_chainKeys as readonly [Scene, LightsNode]) || ({} as CacheKeyData);
+ 
+         if (cacheKeyData.callId !== callId) {
+             const environmentNode = this.getEnvironmentNode(scene);
+@@ -369,7 +433,7 @@ class Nodes extends DataMap {
+             cacheKeyData.callId = callId;
+             cacheKeyData.cacheKey = hashArray(_cacheKeyValues);
+ 
+-            this.callHashCache.set(_chainKeys, cacheKeyData);
++            this.callHashCache.set(_chainKeys as readonly [Scene, LightsNode], cacheKeyData);
+ 
+             _cacheKeyValues.length = 0;
+         }
+@@ -395,7 +459,7 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8534,7 +8557,7 @@ index 8b398869..2d7bdea8 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -411,7 +470,7 @@ class Nodes extends DataMap {
+@@ -410,7 +474,7 @@ class Nodes extends DataMap {
                      background,
                      () => {
                          if (
@@ -8543,7 +8566,7 @@ index 8b398869..2d7bdea8 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -421,18 +480,18 @@ class Nodes extends DataMap {
+@@ -420,18 +484,18 @@ class Nodes extends DataMap {
                              } else {
                                  let envMap;
  
@@ -8568,7 +8591,7 @@ index 8b398869..2d7bdea8 100644
                          }
                      },
                      forceUpdate,
-@@ -458,7 +517,12 @@ class Nodes extends DataMap {
+@@ -457,7 +521,12 @@ class Nodes extends DataMap {
       * @param {Boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -8582,7 +8605,7 @@ index 8b398869..2d7bdea8 100644
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -477,22 +541,22 @@ class Nodes extends DataMap {
+@@ -476,22 +545,22 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8613,7 +8636,7 @@ index 8b398869..2d7bdea8 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -515,14 +579,14 @@ class Nodes extends DataMap {
+@@ -514,14 +583,14 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -8630,7 +8653,7 @@ index 8b398869..2d7bdea8 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -540,7 +604,13 @@ class Nodes extends DataMap {
+@@ -539,7 +608,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -8645,7 +8668,7 @@ index 8b398869..2d7bdea8 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -551,7 +621,7 @@ class Nodes extends DataMap {
+@@ -550,7 +625,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -8654,7 +8677,7 @@ index 8b398869..2d7bdea8 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -579,7 +649,7 @@ class Nodes extends DataMap {
+@@ -578,7 +653,7 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Boolean} Whether the output configuration has changed or not.
       */
@@ -8663,7 +8686,7 @@ index 8b398869..2d7bdea8 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -592,11 +662,14 @@ class Nodes extends DataMap {
+@@ -591,11 +666,14 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -8680,7 +8703,7 @@ index 8b398869..2d7bdea8 100644
  
          _outputNodeMap.set(outputTarget, cacheKey);
  
-@@ -609,7 +682,7 @@ class Nodes extends DataMap {
+@@ -608,7 +686,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8689,7 +8712,7 @@ index 8b398869..2d7bdea8 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -625,7 +698,7 @@ class Nodes extends DataMap {
+@@ -624,7 +702,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8698,7 +8721,7 @@ index 8b398869..2d7bdea8 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -641,7 +714,7 @@ class Nodes extends DataMap {
+@@ -640,7 +718,7 @@ class Nodes extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -8707,7 +8730,7 @@ index 8b398869..2d7bdea8 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -656,7 +729,7 @@ class Nodes extends DataMap {
+@@ -655,7 +733,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -8716,7 +8739,7 @@ index 8b398869..2d7bdea8 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -671,7 +744,7 @@ class Nodes extends DataMap {
+@@ -670,7 +748,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Boolean} Whether the given render object requires a refresh or not.
       */
