@@ -4182,7 +4182,7 @@ index e9f6f2e0..dd7ea2d4 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
-index 24789e1e..224e5456 100644
+index b913d6b6..d4d3d9be 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
 +++ b/src-testing/src/renderers/common/ChainMap.ts
 @@ -1,3 +1,5 @@
@@ -4191,18 +4191,17 @@ index 24789e1e..224e5456 100644
  /**
   * Data structure for the renderer. It allows defining values
   * with chained, hierarchical keys. Keys are meant to be
-@@ -6,7 +8,9 @@
+@@ -6,7 +8,8 @@
   *
   * @private
   */
--export default class ChainMap {
-+export default class ChainMap<K extends readonly object[], V> {
+-class ChainMap {
++class ChainMap<K extends readonly object[], V> {
 +    weakMap: RecursiveWeakMap<K, V>;
-+
      /**
-      * Constructs a new chained map.
+      * Constructs a new Chain Map.
       */
-@@ -16,7 +20,7 @@ export default class ChainMap {
+@@ -16,7 +19,7 @@ class ChainMap {
           *
           * @type {WeakMap}
           */
@@ -4211,7 +4210,7 @@ index 24789e1e..224e5456 100644
      }
  
      /**
-@@ -25,16 +29,16 @@ export default class ChainMap {
+@@ -25,16 +28,16 @@ class ChainMap {
       * @param {Array<Object>} keys - List of keys.
       * @return {Any} The value. Returns `undefined` if no value was found.
       */
@@ -4232,9 +4231,9 @@ index 24789e1e..224e5456 100644
      }
  
      /**
-@@ -44,18 +48,18 @@ export default class ChainMap {
+@@ -44,18 +47,18 @@ class ChainMap {
       * @param {Any} value - The value to set.
-      * @return {ChainMap} A reference to this chain map.
+      * @return {ChainMap} A reference to this Chain Map.
       */
 -    set(keys, value) {
 -        let map = this.weakMap;
@@ -4256,7 +4255,7 @@ index 24789e1e..224e5456 100644
  
          return this;
      }
-@@ -66,11 +70,11 @@ export default class ChainMap {
+@@ -66,11 +69,11 @@ class ChainMap {
       * @param {Array<Object>} keys - The keys.
       * @return {Boolean} Returns `true` if the value has been removed successfully and `false` if the value has not be found.
       */
@@ -5726,7 +5725,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 7284e730..4e9dbde0 100644
+index 67024b0f..4884039e 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5758,10 +5757,10 @@ index 7284e730..4e9dbde0 100644
      const keys = Object.keys(obj);
  
      let proto = Object.getPrototypeOf(obj);
-@@ -45,6 +64,48 @@ function getKeys(obj) {
+@@ -45,6 +64,47 @@ function getKeys(obj) {
   * @private
   */
- export default class RenderObject {
+ class RenderObject {
 +    _nodes: Nodes;
 +    _geometries: Geometries;
 +
@@ -5803,11 +5802,10 @@ index 7284e730..4e9dbde0 100644
 +    readonly isRenderObject: true;
 +
 +    onMaterialDispose: () => void;
-+
      /**
       * Constructs a new render object.
       *
-@@ -60,16 +121,16 @@ export default class RenderObject {
+@@ -60,16 +120,16 @@ class RenderObject {
       * @param {ClippingContext} clippingContext - The clipping context.
       */
      constructor(
@@ -5834,7 +5832,7 @@ index 7284e730..4e9dbde0 100644
      ) {
          this.id = _id++;
  
-@@ -295,7 +356,7 @@ export default class RenderObject {
+@@ -295,7 +355,7 @@ class RenderObject {
       *
       * @param {ClippingContext} context - The clipping context to set.
       */
@@ -5843,7 +5841,7 @@ index 7284e730..4e9dbde0 100644
          this.clippingContext = context;
      }
  
-@@ -309,7 +370,7 @@ export default class RenderObject {
+@@ -309,7 +369,7 @@ class RenderObject {
          if (this.clippingContext === null || this.clippingContext.cacheKey === this.clippingContextCacheKey)
              return false;
  
@@ -5852,7 +5850,7 @@ index 7284e730..4e9dbde0 100644
  
          return true;
      }
-@@ -375,7 +436,7 @@ export default class RenderObject {
+@@ -375,7 +435,7 @@ class RenderObject {
       * @return {Array<Object>} An array with object references.
       */
      getChainArray() {
@@ -5861,7 +5859,7 @@ index 7284e730..4e9dbde0 100644
      }
  
      /**
-@@ -384,7 +445,7 @@ export default class RenderObject {
+@@ -384,7 +444,7 @@ class RenderObject {
       *
       * @param {BufferGeometry} geometry - The geometry to set.
       */
@@ -5870,7 +5868,7 @@ index 7284e730..4e9dbde0 100644
          this.geometry = geometry;
          this.attributes = null;
      }
-@@ -401,8 +462,8 @@ export default class RenderObject {
+@@ -401,8 +461,8 @@ class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -5881,7 +5879,7 @@ index 7284e730..4e9dbde0 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -681,6 +742,6 @@ export default class RenderObject {
+@@ -681,7 +741,7 @@ class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -5889,6 +5887,7 @@ index 7284e730..4e9dbde0 100644
 +        this.onDispose!();
      }
  }
+ 
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
 index d9a10284..2f536d3f 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
@@ -7755,7 +7754,7 @@ index dba46fd8..69a96404 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index bbc6dc77..186ab14f 100644
+index 59ab7f3c..3493d8d4 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,5 +1,15 @@
@@ -7916,7 +7915,7 @@ index bbc6dc77..186ab14f 100644
          if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
              return new Int32Array(this.buffer.buffer);
          if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
-@@ -401,7 +417,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -402,7 +418,7 @@ class UniformsGroup extends UniformBuffer {
   * @param {TypedArray} b - The second array.
   * @param {Number} offset - An index offset for the first array.
   */
@@ -7925,7 +7924,7 @@ index bbc6dc77..186ab14f 100644
      for (let i = 0, l = b.length; i < l; i++) {
          a[offset + i] = b[i];
      }
-@@ -415,7 +431,7 @@ function setArray(a, b, offset) {
+@@ -417,7 +433,7 @@ function setArray(a, b, offset) {
   * @param {Number} offset - An index offset for the first array.
   * @return {Boolean} Whether the given arrays are equal or not.
   */
