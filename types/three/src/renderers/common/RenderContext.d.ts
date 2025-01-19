@@ -56,7 +56,9 @@ declare class RenderContext {
     getCacheKey(): number;
 }
 /**
- * Computes a cache key for the given render context.
+ * Computes a cache key for the given render context. This cache
+ * should identify the render target state so it is possible to
+ * configure the correct attachments in the respective backend.
  *
  * @param {RenderContext} renderContext - The render context.
  * @return {Number} The cache key.
