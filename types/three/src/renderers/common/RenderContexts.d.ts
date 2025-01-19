@@ -31,7 +31,7 @@ declare class RenderContexts {
      * @param {RenderTarget?} [renderTarget=null] - The active render target.
      * @return {RenderContext} The render context.
      */
-    getForClear(renderTarget?: null): RenderContext;
+    getForClear(renderTarget?: RenderTarget | null): RenderContext;
     /**
      * Returns a chain map for the given attachment state.
      *
