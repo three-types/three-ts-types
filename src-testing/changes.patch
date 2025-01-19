@@ -5400,7 +5400,7 @@ index e70a328d..b805b43e 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index 308ab331..1b677fc7 100644
+index 308ab331..e0f25ada 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
 @@ -2,8 +2,9 @@ import ChainMap from './ChainMap.js';
@@ -5433,6 +5433,15 @@ index 308ab331..1b677fc7 100644
 +    get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null) {
          _chainKeys[0] = scene;
          _chainKeys[1] = camera;
+ 
+@@ -72,7 +77,7 @@ class RenderContexts {
+      * @param {RenderTarget?} [renderTarget=null] - The active render target.
+      * @return {RenderContext} The render context.
+      */
+-    getForClear(renderTarget = null) {
++    getForClear(renderTarget: RenderTarget | null = null) {
+         return this.get(_defaultScene, _defaultCamera, renderTarget);
+     }
  
 @@ -83,8 +88,11 @@ class RenderContexts {
       * @param {String} attachmentState - The attachment state.
