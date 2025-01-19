@@ -325,7 +325,7 @@ declare class Renderer {
      *
      * @async
      * @param {Function} callback - The application's animation loop.
-     * @return {Promise} A Promise that resolves when the set has been exeucted.
+     * @return {Promise} A Promise that resolves when the set has been executed.
      */
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
     /**

@@ -121,7 +121,7 @@ declare class RenderObject {
     /**
      * Returns the node builder state of this render object.
      *
-     * @return {NodeBuilderState} The node buider state.
+     * @return {NodeBuilderState} The node builder state.
      */
     getNodeBuilderState(): NodeBuilderState;
     /**
@@ -224,7 +224,7 @@ declare class RenderObject {
      * `RenderObjects.get()`. The render object's NodeMaterialObserver is then used to detect
      * a need for a refresh due to material, geometry or object related value changes.
      *
-     * TODO: Investigate if it's possible to merge boths steps so there is only a single place
+     * TODO: Investigate if it's possible to merge both steps so there is only a single place
      * that performs the 'needsUpdate' check.
      *
      * @type {Boolean}

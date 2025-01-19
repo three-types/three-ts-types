@@ -149,7 +149,7 @@ declare class Pipelines extends DataMap<{
      * Releases the shader program.
      *
      * @private
-     * @param {Object} program - The shdaer program to release.
+     * @param {Object} program - The shader program to release.
      */
     _releaseProgram(program: ProgrammableStage): void;
     /**
