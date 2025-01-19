@@ -6,6 +6,7 @@ import prettier from 'prettier';
 import examplesFiles from '../three.js/examples/files.json' with { type: 'json' };
 
 const exceptionList = [
+    'misc_raycaster_helper',
     'webgl_animation_skinning_blending',
     'webgl_animation_skinning_additive_blending',
     'webgl_animation_skinning_ik',
