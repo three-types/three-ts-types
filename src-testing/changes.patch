@@ -3401,7 +3401,7 @@ index 4ac059f0..fcb1c9fd 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index e7b0be6d..29e31e02 100644
+index 81423e0f..31b68f5d 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
@@ -4124,7 +4124,7 @@ index 5f6246d6..676f860d 100644
      }
  
 diff --git a/src-testing/src/renderers/common/BufferUtils.ts b/src-testing/src/renderers/common/BufferUtils.ts
-index 3aa3df7d..09666b98 100644
+index 65fb3e93..d4c3ccf5 100644
 --- a/src-testing/src/renderers/common/BufferUtils.ts
 +++ b/src-testing/src/renderers/common/BufferUtils.ts
 @@ -10,7 +10,7 @@ import { GPU_CHUNK_BYTES } from './Constants.js';
@@ -4155,7 +4155,7 @@ index 3aa3df7d..09666b98 100644
  
      return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/src-testing/src/renderers/common/BundleGroup.ts b/src-testing/src/renderers/common/BundleGroup.ts
-index e9f6f2e0..dd7ea2d4 100644
+index dec2b750..db126b84 100644
 --- a/src-testing/src/renderers/common/BundleGroup.ts
 +++ b/src-testing/src/renderers/common/BundleGroup.ts
 @@ -13,6 +13,13 @@ import { Group } from '../../objects/Group.js';
@@ -4613,7 +4613,7 @@ index 775be63e..37d044b1 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Geometries.ts b/src-testing/src/renderers/common/Geometries.ts
-index 89d6ba7f..385c2d32 100644
+index 5c49e999..8ff10888 100644
 --- a/src-testing/src/renderers/common/Geometries.ts
 +++ b/src-testing/src/renderers/common/Geometries.ts
 @@ -1,7 +1,13 @@
@@ -4633,7 +4633,7 @@ index 89d6ba7f..385c2d32 100644
   * Returns `true` if the given array has values that require an Uint32 array type.
 @@ -11,7 +17,7 @@ import { Uint16BufferAttribute, Uint32BufferAttribute } from '../../core/BufferA
   * @param {Array<Number>} array - The array to test.
-  * @return {Booolean} Whether the given array has values that require an Uint32 array type or not.
+  * @return {Boolean} Whether the given array has values that require an Uint32 array type or not.
   */
 -function arrayNeedsUint32(array) {
 +function arrayNeedsUint32(array: number[]) {
@@ -4642,7 +4642,7 @@ index 89d6ba7f..385c2d32 100644
      for (let i = array.length - 1; i >= 0; --i) {
 @@ -29,8 +35,8 @@ function arrayNeedsUint32(array) {
   * @param {BufferGeometry} geometry - The geometry.
-  * @return {Number} The versio.
+  * @return {Number} The version.
   */
 -function getWireframeVersion(geometry) {
 -    return geometry.index !== null ? geometry.index.version : geometry.attributes.position.version;
@@ -4900,7 +4900,7 @@ index 0336ccac..0c6fb271 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index eed654b7..6c6268cc 100644
+index 7c326179..6e64b4a7 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
 @@ -2,6 +2,22 @@ import DataMap from './DataMap.js';
@@ -5193,7 +5193,7 @@ index eed654b7..6c6268cc 100644
  
 @@ -377,7 +422,7 @@ class Pipelines extends DataMap {
       * @private
-      * @param {Object} program - The shdaer program to release.
+      * @param {Object} program - The shader program to release.
       */
 -    _releaseProgram(program) {
 +    _releaseProgram(program: ProgrammableStage) {
@@ -5725,7 +5725,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 67024b0f..4884039e 100644
+index 449b8028..3f506673 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6047,7 +6047,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 9733fd63..209a0c57 100644
+index 5ed43e22..81c62bbf 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -6521,7 +6521,7 @@ index 9733fd63..209a0c57 100644
  
 @@ -1378,10 +1571,10 @@ class Renderer {
       * @param {Function} callback - The application's animation loop.
-      * @return {Promise} A Promise that resolves when the set has been exeucted.
+      * @return {Promise} A Promise that resolves when the set has been executed.
       */
 -    async setAnimationLoop(callback) {
 +    async setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null) {
@@ -8014,7 +8014,7 @@ index 37480124..00d3445d 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index 81cc1ccd..79467fd8 100644
+index 1ec36798..7cd30055 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 @@ -1,3 +1,12 @@
@@ -8077,7 +8077,7 @@ index 81cc1ccd..79467fd8 100644
      }
  
 @@ -88,7 +107,7 @@ class NodeLibrary {
-      * @param {Sring} materialType - The material type.
+      * @param {String} materialType - The material type.
       * @return {NodeMaterial.constructor?} The node material class definition. Returns `null` if no node material is found.
       */
 -    getMaterialNodeClass(materialType) {
@@ -8087,7 +8087,7 @@ index 81cc1ccd..79467fd8 100644
  
 @@ -98,7 +117,7 @@ class NodeLibrary {
       * @param {NodeMaterial.constructor} materialNodeClass - The node material class definition.
-      * @param {Sring} materialClassType - The material type.
+      * @param {String} materialClassType - The material type.
       */
 -    addMaterial(materialNodeClass, materialClassType) {
 +    addMaterial(materialNodeClass: { new (): NodeMaterial }, materialClassType: string) {
@@ -8319,7 +8319,7 @@ index d0934d34..9066b3ed 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 9c134938..9dc21023 100644
+index 51bd2e13..74f42846 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -15,6 +15,7 @@ import {
@@ -8748,7 +8748,7 @@ index 9c134938..9dc21023 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index b0ef4905..369dde44 100644
+index 6dbffadb..eb121811 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9210,7 +9210,7 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 99c19bc4..a43a768c 100644
+index 4e10f7b4..d3a2d9e0 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -1277,7 +1277,14 @@ class WebGPUBackend extends Backend {
@@ -9230,7 +9230,7 @@ index 99c19bc4..a43a768c 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 7e9472ab..020eadaa 100644
+index 043019e7..9338eaa6 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {

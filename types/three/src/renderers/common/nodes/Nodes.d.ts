@@ -282,7 +282,7 @@ declare class Nodes extends DataMap<{
      */
     needsRefresh(renderObject: RenderObject): boolean;
     /**
-     * Frees the intenral resources.
+     * Frees the internal resources.
      */
     dispose(): void;
 }
