@@ -20,7 +20,8 @@ declare class VideoFrameTexture extends VideoTexture {
         anisotropy?: number,
     );
 
-    setFrame(frane: VideoFrame): void;
+    // FIXME Replace with VideoFrame when we no longer need to support TypeScript 5.0
+    setFrame(frane: unknown): void;
 }
 
 export { VideoFrameTexture };
