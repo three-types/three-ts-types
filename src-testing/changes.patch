@@ -1271,7 +1271,7 @@ index b1a5c99b..df827f78 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 7f1b2661..5c5f99ce 100644
+index 0736b400..345d0f7f 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructTypeNode from './StructTypeNode.js';
@@ -2041,21 +2041,22 @@ index 7f1b2661..5c5f99ce 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let nodeUniform = nodeData.uniform;
-@@ -1440,7 +1578,12 @@ class NodeBuilder {
-      * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage=this.shaderStage] - The shader stage.
+@@ -1442,7 +1580,13 @@ class NodeBuilder {
+      *
       * @return {NodeVar} The node variable.
       */
--    getVarFromNode(node, name = null, type = node.getNodeType(this), shaderStage = this.shaderStage) {
+-    getVarFromNode(node, name = null, type = node.getNodeType(this), shaderStage = this.shaderStage, readOnly = false) {
 +    getVarFromNode(
 +        node: Node,
 +        name: string | null = null,
 +        type = node.getNodeType(this),
 +        shaderStage = this.shaderStage!,
++        readOnly = false,
 +    ) {
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          let nodeVar = nodeData.variable;
-@@ -1468,7 +1611,7 @@ class NodeBuilder {
+@@ -1501,7 +1645,7 @@ class NodeBuilder {
       * @param {String} [type=node.getNodeType( this )] - The varying's type.
       * @return {NodeVar} The node varying.
       */
@@ -2064,7 +2065,7 @@ index 7f1b2661..5c5f99ce 100644
          const nodeData = this.getDataFromNode(node, 'any');
  
          let nodeVarying = nodeData.varying;
-@@ -1497,7 +1640,7 @@ class NodeBuilder {
+@@ -1530,7 +1674,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage=this.shaderStage] - The shader stage.
       * @return {NodeCode} The node code.
       */
@@ -2073,7 +2074,7 @@ index 7f1b2661..5c5f99ce 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -1570,7 +1713,7 @@ class NodeBuilder {
+@@ -1603,7 +1747,7 @@ class NodeBuilder {
       * @param {Node?} [node= null] - Optional Node, can help the system understand if the Node is part of a code-block.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2082,7 +2083,7 @@ index 7f1b2661..5c5f99ce 100644
          if (code === '') return this;
  
          if (node !== null && this.context.nodeBlock) {
-@@ -1594,7 +1737,7 @@ class NodeBuilder {
+@@ -1627,7 +1771,7 @@ class NodeBuilder {
       * @param {String} code - Shader code.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2091,7 +2092,7 @@ index 7f1b2661..5c5f99ce 100644
          this.flow.code += code;
  
          return this;
-@@ -1630,7 +1773,7 @@ class NodeBuilder {
+@@ -1663,7 +1807,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {Object} The flow data.
       */
@@ -2100,7 +2101,7 @@ index 7f1b2661..5c5f99ce 100644
          return this.flowsData.get(node);
      }
  
-@@ -1640,7 +1783,7 @@ class NodeBuilder {
+@@ -1673,7 +1817,7 @@ class NodeBuilder {
       * @param {Node} node - The node to execute.
       * @return {Object} The code flow.
       */
@@ -2109,7 +2110,7 @@ index 7f1b2661..5c5f99ce 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -1650,6 +1793,8 @@ class NodeBuilder {
+@@ -1683,6 +1827,8 @@ class NodeBuilder {
          return flowData;
      }
  
@@ -2118,7 +2119,7 @@ index 7f1b2661..5c5f99ce 100644
      /**
       * Returns the native shader operator name for a given generic name.
       * It is a similar type of method like {@link NodeBuilder#getMethod}.
-@@ -1657,7 +1802,7 @@ class NodeBuilder {
+@@ -1690,7 +1836,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node to build the function node with.
       * @return {FunctionNode} The build function node.
       */
@@ -2127,7 +2128,7 @@ index 7f1b2661..5c5f99ce 100644
          const fn = new FunctionNode();
  
          const previous = this.currentFunctionNode;
-@@ -1677,7 +1822,7 @@ class NodeBuilder {
+@@ -1710,7 +1856,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - A function code will be generated based on the input.
       * @return {Object}
       */
@@ -2136,7 +2137,7 @@ index 7f1b2661..5c5f99ce 100644
          const layout = shaderNode.layout;
  
          const inputs = {
-@@ -1693,7 +1838,7 @@ class NodeBuilder {
+@@ -1726,7 +1872,7 @@ class NodeBuilder {
              },
          };
  
@@ -2145,7 +2146,7 @@ index 7f1b2661..5c5f99ce 100644
              inputs[input.name] = new ParameterNode(input.type, input.name);
          }
  
-@@ -1716,14 +1861,14 @@ class NodeBuilder {
+@@ -1749,14 +1895,14 @@ class NodeBuilder {
       * @param {String?} output - Expected output type. For example 'vec3'.
       * @return {Object}
       */
@@ -2162,7 +2163,7 @@ index 7f1b2661..5c5f99ce 100644
              code: '',
          };
  
-@@ -1738,7 +1883,7 @@ class NodeBuilder {
+@@ -1771,7 +1917,7 @@ class NodeBuilder {
              flow.result = node.build(this, output);
          }
  
@@ -2171,7 +2172,7 @@ index 7f1b2661..5c5f99ce 100644
  
          this.flow = previousFlow;
          this.vars = previousVars;
-@@ -1769,10 +1914,10 @@ class NodeBuilder {
+@@ -1802,10 +1948,10 @@ class NodeBuilder {
       * @param {String?} output - Expected output type. For example 'vec3'.
       * @return {Object} The code flow.
       */
@@ -2184,7 +2185,7 @@ index 7f1b2661..5c5f99ce 100644
              code: '',
          };
  
-@@ -1797,7 +1942,12 @@ class NodeBuilder {
+@@ -1830,7 +1976,12 @@ class NodeBuilder {
       * @param {String?} propertyName - The property name to assign the result.
       * @return {Object}
       */
@@ -2198,7 +2199,7 @@ index 7f1b2661..5c5f99ce 100644
          const previousShaderStage = this.shaderStage;
  
          this.setShaderStage(shaderStage);
-@@ -1831,9 +1981,7 @@ class NodeBuilder {
+@@ -1864,9 +2015,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {String} The attribute code section.
       */
@@ -2209,7 +2210,7 @@ index 7f1b2661..5c5f99ce 100644
  
      /**
       * Returns the varying definitions as a shader string for the given shader stage.
-@@ -1842,9 +1990,7 @@ class NodeBuilder {
+@@ -1875,9 +2024,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {String} The varying code section.
       */
@@ -2220,7 +2221,7 @@ index 7f1b2661..5c5f99ce 100644
  
      /**
       * Returns a single variable definition as a shader string for the given variable type and name.
-@@ -1853,7 +1999,7 @@ class NodeBuilder {
+@@ -1886,7 +2033,7 @@ class NodeBuilder {
       * @param {String} name - The variable's name.
       * @return {String} The shader string.
       */
@@ -2229,7 +2230,7 @@ index 7f1b2661..5c5f99ce 100644
          return `${this.getType(type)} ${name}`;
      }
  
-@@ -1863,7 +2009,7 @@ class NodeBuilder {
+@@ -1896,7 +2043,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {String} The variable code section.
       */
@@ -2238,7 +2239,7 @@ index 7f1b2661..5c5f99ce 100644
          let snippet = '';
  
          const vars = this.vars[shaderStage];
-@@ -1884,9 +2030,7 @@ class NodeBuilder {
+@@ -1917,9 +2064,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {String} The uniform code section.
       */
@@ -2249,7 +2250,7 @@ index 7f1b2661..5c5f99ce 100644
  
      /**
       * Returns the native code definitions as a shader string for the given shader stage.
-@@ -1894,7 +2038,7 @@ class NodeBuilder {
+@@ -1927,7 +2072,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {String} The native code section.
       */
@@ -2258,7 +2259,7 @@ index 7f1b2661..5c5f99ce 100644
          const codes = this.codes[shaderStage];
  
          let code = '';
-@@ -1914,7 +2058,7 @@ class NodeBuilder {
+@@ -1947,7 +2092,7 @@ class NodeBuilder {
       * @return {String} The hash.
       */
      getHash() {
@@ -2267,7 +2268,7 @@ index 7f1b2661..5c5f99ce 100644
      }
  
      /**
-@@ -1922,7 +2066,7 @@ class NodeBuilder {
+@@ -1955,7 +2100,7 @@ class NodeBuilder {
       *
       * @param {('vertex'|'fragment'|'compute'|'any')?} shaderStage - The shader stage to set.
       */
@@ -2276,7 +2277,7 @@ index 7f1b2661..5c5f99ce 100644
          this.shaderStage = shaderStage;
      }
  
-@@ -1940,7 +2084,7 @@ class NodeBuilder {
+@@ -1973,7 +2118,7 @@ class NodeBuilder {
       *
       * @param {('setup'|'analyze'|'generate')?} buildStage - The build stage to set.
       */
@@ -2285,7 +2286,7 @@ index 7f1b2661..5c5f99ce 100644
          this.buildStage = buildStage;
      }
  
-@@ -2028,7 +2172,7 @@ class NodeBuilder {
+@@ -2061,7 +2206,7 @@ class NodeBuilder {
       * @param {String} type - The requested type.
       * @return {Uniform} The uniform.
       */
@@ -2294,7 +2295,7 @@ index 7f1b2661..5c5f99ce 100644
          if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
          if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
          if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
-@@ -2050,7 +2194,7 @@ class NodeBuilder {
+@@ -2083,7 +2228,7 @@ class NodeBuilder {
       * @param {String} toType - The target type.
       * @return {String} The updated shader string.
       */
@@ -2684,26 +2685,30 @@ index 0fc08ddc..a3a7fc7e 100644
  
      const typeOf = typeof value;
 diff --git a/src-testing/src/nodes/core/NodeVar.ts b/src-testing/src/nodes/core/NodeVar.ts
-index 862121db..560e0b03 100644
+index 7fe83ec8..e6a2118b 100644
 --- a/src-testing/src/nodes/core/NodeVar.ts
 +++ b/src-testing/src/nodes/core/NodeVar.ts
-@@ -5,13 +5,18 @@
+@@ -5,6 +5,14 @@
   * this purpose.
   */
  class NodeVar {
 +    readonly isNodeVar: true;
 +
 +    name: string;
-+    type: string | null;
++
++    type: string;
++
++    readOnly: boolean;
 +
      /**
       * Constructs a new node variable.
       *
-      * @param {String} name - The name of the variable.
+@@ -12,7 +20,7 @@ class NodeVar {
       * @param {String} type - The type of the variable.
+      * @param {Boolean} [readOnly=false] - The read-only flag.
       */
--    constructor(name, type) {
-+    constructor(name: string, type: string | null) {
+-    constructor(name, type, readOnly = false) {
++    constructor(name: string, type: string, readOnly = false) {
          /**
           * This flag can be used for type testing.
           *
@@ -9210,10 +9215,10 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 4e10f7b4..d3a2d9e0 100644
+index bc8b4ef5..28495763 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1277,7 +1277,14 @@ class WebGPUBackend extends Backend {
+@@ -1279,7 +1279,14 @@ class WebGPUBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9230,7 +9235,7 @@ index 4e10f7b4..d3a2d9e0 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 043019e7..9338eaa6 100644
+index 054d2dea..b2ac7cea 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -9406,7 +9411,7 @@ index 043019e7..9338eaa6 100644
 +        const snippets: string[] = [];
  
          if (shaderStage === 'compute') {
-             this.getBuiltin('global_invocation_id', 'id', 'vec3<u32>', 'attribute');
+             this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
 @@ -1315,8 +1340,8 @@ ${flowData.code}
       * @param {String} shaderStage - The shader stage.
       * @return {String} The WGSL snippet that defines the varyings.
