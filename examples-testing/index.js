@@ -80,6 +80,7 @@ const exceptionList = [
     'webgpu_tsl_transpiler',
     'webgpu_tsl_vfx_linkedparticles',
     'webgpu_tsl_vfx_tornado',
+    'webgpu_video_frame',
     'webgpu_volume_cloud',
     'webgpu_volume_perlin',
     'webxr_vr_handinput_cubes',
