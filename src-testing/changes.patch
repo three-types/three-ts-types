@@ -5329,7 +5329,7 @@ index d6c72696..3ae4005b 100644
  
          _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 3db4ccbe..5e868275 100644
+index 3db4ccbe..9b0c7493 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
 @@ -1,5 +1,9 @@
@@ -5342,7 +5342,7 @@ index 3db4ccbe..5e868275 100644
  
  let _id = 0;
  
-@@ -12,6 +16,45 @@ let _id = 0;
+@@ -12,6 +16,43 @@ let _id = 0;
   * @private
   */
  class RenderContext {
@@ -5364,6 +5364,7 @@ index 3db4ccbe..5e868275 100644
 +    viewportValue: Vector4;
 +    scissor: boolean;
 +    scissorValue: Vector4;
++    renderTarget: RenderTarget | null;
 +
 +    textures: Texture[] | null;
 +    depthTexture: DepthTexture | null;
@@ -5372,23 +5373,20 @@ index 3db4ccbe..5e868275 100644
 +
 +    width: number;
 +    height: number;
++    occlusionQueryCount: number;
++    clippingContext: ClippingContext | null;
 +
 +    readonly isRenderContext: true;
-+
-+    clippingContext?: ClippingContext | undefined;
 +
 +    depthClearValue?: number | undefined;
 +    stencilClearValue?: number | undefined;
 +
-+    renderTarget?: RenderTarget | undefined;
-+
 +    activeMipmapLevel?: number | undefined;
-+    occlusionQueryCount?: number | undefined;
 +
      /**
       * Constructs a new render context.
       */
-@@ -232,12 +275,12 @@ class RenderContext {
+@@ -232,12 +273,12 @@ class RenderContext {
   * @param {RenderContext} renderContext - The render context.
   * @return {Number} The cache key.
   */
