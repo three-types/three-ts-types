@@ -121,7 +121,7 @@ declare class Nodes extends DataMap<{
      */
     delete(
         object: NodeUniformsGroup | RenderObject | ComputeNode | Scene,
-    ): SceneData | RenderObjectData | NodeUniformsGroupData | ComputeNodeData;
+    ): RenderObjectData | NodeUniformsGroupData | ComputeNodeData | SceneData;
     /**
      * Returns a node builder state for the given compute node.
      *
@@ -170,7 +170,7 @@ declare class Nodes extends DataMap<{
      * @param {LightsNode} lightsNode - The lights node.
      * @return {Number} The cache key.
      */
-    getCacheKey(scene: Scene, lightsNode: LightsNode): string;
+    getCacheKey(scene: Scene, lightsNode: LightsNode): any;
     /**
      * A boolean that indicates whether tone mapping should be enabled
      * or not.
