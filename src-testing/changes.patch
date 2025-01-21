@@ -4276,7 +4276,7 @@ index b913d6b6..d4d3d9be 100644
              if (map === undefined) return false;
          }
 diff --git a/src-testing/src/renderers/common/ClippingContext.ts b/src-testing/src/renderers/common/ClippingContext.ts
-index a7c62000..a41ae955 100644
+index 3f08f771..56df8224 100644
 --- a/src-testing/src/renderers/common/ClippingContext.ts
 +++ b/src-testing/src/renderers/common/ClippingContext.ts
 @@ -1,6 +1,10 @@
@@ -4341,7 +4341,7 @@ index a7c62000..a41ae955 100644
       */
 -    updateGlobal(scene, camera) {
 +    updateGlobal(scene: Scene, camera: Camera) {
-         this.shadowPass = scene.overrideMaterial !== null && scene.overrideMaterial.isShadowNodeMaterial;
+         this.shadowPass = scene.overrideMaterial !== null && scene.overrideMaterial.isShadowPassMaterial;
          this.viewMatrix = camera.matrixWorldInverse;
  
 @@ -138,12 +159,12 @@ class ClippingContext {
@@ -5728,7 +5728,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 992bc19e..91145472 100644
+index 85958384..60918f7f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5882,7 +5882,7 @@ index 992bc19e..91145472 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -703,7 +763,7 @@ class RenderObject {
+@@ -708,7 +768,7 @@ class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -6050,7 +6050,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index adba7090..15702bde 100644
+index fd9a9811..e8230f27 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -9214,10 +9214,10 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index b01f4784..8b7fdfcf 100644
+index d566c074..e8126a9c 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1283,7 +1283,14 @@ class WebGPUBackend extends Backend {
+@@ -1284,7 +1284,14 @@ class WebGPUBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
