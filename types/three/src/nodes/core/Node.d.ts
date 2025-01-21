@@ -322,7 +322,7 @@ declare class Node extends EventDispatcher<{
     /**
      * Returns the child nodes as a JSON object.
      *
-     * @return {Object} The serialized child objects as JSON.
+     * @return {Array<Object>} An iterable list of serialized child objects as JSON.
      */
     getSerializeChildren(): Generator<import("./NodeUtils.js").NodeChild, void, unknown>;
     /**
