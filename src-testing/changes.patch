@@ -2540,7 +2540,7 @@ index 2e8a372c..0dd736ec 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index 0fc08ddc..a3a7fc7e 100644
+index 2229f0c0..74580b4a 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
 @@ -4,6 +4,7 @@ import { Matrix4 } from '../../math/Matrix4.js';
@@ -3852,7 +3852,7 @@ index 01b8ddeb..e39524b8 100644
           * The bind group's name.
           *
 diff --git a/src-testing/src/renderers/common/Binding.ts b/src-testing/src/renderers/common/Binding.ts
-index 4417e9b8..559cc30c 100644
+index 9b27454f..cca19581 100644
 --- a/src-testing/src/renderers/common/Binding.ts
 +++ b/src-testing/src/renderers/common/Binding.ts
 @@ -8,6 +8,10 @@
@@ -4425,7 +4425,7 @@ index a7c62000..a41ae955 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Color4.ts b/src-testing/src/renderers/common/Color4.ts
-index fc7845fd..414a8b9a 100644
+index a1718cff..f991ed90 100644
 --- a/src-testing/src/renderers/common/Color4.ts
 +++ b/src-testing/src/renderers/common/Color4.ts
 @@ -1,4 +1,4 @@
@@ -4456,7 +4456,7 @@ index fc7845fd..414a8b9a 100644
  
          this.a = a;
      }
-@@ -32,7 +36,8 @@ class Color4 extends Color {
+@@ -34,7 +38,8 @@ class Color4 extends Color {
       * @param {Number} [a=1] - The alpha value.
       * @return {Color4} A reference to this object.
       */
@@ -4466,7 +4466,7 @@ index fc7845fd..414a8b9a 100644
          this.a = a;
  
          return super.set(r, g, b);
-@@ -44,8 +49,8 @@ class Color4 extends Color {
+@@ -46,8 +51,8 @@ class Color4 extends Color {
       * @param {Color4} color - The color to copy.
       * @return {Color4} A reference to this object.
       */
@@ -4477,7 +4477,7 @@ index fc7845fd..414a8b9a 100644
  
          return super.copy(color);
      }
-@@ -55,8 +60,8 @@ class Color4 extends Color {
+@@ -57,8 +62,8 @@ class Color4 extends Color {
       *
       * @return {Color4} The cloned color.
       */
@@ -4905,7 +4905,7 @@ index 0336ccac..0c6fb271 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index 7c326179..6e64b4a7 100644
+index f7939ba6..b397b8c4 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
 @@ -2,6 +2,22 @@ import DataMap from './DataMap.js';
@@ -5149,7 +5149,7 @@ index 7c326179..6e64b4a7 100644
          if (pipeline === undefined) {
              pipeline = new ComputePipeline(cacheKey, stageCompute);
 @@ -312,12 +351,18 @@ class Pipelines extends DataMap {
-      * @param {Array} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
+      * @param {Array<Promise>?} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
       * @return {ComputePipeline} The compute pipeline.
       */
 -    _getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises) {
@@ -5329,7 +5329,7 @@ index d6c72696..3ae4005b 100644
  
          _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 17124b62..ed67c412 100644
+index 5edc6d81..e1f0cbbe 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
 @@ -1,5 +1,9 @@
@@ -5386,7 +5386,7 @@ index 17124b62..ed67c412 100644
      /**
       * Constructs a new render context.
       */
-@@ -232,12 +273,12 @@ class RenderContext {
+@@ -240,12 +281,12 @@ class RenderContext {
   * @param {RenderContext} renderContext - The render context.
   * @return {Number} The cache key.
   */
@@ -5728,7 +5728,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index d4cc350a..8d62b85b 100644
+index 992bc19e..91145472 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5835,7 +5835,7 @@ index d4cc350a..8d62b85b 100644
      ) {
          this.id = _id++;
  
-@@ -295,7 +355,7 @@ class RenderObject {
+@@ -305,7 +365,7 @@ class RenderObject {
       *
       * @param {ClippingContext} context - The clipping context to set.
       */
@@ -5844,7 +5844,7 @@ index d4cc350a..8d62b85b 100644
          this.clippingContext = context;
      }
  
-@@ -309,7 +369,7 @@ class RenderObject {
+@@ -319,7 +379,7 @@ class RenderObject {
          if (this.clippingContext === null || this.clippingContext.cacheKey === this.clippingContextCacheKey)
              return false;
  
@@ -5853,7 +5853,7 @@ index d4cc350a..8d62b85b 100644
  
          return true;
      }
-@@ -375,7 +435,7 @@ class RenderObject {
+@@ -385,7 +445,7 @@ class RenderObject {
       * @return {Array<Object>} An array with object references.
       */
      getChainArray() {
@@ -5862,7 +5862,7 @@ index d4cc350a..8d62b85b 100644
      }
  
      /**
-@@ -384,7 +444,7 @@ class RenderObject {
+@@ -394,7 +454,7 @@ class RenderObject {
       *
       * @param {BufferGeometry} geometry - The geometry to set.
       */
@@ -5871,7 +5871,7 @@ index d4cc350a..8d62b85b 100644
          this.geometry = geometry;
          this.attributes = null;
      }
-@@ -401,8 +461,8 @@ class RenderObject {
+@@ -411,8 +471,8 @@ class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -5882,7 +5882,7 @@ index d4cc350a..8d62b85b 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -693,7 +753,7 @@ class RenderObject {
+@@ -703,7 +763,7 @@ class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -6050,7 +6050,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index a5ec1592..bfa81fd3 100644
+index adba7090..15702bde 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -6293,7 +6293,7 @@ index a5ec1592..bfa81fd3 100644
                      scene,
 @@ -803,14 +996,14 @@ class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
-      * @return {Promise} A Promise that resolves when the compile has been finished.
+      * @return {Promise<Array>} A Promise that resolves when the compile has been finished.
       */
 -    async compileAsync(scene, camera, targetScene = null) {
 +    async compileAsync(scene: Object3D, camera: Camera, targetScene: Object3D | null = null) {
@@ -6801,7 +6801,7 @@ index a5ec1592..bfa81fd3 100644
       */
 -    compute(computeNodes) {
 +    compute(computeNodes: ComputeNode | ComputeNode[]) {
-         if (this.isDeviceLost === true) return;
+         if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
 @@ -1949,7 +2158,7 @@ class Renderer {
@@ -6828,7 +6828,7 @@ index a5ec1592..bfa81fd3 100644
  
 @@ -2022,7 +2231,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
-      * @return {Promise?} A Promise that resolve when the compute has finished.
+      * @return {Promise} A Promise that resolve when the compute has finished.
       */
 -    async computeAsync(computeNodes) {
 +    async computeAsync(computeNodes: ComputeNode | ComputeNode[]) {
@@ -7056,7 +7056,7 @@ index a5ec1592..bfa81fd3 100644
          // process renderable objects
  
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -2359,18 +2608,18 @@ class Renderer {
+@@ -2356,18 +2605,18 @@ class Renderer {
  
              const { object, geometry, material, group, clippingContext } = renderItem;
  
@@ -7079,7 +7079,7 @@ index a5ec1592..bfa81fd3 100644
                          viewportValue.copy(vp).multiplyScalar(this._pixelRatio).floor();
                          viewportValue.minDepth = minDepth;
                          viewportValue.maxDepth = maxDepth;
-@@ -2378,13 +2627,13 @@ class Renderer {
+@@ -2375,13 +2624,13 @@ class Renderer {
  
                          this.backend.updateViewport(this._currentRenderContext);
  
@@ -7098,7 +7098,7 @@ index a5ec1592..bfa81fd3 100644
                              lightsNode,
                              clippingContext,
                              passId,
-@@ -2392,13 +2641,13 @@ class Renderer {
+@@ -2389,13 +2638,13 @@ class Renderer {
                      }
                  }
              } else {
@@ -7117,7 +7117,7 @@ index a5ec1592..bfa81fd3 100644
                      lightsNode,
                      clippingContext,
                      passId,
-@@ -2421,7 +2670,17 @@ class Renderer {
+@@ -2418,7 +2667,17 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7136,7 +7136,7 @@ index a5ec1592..bfa81fd3 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2508,14 +2767,23 @@ class Renderer {
+@@ -2505,14 +2764,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7163,7 +7163,7 @@ index a5ec1592..bfa81fd3 100644
              clippingContext,
              passId,
          );
-@@ -2524,18 +2792,18 @@ class Renderer {
+@@ -2521,18 +2789,18 @@ class Renderer {
  
          //
  
@@ -7188,7 +7188,7 @@ index a5ec1592..bfa81fd3 100644
  
          //
  
-@@ -2549,7 +2817,7 @@ class Renderer {
+@@ -2546,7 +2814,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7197,7 +7197,7 @@ index a5ec1592..bfa81fd3 100644
      }
  
      /**
-@@ -2566,14 +2834,23 @@ class Renderer {
+@@ -2563,14 +2831,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7224,7 +7224,7 @@ index a5ec1592..bfa81fd3 100644
              clippingContext,
              passId,
          );
-@@ -2582,16 +2859,16 @@ class Renderer {
+@@ -2579,16 +2856,16 @@ class Renderer {
  
          //
  
@@ -9214,10 +9214,10 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index d17e3a4b..eaeb4232 100644
+index b01f4784..8b7fdfcf 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1279,7 +1279,14 @@ class WebGPUBackend extends Backend {
+@@ -1283,7 +1283,14 @@ class WebGPUBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
