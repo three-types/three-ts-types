@@ -122,6 +122,8 @@ declare class Renderer {
             material: Material,
             group: GeometryGroup,
             lightsNode: LightsNode,
+            clippingContext: ClippingContext | null,
+            passId: string | null,
         ) => void)
         | null;
     _currentRenderObjectFunction:
@@ -133,6 +135,8 @@ declare class Renderer {
             material: Material,
             group: GeometryGroup,
             lightsNode: LightsNode,
+            clippingContext: ClippingContext | null,
+            passId: string | null,
         ) => void)
         | null;
     _currentRenderBundle: RenderBundle | null;
@@ -143,6 +147,7 @@ declare class Renderer {
         camera: Camera,
         lightsNode: LightsNode,
         group: GeometryGroup,
+        clippingContext: ClippingContext | null,
         passId?: string,
     ) => void;
     _isDeviceLost: boolean;
@@ -662,6 +667,8 @@ declare class Renderer {
             material: Material,
             group: GeometryGroup,
             lightsNode: LightsNode,
+            clippingContext: ClippingContext | null,
+            passId: string | null,
         ) => void)
         | null;
     /**

@@ -93,6 +93,7 @@ export const bypass: typeof TSL.bypass;
 export const cache: typeof TSL.cache;
 export const call: typeof TSL.call;
 export const cameraFar: typeof TSL.cameraFar;
+export const cameraIndex: typeof TSL.cameraIndex;
 export const cameraNear: typeof TSL.cameraNear;
 export const cameraNormalMatrix: typeof TSL.cameraNormalMatrix;
 export const cameraPosition: typeof TSL.cameraPosition;

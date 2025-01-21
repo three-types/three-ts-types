@@ -127,7 +127,7 @@ index a4dfe6b4..2d68722b 100644
  
          const { renderId } = nodeFrame;
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index d3ab54f8..1fdb5cf0 100644
+index 604da7d2..5df608da 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,10 @@ import { varying } from '../core/VaryingNode.js';
@@ -268,7 +268,7 @@ index d3ab54f8..1fdb5cf0 100644
  
          return this;
 @@ -243,7 +265,7 @@ class BufferAttributeNode extends InputNode {
-      * @param {Number} value - The value to set.
+      * @param {Boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
 -    setInstanced(value) {
@@ -336,7 +336,7 @@ index d3ab54f8..1fdb5cf0 100644
  
  addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index d6d8b80a..0603c8c2 100644
+index 0d93173b..40c99bbf 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,10 +4,15 @@ import { textureSize } from './TextureSizeNode.js';
@@ -775,7 +775,7 @@ index 91d31e90..3f080c9a 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 6ec542d1..5a194785 100644
+index 068e0550..8b96f282 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -4425,7 +4425,7 @@ index 3f08f771..56df8224 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Color4.ts b/src-testing/src/renderers/common/Color4.ts
-index a1718cff..f991ed90 100644
+index eddd65a5..3f7bb449 100644
 --- a/src-testing/src/renderers/common/Color4.ts
 +++ b/src-testing/src/renderers/common/Color4.ts
 @@ -1,4 +1,4 @@
@@ -4442,9 +4442,9 @@ index a1718cff..f991ed90 100644
 +
      /**
       * Constructs a new four-component color.
-      *
-@@ -17,8 +19,10 @@ class Color4 extends Color {
-      * @param {Number} b - The blue value.
+      * You can also pass a single THREE.Color, hex or
+@@ -19,8 +21,10 @@ class Color4 extends Color {
+      * @param {Number} [b=1] - The blue value.
       * @param {Number} [a=1] - The alpha value.
       */
 -    constructor(r, g, b, a = 1) {
@@ -4456,7 +4456,7 @@ index a1718cff..f991ed90 100644
  
          this.a = a;
      }
-@@ -34,7 +38,8 @@ class Color4 extends Color {
+@@ -36,7 +40,8 @@ class Color4 extends Color {
       * @param {Number} [a=1] - The alpha value.
       * @return {Color4} A reference to this object.
       */
@@ -4466,7 +4466,7 @@ index a1718cff..f991ed90 100644
          this.a = a;
  
          return super.set(r, g, b);
-@@ -46,8 +51,8 @@ class Color4 extends Color {
+@@ -48,8 +53,8 @@ class Color4 extends Color {
       * @param {Color4} color - The color to copy.
       * @return {Color4} A reference to this object.
       */
@@ -4477,7 +4477,7 @@ index a1718cff..f991ed90 100644
  
          return super.copy(color);
      }
-@@ -57,8 +62,8 @@ class Color4 extends Color {
+@@ -59,8 +64,8 @@ class Color4 extends Color {
       *
       * @return {Color4} The cloned color.
       */
@@ -5460,7 +5460,7 @@ index 308ab331..e0f25ada 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
-index 798a149f..d0006a7e 100644
+index a88cde1d..e7047e83 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
 +++ b/src-testing/src/renderers/common/RenderList.ts
 @@ -1,4 +1,13 @@
@@ -5655,8 +5655,8 @@ index 798a149f..d0006a7e 100644
      }
  
 @@ -308,7 +375,10 @@ class RenderList {
-      * @param {Function} customOpaqueSort - A custom sort function for opaque objects.
-      * @param {Function} customTransparentSort -  A custom sort function for transparent objects.
+      * @param {function(Any, Any): Number} customOpaqueSort - A custom sort function for opaque objects.
+      * @param {function(Any, Any): Number} customTransparentSort -  A custom sort function for transparent objects.
       */
 -    sort(customOpaqueSort, customTransparentSort) {
 +    sort(
@@ -5728,7 +5728,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 85958384..60918f7f 100644
+index 6b64764e..ccbc922a 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -5853,7 +5853,16 @@ index 85958384..60918f7f 100644
  
          return true;
      }
-@@ -385,7 +445,7 @@ class RenderObject {
+@@ -367,7 +427,7 @@ class RenderObject {
+      * @param {String} name - The name of the binding group.
+      * @return {BindGroup?} The bindings.
+      */
+-    getBindingGroup(name) {
++    getBindingGroup(name: string) {
+         for (const bindingGroup of this.getBindings()) {
+             if (bindingGroup.name === name) {
+                 return bindingGroup;
+@@ -399,7 +459,7 @@ class RenderObject {
       * @return {Array<Object>} An array with object references.
       */
      getChainArray() {
@@ -5862,7 +5871,7 @@ index 85958384..60918f7f 100644
      }
  
      /**
-@@ -394,7 +454,7 @@ class RenderObject {
+@@ -408,7 +468,7 @@ class RenderObject {
       *
       * @param {BufferGeometry} geometry - The geometry to set.
       */
@@ -5871,7 +5880,7 @@ index 85958384..60918f7f 100644
          this.geometry = geometry;
          this.attributes = null;
      }
-@@ -411,8 +471,8 @@ class RenderObject {
+@@ -425,8 +485,8 @@ class RenderObject {
          const nodeAttributes = this.getNodeBuilderState().nodeAttributes;
          const geometry = this.geometry;
  
@@ -5882,7 +5891,7 @@ index 85958384..60918f7f 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -708,7 +768,7 @@ class RenderObject {
+@@ -722,7 +782,7 @@ class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -6050,7 +6059,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index fd9a9811..e8230f27 100644
+index 6e281504..4a8b02ac 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -36,7 +36,34 @@ import {
@@ -6088,7 +6097,7 @@ index fd9a9811..e8230f27 100644
  
  /** @module Renderer **/
  
-@@ -47,10 +74,176 @@ const _frustum = /*@__PURE__*/ new Frustum();
+@@ -47,10 +74,181 @@ const _frustum = /*@__PURE__*/ new Frustum();
  const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
  const _vector4 = /*@__PURE__*/ new Vector4();
  
@@ -6203,6 +6212,8 @@ index fd9a9811..e8230f27 100644
 +              material: Material,
 +              group: GeometryGroup,
 +              lightsNode: LightsNode,
++              clippingContext: ClippingContext | null,
++              passId: string | null,
 +          ) => void)
 +        | null;
 +    _currentRenderObjectFunction:
@@ -6214,6 +6225,8 @@ index fd9a9811..e8230f27 100644
 +              material: Material,
 +              group: GeometryGroup,
 +              lightsNode: LightsNode,
++              clippingContext: ClippingContext | null,
++              passId: string | null,
 +          ) => void)
 +        | null;
 +    _currentRenderBundle: RenderBundle | null;
@@ -6225,6 +6238,7 @@ index fd9a9811..e8230f27 100644
 +        camera: Camera,
 +        lightsNode: LightsNode,
 +        group: GeometryGroup,
++        clippingContext: ClippingContext | null,
 +        passId?: string,
 +    ) => void;
 +
@@ -6265,7 +6279,7 @@ index fd9a9811..e8230f27 100644
      /**
       * Constructs a new renderer.
       *
-@@ -65,7 +258,7 @@ class Renderer {
+@@ -65,7 +263,7 @@ class Renderer {
       * to overwrite the default.
       * @param {Function?} [parameters.getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
       */
@@ -6274,7 +6288,7 @@ index fd9a9811..e8230f27 100644
          /**
           * This flag can be used for type testing.
           *
-@@ -679,12 +872,12 @@ class Renderer {
+@@ -679,12 +877,12 @@ class Renderer {
              getShaderAsync: async (scene, camera, object) => {
                  await this.compileAsync(scene, camera);
  
@@ -6291,7 +6305,7 @@ index fd9a9811..e8230f27 100644
                      object,
                      material,
                      scene,
-@@ -803,14 +996,14 @@ class Renderer {
+@@ -803,14 +1001,14 @@ class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {Promise<Array>} A Promise that resolves when the compile has been finished.
       */
@@ -6308,7 +6322,7 @@ index fd9a9811..e8230f27 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -819,15 +1012,15 @@ class Renderer {
+@@ -819,15 +1017,15 @@ class Renderer {
  
          //
  
@@ -6327,7 +6341,7 @@ index fd9a9811..e8230f27 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -856,7 +1049,7 @@ class Renderer {
+@@ -856,7 +1054,7 @@ class Renderer {
  
          //
  
@@ -6336,7 +6350,7 @@ index fd9a9811..e8230f27 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -864,8 +1057,8 @@ class Renderer {
+@@ -864,8 +1062,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -6347,7 +6361,7 @@ index fd9a9811..e8230f27 100644
                  }
              });
          }
-@@ -875,12 +1068,12 @@ class Renderer {
+@@ -875,12 +1073,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6364,7 +6378,7 @@ index fd9a9811..e8230f27 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -888,7 +1081,7 @@ class Renderer {
+@@ -888,7 +1086,7 @@ class Renderer {
  
          //
  
@@ -6373,7 +6387,7 @@ index fd9a9811..e8230f27 100644
  
          // process render lists
  
-@@ -925,7 +1118,7 @@ class Renderer {
+@@ -925,7 +1123,7 @@ class Renderer {
       * @param {Camera} camera - The camera.
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
@@ -6382,7 +6396,7 @@ index fd9a9811..e8230f27 100644
          if (this._initialized === false) await this.init();
  
          const renderContext = this._renderScene(scene, camera);
-@@ -950,7 +1143,7 @@ class Renderer {
+@@ -950,7 +1148,7 @@ class Renderer {
       * @param {MRTNode} mrt - The MRT node to set.
       * @return {Renderer} A reference to this renderer.
       */
@@ -6391,7 +6405,7 @@ index fd9a9811..e8230f27 100644
          this._mrt = mrt;
  
          return this;
-@@ -971,7 +1164,7 @@ class Renderer {
+@@ -971,7 +1169,7 @@ class Renderer {
       * @private
       * @param {Object} info - Information about the context lost.
       */
@@ -6400,7 +6414,7 @@ index fd9a9811..e8230f27 100644
          let errorMessage = `THREE.WebGPURenderer: ${info.api} Device Lost:\n\nMessage: ${info.message}`;
  
          if (info.reason) {
-@@ -991,14 +1184,14 @@ class Renderer {
+@@ -991,14 +1189,14 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundle belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -6418,7 +6432,7 @@ index fd9a9811..e8230f27 100644
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -1037,13 +1230,13 @@ class Renderer {
+@@ -1037,13 +1235,13 @@ class Renderer {
              for (let i = 0, l = renderObjects.length; i < l; i++) {
                  const renderObject = renderObjects[i];
  
@@ -6437,7 +6451,7 @@ index fd9a9811..e8230f27 100644
                  }
              }
          }
-@@ -1063,7 +1256,7 @@ class Renderer {
+@@ -1063,7 +1261,7 @@ class Renderer {
       * @return {Promise?} A Promise that resolve when the scene has been rendered.
       * Only returned when the renderer has not been initialized.
       */
@@ -6446,7 +6460,7 @@ index fd9a9811..e8230f27 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -1135,14 +1328,14 @@ class Renderer {
+@@ -1135,14 +1333,14 @@ class Renderer {
       * @param {Boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
       * @return {RenderContext} The current render context.
       */
@@ -6463,7 +6477,7 @@ index fd9a9811..e8230f27 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -1171,7 +1364,7 @@ class Renderer {
+@@ -1171,7 +1369,7 @@ class Renderer {
  
          //
  
@@ -6472,7 +6486,7 @@ index fd9a9811..e8230f27 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -1243,7 +1436,7 @@ class Renderer {
+@@ -1249,7 +1447,7 @@ class Renderer {
          _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
          _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
  
@@ -6481,7 +6495,7 @@ index fd9a9811..e8230f27 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -1257,14 +1450,14 @@ class Renderer {
+@@ -1263,14 +1461,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6502,7 +6516,7 @@ index fd9a9811..e8230f27 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -1285,7 +1478,7 @@ class Renderer {
+@@ -1291,7 +1489,7 @@ class Renderer {
  
          //
  
@@ -6511,7 +6525,7 @@ index fd9a9811..e8230f27 100644
  
          //
  
-@@ -1325,8 +1518,8 @@ class Renderer {
+@@ -1331,8 +1529,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -6522,7 +6536,7 @@ index fd9a9811..e8230f27 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -1378,10 +1571,10 @@ class Renderer {
+@@ -1384,10 +1582,10 @@ class Renderer {
       * @param {Function} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -6535,7 +6549,7 @@ index fd9a9811..e8230f27 100644
      }
  
      /**
-@@ -1392,7 +1585,7 @@ class Renderer {
+@@ -1398,7 +1596,7 @@ class Renderer {
       * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
       * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -6544,7 +6558,7 @@ index fd9a9811..e8230f27 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -1420,7 +1613,7 @@ class Renderer {
+@@ -1426,7 +1624,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The drawing buffer size.
       */
@@ -6553,7 +6567,7 @@ index fd9a9811..e8230f27 100644
          return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
      }
  
-@@ -1430,7 +1623,7 @@ class Renderer {
+@@ -1436,7 +1634,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The drawing buffer size.
       */
@@ -6562,7 +6576,7 @@ index fd9a9811..e8230f27 100644
          return target.set(this._width, this._height);
      }
  
-@@ -1460,7 +1653,7 @@ class Renderer {
+@@ -1466,7 +1664,7 @@ class Renderer {
       * @param {Number} height - The height in logical pixels.
       * @param {Number} pixelRatio - The pixel ratio.
       */
@@ -6571,7 +6585,7 @@ index fd9a9811..e8230f27 100644
          this._width = width;
          this._height = height;
  
-@@ -1481,7 +1674,7 @@ class Renderer {
+@@ -1487,7 +1685,7 @@ class Renderer {
       * @param {Number} height - The height in logical pixels.
       * @param {Boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
       */
@@ -6580,7 +6594,7 @@ index fd9a9811..e8230f27 100644
          this._width = width;
          this._height = height;
  
-@@ -1504,7 +1697,7 @@ class Renderer {
+@@ -1510,7 +1708,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6589,7 +6603,7 @@ index fd9a9811..e8230f27 100644
          this._opaqueSort = method;
      }
  
-@@ -1514,7 +1707,7 @@ class Renderer {
+@@ -1520,7 +1718,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6598,7 +6612,7 @@ index fd9a9811..e8230f27 100644
          this._transparentSort = method;
      }
  
-@@ -1524,7 +1717,7 @@ class Renderer {
+@@ -1530,7 +1728,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The scissor rectangle.
       */
@@ -6607,7 +6621,7 @@ index fd9a9811..e8230f27 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -1544,13 +1737,15 @@ class Renderer {
+@@ -1550,13 +1748,15 @@ class Renderer {
       * @param {Number} width - The width of the scissor box in logical pixel unit.
       * @param {Number} height - The height of the scissor box in logical pixel unit.
       */
@@ -6627,7 +6641,7 @@ index fd9a9811..e8230f27 100644
          }
      }
  
-@@ -1568,7 +1763,7 @@ class Renderer {
+@@ -1574,7 +1774,7 @@ class Renderer {
       *
       * @param {Boolean} boolean - Whether the scissor test should be enabled or not.
       */
@@ -6636,7 +6650,7 @@ index fd9a9811..e8230f27 100644
          this._scissorTest = boolean;
  
          this.backend.setScissorTest(boolean);
-@@ -1580,7 +1775,7 @@ class Renderer {
+@@ -1586,7 +1786,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The viewport definition.
       */
@@ -6645,7 +6659,7 @@ index fd9a9811..e8230f27 100644
          return target.copy(this._viewport);
      }
  
-@@ -1594,13 +1789,15 @@ class Renderer {
+@@ -1600,13 +1800,15 @@ class Renderer {
       * @param {Number} minDepth - The minimum depth value of the viewport. WebGPU only.
       * @param {Number} maxDepth - The maximum depth value of the viewport. WebGPU only.
       */
@@ -6665,7 +6679,7 @@ index fd9a9811..e8230f27 100644
          }
  
          viewport.minDepth = minDepth;
-@@ -1613,7 +1810,7 @@ class Renderer {
+@@ -1619,7 +1821,7 @@ class Renderer {
       * @param {Color} target - The method writes the result in this target object.
       * @return {Color} The clear color.
       */
@@ -6674,7 +6688,7 @@ index fd9a9811..e8230f27 100644
          return target.copy(this._clearColor);
      }
  
-@@ -1623,7 +1820,7 @@ class Renderer {
+@@ -1629,7 +1831,7 @@ class Renderer {
       * @param {Color} color - The clear color.
       * @param {Number} [alpha=1] - The clear alpha.
       */
@@ -6683,7 +6697,7 @@ index fd9a9811..e8230f27 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -1642,7 +1839,7 @@ class Renderer {
+@@ -1648,7 +1850,7 @@ class Renderer {
       *
       * @param {Number} alpha - The clear alpha.
       */
@@ -6692,7 +6706,7 @@ index fd9a9811..e8230f27 100644
          this._clearColor.a = alpha;
      }
  
-@@ -1660,7 +1857,7 @@ class Renderer {
+@@ -1666,7 +1868,7 @@ class Renderer {
       *
       * @param {Number} depth - The clear depth.
       */
@@ -6701,7 +6715,7 @@ index fd9a9811..e8230f27 100644
          this._clearDepth = depth;
      }
  
-@@ -1678,7 +1875,7 @@ class Renderer {
+@@ -1684,7 +1886,7 @@ class Renderer {
       *
       * @param {Number} stencil - The clear stencil.
       */
@@ -6710,7 +6724,7 @@ index fd9a9811..e8230f27 100644
          this._clearStencil = stencil;
      }
  
-@@ -1690,7 +1887,7 @@ class Renderer {
+@@ -1696,7 +1898,7 @@ class Renderer {
       * @param {Object3D} object - The 3D object to test.
       * @return {Boolean} Whether the 3D object is fully occluded or not.
       */
@@ -6719,7 +6733,7 @@ index fd9a9811..e8230f27 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -1719,9 +1916,9 @@ class Renderer {
+@@ -1725,9 +1927,9 @@ class Renderer {
          let renderContext = null;
  
          if (renderTarget !== null) {
@@ -6731,7 +6745,7 @@ index fd9a9811..e8230f27 100644
  
              renderContext = this._renderContexts.getForClear(renderTarget);
              renderContext.textures = renderTargetData.textures;
-@@ -1741,8 +1938,8 @@ class Renderer {
+@@ -1750,8 +1952,8 @@ class Renderer {
  
              const quad = this._quad;
  
@@ -6742,7 +6756,7 @@ index fd9a9811..e8230f27 100644
                  quad.material.needsUpdate = true;
              }
  
-@@ -1853,14 +2050,14 @@ class Renderer {
+@@ -1862,14 +2064,14 @@ class Renderer {
          this.info.dispose();
          this.backend.dispose();
  
@@ -6765,7 +6779,7 @@ index fd9a9811..e8230f27 100644
  
          this.setRenderTarget(null);
          this.setAnimationLoop(null);
-@@ -1875,7 +2072,7 @@ class Renderer {
+@@ -1884,7 +2086,7 @@ class Renderer {
       * @param {Number} [activeCubeFace=0] - The active cube face.
       * @param {Number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -6774,7 +6788,7 @@ index fd9a9811..e8230f27 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -1916,7 +2113,19 @@ class Renderer {
+@@ -1925,7 +2127,19 @@ class Renderer {
       *
       * @param {module:Renderer~renderObjectFunction?} renderObjectFunction - The render object function.
       */
@@ -6795,7 +6809,7 @@ index fd9a9811..e8230f27 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -1936,7 +2145,7 @@ class Renderer {
+@@ -1945,7 +2159,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise?} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -6804,7 +6818,7 @@ index fd9a9811..e8230f27 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -1949,7 +2158,7 @@ class Renderer {
+@@ -1958,7 +2172,7 @@ class Renderer {
  
          //
  
@@ -6813,7 +6827,7 @@ index fd9a9811..e8230f27 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -1964,9 +2173,9 @@ class Renderer {
+@@ -1973,9 +2187,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -6826,7 +6840,7 @@ index fd9a9811..e8230f27 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2022,7 +2231,7 @@ class Renderer {
+@@ -2031,7 +2245,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -6835,7 +6849,7 @@ index fd9a9811..e8230f27 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes);
-@@ -2037,7 +2246,7 @@ class Renderer {
+@@ -2046,7 +2260,7 @@ class Renderer {
       * @param {String} name - The feature's name.
       * @return {Promise<Boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -6844,7 +6858,7 @@ index fd9a9811..e8230f27 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.hasFeature(name);
-@@ -2050,7 +2259,7 @@ class Renderer {
+@@ -2059,7 +2273,7 @@ class Renderer {
       * @param {String} name - The feature's name.
       * @return {Boolean} Whether the feature is supported or not.
       */
@@ -6853,7 +6867,7 @@ index fd9a9811..e8230f27 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2079,10 +2288,10 @@ class Renderer {
+@@ -2088,10 +2302,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -6866,7 +6880,7 @@ index fd9a9811..e8230f27 100644
      }
  
      /**
-@@ -2093,14 +2302,14 @@ class Renderer {
+@@ -2102,14 +2316,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -6883,7 +6897,7 @@ index fd9a9811..e8230f27 100644
      }
  
      /**
-@@ -2109,7 +2318,7 @@ class Renderer {
+@@ -2118,7 +2332,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {Vector2|Vector4} rectangle - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -6892,7 +6906,7 @@ index fd9a9811..e8230f27 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2159,7 +2368,13 @@ class Renderer {
+@@ -2168,7 +2382,13 @@ class Renderer {
       * @param {Vector2|Vector3} [dstPosition=null] - A vector that represents the origin of the destination region. Can be two or three-dimensional.
       * @param {Number} level - The mipmap level to copy.
       */
@@ -6907,7 +6921,7 @@ index fd9a9811..e8230f27 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2179,7 +2394,15 @@ class Renderer {
+@@ -2188,7 +2408,15 @@ class Renderer {
       * @param {Number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -6924,7 +6938,7 @@ index fd9a9811..e8230f27 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2193,45 +2416,59 @@ class Renderer {
+@@ -2202,45 +2430,59 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -6999,7 +7013,7 @@ index fd9a9811..e8230f27 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2241,7 +2478,7 @@ class Renderer {
+@@ -2250,7 +2492,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7008,7 +7022,7 @@ index fd9a9811..e8230f27 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2266,7 +2503,7 @@ class Renderer {
+@@ -2275,7 +2517,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7017,7 +7031,7 @@ index fd9a9811..e8230f27 100644
  
              renderList.begin();
  
-@@ -2294,7 +2531,7 @@ class Renderer {
+@@ -2303,7 +2545,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7026,7 +7040,7 @@ index fd9a9811..e8230f27 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2310,7 +2547,13 @@ class Renderer {
+@@ -2319,7 +2561,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7041,7 +7055,7 @@ index fd9a9811..e8230f27 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2348,7 +2591,13 @@ class Renderer {
+@@ -2357,17 +2605,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7053,71 +7067,25 @@ index fd9a9811..e8230f27 100644
 +        lightsNode: LightsNode,
 +        passId: string | null = null,
 +    ) {
-         // process renderable objects
- 
          for (let i = 0, il = renderList.length; i < il; i++) {
-@@ -2356,18 +2605,18 @@ class Renderer {
+             const { object, geometry, material, group, clippingContext } = renderList[i];
  
-             const { object, geometry, material, group, clippingContext } = renderItem;
- 
--            if (camera.isArrayCamera) {
--                const cameras = camera.cameras;
-+            if ((camera as ArrayCamera).isArrayCamera) {
-+                const cameras = (camera as ArrayCamera).cameras;
- 
-                 for (let j = 0, jl = cameras.length; j < jl; j++) {
-                     const camera2 = cameras[j];
- 
--                    if (object.layers.test(camera2.layers)) {
-+                    if (object!.layers.test(camera2.layers)) {
-                         const vp = camera2.viewport;
-                         const minDepth = vp.minDepth === undefined ? 0 : vp.minDepth;
-                         const maxDepth = vp.maxDepth === undefined ? 1 : vp.maxDepth;
- 
--                        const viewportValue = this._currentRenderContext.viewportValue;
-+                        const viewportValue = this._currentRenderContext!.viewportValue;
-                         viewportValue.copy(vp).multiplyScalar(this._pixelRatio).floor();
-                         viewportValue.minDepth = minDepth;
-                         viewportValue.maxDepth = maxDepth;
-@@ -2375,13 +2624,13 @@ class Renderer {
- 
-                         this.backend.updateViewport(this._currentRenderContext);
- 
--                        this._currentRenderObjectFunction(
--                            object,
-+                        this._currentRenderObjectFunction!(
-+                            object!,
-                             scene,
-                             camera2,
--                            geometry,
--                            material,
--                            group,
-+                            geometry!,
-+                            material!,
-+                            group!,
-                             lightsNode,
-                             clippingContext,
-                             passId,
-@@ -2389,13 +2638,13 @@ class Renderer {
-                     }
-                 }
-             } else {
--                this._currentRenderObjectFunction(
--                    object,
-+                this._currentRenderObjectFunction!(
-+                    object!,
-                     scene,
-                     camera,
--                    geometry,
--                    material,
--                    group,
-+                    geometry!,
-+                    material!,
-+                    group!,
-                     lightsNode,
-                     clippingContext,
-                     passId,
-@@ -2418,7 +2667,17 @@ class Renderer {
+-            this._currentRenderObjectFunction(
+-                object,
++            this._currentRenderObjectFunction!(
++                object!,
+                 scene,
+                 camera,
+-                geometry,
+-                material,
+-                group,
++                geometry!,
++                material!,
++                group!,
+                 lightsNode,
+                 clippingContext,
+                 passId,
+@@ -2389,7 +2643,17 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7136,7 +7104,7 @@ index fd9a9811..e8230f27 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2505,14 +2764,23 @@ class Renderer {
+@@ -2476,14 +2740,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7163,7 +7131,7 @@ index fd9a9811..e8230f27 100644
              clippingContext,
              passId,
          );
-@@ -2521,18 +2789,18 @@ class Renderer {
+@@ -2492,18 +2765,18 @@ class Renderer {
  
          //
  
@@ -7188,7 +7156,7 @@ index fd9a9811..e8230f27 100644
  
          //
  
-@@ -2546,7 +2814,7 @@ class Renderer {
+@@ -2517,7 +2790,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7197,7 +7165,7 @@ index fd9a9811..e8230f27 100644
      }
  
      /**
-@@ -2563,14 +2831,23 @@ class Renderer {
+@@ -2534,14 +2807,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {String?} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7224,7 +7192,7 @@ index fd9a9811..e8230f27 100644
              clippingContext,
              passId,
          );
-@@ -2579,16 +2856,16 @@ class Renderer {
+@@ -2550,16 +2832,16 @@ class Renderer {
  
          //
  
@@ -7248,7 +7216,7 @@ index fd9a9811..e8230f27 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/SampledTexture.ts b/src-testing/src/renderers/common/SampledTexture.ts
-index d47b7267..0012f0d4 100644
+index 62ef8eaa..0c521244 100644
 --- a/src-testing/src/renderers/common/SampledTexture.ts
 +++ b/src-testing/src/renderers/common/SampledTexture.ts
 @@ -1,4 +1,6 @@
@@ -7300,7 +7268,7 @@ index d47b7267..0012f0d4 100644
      }
  
      /**
-@@ -112,13 +123,15 @@ class SampledTexture extends Binding {
+@@ -111,13 +122,15 @@ class SampledTexture extends Binding {
   * @augments SampledTexture
   */
  class SampledArrayTexture extends SampledTexture {
@@ -7317,7 +7285,7 @@ index d47b7267..0012f0d4 100644
          super(name, texture);
  
          /**
-@@ -139,13 +152,15 @@ class SampledArrayTexture extends SampledTexture {
+@@ -138,13 +151,15 @@ class SampledArrayTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class Sampled3DTexture extends SampledTexture {
@@ -7334,7 +7302,7 @@ index d47b7267..0012f0d4 100644
          super(name, texture);
  
          /**
-@@ -166,13 +181,15 @@ class Sampled3DTexture extends SampledTexture {
+@@ -165,13 +180,15 @@ class Sampled3DTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class SampledCubeTexture extends SampledTexture {
@@ -8018,7 +7986,7 @@ index 37480124..00d3445d 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index 1ec36798..7cd30055 100644
+index 38940dc4..69db401f 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 @@ -1,3 +1,12 @@
@@ -8129,7 +8097,7 @@ index 1ec36798..7cd30055 100644
  
      /**
 @@ -129,7 +158,7 @@ class NodeLibrary {
-      * @param {String} type - The object type.
+      * @param {Number|String} type - The object type.
       * @param {Map} library - The type library.
       */
 -    addType(nodeClass, type, library) {
@@ -8752,7 +8720,7 @@ index 51bd2e13..74f42846 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 6a453fd4..00ac75fb 100644
+index 5e37f785..2ca2d348 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -13,6 +13,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -8763,7 +8731,7 @@ index 6a453fd4..00ac75fb 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1017,7 +1018,14 @@ class WebGLBackend extends Backend {
+@@ -1064,7 +1065,14 @@ class WebGLBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9214,10 +9182,10 @@ index bc7914ba..ffbf5e67 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index d566c074..e8126a9c 100644
+index 36d0b77c..e9363b53 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1284,7 +1284,14 @@ class WebGPUBackend extends Backend {
+@@ -1335,7 +1335,14 @@ class WebGPUBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
