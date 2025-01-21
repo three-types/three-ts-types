@@ -219,7 +219,7 @@ declare class Renderer {
      * @param {Object3D} scene - The scene or 3D object to precompile.
      * @param {Camera} camera - The camera that is used to render the scene.
      * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
-     * @return {Promise} A Promise that resolves when the compile has been finished.
+     * @return {Promise<Array>} A Promise that resolves when the compile has been finished.
      */
     compileAsync(scene: Object3D, camera: Camera, targetScene?: Object3D | null): Promise<void>;
     /**
@@ -677,7 +677,7 @@ declare class Renderer {
      *
      * @async
      * @param {Node|Array<Node>} computeNodes - The compute node(s).
-     * @return {Promise?} A Promise that resolve when the compute has finished.
+     * @return {Promise} A Promise that resolve when the compute has finished.
      */
     computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
     /**
@@ -860,7 +860,7 @@ declare class Renderer {
      * @param {Scene} scene - The scene the 3D object belongs to.
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {LightsNode} lightsNode - The current lights node.
-     * @param {Object?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {{start: Number, count: Number}?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
      * @param {String?} [passId=null] - An optional ID for identifying the pass.
      */
@@ -884,7 +884,7 @@ declare class Renderer {
      * @param {Scene} scene - The scene the 3D object belongs to.
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {LightsNode} lightsNode - The current lights node.
-     * @param {Object?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {{start: Number, count: Number}?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
      * @param {String?} [passId=null] - An optional ID for identifying the pass.
      */

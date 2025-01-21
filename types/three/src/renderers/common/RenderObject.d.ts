@@ -203,7 +203,7 @@ declare class RenderObject {
      *
      * The material cache key is part of the render object cache key.
      *
-     * @return {String} The material cache key.
+     * @return {Number} The material cache key.
      */
     getMaterialCacheKey(): number;
     /**
@@ -234,13 +234,13 @@ declare class RenderObject {
     /**
      * Returns the dynamic cache key which represents a key that is computed per draw command.
      *
-     * @return {String} The cache key.
+     * @return {Number} The cache key.
      */
     getDynamicCacheKey(): number;
     /**
      * Returns the render object's cache key.
      *
-     * @return {String} The cache key.
+     * @return {Number} The cache key.
      */
     getCacheKey(): number;
     /**
