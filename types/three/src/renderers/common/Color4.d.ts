@@ -21,6 +21,8 @@ declare class Color4 extends Color {
     constructor(r: number, g: number, b: number, a?: number);
     /**
      * Overwrites the default to honor alpha.
+     * You can also passed a single THREE.Color, hex or
+     * string argument to this method.
      *
      * @param {Number|String} r - The red value.
      * @param {Number} g - The green value.
