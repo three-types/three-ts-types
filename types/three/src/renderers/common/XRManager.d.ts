@@ -51,7 +51,10 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _foveation: number;
     _session: XRSession | null;
     _glBaseLayer: XRWebGLLayer | null;
+    _glBinding: XRWebGLBinding | null;
+    _glProjLayer: XRProjectionLayer | null;
     _xrFrame: XRFrame | null;
+    _useLayers: boolean;
     /**
      * Constructs a new XR manager.
      *
