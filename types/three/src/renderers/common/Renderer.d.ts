@@ -38,6 +38,7 @@ import RenderList, { Bundle, RenderItem } from "./RenderList.js";
 import RenderLists from "./RenderLists.js";
 import RenderObjects from "./RenderObjects.js";
 import Textures from "./Textures.js";
+import XRManager from "./XRManager.js";
 interface Rectangle {
     x: number;
     y: number;
@@ -161,9 +162,7 @@ declare class Renderer {
         enabled: boolean;
         type: ShadowMapType | null;
     };
-    xr: {
-        enabled: boolean;
-    };
+    xr: XRManager;
     debug: {
         checkShaderErrors: boolean;
         onShaderError:
