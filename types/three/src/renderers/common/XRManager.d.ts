@@ -18,6 +18,8 @@ export interface XRManagerEventMap {
  * manage XR sessions with `WebGPURenderer`.
  *
  * XR is currently only supported with a WebGL 2 backend.
+ *
+ * @augments EventDispatcher
  */
 declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     enabled: boolean;
@@ -97,17 +99,17 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
      */
     setFoveation(foveation: number): void;
     /**
-     * Returns the frammebuffer scale factor.
+     * Returns the framebuffer scale factor.
      *
-     * @return {Number} The frammebuffer scale factor.
+     * @return {Number} The framebuffer scale factor.
      */
     getFramebufferScaleFactor(): number;
     /**
-     * Sets the frammebuffer scale factor.
+     * Sets the framebuffer scale factor.
      *
      * This method can not be used during a XR session.
      *
-     * @param {Number} factor - The frammebuffer scale factor.
+     * @param {Number} factor - The framebuffer scale factor.
      */
     setFramebufferScaleFactor(factor: number): void;
     /**
@@ -145,7 +147,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     /**
      * Returns the environment blend mode from the current XR session.
      *
-     * @return {'opaque'|'additive'|'alpha-blend'} The environment blend mode.
+     * @return {('opaque'|'additive'|'alpha-blend')?} The environment blend mode. Returns `null` when used outside of a XR session.
      */
     getEnvironmentBlendMode(): XREnvironmentBlendMode | undefined;
     /**
@@ -172,7 +174,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     setSession(session: XRSession): Promise<void>;
     /**
      * This method is called by the renderer per frame and updates the XR camera
-     * and it sub cameras based on the given camera. The given camera is the "normal"
+     * and it sub cameras based on the given camera. The given camera is the "user"
      * camera created on application level and used for non-XR rendering.
      *
      * @param {PerspectiveCamera} camera - The camera.
