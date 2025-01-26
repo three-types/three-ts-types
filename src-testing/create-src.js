@@ -80,6 +80,7 @@ const files = [
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
+    'renderers/common/XRManager',
     'renderers/webgl-fallback/nodes/GLSLNodeBuilder',
     'renderers/webgl-fallback/WebGLBackend',
     'renderers/webgpu/nodes/BasicNodeLibrary',

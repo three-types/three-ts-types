@@ -55,6 +55,7 @@ const files = [
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
+    'renderers/common/XRManager',
     'renderers/webgpu/nodes/BasicNodeLibrary',
     'renderers/webgpu/nodes/StandardNodeLibrary',
 ];

@@ -38,6 +38,7 @@ import RenderList, { Bundle, RenderItem } from "./RenderList.js";
 import RenderLists from "./RenderLists.js";
 import RenderObjects from "./RenderObjects.js";
 import Textures from "./Textures.js";
+import XRManager from "./XRManager.js";
 interface Rectangle {
     x: number;
     y: number;
@@ -161,9 +162,7 @@ declare class Renderer {
         enabled: boolean;
         type: ShadowMapType | null;
     };
-    xr: {
-        enabled: boolean;
-    };
+    xr: XRManager;
     debug: {
         checkShaderErrors: boolean;
         onShaderError:
@@ -599,6 +598,19 @@ declare class Renderer {
      * is no longer in use by your app.
      */
     dispose(): void;
+    /**
+     * Ensures the renderer is XR compatible.
+     *
+     * @async
+     * @return {Promise} A Promise that resolve when the renderer is XR compatible.
+     */
+    makeXRCompatible(): Promise<void>;
+    /**
+     * Sets the XR rendering destination.
+     *
+     * @param {WebGLFramebuffer} xrTarget - The XR target.
+     */
+    setXRTarget(xrTarget: WebGLFramebuffer): void;
     /**
      * Sets the given render target. Calling this method means the renderer does not
      * target the default framebuffer (meaning the canvas) anymore but a custom framebuffer.

@@ -17890,6 +17890,84 @@ index 76e09f1f..edefce0e 100644
  
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
+diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
+index 104e33ae..85925f77 100644
+--- a/examples-testing/examples/webgpu_xr_cubes.ts
++++ b/examples-testing/examples/webgpu_xr_cubes.ts
+@@ -1,18 +1,22 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
+ import { XRButton } from 'three/addons/webxr/XRButtonGPU.js';
+ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+ 
++type CubeMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> & {
++    currentHex: number;
++};
++
+ const clock = new THREE.Clock();
+ 
+-let container;
+-let camera, scene, raycaster, renderer;
++let container: HTMLDivElement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, raycaster: THREE.Raycaster, renderer: THREE.WebGPURenderer;
+ 
+-let room;
++let room: THREE.LineSegments;
+ 
+-let controller, controllerGrip;
+-let INTERSECTED;
++let controller: THREE.XRTargetRaySpace, controllerGrip: THREE.XRGripSpace;
++let INTERSECTED: CubeMesh | undefined;
+ 
+ init();
+ 
+@@ -75,21 +79,21 @@ function init() {
+ 
+     //
+ 
+-    function onSelectStart() {
++    function onSelectStart(this: THREE.XRTargetRaySpace) {
+         this.userData.isSelecting = true;
+     }
+ 
+-    function onSelectEnd() {
++    function onSelectEnd(this: THREE.XRTargetRaySpace) {
+         this.userData.isSelecting = false;
+     }
+ 
+     controller = renderer.xr.getController(0);
+     controller.addEventListener('selectstart', onSelectStart);
+     controller.addEventListener('selectend', onSelectEnd);
+-    controller.addEventListener('connected', function (event) {
+-        this.add(buildController(event.data));
++    controller.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event) {
++        this.add(buildController(event.data)!);
+     });
+-    controller.addEventListener('disconnected', function () {
++    controller.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
+         this.remove(this.children[0]);
+     });
+     scene.add(controller);
+@@ -107,7 +111,7 @@ function init() {
+     document.body.appendChild(XRButton.createButton(renderer));
+ }
+ 
+-function buildController(data) {
++function buildController(data: XRInputSource) {
+     let geometry, material;
+ 
+     switch (data.targetRayMode) {
+@@ -161,7 +165,7 @@ function animate() {
+         if (INTERSECTED != intersects[0].object) {
+             if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
+ 
+-            INTERSECTED = intersects[0].object;
++            INTERSECTED = intersects[0].object as CubeMesh;
+             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+             INTERSECTED.material.emissive.setHex(0xff0000);
+         }
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index 95eb3439..0e641cdb 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
