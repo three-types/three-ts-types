@@ -3406,14 +3406,14 @@ index 227dc9db..549cbbb7 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index 16bd8b12..f61fd5d3 100644
+index 16bd8b12..3de475c7 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
 +import Nodes from './nodes/Nodes.js';
 +import Info from './Info.js';
 +
-+interface AnimationContext {
++export interface AnimationContext {
 +    requestAnimationFrame(callback: FrameRequestCallback, frame?: XRFrame): number;
 +    cancelAnimationFrame(handle: number): void;
 +}
@@ -7905,6 +7905,375 @@ index 59ab7f3c..3493d8d4 100644
      for (let i = 0, l = b.length; i < l; i++) {
          if (a[offset + i] !== b[i]) return false;
      }
+diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
+index 67a45b04..aabda6d4 100644
+--- a/src-testing/src/renderers/common/XRManager.ts
++++ b/src-testing/src/renderers/common/XRManager.ts
+@@ -8,23 +8,93 @@ import { Vector3 } from '../../math/Vector3.js';
+ import { Vector4 } from '../../math/Vector4.js';
+ import { WebXRController } from '../webxr/WebXRController.js';
+ import { RGBAFormat, UnsignedByteType } from '../../constants.js';
++import Renderer from './Renderer.js';
++import { AnimationContext } from './Animation.js';
++import { Camera } from '../../cameras/Camera.js';
++import { Object3D } from '../../core/Object3D.js';
+ 
+ const _cameraLPos = /*@__PURE__*/ new Vector3();
+ const _cameraRPos = /*@__PURE__*/ new Vector3();
+ 
++export interface XRManagerEventMap {
++    sessionstart: {};
++    sessionend: {};
++    planesdetected: { data: XRFrame };
++}
++
+ /**
+  * The XR manager is built on top of the WebXR Device API to
+  * manage XR sessions with `WebGPURenderer`.
+  *
+  * XR is currently only supported with a WebGL 2 backend.
+  */
+-class XRManager extends EventDispatcher {
++class XRManager extends EventDispatcher<XRManagerEventMap> {
++    enabled: boolean;
++
++    isPresenting: boolean;
++
++    cameraAutoUpdate: boolean;
++
++    _renderer: Renderer;
++
++    _cameraL: PerspectiveCamera;
++
++    _cameraR: PerspectiveCamera;
++
++    _cameras: PerspectiveCamera[];
++
++    _cameraXR: ArrayCamera;
++
++    _currentDepthNear: number | null;
++
++    _currentDepthFar: number | null;
++
++    _controllers: WebXRController[];
++
++    _controllerInputSources: (XRInputSource | null)[];
++
++    _currentRenderTarget: RenderTarget | null;
++
++    _xrRenderTarget: RenderTarget | null;
++
++    _currentAnimationContext: AnimationContext | null;
++
++    _currentAnimationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
++
++    _currentPixelRatio: number | null;
++
++    _currentSize: Vector2;
++
++    _onSessionEvent: (event: XRInputSourceEvent) => void;
++
++    _onSessionEnd: () => void;
++
++    _onInputSourcesChange: (event: XRInputSourcesChangeEvent) => void;
++
++    _onAnimationFrame: (time: DOMHighResTimeStamp, frame?: XRFrame) => void;
++
++    _referenceSpace: XRReferenceSpace | null;
++
++    _referenceSpaceType: XRReferenceSpaceType;
++
++    _customReferenceSpace: XRReferenceSpace | null;
++
++    _framebufferScaleFactor: number;
++
++    _foveation: number;
++
++    _session: XRSession | null;
++
++    _glBaseLayer: XRWebGLLayer | null;
++
++    _xrFrame: XRFrame | null;
++
+     /**
+      * Constructs a new XR manager.
+      *
+      * @param {Renderer} renderer - The renderer.
+      */
+-    constructor(renderer) {
++    constructor(renderer: Renderer) {
+         super();
+ 
+         /**
+@@ -301,7 +371,7 @@ class XRManager extends EventDispatcher {
+      * @param {Number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getController(index) {
++    getController(index: number) {
+         const controller = this._getController(index);
+ 
+         return controller.getTargetRaySpace();
+@@ -315,7 +385,7 @@ class XRManager extends EventDispatcher {
+      * @param {Number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getControllerGrip(index) {
++    getControllerGrip(index: number) {
+         const controller = this._getController(index);
+ 
+         return controller.getGripSpace();
+@@ -329,7 +399,7 @@ class XRManager extends EventDispatcher {
+      * @param {Number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getHand(index) {
++    getHand(index: number) {
+         const controller = this._getController(index);
+ 
+         return controller.getHandSpace();
+@@ -354,7 +424,7 @@ class XRManager extends EventDispatcher {
+      * @param {Number} foveation - A number in the range `[0,1]` where `0` means no foveation (full resolution)
+      * and `1` means maximum foveation (the edges render at lower resolution).
+      */
+-    setFoveation(foveation) {
++    setFoveation(foveation: number) {
+         this._foveation = foveation;
+ 
+         if (this._glBaseLayer !== null && this._glBaseLayer.fixedFoveation !== undefined) {
+@@ -378,7 +448,7 @@ class XRManager extends EventDispatcher {
+      *
+      * @param {Number} factor - The frammebuffer scale factor.
+      */
+-    setFramebufferScaleFactor(factor) {
++    setFramebufferScaleFactor(factor: number) {
+         this._framebufferScaleFactor = factor;
+ 
+         if (this.isPresenting === true) {
+@@ -402,7 +472,7 @@ class XRManager extends EventDispatcher {
+      *
+      * @param {String} type - The reference space type.
+      */
+-    setReferenceSpaceType(type) {
++    setReferenceSpaceType(type: XRReferenceSpaceType) {
+         this._referenceSpaceType = type;
+ 
+         if (this.isPresenting === true) {
+@@ -424,7 +494,7 @@ class XRManager extends EventDispatcher {
+      *
+      * @param {XRReferenceSpace} space - The XR reference space.
+      */
+-    setReferenceSpace(space) {
++    setReferenceSpace(space: XRReferenceSpace) {
+         this._customReferenceSpace = space;
+     }
+ 
+@@ -475,7 +545,7 @@ class XRManager extends EventDispatcher {
+      * @param {XRSession} session - The XR session to set.
+      * @return {Promise} A Promise that resolves when the session has been set.
+      */
+-    async setSession(session) {
++    async setSession(session: XRSession) {
+         const renderer = this._renderer;
+         const gl = renderer.getContext();
+ 
+@@ -503,9 +573,9 @@ class XRManager extends EventDispatcher {
+             this._currentPixelRatio = renderer.getPixelRatio();
+             renderer.getSize(this._currentSize);
+ 
+-            this._currentAnimationContext = renderer._animation.getContext();
+-            this._currentAnimationLoop = renderer._animation.getAnimationLoop();
+-            renderer._animation.stop();
++            this._currentAnimationContext = renderer._animation!.getContext();
++            this._currentAnimationLoop = renderer._animation!.getAnimationLoop();
++            renderer._animation!.stop();
+ 
+             const attributes = gl.getContextAttributes();
+ 
+@@ -534,13 +604,13 @@ class XRManager extends EventDispatcher {
+ 
+             this._xrRenderTarget.isXRRenderTarget = true; // TODO Remove this when possible, see #23278
+ 
+-            this.setFoveation(this.getFoveation());
++            this.setFoveation(this.getFoveation()!);
+ 
+             this._referenceSpace = await session.requestReferenceSpace(this.getReferenceSpaceType());
+ 
+-            renderer._animation.setAnimationLoop(this._onAnimationFrame);
+-            renderer._animation.setContext(session);
+-            renderer._animation.start();
++            renderer._animation!.setAnimationLoop(this._onAnimationFrame);
++            renderer._animation!.setContext(session);
++            renderer._animation!.start();
+ 
+             this.isPresenting = true;
+ 
+@@ -555,7 +625,7 @@ class XRManager extends EventDispatcher {
+      *
+      * @param {PerspectiveCamera} camera - The camera.
+      */
+-    updateCamera(camera) {
++    updateCamera(camera: PerspectiveCamera) {
+         const session = this._session;
+ 
+         if (session === null) return;
+@@ -586,7 +656,7 @@ class XRManager extends EventDispatcher {
+         cameraR.layers.mask = camera.layers.mask | 0b100;
+         cameraXR.layers.mask = cameraL.layers.mask | cameraR.layers.mask;
+ 
+-        const parent = camera.parent;
++        const parent = camera.parent!;
+         const cameras = cameraXR.cameras;
+ 
+         updateCamera(cameraXR, parent);
+@@ -617,7 +687,7 @@ class XRManager extends EventDispatcher {
+      * @param {Number} index - The controller index.
+      * @return {WebXRController} The XR controller.
+      */
+-    _getController(index) {
++    _getController(index: number) {
+         let controller = this._controllers[index];
+ 
+         if (controller === undefined) {
+@@ -639,7 +709,7 @@ class XRManager extends EventDispatcher {
+  * @param {PerspectiveCamera} cameraL - The left camera.
+  * @param {PerspectiveCamera} cameraR - The right camera.
+  */
+-function setProjectionFromUnion(camera, cameraL, cameraR) {
++function setProjectionFromUnion(camera: ArrayCamera, cameraL: PerspectiveCamera, cameraR: PerspectiveCamera) {
+     _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
+     _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
+ 
+@@ -703,7 +773,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+  * @param {Camera} camera - The camera to update.
+  * @param {Object3D} parent - The parent 3D object.
+  */
+-function updateCamera(camera, parent) {
++function updateCamera(camera: Camera, parent: Object3D) {
+     if (parent === null) {
+         camera.matrixWorld.copy(camera.matrix);
+     } else {
+@@ -721,7 +791,7 @@ function updateCamera(camera, parent) {
+  * @param {ArrayCamera} cameraXR - The XR camera.
+  * @param {Object3D} parent - The parent 3D object.
+  */
+-function updateUserCamera(camera, cameraXR, parent) {
++function updateUserCamera(camera: Camera, cameraXR: ArrayCamera, parent: Object3D) {
+     if (parent === null) {
+         camera.matrix.copy(cameraXR.matrixWorld);
+     } else {
+@@ -736,13 +806,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+     camera.projectionMatrix.copy(cameraXR.projectionMatrix);
+     camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
+ 
+-    if (camera.isPerspectiveCamera) {
+-        camera.fov = RAD2DEG * 2 * Math.atan(1 / camera.projectionMatrix.elements[5]);
+-        camera.zoom = 1;
++    if ((camera as PerspectiveCamera).isPerspectiveCamera) {
++        (camera as PerspectiveCamera).fov =
++            RAD2DEG * 2 * Math.atan(1 / (camera as PerspectiveCamera).projectionMatrix.elements[5]);
++        (camera as PerspectiveCamera).zoom = 1;
+     }
+ }
+ 
+-function onSessionEvent(event) {
++function onSessionEvent(this: XRManager, event: XRInputSourceEvent) {
+     const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
+ 
+     if (controllerIndex === -1) {
+@@ -752,15 +823,15 @@ function onSessionEvent(event) {
+     const controller = this._controllers[controllerIndex];
+ 
+     if (controller !== undefined) {
+-        const referenceSpace = this.getReferenceSpace();
++        const referenceSpace = this.getReferenceSpace()!;
+ 
+         controller.update(event.inputSource, event.frame, referenceSpace);
+         controller.dispatchEvent({ type: event.type, data: event.inputSource });
+     }
+ }
+ 
+-function onSessionEnd() {
+-    const session = this._session;
++function onSessionEnd(this: XRManager) {
++    const session = this._session!;
+     const renderer = this._renderer;
+ 
+     session.removeEventListener('select', this._onSessionEvent);
+@@ -796,13 +867,13 @@ function onSessionEnd() {
+ 
+     this.isPresenting = false;
+ 
+-    renderer._animation.stop();
++    renderer._animation!.stop();
+ 
+-    renderer._animation.setAnimationLoop(this._currentAnimationLoop);
+-    renderer._animation.setContext(this._currentAnimationContext);
+-    renderer._animation.start();
++    renderer._animation!.setAnimationLoop(this._currentAnimationLoop);
++    renderer._animation!.setContext(this._currentAnimationContext!);
++    renderer._animation!.start();
+ 
+-    renderer.setPixelRatio(this._currentPixelRatio);
++    renderer.setPixelRatio(this._currentPixelRatio!);
+     renderer.setSize(this._currentSize.width, this._currentSize.height, false);
+ 
+     renderer.setXRTarget(null);
+@@ -810,7 +881,7 @@ function onSessionEnd() {
+     this.dispatchEvent({ type: 'sessionend' });
+ }
+ 
+-function onInputSourcesChange(event) {
++function onInputSourcesChange(this: XRManager, event: XRInputSourcesChangeEvent) {
+     const controllers = this._controllers;
+     const controllerInputSources = this._controllerInputSources;
+ 
+@@ -861,7 +932,7 @@ function onInputSourcesChange(event) {
+     }
+ }
+ 
+-function onAnimationFrame(time, frame) {
++function onAnimationFrame(this: XRManager, time: DOMHighResTimeStamp, frame?: XRFrame) {
+     if (frame === undefined) return;
+ 
+     const cameraXR = this._cameraXR;
+@@ -869,15 +940,15 @@ function onAnimationFrame(time, frame) {
+ 
+     const glBaseLayer = this._glBaseLayer;
+ 
+-    const referenceSpace = this.getReferenceSpace();
++    const referenceSpace = this.getReferenceSpace()!;
+     const pose = frame.getViewerPose(referenceSpace);
+ 
+     this._xrFrame = frame;
+ 
+     if (pose !== null) {
+-        const views = pose.views;
++        const views = pose!.views;
+ 
+-        renderer.setXRTarget(glBaseLayer.framebuffer);
++        renderer.setXRTarget(glBaseLayer!.framebuffer);
+         renderer.setRenderTarget(this._xrRenderTarget);
+ 
+         let cameraXRNeedsUpdate = false;
+@@ -892,7 +963,7 @@ function onAnimationFrame(time, frame) {
+         for (let i = 0; i < views.length; i++) {
+             const view = views[i];
+ 
+-            const viewport = glBaseLayer.getViewport(view);
++            const viewport = glBaseLayer!.getViewport(view)!;
+ 
+             let camera = this._cameras[i];
+ 
+@@ -907,7 +978,7 @@ function onAnimationFrame(time, frame) {
+             camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
+             camera.projectionMatrix.fromArray(view.projectionMatrix);
+             camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
+-            camera.viewport.set(viewport.x, viewport.y, viewport.width, viewport.height);
++            camera.viewport!.set(viewport.x, viewport.y, viewport.width, viewport.height);
+ 
+             if (i === 0) {
+                 cameraXR.matrix.copy(camera.matrix);
 diff --git a/src-testing/src/renderers/common/nodes/NodeBuilderState.ts b/src-testing/src/renderers/common/nodes/NodeBuilderState.ts
 index 37480124..00d3445d 100644
 --- a/src-testing/src/renderers/common/nodes/NodeBuilderState.ts
