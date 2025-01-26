@@ -611,7 +611,7 @@ declare class Renderer {
      *
      * @param {WebGLFramebuffer} xrTarget - The XR target.
      */
-    setXRTarget(xrTarget: any): void;
+    setXRTarget(xrTarget: WebGLFramebuffer): void;
     /**
      * Sets the given render target. Calling this method means the renderer does not
      * target the default framebuffer (meaning the canvas) anymore but a custom framebuffer.
