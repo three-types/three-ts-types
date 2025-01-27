@@ -17891,7 +17891,7 @@ index 76e09f1f..edefce0e 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index 104e33ae..85925f77 100644
+index e56a190e..e48ab538 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
 @@ -1,18 +1,22 @@
@@ -17899,7 +17899,7 @@ index 104e33ae..85925f77 100644
 +import * as THREE from 'three/webgpu';
  
  import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
- import { XRButton } from 'three/addons/webxr/XRButtonGPU.js';
+ import { XRButton } from 'three/addons/webxr/XRButton.js';
  import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
  
 +type CubeMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> & {
@@ -17923,7 +17923,7 @@ index 104e33ae..85925f77 100644
  
  init();
  
-@@ -75,21 +79,21 @@ function init() {
+@@ -75,25 +79,25 @@ function init() {
  
      //
  
@@ -17941,16 +17941,20 @@ index 104e33ae..85925f77 100644
      controller.addEventListener('selectstart', onSelectStart);
      controller.addEventListener('selectend', onSelectEnd);
 -    controller.addEventListener('connected', function (event) {
--        this.add(buildController(event.data));
 +    controller.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event) {
-+        this.add(buildController(event.data)!);
+         const targetRayMode = event.data.targetRayMode;
+ 
+         if (targetRayMode === 'tracked-pointer' || targetRayMode === 'gaze') {
+-            this.add(buildController(event.data));
++            this.add(buildController(event.data)!);
+         }
      });
 -    controller.addEventListener('disconnected', function () {
 +    controller.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
          this.remove(this.children[0]);
      });
      scene.add(controller);
-@@ -107,7 +111,7 @@ function init() {
+@@ -111,7 +115,7 @@ function init() {
      document.body.appendChild(XRButton.createButton(renderer));
  }
  
@@ -17959,7 +17963,7 @@ index 104e33ae..85925f77 100644
      let geometry, material;
  
      switch (data.targetRayMode) {
-@@ -161,7 +165,7 @@ function animate() {
+@@ -165,7 +169,7 @@ function animate() {
          if (INTERSECTED != intersects[0].object) {
              if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
  
