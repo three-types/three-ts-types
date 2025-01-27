@@ -51,7 +51,10 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _foveation: number;
     _session: XRSession | null;
     _glBaseLayer: XRWebGLLayer | null;
+    _glBinding: XRWebGLBinding | null;
+    _glProjLayer: XRProjectionLayer | null;
     _xrFrame: XRFrame | null;
+    _useLayers: boolean;
     /**
      * Constructs a new XR manager.
      *
@@ -88,7 +91,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     /**
      * Returns the foveation value.
      *
-     * @return {Number|undefined} The foveation value. Returns `undefined` if no base layer is defined.
+     * @return {Number|undefined} The foveation value. Returns `undefined` if no base or projection layer is defined.
      */
     getFoveation(): number | undefined;
     /**

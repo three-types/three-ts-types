@@ -599,19 +599,6 @@ declare class Renderer {
      */
     dispose(): void;
     /**
-     * Ensures the renderer is XR compatible.
-     *
-     * @async
-     * @return {Promise} A Promise that resolve when the renderer is XR compatible.
-     */
-    makeXRCompatible(): Promise<void>;
-    /**
-     * Sets the XR rendering destination.
-     *
-     * @param {WebGLFramebuffer} xrTarget - The XR target.
-     */
-    setXRTarget(xrTarget: WebGLFramebuffer): void;
-    /**
      * Sets the given render target. Calling this method means the renderer does not
      * target the default framebuffer (meaning the canvas) anymore but a custom framebuffer.
      * Use `null` as the first argument to reset the state.
