@@ -6,6 +6,7 @@ import { Vector2 } from "../../math/Vector2.js";
 import { WebXRController } from "../webxr/WebXRController.js";
 import { AnimationContext } from "./Animation.js";
 import Renderer from "./Renderer.js";
+import { XRRenderTarget } from "./XRRenderTarget.js";
 export interface XRManagerEventMap {
     sessionstart: {};
     sessionend: {};
@@ -35,7 +36,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _controllers: WebXRController[];
     _controllerInputSources: (XRInputSource | null)[];
     _currentRenderTarget: RenderTarget | null;
-    _xrRenderTarget: RenderTarget | null;
+    _xrRenderTarget: XRRenderTarget | null;
     _currentAnimationContext: AnimationContext | null;
     _currentAnimationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
     _currentPixelRatio: number | null;
