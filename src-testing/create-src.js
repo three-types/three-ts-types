@@ -81,6 +81,7 @@ const files = [
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
     'renderers/common/XRManager',
+    'renderers/common/XRRenderTarget',
     'renderers/webgl-fallback/nodes/GLSLNodeBuilder',
     'renderers/webgl-fallback/WebGLBackend',
     'renderers/webgpu/nodes/BasicNodeLibrary',
