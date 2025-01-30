@@ -77,6 +77,7 @@ const files = [
     'renderers/common/Sampler',
     'renderers/common/StorageBuffer',
     'renderers/common/Textures',
+    'renderers/common/TimestampQueryPool',
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',

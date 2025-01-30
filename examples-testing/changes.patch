@@ -13660,97 +13660,29 @@ index 4e567e9c..847c42ef 100644
  
          // delay
  
-diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index b9f971f4..64fbf56e 100644
---- a/examples-testing/examples/webgpu_compute_birds.ts
-+++ b/examples-testing/examples/webgpu_compute_birds.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     uniform,
-     varying,
-@@ -28,6 +28,7 @@ import {
-     normalize,
-     instanceIndex,
-     length,
-+    ShaderNodeObject,
- } from 'three/tsl';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -35,13 +36,26 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
--let container, stats;
--let camera, scene, renderer;
-+let container: HTMLDivElement, stats: Stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
- 
- let last = performance.now();
- 
--let pointer, raycaster;
--let computeVelocity, computePosition, effectController;
-+let pointer: THREE.Vector2, raycaster: THREE.Raycaster;
-+let computeVelocity: ShaderNodeObject<THREE.ComputeNode>,
-+    computePosition: ShaderNodeObject<THREE.ComputeNode>,
-+    effectController: EffectController;
-+
-+interface EffectController {
-+    separation: ShaderNodeObject<THREE.UniformNode<number>>;
-+    alignment: ShaderNodeObject<THREE.UniformNode<number>>;
-+    cohesion: ShaderNodeObject<THREE.UniformNode<number>>;
-+    freedom: ShaderNodeObject<THREE.UniformNode<number>>;
-+    now: ShaderNodeObject<THREE.UniformNode<number>>;
-+    deltaTime: ShaderNodeObject<THREE.UniformNode<number>>;
-+    rayOrigin: ShaderNodeObject<THREE.UniformNode<THREE.Vector3>>;
-+    rayDirection: ShaderNodeObject<THREE.UniformNode<THREE.Vector3>>;
-+}
- 
- const BIRDS = 16384;
- const SPEED_LIMIT = 9.0;
-@@ -67,9 +81,9 @@ class BirdGeometry extends THREE.BufferGeometry {
- 
-         let v = 0;
- 
--        function verts_push() {
--            for (let i = 0; i < arguments.length; i++) {
--                vertices.array[v++] = arguments[i];
-+        function verts_push(...args: number[]) {
-+            for (let i = 0; i < args.length; i++) {
-+                vertices.array[v++] = args[i];
-             }
-         }
- 
-@@ -391,7 +405,7 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function onPointerMove(event) {
-+function onPointerMove(event: PointerEvent) {
-     if (event.isPrimary === false) return;
- 
-     pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index 382245dc..c86e4c54 100644
+index fe8a8db0..03b95fb8 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
-@@ -1,10 +1,10 @@
+@@ -1,13 +1,13 @@
 -import * as THREE from 'three';
--import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
+ 
+ import Stats from 'stats-gl';
+ 
+-import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex } from 'three/tsl';
 +import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex, ShaderNodeObject } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer;
+-let camera, scene, renderer, stats;
 -let computeNode;
-+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
 +let computeNode: ShaderNodeObject<THREE.ComputeNode>;
  
  const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
  const scaleVector = new THREE.Vector2(1, 1);
-@@ -104,7 +104,7 @@ function onWindowResize() {
+@@ -120,7 +120,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -16039,14 +15971,14 @@ index 91d60371..24a769e9 100644
      const uint32 = new Uint32Array(5);
      uint32[0] = indexCount; // indexCount
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
-index b9642ce0..e92b2903 100644
+index 53b19e79..36f65109 100644
 --- a/examples-testing/examples/webgpu_performance.ts
 +++ b/examples-testing/examples/webgpu_performance.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
- import Stats from 'three/addons/libs/stats.module.js';
+ import Stats from 'stats-gl';
  
 @@ -10,17 +10,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
@@ -16072,7 +16004,7 @@ index b9642ce0..e92b2903 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_performance_renderbundle.ts b/examples-testing/examples/webgpu_performance_renderbundle.ts
-index cfd8ec83..785d875b 100644
+index a891b932..a405f85c 100644
 --- a/examples-testing/examples/webgpu_performance_renderbundle.ts
 +++ b/examples-testing/examples/webgpu_performance_renderbundle.ts
 @@ -1,4 +1,4 @@
@@ -16143,7 +16075,7 @@ index cfd8ec83..785d875b 100644
      group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
  
      for (let i = 0; i < count; i++) {
-@@ -197,7 +197,7 @@ async function init(forceWebGL = false) {
+@@ -198,7 +198,7 @@ async function init(forceWebGL = false) {
          camera.updateProjectionMatrix();
  
          renderer.setSize(width, height);
@@ -16152,8 +16084,8 @@ index cfd8ec83..785d875b 100644
      }
  
      async function animate() {
-@@ -215,7 +215,7 @@ async function init(forceWebGL = false) {
-         const average = renderTimeAverages.reduce((a, b) => a + b, 0) / renderTimeAverages.length;
+@@ -218,7 +218,7 @@ async function init(forceWebGL = false) {
+         renderer.resolveTimestampsAsync();
          stats.update();
  
 -        document.getElementById('backend').innerText =

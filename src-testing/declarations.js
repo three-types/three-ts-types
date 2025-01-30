@@ -52,6 +52,7 @@ const files = [
     'renderers/common/RenderObjects',
     'renderers/common/RenderPipeline',
     'renderers/common/Textures',
+    'renderers/common/TimestampQueryPool',
     'renderers/common/Uniform',
     'renderers/common/UniformBuffer',
     'renderers/common/UniformsGroup',
