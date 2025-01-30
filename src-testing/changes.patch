@@ -8540,10 +8540,10 @@ index 38940dc4..69db401f 100644
              console.warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 41e5d118..4cfd18b0 100644
+index 41e5d118..d27218af 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-@@ -8,6 +8,13 @@ import {
+@@ -8,6 +8,14 @@ import {
      Matrix3Uniform,
      Matrix4Uniform,
  } from '../Uniform.js';
@@ -8552,12 +8552,13 @@ index 41e5d118..4cfd18b0 100644
 +import { Vector3 } from '../../../math/Vector3.js';
 +import { Vector4 } from '../../../math/Vector4.js';
 +import { Color } from '../../../math/Color.js';
++import { Matrix2 } from '../../../math/Matrix2.js';
 +import { Matrix3 } from '../../../math/Matrix3.js';
 +import { Matrix4 } from '../../../math/Matrix4.js';
  
  /**
   * A special form of Number uniform binding type.
-@@ -17,12 +24,14 @@ import {
+@@ -17,12 +25,14 @@ import {
   * @augments NumberUniform
   */
  class NumberNodeUniform extends NumberUniform {
@@ -8573,7 +8574,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -60,12 +69,14 @@ class NumberNodeUniform extends NumberUniform {
+@@ -60,12 +70,14 @@ class NumberNodeUniform extends NumberUniform {
   * @augments Vector2Uniform
   */
  class Vector2NodeUniform extends Vector2Uniform {
@@ -8589,7 +8590,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -103,12 +114,14 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -103,12 +115,14 @@ class Vector2NodeUniform extends Vector2Uniform {
   * @augments Vector3Uniform
   */
  class Vector3NodeUniform extends Vector3Uniform {
@@ -8605,7 +8606,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -146,12 +159,14 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -146,12 +160,14 @@ class Vector3NodeUniform extends Vector3Uniform {
   * @augments Vector4Uniform
   */
  class Vector4NodeUniform extends Vector4Uniform {
@@ -8621,7 +8622,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -189,12 +204,14 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -189,12 +205,14 @@ class Vector4NodeUniform extends Vector4Uniform {
   * @augments ColorUniform
   */
  class ColorNodeUniform extends ColorUniform {
@@ -8637,7 +8638,23 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -275,12 +292,14 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+@@ -232,12 +250,14 @@ class ColorNodeUniform extends ColorUniform {
+  * @augments Matrix2Uniform
+  */
+ class Matrix2NodeUniform extends Matrix2Uniform {
++    nodeUniform: NodeUniform<Matrix2>;
++
+     /**
+      * Constructs a new node-based Matrix2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform) {
++    constructor(nodeUniform: NodeUniform<Matrix2>) {
+         super(nodeUniform.name, nodeUniform.value);
+ 
+         /**
+@@ -275,12 +295,14 @@ class Matrix2NodeUniform extends Matrix2Uniform {
   * @augments Matrix3Uniform
   */
  class Matrix3NodeUniform extends Matrix3Uniform {
@@ -8653,7 +8670,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -318,12 +337,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -318,12 +340,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
   * @augments Matrix4Uniform
   */
  class Matrix4NodeUniform extends Matrix4Uniform {
@@ -8669,7 +8686,7 @@ index 41e5d118..4cfd18b0 100644
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -363,3 +384,11 @@ export {
+@@ -363,3 +387,11 @@ export {
      Matrix3NodeUniform,
      Matrix4NodeUniform,
  };
