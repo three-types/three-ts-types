@@ -1,4 +1,5 @@
 import { Color } from "../../../math/Color.js";
+import { Matrix2 } from "../../../math/Matrix2.js";
 import { Matrix3 } from "../../../math/Matrix3.js";
 import { Matrix4 } from "../../../math/Matrix4.js";
 import { Vector2 } from "../../../math/Vector2.js";
@@ -163,24 +164,25 @@ declare class ColorNodeUniform extends ColorUniform {
  * @augments Matrix2Uniform
  */
 declare class Matrix2NodeUniform extends Matrix2Uniform {
+    nodeUniform: NodeUniform<Matrix2>;
     /**
      * Constructs a new node-based Matrix2 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: any);
+    constructor(nodeUniform: NodeUniform<Matrix2>);
     /**
      * Overwritten to return the value of the node uniform.
      *
      * @return {Matrix2} The value.
      */
-    getValue(): any;
+    getValue(): Matrix2;
     /**
      * Returns the node uniform data type.
      *
      * @return {String} The data type.
      */
-    getType(): any;
+    getType(): string | null;
 }
 /**
  * A special form of Matrix3 uniform binding type.
