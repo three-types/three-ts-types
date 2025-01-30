@@ -1,3 +1,4 @@
+import { TimestampQuery } from "@types/three";
 import { Camera } from "../../cameras/Camera.js";
 import { ShadowMapType, ToneMapping } from "../../constants.js";
 import { BufferAttribute } from "../../core/BufferAttribute.js";
@@ -694,7 +695,7 @@ declare class Renderer {
      * @return {Promise<Boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
      */
     hasFeatureAsync(name: string): Promise<void>;
-    resolveTimestampsAsync(type?: "render" | "compute"): Promise<number | undefined>;
+    resolveTimestampsAsync(type?: TimestampQuery): Promise<number | undefined>;
     /**
      * Checks if the given feature is supported by the selected backend. If the
      * renderer has not been initialized, this method always returns `false`.
