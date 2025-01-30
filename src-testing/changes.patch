@@ -3558,10 +3558,10 @@ index 7b2018e4..6ea269a6 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index a448135d..393389b8 100644
+index a448135d..a265609d 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
-@@ -1,10 +1,38 @@
+@@ -1,10 +1,39 @@
 -let _vector2 = null;
 -let _color4 = null;
 -
@@ -3581,6 +3581,7 @@ index a448135d..393389b8 100644
 +import { Scene } from '../../scenes/Scene.js';
 +import NodeBuilder from '../../nodes/core/NodeBuilder.js';
 +import TimestampQueryPool from './TimestampQueryPool.js';
++import { TimestampQuery } from '@types/three';
 +
 +let _vector2: Vector2 | null = null;
 +let _color4: Color4 | null = null;
@@ -3604,7 +3605,7 @@ index a448135d..393389b8 100644
  
  /**
   * Most of the rendering related logic is implemented in the
-@@ -18,13 +46,25 @@ import { REVISION } from '../../constants.js';
+@@ -18,13 +47,25 @@ import { REVISION } from '../../constants.js';
   * @abstract
   * @private
   */
@@ -3632,7 +3633,7 @@ index a448135d..393389b8 100644
          /**
           * The parameters of the backend.
           *
-@@ -38,7 +78,10 @@ class Backend {
+@@ -38,7 +79,10 @@ class Backend {
           *
           * @type {WeakMap}
           */
@@ -3644,7 +3645,7 @@ index a448135d..393389b8 100644
  
          /**
           * A reference to the renderer.
-@@ -76,7 +119,7 @@ class Backend {
+@@ -76,7 +120,7 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {Promise} A Promise that resolves when the backend has been initialized.
       */
@@ -3653,7 +3654,7 @@ index a448135d..393389b8 100644
          this.renderer = renderer;
      }
  
-@@ -87,7 +130,9 @@ class Backend {
+@@ -87,7 +131,9 @@ class Backend {
       * @type {Number}
       * @readonly
       */
@@ -3664,7 +3665,7 @@ index a448135d..393389b8 100644
  
      // render context
  
-@@ -255,7 +300,11 @@ class Backend {
+@@ -255,7 +301,11 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {NodeBuilder} The node builder.
       */
@@ -3677,7 +3678,7 @@ index a448135d..393389b8 100644
  
      // textures
  
-@@ -331,7 +380,14 @@ class Backend {
+@@ -331,7 +381,14 @@ class Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -3693,7 +3694,7 @@ index a448135d..393389b8 100644
  
      /**
       * Copies data of the given source texture to the given destination texture.
-@@ -435,7 +491,7 @@ class Backend {
+@@ -435,7 +492,7 @@ class Backend {
       * @param {Object3D} object - The 3D object to test.
       * @return {Boolean} Whether the 3D object is fully occluded or not.
       */
@@ -3702,16 +3703,16 @@ index a448135d..393389b8 100644
  
      /**
       * Resolves the time stamp for the given render context and type.
-@@ -445,7 +501,7 @@ class Backend {
+@@ -445,7 +502,7 @@ class Backend {
       * @param {String} [type='render'] - The type of the time stamp.
       * @return {Promise<Number>} A Promise that resolves with the time stamp.
       */
 -    async resolveTimestampsAsync(type = 'render') {
-+    async resolveTimestampsAsync(type: 'render' | 'compute' = 'render') {
++    async resolveTimestampsAsync(type: TimestampQuery = 'render') {
          if (!this.trackTimestamp) {
              warnOnce('WebGPURenderer: Timestamp tracking is disabled.');
              return;
-@@ -459,7 +515,7 @@ class Backend {
+@@ -459,7 +516,7 @@ class Backend {
  
          const duration = await queryPool.resolveQueriesAsync();
  
@@ -3720,7 +3721,7 @@ index a448135d..393389b8 100644
  
          return duration;
      }
-@@ -509,7 +565,7 @@ class Backend {
+@@ -509,7 +566,7 @@ class Backend {
       * @abstract
       * @return {Number} The maximum anisotropy texture filtering value.
       */
@@ -3729,7 +3730,7 @@ index a448135d..393389b8 100644
  
      /**
       * Returns the drawing buffer size.
-@@ -519,7 +575,7 @@ class Backend {
+@@ -519,7 +576,7 @@ class Backend {
      getDrawingBufferSize() {
          _vector2 = _vector2 || new Vector2();
  
@@ -3738,7 +3739,7 @@ index a448135d..393389b8 100644
      }
  
      /**
-@@ -541,9 +597,9 @@ class Backend {
+@@ -541,9 +598,9 @@ class Backend {
  
          _color4 = _color4 || new Color4();
  
@@ -3750,7 +3751,7 @@ index a448135d..393389b8 100644
  
          return _color4;
      }
-@@ -586,7 +642,11 @@ class Backend {
+@@ -586,7 +643,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
       */
@@ -3763,7 +3764,7 @@ index a448135d..393389b8 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -604,7 +664,7 @@ class Backend {
+@@ -604,7 +665,7 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Boolean} Whether a dictionary for the given object as been defined or not.
       */
@@ -3772,7 +3773,7 @@ index a448135d..393389b8 100644
          return this.data.has(object);
      }
  
-@@ -613,7 +673,7 @@ class Backend {
+@@ -613,7 +674,7 @@ class Backend {
       *
       * @param {Object} object - The object to delete.
       */
@@ -6069,7 +6070,7 @@ index 78ce62cb..e978810d 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index e54c8ed5..ad92255d 100644
+index e54c8ed5..89a38f06 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -37,7 +37,34 @@ import {
@@ -6078,6 +6079,7 @@ index e54c8ed5..ad92255d 100644
      PCFShadowMap,
 +    ToneMapping,
 +    ShadowMapType,
++    TimestampQuery,
  } from '../../constants.js';
 +import Backend from './Backend.js';
 +import RenderContext from './RenderContext.js';
@@ -6100,7 +6102,6 @@ index e54c8ed5..ad92255d 100644
 +import { Mesh } from '../../objects/Mesh.js';
 +import { Line } from '../../objects/Line.js';
 +import { Points } from '../../objects/Points.js';
-+import { ArrayCamera } from '../../cameras/ArrayCamera.js';
 +import MRTNode from '../../nodes/core/MRTNode.js';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
@@ -6871,7 +6872,7 @@ index e54c8ed5..ad92255d 100644
      }
  
 -    async resolveTimestampsAsync(type = 'render') {
-+    async resolveTimestampsAsync(type: 'render' | 'compute' = 'render') {
++    async resolveTimestampsAsync(type: TimestampQuery = 'render') {
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
@@ -7988,7 +7989,7 @@ index 59ab7f3c..3493d8d4 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index 27a4cc59..42c15428 100644
+index 9fdcf1e3..6b41ea4a 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -16,10 +16,21 @@ import {
@@ -8180,7 +8181,7 @@ index 27a4cc59..42c15428 100644
  
              //
  
-@@ -633,13 +710,13 @@ class XRManager extends EventDispatcher {
+@@ -634,13 +711,13 @@ class XRManager extends EventDispatcher {
  
              //
  
@@ -8198,7 +8199,7 @@ index 27a4cc59..42c15428 100644
  
              this.isPresenting = true;
  
-@@ -654,7 +731,7 @@ class XRManager extends EventDispatcher {
+@@ -655,7 +732,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {PerspectiveCamera} camera - The camera.
       */
@@ -8207,7 +8208,7 @@ index 27a4cc59..42c15428 100644
          const session = this._session;
  
          if (session === null) return;
-@@ -685,7 +762,7 @@ class XRManager extends EventDispatcher {
+@@ -686,7 +763,7 @@ class XRManager extends EventDispatcher {
          cameraR.layers.mask = camera.layers.mask | 0b100;
          cameraXR.layers.mask = cameraL.layers.mask | cameraR.layers.mask;
  
@@ -8216,7 +8217,7 @@ index 27a4cc59..42c15428 100644
          const cameras = cameraXR.cameras;
  
          updateCamera(cameraXR, parent);
-@@ -716,7 +793,7 @@ class XRManager extends EventDispatcher {
+@@ -717,7 +794,7 @@ class XRManager extends EventDispatcher {
       * @param {Number} index - The controller index.
       * @return {WebXRController} The XR controller.
       */
@@ -8225,7 +8226,7 @@ index 27a4cc59..42c15428 100644
          let controller = this._controllers[index];
  
          if (controller === undefined) {
-@@ -738,7 +815,7 @@ class XRManager extends EventDispatcher {
+@@ -739,7 +816,7 @@ class XRManager extends EventDispatcher {
   * @param {PerspectiveCamera} cameraL - The left camera.
   * @param {PerspectiveCamera} cameraR - The right camera.
   */
@@ -8234,7 +8235,7 @@ index 27a4cc59..42c15428 100644
      _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
      _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
  
-@@ -802,7 +879,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+@@ -803,7 +880,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
   * @param {Camera} camera - The camera to update.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8243,7 +8244,7 @@ index 27a4cc59..42c15428 100644
      if (parent === null) {
          camera.matrixWorld.copy(camera.matrix);
      } else {
-@@ -820,7 +897,7 @@ function updateCamera(camera, parent) {
+@@ -821,7 +898,7 @@ function updateCamera(camera, parent) {
   * @param {ArrayCamera} cameraXR - The XR camera.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8252,7 +8253,7 @@ index 27a4cc59..42c15428 100644
      if (parent === null) {
          camera.matrix.copy(cameraXR.matrixWorld);
      } else {
-@@ -835,13 +912,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+@@ -836,13 +913,14 @@ function updateUserCamera(camera, cameraXR, parent) {
      camera.projectionMatrix.copy(cameraXR.projectionMatrix);
      camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
  
@@ -8271,7 +8272,7 @@ index 27a4cc59..42c15428 100644
      const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
  
      if (controllerIndex === -1) {
-@@ -851,15 +929,15 @@ function onSessionEvent(event) {
+@@ -852,15 +930,15 @@ function onSessionEvent(event) {
      const controller = this._controllers[controllerIndex];
  
      if (controller !== undefined) {
@@ -8290,7 +8291,7 @@ index 27a4cc59..42c15428 100644
      const renderer = this._renderer;
  
      session.removeEventListener('select', this._onSessionEvent);
-@@ -896,19 +974,19 @@ function onSessionEnd() {
+@@ -897,19 +975,19 @@ function onSessionEnd() {
  
      this.isPresenting = false;
  
@@ -8316,7 +8317,7 @@ index 27a4cc59..42c15428 100644
      const controllers = this._controllers;
      const controllerInputSources = this._controllerInputSources;
  
-@@ -959,7 +1037,7 @@ function onInputSourcesChange(event) {
+@@ -960,7 +1038,7 @@ function onInputSourcesChange(event) {
      }
  }
  
@@ -8325,7 +8326,7 @@ index 27a4cc59..42c15428 100644
      if (frame === undefined) return;
  
      const cameraXR = this._cameraXR;
-@@ -968,16 +1046,16 @@ function onAnimationFrame(time, frame) {
+@@ -969,16 +1047,16 @@ function onAnimationFrame(time, frame) {
  
      const glBaseLayer = this._glBaseLayer;
  
@@ -8345,7 +8346,7 @@ index 27a4cc59..42c15428 100644
          }
  
          let cameraXRNeedsUpdate = false;
-@@ -1007,7 +1085,7 @@ function onAnimationFrame(time, frame) {
+@@ -1008,7 +1086,7 @@ function onAnimationFrame(time, frame) {
                      );
                  }
              } else {
@@ -8354,7 +8355,7 @@ index 27a4cc59..42c15428 100644
              }
  
              let camera = this._cameras[i];
-@@ -1023,7 +1101,7 @@ function onAnimationFrame(time, frame) {
+@@ -1024,7 +1102,7 @@ function onAnimationFrame(time, frame) {
              camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
              camera.projectionMatrix.fromArray(view.projectionMatrix);
              camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
@@ -9221,7 +9222,7 @@ index c7e74e63..d34089e4 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 668a8c5a..00543fad 100644
+index 3d131de1..4793007f 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9232,7 +9233,7 @@ index 668a8c5a..00543fad 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1074,7 +1075,14 @@ class WebGLBackend extends Backend {
+@@ -1078,7 +1079,14 @@ class WebGLBackend extends Backend {
       * @param {Number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
