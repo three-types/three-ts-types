@@ -7,6 +7,7 @@ import { Vector4 } from "../../../math/Vector4.js";
 import NodeUniform from "../../../nodes/core/NodeUniform.js";
 import {
     ColorUniform,
+    Matrix2Uniform,
     Matrix3Uniform,
     Matrix4Uniform,
     NumberUniform,
@@ -155,6 +156,33 @@ declare class ColorNodeUniform extends ColorUniform {
     getType(): string | null;
 }
 /**
+ * A special form of Matrix2 uniform binding type.
+ * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Matrix2Uniform
+ */
+declare class Matrix2NodeUniform extends Matrix2Uniform {
+    /**
+     * Constructs a new node-based Matrix2 uniform.
+     *
+     * @param {NodeUniform} nodeUniform - The node uniform.
+     */
+    constructor(nodeUniform: any);
+    /**
+     * Overwritten to return the value of the node uniform.
+     *
+     * @return {Matrix2} The value.
+     */
+    getValue(): any;
+    /**
+     * Returns the node uniform data type.
+     *
+     * @return {String} The data type.
+     */
+    getType(): any;
+}
+/**
  * A special form of Matrix3 uniform binding type.
  * It's value is managed by a node object.
  *
@@ -212,6 +240,7 @@ declare class Matrix4NodeUniform extends Matrix4Uniform {
 }
 export {
     ColorNodeUniform,
+    Matrix2NodeUniform,
     Matrix3NodeUniform,
     Matrix4NodeUniform,
     NumberNodeUniform,
