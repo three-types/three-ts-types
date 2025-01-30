@@ -43,6 +43,7 @@ export const anisotropyB: typeof TSL.anisotropyB;
 export const anisotropyT: typeof TSL.anisotropyT;
 export const any: typeof TSL.any;
 export const append: typeof TSL.append;
+export const array: typeof TSL.array;
 export const arrayBuffer: typeof TSL.arrayBuffer;
 export const asin: typeof TSL.asin;
 export const assign: typeof TSL.assign;
