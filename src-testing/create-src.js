@@ -26,6 +26,7 @@ const files = [
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
     'nodes/core/StackNode',
+    'nodes/core/StructType',
     'nodes/core/StructTypeNode',
     'nodes/core/UniformGroupNode',
     'nodes/core/UniformNode',
