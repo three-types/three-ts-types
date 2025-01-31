@@ -236,7 +236,7 @@ interface Layout {
     type: string;
     inputs: {
         name: string;
-        type: "bool" | "int" | "float" | "vec2" | "vec3" | "vec4";
+        type: string;
         qualifier?: "in" | "out" | "inout";
     }[];
 }
