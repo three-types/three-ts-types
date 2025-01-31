@@ -13692,7 +13692,7 @@ index 8dcba7eb..cee29e7b 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 875ba936..67afb2a7 100644
+index 836d8cde..1a6e3767 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -1,4 +1,4 @@
@@ -15942,15 +15942,16 @@ index 478c5bae..adbea486 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
-index 91d60371..24a769e9 100644
+index 20dc5e1e..49e185a9 100644
 --- a/examples-testing/examples/webgpu_particles.ts
 +++ b/examples-testing/examples/webgpu_particles.ts
-@@ -1,12 +1,12 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  import { range, texture, mix, uv, color, rotateUV, positionLocal, time, uniform } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -6,8 +6,8 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15961,7 +15962,7 @@ index 91d60371..24a769e9 100644
  
  init();
  
-@@ -84,7 +84,7 @@ function init() {
+@@ -91,7 +91,7 @@ function init() {
      // indirect draw ( optional )
      // each indirect draw call is 5 uint32 values for indexes ( different structure for non-indexed draw calls using 4 uint32 values )
  
@@ -17475,7 +17476,7 @@ index 175e9dee..ceca2ec9 100644
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
-index 7504ecf5..5dea1562 100644
+index 54d389a1..71d22687 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
 +++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
 @@ -1,5 +1,5 @@
@@ -17485,8 +17486,8 @@ index 7504ecf5..5dea1562 100644
 +import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
-@@ -20,7 +20,7 @@ scene.background = new THREE.Color(0x00001f);
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -27,7 +27,7 @@ scene.background = new THREE.Color(0x00001f);
  camera.position.set(1, 1, 1);
  const controls = new OrbitControls(camera, renderer.domElement);
  
@@ -17813,7 +17814,7 @@ index 76e09f1f..edefce0e 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index f621338d..297da78d 100644
+index b3b47e0e..e8108537 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
 @@ -1,18 +1,22 @@

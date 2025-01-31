@@ -1,5 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
-import { ShadowMapType, TimestampQuery, ToneMapping } from "../../constants.js";
+import { ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
@@ -59,6 +59,7 @@ export interface RendererParameters {
     antialias?: boolean | undefined;
     samples?: number | undefined;
     getFallback?: ((error: unknown) => Backend) | null | undefined;
+    colorBufferType?: TextureDataType | undefined;
 }
 /**
  * Base class for renderers.
@@ -153,6 +154,7 @@ declare class Renderer {
     ) => void;
     _isDeviceLost: boolean;
     onDeviceLost: (info: DeviceLostInfo) => void;
+    _colorBufferType: TextureDataType;
     _initialized: boolean;
     _initPromise: Promise<void> | null;
     _compilationPromises: Promise<void>[] | null;
@@ -192,6 +194,8 @@ declare class Renderer {
      * @param {Number} [parameters.samples=0] - When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0
      * to overwrite the default.
      * @param {Function?} [parameters.getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
+     * @param {Number} [parameters.colorBufferType=HalfFloatType] - Defines the type of color buffers. The default `HalfFloatType` is recommend for best
+     * quality. To save memory and bandwidth, `UnsignedByteType` might be used. This will reduce rendering quality though.
      */
     constructor(backend: Backend, parameters?: RendererParameters);
     /**
@@ -256,6 +260,12 @@ declare class Renderer {
      * @return {MRTNode} The MRT configuration.
      */
     getMRT(): MRTNode | null;
+    /**
+     * Returns the color buffer type.
+     *
+     * @return {Number} The color buffer type.
+     */
+    getColorBufferType(): TextureDataType;
     /**
      * Default implementation of the device lost callback.
      *
