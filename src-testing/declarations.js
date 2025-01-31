@@ -13,6 +13,7 @@ const files = [
     'nodes/core/NodeUniform',
     'nodes/core/NodeVar',
     'nodes/core/NodeVarying',
+    'nodes/core/StructType',
     'nodes/core/StructTypeNode',
     'nodes/core/UniformNode',
     'renderers/common/nodes/NodeBuilderState',

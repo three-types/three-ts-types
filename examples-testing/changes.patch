@@ -17474,6 +17474,27 @@ index 175e9dee..ceca2ec9 100644
  
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
+diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
+index 7504ecf5..5dea1562 100644
+--- a/examples-testing/examples/webgpu_struct_drawindirect.ts
++++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
+@@ -1,5 +1,5 @@
+-import * as THREE from 'three';
+-import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute, ShaderNodeObject } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+@@ -20,7 +20,7 @@ scene.background = new THREE.Color(0x00001f);
+ camera.position.set(1, 1, 1);
+ const controls = new OrbitControls(camera, renderer.domElement);
+ 
+-let computeDrawBuffer, computeInitDrawBuffer;
++let computeDrawBuffer: ShaderNodeObject<THREE.ComputeNode>, computeInitDrawBuffer: ShaderNodeObject<THREE.ComputeNode>;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
 index 3e8bf7ee..56db87fd 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
