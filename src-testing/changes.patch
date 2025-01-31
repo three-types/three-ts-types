@@ -1285,7 +1285,7 @@ index b1a5c99b..df827f78 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 8d73ea76..606da671 100644
+index 8d73ea76..62f534f7 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -1341,7 +1341,7 @@ index 8d73ea76..606da671 100644
 +import { DataTexture } from '../../textures/DataTexture.js';
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 +import LightsNode from '../lighting/LightsNode.js';
-+import StructTypeNode, { MemberLayout, MembersLayout } from './StructTypeNode.js';
++import StructTypeNode, { MemberLayout } from './StructTypeNode.js';
 +
 +const rendererCache = new WeakMap<
 +    Renderer,
@@ -1426,7 +1426,7 @@ index 8d73ea76..606da671 100644
 +        compute: NodeUniform<unknown>[];
 +        index: number;
 +    };
-+    structs: { vertex: StructTypeNode[]; fragment: StructTypeNode[]; compute: StructTypeNode[]; index: number };
++    structs: { vertex: StructType[]; fragment: StructType[]; compute: StructType[]; index: number };
 +    bindings: {
 +        vertex: { [groupName: string]: NodeUniformsGroup[] | undefined };
 +        fragment: { [groupName: string]: NodeUniformsGroup[] | undefined };
@@ -2325,10 +2325,10 @@ index 8d73ea76..606da671 100644
          toType = this.getVectorType(toType);
  
 diff --git a/src-testing/src/nodes/core/NodeCache.ts b/src-testing/src/nodes/core/NodeCache.ts
-index c6457901..8c439f16 100644
+index c6457901..e8052e64 100644
 --- a/src-testing/src/nodes/core/NodeCache.ts
 +++ b/src-testing/src/nodes/core/NodeCache.ts
-@@ -1,16 +1,63 @@
+@@ -1,16 +1,64 @@
 +import NodeAttribute from './NodeAttribute.js';
 +import NodeUniform from './NodeUniform.js';
 +import NodeVar from './NodeVar.js';
@@ -2338,6 +2338,7 @@ index c6457901..8c439f16 100644
 +import BufferAttributeNode from '../accessors/BufferAttributeNode.js';
 +import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
 +import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import StructType from './StructType.js';
 +
  let _id = 0;
  
@@ -2351,7 +2352,7 @@ index c6457901..8c439f16 100644
 +          })
 +        | undefined;
 +    bufferAttribute?: NodeAttribute | undefined;
-+    structType?: Node | undefined;
++    structType?: StructType | undefined;
 +    uniform?: NodeUniform<unknown> | undefined;
 +    variable?: NodeVar | undefined;
 +    varying?: NodeVarying | undefined;
@@ -2393,7 +2394,7 @@ index c6457901..8c439f16 100644
          /**
           * The id of the cache.
           *
-@@ -41,11 +88,13 @@ class NodeCache {
+@@ -41,11 +89,13 @@ class NodeCache {
       * @param {Node} node - The node.
       * @return {Object?} The data for the node.
       */
@@ -2409,7 +2410,7 @@ index c6457901..8c439f16 100644
          }
  
          return data;
-@@ -57,7 +106,9 @@ class NodeCache {
+@@ -57,7 +107,9 @@ class NodeCache {
       * @param {Node} node - The node.
       * @param {Object} data - The data that should be cached.
       */
@@ -2838,6 +2839,23 @@ index c59893cb..823d08e7 100644
          const previousStack = getCurrentStack();
  
          setCurrentStack(this);
+diff --git a/src-testing/src/nodes/core/StructType.ts b/src-testing/src/nodes/core/StructType.ts
+index b06830b4..27e70330 100644
+--- a/src-testing/src/nodes/core/StructType.ts
++++ b/src-testing/src/nodes/core/StructType.ts
+@@ -1,5 +1,11 @@
++import { MemberLayout } from './StructTypeNode.js';
++
+ class StructType {
+-    constructor(name, members) {
++    name: string;
++    members: MemberLayout[];
++    output: boolean;
++
++    constructor(name: string, members: MemberLayout[]) {
+         this.name = name;
+         this.members = members;
+         this.output = false;
 diff --git a/src-testing/src/nodes/core/StructTypeNode.ts b/src-testing/src/nodes/core/StructTypeNode.ts
 index ab93ae6c..3ec47d63 100644
 --- a/src-testing/src/nodes/core/StructTypeNode.ts
