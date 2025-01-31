@@ -444,6 +444,7 @@ export const storageBarrier: typeof TSL.storageBarrier;
 export const storageObject: typeof TSL.storageObject;
 export const storageTexture: typeof TSL.storageTexture;
 export const string: typeof TSL.string;
+export const struct: typeof TSL.struct;
 export const sub: typeof TSL.sub;
 export const subgroupIndex: typeof TSL.subgroupIndex;
 export const subgroupSize: typeof TSL.subgroupSize;
