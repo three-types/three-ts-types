@@ -234,7 +234,11 @@ export function nodeImmutable<T>(
 interface Layout {
     name: string;
     type: string;
-    inputs: { name: string; type: string }[];
+    inputs: {
+        name: string;
+        type: string;
+        qualifier?: "in" | "out" | "inout";
+    }[];
 }
 
 interface ShaderNodeFn<Args extends readonly unknown[]> {
