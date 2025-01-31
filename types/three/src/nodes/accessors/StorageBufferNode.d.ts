@@ -41,7 +41,7 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
 
 export const storage: (
     value: StorageBufferAttribute | StorageInstancedBufferAttribute,
-    type?: string | null,
+    type?: string | Struct | null,
     count?: number,
 ) => ShaderNodeObject<StorageBufferNode>;
 
