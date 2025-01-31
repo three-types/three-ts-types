@@ -13661,7 +13661,7 @@ index 4e567e9c..847c42ef 100644
          // delay
  
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index fe8a8db0..03b95fb8 100644
+index 8dcba7eb..cee29e7b 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
 @@ -1,13 +1,13 @@
@@ -13692,7 +13692,7 @@ index fe8a8db0..03b95fb8 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index e196c0e5..829ca1f7 100644
+index 875ba936..67afb2a7 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -1,4 +1,4 @@
@@ -13708,8 +13708,8 @@ index e196c0e5..829ca1f7 100644
 +    ShaderNodeObject,
  } from 'three/tsl';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-@@ -36,8 +37,8 @@ const StepType = {
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+@@ -38,8 +39,8 @@ const StepType = {
  };
  
  const timestamps = {
@@ -13720,7 +13720,7 @@ index e196c0e5..829ca1f7 100644
  };
  
  const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
-@@ -140,7 +141,7 @@ async function init(forceGlobalSwap = false) {
+@@ -148,7 +149,7 @@ async function init(forceGlobalSwap = false) {
          .setPBO(true)
          .label('RandomizedElements');
  
@@ -13729,7 +13729,7 @@ index e196c0e5..829ca1f7 100644
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
          const idx = uvec2(index.modInt(halfHeight), blockHeight.sub(index.modInt(halfHeight)).sub(1));
-@@ -150,7 +151,10 @@ async function init(forceGlobalSwap = false) {
+@@ -158,7 +159,10 @@ async function init(forceGlobalSwap = false) {
          return idx;
      };
  
@@ -13741,7 +13741,7 @@ index e196c0e5..829ca1f7 100644
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
          const idx = uvec2(index.modInt(halfHeight), index.modInt(halfHeight).add(halfHeight));
-@@ -164,7 +168,7 @@ async function init(forceGlobalSwap = false) {
+@@ -172,7 +176,7 @@ async function init(forceGlobalSwap = false) {
      const localStorage = workgroupArray('uint', 64 * 2);
  
      // Swap the elements in local storage
@@ -13750,7 +13750,7 @@ index e196c0e5..829ca1f7 100644
          If(localStorage.element(idxAfter).lessThan(localStorage.element(idxBefore)), () => {
              atomicAdd(counterStorage.element(0), 1);
              const temp = localStorage.element(idxBefore).toVar();
-@@ -173,7 +177,7 @@ async function init(forceGlobalSwap = false) {
+@@ -181,7 +185,7 @@ async function init(forceGlobalSwap = false) {
          });
      };
  
@@ -13759,8 +13759,8 @@ index e196c0e5..829ca1f7 100644
          // If the later element is less than the current element
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
-@@ -399,7 +403,7 @@ async function init(forceGlobalSwap = false) {
-         }
+@@ -409,7 +413,7 @@ async function init(forceGlobalSwap = false) {
+         renderer.resolveTimestampsAsync(THREE.TimestampQuery.COMPUTE);
  
          const algo = new Uint32Array(await renderer.getArrayBufferAsync(nextAlgoBuffer));
 -        algo > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
@@ -15971,7 +15971,7 @@ index 91d60371..24a769e9 100644
      const uint32 = new Uint32Array(5);
      uint32[0] = indexCount; // indexCount
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
-index 53b19e79..36f65109 100644
+index ca92a2ce..6f2dbe59 100644
 --- a/examples-testing/examples/webgpu_performance.ts
 +++ b/examples-testing/examples/webgpu_performance.ts
 @@ -1,4 +1,4 @@
@@ -16168,20 +16168,26 @@ index 59914331..d41eb81e 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index de4144b4..afec7c7f 100644
+index bdad9a52..b7fad821 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-@@ -1,21 +1,31 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
--import { pass, texture3D, uniform, renderOutput } from 'three/tsl';
--import { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, texture3D, uniform, renderOutput, ShaderNodeObject } from 'three/tsl';
+ import {
+     mix,
+     mul,
+@@ -17,22 +17,33 @@ import {
+     texture3D,
+     uniform,
+     renderOutput,
++    ShaderNodeObject,
+ } from 'three/tsl';
+-import { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
 +import Lut3DNode, { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 -import { LUTCubeLoader } from 'three/addons/loaders/LUTCubeLoader.js';
 -import { LUT3dlLoader } from 'three/addons/loaders/LUT3dlLoader.js';
 -import { LUTImageLoader } from 'three/addons/loaders/LUTImageLoader.js';
@@ -16211,20 +16217,21 @@ index de4144b4..afec7c7f 100644
      'Bourbon 64.CUBE': null,
      'Chemical 168.CUBE': null,
      'Clayton 33.CUBE': null,
-@@ -27,9 +37,9 @@ const lutMap = {
+@@ -44,7 +55,12 @@ const lutMap = {
      NightLUT: null,
  };
  
--let gui;
--let camera, scene, renderer;
--let postProcessing, lutPass;
-+let gui: GUI;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing, lutPass: ShaderNodeObject<Lut3DNode>;
+-let camera, scene, renderer, postProcessing, controls, lutPass;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    controls: OrbitControls,
++    lutPass: ShaderNodeObject<Lut3DNode>;
  
  init();
  
-@@ -62,11 +72,13 @@ async function init() {
+@@ -67,11 +83,13 @@ async function init() {
  
      for (const name in lutMap) {
          if (/\.CUBE$/i.test(name)) {
@@ -16241,7 +16248,7 @@ index de4144b4..afec7c7f 100644
          }
      }
  
-@@ -74,7 +86,9 @@ async function init() {
+@@ -79,13 +97,17 @@ async function init() {
      await Promise.all(pendings);
  
      for (const name in lutMap) {
@@ -16251,8 +16258,17 @@ index de4144b4..afec7c7f 100644
 +        )[name];
      }
  
-     renderer = new THREE.WebGPURenderer();
-@@ -98,7 +112,7 @@ async function init() {
+     // baked model
+ 
+     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
+-        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
++        (
++            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
++        ).material.map!.anisotropy = 8;
+         scene.add(gltf.scene);
+     });
+ 
+@@ -183,7 +205,7 @@ async function init() {
      const scenePass = pass(scene, camera);
      const outputPass = renderOutput(scenePass);
  
@@ -16261,30 +16277,24 @@ index de4144b4..afec7c7f 100644
      lutPass = lut3D(outputPass, texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
  
      postProcessing.outputNode = lutPass;
-@@ -112,7 +126,7 @@ async function init() {
-     controls.update();
+@@ -199,7 +221,7 @@ async function init() {
+     // gui
  
-     gui = new GUI();
+     const gui = new GUI();
 -    gui.add(params, 'lut', Object.keys(lutMap));
 +    gui.add(params, 'lut', Object.keys(lutMap) as (keyof typeof lutMap)[]);
      gui.add(params, 'intensity').min(0).max(1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -128,11 +142,11 @@ function onWindowResize() {
- //
- 
- function animate() {
--    lutPass.intensityNode.value = params.intensity;
-+    lutPass.intensityNode!.value = params.intensity;
+@@ -218,7 +240,7 @@ async function animate() {
+     lutPass.intensityNode.value = params.intensity;
  
      if (lutMap[params.lut]) {
 -        const lut = lutMap[params.lut];
--        lutPass.lutNode.value = lut.texture3D;
 +        const lut = lutMap[params.lut] as LUTCubeResult | LUT3dlResult | LUTImageResult;
-+        lutPass.lutNode!.value = lut.texture3D;
+         lutPass.lutNode.value = lut.texture3D;
          lutPass.size.value = lut.texture3D.image.width;
      }
- 
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 index 06af5ab4..e543f68b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
@@ -17438,25 +17448,14 @@ index 06a016ed..fc2f40fd 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 1b54814d..a9685c82 100644
+index 175e9dee..ceca2ec9 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
-@@ -1,9 +1,20 @@
+@@ -1,9 +1,9 @@
 -import * as THREE from 'three';
--import { storageObject, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
+-import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import {
-+    storageObject,
-+    If,
-+    vec3,
-+    uv,
-+    uint,
-+    float,
-+    Fn,
-+    instanceIndex,
-+    workgroupBarrier,
-+    ShaderNodeObject,
-+} from 'three/tsl';
++import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier, ShaderNodeObject } from 'three/tsl';
  
  const timestamps = {
 -    webgpu: document.getElementById('timestamps'),
@@ -17466,7 +17465,7 @@ index 1b54814d..a9685c82 100644
  };
  
  // WebGPU Backend
-@@ -26,7 +37,7 @@ async function init(forceWebGL = false) {
+@@ -26,7 +26,7 @@ async function init(forceWebGL = false) {
  
      const type = ['float', 'vec2', 'vec3', 'vec4'];
  
@@ -17651,36 +17650,6 @@ index 07fb8d27..ea32b4d6 100644
      }
  }
  
-diff --git a/examples-testing/examples/webgpu_tsl_coffee_smoke.ts b/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
-index 90c9abd1..3fb25db7 100644
---- a/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
-+++ b/examples-testing/examples/webgpu_tsl_coffee_smoke.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     mix,
-     mul,
-@@ -18,7 +18,7 @@ import {
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- 
--let camera, scene, renderer, controls;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
- 
- init();
- 
-@@ -36,7 +36,9 @@ function init() {
-     // baked model
- 
-     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
--        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
-+        (
-+            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
-+        ).material.map!.anisotropy = 8;
-         scene.add(gltf.scene);
-     });
- 
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
 index 48af92d1..a1281a80 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
@@ -17823,7 +17792,7 @@ index 76e09f1f..edefce0e 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index e56a190e..e48ab538 100644
+index f621338d..297da78d 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
 @@ -1,18 +1,22 @@
