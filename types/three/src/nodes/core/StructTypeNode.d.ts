@@ -20,7 +20,7 @@ declare class StructTypeNode extends Node {
     constructor(membersLayout: MembersLayout, name?: string | null);
     getLength(): number;
     getMemberType(builder: NodeBuilder, name: string): string;
-    getNodeType(builder: NodeBuilder): any;
-    generate(builder: NodeBuilder): any;
+    getNodeType(builder: NodeBuilder): string;
+    generate(builder: NodeBuilder): string;
 }
 export default StructTypeNode;
