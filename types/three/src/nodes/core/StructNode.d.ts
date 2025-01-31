@@ -1,6 +1,6 @@
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
-import StructTypeNode from "./StructTypeNode.js";
+import StructTypeNode, { MembersLayout } from "./StructTypeNode.js";
 
 declare class StructNode extends Node {
     constructor(structLayoutNode: StructTypeNode);
