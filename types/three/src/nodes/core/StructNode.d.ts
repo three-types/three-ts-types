@@ -3,13 +3,17 @@ import Node from "./Node.js";
 import StructTypeNode, { MembersLayout } from "./StructTypeNode.js";
 
 declare class StructNode extends Node {
-    constructor(structLayoutNode: StructTypeNode);
+    values: Node[];
+
+    constructor(structLayoutNode: StructTypeNode, values: Node[]);
 }
 
 export default StructNode;
 
 export interface Struct {
-    (...params: unknown[]): ShaderNodeObject<StructNode>;
+    (): ShaderNodeObject<StructNode>;
+    (values: Node[]): ShaderNodeObject<StructNode>;
+    (...values: Node[]): ShaderNodeObject<StructNode>;
     layout: StructTypeNode;
     isStruct: true;
 }
