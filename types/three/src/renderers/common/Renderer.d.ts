@@ -1,6 +1,5 @@
-import { TextureDataType } from "@types/three";
 import { Camera } from "../../cameras/Camera.js";
-import { ShadowMapType, TimestampQuery, ToneMapping } from "../../constants.js";
+import { ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
