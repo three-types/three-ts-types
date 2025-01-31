@@ -1,27 +1,26 @@
 import Node from "./Node.js";
-/**
- * {@link NodeBuilder} is going to create instances of this class during the build process
- * of nodes. They represent the final shader struct data that are going to be generated
- * by the builder. A dictionary of struct types is maintained in {@link NodeBuilder#structs}
- * for this purpose.
- */
+import NodeBuilder from "./NodeBuilder.js";
+/** @module StructTypeNode **/
+interface MembersLayout {
+    [name: string]: string | {
+        type: string;
+        atomic?: boolean;
+    };
+}
+export interface MemberLayout {
+    name: string;
+    type: string;
+    atomic: boolean;
+}
 declare class StructTypeNode extends Node {
     static get type(): string;
-    name: string;
-    types: string[];
-    readonly isStructTypeNode: true;
-    /**
-     * Constructs a new struct type node.
-     *
-     * @param {String} name - The name of the struct.
-     * @param {Array<String>} types - An array of types.
-     */
-    constructor(name: string, types: string[]);
-    /**
-     * Returns the member types.
-     *
-     * @return {Array<String>} The types.
-     */
-    getMemberTypes(): string[];
+    membersLayout: MemberLayout[];
+    name: string | null;
+    readonly isStructLayoutNode: true;
+    constructor(membersLayout: MembersLayout, name?: string | null);
+    getLength(): number;
+    getMemberType(builder: NodeBuilder, name: string): string;
+    getNodeType(builder: NodeBuilder): any;
+    generate(builder: NodeBuilder): any;
 }
 export default StructTypeNode;
