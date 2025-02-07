@@ -15,7 +15,7 @@ declare abstract class TimestampQueryPool {
     /**
      * Creates a new timestamp query pool.
      *
-     * @param {Number} [maxQueries=256] - Maximum number of queries this pool can hold.
+     * @param {number} [maxQueries=256] - Maximum number of queries this pool can hold.
      */
     constructor(maxQueries?: number);
     /**
@@ -30,7 +30,7 @@ declare abstract class TimestampQueryPool {
      *
      * @abstract
      * @async
-     * @returns {Promise<Number>|Number} The resolved timestamp value.
+     * @returns {Promise<number>|number} The resolved timestamp value.
      */
     abstract resolveQueriesAsync(): Promise<number>;
     /**
