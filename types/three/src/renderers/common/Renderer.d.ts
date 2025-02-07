@@ -315,6 +315,13 @@ declare class Renderer {
      */
     _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext | undefined;
     /**
+     * The output pass performs tone mapping and color space conversion.
+     *
+     * @private
+     * @param {RenderTarget} renderTarget - The current render target.
+     */
+    _renderOutput(renderTarget: RenderTarget): void;
+    /**
      * Returns the maximum available anisotropy for texture filtering.
      *
      * @return {Number} The maximum available anisotropy.
@@ -559,7 +566,7 @@ declare class Renderer {
      */
     clearStencil(): Promise<void> | undefined;
     /**
-     * Async version of {@link module:Renderer~Renderer#clear}.
+     * Async version of {@link Renderer#clear}.
      *
      * @async
      * @param {Boolean} [color=true] - Whether the color buffer should be cleared or not.
@@ -569,21 +576,21 @@ declare class Renderer {
      */
     clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
     /**
-     * Async version of {@link module:Renderer~Renderer#clearColor}.
+     * Async version of {@link Renderer#clearColor}.
      *
      * @async
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearColorAsync(): Promise<void>;
     /**
-     * Async version of {@link module:Renderer~Renderer#clearDepth}.
+     * Async version of {@link Renderer#clearDepth}.
      *
      * @async
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearDepthAsync(): Promise<void>;
     /**
-     * Async version of {@link module:Renderer~Renderer#clearStencil}.
+     * Async version of {@link Renderer#clearStencil}.
      *
      * @async
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
@@ -625,7 +632,7 @@ declare class Renderer {
      */
     getRenderTarget(): RenderTarget<Texture> | null;
     /**
-     * Callback for {@link module:Renderer~Renderer#setRenderObjectFunction}.
+     * Callback for {@link Renderer#setRenderObjectFunction}.
      *
      * @callback renderObjectFunction
      * @param {Object3D} object - The 3D object.
@@ -640,14 +647,14 @@ declare class Renderer {
      */
     /**
      * Sets the given render object function. Calling this method overwrites the default implementation
-     * which is {@link module:Renderer~Renderer#renderObject}. Defining a custom function can be useful
+     * which is {@link Renderer#renderObject}. Defining a custom function can be useful
      * if you want to modify the way objects are rendered. For example you can define things like "every
      * object that has material of a certain type should perform a pre-pass with a special overwrite material".
      * The custom function must always call `renderObject()` in its implementation.
      *
      * Use `null` as the first argument to reset the state.
      *
-     * @param {module:Renderer~renderObjectFunction?} renderObjectFunction - The render object function.
+     * @param {renderObjectFunction?} renderObjectFunction - The render object function.
      */
     setRenderObjectFunction(
         renderObjectFunction:
