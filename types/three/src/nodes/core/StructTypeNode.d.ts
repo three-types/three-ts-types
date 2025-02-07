@@ -41,6 +41,7 @@ declare class StructTypeNode extends Node {
     getLength(): number;
     getMemberType(builder: NodeBuilder, name: string): string;
     getNodeType(builder: NodeBuilder): string;
+    setup(builder: NodeBuilder): void;
     generate(builder: NodeBuilder): string;
 }
 export default StructTypeNode;
