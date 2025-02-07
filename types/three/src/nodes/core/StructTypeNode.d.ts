@@ -35,7 +35,7 @@ declare class StructTypeNode extends Node {
      * Returns the length of the struct.
      * The length is calculated by summing the lengths of the struct's members.
      *
-     * @returns {Number} The length of the struct.
+     * @returns {number} The length of the struct.
      */
     getLength(): number;
     getMemberType(builder: NodeBuilder, name: string): string;

@@ -186,15 +186,15 @@ declare class Renderer {
      *
      * @param {Backend} backend - The backend the renderer is targeting (e.g. WebGPU or WebGL 2).
      * @param {Object} parameters - The configuration parameter.
-     * @param {Boolean} [parameters.logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not.
-     * @param {Boolean} [parameters.alpha=true] - Whether the default framebuffer (which represents the final contents of the canvas) should be transparent or opaque.
-     * @param {Boolean} [parameters.depth=true] - Whether the default framebuffer should have a depth buffer or not.
-     * @param {Boolean} [parameters.stencil=false] - Whether the default framebuffer should have a stencil buffer or not.
-     * @param {Boolean} [parameters.antialias=false] - Whether MSAA as the default anti-aliasing should be enabled or not.
-     * @param {Number} [parameters.samples=0] - When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0
+     * @param {boolean} [parameters.logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not.
+     * @param {boolean} [parameters.alpha=true] - Whether the default framebuffer (which represents the final contents of the canvas) should be transparent or opaque.
+     * @param {boolean} [parameters.depth=true] - Whether the default framebuffer should have a depth buffer or not.
+     * @param {boolean} [parameters.stencil=false] - Whether the default framebuffer should have a stencil buffer or not.
+     * @param {boolean} [parameters.antialias=false] - Whether MSAA as the default anti-aliasing should be enabled or not.
+     * @param {number} [parameters.samples=0] - When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0
      * to overwrite the default.
-     * @param {Function?} [parameters.getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
-     * @param {Number} [parameters.colorBufferType=HalfFloatType] - Defines the type of color buffers. The default `HalfFloatType` is recommend for best
+     * @param {?Function} [parameters.getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
+     * @param {number} [parameters.colorBufferType=HalfFloatType] - Defines the type of color buffers. The default `HalfFloatType` is recommend for best
      * quality. To save memory and bandwidth, `UnsignedByteType` might be used. This will reduce rendering quality though.
      */
     constructor(backend: Backend, parameters?: RendererParameters);
@@ -211,7 +211,7 @@ declare class Renderer {
      * `THREE.WebGPUCoordinateSystem`.
      *
      * @readonly
-     * @type {Number}
+     * @type {number}
      */
     get coordinateSystem(): import("../../constants.js").CoordinateSystem;
     /**
@@ -263,7 +263,7 @@ declare class Renderer {
     /**
      * Returns the color buffer type.
      *
-     * @return {Number} The color buffer type.
+     * @return {number} The color buffer type.
      */
     getColorBufferType(): TextureDataType;
     /**
@@ -291,7 +291,7 @@ declare class Renderer {
      *
      * @param {Object3D} scene - The scene or 3D object to render.
      * @param {Camera} camera - The camera to render the scene with.
-     * @return {Promise?} A Promise that resolve when the scene has been rendered.
+     * @return {?Promise} A Promise that resolve when the scene has been rendered.
      * Only returned when the renderer has not been initialized.
      */
     render(scene: Scene, camera: Camera): Promise<void> | undefined;
@@ -301,7 +301,7 @@ declare class Renderer {
      * pass and not inline to achieve more correct results.
      *
      * @private
-     * @return {RenderTarget?} The render target. The method returns `null` if no output conversion should be applied.
+     * @return {?RenderTarget} The render target. The method returns `null` if no output conversion should be applied.
      */
     _getFrameBufferTarget(): RenderTarget<Texture> | null;
     /**
@@ -310,7 +310,7 @@ declare class Renderer {
      * @private
      * @param {Object3D} scene - The scene or 3D object to render.
      * @param {Camera} camera - The camera to render the scene with.
-     * @param {Boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
+     * @param {boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
      * @return {RenderContext} The current render context.
      */
     _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext | undefined;
@@ -324,19 +324,19 @@ declare class Renderer {
     /**
      * Returns the maximum available anisotropy for texture filtering.
      *
-     * @return {Number} The maximum available anisotropy.
+     * @return {number} The maximum available anisotropy.
      */
     getMaxAnisotropy(): number;
     /**
      * Returns the active cube face.
      *
-     * @return {Number} The active cube face.
+     * @return {number} The active cube face.
      */
     getActiveCubeFace(): number;
     /**
      * Returns the active mipmap level.
      *
-     * @return {Number} The active mipmap level.
+     * @return {number} The active mipmap level.
      */
     getActiveMipmapLevel(): number;
     /**
@@ -367,7 +367,7 @@ declare class Renderer {
     /**
      * Returns the pixel ratio.
      *
-     * @return {Number} The pixel ratio.
+     * @return {number} The pixel ratio.
      */
     getPixelRatio(): number;
     /**
@@ -387,7 +387,7 @@ declare class Renderer {
     /**
      * Sets the given pixel ration and resizes the canvas if necessary.
      *
-     * @param {Number} [value=1] - The pixel ratio.
+     * @param {number} [value=1] - The pixel ratio.
      */
     setPixelRatio(value?: number): void;
     /**
@@ -399,17 +399,17 @@ declare class Renderer {
      * size.y = height * pixelRatio;
      * ```
      *
-     * @param {Number} width - The width in logical pixels.
-     * @param {Number} height - The height in logical pixels.
-     * @param {Number} pixelRatio - The pixel ratio.
+     * @param {number} width - The width in logical pixels.
+     * @param {number} height - The height in logical pixels.
+     * @param {number} pixelRatio - The pixel ratio.
      */
     setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
     /**
      * Sets the size of the renderer.
      *
-     * @param {Number} width - The width in logical pixels.
-     * @param {Number} height - The height in logical pixels.
-     * @param {Boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
+     * @param {number} width - The width in logical pixels.
+     * @param {number} height - The height in logical pixels.
+     * @param {boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
      */
     setSize(width: number, height: number, updateStyle?: boolean): void;
     /**
@@ -436,24 +436,24 @@ declare class Renderer {
     /**
      * Defines the scissor rectangle.
      *
-     * @param {Number | Vector4} x - The horizontal coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the box in logical pixel unit.
      * Instead of passing four arguments, the method also works with a single four-dimensional vector.
-     * @param {Number} y - The vertical coordinate for the lower left corner of the box in logical pixel unit.
-     * @param {Number} width - The width of the scissor box in logical pixel unit.
-     * @param {Number} height - The height of the scissor box in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number} width - The width of the scissor box in logical pixel unit.
+     * @param {number} height - The height of the scissor box in logical pixel unit.
      */
     setScissor(x: Vector4): void;
     setScissor(x: number, y: number, width: number, height: number): void;
     /**
      * Returns the scissor test value.
      *
-     * @return {Boolean} Whether the scissor test should be enabled or not.
+     * @return {boolean} Whether the scissor test should be enabled or not.
      */
     getScissorTest(): boolean;
     /**
      * Defines the scissor test.
      *
-     * @param {Boolean} boolean - Whether the scissor test should be enabled or not.
+     * @param {boolean} boolean - Whether the scissor test should be enabled or not.
      */
     setScissorTest(boolean: boolean): void;
     /**
@@ -466,12 +466,12 @@ declare class Renderer {
     /**
      * Defines the viewport.
      *
-     * @param {Number | Vector4} x - The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
-     * @param {Number} y - The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.
-     * @param {Number} width - The width of the viewport in logical pixel unit.
-     * @param {Number} height - The height of the viewport in logical pixel unit.
-     * @param {Number} minDepth - The minimum depth value of the viewport. WebGPU only.
-     * @param {Number} maxDepth - The maximum depth value of the viewport. WebGPU only.
+     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.
+     * @param {number} width - The width of the viewport in logical pixel unit.
+     * @param {number} height - The height of the viewport in logical pixel unit.
+     * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
+     * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
      */
     setViewport(x: Vector4): void;
     setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
@@ -486,43 +486,43 @@ declare class Renderer {
      * Defines the clear color and optionally the clear alpha.
      *
      * @param {Color} color - The clear color.
-     * @param {Number} [alpha=1] - The clear alpha.
+     * @param {number} [alpha=1] - The clear alpha.
      */
     setClearColor(color: ColorRepresentation, alpha?: number): void;
     /**
      * Returns the clear alpha.
      *
-     * @return {Number} The clear alpha.
+     * @return {number} The clear alpha.
      */
     getClearAlpha(): number;
     /**
      * Defines the clear alpha.
      *
-     * @param {Number} alpha - The clear alpha.
+     * @param {number} alpha - The clear alpha.
      */
     setClearAlpha(alpha: number): void;
     /**
      * Returns the clear depth.
      *
-     * @return {Number} The clear depth.
+     * @return {number} The clear depth.
      */
     getClearDepth(): number;
     /**
      * Defines the clear depth.
      *
-     * @param {Number} depth - The clear depth.
+     * @param {number} depth - The clear depth.
      */
     setClearDepth(depth: number): void;
     /**
      * Returns the clear stencil.
      *
-     * @return {Number} The clear stencil.
+     * @return {number} The clear stencil.
      */
     getClearStencil(): number;
     /**
      * Defines the clear stencil.
      *
-     * @param {Number} stencil - The clear stencil.
+     * @param {number} stencil - The clear stencil.
      */
     setClearStencil(stencil: number): void;
     /**
@@ -531,15 +531,15 @@ declare class Renderer {
      * 3D objects in the scene.
      *
      * @param {Object3D} object - The 3D object to test.
-     * @return {Boolean} Whether the 3D object is fully occluded or not.
+     * @return {boolean} Whether the 3D object is fully occluded or not.
      */
     isOccluded(object: Object3D): boolean | null;
     /**
      * Performs a manual clear operation. This method ignores `autoClear` properties.
      *
-     * @param {Boolean} [color=true] - Whether the color buffer should be cleared or not.
-     * @param {Boolean} [depth=true] - Whether the depth buffer should be cleared or not.
-     * @param {Boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
+     * @param {boolean} [color=true] - Whether the color buffer should be cleared or not.
+     * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
+     * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      * Only returned when the renderer has not been initialized.
      */
@@ -569,9 +569,9 @@ declare class Renderer {
      * Async version of {@link Renderer#clear}.
      *
      * @async
-     * @param {Boolean} [color=true] - Whether the color buffer should be cleared or not.
-     * @param {Boolean} [depth=true] - Whether the depth buffer should be cleared or not.
-     * @param {Boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
+     * @param {boolean} [color=true] - Whether the color buffer should be cleared or not.
+     * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
+     * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
@@ -600,14 +600,14 @@ declare class Renderer {
      * The current output tone mapping of the renderer. When a render target is set,
      * the output tone mapping is always `NoToneMapping`.
      *
-     * @type {Number}
+     * @type {number}
      */
     get currentToneMapping(): ToneMapping;
     /**
      * The current output color space of the renderer. When a render target is set,
      * the output color space is always `LinearSRGBColorSpace`.
      *
-     * @type {String}
+     * @type {string}
      */
     get currentColorSpace(): string;
     /**
@@ -620,15 +620,15 @@ declare class Renderer {
      * target the default framebuffer (meaning the canvas) anymore but a custom framebuffer.
      * Use `null` as the first argument to reset the state.
      *
-     * @param {RenderTarget?} renderTarget - The render target to set.
-     * @param {Number} [activeCubeFace=0] - The active cube face.
-     * @param {Number} [activeMipmapLevel=0] - The active mipmap level.
+     * @param {?RenderTarget} renderTarget - The render target to set.
+     * @param {number} [activeCubeFace=0] - The active cube face.
+     * @param {number} [activeMipmapLevel=0] - The active mipmap level.
      */
     setRenderTarget(renderTarget: RenderTarget | null, activeCubeFace?: number, activeMipmapLevel?: number): void;
     /**
      * Returns the current render target.
      *
-     * @return {RenderTarget?} The render target. Returns `null` if no render target is set.
+     * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
      */
     getRenderTarget(): RenderTarget<Texture> | null;
     /**
@@ -640,10 +640,10 @@ declare class Renderer {
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {BufferGeometry} geometry - The object's geometry.
      * @param {Material} material - The object's material.
-     * @param {Object?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {LightsNode} lightsNode - The current lights node.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {String?} [passId=null] - An optional ID for identifying the pass.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
     /**
      * Sets the given render object function. Calling this method overwrites the default implementation
@@ -654,7 +654,7 @@ declare class Renderer {
      *
      * Use `null` as the first argument to reset the state.
      *
-     * @param {renderObjectFunction?} renderObjectFunction - The render object function.
+     * @param {?renderObjectFunction} renderObjectFunction - The render object function.
      */
     setRenderObjectFunction(
         renderObjectFunction:
@@ -672,7 +672,7 @@ declare class Renderer {
     /**
      * Returns the current render object function.
      *
-     * @return {Function?} The current render object function. Returns `null` if no function is set.
+     * @return {?Function} The current render object function. Returns `null` if no function is set.
      */
     getRenderObjectFunction():
         | ((
@@ -692,7 +692,7 @@ declare class Renderer {
      * if the renderer has been initialized.
      *
      * @param {Node|Array<Node>} computeNodes - The compute node(s).
-     * @return {Promise?} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
+     * @return {?Promise} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
      */
     compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> | undefined;
     /**
@@ -707,8 +707,8 @@ declare class Renderer {
      * Checks if the given feature is supported by the selected backend.
      *
      * @async
-     * @param {String} name - The feature's name.
-     * @return {Promise<Boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
+     * @param {string} name - The feature's name.
+     * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
      */
     hasFeatureAsync(name: string): Promise<void>;
     resolveTimestampsAsync(type?: TimestampQuery): Promise<number | undefined>;
@@ -716,14 +716,14 @@ declare class Renderer {
      * Checks if the given feature is supported by the selected backend. If the
      * renderer has not been initialized, this method always returns `false`.
      *
-     * @param {String} name - The feature's name.
-     * @return {Boolean} Whether the feature is supported or not.
+     * @param {string} name - The feature's name.
+     * @return {boolean} Whether the feature is supported or not.
      */
     hasFeature(name: string): false | void;
     /**
      * Returns `true` when the renderer has been initialized.
      *
-     * @return {Boolean} Whether the renderer has been initialized or not.
+     * @return {boolean} Whether the renderer has been initialized or not.
      */
     hasInitialized(): boolean;
     /**
@@ -758,7 +758,7 @@ declare class Renderer {
      * @param {Texture} dstTexture - The destination texture.
      * @param {Box2|Box3} [srcRegion=null] - A bounding box which describes the source region. Can be two or three-dimensional.
      * @param {Vector2|Vector3} [dstPosition=null] - A vector that represents the origin of the destination region. Can be two or three-dimensional.
-     * @param {Number} level - The mipmap level to copy.
+     * @param {number} level - The mipmap level to copy.
      */
     copyTextureToTexture(
         srcTexture: Texture,
@@ -772,12 +772,12 @@ declare class Renderer {
      *
      * @async
      * @param {RenderTarget} renderTarget - The render target to read from.
-     * @param {Number} x - The `x` coordinate of the copy region's origin.
-     * @param {Number} y - The `y` coordinate of the copy region's origin.
-     * @param {Number} width - The width of the copy region.
-     * @param {Number} height - The height of the copy region.
-     * @param {Number} [textureIndex=0] - The texture index of a MRT render target.
-     * @param {Number} [faceIndex=0] - The active cube face index.
+     * @param {number} x - The `x` coordinate of the copy region's origin.
+     * @param {number} y - The `y` coordinate of the copy region's origin.
+     * @param {number} width - The width of the copy region.
+     * @param {number} height - The height of the copy region.
+     * @param {number} [textureIndex=0] - The texture index of a MRT render target.
+     * @param {number} [faceIndex=0] - The active cube face index.
      * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
      */
     readRenderTargetPixelsAsync(
@@ -795,7 +795,7 @@ declare class Renderer {
      *
      * @param {Object3D} object - The 3D object to process (usually a scene).
      * @param {Camera} camera - The camera the object is rendered with.
-     * @param {Number} groupOrder - The group order is derived from the `renderOrder` of groups and is used to group 3D objects within groups.
+     * @param {number} groupOrder - The group order is derived from the `renderOrder` of groups and is used to group 3D objects within groups.
      * @param {RenderList} renderList - The current render list.
      * @param {ClippingContext} clippingContext - The current clipping context.
      */
@@ -840,7 +840,7 @@ declare class Renderer {
      * @param {Camera} camera - The camera the render list should be rendered with.
      * @param {Scene} scene - The scene the render list belongs to.
      * @param {LightsNode} lightsNode - The current lights node.
-     * @param {String?} [passId=null] - An optional ID for identifying the pass.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
     _renderObjects(
         renderList: RenderItem[],
@@ -858,10 +858,10 @@ declare class Renderer {
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {BufferGeometry} geometry - The object's geometry.
      * @param {Material} material - The object's material.
-     * @param {Object?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {LightsNode} lightsNode - The current lights node.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {String?} [passId=null] - An optional ID for identifying the pass.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
     renderObject(
         object: Object3D,
@@ -884,9 +884,9 @@ declare class Renderer {
      * @param {Scene} scene - The scene the 3D object belongs to.
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {LightsNode} lightsNode - The current lights node.
-     * @param {{start: Number, count: Number}?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {?{start: number, count: number}} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {String?} [passId=null] - An optional ID for identifying the pass.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
     _renderObjectDirect(
         object: Object3D,
@@ -908,9 +908,9 @@ declare class Renderer {
      * @param {Scene} scene - The scene the 3D object belongs to.
      * @param {Camera} camera - The camera the object should be rendered with.
      * @param {LightsNode} lightsNode - The current lights node.
-     * @param {{start: Number, count: Number}?} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {?{start: number, count: number}} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {String?} [passId=null] - An optional ID for identifying the pass.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
     _createObjectPipeline(
         object: Object3D,

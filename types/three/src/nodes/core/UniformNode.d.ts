@@ -17,14 +17,14 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
     /**
      * Constructs a new uniform node.
      *
-     * @param {Any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
-     * @param {String?} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
      */
     constructor(value: TValue, nodeType?: string | null);
     /**
      * Sets the {@link UniformNode#name} property.
      *
-     * @param {String} name - The name of the uniform.
+     * @param {string} name - The name of the uniform.
      * @return {UniformNode} A reference to this node.
      */
     label(name: string): this;
@@ -46,7 +46,7 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
      * classes might overwrite this method with a different implementation.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {String} The uniform hash.
+     * @return {string} The uniform hash.
      */
     getUniformHash(builder: NodeBuilder): string;
     onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
@@ -58,8 +58,8 @@ export default UniformNode;
  *
  * @tsl
  * @function
- * @param {Any} arg1 - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
- * @param {String?} arg2 - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+ * @param {any} arg1 - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+ * @param {?string} arg2 - The node type. If no explicit type is defined, the node tries to derive the type from its value.
  * @returns {UniformNode}
  */
 export declare const uniform: <TValue>(
