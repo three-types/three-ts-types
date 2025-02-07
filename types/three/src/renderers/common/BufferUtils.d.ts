@@ -1,4 +1,3 @@
-/** @module BufferUtils **/
 /**
  * This function is usually called with the length in bytes of an array buffer.
  * It returns an padded value which ensure chunk size alignment according to STD140 layout.

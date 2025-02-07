@@ -1,6 +1,5 @@
 import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
-/** @module StructTypeNode **/
 export interface MembersLayout {
     [name: string]: string | {
         type: string;

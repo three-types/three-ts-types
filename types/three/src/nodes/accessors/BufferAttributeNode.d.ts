@@ -4,7 +4,6 @@ import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import InputNode from "../core/InputNode.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-/** @module BufferAttributeNode **/
 /**
  * In earlier `three.js` versions it was only possible to define attribute data
  * on geometry level. With `BufferAttributeNode`, it is also possible to do this
@@ -107,6 +106,7 @@ export default BufferAttributeNode;
 /**
  * TSL function for creating a buffer attribute node.
  *
+ * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {String?} [type=null] - The buffer type (e.g. `'vec3'`).
@@ -124,6 +124,7 @@ export declare const bufferAttribute: (
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
  *
+ * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {String?} [type=null] - The buffer type (e.g. `'vec3'`).
@@ -140,6 +141,7 @@ export declare const dynamicBufferAttribute: (
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
+ * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {String?} [type=null] - The buffer type (e.g. `'vec3'`).
@@ -156,6 +158,7 @@ export declare const instancedBufferAttribute: (
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
+ * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {String?} [type=null] - The buffer type (e.g. `'vec3'`).
