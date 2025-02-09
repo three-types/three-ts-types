@@ -3667,7 +3667,7 @@ index ead6d8c3..b89f4873 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index de375988..fc0430fb 100644
+index ea8abd08..e53ed801 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,39 @@
@@ -3848,18 +3848,15 @@ index de375988..fc0430fb 100644
      }
  
      /**
-@@ -541,9 +598,9 @@ class Backend {
+@@ -541,7 +598,7 @@ class Backend {
  
          _color4 = _color4 || new Color4();
  
 -        renderer.getClearColor(_color4);
 +        renderer!.getClearColor(_color4);
  
--        _color4.getRGB(_color4, this.renderer.currentColorSpace);
-+        _color4.getRGB(_color4, this.renderer!.currentColorSpace);
+         _color4.getRGB(_color4);
  
-         return _color4;
-     }
 @@ -586,7 +643,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
@@ -3892,13 +3889,13 @@ index de375988..fc0430fb 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 1437b80e..ed2a1908 100644
+index a0f4def7..fec55d38 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -14,23 +14,38 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
  import { Mesh } from '../../objects/Mesh.js';
  import { SphereGeometry } from '../../geometries/SphereGeometry.js';
- import { BackSide, LinearSRGBColorSpace } from '../../constants.js';
+ import { BackSide } from '../../constants.js';
 +import { Scene } from '../../scenes/Scene.js';
 +import Renderer from './Renderer.js';
 +import Nodes from './nodes/Nodes.js';
@@ -6170,7 +6167,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 5e2718e9..9ca3b68f 100644
+index 434e6523..17ea8df2 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -37,7 +37,35 @@ import {
@@ -9332,7 +9329,7 @@ index caabd9b7..07b54278 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 7f22b1f5..bb2e200b 100644
+index f4794059..9dcd7933 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9343,7 +9340,7 @@ index 7f22b1f5..bb2e200b 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1094,7 +1095,14 @@ class WebGLBackend extends Backend {
+@@ -1104,7 +1105,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9794,10 +9791,10 @@ index dc4ece58..50c5a723 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 26a9ae48..d8925be2 100644
+index 78602757..716d9d27 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1342,7 +1342,14 @@ class WebGPUBackend extends Backend {
+@@ -1355,7 +1355,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
