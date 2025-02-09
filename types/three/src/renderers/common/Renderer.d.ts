@@ -114,6 +114,7 @@ declare class Renderer {
     _renderTarget: RenderTarget | null;
     _activeCubeFace: number;
     _activeMipmapLevel: number;
+    _outputRenderTarget: RenderTarget | null;
     _mrt: MRTNode | null;
     _renderObjectFunction:
         | ((
@@ -611,6 +612,12 @@ declare class Renderer {
      */
     get currentColorSpace(): string;
     /**
+     * Returns `true` if the rendering settings are set to screen output.
+     *
+     * @returns {boolean} True if the current render target is the same of output render target or `null`, otherwise false.
+     */
+    get isOutputTarget(): boolean;
+    /**
      * Frees all internal resources of the renderer. Call this method if the renderer
      * is no longer in use by your app.
      */
@@ -631,6 +638,18 @@ declare class Renderer {
      * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
      */
     getRenderTarget(): RenderTarget<Texture> | null;
+    /**
+     * Sets the output render target for the renderer.
+     *
+     * @param {Object} renderTarget - The render target to set as the output target.
+     */
+    setOutputRenderTarget(renderTarget: RenderTarget | null): void;
+    /**
+     * Returns the current output target.
+     *
+     * @return {?RenderTarget} The current output render target. Returns `null` if no output target is set.
+     */
+    getOutputRenderTarget(): RenderTarget<Texture> | null;
     /**
      * Callback for {@link Renderer#setRenderObjectFunction}.
      *

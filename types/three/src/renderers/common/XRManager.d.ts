@@ -1,7 +1,6 @@
 import { ArrayCamera } from "../../cameras/ArrayCamera.js";
 import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
-import { RenderTarget } from "../../core/RenderTarget.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { WebXRController } from "../webxr/WebXRController.js";
 import { AnimationContext } from "./Animation.js";
@@ -35,7 +34,6 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _currentDepthFar: number | null;
     _controllers: WebXRController[];
     _controllerInputSources: (XRInputSource | null)[];
-    _currentRenderTarget: RenderTarget | null;
     _xrRenderTarget: XRRenderTarget | null;
     _currentAnimationContext: AnimationContext | null;
     _currentAnimationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
