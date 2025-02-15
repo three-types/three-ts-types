@@ -17807,6 +17807,36 @@ index e409b3c0..78885bec 100644
      if (isUserInteracting === true) {
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
+diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
+index 9ad555cf..588f5fac 100644
+--- a/examples-testing/examples/webgpu_volume_cloud.ts
++++ b/examples-testing/examples/webgpu_volume_cloud.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { texture3D, uniform } from 'three/tsl';
+ 
+ import { raymarchingTexture3D } from 'three/addons/tsl/utils/Raymarching.js';
+@@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera;
+-let mesh;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh;
+ 
+ init();
+ 
+@@ -33,7 +33,7 @@ function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
 index 76e09f1f..edefce0e 100644
 --- a/examples-testing/examples/webgpu_water.ts
