@@ -1,4 +1,4 @@
-import { FunctionNode, Node, Texture, TextureNode } from "three/tsl";
+import { FunctionNode, Node, Texture, TextureNode } from "three/webgpu";
 
 export const RaymarchingBox: (
     steps: number | Node,
