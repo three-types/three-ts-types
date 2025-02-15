@@ -1,3 +1,4 @@
+import { ShaderNodeObject } from "three/tsl";
 import { FunctionNode, Node, Texture, TextureNode } from "three/webgpu";
 
 export const RaymarchingBox: (
@@ -13,4 +14,4 @@ export const raymarchingTexture3D: (
         opacity: number | Node;
         steps: number | Node;
     },
-) => Node;
+) => ShaderNodeObject<Node>;
