@@ -1,8 +1,8 @@
-import { Node, Texture, TextureNode } from "three/webgpu";
+import { FunctionNode, Node, Texture, TextureNode } from "three/webgpu";
 
 export const RaymarchingBox: (
     steps: number | Node,
-    callback: ((params: { positionRay: Node }) => void) | Node,
+    callback: ((params: { positionRay: Node }) => void) | FunctionNode<{ positionRay: Node }>,
 ) => void;
 
 export const raymarchingTexture3D: (
