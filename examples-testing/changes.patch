@@ -2348,15 +2348,15 @@ index bef2c264..c0887a8d 100644
      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
  
 diff --git a/examples-testing/examples/webgl_buffergeometry_lines.ts b/examples-testing/examples/webgl_buffergeometry_lines.ts
-index 1aaa5ca4..9d608594 100644
+index 5d8d425d..e767acf9 100644
 --- a/examples-testing/examples/webgl_buffergeometry_lines.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_lines.ts
-@@ -2,11 +2,11 @@ import * as THREE from 'three';
- 
+@@ -3,11 +3,11 @@ import * as THREE from 'three';
+ import { Timer } from 'three/addons/misc/Timer.js';
  import Stats from 'three/addons/libs/stats.module.js';
  
--let container, stats, clock;
-+let container: HTMLElement, stats: Stats, clock: THREE.Clock;
+-let container, stats, timer;
++let container: HTMLElement, stats: Stats, timer: Timer;
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
@@ -2366,7 +2366,7 @@ index 1aaa5ca4..9d608594 100644
  
  const segments = 10000;
  const r = 800;
-@@ -15,7 +15,7 @@ let t = 0;
+@@ -16,7 +16,7 @@ let t = 0;
  init();
  
  function init() {
@@ -2375,7 +2375,7 @@ index 1aaa5ca4..9d608594 100644
  
      //
  
-@@ -93,14 +93,14 @@ function animate() {
+@@ -96,14 +96,14 @@ function animate() {
      line.rotation.y = time * 0.5;
  
      t += delta * 0.5;
@@ -3865,12 +3865,12 @@ index 572601ac..136a3141 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_geometry_dynamic.ts b/examples-testing/examples/webgl_geometry_dynamic.ts
-index 06e858f5..28273563 100644
+index 167d6fbf..98cca781 100644
 --- a/examples-testing/examples/webgl_geometry_dynamic.ts
 +++ b/examples-testing/examples/webgl_geometry_dynamic.ts
-@@ -4,9 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
- 
+@@ -5,9 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
+ import { Timer } from 'three/addons/misc/Timer.js';
  
 -let camera, controls, scene, renderer, stats;
 +let camera: THREE.PerspectiveCamera,
@@ -3879,12 +3879,12 @@ index 06e858f5..28273563 100644
 +    renderer: THREE.WebGLRenderer,
 +    stats: Stats;
  
--let mesh, geometry, material, clock;
-+let mesh: THREE.Mesh, geometry: THREE.PlaneGeometry, material: THREE.MeshBasicMaterial, clock: THREE.Clock;
+-let mesh, geometry, material, timer;
++let mesh: THREE.Mesh, geometry: THREE.PlaneGeometry, material: THREE.MeshBasicMaterial, timer: Timer;
  
  const worldWidth = 128,
      worldDepth = 128;
-@@ -26,7 +30,7 @@ function init() {
+@@ -27,7 +31,7 @@ function init() {
      geometry = new THREE.PlaneGeometry(20000, 20000, worldWidth - 1, worldDepth - 1);
      geometry.rotateX(-Math.PI / 2);
  
@@ -13051,7 +13051,7 @@ index 77dd8de4..6414f1b4 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_volume_instancing.ts b/examples-testing/examples/webgl_volume_instancing.ts
-index bf90eeea..135869e2 100644
+index 39bfc379..ed8d58f5 100644
 --- a/examples-testing/examples/webgl_volume_instancing.ts
 +++ b/examples-testing/examples/webgl_volume_instancing.ts
 @@ -2,7 +2,11 @@ import * as THREE from 'three';
@@ -13067,7 +13067,7 @@ index bf90eeea..135869e2 100644
  
  init();
  
-@@ -155,7 +159,7 @@ function init() {
+@@ -186,7 +190,7 @@ function init() {
  
              const mesh = new THREE.InstancedMesh(geometry, material, 50000);
              mesh.onBeforeRender = function () {
