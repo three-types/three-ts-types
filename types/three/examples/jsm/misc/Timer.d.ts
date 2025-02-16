@@ -22,7 +22,12 @@
  * @see https://threejs.org/examples/#webgl_morphtargets_sphere
  */
 export class Timer {
-    constructor();
+    /**
+     * Whether to use the Page Visibility API to avoid large time delta values in inactive tabs or not.
+     * @default true
+     * @param usePageVisibilityAPI
+     */
+    constructor(usePageVisibilityAPI?: boolean);
 
     /**
      * Returns the time delta in seconds.
