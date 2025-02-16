@@ -4522,7 +4522,7 @@ index 831ebcd6..e5947329 100644
  
      document.removeEventListener('pointermove', onPointerMove);
 diff --git a/examples-testing/examples/webgl_geometry_text_shapes.ts b/examples-testing/examples/webgl_geometry_text_shapes.ts
-index adfb6008..141b618f 100644
+index d9633cd1..c2b07d41 100644
 --- a/examples-testing/examples/webgl_geometry_text_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_text_shapes.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
@@ -4565,7 +4565,7 @@ index adfb6008..141b618f 100644
              if (shape.holes && shape.holes.length > 0) {
                  for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_geometry_text_stroke.ts b/examples-testing/examples/webgl_geometry_text_stroke.ts
-index 9a198325..e47d7b66 100644
+index 25dde276..ae7afcac 100644
 --- a/examples-testing/examples/webgl_geometry_text_stroke.ts
 +++ b/examples-testing/examples/webgl_geometry_text_stroke.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14982,10 +14982,10 @@ index 54d26d65..824c087a 100644
  
          mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgpu_materials_envmaps.ts b/examples-testing/examples/webgpu_materials_envmaps.ts
-index 012a5065..6ca474e3 100644
+index e6201b97..b369c6c5 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps.ts
-@@ -1,11 +1,20 @@
+@@ -1,11 +1,21 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
@@ -14997,7 +14997,7 @@ index 012a5065..6ca474e3 100644
 -let sphereMesh, sphereMaterial, params;
 +let controls, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let textureEquirec: THREE.Texture, textureCube: THREE.CubeTexture;
-+let sphereMesh: THREE.Mesh,
++let sphereMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicMaterial>,
 +    sphereMaterial: THREE.MeshBasicMaterial,
 +    params: {
 +        Cube: () => void;
@@ -15006,6 +15006,7 @@ index 012a5065..6ca474e3 100644
 +        backgroundRotationX: boolean;
 +        backgroundRotationY: boolean;
 +        backgroundRotationZ: boolean;
++        syncMaterial: boolean;
 +    };
  
  init();
@@ -17504,7 +17505,7 @@ index 175e9dee..ceca2ec9 100644
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
-index 54d389a1..71d22687 100644
+index 9ae3cecc..9a12b3f1 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
 +++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
 @@ -1,5 +1,5 @@
@@ -17808,15 +17809,17 @@ index e409b3c0..78885bec 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 9ad555cf..588f5fac 100644
+index 679ce01a..50b5dadf 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
-@@ -1,4 +1,4 @@
+@@ -1,5 +1,5 @@
 -import * as THREE from 'three';
+-import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
- import { texture3D, uniform } from 'three/tsl';
++import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform, ShaderNodeObject } from 'three/tsl';
  
- import { raymarchingTexture3D } from 'three/addons/tsl/utils/Raymarching.js';
+ import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
+ 
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17837,6 +17840,62 @@ index 9ad555cf..588f5fac 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
+@@ -85,33 +85,37 @@ function init() {
+ 
+     // Shader
+ 
+-    const transparentRaymarchingTexture = Fn(
+-        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
+-            const finalColor = vec4(0).toVar();
++    const transparentRaymarchingTexture = Fn<{
++        texture: ShaderNodeObject<THREE.TextureNode>;
++        range: ShaderNodeObject<THREE.UniformNode<number>>;
++        threshold: ShaderNodeObject<THREE.UniformNode<number>>;
++        opacity: ShaderNodeObject<THREE.UniformNode<number>>;
++        steps: ShaderNodeObject<THREE.UniformNode<number>>;
++    }>(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
++        const finalColor = vec4(0).toVar();
+ 
+-            RaymarchingBox(steps, ({ positionRay }) => {
+-                const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
++        RaymarchingBox(steps, ({ positionRay }) => {
++            const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
+ 
+-                mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
++            mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
+ 
+-                const shading = texture
+-                    .sample(positionRay.add(vec3(-0.01)))
+-                    .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
++            const shading = texture
++                .sample(positionRay.add(vec3(-0.01)))
++                .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
+ 
+-                const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
++            const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
+ 
+-                finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
++            finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
+ 
+-                finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
++            finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
+ 
+-                If(finalColor.a.greaterThanEqual(0.95), () => {
+-                    Break();
+-                });
++            If(finalColor.a.greaterThanEqual(0.95), () => {
++                Break();
+             });
++        });
+ 
+-            return finalColor;
+-        },
+-    );
++        return finalColor;
++    });
+ 
+     // Material
+ 
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
 index 76e09f1f..edefce0e 100644
 --- a/examples-testing/examples/webgpu_water.ts
