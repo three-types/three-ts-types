@@ -4015,7 +4015,7 @@ index 0cdcb293..885a7b95 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index a0ee0c65..7dd063df 100644
+index aae74556..a490fb81 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -4159,8 +4159,8 @@ index a0ee0c65..7dd063df 100644
  
                  // every uniforms group is a uniform buffer. So if no update is required,
                  // we move one with the next binding. Otherwise the next if block will update the group.
-@@ -191,22 +225,23 @@ class Bindings extends DataMap {
-                 if (updated === false) continue;
+@@ -200,22 +234,23 @@ class Bindings extends DataMap {
+                 this.attributes.update(attribute, attributeType);
              }
  
 -            if (binding.isUniformBuffer) {
@@ -4193,7 +4193,7 @@ index a0ee0c65..7dd063df 100644
  
                  if (updated) {
                      this.textures.updateTexture(texture);
-@@ -229,10 +264,10 @@ class Bindings extends DataMap {
+@@ -238,10 +273,10 @@ class Bindings extends DataMap {
                      // TODO: Remove this once we found why updated === false isn't bound to a texture in the WebGPU backend
                      console.error(
                          'Bindings._update: binding should be available:',
@@ -4206,7 +4206,7 @@ index a0ee0c65..7dd063df 100644
                          needsBindingsUpdate,
                      );
  
-@@ -243,7 +278,7 @@ class Bindings extends DataMap {
+@@ -252,7 +287,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true) {
                      const textureData = this.get(texture);
  
@@ -9329,7 +9329,7 @@ index caabd9b7..07b54278 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 4d9230c9..a9c7284b 100644
+index 6e50c2cd..a9616928 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
