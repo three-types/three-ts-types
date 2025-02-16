@@ -64,7 +64,7 @@ function init() {
             }
         }
 
-        shapes.push.apply(shapes, holeShapes);
+        shapes.push(...holeShapes);
 
         const style = SVGLoader.getStrokeStyle(5, color.getStyle());
 

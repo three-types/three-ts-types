@@ -63,7 +63,7 @@ function init() {
             }
         }
 
-        shapes.push.apply(shapes, holeShapes);
+        shapes.push(...holeShapes);
 
         const lineText = new THREE.Object3D();
 
