@@ -1284,7 +1284,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 3eaad7a9..2c3a0ded 100644
+index 8ac672dd..361a0ead 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -1761,7 +1761,7 @@ index 3eaad7a9..2c3a0ded 100644
          if (value === null) {
              if (type === 'float' || type === 'int' || type === 'uint') value = 0;
              else if (type === 'bool') value = false;
-@@ -1027,26 +1157,26 @@ class NodeBuilder {
+@@ -1027,20 +1157,20 @@ class NodeBuilder {
          }
  
          if (type === 'float') return toFloat(value);
@@ -1785,18 +1785,8 @@ index 3eaad7a9..2c3a0ded 100644
 -            return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)} )`;
 +            return `${this.getType(type)}( ${generateConst((value as Vector2).x)}, ${generateConst((value as Vector2).y)} )`;
          } else if (typeLength === 3) {
--            return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)} )`;
-+            return `${this.getType(type)}( ${generateConst((value as Vector3).x)}, ${generateConst((value as Vector3).y)}, ${generateConst((value as Vector3).z)} )`;
-         } else if (typeLength === 4) {
--            return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)}, ${generateConst(value.w)} )`;
--        } else if (typeLength > 4 && value && (value.isMatrix3 || value.isMatrix4)) {
--            return `${this.getType(type)}( ${value.elements.map(generateConst).join(', ')} )`;
-+            return `${this.getType(type)}( ${generateConst((value as Vector4).x)}, ${generateConst((value as Vector4).y)}, ${generateConst((value as Vector4).z)}, ${generateConst((value as Vector4).w)} )`;
-+        } else if (typeLength > 4 && value && ((value as Matrix3).isMatrix3 || (value as Matrix4).isMatrix4)) {
-+            return `${this.getType(type)}( ${(value as Matrix3 | Matrix4).elements.map(generateConst).join(', ')} )`;
-         } else if (typeLength > 4) {
-             return `${this.getType(type)}()`;
-         }
+             return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)} )`;
+         } else if (typeLength === 4 && type !== 'mat2') {
 @@ -1061,7 +1191,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The updated type.
@@ -2987,7 +2977,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index c2b8fdba..5b0ddfff 100644
+index 267d4433..a369001b 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,24 +1,33 @@
@@ -3084,7 +3074,7 @@ index c2b8fdba..5b0ddfff 100644
          );
          const propertyName = builder.getPropertyName(nodeUniform);
 @@ -146,11 +155,14 @@ export default UniformNode;
-  * @param {?string} arg2 - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+  * @param {string} [arg2] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
 -export const uniform = (arg1, arg2) => {
@@ -6167,7 +6157,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 27397759..b53ebe8b 100644
+index c0931ffb..c905c419 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -37,7 +37,35 @@ import {
@@ -6359,7 +6349,7 @@ index 27397759..b53ebe8b 100644
 +    _colorBufferType: TextureDataType;
 +
 +    _initialized: boolean;
-+    _initPromise: Promise<void> | null;
++    _initPromise: Promise<this> | null;
 +
 +    _compilationPromises: Promise<void>[] | null;
 +
@@ -6418,6 +6408,15 @@ index 27397759..b53ebe8b 100644
                      object,
                      material,
                      scene,
+@@ -736,7 +939,7 @@ class Renderer {
+             return this._initPromise;
+         }
+ 
+-        this._initPromise = new Promise(async (resolve, reject) => {
++        this._initPromise = new Promise<this>(async (resolve, reject) => {
+             let backend = this.backend;
+ 
+             try {
 @@ -823,14 +1026,14 @@ class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {Promise<Array>} A Promise that resolves when the compile has been finished.
@@ -9329,7 +9328,7 @@ index caabd9b7..07b54278 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 6e50c2cd..a9616928 100644
+index a5631315..398991a0 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9340,7 +9339,7 @@ index 6e50c2cd..a9616928 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1104,7 +1105,14 @@ class WebGLBackend extends Backend {
+@@ -1108,7 +1109,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9791,10 +9790,10 @@ index dc4ece58..50c5a723 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 78602757..716d9d27 100644
+index fa595d5d..5fa0dd56 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1355,7 +1355,14 @@ class WebGPUBackend extends Backend {
+@@ -1363,7 +1363,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9811,7 +9810,7 @@ index 78602757..716d9d27 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 3d06f780..40dbc93c 100644
+index 4b5b93b3..0314a66c 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
