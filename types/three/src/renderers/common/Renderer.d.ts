@@ -157,7 +157,7 @@ declare class Renderer {
     onDeviceLost: (info: DeviceLostInfo) => void;
     _colorBufferType: TextureDataType;
     _initialized: boolean;
-    _initPromise: Promise<void> | null;
+    _initPromise: Promise<this> | null;
     _compilationPromises: Promise<void>[] | null;
     transparent: boolean;
     opaque: boolean;
@@ -203,9 +203,9 @@ declare class Renderer {
      * Initializes the renderer so it is ready for usage.
      *
      * @async
-     * @return {Promise} A Promise that resolves when the renderer has been initialized.
+     * @return {Promise<this>} A Promise that resolves when the renderer has been initialized.
      */
-    init(): Promise<void>;
+    init(): Promise<this>;
     /**
      * The coordinate system of the renderer. The value of this property
      * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
