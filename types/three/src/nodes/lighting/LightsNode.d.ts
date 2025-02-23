@@ -4,6 +4,20 @@ import { NodeBuilder } from "../Nodes.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import LightingNode from "./LightingNode.js";
 
+export interface DirectLightData {
+    lightDirection: Node;
+    lightColor: Node;
+}
+
+export interface DirectRectAreaLightData {
+    lightColor: Node;
+    lightPosition: Node;
+    halfWidth: Node;
+    halfHeight: Node;
+    ltc_1: Node;
+    ltc_2: Node;
+}
+
 declare class LightsNode extends Node {
     totalDiffuseNode: Node;
     totalSpecularNode: Node;
@@ -13,11 +27,9 @@ declare class LightsNode extends Node {
 
     setupLightsNode(builder: NodeBuilder): void;
 
-    // TODO Parameter types
-    setupDirectLight(builder: NodeBuilder, lightNode: Node, lightData): void;
+    setupDirectLight(builder: NodeBuilder, lightNode: Node, lightData: DirectLightData): void;
 
-    // TODO Parameter types
-    setupDirectRectAreaLight(builder: NodeBuilder, lightNode: Node, lightData): void;
+    setupDirectRectAreaLight(builder: NodeBuilder, lightNode: Node, lightData: DirectRectAreaLightData): void;
 
     setupLights(builder: NodeBuilder, lightNodes: LightingNode[]): void;
 
