@@ -4,7 +4,6 @@ import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import AnalyticLightNode from "./AnalyticLightNode.js";
 import PointShadowNode from "./PointShadowNode.js";
 
-// TODO Are the parameters actually nodes?
 export const directPointLight: (params: {
     color: ShaderNodeObject<Node>;
     lightViewPosition: ShaderNodeObject<Node>;
