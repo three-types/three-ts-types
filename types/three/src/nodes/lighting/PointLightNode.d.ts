@@ -6,11 +6,11 @@ import PointShadowNode from "./PointShadowNode.js";
 
 // TODO Are the parameters actually nodes?
 export const directPointLight: (params: {
-                                    color: ShaderNodeObject<Node>,
-                                    lightViewPosition: ShaderNodeObject<Node>,
-                                    cutoffDistance: ShaderNodeObject<Node>,
-                                    decayExponent: ShaderNodeObject<Node>,
-                                }) => { lightDirection: ShaderNodeObject<Node>; lightColor: ShaderNodeObject<Node> };
+    color: ShaderNodeObject<Node>;
+    lightViewPosition: ShaderNodeObject<Node>;
+    cutoffDistance: ShaderNodeObject<Node>;
+    decayExponent: ShaderNodeObject<Node>;
+}) => { lightDirection: ShaderNodeObject<Node>; lightColor: ShaderNodeObject<Node> };
 
 declare class PointLightNode extends AnalyticLightNode<PointLight> {
     cutoffDistanceNode: Node;

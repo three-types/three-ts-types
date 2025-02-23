@@ -1,4 +1,4 @@
-import LightingModel from '../core/LightingModel.js';
+import LightingModel from "../core/LightingModel.js";
 
 declare class VolumetricLightingModel extends LightingModel {
 }

@@ -1,9 +1,9 @@
 import { Light } from "../../lights/Light.js";
 import Node from "../core/Node.js";
+import NodeBuilder from "../core/NodeBuilder.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import LightingNode from "./LightingNode.js";
 import ShadowNode from "./ShadowNode.js";
-import NodeBuilder from '../core/NodeBuilder.js';
 
 declare module "../../lights/LightShadow.js" {
     export interface LightShadow {

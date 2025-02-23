@@ -19,4 +19,7 @@ export default class LightingContextNode extends ContextNode {
     getContext(): LightingModelIndirectInput;
 }
 
-export const lightingContext: (node: LightsNode, lightingModelNode?: LightingModel) => ShaderNodeObject<LightingContextNode>;
+export const lightingContext: (
+    node: LightsNode,
+    lightingModelNode?: LightingModel,
+) => ShaderNodeObject<LightingContextNode>;
