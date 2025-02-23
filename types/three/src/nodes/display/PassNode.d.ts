@@ -53,7 +53,7 @@ declare class PassNode extends TempNode {
 
     toggleTexture(name: string): void;
 
-    getTextureNode(name?: string): ShaderNodeObject<Node>;
+    getTextureNode(name?: string): ShaderNodeObject<TextureNode>;
 
     getPreviousTextureNode(name?: string): ShaderNodeObject<Node>;
 
