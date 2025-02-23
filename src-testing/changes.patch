@@ -3507,7 +3507,7 @@ index 096326f3..d1b6ae2e 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index 5f4e7775..0c490ad9 100644
+index fe3f7743..92f9822a 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
@@ -3515,7 +3515,7 @@ index 5f4e7775..0c490ad9 100644
 +import Info from './Info.js';
 +
 +export interface AnimationContext {
-+    requestAnimationFrame(callback: FrameRequestCallback, frame?: XRFrame): number;
++    requestAnimationFrame(callback: FrameRequestCallback, xrFrame?: XRFrame): number;
 +    cancelAnimationFrame(handle: number): void;
 +}
 +
@@ -3529,7 +3529,7 @@ index 5f4e7775..0c490ad9 100644
 +    info: Info;
 +
 +    _context: AnimationContext;
-+    _animationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
++    _animationLoop: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
 +    _requestId: number | null;
 +
      /**
@@ -3547,8 +3547,8 @@ index 5f4e7775..0c490ad9 100644
       * Starts the internal animation loop.
       */
      start() {
--        const update = (time, frame) => {
-+        const update = (time?: DOMHighResTimeStamp, frame?: XRFrame) => {
+-        const update = (time, xrFrame) => {
++        const update = (time?: DOMHighResTimeStamp, xrFrame?: XRFrame) => {
              this._requestId = this._context.requestAnimationFrame(update);
  
              if (this.info.autoReset === true) this.info.reset();
@@ -3556,8 +3556,8 @@ index 5f4e7775..0c490ad9 100644
  
              this.info.frame = this.nodes.nodeFrame.frameId;
  
--            if (this._animationLoop !== null) this._animationLoop(time, frame);
-+            if (this._animationLoop !== null) this._animationLoop(time!, frame);
+-            if (this._animationLoop !== null) this._animationLoop(time, xrFrame);
++            if (this._animationLoop !== null) this._animationLoop(time!, xrFrame);
          };
  
          update();
@@ -3575,7 +3575,7 @@ index 5f4e7775..0c490ad9 100644
       * @param {Function} callback - The animation loop.
       */
 -    setAnimationLoop(callback) {
-+    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null) {
++    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null) {
          this._animationLoop = callback;
      }
  
@@ -6159,7 +6159,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index c0931ffb..c905c419 100644
+index 52535a1c..dd128cfd 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -37,7 +37,35 @@ import {

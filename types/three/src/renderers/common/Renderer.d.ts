@@ -386,7 +386,7 @@ declare class Renderer {
      */
     getSize(target: Vector2): Vector2;
     /**
-     * Sets the given pixel ration and resizes the canvas if necessary.
+     * Sets the given pixel ratio and resizes the canvas if necessary.
      *
      * @param {number} [value=1] - The pixel ratio.
      */
