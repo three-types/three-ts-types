@@ -1,4 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
+import { Layers } from "../../core/Layers.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
@@ -38,11 +39,9 @@ declare class PassNode extends TempNode {
 
     getResolution(): number;
 
-    // TODO Parameter type?
-    setLayers(layers: ): this;
+    setLayers(layers: Layers): this;
 
-    // TODO Return type?
-    getLayers(): ;
+    getLayers(): Layers;
 
     setMRT(mrt: MRTNode | null): this;
 
