@@ -89,6 +89,7 @@ declare class NodeMaterial extends Material {
     setupOutgoingLight(): Node;
     setupLightingModel(builder: NodeBuilder): LightingModel;
     setupLighting(builder: NodeBuilder): Node;
+    setupFog(builder: NodeBuilder, outputNode: Node): Node;
     setupOutput(builder: NodeBuilder, outputNode: Node): Node;
 
     setDefaultValues(material: Material): void;

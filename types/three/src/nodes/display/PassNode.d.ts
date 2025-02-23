@@ -34,6 +34,16 @@ declare class PassNode extends TempNode {
 
     constructor(scope: PassNodeScope, scene: Scene, camera: Camera, options?: RenderTargetOptions);
 
+    setResolution(resolution: number): this;
+
+    getResolution(): number;
+
+    // TODO Parameter type?
+    setLayers(layers: ): this;
+
+    // TODO Return type?
+    getLayers(): ;
+
     setMRT(mrt: MRTNode | null): this;
 
     getMRT(): MRTNode | null;
