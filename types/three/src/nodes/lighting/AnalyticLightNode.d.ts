@@ -18,8 +18,10 @@ declare class AnalyticLightNode<T extends Light> extends LightingNode {
 
     getLightVector(builder: NodeBuilder): Node;
 
+    // TODO Update return type
     setupDirect(builder: NodeBuilder): void;
 
+    // TODO Update return type
     setupDirectRectArea(builder: NodeBuilder): void;
 
     setupShadowNode(): ShaderNodeObject<ShadowNode>;

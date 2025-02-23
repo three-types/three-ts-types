@@ -14,10 +14,10 @@ declare class LightsNode extends Node {
     setupLightsNode(builder: NodeBuilder): void;
 
     // TODO Parameter types
-    setupDirectLight(builder: NodeBuilder, lightNode, lightData): void;
+    setupDirectLight(builder: NodeBuilder, lightNode: Node, lightData): void;
 
     // TODO Parameter types
-    setupDirectRectAreaLight(builder: NodeBuilder, lightNode, lightData): void;
+    setupDirectRectAreaLight(builder: NodeBuilder, lightNode: Node, lightData): void;
 
     setupLights(builder: NodeBuilder, lightNodes: LightingNode[]): void;
 
