@@ -3507,7 +3507,7 @@ index 096326f3..d1b6ae2e 100644
  
  export const Fn = (jsFunc, nodeType) => {
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index fe3f7743..eacad065 100644
+index fe3f7743..92f9822a 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
@@ -3515,7 +3515,7 @@ index fe3f7743..eacad065 100644
 +import Info from './Info.js';
 +
 +export interface AnimationContext {
-+    requestAnimationFrame(callback: FrameRequestCallback, frame?: XRFrame): number;
++    requestAnimationFrame(callback: FrameRequestCallback, xrFrame?: XRFrame): number;
 +    cancelAnimationFrame(handle: number): void;
 +}
 +
@@ -3529,7 +3529,7 @@ index fe3f7743..eacad065 100644
 +    info: Info;
 +
 +    _context: AnimationContext;
-+    _animationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
++    _animationLoop: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
 +    _requestId: number | null;
 +
      /**
@@ -3575,7 +3575,7 @@ index fe3f7743..eacad065 100644
       * @param {Function} callback - The animation loop.
       */
 -    setAnimationLoop(callback) {
-+    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null) {
++    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null) {
          this._animationLoop = callback;
      }
  
