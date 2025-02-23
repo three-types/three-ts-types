@@ -17896,6 +17896,103 @@ index 679ce01a..50b5dadf 100644
  
      // Material
  
+diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
+index feff77f6..ca2a596b 100644
+--- a/examples-testing/examples/webgpu_volume_lighting.ts
++++ b/examples-testing/examples/webgpu_volume_lighting.ts
+@@ -1,5 +1,5 @@
+-import * as THREE from 'three';
+-import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+@@ -12,10 +12,10 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera;
+-let volumetricMesh, teapot, pointLight, spotLight;
+-let postProcessing;
+-let stats;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let volumetricMesh: THREE.Mesh, teapot: THREE.Mesh, pointLight: THREE.PointLight, spotLight: THREE.SpotLight;
++let postProcessing: THREE.PostProcessing;
++let stats: Stats;
+ 
+ init();
+ 
+@@ -91,12 +91,12 @@ function init() {
+     const volumetricMaterial = new THREE.VolumeNodeMaterial();
+     volumetricMaterial.steps = 12;
+     volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
+-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: ShaderNodeObject<THREE.Node> }) => {
+         // Return the amount of fog based on the noise texture
+ 
+         const timeScaled = vec3(time, 0, time.mul(0.3));
+ 
+-        const sampleGrain = (scale, timeScale = 1) =>
++        const sampleGrain = (scale: number, timeScale = 1) =>
+             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+ 
+         let density = sampleGrain(0.1);
+diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
+index 23ec92a0..876c0299 100644
+--- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
++++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
+@@ -1,5 +1,5 @@
+-import * as THREE from 'three';
+-import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
++import * as THREE from 'three/webgpu';
++import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+@@ -12,12 +12,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera;
+-let volumetricMesh, meshKnot;
+-let rectLight1, rectLight2, rectLight3;
+-let clock;
+-let postProcessing;
+-let stats;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let volumetricMesh: THREE.Mesh, meshKnot: THREE.Mesh;
++let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
++let clock: THREE.Clock;
++let postProcessing: THREE.PostProcessing;
++let stats: Stats;
+ 
+ init();
+ 
+@@ -93,12 +93,12 @@ function init() {
+     const volumetricMaterial = new THREE.VolumeNodeMaterial();
+     volumetricMaterial.steps = 12;
+     volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
+-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: ShaderNodeObject<THREE.Node> }) => {
+         // Return the amount of fog based on the noise texture
+ 
+         const timeScaled = vec3(time, 0, time.mul(0.3));
+ 
+-        const sampleGrain = (scale, timeScale = 1) =>
++        const sampleGrain = (scale: number, timeScale = 1) =>
+             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+ 
+         let density = sampleGrain(0.1);
+@@ -134,7 +134,7 @@ function init() {
+ 
+     //
+ 
+-    const createRectLightMesh = rectLight => {
++    const createRectLightMesh = (rectLight: THREE.RectAreaLight) => {
+         const geometry = new THREE.PlaneGeometry(4, 10);
+         const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
+         const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
 index 76e09f1f..edefce0e 100644
 --- a/examples-testing/examples/webgpu_water.ts
