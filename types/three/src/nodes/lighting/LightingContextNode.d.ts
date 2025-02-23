@@ -1,8 +1,18 @@
 import ContextNode from "../core/ContextNode.js";
-import LightingModel, { LightingModelIndirectInput } from "../core/LightingModel.js";
+import LightingModel, { LightingModelReflectedLight } from "../core/LightingModel.js";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import LightsNode from "./LightsNode.js";
+
+export interface LightingContext {
+    radiance: Node;
+    irradiance: Node;
+    iblIrradiance: Node;
+    ambientOcclusion: Node;
+    reflectedLight: LightingModelReflectedLight;
+    backdrop: Node;
+    backdropAlpha: Node;
+}
 
 export default class LightingContextNode extends ContextNode {
     lightingModelNode: LightingModel | null;
@@ -16,7 +26,7 @@ export default class LightingContextNode extends ContextNode {
         backdropAlphaNode?: Node | null,
     );
 
-    getContext(): LightingModelIndirectInput;
+    getContext(): LightingContext;
 }
 
 export const lightingContext: (
