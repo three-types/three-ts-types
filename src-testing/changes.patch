@@ -8099,7 +8099,7 @@ index 93cc042e..5ff6ce79 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index 2a7895e2..f124c644 100644
+index f948e9c1..0a6c01d7 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -16,10 +16,21 @@ import {
@@ -8289,7 +8289,7 @@ index 2a7895e2..f124c644 100644
  
              //
  
-@@ -620,13 +695,13 @@ class XRManager extends EventDispatcher {
+@@ -624,13 +699,13 @@ class XRManager extends EventDispatcher {
  
              //
  
@@ -8307,7 +8307,7 @@ index 2a7895e2..f124c644 100644
  
              this.isPresenting = true;
  
-@@ -641,7 +716,7 @@ class XRManager extends EventDispatcher {
+@@ -645,7 +720,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {PerspectiveCamera} camera - The camera.
       */
@@ -8316,7 +8316,7 @@ index 2a7895e2..f124c644 100644
          const session = this._session;
  
          if (session === null) return;
-@@ -672,7 +747,7 @@ class XRManager extends EventDispatcher {
+@@ -676,7 +751,7 @@ class XRManager extends EventDispatcher {
          cameraR.layers.mask = camera.layers.mask | 0b100;
          cameraXR.layers.mask = cameraL.layers.mask | cameraR.layers.mask;
  
@@ -8325,7 +8325,7 @@ index 2a7895e2..f124c644 100644
          const cameras = cameraXR.cameras;
  
          updateCamera(cameraXR, parent);
-@@ -703,7 +778,7 @@ class XRManager extends EventDispatcher {
+@@ -707,7 +782,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The controller index.
       * @return {WebXRController} The XR controller.
       */
@@ -8334,7 +8334,7 @@ index 2a7895e2..f124c644 100644
          let controller = this._controllers[index];
  
          if (controller === undefined) {
-@@ -725,7 +800,7 @@ class XRManager extends EventDispatcher {
+@@ -729,7 +804,7 @@ class XRManager extends EventDispatcher {
   * @param {PerspectiveCamera} cameraL - The left camera.
   * @param {PerspectiveCamera} cameraR - The right camera.
   */
@@ -8343,7 +8343,7 @@ index 2a7895e2..f124c644 100644
      _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
      _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
  
-@@ -789,7 +864,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+@@ -793,7 +868,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
   * @param {Camera} camera - The camera to update.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8352,7 +8352,7 @@ index 2a7895e2..f124c644 100644
      if (parent === null) {
          camera.matrixWorld.copy(camera.matrix);
      } else {
-@@ -807,7 +882,7 @@ function updateCamera(camera, parent) {
+@@ -811,7 +886,7 @@ function updateCamera(camera, parent) {
   * @param {ArrayCamera} cameraXR - The XR camera.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8361,7 +8361,7 @@ index 2a7895e2..f124c644 100644
      if (parent === null) {
          camera.matrix.copy(cameraXR.matrixWorld);
      } else {
-@@ -822,13 +897,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+@@ -826,13 +901,14 @@ function updateUserCamera(camera, cameraXR, parent) {
      camera.projectionMatrix.copy(cameraXR.projectionMatrix);
      camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
  
@@ -8380,7 +8380,7 @@ index 2a7895e2..f124c644 100644
      const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
  
      if (controllerIndex === -1) {
-@@ -838,15 +914,15 @@ function onSessionEvent(event) {
+@@ -842,15 +918,15 @@ function onSessionEvent(event) {
      const controller = this._controllers[controllerIndex];
  
      if (controller !== undefined) {
@@ -8399,7 +8399,7 @@ index 2a7895e2..f124c644 100644
      const renderer = this._renderer;
  
      session.removeEventListener('select', this._onSessionEvent);
-@@ -883,19 +959,19 @@ function onSessionEnd() {
+@@ -887,19 +963,19 @@ function onSessionEnd() {
  
      this.isPresenting = false;
  
@@ -8425,7 +8425,7 @@ index 2a7895e2..f124c644 100644
      const controllers = this._controllers;
      const controllerInputSources = this._controllerInputSources;
  
-@@ -946,7 +1022,7 @@ function onInputSourcesChange(event) {
+@@ -950,7 +1026,7 @@ function onInputSourcesChange(event) {
      }
  }
  
@@ -8434,7 +8434,7 @@ index 2a7895e2..f124c644 100644
      if (frame === undefined) return;
  
      const cameraXR = this._cameraXR;
-@@ -955,16 +1031,16 @@ function onAnimationFrame(time, frame) {
+@@ -959,16 +1035,16 @@ function onAnimationFrame(time, frame) {
  
      const glBaseLayer = this._glBaseLayer;
  
@@ -8454,7 +8454,7 @@ index 2a7895e2..f124c644 100644
          }
  
          let cameraXRNeedsUpdate = false;
-@@ -994,7 +1070,7 @@ function onAnimationFrame(time, frame) {
+@@ -998,7 +1074,7 @@ function onAnimationFrame(time, frame) {
                      );
                  }
              } else {
@@ -8463,7 +8463,7 @@ index 2a7895e2..f124c644 100644
              }
  
              let camera = this._cameras[i];
-@@ -1010,7 +1086,7 @@ function onAnimationFrame(time, frame) {
+@@ -1014,7 +1090,7 @@ function onAnimationFrame(time, frame) {
              camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
              camera.projectionMatrix.fromArray(view.projectionMatrix);
              camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
@@ -8473,9 +8473,15 @@ index 2a7895e2..f124c644 100644
              if (i === 0) {
                  cameraXR.matrix.copy(camera.matrix);
 diff --git a/src-testing/src/renderers/common/XRRenderTarget.ts b/src-testing/src/renderers/common/XRRenderTarget.ts
-index 95fac673..470249e2 100644
+index 95fac673..d104ced9 100644
 --- a/src-testing/src/renderers/common/XRRenderTarget.ts
 +++ b/src-testing/src/renderers/common/XRRenderTarget.ts
+@@ -1,4 +1,4 @@
+-import { RenderTarget } from '../../core/RenderTarget.js';
++import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
+ 
+ /**
+  * A special type of render target that is used when rendering
 @@ -8,6 +8,12 @@ import { RenderTarget } from '../../core/RenderTarget.js';
   * @augments RenderTarget
   */
@@ -8489,6 +8495,15 @@ index 95fac673..470249e2 100644
      /**
       * Constructs a new XR render target.
       *
+@@ -15,7 +21,7 @@ class XRRenderTarget extends RenderTarget {
+      * @param {number} [height=1] - The height of the render target.
+      * @param {Object} [options={}] - The configuration options.
+      */
+-    constructor(width = 1, height = 1, options = {}) {
++    constructor(width = 1, height = 1, options: RenderTargetOptions = {}) {
+         super(width, height, options);
+ 
+         /**
 @@ -54,7 +60,7 @@ class XRRenderTarget extends RenderTarget {
          this.autoAllocateDepthBuffer = true;
      }
