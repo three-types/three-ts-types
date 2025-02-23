@@ -3139,7 +3139,7 @@ index 1fe2dbbd..a431897f 100644
 +export const shaderStages: NodeShaderStage[] = [...defaultShaderStages, 'compute'];
  export const vectorComponents = ['x', 'y', 'z', 'w'];
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index e5cac583..821c3c48 100644
+index ee5cf92a..c58f0886 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
 @@ -1,5 +1,23 @@
@@ -3186,20 +3186,22 @@ index e5cac583..821c3c48 100644
      /**
       * Constructs a new lighting context node.
       *
-@@ -21,7 +45,12 @@ class LightingContextNode extends ContextNode {
+@@ -21,8 +45,13 @@ class LightingContextNode extends ContextNode {
       * @param {?Node<vec3>} [backdropNode=null] - A backdrop node.
       * @param {?Node<float>} [backdropAlphaNode=null] - A backdrop alpha node.
       */
--    constructor(node, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
+-    constructor(lightsNode, lightingModel = null, backdropNode = null, backdropAlphaNode = null) {
+-        super(lightsNode);
 +    constructor(
-+        node: Node,
++        lightsNode: Node,
 +        lightingModel: LightingModel | null = null,
 +        backdropNode: Node | null = null,
 +        backdropAlphaNode: Node | null = null,
 +    ) {
-         super(node);
++        super(node);
  
          /**
+          * The current lighting model.
 @@ -79,7 +108,7 @@ class LightingContextNode extends ContextNode {
              indirectSpecular,
          };
