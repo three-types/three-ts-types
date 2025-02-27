@@ -2348,7 +2348,7 @@ index bef2c264..c0887a8d 100644
      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
  
 diff --git a/examples-testing/examples/webgl_buffergeometry_lines.ts b/examples-testing/examples/webgl_buffergeometry_lines.ts
-index 5d8d425d..e767acf9 100644
+index 025acf27..51a3811b 100644
 --- a/examples-testing/examples/webgl_buffergeometry_lines.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_lines.ts
 @@ -3,11 +3,11 @@ import * as THREE from 'three';
@@ -2375,7 +2375,7 @@ index 5d8d425d..e767acf9 100644
  
      //
  
-@@ -96,14 +96,14 @@ function animate() {
+@@ -97,14 +97,14 @@ function animate() {
      line.rotation.y = time * 0.5;
  
      t += delta * 0.5;
@@ -3865,7 +3865,7 @@ index 572601ac..136a3141 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_geometry_dynamic.ts b/examples-testing/examples/webgl_geometry_dynamic.ts
-index 167d6fbf..98cca781 100644
+index bc2df96c..5f5ef696 100644
 --- a/examples-testing/examples/webgl_geometry_dynamic.ts
 +++ b/examples-testing/examples/webgl_geometry_dynamic.ts
 @@ -5,9 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -3884,7 +3884,7 @@ index 167d6fbf..98cca781 100644
  
  const worldWidth = 128,
      worldDepth = 128;
-@@ -27,7 +31,7 @@ function init() {
+@@ -28,7 +32,7 @@ function init() {
      geometry = new THREE.PlaneGeometry(20000, 20000, worldWidth - 1, worldDepth - 1);
      geometry.rotateX(-Math.PI / 2);
  
@@ -7212,7 +7212,7 @@ index 45361b92..f5d72d3c 100644
                      if (geometry) {
                          const mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgl_loader_texture_dds.ts b/examples-testing/examples/webgl_loader_texture_dds.ts
-index 0a697e1a..6137631b 100644
+index ba9b18e9..d4161ff3 100644
 --- a/examples-testing/examples/webgl_loader_texture_dds.ts
 +++ b/examples-testing/examples/webgl_loader_texture_dds.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three';
@@ -7228,7 +7228,7 @@ index 0a697e1a..6137631b 100644
  
 @@ -111,7 +111,7 @@ function init() {
      const material12 = new THREE.MeshBasicMaterial({ map: map10 });
-     const material13 = new THREE.MeshBasicMaterial({ map: map11 });
+     const material13 = new THREE.MeshBasicMaterial({ map: map11, transparent: true });
  
 -    let mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
 +    let mesh: THREE.Mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
@@ -9378,7 +9378,7 @@ index 2c29e9c0..5e285283 100644
  const radius = 600;
  let theta = 0;
 diff --git a/examples-testing/examples/webgl_morphtargets_sphere.ts b/examples-testing/examples/webgl_morphtargets_sphere.ts
-index 2b889911..8ddf9f4a 100644
+index 4821304f..1c1dc887 100644
 --- a/examples-testing/examples/webgl_morphtargets_sphere.ts
 +++ b/examples-testing/examples/webgl_morphtargets_sphere.ts
 @@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -9402,7 +9402,7 @@ index 2b889911..8ddf9f4a 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
      camera.position.set(0, 5, 5);
-@@ -35,7 +35,7 @@ function init() {
+@@ -36,7 +36,7 @@ function init() {
  
      const loader = new GLTFLoader();
      loader.load('models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
@@ -9411,7 +9411,7 @@ index 2b889911..8ddf9f4a 100644
          mesh.rotation.z = Math.PI / 2;
          scene.add(mesh);
  
-@@ -94,9 +94,9 @@ function render() {
+@@ -95,9 +95,9 @@ function render() {
  
          mesh.rotation.y += step;
  
@@ -13934,7 +13934,7 @@ index baca16cb..b01cd750 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index aa8149e3..f9fd7f00 100644
+index c3c78ca0..d964d0cd 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
 @@ -1,26 +1,32 @@
@@ -13979,7 +13979,7 @@ index aa8149e3..f9fd7f00 100644
  
  init();
  
-@@ -92,7 +98,7 @@ function init() {
+@@ -93,7 +99,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -13988,7 +13988,7 @@ index aa8149e3..f9fd7f00 100644
      if (value === 'stereo') {
          postProcessing.outputNode = stereo;
      } else if (value === 'anaglyph') {
-@@ -111,7 +117,7 @@ function onWindowResize() {
+@@ -112,7 +118,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -16502,7 +16502,7 @@ index e4624db9..0cf7cf09 100644
      }
  });
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
-index dc30eb60..2a156b13 100644
+index ef0e58fb..334ee7ba 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
 @@ -1,4 +1,4 @@
@@ -16860,7 +16860,7 @@ index 1ee744c8..9e213114 100644
  
      scene.add(model);
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 4aeb6e43..738b6580 100644
+index 06bf751e..4e685fb2 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 @@ -1,13 +1,14 @@
@@ -16883,7 +16883,7 @@ index 4aeb6e43..738b6580 100644
  
  const params = {
      sampleLevel: 3,
-@@ -148,7 +149,7 @@ function animate() {
+@@ -149,7 +150,7 @@ function animate() {
          mesh.rotation.y += delta * 0.5;
      }
  
@@ -16892,7 +16892,7 @@ index 4aeb6e43..738b6580 100644
  
      switch (params.clearColor) {
          case 'blue':
-@@ -173,7 +174,7 @@ function animate() {
+@@ -174,7 +175,7 @@ function animate() {
  
      ssaaRenderPass.sampleLevel = params.sampleLevel;
  
@@ -17897,7 +17897,7 @@ index 679ce01a..50b5dadf 100644
      // Material
  
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index feff77f6..ca2a596b 100644
+index 5c4b50dd..6ad89604 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -1,5 +1,5 @@
@@ -17939,7 +17939,7 @@ index feff77f6..ca2a596b 100644
  
          let density = sampleGrain(0.1);
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 23ec92a0..876c0299 100644
+index dfa16d31..a8375617 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -1,5 +1,5 @@
