@@ -29,10 +29,10 @@ interface ParametricGeometries {
     plane: (width: number, height: number) => (u: number, v: number, target: Vector3) => Vector3;
     mobius: (u: number, t: number, target: Vector3) => Vector3;
     mobius3d: (u: number, t: number, target: Vector3) => Vector3;
-    PlaneGeometry: ParametricPlaneGeometry;
-    TorusKnotGeometry: ParametricTorusKnotGeometry;
-    TubeGeometry: ParametricTubeGeometry;
-    SphereGeometry: ParametricSphereGeometry;
+    PlaneGeometry: typeof ParametricPlaneGeometry;
+    TorusKnotGeometry: typeof ParametricTorusKnotGeometry;
+    TubeGeometry: typeof ParametricTubeGeometry;
+    SphereGeometry: typeof ParametricSphereGeometry;
 }
 
 declare const ParametricGeometries: ParametricGeometries;
