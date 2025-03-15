@@ -6,14 +6,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 const INITIAL_CLOUD_SIZE = 128;
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
 let prevTime = performance.now();
-let cloudTexture = null;
+let cloudTexture: THREE.Data3DTexture | null = null;
 
 init();
 
-function generateCloudTexture(size, scaleFactor = 1.0) {
+function generateCloudTexture(size: number, scaleFactor = 1.0) {
     const data = new Uint8Array(size * size * size);
     const scale = (scaleFactor * 10.0) / size;
 
@@ -60,7 +60,7 @@ function init() {
     canvas.width = 1;
     canvas.height = 32;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createLinearGradient(0, 0, 0, 32);
     gradient.addColorStop(0.0, '#014a84');
     gradient.addColorStop(0.5, '#0561a0');
@@ -310,17 +310,17 @@ function animate() {
         const scaleFactor = (Math.random() + 0.5) * 0.5;
         const source = generateCloudTexture(perElementPaddedSize, scaleFactor);
 
-        renderer.copyTextureToTexture(source, cloudTexture, box, position);
+        renderer.copyTextureToTexture(source, cloudTexture!, box, position);
 
         prevTime = time;
 
         curr++;
     }
 
-    mesh.material.uniforms.cameraPos.value.copy(camera.position);
+    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
     // mesh.rotation.y = - performance.now() / 7500;
 
-    mesh.material.uniforms.frame.value++;
+    (mesh.material.uniforms.frame.value as number)++;
 
     renderer.render(scene, camera);
 }

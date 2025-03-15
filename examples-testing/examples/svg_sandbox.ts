@@ -6,9 +6,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
 
 THREE.ColorManagement.enabled = false;
 
-let camera, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer, stats: Stats;
 
-let group;
+let group: THREE.Mesh;
 
 init();
 animate();
@@ -33,9 +33,13 @@ function init() {
 
     const boxGeometry = new THREE.BoxGeometry(100, 100, 100);
 
-    let mesh = new THREE.Mesh(
+    let mesh: THREE.Mesh = new THREE.Mesh(
         boxGeometry,
-        new THREE.MeshBasicMaterial({ color: 0x0000ff, opacity: 0.5, transparent: true }),
+        new THREE.MeshBasicMaterial({
+            color: 0x0000ff,
+            opacity: 0.5,
+            transparent: true,
+        }),
     );
     mesh.position.x = 500;
     mesh.rotation.x = Math.random();
@@ -55,7 +59,10 @@ function init() {
 
     mesh = new THREE.Mesh(
         new THREE.PlaneGeometry(100, 100),
-        new THREE.MeshBasicMaterial({ color: Math.random() * 0xffffff, side: THREE.DoubleSide }),
+        new THREE.MeshBasicMaterial({
+            color: Math.random() * 0xffffff,
+            side: THREE.DoubleSide,
+        }),
     );
     mesh.position.y = -500;
     mesh.scale.x = mesh.scale.y = mesh.scale.z = 2;
@@ -75,7 +82,10 @@ function init() {
     // POLYFIELD
 
     const geometry = new THREE.BufferGeometry();
-    const material = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide });
+    const material = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        side: THREE.DoubleSide,
+    });
 
     const v = new THREE.Vector3();
     const v0 = new THREE.Vector3();
@@ -122,7 +132,9 @@ function init() {
     // SPRITES
 
     for (let i = 0; i < 50; i++) {
-        const material = new THREE.SpriteMaterial({ color: Math.random() * 0xffffff });
+        const material = new THREE.SpriteMaterial({
+            color: Math.random() * 0xffffff,
+        });
         const sprite = new THREE.Sprite(material);
         sprite.position.x = Math.random() * 1000 - 500;
         sprite.position.y = Math.random() * 1000 - 500;
@@ -139,7 +151,7 @@ function init() {
     node.setAttribute('r', '40');
 
     for (let i = 0; i < 50; i++) {
-        const object = new SVGObject(node.cloneNode());
+        const object = new SVGObject(node.cloneNode() as SVGCircleElement);
         object.position.x = Math.random() * 1000 - 500;
         object.position.y = Math.random() * 1000 - 500;
         object.position.z = Math.random() * 1000 - 500;
@@ -152,7 +164,7 @@ function init() {
     fileLoader.load('models/svg/hexagon.svg', function (svg) {
         const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         const parser = new DOMParser();
-        const doc = parser.parseFromString(svg, 'image/svg+xml');
+        const doc = parser.parseFromString(svg as string, 'image/svg+xml');
 
         node.appendChild(doc.documentElement);
 

@@ -1,6 +1,6 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 let isUserInteracting = false,
     lon = 0,
@@ -17,7 +17,7 @@ const distance = 0.5;
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.25, 10);
 
@@ -27,7 +27,7 @@ function init() {
     // invert the geometry on the x-axis so that all of the faces point inward
     geometry.scale(-1, 1, 1);
 
-    const video = document.getElementById('video');
+    const video = document.getElementById('video') as HTMLVideoElement;
     video.play();
 
     const texture = new THREE.VideoTexture(video);
@@ -59,7 +59,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     isUserInteracting = true;
 
     onPointerDownPointerX = event.clientX;
@@ -69,7 +69,7 @@ function onPointerDown(event) {
     onPointerDownLat = lat;
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (isUserInteracting === true) {
         lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
         lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;

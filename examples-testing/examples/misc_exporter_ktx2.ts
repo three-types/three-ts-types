@@ -5,7 +5,14 @@ import { KTX2Exporter } from 'three/addons/exporters/KTX2Exporter.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGLRenderer,
+    exporter: KTX2Exporter,
+    mesh: THREE.Mesh,
+    controls: OrbitControls,
+    renderTarget: THREE.WebGLRenderTarget,
+    dataTexture: THREE.DataTexture;
 
 const params = {
     target: 'pmrem',
@@ -135,7 +142,7 @@ async function exportFile() {
     saveArrayBuffer(result, params.target + '.ktx2');
 }
 
-function saveArrayBuffer(buffer, filename) {
+function saveArrayBuffer(buffer: Uint8Array, filename: string) {
     const blob = new Blob([buffer], { type: 'image/ktx2' });
     const link = document.createElement('a');
 

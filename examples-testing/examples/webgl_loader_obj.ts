@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let object;
+let object: THREE.Group;
 
 init();
 
@@ -28,7 +28,8 @@ function init() {
 
     function loadModel() {
         object.traverse(function (child) {
-            if (child.isMesh) child.material.map = texture;
+            if ((child as THREE.Mesh).isMesh)
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map = texture;
         });
 
         object.position.y = -0.95;
@@ -48,7 +49,7 @@ function init() {
 
     // model
 
-    function onProgress(xhr) {
+    function onProgress(xhr: ProgressEvent) {
         if (xhr.lengthComputable) {
             const percentComplete = (xhr.loaded / xhr.total) * 100;
             console.log('model ' + percentComplete.toFixed(2) + '% downloaded');

@@ -2,11 +2,11 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let points;
+let points: THREE.Points<THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>, THREE.PointsMaterial>;
 
 const particles = 300000;
 let drawCount = 10000;
@@ -15,7 +15,7 @@ init();
 animate();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -37,7 +37,7 @@ function init() {
 
     //
 
-    const geometry = new THREE.BufferGeometry();
+    const geometry = new THREE.BufferGeometry<THREE.NormalOrGLBufferAttributes>();
 
     const positions = [];
     const positions2 = [];
@@ -71,15 +71,15 @@ function init() {
 
     const gl = renderer.getContext();
 
-    const pos = gl.createBuffer();
+    const pos = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, pos);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-    const pos2 = gl.createBuffer();
+    const pos2 = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, pos2);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions2), gl.STATIC_DRAW);
 
-    const rgb = gl.createBuffer();
+    const rgb = gl.createBuffer()!;
     gl.bindBuffer(gl.ARRAY_BUFFER, rgb);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 

@@ -1,9 +1,9 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 render();
@@ -31,7 +31,7 @@ function init() {
 
     // create function
 
-    const computeTexture = Fn(({ storageTexture }) => {
+    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
         const posX = instanceIndex.modInt(width);
         const posY = instanceIndex.div(width);
         const indexUV = uvec2(posX, posY);

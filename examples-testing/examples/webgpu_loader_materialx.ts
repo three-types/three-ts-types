@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
-import { OrbitControls } from './jsm/controls/OrbitControls.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-import { RGBELoader } from './jsm/loaders/RGBELoader.js';
-import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-import { MaterialXLoader } from './jsm/loaders/MaterialXLoader.js';
+import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
 
 const SAMPLE_PATH =
     'https://raw.githubusercontent.com/materialx/MaterialX/main/resources/Materials/Examples/StandardSurface/';
@@ -34,8 +34,8 @@ const samples = [
     'standard_surface_wood_tiled.mtlx',
 ];
 
-let camera, scene, renderer, prefab;
-const models = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, prefab: THREE.Group;
+const models: THREE.Group[] = [];
 
 init();
 
@@ -98,7 +98,7 @@ function updateModelsAlign() {
     }
 }
 
-async function addSample(sample) {
+async function addSample(sample: string) {
     const model = prefab.clone();
 
     models.push(model);
@@ -112,12 +112,12 @@ async function addSample(sample) {
     const material = await new MaterialXLoader()
         .setPath(SAMPLE_PATH)
         .loadAsync(sample)
-        .then(({ materials }) => Object.values(materials).pop());
+        .then(({ materials }) => Object.values(materials).pop()!);
 
-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
+    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
     calibrationMesh.material = material;
 
-    const Preview_Mesh = model.getObjectByName('Preview_Mesh');
+    const Preview_Mesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
     Preview_Mesh.material = material;
 }
 

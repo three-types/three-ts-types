@@ -22,17 +22,20 @@ const params = {
     exposure: 1,
 };
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let mesh, material;
+let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>, material: THREE.MeshPhysicalMaterial;
 
 const hdrEquirect = new RGBELoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function () {
     hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
 
     new GLTFLoader().setPath('models/gltf/').load('DragonAttenuation.glb', function (gltf) {
         gltf.scene.traverse(function (child) {
-            if (child.isMesh && child.material.isMeshPhysicalMaterial) {
-                mesh = child;
+            if (
+                (child as THREE.Mesh).isMesh &&
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.isMeshPhysicalMaterial
+            ) {
+                mesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>;
                 material = mesh.material;
 
                 const color = new THREE.Color();
@@ -74,7 +77,7 @@ function init() {
 
     // accommodate CSS table
     renderer.domElement.style.position = 'absolute';
-    renderer.domElement.style.top = 0;
+    renderer.domElement.style.top = '0';
 
     scene = new THREE.Scene();
 

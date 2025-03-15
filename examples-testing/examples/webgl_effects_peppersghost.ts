@@ -2,10 +2,10 @@ import * as THREE from 'three';
 
 import { PeppersGhostEffect } from 'three/addons/effects/PeppersGhostEffect.js';
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer, effect;
-let group;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, effect: PeppersGhostEffect;
+let group: THREE.Group;
 
 init();
 

@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-let container, stats;
+let container: HTMLDivElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let pointLight;
 
@@ -65,7 +65,7 @@ function init() {
 
     objLoader.setPath('models/obj/walt/');
     objLoader.load('WaltHead.obj', function (object) {
-        const head = object.children[0];
+        const head = object.children[0] as THREE.Mesh;
         head.scale.setScalar(0.1);
         head.position.y = -3;
         head.material = cubeMaterial1;

@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { normalWorld, uniform, pmremTexture } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 

@@ -1,12 +1,12 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { texture, uniform, saturation, hue } from 'three/tsl';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 const mouse = new THREE.Vector2();
 
-let quadMesh, renderTarget;
+let quadMesh: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
 
-let box;
+let box: THREE.Mesh;
 
 const dpr = window.devicePixelRatio;
 
@@ -61,7 +61,7 @@ function init() {
     quadMesh = new THREE.QuadMesh(materialFX);
 }
 
-function onWindowMouseMove(e) {
+function onWindowMouseMove(e: MouseEvent) {
     mouse.x = e.offsetX / window.innerWidth;
     mouse.y = e.offsetY / window.innerHeight;
 }

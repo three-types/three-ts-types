@@ -1,12 +1,18 @@
-import * as THREE from 'three';
-import { nodeObject, uniform } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import { nodeObject, uniform, ShaderNodeObject } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 class OcclusionNode extends THREE.Node {
-    constructor(testObject, normalColor, occludedColor) {
+    uniformNode: ShaderNodeObject<THREE.UniformNode<THREE.Color>>;
+
+    testObject: THREE.Mesh;
+    normalColor: THREE.Color;
+    occludedColor: THREE.Color;
+
+    constructor(testObject: THREE.Mesh, normalColor: THREE.Color, occludedColor: THREE.Color) {
         super('vec3');
 
         this.updateType = THREE.NodeUpdateType.OBJECT;
@@ -18,8 +24,8 @@ class OcclusionNode extends THREE.Node {
         this.occludedColor = occludedColor;
     }
 
-    async update(frame) {
-        const isOccluded = frame.renderer.isOccluded(this.testObject);
+    async update(frame: THREE.NodeFrame) {
+        const isOccluded = frame.renderer!.isOccluded(this.testObject);
 
         this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
     }

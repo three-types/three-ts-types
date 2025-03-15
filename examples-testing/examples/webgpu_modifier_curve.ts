@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import { Flow } from 'three/addons/modifiers/CurveModifierGPU.js';
@@ -7,17 +7,17 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 const ACTION_SELECT = 1,
     ACTION_NONE = 0;
-const curveHandles = [];
+const curveHandles: THREE.Object3D[] = [];
 const mouse = new THREE.Vector2();
 
-let stats;
-let scene,
-    camera,
-    renderer,
-    rayCaster,
-    control,
-    flow,
-    action = ACTION_NONE;
+let stats: Stats;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGPURenderer,
+    rayCaster: THREE.Raycaster,
+    control: TransformControls,
+    flow: Flow,
+    action: typeof ACTION_SELECT | typeof ACTION_NONE = ACTION_NONE;
 
 init();
 
@@ -128,7 +128,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     action = ACTION_SELECT;
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { pass, renderOutput } from 'three/tsl';
 import { sobel } from 'three/addons/tsl/display/SobelOperatorNode.js';
 
@@ -8,8 +8,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, controls;
-let postProcessing;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let postProcessing: THREE.PostProcessing;
 
 const params = {
     enabled: true,
@@ -27,7 +27,7 @@ async function init() {
 
     const loader = new GLTFLoader();
     const gltf = await loader.loadAsync('models/gltf/DragonAttenuation.glb');
-    const model = gltf.scene.children[1];
+    const model = gltf.scene.children[1] as THREE.Mesh;
     model.material = new THREE.MeshStandardNodeMaterial();
 
     scene.add(model);

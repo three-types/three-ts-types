@@ -2,11 +2,16 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let renderer, scene, camera, stats;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
 
-let sphere, uniforms;
+let sphere: THREE.Mesh,
+    uniforms: {
+        amplitude: THREE.IUniform<number>;
+        color: THREE.IUniform<THREE.Color>;
+        colorTexture: THREE.IUniform<THREE.Texture>;
+    };
 
-let displacement, noise;
+let displacement: Float32Array, noise: Float32Array;
 
 init();
 
@@ -27,8 +32,8 @@ function init() {
 
     const shaderMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexshader').textContent,
-        fragmentShader: document.getElementById('fragmentshader').textContent,
+        vertexShader: document.getElementById('vertexshader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
     });
 
     const radius = 50,
@@ -54,7 +59,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
     container.appendChild(renderer.domElement);
 
     stats = new Stats();

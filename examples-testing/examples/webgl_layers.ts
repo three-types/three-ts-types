@@ -3,8 +3,8 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let container, stats;
-let camera, scene, renderer;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let theta = 0;
 const radius = 5;

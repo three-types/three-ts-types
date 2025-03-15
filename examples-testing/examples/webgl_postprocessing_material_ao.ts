@@ -10,7 +10,12 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { MeshPostProcessingMaterial } from 'three/addons/materials/MeshPostProcessingMaterial.js';
 
-let renderer, camera, scene, composer, controls, stats;
+let renderer: THREE.WebGLRenderer,
+    camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    composer: EffectComposer,
+    controls: OrbitControls,
+    stats: Stats;
 const sceneParameters = {
     output: 0,
     envMapIntensity: 1.0,
@@ -218,7 +223,7 @@ function init() {
         .max(100)
         .step(1)
         .onChange(() => {
-            lightGroup.children.forEach(light => (light.intensity = sceneParameters.lightIntensity));
+            lightGroup.children.forEach(light => ((light as THREE.Light).intensity = sceneParameters.lightIntensity));
         });
     gui.add(sceneParameters, 'shadow').onChange(value => {
         renderer.shadowMap.enabled = value;

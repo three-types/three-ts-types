@@ -1,17 +1,27 @@
-import * as THREE from 'three';
-import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, color } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import {
+    Fn,
+    uniform,
+    instanceIndex,
+    instancedArray,
+    float,
+    texture,
+    screenUV,
+    color,
+    ShaderNodeObject,
+} from 'three/tsl';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
-let computeNode;
-let waveBuffer, sampleRate;
-let waveArray;
-let currentAudio, currentAnalyser;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let computeNode: ShaderNodeObject<THREE.ComputeNode>;
+let waveBuffer: Float32Array, sampleRate: number;
+let waveArray: ShaderNodeObject<THREE.StorageBufferNode>;
+let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
 const analyserBuffer = new Uint8Array(1024);
-let analyserTexture;
+let analyserTexture: THREE.DataTexture;
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', init);
 
 async function playAudioBuffer() {
@@ -46,7 +56,7 @@ async function playAudioBuffer() {
 }
 
 async function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
     // audio buffer
@@ -92,7 +102,7 @@ async function init() {
 
         const time = index.mul(pitch);
 
-        let wave = originalWave.element(time);
+        let wave: ShaderNodeObject<THREE.Node> = originalWave.element(time);
 
         // delay
 

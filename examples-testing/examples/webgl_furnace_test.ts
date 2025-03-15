@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let scene, camera, renderer, radianceMap;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, radianceMap: THREE.Texture;
 
 const COLOR = 0xcccccc;
 
@@ -20,7 +20,8 @@ function init() {
 
     document.body.addEventListener('mouseover', function () {
         scene.traverse(function (child) {
-            if (child.isMesh) child.material.color.setHex(0xffffff);
+            if ((child as THREE.Mesh).isMesh)
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xffffff);
         });
 
         render();
@@ -28,7 +29,8 @@ function init() {
 
     document.body.addEventListener('mouseout', function () {
         scene.traverse(function (child) {
-            if (child.isMesh) child.material.color.setHex(0xccccff); // tinted for visibility
+            if ((child as THREE.Mesh).isMesh)
+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xccccff); // tinted for visibility
         });
 
         render();

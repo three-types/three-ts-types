@@ -3,9 +3,9 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
 
-let camera, scene, renderer;
-let controller;
-let defaultEnvironment;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let controller: THREE.XRTargetRaySpace;
+let defaultEnvironment: THREE.DataTexture;
 
 init();
 

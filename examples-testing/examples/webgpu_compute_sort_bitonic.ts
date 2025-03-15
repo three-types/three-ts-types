@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import {
     storage,
     If,
@@ -21,6 +21,7 @@ import {
     atomicAdd,
     atomicStore,
     workgroupId,
+    ShaderNodeObject,
 } from 'three/tsl';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -38,8 +39,8 @@ const StepType = {
 };
 
 const timestamps = {
-    local_swap: document.getElementById('local_swap'),
-    global_swap: document.getElementById('global_swap'),
+    local_swap: document.getElementById('local_swap')!,
+    global_swap: document.getElementById('global_swap')!,
 };
 
 const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
@@ -148,7 +149,7 @@ async function init(forceGlobalSwap = false) {
         .setPBO(true)
         .label('RandomizedElements');
 
-    const getFlipIndices = (index, blockHeight) => {
+    const getFlipIndices = (index: ShaderNodeObject<THREE.IndexNode>, blockHeight: ShaderNodeObject<THREE.VarNode>) => {
         const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
         const halfHeight = blockHeight.div(2);
         const idx = uvec2(index.modInt(halfHeight), blockHeight.sub(index.modInt(halfHeight)).sub(1));
@@ -158,7 +159,10 @@ async function init(forceGlobalSwap = false) {
         return idx;
     };
 
-    const getDisperseIndices = (index, blockHeight) => {
+    const getDisperseIndices = (
+        index: ShaderNodeObject<THREE.IndexNode>,
+        blockHeight: ShaderNodeObject<THREE.VarNode>,
+    ) => {
         const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
         const halfHeight = blockHeight.div(2);
         const idx = uvec2(index.modInt(halfHeight), index.modInt(halfHeight).add(halfHeight));
@@ -172,7 +176,7 @@ async function init(forceGlobalSwap = false) {
     const localStorage = workgroupArray('uint', 64 * 2);
 
     // Swap the elements in local storage
-    const localCompareAndSwap = (idxBefore, idxAfter) => {
+    const localCompareAndSwap = (idxBefore: ShaderNodeObject<THREE.Node>, idxAfter: ShaderNodeObject<THREE.Node>) => {
         If(localStorage.element(idxAfter).lessThan(localStorage.element(idxBefore)), () => {
             atomicAdd(counterStorage.element(0), 1);
             const temp = localStorage.element(idxBefore).toVar();
@@ -181,7 +185,7 @@ async function init(forceGlobalSwap = false) {
         });
     };
 
-    const globalCompareAndSwap = (idxBefore, idxAfter) => {
+    const globalCompareAndSwap = (idxBefore: ShaderNodeObject<THREE.Node>, idxAfter: ShaderNodeObject<THREE.Node>) => {
         // If the later element is less than the current element
         If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
             // Apply the swapped values to temporary storage.
@@ -409,7 +413,7 @@ async function init(forceGlobalSwap = false) {
         renderer.resolveTimestampsAsync(THREE.TimestampQuery.COMPUTE);
 
         const algo = new Uint32Array(await renderer.getArrayBufferAsync(nextAlgoBuffer));
-        algo > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
+        (algo as unknown as number) > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
         const totalSwaps = new Uint32Array(await renderer.getArrayBufferAsync(counterBuffer));
 
         renderer.render(scene, camera);

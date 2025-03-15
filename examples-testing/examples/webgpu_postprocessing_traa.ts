@@ -1,11 +1,14 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { mrt, output, velocity } from 'three/tsl';
 import { traaPass } from 'three/addons/tsl/display/TRAAPassNode.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, postProcessing;
-let stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing;
+let stats: Stats;
 let index = 0;
 
 init();

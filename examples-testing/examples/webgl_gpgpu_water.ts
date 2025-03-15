@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
+import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
 import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
 
 // Texture width for simulation
@@ -13,25 +13,25 @@ const WIDTH = 128;
 const BOUNDS = 512;
 const BOUNDS_HALF = BOUNDS * 0.5;
 
-let container, stats;
-let camera, scene, renderer;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 let mouseMoved = false;
 const mouseCoords = new THREE.Vector2();
 const raycaster = new THREE.Raycaster();
 
-let waterMesh;
-let meshRay;
-let gpuCompute;
-let heightmapVariable;
-let waterUniforms;
-let smoothShader;
-let readWaterLevelShader;
-let readWaterLevelRenderTarget;
-let readWaterLevelImage;
+let waterMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
+let meshRay: THREE.Mesh;
+let gpuCompute: GPUComputationRenderer;
+let heightmapVariable: Variable;
+let waterUniforms: Record<string, THREE.IUniform>;
+let smoothShader: THREE.ShaderMaterial;
+let readWaterLevelShader: THREE.ShaderMaterial;
+let readWaterLevelRenderTarget: THREE.WebGLRenderTarget;
+let readWaterLevelImage: Uint8Array;
 const waterNormal = new THREE.Vector3();
 
 const NUM_SPHERES = 5;
-const spheres = [];
+const spheres: THREE.Mesh[] = [];
 let spheresEnabled = true;
 
 const simplex = new SimplexNoise();
@@ -127,7 +127,7 @@ function initWater() {
                 heightmap: { value: null },
             },
         ]),
-        vertexShader: document.getElementById('waterVertexShader').textContent,
+        vertexShader: document.getElementById('waterVertexShader')!.textContent!,
         fragmentShader: THREE.ShaderChunk['meshphong_frag'],
     });
 
@@ -171,7 +171,7 @@ function initWater() {
 
     heightmapVariable = gpuCompute.addVariable(
         'heightmap',
-        document.getElementById('heightmapFragmentShader').textContent,
+        document.getElementById('heightmapFragmentShader')!.textContent!,
         heightmap0,
     );
 
@@ -189,13 +189,13 @@ function initWater() {
     }
 
     // Create compute shader to smooth the water surface and velocity
-    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, {
+    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader')!.textContent!, {
         smoothTexture: { value: null },
     });
 
     // Create compute shader to read water level
     readWaterLevelShader = gpuCompute.createShaderMaterial(
-        document.getElementById('readWaterLevelFragmentShader').textContent,
+        document.getElementById('readWaterLevelFragmentShader')!.textContent!,
         {
             point1: { value: new THREE.Vector2() },
             levelTexture: { value: null },
@@ -218,10 +218,10 @@ function initWater() {
     });
 }
 
-function fillTexture(texture) {
+function fillTexture(texture: THREE.DataTexture) {
     const waterMaxHeight = 10;
 
-    function noise(x, y) {
+    function noise(x: number, y: number) {
         let multR = waterMaxHeight;
         let mult = 0.025;
         let r = 0;
@@ -234,7 +234,7 @@ function fillTexture(texture) {
         return r;
     }
 
-    const pixels = texture.image.data;
+    const pixels = texture.image.data as Float32Array;
 
     let p = 0;
     for (let j = 0; j < WIDTH; j++) {
@@ -346,12 +346,12 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function setMouseCoords(x, y) {
+function setMouseCoords(x: number, y: number) {
     mouseCoords.set((x / renderer.domElement.clientWidth) * 2 - 1, -(y / renderer.domElement.clientHeight) * 2 + 1);
     mouseMoved = true;
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     setMouseCoords(event.clientX, event.clientY);

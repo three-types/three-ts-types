@@ -8,11 +8,11 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { HalftonePass } from 'three/addons/postprocessing/HalftonePass.js';
 
-let renderer, clock, camera, stats;
+let renderer: THREE.WebGLRenderer, clock: THREE.Clock, camera: THREE.PerspectiveCamera, stats: Stats;
 
 const rotationSpeed = Math.PI / 64;
 
-let composer, group;
+let composer: EffectComposer, group: THREE.Group;
 
 init();
 

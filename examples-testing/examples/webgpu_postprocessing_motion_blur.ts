@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { pass, texture, uniform, output, mrt, mix, velocity, uv, screenUV } from 'three/tsl';
 import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js';
 
@@ -10,11 +10,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer;
-let boxLeft, boxRight, model, mixer, clock;
-let postProcessing;
-let controls;
-let stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let boxLeft: THREE.Mesh, boxRight: THREE.Mesh, model: THREE.Group, mixer: THREE.AnimationMixer, clock: THREE.Clock;
+let postProcessing: THREE.PostProcessing;
+let controls: OrbitControls;
+let stats: Stats;
 
 const params = {
     speed: 1.0,
@@ -60,7 +60,7 @@ function init() {
         model.rotation.y = Math.PI / 2;
 
         model.traverse(function (child) {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
             }

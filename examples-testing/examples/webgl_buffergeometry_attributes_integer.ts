@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, mesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
 
 init();
 
@@ -65,7 +65,7 @@ function init() {
     geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
     geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
     geometry.setAttribute('textureIndex', new THREE.Int16BufferAttribute(textureIndices, 1));
-    geometry.attributes.textureIndex.gpuType = THREE.IntType;
+    (geometry.attributes.textureIndex as THREE.BufferAttribute).gpuType = THREE.IntType;
 
     geometry.computeBoundingSphere();
 

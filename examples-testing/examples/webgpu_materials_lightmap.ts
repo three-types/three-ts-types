@@ -1,12 +1,12 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { vec4, color, positionLocal, mix } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container, stats;
-let camera, scene, renderer;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 

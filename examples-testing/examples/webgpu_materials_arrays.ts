@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer, scene, camera, controls;
-let planeMesh, boxMesh, boxMeshWireframe, planeMeshWireframe;
-let materials;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let planeMesh: THREE.Mesh, boxMesh: THREE.Mesh, boxMeshWireframe: THREE.Mesh, planeMeshWireframe: THREE.Mesh;
+let materials: THREE.MeshBasicMaterial[];
 
 const api = {
     webgpu: true,

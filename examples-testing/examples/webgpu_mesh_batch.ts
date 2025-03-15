@@ -1,19 +1,19 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { radixSort } from 'three/addons/utils/SortUtils.js';
+import { radixSort, RadixSortOptions } from 'three/addons/utils/SortUtils.js';
 
 import { transformedNormalView, directionToColor, diffuseColor } from 'three/tsl';
 
-let camera, scene, renderer;
-let controls, stats;
-let gui;
-let geometries, mesh, material;
-const ids = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls, stats: Stats;
+let gui: GUI;
+let geometries: THREE.BufferGeometry[], mesh: THREE.BatchedMesh, material: THREE.MeshBasicNodeMaterial;
+const ids: number[] = [];
 
 const matrix = new THREE.Matrix4();
 
@@ -48,7 +48,7 @@ init();
 
 //
 
-function randomizeMatrix(matrix) {
+function randomizeMatrix(matrix: THREE.Matrix4) {
     position.x = Math.random() * 40 - 20;
     position.y = Math.random() * 40 - 20;
     position.z = Math.random() * 40 - 20;
@@ -64,7 +64,7 @@ function randomizeMatrix(matrix) {
     return matrix.compose(position, quaternion, scale);
 }
 
-function randomizeRotationSpeed(rotation) {
+function randomizeRotationSpeed(rotation: THREE.Euler) {
     rotation.x = Math.random() * 0.01;
     rotation.y = Math.random() * 0.01;
     rotation.z = Math.random() * 0.01;
@@ -90,7 +90,7 @@ function createMaterial() {
 
 function cleanup() {
     if (mesh) {
-        mesh.parent.remove(mesh);
+        mesh.parent!.remove(mesh);
 
         if (mesh.dispose) {
             mesh.dispose();
@@ -254,18 +254,26 @@ function init(forceWebGL = false) {
 
 //
 
-function sortFunction(list, camera) {
+type BatchedMeshWithOptions = THREE.BatchedMesh & {
+    _options?: RadixSortOptions<{ start: number; count: number; z: number }>;
+};
+
+function sortFunction(
+    this: THREE.BatchedMesh,
+    list: { start: number; count: number; z: number }[],
+    camera: THREE.Camera,
+) {
     // initialize options
-    this._options = this._options || {
+    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
         get: el => el.z,
         aux: new Array(this.maxInstanceCount),
     };
 
-    const options = this._options;
+    const options = (this as BatchedMeshWithOptions)._options!;
     options.reversed = this.material.transparent;
 
     // convert depth to unsigned 32 bit range
-    const factor = (2 ** 32 - 1) / camera.far; // UINT32_MAX / max_depth
+    const factor = (2 ** 32 - 1) / (camera as THREE.PerspectiveCamera).far; // UINT32_MAX / max_depth
     for (let i = 0, l = list.length; i < l; i++) {
         list[i].z *= factor;
     }

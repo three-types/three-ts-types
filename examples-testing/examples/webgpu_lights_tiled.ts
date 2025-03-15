@@ -1,8 +1,9 @@
-import * as THREE from 'three';
-import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import { texture, uv, pass, normalMap, uniform, ShaderNodeObject } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
 import { TiledLighting } from 'three/addons/lighting/TiledLighting.js';
+import TiledLightsNode from 'three/addons/tsl/lighting/TiledLightsNode.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -12,18 +13,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera,
-    scene,
-    renderer,
-    lights,
-    lightDummy,
-    stats,
-    controls,
-    compose,
-    tileInfluence,
-    lighting,
-    count,
-    postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    lights: THREE.Group,
+    lightDummy: THREE.InstancedMesh,
+    stats: Stats,
+    controls: OrbitControls,
+    compose: ShaderNodeObject<THREE.Node>,
+    tileInfluence: ShaderNodeObject<THREE.UniformNode<number>>,
+    lighting: TiledLighting,
+    count: number,
+    postProcessing: THREE.PostProcessing;
 
 init();
 
@@ -55,7 +56,7 @@ function init() {
     lights = new THREE.Group();
     scene.add(lights);
 
-    const addLight = (hexColor, power = 10, distance = 3) => {
+    const addLight = (hexColor: THREE.ColorRepresentation, power = 10, distance = 3) => {
         const light = new THREE.PointLight(hexColor, 1, distance);
         light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
         light.power = power;
@@ -156,8 +157,7 @@ function init() {
 function updatePostProcessing() {
     // tile indexes debug, needs to be updated every time the renderer size changes
 
-    const debugBlockIndexes = lighting
-        .getNode(scene, camera)
+    const debugBlockIndexes = (lighting.getNode(scene, camera) as TiledLightsNode)
         .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio)
         .getBlock()
         .toColor()

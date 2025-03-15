@@ -1,7 +1,7 @@
-import * as THREE from 'three';
-import { pass, mrt, output, normalView } from 'three/tsl';
-import { ao } from 'three/addons/tsl/display/GTAONode.js';
-import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
+import * as THREE from 'three/webgpu';
+import { pass, mrt, output, normalView, ShaderNodeObject } from 'three/tsl';
+import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
+import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -11,9 +11,18 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, postProcessing, controls, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    controls: OrbitControls,
+    stats: Stats;
 
-let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
+let aoPass: ShaderNodeObject<GTAONode>,
+    denoisePass: ShaderNodeObject<DenoiseNode>,
+    blendPassAO: ShaderNodeObject<THREE.Node>,
+    blendPassDenoise: ShaderNodeObject<THREE.Node>,
+    scenePassColor: ShaderNodeObject<THREE.TextureNode>;
 
 const params = {
     distanceExponent: 1,
@@ -118,7 +127,8 @@ async function init() {
         // first place. Besides, normal estimation is computationally more expensive than just sampling a
         // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
 
-        if (o.material) o.material.depthWrite = true;
+        if ((o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
+            (o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.depthWrite = true;
     });
 
     window.addEventListener('resize', onWindowResize);

@@ -4,12 +4,12 @@ import TWEEN from 'three/addons/libs/tween.module.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DSprite } from 'three/addons/renderers/CSS3DRenderer.js';
 
-let camera, scene, renderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: CSS3DRenderer;
+let controls: TrackballControls;
 
 const particlesTotal = 512;
-const positions = [];
-const objects = [];
+const positions: number[] = [];
+const objects: CSS3DSprite[] = [];
 let current = 0;
 
 init();
@@ -25,7 +25,7 @@ function init() {
     const image = document.createElement('img');
     image.addEventListener('load', function () {
         for (let i = 0; i < particlesTotal; i++) {
-            const object = new CSS3DSprite(image.cloneNode());
+            const object = new CSS3DSprite(image.cloneNode() as typeof image);
             (object.position.x = Math.random() * 4000 - 2000),
                 (object.position.y = Math.random() * 4000 - 2000),
                 (object.position.z = Math.random() * 4000 - 2000);
@@ -93,7 +93,7 @@ function init() {
 
     renderer = new CSS3DRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
-    document.getElementById('container').appendChild(renderer.domElement);
+    document.getElementById('container')!.appendChild(renderer.domElement);
 
     //
 
@@ -131,7 +131,7 @@ function transition() {
             .start();
     }
 
-    new TWEEN.Tween(this)
+    new TWEEN.Tween({})
         .to({}, duration * 3)
         .onComplete(transition)
         .start();

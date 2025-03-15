@@ -1,6 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
-let camera, scene, renderer, clock, dataTexture, diffuseMap;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    clock: THREE.Clock,
+    dataTexture: THREE.DataTexture,
+    diffuseMap: THREE.Texture;
 
 let last = 0;
 const position = new THREE.Vector2();
@@ -78,9 +83,9 @@ async function animate() {
     }
 }
 
-function updateDataTexture(texture) {
+function updateDataTexture(texture: THREE.DataTexture) {
     const size = texture.image.width * texture.image.height;
-    const data = texture.image.data;
+    const data = texture.image.data as Uint8Array;
 
     // generate a random color and update texture data
 

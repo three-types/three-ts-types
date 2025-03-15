@@ -3,11 +3,11 @@ import * as THREE from 'three';
 import { Timer } from 'three/addons/misc/Timer.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats, timer;
+let container: HTMLElement, stats: Stats, timer: Timer;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let line;
+let line: THREE.Line;
 
 const segments = 10000;
 const r = 800;
@@ -16,7 +16,7 @@ let t = 0;
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -97,14 +97,14 @@ function animate() {
     line.rotation.y = time * 0.5;
 
     t += delta * 0.5;
-    line.morphTargetInfluences[0] = Math.abs(Math.sin(t));
+    line.morphTargetInfluences![0] = Math.abs(Math.sin(t));
 
     renderer.render(scene, camera);
 
     stats.update();
 }
 
-function generateMorphTargets(geometry) {
+function generateMorphTargets(geometry: THREE.BufferGeometry) {
     const data = [];
 
     for (let i = 0; i < segments; i++) {

@@ -1,6 +1,10 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, mesh, target;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    mesh: THREE.Mesh,
+    target: THREE.Mesh;
 
 const spherical = new THREE.Spherical();
 const rotationMatrix = new THREE.Matrix4();

@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import {
     color,
     positionWorld,
@@ -20,8 +20,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let mixer, clock;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let mixer: THREE.AnimationMixer, clock: THREE.Clock;
 
 init();
 
@@ -127,13 +127,13 @@ function init() {
     };
 
     const gui = new GUI();
-    const options = { material: 'blurred' };
+    const options: { material: keyof typeof materials } = { material: 'blurred' };
 
     box.material = materials[options.material];
 
     gui.add(box.scale, 'x', 0.1, 2, 0.01);
     gui.add(box.scale, 'z', 0.1, 2, 0.01);
-    gui.add(options, 'material', Object.keys(materials)).onChange(name => {
+    gui.add(options, 'material', Object.keys(materials) as (keyof typeof materials)[]).onChange(name => {
         box.material = materials[name];
     });
 }

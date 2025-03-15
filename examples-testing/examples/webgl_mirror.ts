@@ -3,18 +3,18 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let cameraControls;
+let cameraControls: OrbitControls;
 
-let sphereGroup, smallSphere;
+let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
 
-let groundMirror, verticalMirror;
+let groundMirror: Reflector, verticalMirror: Reflector;
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     // renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });

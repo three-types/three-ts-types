@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute, ShaderNodeObject } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -27,7 +27,7 @@ scene.background = new THREE.Color(0x00001f);
 camera.position.set(1, 1, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let computeDrawBuffer, computeInitDrawBuffer;
+let computeDrawBuffer: ShaderNodeObject<THREE.ComputeNode>, computeInitDrawBuffer: ShaderNodeObject<THREE.ComputeNode>;
 
 init();
 

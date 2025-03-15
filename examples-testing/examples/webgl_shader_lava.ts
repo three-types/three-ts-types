@@ -5,14 +5,22 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { BloomPass } from 'three/addons/postprocessing/BloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera, renderer, composer, clock;
+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, composer: EffectComposer, clock: THREE.Clock;
 
-let uniforms, mesh;
+let uniforms: {
+        fogDensity: THREE.IUniform<number>;
+        fogColor: THREE.IUniform<THREE.Vector3>;
+        time: THREE.IUniform<number>;
+        uvScale: THREE.IUniform<THREE.Vector2>;
+        texture1: THREE.IUniform<THREE.Texture>;
+        texture2: THREE.IUniform<THREE.Texture>;
+    },
+    mesh: THREE.Mesh;
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(35, window.innerWidth / window.innerHeight, 1, 3000);
     camera.position.z = 4;
@@ -44,8 +52,8 @@ function init() {
 
     const material = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
     });
 
     mesh = new THREE.Mesh(new THREE.TorusGeometry(size, 0.3, 30, 30), material);

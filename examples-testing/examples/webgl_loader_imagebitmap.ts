@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
-let group, cubes;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let group: THREE.Group, cubes: THREE.Group;
 
 init();
 
@@ -42,7 +42,7 @@ function addImage() {
 
 const geometry = new THREE.BoxGeometry();
 
-function addCube(material) {
+function addCube(material: THREE.MeshBasicMaterial) {
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
     cube.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);

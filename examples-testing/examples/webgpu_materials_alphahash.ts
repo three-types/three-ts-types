@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -7,7 +7,14 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 
-let camera, scene, renderer, controls, stats, mesh, material, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    stats: Stats,
+    mesh: THREE.InstancedMesh,
+    material: THREE.MeshStandardMaterial,
+    postProcessing: THREE.PostProcessing;
 
 const amount = parseInt(window.location.search.slice(1)) || 3;
 const count = Math.pow(amount, 3);

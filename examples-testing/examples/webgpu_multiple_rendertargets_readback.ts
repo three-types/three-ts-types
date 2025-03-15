@@ -1,12 +1,30 @@
-import * as THREE from 'three';
-import { mix, step, texture, screenUV, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import {
+    mix,
+    step,
+    texture,
+    screenUV,
+    mrt,
+    output,
+    transformedNormalWorld,
+    uv,
+    vec2,
+    ShaderNodeObject,
+} from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, torus;
-let quadMesh, sceneMRT, renderTarget, readbackTarget, material, readbackMaterial, pixelBuffer, pixelBufferTexture;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
+let quadMesh: THREE.QuadMesh,
+    sceneMRT: ShaderNodeObject<THREE.MRTNode>,
+    renderTarget: THREE.RenderTarget,
+    readbackTarget: THREE.RenderTarget,
+    material: THREE.NodeMaterial,
+    readbackMaterial: THREE.MeshBasicNodeMaterial,
+    pixelBuffer: Uint8Array,
+    pixelBufferTexture: THREE.DataTexture;
 
 const gui = new GUI();
 
@@ -109,7 +127,7 @@ function onWindowResize() {
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
 }
 
-async function render(time) {
+async function render(time: number) {
     const selection = options.selection;
 
     torus.rotation.y = (time / 1000) * 0.4;
@@ -143,12 +161,26 @@ async function readback() {
     const selection = options.selection;
 
     if (selection === 'diffuse') {
-        pixelBuffer = await renderer.readRenderTargetPixelsAsync(readbackTarget, 0, 0, width, height, 0); // zero is optional
+        pixelBuffer = (await renderer.readRenderTargetPixelsAsync(
+            readbackTarget,
+            0,
+            0,
+            width,
+            height,
+            0,
+        )) as Uint8Array; // zero is optional
 
         pixelBufferTexture.image.data = pixelBuffer;
         pixelBufferTexture.needsUpdate = true;
     } else if (selection === 'normal') {
-        pixelBuffer = await renderer.readRenderTargetPixelsAsync(readbackTarget, 0, 0, width, height, 1);
+        pixelBuffer = (await renderer.readRenderTargetPixelsAsync(
+            readbackTarget,
+            0,
+            0,
+            width,
+            height,
+            1,
+        )) as Uint8Array;
 
         pixelBufferTexture.image.data = pixelBuffer;
         pixelBufferTexture.needsUpdate = true;

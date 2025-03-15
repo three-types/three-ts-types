@@ -1,10 +1,10 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
 import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
 import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
 
-let camera, renderer, postProcessing;
-let object;
+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
+let object: THREE.Object3D;
 
 init();
 

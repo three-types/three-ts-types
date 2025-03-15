@@ -5,19 +5,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Lut } from 'three/addons/math/Lut.js';
 
-let container;
+let container: HTMLElement;
 
-let perpCamera, orthoCamera, renderer, lut;
+let perpCamera: THREE.PerspectiveCamera, orthoCamera: THREE.OrthographicCamera, renderer: THREE.WebGLRenderer, lut: Lut;
 
-let mesh, sprite;
-let scene, uiScene;
+let mesh: THREE.Mesh, sprite: THREE.Sprite;
+let scene: THREE.Scene, uiScene: THREE.Scene;
 
-let params;
+let params: { colorMap: string };
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
@@ -41,7 +41,7 @@ function init() {
             map: new THREE.CanvasTexture(lut.createCanvas()),
         }),
     );
-    sprite.material.map.colorSpace = THREE.SRGBColorSpace;
+    sprite.material.map!.colorSpace = THREE.SRGBColorSpace;
     sprite.scale.x = 0.125;
     uiScene.add(sprite);
 
@@ -142,7 +142,7 @@ function updateColors() {
 
     colors.needsUpdate = true;
 
-    const map = sprite.material.map;
+    const map = sprite.material.map!;
     lut.updateCanvas(map.image);
     map.needsUpdate = true;
 }

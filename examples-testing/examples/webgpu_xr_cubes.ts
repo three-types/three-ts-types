@@ -1,18 +1,22 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
+type CubeMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> & {
+    currentHex: number;
+};
+
 const clock = new THREE.Clock();
 
-let container;
-let camera, scene, raycaster, renderer;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, raycaster: THREE.Raycaster, renderer: THREE.WebGPURenderer;
 
-let room;
+let room: THREE.LineSegments;
 
-let controller, controllerGrip;
-let INTERSECTED;
+let controller: THREE.XRTargetRaySpace, controllerGrip: THREE.XRGripSpace;
+let INTERSECTED: CubeMesh | undefined;
 
 init();
 
@@ -75,25 +79,25 @@ function init() {
 
     //
 
-    function onSelectStart() {
+    function onSelectStart(this: THREE.XRTargetRaySpace) {
         this.userData.isSelecting = true;
     }
 
-    function onSelectEnd() {
+    function onSelectEnd(this: THREE.XRTargetRaySpace) {
         this.userData.isSelecting = false;
     }
 
     controller = renderer.xr.getController(0);
     controller.addEventListener('selectstart', onSelectStart);
     controller.addEventListener('selectend', onSelectEnd);
-    controller.addEventListener('connected', function (event) {
+    controller.addEventListener('connected', function (this: THREE.XRTargetRaySpace, event) {
         const targetRayMode = event.data.targetRayMode;
 
         if (targetRayMode === 'tracked-pointer' || targetRayMode === 'gaze') {
-            this.add(buildController(event.data));
+            this.add(buildController(event.data)!);
         }
     });
-    controller.addEventListener('disconnected', function () {
+    controller.addEventListener('disconnected', function (this: THREE.XRTargetRaySpace) {
         this.remove(this.children[0]);
     });
     scene.add(controller);
@@ -111,7 +115,7 @@ function init() {
     document.body.appendChild(XRButton.createButton(renderer));
 }
 
-function buildController(data) {
+function buildController(data: XRInputSource) {
     let geometry, material;
 
     switch (data.targetRayMode) {
@@ -165,7 +169,7 @@ function animate() {
         if (INTERSECTED != intersects[0].object) {
             if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
 
-            INTERSECTED = intersects[0].object;
+            INTERSECTED = intersects[0].object as CubeMesh;
             INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
             INTERSECTED.material.emissive.setHex(0xff0000);
         }

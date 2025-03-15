@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -6,7 +6,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -25,7 +25,10 @@ function init() {
     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
         scene.add(gltf.scene);
 
-        const object = gltf.scene.getObjectByName('SheenChair_fabric');
+        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshPhysicalMaterial
+        >;
 
         const gui = new GUI();
 

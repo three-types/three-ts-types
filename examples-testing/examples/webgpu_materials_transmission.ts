@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19,7 +19,7 @@ const params = {
     exposure: 1,
 };
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 let mesh;
 
@@ -156,7 +156,7 @@ function generateTexture() {
     canvas.width = 2;
     canvas.height = 2;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     context.fillStyle = 'white';
     context.fillRect(0, 1, 2, 1);
 

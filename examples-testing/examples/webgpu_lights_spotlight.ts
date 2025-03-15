@@ -1,13 +1,13 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let renderer, scene, camera;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 
-let spotLight, lightHelper;
+let spotLight: THREE.SpotLight, lightHelper: THREE.SpotLightHelper;
 
 init();
 
@@ -42,7 +42,7 @@ function init() {
     const loader = new THREE.TextureLoader().setPath('textures/');
     const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
 
-    const textures = { none: null };
+    const textures: { [filename: string]: THREE.Texture | null } = { none: null };
 
     for (let i = 0; i < filenames.length; i++) {
         const filename = filenames[i];
@@ -157,8 +157,8 @@ function init() {
         renderer.shadowMap.enabled = val;
 
         scene.traverse(function (child) {
-            if (child.material) {
-                child.material.needsUpdate = true;
+            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
             }
         });
     });

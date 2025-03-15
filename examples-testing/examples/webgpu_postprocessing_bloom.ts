@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
@@ -8,8 +8,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, stats;
-let postProcessing, renderer, mixer, clock;
+let camera: THREE.PerspectiveCamera, stats: Stats;
+let postProcessing: THREE.PostProcessing,
+    renderer: THREE.WebGPURenderer,
+    mixer: THREE.AnimationMixer,
+    clock: THREE.Clock;
 
 const params = {
     threshold: 0,
@@ -21,7 +24,7 @@ const params = {
 init();
 
 async function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     clock = new THREE.Clock();
 

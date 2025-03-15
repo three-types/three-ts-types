@@ -1,23 +1,23 @@
 import * as THREE from 'three';
 
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 THREE.Cache.enabled = true;
 
-let container;
+let container: HTMLDivElement;
 
-let camera, cameraTarget, scene, renderer;
+let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let group, textMesh1, textMesh2, textGeo, materials;
+let group: THREE.Group, textMesh1: THREE.Mesh, textMesh2: THREE.Mesh, textGeo, materials: THREE.MeshPhongMaterial[];
 
 let firstLetter = true;
 
 let text = 'three.js',
     bevelEnabled = true,
-    font = undefined,
+    font: Font | undefined = undefined,
     fontName = 'optimer', // helvetiker, optimer, gentilis, droid sans, droid serif
     fontWeight = 'bold'; // normal bold
 
@@ -43,11 +43,11 @@ const weightMap = {
     bold: 1,
 };
 
-const reverseFontMap = [];
-const reverseWeightMap = [];
+const reverseFontMap: string[] = [];
+const reverseWeightMap: string[] = [];
 
-for (const i in fontMap) reverseFontMap[fontMap[i]] = i;
-for (const i in weightMap) reverseWeightMap[weightMap[i]] = i;
+for (const i in fontMap) reverseFontMap[fontMap[i as keyof typeof fontMap]] = i;
+for (const i in weightMap) reverseWeightMap[weightMap[i as keyof typeof weightMap]] = i;
 
 let targetRotation = 0;
 let targetRotationOnPointerDown = 0;
@@ -180,7 +180,7 @@ function onWindowResize() {
 
 //
 
-function onDocumentKeyDown(event) {
+function onDocumentKeyDown(event: KeyboardEvent) {
     if (firstLetter) {
         firstLetter = false;
         text = '';
@@ -200,7 +200,7 @@ function onDocumentKeyDown(event) {
     }
 }
 
-function onDocumentKeyPress(event) {
+function onDocumentKeyPress(event: KeyboardEvent) {
     const keyCode = event.which;
 
     // backspace
@@ -226,7 +226,7 @@ function loadFont() {
 
 function createText() {
     textGeo = new TextGeometry(text, {
-        font: font,
+        font: font!,
 
         size: size,
         depth: depth,
@@ -239,7 +239,7 @@ function createText() {
 
     textGeo.computeBoundingBox();
 
-    const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+    const centerOffset = -0.5 * (textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x);
 
     textMesh1 = new THREE.Mesh(textGeo, materials);
 
@@ -275,7 +275,7 @@ function refreshText() {
     createText();
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     pointerXOnPointerDown = event.clientX - windowHalfX;
@@ -285,7 +285,7 @@ function onPointerDown(event) {
     document.addEventListener('pointerup', onPointerUp);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     pointerX = event.clientX - windowHalfX;
@@ -293,7 +293,7 @@ function onPointerMove(event) {
     targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
 }
 
-function onPointerUp() {
+function onPointerUp(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     document.removeEventListener('pointermove', onPointerMove);

@@ -4,11 +4,15 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, clock, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    clock: THREE.Clock,
+    stats: Stats;
 
-let lightingUniformsGroup, lightCenters;
+let lightingUniformsGroup: THREE.UniformsGroup, lightCenters: { x: number; z: number }[];
 
-const container = document.getElementById('container');
+const container = document.getElementById('container')!;
 
 const pointLightsMax = 300;
 
@@ -71,8 +75,8 @@ function init() {
         defines: {
             POINTLIGHTS_MAX: pointLightsMax,
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         glslVersion: THREE.GLSL3,
     });
 
@@ -129,7 +133,7 @@ function init() {
     gui.add(api, 'count', 1, pointLightsMax)
         .step(1)
         .onChange(function () {
-            lightingUniformsGroup.uniforms[2].value = api.count;
+            (lightingUniformsGroup.uniforms[2] as THREE.Uniform).value = api.count;
         });
 }
 
@@ -145,7 +149,7 @@ function onWindowResize() {
 function animate() {
     const elapsedTime = clock.getElapsedTime();
 
-    const lights = lightingUniformsGroup.uniforms[0];
+    const lights = lightingUniformsGroup.uniforms[0] as THREE.Uniform[];
 
     // Parameters for circular movement
     const radius = 5; // Smaller radius for individual circular movements

@@ -1,14 +1,24 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, clock, stats;
-let dirLight, spotLight;
-let torusKnot, dirGroup;
-let config;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    clock: THREE.Clock,
+    stats: Stats;
+let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
+let torusKnot: THREE.Mesh, dirGroup: THREE.Group;
+let config: {
+    spotlightRadius: number;
+    spotlightSamples: number;
+    dirlightRadius: number;
+    dirlightSamples: number;
+    animate: boolean;
+};
 
 init();
 
@@ -188,7 +198,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: DOMHighResTimeStamp) {
     const delta = clock.getDelta();
 
     if (config.animate === true) {

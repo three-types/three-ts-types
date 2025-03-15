@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6,8 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { uniform } from 'three/tsl';
 import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
 
-let camera, scene, renderer, postProcessing, crystalMesh, clock;
-let gui, effectController;
+let camera: THREE.OrthographicCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
+    clock: THREE.Clock;
+let gui: GUI,
+    effectController: {
+        pixelSize: THREE.UniformNode<number>;
+        normalEdgeStrength: THREE.UniformNode<number>;
+        depthEdgeStrength: THREE.UniformNode<number>;
+        pixelAlignedPanning: boolean;
+    };
 
 init();
 
@@ -35,7 +46,7 @@ function init() {
 
     const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
 
-    function addBox(boxSideLength, x, z, rotation) {
+    function addBox(boxSideLength: number, x: number, z: number, rotation: number) {
         const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -173,7 +184,7 @@ function animate() {
 
 // Helper functions
 
-function pixelTexture(texture) {
+function pixelTexture(texture: THREE.Texture) {
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
     texture.generateMipmaps = false;
@@ -183,25 +194,30 @@ function pixelTexture(texture) {
     return texture;
 }
 
-function easeInOutCubic(x) {
+function easeInOutCubic(x: number) {
     return x ** 2 * 3 - x ** 3 * 2;
 }
 
-function linearStep(x, edge0, edge1) {
+function linearStep(x: number, edge0: number, edge1: number) {
     const w = edge1 - edge0;
     const m = 1 / w;
     const y0 = -m * edge0;
     return THREE.MathUtils.clamp(y0 + m * x, 0, 1);
 }
 
-function stopGoEased(x, downtime, period) {
+function stopGoEased(x: number, downtime: number, period: number) {
     const cycle = (x / period) | 0;
     const tween = x - cycle * period;
     const linStep = easeInOutCubic(linearStep(tween, downtime, period));
     return cycle + linStep;
 }
 
-function pixelAlignFrustum(camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight) {
+function pixelAlignFrustum(
+    camera: THREE.OrthographicCamera,
+    aspectRatio: number,
+    pixelsPerScreenWidth: number,
+    pixelsPerScreenHeight: number,
+) {
     // 0. Get Pixel Grid Units
     const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
     const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;

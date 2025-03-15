@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
+import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
 
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 64;
@@ -10,16 +10,20 @@ const BIRDS = WIDTH * WIDTH;
 
 /* BAKE ANIMATION INTO TEXTURE and CREATE GEOMETRY FROM BASE MODEL */
 const BirdGeometry = new THREE.BufferGeometry();
-let textureAnimation, durationAnimation, birdMesh, materialShader, indicesPerBird;
+let textureAnimation: THREE.DataTexture,
+    durationAnimation: number,
+    birdMesh: THREE.Mesh,
+    materialShader: THREE.WebGLProgramParametersWithUniforms,
+    indicesPerBird: number;
 
-function nextPowerOf2(n) {
+function nextPowerOf2(n: number) {
     return Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
 }
 
-Math.lerp = function (value1, value2, amount) {
+function lerp(value1: number, value2: number, amount: number) {
     amount = Math.max(Math.min(amount, 1), 0);
     return value1 + (value2 - value1) * amount;
-};
+}
 
 const gltfs = ['models/gltf/Parrot.glb', 'models/gltf/Flamingo.glb'];
 const colors = [0xccffff, 0xffdeff];
@@ -28,11 +32,11 @@ const selectModel = Math.floor(Math.random() * gltfs.length);
 new GLTFLoader().load(gltfs[selectModel], function (gltf) {
     const animations = gltf.animations;
     durationAnimation = Math.round(animations[0].duration * 60);
-    const birdGeo = gltf.scene.children[0].geometry;
+    const birdGeo = (gltf.scene.children[0] as THREE.Mesh).geometry;
     const morphAttributes = birdGeo.morphAttributes.position;
     const tHeight = nextPowerOf2(durationAnimation);
     const tWidth = nextPowerOf2(birdGeo.getAttribute('position').count);
-    indicesPerBird = birdGeo.index.count;
+    indicesPerBird = birdGeo.index!.count;
     const tData = new Float32Array(4 * tWidth * tHeight);
 
     for (let i = 0; i < tWidth; i++) {
@@ -50,17 +54,17 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
                 d0 = morphAttributes[curMorph].array[i * 3];
                 d1 = morphAttributes[nextMorph].array[i * 3];
 
-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = Math.lerp(d0, d1, lerpAmount);
+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = lerp(d0, d1, lerpAmount);
 
                 d0 = morphAttributes[curMorph].array[i * 3 + 1];
                 d1 = morphAttributes[nextMorph].array[i * 3 + 1];
 
-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = Math.lerp(d0, d1, lerpAmount);
+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = lerp(d0, d1, lerpAmount);
 
                 d0 = morphAttributes[curMorph].array[i * 3 + 2];
                 d1 = morphAttributes[nextMorph].array[i * 3 + 2];
 
-                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = Math.lerp(d0, d1, lerpAmount);
+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = lerp(d0, d1, lerpAmount);
 
                 tData[offset + i * 4 + 3] = 1;
             }
@@ -94,9 +98,9 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
         seeds.push(bird, r, Math.random(), Math.random());
     }
 
-    for (let i = 0; i < birdGeo.index.array.length * BIRDS; i++) {
-        const offset = Math.floor(i / birdGeo.index.array.length) * birdGeo.getAttribute('position').count;
-        indices.push(birdGeo.index.array[i % birdGeo.index.array.length] + offset);
+    for (let i = 0; i < birdGeo.index!.array.length * BIRDS; i++) {
+        const offset = Math.floor(i / birdGeo.index!.array.length) * birdGeo.getAttribute('position').count;
+        indices.push(birdGeo.index!.array[i % birdGeo.index!.array.length] + offset);
     }
 
     BirdGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
@@ -110,8 +114,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
     init();
 });
 
-let container, stats;
-let camera, scene, renderer;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 let mouseX = 0,
     mouseY = 0;
 
@@ -123,11 +127,20 @@ const BOUNDS = 800,
 
 let last = performance.now();
 
-let gpuCompute;
-let velocityVariable;
-let positionVariable;
-let positionUniforms;
-let velocityUniforms;
+let gpuCompute: GPUComputationRenderer;
+let velocityVariable: Variable;
+let positionVariable: Variable;
+let positionUniforms: Record<string, THREE.IUniform>;
+let velocityUniforms: Record<string, THREE.IUniform>;
+
+interface EffectController {
+    separation: number;
+    alignment: number;
+    cohesion: number;
+    freedom: number;
+    size: number;
+    count: number;
+}
 
 function init() {
     container = document.createElement('div');
@@ -212,12 +225,12 @@ function initComputeRenderer() {
 
     velocityVariable = gpuCompute.addVariable(
         'textureVelocity',
-        document.getElementById('fragmentShaderVelocity').textContent,
+        document.getElementById('fragmentShaderVelocity')!.textContent!,
         dtVelocity,
     );
     positionVariable = gpuCompute.addVariable(
         'texturePosition',
-        document.getElementById('fragmentShaderPosition').textContent,
+        document.getElementById('fragmentShaderPosition')!.textContent!,
         dtPosition,
     );
 
@@ -251,7 +264,7 @@ function initComputeRenderer() {
     }
 }
 
-function initBirds(effectController) {
+function initBirds(effectController: EffectController) {
     const geometry = BirdGeometry;
 
     const m = new THREE.MeshStandardMaterial({
@@ -331,8 +344,8 @@ function initBirds(effectController) {
     scene.add(birdMesh);
 }
 
-function fillPositionTexture(texture) {
-    const theArray = texture.image.data;
+function fillPositionTexture(texture: THREE.DataTexture) {
+    const theArray = texture.image.data as Float32Array;
 
     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
         const x = Math.random() * BOUNDS - BOUNDS_HALF;
@@ -346,8 +359,8 @@ function fillPositionTexture(texture) {
     }
 }
 
-function fillVelocityTexture(texture) {
-    const theArray = texture.image.data;
+function fillVelocityTexture(texture: THREE.DataTexture) {
+    const theArray = texture.image.data as Float32Array;
 
     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
         const x = Math.random() - 0.5;
@@ -371,7 +384,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

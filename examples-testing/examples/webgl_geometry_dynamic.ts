@@ -5,9 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 
-let camera, controls, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera,
+    controls: FirstPersonControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats;
 
-let mesh, geometry, material, timer;
+let mesh: THREE.Mesh, geometry: THREE.PlaneGeometry, material: THREE.MeshBasicMaterial, timer: Timer;
 
 const worldWidth = 128,
     worldDepth = 128;
@@ -28,7 +32,7 @@ function init() {
     geometry = new THREE.PlaneGeometry(20000, 20000, worldWidth - 1, worldDepth - 1);
     geometry.rotateX(-Math.PI / 2);
 
-    const position = geometry.attributes.position;
+    const position = geometry.attributes.position as THREE.BufferAttribute;
     position.usage = THREE.DynamicDrawUsage;
 
     for (let i = 0; i < position.count; i++) {

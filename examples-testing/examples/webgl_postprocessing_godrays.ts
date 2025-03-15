@@ -11,16 +11,37 @@ import {
     GodRaysGenerateShader,
 } from 'three/addons/shaders/GodRaysShader.js';
 
-let container, stats;
-let camera, scene, renderer, materialDepth;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    materialDepth: THREE.MeshDepthMaterial;
 
-let sphereMesh;
+let sphereMesh: THREE.Mesh;
 
 const sunPosition = new THREE.Vector3(0, 1000, -1000);
 const clipPosition = new THREE.Vector4();
 const screenSpacePosition = new THREE.Vector3();
 
-const postprocessing = { enabled: true };
+const postprocessing: {
+    enabled: boolean;
+    scene?: THREE.Scene;
+    camera?: THREE.OrthographicCamera;
+    rtTextureColors?: THREE.WebGLRenderTarget;
+    rtTextureDepth?: THREE.WebGLRenderTarget;
+    rtTextureDepthMask?: THREE.WebGLRenderTarget;
+    rtTextureGodRays1?: THREE.WebGLRenderTarget;
+    rtTextureGodRays2?: THREE.WebGLRenderTarget;
+    godrayMaskUniforms?: (typeof GodRaysDepthMaskShader)['uniforms'];
+    materialGodraysDepthMask?: THREE.ShaderMaterial;
+    godrayGenUniforms?: (typeof GodRaysGenerateShader)['uniforms'];
+    materialGodraysGenerate?: THREE.ShaderMaterial;
+    godrayCombineUniforms?: (typeof GodRaysCombineShader)['uniforms'];
+    materialGodraysCombine?: THREE.ShaderMaterial;
+    godraysFakeSunUniforms?: (typeof GodRaysFakeSunShader)['uniforms'];
+    materialGodraysFakeSun?: THREE.ShaderMaterial;
+    quad?: THREE.Mesh;
+} = { enabled: true };
 
 const orbitRadius = 200;
 
@@ -102,17 +123,17 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 
     renderer.setSize(renderTargetWidth, renderTargetHeight);
-    postprocessing.rtTextureColors.setSize(renderTargetWidth, renderTargetHeight);
-    postprocessing.rtTextureDepth.setSize(renderTargetWidth, renderTargetHeight);
-    postprocessing.rtTextureDepthMask.setSize(renderTargetWidth, renderTargetHeight);
+    postprocessing.rtTextureColors!.setSize(renderTargetWidth, renderTargetHeight);
+    postprocessing.rtTextureDepth!.setSize(renderTargetWidth, renderTargetHeight);
+    postprocessing.rtTextureDepthMask!.setSize(renderTargetWidth, renderTargetHeight);
 
     const adjustedWidth = renderTargetWidth * godrayRenderTargetResolutionMultiplier;
     const adjustedHeight = renderTargetHeight * godrayRenderTargetResolutionMultiplier;
-    postprocessing.rtTextureGodRays1.setSize(adjustedWidth, adjustedHeight);
-    postprocessing.rtTextureGodRays2.setSize(adjustedWidth, adjustedHeight);
+    postprocessing.rtTextureGodRays1!.setSize(adjustedWidth, adjustedHeight);
+    postprocessing.rtTextureGodRays2!.setSize(adjustedWidth, adjustedHeight);
 }
 
-function initPostprocessing(renderTargetWidth, renderTargetHeight) {
+function initPostprocessing(renderTargetWidth: number, renderTargetHeight: number) {
     postprocessing.scene = new THREE.Scene();
 
     postprocessing.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -10000, 10000);
@@ -183,10 +204,10 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight) {
         fragmentShader: godraysFakeSunShader.fragmentShader,
     });
 
-    postprocessing.godraysFakeSunUniforms.bgColor.value.setHex(bgColor);
-    postprocessing.godraysFakeSunUniforms.sunColor.value.setHex(sunColor);
+    postprocessing.godraysFakeSunUniforms!.bgColor.value.setHex(bgColor);
+    postprocessing.godraysFakeSunUniforms!.sunColor.value.setHex(sunColor);
 
-    postprocessing.godrayCombineUniforms.fGodRayIntensity.value = 0.75;
+    postprocessing.godrayCombineUniforms!.fGodRayIntensity.value = 0.75;
 
     postprocessing.quad = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), postprocessing.materialGodraysGenerate);
     postprocessing.quad.position.z = -9900;
@@ -199,19 +220,19 @@ function animate() {
     stats.end();
 }
 
-function getStepSize(filterLen, tapsPerPass, pass) {
+function getStepSize(filterLen: number, tapsPerPass: number, pass: number) {
     return filterLen * Math.pow(tapsPerPass, -pass);
 }
 
-function filterGodRays(inputTex, renderTarget, stepSize) {
-    postprocessing.scene.overrideMaterial = postprocessing.materialGodraysGenerate;
+function filterGodRays(inputTex: THREE.Texture, renderTarget: THREE.WebGLRenderTarget, stepSize: number) {
+    postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysGenerate!;
 
-    postprocessing.godrayGenUniforms['fStepSize'].value = stepSize;
-    postprocessing.godrayGenUniforms['tInput'].value = inputTex;
+    postprocessing.godrayGenUniforms!['fStepSize'].value = stepSize;
+    postprocessing.godrayGenUniforms!['tInput'].value = inputTex;
 
     renderer.setRenderTarget(renderTarget);
-    renderer.render(postprocessing.scene, postprocessing.camera);
-    postprocessing.scene.overrideMaterial = null;
+    renderer.render(postprocessing.scene!, postprocessing.camera!);
+    postprocessing.scene!.overrideMaterial = null;
 }
 
 function render() {
@@ -239,14 +260,14 @@ function render() {
 
         // Give it to the god-ray and sun shaders
 
-        postprocessing.godrayGenUniforms['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
-        postprocessing.godraysFakeSunUniforms['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
+        postprocessing.godrayGenUniforms!['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
+        postprocessing.godraysFakeSunUniforms!['vSunPositionScreenSpace'].value.copy(screenSpacePosition);
 
         // -- Draw sky and sun --
 
         // Clear colors and depths, will clear to sky color
 
-        renderer.setRenderTarget(postprocessing.rtTextureColors);
+        renderer.setRenderTarget(postprocessing.rtTextureColors!);
         renderer.clear(true, true, false);
 
         // Sun render. Runs a shader that gives a brightness based on the screen
@@ -262,11 +283,11 @@ function render() {
         renderer.setScissor(screenSpacePosition.x - sunsqW / 2, screenSpacePosition.y - sunsqH / 2, sunsqW, sunsqH);
         renderer.setScissorTest(true);
 
-        postprocessing.godraysFakeSunUniforms['fAspect'].value = window.innerWidth / window.innerHeight;
+        postprocessing.godraysFakeSunUniforms!['fAspect'].value = window.innerWidth / window.innerHeight;
 
-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysFakeSun;
-        renderer.setRenderTarget(postprocessing.rtTextureColors);
-        renderer.render(postprocessing.scene, postprocessing.camera);
+        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysFakeSun!;
+        renderer.setRenderTarget(postprocessing.rtTextureColors!);
+        renderer.render(postprocessing.scene!, postprocessing.camera!);
 
         renderer.setScissorTest(false);
 
@@ -275,23 +296,23 @@ function render() {
         // Colors
 
         scene.overrideMaterial = null;
-        renderer.setRenderTarget(postprocessing.rtTextureColors);
+        renderer.setRenderTarget(postprocessing.rtTextureColors!);
         renderer.render(scene, camera);
 
         // Depth
 
         scene.overrideMaterial = materialDepth;
-        renderer.setRenderTarget(postprocessing.rtTextureDepth);
+        renderer.setRenderTarget(postprocessing.rtTextureDepth!);
         renderer.clear();
         renderer.render(scene, camera);
 
         //
 
-        postprocessing.godrayMaskUniforms['tInput'].value = postprocessing.rtTextureDepth.texture;
+        postprocessing.godrayMaskUniforms!['tInput'].value = postprocessing.rtTextureDepth!.texture;
 
-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysDepthMask;
-        renderer.setRenderTarget(postprocessing.rtTextureDepthMask);
-        renderer.render(postprocessing.scene, postprocessing.camera);
+        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysDepthMask!;
+        renderer.setRenderTarget(postprocessing.rtTextureDepthMask!);
+        renderer.render(postprocessing.scene!, postprocessing.camera!);
 
         // -- Render god-rays --
 
@@ -310,35 +331,35 @@ function render() {
 
         // pass 1 - render into first ping-pong target
         filterGodRays(
-            postprocessing.rtTextureDepthMask.texture,
-            postprocessing.rtTextureGodRays2,
+            postprocessing.rtTextureDepthMask!.texture,
+            postprocessing.rtTextureGodRays2!,
             getStepSize(filterLen, TAPS_PER_PASS, 1.0),
         );
 
         // pass 2 - render into second ping-pong target
         filterGodRays(
-            postprocessing.rtTextureGodRays2.texture,
-            postprocessing.rtTextureGodRays1,
+            postprocessing.rtTextureGodRays2!.texture,
+            postprocessing.rtTextureGodRays1!,
             getStepSize(filterLen, TAPS_PER_PASS, 2.0),
         );
 
         // pass 3 - 1st RT
         filterGodRays(
-            postprocessing.rtTextureGodRays1.texture,
-            postprocessing.rtTextureGodRays2,
+            postprocessing.rtTextureGodRays1!.texture,
+            postprocessing.rtTextureGodRays2!,
             getStepSize(filterLen, TAPS_PER_PASS, 3.0),
         );
 
         // final pass - composite god-rays onto colors
 
-        postprocessing.godrayCombineUniforms['tColors'].value = postprocessing.rtTextureColors.texture;
-        postprocessing.godrayCombineUniforms['tGodRays'].value = postprocessing.rtTextureGodRays2.texture;
+        postprocessing.godrayCombineUniforms!['tColors'].value = postprocessing.rtTextureColors!.texture;
+        postprocessing.godrayCombineUniforms!['tGodRays'].value = postprocessing.rtTextureGodRays2!.texture;
 
-        postprocessing.scene.overrideMaterial = postprocessing.materialGodraysCombine;
+        postprocessing.scene!.overrideMaterial = postprocessing.materialGodraysCombine!;
 
         renderer.setRenderTarget(null);
-        renderer.render(postprocessing.scene, postprocessing.camera);
-        postprocessing.scene.overrideMaterial = null;
+        renderer.render(postprocessing.scene!, postprocessing.camera!);
+        postprocessing.scene!.overrideMaterial = null;
     } else {
         renderer.setRenderTarget(null);
         renderer.clear();

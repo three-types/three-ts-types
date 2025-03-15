@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import {
     color,
     storage,
@@ -12,6 +12,7 @@ import {
     shapeCircle,
     mix,
     vec3,
+    ShaderNodeObject,
 } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
@@ -21,18 +22,28 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let renderer, scene, camera, camera2, controls, backgroundNode;
-let material;
-let stats;
-let gui;
-let effectController;
+let renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    camera2: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    backgroundNode: ShaderNodeObject<THREE.Node>;
+let material: THREE.PointsNodeMaterial;
+let stats: Stats;
+let gui: GUI;
+let effectController: {
+    pulseSpeed: ShaderNodeObject<THREE.UniformNode<number>>;
+    minWidth: ShaderNodeObject<THREE.UniformNode<number>>;
+    maxWidth: ShaderNodeObject<THREE.UniformNode<number>>;
+    alphaToCoverage: boolean;
+};
 
 // viewport
-let insetWidth;
-let insetHeight;
+let insetWidth: number;
+let insetHeight: number;
 
 // compute
-let computeSize;
+let computeSize: ShaderNodeObject<THREE.ComputeNode>;
 
 init();
 

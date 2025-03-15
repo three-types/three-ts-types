@@ -4,9 +4,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Water } from 'three/addons/objects/Water2.js';
 
-let scene, camera, clock, renderer, water;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    clock: THREE.Clock,
+    renderer: THREE.WebGLRenderer,
+    water: Water;
 
-let torusKnot;
+let torusKnot: THREE.Mesh;
 
 const params = {
     color: '#ffffff',

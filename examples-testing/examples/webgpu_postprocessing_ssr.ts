@@ -1,6 +1,16 @@
-import * as THREE from 'three';
-import { pass, mrt, output, transformedNormalView, metalness, blendColor, screenUV, color } from 'three/tsl';
-import { ssr } from 'three/addons/tsl/display/SSRNode.js';
+import * as THREE from 'three/webgpu';
+import {
+    pass,
+    mrt,
+    output,
+    transformedNormalView,
+    metalness,
+    blendColor,
+    screenUV,
+    color,
+    ShaderNodeObject,
+} from 'three/tsl';
+import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
 import { smaa } from 'three/addons/tsl/display/SMAANode.js';
 
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -17,8 +27,12 @@ const params = {
     enabled: true,
 };
 
-let camera, scene, renderer, postProcessing, ssrPass;
-let gui, stats, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    ssrPass: ShaderNodeObject<SSRNode>;
+let gui: GUI, stats: Stats, controls: OrbitControls;
 
 init();
 
@@ -37,9 +51,9 @@ async function init() {
     loader.setDRACOLoader(dracoLoader);
     loader.load('models/gltf/steampunk_camera.glb', function (gltf) {
         gltf.scene.traverse(function (object) {
-            if (object.material) {
+            if ((object as THREE.Mesh).material) {
                 // Avoid overdrawing
-                object.material.side = THREE.FrontSide;
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.side = THREE.FrontSide;
             }
         });
 

@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
-let camera, scene, renderer, mesh;
+let container: HTMLElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.InstancedMesh;
 
 const instances = 5000;
 let lastTime = 0;
@@ -16,7 +16,7 @@ const currentM = new THREE.Matrix4();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
 

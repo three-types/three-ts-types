@@ -1,22 +1,35 @@
 import * as THREE from 'three';
 
-import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-let mesh, renderer, scene, camera, controls;
-let gui,
-    guiExposure = null;
+type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral' | 'Custom';
 
-const params = {
+interface Params {
+    exposure: number;
+    toneMapping: ToneMapping;
+    blurriness: number;
+    intensity: number;
+}
+
+let mesh: THREE.Object3D,
+    renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    controls: OrbitControls;
+let gui: GUI,
+    guiExposure: NumberController<Params, 'exposure'> | null = null;
+
+const params: Params = {
     exposure: 1.0,
     toneMapping: 'AgX',
     blurriness: 0.3,
     intensity: 1.0,
 };
 
-const toneMappingOptions = {
+const toneMappingOptions: { [K in ToneMapping]: THREE.ToneMapping } = {
     None: THREE.NoToneMapping,
     Linear: THREE.LinearToneMapping,
     Reinhard: THREE.ReinhardToneMapping,
@@ -88,7 +101,7 @@ async function init() {
 
     // model
 
-    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514');
+    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514')!;
     scene.add(mesh);
 
     render();
@@ -99,7 +112,7 @@ async function init() {
     const toneMappingFolder = gui.addFolder('Tone Mapping');
 
     toneMappingFolder
-        .add(params, 'toneMapping', Object.keys(toneMappingOptions))
+        .add(params, 'toneMapping', Object.keys(toneMappingOptions) as ToneMapping[])
 
         .name('type')
         .onChange(function () {
@@ -140,11 +153,11 @@ async function init() {
     gui.open();
 }
 
-function updateGUI(folder) {
+function updateGUI(folder: GUI) {
     if (params.toneMapping === 'None') {
-        guiExposure.hide();
+        guiExposure!.hide();
     } else {
-        guiExposure.show();
+        guiExposure!.show();
     }
 }
 

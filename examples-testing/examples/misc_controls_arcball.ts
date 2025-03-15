@@ -12,8 +12,12 @@ const cameraType = { type: 'Perspective' };
 
 const perspectiveDistance = 2.5;
 const orthographicDistance = 120;
-let camera, controls, scene, renderer, gui;
-let folderOptions, folderAnimations;
+let camera: THREE.OrthographicCamera | THREE.PerspectiveCamera,
+    controls: ArcballControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    gui: GUI;
+let folderOptions: GUI, folderAnimations: GUI;
 
 const arcballGui = {
     gizmoVisible: true,
@@ -98,8 +102,8 @@ function init() {
         material.normalMap.wrapS = THREE.RepeatWrapping;
 
         group.traverse(function (child) {
-            if (child.isMesh) {
-                child.material = material;
+            if ((child as THREE.Mesh).isMesh) {
+                (child as THREE.Mesh).material = material;
             }
         });
 
@@ -165,12 +169,12 @@ function onWindowResize() {
 
         const halfW = perspectiveDistance * Math.tan(halfFovH);
         const halfH = perspectiveDistance * Math.tan(halfFovV);
-        camera.left = -halfW;
-        camera.right = halfW;
-        camera.top = halfH;
-        camera.bottom = -halfH;
+        (camera as THREE.OrthographicCamera).left = -halfW;
+        (camera as THREE.OrthographicCamera).right = halfW;
+        (camera as THREE.OrthographicCamera).top = halfH;
+        (camera as THREE.OrthographicCamera).bottom = -halfH;
     } else if (camera.type == 'PerspectiveCamera') {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        (camera as THREE.PerspectiveCamera).aspect = window.innerWidth / window.innerHeight;
     }
 
     camera.updateProjectionMatrix();
@@ -184,7 +188,7 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function onKeyDown(event) {
+function onKeyDown(event: KeyboardEvent) {
     if (event.key === 'c') {
         if (event.ctrlKey || event.metaKey) {
             controls.copyState();
@@ -196,7 +200,7 @@ function onKeyDown(event) {
     }
 }
 
-function setCamera(type) {
+function setCamera(type: string) {
     if (type == 'Orthographic') {
         camera = makeOrthographicCamera();
         camera.position.set(0, 0, orthographicDistance);

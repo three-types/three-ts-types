@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -9,17 +9,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMapGPU.js
 const shadowMapRes = 1024,
     lightMapRes = 1024,
     lightCount = 4;
-let camera,
-    scene,
-    renderer,
-    controls,
-    control,
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    control: TransformControls,
     control2,
-    object = new THREE.Mesh(),
-    lightOrigin = null,
-    progressiveSurfacemap;
-const dirLights = [],
-    lightmapObjects = [];
+    object: THREE.Object3D = new THREE.Mesh(),
+    lightOrigin: THREE.Group,
+    progressiveSurfacemap: ProgressiveLightMap;
+const dirLights: THREE.DirectionalLight[] = [],
+    lightmapObjects: THREE.Object3D[] = [];
 const params = {
     Enable: true,
     'Blur Edges': true,
@@ -99,14 +99,14 @@ function init() {
     // model
     function loadModel() {
         object.traverse(function (child) {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 child.name = 'Loaded Mesh';
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshPhongMaterial();
+                (child as THREE.Mesh).material = new THREE.MeshPhongMaterial();
 
                 // This adds the model to the lightmap
-                lightmapObjects.push(child);
+                lightmapObjects.push(child as THREE.Mesh);
                 progressiveSurfacemap.addObjectsToLightMap(lightmapObjects);
             } else {
                 child.layers.disableAll(); // Disable Rendering for this

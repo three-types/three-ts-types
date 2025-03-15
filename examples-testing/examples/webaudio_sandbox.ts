@@ -4,19 +4,23 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 
-let camera, controls, scene, renderer, light;
+let camera: THREE.PerspectiveCamera,
+    controls: FirstPersonControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    light: THREE.DirectionalLight;
 
-let material1, material2, material3;
+let material1: THREE.MeshPhongMaterial, material2: THREE.MeshPhongMaterial, material3: THREE.MeshPhongMaterial;
 
-let analyser1, analyser2, analyser3;
+let analyser1: THREE.AudioAnalyser, analyser2: THREE.AudioAnalyser, analyser3: THREE.AudioAnalyser;
 
 const clock = new THREE.Clock();
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', init);
 
 function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
@@ -45,7 +49,7 @@ function init() {
     scene.add(mesh1);
 
     const sound1 = new THREE.PositionalAudio(listener);
-    const songElement = document.getElementById('song');
+    const songElement = document.getElementById('song') as HTMLAudioElement;
     sound1.setMediaElementSource(songElement);
     sound1.setRefDistance(20);
     songElement.play();
@@ -58,7 +62,7 @@ function init() {
     scene.add(mesh2);
 
     const sound2 = new THREE.PositionalAudio(listener);
-    const skullbeatzElement = document.getElementById('skullbeatz');
+    const skullbeatzElement = document.getElementById('skullbeatz') as HTMLAudioElement;
     sound2.setMediaElementSource(skullbeatzElement);
     sound2.setRefDistance(20);
     skullbeatzElement.play();
@@ -89,7 +93,7 @@ function init() {
     // global ambient audio
 
     const sound4 = new THREE.Audio(listener);
-    const utopiaElement = document.getElementById('utopia');
+    const utopiaElement = document.getElementById('utopia') as HTMLAudioElement;
     sound4.setMediaElementSource(utopiaElement);
     sound4.setVolume(0.5);
     utopiaElement.play();
@@ -102,18 +106,31 @@ function init() {
 
     //
 
-    const SoundControls = function () {
-        this.master = listener.getMasterVolume();
-        this.firstSphere = sound1.getVolume();
-        this.secondSphere = sound2.getVolume();
-        this.thirdSphere = sound3.getVolume();
-        this.Ambient = sound4.getVolume();
-    };
+    class SoundControls {
+        master: number;
+        firstSphere: number;
+        secondSphere: number;
+        thirdSphere: number;
+        Ambient: number;
 
-    const GeneratorControls = function () {
-        this.frequency = oscillator.frequency.value;
-        this.wavetype = oscillator.type;
-    };
+        constructor() {
+            this.master = listener.getMasterVolume();
+            this.firstSphere = sound1.getVolume();
+            this.secondSphere = sound2.getVolume();
+            this.thirdSphere = sound3.getVolume();
+            this.Ambient = sound4.getVolume();
+        }
+    }
+
+    class GeneratorControls {
+        frequency: number;
+        wavetype: OscillatorType;
+
+        constructor() {
+            this.frequency = oscillator.frequency.value;
+            this.wavetype = oscillator.type;
+        }
+    }
 
     const gui = new GUI();
     const soundControls = new SoundControls();

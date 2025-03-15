@@ -4,10 +4,10 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let stats;
-let camera, scene, renderer;
+let stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let group;
+let group: THREE.Group;
 
 init();
 
@@ -95,12 +95,12 @@ function init() {
 
     shader = shader.replace(
         '#ifdef USE_SHADOWMAP',
-        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS').textContent,
+        '#ifdef USE_SHADOWMAP' + document.getElementById('PCSS')!.textContent,
     );
 
     shader = shader.replace(
         '#if defined( SHADOWMAP_TYPE_PCF )',
-        document.getElementById('PCSSGetShadow').textContent + '#if defined( SHADOWMAP_TYPE_PCF )',
+        document.getElementById('PCSSGetShadow')!.textContent + '#if defined( SHADOWMAP_TYPE_PCF )',
     );
 
     THREE.ShaderChunk.shadowmap_pars_fragment = shader;

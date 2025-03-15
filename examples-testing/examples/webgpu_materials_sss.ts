@@ -7,9 +7,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
-let container, stats;
-let camera, scene, renderer;
-let model;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let model: THREE.Mesh;
 
 init();
 
@@ -92,7 +92,7 @@ function initMaterial() {
 
     const loaderFBX = new FBXLoader();
     loaderFBX.load('models/fbx/stanford-bunny.fbx', function (object) {
-        model = object.children[0];
+        model = object.children[0] as THREE.Mesh;
         model.position.set(0, 0, 10);
         model.scale.setScalar(1);
         model.material = material;
@@ -102,16 +102,24 @@ function initMaterial() {
     initGUI(material);
 }
 
-function initGUI(material) {
+function initGUI(material: THREE.MeshSSSNodeMaterial) {
     const gui = new GUI({ title: 'Thickness Control' });
 
-    const ThicknessControls = function () {
-        this.distortion = material.thicknessDistortionNode.value;
-        this.ambient = material.thicknessAmbientNode.value;
-        this.attenuation = material.thicknessAttenuationNode.value;
-        this.power = material.thicknessPowerNode.value;
-        this.scale = material.thicknessScaleNode.value;
-    };
+    class ThicknessControls {
+        distortion: number;
+        ambient: number;
+        attenuation: number;
+        power: number;
+        scale: number;
+
+        constructor() {
+            this.distortion = material.thicknessDistortionNode.value;
+            this.ambient = material.thicknessAmbientNode.value;
+            this.attenuation = material.thicknessAttenuationNode.value;
+            this.power = material.thicknessPowerNode.value;
+            this.scale = material.thicknessScaleNode.value;
+        }
+    }
 
     const thicknessControls = new ThicknessControls();
 

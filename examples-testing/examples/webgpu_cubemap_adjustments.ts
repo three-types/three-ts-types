@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import {
     uniform,
     mix,
@@ -11,6 +11,7 @@ import {
     normalWorld,
     positionWorldDirection,
     reflectVector,
+    ShaderNodeObject,
 } from 'three/tsl';
 
 import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
@@ -20,7 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -71,7 +72,10 @@ async function init() {
     const rotateY1Matrix = new THREE.Matrix4();
     const rotateY2Matrix = new THREE.Matrix4();
 
-    const getEnvironmentNode = (reflectNode, positionNode) => {
+    const getEnvironmentNode = (
+        reflectNode: ShaderNodeObject<THREE.Node>,
+        positionNode: ShaderNodeObject<THREE.Node>,
+    ) => {
         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
         const mixCubeMaps = mix(

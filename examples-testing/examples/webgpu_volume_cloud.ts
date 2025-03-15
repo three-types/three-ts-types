@@ -1,5 +1,5 @@
-import * as THREE from 'three';
-import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform } from 'three/tsl';
+import * as THREE from 'three/webgpu';
+import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform, ShaderNodeObject } from 'three/tsl';
 
 import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
 
@@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh;
 
 init();
 
@@ -33,7 +33,7 @@ function init() {
     canvas.width = 1;
     canvas.height = 32;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createLinearGradient(0, 0, 0, 32);
     gradient.addColorStop(0.0, '#014a84');
     gradient.addColorStop(0.5, '#0561a0');
@@ -85,33 +85,37 @@ function init() {
 
     // Shader
 
-    const transparentRaymarchingTexture = Fn(
-        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
-            const finalColor = vec4(0).toVar();
+    const transparentRaymarchingTexture = Fn<{
+        texture: ShaderNodeObject<THREE.TextureNode>;
+        range: ShaderNodeObject<THREE.UniformNode<number>>;
+        threshold: ShaderNodeObject<THREE.UniformNode<number>>;
+        opacity: ShaderNodeObject<THREE.UniformNode<number>>;
+        steps: ShaderNodeObject<THREE.UniformNode<number>>;
+    }>(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
+        const finalColor = vec4(0).toVar();
 
-            RaymarchingBox(steps, ({ positionRay }) => {
-                const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
+        RaymarchingBox(steps, ({ positionRay }) => {
+            const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
 
-                mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
+            mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
 
-                const shading = texture
-                    .sample(positionRay.add(vec3(-0.01)))
-                    .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
+            const shading = texture
+                .sample(positionRay.add(vec3(-0.01)))
+                .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
 
-                const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
+            const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
 
-                finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
+            finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
 
-                finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
+            finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
 
-                If(finalColor.a.greaterThanEqual(0.95), () => {
-                    Break();
-                });
+            If(finalColor.a.greaterThanEqual(0.95), () => {
+                Break();
             });
+        });
 
-            return finalColor;
-        },
-    );
+        return finalColor;
+    });
 
     // Material
 

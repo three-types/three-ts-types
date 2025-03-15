@@ -4,7 +4,15 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-let camera, scene, renderer, light1, light2, light3, light4, object, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    light1: THREE.PointLight,
+    light2: THREE.PointLight,
+    light3: THREE.PointLight,
+    light4: THREE.PointLight,
+    object: THREE.Group,
+    stats: Stats;
 
 const clock = new THREE.Clock();
 

@@ -1,11 +1,15 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { pass } from 'three/tsl';
 import { smaa } from 'three/addons/tsl/display/SMAANode.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, postProcessing, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    stats: Stats;
 
 const params = {
     enabled: true,

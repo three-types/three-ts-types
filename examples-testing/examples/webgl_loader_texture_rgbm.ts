@@ -8,7 +8,7 @@ const params = {
     exposure: 2.0,
 };
 
-let renderer, scene, camera;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
 
 init();
 

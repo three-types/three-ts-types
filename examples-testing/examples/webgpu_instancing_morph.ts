@@ -1,10 +1,16 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats, mesh, mixer, dummy;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    stats: Stats,
+    mesh: THREE.InstancedMesh,
+    mixer: THREE.AnimationMixer,
+    dummy: THREE.Mesh;
 
 const offset = 5000;
 
@@ -70,7 +76,7 @@ function init() {
     const loader = new GLTFLoader();
 
     loader.load('models/gltf/Horse.glb', function (glb) {
-        dummy = glb.scene.children[0];
+        dummy = glb.scene.children[0] as THREE.Mesh;
 
         mesh = new THREE.InstancedMesh(
             dummy.geometry,
@@ -140,7 +146,7 @@ function animate() {
             mesh.setMorphAt(i, dummy);
         }
 
-        mesh.morphTexture.needsUpdate = true;
+        mesh.morphTexture!.needsUpdate = true;
     }
 
     renderer.render(scene, camera);

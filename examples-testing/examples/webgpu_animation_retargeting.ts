@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import {
     color,
     screenUV,
@@ -18,22 +18,23 @@ import {
     pow,
     blendDodge,
     normalWorld,
+    ShaderNodeObject,
 } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 const [sourceModel, targetModel] = await Promise.all([
-    new Promise((resolve, reject) => {
+    new Promise<GLTF>((resolve, reject) => {
         new GLTFLoader().load('./models/gltf/Michelle.glb', resolve, undefined, reject);
     }),
 
-    new Promise((resolve, reject) => {
+    new Promise<GLTF>((resolve, reject) => {
         new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
     }),
 ]);
@@ -45,7 +46,7 @@ const clock = new THREE.Clock();
 const stats = new Stats();
 document.body.appendChild(stats.dom);
 
-export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
+export const lightSpeed = /*#__PURE__*/ Fn<[ShaderNodeObject<THREE.Node>]>(([suv_immutable]) => {
     // forked from https://www.shadertoy.com/view/7ly3D1
 
     const suv = vec2(suv_immutable);
@@ -170,7 +171,13 @@ gui.add(helpers, 'visible').name('helpers');
 
 //
 
-function getSource(sourceModel) {
+interface Source {
+    clip: THREE.AnimationClip;
+    skeleton: THREE.Skeleton;
+    mixer: THREE.AnimationMixer;
+}
+
+function getSource(sourceModel: GLTF): Source {
     const clip = sourceModel.animations[0];
 
     const helper = new THREE.SkeletonHelper(sourceModel.scene);
@@ -184,7 +191,7 @@ function getSource(sourceModel) {
     return { clip, skeleton, mixer };
 }
 
-function retargetModel(sourceModel, targetModel) {
+function retargetModel(sourceModel: Source, targetModel: GLTF) {
     const targetSkin = targetModel.scene.children[0].children[0];
 
     const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);

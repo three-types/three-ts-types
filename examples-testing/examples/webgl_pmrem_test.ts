@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, controls, renderer;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGLRenderer;
 
 function init() {
     const width = window.innerWidth;
@@ -68,8 +68,9 @@ function init() {
             directionalLight.intensity = value ? 0 : 1;
 
             scene.traverse(function (child) {
-                if (child.isMesh) {
-                    child.material.envMapIntensity = 1 - directionalLight.intensity;
+                if ((child as THREE.Mesh).isMesh) {
+                    ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).envMapIntensity =
+                        1 - directionalLight.intensity;
                 }
             });
 
