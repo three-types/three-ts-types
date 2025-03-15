@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGLRenderer;
+let camera, scene, mesh, renderer;
 
 const planeWidth = 20;
 const planeHeight = 10;
@@ -35,7 +35,7 @@ async function init() {
     // Load several KTX2 textures which will later be used to modify
     // specific texture array layers.
 
-    const spiritedaway = (await ktx2Loader.loadAsync('textures/spiritedaway.ktx2')) as THREE.CompressedArrayTexture;
+    const spiritedaway = await ktx2Loader.loadAsync('textures/spiritedaway.ktx2');
 
     // Create a texture array for rendering.
 
@@ -67,9 +67,9 @@ async function init() {
         srcLayer: 0,
         destLayer: 0,
         transfer() {
-            const layerElementLength = layerByteLength / spiritedaway.mipmaps![0].data.BYTES_PER_ELEMENT;
-            textureArray.mipmaps![0].data.set(
-                spiritedaway.mipmaps![0].data.subarray(
+            const layerElementLength = layerByteLength / spiritedaway.mipmaps[0].data.BYTES_PER_ELEMENT;
+            textureArray.mipmaps[0].data.set(
+                spiritedaway.mipmaps[0].data.subarray(
                     layerElementLength * (formData.srcLayer % spiritedaway.image.depth),
                     layerElementLength * ((formData.srcLayer % spiritedaway.image.depth) + 1),
                 ),
@@ -94,13 +94,13 @@ async function init() {
             diffuse: { value: textureArray },
             size: { value: new THREE.Vector2(planeWidth, planeHeight) },
         },
-        vertexShader: document.getElementById('vs')!.textContent!.trim(),
-        fragmentShader: document.getElementById('fs')!.textContent!.trim(),
+        vertexShader: document.getElementById('vs').textContent.trim(),
+        fragmentShader: document.getElementById('fs').textContent.trim(),
         glslVersion: THREE.GLSL3,
     });
 
     const geometry = new THREE.InstancedBufferGeometry();
-    geometry.copy(new THREE.PlaneGeometry(planeWidth, planeHeight) as unknown as THREE.InstancedBufferGeometry);
+    geometry.copy(new THREE.PlaneGeometry(planeWidth, planeHeight));
     geometry.instanceCount = 3;
 
     const instancedIndexAttribute = new THREE.InstancedBufferAttribute(new Uint16Array([0, 1, 2]), 1, false, 1);
@@ -116,7 +116,7 @@ async function init() {
     // Initialize the texture array by first rendering the spirited away
     // frames in order.
 
-    textureArray.mipmaps![0].data.set(spiritedaway.mipmaps![0].data.subarray(0, textureArray.mipmaps![0].data.length));
+    textureArray.mipmaps[0].data.set(spiritedaway.mipmaps[0].data.subarray(0, textureArray.mipmaps[0].data.length));
     textureArray.needsUpdate = true;
     renderer.render(scene, camera);
 }

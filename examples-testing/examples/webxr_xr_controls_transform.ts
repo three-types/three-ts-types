@@ -3,14 +3,14 @@ import { TransformControls } from 'three/addons/controls/TransformControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
-let container: HTMLDivElement;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace, line: THREE.Line;
-let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
+let container;
+let camera, scene, renderer;
+let controller1, controller2, line;
+let controllerGrip1, controllerGrip2;
 
-let raycaster: THREE.Raycaster;
+let raycaster;
 
-let controls: TransformControls, group: THREE.Group;
+let controls, group;
 
 init();
 
@@ -148,7 +148,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function onSelect(event: THREE.Event<'select', THREE.XRTargetRaySpace>) {
+function onSelect(event) {
     const controller = event.target;
 
     controller1.userData.active = false;
@@ -173,7 +173,7 @@ function onSelect(event: THREE.Event<'select', THREE.XRTargetRaySpace>) {
     }
 }
 
-function onControllerEvent(event: THREE.Event<'selectstart' | 'selectend' | 'move', THREE.XRTargetRaySpace>) {
+function onControllerEvent(event) {
     const controller = event.target;
 
     if (controller.userData.active === false) return;

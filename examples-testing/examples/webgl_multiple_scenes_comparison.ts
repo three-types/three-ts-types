@@ -2,15 +2,15 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container: HTMLElement, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-let sceneL: THREE.Scene, sceneR: THREE.Scene;
+let container, camera, renderer, controls;
+let sceneL, sceneR;
 
 let sliderPos = window.innerWidth / 2;
 
 init();
 
 function init() {
-    container = document.querySelector('.container')!;
+    container = document.querySelector('.container');
 
     sceneL = new THREE.Scene();
     sceneL.background = new THREE.Color(0xbcd48f);
@@ -52,9 +52,9 @@ function initMeshes() {
 }
 
 function initSlider() {
-    const slider = document.querySelector('.slider') as HTMLElement;
+    const slider = document.querySelector('.slider');
 
-    function onPointerDown(event: PointerEvent) {
+    function onPointerDown() {
         if (event.isPrimary === false) return;
 
         controls.enabled = false;
@@ -70,10 +70,10 @@ function initSlider() {
         window.removeEventListener('pointerup', onPointerUp);
     }
 
-    function onPointerMove(event: PointerEvent) {
+    function onPointerMove(e) {
         if (event.isPrimary === false) return;
 
-        sliderPos = Math.max(0, Math.min(window.innerWidth, event.pageX));
+        sliderPos = Math.max(0, Math.min(window.innerWidth, e.pageX));
 
         slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
     }

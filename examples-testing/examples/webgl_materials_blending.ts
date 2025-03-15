@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let mapBg: THREE.CanvasTexture;
+let camera, scene, renderer;
+let mapBg;
 
 const textureLoader = new THREE.TextureLoader();
 
@@ -20,7 +20,7 @@ function init() {
     // BACKGROUND
 
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
     canvas.width = canvas.height = 128;
     ctx.fillStyle = '#ddd';
     ctx.fillRect(0, 0, 128, 128);
@@ -50,7 +50,7 @@ function init() {
         { name: 'Multiply', constant: THREE.MultiplyBlending },
     ];
 
-    const assignSRGB = (texture: THREE.Texture) => {
+    const assignSRGB = texture => {
         texture.colorSpace = THREE.SRGBColorSpace;
     };
 
@@ -69,7 +69,7 @@ function init() {
     addImageRow(map3, -150);
     addImageRow(map4, -300);
 
-    function addImageRow(map: THREE.Texture, y: number) {
+    function addImageRow(map, y) {
         for (let i = 0; i < blendings.length; i++) {
             const blending = blendings[i];
 
@@ -115,9 +115,9 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function generateLabelMaterial(text: string) {
+function generateLabelMaterial(text) {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
     canvas.width = 128;
     canvas.height = 32;
 

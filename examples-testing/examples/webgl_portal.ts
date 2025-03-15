@@ -3,26 +3,26 @@ import * as THREE from 'three';
 import * as CameraUtils from 'three/addons/utils/CameraUtils.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let cameraControls: OrbitControls;
+let cameraControls;
 
-let smallSphereOne: THREE.Mesh, smallSphereTwo: THREE.Mesh;
+let smallSphereOne, smallSphereTwo;
 
-let portalCamera: THREE.PerspectiveCamera,
-    leftPortal: THREE.Mesh,
-    rightPortal: THREE.Mesh,
-    leftPortalTexture: THREE.WebGLRenderTarget,
-    reflectedPosition: THREE.Vector3,
-    rightPortalTexture: THREE.WebGLRenderTarget,
-    bottomLeftCorner: THREE.Vector3,
-    bottomRightCorner: THREE.Vector3,
-    topLeftCorner: THREE.Vector3;
+let portalCamera,
+    leftPortal,
+    rightPortal,
+    leftPortalTexture,
+    reflectedPosition,
+    rightPortalTexture,
+    bottomLeftCorner,
+    bottomRightCorner,
+    topLeftCorner;
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     // renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -150,11 +150,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function renderPortal(
-    thisPortalMesh: THREE.Mesh,
-    otherPortalMesh: THREE.Mesh,
-    thisPortalTexture: THREE.WebGLRenderTarget,
-) {
+function renderPortal(thisPortalMesh, otherPortalMesh, thisPortalTexture) {
     // set the portal camera position to be reflected about the portal plane
     thisPortalMesh.worldToLocal(reflectedPosition.copy(camera.position));
     reflectedPosition.x *= -1.0;

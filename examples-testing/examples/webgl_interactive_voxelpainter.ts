@@ -1,15 +1,15 @@
 import * as THREE from 'three';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let plane: THREE.Mesh;
-let pointer: THREE.Vector2,
-    raycaster: THREE.Raycaster,
+let camera, scene, renderer;
+let plane;
+let pointer,
+    raycaster,
     isShiftDown = false;
 
-let rollOverMesh: THREE.Mesh, rollOverMaterial: THREE.MeshBasicMaterial;
-let cubeGeo: THREE.BoxGeometry, cubeMaterial: THREE.MeshLambertMaterial;
+let rollOverMesh, rollOverMaterial;
+let cubeGeo, cubeMaterial;
 
-const objects: THREE.Object3D[] = [];
+const objects = [];
 
 init();
 render();
@@ -87,7 +87,7 @@ function onWindowResize() {
     render();
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     raycaster.setFromCamera(pointer, camera);
@@ -97,14 +97,14 @@ function onPointerMove(event: PointerEvent) {
     if (intersects.length > 0) {
         const intersect = intersects[0];
 
-        rollOverMesh.position.copy(intersect.point).add(intersect.face!.normal);
+        rollOverMesh.position.copy(intersect.point).add(intersect.face.normal);
         rollOverMesh.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
 
         render();
     }
 }
 
-function onPointerDown(event: PointerEvent) {
+function onPointerDown(event) {
     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     raycaster.setFromCamera(pointer, camera);
@@ -126,7 +126,7 @@ function onPointerDown(event: PointerEvent) {
             // create cube
         } else {
             const voxel = new THREE.Mesh(cubeGeo, cubeMaterial);
-            voxel.position.copy(intersect.point).add(intersect.face!.normal);
+            voxel.position.copy(intersect.point).add(intersect.face.normal);
             voxel.position.divideScalar(50).floor().multiplyScalar(50).addScalar(25);
             scene.add(voxel);
 
@@ -137,7 +137,7 @@ function onPointerDown(event: PointerEvent) {
     }
 }
 
-function onDocumentKeyDown(event: KeyboardEvent) {
+function onDocumentKeyDown(event) {
     switch (event.keyCode) {
         case 16:
             isShiftDown = true;
@@ -145,7 +145,7 @@ function onDocumentKeyDown(event: KeyboardEvent) {
     }
 }
 
-function onDocumentKeyUp(event: KeyboardEvent) {
+function onDocumentKeyUp(event) {
     switch (event.keyCode) {
         case 16:
             isShiftDown = false;

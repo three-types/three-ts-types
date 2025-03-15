@@ -5,14 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ShadowMapViewer } from 'three/addons/utils/ShadowMapViewer.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    clock: THREE.Clock,
-    stats: Stats;
-let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
-let torusKnot: THREE.Mesh, cube: THREE.Mesh;
-let dirLightShadowMapViewer: ShadowMapViewer, spotLightShadowMapViewer: ShadowMapViewer;
+let camera, scene, renderer, clock, stats;
+let dirLight, spotLight;
+let torusKnot, cube;
+let dirLightShadowMapViewer, spotLightShadowMapViewer;
 
 init();
 
@@ -66,7 +62,7 @@ function initScene() {
     scene.add(new THREE.CameraHelper(dirLight.shadow.camera));
 
     // Geometry
-    let geometry: THREE.BufferGeometry = new THREE.TorusKnotGeometry(25, 8, 75, 20);
+    let geometry = new THREE.TorusKnotGeometry(25, 8, 75, 20);
     let material = new THREE.MeshPhongMaterial({
         color: 0xff0000,
         shininess: 150,

@@ -8,16 +8,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let stats: Stats;
+let camera, scene, renderer;
+let stats;
 
-let grid: THREE.GridHelper;
-let controls: OrbitControls;
+let grid;
+let controls;
 
-const wheels: THREE.Object3D[] = [];
+const wheels = [];
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -78,17 +78,17 @@ function init() {
         transmission: 1.0,
     });
 
-    const bodyColorInput = document.getElementById('body-color') as HTMLInputElement;
+    const bodyColorInput = document.getElementById('body-color');
     bodyColorInput.addEventListener('input', function () {
         bodyMaterial.color.set(this.value);
     });
 
-    const detailsColorInput = document.getElementById('details-color') as HTMLInputElement;
+    const detailsColorInput = document.getElementById('details-color');
     detailsColorInput.addEventListener('input', function () {
         detailsMaterial.color.set(this.value);
     });
 
-    const glassColorInput = document.getElementById('glass-color') as HTMLInputElement;
+    const glassColorInput = document.getElementById('glass-color');
     glassColorInput.addEventListener('input', function () {
         glassMaterial.color.set(this.value);
     });
@@ -106,21 +106,21 @@ function init() {
     loader.load('models/gltf/ferrari.glb', function (gltf) {
         const carModel = gltf.scene.children[0];
 
-        (carModel.getObjectByName('body') as THREE.Mesh).material = bodyMaterial;
+        carModel.getObjectByName('body').material = bodyMaterial;
 
-        (carModel.getObjectByName('rim_fl') as THREE.Mesh).material = detailsMaterial;
-        (carModel.getObjectByName('rim_fr') as THREE.Mesh).material = detailsMaterial;
-        (carModel.getObjectByName('rim_rr') as THREE.Mesh).material = detailsMaterial;
-        (carModel.getObjectByName('rim_rl') as THREE.Mesh).material = detailsMaterial;
-        (carModel.getObjectByName('trim') as THREE.Mesh).material = detailsMaterial;
+        carModel.getObjectByName('rim_fl').material = detailsMaterial;
+        carModel.getObjectByName('rim_fr').material = detailsMaterial;
+        carModel.getObjectByName('rim_rr').material = detailsMaterial;
+        carModel.getObjectByName('rim_rl').material = detailsMaterial;
+        carModel.getObjectByName('trim').material = detailsMaterial;
 
-        (carModel.getObjectByName('glass') as THREE.Mesh).material = glassMaterial;
+        carModel.getObjectByName('glass').material = glassMaterial;
 
         wheels.push(
-            carModel.getObjectByName('wheel_fl')!,
-            carModel.getObjectByName('wheel_fr')!,
-            carModel.getObjectByName('wheel_rl')!,
-            carModel.getObjectByName('wheel_rr')!,
+            carModel.getObjectByName('wheel_fl'),
+            carModel.getObjectByName('wheel_fr'),
+            carModel.getObjectByName('wheel_rl'),
+            carModel.getObjectByName('wheel_rr'),
         );
 
         // shadow

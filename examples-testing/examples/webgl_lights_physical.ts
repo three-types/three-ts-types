@@ -5,19 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    bulbLight: THREE.PointLight,
-    bulbMat: THREE.MeshStandardMaterial,
-    hemiLight: THREE.HemisphereLight,
-    stats: Stats;
-let ballMat: THREE.MeshStandardMaterial, cubeMat: THREE.MeshStandardMaterial, floorMat: THREE.MeshStandardMaterial;
+let camera, scene, renderer, bulbLight, bulbMat, hemiLight, stats;
+let ballMat, cubeMat, floorMat;
 
 let previousShadowMap = false;
 
 // ref for lumens: http://www.power-sure.com/lumens.htm
-const bulbLuminousPowers: Record<string, number> = {
+const bulbLuminousPowers = {
     '110000 lm (1000W)': 110000,
     '3500 lm (300W)': 3500,
     '1700 lm (100W)': 1700,
@@ -29,7 +23,7 @@ const bulbLuminousPowers: Record<string, number> = {
 };
 
 // ref for solar irradiances: https://en.wikipedia.org/wiki/Lux
-const hemiLuminousIrradiances: Record<string, number> = {
+const hemiLuminousIrradiances = {
     '0.0001 lx (Moonless Night)': 0.0001,
     '0.002 lx (Night Airglow)': 0.002,
     '0.5 lx (Full Moon)': 0.5,
@@ -53,7 +47,7 @@ const params = {
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     stats = new Stats();
     container.appendChild(stats.dom);

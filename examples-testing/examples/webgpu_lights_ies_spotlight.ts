@@ -1,13 +1,13 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { OrbitControls } from './jsm/controls/OrbitControls.js';
 
 import { IESLoader } from 'three/addons/loaders/IESLoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-let lights: THREE.IESSpotLight[];
+let renderer, scene, camera;
+let lights;
 
 async function init() {
     const iesLoader = new IESLoader().setPath('./ies/');
@@ -122,7 +122,7 @@ async function init() {
 
     //
 
-    function setHelperVisible(value: boolean) {
+    function setHelperVisible(value) {
         for (let i = 0; i < lights.length; i++) {
             lights[i].userData.helper.visible = value;
         }
@@ -150,7 +150,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function render(time: number) {
+function render(time) {
     time = time / 1000;
 
     for (let i = 0; i < lights.length; i++) {

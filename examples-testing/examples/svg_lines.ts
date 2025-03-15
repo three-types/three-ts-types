@@ -4,7 +4,7 @@ import { SVGRenderer } from 'three/addons/renderers/SVGRenderer.js';
 
 THREE.ColorManagement.enabled = false;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer;
+let camera, scene, renderer;
 
 init();
 animate();

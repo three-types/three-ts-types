@@ -2,11 +2,9 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+let renderer, scene, camera, stats;
 
-let particleSystem: THREE.Points,
-    uniforms: { pointTexture: THREE.IUniform<THREE.Texture> },
-    geometry: THREE.BufferGeometry;
+let particleSystem, uniforms, geometry;
 
 const particles = 100000;
 
@@ -24,8 +22,8 @@ function init() {
 
     const shaderMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
 
         blending: THREE.AdditiveBlending,
         depthTest: false,
@@ -68,7 +66,7 @@ function init() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.appendChild(renderer.domElement);
 
     stats = new Stats();

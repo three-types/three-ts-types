@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 
-let container: HTMLElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh;
+let container, stats;
+let camera, scene, renderer;
+let controls, water, sun, mesh;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     //
 
@@ -75,7 +75,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
 
-    let renderTarget: THREE.RenderTarget | undefined;
+    let renderTarget;
 
     function updateSun() {
         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);

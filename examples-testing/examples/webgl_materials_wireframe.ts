@@ -8,10 +8,7 @@ const API = {
     thickness: 1,
 };
 
-let renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    mesh2: THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>;
+let renderer, scene, camera, mesh2;
 
 init();
 
@@ -53,8 +50,8 @@ function init() {
 
         const material2 = new THREE.ShaderMaterial({
             uniforms: { thickness: { value: API.thickness } },
-            vertexShader: document.getElementById('vertexShader')!.textContent!,
-            fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+            vertexShader: document.getElementById('vertexShader').textContent,
+            fragmentShader: document.getElementById('fragmentShader').textContent,
             side: THREE.DoubleSide,
             alphaToCoverage: true, // only works when WebGLRenderer's "antialias" is set to "true"
         });
@@ -85,7 +82,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function setupAttributes(geometry: THREE.BufferGeometry) {
+function setupAttributes(geometry) {
     const vectors = [new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1, 0), new THREE.Vector3(0, 0, 1)];
 
     const position = geometry.attributes.position;

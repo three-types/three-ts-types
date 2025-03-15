@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'stats-gl';
 
@@ -9,13 +9,12 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
 import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 
-let line: Line2, thresholdLine: Line2, segments: LineSegments2, thresholdSegments: LineSegments2;
-let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
-let sphereInter: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
-    sphereOnLine: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
-let stats: Stats;
-let gui: GUI;
-let clock: THREE.Clock;
+let line, thresholdLine, segments, thresholdSegments;
+let renderer, scene, camera, controls;
+let sphereInter, sphereOnLine;
+let stats;
+let gui;
+let clock;
 
 const color = new THREE.Color();
 
@@ -23,8 +22,8 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
 
 const raycaster = new THREE.Raycaster();
 
-raycaster.params.Line2 = {} as typeof raycaster.params.Line2;
-raycaster.params.Line2!.threshold = 0;
+raycaster.params.Line2 = {};
+raycaster.params.Line2.threshold = 0;
 
 const matLine = new THREE.Line2NodeMaterial({
     color: 0xffffff,
@@ -52,8 +51,8 @@ const params = {
     'visualize threshold': matThresholdLine.visible,
     width: matLine.linewidth,
     alphaToCoverage: matLine.alphaToCoverage,
-    threshold: raycaster.params.Line2!.threshold,
-    translation: raycaster.params.Line2!.threshold,
+    threshold: raycaster.params.Line2.threshold,
+    translation: raycaster.params.Line2.threshold,
     animate: true,
 };
 
@@ -170,7 +169,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
@@ -199,9 +198,9 @@ async function animate() {
         sphereOnLine.visible = true;
 
         sphereInter.position.copy(intersects[0].point);
-        sphereOnLine.position.copy(intersects[0].pointOnLine!);
+        sphereOnLine.position.copy(intersects[0].pointOnLine);
 
-        const index = intersects[0].faceIndex!;
+        const index = intersects[0].faceIndex;
         const colors = obj.geometry.getAttribute('instanceColorStart');
 
         color.fromBufferAttribute(colors, index);
@@ -223,7 +222,7 @@ async function animate() {
 
 //
 
-function switchLine(val: number) {
+function switchLine(val) {
     switch (val) {
         case 0:
             line.visible = true;
@@ -268,7 +267,7 @@ function initGui() {
 
     gui.add(params, 'width', 1, 10).onChange(function (val) {
         matLine.linewidth = val;
-        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2!.threshold;
+        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
     });
 
     gui.add(params, 'alphaToCoverage').onChange(function (val) {
@@ -276,8 +275,8 @@ function initGui() {
     });
 
     gui.add(params, 'threshold', 0, 10).onChange(function (val) {
-        raycaster.params.Line2!.threshold = val;
-        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2!.threshold;
+        raycaster.params.Line2.threshold = val;
+        matThresholdLine.linewidth = matLine.linewidth + raycaster.params.Line2.threshold;
     });
 
     gui.add(params, 'translation', 0, 10).onChange(function (val) {

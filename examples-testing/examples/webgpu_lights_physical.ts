@@ -1,18 +1,12 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    bulbLight: THREE.PointLight,
-    bulbMat: THREE.MeshStandardMaterial,
-    hemiLight: THREE.HemisphereLight,
-    stats: Stats;
-let ballMat: THREE.MeshStandardMaterial, cubeMat: THREE.MeshStandardMaterial, floorMat: THREE.MeshStandardMaterial;
+let camera, scene, renderer, bulbLight, bulbMat, hemiLight, stats;
+let ballMat, cubeMat, floorMat;
 
 let previousShadowMap = false;
 
@@ -43,22 +37,17 @@ const hemiLuminousIrradiances = {
     '50000 lx (Direct Sun)': 50000,
 };
 
-const params: {
-    shadows: boolean;
-    exposure: number;
-    bulbPower: keyof typeof bulbLuminousPowers;
-    hemiIrradiance: keyof typeof hemiLuminousIrradiances;
-} = {
+const params = {
     shadows: true,
     exposure: 0.68,
-    bulbPower: Object.keys(bulbLuminousPowers)[4] as keyof typeof bulbLuminousPowers,
-    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0] as keyof typeof hemiLuminousIrradiances,
+    bulbPower: Object.keys(bulbLuminousPowers)[4],
+    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0],
 };
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     stats = new Stats();
     container.appendChild(stats.dom);
@@ -212,8 +201,8 @@ function init() {
 
     const gui = new GUI();
 
-    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances) as (keyof typeof hemiLuminousIrradiances)[]);
-    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers) as (keyof typeof bulbLuminousPowers)[]);
+    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances));
+    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers));
     gui.add(params, 'exposure', 0, 1);
     gui.add(params, 'shadows');
     gui.open();

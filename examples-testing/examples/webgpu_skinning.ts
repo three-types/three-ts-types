@@ -1,11 +1,11 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { color, screenUV } from 'three/tsl';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let mixer: THREE.AnimationMixer, clock: THREE.Clock;
+let mixer, clock;
 
 init();
 

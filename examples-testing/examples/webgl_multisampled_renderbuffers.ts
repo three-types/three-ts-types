@@ -5,9 +5,9 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, group: THREE.Group, container: HTMLElement;
+let camera, renderer, group, container;
 
-let composer1: EffectComposer, composer2: EffectComposer;
+let composer1, composer2;
 
 const params = {
     animate: true,
@@ -16,7 +16,7 @@ const params = {
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 10, 2000);
     camera.position.z = 500;

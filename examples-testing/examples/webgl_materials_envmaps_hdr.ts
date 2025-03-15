@@ -8,13 +8,7 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
 import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 import { DebugEnvironment } from 'three/addons/environments/DebugEnvironment.js';
 
-const params: {
-    envMap: 'Generated' | 'LDR' | 'HDR' | 'RGBM16';
-    roughness: number;
-    metalness: number;
-    exposure: number;
-    debug: boolean;
-} = {
+const params = {
     envMap: 'HDR',
     roughness: 0.0,
     metalness: 0.0,
@@ -22,15 +16,11 @@ const params: {
     debug: false,
 };
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-let torusMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    planeMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
-let generatedCubeRenderTarget: THREE.WebGLRenderTarget,
-    ldrCubeRenderTarget: THREE.WebGLRenderTarget,
-    hdrCubeRenderTarget: THREE.WebGLRenderTarget,
-    rgbmCubeRenderTarget: THREE.WebGLRenderTarget;
-let ldrCubeMap: THREE.CubeTexture, hdrCubeMap: THREE.CubeTexture, rgbmCubeMap: THREE.CubeTexture;
+let container, stats;
+let camera, scene, renderer, controls;
+let torusMesh, planeMesh;
+let generatedCubeRenderTarget, ldrCubeRenderTarget, hdrCubeRenderTarget, rgbmCubeRenderTarget;
+let ldrCubeMap, hdrCubeMap, rgbmCubeMap;
 
 init();
 
@@ -49,9 +39,9 @@ function init() {
 
     //
 
-    let geometry: THREE.BufferGeometry = new THREE.TorusKnotGeometry(18, 8, 150, 20);
+    let geometry = new THREE.TorusKnotGeometry(18, 8, 150, 20);
     // let geometry = new THREE.SphereGeometry( 26, 64, 32 );
-    let material: THREE.MeshStandardMaterial | THREE.MeshBasicMaterial = new THREE.MeshStandardMaterial({
+    let material = new THREE.MeshStandardMaterial({
         color: 0xffffff,
         metalness: params.metalness,
         roughness: params.roughness,

@@ -5,13 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { ColladaLoader } from 'three/addons/loaders/ColladaLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container: HTMLElement, stats: Stats, clock: THREE.Clock, controls: OrbitControls;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer;
+let container, stats, clock, controls;
+let camera, scene, renderer, mixer;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
     camera.position.set(15, 10, -15);

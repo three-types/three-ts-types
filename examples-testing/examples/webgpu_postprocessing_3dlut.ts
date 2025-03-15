@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import {
     mix,
     mul,
@@ -17,33 +17,22 @@ import {
     texture3D,
     uniform,
     renderOutput,
-    ShaderNodeObject,
 } from 'three/tsl';
-import Lut3DNode, { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
+import { lut3D } from 'three/addons/tsl/display/Lut3DNode.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { LUTCubeLoader, LUTCubeResult } from 'three/addons/loaders/LUTCubeLoader.js';
-import { LUT3dlLoader, LUT3dlResult } from 'three/addons/loaders/LUT3dlLoader.js';
-import { LUTImageLoader, LUTImageResult } from 'three/addons/loaders/LUTImageLoader.js';
+import { LUTCubeLoader } from 'three/addons/loaders/LUTCubeLoader.js';
+import { LUT3dlLoader } from 'three/addons/loaders/LUT3dlLoader.js';
+import { LUTImageLoader } from 'three/addons/loaders/LUTImageLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-const params: { lut: keyof typeof lutMap; intensity: number } = {
+const params = {
     lut: 'Bourbon 64.CUBE',
     intensity: 1,
 };
 
-const lutMap: {
-    'Bourbon 64.CUBE': LUTCubeResult | Promise<LUTCubeResult> | null;
-    'Chemical 168.CUBE': LUTCubeResult | Promise<LUTCubeResult> | null;
-    'Clayton 33.CUBE': LUTCubeResult | Promise<LUTCubeResult> | null;
-    'Cubicle 99.CUBE': LUTCubeResult | Promise<LUTCubeResult> | null;
-    'Remy 24.CUBE': LUTCubeResult | Promise<LUTCubeResult> | null;
-    'Presetpro-Cinematic.3dl': LUT3dlResult | Promise<LUT3dlResult> | null;
-    NeutralLUT: LUTImageResult | Promise<LUTImageResult> | null;
-    'B&WLUT': LUTImageResult | Promise<LUTImageResult> | null;
-    NightLUT: LUTImageResult | Promise<LUTImageResult> | null;
-} = {
+const lutMap = {
     'Bourbon 64.CUBE': null,
     'Chemical 168.CUBE': null,
     'Clayton 33.CUBE': null,
@@ -55,12 +44,7 @@ const lutMap: {
     NightLUT: null,
 };
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    postProcessing: THREE.PostProcessing,
-    controls: OrbitControls,
-    lutPass: ShaderNodeObject<Lut3DNode>;
+let camera, scene, renderer, postProcessing, controls, lutPass;
 
 init();
 
@@ -83,13 +67,11 @@ async function init() {
 
     for (const name in lutMap) {
         if (/\.CUBE$/i.test(name)) {
-            (lutMap as unknown as Record<string, Promise<LUTCubeResult>>)[name] = lutCubeLoader.loadAsync(
-                'luts/' + name,
-            );
+            lutMap[name] = lutCubeLoader.loadAsync('luts/' + name);
         } else if (/\LUT$/i.test(name)) {
-            (lutMap as Record<string, Promise<LUTImageResult>>)[name] = lutImageLoader.loadAsync(`luts/${name}.png`);
+            lutMap[name] = lutImageLoader.loadAsync(`luts/${name}.png`);
         } else {
-            (lutMap as Record<string, Promise<LUT3dlResult>>)[name] = lut3dlLoader.loadAsync('luts/' + name);
+            lutMap[name] = lut3dlLoader.loadAsync('luts/' + name);
         }
     }
 
@@ -97,17 +79,13 @@ async function init() {
     await Promise.all(pendings);
 
     for (const name in lutMap) {
-        (lutMap as Record<string, LUTCubeResult | LUT3dlResult | LUTImageResult>)[name] = await (
-            lutMap as Record<string, Promise<LUTCubeResult | LUT3dlResult | LUTImageResult>>
-        )[name];
+        lutMap[name] = await lutMap[name];
     }
 
     // baked model
 
     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
-        (
-            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
-        ).material.map!.anisotropy = 8;
+        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
         scene.add(gltf.scene);
     });
 
@@ -205,7 +183,7 @@ async function init() {
     const scenePass = pass(scene, camera);
     const outputPass = renderOutput(scenePass);
 
-    const lut = lutMap[params.lut] as LUTCubeResult | LUT3dlResult | LUTImageResult;
+    const lut = lutMap[params.lut];
     lutPass = lut3D(outputPass, texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
 
     postProcessing.outputNode = lutPass;
@@ -221,7 +199,7 @@ async function init() {
     // gui
 
     const gui = new GUI();
-    gui.add(params, 'lut', Object.keys(lutMap) as (keyof typeof lutMap)[]);
+    gui.add(params, 'lut', Object.keys(lutMap));
     gui.add(params, 'intensity').min(0).max(1);
 
     window.addEventListener('resize', onWindowResize);
@@ -240,7 +218,7 @@ async function animate() {
     lutPass.intensityNode.value = params.intensity;
 
     if (lutMap[params.lut]) {
-        const lut = lutMap[params.lut] as LUTCubeResult | LUT3dlResult | LUTImageResult;
+        const lut = lutMap[params.lut];
         lutPass.lutNode.value = lut.texture3D;
         lutPass.size.value = lut.texture3D.image.width;
     }

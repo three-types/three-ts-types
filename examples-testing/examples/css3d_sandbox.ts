@@ -2,13 +2,13 @@ import * as THREE from 'three';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
-import { Controller, GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let scene2: THREE.Scene, renderer2: CSS3DRenderer;
+let scene2, renderer2;
 
-let controls: TrackballControls;
+let controls;
 
 init();
 animate();
@@ -35,7 +35,7 @@ function init() {
         const element = document.createElement('div');
         element.style.width = '100px';
         element.style.height = '100px';
-        element.style.opacity = `${i < 5 ? 0.5 : 1}`;
+        element.style.opacity = i < 5 ? 0.5 : 1;
         element.style.background = new THREE.Color(Math.random() * 0xffffff).getStyle();
 
         const object = new CSS3DObject(element);
@@ -67,7 +67,7 @@ function init() {
     renderer2 = new CSS3DRenderer();
     renderer2.setSize(window.innerWidth, window.innerHeight);
     renderer2.domElement.style.position = 'absolute';
-    renderer2.domElement.style.top = '0';
+    renderer2.domElement.style.top = 0;
     document.body.appendChild(renderer2.domElement);
 
     controls = new TrackballControls(camera, renderer2.domElement);
@@ -101,12 +101,12 @@ function createPanel() {
 
     const settings = {
         setViewOffset() {
-            (folder1.children[1] as Controller).enable().setValue(window.innerWidth);
-            (folder1.children[2] as Controller).enable().setValue(window.innerHeight);
-            (folder1.children[3] as Controller).enable().setValue(0);
-            (folder1.children[4] as Controller).enable().setValue(0);
-            (folder1.children[5] as Controller).enable().setValue(window.innerWidth);
-            (folder1.children[6] as Controller).enable().setValue(window.innerHeight);
+            folder1.children[1].enable().setValue(window.innerWidth);
+            folder1.children[2].enable().setValue(window.innerHeight);
+            folder1.children[3].enable().setValue(0);
+            folder1.children[4].enable().setValue(0);
+            folder1.children[5].enable().setValue(window.innerWidth);
+            folder1.children[6].enable().setValue(window.innerHeight);
         },
         fullWidth: 0,
         fullHeight: 0,
@@ -115,12 +115,12 @@ function createPanel() {
         width: 0,
         height: 0,
         clearViewOffset() {
-            (folder1.children[1] as Controller).setValue(0).disable();
-            (folder1.children[2] as Controller).setValue(0).disable();
-            (folder1.children[3] as Controller).setValue(0).disable();
-            (folder1.children[4] as Controller).setValue(0).disable();
-            (folder1.children[5] as Controller).setValue(0).disable();
-            (folder1.children[6] as Controller).setValue(0).disable();
+            folder1.children[1].setValue(0).disable();
+            folder1.children[2].setValue(0).disable();
+            folder1.children[3].setValue(0).disable();
+            folder1.children[4].setValue(0).disable();
+            folder1.children[5].setValue(0).disable();
+            folder1.children[6].setValue(0).disable();
             camera.clearViewOffset();
         },
     };
@@ -153,21 +153,7 @@ function createPanel() {
     folder1.add(settings, 'clearViewOffset');
 }
 
-function updateCameraViewOffset({
-    fullWidth,
-    fullHeight,
-    x,
-    y,
-    width,
-    height,
-}: {
-    fullWidth?: number;
-    fullHeight?: number;
-    x?: number;
-    y?: number;
-    width?: number;
-    height?: number;
-}) {
+function updateCameraViewOffset({ fullWidth, fullHeight, x, y, width, height }) {
     if (!camera.view) {
         camera.setViewOffset(
             fullWidth || window.innerWidth,

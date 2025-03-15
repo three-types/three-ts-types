@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { VTKLoader } from 'three/addons/loaders/VTKLoader.js';
 
-let stats: Stats;
+let stats;
 
-let camera: THREE.PerspectiveCamera, controls: TrackballControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, controls, scene, renderer;
 
 init();
 

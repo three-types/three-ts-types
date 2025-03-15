@@ -16,15 +16,11 @@ const MARGIN = 0;
 let SCREEN_HEIGHT = window.innerHeight - MARGIN * 2;
 let SCREEN_WIDTH = window.innerWidth;
 
-let camera: THREE.PerspectiveCamera,
-    controls: FlyControls,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    stats: Stats;
-let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
-let dirLight: THREE.DirectionalLight;
+let camera, controls, scene, renderer, stats;
+let geometry, meshPlanet, meshClouds, meshMoon;
+let dirLight;
 
-let postProcessing: THREE.PostProcessing;
+let postProcessing;
 
 const textureLoader = new THREE.TextureLoader();
 
@@ -56,7 +52,7 @@ function init() {
         // y scale is negated to compensate for normal map handedness.
         normalScale: new THREE.Vector2(0.85, -0.85),
     });
-    materialNormalMap.map!.colorSpace = THREE.SRGBColorSpace;
+    materialNormalMap.map.colorSpace = THREE.SRGBColorSpace;
 
     // planet
 
@@ -73,7 +69,7 @@ function init() {
         map: textureLoader.load('textures/planets/earth_clouds_1024.png'),
         transparent: true,
     });
-    materialClouds.map!.colorSpace = THREE.SRGBColorSpace;
+    materialClouds.map.colorSpace = THREE.SRGBColorSpace;
 
     meshClouds = new THREE.Mesh(geometry, materialClouds);
     meshClouds.scale.set(cloudsScale, cloudsScale, cloudsScale);
@@ -85,7 +81,7 @@ function init() {
     const materialMoon = new THREE.MeshPhongMaterial({
         map: textureLoader.load('textures/planets/moon_1024.jpg'),
     });
-    materialMoon.map!.colorSpace = THREE.SRGBColorSpace;
+    materialMoon.map.colorSpace = THREE.SRGBColorSpace;
 
     meshMoon = new THREE.Mesh(geometry, materialMoon);
     meshMoon.position.set(radius * 5, 0, 0);

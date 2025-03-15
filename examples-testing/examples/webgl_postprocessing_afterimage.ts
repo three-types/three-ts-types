@@ -7,10 +7,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { AfterimagePass } from 'three/addons/postprocessing/AfterimagePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
-let mesh: THREE.Mesh;
+let camera, scene, renderer, composer;
+let mesh;
 
-let afterimagePass: AfterimagePass;
+let afterimagePass;
 
 const params = {
     enable: true,

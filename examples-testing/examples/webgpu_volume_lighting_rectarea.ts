@@ -1,5 +1,5 @@
-import * as THREE from 'three/webgpu';
-import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
+import * as THREE from 'three';
+import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -12,12 +12,12 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-let volumetricMesh: THREE.Mesh, meshKnot: THREE.Mesh;
-let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
-let clock: THREE.Clock;
-let postProcessing: THREE.PostProcessing;
-let stats: Stats;
+let renderer, scene, camera;
+let volumetricMesh, meshKnot;
+let rectLight1, rectLight2, rectLight3;
+let clock;
+let postProcessing;
+let stats;
 
 init();
 
@@ -93,12 +93,12 @@ function init() {
     const volumetricMaterial = new THREE.VolumeNodeMaterial();
     volumetricMaterial.steps = 12;
     volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
-    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: ShaderNodeObject<THREE.Node> }) => {
+    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
         // Return the amount of fog based on the noise texture
 
         const timeScaled = vec3(time, 0, time.mul(0.3));
 
-        const sampleGrain = (scale: number, timeScale = 1) =>
+        const sampleGrain = (scale, timeScale = 1) =>
             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
 
         let density = sampleGrain(0.1);
@@ -134,7 +134,7 @@ function init() {
 
     //
 
-    const createRectLightMesh = (rectLight: THREE.RectAreaLight) => {
+    const createRectLightMesh = rectLight => {
         const geometry = new THREE.PlaneGeometry(4, 10);
         const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
         const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
@@ -187,11 +187,11 @@ function init() {
     // Scene Pass
 
     const scenePass = pass(scene, camera);
-    const sceneDepth = scenePass.getTextureNode('depth');
+    const sceneLinearDepth = scenePass.getTextureNode('depth');
 
     // Material - Apply occlusion depth of volumetric lighting based on the scene depth
 
-    volumetricMaterial.depthNode = sceneDepth.sample(screenUV);
+    volumetricMaterial.depthNode = sceneLinearDepth.sample(screenUV);
 
     // Volumetric Lighting Pass
 
@@ -212,6 +212,7 @@ function init() {
     // GUI
 
     const params = {
+        quality: 1,
         resolution: volumetricPass.getResolution(),
         denoise: true,
     };

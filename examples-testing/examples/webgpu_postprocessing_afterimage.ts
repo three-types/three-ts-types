@@ -1,31 +1,12 @@
-import * as THREE from 'three/webgpu';
-import {
-    instancedBufferAttribute,
-    mod,
-    pass,
-    texture,
-    float,
-    time,
-    vec2,
-    vec3,
-    vec4,
-    sin,
-    cos,
-    ShaderNodeObject,
-} from 'three/tsl';
-import AfterImageNode, { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
+import * as THREE from 'three';
+import { instancedBufferAttribute, mod, pass, texture, float, time, vec2, vec3, vec4, sin, cos } from 'three/tsl';
+import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    particles: THREE.Sprite,
-    stats: Stats;
-let postProcessing: THREE.PostProcessing,
-    afterImagePass: ShaderNodeObject<AfterImageNode>,
-    scenePass: ShaderNodeObject<THREE.PassNode>;
+let camera, scene, renderer, particles, stats;
+let postProcessing, afterImagePass, scenePass;
 
 const params = {
     damp: 0.8,
@@ -135,7 +116,7 @@ function updatePassChain() {
     postProcessing.needsUpdate = true;
 }
 
-function getRandomPointOnSphere(r: number, v: THREE.Vector3) {
+function getRandomPointOnSphere(r, v) {
     const angle = Math.random() * Math.PI * 2;
     const u = Math.random() * 2 - 1;
 
@@ -155,7 +136,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time: number) {
+function animate(time) {
     particles.rotation.z = time * 0.001;
 
     postProcessing.render();

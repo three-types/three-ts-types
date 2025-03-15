@@ -6,10 +6,10 @@ const SEPARATION = 100,
     AMOUNTX = 50,
     AMOUNTY = 50;
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let container, stats;
+let camera, scene, renderer;
 
-let particles: THREE.Points,
+let particles,
     count = 0;
 
 let mouseX = 0,
@@ -60,8 +60,8 @@ function init() {
         uniforms: {
             color: { value: new THREE.Color(0xffffff) },
         },
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
     });
 
     //
@@ -100,7 +100,7 @@ function onWindowResize() {
 
 //
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

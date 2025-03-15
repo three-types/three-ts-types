@@ -9,10 +9,10 @@ import { Gyroscope } from 'three/addons/misc/Gyroscope.js';
 let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let container, stats;
+let camera, scene, renderer;
 
-const characters: MD2CharacterComplex[] = [];
+const characters = [];
 let nCharacters = 0;
 
 let cameraControls;
@@ -76,10 +76,10 @@ function init() {
 
     const ground = new THREE.Mesh(gg, gm);
     ground.rotation.x = -Math.PI / 2;
-    ground.material.map!.repeat.set(64, 64);
-    ground.material.map!.wrapS = THREE.RepeatWrapping;
-    ground.material.map!.wrapT = THREE.RepeatWrapping;
-    ground.material.map!.colorSpace = THREE.SRGBColorSpace;
+    ground.material.map.repeat.set(64, 64);
+    ground.material.map.wrapS = THREE.RepeatWrapping;
+    ground.material.map.wrapT = THREE.RepeatWrapping;
+    ground.material.map.colorSpace = THREE.SRGBColorSpace;
     // note that because the ground does not cast a shadow, .castShadow is left false
     ground.receiveShadow = true;
 
@@ -212,7 +212,7 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function onKeyDown(event: KeyboardEvent) {
+function onKeyDown(event) {
     switch (event.code) {
         case 'ArrowUp':
         case 'KeyW':
@@ -241,7 +241,7 @@ function onKeyDown(event: KeyboardEvent) {
     }
 }
 
-function onKeyUp(event: KeyboardEvent) {
+function onKeyUp(event) {
     switch (event.code) {
         case 'ArrowUp':
         case 'KeyW':

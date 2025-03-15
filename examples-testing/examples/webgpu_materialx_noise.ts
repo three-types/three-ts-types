@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import {
     normalWorld,
     time,
@@ -13,12 +13,12 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
 
-let container: HTMLDivElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let particleLight: THREE.Mesh;
-let group: THREE.Group;
+let particleLight;
+let group;
 
 init();
 

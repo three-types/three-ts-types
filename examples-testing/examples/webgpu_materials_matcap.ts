@@ -1,14 +1,11 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
 
-let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapNodeMaterial>,
-    renderer: THREE.WebGPURenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera;
+let mesh, renderer, scene, camera;
 
 const API = {
     color: 0xffffff, // sRGB
@@ -55,7 +52,7 @@ function init() {
 
     // model
     new GLTFLoader(manager).load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapNodeMaterial>;
+        mesh = gltf.scene.children[0];
         mesh.position.y = -0.25;
 
         mesh.material = new THREE.MeshMatcapNodeMaterial({
@@ -107,7 +104,7 @@ function render() {
 // drag and drop anywhere in document
 //
 
-function updateMatcap(texture: THREE.Texture) {
+function updateMatcap(texture) {
     if (mesh.material.matcap) {
         mesh.material.matcap.dispose();
     }
@@ -121,11 +118,11 @@ function updateMatcap(texture: THREE.Texture) {
     render();
 }
 
-function handleJPG(event: ProgressEvent<FileReader>) {
+function handleJPG(event) {
     // PNG, WebP, AVIF, too
 
-    function imgCallback(event: Event) {
-        const texture = new THREE.Texture(event.target!);
+    function imgCallback(event) {
+        const texture = new THREE.Texture(event.target);
 
         texture.colorSpace = THREE.SRGBColorSpace;
 
@@ -136,11 +133,11 @@ function handleJPG(event: ProgressEvent<FileReader>) {
 
     img.onload = imgCallback;
 
-    img.src = event.target!.result as string;
+    img.src = event.target.result;
 }
 
-function handleEXR(event: ProgressEvent<FileReader>) {
-    const contents = event.target!.result as ArrayBuffer;
+function handleEXR(event) {
+    const contents = event.target.result;
 
     const loader = new EXRLoader();
 
@@ -165,9 +162,9 @@ function handleEXR(event: ProgressEvent<FileReader>) {
     updateMatcap(texture);
 }
 
-function loadFile(file: File) {
+function loadFile(file) {
     const filename = file.name;
-    const extension = filename.split('.').pop()!.toLowerCase();
+    const extension = filename.split('.').pop().toLowerCase();
 
     if (extension === 'exr') {
         const reader = new FileReader();
@@ -193,12 +190,12 @@ function loadFile(file: File) {
 function initDragAndDrop() {
     document.addEventListener('dragover', function (event) {
         event.preventDefault();
-        event.dataTransfer!.dropEffect = 'copy';
+        event.dataTransfer.dropEffect = 'copy';
     });
 
     document.addEventListener('drop', function (event) {
         event.preventDefault();
 
-        loadFile(event.dataTransfer!.files[0]);
+        loadFile(event.dataTransfer.files[0]);
     });
 }

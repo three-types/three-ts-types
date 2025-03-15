@@ -1,11 +1,11 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { texture, uv, userData, fog, rangeFogFactor, color } from 'three/tsl';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let map: THREE.Texture;
+let map;
 
-let group: THREE.Group;
+let group;
 
 let imageWidth = 1,
     imageHeight = 1;

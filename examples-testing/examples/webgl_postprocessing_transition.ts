@@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { RenderTransitionPass } from 'three/addons/postprocessing/RenderTransitionPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let stats: Stats;
-let renderer: THREE.WebGLRenderer, composer: EffectComposer, renderTransitionPass: RenderTransitionPass;
+let stats;
+let renderer, composer, renderTransitionPass;
 
-const textures: THREE.Texture[] = [];
+const textures = [];
 const clock = new THREE.Clock();
 
 const params = {
@@ -22,56 +22,6 @@ const params = {
     cycle: true,
     threshold: 0.1,
 };
-
-class FXScene {
-    rotationSpeed: THREE.Vector3;
-
-    scene: THREE.Scene;
-    camera: THREE.PerspectiveCamera;
-    mesh: THREE.InstancedMesh;
-
-    update: (delta: number) => void;
-
-    resize: () => void;
-
-    constructor(geometry: THREE.BufferGeometry, rotationSpeed: THREE.Vector3, backgroundColor: number) {
-        const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.z = 20;
-
-        // Setup scene
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(backgroundColor);
-        scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
-
-        const light = new THREE.DirectionalLight(0xffffff, 3);
-        light.position.set(0, 1, 4);
-        scene.add(light);
-
-        this.rotationSpeed = rotationSpeed;
-
-        const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
-        const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
-        const mesh = generateInstancedMesh(geometry, material, 500);
-        scene.add(mesh);
-
-        this.scene = scene;
-        this.camera = camera;
-        this.mesh = mesh;
-
-        this.update = function (delta) {
-            if (params.sceneAnimate) {
-                mesh.rotation.x += this.rotationSpeed.x * delta;
-                mesh.rotation.y += this.rotationSpeed.y * delta;
-                mesh.rotation.z += this.rotationSpeed.z * delta;
-            }
-        };
-
-        this.resize = function () {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-        };
-    }
-}
 
 const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
 const fxSceneB = new FXScene(new THREE.IcosahedronGeometry(1, 1), new THREE.Vector3(0, 0.2, 0.1), 0x000000);
@@ -188,7 +138,45 @@ function render() {
     }
 }
 
-function generateInstancedMesh(geometry: THREE.BufferGeometry, material: THREE.MeshPhongMaterial, count: number) {
+function FXScene(geometry, rotationSpeed, backgroundColor) {
+    const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.z = 20;
+
+    // Setup scene
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(backgroundColor);
+    scene.add(new THREE.AmbientLight(0xaaaaaa, 3));
+
+    const light = new THREE.DirectionalLight(0xffffff, 3);
+    light.position.set(0, 1, 4);
+    scene.add(light);
+
+    this.rotationSpeed = rotationSpeed;
+
+    const color = geometry.type === 'BoxGeometry' ? 0x0000ff : 0xff0000;
+    const material = new THREE.MeshPhongMaterial({ color: color, flatShading: true });
+    const mesh = generateInstancedMesh(geometry, material, 500);
+    scene.add(mesh);
+
+    this.scene = scene;
+    this.camera = camera;
+    this.mesh = mesh;
+
+    this.update = function (delta) {
+        if (params.sceneAnimate) {
+            mesh.rotation.x += this.rotationSpeed.x * delta;
+            mesh.rotation.y += this.rotationSpeed.y * delta;
+            mesh.rotation.z += this.rotationSpeed.z * delta;
+        }
+    };
+
+    this.resize = function () {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    };
+}
+
+function generateInstancedMesh(geometry, material, count) {
     const mesh = new THREE.InstancedMesh(geometry, material, count);
 
     const dummy = new THREE.Object3D();

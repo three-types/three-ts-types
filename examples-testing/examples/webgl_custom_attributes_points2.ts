@@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
-let sphere: THREE.Points, length1: number;
+let renderer, scene, camera, stats;
+let sphere, length1;
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -22,8 +22,8 @@ function init() {
         segments = 68,
         rings = 38;
 
-    let sphereGeometry: THREE.BufferGeometry = new THREE.SphereGeometry(radius, segments, rings);
-    let boxGeometry: THREE.BufferGeometry = new THREE.BoxGeometry(0.8 * radius, 0.8 * radius, 0.8 * radius, 10, 10, 10);
+    let sphereGeometry = new THREE.SphereGeometry(radius, segments, rings);
+    let boxGeometry = new THREE.BoxGeometry(0.8 * radius, 0.8 * radius, 0.8 * radius, 10, 10, 10);
 
     // if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
 
@@ -39,8 +39,8 @@ function init() {
     const combinedGeometry = BufferGeometryUtils.mergeGeometries([sphereGeometry, boxGeometry]);
     const positionAttribute = combinedGeometry.getAttribute('position');
 
-    const colors: number[] = [];
-    const sizes: number[] = [];
+    const colors = [];
+    const sizes = [];
 
     const color = new THREE.Color();
     const vertex = new THREE.Vector3();
@@ -77,8 +77,8 @@ function init() {
             color: { value: new THREE.Color(0xffffff) },
             pointTexture: { value: texture },
         },
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
         transparent: true,
     });
 
@@ -94,7 +94,7 @@ function init() {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.appendChild(renderer.domElement);
 
     stats = new Stats();
@@ -150,7 +150,7 @@ function sortPoints() {
         sortArray.push([vector.z, i]);
     }
 
-    function numericalSort(a: number[], b: number[]) {
+    function numericalSort(a, b) {
         return b[0] - a[0];
     }
 
@@ -162,7 +162,7 @@ function sortPoints() {
         indices[i] = sortArray[i][1];
     }
 
-    geometry.index!.needsUpdate = true;
+    geometry.index.needsUpdate = true;
 }
 
 function animate() {

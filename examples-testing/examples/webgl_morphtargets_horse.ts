@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let mesh: THREE.Object3D, mixer: THREE.AnimationMixer;
+let container, stats;
+let camera, scene, renderer;
+let mesh, mixer;
 
 const radius = 600;
 let theta = 0;

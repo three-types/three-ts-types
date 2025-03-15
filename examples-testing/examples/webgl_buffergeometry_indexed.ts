@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let camera, scene, renderer, stats;
 
-let mesh: THREE.Mesh;
+let mesh;
 
 init();
 

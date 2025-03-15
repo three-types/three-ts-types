@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
 
 /* TEXTURE WIDTH FOR SIMULATION */
 const WIDTH = 32;
@@ -33,9 +33,9 @@ class BirdGeometry extends THREE.BufferGeometry {
 
         let v = 0;
 
-        function verts_push(...args: number[]) {
-            for (let i = 0; i < args.length; i++) {
-                vertices.array[v++] = args[i];
+        function verts_push() {
+            for (let i = 0; i < arguments.length; i++) {
+                vertices.array[v++] = arguments[i];
             }
         }
 
@@ -77,8 +77,8 @@ class BirdGeometry extends THREE.BufferGeometry {
 
 //
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let container, stats;
+let camera, scene, renderer;
 let mouseX = 0,
     mouseY = 0;
 
@@ -90,12 +90,12 @@ const BOUNDS = 800,
 
 let last = performance.now();
 
-let gpuCompute: GPUComputationRenderer;
-let velocityVariable: Variable;
-let positionVariable: Variable;
-let positionUniforms: Record<string, THREE.IUniform>;
-let velocityUniforms: Record<string, THREE.IUniform>;
-let birdUniforms: Record<string, THREE.IUniform>;
+let gpuCompute;
+let velocityVariable;
+let positionVariable;
+let positionUniforms;
+let velocityUniforms;
+let birdUniforms;
 
 init();
 
@@ -164,12 +164,12 @@ function initComputeRenderer() {
 
     velocityVariable = gpuCompute.addVariable(
         'textureVelocity',
-        document.getElementById('fragmentShaderVelocity')!.textContent!,
+        document.getElementById('fragmentShaderVelocity').textContent,
         dtVelocity,
     );
     positionVariable = gpuCompute.addVariable(
         'texturePosition',
-        document.getElementById('fragmentShaderPosition')!.textContent!,
+        document.getElementById('fragmentShaderPosition').textContent,
         dtPosition,
     );
 
@@ -218,8 +218,8 @@ function initBirds() {
     // THREE.ShaderMaterial
     const material = new THREE.ShaderMaterial({
         uniforms: birdUniforms,
-        vertexShader: document.getElementById('birdVS')!.textContent!,
-        fragmentShader: document.getElementById('birdFS')!.textContent!,
+        vertexShader: document.getElementById('birdVS').textContent,
+        fragmentShader: document.getElementById('birdFS').textContent,
         side: THREE.DoubleSide,
     });
 
@@ -231,8 +231,8 @@ function initBirds() {
     scene.add(birdMesh);
 }
 
-function fillPositionTexture(texture: THREE.DataTexture) {
-    const theArray = texture.image.data as Float32Array;
+function fillPositionTexture(texture) {
+    const theArray = texture.image.data;
 
     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
         const x = Math.random() * BOUNDS - BOUNDS_HALF;
@@ -246,8 +246,8 @@ function fillPositionTexture(texture: THREE.DataTexture) {
     }
 }
 
-function fillVelocityTexture(texture: THREE.DataTexture) {
-    const theArray = texture.image.data as Float32Array;
+function fillVelocityTexture(texture) {
+    const theArray = texture.image.data;
 
     for (let k = 0, kl = theArray.length; k < kl; k += 4) {
         const x = Math.random() - 0.5;
@@ -271,7 +271,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

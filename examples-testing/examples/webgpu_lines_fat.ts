@@ -1,5 +1,5 @@
-import * as THREE from 'three/webgpu';
-import { color, ShaderNodeObject } from 'three/tsl';
+import * as THREE from 'three';
+import { color } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -9,23 +9,15 @@ import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
 import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let line: Line2,
-    renderer: THREE.WebGPURenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    camera2: THREE.PerspectiveCamera,
-    controls: OrbitControls,
-    backgroundNode: ShaderNodeObject<THREE.Node>;
-let line1: THREE.Line;
-let matLine: THREE.Line2NodeMaterial,
-    matLineBasic: THREE.LineBasicNodeMaterial,
-    matLineDashed: THREE.LineDashedNodeMaterial;
-let stats: Stats;
-let gui: GUI;
+let line, renderer, scene, camera, camera2, controls, backgroundNode;
+let line1;
+let matLine, matLineBasic, matLineDashed;
+let stats;
+let gui;
 
 // viewport
-let insetWidth: number;
-let insetHeight: number;
+let insetWidth;
+let insetHeight;
 
 init();
 

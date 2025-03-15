@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -14,7 +14,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 init();
 
 async function init() {
-    let mixer: THREE.AnimationMixer;
+    let mixer;
 
     const clock = new THREE.Clock();
 
@@ -54,13 +54,13 @@ async function init() {
 
             // GUI
 
-            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
-            const influences = head.morphTargetInfluences!;
+            const head = mesh.getObjectByName('mesh_2');
+            const influences = head.morphTargetInfluences;
 
             const gui = new GUI();
             gui.close();
 
-            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
+            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
                 gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
             }
         });

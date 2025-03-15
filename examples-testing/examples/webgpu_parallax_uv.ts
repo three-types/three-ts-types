@@ -1,11 +1,11 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { texture, parallaxUV, blendOverlay, uv } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let controls: OrbitControls;
+let controls;
 
 init();
 

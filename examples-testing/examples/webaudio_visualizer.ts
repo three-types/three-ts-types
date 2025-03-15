@@ -1,13 +1,8 @@
 import * as THREE from 'three';
-import { IUniform } from 'three';
 
-let scene: THREE.Scene,
-    camera: THREE.Camera,
-    renderer: THREE.WebGLRenderer,
-    analyser: THREE.AudioAnalyser,
-    uniforms: { [uniform: string]: IUniform };
+let scene, camera, renderer, analyser, uniforms;
 
-const startButton = document.getElementById('startButton')!;
+const startButton = document.getElementById('startButton');
 startButton.addEventListener('click', init);
 
 function init() {
@@ -15,12 +10,12 @@ function init() {
 
     //
 
-    const overlay = document.getElementById('overlay')!;
+    const overlay = document.getElementById('overlay');
     overlay.remove();
 
     //
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     scene = new THREE.Scene();
 
@@ -56,8 +51,8 @@ function init() {
 
     const material = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexShader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent,
     });
 
     const geometry = new THREE.PlaneGeometry(1, 1);

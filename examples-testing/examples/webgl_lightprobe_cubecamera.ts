@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
 import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, cubeCamera: THREE.CubeCamera;
+let renderer, scene, camera, cubeCamera;
 
-let lightProbe: THREE.LightProbe;
+let lightProbe;
 
 init();
 
@@ -40,7 +40,7 @@ function init() {
     scene.add(lightProbe);
 
     // envmap
-    const genCubeUrls = function (prefix: string, postfix: string) {
+    const genCubeUrls = function (prefix, postfix) {
         return [
             prefix + 'px' + postfix,
             prefix + 'nx' + postfix,

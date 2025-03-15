@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { cubeTexture, positionWorld, oscSine, time, pass, uniform } from 'three/tsl';
 import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
 
@@ -8,11 +8,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 //
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    mesh: THREE.InstancedMesh,
-    stats: Stats;
+let camera, scene, renderer, mesh, stats;
 
 let mouseX = 0,
     mouseY = 0;
@@ -23,7 +19,7 @@ let windowHalfY = window.innerHeight / 2;
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let postProcessing: THREE.PostProcessing;
+let postProcessing;
 
 init();
 
@@ -130,7 +126,7 @@ function init() {
     gui.add(effectController.maxblur, 'value', 0.0, 0.01, 0.001).name('maxblur');
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     if (event.isPrimary === false) return;
 
     mouseX = event.clientX - windowHalfX;

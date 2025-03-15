@@ -2,18 +2,18 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
+let raycaster, pointer;
 
-let mesh: THREE.Mesh, line: THREE.Line;
+let mesh, line;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     //
 
@@ -146,7 +146,7 @@ function init() {
 
     geometry.computeBoundingSphere();
 
-    let material: THREE.Material = new THREE.MeshPhongMaterial({
+    let material = new THREE.MeshPhongMaterial({
         color: 0xaaaaaa,
         specular: 0xffffff,
         shininess: 250,
@@ -197,7 +197,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }
@@ -221,10 +221,10 @@ function render() {
 
     if (intersects.length > 0) {
         const intersect = intersects[0];
-        const face = intersect.face!;
+        const face = intersect.face;
 
-        const linePosition = line.geometry.attributes.position as THREE.BufferAttribute;
-        const meshPosition = mesh.geometry.attributes.position as THREE.BufferAttribute;
+        const linePosition = line.geometry.attributes.position;
+        const meshPosition = mesh.geometry.attributes.position;
 
         linePosition.copyAt(0, meshPosition, face.a);
         linePosition.copyAt(1, meshPosition, face.b);

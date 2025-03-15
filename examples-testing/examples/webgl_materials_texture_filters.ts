@@ -3,9 +3,9 @@ import * as THREE from 'three';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, scene2, renderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -33,7 +33,7 @@ function init() {
     // GROUND
 
     const imageCanvas = document.createElement('canvas');
-    const context = imageCanvas.getContext('2d')!;
+    const context = imageCanvas.getContext('2d');
 
     imageCanvas.width = imageCanvas.height = 128;
 
@@ -86,7 +86,7 @@ function init() {
         addPainting(scene, mesh);
         addPainting(scene2, mesh2);
 
-        function addPainting(zscene: THREE.Scene, zmesh: THREE.Mesh) {
+        function addPainting(zscene, zmesh) {
             zmesh.scale.x = image.width / 100;
             zmesh.scale.y = image.height / 100;
 
@@ -141,7 +141,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { pass, luminance, saturation } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -10,8 +10,8 @@ const params = {
     speed: 0,
 };
 
-let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
-let timer: Timer, mesh: THREE.Mesh, controls: OrbitControls;
+let camera, renderer, postProcessing;
+let timer, mesh, controls;
 
 init();
 

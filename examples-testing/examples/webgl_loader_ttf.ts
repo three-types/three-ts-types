@@ -4,9 +4,9 @@ import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
 import { Font } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-let container: HTMLDivElement;
-let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let group: THREE.Group, textMesh1: THREE.Mesh, textMesh2: THREE.Mesh, textGeo, material: THREE.MeshPhongMaterial;
+let container;
+let camera, cameraTarget, scene, renderer;
+let group, textMesh1, textMesh2, textGeo, material;
 let firstLetter = true;
 
 let text = 'three.js';
@@ -17,7 +17,7 @@ const depth = 20,
     bevelThickness = 2,
     bevelSize = 1.5;
 
-let font: Font | null = null;
+let font = null;
 const mirror = true;
 
 let targetRotation = 0;
@@ -108,7 +108,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentKeyDown(event: KeyboardEvent) {
+function onDocumentKeyDown(event) {
     if (firstLetter) {
         firstLetter = false;
         text = '';
@@ -128,7 +128,7 @@ function onDocumentKeyDown(event: KeyboardEvent) {
     }
 }
 
-function onDocumentKeyPress(event: KeyboardEvent) {
+function onDocumentKeyPress(event) {
     const keyCode = event.which;
 
     // backspace
@@ -145,7 +145,7 @@ function onDocumentKeyPress(event: KeyboardEvent) {
 
 function createText() {
     textGeo = new TextGeometry(text, {
-        font: font!,
+        font: font,
 
         size: size,
         depth: depth,
@@ -159,7 +159,7 @@ function createText() {
     textGeo.computeBoundingBox();
     textGeo.computeVertexNormals();
 
-    const centerOffset = -0.5 * (textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x);
+    const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
     textMesh1 = new THREE.Mesh(textGeo, material);
 
@@ -195,7 +195,7 @@ function refreshText() {
     createText();
 }
 
-function onPointerDown(event: PointerEvent) {
+function onPointerDown(event) {
     if (event.isPrimary === false) return;
 
     pointerXOnPointerDown = event.clientX - windowHalfX;
@@ -205,7 +205,7 @@ function onPointerDown(event: PointerEvent) {
     document.addEventListener('pointerup', onPointerUp);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     if (event.isPrimary === false) return;
 
     pointerX = event.clientX - windowHalfX;
@@ -214,7 +214,7 @@ function onPointerMove(event: PointerEvent) {
 }
 
 function onPointerUp() {
-    if ((event as PointerEvent).isPrimary === false) return;
+    if (event.isPrimary === false) return;
 
     document.removeEventListener('pointermove', onPointerMove);
     document.removeEventListener('pointerup', onPointerUp);

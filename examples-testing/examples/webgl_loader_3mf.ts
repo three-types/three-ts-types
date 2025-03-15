@@ -4,12 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ThreeMFLoader } from 'three/addons/loaders/3MFLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    object: THREE.Group,
-    loader: ThreeMFLoader,
-    controls: OrbitControls;
+let camera, scene, renderer, object, loader, controls;
 
 const params = {
     asset: 'cube_gears',
@@ -78,18 +73,13 @@ function init() {
     });
 }
 
-function loadAsset(asset: string) {
+function loadAsset(asset) {
     loader.load('models/3mf/' + asset + '.3mf', function (group) {
         if (object) {
             object.traverse(function (child) {
-                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
-                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
-                if (
-                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material &&
-                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.map
-                )
-                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.map!.dispose();
-                if ((child as THREE.Mesh).geometry) (child as THREE.Mesh).geometry.dispose();
+                if (child.material) child.material.dispose();
+                if (child.material && child.material.map) child.material.map.dispose();
+                if (child.geometry) child.geometry.dispose();
             });
 
             scene.remove(object);

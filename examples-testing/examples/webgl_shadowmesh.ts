@@ -12,18 +12,18 @@ const renderer = new THREE.WebGLRenderer({ stencil: true });
 
 const sunLight = new THREE.DirectionalLight('rgb(255,255,255)', 3);
 let useDirectionalLight = true;
-let arrowHelper1: THREE.ArrowHelper, arrowHelper2: THREE.ArrowHelper, arrowHelper3: THREE.ArrowHelper;
+let arrowHelper1, arrowHelper2, arrowHelper3;
 const arrowDirection = new THREE.Vector3();
 const arrowPosition1 = new THREE.Vector3();
 const arrowPosition2 = new THREE.Vector3();
 const arrowPosition3 = new THREE.Vector3();
-let groundMesh: THREE.Mesh<THREE.BoxGeometry, THREE.MeshLambertMaterial>;
-let lightSphere: THREE.Mesh, lightHolder: THREE.Mesh;
-let pyramid: THREE.Mesh, pyramidShadow: ShadowMesh;
-let sphere: THREE.Mesh, sphereShadow: ShadowMesh;
-let cube: THREE.Mesh, cubeShadow: ShadowMesh;
-let cylinder: THREE.Mesh, cylinderShadow: ShadowMesh;
-let torus: THREE.Mesh, torusShadow: ShadowMesh;
+let groundMesh;
+let lightSphere, lightHolder;
+let pyramid, pyramidShadow;
+let sphere, sphereShadow;
+let cube, cubeShadow;
+let cylinder, cylinderShadow;
+let torus, torusShadow;
 const normalVector = new THREE.Vector3(0, 1, 0);
 const planeConstant = 0.01; // this value must be slightly higher than the groundMesh's y position of 0.0
 const groundPlane = new THREE.Plane(normalVector, planeConstant);
@@ -41,7 +41,7 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
     renderer.setAnimationLoop(animate);
-    document.getElementById('container')!.appendChild(renderer.domElement);
+    document.getElementById('container').appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize);
 
@@ -150,7 +150,7 @@ function init() {
     pyramidShadow = new ShadowMesh(pyramid);
     scene.add(pyramidShadow);
 
-    document.getElementById('lightButton')!.addEventListener('click', lightButtonHandler);
+    document.getElementById('lightButton').addEventListener('click', lightButtonHandler);
 }
 
 function animate() {
@@ -203,7 +203,7 @@ function lightButtonHandler() {
     useDirectionalLight = !useDirectionalLight;
 
     if (useDirectionalLight) {
-        (scene.background as THREE.Color).setHex(0x0096ff);
+        scene.background.setHex(0x0096ff);
 
         groundMesh.material.color.setHex(0x008200);
         sunLight.position.set(5, 7, -1);
@@ -221,9 +221,9 @@ function lightButtonHandler() {
         lightSphere.visible = false;
         lightHolder.visible = false;
 
-        (document.getElementById('lightButton') as HTMLButtonElement).value = 'Switch to PointLight';
+        document.getElementById('lightButton').value = 'Switch to PointLight';
     } else {
-        (scene.background as THREE.Color).setHex(0x000000);
+        scene.background.setHex(0x000000);
 
         groundMesh.material.color.setHex(0x969696);
 
@@ -245,6 +245,6 @@ function lightButtonHandler() {
         lightSphere.visible = true;
         lightHolder.visible = true;
 
-        (document.getElementById('lightButton') as HTMLButtonElement).value = 'Switch to THREE.DirectionalLight';
+        document.getElementById('lightButton').value = 'Switch to THREE.DirectionalLight';
     }
 }

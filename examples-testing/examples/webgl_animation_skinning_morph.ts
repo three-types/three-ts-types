@@ -5,29 +5,10 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let container: HTMLDivElement,
-    stats: Stats,
-    clock: THREE.Clock,
-    gui: GUI,
-    mixer: THREE.AnimationMixer,
-    actions: Record<string, THREE.AnimationAction>,
-    activeAction: THREE.AnimationAction,
-    previousAction: THREE.AnimationAction;
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    model: THREE.Group,
-    face: THREE.Mesh;
+let container, stats, clock, gui, mixer, actions, activeAction, previousAction;
+let camera, scene, renderer, model, face;
 
-const api: {
-    state: string;
-    Jump?: () => void;
-    Yes?: () => void;
-    No?: () => void;
-    Wave?: () => void;
-    Punch?: () => void;
-    ThumbsUp?: () => void;
-} = { state: 'Walking' };
+const api = { state: 'Walking' };
 
 init();
 
@@ -99,9 +80,9 @@ function init() {
     container.appendChild(stats.dom);
 }
 
-function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
+function createGUI(model, animations) {
     const states = ['Idle', 'Walking', 'Running', 'Dance', 'Death', 'Sitting', 'Standing'];
-    const emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'] as const;
+    const emotes = ['Jump', 'Yes', 'No', 'Wave', 'Punch', 'ThumbsUp'];
 
     gui = new GUI();
 
@@ -114,7 +95,7 @@ function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
         const action = mixer.clipAction(clip);
         actions[clip.name] = action;
 
-        if (emotes.indexOf(clip.name as (typeof emotes)[number]) >= 0 || states.indexOf(clip.name) >= 4) {
+        if (emotes.indexOf(clip.name) >= 0 || states.indexOf(clip.name) >= 4) {
             action.clampWhenFinished = true;
             action.loop = THREE.LoopOnce;
         }
@@ -136,14 +117,14 @@ function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
 
     const emoteFolder = gui.addFolder('Emotes');
 
-    function createEmoteCallback(name: (typeof emotes)[number]) {
+    function createEmoteCallback(name) {
         api[name] = function () {
             fadeToAction(name, 0.2);
 
             mixer.addEventListener('finished', restoreState);
         };
 
-        emoteFolder.add(api as Required<typeof api>, name);
+        emoteFolder.add(api, name);
     }
 
     function restoreState() {
@@ -160,13 +141,13 @@ function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
 
     // expressions
 
-    face = model.getObjectByName('Head_4') as THREE.Mesh;
+    face = model.getObjectByName('Head_4');
 
-    const expressions = Object.keys(face.morphTargetDictionary!);
+    const expressions = Object.keys(face.morphTargetDictionary);
     const expressionFolder = gui.addFolder('Expressions');
 
     for (let i = 0; i < expressions.length; i++) {
-        expressionFolder.add(face.morphTargetInfluences!, i, 0, 1, 0.01).name(expressions[i]);
+        expressionFolder.add(face.morphTargetInfluences, i, 0, 1, 0.01).name(expressions[i]);
     }
 
     activeAction = actions['Walking'];
@@ -175,7 +156,7 @@ function createGUI(model: THREE.Group, animations: THREE.AnimationClip[]) {
     expressionFolder.open();
 }
 
-function fadeToAction(name: string, duration: number) {
+function fadeToAction(name, duration) {
     previousAction = activeAction;
     activeAction = actions[name];
 

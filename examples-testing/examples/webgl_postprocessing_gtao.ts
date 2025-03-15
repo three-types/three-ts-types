@@ -10,14 +10,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    composer: EffectComposer,
-    controls: OrbitControls,
-    clock: THREE.Clock,
-    stats: Stats,
-    mixer: THREE.AnimationMixer;
+let camera, scene, renderer, composer, controls, clock, stats, mixer;
 
 init();
 

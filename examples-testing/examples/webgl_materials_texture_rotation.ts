@@ -3,10 +3,7 @@ import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>,
-    renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera;
+let mesh, renderer, scene, camera;
 
 let gui;
 
@@ -79,7 +76,7 @@ function onWindowResize() {
 }
 
 function updateUvTransform() {
-    const texture = mesh.material.map!;
+    const texture = mesh.material.map;
 
     if (texture.matrixAutoUpdate === true) {
         texture.offset.set(API.offsetX, API.offsetY);

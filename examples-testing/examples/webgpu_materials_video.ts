@@ -1,13 +1,10 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let video: HTMLVideoElement,
-    texture: THREE.VideoTexture,
-    material: THREE.MeshPhongMaterial & { hue?: number; saturation?: number },
-    mesh: THREE.Mesh & { dx?: number; dy?: number };
+let video, texture, material, mesh;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -15,20 +12,20 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-let cube_count: number;
+let cube_count;
 
-const meshes: THREE.Mesh[] = [],
-    materials: (THREE.MeshPhongMaterial & { hue?: number; saturation?: number })[] = [],
+const meshes = [],
+    materials = [],
     xgrid = 20,
     ygrid = 10;
 
-const startButton = document.getElementById('startButton')!;
+const startButton = document.getElementById('startButton');
 startButton.addEventListener('click', function () {
     init();
 });
 
 function init() {
-    const overlay = document.getElementById('overlay')!;
+    const overlay = document.getElementById('overlay');
     overlay.remove();
 
     container = document.createElement('div');
@@ -49,7 +46,7 @@ function init() {
     renderer.setAnimationLoop(render);
     container.appendChild(renderer.domElement);
 
-    video = document.getElementById('video') as HTMLVideoElement;
+    video = document.getElementById('video');
     video.play();
     video.addEventListener('play', function () {
         this.currentTime = 3;
@@ -125,7 +122,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function change_uvs(geometry: THREE.BoxGeometry, unitx: number, unity: number, offsetx: number, offsety: number) {
+function change_uvs(geometry, unitx, unity, offsetx, offsety) {
     const uvs = geometry.attributes.uv.array;
 
     for (let i = 0; i < uvs.length; i += 2) {
@@ -134,7 +131,7 @@ function change_uvs(geometry: THREE.BoxGeometry, unitx: number, unity: number, o
     }
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowHalfX;
     mouseY = (event.clientY - windowHalfY) * 0.3;
 }
@@ -155,20 +152,20 @@ function render() {
     for (let i = 0; i < cube_count; i++) {
         material = materials[i];
 
-        h = ((360 * (material.hue! + time)) % 360) / 360;
-        material.color.setHSL(h, material.saturation!, 0.5);
+        h = ((360 * (material.hue + time)) % 360) / 360;
+        material.color.setHSL(h, material.saturation, 0.5);
     }
 
     if (counter % 1000 > 200) {
         for (let i = 0; i < cube_count; i++) {
             mesh = meshes[i];
 
-            mesh.rotation.x += 10 * mesh.dx!;
-            mesh.rotation.y += 10 * mesh.dy!;
+            mesh.rotation.x += 10 * mesh.dx;
+            mesh.rotation.y += 10 * mesh.dy;
 
-            mesh.position.x -= 150 * mesh.dx!;
-            mesh.position.y += 150 * mesh.dy!;
-            mesh.position.z += 300 * mesh.dx!;
+            mesh.position.x -= 150 * mesh.dx;
+            mesh.position.y += 150 * mesh.dy;
+            mesh.position.z += 300 * mesh.dx;
         }
     }
 
@@ -176,8 +173,8 @@ function render() {
         for (let i = 0; i < cube_count; i++) {
             mesh = meshes[i];
 
-            mesh.dx! *= -1;
-            mesh.dy! *= -1;
+            mesh.dx *= -1;
+            mesh.dy *= -1;
         }
     }
 

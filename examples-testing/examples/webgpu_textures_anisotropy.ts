@@ -1,10 +1,10 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLDivElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene1, scene2, renderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -75,11 +75,11 @@ function init() {
     texture2.repeat.set(512, 512);
 
     if (maxAnisotropy > 0) {
-        document.getElementById('val_left')!.innerHTML = texture1.anisotropy.toString();
-        document.getElementById('val_right')!.innerHTML = texture2.anisotropy.toString();
+        document.getElementById('val_left').innerHTML = texture1.anisotropy;
+        document.getElementById('val_right').innerHTML = texture2.anisotropy;
     } else {
-        document.getElementById('val_left')!.innerHTML = 'not supported';
-        document.getElementById('val_right')!.innerHTML = 'not supported';
+        document.getElementById('val_left').innerHTML = 'not supported';
+        document.getElementById('val_right').innerHTML = 'not supported';
     }
 
     //
@@ -114,7 +114,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     const windowHalfX = window.innerWidth / 2;
     const windowHalfY = window.innerHeight / 2;
 

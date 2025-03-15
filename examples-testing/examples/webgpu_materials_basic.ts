@@ -1,10 +1,10 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-const spheres: THREE.Mesh[] = [];
+const spheres = [];
 
 let mouseX = 0;
 let mouseY = 0;
@@ -12,13 +12,7 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-const params: {
-    color: string;
-    mapping: THREE.CubeTextureMapping;
-    refractionRatio: number;
-    transparent: boolean;
-    opacity: number;
-} = {
+const params = {
     color: '#ffffff',
     mapping: THREE.CubeReflectionMapping,
     refractionRatio: 0.98,
@@ -117,7 +111,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = (event.clientX - windowHalfX) / 100;
     mouseY = (event.clientY - windowHalfY) / 100;
 }

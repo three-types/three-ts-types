@@ -1,16 +1,12 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { WaterMesh, WaterNode } from 'three/addons/objects/Water2Mesh.js';
+import { WaterMesh } from 'three/addons/objects/Water2Mesh.js';
 
-let scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    clock: THREE.Clock,
-    renderer: THREE.WebGPURenderer,
-    water: WaterMesh;
+let scene, camera, clock, renderer, water;
 
-let torusKnot: THREE.Mesh;
+let torusKnot;
 
 const params = {
     color: '#ffffff',
@@ -125,7 +121,7 @@ function init() {
     // gui
 
     const gui = new GUI();
-    const waterNode = water.material.fragmentNode as WaterNode;
+    const waterNode = water.material.fragmentNode;
 
     gui.addColor(params, 'color').onChange(function (value) {
         waterNode.color.value.set(value);

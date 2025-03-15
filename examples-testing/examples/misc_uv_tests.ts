@@ -7,7 +7,7 @@ import { UVsDebug } from 'three/addons/utils/UVsDebug.js';
  * as well as allow a new user to visualize what UVs are about.
  */
 
-function test(name: string, geometry: THREE.BufferGeometry) {
+function test(name, geometry) {
     const d = document.createElement('div');
 
     d.innerHTML = '<h3>' + name + '</h3>';

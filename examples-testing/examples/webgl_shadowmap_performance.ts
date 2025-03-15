@@ -16,16 +16,16 @@ const FLOOR = -250;
 
 const ANIMATION_GROUPS = 25;
 
-let camera: THREE.PerspectiveCamera, controls: FirstPersonControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let stats: Stats;
+let camera, controls, scene, renderer;
+let stats;
 
 const NEAR = 5,
     FAR = 3000;
 
-let morph, mixer: THREE.AnimationMixer;
+let morph, mixer;
 
-const morphs: (THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> & { speed?: number })[] = [],
-    animGroups: THREE.AnimationObjectGroup[] = [];
+const morphs = [],
+    animGroups = [];
 
 const clock = new THREE.Clock();
 
@@ -150,7 +150,7 @@ function createScene() {
         });
 
         textGeo.computeBoundingBox();
-        const centerOffset = -0.5 * (textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x);
+        const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
         const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
 
@@ -195,17 +195,7 @@ function createScene() {
 
     // MORPHS
 
-    function addMorph(
-        mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> & { speed?: number },
-        clip: THREE.AnimationClip,
-        speed: number,
-        duration: number,
-        x: number,
-        y: number,
-        z: number,
-        fudgeColor: boolean,
-        massOptimization: boolean,
-    ) {
+    function addMorph(mesh, clip, speed, duration, x, y, z, fudgeColor, massOptimization) {
         mesh = mesh.clone();
         mesh.material = mesh.material.clone();
 
@@ -252,7 +242,7 @@ function createScene() {
 
     const gltfLoader = new GLTFLoader();
     gltfLoader.load('models/gltf/Horse.glb', function (gltf) {
-        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+        const mesh = gltf.scene.children[0];
         const clip = gltf.animations[0];
 
         for (let i = -600; i < 601; i += 2) {
@@ -277,7 +267,7 @@ function render() {
     for (let i = 0; i < morphs.length; i++) {
         morph = morphs[i];
 
-        morph.position.x += morph.speed! * delta;
+        morph.position.x += morph.speed * delta;
 
         if (morph.position.x > 2000) {
             morph.position.x = -1000 - Math.random() * 500;

@@ -2,17 +2,17 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let points: THREE.Points;
+let points;
 
 init();
 animate();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     //
 

@@ -12,11 +12,11 @@ import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-let composer: EffectComposer, effectFXAA: ShaderPass, outlinePass: OutlinePass;
+let container, stats;
+let camera, scene, renderer, controls;
+let composer, effectFXAA, outlinePass;
 
-let selectedObjects: THREE.Object3D[] = [];
+let selectedObjects = [];
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -59,14 +59,9 @@ gui.add(params, 'usePatternTexture').onChange(function (value) {
     outlinePass.usePatternTexture = value;
 });
 
-class Configuration {
-    visibleEdgeColor: string;
-    hiddenEdgeColor: string;
-
-    constructor() {
-        this.visibleEdgeColor = '#ffffff';
-        this.hiddenEdgeColor = '#190a05';
-    }
+function Configuration() {
+    this.visibleEdgeColor = '#ffffff';
+    this.hiddenEdgeColor = '#190a05';
 }
 
 const conf = new Configuration();
@@ -228,7 +223,7 @@ function init() {
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.addEventListener('pointermove', onPointerMove);
 
-    function onPointerMove(event: PointerEvent) {
+    function onPointerMove(event) {
         if (event.isPrimary === false) return;
 
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -237,7 +232,7 @@ function init() {
         checkIntersection();
     }
 
-    function addSelectedObject(object: THREE.Object3D) {
+    function addSelectedObject(object) {
         selectedObjects = [];
         selectedObjects.push(object);
     }

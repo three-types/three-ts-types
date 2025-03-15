@@ -4,11 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { DRACOExporter } from 'three/addons/exporters/DRACOExporter.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    renderer: THREE.WebGLRenderer,
-    exporter: DRACOExporter,
-    mesh: THREE.Mesh;
+let scene, camera, renderer, exporter, mesh;
 
 const params = {
     export: exportFile,
@@ -110,12 +106,12 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link);
 
-function save(blob: Blob, filename: string) {
+function save(blob, filename) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
 }
 
-function saveArrayBuffer(buffer: BufferSource, filename: string) {
+function saveArrayBuffer(buffer, filename) {
     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
 }

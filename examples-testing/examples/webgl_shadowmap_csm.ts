@@ -2,32 +2,12 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { CSM, CSMMode } from 'three/addons/csm/CSM.js';
+import { CSM } from 'three/addons/csm/CSM.js';
 import { CSMHelper } from 'three/addons/csm/CSMHelper.js';
 
-let renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    orthoCamera: THREE.OrthographicCamera,
-    controls: OrbitControls,
-    csm: CSM,
-    csmHelper: CSMHelper;
+let renderer, scene, camera, orthoCamera, controls, csm, csmHelper;
 
-const params: {
-    orthographic: boolean;
-    fade: boolean;
-    shadows: boolean;
-    far: number;
-    mode: CSMMode;
-    lightX: number;
-    lightY: number;
-    lightZ: number;
-    margin: number;
-    lightFar: number;
-    lightNear: number;
-    autoUpdateHelper: boolean;
-    updateHelper: () => void;
-} = {
+const params = {
     orthographic: false,
     fade: false,
     shadows: true,
@@ -153,8 +133,8 @@ function init() {
         renderer.shadowMap.enabled = value;
 
         scene.traverse(function (child) {
-            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
-                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
+            if (child.material) {
+                child.material.needsUpdate = true;
             }
         });
     });

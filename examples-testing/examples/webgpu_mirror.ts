@@ -1,13 +1,13 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { reflector, uv, texture, color } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let cameraControls: OrbitControls;
+let cameraControls;
 
-let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
+let sphereGroup, smallSphere;
 
 init();
 
@@ -72,8 +72,8 @@ function init() {
     const groundUVOffset = texture(decalNormal).xy.mul(2).sub(1).mul(groundNormalScale);
     const verticalUVOffset = texture(floorNormal, uv().mul(5)).xy.mul(2).sub(1).mul(verticalNormalScale);
 
-    groundReflector.uvNode = groundReflector.uvNode!.add(groundUVOffset);
-    verticalReflector.uvNode = verticalReflector.uvNode!.add(verticalUVOffset);
+    groundReflector.uvNode = groundReflector.uvNode.add(groundUVOffset);
+    verticalReflector.uvNode = verticalReflector.uvNode.add(verticalUVOffset);
 
     const groundNode = texture(decalDiffuse).a.mix(color(0xffffff), groundReflector);
     const verticalNode = color(0x0000ff).mul(0.1).add(verticalReflector);

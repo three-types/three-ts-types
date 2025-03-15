@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 import { DragControls } from 'three/addons/controls/DragControls.js';
 
-let container: HTMLDivElement;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let controls: DragControls, group: THREE.Group;
+let container;
+let camera, scene, renderer;
+let controls, group;
 let enableSelection = false;
 
-const objects: THREE.Object3D[] = [];
+const objects = [];
 
 const mouse = new THREE.Vector2(),
     raycaster = new THREE.Raycaster();
@@ -98,7 +98,7 @@ function onWindowResize() {
     render();
 }
 
-function onKeyDown(event: KeyboardEvent) {
+function onKeyDown(event) {
     enableSelection = event.keyCode === 16 ? true : false;
 
     if (event.keyCode === 77) {
@@ -110,7 +110,7 @@ function onKeyUp() {
     enableSelection = false;
 }
 
-function onClick(event: MouseEvent) {
+function onClick(event) {
     event.preventDefault();
 
     if (enableSelection === true) {
@@ -128,10 +128,10 @@ function onClick(event: MouseEvent) {
             const object = intersections[0].object;
 
             if (group.children.includes(object) === true) {
-                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0x000000);
+                object.material.emissive.set(0x000000);
                 scene.attach(object);
             } else {
-                ((object as THREE.Mesh).material as THREE.MeshLambertMaterial).emissive.set(0xaaaaaa);
+                object.material.emissive.set(0xaaaaaa);
                 group.attach(object);
             }
 

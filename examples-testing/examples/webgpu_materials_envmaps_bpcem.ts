@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import {
     bumpMap,
     float,
@@ -15,11 +15,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let controls: OrbitControls, cubeCamera: THREE.CubeCamera;
+let controls, cubeCamera;
 
-let groundPlane: THREE.Mesh, wallMat: THREE.MeshStandardNodeMaterial;
+let groundPlane, wallMat;
 
 init();
 

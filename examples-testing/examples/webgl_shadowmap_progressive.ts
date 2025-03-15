@@ -9,17 +9,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMap.js';
 const shadowMapRes = 512,
     lightMapRes = 1024,
     lightCount = 8;
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    controls: OrbitControls,
-    control: TransformControls,
-    control2: TransformControls,
-    object: THREE.Object3D = new THREE.Mesh(),
-    lightOrigin: THREE.Group | null = null,
-    progressiveSurfacemap: ProgressiveLightMap;
-const dirLights: THREE.DirectionalLight[] = [],
-    lightmapObjects: THREE.Object3D[] = [];
+let camera,
+    scene,
+    renderer,
+    controls,
+    control,
+    control2,
+    object = new THREE.Mesh(),
+    lightOrigin = null,
+    progressiveSurfacemap;
+const dirLights = [],
+    lightmapObjects = [];
 const params = {
     Enable: true,
     'Blur Edges': true,
@@ -98,11 +98,11 @@ function init() {
     // model
     function loadModel() {
         object.traverse(function (child) {
-            if ((child as THREE.Mesh).isMesh) {
+            if (child.isMesh) {
                 child.name = 'Loaded Mesh';
                 child.castShadow = true;
                 child.receiveShadow = true;
-                (child as THREE.Mesh).material = new THREE.MeshPhongMaterial();
+                child.material = new THREE.MeshPhongMaterial();
 
                 // This adds the model to the lightmap
                 lightmapObjects.push(child);
@@ -183,9 +183,9 @@ function animate() {
         // Sometimes they will be uniformly sampled from the upper hemisphere
         if (Math.random() > params['Ambient Weight']) {
             dirLights[l].position.set(
-                lightOrigin!.position.x + Math.random() * params['Light Radius'],
-                lightOrigin!.position.y + Math.random() * params['Light Radius'],
-                lightOrigin!.position.z + Math.random() * params['Light Radius'],
+                lightOrigin.position.x + Math.random() * params['Light Radius'],
+                lightOrigin.position.y + Math.random() * params['Light Radius'],
+                lightOrigin.position.z + Math.random() * params['Light Radius'],
             );
         } else {
             // Uniform Hemispherical Surface Distribution for Ambient Occlusion

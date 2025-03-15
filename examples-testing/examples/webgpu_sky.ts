@@ -1,12 +1,12 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let sky: SkyMesh, sun: THREE.Vector3;
+let sky, sun;
 
 init();
 

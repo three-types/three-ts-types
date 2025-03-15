@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { pass, renderOutput } from 'three/tsl';
 import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 
@@ -9,12 +9,8 @@ const params = {
     animated: false,
 };
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    clock: THREE.Clock,
-    group: THREE.Group;
-let postProcessing: THREE.PostProcessing;
+let camera, scene, renderer, clock, group;
+let postProcessing;
 
 init();
 

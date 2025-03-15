@@ -1,14 +1,14 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { texture } from 'three/tsl';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 const mouse = new THREE.Vector2();
 
-let quadMesh: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
+let quadMesh, renderTarget;
 
-let box: THREE.InstancedMesh, box2: THREE.InstancedMesh;
+let box, box2;
 
 const dpr = 1;
 
@@ -22,7 +22,7 @@ const mat4 = new THREE.Matrix4();
 const count = 50;
 const fullRadius = 20; // Radius of the sphere
 const halfRadius = 10; // Radius of the sphere
-const positions = new Array(count).fill(undefined).map((_, i) => {
+const positions = new Array(count).fill().map((_, i) => {
     const radius = i % 2 === 0 ? fullRadius : halfRadius;
 
     const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
@@ -97,7 +97,7 @@ function init() {
     quadMesh = new THREE.QuadMesh(materialFX);
 }
 
-function onWindowMouseMove(e: MouseEvent) {
+function onWindowMouseMove(e) {
     mouse.x = e.offsetX / window.innerWidth;
     mouse.y = e.offsetY / window.innerHeight;
 }

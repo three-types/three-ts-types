@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: FlyControls;
+let camera, scene, renderer, controls;
 
 const clock = new THREE.Clock();
 
@@ -28,7 +28,7 @@ function init() {
     dirLight.position.set(0, 0, 1).normalize();
     scene.add(dirLight);
 
-    const geometry: [THREE.IcosahedronGeometry, number][] = [
+    const geometry = [
         [new THREE.IcosahedronGeometry(100, 16), 50],
         [new THREE.IcosahedronGeometry(100, 8), 300],
         [new THREE.IcosahedronGeometry(100, 4), 1000],

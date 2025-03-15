@@ -5,16 +5,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-const mixers: THREE.AnimationMixer[] = [];
-let stats: Stats;
+let camera, scene, renderer;
+const mixers = [];
+let stats;
 
 const clock = new THREE.Clock();
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 5000);
     camera.position.set(0, 0, 250);
@@ -74,8 +74,8 @@ function init() {
 
     // SKYDOME
 
-    const vertexShader = document.getElementById('vertexShader')!.textContent!;
-    const fragmentShader = document.getElementById('fragmentShader')!.textContent!;
+    const vertexShader = document.getElementById('vertexShader').textContent;
+    const fragmentShader = document.getElementById('fragmentShader').textContent;
     const uniforms = {
         topColor: { value: new THREE.Color(0x0077ff) },
         bottomColor: { value: new THREE.Color(0xffffff) },

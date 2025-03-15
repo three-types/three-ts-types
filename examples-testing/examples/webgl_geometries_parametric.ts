@@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let camera, scene, renderer, stats;
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
     camera.position.y = 400;
@@ -93,7 +93,7 @@ function render() {
     camera.lookAt(scene.position);
 
     scene.traverse(function (object) {
-        if ((object as THREE.Mesh).isMesh === true) {
+        if (object.isMesh === true) {
             object.rotation.x = timer * 5;
             object.rotation.y = timer * 2.5;
         }

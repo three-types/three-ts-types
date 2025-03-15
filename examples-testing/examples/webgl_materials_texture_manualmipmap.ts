@@ -3,9 +3,9 @@ import * as THREE from 'three';
 const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene1, scene2, renderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -32,9 +32,9 @@ function init() {
 
     // GROUND
 
-    function mipmap(size: number, color: string) {
+    function mipmap(size, color) {
         const imageCanvas = document.createElement('canvas');
-        const context = imageCanvas.getContext('2d')!;
+        const context = imageCanvas.getContext('2d');
 
         imageCanvas.width = imageCanvas.height = size;
 
@@ -49,14 +49,14 @@ function init() {
 
     const canvas = mipmap(128, '#f00');
     const textureCanvas1 = new THREE.CanvasTexture(canvas);
-    textureCanvas1.mipmaps![0] = canvas;
-    textureCanvas1.mipmaps![1] = mipmap(64, '#0f0');
-    textureCanvas1.mipmaps![2] = mipmap(32, '#00f');
-    textureCanvas1.mipmaps![3] = mipmap(16, '#400');
-    textureCanvas1.mipmaps![4] = mipmap(8, '#040');
-    textureCanvas1.mipmaps![5] = mipmap(4, '#004');
-    textureCanvas1.mipmaps![6] = mipmap(2, '#044');
-    textureCanvas1.mipmaps![7] = mipmap(1, '#404');
+    textureCanvas1.mipmaps[0] = canvas;
+    textureCanvas1.mipmaps[1] = mipmap(64, '#0f0');
+    textureCanvas1.mipmaps[2] = mipmap(32, '#00f');
+    textureCanvas1.mipmaps[3] = mipmap(16, '#400');
+    textureCanvas1.mipmaps[4] = mipmap(8, '#040');
+    textureCanvas1.mipmaps[5] = mipmap(4, '#004');
+    textureCanvas1.mipmaps[6] = mipmap(2, '#044');
+    textureCanvas1.mipmaps[7] = mipmap(1, '#404');
     textureCanvas1.colorSpace = THREE.SRGBColorSpace;
     textureCanvas1.repeat.set(1000, 1000);
     textureCanvas1.wrapS = THREE.RepeatWrapping;
@@ -97,7 +97,7 @@ function init() {
         addPainting(scene1, mesh1);
         addPainting(scene2, mesh2);
 
-        function addPainting(zscene: THREE.Scene, zmesh: THREE.Mesh) {
+        function addPainting(zscene, zmesh) {
             zmesh.scale.x = image.width / 100;
             zmesh.scale.y = image.height / 100;
 
@@ -151,7 +151,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

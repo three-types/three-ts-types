@@ -8,14 +8,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 const manager = new THREE.LoadingManager();
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    stats: Stats,
-    object: THREE.Group,
-    loader: FBXLoader,
-    guiMorphsFolder: GUI;
-let mixer: THREE.AnimationMixer | null;
+let camera, scene, renderer, stats, object, loader, guiMorphsFolder;
+let mixer;
 
 const clock = new THREE.Clock();
 
@@ -95,22 +89,19 @@ function init() {
     guiMorphsFolder = gui.addFolder('Morphs').hide();
 }
 
-function loadAsset(asset: string) {
+function loadAsset(asset) {
     loader.load('models/fbx/' + asset + '.fbx', function (group) {
         if (object) {
             object.traverse(function (child) {
-                if ((child as THREE.Mesh).material) {
-                    const materials = Array.isArray((child as THREE.Mesh).material)
-                        ? (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material[]>).material
-                        : [(child as THREE.Mesh).material];
+                if (child.material) {
+                    const materials = Array.isArray(child.material) ? child.material : [child.material];
                     materials.forEach(material => {
-                        if ((material as THREE.MeshPhongMaterial).map)
-                            (material as THREE.MeshPhongMaterial).map!.dispose();
-                        (material as THREE.MeshPhongMaterial).dispose();
+                        if (material.map) material.map.dispose();
+                        material.dispose();
                     });
                 }
 
-                if ((child as THREE.Mesh).geometry) (child as THREE.Mesh).geometry.dispose();
+                if (child.geometry) child.geometry.dispose();
             });
 
             scene.remove(object);
@@ -133,21 +124,15 @@ function loadAsset(asset: string) {
         guiMorphsFolder.hide();
 
         object.traverse(function (child) {
-            if ((child as THREE.Mesh).isMesh) {
+            if (child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
 
-                if ((child as THREE.Mesh).morphTargetDictionary) {
+                if (child.morphTargetDictionary) {
                     guiMorphsFolder.show();
                     const meshFolder = guiMorphsFolder.addFolder(child.name || child.uuid);
-                    Object.keys((child as THREE.Mesh).morphTargetDictionary!).forEach(key => {
-                        meshFolder.add(
-                            (child as THREE.Mesh).morphTargetInfluences!,
-                            (child as THREE.Mesh).morphTargetDictionary![key],
-                            0,
-                            1,
-                            0.01,
-                        );
+                    Object.keys(child.morphTargetDictionary).forEach(key => {
+                        meshFolder.add(child.morphTargetInfluences, child.morphTargetDictionary[key], 0, 1, 0.01);
                     });
                 }
             }

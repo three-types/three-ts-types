@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { mix, oscSine, time, pmremTexture, float } from 'three/tsl';
 
 import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
@@ -6,7 +6,7 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
 init();
 

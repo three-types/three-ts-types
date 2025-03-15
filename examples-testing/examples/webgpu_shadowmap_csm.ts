@@ -1,34 +1,13 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
-import { CSMShadowNode, CSMShadowNodeMode } from 'three/addons/csm/CSMShadowNode.js';
+import { CSMShadowNode } from 'three/addons/csm/CSMShadowNode.js';
 import { CSMHelper } from 'three/addons/csm/CSMHelper.js';
 
-let renderer: THREE.WebGPURenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    orthoCamera: THREE.OrthographicCamera,
-    controls: OrbitControls,
-    csm: CSMShadowNode,
-    csmHelper: CSMHelper,
-    csmDirectionalLight: THREE.DirectionalLight;
+let renderer, scene, camera, orthoCamera, controls, csm, csmHelper, csmDirectionalLight;
 
-const params: {
-    orthographic: boolean;
-    fade: boolean;
-    shadows: boolean;
-    maxFar: number;
-    mode: CSMShadowNodeMode;
-    lightX: number;
-    lightY: number;
-    lightZ: number;
-    margin: number;
-    shadowNear: number;
-    shadowFar: number;
-    autoUpdateHelper: boolean;
-    updateHelper: () => void;
-} = {
+const params = {
     orthographic: false,
     fade: false,
     shadows: true,
@@ -217,8 +196,8 @@ function init() {
         .name('shadow near')
         .onChange(function (value) {
             for (let i = 0; i < csm.lights.length; i++) {
-                csm.lights[i].shadow!.camera.near = value;
-                csm.lights[i].shadow!.camera.updateProjectionMatrix();
+                csm.lights[i].shadow.camera.near = value;
+                csm.lights[i].shadow.camera.updateProjectionMatrix();
             }
         });
 
@@ -226,8 +205,8 @@ function init() {
         .name('shadow far')
         .onChange(function (value) {
             for (let i = 0; i < csm.lights.length; i++) {
-                csm.lights[i].shadow!.camera.far = value;
-                csm.lights[i].shadow!.camera.updateProjectionMatrix();
+                csm.lights[i].shadow.camera.far = value;
+                csm.lights[i].shadow.camera.updateProjectionMatrix();
             }
         });
 

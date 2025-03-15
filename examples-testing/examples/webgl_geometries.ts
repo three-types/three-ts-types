@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let camera, scene, renderer, stats;
 
 init();
 
@@ -127,7 +127,7 @@ function render() {
     camera.lookAt(scene.position);
 
     scene.traverse(function (object) {
-        if ((object as THREE.Mesh).isMesh === true) {
+        if (object.isMesh === true) {
             object.rotation.x = timer * 5;
             object.rotation.y = timer * 2.5;
         }

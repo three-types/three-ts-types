@@ -5,15 +5,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let group: THREE.Group;
-let container: HTMLElement, stats: Stats;
-const particlesData: { velocity: THREE.Vector3; numConnections: number }[] = [];
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let positions: Float32Array, colors: Float32Array;
-let particles: THREE.BufferGeometry;
-let pointCloud: THREE.Points;
-let particlePositions: Float32Array;
-let linesMesh: THREE.LineSegments;
+let group;
+let container, stats;
+const particlesData = [];
+let camera, scene, renderer;
+let positions, colors;
+let particles;
+let pointCloud;
+let particlePositions;
+let linesMesh;
 
 const maxParticleCount = 1000;
 let particleCount = 500;
@@ -52,7 +52,7 @@ function initGUI() {
 function init() {
     initGUI();
 
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 4000);
     camera.position.z = 1750;

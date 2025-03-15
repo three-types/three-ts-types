@@ -2,10 +2,10 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLDivElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let geometry: THREE.InstancedBufferGeometry, material: THREE.RawShaderMaterial, mesh: THREE.Mesh;
+let camera, scene, renderer;
+let geometry, material, mesh;
 
 init();
 
@@ -41,8 +41,8 @@ function init() {
             map: { value: new THREE.TextureLoader().load('textures/sprites/circle.png') },
             time: { value: 0.0 },
         },
-        vertexShader: document.getElementById('vshader')!.textContent!,
-        fragmentShader: document.getElementById('fshader')!.textContent!,
+        vertexShader: document.getElementById('vshader').textContent,
+        fragmentShader: document.getElementById('fshader').textContent,
         depthTest: true,
         depthWrite: true,
     });

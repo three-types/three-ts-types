@@ -6,14 +6,8 @@ import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelated
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.OrthographicCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    composer: EffectComposer,
-    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
-    clock: THREE.Clock;
-let gui: GUI,
-    params: { pixelSize: number; normalEdgeStrength: number; depthEdgeStrength: number; pixelAlignedPanning: boolean };
+let camera, scene, renderer, composer, crystalMesh, clock;
+let gui, params;
 
 init();
 
@@ -59,14 +53,8 @@ function init() {
         .onChange(() => {
             renderPixelatedPass.setPixelSize(params.pixelSize);
         });
-    gui.add(renderPixelatedPass as { normalEdgeStrength: number }, 'normalEdgeStrength')
-        .min(0)
-        .max(2)
-        .step(0.05);
-    gui.add(renderPixelatedPass as { depthEdgeStrength: number }, 'depthEdgeStrength')
-        .min(0)
-        .max(1)
-        .step(0.05);
+    gui.add(renderPixelatedPass, 'normalEdgeStrength').min(0).max(2).step(0.05);
+    gui.add(renderPixelatedPass, 'depthEdgeStrength').min(0).max(1).step(0.05);
     gui.add(params, 'pixelAlignedPanning');
 
     // textures
@@ -81,7 +69,7 @@ function init() {
 
     const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
 
-    function addBox(boxSideLength: number, x: number, z: number, rotation: number) {
+    function addBox(boxSideLength, x, z, rotation) {
         const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
         mesh.castShadow = true;
         mesh.receiveShadow = true;
@@ -178,7 +166,7 @@ function animate() {
 
 // Helper functions
 
-function pixelTexture(texture: THREE.Texture) {
+function pixelTexture(texture) {
     texture.minFilter = THREE.NearestFilter;
     texture.magFilter = THREE.NearestFilter;
     texture.generateMipmaps = false;
@@ -188,30 +176,25 @@ function pixelTexture(texture: THREE.Texture) {
     return texture;
 }
 
-function easeInOutCubic(x: number) {
+function easeInOutCubic(x) {
     return x ** 2 * 3 - x ** 3 * 2;
 }
 
-function linearStep(x: number, edge0: number, edge1: number) {
+function linearStep(x, edge0, edge1) {
     const w = edge1 - edge0;
     const m = 1 / w;
     const y0 = -m * edge0;
     return THREE.MathUtils.clamp(y0 + m * x, 0, 1);
 }
 
-function stopGoEased(x: number, downtime: number, period: number) {
+function stopGoEased(x, downtime, period) {
     const cycle = (x / period) | 0;
     const tween = x - cycle * period;
     const linStep = easeInOutCubic(linearStep(tween, downtime, period));
     return cycle + linStep;
 }
 
-function pixelAlignFrustum(
-    camera: THREE.OrthographicCamera,
-    aspectRatio: number,
-    pixelsPerScreenWidth: number,
-    pixelsPerScreenHeight: number,
-) {
+function pixelAlignFrustum(camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight) {
     // 0. Get Pixel Grid Units
     const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
     const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;

@@ -8,20 +8,15 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 import { Wireframe } from 'three/addons/lines/Wireframe.js';
 import { WireframeGeometry2 } from 'three/addons/lines/WireframeGeometry2.js';
 
-let wireframe: Wireframe,
-    renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    camera2: THREE.PerspectiveCamera,
-    controls: OrbitControls;
-let wireframe1: THREE.LineSegments;
-let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
-let stats: Stats;
-let gui: GUI;
+let wireframe, renderer, scene, camera, camera2, controls;
+let wireframe1;
+let matLine, matLineBasic, matLineDashed;
+let stats;
+let gui;
 
 // viewport
-let insetWidth: number;
-let insetHeight: number;
+let insetWidth;
+let insetHeight;
 
 init();
 
@@ -47,7 +42,7 @@ function init() {
 
     // Wireframe ( WireframeGeometry2, LineMaterial )
 
-    let geo: THREE.BufferGeometry = new THREE.IcosahedronGeometry(20, 1);
+    let geo = new THREE.IcosahedronGeometry(20, 1);
 
     const geometry = new WireframeGeometry2(geo);
 

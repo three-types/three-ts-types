@@ -4,14 +4,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Refractor } from 'three/addons/objects/Refractor.js';
 import { WaterRefractionShader } from 'three/addons/shaders/WaterRefractionShader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+let camera, scene, renderer, clock;
 
-let refractor: Refractor, smallSphere: THREE.Mesh;
+let refractor, smallSphere;
 
 init();
 
 async function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     clock = new THREE.Clock();
 

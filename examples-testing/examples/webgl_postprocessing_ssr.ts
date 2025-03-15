@@ -18,17 +18,17 @@ const params = {
     otherMeshes: true,
     groundReflector: true,
 };
-let composer: EffectComposer;
-let ssrPass: SSRPass;
-let gui: GUI;
-let stats: Stats;
-let controls: OrbitControls;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-const otherMeshes: THREE.Mesh[] = [];
-let groundReflector: ReflectorForSSRPass;
-const selects: THREE.Mesh[] = [];
+let composer;
+let ssrPass;
+let gui;
+let stats;
+let controls;
+let camera, scene, renderer;
+const otherMeshes = [];
+let groundReflector;
+const selects = [];
 
-const container = document.querySelector('#container')!;
+const container = document.querySelector('#container');
 
 // Configure and create Draco decoder.
 const dracoLoader = new DRACOLoader();
@@ -77,7 +77,7 @@ function init() {
         dracoLoader.dispose();
     });
 
-    let geometry: THREE.BufferGeometry, material: THREE.MeshStandardMaterial, mesh: THREE.Mesh;
+    let geometry, material, mesh;
 
     geometry = new THREE.BoxGeometry(0.05, 0.05, 0.05);
     material = new THREE.MeshStandardMaterial({ color: 'green' });

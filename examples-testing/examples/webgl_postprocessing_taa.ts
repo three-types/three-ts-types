@@ -8,13 +8,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    composer: EffectComposer,
-    taaRenderPass: TAARenderPass,
-    renderPass: RenderPass;
-let gui: GUI | undefined, stats: Stats;
+let camera, scene, renderer, composer, taaRenderPass, renderPass;
+let gui, stats;
 let index = 0;
 
 const param = { TAAEnabled: '1', TAASampleLevel: 0 };
@@ -55,7 +50,7 @@ function clearGui() {
 }
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);

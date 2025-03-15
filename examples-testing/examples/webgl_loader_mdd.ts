@@ -2,11 +2,7 @@ import * as THREE from 'three';
 
 import { MDDLoader } from 'three/addons/loaders/MDDLoader.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    mixer: THREE.AnimationMixer,
-    clock: THREE.Clock;
+let camera, scene, renderer, mixer, clock;
 
 init();
 

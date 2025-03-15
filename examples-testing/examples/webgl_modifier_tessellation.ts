@@ -4,14 +4,14 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 import { TessellateModifier } from 'three/addons/modifiers/TessellateModifier.js';
-import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+let renderer, scene, camera, stats;
 
-let controls: TrackballControls;
+let controls;
 
-let mesh: THREE.Mesh, uniforms: Record<string, THREE.IUniform<unknown>>;
+let mesh, uniforms;
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -21,7 +21,7 @@ loader.load('fonts/helvetiker_bold.typeface.json', function (font) {
     init(font);
 });
 
-function init(font: Font) {
+function init(font) {
     camera = new THREE.PerspectiveCamera(40, WIDTH / HEIGHT, 1, 10000);
     camera.position.set(-100, 100, 200);
 
@@ -90,8 +90,8 @@ function init(font: Font) {
 
     const shaderMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
     });
 
     //
@@ -105,7 +105,7 @@ function init(font: Font) {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.appendChild(renderer.domElement);
 
     controls = new TrackballControls(camera, renderer.domElement);

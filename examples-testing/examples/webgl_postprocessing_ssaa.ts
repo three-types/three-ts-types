@@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
 import { SSAARenderPass } from 'three/addons/postprocessing/SSAARenderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
-let cameraP: THREE.PerspectiveCamera, ssaaRenderPassP: SSAARenderPass;
-let cameraO: THREE.OrthographicCamera, ssaaRenderPassO: SSAARenderPass;
-let gui: GUI, stats: Stats;
+let scene, renderer, composer;
+let cameraP, ssaaRenderPassP;
+let cameraO, ssaaRenderPassO;
+let gui, stats;
 
 const params = {
     sampleLevel: 4,
@@ -50,7 +50,7 @@ function clearGui() {
 }
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     const width = window.innerWidth || 1;
     const height = window.innerHeight || 1;
@@ -198,7 +198,7 @@ function animate() {
     ssaaRenderPassP.enabled = params.camera === 'perspective';
     ssaaRenderPassO.enabled = params.camera === 'orthographic';
 
-    cameraP.view!.offsetX = params.viewOffsetX;
+    cameraP.view.offsetX = params.viewOffsetX;
 
     composer.render();
 

@@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Water } from 'three/addons/objects/Water.js';
 import { Sky } from 'three/addons/objects/Sky.js';
 
-let container: HTMLElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let controls: OrbitControls, water: Water, sun: THREE.Vector3, mesh: THREE.Mesh;
+let container, stats;
+let camera, scene, renderer;
+let controls, water, sun, mesh;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     //
 
@@ -79,7 +79,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
 
-    let renderTarget: THREE.WebGLRenderTarget;
+    let renderTarget;
 
     function updateSun() {
         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);

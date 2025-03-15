@@ -8,10 +8,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { SSAOPass } from 'three/addons/postprocessing/SSAOPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let composer: EffectComposer;
-let group: THREE.Group;
+let container, stats;
+let camera, scene, renderer;
+let composer;
+let group;
 
 init();
 

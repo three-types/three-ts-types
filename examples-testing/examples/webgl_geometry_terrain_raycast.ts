@@ -5,18 +5,18 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
-let container: HTMLElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, controls, scene, renderer;
 
-let mesh: THREE.Mesh, texture: THREE.CanvasTexture;
+let mesh, texture;
 
 const worldWidth = 256,
     worldDepth = 256,
     worldHalfWidth = worldWidth / 2,
     worldHalfDepth = worldDepth / 2;
 
-let helper: THREE.Mesh;
+let helper;
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
@@ -24,7 +24,7 @@ const pointer = new THREE.Vector2();
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
     container.innerHTML = '';
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -94,7 +94,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function generateHeight(width: number, height: number) {
+function generateHeight(width, height) {
     const size = width * height,
         data = new Uint8Array(size),
         perlin = new ImprovedNoise(),
@@ -115,7 +115,7 @@ function generateHeight(width: number, height: number) {
     return data;
 }
 
-function generateTexture(data: Uint8Array, width: number, height: number) {
+function generateTexture(data, width, height) {
     // bake lighting into texture
 
     let context, image, imageData, shade;
@@ -129,7 +129,7 @@ function generateTexture(data: Uint8Array, width: number, height: number) {
     canvas.width = width;
     canvas.height = height;
 
-    context = canvas.getContext('2d')!;
+    context = canvas.getContext('2d');
     context.fillStyle = '#000';
     context.fillRect(0, 0, width, height);
 
@@ -157,7 +157,7 @@ function generateTexture(data: Uint8Array, width: number, height: number) {
     canvasScaled.width = width * 4;
     canvasScaled.height = height * 4;
 
-    context = canvasScaled.getContext('2d')!;
+    context = canvasScaled.getContext('2d');
     context.scale(4, 4);
     context.drawImage(canvas, 0, 0);
 
@@ -188,7 +188,7 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
     pointer.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
@@ -199,7 +199,7 @@ function onPointerMove(event: PointerEvent) {
     // Toggle rotation bool for meshes that we clicked
     if (intersects.length > 0) {
         helper.position.set(0, 0, 0);
-        helper.lookAt(intersects[0].face!.normal);
+        helper.lookAt(intersects[0].face.normal);
 
         helper.position.copy(intersects[0].point);
     }

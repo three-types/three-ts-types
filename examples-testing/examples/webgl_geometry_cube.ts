@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let mesh: THREE.Mesh;
+let camera, scene, renderer;
+let mesh;
 
 init();
 

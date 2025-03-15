@@ -1,11 +1,11 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { uniform, skinning } from 'three/tsl';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let mixer: THREE.AnimationMixer, clock: THREE.Clock;
+let mixer, clock;
 
 init();
 
@@ -27,14 +27,14 @@ function init() {
         action.play();
 
         object.traverse(function (child) {
-            if ((child as THREE.SkinnedMesh).isMesh) {
-                (child as THREE.SkinnedMesh).visible = false;
+            if (child.isMesh) {
+                child.visible = false;
 
                 const materialPoints = new THREE.PointsNodeMaterial();
                 materialPoints.colorNode = uniform(new THREE.Color());
-                materialPoints.positionNode = skinning(child as THREE.SkinnedMesh);
+                materialPoints.positionNode = skinning(child);
 
-                const pointCloud = new THREE.Points((child as THREE.SkinnedMesh).geometry, materialPoints);
+                const pointCloud = new THREE.Points(child.geometry, materialPoints);
                 scene.add(pointCloud);
             }
         });

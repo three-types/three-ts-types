@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-let camera: THREE.ArrayCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let mesh: THREE.Mesh;
+let camera, scene, renderer;
+let mesh;
 const AMOUNT = 6;
 
 init();
@@ -86,7 +86,7 @@ function onWindowResize() {
         for (let x = 0; x < AMOUNT; x++) {
             const subcamera = camera.cameras[AMOUNT * y + x];
 
-            subcamera.viewport!.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
+            subcamera.viewport.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
 
             subcamera.aspect = ASPECT_RATIO;
             subcamera.updateProjectionMatrix();

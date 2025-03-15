@@ -4,13 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let container: HTMLDivElement, stats: Stats, loader: GLTFLoader;
+let container, stats, loader;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let mesh: THREE.Mesh;
+let mesh;
 
-let spotLight: THREE.SpotLight;
+let spotLight;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -71,7 +71,7 @@ function init() {
 
     loader = new GLTFLoader();
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        createScene((gltf.scene.children[0] as THREE.Mesh).geometry, 1, material);
+        createScene(gltf.scene.children[0].geometry, 1, material);
     });
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -93,7 +93,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function createScene(geometry: THREE.BufferGeometry, scale: number, material: THREE.Material) {
+function createScene(geometry, scale, material) {
     mesh = new THREE.Mesh(geometry, material);
 
     mesh.position.y = -0.5;
@@ -114,7 +114,7 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

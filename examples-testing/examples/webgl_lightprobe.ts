@@ -8,15 +8,12 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
 
 import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelper.js';
 
-let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
-    renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera;
+let mesh, renderer, scene, camera;
 
 let gui;
 
-let lightProbe: THREE.LightProbe;
-let directionalLight: THREE.DirectionalLight;
+let lightProbe;
+let directionalLight;
 
 // linear color space
 const API = {
@@ -61,7 +58,7 @@ function init() {
     scene.add(directionalLight);
 
     // envmap
-    const genCubeUrls = function (prefix: string, postfix: string) {
+    const genCubeUrls = function (prefix, postfix) {
         return [
             prefix + 'px' + postfix,
             prefix + 'nx' + postfix,

@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 
@@ -26,7 +26,7 @@ function createImage() {
     canvas.width = 256;
     canvas.height = 256;
 
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     context.fillStyle =
         'rgb(' +
         Math.floor(Math.random() * 256) +

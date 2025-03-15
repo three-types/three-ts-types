@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -6,12 +6,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    controls: OrbitControls,
-    clock: THREE.Clock,
-    mixer: THREE.AnimationMixer;
+let camera, scene, renderer, controls, clock, mixer;
 
 init();
 

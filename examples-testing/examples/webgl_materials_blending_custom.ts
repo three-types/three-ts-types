@@ -2,12 +2,12 @@ import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
-let mapBg: THREE.CanvasTexture;
-const materials: THREE.Material[] = [];
+let mapBg;
+const materials = [];
 
-const params: { blendEquation: THREE.BlendingEquation } = {
+const params = {
     blendEquation: THREE.AddEquation,
 };
 
@@ -34,7 +34,7 @@ function init() {
     // BACKGROUND
 
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
     canvas.width = canvas.height = 128;
     ctx.fillStyle = '#ddd';
     ctx.fillRect(0, 0, 128, 128);
@@ -177,9 +177,9 @@ function onWindowResize() {
 
 //
 
-function generateLabelMaterial(text: string, bg: string) {
+function generateLabelMaterial(text, bg) {
     const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext('2d');
     canvas.width = 128;
     canvas.height = 32;
 
@@ -197,7 +197,7 @@ function generateLabelMaterial(text: string, bg: string) {
     return material;
 }
 
-function updateBlendEquation(value: THREE.BlendingEquation) {
+function updateBlendEquation(value) {
     for (const material of materials) {
         material.blendEquation = value;
     }

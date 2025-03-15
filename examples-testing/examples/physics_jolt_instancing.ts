@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { JoltPhysics, JoltPhysicsObject } from 'three/addons/physics/JoltPhysics.js';
+import { JoltPhysics } from 'three/addons/physics/JoltPhysics.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
-let physics: JoltPhysicsObject, position: THREE.Vector3;
+let camera, scene, renderer, stats;
+let physics, position;
 
-let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
+let boxes, spheres;
 
 init();
 

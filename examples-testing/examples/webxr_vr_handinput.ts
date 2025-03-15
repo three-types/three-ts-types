@@ -4,13 +4,13 @@ import { VRButton } from 'three/addons/webxr/VRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 import { XRHandModelFactory } from 'three/addons/webxr/XRHandModelFactory.js';
 
-let container: HTMLDivElement;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let hand1: THREE.XRHandSpace, hand2: THREE.XRHandSpace;
-let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
-let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
+let container;
+let camera, scene, renderer;
+let hand1, hand2;
+let controller1, controller2;
+let controllerGrip1, controllerGrip2;
 
-let controls: OrbitControls;
+let controls;
 
 init();
 

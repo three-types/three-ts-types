@@ -1,16 +1,12 @@
 import * as THREE from 'three';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    sphere: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
-    clock: THREE.Clock;
+let camera, scene, renderer, sphere, clock;
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     clock = new THREE.Clock();
 

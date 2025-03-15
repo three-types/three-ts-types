@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'stats-gl';
 
@@ -10,17 +10,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
-let model: THREE.Group;
+let camera, scene, renderer, stats;
+let model;
 
 const options = { static: true };
 
 init();
 
-function setStatic(object: THREE.Group, value: boolean) {
+function setStatic(object, value) {
     object.traverse(child => {
-        if ((child as THREE.Mesh).isMesh) {
-            (child as THREE.Mesh).static = value;
+        if (child.isMesh) {
+            child.static = value;
         }
     });
 }

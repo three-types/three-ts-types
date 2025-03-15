@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -6,12 +6,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    startTime: number,
-    object: THREE.Mesh,
-    stats: Stats;
+let camera, scene, renderer, startTime, object, stats;
 
 init();
 
@@ -201,7 +196,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(currentTime: DOMHighResTimeStamp) {
+function animate(currentTime) {
     const time = (currentTime - startTime) / 1000;
 
     object.position.y = 0.8;

@@ -2,11 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VOXLoader, VOXData3DTexture } from 'three/addons/loaders/VOXLoader.js';
 
-let renderer: THREE.WebGLRenderer,
-    scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    controls: OrbitControls,
-    clock: THREE.Clock;
+let renderer, scene, camera, controls, clock;
 
 init();
 
@@ -190,7 +186,7 @@ function init() {
 
             const mesh = new THREE.InstancedMesh(geometry, material, 50000);
             mesh.onBeforeRender = function () {
-                (this.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+                this.material.uniforms.cameraPos.value.copy(camera.position);
             };
 
             const transform = new THREE.Object3D();

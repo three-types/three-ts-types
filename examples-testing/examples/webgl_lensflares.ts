@@ -5,10 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { FlyControls } from 'three/addons/controls/FlyControls.js';
 import { Lensflare, LensflareElement } from 'three/addons/objects/Lensflare.js';
 
-let container: HTMLDivElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let controls: FlyControls;
+let camera, scene, renderer;
+let controls;
 
 const clock = new THREE.Clock();
 
@@ -70,7 +70,7 @@ function init() {
     addLight(0.08, 0.8, 0.5, 0, 0, -1000);
     addLight(0.995, 0.5, 0.9, 5000, 5000, -1000);
 
-    function addLight(h: number, s: number, l: number, x: number, y: number, z: number) {
+    function addLight(h, s, l, x, y, z) {
         const light = new THREE.PointLight(0xffffff, 1.5, 2000, 0);
         light.color.setHSL(h, s, l);
         light.position.set(x, y, z);

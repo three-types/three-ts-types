@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
@@ -6,12 +6,12 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
-let cube: THREE.Mesh, sphere: THREE.Mesh, torus: THREE.Mesh, material: THREE.MeshStandardNodeMaterial;
+let camera, scene, renderer, stats;
+let cube, sphere, torus, material;
 
-let cubeCamera: THREE.CubeCamera, cubeRenderTarget: THREE.WebGLCubeRenderTarget;
+let cubeCamera, cubeRenderTarget;
 
-let controls: OrbitControls;
+let controls;
 
 init();
 
@@ -108,7 +108,7 @@ function onWindowResized() {
     camera.updateProjectionMatrix();
 }
 
-function animation(msTime: DOMHighResTimeStamp) {
+function animation(msTime) {
     const time = msTime / 1000;
 
     cube.position.x = Math.cos(time) * 30;

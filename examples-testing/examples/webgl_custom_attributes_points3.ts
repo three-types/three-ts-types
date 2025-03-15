@@ -4,11 +4,11 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+let renderer, scene, camera, stats;
 
-let object: THREE.Points;
+let object;
 
-let vertices1: number;
+let vertices1;
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -47,7 +47,7 @@ function init() {
 
     radius = 200;
 
-    let boxGeometry1: THREE.BufferGeometry = new THREE.BoxGeometry(radius, 0.1 * radius, 0.1 * radius, 50, 5, 5);
+    let boxGeometry1 = new THREE.BoxGeometry(radius, 0.1 * radius, 0.1 * radius, 50, 5, 5);
 
     // if normal and uv attributes are not removed, mergeVertices() can't consolidate identical vertices with different normal/uv data
 
@@ -62,7 +62,7 @@ function init() {
     const quaternion = new THREE.Quaternion();
     const scale = new THREE.Vector3(1, 1, 1);
 
-    function addGeo(geo: THREE.BufferGeometry, x: number, y: number, z: number, ry: number) {
+    function addGeo(geo, x, y, z, ry) {
         position.set(x, y, z);
         rotation.set(0, ry, 0);
 
@@ -93,7 +93,7 @@ function init() {
 
     // corner edges
 
-    let boxGeometry2: THREE.BufferGeometry = new THREE.BoxGeometry(0.1 * radius, radius * 1.2, 0.1 * radius, 5, 60, 5);
+    let boxGeometry2 = new THREE.BoxGeometry(0.1 * radius, radius * 1.2, 0.1 * radius, 5, 60, 5);
 
     boxGeometry2.deleteAttribute('normal');
     boxGeometry2.deleteAttribute('uv');
@@ -107,8 +107,8 @@ function init() {
 
     const positionAttribute = new THREE.Float32BufferAttribute(vertices, 3);
 
-    const colors: number[] = [];
-    const sizes: number[] = [];
+    const colors = [];
+    const sizes = [];
 
     const color = new THREE.Color();
 
@@ -141,8 +141,8 @@ function init() {
             color: { value: new THREE.Color(0xffffff) },
             pointTexture: { value: texture },
         },
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
     });
 
     //
@@ -157,7 +157,7 @@ function init() {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.appendChild(renderer.domElement);
 
     stats = new Stats();

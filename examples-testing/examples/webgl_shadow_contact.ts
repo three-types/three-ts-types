@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { HorizontalBlurShader } from 'three/addons/shaders/HorizontalBlurShader.js';
 import { VerticalBlurShader } from 'three/addons/shaders/VerticalBlurShader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats, gui;
+let camera, scene, renderer, stats, gui;
 
-const meshes: THREE.Mesh[] = [];
+const meshes = [];
 
 const PLANE_WIDTH = 2.5;
 const PLANE_HEIGHT = 2.5;
@@ -26,18 +26,16 @@ const state = {
     showWireframe: false,
 };
 
-let shadowGroup: THREE.Group,
-    renderTarget: THREE.WebGLRenderTarget,
-    renderTargetBlur: THREE.WebGLRenderTarget,
-    shadowCamera: THREE.OrthographicCamera,
-    cameraHelper: THREE.CameraHelper,
-    depthMaterial: THREE.MeshDepthMaterial,
-    horizontalBlurMaterial: THREE.ShaderMaterial,
-    verticalBlurMaterial: THREE.ShaderMaterial;
+let shadowGroup,
+    renderTarget,
+    renderTargetBlur,
+    shadowCamera,
+    cameraHelper,
+    depthMaterial,
+    horizontalBlurMaterial,
+    verticalBlurMaterial;
 
-let plane: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>,
-    blurPlane: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial | THREE.ShaderMaterial>,
-    fillPlane: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
+let plane, blurPlane, fillPlane;
 
 init();
 
@@ -208,7 +206,7 @@ function onWindowResize() {
 }
 
 // renderTarget --> blurPlane (horizontalBlur) --> renderTargetBlur --> blurPlane (verticalBlur) --> renderTarget
-function blurShadow(amount: number) {
+function blurShadow(amount) {
     blurPlane.visible = true;
 
     // blur horizontally and draw in the renderTargetBlur

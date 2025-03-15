@@ -14,12 +14,11 @@ const params = {
     debug: false,
 };
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-let torusMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    planeMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
-let pngCubeRenderTarget: THREE.WebGLRenderTarget, exrCubeRenderTarget: THREE.WebGLRenderTarget;
-let pngBackground: THREE.Texture, exrBackground: THREE.DataTexture;
+let container, stats;
+let camera, scene, renderer, controls;
+let torusMesh, planeMesh;
+let pngCubeRenderTarget, exrCubeRenderTarget;
+let pngBackground, exrBackground;
 
 init();
 
@@ -43,8 +42,8 @@ function init() {
 
     //
 
-    let geometry: THREE.BufferGeometry = new THREE.TorusKnotGeometry(18, 8, 150, 20);
-    let material: THREE.MeshStandardMaterial | THREE.MeshBasicMaterial = new THREE.MeshStandardMaterial({
+    let geometry = new THREE.TorusKnotGeometry(18, 8, 150, 20);
+    let material = new THREE.MeshStandardMaterial({
         metalness: params.metalness,
         roughness: params.roughness,
         envMapIntensity: 1.0,

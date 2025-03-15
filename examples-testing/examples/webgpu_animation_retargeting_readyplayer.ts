@@ -1,20 +1,20 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 const [sourceModel, targetModel] = await Promise.all([
-    new Promise<THREE.Group>((resolve, reject) => {
+    new Promise((resolve, reject) => {
         new FBXLoader().load('./models/fbx/mixamo.fbx', resolve, undefined, reject);
     }),
 
-    new Promise<GLTF>((resolve, reject) => {
+    new Promise((resolve, reject) => {
         new GLTFLoader().load('./models/gltf/readyplayer.me.glb', resolve, undefined, reject);
     }),
 ]);
@@ -102,13 +102,7 @@ scene.add(floor);
 
 //
 
-interface Source {
-    clip: THREE.AnimationClip;
-    skeleton: THREE.Skeleton;
-    mixer: THREE.AnimationMixer;
-}
-
-function getSource(sourceModel: THREE.Group): Source {
+function getSource(sourceModel) {
     const clip = sourceModel.animations[0];
 
     const helper = new THREE.SkeletonHelper(sourceModel);
@@ -120,10 +114,10 @@ function getSource(sourceModel: THREE.Group): Source {
     return { clip, skeleton, mixer };
 }
 
-function retargetModel(sourceModel: Source, targetModel: GLTF) {
+function retargetModel(sourceModel, targetModel) {
     const targetSkin = targetModel.scene.children[0].children[1];
 
-    const retargetOptions: SkeletonUtils.RetargetClipOptions = {
+    const retargetOptions = {
         // specify the name of the source's hip bone.
         hip: 'mixamorigHips',
 

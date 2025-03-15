@@ -2,27 +2,16 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let stats: Stats;
+let stats;
 
-let scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let scene, renderer;
 
 let mouseX = 0,
     mouseY = 0;
 
-let windowWidth: number, windowHeight: number;
+let windowWidth, windowHeight;
 
-const views: {
-    left: number;
-    bottom: number;
-    width: number;
-    height: number;
-    background: THREE.Color;
-    eye: [number, number, number];
-    up: [number, number, number];
-    fov: number;
-    updateCamera: (camera: THREE.PerspectiveCamera, scene: THREE.Scene, mouseX: number, mouseY: number) => void;
-    camera?: THREE.PerspectiveCamera;
-}[] = [
+const views = [
     {
         left: 0,
         bottom: 0,
@@ -73,7 +62,7 @@ const views: {
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     for (let ii = 0; ii < views.length; ++ii) {
         const view = views[ii];
@@ -95,7 +84,7 @@ function init() {
     canvas.width = 128;
     canvas.height = 128;
 
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     const gradient = context.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -202,7 +191,7 @@ function init() {
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowWidth / 2;
     mouseY = event.clientY - windowHeight / 2;
 }
@@ -226,7 +215,7 @@ function render() {
 
     for (let ii = 0; ii < views.length; ++ii) {
         const view = views[ii];
-        const camera = view.camera!;
+        const camera = view.camera;
 
         view.updateCamera(camera, scene, mouseX, mouseY);
 

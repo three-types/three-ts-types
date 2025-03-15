@@ -4,7 +4,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 
@@ -25,7 +25,7 @@ function init() {
 
     // model
 
-    const onProgress = function (xhr: ProgressEvent) {
+    const onProgress = function (xhr) {
         if (xhr.lengthComputable) {
             const percentComplete = (xhr.loaded / xhr.total) * 100;
             console.log(percentComplete.toFixed(2) + '% downloaded');

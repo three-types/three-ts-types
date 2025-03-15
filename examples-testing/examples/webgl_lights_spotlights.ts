@@ -29,7 +29,7 @@ const spotLight1 = createSpotlight(0xff7f00);
 const spotLight2 = createSpotlight(0x00ff7f);
 const spotLight3 = createSpotlight(0x7f00ff);
 
-let lightHelper1: THREE.SpotLightHelper, lightHelper2: THREE.SpotLightHelper, lightHelper3: THREE.SpotLightHelper;
+let lightHelper1, lightHelper2, lightHelper3;
 
 function init() {
     renderer.shadowMap.enabled = true;
@@ -68,7 +68,7 @@ function init() {
     controls.update();
 }
 
-function createSpotlight(color: number) {
+function createSpotlight(color) {
     const newObj = new THREE.SpotLight(color, 10);
 
     newObj.castShadow = true;
@@ -86,7 +86,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function tween(light: THREE.SpotLight) {
+function tween(light) {
     new TWEEN.Tween(light)
         .to(
             {

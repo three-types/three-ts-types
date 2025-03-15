@@ -11,10 +11,10 @@ import { ClearPass } from 'three/addons/postprocessing/ClearPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
-let clearPass: ClearPass, texturePass: TexturePass, renderPass: RenderPass;
-let cameraP: THREE.PerspectiveCamera, cubeTexturePassP: CubeTexturePass | null;
-let gui: GUI | undefined, stats: Stats;
+let scene, renderer, composer;
+let clearPass, texturePass, renderPass;
+let cameraP, cubeTexturePassP;
+let gui, stats;
 
 const params = {
     clearPass: true,
@@ -55,7 +55,7 @@ function clearGui() {
 }
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     const width = window.innerWidth || 1;
     const height = window.innerHeight || 1;
@@ -111,7 +111,7 @@ function init() {
 
     // postprocessing
 
-    const genCubeUrls = function (prefix: string, postfix: string) {
+    const genCubeUrls = function (prefix, postfix) {
         return [
             prefix + 'px' + postfix,
             prefix + 'nx' + postfix,

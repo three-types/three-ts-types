@@ -10,8 +10,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera: THREE.PerspectiveCamera, stats: Stats;
-let composer: EffectComposer, renderer: THREE.WebGLRenderer, mixer: THREE.AnimationMixer, clock: THREE.Clock;
+let camera, stats;
+let composer, renderer, mixer, clock;
 
 const params = {
     threshold: 0,
@@ -23,7 +23,7 @@ const params = {
 init();
 
 async function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     clock = new THREE.Clock();
 

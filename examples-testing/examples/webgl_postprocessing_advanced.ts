@@ -21,21 +21,11 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let container: HTMLElement, stats: Stats;
+let container, stats;
 
-let composerScene: EffectComposer,
-    composer1: EffectComposer,
-    composer2: EffectComposer,
-    composer3: EffectComposer,
-    composer4: EffectComposer;
+let composerScene, composer1, composer2, composer3, composer4;
 
-let cameraOrtho: THREE.OrthographicCamera,
-    cameraPerspective: THREE.PerspectiveCamera,
-    sceneModel: THREE.Scene,
-    sceneBG: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    mesh: THREE.Mesh,
-    directionalLight: THREE.DirectionalLight;
+let cameraOrtho, cameraPerspective, sceneModel, sceneBG, renderer, mesh, directionalLight;
 
 const width = window.innerWidth || 2;
 const height = window.innerHeight || 2;
@@ -43,14 +33,14 @@ const height = window.innerHeight || 2;
 let halfWidth = width / 2;
 let halfHeight = height / 2;
 
-let quadBG: THREE.Mesh, quadMask: THREE.Mesh, renderScene: TexturePass;
+let quadBG, quadMask, renderScene;
 
 const delta = 0.01;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     //
 
@@ -73,7 +63,7 @@ function init() {
 
     const loader = new GLTFLoader();
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        createMesh((gltf.scene.children[0] as THREE.Mesh).geometry, sceneModel, 100);
+        createMesh(gltf.scene.children[0].geometry, sceneModel, 100);
     });
 
     //
@@ -264,7 +254,7 @@ function onWindowResize() {
     quadMask.scale.set(window.innerWidth / 2, window.innerHeight / 2, 1);
 }
 
-function createMesh(geometry: THREE.BufferGeometry, scene: THREE.Scene, scale: number) {
+function createMesh(geometry, scene, scale) {
     const diffuseMap = new THREE.TextureLoader().load('models/gltf/LeePerrySmith/Map-COL.jpg');
     diffuseMap.colorSpace = THREE.SRGBColorSpace;
 

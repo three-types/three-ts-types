@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: Timer;
+let camera, scene, renderer, timer;
 
-let mesh: THREE.Mesh;
+let mesh;
 
 let sign = 1;
 const speed = 0.5;
@@ -14,7 +14,7 @@ const speed = 0.5;
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
     camera.position.set(0, 5, 5);
@@ -36,7 +36,7 @@ function init() {
 
     const loader = new GLTFLoader();
     loader.load('models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
-        mesh = gltf.scene.getObjectByName('AnimatedMorphSphere') as THREE.Mesh;
+        mesh = gltf.scene.getObjectByName('AnimatedMorphSphere');
         mesh.rotation.z = Math.PI / 2;
         scene.add(mesh);
 
@@ -95,9 +95,9 @@ function render() {
 
         mesh.rotation.y += step;
 
-        mesh.morphTargetInfluences![1] = mesh.morphTargetInfluences![1] + step * sign;
+        mesh.morphTargetInfluences[1] = mesh.morphTargetInfluences[1] + step * sign;
 
-        if (mesh.morphTargetInfluences![1] <= 0 || mesh.morphTargetInfluences![1] >= 1) {
+        if (mesh.morphTargetInfluences[1] <= 0 || mesh.morphTargetInfluences[1] >= 1) {
             sign *= -1;
         }
     }

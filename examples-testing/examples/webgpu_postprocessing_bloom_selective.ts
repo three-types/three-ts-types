@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { pass, mrt, output, float, uniform } from 'three/tsl';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
@@ -85,10 +85,9 @@ window.addEventListener('pointerdown', event => {
     const intersects = raycaster.intersectObjects(scene.children, false);
 
     if (intersects.length > 0) {
-        const material = (intersects[0].object as THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicNodeMaterial>)
-            .material;
+        const material = intersects[0].object.material;
 
-        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<number>;
+        const bloomIntensity = material.mrtNode.get('bloomIntensity');
         bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
     }
 });

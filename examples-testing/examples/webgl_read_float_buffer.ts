@@ -2,14 +2,9 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLElement, stats: Stats;
+let container, stats;
 
-let cameraRTT: THREE.OrthographicCamera,
-    sceneRTT: THREE.Scene,
-    sceneScreen: THREE.Scene,
-    renderer: THREE.WebGLRenderer,
-    zmesh1: THREE.Mesh,
-    zmesh2: THREE.Mesh;
+let cameraRTT, sceneRTT, sceneScreen, renderer, zmesh1, zmesh2;
 
 let mouseX = 0,
     mouseY = 0;
@@ -17,15 +12,15 @@ let mouseX = 0,
 const windowHalfX = window.innerWidth / 2;
 const windowHalfY = window.innerHeight / 2;
 
-let rtTexture: THREE.WebGLRenderTarget, material: THREE.ShaderMaterial, quad: THREE.Mesh;
+let rtTexture, material, quad;
 
 let delta = 0.01;
-let valueNode: HTMLElement;
+let valueNode;
 
 init();
 
 function init() {
-    container = document.getElementById('container')!;
+    container = document.getElementById('container');
 
     cameraRTT = new THREE.OrthographicCamera(
         window.innerWidth / -2,
@@ -59,14 +54,14 @@ function init() {
 
     material = new THREE.ShaderMaterial({
         uniforms: { time: { value: 0.0 } },
-        vertexShader: document.getElementById('vertexShader')!.textContent!,
-        fragmentShader: document.getElementById('fragment_shader_pass_1')!.textContent!,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragment_shader_pass_1').textContent,
     });
 
     const materialScreen = new THREE.ShaderMaterial({
         uniforms: { tDiffuse: { value: rtTexture.texture } },
-        vertexShader: document.getElementById('vertexShader')!.textContent!,
-        fragmentShader: document.getElementById('fragment_shader_screen')!.textContent!,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragment_shader_screen').textContent,
 
         depthWrite: false,
     });
@@ -107,12 +102,12 @@ function init() {
     stats = new Stats();
     container.appendChild(stats.dom);
 
-    valueNode = document.getElementById('values')!;
+    valueNode = document.getElementById('values');
 
     document.addEventListener('mousemove', onDocumentMouseMove);
 }
 
-function onDocumentMouseMove(event: MouseEvent) {
+function onDocumentMouseMove(event) {
     mouseX = event.clientX - windowHalfX;
     mouseY = event.clientY - windowHalfY;
 }

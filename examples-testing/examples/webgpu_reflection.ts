@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { color, pass, reflector, normalWorld, texture, uv, screenUV } from 'three/tsl';
 import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
 
@@ -8,11 +8,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-let model: THREE.Group, mixer: THREE.AnimationMixer, clock: THREE.Clock;
-let postProcessing: THREE.PostProcessing;
-let controls: OrbitControls;
-let stats: Stats;
+let camera, scene, renderer;
+let model, mixer, clock;
+let postProcessing;
+let controls;
+let stats;
 
 init();
 
@@ -82,7 +82,7 @@ function init() {
 
     const reflection = reflector({ resolution: 0.5 }); // 0.5 is half of the rendering view
     reflection.target.rotateX(-Math.PI / 2);
-    reflection.uvNode = reflection.uvNode!.add(floorNormalOffset);
+    reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
     scene.add(reflection.target);
 
     const floorMaterial = new THREE.MeshPhongNodeMaterial();

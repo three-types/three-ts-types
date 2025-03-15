@@ -1,32 +1,26 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
-import { ShaderNodeObject } from 'three/tsl';
-import StereoPassNode, { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
-import AnaglyphPassNode, { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
-import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
+import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
+import { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
+import { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Timer } from 'three/addons/misc/Timer.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    postProcessing: THREE.PostProcessing;
+let camera, scene, renderer, postProcessing;
 
-let stereo: ShaderNodeObject<StereoPassNode>,
-    anaglyph: ShaderNodeObject<AnaglyphPassNode>,
-    parallaxBarrier: ShaderNodeObject<ParallaxBarrierPassNode>;
+let stereo, anaglyph, parallaxBarrier;
 
-let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: Timer;
+let mesh, dummy, timer;
 
 const position = new THREE.Vector3();
 
-const params: { effect: 'stereo' | 'anaglyph' | 'parallaxBarrier'; eyeSep: number } = {
+const params = {
     effect: 'stereo',
     eyeSep: 0.064,
 };
 
-const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' } as const;
+const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' };
 
 init();
 
@@ -99,7 +93,7 @@ function init() {
     controls.maxDistance = 25;
 }
 
-function update(value: 'stereo' | 'anaglyph' | 'parallaxBarrier') {
+function update(value) {
     if (value === 'stereo') {
         postProcessing.outputNode = stereo;
     } else if (value === 'anaglyph') {
@@ -118,7 +112,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function extractPosition(matrix: THREE.Matrix4, position: THREE.Vector3) {
+function extractPosition(matrix, position) {
     position.x = matrix.elements[12];
     position.y = matrix.elements[13];
     position.z = matrix.elements[14];

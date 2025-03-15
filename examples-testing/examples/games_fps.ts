@@ -39,7 +39,7 @@ directionalLight.shadow.radius = 4;
 directionalLight.shadow.bias = -0.00006;
 scene.add(directionalLight);
 
-const container = document.getElementById('container')!;
+const container = document.getElementById('container');
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -51,9 +51,9 @@ renderer.toneMapping = THREE.ACESFilmicToneMapping;
 container.appendChild(renderer.domElement);
 
 const stats = new Stats();
-stats.dom.style.position = 'absolute';
-stats.dom.style.top = '0px';
-container.appendChild(stats.dom);
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.top = '0px';
+container.appendChild(stats.domElement);
 
 const GRAVITY = 30;
 
@@ -65,13 +65,7 @@ const STEPS_PER_FRAME = 5;
 const sphereGeometry = new THREE.IcosahedronGeometry(SPHERE_RADIUS, 5);
 const sphereMaterial = new THREE.MeshLambertMaterial({ color: 0xdede8d });
 
-interface Sphere {
-    mesh: THREE.Mesh;
-    collider: THREE.Sphere;
-    velocity: THREE.Vector3;
-}
-
-const spheres: Sphere[] = [];
+const spheres = [];
 let sphereIdx = 0;
 
 for (let i = 0; i < NUM_SPHERES; i++) {
@@ -98,7 +92,7 @@ const playerDirection = new THREE.Vector3();
 let playerOnFloor = false;
 let mouseTime = 0;
 
-const keyStates: { [eventCode: string]: boolean | undefined } = {};
+const keyStates = {};
 
 const vector1 = new THREE.Vector3();
 const vector2 = new THREE.Vector3();
@@ -173,7 +167,7 @@ function playerCollisions() {
     }
 }
 
-function updatePlayer(deltaTime: number) {
+function updatePlayer(deltaTime) {
     let damping = Math.exp(-4 * deltaTime) - 1;
 
     if (!playerOnFloor) {
@@ -193,7 +187,7 @@ function updatePlayer(deltaTime: number) {
     camera.position.copy(playerCollider.end);
 }
 
-function playerSphereCollision(sphere: Sphere) {
+function playerSphereCollision(sphere) {
     const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
 
     const sphere_center = sphere.collider.center;
@@ -248,7 +242,7 @@ function spheresCollisions() {
     }
 }
 
-function updateSpheres(deltaTime: number) {
+function updateSpheres(deltaTime) {
     spheres.forEach(sphere => {
         sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
 
@@ -291,7 +285,7 @@ function getSideVector() {
     return playerDirection;
 }
 
-function controls(deltaTime: number) {
+function controls(deltaTime) {
     // gives a bit of air control
     const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
 
@@ -326,12 +320,12 @@ loader.load('collision-world.glb', gltf => {
     worldOctree.fromGraphNode(gltf.scene);
 
     gltf.scene.traverse(child => {
-        if ((child as THREE.Mesh).isMesh) {
+        if (child.isMesh) {
             child.castShadow = true;
             child.receiveShadow = true;
 
-            if (((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map) {
-                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).map!.anisotropy = 4;
+            if (child.material.map) {
+                child.material.map.anisotropy = 4;
             }
         }
     });

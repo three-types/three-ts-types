@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 import { DDSLoader } from 'three/addons/loaders/DDSLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-const meshes: THREE.Mesh[] = [];
+let camera, scene, renderer;
+const meshes = [];
 
 init();
 
@@ -111,7 +111,7 @@ function init() {
     const material12 = new THREE.MeshBasicMaterial({ map: map10 });
     const material13 = new THREE.MeshBasicMaterial({ map: map11, transparent: true });
 
-    let mesh: THREE.Mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
+    let mesh = new THREE.Mesh(new THREE.TorusGeometry(), material1);
     mesh.position.x = -10;
     mesh.position.y = -2;
     scene.add(mesh);

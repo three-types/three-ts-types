@@ -7,11 +7,9 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-let modifier: EdgeSplitModifier,
-    mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
-    baseGeometry: THREE.BufferGeometry;
-let map: THREE.Texture;
+let renderer, scene, camera;
+let modifier, mesh, baseGeometry;
+let map;
 
 const params = {
     smoothShading: true,
@@ -52,7 +50,7 @@ function init() {
     scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 3));
 
     new OBJLoader().load('./models/obj/cerberus/Cerberus.obj', function (group) {
-        const cerberus = group.children[0] as THREE.Mesh;
+        const cerberus = group.children[0];
         const modelGeometry = cerberus.geometry;
 
         modifier = new EdgeSplitModifier();

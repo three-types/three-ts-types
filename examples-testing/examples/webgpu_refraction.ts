@@ -1,13 +1,13 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { viewportSafeUV, viewportSharedTexture, screenUV, texture, uv } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
-let cameraControls: OrbitControls;
+let cameraControls;
 
-let smallSphere: THREE.Mesh;
+let smallSphere;
 
 init();
 

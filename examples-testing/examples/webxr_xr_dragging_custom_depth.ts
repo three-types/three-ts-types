@@ -3,18 +3,18 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { XRButton } from 'three/addons/webxr/XRButton.js';
 import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
 
-let container: HTMLDivElement;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
-let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
+let container;
+let camera, scene, renderer;
+let controller1, controller2;
+let controllerGrip1, controllerGrip2;
 let isDepthSupplied = false;
 
-let raycaster: THREE.Raycaster;
+let raycaster;
 
-const intersected: THREE.Object3D[] = [];
+const intersected = [];
 const tempMatrix = new THREE.Matrix4();
 
-let controls: OrbitControls, group: THREE.Group;
+let controls, group;
 
 init();
 animate();
@@ -289,7 +289,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onSelectStart(event: THREE.Event<'selectstart', THREE.XRTargetRaySpace> & { data: XRInputSource }) {
+function onSelectStart(event) {
     const controller = event.target;
 
     const intersections = getIntersections(controller);
@@ -297,7 +297,7 @@ function onSelectStart(event: THREE.Event<'selectstart', THREE.XRTargetRaySpace>
     if (intersections.length > 0) {
         const intersection = intersections[0];
 
-        const object = intersection.object as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>;
+        const object = intersection.object;
         object.material.uniforms.emissive.value = 1;
         controller.attach(object);
 
@@ -307,7 +307,7 @@ function onSelectStart(event: THREE.Event<'selectstart', THREE.XRTargetRaySpace>
     controller.userData.targetRayMode = event.data.targetRayMode;
 }
 
-function onSelectEnd(event: THREE.Event<'selectend', THREE.XRTargetRaySpace> & { data: XRInputSource }) {
+function onSelectEnd(event) {
     const controller = event.target;
 
     if (controller.userData.selected !== undefined) {
@@ -319,7 +319,7 @@ function onSelectEnd(event: THREE.Event<'selectend', THREE.XRTargetRaySpace> & {
     }
 }
 
-function getIntersections(controller: THREE.XRTargetRaySpace) {
+function getIntersections(controller) {
     controller.updateMatrixWorld();
 
     tempMatrix.identity().extractRotation(controller.matrixWorld);
@@ -330,7 +330,7 @@ function getIntersections(controller: THREE.XRTargetRaySpace) {
     return raycaster.intersectObjects(group.children, false);
 }
 
-function intersectObjects(controller: THREE.XRTargetRaySpace) {
+function intersectObjects(controller) {
     // Do not highlight in mobile-ar
 
     if (controller.userData.targetRayMode === 'screen') return;
@@ -345,19 +345,19 @@ function intersectObjects(controller: THREE.XRTargetRaySpace) {
     if (intersections.length > 0) {
         const intersection = intersections[0];
 
-        const object = intersection.object as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>;
+        const object = intersection.object;
         object.material.uniforms.emissive.value = 1;
         intersected.push(object);
 
-        line!.scale.z = intersection.distance;
+        line.scale.z = intersection.distance;
     } else {
-        line!.scale.z = 5;
+        line.scale.z = 5;
     }
 }
 
 function cleanIntersected() {
     while (intersected.length) {
-        const object = intersected.pop() as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>;
+        const object = intersected.pop();
         object.material.uniforms.emissive.value = 0;
     }
 }
@@ -371,18 +371,16 @@ function animate() {
 function render() {
     if (renderer.xr.hasDepthSensing() && !isDepthSupplied) {
         group.children.forEach(child => {
-            (child as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>).material.uniforms.depthColor.value =
-                renderer.xr.getDepthTexture();
-            (child as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>).material.uniforms.depthWidth.value = 1680;
-            (child as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>).material.uniforms.depthHeight.value =
-                1760;
+            child.material.uniforms.depthColor.value = renderer.xr.getDepthTexture();
+            child.material.uniforms.depthWidth.value = 1680;
+            child.material.uniforms.depthHeight.value = 1760;
 
             isDepthSupplied = true;
         });
     } else if (!renderer.xr.hasDepthSensing() && isDepthSupplied) {
         group.children.forEach(child => {
-            (child as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>).material.uniforms.depthWidth.value = 0;
-            (child as THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>).material.uniforms.depthHeight.value = 0;
+            child.material.uniforms.depthWidth.value = 0;
+            child.material.uniforms.depthHeight.value = 0;
 
             isDepthSupplied = false;
         });

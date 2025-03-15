@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { fog, rangeFogFactor, color, lights, texture, normalMap } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
@@ -8,15 +8,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    light1: THREE.PointLight,
-    light2: THREE.PointLight,
-    light3: THREE.PointLight,
-    light4: THREE.PointLight,
-    stats: Stats,
-    controls: OrbitControls;
+let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
 
 init();
 
@@ -43,7 +35,7 @@ function init() {
 
     //lights
 
-    const addLight = (hexColor: number, power = 1700, distance = 100) => {
+    const addLight = (hexColor, power = 1700, distance = 100) => {
         const material = new THREE.MeshStandardNodeMaterial();
         material.colorNode = color(hexColor);
         material.lights = false;

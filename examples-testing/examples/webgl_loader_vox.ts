@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VOXLoader, VOXMesh } from 'three/addons/loaders/VOXLoader.js';
 
-let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, controls, scene, renderer;
 
 init();
 

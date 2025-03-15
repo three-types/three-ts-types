@@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+let camera, scene, renderer, controls;
 
 init();
 
@@ -24,10 +24,7 @@ function init() {
     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
         scene.add(gltf.scene);
 
-        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh<
-            THREE.BufferGeometry,
-            THREE.MeshPhysicalMaterial
-        >;
+        const object = gltf.scene.getObjectByName('SheenChair_fabric');
 
         const gui = new GUI();
 

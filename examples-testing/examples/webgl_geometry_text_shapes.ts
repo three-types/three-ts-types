@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 
@@ -32,13 +32,13 @@ function init() {
 
         const message = '   Three.js\nSimple text.';
 
-        const shapes: THREE.Path[] = font.generateShapes(message, 100);
+        const shapes = font.generateShapes(message, 100);
 
-        const geometry = new THREE.ShapeGeometry(shapes as THREE.Shape[]);
+        const geometry = new THREE.ShapeGeometry(shapes);
 
         geometry.computeBoundingBox();
 
-        const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
+        const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
 
         geometry.translate(xMid, 0, 0);
 
@@ -50,10 +50,10 @@ function init() {
 
         // make line shape ( N.B. edge view remains visible )
 
-        const holeShapes: THREE.Path[] = [];
+        const holeShapes = [];
 
         for (let i = 0; i < shapes.length; i++) {
-            const shape = shapes[i] as THREE.Shape;
+            const shape = shapes[i];
 
             if (shape.holes && shape.holes.length > 0) {
                 for (let j = 0; j < shape.holes.length; j++) {

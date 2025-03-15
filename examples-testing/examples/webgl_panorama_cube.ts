@@ -2,14 +2,14 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, controls: OrbitControls;
-let renderer: THREE.WebGLRenderer;
-let scene: THREE.Scene;
+let camera, controls;
+let renderer;
+let scene;
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
 
     renderer = new THREE.WebGLRenderer();
     renderer.setPixelRatio(window.devicePixelRatio);
@@ -43,8 +43,8 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function getTexturesFromAtlasFile(atlasImgUrl: string, tilesNum: number) {
-    const textures: THREE.Texture[] = [];
+function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
+    const textures = [];
 
     for (let i = 0; i < tilesNum; i++) {
         textures[i] = new THREE.Texture();
@@ -56,7 +56,7 @@ function getTexturesFromAtlasFile(atlasImgUrl: string, tilesNum: number) {
 
         for (let i = 0; i < textures.length; i++) {
             canvas = document.createElement('canvas');
-            context = canvas.getContext('2d')!;
+            context = canvas.getContext('2d');
             canvas.height = tileWidth;
             canvas.width = tileWidth;
             context.drawImage(image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);

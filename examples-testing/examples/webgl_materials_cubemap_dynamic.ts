@@ -6,12 +6,12 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
-let cube: THREE.Mesh, sphere: THREE.Mesh, torus: THREE.Mesh, material: THREE.MeshStandardMaterial;
+let camera, scene, renderer, stats;
+let cube, sphere, torus, material;
 
-let cubeCamera: THREE.CubeCamera, cubeRenderTarget: THREE.WebGLCubeRenderTarget;
+let cubeCamera, cubeRenderTarget;
 
-let controls: OrbitControls;
+let controls;
 
 init();
 
@@ -88,7 +88,7 @@ function onWindowResized() {
     camera.updateProjectionMatrix();
 }
 
-function animate(msTime: DOMHighResTimeStamp) {
+function animate(msTime) {
     const time = msTime / 1000;
 
     cube.position.x = Math.cos(time) * 30;

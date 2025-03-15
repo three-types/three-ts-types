@@ -2,13 +2,8 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container: HTMLElement, stats: Stats;
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    raycaster: THREE.Raycaster,
-    renderer: THREE.WebGLRenderer,
-    parentTransform: THREE.Object3D,
-    sphereInter: THREE.Mesh;
+let container, stats;
+let camera, scene, raycaster, renderer, parentTransform, sphereInter;
 
 const pointer = new THREE.Vector2();
 const radius = 100;
@@ -126,7 +121,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event: PointerEvent) {
+function onPointerMove(event) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }

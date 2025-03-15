@@ -5,21 +5,21 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { GlitchPass } from 'three/addons/postprocessing/GlitchPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
-let object: THREE.Object3D, light: THREE.DirectionalLight;
+let camera, scene, renderer, composer;
+let object, light;
 
-let glitchPass: GlitchPass;
+let glitchPass;
 
-const button = document.querySelector('#startButton')!;
+const button = document.querySelector('#startButton');
 button.addEventListener('click', function () {
-    const overlay = document.getElementById('overlay')!;
+    const overlay = document.getElementById('overlay');
     overlay.remove();
 
     init();
 });
 
 function updateOptions() {
-    const wildGlitch = document.getElementById('wildGlitch') as HTMLInputElement;
+    const wildGlitch = document.getElementById('wildGlitch');
     glitchPass.goWild = wildGlitch.checked;
 }
 
@@ -75,7 +75,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    const wildGlitchOption = document.getElementById('wildGlitch')!;
+    const wildGlitchOption = document.getElementById('wildGlitch');
     wildGlitchOption.addEventListener('change', updateOptions);
 
     updateOptions();

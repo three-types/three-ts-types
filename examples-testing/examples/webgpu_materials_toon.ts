@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { toonOutlinePass } from 'three/tsl';
 
 import Stats from 'three/addons/libs/stats.module.js';
@@ -6,22 +6,18 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
-import { Font } from 'three/examples/jsm/loaders/FontLoader.js';
 
-let container: HTMLDivElement, stats: Stats;
+let container, stats;
 
-let camera: THREE.PerspectiveCamera,
-    scene: THREE.Scene,
-    renderer: THREE.WebGPURenderer,
-    postProcessing: THREE.PostProcessing;
-let particleLight: THREE.Mesh;
+let camera, scene, renderer, postProcessing;
+let particleLight;
 
 const loader = new FontLoader();
 loader.load('fonts/gentilis_regular.typeface.json', function (font) {
     init(font);
 });
 
-function init(font: Font) {
+function init(font) {
     container = document.createElement('div');
     document.body.appendChild(container);
 
@@ -89,7 +85,7 @@ function init(font: Font) {
         }
     }
 
-    function addLabel(name: string, location: THREE.Vector3) {
+    function addLabel(name, location) {
         const textGeo = new TextGeometry(name, {
             font: font,
 

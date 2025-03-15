@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 init();
 
 function init() {
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.addEventListener('click', function () {
         video.play();
     });
@@ -16,7 +16,7 @@ function init() {
 
     // video
 
-    const video = document.getElementById('video') as HTMLVideoElement;
+    const video = document.getElementById('video');
     video.play();
 
     const texture = new THREE.VideoTexture(video);

@@ -3,10 +3,10 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let line: THREE.Line, sprite: THREE.Sprite, texture: THREE.FramebufferTexture;
+let camera, scene, renderer;
+let line, sprite, texture;
 
-let cameraOrtho: THREE.OrthographicCamera, sceneOrtho: THREE.Scene;
+let cameraOrtho, sceneOrtho;
 
 let offset = 0;
 
@@ -76,7 +76,7 @@ function init() {
 
     //
 
-    const selection = document.getElementById('selection')!;
+    const selection = document.getElementById('selection');
     const controls = new OrbitControls(camera, selection);
     controls.enablePan = false;
 
@@ -133,7 +133,7 @@ function animate() {
     renderer.render(sceneOrtho, cameraOrtho);
 }
 
-function updateColors(colorAttribute: THREE.BufferAttribute | THREE.InterleavedBufferAttribute) {
+function updateColors(colorAttribute) {
     const l = colorAttribute.count;
 
     for (let i = 0; i < l; i++) {

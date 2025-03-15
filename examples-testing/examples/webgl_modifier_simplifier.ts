@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let renderer, scene, camera;
 
 init();
 
@@ -47,7 +47,7 @@ function init() {
 
         const modifier = new SimplifyModifier();
 
-        const simplified = mesh.clone() as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+        const simplified = mesh.clone();
         simplified.material = simplified.material.clone();
         simplified.material.flatShading = true;
         const count = Math.floor(simplified.geometry.attributes.position.count * 0.875); // number of vertices to remove

@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let camera, scene, renderer, stats;
 
 init();
 
@@ -17,7 +17,7 @@ function init() {
 
     const loader = new GLTFLoader();
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        const geometry = (gltf.scene.children[0] as THREE.Mesh).geometry;
+        const geometry = gltf.scene.children[0].geometry;
 
         let mesh = new THREE.Mesh(geometry, buildTwistMaterial(2.0));
         mesh.position.x = -3.5;
@@ -50,7 +50,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function buildTwistMaterial(amount: number) {
+function buildTwistMaterial(amount) {
     const material = new THREE.MeshNormalMaterial();
     material.onBeforeCompile = function (shader) {
         shader.uniforms.time = { value: 0 };
@@ -102,8 +102,8 @@ function animate() {
 
 function render() {
     scene.traverse(function (child) {
-        if ((child as THREE.Mesh).isMesh) {
-            const shader = ((child as THREE.Mesh).material as THREE.Material).userData.shader;
+        if (child.isMesh) {
+            const shader = child.material.userData.shader;
 
             if (shader) {
                 shader.uniforms.time.value = performance.now() / 1000;

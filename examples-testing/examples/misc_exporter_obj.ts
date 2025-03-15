@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJExporter } from 'three/addons/exporters/OBJExporter.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, scene, renderer;
 
 const params = {
     addTriangle: addTriangle,
@@ -66,12 +66,12 @@ function exportToObj() {
     saveString(result, 'object.obj');
 }
 
-function addGeometry(type: number) {
+function addGeometry(type) {
     for (let i = 0; i < scene.children.length; i++) {
         const child = scene.children[i];
 
-        if ((child as THREE.Mesh).isMesh || (child as THREE.Points).isPoints) {
-            (child as THREE.Mesh | THREE.Points).geometry.dispose();
+        if (child.isMesh || child.isPoints) {
+            child.geometry.dispose();
             scene.remove(child);
             i--;
         }
@@ -156,13 +156,13 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link);
 
-function save(blob: Blob, filename: string) {
+function save(blob, filename) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
 }
 
-function saveString(text: string, filename: string) {
+function saveString(text, filename) {
     save(new Blob([text], { type: 'text/plain' }), filename);
 }
 

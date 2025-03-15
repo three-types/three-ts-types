@@ -1,4 +1,4 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
 
-let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-let stats: Stats, meshKnot: THREE.Mesh;
+let renderer, scene, camera;
+let stats, meshKnot;
 
 init();
 
@@ -70,7 +70,7 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function animation(time: number) {
+function animation(time) {
     meshKnot.rotation.y = time / 1000;
 
     renderer.render(scene, camera);

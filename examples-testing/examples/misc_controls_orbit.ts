@@ -2,7 +2,7 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera, controls, scene, renderer;
 
 init();
 //render(); // remove when using animation loop

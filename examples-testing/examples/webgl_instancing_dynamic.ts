@@ -3,9 +3,9 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let camera, scene, renderer, stats;
 
-let mesh: THREE.InstancedMesh;
+let mesh;
 const amount = parseInt(window.location.search.slice(1)) || 10;
 const count = Math.pow(amount, 3);
 const dummy = new THREE.Object3D();

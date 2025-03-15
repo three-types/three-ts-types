@@ -1,10 +1,10 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 import { checker, uv, uniform, convertToTexture } from 'three/tsl';
 import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let camera, scene, renderer;
 
 init();
 render();

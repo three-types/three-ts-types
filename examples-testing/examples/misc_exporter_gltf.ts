@@ -7,7 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import * as TextureUtils from 'three/addons/utils/WebGLTextureUtils.js';
 
-function exportGLTF(input: THREE.Object3D | THREE.Object3D[]) {
+function exportGLTF(input) {
     const gltfExporter = new GLTFExporter().setTextureUtils(TextureUtils);
 
     const options = {
@@ -38,7 +38,7 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link); // Firefox workaround, see #6594
 
-function save(blob: Blob, filename: string) {
+function save(blob, filename) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
@@ -46,25 +46,18 @@ function save(blob: Blob, filename: string) {
     // URL.revokeObjectURL( url ); breaks Firefox...
 }
 
-function saveString(text: string, filename: string) {
+function saveString(text, filename) {
     save(new Blob([text], { type: 'text/plain' }), filename);
 }
 
-function saveArrayBuffer(buffer: BufferSource, filename: string) {
+function saveArrayBuffer(buffer, filename) {
     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
 }
 
-let container: HTMLDivElement;
+let container;
 
-let camera: THREE.PerspectiveCamera,
-    object: THREE.Object3D,
-    object2: THREE.Mesh,
-    material: THREE.MeshBasicMaterial | THREE.MeshLambertMaterial | THREE.MeshStandardMaterial,
-    geometry: THREE.BufferGeometry,
-    scene1: THREE.Scene,
-    scene2: THREE.Scene,
-    renderer: THREE.WebGLRenderer;
-let gridHelper: THREE.GridHelper, sphere: THREE.Mesh, model: THREE.Group, coffeemat: THREE.Group;
+let camera, object, object2, material, geometry, scene1, scene2, renderer;
+let gridHelper, sphere, model, coffeemat;
 
 const params = {
     trs: false,
@@ -395,8 +388,8 @@ function init() {
     const color = new THREE.Color();
     for (let i = 0; i < 50; i++) {
         matrix.setPosition(Math.random() * 100 - 50, Math.random() * 100 - 50, Math.random() * 100 - 50);
-        (object as THREE.InstancedMesh).setMatrixAt(i, matrix);
-        (object as THREE.InstancedMesh).setColorAt(i, color.setHSL(i / 50, 1, 0.5));
+        object.setMatrixAt(i, matrix);
+        object.setColorAt(i, color.setHSL(i / 50, 1, 0.5));
     }
 
     object.position.set(400, 0, 200);

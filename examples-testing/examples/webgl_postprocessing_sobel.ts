@@ -11,9 +11,9 @@ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { LuminosityShader } from 'three/addons/shaders/LuminosityShader.js';
 import { SobelOperatorShader } from 'three/addons/shaders/SobelOperatorShader.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, composer: EffectComposer;
+let camera, scene, renderer, composer;
 
-let effectSobel: ShaderPass;
+let effectSobel;
 
 const params = {
     enable: true,

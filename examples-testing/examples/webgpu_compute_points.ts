@@ -1,13 +1,13 @@
-import * as THREE from 'three/webgpu';
+import * as THREE from 'three';
 
 import Stats from 'stats-gl';
 
-import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex, ShaderNodeObject } from 'three/tsl';
+import { Fn, uniform, instancedArray, float, vec2, vec3, color, instanceIndex } from 'three/tsl';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
-let computeNode: ShaderNodeObject<THREE.ComputeNode>;
+let camera, scene, renderer, stats;
+let computeNode;
 
 const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
 const scaleVector = new THREE.Vector2(1, 1);
@@ -120,7 +120,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onMouseMove(event: MouseEvent) {
+function onMouseMove(event) {
     const x = event.clientX;
     const y = event.clientY;
 

@@ -1,25 +1,20 @@
 import * as THREE from 'three';
 
-import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+let renderer, scene, camera, stats;
 
-let line: THREE.Line,
-    uniforms: {
-        amplitude: THREE.IUniform<number>;
-        opacity: THREE.IUniform<number>;
-        color: THREE.IUniform<THREE.Color>;
-    };
+let line, uniforms;
 
 const loader = new FontLoader();
 loader.load('fonts/helvetiker_bold.typeface.json', function (font) {
     init(font);
 });
 
-function init(font: Font) {
+function init(font) {
     camera = new THREE.PerspectiveCamera(30, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 400;
 
@@ -34,8 +29,8 @@ function init(font: Font) {
 
     const shaderMaterial = new THREE.ShaderMaterial({
         uniforms: uniforms,
-        vertexShader: document.getElementById('vertexshader')!.textContent!,
-        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
+        vertexShader: document.getElementById('vertexshader').textContent,
+        fragmentShader: document.getElementById('fragmentshader').textContent,
         blending: THREE.AdditiveBlending,
         depthTest: false,
         transparent: true,
@@ -80,7 +75,7 @@ function init(font: Font) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container')!;
+    const container = document.getElementById('container');
     container.appendChild(renderer.domElement);
 
     stats = new Stats();

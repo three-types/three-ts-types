@@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
+let renderer, scene, camera;
+let mesh;
 
 init();
 
@@ -29,7 +29,7 @@ function init() {
     canvas.width = 1;
     canvas.height = 32;
 
-    const context = canvas.getContext('2d')!;
+    const context = canvas.getContext('2d');
     const gradient = context.createLinearGradient(0, 0, 0, 32);
     gradient.addColorStop(0.0, '#014a84');
     gradient.addColorStop(0.5, '#0561a0');
@@ -270,10 +270,10 @@ function onWindowResize() {
 }
 
 function animate() {
-    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
+    mesh.material.uniforms.cameraPos.value.copy(camera.position);
     mesh.rotation.y = -performance.now() / 7500;
 
-    (mesh.material.uniforms.frame.value as number)++;
+    mesh.material.uniforms.frame.value++;
 
     renderer.render(scene, camera);
 }

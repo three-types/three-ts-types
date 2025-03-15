@@ -4,32 +4,22 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
+import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
 
 // Texture width for simulation (each texel is a debris particle)
 const WIDTH = 64;
 
-let container: HTMLDivElement, stats: Stats;
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, geometry: THREE.BufferGeometry;
+let container, stats;
+let camera, scene, renderer, geometry;
 
 const PARTICLES = WIDTH * WIDTH;
 
-let gpuCompute: GPUComputationRenderer;
-let velocityVariable: Variable;
-let positionVariable: Variable;
-let velocityUniforms: Record<string, THREE.IUniform>;
-let particleUniforms: Record<string, THREE.IUniform>;
-let effectController: {
-    gravityConstant: number;
-    density: number;
-    radius: number;
-    height: number;
-    exponent: number;
-    maxMass: number;
-    velocity: number;
-    velocityExponent: number;
-    randVelocity: number;
-};
+let gpuCompute;
+let velocityVariable;
+let positionVariable;
+let velocityUniforms;
+let particleUniforms;
+let effectController;
 
 init();
 
@@ -92,12 +82,12 @@ function initComputeRenderer() {
 
     velocityVariable = gpuCompute.addVariable(
         'textureVelocity',
-        document.getElementById('computeShaderVelocity')!.textContent!,
+        document.getElementById('computeShaderVelocity').textContent,
         dtVelocity,
     );
     positionVariable = gpuCompute.addVariable(
         'texturePosition',
-        document.getElementById('computeShaderPosition')!.textContent!,
+        document.getElementById('computeShaderPosition').textContent,
         dtPosition,
     );
 
@@ -163,8 +153,8 @@ function initProtoplanets() {
     // THREE.ShaderMaterial
     const material = new THREE.ShaderMaterial({
         uniforms: particleUniforms,
-        vertexShader: document.getElementById('particleVertexShader')!.textContent!,
-        fragmentShader: document.getElementById('particleFragmentShader')!.textContent!,
+        vertexShader: document.getElementById('particleVertexShader').textContent,
+        fragmentShader: document.getElementById('particleFragmentShader').textContent,
     });
 
     const particles = new THREE.Points(geometry, material);
@@ -174,9 +164,9 @@ function initProtoplanets() {
     scene.add(particles);
 }
 
-function fillTextures(texturePosition: THREE.DataTexture, textureVelocity: THREE.DataTexture) {
-    const posArray = texturePosition.image.data as Float32Array;
-    const velArray = textureVelocity.image.data as Float32Array;
+function fillTextures(texturePosition, textureVelocity) {
+    const posArray = texturePosition.image.data;
+    const velArray = textureVelocity.image.data;
 
     const radius = effectController.radius;
     const height = effectController.height;
@@ -271,7 +261,7 @@ function initGUI() {
     folder2.open();
 }
 
-function getCameraConstant(camera: THREE.PerspectiveCamera) {
+function getCameraConstant(camera) {
     return window.innerHeight / (Math.tan(THREE.MathUtils.DEG2RAD * 0.5 * camera.fov) / camera.zoom);
 }
 

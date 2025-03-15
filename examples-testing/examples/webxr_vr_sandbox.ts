@@ -11,9 +11,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-let reflector: Reflector;
-let stats: Stats, statsMesh: HTMLMesh;
+let camera, scene, renderer;
+let reflector;
+let stats, statsMesh;
 
 const parameters = {
     radius: 0.6,
@@ -180,7 +180,7 @@ function onWindowResize() {
 
 function animate() {
     const time = performance.now() * 0.0002;
-    const torus = scene.getObjectByName('torus')!;
+    const torus = scene.getObjectByName('torus');
     torus.rotation.x = time * 0.4;
     torus.rotation.y = time;
 
@@ -188,9 +188,5 @@ function animate() {
     stats.update();
 
     // Canvas elements doesn't trigger DOM updates, so we have to update the texture
-    (statsMesh.material.map as HTMLTexture).update();
-}
-
-interface HTMLTexture extends THREE.CanvasTexture {
-    update(): void;
+    statsMesh.material.map.update();
 }
