@@ -117,7 +117,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     /**
      * Returns the reference space type.
      *
-     * @return {string} The reference space type.
+     * @return {XRReferenceSpaceType} The reference space type.
      */
     getReferenceSpaceType(): XRReferenceSpaceType;
     /**
@@ -125,7 +125,7 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
      *
      * This method can not be used during a XR session.
      *
-     * @param {string} type - The reference space type.
+     * @param {XRReferenceSpaceType} type - The reference space type.
      */
     setReferenceSpaceType(type: XRReferenceSpaceType): void;
     /**
