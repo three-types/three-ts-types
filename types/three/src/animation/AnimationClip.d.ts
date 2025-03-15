@@ -56,6 +56,11 @@ export class AnimationClip {
         noLoop: boolean,
     ): AnimationClip[];
     static parse(json: AnimationClipJSON): AnimationClip;
+
+    /**
+     * @deprecated parseAnimation() is deprecated and will be removed with r185
+     */
     static parseAnimation(animation: AnimationClipJSON, bones: Bone[]): AnimationClip;
+
     static toJSON(clip: AnimationClip): AnimationClipJSON;
 }
