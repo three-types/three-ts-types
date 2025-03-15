@@ -287,9 +287,8 @@ declare class Renderer {
      * @private
      * @param {Object} bundle - Render bundle data.
      * @param {Scene} sceneRef - The scene the render bundle belongs to.
-     * @param {LightsNode} lightsNode - The current lights node.
      */
-    _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
+    _renderBundle(bundle: Bundle, sceneRef: Scene): void;
     /**
      * Renders the scene or 3D object with the given camera. This method can only be called
      * if the renderer has been initialized.
@@ -353,7 +352,7 @@ declare class Renderer {
      * for best compatibility.
      *
      * @async
-     * @param {Function} callback - The application's animation loop.
+     * @param {?Function} callback - The application's animation loop.
      * @return {Promise} A Promise that resolves when the set has been executed.
      */
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
@@ -840,9 +839,8 @@ declare class Renderer {
      * @private
      * @param {Array<Object>} bundles - Array with render bundle data.
      * @param {Scene} sceneRef - The scene the render bundles belong to.
-     * @param {LightsNode} lightsNode - The current lights node.
      */
-    _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
+    _renderBundles(bundles: Bundle[], sceneRef: Scene): void;
     /**
      * Renders the transparent objects from the given render lists.
      *
