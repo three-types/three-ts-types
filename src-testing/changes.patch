@@ -3589,7 +3589,7 @@ index a361dd1a..3cefe5aa 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Attributes.ts b/src-testing/src/renderers/common/Attributes.ts
-index 6cf55824..f9ed7479 100644
+index 837cbce7..12a2da6a 100644
 --- a/src-testing/src/renderers/common/Attributes.ts
 +++ b/src-testing/src/renderers/common/Attributes.ts
 @@ -2,6 +2,14 @@ import DataMap from './DataMap.js';
@@ -3633,7 +3633,7 @@ index 6cf55824..f9ed7479 100644
 +    delete(attribute: BufferAttribute | InterleavedBufferAttribute) {
          const attributeData = super.delete(attribute);
  
-         if (attributeData !== undefined) {
+         if (attributeData !== null) {
 @@ -49,7 +59,7 @@ class Attributes extends DataMap {
       * @param {BufferAttribute} attribute - The attribute to update.
       * @param {number} type - The attribute type.
@@ -6165,7 +6165,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index da35c0c1..8e50a280 100644
+index 5bf524fb..8ac3018e 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -24,6 +24,7 @@ import { Scene } from '../../scenes/Scene.js';
@@ -6543,12 +6543,12 @@ index da35c0c1..8e50a280 100644
          let errorMessage = `THREE.WebGPURenderer: ${info.api} Device Lost:\n\nMessage: ${info.message}`;
  
          if (info.reason) {
-@@ -1024,14 +1229,14 @@ class Renderer {
-      * @param {Object} bundle - Render bundle data.
+@@ -1025,14 +1230,14 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundle belongs to.
+      * @param {LightsNode} lightsNode - The lights node.
       */
--    _renderBundle(bundle, sceneRef) {
-+    _renderBundle(bundle: Bundle, sceneRef: Scene) {
+-    _renderBundle(bundle, sceneRef, lightsNode) {
++    _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode) {
          const { bundleGroup, camera, renderList } = bundle;
  
 -        const renderContext = this._currentRenderContext;
@@ -7170,16 +7170,16 @@ index da35c0c1..8e50a280 100644
  
              renderList.begin();
  
-@@ -2404,7 +2654,7 @@ class Renderer {
-      * @param {Array<Object>} bundles - Array with render bundle data.
+@@ -2405,7 +2655,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
+      * @param {LightsNode} lightsNode - The current lights node.
       */
--    _renderBundles(bundles, sceneRef) {
-+    _renderBundles(bundles: Bundle[], sceneRef: Scene) {
+-    _renderBundles(bundles, sceneRef, lightsNode) {
++    _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode) {
          for (const bundle of bundles) {
-             this._renderBundle(bundle, sceneRef);
+             this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2420,7 +2670,13 @@ class Renderer {
+@@ -2421,7 +2671,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7194,7 +7194,7 @@ index da35c0c1..8e50a280 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2458,17 +2714,23 @@ class Renderer {
+@@ -2459,17 +2715,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7224,7 +7224,7 @@ index da35c0c1..8e50a280 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2490,7 +2752,17 @@ class Renderer {
+@@ -2491,7 +2753,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7243,7 +7243,7 @@ index da35c0c1..8e50a280 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2577,14 +2849,23 @@ class Renderer {
+@@ -2578,14 +2850,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7270,7 +7270,7 @@ index da35c0c1..8e50a280 100644
              clippingContext,
              passId,
          );
-@@ -2593,18 +2874,18 @@ class Renderer {
+@@ -2594,18 +2875,18 @@ class Renderer {
  
          //
  
@@ -7295,7 +7295,7 @@ index da35c0c1..8e50a280 100644
  
          //
  
-@@ -2618,7 +2899,7 @@ class Renderer {
+@@ -2619,7 +2900,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7304,7 +7304,7 @@ index da35c0c1..8e50a280 100644
      }
  
      /**
-@@ -2635,14 +2916,23 @@ class Renderer {
+@@ -2636,14 +2917,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7331,7 +7331,7 @@ index da35c0c1..8e50a280 100644
              clippingContext,
              passId,
          );
-@@ -2651,16 +2941,16 @@ class Renderer {
+@@ -2652,16 +2942,16 @@ class Renderer {
  
          //
  
