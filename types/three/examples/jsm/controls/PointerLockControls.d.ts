@@ -75,7 +75,7 @@ declare class PointerLockControls extends Controls<PointerLockControlsEventMap> 
     /**
      * Activates the pointer lock.
      */
-    lock(): void;
+    lock(unadjustedMovement?: boolean): void;
 
     /**
      * Exits the pointer lock.
