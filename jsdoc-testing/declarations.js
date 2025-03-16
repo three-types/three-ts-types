@@ -15,6 +15,8 @@ const files = [
     'animation/AnimationObjectGroup',
     'animation/AnimationUtils',
     'animation/KeyframeTrack',
+    'animation/PropertyBinding',
+    'animation/PropertyMixer',
 ];
 
 const inDir = './jsdoc';
