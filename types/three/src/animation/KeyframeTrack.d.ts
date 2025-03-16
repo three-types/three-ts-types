@@ -1,3 +1,4 @@
+import { InterpolationModes } from "../constants.js";
 import { TypedArray } from "../core/BufferAttribute.js";
 import { CubicInterpolant } from "../math/interpolants/CubicInterpolant.js";
 import { DiscreteInterpolant } from "../math/interpolants/DiscreteInterpolant.js";
