@@ -1,0 +1,98 @@
+diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
+index 45b4b715..015c46ed 100644
+--- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
+@@ -1,3 +1,16 @@
++import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
++import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
++import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++
++export interface KeyframeTrackJSON {
++    name: string;
++    times: number[];
++    values: number[];
++    interpolation?: InterpolationModes;
++    type: string;
++}
++
+ /**
+  * Represents s a timed sequence of keyframes, which are composed of lists of
+  * times and related values, and which are used to animate a specific property
+@@ -11,7 +24,7 @@ export class KeyframeTrack {
+      * @param {KeyframeTrack} track - The keyframe track to serialize.
+      * @return {Object} The serialized keyframe track as JSON.
+      */
+-    static toJSON(track: KeyframeTrack): Object;
++    static toJSON(track: KeyframeTrack): KeyframeTrackJSON;
+     /**
+      * Constructs a new keyframe track.
+      *
+@@ -20,7 +33,7 @@ export class KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: (number | number | number));
++    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
+     /**
+      * The track's name can refer to morph targets or bones or
+      * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
+@@ -71,14 +84,14 @@ export class KeyframeTrack {
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} interpolation - The interpolation type.
+      * @return {KeyframeTrack} A reference to this keyframe track.
+      */
+-    setInterpolation(interpolation: (number | number | number)): KeyframeTrack;
++    setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
+     createInterpolant: ((result?: TypedArray) => LinearInterpolant) | ((result?: TypedArray) => CubicInterpolant) | undefined;
+     /**
+      * Returns the current interpolation type.
+      *
+      * @return {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} The interpolation type.
+      */
+-    getInterpolation(): (number | number | number);
++    getInterpolation(): InterpolationModes;
+     /**
+      * Returns the value size.
+      *
+@@ -123,13 +136,13 @@ export class KeyframeTrack {
+      *
+      * @return {AnimationClip} A reference to this animation clip.
+      */
+-    optimize(): AnimationClip;
++    optimize(): this;
+     /**
+      * Returns a new keyframe track with copied values from this instance.
+      *
+      * @return {KeyframeTrack} A clone of this instance.
+      */
+-    clone(): KeyframeTrack;
++    clone(): this;
+     /**
+      * The value type name.
+      *
+@@ -143,22 +156,19 @@ export class KeyframeTrack {
+      * @type {TypedArray|Array}
+      * @default Float32Array.constructor
+      */
+-    TimeBufferType: TypedArray | any[];
++    TimeBufferType: TypedArray | number[];
+     /**
+      * The value buffer type of this keyframe track.
+      *
+      * @type {TypedArray|Array}
+      * @default Float32Array.constructor
+      */
+-    ValueBufferType: TypedArray | any[];
++    ValueBufferType: TypedArray | number[];
+     /**
+      * The default interpolation type of this keyframe track.
+      *
+      * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+      * @default InterpolateLinear
+      */
+-    DefaultInterpolation: (number | number | number);
++    DefaultInterpolation: InterpolationModes;
+ }
+-import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
+-import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
+-import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
