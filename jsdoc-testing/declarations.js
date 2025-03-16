@@ -13,6 +13,7 @@ const files = [
     'animation/AnimationClip',
     'animation/AnimationMixer',
     'animation/AnimationObjectGroup',
+    'animation/AnimationUtils',
     'animation/KeyframeTrack',
 ];
 
