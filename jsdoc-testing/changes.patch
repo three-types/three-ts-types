@@ -629,17 +629,25 @@ index 45b4b715..e4bbb710 100644
 -import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 -import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
 diff --git a/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts b/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts
-index af4e99d9..02d8af3d 100644
+index af4e99d9..0191d876 100644
 --- a/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts
-@@ -1,3 +1,6 @@
+@@ -1,3 +1,14 @@
 +import { Object3D } from "../core/Object3D.js";
 +import { Skeleton } from "../objects/Skeleton.js";
++
++export interface ParseTrackNameResults {
++    nodeName: string;
++    objectName: string;
++    objectIndex: string;
++    propertyName: string;
++    propertyIndex: string;
++}
 +
  /**
   * This holds a reference to a real property in the scene graph; used internally.
   */
-@@ -11,7 +14,7 @@ export class PropertyBinding {
+@@ -11,7 +22,7 @@ export class PropertyBinding {
       * @param {?Object} [parsedPath] - The parsed path.
       * @return {PropertyBinding|Composite} The created property binding or composite.
       */
@@ -648,16 +656,16 @@ index af4e99d9..02d8af3d 100644
      /**
       * Replaces spaces with underscores and removes unsupported characters from
       * node names, to ensure compatibility with parseTrackName().
-@@ -38,7 +41,7 @@ export class PropertyBinding {
+@@ -38,7 +49,7 @@ export class PropertyBinding {
       * @param {string} trackName - The track name to parse.
       * @return {Object} The parsed track name as an object.
       */
 -    static parseTrackName(trackName: string): Object;
-+    static parseTrackName(trackName: string): object;
++    static parseTrackName(trackName: string): ParseTrackNameResults;
      /**
       * Searches for a node in the hierarchy of the given root object by the given
       * node name.
-@@ -48,7 +51,7 @@ export class PropertyBinding {
+@@ -48,7 +59,7 @@ export class PropertyBinding {
       * @param {string|number} nodeName - The name of the node.
       * @return {?Object} The found node. Returns `null` if no object was found.
       */
@@ -666,7 +674,7 @@ index af4e99d9..02d8af3d 100644
      /**
       * Constructs a new property binding.
       *
-@@ -56,7 +59,7 @@ export class PropertyBinding {
+@@ -56,7 +67,7 @@ export class PropertyBinding {
       * @param {string} path - The path.
       * @param {?Object} [parsedPath] - The parsed path.
       */
@@ -675,7 +683,7 @@ index af4e99d9..02d8af3d 100644
      /**
       * The object path to the animated property.
       *
-@@ -68,77 +71,31 @@ export class PropertyBinding {
+@@ -68,77 +79,31 @@ export class PropertyBinding {
       *
       * @type {Object}
       */
