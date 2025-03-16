@@ -1,7 +1,5 @@
-import { WebGLRenderer, WebXRManager } from "three";
-
 export interface VRButtonRenderer {
-    xr: WebXRManager;
+    xr: { setSession: (value: XRSession) => Promise<void> };
 }
 
 export class VRButton {
