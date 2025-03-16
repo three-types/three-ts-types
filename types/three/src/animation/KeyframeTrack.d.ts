@@ -39,20 +39,14 @@ export class KeyframeTrack {
      * The track's name can refer to morph targets or bones or
      * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
      * for the forms of strings that can be parsed for property binding.
-     *
-     * @type {string}
      */
     name: string;
     /**
      * The keyframe times.
-     *
-     * @type {Float32Array}
      */
     times: Float32Array;
     /**
      * The keyframe values.
-     *
-     * @type {Float32Array}
      */
     values: Float32Array;
     /**
@@ -151,28 +145,24 @@ export class KeyframeTrack {
     /**
      * The value type name.
      *
-     * @type {String}
      * @default ''
      */
     ValueTypeName: string;
     /**
      * The time buffer type of this keyframe track.
      *
-     * @type {TypedArray|Array}
      * @default Float32Array.constructor
      */
-    TimeBufferType: TypedArray | number[];
+    TimeBufferType: typeof TypedArray | ArrayConstructor;
     /**
      * The value buffer type of this keyframe track.
      *
-     * @type {TypedArray|Array}
      * @default Float32Array.constructor
      */
-    ValueBufferType: TypedArray | number[];
+    ValueBufferType: typeof TypedArray | ArrayConstructor;
     /**
      * The default interpolation type of this keyframe track.
      *
-     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
      * @default InterpolateLinear
      */
     DefaultInterpolation: InterpolationModes;
