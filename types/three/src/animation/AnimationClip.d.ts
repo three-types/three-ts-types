@@ -130,8 +130,6 @@ export class AnimationClip {
     blendMode: AnimationBlendMode;
     /**
      * The UUID of the animation clip.
-     *
-     * @readonly
      */
     readonly uuid: string;
     /**

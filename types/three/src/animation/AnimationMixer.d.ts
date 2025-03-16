@@ -3,6 +3,7 @@ import { EventDispatcher } from "../core/EventDispatcher.js";
 import { Object3D } from "../core/Object3D.js";
 import { AnimationAction } from "./AnimationAction.js";
 import { AnimationClip } from "./AnimationClip.js";
+import { AnimationObjectGroup } from "./AnimationObjectGroup.js";
 
 export interface AnimationMixerEventMap {
     loop: { action: AnimationAction; loopDelta: number };
@@ -20,7 +21,7 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      *
      * @param {Object3D} root - The object whose animations shall be played by this mixer.
      */
-    constructor(root: Object3D);
+    constructor(root: Object3D | AnimationObjectGroup);
     /**
      * The global mixer time (in seconds; starting with `0` on the mixer's creation).
      *
@@ -51,7 +52,7 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      */
     clipAction(
         clip: AnimationClip | string,
-        optionalRoot?: Object3D,
+        optionalRoot?: Object3D | AnimationObjectGroup,
         blendMode?: AnimationBlendMode,
     ): AnimationAction | null;
     /**
@@ -61,7 +62,10 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @param {Object3D} [optionalRoot] - An alternative root object.
      * @return {?AnimationAction} The animation action. Returns `null` if no action was found.
      */
-    existingAction(clip: AnimationClip | string, optionalRoot?: Object3D): AnimationAction | null;
+    existingAction(
+        clip: AnimationClip | string,
+        optionalRoot?: Object3D | AnimationObjectGroup,
+    ): AnimationAction | null;
     /**
      * Deactivates all previously scheduled actions on this mixer.
      *
@@ -93,7 +97,7 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      *
      * @return {Object3D} The mixer's root object.
      */
-    getRoot(): Object3D;
+    getRoot(): Object3D | AnimationObjectGroup;
     /**
      * Deallocates all memory resources for a clip. Before using this method make
      * sure to call {@link AnimationAction#stop} for all related actions.
@@ -109,7 +113,7 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      *
      * @param {Object3D} root - The root object to uncache.
      */
-    uncacheRoot(root: Object3D): void;
+    uncacheRoot(root: Object3D | AnimationObjectGroup): void;
     /**
      * Deallocates all memory resources for an action. The action is identified by the
      * given clip and an optional root object. Before using this method make
@@ -118,5 +122,5 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @param {AnimationClip|string} clip - An animation clip or alternatively the name of the animation clip.
      * @param {Object3D} [optionalRoot] - An alternative root object.
      */
-    uncacheAction(clip: AnimationClip | string, optionalRoot?: Object3D): void;
+    uncacheAction(clip: AnimationClip | string, optionalRoot?: Object3D | AnimationObjectGroup): void;
 }
