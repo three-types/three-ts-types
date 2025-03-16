@@ -9,6 +9,7 @@ const files = [
     'animation/tracks/QuaternionKeyframeTrack',
     'animation/tracks/StringKeyframeTrack',
     'animation/tracks/VectorKeyframeTrack',
+    'animation/AnimationAction',
     'animation/KeyframeTrack',
 ];
 
