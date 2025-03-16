@@ -459,6 +459,52 @@ index 040c4af5..21a787d5 100644
 -    subscribe_(path: any, parsedPath: any): any;
 -    unsubscribe_(path: any): void;
  }
+diff --git a/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts b/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
+index b8f10dfd..dbec9086 100644
+--- a/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
++++ b/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
+@@ -1,3 +1,6 @@
++import { AnimationClip } from "./AnimationClip.js";
++import { TypedArray, TypedArrayConstructor} from '../core/BufferAttribute.js';
++
+ /**
+  * Converts an array to a specific type.
+  *
+@@ -5,14 +8,14 @@
+  * @param {TypedArray.constructor} type - The constructor of a typed array that defines the new type.
+  * @return {TypedArray} The converted array.
+  */
+-export function convertArray(array: TypedArray | any[], type: TypedArray.constructor): TypedArray;
++export function convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray | number[];
+ /**
+  * Returns `true` if the given object is a typed array.
+  *
+  * @param {any} object - The object to check.
+  * @return {boolean} Whether the given object is a typed array.
+  */
+-export function isTypedArray(object: any): boolean;
++export function isTypedArray(object: unknown): boolean;
+ /**
+  * Returns an array by which times and values can be sorted.
+  *
+@@ -73,7 +76,7 @@ export class AnimationUtils {
+      * @param {TypedArray.constructor} type - The constructor of a type array.
+      * @return {TypedArray} The converted array
+      */
+-    static convertArray(array: TypedArray | any[], type: TypedArray.constructor): TypedArray;
++    static convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray | number[];
+     /**
+      * Returns `true` if the given object is a typed array.
+      *
+@@ -81,7 +84,7 @@ export class AnimationUtils {
+      * @param {any} object - The object to check.
+      * @return {boolean} Whether the given object is a typed array.
+      */
+-    static isTypedArray(object: any): boolean;
++    static isTypedArray(object: unknown): boolean;
+     /**
+      * Returns an array by which times and values can be sorted.
+      *
 diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 index 45b4b715..e4bbb710 100644
 --- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
