@@ -1,5 +1,9 @@
-import { WebGLRenderer } from "three";
+import { WebGLRenderer, WebXRManager } from "three";
+
+export interface VRButtonRenderer {
+    xr: WebXRManager;
+}
 
 export class VRButton {
-    static createButton(renderer: WebGLRenderer, sessionInit?: XRSessionInit): HTMLElement;
+    static createButton(renderer: VRButtonRenderer, sessionInit?: XRSessionInit): HTMLElement;
 }
