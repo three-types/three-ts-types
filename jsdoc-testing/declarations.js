@@ -2,7 +2,15 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { argv } from 'node:process';
 
-const files = ['animation/KeyframeTrack'];
+const files = [
+    'animation/tracks/BooleanKeyframeTrack',
+    'animation/tracks/ColorKeyframeTrack',
+    'animation/tracks/NumberKeyframeTrack',
+    'animation/tracks/QuaternionKeyframeTrack',
+    'animation/tracks/StringKeyframeTrack',
+    'animation/tracks/VectorKeyframeTrack',
+    'animation/KeyframeTrack',
+];
 
 const inDir = './jsdoc';
 const outDir = '../types/three/src';
