@@ -105,3 +105,25 @@ jobs:
         working-directory: src-testing
       - run: pnpm run check-declarations
         working-directory: src-testing
+  test-jsodc:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run build-declarations
+        working-directory: jsdoc-testing
+      - run: git apply changes.patch --allow-empty
+        working-directory: jsdoc-testing
+      - run: pnpm run format-dprint
+        working-directory: jsdoc-testing
+      - run: pnpm run check-declarations
+        working-directory: jsdoc-testing
