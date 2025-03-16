@@ -85,7 +85,8 @@ export class KeyframeTrack {
      * @return {KeyframeTrack} A reference to this keyframe track.
      */
     setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
-    createInterpolant:
+    createInterpolant?:
+        | ((result?: TypedArray) => DiscreteInterpolant)
         | ((result?: TypedArray) => LinearInterpolant)
         | ((result?: TypedArray) => CubicInterpolant)
         | undefined;
