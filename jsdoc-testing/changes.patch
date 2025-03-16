@@ -1,5 +1,5 @@
 diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
-index 45b4b715..56d43357 100644
+index 45b4b715..00beaf0f 100644
 --- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 @@ -1,3 +1,17 @@
@@ -29,7 +29,7 @@ index 45b4b715..56d43357 100644
      /**
       * Constructs a new keyframe track.
       *
-@@ -20,7 +34,7 @@ export class KeyframeTrack {
+@@ -20,25 +34,19 @@ export class KeyframeTrack {
       * @param {Array<number>} values - A list of keyframe values.
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
       */
@@ -38,7 +38,25 @@ index 45b4b715..56d43357 100644
      /**
       * The track's name can refer to morph targets or bones or
       * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
-@@ -71,14 +85,14 @@ export class KeyframeTrack {
+      * for the forms of strings that can be parsed for property binding.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The keyframe times.
+-     *
+-     * @type {Float32Array}
+      */
+     times: Float32Array;
+     /**
+      * The keyframe values.
+-     *
+-     * @type {Float32Array}
+      */
+     values: Float32Array;
+     /**
+@@ -71,14 +79,14 @@ export class KeyframeTrack {
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} interpolation - The interpolation type.
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
@@ -56,7 +74,7 @@ index 45b4b715..56d43357 100644
      /**
       * Returns the value size.
       *
-@@ -123,13 +137,13 @@ export class KeyframeTrack {
+@@ -123,42 +131,35 @@ export class KeyframeTrack {
       *
       * @return {AnimationClip} A reference to this animation clip.
       */
@@ -72,24 +90,30 @@ index 45b4b715..56d43357 100644
      /**
       * The value type name.
       *
-@@ -143,22 +157,19 @@ export class KeyframeTrack {
-      * @type {TypedArray|Array}
+-     * @type {String}
+      * @default ''
+      */
+     ValueTypeName: string;
+     /**
+      * The time buffer type of this keyframe track.
+      *
+-     * @type {TypedArray|Array}
       * @default Float32Array.constructor
       */
 -    TimeBufferType: TypedArray | any[];
-+    TimeBufferType: TypedArray | number[];
++    TimeBufferType: typeof TypedArray | ArrayConstructor;
      /**
       * The value buffer type of this keyframe track.
       *
-      * @type {TypedArray|Array}
+-     * @type {TypedArray|Array}
       * @default Float32Array.constructor
       */
 -    ValueBufferType: TypedArray | any[];
-+    ValueBufferType: TypedArray | number[];
++    ValueBufferType: typeof TypedArray | ArrayConstructor;
      /**
       * The default interpolation type of this keyframe track.
       *
-      * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+-     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
       * @default InterpolateLinear
       */
 -    DefaultInterpolation: (number | number | number);
@@ -98,3 +122,132 @@ index 45b4b715..56d43357 100644
 -import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 -import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 -import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/BooleanKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/BooleanKeyframeTrack.d.ts
+index 998efcc9..a97070b3 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/BooleanKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/BooleanKeyframeTrack.d.ts
+@@ -1,3 +1,5 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++
+ /**
+  * A track for boolean keyframe values.
+  *
+@@ -14,15 +16,5 @@ export class BooleanKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} times - A list of keyframe times.
+      * @param {Array<number>} values - A list of keyframe values.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>);
+-    /**
+-     * The default interpolation type of this keyframe track.
+-     *
+-     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+-     * @default InterpolateDiscrete
+-     */
+-    DefaultInterpolation: (InterpolateLinear | number | InterpolateSmooth);
+-    InterpolantFactoryMethodLinear: any;
+-    InterpolantFactoryMethodSmooth: any;
++    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>);
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/ColorKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/ColorKeyframeTrack.d.ts
+index aa0f64d7..51ef56e6 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/ColorKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/ColorKeyframeTrack.d.ts
+@@ -1,3 +1,6 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++import { InterpolationModes } from "../constants.js";
++
+ /**
+  * A track for color keyframe values.
+  *
+@@ -12,6 +15,5 @@ export class ColorKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: (InterpolateLinear | InterpolateDiscrete | InterpolateSmooth));
++    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/NumberKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/NumberKeyframeTrack.d.ts
+index f83c955c..9405b41e 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/NumberKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/NumberKeyframeTrack.d.ts
+@@ -1,3 +1,6 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++import { InterpolationModes } from "../constants.js";
++
+ /**
+  * A track for numeric keyframe values.
+  *
+@@ -12,6 +15,5 @@ export class NumberKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: (InterpolateLinear | InterpolateDiscrete | InterpolateSmooth));
++    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: InterpolationModes);
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/QuaternionKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/QuaternionKeyframeTrack.d.ts
+index 98e4a75e..f94f6560 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/QuaternionKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/QuaternionKeyframeTrack.d.ts
+@@ -1,3 +1,6 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++import { InterpolationModes } from "../constants.js";
++
+ /**
+  * A track for Quaternion keyframe values.
+  *
+@@ -12,7 +15,5 @@ export class QuaternionKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: (InterpolateLinear | InterpolateDiscrete | InterpolateSmooth));
+-    InterpolantFactoryMethodSmooth: any;
++    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: InterpolationModes);
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/StringKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/StringKeyframeTrack.d.ts
+index 26868e33..f1997490 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/StringKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/StringKeyframeTrack.d.ts
+@@ -1,3 +1,5 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++
+ /**
+  * A track for string keyframe values.
+  *
+@@ -15,14 +17,4 @@ export class StringKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      */
+     constructor(name: string, times: Array<number>, values: Array<number>);
+-    /**
+-     * The default interpolation type of this keyframe track.
+-     *
+-     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+-     * @default InterpolateDiscrete
+-     */
+-    DefaultInterpolation: (InterpolateLinear | number | InterpolateSmooth);
+-    InterpolantFactoryMethodLinear: any;
+-    InterpolantFactoryMethodSmooth: any;
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/tracks/VectorKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/tracks/VectorKeyframeTrack.d.ts
+index 856db2d5..83927451 100644
+--- a/jsdoc-testing/jsdoc/animation/tracks/VectorKeyframeTrack.d.ts
++++ b/jsdoc-testing/jsdoc/animation/tracks/VectorKeyframeTrack.d.ts
+@@ -1,3 +1,6 @@
++import { KeyframeTrack } from '../KeyframeTrack.js';
++import { InterpolationModes } from "../constants.js";
++
+ /**
+  * A track for vector keyframe values.
+  *
+@@ -12,6 +15,5 @@ export class VectorKeyframeTrack extends KeyframeTrack {
+      * @param {Array<number>} values - A list of keyframe values.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      */
+-    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: (InterpolateLinear | InterpolateDiscrete | InterpolateSmooth));
++    constructor(name: string, times: Array<number>, values: Array<number>, interpolation?: InterpolationModes);
+ }
+-import { KeyframeTrack } from '../KeyframeTrack.js';
