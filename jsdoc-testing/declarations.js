@@ -2,9 +2,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { argv } from 'node:process';
 
-const files = [
-    'animation/KeyframeTrack',
-];
+const files = ['animation/KeyframeTrack'];
 
 const inDir = './jsdoc';
 const outDir = '../types/three/src';
