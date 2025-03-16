@@ -1,7 +1,14 @@
 import { ArrayCamera } from "../../cameras/ArrayCamera.js";
 import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { CylinderGeometry } from "../../geometries/CylinderGeometry.js";
+import { PlaneGeometry } from "../../geometries/PlaneGeometry.js";
+import { Material } from "../../materials/Material.js";
+import { MeshBasicMaterial } from "../../materials/MeshBasicMaterial.js";
+import { Quaternion } from "../../math/Quaternion.js";
 import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Mesh } from "../../objects/Mesh.js";
 import { WebXRController } from "../webxr/WebXRController.js";
 import { AnimationContext } from "./Animation.js";
 import Renderer from "./Renderer.js";
@@ -12,6 +19,39 @@ export interface XRManagerEventMap {
     planesdetected: {
         data: XRFrame;
     };
+}
+export interface XRQuadLayerObject {
+    type: "quad";
+    width: number;
+    height: number;
+    translation: Vector3;
+    quaternion: Quaternion;
+    pixelwidth: number;
+    pixelheight: number;
+    plane: Mesh;
+    material: Material;
+    rendercall: () => void;
+    renderTarget: XRRenderTarget;
+    xrlayer?: XRLayer;
+}
+export interface XRCylinderLayerObject {
+    type: "cylinder";
+    radius: number;
+    centralAngle: number;
+    aspectratio: number;
+    translation: Vector3;
+    quaternion: Quaternion;
+    pixelwidth: number;
+    pixelheight: number;
+    plane: Mesh;
+    material: Material;
+    rendercall: () => void;
+    renderTarget: XRRenderTarget;
+    xrlayer?: XRLayer;
+}
+export type XRLayerObject = XRQuadLayerObject | XRCylinderLayerObject;
+export interface LayerAttributes {
+    stencil?: boolean | undefined;
 }
 /**
  * The XR manager is built on top of the WebXR Device API to
@@ -35,6 +75,10 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _controllers: WebXRController[];
     _controllerInputSources: (XRInputSource | null)[];
     _xrRenderTarget: XRRenderTarget | null;
+    _layers: XRLayerObject[];
+    _supportsLayers: boolean;
+    _createXRLayer: (layer: XRLayerObject) => XRLayer;
+    _gl: WebGL2RenderingContext | null;
     _currentAnimationContext: AnimationContext | null;
     _currentAnimationLoop: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null;
     _currentPixelRatio: number | null;
@@ -158,6 +202,28 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
      * @return {?XRFrame} The XR frame. Returns `null` when used outside a XR session.
      */
     getFrame(): XRFrame | null;
+    createQuadLayer(
+        width: number,
+        height: number,
+        translation: Vector3,
+        quaternion: Quaternion,
+        pixelwidth: number,
+        pixelheight: number,
+        rendercall: () => void,
+        attributes?: LayerAttributes,
+    ): Mesh<PlaneGeometry, MeshBasicMaterial, import("../../core/Object3D.js").Object3DEventMap>;
+    createCylinderLayer(
+        radius: number,
+        centralAngle: number,
+        aspectratio: number,
+        translation: Vector3,
+        quaternion: Quaternion,
+        pixelwidth: number,
+        pixelheight: number,
+        rendercall: () => void,
+        attributes?: LayerAttributes,
+    ): Mesh<CylinderGeometry, MeshBasicMaterial, import("../../core/Object3D.js").Object3DEventMap>;
+    renderLayers(): void;
     /**
      * Returns the current XR session.
      *
