@@ -70,26 +70,18 @@ export class PropertyBinding {
     constructor(rootNode: Object3D | Skeleton, path: string, parsedPath?: object | null);
     /**
      * The object path to the animated property.
-     *
-     * @type {string}
      */
     path: string;
     /**
      * An object holding information about the path.
-     *
-     * @type {Object}
      */
     parsedPath: object;
     /**
      * The object owns the animated property.
-     *
-     * @type {?Object}
      */
     node: object | null;
     /**
      * The root node.
-     *
-     * @type {Object3D|Skeleton}
      */
     rootNode: Object3D | Skeleton;
     /**
