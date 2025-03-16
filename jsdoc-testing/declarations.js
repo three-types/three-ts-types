@@ -11,6 +11,7 @@ const files = [
     'animation/tracks/VectorKeyframeTrack',
     'animation/AnimationAction',
     'animation/AnimationClip',
+    'animation/AnimationMixer',
     'animation/KeyframeTrack',
 ];
 
