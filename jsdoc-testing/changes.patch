@@ -271,8 +271,111 @@ index 75ed2986..a1691635 100644
 +    toJSON(): AnimationClipJSON;
  }
 -import { KeyframeTrack } from './KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
+index ea941771..69905f58 100644
+--- a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
++++ b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
+@@ -1,21 +1,29 @@
++import { EventDispatcher } from '../core/EventDispatcher.js';
++import { AnimationClip } from './AnimationClip.js';
++import { AnimationAction } from './AnimationAction.js';
++import { AnimationBlendMode } from "../constants.js";
++import { Object3D } from "../core/Object3D.js";
++
++export interface AnimationMixerEventMap {
++    loop: { action: AnimationAction; loopDelta: number };
++    finished: { action: AnimationAction; direction: number };
++}
++
+ /**
+  * `AnimationMixer` is a player for animations on a particular object in
+  * the scene. When multiple objects in the scene are animated independently,
+  * one `AnimationMixer` may be used for each object.
+  */
+-export class AnimationMixer extends EventDispatcher {
++export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
+     /**
+      * Constructs a new animation mixer.
+      *
+      * @param {Object3D} root - The object whose animations shall be played by this mixer.
+      */
+     constructor(root: Object3D);
+-    _root: Object3D;
+-    _accuIndex: number;
+     /**
+      * The global mixer time (in seconds; starting with `0` on the mixer's creation).
+      *
+-     * @type {number}
+      * @default 0
+      */
+     time: number;
+@@ -26,48 +34,9 @@ export class AnimationMixer extends EventDispatcher {
+      * possibility to pause/unpause all actions that are controlled by this
+      * mixer.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     timeScale: number;
+-    _bindAction(action: any, prototypeAction: any): void;
+-    _activateAction(action: any): void;
+-    _deactivateAction(action: any): void;
+-    _initMemoryManager(): void;
+-    _actions: any[] | undefined;
+-    _nActiveActions: number | undefined;
+-    _actionsByClip: {} | undefined;
+-    _bindings: any[] | undefined;
+-    _nActiveBindings: number | undefined;
+-    _bindingsByRootAndName: {} | undefined;
+-    _controlInterpolants: any[] | undefined;
+-    _nActiveControlInterpolants: number | undefined;
+-    stats: {
+-        actions: {
+-            readonly total: number;
+-            readonly inUse: number | undefined;
+-        };
+-        bindings: {
+-            readonly total: number;
+-            readonly inUse: number | undefined;
+-        };
+-        controlInterpolants: {
+-            readonly total: number;
+-            readonly inUse: number | undefined;
+-        };
+-    } | undefined;
+-    _isActiveAction(action: any): boolean;
+-    _addInactiveAction(action: any, clipUuid: any, rootUuid: any): void;
+-    _removeInactiveAction(action: any): void;
+-    _removeInactiveBindingsForAction(action: any): void;
+-    _lendAction(action: any): void;
+-    _takeBackAction(action: any): void;
+-    _addInactiveBinding(binding: any, rootUuid: any, trackName: any): void;
+-    _removeInactiveBinding(binding: any): void;
+-    _lendBinding(binding: any): void;
+-    _takeBackBinding(binding: any): void;
+-    _lendControlInterpolant(): any;
+-    _takeBackControlInterpolant(interpolant: any): void;
+     /**
+      * Returns an instance of {@link AnimationAction} for the passed clip.
+      *
+@@ -80,7 +49,7 @@ export class AnimationMixer extends EventDispatcher {
+      * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode] - The blend mode.
+      * @return {?AnimationAction} The animation action.
+      */
+-    clipAction(clip: AnimationClip | string, optionalRoot?: Object3D, blendMode?: (number | AdditiveAnimationBlendMode)): AnimationAction | null;
++    clipAction(clip: AnimationClip | string, optionalRoot?: Object3D, blendMode?: AnimationBlendMode): AnimationAction | null;
+     /**
+      * Returns an existing animation action for the passed clip.
+      *
+@@ -147,6 +116,3 @@ export class AnimationMixer extends EventDispatcher {
+      */
+     uncacheAction(clip: AnimationClip | string, optionalRoot?: Object3D): void;
+ }
+-import { EventDispatcher } from '../core/EventDispatcher.js';
+-import { AnimationClip } from './AnimationClip.js';
+-import { AnimationAction } from './AnimationAction.js';
 diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
-index 45b4b715..8dd68cd0 100644
+index 45b4b715..e4bbb710 100644
 --- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 @@ -1,3 +1,17 @@
@@ -329,14 +432,13 @@ index 45b4b715..8dd68cd0 100644
       */
      values: Float32Array;
      /**
-@@ -71,14 +79,14 @@ export class KeyframeTrack {
+@@ -71,14 +79,13 @@ export class KeyframeTrack {
       * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} interpolation - The interpolation type.
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
 -    setInterpolation(interpolation: (number | number | number)): KeyframeTrack;
 -    createInterpolant: ((result?: TypedArray) => LinearInterpolant) | ((result?: TypedArray) => CubicInterpolant) | undefined;
 +    setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
-+    createInterpolant?: ((result?: TypedArray) => DiscreteInterpolant) | ((result?: TypedArray) => LinearInterpolant) | ((result?: TypedArray) => CubicInterpolant) | undefined;
      /**
       * Returns the current interpolation type.
       *
@@ -347,7 +449,7 @@ index 45b4b715..8dd68cd0 100644
      /**
       * Returns the value size.
       *
-@@ -123,42 +131,35 @@ export class KeyframeTrack {
+@@ -123,42 +130,35 @@ export class KeyframeTrack {
       *
       * @return {AnimationClip} A reference to this animation clip.
       */
