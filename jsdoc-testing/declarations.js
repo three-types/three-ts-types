@@ -10,6 +10,7 @@ const files = [
     'animation/tracks/StringKeyframeTrack',
     'animation/tracks/VectorKeyframeTrack',
     'animation/AnimationAction',
+    'animation/AnimationClip',
     'animation/KeyframeTrack',
 ];
 
