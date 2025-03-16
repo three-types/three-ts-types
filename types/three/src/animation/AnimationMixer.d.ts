@@ -51,6 +51,11 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @return {?AnimationAction} The animation action.
      */
     clipAction(
+        clip: AnimationClip,
+        optionalRoot?: Object3D | AnimationObjectGroup,
+        blendMode?: AnimationBlendMode,
+    ): AnimationAction;
+    clipAction(
         clip: AnimationClip | string,
         optionalRoot?: Object3D | AnimationObjectGroup,
         blendMode?: AnimationBlendMode,
