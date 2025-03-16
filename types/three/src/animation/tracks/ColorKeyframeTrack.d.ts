@@ -1,10 +1,8 @@
-import { InterpolationModes } from "../constants.js";
+import { InterpolationModes } from "../../constants.js";
 import { KeyframeTrack } from "../KeyframeTrack.js";
 
 /**
  * A track for color keyframe values.
- *
- * @augments KeyframeTrack
  */
 export class ColorKeyframeTrack extends KeyframeTrack {
     /**

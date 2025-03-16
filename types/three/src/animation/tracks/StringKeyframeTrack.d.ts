@@ -2,8 +2,6 @@ import { KeyframeTrack } from "../KeyframeTrack.js";
 
 /**
  * A track for string keyframe values.
- *
- * @augments KeyframeTrack
  */
 export class StringKeyframeTrack extends KeyframeTrack {
     /**

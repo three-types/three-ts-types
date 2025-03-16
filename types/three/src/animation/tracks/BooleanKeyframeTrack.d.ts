@@ -2,8 +2,6 @@ import { KeyframeTrack } from "../KeyframeTrack.js";
 
 /**
  * A track for boolean keyframe values.
- *
- * @augments KeyframeTrack
  */
 export class BooleanKeyframeTrack extends KeyframeTrack {
     /**

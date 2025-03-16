@@ -1,10 +1,8 @@
-import { InterpolationModes } from "../constants.js";
+import { InterpolationModes } from "../../constants.js";
 import { KeyframeTrack } from "../KeyframeTrack.js";
 
 /**
  * A track for vector keyframe values.
- *
- * @augments KeyframeTrack
  */
 export class VectorKeyframeTrack extends KeyframeTrack {
     /**

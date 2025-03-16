@@ -1,5 +1,5 @@
 import { InterpolationModes } from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
+import { TypedArray, TypedArrayConstructor } from "../core/BufferAttribute.js";
 import { CubicInterpolant } from "../math/interpolants/CubicInterpolant.js";
 import { DiscreteInterpolant } from "../math/interpolants/DiscreteInterpolant.js";
 import { LinearInterpolant } from "../math/interpolants/LinearInterpolant.js";
@@ -153,13 +153,13 @@ export class KeyframeTrack {
      *
      * @default Float32Array.constructor
      */
-    TimeBufferType: typeof TypedArray | ArrayConstructor;
+    TimeBufferType: TypedArrayConstructor | ArrayConstructor;
     /**
      * The value buffer type of this keyframe track.
      *
      * @default Float32Array.constructor
      */
-    ValueBufferType: typeof TypedArray | ArrayConstructor;
+    ValueBufferType: TypedArrayConstructor | ArrayConstructor;
     /**
      * The default interpolation type of this keyframe track.
      *
