@@ -1,6 +1,14 @@
 import { Object3D } from "../core/Object3D.js";
 import { Skeleton } from "../objects/Skeleton.js";
 
+export interface ParseTrackNameResults {
+    nodeName: string;
+    objectName: string;
+    objectIndex: string;
+    propertyName: string;
+    propertyIndex: string;
+}
+
 /**
  * This holds a reference to a real property in the scene graph; used internally.
  */
@@ -41,7 +49,7 @@ export class PropertyBinding {
      * @param {string} trackName - The track name to parse.
      * @return {Object} The parsed track name as an object.
      */
-    static parseTrackName(trackName: string): object;
+    static parseTrackName(trackName: string): ParseTrackNameResults;
     /**
      * Searches for a node in the hierarchy of the given root object by the given
      * node name.
