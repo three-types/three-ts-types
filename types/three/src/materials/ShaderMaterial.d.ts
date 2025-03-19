@@ -69,8 +69,8 @@ export interface ShaderMaterialJSON extends MaterialJSON {
     extensions?: Record<string, boolean>;
 }
 
-export class ShaderMaterial extends Material {
-    constructor(parameters?: ShaderMaterialParameters);
+export class ShaderMaterial<T extends Record<string, IUniform> = any> extends Material {
+    constructor(parameters?: Omit<ShaderMaterialParameters, 'uniforms'> & { uniforms: T });
 
     /**
      * Read-only flag to check if a given object is of type {@link ShaderMaterial}.
@@ -87,7 +87,7 @@ export class ShaderMaterial extends Material {
     /**
      * @default {}
      */
-    uniforms: { [uniform: string]: IUniform };
+    uniforms: T;
 
     uniformsGroups: UniformsGroup[];
 
