@@ -1,6 +1,6 @@
 import { ShaderMaterial, ShaderMaterialParameters } from "./ShaderMaterial.js";
 
-export class RawShaderMaterial<T extends Record<string, IUniform<any>> = any> extends ShaderMaterial {
+export class RawShaderMaterial<T extends Record<string, IUniform> = any> extends ShaderMaterial {
     declare uniforms: T;
     
     constructor(parameters?: Omit<ShaderMaterialParameters, 'uniforms'> & { uniforms: T });
