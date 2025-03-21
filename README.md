@@ -22,7 +22,7 @@ The tests are split into two directories: `types/three/test/integration` and `ty
 
 ### Integration tests
 
-The integration tests are usually runnable three.js code that has just been translated to TypeScript to make sure the types work. The `three-examples` is a special directory that holds the examples from the three.js repository with matching file names. If you want to add a integration test, you can just create a new file in the `integration` directory.
+The integration tests are usually runnable three.js code that has just been translated to TypeScript to make sure the types work. The `three-examples` is a special directory that holds the examples from the three.js repository with matching file names. If you want to add an integration test, you can just create a new file in the `integration` directory.
 
 ### Unit tests
 
@@ -36,4 +36,4 @@ Please see our [Contributing Guidelines](https://github.com/three-types/three-ts
 
 ### Why are the declaration files in a `types/three/` directory and why is there a `notNeededPackages.json`?
 
-This makes it easier to re-use the testing process used by DefinitelyTyped since they have a check to make sure the types are within a `types` directory as well a check for `notNeededPackages.json`. It also makes it possible to use `typeRoots` in the `tsconfig.json` so that the `three` types can be resolved correctly in the tests.
+This makes it easier to re-use the testing process used by DefinitelyTyped since they have a check to make sure the types are within a `types` directory as well as a check for `notNeededPackages.json`. It also makes it possible to use `typeRoots` in the `tsconfig.json` so that the `three` types can be resolved correctly in the tests.
