@@ -17400,25 +17400,24 @@ index 50e91d95..0895db7f 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_skinning_points.ts b/examples-testing/examples/webgpu_skinning_points.ts
-index 4a545254..2dffdfaf 100644
+index 9f72c7a9..3532484b 100644
 --- a/examples-testing/examples/webgpu_skinning_points.ts
 +++ b/examples-testing/examples/webgpu_skinning_points.ts
-@@ -1,11 +1,11 @@
+@@ -1,10 +1,10 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { uniform, skinning } from 'three/tsl';
+ import { color, computeSkinning, objectWorldMatrix, instancedArray, instanceIndex, Fn, shapeCircle } from 'three/tsl';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
- 
 -let mixer, clock;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let mixer: THREE.AnimationMixer, clock: THREE.Clock;
  
  init();
  
-@@ -27,14 +27,14 @@ function init() {
+@@ -29,16 +29,16 @@ function init() {
          action.play();
  
          object.traverse(function (child) {
@@ -17427,16 +17426,18 @@ index 4a545254..2dffdfaf 100644
 +            if ((child as THREE.SkinnedMesh).isMesh) {
 +                (child as THREE.SkinnedMesh).visible = false;
  
-                 const materialPoints = new THREE.PointsNodeMaterial();
-                 materialPoints.colorNode = uniform(new THREE.Color());
--                materialPoints.positionNode = skinning(child);
-+                materialPoints.positionNode = skinning(child as THREE.SkinnedMesh);
+-                const countOfPoints = child.geometry.getAttribute('position').count;
++                const countOfPoints = (child as THREE.SkinnedMesh).geometry.getAttribute('position').count;
  
--                const pointCloud = new THREE.Points(child.geometry, materialPoints);
-+                const pointCloud = new THREE.Points((child as THREE.SkinnedMesh).geometry, materialPoints);
-                 scene.add(pointCloud);
-             }
-         });
+                 const pointPositionArray = instancedArray(countOfPoints, 'vec3').setPBO(true);
+                 const pointSpeedArray = instancedArray(countOfPoints, 'vec3').setPBO(true);
+ 
+                 const pointSpeedAttribute = pointSpeedArray.toAttribute();
+-                const skinningPosition = computeSkinning(child);
++                const skinningPosition = computeSkinning(child as THREE.SkinnedMesh);
+ 
+                 const materialPoints = new THREE.PointsNodeMaterial();
+                 materialPoints.colorNode = pointSpeedAttribute.mul(0.6).mix(color(0x0066ff), color(0xff9000));
 diff --git a/examples-testing/examples/webgpu_sky.ts b/examples-testing/examples/webgpu_sky.ts
 index 097d06af..3836e7ee 100644
 --- a/examples-testing/examples/webgpu_sky.ts
