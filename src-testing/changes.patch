@@ -132,10 +132,14 @@ index b1a6b90b..aa2965be 100644
  
          const { renderId } = nodeFrame;
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index d207da78..17a91e36 100644
+index d207da78..9c25d5cc 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-@@ -4,7 +4,10 @@ import { varying } from '../core/VaryingNode.js';
+@@ -1,10 +1,15 @@
+ import InputNode from '../core/InputNode.js';
+-import { nodeObject, addMethodChaining } from '../tsl/TSLCore.js';
++import { nodeObject, addMethodChaining, ShaderNodeObject } from '../tsl/TSLCore.js';
+ import { varying } from '../core/VaryingNode.js';
  
  import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
  import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
@@ -144,10 +148,12 @@ index d207da78..17a91e36 100644
 +import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
 +import { InstancedBufferAttribute } from '../../core/InstancedBufferAttribute.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
++import { array } from '@types/three/src/nodes/core/ArrayNode.js';
++import BufferNode from './BufferNode.js';
  
  /**
   * In earlier `three.js` versions it was only possible to define attribute data
-@@ -28,11 +31,22 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
+@@ -28,11 +33,22 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
   * ```
   * @augments InputNode
   */
@@ -171,7 +177,7 @@ index d207da78..17a91e36 100644
      /**
       * Constructs a new buffer attribute node.
       *
-@@ -41,7 +55,12 @@ class BufferAttributeNode extends InputNode {
+@@ -41,7 +57,12 @@ class BufferAttributeNode extends InputNode {
       * @param {number} [bufferStride=0] - The buffer stride.
       * @param {number} [bufferOffset=0] - The buffer offset.
       */
@@ -185,7 +191,7 @@ index d207da78..17a91e36 100644
          super(value, bufferType);
  
          /**
-@@ -110,10 +129,10 @@ class BufferAttributeNode extends InputNode {
+@@ -110,10 +131,10 @@ class BufferAttributeNode extends InputNode {
           */
          this.global = true;
  
@@ -200,7 +206,7 @@ index d207da78..17a91e36 100644
          }
      }
  
-@@ -124,7 +143,7 @@ class BufferAttributeNode extends InputNode {
+@@ -124,7 +145,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -209,7 +215,7 @@ index d207da78..17a91e36 100644
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
-@@ -149,7 +168,7 @@ class BufferAttributeNode extends InputNode {
+@@ -149,7 +170,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The node type.
       */
@@ -218,7 +224,7 @@ index d207da78..17a91e36 100644
          if (this.bufferType === null) {
              this.bufferType = builder.getTypeFromAttribute(this.attribute);
          }
-@@ -164,16 +183,19 @@ class BufferAttributeNode extends InputNode {
+@@ -164,16 +185,19 @@ class BufferAttributeNode extends InputNode {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -241,7 +247,7 @@ index d207da78..17a91e36 100644
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
  
          buffer.setUsage(this.usage);
-@@ -188,13 +210,13 @@ class BufferAttributeNode extends InputNode {
+@@ -188,13 +212,13 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The generated code snippet.
       */
@@ -257,7 +263,7 @@ index d207da78..17a91e36 100644
  
          if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
              this.name = propertyName;
-@@ -225,11 +247,11 @@ class BufferAttributeNode extends InputNode {
+@@ -225,11 +249,11 @@ class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -272,7 +278,7 @@ index d207da78..17a91e36 100644
          }
  
          return this;
-@@ -241,7 +263,7 @@ class BufferAttributeNode extends InputNode {
+@@ -241,7 +265,7 @@ class BufferAttributeNode extends InputNode {
       * @param {boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -281,7 +287,7 @@ index d207da78..17a91e36 100644
          this.instanced = value;
  
          return this;
-@@ -261,8 +283,12 @@ export default BufferAttributeNode;
+@@ -261,8 +285,12 @@ export default BufferAttributeNode;
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -296,7 +302,7 @@ index d207da78..17a91e36 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage.
-@@ -276,8 +302,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+@@ -276,8 +304,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -311,7 +317,7 @@ index d207da78..17a91e36 100644
  
  /**
   * TSL function for creating a buffer attribute node but with enabled instancing
-@@ -290,8 +320,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+@@ -290,8 +322,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -326,20 +332,28 @@ index d207da78..17a91e36 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -304,7 +338,11 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -304,7 +340,17 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
 -export const instancedDynamicBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
+-
+-addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
 +export const instancedDynamicBufferAttribute = (
 +    array: TypedArray | InterleavedBuffer | BufferAttribute,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
 +) => dynamicBufferAttribute(array, type, stride, offset).setInstanced(true);
- 
- addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
++
++addMethodChaining('toAttribute', <TValue>(bufferNode: BufferNode<TValue>) => bufferAttribute(bufferNode.value));
++
++declare module '../tsl/TSLCore.js' {
++    interface NodeElements {
++        toAttribute: <TValue>(bufferNode: BufferNode<TValue>) => ShaderNodeObject<BufferAttributeNode>;
++    }
++}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
 index c2b1ccef..ee4ff754 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
@@ -779,7 +793,7 @@ index 81c87767..c7f7558a 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index b0a1a5cd..c5de4d5f 100644
+index c06143fd..66928648 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1115,7 +1129,7 @@ index b0a1a5cd..c5de4d5f 100644
                      }
                  }
  
-@@ -604,10 +682,10 @@ class Node extends EventDispatcher {
+@@ -612,10 +690,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1128,7 +1142,7 @@ index b0a1a5cd..c5de4d5f 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -615,7 +693,9 @@ class Node extends EventDispatcher {
+@@ -623,7 +701,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1139,7 +1153,7 @@ index b0a1a5cd..c5de4d5f 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -631,33 +711,33 @@ class Node extends EventDispatcher {
+@@ -639,33 +719,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1183,7 +1197,7 @@ index b0a1a5cd..c5de4d5f 100644
                  }
              }
          }
-@@ -669,7 +749,7 @@ class Node extends EventDispatcher {
+@@ -677,7 +757,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1192,7 +1206,7 @@ index b0a1a5cd..c5de4d5f 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -678,18 +758,18 @@ class Node extends EventDispatcher {
+@@ -686,18 +766,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1214,7 +1228,7 @@ index b0a1a5cd..c5de4d5f 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -697,7 +777,7 @@ class Node extends EventDispatcher {
+@@ -705,7 +785,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1223,7 +1237,7 @@ index b0a1a5cd..c5de4d5f 100644
  
              this.serialize(data);
  
-@@ -706,12 +786,12 @@ class Node extends EventDispatcher {
+@@ -714,12 +794,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1238,7 +1252,7 @@ index b0a1a5cd..c5de4d5f 100644
                  values.push(data);
              }
  
-@@ -719,9 +799,9 @@ class Node extends EventDispatcher {
+@@ -727,9 +807,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -2754,7 +2768,7 @@ index 577ae945..9d6c5578 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 07492b96..e319946a 100644
+index 4fa71a98..2060bc22 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,7 @@
@@ -3221,7 +3235,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 096326f3..d1b6ae2e 100644
+index c60c1665..133a99d4 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3881,7 +3895,7 @@ index 3708522d..b6f51892 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index a0f4def7..fec55d38 100644
+index baa25e45..700f7c06 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -14,23 +14,38 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
@@ -6165,7 +6179,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 0785ccef..78024f9f 100644
+index c7b31a22..c7723285 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -24,6 +24,7 @@ import { Scene } from '../../scenes/Scene.js';
@@ -9575,7 +9589,7 @@ index 3c2ba9b5..294c4f01 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index bc7d174c..95cdb563 100644
+index 923ee3a2..b8152c4f 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -9905,7 +9919,7 @@ index bc7d174c..95cdb563 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -929,7 +991,7 @@ ${flowData.code}
+@@ -928,7 +990,7 @@ ${flowData.code}
       * @param {string} vars - The struct variables.
       * @return {string} The GLSL snippet representing a struct.
       */
@@ -9914,7 +9928,7 @@ index bc7d174c..95cdb563 100644
          return `
  layout( std140 ) uniform ${name} {
  ${vars}
-@@ -943,7 +1005,7 @@ ${vars}
+@@ -942,7 +1004,7 @@ ${vars}
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -9923,7 +9937,7 @@ index bc7d174c..95cdb563 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -990,7 +1052,7 @@ void main() {
+@@ -989,7 +1051,7 @@ void main() {
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -9932,7 +9946,7 @@ index bc7d174c..95cdb563 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1026,19 +1088,20 @@ void main() {
+@@ -1025,19 +1087,20 @@ void main() {
       * Controls the code build of the shader stages.
       */
      buildCode() {
@@ -9957,7 +9971,7 @@ index bc7d174c..95cdb563 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -1064,24 +1127,24 @@ void main() {
+@@ -1063,24 +1126,24 @@ void main() {
                  }
              }
  
@@ -9994,7 +10008,7 @@ index bc7d174c..95cdb563 100644
          }
      }
  
-@@ -1098,7 +1161,12 @@ void main() {
+@@ -1097,7 +1160,12 @@ void main() {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
