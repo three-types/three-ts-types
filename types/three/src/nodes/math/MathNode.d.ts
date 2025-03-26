@@ -178,8 +178,8 @@ export const transpose: Unary;
 
 type Binary = (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
-export const min: Binary;
-export const max: Binary;
+export const min: (...values: NodeRepresentation[]) => ShaderNodeObject<MathNode>;
+export const max: (...values: NodeRepresentation[]) => ShaderNodeObject<MathNode>;
 export const mod: Binary;
 export const step: Binary;
 export const reflect: Binary;
