@@ -33,33 +33,51 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-type Operator = (
-    a: NodeRepresentation,
-    b: NodeRepresentation,
-    ...others: NodeRepresentation[]
+export const add: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
-
-export const add: Operator;
-export const sub: Operator;
-export const mul: Operator;
-export const div: Operator;
-export const modInt: Operator;
-export const equal: Operator;
-export const notEqual: Operator;
-export const lessThan: Operator;
-export const greaterThan: Operator;
-export const lessThanEqual: Operator;
-export const greaterThanEqual: Operator;
-export const and: Operator;
-export const or: Operator;
-export const not: (a: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const xor: Operator;
-export const bitAnd: Operator;
-export const bitNot: (a: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const bitOr: Operator;
-export const bitXor: Operator;
-export const shiftLeft: Operator;
-export const shiftRight: Operator;
+export const sub: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
+export const mul: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
+export const div: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
+export const modInt: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const equal: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const notEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const lessThan: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const greaterThan: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const lessThanEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const greaterThanEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const and: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
+export const or: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
+export const not: (value: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const xor: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitAnd: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitNot: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitOr: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitXor: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const shiftLeft: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const shiftRight: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
@@ -90,7 +108,11 @@ declare module "../tsl/TSLCore.js" {
 /**
  * @deprecated .remainder() has been renamed to .modInt().
  */
-export const remainder: Operator;
+export const remainder: (
+    aNode: NodeRepresentation,
+    bNode: NodeRepresentation,
+    ...params: NodeRepresentation[]
+) => ShaderNodeObject<OperatorNode>;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
