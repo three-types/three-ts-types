@@ -138,6 +138,10 @@ type Unary = (a: NodeRepresentation) => ShaderNodeObject<MathNode>;
 
 export const all: Unary;
 export const any: Unary;
+
+/**
+ * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
+ */
 export const equals: Unary;
 
 export const radians: Unary;
