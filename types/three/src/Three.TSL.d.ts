@@ -129,6 +129,7 @@ export const cubeTexture: typeof TSL.cubeTexture;
 export const dFdx: typeof TSL.dFdx;
 export const dFdy: typeof TSL.dFdy;
 export const dashSize: typeof TSL.dashSize;
+export const debug: typeof TSL.debug;
 export const defaultBuildStages: typeof TSL.defaultBuildStages;
 export const defaultShaderStages: typeof TSL.defaultShaderStages;
 export const defined: typeof TSL.defined;
