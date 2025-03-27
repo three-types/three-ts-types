@@ -3894,7 +3894,7 @@ index bc2df96c..5f5ef696 100644
  
      for (let i = 0; i < position.count; i++) {
 diff --git a/examples-testing/examples/webgl_geometry_extrude_shapes.ts b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
-index 7428aee3..386e8d57 100644
+index ffcbc8d6..d7bb7dd5 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -3906,15 +3906,6 @@ index 7428aee3..386e8d57 100644
  
  init();
  
-@@ -13,7 +13,7 @@ function init() {
-     info.style.width = '100%';
-     info.style.textAlign = 'center';
-     info.style.color = '#fff';
--    info.style.link = '#f80';
-+    (info.style as any).link = '#f80';
-     info.innerHTML =
-         '<a href="https://threejs.org" target="_blank" rel="noopener">three.js</a> webgl - geometry extrude shapes';
-     document.body.appendChild(info);
 diff --git a/examples-testing/examples/webgl_geometry_extrude_splines.ts b/examples-testing/examples/webgl_geometry_extrude_splines.ts
 index 8636812f..90e2b7b0 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_splines.ts
@@ -4029,7 +4020,7 @@ index 765aa1e4..b15665d8 100644
  }
  
 diff --git a/examples-testing/examples/webgl_geometry_nurbs.ts b/examples-testing/examples/webgl_geometry_nurbs.ts
-index a603710b..74676e45 100644
+index ecd79c67..74676e45 100644
 --- a/examples-testing/examples/webgl_geometry_nurbs.ts
 +++ b/examples-testing/examples/webgl_geometry_nurbs.ts
 @@ -7,10 +7,10 @@ import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
@@ -4115,13 +4106,13 @@ index a603710b..74676e45 100644
      targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
  }
  
--function onPointerUp() {
+-function onPointerUp(event) {
 +function onPointerUp(event: PointerEvent) {
      if (event.isPrimary === false) return;
  
      document.removeEventListener('pointermove', onPointerMove);
 diff --git a/examples-testing/examples/webgl_geometry_shapes.ts b/examples-testing/examples/webgl_geometry_shapes.ts
-index f1d00f01..2042c353 100644
+index 0c25d885..2042c353 100644
 --- a/examples-testing/examples/webgl_geometry_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_shapes.ts
 @@ -2,11 +2,11 @@ import * as THREE from 'three';
@@ -4205,7 +4196,7 @@ index f1d00f01..2042c353 100644
      targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
  }
  
--function onPointerUp() {
+-function onPointerUp(event) {
 +function onPointerUp(event: PointerEvent) {
      if (event.isPrimary === false) return;
  
@@ -4410,7 +4401,7 @@ index f1383c13..6e9cd025 100644
          helper.position.copy(intersects[0].point);
      }
 diff --git a/examples-testing/examples/webgl_geometry_text.ts b/examples-testing/examples/webgl_geometry_text.ts
-index 831ebcd6..e5947329 100644
+index 1a9d00d0..e5947329 100644
 --- a/examples-testing/examples/webgl_geometry_text.ts
 +++ b/examples-testing/examples/webgl_geometry_text.ts
 @@ -1,23 +1,23 @@
@@ -4516,7 +4507,7 @@ index 831ebcd6..e5947329 100644
      targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
  }
  
--function onPointerUp() {
+-function onPointerUp(event) {
 +function onPointerUp(event: PointerEvent) {
      if (event.isPrimary === false) return;
  
@@ -7387,7 +7378,7 @@ index c8bce4bf..a28a7f00 100644
  
          loader.load(`textures/equirectangular/spruit_sunrise_${resolution}.hdr.jpg`, function (texture) {
 diff --git a/examples-testing/examples/webgl_loader_ttf.ts b/examples-testing/examples/webgl_loader_ttf.ts
-index 168371a1..073084f7 100644
+index b54b8c29..40a692eb 100644
 --- a/examples-testing/examples/webgl_loader_ttf.ts
 +++ b/examples-testing/examples/webgl_loader_ttf.ts
 @@ -4,9 +4,9 @@ import { TTFLoader } from 'three/addons/loaders/TTFLoader.js';
@@ -7466,11 +7457,13 @@ index 168371a1..073084f7 100644
      if (event.isPrimary === false) return;
  
      pointerX = event.clientX - windowHalfX;
-@@ -214,7 +214,7 @@ function onPointerMove(event) {
+@@ -213,8 +213,8 @@ function onPointerMove(event) {
+     targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
  }
  
- function onPointerUp() {
+-function onPointerUp(event) {
 -    if (event.isPrimary === false) return;
++function onPointerUp(event: PointerEvent) {
 +    if ((event as PointerEvent).isPrimary === false) return;
  
      document.removeEventListener('pointermove', onPointerMove);
@@ -9694,7 +9687,7 @@ index efd09cfc..e4832209 100644
              canvas.width = tileWidth;
              context.drawImage(image, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);
 diff --git a/examples-testing/examples/webgl_panorama_equirectangular.ts b/examples-testing/examples/webgl_panorama_equirectangular.ts
-index 40796f6e..6d631dee 100644
+index 35949ee6..6d631dee 100644
 --- a/examples-testing/examples/webgl_panorama_equirectangular.ts
 +++ b/examples-testing/examples/webgl_panorama_equirectangular.ts
 @@ -1,6 +1,6 @@
@@ -9735,12 +9728,12 @@ index 40796f6e..6d631dee 100644
      lat = (event.clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
  }
  
--function onPointerUp() {
+-function onPointerUp(event) {
 +function onPointerUp(event: PointerEvent) {
      if (event.isPrimary === false) return;
  
      isUserInteracting = false;
-@@ -85,7 +85,7 @@ function onPointerUp() {
+@@ -85,7 +85,7 @@ function onPointerUp(event) {
      document.removeEventListener('pointerup', onPointerUp);
  }
  
@@ -13692,7 +13685,7 @@ index 8dcba7eb..cee29e7b 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 836d8cde..1a6e3767 100644
+index dcf6dde2..7cc0aa4e 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -1,4 +1,4 @@
@@ -13728,7 +13721,7 @@ index 836d8cde..1a6e3767 100644
 +    const getFlipIndices = (index: ShaderNodeObject<THREE.IndexNode>, blockHeight: ShaderNodeObject<THREE.VarNode>) => {
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
-         const idx = uvec2(index.modInt(halfHeight), blockHeight.sub(index.modInt(halfHeight)).sub(1));
+         const idx = uvec2(index.mod(halfHeight), blockHeight.sub(index.mod(halfHeight)).sub(1));
 @@ -158,7 +159,10 @@ async function init(forceGlobalSwap = false) {
          return idx;
      };
@@ -13740,7 +13733,7 @@ index 836d8cde..1a6e3767 100644
 +    ) => {
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
-         const idx = uvec2(index.modInt(halfHeight), index.modInt(halfHeight).add(halfHeight));
+         const idx = uvec2(index.mod(halfHeight), index.mod(halfHeight).add(halfHeight));
 @@ -172,7 +176,7 @@ async function init(forceGlobalSwap = false) {
      const localStorage = workgroupArray('uint', 64 * 2);
  
@@ -13769,7 +13762,7 @@ index 836d8cde..1a6e3767 100644
  
          renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
-index f9caa443..1994271a 100644
+index 30f075d8..56fae624 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
 +++ b/examples-testing/examples/webgpu_compute_texture.ts
 @@ -1,9 +1,9 @@
@@ -13790,7 +13783,7 @@ index f9caa443..1994271a 100644
  
 -    const computeTexture = Fn(({ storageTexture }) => {
 +    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
-         const posX = instanceIndex.modInt(width);
+         const posX = instanceIndex.mod(width);
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
