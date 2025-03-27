@@ -34,50 +34,50 @@ export default class OperatorNode extends TempNode {
 }
 
 export const add: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 export const sub: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 export const mul: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 export const div: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
-export const modInt: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const equal: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const notEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const lessThan: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const greaterThan: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const lessThanEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const greaterThanEqual: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const mod: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const equal: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const notEqual: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const lessThan: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const greaterThan: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const lessThanEqual: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const greaterThanEqual: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 export const and: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 export const or: (
-    aNode: NodeRepresentation,
-    bNode: NodeRepresentation,
+    a: NodeRepresentation,
+    b: NodeRepresentation,
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 export const not: (value: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const xor: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const bitAnd: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const bitNot: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const bitOr: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const bitXor: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const shiftLeft: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
-export const shiftRight: (aNode: NodeRepresentation, bNode: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const xor: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitAnd: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitNot: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitOr: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const bitXor: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const shiftLeft: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+export const shiftRight: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
@@ -85,7 +85,7 @@ declare module "../tsl/TSLCore.js" {
         sub: typeof sub;
         mul: typeof mul;
         div: typeof div;
-        modInt: typeof modInt;
+        mod: typeof mod;
         equal: typeof equal;
         notEqual: typeof notEqual;
         lessThan: typeof lessThan;
@@ -114,11 +114,20 @@ export const remainder: (
     ...params: NodeRepresentation[]
 ) => ShaderNodeObject<OperatorNode>;
 
+/**
+ * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
+ */
+export const modInt: (a: NodeRepresentation, b: NodeRepresentation) => ShaderNodeObject<OperatorNode>;
+
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         /**
          * @deprecated .remainder() has been renamed to .modInt().
          */
         remainder: typeof remainder;
+        /**
+         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
+         */
+        modInt: typeof modInt;
     }
 }

@@ -39,7 +39,6 @@ export type MathNodeMethod1 =
 export type MathNodeMethod2 =
     | typeof MathNode.MIN
     | typeof MathNode.MAX
-    | typeof MathNode.MOD
     | typeof MathNode.STEP
     | typeof MathNode.REFLECT
     | typeof MathNode.DISTANCE
@@ -100,7 +99,6 @@ export default class MathNode extends TempNode {
 
     static MIN: "min";
     static MAX: "max";
-    static MOD: "mod";
     static STEP: "step";
     static REFLECT: "reflect";
     static DISTANCE: "distance";
@@ -188,7 +186,6 @@ export const max: (
     y: NodeRepresentation,
     ...values: NodeRepresentation[]
 ) => ShaderNodeObject<MathNode>;
-export const mod: Binary;
 export const step: Binary;
 export const reflect: Binary;
 export const distance: Binary;
@@ -271,7 +268,6 @@ declare module "../tsl/TSLCore.js" {
         atan2: typeof atan2;
         min: typeof min;
         max: typeof max;
-        mod: typeof mod;
         step: typeof step;
         reflect: typeof reflect;
         distance: typeof distance;
