@@ -282,4 +282,5 @@ export class AnimationAction {
      * @return {Object3D} The root object.
      */
     getRoot(): Object3D;
+    _scheduleFading(duration: number, weightNow: number, weightThen: number): this;
 }
