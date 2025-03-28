@@ -2014,6 +2014,179 @@ index f05369aa..5e9ce7d0 100644
      previousAction = activeAction;
      activeAction = actions[name];
  
+diff --git a/examples-testing/examples/webgl_animation_walk.ts b/examples-testing/examples/webgl_animation_walk.ts
+index bf247ddd..2cf1cb61 100644
+--- a/examples-testing/examples/webgl_animation_walk.ts
++++ b/examples-testing/examples/webgl_animation_walk.ts
+@@ -6,10 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ 
+-let scene, renderer, camera, floor, orbitControls;
+-let group, followGroup, model, skeleton, mixer, clock;
+-
+-let actions;
++let scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    camera: THREE.PerspectiveCamera,
++    floor: THREE.Mesh,
++    orbitControls: OrbitControls;
++let group: THREE.Group,
++    followGroup: THREE.Group,
++    model,
++    skeleton: THREE.SkeletonHelper,
++    mixer: THREE.AnimationMixer,
++    clock: THREE.Clock;
++
++let actions: { Idle: THREE.AnimationAction; Walk: THREE.AnimationAction; Run: THREE.AnimationAction };
+ 
+ let settings = {
+     show_skeleton: false,
+@@ -19,7 +28,19 @@ let settings = {
+ const PI = Math.PI;
+ const PI90 = Math.PI / 2;
+ 
+-const controls = {
++const controls: {
++    key: number[];
++    ease: THREE.Vector3;
++    position: THREE.Vector3;
++    up: THREE.Vector3;
++    rotate: THREE.Quaternion;
++    current: keyof typeof actions;
++    fadeDuration: number;
++    runVelocity: number;
++    walkVelocity: number;
++    rotateSpeed: number;
++    floorDecale: number;
++} = {
+     key: [0, 0],
+     ease: new THREE.Vector3(),
+     position: new THREE.Vector3(),
+@@ -36,7 +57,7 @@ const controls = {
+ init();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+     camera.position.set(0, 2, -5);
+@@ -160,22 +181,34 @@ function loadModel() {
+         group.rotation.y = PI;
+ 
+         model.traverse(function (object) {
+-            if (object.isMesh) {
+-                if (object.name == 'vanguard_Mesh') {
+-                    object.castShadow = true;
+-                    object.receiveShadow = true;
+-                    object.material.shadowSide = THREE.DoubleSide;
+-                    //object.material.envMapIntensity = 0.5;
+-                    object.material.metalness = 1.0;
+-                    object.material.roughness = 0.2;
+-                    object.material.color.set(1, 1, 1);
+-                    object.material.metalnessMap = object.material.map;
++            if ((object as THREE.Mesh).isMesh) {
++                if ((object as THREE.Mesh).name == 'vanguard_Mesh') {
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).castShadow = true;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).receiveShadow = true;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.shadowSide =
++                        THREE.DoubleSide;
++                    //(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.envMapIntensity = 0.5;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalness = 1.0;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0.2;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.color.set(
++                        1,
++                        1,
++                        1,
++                    );
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalnessMap = (
++                        object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
++                    ).material.map;
+                 } else {
+-                    object.material.metalness = 1;
+-                    object.material.roughness = 0;
+-                    object.material.transparent = true;
+-                    object.material.opacity = 0.8;
+-                    object.material.color.set(1, 1, 1);
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalness = 1;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.transparent =
++                        true;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = 0.8;
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.color.set(
++                        1,
++                        1,
++                        1,
++                    );
+                 }
+             }
+         });
+@@ -203,9 +236,9 @@ function loadModel() {
+         };
+ 
+         for (let m in actions) {
+-            actions[m].enabled = true;
+-            actions[m].setEffectiveTimeScale(1);
+-            if (m !== 'Idle') actions[m].setEffectiveWeight(0);
++            actions[m as keyof typeof actions].enabled = true;
++            actions[m as keyof typeof actions].setEffectiveTimeScale(1);
++            if (m !== 'Idle') actions[m as keyof typeof actions].setEffectiveWeight(0);
+         }
+ 
+         actions.Idle.play();
+@@ -214,7 +247,7 @@ function loadModel() {
+     });
+ }
+ 
+-function updateCharacter(delta) {
++function updateCharacter(delta: number) {
+     const fade = controls.fadeDuration;
+     const key = controls.key;
+     const up = controls.up;
+@@ -224,7 +257,7 @@ function updateCharacter(delta) {
+     const azimut = orbitControls.getAzimuthalAngle();
+ 
+     let active = key[0] === 0 && key[1] === 0 ? false : true;
+-    let play = active ? (key[2] ? 'Run' : 'Walk') : 'Idle';
++    let play = active ? (key[2] ? ('Run' as const) : ('Walk' as const)) : ('Idle' as const);
+ 
+     // change animation
+ 
+@@ -286,7 +319,7 @@ function updateCharacter(delta) {
+     orbitControls.update();
+ }
+ 
+-function unwrapRad(r) {
++function unwrapRad(r: number) {
+     return Math.atan2(Math.sin(r), Math.cos(r));
+ }
+ 
+@@ -299,13 +332,13 @@ function createPanel() {
+     panel.add(settings, 'fixe_transition');
+ }
+ 
+-function setWeight(action, weight) {
++function setWeight(action: THREE.AnimationAction, weight: number) {
+     action.enabled = true;
+     action.setEffectiveTimeScale(1);
+     action.setEffectiveWeight(weight);
+ }
+ 
+-function onKeyDown(event) {
++function onKeyDown(event: KeyboardEvent) {
+     const key = controls.key;
+     switch (event.code) {
+         case 'ArrowUp':
+@@ -333,7 +366,7 @@ function onKeyDown(event) {
+     }
+ }
+ 
+-function onKeyUp(event) {
++function onKeyUp(event: KeyboardEvent) {
+     const key = controls.key;
+     switch (event.code) {
+         case 'ArrowUp':
 diff --git a/examples-testing/examples/webgl_buffergeometry.ts b/examples-testing/examples/webgl_buffergeometry.ts
 index 28b2c96a..6a802ab6 100644
 --- a/examples-testing/examples/webgl_buffergeometry.ts
@@ -4984,31 +5157,47 @@ index 30444ddb..e1c40aef 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 00c32f22..e1655f04 100644
+index 80cda60f..1a8147a9 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
-@@ -3,7 +3,7 @@ import * as THREE from 'three';
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -4,11 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -import { GPUComputationRenderer } from 'three/addons/misc/GPUComputationRenderer.js';
 +import { GPUComputationRenderer, Variable } from 'three/addons/misc/GPUComputationRenderer.js';
  import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
++import { MeshStandardMaterialParameters, WebGLProgramParametersWithUniforms } from 'three';
  
  // Texture width for simulation
-@@ -13,25 +13,25 @@ const WIDTH = 128;
- const BOUNDS = 512;
+ const WIDTH = 128;
+@@ -17,34 +18,34 @@ const WIDTH = 128;
+ const BOUNDS = 6;
  const BOUNDS_HALF = BOUNDS * 0.5;
  
+-let tmpHeightmap = null;
++let tmpHeightmap: THREE.Texture | null = null;
+ let tmpQuat = new THREE.Quaternion();
+ let tmpQuatX = new THREE.Quaternion();
+ let tmpQuatZ = new THREE.Quaternion();
+-let duckModel = null;
++let duckModel: THREE.Mesh | null = null;
+ 
 -let container, stats;
--let camera, scene, renderer;
+-let camera, scene, renderer, controls;
 +let container: HTMLDivElement, stats: Stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
  let mouseMoved = false;
+ let mousedown = false;
  const mouseCoords = new THREE.Vector2();
  const raycaster = new THREE.Raycaster();
  
+-let sun;
 -let waterMesh;
+-let poolBorder;
 -let meshRay;
 -let gpuCompute;
 -let heightmapVariable;
@@ -5017,7 +5206,9 @@ index 00c32f22..e1655f04 100644
 -let readWaterLevelShader;
 -let readWaterLevelRenderTarget;
 -let readWaterLevelImage;
-+let waterMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>;
++let sun: THREE.DirectionalLight;
++let waterMesh: THREE.Mesh<THREE.PlaneGeometry, WaterMaterial>;
++let poolBorder: THREE.Mesh<THREE.TorusGeometry, THREE.MeshStandardMaterial>;
 +let meshRay: THREE.Mesh;
 +let gpuCompute: GPUComputationRenderer;
 +let heightmapVariable: Variable;
@@ -5028,32 +5219,34 @@ index 00c32f22..e1655f04 100644
 +let readWaterLevelImage: Uint8Array;
  const waterNormal = new THREE.Vector3();
  
- const NUM_SPHERES = 5;
--const spheres = [];
-+const spheres: THREE.Mesh[] = [];
- let spheresEnabled = true;
+ const NUM_DUCK = 12;
+-const ducks = [];
++const ducks: THREE.Mesh[] = [];
+ let ducksEnabled = true;
  
  const simplex = new SimplexNoise();
-@@ -127,7 +127,7 @@ function initWater() {
-                 heightmap: { value: null },
-             },
-         ]),
--        vertexShader: document.getElementById('waterVertexShader').textContent,
-+        vertexShader: document.getElementById('waterVertexShader')!.textContent!,
-         fragmentShader: THREE.ShaderChunk['meshphong_frag'],
-     });
+@@ -110,7 +111,7 @@ async function init() {
+     scene.backgroundBlurriness = 0.3;
+     scene.environmentIntensity = 1.25;
  
-@@ -171,7 +171,7 @@ function initWater() {
+-    duckModel = model.scene.children[0];
++    duckModel = model.scene.children[0] as THREE.Mesh;
+     duckModel.receiveShadow = true;
+     duckModel.castShadow = true;
  
-     heightmapVariable = gpuCompute.addVariable(
-         'heightmap',
--        document.getElementById('heightmapFragmentShader').textContent,
-+        document.getElementById('heightmapFragmentShader')!.textContent!,
-         heightmap0,
-     );
+@@ -180,8 +181,8 @@ function initWater() {
+     borderGeom.rotateY(Math.PI * 0.25);
+     poolBorder = new THREE.Mesh(borderGeom, new THREE.MeshStandardMaterial({ color: 0x908877, roughness: 0.2 }));
+     scene.add(poolBorder);
+-    borderGeom.receiveShadow = true;
+-    borderGeom.castShadow = true;
++    poolBorder.receiveShadow = true;
++    poolBorder.castShadow = true;
  
-@@ -189,13 +189,13 @@ function initWater() {
-     }
+     // THREE.Mesh just for mouse raycasting
+     const geometryRay = new THREE.PlaneGeometry(BOUNDS, BOUNDS, 1, 1);
+@@ -213,13 +214,13 @@ function initWater() {
+     if (error !== null) console.error(error);
  
      // Create compute shader to smooth the water surface and velocity
 -    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, {
@@ -5068,20 +5261,20 @@ index 00c32f22..e1655f04 100644
          {
              point1: { value: new THREE.Vector2() },
              levelTexture: { value: null },
-@@ -218,10 +218,10 @@ function initWater() {
+@@ -242,10 +243,10 @@ function initWater() {
      });
  }
  
 -function fillTexture(texture) {
 +function fillTexture(texture: THREE.DataTexture) {
-     const waterMaxHeight = 10;
+     const waterMaxHeight = 0.1;
  
 -    function noise(x, y) {
 +    function noise(x: number, y: number) {
          let multR = waterMaxHeight;
          let mult = 0.025;
          let r = 0;
-@@ -234,7 +234,7 @@ function fillTexture(texture) {
+@@ -258,7 +259,7 @@ function fillTexture(texture) {
          return r;
      }
  
@@ -5090,21 +5283,78 @@ index 00c32f22..e1655f04 100644
  
      let p = 0;
      for (let j = 0; j < WIDTH; j++) {
-@@ -346,12 +346,12 @@ function onWindowResize() {
+@@ -276,7 +277,7 @@ function fillTexture(texture) {
+     }
+ }
+ 
+-function addShadow(v) {
++function addShadow(v: boolean) {
+     renderer.shadowMap.enabled = v;
+     sun.castShadow = v;
+ 
+@@ -315,9 +316,9 @@ function smoothWater() {
+ 
+ function createducks() {
+     for (let i = 0; i < NUM_DUCK; i++) {
+-        let sphere = duckModel;
++        let sphere = duckModel!;
+         if (i < NUM_DUCK - 1) {
+-            sphere = duckModel.clone();
++            sphere = duckModel!.clone();
+         }
+ 
+         sphere.position.x = (Math.random() - 0.5) * BOUNDS * 0.7;
+@@ -407,16 +408,16 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
--function setMouseCoords(x, y) {
-+function setMouseCoords(x: number, y: number) {
-     mouseCoords.set((x / renderer.domElement.clientWidth) * 2 - 1, -(y / renderer.domElement.clientHeight) * 2 + 1);
-     mouseMoved = true;
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     mousedown = true;
+ }
+ 
+-function onPointerUp(event) {
++function onPointerUp(event: PointerEvent) {
+     mousedown = false;
+     controls.enabled = true;
  }
  
 -function onPointerMove(event) {
 +function onPointerMove(event: PointerEvent) {
-     if (event.isPrimary === false) return;
+     let dom = renderer.domElement;
+     mouseCoords.set((event.clientX / dom.clientWidth) * 2 - 1, -(event.clientY / dom.clientHeight) * 2 + 1);
+ }
+@@ -472,7 +473,11 @@ function render() {
+ //----------------------
  
-     setMouseCoords(event.clientX, event.clientY);
+ class WaterMaterial extends THREE.MeshStandardMaterial {
+-    constructor(parameters) {
++    extra: { [name: string]: unknown };
++
++    heightmap!: THREE.Texture | null;
++
++    constructor(parameters: THREE.MeshStandardMaterialParameters) {
+         super();
+ 
+         this.defines = {
+@@ -489,7 +494,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+         this.setValues(parameters);
+     }
+ 
+-    addParametre(name, value) {
++    addParametre(name: string, value: unknown) {
+         this.extra[name] = value;
+         Object.defineProperty(this, name, {
+             get: () => this.extra[name],
+@@ -500,7 +505,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+         });
+     }
+ 
+-    onBeforeCompile(shader) {
++    onBeforeCompile(shader: THREE.WebGLProgramParametersWithUniforms) {
+         for (let name in this.extra) {
+             shader.uniforms[name] = { value: this.extra[name] };
+         }
 diff --git a/examples-testing/examples/webgl_helpers.ts b/examples-testing/examples/webgl_helpers.ts
 index a8c3b977..09ad778d 100644
 --- a/examples-testing/examples/webgl_helpers.ts
@@ -9546,7 +9796,7 @@ index 41a5130d..66d539a9 100644
          slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
      }
 diff --git a/examples-testing/examples/webgl_multiple_views.ts b/examples-testing/examples/webgl_multiple_views.ts
-index 29126b01..b418641f 100644
+index 640eac82..04d7749c 100644
 --- a/examples-testing/examples/webgl_multiple_views.ts
 +++ b/examples-testing/examples/webgl_multiple_views.ts
 @@ -2,16 +2,27 @@ import * as THREE from 'three';
@@ -9576,7 +9826,7 @@ index 29126b01..b418641f 100644
 +    eye: [number, number, number];
 +    up: [number, number, number];
 +    fov: number;
-+    updateCamera: (camera: THREE.PerspectiveCamera, scene: THREE.Scene, mouseX: number, mouseY: number) => void;
++    updateCamera: (camera: THREE.PerspectiveCamera, scene: THREE.Scene, mouseX: number) => void;
 +    camera?: THREE.PerspectiveCamera;
 +}[] = [
      {
@@ -9616,7 +9866,7 @@ index 29126b01..b418641f 100644
 -        const camera = view.camera;
 +        const camera = view.camera!;
  
-         view.updateCamera(camera, scene, mouseX, mouseY);
+         view.updateCamera(camera, scene, mouseX);
  
 diff --git a/examples-testing/examples/webgl_multisampled_renderbuffers.ts b/examples-testing/examples/webgl_multisampled_renderbuffers.ts
 index df84fb14..fc3da7a8 100644
@@ -11052,6 +11302,55 @@ index d633806e..a25f53b5 100644
          delete materials[obj.uuid];
      }
  }
+diff --git a/examples-testing/examples/webgl_random_uv.ts b/examples-testing/examples/webgl_random_uv.ts
+index 0147d039..85fec94e 100644
+--- a/examples-testing/examples/webgl_random_uv.ts
++++ b/examples-testing/examples/webgl_random_uv.ts
+@@ -6,14 +6,24 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+-
+-let camera, scene, renderer, dirLight, ground, gui, material, materialIn, uniforms, uniformsIn;
++import { IUniform } from 'three';
++
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    dirLight: THREE.DirectionalLight,
++    ground: THREE.Mesh<THREE.PlaneGeometry, THREE.ShadowMaterial>,
++    gui: GUI,
++    material: THREE.MeshStandardMaterial,
++    materialIn: THREE.MeshStandardMaterial,
++    uniforms: { [uniform: string]: IUniform },
++    uniformsIn: { [uniform: string]: IUniform };
+ 
+ init();
+ render();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
+     camera.position.set(-0.8, 0.6, 1.5);
+@@ -95,12 +105,14 @@ function init() {
+                 shaderBall.children[i].renderOrder = n++;
+             }
+ 
+-            material = shaderBall.children[0].material;
++            material = (shaderBall.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>)
++                .material;
+             material.map = map;
+             material.alphaMap = disolveMap;
+             material.transparent = true;
+ 
+-            materialIn = shaderBall.children[1].material;
++            materialIn = (shaderBall.children[1] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>)
++                .material;
+             materialIn.alphaMap = disolveMap;
+             materialIn.transparent = true;
+ 
 diff --git a/examples-testing/examples/webgl_raycaster_sprite.ts b/examples-testing/examples/webgl_raycaster_sprite.ts
 index f35d5de1..73dd9349 100644
 --- a/examples-testing/examples/webgl_raycaster_sprite.ts
@@ -11397,6 +11696,67 @@ index 572575af..169120a1 100644
  
      clock = new THREE.Clock();
  
+diff --git a/examples-testing/examples/webgl_reverse_depth_buffer.ts b/examples-testing/examples/webgl_reverse_depth_buffer.ts
+index ccafe70f..95923d8c 100644
+--- a/examples-testing/examples/webgl_reverse_depth_buffer.ts
++++ b/examples-testing/examples/webgl_reverse_depth_buffer.ts
+@@ -3,14 +3,19 @@ import * as THREE from 'three';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let stats, camera, scene, normalRenderer, logarithmicRenderer, reverseRenderer;
+-const meshes = [];
++let stats: Stats,
++    camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    normalRenderer: THREE.WebGLRenderer,
++    logarithmicRenderer: THREE.WebGLRenderer,
++    reverseRenderer: THREE.WebGLRenderer;
++const meshes: THREE.Mesh[] = [];
+ 
+ init();
+ animate();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     stats = new Stats();
+     container.appendChild(stats.dom);
+@@ -99,21 +104,21 @@ function init() {
+         }
+     }
+ 
+-    const normalContainer = document.getElementById('container_normal');
++    const normalContainer = document.getElementById('container_normal')!;
+     normalRenderer = new THREE.WebGLRenderer();
+     normalRenderer.setPixelRatio(window.devicePixelRatio);
+     normalRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
+     normalRenderer.domElement.style.position = 'relative';
+     normalContainer.appendChild(normalRenderer.domElement);
+ 
+-    const logarithmicContainer = document.getElementById('container_logarithmic');
++    const logarithmicContainer = document.getElementById('container_logarithmic')!;
+     logarithmicRenderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true });
+     logarithmicRenderer.setPixelRatio(window.devicePixelRatio);
+     logarithmicRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
+     logarithmicRenderer.domElement.style.position = 'relative';
+     logarithmicContainer.appendChild(logarithmicRenderer.domElement);
+ 
+-    const reverseContainer = document.getElementById('container_reverse');
++    const reverseContainer = document.getElementById('container_reverse')!;
+     reverseRenderer = new THREE.WebGLRenderer({ reverseDepthBuffer: true });
+     reverseRenderer.setPixelRatio(window.devicePixelRatio);
+     reverseRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
+@@ -126,7 +131,7 @@ function init() {
+     const depthBits = gl.getParameter(gl.DEPTH_BITS);
+ 
+     if (depthBits < 24) {
+-        document.getElementById('depth-warning').style.display = 'block';
++        document.getElementById('depth-warning')!.style.display = 'block';
+     }
+ 
+     window.addEventListener('resize', onWindowResize);
 diff --git a/examples-testing/examples/webgl_rtt.ts b/examples-testing/examples/webgl_rtt.ts
 index 9f16fdab..9c70a341 100644
 --- a/examples-testing/examples/webgl_rtt.ts
@@ -13093,6 +13453,98 @@ index a98f9a68..5689cf91 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgl_watch.ts b/examples-testing/examples/webgl_watch.ts
+index c324c8fe..b6d5c82f 100644
+--- a/examples-testing/examples/webgl_watch.ts
++++ b/examples-testing/examples/webgl_watch.ts
+@@ -1,5 +1,5 @@
+ import * as THREE from 'three';
+-import * as TWEEN from 'tween';
++import * as TWEEN from 'three/addons/libs/tween.module.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -15,12 +15,17 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+ import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+ 
+-let composer, camera, scene, renderer;
+-let gui, dirLight, pointLight, controls, bloomPass, fxaaPass;
++let composer: EffectComposer | null, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let gui: GUI,
++    dirLight: THREE.DirectionalLight,
++    pointLight: THREE.PointLight,
++    controls: OrbitControls,
++    bloomPass: UnrealBloomPass | null,
++    fxaaPass: ShaderPass | null;
+ let ready = false;
+ 
+-const meshs = {};
+-const materials = {};
++const meshs: { [name: string]: THREE.Mesh | THREE.Group } = {};
++const materials: { [name: string]: THREE.MeshStandardMaterial } = {};
+ const torad = Math.PI / 180;
+ 
+ const setting = {
+@@ -37,7 +42,7 @@ init();
+ render();
+ 
+ function init() {
+-    const container = document.getElementById('container');
++    const container = document.getElementById('container')!;
+ 
+     camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
+     camera.position.set(0.8, 0.5, -1.5);
+@@ -71,22 +76,25 @@ function init() {
+             gltf.scene.rotation.x = Math.PI * 0.25;
+ 
+             gltf.scene.traverse(child => {
+-                if (child.isMesh || child.isGroup) {
+-                    if (child.isMesh) {
+-                        child.material.vertexColors = false;
+-                        materials[child.material.name] = child.material;
++                if ((child as THREE.Mesh).isMesh || (child as THREE.Group).isGroup) {
++                    if ((child as THREE.Mesh).isMesh) {
++                        (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.vertexColors =
++                            false;
++                        materials[(child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.name] = (
++                            child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
++                        ).material;
+                         if (child.name !== 'glass') {
+                             child.receiveShadow = true;
+                             child.castShadow = true;
+                         }
+                     }
+-                    meshs[child.name] = child;
++                    meshs[child.name] = child as THREE.Mesh | THREE.Group;
+                 }
+             });
+ 
+             scene.add(gltf.scene);
+ 
+-            meshs.glass.material = new THREE.MeshPhysicalMaterial({
++            (meshs.glass as THREE.Mesh).material = new THREE.MeshPhysicalMaterial({
+                 color: 0x020205,
+                 transparent: true,
+                 opacity: setting.opacity,
+@@ -164,7 +172,7 @@ function moveCamera() {
+         .start();
+ }
+ 
+-function postProcess(b) {
++function postProcess(b: boolean) {
+     if (b) {
+         if (composer) return;
+ 
+@@ -218,7 +226,7 @@ function createGUI() {
+ function upMaterial() {
+     materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
+     materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
+-    meshs.glass.material.opacity = setting.opacity;
++    (meshs.glass as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = setting.opacity;
+ }
+ 
+ function upBloom() {
 diff --git a/examples-testing/examples/webgl_water.ts b/examples-testing/examples/webgl_water.ts
 index 496a5f85..379619a1 100644
 --- a/examples-testing/examples/webgl_water.ts
@@ -13685,7 +14137,7 @@ index 8dcba7eb..cee29e7b 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index dcf6dde2..7cc0aa4e 100644
+index a19a8bc8..f7b77f28 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -1,4 +1,4 @@
@@ -13752,15 +14204,6 @@ index dcf6dde2..7cc0aa4e 100644
          // If the later element is less than the current element
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
-@@ -409,7 +413,7 @@ async function init(forceGlobalSwap = false) {
-         renderer.resolveTimestampsAsync(THREE.TimestampQuery.COMPUTE);
- 
-         const algo = new Uint32Array(await renderer.getArrayBufferAsync(nextAlgoBuffer));
--        algo > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
-+        (algo as unknown as number) > StepType.DISPERSE_LOCAL ? (nextStepGlobal = true) : (nextStepGlobal = false);
-         const totalSwaps = new Uint32Array(await renderer.getArrayBufferAsync(counterBuffer));
- 
-         renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
 index 30f075d8..56fae624 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
