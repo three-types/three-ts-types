@@ -420,7 +420,7 @@ export const RGFormat: 1030;
 export const RGIntegerFormat: 1031;
 
 /**
- * {@link RGBIntegerFormat} discrads the alpha components and reads the red, green, and blue components.
+ * {@link RGBIntegerFormat} discards the alpha components and reads the red, green, and blue components.
  */
 export const RGBIntegerFormat: 1032;
 
