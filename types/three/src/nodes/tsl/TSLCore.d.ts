@@ -113,7 +113,7 @@ type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, 
  *
  * We use an object instead of tuple or union as it makes stuff easier, especially in Typescript 4.0.
  */
-interface Construtors<
+interface Constructors<
     A extends undefined | [...unknown[]],
     B extends undefined | [...unknown[]],
     C extends undefined | [...unknown[]],
@@ -136,20 +136,20 @@ type OverloadedConstructorsOf<T> = T extends {
     new(...args: infer A2): unknown;
     new(...args: infer A3): unknown;
     new(...args: infer A4): unknown;
-} ? Construtors<A1, A2, A3, A4>
+} ? Constructors<A1, A2, A3, A4>
     : T extends {
         new(...args: infer A1): unknown;
         new(...args: infer A2): unknown;
         new(...args: infer A3): unknown;
-    } ? Construtors<A1, A2, A3, undefined>
+    } ? Constructors<A1, A2, A3, undefined>
     : T extends {
         new(...args: infer A1): unknown;
         new(...args: infer A2): unknown;
-    } ? Construtors<A1, A2, undefined, undefined>
-    : T extends new(...args: infer A) => unknown ? Construtors<A, undefined, undefined, undefined>
-    : Construtors<undefined, undefined, undefined, undefined>;
+    } ? Constructors<A1, A2, undefined, undefined>
+    : T extends new(...args: infer A) => unknown ? Constructors<A, undefined, undefined, undefined>
+    : Constructors<undefined, undefined, undefined, undefined>;
 
-type AnyConstructors = Construtors<any, any, any, any>;
+type AnyConstructors = Constructors<any, any, any, any>;
 
 /**
  * Returns all constructors where the first paramter is assignable to given "scope"
