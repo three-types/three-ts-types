@@ -13,3 +13,5 @@ export interface RapierPhysicsObject {
 }
 
 export function RapierPhysics(): Promise<RapierPhysicsObject>;
+
+export type RAPIER = typeof RAPIER;

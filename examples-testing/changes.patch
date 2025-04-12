@@ -1473,6 +1473,57 @@ index 022263c0..3df667b6 100644
  
  init();
  
+diff --git a/examples-testing/examples/physics_rapier_basic.ts b/examples-testing/examples/physics_rapier_basic.ts
+index be7a46c9..0263765f 100644
+--- a/examples-testing/examples/physics_rapier_basic.ts
++++ b/examples-testing/examples/physics_rapier_basic.ts
+@@ -1,11 +1,11 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
+ import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, physicsHelper;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: RapierPhysicsObject, physicsHelper: RapierHelper;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/physics_rapier_character_controller.ts b/examples-testing/examples/physics_rapier_character_controller.ts
+index 8e797a98..d9b8caa6 100644
+--- a/examples-testing/examples/physics_rapier_character_controller.ts
++++ b/examples-testing/examples/physics_rapier_character_controller.ts
+@@ -1,12 +1,14 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject, RAPIER } from 'three/addons/physics/RapierPhysics.js';
+ import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, characterController, physicsHelper;
+-let player, movement;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: RapierPhysicsObject,
++    characterController: InstanceType<RAPIER['KinematicCharacterController']>,
++    physicsHelper: RapierHelper;
++let player: THREE.Mesh, movement: { forward: number; right: number };
+ 
+ init();
+ 
+@@ -100,7 +102,7 @@ async function init() {
+     window.addEventListener('resize', onWindowResize, false);
+ }
+ 
+-function random(min, max) {
++function random(min: number, max: number) {
+     return Math.random() * (max - min) + min;
+ }
+ 
 diff --git a/examples-testing/examples/physics_rapier_instancing.ts b/examples-testing/examples/physics_rapier_instancing.ts
 index f23cf766..859a1d59 100644
 --- a/examples-testing/examples/physics_rapier_instancing.ts
@@ -1493,6 +1544,104 @@ index f23cf766..859a1d59 100644
 +let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
  
  init();
+ 
+diff --git a/examples-testing/examples/physics_rapier_joints.ts b/examples-testing/examples/physics_rapier_joints.ts
+index 5f8805fe..318ffa8e 100644
+--- a/examples-testing/examples/physics_rapier_joints.ts
++++ b/examples-testing/examples/physics_rapier_joints.ts
+@@ -1,11 +1,11 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
+ import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, pivot, physicsHelper;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: RapierPhysicsObject, pivot: THREE.Mesh, physicsHelper: RapierHelper;
+ 
+ init();
+ 
+@@ -88,7 +88,7 @@ async function initPhysics() {
+ 
+ //link - the mesh that the new link will be attached to
+ //x    - used to position the new link
+-function addLink(link, x) {
++function addLink(link: THREE.Mesh, x: number) {
+     const geometry = new THREE.CapsuleGeometry(0.25, 1.8);
+     const material = new THREE.MeshStandardMaterial({ color: 0xcccc00 });
+ 
+diff --git a/examples-testing/examples/physics_rapier_vehicle_controller.ts b/examples-testing/examples/physics_rapier_vehicle_controller.ts
+index fac5ef08..d4399154 100644
+--- a/examples-testing/examples/physics_rapier_vehicle_controller.ts
++++ b/examples-testing/examples/physics_rapier_vehicle_controller.ts
+@@ -1,12 +1,23 @@
+ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject, RAPIER } from 'three/addons/physics/RapierPhysics.js';
+ import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, stats;
+-let physics, physicsHelper, controls;
+-let car, chassis, wheels, movement, vehicleController;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let physics: RapierPhysicsObject, physicsHelper: RapierHelper, controls: OrbitControls;
++let car: THREE.Mesh,
++    chassis: InstanceType<RAPIER['RigidBody']>,
++    wheels: THREE.Mesh[],
++    movement: {
++        forward: number;
++        right: number;
++        brake: number;
++        reset: boolean;
++        accelerateForce: { value: number; min: number; max: number; step: number };
++        brakeForce: { value: number; min: number; max: number; step: number };
++    },
++    vehicleController: InstanceType<RAPIER['DynamicRayCastVehicleController']>;
+ 
+ init();
+ 
+@@ -148,7 +159,7 @@ function createCar() {
+     vehicleController.setWheelSteering(1, Math.PI / 4);
+ }
+ 
+-function addWheel(index, pos, carMesh) {
++function addWheel(index: number, pos: { x: number; y: number; z: number }, carMesh: THREE.Mesh) {
+     // Define wheel properties
+     const wheelRadius = 0.3;
+     const wheelWidth = 0.4;
+@@ -167,7 +178,7 @@ function addWheel(index, pos, carMesh) {
+     vehicleController.setWheelFrictionSlip(index, 1000.0);
+ 
+     // Enable steering for the wheel
+-    vehicleController.setWheelSteering(index, pos.z < 0);
++    vehicleController.setWheelSteering(index, (pos.z < 0) as unknown as number);
+ 
+     // Create a wheel mesh
+     const geometry = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelWidth, 16);
+@@ -193,8 +204,8 @@ function updateWheels() {
+     //const chassisPosition = chassis.translation();
+ 
+     wheels.forEach((wheel, index) => {
+-        const wheelAxleCs = vehicleController.wheelAxleCs(index);
+-        const connection = vehicleController.wheelChassisConnectionPointCs(index).y || 0;
++        const wheelAxleCs = vehicleController.wheelAxleCs(index)!;
++        const connection = vehicleController.wheelChassisConnectionPointCs(index)!.y || 0;
+         const suspension = vehicleController.wheelSuspensionLength(index) || 0;
+         const steering = vehicleController.wheelSteering(index) || 0;
+         const rotationRad = vehicleController.wheelRotation(index) || 0;
+@@ -254,7 +265,7 @@ function updateCarControl() {
+     vehicleController.setWheelEngineForce(0, engineForce);
+     vehicleController.setWheelEngineForce(1, engineForce);
+ 
+-    const currentSteering = vehicleController.wheelSteering(0);
++    const currentSteering = vehicleController.wheelSteering(0)!;
+     const steerDirection = movement.right;
+     const steerAngle = Math.PI / 4;
  
 diff --git a/examples-testing/examples/svg_lines.ts b/examples-testing/examples/svg_lines.ts
 index 99b74c40..65aaf28d 100644
@@ -19253,3 +19402,13 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/examples/jsm/physics/RapierPhysics.d.ts b/types/three/examples/jsm/physics/RapierPhysics.d.ts
+index 344ffc16..17ef0cce 100644
+--- a/types/three/examples/jsm/physics/RapierPhysics.d.ts
++++ b/types/three/examples/jsm/physics/RapierPhysics.d.ts
+@@ -13,3 +13,5 @@ export interface RapierPhysicsObject {
+ }
+ 
+ export function RapierPhysics(): Promise<RapierPhysicsObject>;
++
++export type RAPIER = typeof RAPIER;
