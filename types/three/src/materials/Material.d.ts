@@ -628,9 +628,4 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default false
      */
     set needsUpdate(value: boolean);
-
-    /**
-     * @deprecated onBuild() has been removed.
-     */
-    onBuild(object: Object3D, parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
 }
