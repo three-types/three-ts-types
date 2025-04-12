@@ -2015,7 +2015,7 @@ index f05369aa..5e9ce7d0 100644
      activeAction = actions[name];
  
 diff --git a/examples-testing/examples/webgl_animation_walk.ts b/examples-testing/examples/webgl_animation_walk.ts
-index bf247ddd..2cf1cb61 100644
+index 611900e7..2f2d172e 100644
 --- a/examples-testing/examples/webgl_animation_walk.ts
 +++ b/examples-testing/examples/webgl_animation_walk.ts
 @@ -6,10 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -2033,16 +2033,16 @@ index bf247ddd..2cf1cb61 100644
 +    orbitControls: OrbitControls;
 +let group: THREE.Group,
 +    followGroup: THREE.Group,
-+    model,
++    model: THREE.Group,
 +    skeleton: THREE.SkeletonHelper,
 +    mixer: THREE.AnimationMixer,
 +    clock: THREE.Clock;
 +
 +let actions: { Idle: THREE.AnimationAction; Walk: THREE.AnimationAction; Run: THREE.AnimationAction };
  
- let settings = {
+ const settings = {
      show_skeleton: false,
-@@ -19,7 +28,19 @@ let settings = {
+@@ -19,7 +28,19 @@ const settings = {
  const PI = Math.PI;
  const PI90 = Math.PI / 2;
  
@@ -2072,7 +2072,7 @@ index bf247ddd..2cf1cb61 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
      camera.position.set(0, 2, -5);
-@@ -160,22 +181,34 @@ function loadModel() {
+@@ -157,22 +178,34 @@ function loadModel() {
          group.rotation.y = PI;
  
          model.traverse(function (object) {
@@ -2122,10 +2122,10 @@ index bf247ddd..2cf1cb61 100644
                  }
              }
          });
-@@ -203,9 +236,9 @@ function loadModel() {
+@@ -200,9 +233,9 @@ function loadModel() {
          };
  
-         for (let m in actions) {
+         for (const m in actions) {
 -            actions[m].enabled = true;
 -            actions[m].setEffectiveTimeScale(1);
 -            if (m !== 'Idle') actions[m].setEffectiveWeight(0);
@@ -2135,7 +2135,7 @@ index bf247ddd..2cf1cb61 100644
          }
  
          actions.Idle.play();
-@@ -214,7 +247,7 @@ function loadModel() {
+@@ -211,7 +244,7 @@ function loadModel() {
      });
  }
  
@@ -2144,16 +2144,7 @@ index bf247ddd..2cf1cb61 100644
      const fade = controls.fadeDuration;
      const key = controls.key;
      const up = controls.up;
-@@ -224,7 +257,7 @@ function updateCharacter(delta) {
-     const azimut = orbitControls.getAzimuthalAngle();
- 
-     let active = key[0] === 0 && key[1] === 0 ? false : true;
--    let play = active ? (key[2] ? 'Run' : 'Walk') : 'Idle';
-+    let play = active ? (key[2] ? ('Run' as const) : ('Walk' as const)) : ('Idle' as const);
- 
-     // change animation
- 
-@@ -286,7 +319,7 @@ function updateCharacter(delta) {
+@@ -284,7 +317,7 @@ function updateCharacter(delta) {
      orbitControls.update();
  }
  
@@ -2162,7 +2153,7 @@ index bf247ddd..2cf1cb61 100644
      return Math.atan2(Math.sin(r), Math.cos(r));
  }
  
-@@ -299,13 +332,13 @@ function createPanel() {
+@@ -298,13 +331,13 @@ function createPanel() {
      panel.add(settings, 'fixe_transition');
  }
  
@@ -2178,7 +2169,7 @@ index bf247ddd..2cf1cb61 100644
      const key = controls.key;
      switch (event.code) {
          case 'ArrowUp':
-@@ -333,7 +366,7 @@ function onKeyDown(event) {
+@@ -332,7 +365,7 @@ function onKeyDown(event) {
      }
  }
  
@@ -5157,10 +5148,10 @@ index 30444ddb..e1c40aef 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 80cda60f..1a8147a9 100644
+index 99ab3462..969ea887 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
-@@ -4,11 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -4,7 +4,7 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -5169,20 +5160,15 @@ index 80cda60f..1a8147a9 100644
  import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
- import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-+import { MeshStandardMaterialParameters, WebGLProgramParametersWithUniforms } from 'three';
- 
- // Texture width for simulation
- const WIDTH = 128;
-@@ -17,34 +18,34 @@ const WIDTH = 128;
+@@ -17,32 +17,32 @@ const WIDTH = 128;
  const BOUNDS = 6;
  const BOUNDS_HALF = BOUNDS * 0.5;
  
 -let tmpHeightmap = null;
 +let tmpHeightmap: THREE.Texture | null = null;
- let tmpQuat = new THREE.Quaternion();
- let tmpQuatX = new THREE.Quaternion();
- let tmpQuatZ = new THREE.Quaternion();
+ const tmpQuat = new THREE.Quaternion();
+ const tmpQuatX = new THREE.Quaternion();
+ const tmpQuatZ = new THREE.Quaternion();
 -let duckModel = null;
 +let duckModel: THREE.Mesh | null = null;
  
@@ -5190,7 +5176,6 @@ index 80cda60f..1a8147a9 100644
 -let camera, scene, renderer, controls;
 +let container: HTMLDivElement, stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
- let mouseMoved = false;
  let mousedown = false;
  const mouseCoords = new THREE.Vector2();
  const raycaster = new THREE.Raycaster();
@@ -5201,7 +5186,6 @@ index 80cda60f..1a8147a9 100644
 -let meshRay;
 -let gpuCompute;
 -let heightmapVariable;
--let waterUniforms;
 -let smoothShader;
 -let readWaterLevelShader;
 -let readWaterLevelRenderTarget;
@@ -5212,7 +5196,6 @@ index 80cda60f..1a8147a9 100644
 +let meshRay: THREE.Mesh;
 +let gpuCompute: GPUComputationRenderer;
 +let heightmapVariable: Variable;
-+let waterUniforms: Record<string, THREE.IUniform>;
 +let smoothShader: THREE.ShaderMaterial;
 +let readWaterLevelShader: THREE.ShaderMaterial;
 +let readWaterLevelRenderTarget: THREE.WebGLRenderTarget;
@@ -5225,7 +5208,7 @@ index 80cda60f..1a8147a9 100644
  let ducksEnabled = true;
  
  const simplex = new SimplexNoise();
-@@ -110,7 +111,7 @@ async function init() {
+@@ -108,7 +108,7 @@ async function init() {
      scene.backgroundBlurriness = 0.3;
      scene.environmentIntensity = 1.25;
  
@@ -5234,7 +5217,7 @@ index 80cda60f..1a8147a9 100644
      duckModel.receiveShadow = true;
      duckModel.castShadow = true;
  
-@@ -180,8 +181,8 @@ function initWater() {
+@@ -178,8 +178,8 @@ function initWater() {
      borderGeom.rotateY(Math.PI * 0.25);
      poolBorder = new THREE.Mesh(borderGeom, new THREE.MeshStandardMaterial({ color: 0x908877, roughness: 0.2 }));
      scene.add(poolBorder);
@@ -5245,7 +5228,7 @@ index 80cda60f..1a8147a9 100644
  
      // THREE.Mesh just for mouse raycasting
      const geometryRay = new THREE.PlaneGeometry(BOUNDS, BOUNDS, 1, 1);
-@@ -213,13 +214,13 @@ function initWater() {
+@@ -211,13 +211,13 @@ function initWater() {
      if (error !== null) console.error(error);
  
      // Create compute shader to smooth the water surface and velocity
@@ -5261,7 +5244,7 @@ index 80cda60f..1a8147a9 100644
          {
              point1: { value: new THREE.Vector2() },
              levelTexture: { value: null },
-@@ -242,10 +243,10 @@ function initWater() {
+@@ -240,10 +240,10 @@ function initWater() {
      });
  }
  
@@ -5274,7 +5257,7 @@ index 80cda60f..1a8147a9 100644
          let multR = waterMaxHeight;
          let mult = 0.025;
          let r = 0;
-@@ -258,7 +259,7 @@ function fillTexture(texture) {
+@@ -256,7 +256,7 @@ function fillTexture(texture) {
          return r;
      }
  
@@ -5283,7 +5266,7 @@ index 80cda60f..1a8147a9 100644
  
      let p = 0;
      for (let j = 0; j < WIDTH; j++) {
-@@ -276,7 +277,7 @@ function fillTexture(texture) {
+@@ -274,7 +274,7 @@ function fillTexture(texture) {
      }
  }
  
@@ -5292,7 +5275,7 @@ index 80cda60f..1a8147a9 100644
      renderer.shadowMap.enabled = v;
      sun.castShadow = v;
  
-@@ -315,9 +316,9 @@ function smoothWater() {
+@@ -313,9 +313,9 @@ function smoothWater() {
  
  function createducks() {
      for (let i = 0; i < NUM_DUCK; i++) {
@@ -5304,27 +5287,16 @@ index 80cda60f..1a8147a9 100644
          }
  
          sphere.position.x = (Math.random() - 0.5) * BOUNDS * 0.7;
-@@ -407,16 +408,16 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function onPointerDown(event) {
-+function onPointerDown(event: PointerEvent) {
-     mousedown = true;
- }
- 
--function onPointerUp(event) {
-+function onPointerUp(event: PointerEvent) {
-     mousedown = false;
+@@ -414,7 +414,7 @@ function onPointerUp() {
      controls.enabled = true;
  }
  
 -function onPointerMove(event) {
 +function onPointerMove(event: PointerEvent) {
-     let dom = renderer.domElement;
+     const dom = renderer.domElement;
      mouseCoords.set((event.clientX / dom.clientWidth) * 2 - 1, -(event.clientY / dom.clientHeight) * 2 + 1);
  }
-@@ -472,7 +473,11 @@ function render() {
+@@ -469,7 +469,11 @@ function render() {
  //----------------------
  
  class WaterMaterial extends THREE.MeshStandardMaterial {
@@ -5337,7 +5309,7 @@ index 80cda60f..1a8147a9 100644
          super();
  
          this.defines = {
-@@ -489,7 +494,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -486,7 +490,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          this.setValues(parameters);
      }
  
@@ -5346,13 +5318,13 @@ index 80cda60f..1a8147a9 100644
          this.extra[name] = value;
          Object.defineProperty(this, name, {
              get: () => this.extra[name],
-@@ -500,7 +505,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -497,7 +501,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          });
      }
  
 -    onBeforeCompile(shader) {
 +    onBeforeCompile(shader: THREE.WebGLProgramParametersWithUniforms) {
-         for (let name in this.extra) {
+         for (const name in this.extra) {
              shader.uniforms[name] = { value: this.extra[name] };
          }
 diff --git a/examples-testing/examples/webgl_helpers.ts b/examples-testing/examples/webgl_helpers.ts
@@ -11303,7 +11275,7 @@ index d633806e..a25f53b5 100644
      }
  }
 diff --git a/examples-testing/examples/webgl_random_uv.ts b/examples-testing/examples/webgl_random_uv.ts
-index 0147d039..85fec94e 100644
+index fae81b38..76091be7 100644
 --- a/examples-testing/examples/webgl_random_uv.ts
 +++ b/examples-testing/examples/webgl_random_uv.ts
 @@ -6,14 +6,24 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -13454,7 +13426,7 @@ index a98f9a68..5689cf91 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_watch.ts b/examples-testing/examples/webgl_watch.ts
-index c324c8fe..b6d5c82f 100644
+index e4545171..4e99dcff 100644
 --- a/examples-testing/examples/webgl_watch.ts
 +++ b/examples-testing/examples/webgl_watch.ts
 @@ -1,5 +1,5 @@
@@ -13486,8 +13458,8 @@ index c324c8fe..b6d5c82f 100644
  const torad = Math.PI / 180;
  
  const setting = {
-@@ -37,7 +42,7 @@ init();
- render();
+@@ -36,7 +41,7 @@ const setting = {
+ init();
  
  function init() {
 -    const container = document.getElementById('container');
@@ -13495,7 +13467,7 @@ index c324c8fe..b6d5c82f 100644
  
      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
      camera.position.set(0.8, 0.5, -1.5);
-@@ -71,22 +76,25 @@ function init() {
+@@ -69,23 +74,26 @@ function init() {
              gltf.scene.rotation.x = Math.PI * 0.25;
  
              gltf.scene.traverse(child => {
@@ -13515,6 +13487,7 @@ index c324c8fe..b6d5c82f 100644
                              child.castShadow = true;
                          }
                      }
+ 
 -                    meshs[child.name] = child;
 +                    meshs[child.name] = child as THREE.Mesh | THREE.Group;
                  }
@@ -13527,7 +13500,7 @@ index c324c8fe..b6d5c82f 100644
                  color: 0x020205,
                  transparent: true,
                  opacity: setting.opacity,
-@@ -164,7 +172,7 @@ function moveCamera() {
+@@ -163,7 +171,7 @@ function moveCamera() {
          .start();
  }
  
@@ -13536,7 +13509,7 @@ index c324c8fe..b6d5c82f 100644
      if (b) {
          if (composer) return;
  
-@@ -218,7 +226,7 @@ function createGUI() {
+@@ -217,7 +225,7 @@ function createGUI() {
  function upMaterial() {
      materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
      materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
