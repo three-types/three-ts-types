@@ -14,12 +14,12 @@ export default class InstanceNode extends Node {
     constructor(
         count: number,
         instanceMatrix: InstancedBufferAttribute,
-        instanceColor: InstancedBufferAttribute | null,
+        instanceColor?: InstancedBufferAttribute | null,
     );
 }
 
 export const instance: (
     count: number,
     instanceMatrix: InstancedBufferAttribute,
-    instanceColor: InstancedBufferAttribute | null,
+    instanceColor?: InstancedBufferAttribute | null,
 ) => ShaderNodeObject<InstanceNode>;
