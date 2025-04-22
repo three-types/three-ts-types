@@ -797,6 +797,22 @@ export const TimestampQuery: {
 };
 export type TimestampQuery = "compute" | "render";
 
+export const InterpolationSamplingType: {
+    PERSPECTIVE: "perspective";
+    LINEAR: "linear";
+    FLAT: "flat";
+};
+export type InterpolationSamplingType = "perspective" | "linear" | "flat";
+
+export const InterpolationSamplingMode: {
+    NORMAL: "normal";
+    CENTROID: "centroid";
+    SAMPLE: "sample";
+    FLAT_FIRST: "flat first";
+    FLAT_EITHER: "flat either";
+};
+export type InterpolationSamplingMode = "normal" | "centroid" | "sample" | "flat first" | "flat either";
+
 ///////////////////////////////////////////////////////////////////////////////
 // Texture - Internal Pixel Formats
 
