@@ -1,19 +1,20 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index b1a6b90b..aa2965be 100644
+index 5ea42f16..1e92d923 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-@@ -1,3 +1,10 @@
+@@ -1,3 +1,11 @@
 +import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
 +import RenderObject from '../../../renderers/common/RenderObject.js';
 +import { Matrix4 } from '../../../math/Matrix4.js';
 +import { Material } from '../../Material.js';
 +import NodeFrame from '../../../nodes/core/NodeFrame.js';
 +import { BufferAttribute } from '../../../core/BufferAttribute.js';
++import Renderer from '../../../renderers/common/Renderer.js';
 +
  const refreshUniforms = [
      'alphaMap',
      'alphaTest',
-@@ -49,7 +56,29 @@ const refreshUniforms = [
+@@ -49,7 +57,29 @@ const refreshUniforms = [
      'thickness',
      'transmission',
      'transmissionMap',
@@ -44,7 +45,7 @@ index b1a6b90b..aa2965be 100644
  
  /**
   * This class is used by {@link WebGPURenderer} as management component.
-@@ -57,12 +86,18 @@ const refreshUniforms = [
+@@ -57,12 +87,18 @@ const refreshUniforms = [
   * refresh right before they are going to be rendered or not.
   */
  class NodeMaterialObserver {
@@ -64,7 +65,7 @@ index b1a6b90b..aa2965be 100644
          /**
           * A node material can be used by more than one render object so the
           * monitor must maintain a list of render objects.
-@@ -107,7 +142,7 @@ class NodeMaterialObserver {
+@@ -107,7 +143,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object is verified for the first time of this observer.
       */
@@ -73,7 +74,16 @@ index b1a6b90b..aa2965be 100644
          const hasInitialized = this.renderObjects.has(renderObject);
  
          if (hasInitialized === false) {
-@@ -125,7 +160,7 @@ class NodeMaterialObserver {
+@@ -125,7 +161,7 @@ class NodeMaterialObserver {
+      * @param {Renderer} renderer - The renderer.
+      * @return {boolean} Whether the current rendering produces motion vectors or not.
+      */
+-    needsVelocity(renderer) {
++    needsVelocity(renderer: Renderer) {
+         const mrt = renderer.getMRT();
+ 
+         return mrt !== null && mrt.has('velocity');
+@@ -137,7 +173,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {Object} The monitoring data.
       */
@@ -82,7 +92,7 @@ index b1a6b90b..aa2965be 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -174,8 +209,8 @@ class NodeMaterialObserver {
+@@ -186,8 +222,8 @@ class NodeMaterialObserver {
       * @param {Object} attributes - The geometry attributes.
       * @return {Object} An object for monitoring the versions of attributes.
       */
@@ -93,7 +103,7 @@ index b1a6b90b..aa2965be 100644
  
          for (const name in attributes) {
              const attribute = attributes[name];
-@@ -195,7 +230,7 @@ class NodeMaterialObserver {
+@@ -207,7 +243,7 @@ class NodeMaterialObserver {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether the node builder's material uses node properties or not.
       */
@@ -102,7 +112,7 @@ index b1a6b90b..aa2965be 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -215,8 +250,8 @@ class NodeMaterialObserver {
+@@ -227,8 +263,8 @@ class NodeMaterialObserver {
       * @param {Material} material - The material.
       * @return {Object} An object for monitoring material properties.
       */
@@ -113,7 +123,7 @@ index b1a6b90b..aa2965be 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -243,7 +278,7 @@ class NodeMaterialObserver {
+@@ -255,7 +291,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object has changed its state or not.
       */
@@ -122,15 +132,15 @@ index b1a6b90b..aa2965be 100644
          const { object, material, geometry } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -394,7 +429,7 @@ class NodeMaterialObserver {
+@@ -406,7 +442,7 @@ class NodeMaterialObserver {
       * @param {NodeFrame} nodeFrame - The current node frame.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
 -    needsRefresh(renderObject, nodeFrame) {
 +    needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame) {
-         if (this.hasNode || this.hasAnimation || this.firstInitialization(renderObject)) return true;
- 
-         const { renderId } = nodeFrame;
+         if (
+             this.hasNode ||
+             this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 index d207da78..9c25d5cc 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
