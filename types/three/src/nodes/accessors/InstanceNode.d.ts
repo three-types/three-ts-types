@@ -1,5 +1,4 @@
 import { InstancedBufferAttribute } from "../../core/InstancedBufferAttribute.js";
-import { InstancedMesh } from "../../objects/InstancedMesh.js";
 import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
