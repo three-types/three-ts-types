@@ -3532,7 +3532,7 @@ index cb8cb804..270726a0 100644
  
  let fnId = 0;
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index 384007e1..57898f3c 100644
+index 384007e1..2ad5cdd7 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,16 +1,31 @@
@@ -3553,7 +3553,7 @@ index 384007e1..57898f3c 100644
 +    nodes: Nodes;
 +    info: Info;
 +
-+    _context: AnimationContext;
++    _context: AnimationContext | null;
 +    _animationLoop: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
 +    _requestId: number | null;
 +
@@ -3568,15 +3568,17 @@ index 384007e1..57898f3c 100644
          /**
           * Renderer component for managing nodes related logic.
           *
-@@ -55,7 +70,7 @@ class Animation {
+@@ -55,8 +70,8 @@ class Animation {
       * Starts the internal animation loop.
       */
      start() {
 -        const update = (time, xrFrame) => {
+-            this._requestId = this._context.requestAnimationFrame(update);
 +        const update = (time?: DOMHighResTimeStamp, xrFrame?: XRFrame) => {
-             this._requestId = this._context.requestAnimationFrame(update);
++            this._requestId = this._context!.requestAnimationFrame(update);
  
              if (this.info.autoReset === true) this.info.reset();
+ 
 @@ -64,7 +79,7 @@ class Animation {
  
              this.info.frame = this.nodes.nodeFrame.frameId;
@@ -3591,7 +3593,7 @@ index 384007e1..57898f3c 100644
       */
      stop() {
 -        this._context.cancelAnimationFrame(this._requestId);
-+        this._context.cancelAnimationFrame(this._requestId!);
++        this._context!.cancelAnimationFrame(this._requestId!);
  
          this._requestId = null;
      }
