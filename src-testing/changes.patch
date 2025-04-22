@@ -7560,11 +7560,11 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 892d49c1..da09fab1 100644
+index cd28b92a..b33e2bb4 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
-@@ -13,8 +13,46 @@ import {
-     CubeRefractionMapping,
+@@ -9,8 +9,46 @@ import {
+     UnsignedInt248Type,
      UnsignedByteType,
  } from '../../constants.js';
 +import { Texture } from '../../textures/Texture.js';
@@ -7592,15 +7592,15 @@ index 892d49c1..da09fab1 100644
 +    sampleCount?: number;
 +    initialized?: boolean;
 +}
-+
+ 
+-const _size = /*@__PURE__*/ new Vector3();
 +interface TextureData {
 +    initialized?: boolean;
 +    version?: number;
 +    isDefaultTexture?: boolean;
 +    generation?: number;
 +}
- 
--const _size = /*@__PURE__*/ new Vector3();
++
 +interface TextureOptions {
 +    width?: number;
 +    height?: number;
@@ -7611,7 +7611,7 @@ index 892d49c1..da09fab1 100644
  
  /**
   * This module manages the textures of the renderer.
-@@ -22,7 +60,14 @@ const _size = /*@__PURE__*/ new Vector3();
+@@ -18,7 +56,14 @@ const _size = /*@__PURE__*/ new Vector3();
   * @private
   * @augments DataMap
   */
@@ -7627,7 +7627,7 @@ index 892d49c1..da09fab1 100644
      /**
       * Constructs a new texture management component.
       *
-@@ -30,7 +75,7 @@ class Textures extends DataMap {
+@@ -26,7 +71,7 @@ class Textures extends DataMap {
       * @param {Backend} backend - The renderer's backend.
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
@@ -7636,7 +7636,7 @@ index 892d49c1..da09fab1 100644
          super();
  
          /**
-@@ -62,7 +107,7 @@ class Textures extends DataMap {
+@@ -58,7 +103,7 @@ class Textures extends DataMap {
       * @param {RenderTarget} renderTarget - The render target to update.
       * @param {number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -7645,7 +7645,7 @@ index 892d49c1..da09fab1 100644
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -172,7 +217,7 @@ class Textures extends DataMap {
+@@ -168,7 +213,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update.
       * @param {Object} [options={}] - The options.
       */
@@ -7654,7 +7654,7 @@ index 892d49c1..da09fab1 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -301,7 +346,7 @@ class Textures extends DataMap {
+@@ -297,7 +342,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -7663,7 +7663,7 @@ index 892d49c1..da09fab1 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -309,12 +354,12 @@ class Textures extends DataMap {
+@@ -305,12 +350,12 @@ class Textures extends DataMap {
  
              target.width = image.width || 1;
              target.height = image.height || 1;
@@ -7678,7 +7678,7 @@ index 892d49c1..da09fab1 100644
      }
  
      /**
-@@ -325,10 +370,10 @@ class Textures extends DataMap {
+@@ -321,10 +366,10 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7691,31 +7691,18 @@ index 892d49c1..da09fab1 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -347,8 +392,12 @@ class Textures extends DataMap {
+@@ -343,8 +388,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
 -    needsMipmaps(texture) {
--        return this.isEnvironmentTexture(texture) || texture.isCompressedTexture === true || texture.generateMipmaps;
+-        return texture.isCompressedTexture === true || texture.generateMipmaps;
 +    needsMipmaps(texture: Texture) {
-+        return (
-+            this.isEnvironmentTexture(texture) ||
-+            (texture as CompressedTexture).isCompressedTexture === true ||
-+            texture.generateMipmaps
-+        );
++        return (texture as CompressedTexture).isCompressedTexture === true || texture.generateMipmaps;
      }
  
      /**
-@@ -357,7 +406,7 @@ class Textures extends DataMap {
-      * @param {Texture} texture - The texture.
-      * @return {boolean} Whether the given texture is an environment map or not.
-      */
--    isEnvironmentTexture(texture) {
-+    isEnvironmentTexture(texture: Texture) {
-         const mapping = texture.mapping;
- 
-         return (
-@@ -374,7 +423,7 @@ class Textures extends DataMap {
+@@ -353,7 +398,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -10055,10 +10042,10 @@ index 3c83fded..505280e1 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 60ec74b4..fe9887ef 100644
+index 5db15c3a..4b9528ef 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1603,7 +1603,14 @@ class WebGPUBackend extends Backend {
+@@ -1613,7 +1613,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
