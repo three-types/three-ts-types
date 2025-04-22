@@ -10087,7 +10087,7 @@ index 5db15c3a..4b9528ef 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 13ecd576..dafb05ff 100644
+index 682229bb..d8eddd32 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10138,7 +10138,7 @@ index 13ecd576..dafb05ff 100644
          const wrapFunction = this.generateWrapFunction(texture);
          const textureDimension = this.generateTextureDimension(texture, textureProperty, levelSnippet);
  
-@@ -495,7 +509,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -495,9 +509,14 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [levelSnippet='0u'] - A WGSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The WGSL snippet.
       */
@@ -10150,10 +10150,12 @@ index 13ecd576..dafb05ff 100644
 +        depthSnippet: string | null,
 +        levelSnippet = '0u',
 +    ) {
+         let snippet;
+-
          if (texture.isVideoTexture === true || texture.isStorageTexture === true) {
-             return `textureLoad( ${textureProperty}, ${uvIndexSnippet} )`;
+             snippet = `textureLoad( ${textureProperty}, ${uvIndexSnippet} )`;
          } else if (depthSnippet) {
-@@ -581,11 +601,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -589,11 +608,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureGrad(
@@ -10170,7 +10172,7 @@ index 13ecd576..dafb05ff 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -609,11 +629,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -617,11 +636,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureCompare(
@@ -10187,7 +10189,7 @@ index 13ecd576..dafb05ff 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -641,11 +661,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -649,11 +668,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureLevel(
@@ -10204,7 +10206,7 @@ index 13ecd576..dafb05ff 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -678,11 +698,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -686,11 +705,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureBias(
@@ -10221,7 +10223,7 @@ index 13ecd576..dafb05ff 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -699,7 +719,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -707,7 +726,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -10230,7 +10232,7 @@ index 13ecd576..dafb05ff 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -788,7 +808,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -796,7 +815,12 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10244,7 +10246,7 @@ index 13ecd576..dafb05ff 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -923,7 +948,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -931,7 +955,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10253,7 +10255,7 @@ index 13ecd576..dafb05ff 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1207,8 +1232,8 @@ ${flowData.code}
+@@ -1215,8 +1239,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10264,7 +10266,7 @@ index 13ecd576..dafb05ff 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1342,8 +1367,8 @@ ${flowData.code}
+@@ -1350,8 +1374,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10275,7 +10277,7 @@ index 13ecd576..dafb05ff 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1396,7 +1421,7 @@ ${flowData.code}
+@@ -1404,7 +1428,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */

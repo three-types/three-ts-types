@@ -19078,7 +19078,7 @@ index 95eb3439..0e641cdb 100644
  init();
  
 diff --git a/examples-testing/examples/webxr_ar_hittest.ts b/examples-testing/examples/webxr_ar_hittest.ts
-index 1867cc47..77acf97e 100644
+index 009b4b97..ffb71130 100644
 --- a/examples-testing/examples/webxr_ar_hittest.ts
 +++ b/examples-testing/examples/webxr_ar_hittest.ts
 @@ -1,13 +1,13 @@
@@ -19087,10 +19087,10 @@ index 1867cc47..77acf97e 100644
  
 -let container;
 -let camera, scene, renderer;
--let controller;
+-let controller1, controller2;
 +let container: HTMLDivElement;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let controller: THREE.XRTargetRaySpace;
++let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace;
  
 -let reticle;
 +let reticle: THREE.Mesh;
@@ -19100,7 +19100,7 @@ index 1867cc47..77acf97e 100644
  let hitTestSourceRequested = false;
  
  init();
-@@ -77,14 +77,14 @@ function onWindowResize() {
+@@ -81,14 +81,14 @@ function onWindowResize() {
  
  //
  
@@ -19118,7 +19118,7 @@ index 1867cc47..77acf97e 100644
                      hitTestSource = source;
                  });
              });
-@@ -104,7 +104,7 @@ function animate(timestamp, frame) {
+@@ -108,7 +108,7 @@ function animate(timestamp, frame) {
                  const hit = hitTestResults[0];
  
                  reticle.visible = true;
