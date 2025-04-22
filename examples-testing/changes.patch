@@ -14108,6 +14108,103 @@ index 15527632..58f5cc14 100644
      const amount = ev.deltaY;
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
+diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
+index ac77927f..c3c883d9 100644
+--- a/examples-testing/examples/webgpu_centroid_sampling.ts
++++ b/examples-testing/examples/webgpu_centroid_sampling.ts
+@@ -1,15 +1,15 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { varying, uv, texture, Fn } from 'three/tsl';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let rendererAntialiasingEnabled;
+-let rendererAntialiasingDisabled;
+-let camera;
+-let scene;
+-let gui;
++let rendererAntialiasingEnabled: THREE.WebGPURenderer;
++let rendererAntialiasingDisabled: THREE.WebGPURenderer;
++let camera: THREE.PerspectiveCamera;
++let scene: THREE.Scene;
++let gui: GUI;
+ 
+-const effectController = {
++const effectController: { sampling: THREE.InterpolationSamplingMode } = {
+     sampling: 'normal',
+ };
+ 
+@@ -17,7 +17,7 @@ const atlasCanvas = document.createElement('canvas');
+ atlasCanvas.width = 16;
+ atlasCanvas.height = 16;
+ 
+-const ctx = atlasCanvas.getContext('2d');
++const ctx = atlasCanvas.getContext('2d')!;
+ ctx.fillStyle = 'red';
+ ctx.fillRect(0, 0, 8, 8);
+ 
+@@ -62,7 +62,7 @@ function init() {
+ 
+     scene = new THREE.Scene();
+ 
+-    const makeFaceGeometry = uvs => {
++    const makeFaceGeometry = (uvs: number[]) => {
+         const geometry = new THREE.BufferGeometry();
+         const positions = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
+         geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+@@ -78,7 +78,7 @@ function init() {
+     const material = new THREE.MeshBasicNodeMaterial();
+     const testUV = varying(uv(), 'testUV');
+ 
+-    const createShader = (type, sampling) => {
++    const createShader = (type: THREE.InterpolationSamplingType, sampling: THREE.InterpolationSamplingMode) => {
+         return Fn(() => {
+             testUV.setInterpolation(type, sampling);
+ 
+@@ -86,8 +86,14 @@ function init() {
+         });
+     };
+ 
+-    const withFlatFirstShader = createShader('flat', 'first');
+-    const withFlatEitherShader = createShader('flat', 'either');
++    const withFlatFirstShader = createShader(
++        THREE.InterpolationSamplingType.FLAT,
++        THREE.InterpolationSamplingMode.FLAT_FIRST,
++    );
++    const withFlatEitherShader = createShader(
++        THREE.InterpolationSamplingType.FLAT,
++        THREE.InterpolationSamplingMode.FLAT_EITHER,
++    );
+ 
+     const withSampleShader = Fn(() => {
+         testUV.setInterpolation(THREE.InterpolationSamplingType.PERSPECTIVE, THREE.InterpolationSamplingMode.SAMPLE);
+@@ -107,7 +113,7 @@ function init() {
+ 
+     material.colorNode = withoutInterpolationShader();
+ 
+-    const faceMeshes = [];
++    const faceMeshes: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicNodeMaterial>[] = [];
+ 
+     for (let x = -5; x < 5; x++) {
+         for (let y = -5; y < 5; y++) {
+@@ -136,13 +142,13 @@ function init() {
+         forceWebGL: forceWebGL,
+     });
+ 
+-    document.body.querySelector('#antialising-enabled').appendChild(rendererAntialiasingEnabled.domElement);
++    document.body.querySelector('#antialising-enabled')!.appendChild(rendererAntialiasingEnabled.domElement);
+     rendererAntialiasingEnabled.setPixelRatio(window.devicePixelRatio);
+     rendererAntialiasingEnabled.setSize(window.innerWidth / 2, window.innerHeight);
+     rendererAntialiasingEnabled.setAnimationLoop(animateAliased);
+ 
+-    document.body.querySelector('#antialising-disabled').appendChild(rendererAntialiasingDisabled.domElement);
+-    document.body.querySelector('#antialising-disabled').appendChild(rendererAntialiasingDisabled.domElement);
++    document.body.querySelector('#antialising-disabled')!.appendChild(rendererAntialiasingDisabled.domElement);
++    document.body.querySelector('#antialising-disabled')!.appendChild(rendererAntialiasingDisabled.domElement);
+ 
+     onWindowResize();
+ 
 diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
 index 0d5b70a2..0c147364 100644
 --- a/examples-testing/examples/webgpu_clearcoat.ts
@@ -15210,7 +15307,7 @@ index 67269546..f39f2d74 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 64d1fda4..079b75d7 100644
+index afd9b7e4..feff7485 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -1,11 +1,11 @@
