@@ -365,7 +365,7 @@ index d207da78..9c25d5cc 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index f9cf630d..58fe8de1 100644
+index ac87e1b3..2de50d25 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,21 +4,43 @@ import { textureSize } from './TextureSizeNode.js';
@@ -1308,7 +1308,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 1b89915b..4f9cd7b8 100644
+index e7b34770..e64a62b2 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -1331,12 +1331,13 @@ index 1b89915b..4f9cd7b8 100644
  
  import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
-@@ -39,16 +39,47 @@ import {
+@@ -39,17 +39,49 @@ import {
      NearestMipmapLinearFilter,
      LinearMipmapLinearFilter,
  } from '../../constants.js';
 -import { RenderTarget } from '../../core/RenderTarget.js';
 +import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
+ import { RenderTargetArray } from '../../core/RenderTargetArray.js';
  import { Color } from '../../math/Color.js';
  import { Vector2 } from '../../math/Vector2.js';
  import { Vector3 } from '../../math/Vector3.js';
@@ -1365,6 +1366,7 @@ index 1b89915b..4f9cd7b8 100644
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
 +import LightsNode from '../lighting/LightsNode.js';
 +import StructTypeNode, { MemberLayout } from './StructTypeNode.js';
++import NodeMaterialObserver from '../../materials/nodes/manager/NodeMaterialObserver.js';
 +
 +const rendererCache = new WeakMap<
 +    Renderer,
@@ -1384,7 +1386,7 @@ index 1b89915b..4f9cd7b8 100644
      [Int8Array, 'int'],
      [Int16Array, 'int'],
      [Int32Array, 'int'],
-@@ -58,21 +89,97 @@ const typeFromArray = new Map([
+@@ -59,21 +91,98 @@ const typeFromArray = new Map([
      [Float32Array, 'float'],
  ]);
  
@@ -1426,10 +1428,13 @@ index 1b89915b..4f9cd7b8 100644
 +    camera: Camera | null;
 +
 +    nodes: Node[];
++    sequentialNodes: Node[];
 +    updateNodes: Node[];
 +    updateBeforeNodes: Node[];
 +    updateAfterNodes: Node[];
 +    hashNodes: { [hash: string]: Node };
++
++    observer: NodeMaterialObserver | null;
 +
 +    lightsNode: LightsNode | null;
 +    environmentNode: ShaderNodeObject<Node> | null;
@@ -1480,12 +1485,10 @@ index 1b89915b..4f9cd7b8 100644
 +    shaderStage: NodeShaderStage | null;
 +    buildStage: string | null;
 +
-+    useComparisonMethod: boolean;
-+
      /**
       * Constructs a new node builder.
       *
-@@ -80,7 +187,7 @@ class NodeBuilder {
+@@ -81,7 +190,7 @@ class NodeBuilder {
       * @param {Renderer} renderer - The current renderer.
       * @param {NodeParser} parser - A reference to a node parser.
       */
@@ -1494,7 +1497,7 @@ index 1b89915b..4f9cd7b8 100644
          /**
           * The 3D object.
           *
-@@ -93,14 +200,14 @@ class NodeBuilder {
+@@ -94,14 +203,14 @@ class NodeBuilder {
           *
           * @type {?Material}
           */
@@ -1511,7 +1514,7 @@ index 1b89915b..4f9cd7b8 100644
  
          /**
           * The current renderer.
-@@ -409,7 +516,7 @@ class NodeBuilder {
+@@ -410,7 +519,7 @@ class NodeBuilder {
           */
          this.globalCache = this.cache;
  
@@ -1520,7 +1523,7 @@ index 1b89915b..4f9cd7b8 100644
  
          /**
           * The current shader stage.
-@@ -452,7 +559,7 @@ class NodeBuilder {
+@@ -453,7 +562,7 @@ class NodeBuilder {
       * @param {Object} options - The options of the render target.
       * @return {RenderTarget} The render target.
       */
@@ -1529,7 +1532,16 @@ index 1b89915b..4f9cd7b8 100644
          return new RenderTarget(width, height, options);
      }
  
-@@ -464,7 +571,7 @@ class NodeBuilder {
+@@ -467,7 +576,7 @@ class NodeBuilder {
+      * @param {Object} options - The options of the render target.
+      * @return {RenderTargetArray} The render target.
+      */
+-    createRenderTargetArray(width, height, depth, options) {
++    createRenderTargetArray(width: number, height: number, depth: number, options: RenderTargetOptions) {
+         return new RenderTargetArray(width, height, depth, options);
+     }
+ 
+@@ -479,7 +588,7 @@ class NodeBuilder {
       * @param {Object} options - The options of the cube render target.
       * @return {CubeRenderTarget} The cube render target.
       */
@@ -1538,7 +1550,7 @@ index 1b89915b..4f9cd7b8 100644
          return new CubeRenderTarget(size, options);
      }
  
-@@ -474,7 +581,7 @@ class NodeBuilder {
+@@ -489,7 +598,7 @@ class NodeBuilder {
       * @param {Node} node - The node to test.
       * @return {boolean} Whether the given node is included in the internal array of nodes or not.
       */
@@ -1547,7 +1559,7 @@ index 1b89915b..4f9cd7b8 100644
          return this.nodes.includes(node);
      }
  
-@@ -495,12 +602,12 @@ class NodeBuilder {
+@@ -510,12 +619,12 @@ class NodeBuilder {
       * @param {Array<NodeUniformsGroup>} bindings - List of bindings.
       * @return {BindGroup} The bind group
       */
@@ -1562,7 +1574,7 @@ index 1b89915b..4f9cd7b8 100644
  
          let sharedGroup = true;
  
-@@ -515,20 +622,20 @@ class NodeBuilder {
+@@ -530,20 +639,20 @@ class NodeBuilder {
          let bindGroup;
  
          if (sharedGroup) {
@@ -1586,7 +1598,7 @@ index 1b89915b..4f9cd7b8 100644
          }
  
          return bindGroup;
-@@ -541,7 +648,7 @@ class NodeBuilder {
+@@ -556,7 +665,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {Array<NodeUniformsGroup>} The array of node uniform groups.
       */
@@ -1595,7 +1607,7 @@ index 1b89915b..4f9cd7b8 100644
          const bindings = this.bindings[shaderStage];
  
          let bindGroup = bindings[groupName];
-@@ -566,12 +673,12 @@ class NodeBuilder {
+@@ -581,12 +690,12 @@ class NodeBuilder {
          let bindingsGroups = this.bindGroups;
  
          if (bindingsGroups === null) {
@@ -1610,7 +1622,7 @@ index 1b89915b..4f9cd7b8 100644
  
                      const groupUniforms = groups[groupName] || (groups[groupName] = []);
                      groupUniforms.push(...uniforms);
-@@ -581,7 +688,7 @@ class NodeBuilder {
+@@ -596,7 +705,7 @@ class NodeBuilder {
              bindingsGroups = [];
  
              for (const groupName in groups) {
@@ -1619,7 +1631,7 @@ index 1b89915b..4f9cd7b8 100644
  
                  const bindingsGroup = this._getBindGroup(groupName, group);
  
-@@ -617,7 +724,7 @@ class NodeBuilder {
+@@ -632,7 +741,7 @@ class NodeBuilder {
       * @param {Node} node - The node to add.
       * @param {number} hash - The hash of the node.
       */
@@ -1628,7 +1640,7 @@ index 1b89915b..4f9cd7b8 100644
          this.hashNodes[hash] = node;
      }
  
-@@ -626,7 +733,7 @@ class NodeBuilder {
+@@ -641,7 +750,7 @@ class NodeBuilder {
       *
       * @param {Node} node - The node to add.
       */
@@ -1637,7 +1649,7 @@ index 1b89915b..4f9cd7b8 100644
          if (this.nodes.includes(node) === false) {
              this.nodes.push(node);
  
-@@ -689,7 +796,7 @@ class NodeBuilder {
+@@ -704,7 +813,7 @@ class NodeBuilder {
       * @param {Texture} texture - The texture to check.
       * @return {boolean} Whether the given texture is filtered or not.
       */
@@ -1646,7 +1658,7 @@ index 1b89915b..4f9cd7b8 100644
          return (
              texture.magFilter === LinearFilter ||
              texture.magFilter === LinearMipmapNearestFilter ||
-@@ -708,7 +815,7 @@ class NodeBuilder {
+@@ -723,7 +832,7 @@ class NodeBuilder {
       *
       * @param {Node} node - The node to add.
       */
@@ -1655,7 +1667,7 @@ index 1b89915b..4f9cd7b8 100644
          /*
  		if ( this.chaining.indexOf( node ) !== - 1 ) {
  
-@@ -725,7 +832,7 @@ class NodeBuilder {
+@@ -740,7 +849,7 @@ class NodeBuilder {
       *
       * @param {Node} node - The node to remove.
       */
@@ -1664,7 +1676,7 @@ index 1b89915b..4f9cd7b8 100644
          const lastChain = this.chaining.pop();
  
          if (lastChain !== node) {
-@@ -742,7 +849,7 @@ class NodeBuilder {
+@@ -757,7 +866,7 @@ class NodeBuilder {
       * @param {string} method - The method name to resolve.
       * @return {string} The resolved method name.
       */
@@ -1673,7 +1685,7 @@ index 1b89915b..4f9cd7b8 100644
          return method;
      }
  
-@@ -752,7 +859,7 @@ class NodeBuilder {
+@@ -767,7 +876,7 @@ class NodeBuilder {
       * @param {number} hash - The hash of the node.
       * @return {Node} The found node.
       */
@@ -1682,7 +1694,7 @@ index 1b89915b..4f9cd7b8 100644
          return this.hashNodes[hash];
      }
  
-@@ -763,7 +870,7 @@ class NodeBuilder {
+@@ -778,7 +887,7 @@ class NodeBuilder {
       * @param {Node} node - The node to add.
       * @return {Node} The node.
       */
@@ -1691,7 +1703,7 @@ index 1b89915b..4f9cd7b8 100644
          this.flowNodes[shaderStage].push(node);
  
          return node;
-@@ -774,7 +881,7 @@ class NodeBuilder {
+@@ -789,7 +898,7 @@ class NodeBuilder {
       *
       * @param {Object} context - The context to set.
       */
@@ -1700,7 +1712,7 @@ index 1b89915b..4f9cd7b8 100644
          this.context = context;
      }
  
-@@ -806,7 +913,7 @@ class NodeBuilder {
+@@ -821,7 +930,7 @@ class NodeBuilder {
       *
       * @param {NodeCache} cache - The cache to set.
       */
@@ -1709,7 +1721,7 @@ index 1b89915b..4f9cd7b8 100644
          this.cache = cache;
      }
  
-@@ -826,7 +933,7 @@ class NodeBuilder {
+@@ -841,7 +950,7 @@ class NodeBuilder {
       * @param {boolean} [parent=true] - Whether this node refers to a shared parent cache or not.
       * @return {NodeCache} The cache.
       */
@@ -1718,7 +1730,7 @@ index 1b89915b..4f9cd7b8 100644
          const data = this.getDataFromNode(node);
          if (data.cache === undefined) data.cache = new NodeCache(parent ? this.getCache() : null);
  
-@@ -840,7 +947,7 @@ class NodeBuilder {
+@@ -855,7 +964,7 @@ class NodeBuilder {
       * @param {string} name - The requested feature.
       * @return {boolean} Whether the requested feature is supported or not.
       */
@@ -1727,7 +1739,7 @@ index 1b89915b..4f9cd7b8 100644
          return false;
      }
  
-@@ -928,9 +1035,12 @@ class NodeBuilder {
+@@ -943,9 +1052,12 @@ class NodeBuilder {
       * @param {string} uvSnippet - Snippet defining the texture coordinates.
       * @return {string} The generated shader string.
       */
@@ -1743,7 +1755,7 @@ index 1b89915b..4f9cd7b8 100644
  
      /**
       * Generates a texture LOD shader string for the given texture data.
-@@ -943,9 +1053,29 @@ class NodeBuilder {
+@@ -958,9 +1070,29 @@ class NodeBuilder {
       * @param {string} levelSnippet - Snippet defining the mip level.
       * @return {string} The generated shader string.
       */
@@ -1776,7 +1788,7 @@ index 1b89915b..4f9cd7b8 100644
  
      /**
       * Generates the array declaration string.
-@@ -1017,7 +1147,7 @@ class NodeBuilder {
+@@ -1032,7 +1164,7 @@ class NodeBuilder {
       * @param {?any} [value=null] - The value.
       * @return {string} The generated value as a shader string.
       */
@@ -1785,7 +1797,7 @@ index 1b89915b..4f9cd7b8 100644
          if (value === null) {
              if (type === 'float' || type === 'int' || type === 'uint') value = 0;
              else if (type === 'bool') value = false;
-@@ -1028,20 +1158,20 @@ class NodeBuilder {
+@@ -1043,20 +1175,20 @@ class NodeBuilder {
          }
  
          if (type === 'float') return toFloat(value);
@@ -1811,7 +1823,7 @@ index 1b89915b..4f9cd7b8 100644
          } else if (typeLength === 3) {
              return `${this.getType(type)}( ${generateConst(value.x)}, ${generateConst(value.y)}, ${generateConst(value.z)} )`;
          } else if (typeLength === 4 && type !== 'mat2') {
-@@ -1062,7 +1192,7 @@ class NodeBuilder {
+@@ -1077,7 +1209,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The updated type.
       */
@@ -1820,7 +1832,7 @@ index 1b89915b..4f9cd7b8 100644
          if (type === 'color') return 'vec3';
  
          return type;
-@@ -1074,7 +1204,7 @@ class NodeBuilder {
+@@ -1089,7 +1221,7 @@ class NodeBuilder {
       * @param {string} name - The attribute name.
       * @return {boolean} Whether the given attribute name is defined in the geometry.
       */
@@ -1829,7 +1841,7 @@ index 1b89915b..4f9cd7b8 100644
          return this.geometry && this.geometry.getAttribute(name) !== undefined;
      }
  
-@@ -1085,7 +1215,7 @@ class NodeBuilder {
+@@ -1100,7 +1232,7 @@ class NodeBuilder {
       * @param {string} type - The attribute's type.
       * @return {NodeAttribute} The node attribute.
       */
@@ -1838,7 +1850,7 @@ index 1b89915b..4f9cd7b8 100644
          const attributes = this.attributes;
  
          // find attribute
-@@ -1114,8 +1244,8 @@ class NodeBuilder {
+@@ -1129,8 +1261,8 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The property name.
       */
@@ -1849,7 +1861,7 @@ index 1b89915b..4f9cd7b8 100644
      }
  
      /**
-@@ -1124,8 +1254,8 @@ class NodeBuilder {
+@@ -1139,8 +1271,8 @@ class NodeBuilder {
       * @param {string} type - The type to check.
       * @return {boolean} Whether the given type is a vector type or not.
       */
@@ -1860,7 +1872,7 @@ index 1b89915b..4f9cd7b8 100644
      }
  
      /**
-@@ -1134,8 +1264,8 @@ class NodeBuilder {
+@@ -1149,8 +1281,8 @@ class NodeBuilder {
       * @param {string} type - The type to check.
       * @return {boolean} Whether the given type is a matrix type or not.
       */
@@ -1871,7 +1883,7 @@ index 1b89915b..4f9cd7b8 100644
      }
  
      /**
-@@ -1144,7 +1274,7 @@ class NodeBuilder {
+@@ -1159,7 +1291,7 @@ class NodeBuilder {
       * @param {string} type - The type to check.
       * @return {boolean} Whether the given type is a reference type or not.
       */
@@ -1880,7 +1892,7 @@ index 1b89915b..4f9cd7b8 100644
          return (
              type === 'void' ||
              type === 'property' ||
-@@ -1175,10 +1305,10 @@ class NodeBuilder {
+@@ -1190,10 +1322,10 @@ class NodeBuilder {
       * @param {Texture} texture - The texture.
       * @return {string} The component type.
       */
@@ -1893,7 +1905,7 @@ index 1b89915b..4f9cd7b8 100644
              if (type === IntType) return 'int';
              if (type === UnsignedIntType) return 'uint';
          }
-@@ -1192,7 +1322,7 @@ class NodeBuilder {
+@@ -1207,7 +1339,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The element type.
       */
@@ -1902,7 +1914,7 @@ index 1b89915b..4f9cd7b8 100644
          if (type === 'mat2') return 'vec2';
          if (type === 'mat3') return 'vec3';
          if (type === 'mat4') return 'vec4';
-@@ -1206,7 +1336,7 @@ class NodeBuilder {
+@@ -1221,7 +1353,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The component type.
       */
@@ -1911,7 +1923,7 @@ index 1b89915b..4f9cd7b8 100644
          type = this.getVectorType(type);
  
          if (type === 'float' || type === 'bool' || type === 'int' || type === 'uint') return type;
-@@ -1228,7 +1358,7 @@ class NodeBuilder {
+@@ -1243,7 +1375,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The vector type.
       */
@@ -1920,7 +1932,7 @@ index 1b89915b..4f9cd7b8 100644
          if (type === 'color') return 'vec3';
          if (type === 'texture' || type === 'cubeTexture' || type === 'storageTexture' || type === 'texture3D')
              return 'vec4';
-@@ -1243,11 +1373,11 @@ class NodeBuilder {
+@@ -1258,11 +1390,11 @@ class NodeBuilder {
       * @param {string} [componentType='float'] - The component type.
       * @return {string} The type.
       */
@@ -1934,7 +1946,7 @@ index 1b89915b..4f9cd7b8 100644
  
          // fix edge case for mat2x2 being same size as vec4
          if (/mat2/.test(componentType) === true) {
-@@ -1263,7 +1393,7 @@ class NodeBuilder {
+@@ -1278,7 +1410,7 @@ class NodeBuilder {
       * @param {TypedArray} array - The typed array.
       * @return {string} The type.
       */
@@ -1943,7 +1955,7 @@ index 1b89915b..4f9cd7b8 100644
          return typeFromArray.get(array.constructor);
      }
  
-@@ -1283,10 +1413,10 @@ class NodeBuilder {
+@@ -1298,10 +1430,10 @@ class NodeBuilder {
       * @param {BufferAttribute} attribute - The buffer attribute.
       * @return {string} The type.
       */
@@ -1958,7 +1970,7 @@ index 1b89915b..4f9cd7b8 100644
  
          const array = dataAttribute.array;
          const itemSize = attribute.itemSize;
-@@ -1307,15 +1437,15 @@ class NodeBuilder {
+@@ -1322,15 +1454,15 @@ class NodeBuilder {
       * @param {string} type - The data type.
       * @return {number} The length.
       */
@@ -1979,7 +1991,7 @@ index 1b89915b..4f9cd7b8 100644
  
          return 0;
      }
-@@ -1326,7 +1456,7 @@ class NodeBuilder {
+@@ -1341,7 +1473,7 @@ class NodeBuilder {
       * @param {string} type - The matrix type.
       * @return {string} The vector type.
       */
@@ -1988,7 +2000,7 @@ index 1b89915b..4f9cd7b8 100644
          return type.replace('mat', 'vec');
      }
  
-@@ -1339,7 +1469,7 @@ class NodeBuilder {
+@@ -1354,7 +1486,7 @@ class NodeBuilder {
       * @param {string} newComponentType - The new component type.
       * @return {string} The new type.
       */
@@ -1997,7 +2009,7 @@ index 1b89915b..4f9cd7b8 100644
          return this.getTypeFromLength(this.getTypeLength(type), newComponentType);
      }
  
-@@ -1349,7 +1479,7 @@ class NodeBuilder {
+@@ -1364,7 +1496,7 @@ class NodeBuilder {
       * @param {string} type - The type.
       * @return {string} The integer type.
       */
@@ -2006,7 +2018,7 @@ index 1b89915b..4f9cd7b8 100644
          const componentType = this.getComponentType(type);
  
          if (componentType === 'int' || componentType === 'uint') return type;
-@@ -1394,7 +1524,11 @@ class NodeBuilder {
+@@ -1409,7 +1541,11 @@ class NodeBuilder {
       * @param {?NodeCache} cache - An optional cache.
       * @return {Object} The node data.
       */
@@ -2019,7 +2031,7 @@ index 1b89915b..4f9cd7b8 100644
          cache = cache === null ? (node.isGlobal(this) ? this.globalCache : this.cache) : cache;
  
          let nodeData = cache.getData(node);
-@@ -1407,7 +1541,7 @@ class NodeBuilder {
+@@ -1422,7 +1558,7 @@ class NodeBuilder {
  
          if (nodeData[shaderStage] === undefined) nodeData[shaderStage] = {};
  
@@ -2028,7 +2040,7 @@ index 1b89915b..4f9cd7b8 100644
      }
  
      /**
-@@ -1417,7 +1551,7 @@ class NodeBuilder {
+@@ -1432,7 +1568,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage='any'] - The shader stage.
       * @return {Object} The node properties.
       */
@@ -2037,7 +2049,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          return nodeData.properties || (nodeData.properties = { outputNode: null });
-@@ -1430,7 +1564,7 @@ class NodeBuilder {
+@@ -1445,7 +1581,7 @@ class NodeBuilder {
       * @param {string} type - The node type.
       * @return {NodeAttribute} The node attribute.
       */
@@ -2046,7 +2058,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node);
  
          let bufferAttribute = nodeData.bufferAttribute;
-@@ -1457,7 +1591,12 @@ class NodeBuilder {
+@@ -1472,7 +1608,12 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage=this.shaderStage] - The shader stage.
       * @return {StructType} The struct type attribute.
       */
@@ -2060,7 +2072,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let structType = nodeData.structType;
-@@ -1500,7 +1639,12 @@ class NodeBuilder {
+@@ -1515,7 +1656,12 @@ class NodeBuilder {
       * @param {?string} name - The name of the uniform.
       * @return {NodeUniform} The node uniform.
       */
@@ -2074,7 +2086,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let nodeUniform = nodeData.uniform;
-@@ -1546,7 +1690,13 @@ class NodeBuilder {
+@@ -1561,7 +1707,13 @@ class NodeBuilder {
       *
       * @return {NodeVar} The node variable.
       */
@@ -2089,7 +2101,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
  
          let nodeVar = nodeData.variable;
-@@ -1621,7 +1771,7 @@ class NodeBuilder {
+@@ -1636,7 +1788,7 @@ class NodeBuilder {
       * @param {string} [type=node.getNodeType( this )] - The varying's type.
       * @return {NodeVar} The node varying.
       */
@@ -2098,7 +2110,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node, 'any');
  
          let nodeVarying = nodeData.varying;
-@@ -1683,7 +1833,7 @@ class NodeBuilder {
+@@ -1698,7 +1850,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage=this.shaderStage] - The shader stage.
       * @return {NodeCode} The node code.
       */
@@ -2107,7 +2119,7 @@ index 1b89915b..4f9cd7b8 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -1756,7 +1906,7 @@ class NodeBuilder {
+@@ -1771,7 +1923,7 @@ class NodeBuilder {
       * @param {?Node} [node= null] - Optional Node, can help the system understand if the Node is part of a code-block.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2116,7 +2128,7 @@ index 1b89915b..4f9cd7b8 100644
          if (code === '') return this;
  
          if (node !== null && this.context.nodeBlock) {
-@@ -1780,7 +1930,7 @@ class NodeBuilder {
+@@ -1795,7 +1947,7 @@ class NodeBuilder {
       * @param {string} code - Shader code.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2125,7 +2137,7 @@ index 1b89915b..4f9cd7b8 100644
          this.flow.code += code;
  
          return this;
-@@ -1816,7 +1966,7 @@ class NodeBuilder {
+@@ -1831,7 +1983,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {Object} The flow data.
       */
@@ -2134,7 +2146,7 @@ index 1b89915b..4f9cd7b8 100644
          return this.flowsData.get(node);
      }
  
-@@ -1826,7 +1976,7 @@ class NodeBuilder {
+@@ -1841,7 +1993,7 @@ class NodeBuilder {
       * @param {Node} node - The node to execute.
       * @return {Object} The code flow.
       */
@@ -2143,7 +2155,7 @@ index 1b89915b..4f9cd7b8 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -1842,12 +1992,14 @@ class NodeBuilder {
+@@ -1857,12 +2009,14 @@ class NodeBuilder {
       * @param {Node} node - The node to include.
       * @returns {void}
       */
@@ -2159,7 +2171,7 @@ index 1b89915b..4f9cd7b8 100644
      /**
       * Returns the native shader operator name for a given generic name.
       * It is a similar type of method like {@link NodeBuilder#getMethod}.
-@@ -1855,7 +2007,7 @@ class NodeBuilder {
+@@ -1870,7 +2024,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node to build the function node with.
       * @return {FunctionNode} The build function node.
       */
@@ -2168,7 +2180,7 @@ index 1b89915b..4f9cd7b8 100644
          const fn = new FunctionNode();
  
          const previous = this.currentFunctionNode;
-@@ -1875,7 +2027,7 @@ class NodeBuilder {
+@@ -1890,7 +2044,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - A function code will be generated based on the input.
       * @return {Object}
       */
@@ -2177,7 +2189,7 @@ index 1b89915b..4f9cd7b8 100644
          const layout = shaderNode.layout;
  
          const inputs = {
-@@ -1891,7 +2043,7 @@ class NodeBuilder {
+@@ -1906,7 +2060,7 @@ class NodeBuilder {
              },
          };
  
@@ -2186,7 +2198,7 @@ index 1b89915b..4f9cd7b8 100644
              inputs[input.name] = new ParameterNode(input.type, input.name);
          }
  
-@@ -1914,7 +2066,7 @@ class NodeBuilder {
+@@ -1929,7 +2083,7 @@ class NodeBuilder {
       * @param {?string} output - Expected output type. For example 'vec3'.
       * @return {Object}
       */
@@ -2195,7 +2207,7 @@ index 1b89915b..4f9cd7b8 100644
          const previousFlow = this.flow;
          const previousVars = this.vars;
          const previousDeclarations = this.declarations;
-@@ -1922,7 +2074,7 @@ class NodeBuilder {
+@@ -1937,7 +2091,7 @@ class NodeBuilder {
          const previousBuildStage = this.buildStage;
          const previousStack = this.stack;
  
@@ -2204,7 +2216,7 @@ index 1b89915b..4f9cd7b8 100644
              code: '',
          };
  
-@@ -1938,7 +2090,7 @@ class NodeBuilder {
+@@ -1953,7 +2107,7 @@ class NodeBuilder {
              flow.result = node.build(this, output);
          }
  
@@ -2213,7 +2225,7 @@ index 1b89915b..4f9cd7b8 100644
  
          this.flow = previousFlow;
          this.vars = previousVars;
-@@ -1981,10 +2133,10 @@ class NodeBuilder {
+@@ -1996,10 +2150,10 @@ class NodeBuilder {
       * @param {?string} output - Expected output type. For example 'vec3'.
       * @return {Object} The code flow.
       */
@@ -2226,7 +2238,7 @@ index 1b89915b..4f9cd7b8 100644
              code: '',
          };
  
-@@ -2009,7 +2161,12 @@ class NodeBuilder {
+@@ -2024,7 +2178,12 @@ class NodeBuilder {
       * @param {?string} propertyName - The property name to assign the result.
       * @return {Object}
       */
@@ -2240,7 +2252,7 @@ index 1b89915b..4f9cd7b8 100644
          const previousShaderStage = this.shaderStage;
  
          this.setShaderStage(shaderStage);
-@@ -2043,9 +2200,7 @@ class NodeBuilder {
+@@ -2058,9 +2217,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The attribute code section.
       */
@@ -2251,7 +2263,7 @@ index 1b89915b..4f9cd7b8 100644
  
      /**
       * Returns the varying definitions as a shader string for the given shader stage.
-@@ -2054,9 +2209,7 @@ class NodeBuilder {
+@@ -2069,9 +2226,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The varying code section.
       */
@@ -2262,7 +2274,7 @@ index 1b89915b..4f9cd7b8 100644
  
      /**
       * Returns a single variable definition as a shader string for the given variable type and name.
-@@ -2066,7 +2219,7 @@ class NodeBuilder {
+@@ -2081,7 +2236,7 @@ class NodeBuilder {
       * @param {?number} [count=null] - The array length.
       * @return {string} The shader string.
       */
@@ -2271,7 +2283,7 @@ index 1b89915b..4f9cd7b8 100644
          return `${count !== null ? this.generateArrayDeclaration(type, count) : this.getType(type)} ${name}`;
      }
  
-@@ -2076,7 +2229,7 @@ class NodeBuilder {
+@@ -2091,7 +2246,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The variable code section.
       */
@@ -2280,7 +2292,7 @@ index 1b89915b..4f9cd7b8 100644
          let snippet = '';
  
          const vars = this.vars[shaderStage];
-@@ -2097,9 +2250,7 @@ class NodeBuilder {
+@@ -2112,9 +2267,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The uniform code section.
       */
@@ -2291,7 +2303,7 @@ index 1b89915b..4f9cd7b8 100644
  
      /**
       * Returns the native code definitions as a shader string for the given shader stage.
-@@ -2107,7 +2258,7 @@ class NodeBuilder {
+@@ -2122,7 +2275,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The native code section.
       */
@@ -2300,7 +2312,7 @@ index 1b89915b..4f9cd7b8 100644
          const codes = this.codes[shaderStage];
  
          let code = '';
-@@ -2127,7 +2278,7 @@ class NodeBuilder {
+@@ -2142,7 +2295,7 @@ class NodeBuilder {
       * @return {string} The hash.
       */
      getHash() {
@@ -2309,7 +2321,7 @@ index 1b89915b..4f9cd7b8 100644
      }
  
      /**
-@@ -2135,7 +2286,7 @@ class NodeBuilder {
+@@ -2150,7 +2303,7 @@ class NodeBuilder {
       *
       * @param {?('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage to set.
       */
@@ -2318,7 +2330,7 @@ index 1b89915b..4f9cd7b8 100644
          this.shaderStage = shaderStage;
      }
  
-@@ -2153,7 +2304,7 @@ class NodeBuilder {
+@@ -2168,7 +2321,7 @@ class NodeBuilder {
       *
       * @param {?('setup'|'analyze'|'generate')} buildStage - The build stage to set.
       */
@@ -2327,7 +2339,7 @@ index 1b89915b..4f9cd7b8 100644
          this.buildStage = buildStage;
      }
  
-@@ -2241,7 +2392,7 @@ class NodeBuilder {
+@@ -2256,7 +2409,7 @@ class NodeBuilder {
       * @param {string} type - The requested type.
       * @return {Uniform} The uniform.
       */
@@ -2336,7 +2348,7 @@ index 1b89915b..4f9cd7b8 100644
          if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
          if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
          if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
-@@ -2264,7 +2415,7 @@ class NodeBuilder {
+@@ -2279,7 +2432,7 @@ class NodeBuilder {
       * @param {string} toType - The target type.
       * @return {string} The updated shader string.
       */
@@ -6192,18 +6204,18 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index c7b31a22..c7723285 100644
+index 48ed65df..46b5c1b3 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
-@@ -24,6 +24,7 @@ import { Scene } from '../../scenes/Scene.js';
- import { Frustum } from '../../math/Frustum.js';
+@@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
+ import { FrustumArray } from '../../math/FrustumArray.js';
  import { Matrix4 } from '../../math/Matrix4.js';
  import { Vector2 } from '../../math/Vector2.js';
 +import { Vector3 } from '../../math/Vector3.js';
  import { Vector4 } from '../../math/Vector4.js';
  import { RenderTarget } from '../../core/RenderTarget.js';
  import {
-@@ -37,7 +38,36 @@ import {
+@@ -38,7 +39,37 @@ import {
      HalfFloatType,
      RGBAFormat,
      PCFShadowMap,
@@ -6237,10 +6249,11 @@ index c7b31a22..c7723285 100644
 +import MRTNode from '../../nodes/core/MRTNode.js';
 +import LightsNode from '../../nodes/lighting/LightsNode.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import { ArrayCamera } from '../../cameras/ArrayCamera.js';
  
  const _scene = /*@__PURE__*/ new Scene();
  const _drawingBufferSize = /*@__PURE__*/ new Vector2();
-@@ -46,10 +76,185 @@ const _frustum = /*@__PURE__*/ new Frustum();
+@@ -49,10 +80,185 @@ const _frustumArray = /*@__PURE__*/ new FrustumArray();
  const _projScreenMatrix = /*@__PURE__*/ new Matrix4();
  const _vector4 = /*@__PURE__*/ new Vector4();
  
@@ -6426,7 +6439,7 @@ index c7b31a22..c7723285 100644
      /**
       * Renderer options.
       *
-@@ -73,7 +278,7 @@ class Renderer {
+@@ -76,7 +282,7 @@ class Renderer {
  	 * @param {Renderer~Options} [parameters] - The configuration parameter.
  
  	 */
@@ -6435,7 +6448,7 @@ index c7b31a22..c7723285 100644
          /**
           * This flag can be used for type testing.
           *
-@@ -706,12 +911,12 @@ class Renderer {
+@@ -709,12 +915,12 @@ class Renderer {
              getShaderAsync: async (scene, camera, object) => {
                  await this.compileAsync(scene, camera);
  
@@ -6452,7 +6465,7 @@ index c7b31a22..c7723285 100644
                      object,
                      material,
                      scene,
-@@ -743,7 +948,7 @@ class Renderer {
+@@ -746,7 +952,7 @@ class Renderer {
              return this._initPromise;
          }
  
@@ -6461,7 +6474,7 @@ index c7b31a22..c7723285 100644
              let backend = this.backend;
  
              try {
-@@ -830,14 +1035,14 @@ class Renderer {
+@@ -833,14 +1039,14 @@ class Renderer {
       * @param {?Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {Promise<Array|undefined>} A Promise that resolves when the compile has been finished.
       */
@@ -6478,7 +6491,7 @@ index c7b31a22..c7723285 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -846,15 +1051,15 @@ class Renderer {
+@@ -849,15 +1055,15 @@ class Renderer {
  
          //
  
@@ -6497,7 +6510,7 @@ index c7b31a22..c7723285 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -883,7 +1088,7 @@ class Renderer {
+@@ -886,7 +1092,7 @@ class Renderer {
  
          //
  
@@ -6506,7 +6519,7 @@ index c7b31a22..c7723285 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -891,8 +1096,8 @@ class Renderer {
+@@ -894,8 +1100,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -6517,7 +6530,7 @@ index c7b31a22..c7723285 100644
                  }
              });
          }
-@@ -902,12 +1107,12 @@ class Renderer {
+@@ -905,12 +1111,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6534,7 +6547,7 @@ index c7b31a22..c7723285 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -915,7 +1120,7 @@ class Renderer {
+@@ -918,7 +1124,7 @@ class Renderer {
  
          //
  
@@ -6543,7 +6556,7 @@ index c7b31a22..c7723285 100644
  
          // process render lists
  
-@@ -952,7 +1157,7 @@ class Renderer {
+@@ -955,7 +1161,7 @@ class Renderer {
       * @param {Camera} camera - The camera.
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
@@ -6552,7 +6565,7 @@ index c7b31a22..c7723285 100644
          if (this._initialized === false) await this.init();
  
          this._renderScene(scene, camera);
-@@ -975,7 +1180,7 @@ class Renderer {
+@@ -978,7 +1184,7 @@ class Renderer {
       * @param {MRTNode} mrt - The MRT node to set.
       * @return {Renderer} A reference to this renderer.
       */
@@ -6561,7 +6574,7 @@ index c7b31a22..c7723285 100644
          this._mrt = mrt;
  
          return this;
-@@ -1005,7 +1210,7 @@ class Renderer {
+@@ -1008,7 +1214,7 @@ class Renderer {
       * @private
       * @param {Object} info - Information about the context lost.
       */
@@ -6570,7 +6583,7 @@ index c7b31a22..c7723285 100644
          let errorMessage = `THREE.WebGPURenderer: ${info.api} Device Lost:\n\nMessage: ${info.message}`;
  
          if (info.reason) {
-@@ -1025,14 +1230,14 @@ class Renderer {
+@@ -1028,14 +1234,14 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundle belongs to.
       * @param {LightsNode} lightsNode - The lights node.
       */
@@ -6588,7 +6601,7 @@ index c7b31a22..c7723285 100644
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -1083,13 +1288,13 @@ class Renderer {
+@@ -1086,13 +1292,13 @@ class Renderer {
              for (let i = 0, l = renderObjects.length; i < l; i++) {
                  const renderObject = renderObjects[i];
  
@@ -6607,7 +6620,7 @@ index c7b31a22..c7723285 100644
                  }
              }
          }
-@@ -1109,7 +1314,7 @@ class Renderer {
+@@ -1112,7 +1318,7 @@ class Renderer {
       * @return {?Promise} A Promise that resolve when the scene has been rendered.
       * Only returned when the renderer has not been initialized.
       */
@@ -6616,7 +6629,7 @@ index c7b31a22..c7723285 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -1181,14 +1386,14 @@ class Renderer {
+@@ -1184,14 +1390,14 @@ class Renderer {
       * @param {boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
       * @return {RenderContext} The current render context.
       */
@@ -6633,7 +6646,7 @@ index c7b31a22..c7723285 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -1217,7 +1422,7 @@ class Renderer {
+@@ -1220,7 +1426,7 @@ class Renderer {
  
          //
  
@@ -6642,16 +6655,16 @@ index c7b31a22..c7723285 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -1301,7 +1506,7 @@ class Renderer {
-         _projScreenMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
-         _frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
+@@ -1308,7 +1514,7 @@ class Renderer {
+             frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
+         }
  
 -        const renderList = this._renderLists.get(scene, camera);
 +        const renderList = this._renderLists!.get(scene, camera);
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -1315,14 +1520,14 @@ class Renderer {
+@@ -1322,14 +1528,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6672,7 +6685,7 @@ index c7b31a22..c7723285 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -1343,7 +1548,7 @@ class Renderer {
+@@ -1350,7 +1556,7 @@ class Renderer {
  
          //
  
@@ -6681,7 +6694,7 @@ index c7b31a22..c7723285 100644
  
          //
  
-@@ -1399,11 +1604,11 @@ class Renderer {
+@@ -1407,11 +1613,11 @@ class Renderer {
       * @private
       * @param {RenderTarget} renderTarget - The current render target.
       */
@@ -6696,7 +6709,7 @@ index c7b31a22..c7723285 100644
              quad.material.needsUpdate = true;
          }
  
-@@ -1457,10 +1662,10 @@ class Renderer {
+@@ -1465,10 +1671,10 @@ class Renderer {
       * @param {?Function} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -6709,7 +6722,7 @@ index c7b31a22..c7723285 100644
      }
  
      /**
-@@ -1471,7 +1676,7 @@ class Renderer {
+@@ -1479,7 +1685,7 @@ class Renderer {
       * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
       * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -6718,7 +6731,7 @@ index c7b31a22..c7723285 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -1499,7 +1704,7 @@ class Renderer {
+@@ -1507,7 +1713,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The drawing buffer size.
       */
@@ -6727,7 +6740,7 @@ index c7b31a22..c7723285 100644
          return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
      }
  
-@@ -1509,7 +1714,7 @@ class Renderer {
+@@ -1517,7 +1723,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The renderer's size in logical pixels.
       */
@@ -6736,7 +6749,7 @@ index c7b31a22..c7723285 100644
          return target.set(this._width, this._height);
      }
  
-@@ -1539,10 +1744,9 @@ class Renderer {
+@@ -1547,10 +1753,9 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {number} pixelRatio - The pixel ratio.
       */
@@ -6748,7 +6761,7 @@ index c7b31a22..c7723285 100644
          this._width = width;
          this._height = height;
  
-@@ -1563,10 +1767,9 @@ class Renderer {
+@@ -1571,10 +1776,9 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
       */
@@ -6760,7 +6773,7 @@ index c7b31a22..c7723285 100644
          this._width = width;
          this._height = height;
  
-@@ -1589,7 +1792,7 @@ class Renderer {
+@@ -1597,7 +1801,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6769,7 +6782,7 @@ index c7b31a22..c7723285 100644
          this._opaqueSort = method;
      }
  
-@@ -1599,7 +1802,7 @@ class Renderer {
+@@ -1607,7 +1811,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6778,7 +6791,7 @@ index c7b31a22..c7723285 100644
          this._transparentSort = method;
      }
  
-@@ -1609,7 +1812,7 @@ class Renderer {
+@@ -1617,7 +1821,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The scissor rectangle.
       */
@@ -6787,7 +6800,7 @@ index c7b31a22..c7723285 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -1629,13 +1832,15 @@ class Renderer {
+@@ -1637,13 +1841,15 @@ class Renderer {
       * @param {number} width - The width of the scissor box in logical pixel unit.
       * @param {number} height - The height of the scissor box in logical pixel unit.
       */
@@ -6807,7 +6820,7 @@ index c7b31a22..c7723285 100644
          }
      }
  
-@@ -1653,7 +1858,7 @@ class Renderer {
+@@ -1661,7 +1867,7 @@ class Renderer {
       *
       * @param {boolean} boolean - Whether the scissor test should be enabled or not.
       */
@@ -6816,7 +6829,7 @@ index c7b31a22..c7723285 100644
          this._scissorTest = boolean;
  
          this.backend.setScissorTest(boolean);
-@@ -1665,7 +1870,7 @@ class Renderer {
+@@ -1673,7 +1879,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The viewport definition.
       */
@@ -6825,7 +6838,7 @@ index c7b31a22..c7723285 100644
          return target.copy(this._viewport);
      }
  
-@@ -1679,13 +1884,15 @@ class Renderer {
+@@ -1687,13 +1893,15 @@ class Renderer {
       * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
       * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
       */
@@ -6845,7 +6858,7 @@ index c7b31a22..c7723285 100644
          }
  
          viewport.minDepth = minDepth;
-@@ -1698,7 +1905,7 @@ class Renderer {
+@@ -1706,7 +1914,7 @@ class Renderer {
       * @param {Color} target - The method writes the result in this target object.
       * @return {Color} The clear color.
       */
@@ -6854,7 +6867,7 @@ index c7b31a22..c7723285 100644
          return target.copy(this._clearColor);
      }
  
-@@ -1708,7 +1915,7 @@ class Renderer {
+@@ -1716,7 +1924,7 @@ class Renderer {
       * @param {Color} color - The clear color.
       * @param {number} [alpha=1] - The clear alpha.
       */
@@ -6863,7 +6876,7 @@ index c7b31a22..c7723285 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -1727,7 +1934,7 @@ class Renderer {
+@@ -1735,7 +1943,7 @@ class Renderer {
       *
       * @param {number} alpha - The clear alpha.
       */
@@ -6872,7 +6885,7 @@ index c7b31a22..c7723285 100644
          this._clearColor.a = alpha;
      }
  
-@@ -1745,7 +1952,7 @@ class Renderer {
+@@ -1753,7 +1961,7 @@ class Renderer {
       *
       * @param {number} depth - The clear depth.
       */
@@ -6881,7 +6894,7 @@ index c7b31a22..c7723285 100644
          this._clearDepth = depth;
      }
  
-@@ -1763,7 +1970,7 @@ class Renderer {
+@@ -1771,7 +1979,7 @@ class Renderer {
       *
       * @param {number} stencil - The clear stencil.
       */
@@ -6890,7 +6903,7 @@ index c7b31a22..c7723285 100644
          this._clearStencil = stencil;
      }
  
-@@ -1775,7 +1982,7 @@ class Renderer {
+@@ -1783,7 +1991,7 @@ class Renderer {
       * @param {Object3D} object - The 3D object to test.
       * @return {boolean} Whether the 3D object is fully occluded or not.
       */
@@ -6899,7 +6912,7 @@ index c7b31a22..c7723285 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -1804,9 +2011,9 @@ class Renderer {
+@@ -1812,9 +2020,9 @@ class Renderer {
          let renderContext = null;
  
          if (renderTarget !== null) {
@@ -6911,7 +6924,7 @@ index c7b31a22..c7723285 100644
  
              renderContext = this._renderContexts.getForClear(renderTarget);
              renderContext.textures = renderTargetData.textures;
-@@ -1941,14 +2148,14 @@ class Renderer {
+@@ -1949,14 +2157,14 @@ class Renderer {
          this.info.dispose();
          this.backend.dispose();
  
@@ -6934,7 +6947,7 @@ index c7b31a22..c7723285 100644
  
          if (this._frameBufferTarget !== null) this._frameBufferTarget.dispose();
  
-@@ -1969,7 +2176,7 @@ class Renderer {
+@@ -1977,7 +2185,7 @@ class Renderer {
       * @param {number} [activeCubeFace=0] - The active cube face.
       * @param {number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -6943,7 +6956,7 @@ index c7b31a22..c7723285 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -1989,7 +2196,7 @@ class Renderer {
+@@ -1997,7 +2205,7 @@ class Renderer {
       *
       * @param {Object} renderTarget - The render target to set as the output target.
       */
@@ -6952,7 +6965,7 @@ index c7b31a22..c7723285 100644
          this._outputRenderTarget = renderTarget;
      }
  
-@@ -2028,7 +2235,19 @@ class Renderer {
+@@ -2036,7 +2244,19 @@ class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -6973,7 +6986,7 @@ index c7b31a22..c7723285 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -2048,7 +2267,7 @@ class Renderer {
+@@ -2056,7 +2276,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -6982,7 +6995,7 @@ index c7b31a22..c7723285 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -2061,7 +2280,7 @@ class Renderer {
+@@ -2069,7 +2289,7 @@ class Renderer {
  
          //
  
@@ -6991,7 +7004,7 @@ index c7b31a22..c7723285 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -2076,9 +2295,9 @@ class Renderer {
+@@ -2084,9 +2304,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -7004,7 +7017,7 @@ index c7b31a22..c7723285 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2134,7 +2353,7 @@ class Renderer {
+@@ -2142,7 +2362,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -7013,7 +7026,7 @@ index c7b31a22..c7723285 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes);
-@@ -2147,13 +2366,13 @@ class Renderer {
+@@ -2155,13 +2375,13 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -7029,7 +7042,7 @@ index c7b31a22..c7723285 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
-@@ -2166,7 +2385,7 @@ class Renderer {
+@@ -2174,7 +2394,7 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {boolean} Whether the feature is supported or not.
       */
@@ -7038,7 +7051,7 @@ index c7b31a22..c7723285 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2195,10 +2414,10 @@ class Renderer {
+@@ -2203,10 +2423,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -7051,7 +7064,7 @@ index c7b31a22..c7723285 100644
      }
  
      /**
-@@ -2209,14 +2428,14 @@ class Renderer {
+@@ -2217,14 +2437,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -7068,7 +7081,7 @@ index c7b31a22..c7723285 100644
      }
  
      /**
-@@ -2225,7 +2444,7 @@ class Renderer {
+@@ -2233,7 +2453,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?Vector2|Vector4} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -7077,7 +7090,7 @@ index c7b31a22..c7723285 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2276,7 +2495,14 @@ class Renderer {
+@@ -2284,7 +2504,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -7093,7 +7106,7 @@ index c7b31a22..c7723285 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2296,7 +2522,15 @@ class Renderer {
+@@ -2304,7 +2531,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -7110,7 +7123,7 @@ index c7b31a22..c7723285 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2310,45 +2544,59 @@ class Renderer {
+@@ -2318,49 +2553,63 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -7138,13 +7151,17 @@ index c7b31a22..c7723285 100644
 -            } else if (object.isLight) {
 -                renderList.pushLight(object);
 -            } else if (object.isSprite) {
--                if (!object.frustumCulled || _frustum.intersectsSprite(object)) {
+-                const frustum = camera.isArrayCamera ? _frustumArray : _frustum;
+-
+-                if (!object.frustumCulled || frustum.intersectsSprite(object, camera)) {
 +            } else if ((object as LOD).isLOD) {
 +                if ((object as LOD).autoUpdate === true) (object as LOD).update(camera);
 +            } else if ((object as Light).isLight) {
 +                renderList.pushLight(object as Light);
 +            } else if ((object as Sprite).isSprite) {
-+                if (!object.frustumCulled || _frustum.intersectsSprite(object as Sprite)) {
++                const frustum = (camera as ArrayCamera).isArrayCamera ? _frustumArray : _frustum;
++
++                if (!object.frustumCulled || frustum.intersectsSprite(object as Sprite, camera)) {
                      if (this.sortObjects === true) {
                          _vector4.setFromMatrixPosition(object.matrixWorld).applyMatrix4(_projScreenMatrix);
                      }
@@ -7172,7 +7189,9 @@ index c7b31a22..c7723285 100644
                  );
 -            } else if (object.isMesh || object.isLine || object.isPoints) {
 +            } else if ((object as Mesh).isMesh || (object as Line).isLine || (object as Points).isPoints) {
-                 if (!object.frustumCulled || _frustum.intersectsObject(object)) {
+                 const frustum = camera.isArrayCamera ? _frustumArray : _frustum;
+ 
+                 if (!object.frustumCulled || frustum.intersectsObject(object, camera)) {
 -                    const { geometry, material } = object;
 +                    const { geometry, material } = object as Mesh | Line | Points;
  
@@ -7185,7 +7204,7 @@ index c7b31a22..c7723285 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2358,7 +2606,7 @@ class Renderer {
+@@ -2370,7 +2619,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7194,7 +7213,7 @@ index c7b31a22..c7723285 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2383,7 +2631,7 @@ class Renderer {
+@@ -2395,7 +2644,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7203,7 +7222,7 @@ index c7b31a22..c7723285 100644
  
              renderList.begin();
  
-@@ -2411,7 +2659,7 @@ class Renderer {
+@@ -2423,7 +2672,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7212,7 +7231,7 @@ index c7b31a22..c7723285 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2427,7 +2675,13 @@ class Renderer {
+@@ -2439,7 +2688,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7227,7 +7246,7 @@ index c7b31a22..c7723285 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2465,17 +2719,23 @@ class Renderer {
+@@ -2477,17 +2732,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7257,7 +7276,7 @@ index c7b31a22..c7723285 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2497,7 +2757,17 @@ class Renderer {
+@@ -2509,7 +2770,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7276,7 +7295,7 @@ index c7b31a22..c7723285 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2584,14 +2854,23 @@ class Renderer {
+@@ -2596,14 +2867,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7303,7 +7322,7 @@ index c7b31a22..c7723285 100644
              clippingContext,
              passId,
          );
-@@ -2600,18 +2879,18 @@ class Renderer {
+@@ -2612,18 +2892,18 @@ class Renderer {
  
          //
  
@@ -7328,7 +7347,7 @@ index c7b31a22..c7723285 100644
  
          //
  
-@@ -2625,7 +2904,7 @@ class Renderer {
+@@ -2637,7 +2917,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7337,7 +7356,7 @@ index c7b31a22..c7723285 100644
      }
  
      /**
-@@ -2642,14 +2921,23 @@ class Renderer {
+@@ -2654,14 +2934,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7364,7 +7383,7 @@ index c7b31a22..c7723285 100644
              clippingContext,
              passId,
          );
-@@ -2658,16 +2946,16 @@ class Renderer {
+@@ -2670,16 +2959,16 @@ class Renderer {
  
          //
  
@@ -7541,7 +7560,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index c28ada4b..a932cd9c 100644
+index 892d49c1..da09fab1 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -13,8 +13,46 @@ import {
@@ -7626,7 +7645,7 @@ index c28ada4b..a932cd9c 100644
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -171,7 +216,7 @@ class Textures extends DataMap {
+@@ -172,7 +217,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update.
       * @param {Object} [options={}] - The options.
       */
@@ -7635,7 +7654,7 @@ index c28ada4b..a932cd9c 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -300,7 +345,7 @@ class Textures extends DataMap {
+@@ -301,7 +346,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -7644,7 +7663,7 @@ index c28ada4b..a932cd9c 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -308,12 +353,12 @@ class Textures extends DataMap {
+@@ -309,12 +354,12 @@ class Textures extends DataMap {
  
              target.width = image.width || 1;
              target.height = image.height || 1;
@@ -7659,7 +7678,7 @@ index c28ada4b..a932cd9c 100644
      }
  
      /**
-@@ -324,10 +369,10 @@ class Textures extends DataMap {
+@@ -325,10 +370,10 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7672,7 +7691,7 @@ index c28ada4b..a932cd9c 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -346,8 +391,12 @@ class Textures extends DataMap {
+@@ -347,8 +392,12 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -7687,7 +7706,7 @@ index c28ada4b..a932cd9c 100644
      }
  
      /**
-@@ -356,7 +405,7 @@ class Textures extends DataMap {
+@@ -357,7 +406,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether the given texture is an environment map or not.
       */
@@ -7696,7 +7715,7 @@ index c28ada4b..a932cd9c 100644
          const mapping = texture.mapping;
  
          return (
-@@ -373,7 +422,7 @@ class Textures extends DataMap {
+@@ -374,7 +423,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -9574,7 +9593,7 @@ index caabd9b7..07b54278 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 3c2ba9b5..294c4f01 100644
+index 69ea02f9..611dfe5c 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9585,7 +9604,7 @@ index 3c2ba9b5..294c4f01 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1125,7 +1126,14 @@ class WebGLBackend extends Backend {
+@@ -1180,7 +1181,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -9602,7 +9621,7 @@ index 3c2ba9b5..294c4f01 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index a602d1b1..0bf4ea0a 100644
+index 3c83fded..505280e1 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -9633,8 +9652,8 @@ index a602d1b1..0bf4ea0a 100644
      textureDimensions: 'textureSize',
      equals: 'equal',
  };
-@@ -66,6 +77,23 @@ precision highp isampler2DArray;
- precision lowp sampler2DShadow;
+@@ -68,6 +79,23 @@ precision lowp sampler2DArrayShadow;
+ precision lowp samplerCubeShadow;
  `;
  
 +export interface Transform {
@@ -9657,7 +9676,7 @@ index a602d1b1..0bf4ea0a 100644
  /**
   * A node builder targeting GLSL.
   *
-@@ -77,13 +105,25 @@ precision lowp sampler2DShadow;
+@@ -79,13 +107,25 @@ precision lowp samplerCubeShadow;
   * @augments NodeBuilder
   */
  class GLSLNodeBuilder extends NodeBuilder {
@@ -9684,7 +9703,7 @@ index a602d1b1..0bf4ea0a 100644
          super(object, renderer, new GLSLNodeParser());
  
          /**
-@@ -133,7 +173,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -135,7 +175,7 @@ class GLSLNodeBuilder extends NodeBuilder {
       * @param {string} method - The method name to resolve.
       * @return {string} The resolved GLSL method name.
       */
@@ -9693,7 +9712,7 @@ index a602d1b1..0bf4ea0a 100644
          return glslMethods[method] || method;
      }
  
-@@ -152,7 +192,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -154,7 +194,7 @@ class GLSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The GLSL function code.
       */
@@ -9702,7 +9721,7 @@ index a602d1b1..0bf4ea0a 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -184,7 +224,7 @@ ${flowData.code}
+@@ -186,7 +226,7 @@ ${flowData.code}
       *
       * @param {StorageBufferNode} storageBufferNode - The storage buffer node.
       */
@@ -9711,7 +9730,7 @@ index a602d1b1..0bf4ea0a 100644
          const attribute = storageBufferNode.value;
  
          if (attribute.pbo === undefined) {
-@@ -255,7 +295,7 @@ ${flowData.code}
+@@ -257,7 +297,7 @@ ${flowData.code}
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -9720,7 +9739,7 @@ index a602d1b1..0bf4ea0a 100644
          if (node.isNodeUniform && node.node.isTextureNode !== true && node.node.isBufferNode !== true) {
              return shaderStage.charAt(0) + '_' + node.name;
          }
-@@ -270,7 +310,7 @@ ${flowData.code}
+@@ -272,7 +312,7 @@ ${flowData.code}
       * @param {StorageArrayElementNode} storageArrayElementNode - The storage array element node.
       * @return {string} The property name.
       */
@@ -9729,7 +9748,7 @@ index a602d1b1..0bf4ea0a 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -352,7 +392,13 @@ ${flowData.code}
+@@ -354,7 +394,13 @@ ${flowData.code}
       * @param {string} [levelSnippet='0u'] - A GLSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The GLSL snippet.
       */
@@ -9744,16 +9763,16 @@ index a602d1b1..0bf4ea0a 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -369,7 +415,7 @@ ${flowData.code}
+@@ -371,7 +417,7 @@ ${flowData.code}
       * @param {?string} depthSnippet -  A GLSL snippet that represents the 0-based texture array index to sample.
       * @return {string} The GLSL snippet.
       */
 -    generateTexture(texture, textureProperty, uvSnippet, depthSnippet) {
 +    generateTexture(texture: Texture, textureProperty: string, uvSnippet: string | null, depthSnippet: string | null) {
          if (texture.isDepthTexture) {
-             return `texture( ${textureProperty}, ${uvSnippet} ).x`;
-         } else {
-@@ -388,7 +434,12 @@ ${flowData.code}
+             if (depthSnippet) uvSnippet = `vec4( ${uvSnippet}, ${depthSnippet} )`;
+ 
+@@ -392,7 +438,12 @@ ${flowData.code}
       * @param {string} levelSnippet - A GLSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The GLSL snippet.
       */
@@ -9767,7 +9786,7 @@ index a602d1b1..0bf4ea0a 100644
          return `textureLod( ${textureProperty}, ${uvSnippet}, ${levelSnippet} )`;
      }
  
-@@ -401,7 +452,12 @@ ${flowData.code}
+@@ -405,7 +456,12 @@ ${flowData.code}
       * @param {string} biasSnippet - A GLSL snippet that represents the bias to apply to the mip level before sampling.
       * @return {string} The GLSL snippet.
       */
@@ -9781,7 +9800,7 @@ index a602d1b1..0bf4ea0a 100644
          return `texture( ${textureProperty}, ${uvSnippet}, ${biasSnippet} )`;
      }
  
-@@ -414,7 +470,12 @@ ${flowData.code}
+@@ -418,7 +474,12 @@ ${flowData.code}
       * @param {Array<string>} gradSnippet - An array holding both gradient GLSL snippets.
       * @return {string} The GLSL snippet.
       */
@@ -9795,7 +9814,7 @@ index a602d1b1..0bf4ea0a 100644
          return `textureGrad( ${textureProperty}, ${uvSnippet}, ${gradSnippet[0]}, ${gradSnippet[1]} )`;
      }
  
-@@ -431,11 +492,11 @@ ${flowData.code}
+@@ -435,11 +496,11 @@ ${flowData.code}
       * @return {string} The GLSL snippet.
       */
      generateTextureCompare(
@@ -9812,7 +9831,7 @@ index a602d1b1..0bf4ea0a 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -444,6 +505,7 @@ ${flowData.code}
+@@ -452,6 +513,7 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -9820,7 +9839,7 @@ index a602d1b1..0bf4ea0a 100644
          }
      }
  
-@@ -453,8 +515,8 @@ ${flowData.code}
+@@ -461,8 +523,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the variables.
       */
@@ -9831,7 +9850,7 @@ index a602d1b1..0bf4ea0a 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -473,7 +535,7 @@ ${flowData.code}
+@@ -481,7 +543,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the uniforms.
       */
@@ -9840,7 +9859,7 @@ index a602d1b1..0bf4ea0a 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -561,7 +623,7 @@ ${flowData.code}
+@@ -573,7 +635,7 @@ ${flowData.code}
       * @param {BufferAttribute} attribute - The buffer attribute.
       * @return {string} The type.
       */
@@ -9849,7 +9868,7 @@ index a602d1b1..0bf4ea0a 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -585,7 +647,7 @@ ${flowData.code}
+@@ -597,7 +659,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the shader attributes.
       */
@@ -9858,7 +9877,7 @@ index a602d1b1..0bf4ea0a 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -607,8 +669,8 @@ ${flowData.code}
+@@ -619,8 +681,8 @@ ${flowData.code}
       * @param {StructTypeNode} struct - The struct type node.
       * @return {string} The GLSL snippet that defines the struct members.
       */
@@ -9869,7 +9888,7 @@ index a602d1b1..0bf4ea0a 100644
  
          for (const member of struct.members) {
              snippets.push(`\t${member.type} ${member.name};`);
-@@ -623,7 +685,7 @@ ${flowData.code}
+@@ -635,7 +697,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the structs.
       */
@@ -9878,7 +9897,7 @@ index a602d1b1..0bf4ea0a 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -656,7 +718,7 @@ ${flowData.code}
+@@ -668,7 +730,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the varyings.
       */
@@ -9887,7 +9906,7 @@ index a602d1b1..0bf4ea0a 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -773,7 +835,7 @@ ${flowData.code}
+@@ -785,7 +847,7 @@ ${flowData.code}
       * @param {string} behavior - The extension behavior.
       * @param {string} [shaderStage=this.shaderStage] - The shader stage.
       */
@@ -9896,7 +9915,7 @@ index a602d1b1..0bf4ea0a 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -790,7 +852,7 @@ ${flowData.code}
+@@ -802,7 +864,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the enabled extensions.
       */
@@ -9905,7 +9924,7 @@ index a602d1b1..0bf4ea0a 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -828,7 +890,7 @@ ${flowData.code}
+@@ -840,7 +902,7 @@ ${flowData.code}
       * @param {string} name - The requested feature.
       * @return {boolean} Whether the requested feature is supported or not.
       */
@@ -9914,7 +9933,7 @@ index a602d1b1..0bf4ea0a 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -887,7 +949,7 @@ ${flowData.code}
+@@ -899,7 +961,7 @@ ${flowData.code}
       * @param {string} varyingName - The varying name.
       * @param {AttributeNode} attributeNode - The attribute node.
       */
@@ -9923,7 +9942,7 @@ index a602d1b1..0bf4ea0a 100644
          this.transforms.push({ varyingName, attributeNode });
      }
  
-@@ -897,7 +959,7 @@ ${flowData.code}
+@@ -909,7 +971,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the transforms.
       */
@@ -9932,7 +9951,7 @@ index a602d1b1..0bf4ea0a 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -920,7 +982,7 @@ ${flowData.code}
+@@ -932,7 +994,7 @@ ${flowData.code}
       * @param {string} vars - The struct variables.
       * @return {string} The GLSL snippet representing a struct.
       */
@@ -9941,7 +9960,7 @@ index a602d1b1..0bf4ea0a 100644
          return `
  layout( std140 ) uniform ${name} {
  ${vars}
-@@ -934,7 +996,7 @@ ${vars}
+@@ -946,7 +1008,7 @@ ${vars}
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -9950,7 +9969,7 @@ index a602d1b1..0bf4ea0a 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -981,7 +1043,7 @@ void main() {
+@@ -993,7 +1055,7 @@ void main() {
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -9959,7 +9978,7 @@ index a602d1b1..0bf4ea0a 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1017,19 +1079,20 @@ void main() {
+@@ -1029,19 +1091,20 @@ void main() {
       * Controls the code build of the shader stages.
       */
      buildCode() {
@@ -9984,7 +10003,7 @@ index a602d1b1..0bf4ea0a 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -1055,24 +1118,24 @@ void main() {
+@@ -1067,24 +1130,24 @@ void main() {
                  }
              }
  
@@ -10021,7 +10040,7 @@ index a602d1b1..0bf4ea0a 100644
          }
      }
  
-@@ -1089,7 +1152,12 @@ void main() {
+@@ -1101,7 +1164,12 @@ void main() {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10036,10 +10055,10 @@ index a602d1b1..0bf4ea0a 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index b43862e3..a32f95be 100644
+index 60ec74b4..fe9887ef 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1380,7 +1380,14 @@ class WebGPUBackend extends Backend {
+@@ -1603,7 +1603,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -10056,7 +10075,7 @@ index b43862e3..a32f95be 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 4fdafe90..a6880bcf 100644
+index 1242f8d3..3dd81dba 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10156,7 +10175,7 @@ index 4fdafe90..a6880bcf 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -637,11 +657,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -641,11 +661,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureLevel(
@@ -10173,7 +10192,7 @@ index 4fdafe90..a6880bcf 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -674,11 +694,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -678,11 +698,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureBias(
@@ -10190,7 +10209,7 @@ index 4fdafe90..a6880bcf 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -695,7 +715,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -699,7 +719,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -10199,7 +10218,7 @@ index 4fdafe90..a6880bcf 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -784,7 +804,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -788,7 +808,12 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10213,7 +10232,7 @@ index 4fdafe90..a6880bcf 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -919,7 +944,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -923,7 +948,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10222,7 +10241,7 @@ index 4fdafe90..a6880bcf 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1203,8 +1228,8 @@ ${flowData.code}
+@@ -1207,8 +1232,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10233,7 +10252,7 @@ index 4fdafe90..a6880bcf 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1338,8 +1363,8 @@ ${flowData.code}
+@@ -1342,8 +1367,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10244,7 +10263,7 @@ index 4fdafe90..a6880bcf 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1385,7 +1410,7 @@ ${flowData.code}
+@@ -1389,7 +1414,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
@@ -10254,10 +10273,10 @@ index 4fdafe90..a6880bcf 100644
  
          const bindingSnippets = [];
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-index 79567aaa..cf967728 100644
+index 34a93355..6e5e4a86 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeFunction.ts
-@@ -135,7 +135,7 @@ class WGSLNodeFunction extends NodeFunction {
+@@ -138,7 +138,7 @@ class WGSLNodeFunction extends NodeFunction {
       *
       * @param {string} source - The WGSL source.
       */
