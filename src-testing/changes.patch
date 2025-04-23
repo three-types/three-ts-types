@@ -1308,7 +1308,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index eb396a6b..240c0d28 100644
+index a4f93f03..9c59b0a9 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -7737,7 +7737,7 @@ index cd28b92a..b33e2bb4 100644
          this.backend.destroyTexture(texture);
  
 diff --git a/src-testing/src/renderers/common/TimestampQueryPool.ts b/src-testing/src/renderers/common/TimestampQueryPool.ts
-index 52a7d2fa..72047e19 100644
+index d165f4ef..fc595a83 100644
 --- a/src-testing/src/renderers/common/TimestampQueryPool.ts
 +++ b/src-testing/src/renderers/common/TimestampQueryPool.ts
 @@ -1,9 +1,19 @@
@@ -7761,16 +7761,16 @@ index 52a7d2fa..72047e19 100644
      /**
       * Creates a new timestamp query pool.
       *
-@@ -72,7 +82,7 @@ class TimestampQueryPool {
-      * @abstract
+@@ -73,7 +83,7 @@ class TimestampQueryPool {
       * @param {Object} renderContext - The render context to allocate queries for.
+      * @returns {?number}
       */
 -    allocateQueriesForContext(/* renderContext */) {}
 +    abstract allocateQueriesForContext(renderContext: RenderContext): number | null;
  
      /**
       * Resolve all timestamps and return data (or process them).
-@@ -81,14 +91,14 @@ class TimestampQueryPool {
+@@ -82,14 +92,14 @@ class TimestampQueryPool {
       * @async
       * @returns {Promise<number>|number} The resolved timestamp value.
       */
@@ -10067,10 +10067,10 @@ index 0df4a7f8..0bcc82b6 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 5db15c3a..4b9528ef 100644
+index 68c2fef2..e7879111 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1613,7 +1613,14 @@ class WebGPUBackend extends Backend {
+@@ -1614,7 +1614,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -10087,7 +10087,7 @@ index 5db15c3a..4b9528ef 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 682229bb..d8eddd32 100644
+index 09994f87..6b614176 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
