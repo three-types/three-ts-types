@@ -1573,6 +1573,98 @@ index 5f8805fe..318ffa8e 100644
      const geometry = new THREE.CapsuleGeometry(0.25, 1.8);
      const material = new THREE.MeshStandardMaterial({ color: 0xcccc00 });
  
+diff --git a/examples-testing/examples/physics_rapier_terrain.ts b/examples-testing/examples/physics_rapier_terrain.ts
+index 7a6074da..f0a8d4ad 100644
+--- a/examples-testing/examples/physics_rapier_terrain.ts
++++ b/examples-testing/examples/physics_rapier_terrain.ts
+@@ -1,7 +1,7 @@
+ import * as THREE from 'three';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
++import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
+ 
+ // Heightfield parameters
+ const terrainWidthExtents = 100;
+@@ -14,15 +14,15 @@ const terrainMaxHeight = 8;
+ const terrainMinHeight = -2;
+ 
+ // Graphics variables
+-let container, stats;
+-let camera, scene, renderer;
+-let terrainMesh;
++let container: HTMLElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let terrainMesh: THREE.Mesh;
+ const clock = new THREE.Clock();
+ 
+ // Physics variables
+-let physics;
+-const dynamicObjects = [];
+-let heightData = null;
++let physics: RapierPhysicsObject;
++const dynamicObjects: THREE.Mesh[] = [];
++let heightData: Float32Array | null = null;
+ 
+ let time = 0;
+ const objectTimePeriod = 3;
+@@ -40,7 +40,7 @@ async function init() {
+ }
+ 
+ function initGraphics() {
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -49,16 +49,16 @@ function initGraphics() {
+     container.appendChild(renderer.domElement);
+ 
+     stats = new Stats();
+-    stats.domElement.style.position = 'absolute';
+-    stats.domElement.style.top = '0px';
+-    container.appendChild(stats.domElement);
++    stats.dom.style.position = 'absolute';
++    stats.dom.style.top = '0px';
++    container.appendChild(stats.dom);
+ 
+     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.2, 2000);
+     scene = new THREE.Scene();
+     scene.background = new THREE.Color(0xbfd1e5);
+ 
+     camera.position.y =
+-        heightData[terrainHalfWidth + terrainHalfDepth * terrainWidth] * (terrainMaxHeight - terrainMinHeight) + 5;
++        heightData![terrainHalfWidth + terrainHalfDepth * terrainWidth] * (terrainMaxHeight - terrainMinHeight) + 5;
+     camera.position.z = terrainDepthExtents / 2;
+     camera.lookAt(0, 0, 0);
+ 
+@@ -76,7 +76,7 @@ function initGraphics() {
+     const vertices = geometry.attributes.position.array;
+ 
+     for (let i = 0, j = 0, l = vertices.length; i < l; i++, j += 3) {
+-        vertices[j + 1] = heightData[i];
++        vertices[j + 1] = heightData![i];
+     }
+ 
+     geometry.computeVertexNormals();
+@@ -127,7 +127,7 @@ async function initPhysics() {
+     physics = await RapierPhysics();
+ 
+     // Create the terrain body using RapierPhysics module
+-    physics.addHeightfield(terrainMesh, terrainWidth - 1, terrainDepth - 1, heightData, {
++    physics.addHeightfield(terrainMesh, terrainWidth - 1, terrainDepth - 1, heightData!, {
+         x: terrainWidthExtents,
+         y: 1.0,
+         z: terrainDepthExtents,
+@@ -136,7 +136,7 @@ async function initPhysics() {
+     // Continue with adding other dynamic objects as needed
+ }
+ 
+-function generateHeight(width, depth, minHeight, maxHeight) {
++function generateHeight(width: number, depth: number, minHeight: number, maxHeight: number) {
+     const size = width * depth;
+     const data = new Float32Array(size);
+     const hRange = maxHeight - minHeight;
 diff --git a/examples-testing/examples/physics_rapier_vehicle_controller.ts b/examples-testing/examples/physics_rapier_vehicle_controller.ts
 index fac5ef08..d4399154 100644
 --- a/examples-testing/examples/physics_rapier_vehicle_controller.ts

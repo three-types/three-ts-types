@@ -10,6 +10,13 @@ export interface RapierPhysicsObject {
     addMesh: (mesh: Mesh, mass?: number, restitution?: number) => void;
     setMeshPosition: (mesh: Mesh, position: Vector, index?: number) => void;
     setMeshVelocity: (mesh: Mesh, velocity: Vector, index?: number) => void;
+    addHeightfield: (
+        mesh: Mesh,
+        width: number,
+        depth: number,
+        heights: Float32Array,
+        scale: Vector,
+    ) => RAPIER.RigidBody;
 }
 
 export function RapierPhysics(): Promise<RapierPhysicsObject>;
