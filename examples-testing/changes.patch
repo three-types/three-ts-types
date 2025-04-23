@@ -3255,7 +3255,7 @@ index cde10c7d..6ab3ba65 100644
  
              get Plane() {
 diff --git a/examples-testing/examples/webgl_clipping_advanced.ts b/examples-testing/examples/webgl_clipping_advanced.ts
-index 614d710d..02b9ad88 100644
+index f65f0004..988b56d8 100644
 --- a/examples-testing/examples/webgl_clipping_advanced.ts
 +++ b/examples-testing/examples/webgl_clipping_advanced.ts
 @@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -3318,14 +3318,14 @@ index 614d710d..02b9ad88 100644
 +    renderer: THREE.WebGLRenderer,
 +    startTime: number,
 +    stats: Stats,
-+    object: THREE.Group,
++    object: THREE.InstancedMesh,
 +    clipMaterial: THREE.MeshPhongMaterial,
 +    volumeVisualization: THREE.Group,
 +    globalClippingPlanes: THREE.Plane[];
  
  function init() {
      camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
-@@ -194,7 +202,7 @@ function init() {
+@@ -196,7 +204,7 @@ function init() {
  
              // clip to the others to show the volume (wildly
              // intersecting transparent planes look bad)
@@ -3334,7 +3334,7 @@ index 614d710d..02b9ad88 100644
                  return j !== i;
              }),
  
-@@ -234,7 +242,7 @@ function init() {
+@@ -236,7 +244,7 @@ function init() {
      container.appendChild(renderer.domElement);
      // Clipping setup:
      globalClippingPlanes = createPlanes(GlobalClippingPlanes.length);
@@ -3343,7 +3343,7 @@ index 614d710d..02b9ad88 100644
      renderer.localClippingEnabled = true;
  
      window.addEventListener('resize', onWindowResize);
-@@ -290,7 +298,7 @@ function init() {
+@@ -292,7 +300,7 @@ function init() {
                  return renderer.clippingPlanes !== Empty;
              },
              set Enabled(v) {
@@ -3352,7 +3352,7 @@ index 614d710d..02b9ad88 100644
              },
          },
          'Enabled',
-@@ -308,12 +316,12 @@ function onWindowResize() {
+@@ -310,12 +318,12 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -3367,7 +3367,7 @@ index 614d710d..02b9ad88 100644
      object.applyMatrix4(matrix);
  }
  
-@@ -334,7 +342,7 @@ function animate() {
+@@ -336,7 +344,7 @@ function animate() {
      const bouncy = Math.cos(time * 0.5) * 0.5 + 0.7;
      transform.multiply(tmpMatrix.makeScale(bouncy, bouncy, bouncy));
  
@@ -19128,7 +19128,7 @@ index 009b4b97..ffb71130 100644
                  reticle.visible = false;
              }
 diff --git a/examples-testing/examples/webxr_ar_lighting.ts b/examples-testing/examples/webxr_ar_lighting.ts
-index 9de23ad9..df20bb43 100644
+index 94bdac56..03597f40 100644
 --- a/examples-testing/examples/webxr_ar_lighting.ts
 +++ b/examples-testing/examples/webxr_ar_lighting.ts
 @@ -3,9 +3,9 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
