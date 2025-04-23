@@ -13,6 +13,7 @@ export const F_Schlick: typeof TSL.F_Schlick;
 export const Fn: typeof TSL.Fn;
 export const INFINITY: typeof TSL.INFINITY;
 export const If: typeof TSL.If;
+export const Switch: typeof TSL.Switch;
 export const Loop: typeof TSL.Loop;
 export const NodeShaderStage: typeof TSL.NodeShaderStage;
 export const NodeType: typeof TSL.NodeType;

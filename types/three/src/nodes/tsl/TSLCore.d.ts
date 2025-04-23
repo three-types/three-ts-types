@@ -281,6 +281,7 @@ export const setCurrentStack: (stack: StackNode | null) => void;
 export const getCurrentStack: () => StackNode | null;
 
 export const If: (boolNode: Node, method: () => void) => StackNode;
+export const Switch: (expression: NodeRepresentation) => StackNode;
 
 export function append(node: Node): Node;
 
