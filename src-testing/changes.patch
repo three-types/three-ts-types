@@ -365,7 +365,7 @@ index d207da78..9c25d5cc 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index ac87e1b3..2de50d25 100644
+index facf5957..a1841ec4 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -4,21 +4,43 @@ import { textureSize } from './TextureSizeNode.js';
@@ -453,7 +453,7 @@ index ac87e1b3..2de50d25 100644
 -    setUpdateMatrix(value) {
 +    setUpdateMatrix(value: boolean) {
          this.updateMatrix = value;
-         this.updateType = value ? NodeUpdateType.RENDER : NodeUpdateType.NONE;
+         this.updateType = value ? NodeUpdateType.OBJECT : NodeUpdateType.NONE;
  
 @@ -249,7 +276,7 @@ class TextureNode extends UniformNode {
       * @param {Node} uvNode - The uv node to setup.
@@ -5630,7 +5630,7 @@ index 67cb78af..00146508 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/RenderList.ts b/src-testing/src/renderers/common/RenderList.ts
-index 54ff877a..5beebbcb 100644
+index 20e4c9b7..34f5553d 100644
 --- a/src-testing/src/renderers/common/RenderList.ts
 +++ b/src-testing/src/renderers/common/RenderList.ts
 @@ -1,4 +1,13 @@
@@ -5647,7 +5647,7 @@ index 54ff877a..5beebbcb 100644
  
  /**
   * Default sorting function for opaque render items.
-@@ -9,17 +18,17 @@ import { DoubleSide } from '../../constants.js';
+@@ -9,15 +18,15 @@ import { DoubleSide } from '../../constants.js';
   * @param {Object} b - The second render item.
   * @return {number} A numeric value which defines the sort order.
   */
@@ -5658,11 +5658,7 @@ index 54ff877a..5beebbcb 100644
 +        return a.groupOrder! - b.groupOrder!;
      } else if (a.renderOrder !== b.renderOrder) {
 -        return a.renderOrder - b.renderOrder;
--    } else if (a.material.id !== b.material.id) {
--        return a.material.id - b.material.id;
 +        return a.renderOrder! - b.renderOrder!;
-+    } else if (a.material!.id !== b.material!.id) {
-+        return a.material!.id - b.material!.id;
      } else if (a.z !== b.z) {
 -        return a.z - b.z;
 +        return a.z! - b.z!;
@@ -5672,7 +5668,7 @@ index 54ff877a..5beebbcb 100644
      }
  }
  
-@@ -32,18 +41,36 @@ function painterSortStable(a, b) {
+@@ -30,18 +39,36 @@ function painterSortStable(a, b) {
   * @param {Object} b - The second render item.
   * @return {number} A numeric value which defines the sort order.
   */
@@ -5714,7 +5710,7 @@ index 54ff877a..5beebbcb 100644
  /**
   * Returns `true` if the given transparent material requires a double pass.
   *
-@@ -52,7 +79,7 @@ function reversePainterSortStable(a, b) {
+@@ -50,7 +77,7 @@ function reversePainterSortStable(a, b) {
   * @param {Material} material - The transparent material.
   * @return {boolean} Whether the given material requires a double pass or not.
   */
@@ -5723,7 +5719,7 @@ index 54ff877a..5beebbcb 100644
      const hasTransmission = material.transmission > 0 || material.transmissionNode;
  
      return hasTransmission && material.side === DoubleSide && material.forceSinglePass === false;
-@@ -70,6 +97,22 @@ function needsDoublePass(material) {
+@@ -68,6 +95,22 @@ function needsDoublePass(material) {
   * @augments Pipeline
   */
  class RenderList {
@@ -5746,7 +5742,7 @@ index 54ff877a..5beebbcb 100644
      /**
       * Constructs a render list.
       *
-@@ -77,7 +120,7 @@ class RenderList {
+@@ -75,7 +118,7 @@ class RenderList {
       * @param {Scene} scene - The scene.
       * @param {Camera} camera - The camera the scene is rendered with.
       */
@@ -5755,7 +5751,7 @@ index 54ff877a..5beebbcb 100644
          /**
           * 3D objects are transformed into render items and stored in this array.
           *
-@@ -200,7 +243,15 @@ class RenderList {
+@@ -198,7 +241,15 @@ class RenderList {
       * @param {ClippingContext} clippingContext - The current clipping context.
       * @return {Object} The render item.
       */
@@ -5772,7 +5768,7 @@ index 54ff877a..5beebbcb 100644
          let renderItem = this.renderItems[this.renderItemsIndex];
  
          if (renderItem === undefined) {
-@@ -246,7 +297,15 @@ class RenderList {
+@@ -244,7 +295,15 @@ class RenderList {
       * @param {?number} group - {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -5789,7 +5785,7 @@ index 54ff877a..5beebbcb 100644
          const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group, clippingContext);
  
          if (object.occlusionTest === true) this.occlusionQueryCount++;
-@@ -272,7 +331,15 @@ class RenderList {
+@@ -270,7 +329,15 @@ class RenderList {
       * @param {?number} group - {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -5806,7 +5802,7 @@ index 54ff877a..5beebbcb 100644
          const renderItem = this.getNextRenderItem(object, geometry, material, groupOrder, z, group, clippingContext);
  
          if (material.transparent === true || material.transmission > 0) {
-@@ -289,7 +356,7 @@ class RenderList {
+@@ -287,7 +354,7 @@ class RenderList {
       *
       * @param {Object} group - Bundle group data.
       */
@@ -5815,7 +5811,7 @@ index 54ff877a..5beebbcb 100644
          this.bundles.push(group);
      }
  
-@@ -298,7 +365,7 @@ class RenderList {
+@@ -296,7 +363,7 @@ class RenderList {
       *
       * @param {Light} light - The light.
       */
@@ -5824,7 +5820,7 @@ index 54ff877a..5beebbcb 100644
          this.lightsArray.push(light);
      }
  
-@@ -308,7 +375,10 @@ class RenderList {
+@@ -306,7 +373,10 @@ class RenderList {
       * @param {?function(any, any): number} customOpaqueSort - A custom sort function for opaque objects.
       * @param {?function(any, any): number} customTransparentSort -  A custom sort function for transparent objects.
       */
@@ -5898,7 +5894,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index cf48e97d..cd268f43 100644
+index a74e309f..8e4b71b0 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6061,7 +6057,7 @@ index cf48e97d..cd268f43 100644
  
          for (const nodeAttribute of nodeAttributes) {
              const attribute =
-@@ -726,7 +786,7 @@ class RenderObject {
+@@ -729,7 +789,7 @@ class RenderObject {
      dispose() {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
  
@@ -8179,7 +8175,7 @@ index 93cc042e..5ff6ce79 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index bc08252e..f3120d7b 100644
+index a76519b8..4ced6dfa 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -26,10 +26,60 @@ import { CylinderGeometry } from '../../geometries/CylinderGeometry.js';
@@ -8504,12 +8500,14 @@ index bc08252e..f3120d7b 100644
  
              //
  
-@@ -879,11 +1010,11 @@ class XRManager extends EventDispatcher {
+@@ -877,13 +1008,13 @@ class XRManager extends EventDispatcher {
  
              //
  
 -            this.setFoveation(this.getFoveation());
 +            this.setFoveation(this.getFoveation()!);
+ 
+             this._referenceSpace = await session.requestReferenceSpace(this.getReferenceSpaceType());
  
 -            renderer._animation.setAnimationLoop(this._onAnimationFrame);
 -            renderer._animation.setContext(session);
