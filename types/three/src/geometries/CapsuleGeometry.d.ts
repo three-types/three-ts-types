@@ -24,7 +24,13 @@ export class CapsuleGeometry extends BufferGeometry {
      * @param radialSegments Number of segmented faces around the circumference of the capsule. Expects a `Integer`. Default `8`
      * @param heightSegments Number of rows of faces along the height of the capsule. Optional; defaults to `1`.
      */
-    constructor(radius?: number, length?: number, capSegments?: number, radialSegments?: number, heightSegments?: number);
+    constructor(
+        radius?: number,
+        length?: number,
+        capSegments?: number,
+        radialSegments?: number,
+        heightSegments?: number,
+    );
 
     /**
      * A Read-only _string_ to check if `this` object type.
