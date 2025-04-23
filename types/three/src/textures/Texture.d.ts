@@ -378,6 +378,13 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
     isRenderTargetTexture: boolean;
 
     /**
+     * Indicates if a texture should be handled like a texture array.
+     *
+     * @default false
+     */
+    isTextureArray: boolean;
+
+    /**
      * An object that can be used to store custom data about the texture.
      * @remarks It should not hold references to functions as these will not be cloned.
      * @defaultValue `{}`
