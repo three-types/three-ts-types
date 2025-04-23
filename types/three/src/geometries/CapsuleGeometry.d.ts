@@ -19,14 +19,14 @@ export class CapsuleGeometry extends BufferGeometry {
     /**
      * Create a new instance of {@link CapsuleGeometry}
      * @param radius Radius of the capsule. Expects a `Float`. Default `1`
-     * @param length Length of the middle section. Expects a `Float`. Default `1`
+     * @param height Height of the middle section. Expects a `Float`. Default `1`
      * @param capSegments Number of curve segments used to build the caps. Expects a `Integer`. Default `4`
      * @param radialSegments Number of segmented faces around the circumference of the capsule. Expects a `Integer`. Default `8`
      * @param heightSegments Number of rows of faces along the height of the capsule. Optional; defaults to `1`.
      */
     constructor(
         radius?: number,
-        length?: number,
+        height?: number,
         capSegments?: number,
         radialSegments?: number,
         heightSegments?: number,
@@ -45,7 +45,7 @@ export class CapsuleGeometry extends BufferGeometry {
      */
     readonly parameters: {
         readonly radius: number;
-        readonly length: number;
+        readonly height: number;
         readonly capSegments: number;
         readonly radialSegments: number;
     };
