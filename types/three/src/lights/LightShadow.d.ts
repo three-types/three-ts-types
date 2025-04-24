@@ -6,6 +6,7 @@ import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 import { Vector4 } from "../math/Vector4.js";
 import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
 import { Light } from "./Light.js";
+import { TextureDataType } from '../constants.js';
 
 export interface LightShadowJSON {
     intensity?: number;
@@ -85,6 +86,13 @@ export class LightShadow<TCamera extends Camera = Camera> {
      * @defaultValue `new THREE.Vector2(512, 512)`
      */
     mapSize: Vector2;
+
+    /**
+     * The type of shadow texture. The default is `UnsignedByteType`.
+     *
+     * @default UnsignedByteType
+     */
+    mapType: TextureDataType;
 
     /**
      * The depth map generated using the internal camera; a location beyond a pixel's depth is in shadow. Computed internally during rendering.
