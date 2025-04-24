@@ -803,10 +803,10 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index aceba20d..e5febc39 100644
+index 12026a8b..77c29a6d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
+@@ -3,25 +3,105 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
  
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
@@ -896,6 +896,8 @@ index aceba20d..e5febc39 100644
 +
 +    global: boolean;
 +
++    parents: boolean;
++
 +    readonly isNode: true;
 +
 +    readonly id!: number;
@@ -912,7 +914,7 @@ index aceba20d..e5febc39 100644
          super();
  
          /**
-@@ -122,7 +200,7 @@ class Node extends EventDispatcher {
+@@ -130,7 +210,7 @@ class Node extends EventDispatcher {
       * @default false
       * @param {boolean} value
       */
@@ -921,7 +923,7 @@ index aceba20d..e5febc39 100644
          if (value === true) {
              this.version++;
          }
-@@ -135,7 +213,7 @@ class Node extends EventDispatcher {
+@@ -143,7 +223,7 @@ class Node extends EventDispatcher {
       * @readonly
       */
      get type() {
@@ -930,7 +932,7 @@ index aceba20d..e5febc39 100644
      }
  
      /**
-@@ -145,7 +223,7 @@ class Node extends EventDispatcher {
+@@ -153,7 +233,7 @@ class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -939,7 +941,7 @@ index aceba20d..e5febc39 100644
          this.updateType = updateType;
          this.update = callback.bind(this.getSelf());
  
-@@ -159,7 +237,7 @@ class Node extends EventDispatcher {
+@@ -167,7 +247,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -948,7 +950,7 @@ index aceba20d..e5febc39 100644
          return this.onUpdate(callback, NodeUpdateType.FRAME);
      }
  
-@@ -170,7 +248,7 @@ class Node extends EventDispatcher {
+@@ -178,7 +258,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -957,7 +959,7 @@ index aceba20d..e5febc39 100644
          return this.onUpdate(callback, NodeUpdateType.RENDER);
      }
  
-@@ -181,7 +259,7 @@ class Node extends EventDispatcher {
+@@ -189,7 +269,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -966,7 +968,7 @@ index aceba20d..e5febc39 100644
          return this.onUpdate(callback, NodeUpdateType.OBJECT);
      }
  
-@@ -191,7 +269,7 @@ class Node extends EventDispatcher {
+@@ -199,7 +279,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -975,7 +977,7 @@ index aceba20d..e5febc39 100644
          this.updateReference = callback.bind(this.getSelf());
  
          return this;
-@@ -216,7 +294,7 @@ class Node extends EventDispatcher {
+@@ -224,7 +304,7 @@ class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -984,7 +986,7 @@ index aceba20d..e5febc39 100644
          return this;
      }
  
-@@ -228,7 +306,7 @@ class Node extends EventDispatcher {
+@@ -236,7 +316,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -993,7 +995,7 @@ index aceba20d..e5febc39 100644
          return this.global;
      }
  
-@@ -264,7 +342,7 @@ class Node extends EventDispatcher {
+@@ -272,7 +352,7 @@ class Node extends EventDispatcher {
       *
       * @param {traverseCallback} callback - A callback that is executed per node.
       */
@@ -1002,7 +1004,7 @@ index aceba20d..e5febc39 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -315,7 +393,7 @@ class Node extends EventDispatcher {
+@@ -323,7 +403,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -1011,7 +1013,7 @@ index aceba20d..e5febc39 100644
          return this.uuid;
      }
  
-@@ -354,7 +432,7 @@ class Node extends EventDispatcher {
+@@ -362,7 +442,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1020,7 +1022,7 @@ index aceba20d..e5febc39 100644
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-@@ -368,7 +446,7 @@ class Node extends EventDispatcher {
+@@ -376,7 +456,7 @@ class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -1029,7 +1031,7 @@ index aceba20d..e5febc39 100644
          return 'void';
      }
  
-@@ -378,7 +456,7 @@ class Node extends EventDispatcher {
+@@ -386,7 +466,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1038,7 +1040,7 @@ index aceba20d..e5febc39 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -397,7 +475,7 @@ class Node extends EventDispatcher {
+@@ -405,7 +485,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node} The shared node if possible. Otherwise `this` is returned.
       */
@@ -1047,7 +1049,7 @@ index aceba20d..e5febc39 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -412,13 +490,13 @@ class Node extends EventDispatcher {
+@@ -420,13 +500,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -1063,7 +1065,7 @@ index aceba20d..e5febc39 100644
          }
  
          // return a outputNode if exists or null
-@@ -432,7 +510,7 @@ class Node extends EventDispatcher {
+@@ -440,7 +520,7 @@ class Node extends EventDispatcher {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -1072,7 +1074,7 @@ index aceba20d..e5febc39 100644
          const usageCount = builder.increaseUsage(this);
  
          if (usageCount === 1) {
-@@ -441,8 +519,8 @@ class Node extends EventDispatcher {
+@@ -449,8 +529,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -1083,7 +1085,7 @@ index aceba20d..e5febc39 100644
                  }
              }
          }
-@@ -456,7 +534,7 @@ class Node extends EventDispatcher {
+@@ -464,7 +544,7 @@ class Node extends EventDispatcher {
       * @param {?string} output - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -1092,7 +1094,7 @@ index aceba20d..e5febc39 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -472,7 +550,7 @@ class Node extends EventDispatcher {
+@@ -480,7 +560,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1101,7 +1103,7 @@ index aceba20d..e5febc39 100644
          console.warn('Abstract function.');
      }
  
-@@ -484,7 +562,7 @@ class Node extends EventDispatcher {
+@@ -492,7 +572,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1110,7 +1112,7 @@ index aceba20d..e5febc39 100644
          console.warn('Abstract function.');
      }
  
-@@ -496,7 +574,7 @@ class Node extends EventDispatcher {
+@@ -504,7 +584,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1119,7 +1121,7 @@ index aceba20d..e5febc39 100644
          console.warn('Abstract function.');
      }
  
-@@ -510,7 +588,7 @@ class Node extends EventDispatcher {
+@@ -518,7 +598,7 @@ class Node extends EventDispatcher {
       * @param {?string} [output=null] - Can be used to define the output type.
       * @return {Node|string|null} The result of the build process, depending on the build stage.
       */
@@ -1128,18 +1130,26 @@ index aceba20d..e5febc39 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -550,8 +628,8 @@ class Node extends EventDispatcher {
+@@ -558,14 +638,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
 -                    if (childNode && childNode.isNode === true) {
--                        childNode.build(builder);
+-                        if (childNode.parents === true) {
+-                            const childProperties = builder.getNodeProperties(childNode);
 +                    if (childNode && (childNode as Node).isNode === true) {
++                        if ((childNode as Node).parents === true) {
++                            const childProperties = builder.getNodeProperties(childNode as Node);
+                             childProperties.parents = childProperties.parents || [];
+                             childProperties.parents.push(this);
+                         }
+ 
+-                        childNode.build(builder);
 +                        (childNode as Node).build(builder);
                      }
                  }
  
-@@ -616,10 +694,10 @@ class Node extends EventDispatcher {
+@@ -630,10 +710,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1152,7 +1162,7 @@ index aceba20d..e5febc39 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -627,7 +705,9 @@ class Node extends EventDispatcher {
+@@ -641,7 +721,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1163,7 +1173,7 @@ index aceba20d..e5febc39 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -643,33 +723,33 @@ class Node extends EventDispatcher {
+@@ -657,33 +739,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1207,7 +1217,7 @@ index aceba20d..e5febc39 100644
                  }
              }
          }
-@@ -681,7 +761,7 @@ class Node extends EventDispatcher {
+@@ -695,7 +777,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1216,7 +1226,7 @@ index aceba20d..e5febc39 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -690,18 +770,18 @@ class Node extends EventDispatcher {
+@@ -704,18 +786,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1238,7 +1248,7 @@ index aceba20d..e5febc39 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -709,7 +789,7 @@ class Node extends EventDispatcher {
+@@ -723,7 +805,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1247,7 +1257,7 @@ index aceba20d..e5febc39 100644
  
              this.serialize(data);
  
-@@ -718,12 +798,12 @@ class Node extends EventDispatcher {
+@@ -732,12 +814,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1262,7 +1272,7 @@ index aceba20d..e5febc39 100644
                  values.push(data);
              }
  
-@@ -731,9 +811,9 @@ class Node extends EventDispatcher {
+@@ -745,9 +827,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -6235,7 +6245,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 002504eb..cd656ffe 100644
+index 90ca3bb9..c38772a7 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7336,7 +7346,7 @@ index 002504eb..cd656ffe 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2643,14 +2915,23 @@ class Renderer {
+@@ -2648,14 +2920,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7363,7 +7373,7 @@ index 002504eb..cd656ffe 100644
              clippingContext,
              passId,
          );
-@@ -2659,18 +2940,18 @@ class Renderer {
+@@ -2664,18 +2945,18 @@ class Renderer {
  
          //
  
@@ -7388,7 +7398,7 @@ index 002504eb..cd656ffe 100644
  
          //
  
-@@ -2684,7 +2965,7 @@ class Renderer {
+@@ -2689,7 +2970,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7397,7 +7407,7 @@ index 002504eb..cd656ffe 100644
      }
  
      /**
-@@ -2701,14 +2982,23 @@ class Renderer {
+@@ -2706,14 +2987,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7424,7 +7434,7 @@ index 002504eb..cd656ffe 100644
              clippingContext,
              passId,
          );
-@@ -2717,16 +3007,16 @@ class Renderer {
+@@ -2722,16 +3012,16 @@ class Renderer {
  
          //
  
