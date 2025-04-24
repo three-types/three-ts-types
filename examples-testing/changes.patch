@@ -14139,6 +14139,38 @@ index 15527632..58f5cc14 100644
      const amount = ev.deltaY;
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
+diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
+index 7bb91369..7f794094 100644
+--- a/examples-testing/examples/webgpu_caustics.ts
++++ b/examples-testing/examples/webgpu_caustics.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import {
+     uniform,
+@@ -22,9 +22,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, controls;
+-let stats;
+-let gltf;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let stats: Stats;
++let gltf: THREE.Group;
+ 
+ init();
+ 
+@@ -68,7 +68,7 @@ async function init() {
+ 
+     // objects / material
+ 
+-    const duck = gltf.children[0];
++    const duck = gltf.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>;
+     duck.material = new THREE.MeshPhysicalNodeMaterial();
+     duck.material.side = THREE.DoubleSide;
+     duck.material.transparent = true;
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
 index ac77927f..c3c883d9 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
@@ -18495,6 +18527,63 @@ index e409b3c0..78885bec 100644
      if (isUserInteracting === true) {
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
+diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
+index a88f55dc..41f6e7eb 100644
+--- a/examples-testing/examples/webgpu_volume_caustics.ts
++++ b/examples-testing/examples/webgpu_volume_caustics.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import {
+     uniform,
+@@ -19,6 +19,7 @@ import {
+     Fn,
+     vec2,
+     vec3,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -33,10 +34,10 @@ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, controls;
+-let postProcessing;
+-let stats;
+-let gltf;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let postProcessing: THREE.PostProcessing;
++let stats: Stats;
++let gltf: THREE.Group;
+ 
+ init();
+ 
+@@ -83,7 +84,7 @@ async function init() {
+ 
+     // Material
+ 
+-    const duck = gltf.children[0];
++    const duck = gltf.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>;
+     duck.material = new THREE.MeshPhysicalNodeMaterial();
+     duck.material.side = THREE.DoubleSide;
+     duck.material.transparent = true;
+@@ -226,12 +227,12 @@ async function init() {
+     const volumetricMaterial = new THREE.VolumeNodeMaterial();
+     volumetricMaterial.steps = 20;
+     volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
+-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
++    volumetricMaterial.scatteringNode = Fn<{ positionRay: ShaderNodeObject<THREE.Node> }>(({ positionRay }) => {
+         // Return the amount of fog based on the noise texture
+ 
+         const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
+ 
+-        const sampleGrain = (scale, timeScale = 1) =>
++        const sampleGrain = (scale: number, timeScale = 1) =>
+             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+ 
+         let density = sampleGrain(1);
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
 index 679ce01a..50b5dadf 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
