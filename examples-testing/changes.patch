@@ -7316,7 +7316,7 @@ index 87a47d2c..c1341d80 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_imagebitmap.ts b/examples-testing/examples/webgl_loader_imagebitmap.ts
-index 1049e985..ae304ad8 100644
+index 27c61b14..4f1ba6d5 100644
 --- a/examples-testing/examples/webgl_loader_imagebitmap.ts
 +++ b/examples-testing/examples/webgl_loader_imagebitmap.ts
 @@ -1,7 +1,7 @@
@@ -7329,7 +7329,7 @@ index 1049e985..ae304ad8 100644
  
  init();
  
-@@ -42,7 +42,7 @@ function addImage() {
+@@ -41,7 +41,7 @@ function addImage() {
  
  const geometry = new THREE.BoxGeometry();
  
@@ -7338,6 +7338,15 @@ index 1049e985..ae304ad8 100644
      const cube = new THREE.Mesh(geometry, material);
      cube.position.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
      cube.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
+@@ -107,7 +107,7 @@ function animate() {
+     renderer.render(scene, camera);
+ }
+ 
+-function disposeImageBitmap(texture) {
++function disposeImageBitmap(texture: THREE.Texture) {
+     texture.source.data.close();
+     texture.onUpdate = null; // make sure this callback is executed only once per texture
+ }
 diff --git a/examples-testing/examples/webgl_loader_kmz.ts b/examples-testing/examples/webgl_loader_kmz.ts
 index f93555e4..8793a351 100644
 --- a/examples-testing/examples/webgl_loader_kmz.ts
@@ -14172,7 +14181,7 @@ index 7bb91369..7f794094 100644
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
-index ac77927f..c3c883d9 100644
+index 18fbc872..c3c883d9 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
 +++ b/examples-testing/examples/webgpu_centroid_sampling.ts
 @@ -1,15 +1,15 @@
@@ -14225,24 +14234,7 @@ index ac77927f..c3c883d9 100644
          return Fn(() => {
              testUV.setInterpolation(type, sampling);
  
-@@ -86,8 +86,14 @@ function init() {
-         });
-     };
- 
--    const withFlatFirstShader = createShader('flat', 'first');
--    const withFlatEitherShader = createShader('flat', 'either');
-+    const withFlatFirstShader = createShader(
-+        THREE.InterpolationSamplingType.FLAT,
-+        THREE.InterpolationSamplingMode.FLAT_FIRST,
-+    );
-+    const withFlatEitherShader = createShader(
-+        THREE.InterpolationSamplingType.FLAT,
-+        THREE.InterpolationSamplingMode.FLAT_EITHER,
-+    );
- 
-     const withSampleShader = Fn(() => {
-         testUV.setInterpolation(THREE.InterpolationSamplingType.PERSPECTIVE, THREE.InterpolationSamplingMode.SAMPLE);
-@@ -107,7 +113,7 @@ function init() {
+@@ -113,7 +113,7 @@ function init() {
  
      material.colorNode = withoutInterpolationShader();
  
@@ -14251,7 +14243,7 @@ index ac77927f..c3c883d9 100644
  
      for (let x = -5; x < 5; x++) {
          for (let y = -5; y < 5; y++) {
-@@ -136,13 +142,13 @@ function init() {
+@@ -142,13 +142,13 @@ function init() {
          forceWebGL: forceWebGL,
      });
  
