@@ -10611,7 +10611,7 @@ index f846c0ce..5eaa953f 100644
  
      updateOptions();
 diff --git a/examples-testing/examples/webgl_postprocessing_godrays.ts b/examples-testing/examples/webgl_postprocessing_godrays.ts
-index d2fb0d25..e263a672 100644
+index c2caf276..235b0741 100644
 --- a/examples-testing/examples/webgl_postprocessing_godrays.ts
 +++ b/examples-testing/examples/webgl_postprocessing_godrays.ts
 @@ -11,16 +11,37 @@ import {
@@ -10680,7 +10680,7 @@ index d2fb0d25..e263a672 100644
      postprocessing.scene = new THREE.Scene();
  
      postprocessing.camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, -10000, 10000);
-@@ -183,10 +204,10 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight) {
+@@ -179,10 +200,10 @@ function initPostprocessing(renderTargetWidth, renderTargetHeight) {
          fragmentShader: godraysFakeSunShader.fragmentShader,
      });
  
@@ -10694,7 +10694,7 @@ index d2fb0d25..e263a672 100644
  
      postprocessing.quad = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.0), postprocessing.materialGodraysGenerate);
      postprocessing.quad.position.z = -9900;
-@@ -199,19 +220,19 @@ function animate() {
+@@ -195,19 +216,19 @@ function animate() {
      stats.end();
  }
  
@@ -10721,7 +10721,7 @@ index d2fb0d25..e263a672 100644
  }
  
  function render() {
-@@ -239,14 +260,14 @@ function render() {
+@@ -235,14 +256,14 @@ function render() {
  
          // Give it to the god-ray and sun shaders
  
@@ -10739,7 +10739,7 @@ index d2fb0d25..e263a672 100644
          renderer.clear(true, true, false);
  
          // Sun render. Runs a shader that gives a brightness based on the screen
-@@ -262,11 +283,11 @@ function render() {
+@@ -258,11 +279,11 @@ function render() {
          renderer.setScissor(screenSpacePosition.x - sunsqW / 2, screenSpacePosition.y - sunsqH / 2, sunsqW, sunsqH);
          renderer.setScissorTest(true);
  
@@ -10755,7 +10755,7 @@ index d2fb0d25..e263a672 100644
  
          renderer.setScissorTest(false);
  
-@@ -275,23 +296,23 @@ function render() {
+@@ -271,23 +292,23 @@ function render() {
          // Colors
  
          scene.overrideMaterial = null;
@@ -10785,7 +10785,7 @@ index d2fb0d25..e263a672 100644
  
          // -- Render god-rays --
  
-@@ -310,35 +331,35 @@ function render() {
+@@ -306,35 +327,35 @@ function render() {
  
          // pass 1 - render into first ping-pong target
          filterGodRays(
@@ -11909,67 +11909,6 @@ index 572575af..169120a1 100644
  
      clock = new THREE.Clock();
  
-diff --git a/examples-testing/examples/webgl_reverse_depth_buffer.ts b/examples-testing/examples/webgl_reverse_depth_buffer.ts
-index 56721250..4b658bcb 100644
---- a/examples-testing/examples/webgl_reverse_depth_buffer.ts
-+++ b/examples-testing/examples/webgl_reverse_depth_buffer.ts
-@@ -3,14 +3,19 @@ import * as THREE from 'three';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
--let stats, camera, scene, normalRenderer, logarithmicRenderer, reverseRenderer;
--const meshes = [];
-+let stats: Stats,
-+    camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    normalRenderer: THREE.WebGLRenderer,
-+    logarithmicRenderer: THREE.WebGLRenderer,
-+    reverseRenderer: THREE.WebGLRenderer;
-+const meshes: THREE.Mesh[] = [];
- 
- init();
- animate();
- 
- function init() {
--    const container = document.getElementById('container');
-+    const container = document.getElementById('container')!;
- 
-     stats = new Stats();
-     container.appendChild(stats.dom);
-@@ -99,21 +104,21 @@ function init() {
-         }
-     }
- 
--    const normalContainer = document.getElementById('container_normal');
-+    const normalContainer = document.getElementById('container_normal')!;
-     normalRenderer = new THREE.WebGLRenderer();
-     normalRenderer.setPixelRatio(window.devicePixelRatio);
-     normalRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
-     normalRenderer.domElement.style.position = 'relative';
-     normalContainer.appendChild(normalRenderer.domElement);
- 
--    const logarithmicContainer = document.getElementById('container_logarithmic');
-+    const logarithmicContainer = document.getElementById('container_logarithmic')!;
-     logarithmicRenderer = new THREE.WebGLRenderer({ logarithmicDepthBuffer: true });
-     logarithmicRenderer.setPixelRatio(window.devicePixelRatio);
-     logarithmicRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
-     logarithmicRenderer.domElement.style.position = 'relative';
-     logarithmicContainer.appendChild(logarithmicRenderer.domElement);
- 
--    const reverseContainer = document.getElementById('container_reverse');
-+    const reverseContainer = document.getElementById('container_reverse')!;
-     reverseRenderer = new THREE.WebGLRenderer({ reverseDepthBuffer: true });
-     reverseRenderer.setPixelRatio(window.devicePixelRatio);
-     reverseRenderer.setSize(0.33 * window.innerWidth, window.innerHeight);
-@@ -126,7 +131,7 @@ function init() {
-     const depthBits = gl.getParameter(gl.DEPTH_BITS);
- 
-     if (depthBits < 24) {
--        document.getElementById('depth-warning').style.display = 'block';
-+        document.getElementById('depth-warning')!.style.display = 'block';
-     }
- 
-     window.addEventListener('resize', onWindowResize);
 diff --git a/examples-testing/examples/webgl_rtt.ts b/examples-testing/examples/webgl_rtt.ts
 index 9f16fdab..9c70a341 100644
 --- a/examples-testing/examples/webgl_rtt.ts
@@ -18776,7 +18715,7 @@ index 76e09f1f..edefce0e 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index b3b47e0e..e8108537 100644
+index 26608935..3481437a 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
 @@ -1,18 +1,22 @@
@@ -18808,7 +18747,7 @@ index b3b47e0e..e8108537 100644
  
  init();
  
-@@ -75,25 +79,25 @@ function init() {
+@@ -80,25 +84,25 @@ function init() {
  
      //
  
@@ -18839,7 +18778,7 @@ index b3b47e0e..e8108537 100644
          this.remove(this.children[0]);
      });
      scene.add(controller);
-@@ -111,7 +115,7 @@ function init() {
+@@ -116,7 +120,7 @@ function init() {
      document.body.appendChild(XRButton.createButton(renderer));
  }
  
@@ -18848,7 +18787,7 @@ index b3b47e0e..e8108537 100644
      let geometry, material;
  
      switch (data.targetRayMode) {
-@@ -165,7 +169,7 @@ function animate() {
+@@ -170,7 +174,7 @@ function animate() {
          if (INTERSECTED != intersects[0].object) {
              if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
  
@@ -18858,7 +18797,7 @@ index b3b47e0e..e8108537 100644
              INTERSECTED.material.emissive.setHex(0xff0000);
          }
 diff --git a/examples-testing/examples/webgpu_xr_native_layers.ts b/examples-testing/examples/webgpu_xr_native_layers.ts
-index bd8cf55e..8f655e8c 100644
+index baf4c4a4..50efbfea 100644
 --- a/examples-testing/examples/webgpu_xr_native_layers.ts
 +++ b/examples-testing/examples/webgpu_xr_native_layers.ts
 @@ -1,4 +1,4 @@
@@ -18968,7 +18907,7 @@ index bd8cf55e..8f655e8c 100644
  }
  
  function init() {
-@@ -152,15 +152,15 @@ function init() {
+@@ -157,15 +157,15 @@ function init() {
  
      // controllers
  
@@ -18987,7 +18926,7 @@ index bd8cf55e..8f655e8c 100644
          const controller = event.target;
  
          const intersections = getIntersections(controller);
-@@ -178,11 +178,10 @@ function init() {
+@@ -183,11 +183,10 @@ function init() {
              }
  
              if (intersections[x].object == guiLayer) {
@@ -19001,7 +18940,7 @@ index bd8cf55e..8f655e8c 100644
                  });
                  hadSelection = true;
              }
-@@ -191,10 +190,10 @@ function init() {
+@@ -196,10 +195,10 @@ function init() {
          this.userData.isSelecting = hadSelection === false;
      }
  
@@ -19016,7 +18955,7 @@ index bd8cf55e..8f655e8c 100644
          this.userData.isSelecting = false;
      }
  
-@@ -203,10 +202,10 @@ function init() {
+@@ -208,10 +207,10 @@ function init() {
      controller1.addEventListener('selectend', onSelectEnd);
      controller1.addEventListener('squeezestart', onSqueezeStart);
      controller1.addEventListener('squeezeend', onSqueezeEnd);
@@ -19030,7 +18969,7 @@ index bd8cf55e..8f655e8c 100644
          this.remove(this.children[0]);
      });
      scene.add(controller1);
-@@ -216,10 +215,10 @@ function init() {
+@@ -221,10 +220,10 @@ function init() {
      controller2.addEventListener('selectend', onSelectEnd);
      controller2.addEventListener('squeezestart', onSqueezeStart);
      controller2.addEventListener('squeezeend', onSqueezeEnd);
@@ -19044,7 +18983,7 @@ index bd8cf55e..8f655e8c 100644
          this.remove(this.children[0]);
      });
      scene.add(controller2);
-@@ -270,7 +269,7 @@ function init() {
+@@ -275,7 +274,7 @@ function init() {
  
      // environment
  
@@ -19053,7 +18992,7 @@ index bd8cf55e..8f655e8c 100644
      rcgeometry.rotateX(-Math.PI / 2);
  
      const positions = rcgeometry.attributes.position.array;
-@@ -290,7 +289,7 @@ function init() {
+@@ -295,7 +294,7 @@ function init() {
  
      rcgeometry.computeVertexNormals();
  
@@ -19062,7 +19001,7 @@ index bd8cf55e..8f655e8c 100644
          color: 0x407000,
      });
  
-@@ -392,7 +391,7 @@ function init() {
+@@ -397,7 +396,7 @@ function init() {
      loader.load('models/gltf/Horse.glb', function (gltf) {
          horseMesh = gltf.scene.children[0];
          horseMesh.scale.set(1.5, 1.5, 1.5);
@@ -19071,7 +19010,7 @@ index bd8cf55e..8f655e8c 100644
  
          horseMixer = new THREE.AnimationMixer(horseMesh);
  
-@@ -420,7 +419,7 @@ function init() {
+@@ -425,7 +424,7 @@ function init() {
      gui.add(parameters, 'thickness', 0, 1).onChange(onThicknessChange);
      gui.domElement.style.visibility = 'hidden';
  
@@ -19080,7 +19019,7 @@ index bd8cf55e..8f655e8c 100644
      guiScene.add(guiGroup);
  
      const mesh = new HTMLMesh(gui.domElement);
-@@ -447,16 +446,16 @@ function init() {
+@@ -452,16 +451,16 @@ function init() {
  }
  
  function renderGui() {
@@ -19101,7 +19040,7 @@ index bd8cf55e..8f655e8c 100644
  
      if (horseMixer) {
          const time = Date.now();
-@@ -466,7 +465,7 @@ function renderQuad() {
+@@ -471,7 +470,7 @@ function renderQuad() {
          prevTime = time;
      }
  
@@ -19110,7 +19049,7 @@ index bd8cf55e..8f655e8c 100644
  }
  
  const rcposition = new THREE.Vector3();
-@@ -504,11 +503,11 @@ function renderRollercoaster() {
+@@ -509,11 +508,11 @@ function renderRollercoaster() {
  
      //
  
@@ -19125,7 +19064,7 @@ index bd8cf55e..8f655e8c 100644
  
      switch (data.targetRayMode) {
          case 'tracked-pointer':
-@@ -534,7 +533,7 @@ function onWindowResize() {
+@@ -539,7 +538,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -19134,7 +19073,7 @@ index bd8cf55e..8f655e8c 100644
      if (controller.userData.isSelecting) {
          const object = room.children[count++];
  
-@@ -550,8 +549,8 @@ function handleController(controller) {
+@@ -555,8 +554,8 @@ function handleController(controller) {
      const intersections = getIntersections(controller);
      for (let x = 0; x < intersections.length; x++) {
          if (intersections[x].object == guiLayer) {
@@ -19145,7 +19084,7 @@ index bd8cf55e..8f655e8c 100644
          }
      }
  }
-@@ -565,7 +564,7 @@ function render() {
+@@ -570,7 +569,7 @@ function render() {
      handleController(controller2);
  
      // rotate horse
