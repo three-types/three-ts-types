@@ -328,7 +328,7 @@ declare class Node extends EventDispatcher<{
      * @param {?string} [output=null] - Can be used to define the output type.
      * @return {Node|string|null} The result of the build process, depending on the build stage.
      */
-    build(builder: NodeBuilder, output?: string | null): string | null;
+    build(builder: NodeBuilder, output?: string | null): Node | string | null;
     /**
      * Returns the child nodes as a JSON object.
      *
