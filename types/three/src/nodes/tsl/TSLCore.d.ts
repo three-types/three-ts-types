@@ -9,7 +9,7 @@ import ConvertNode from "../utils/ConvertNode.js";
 export interface NodeElements {
     toGlobal: (node: Node) => Node;
 
-    append: typeof append;
+    toStack: typeof Stack;
 
     toColor: typeof color;
     toFloat: typeof float;
@@ -34,6 +34,8 @@ export interface NodeElements {
 
     element: typeof element;
     convert: typeof convert;
+
+    append: typeof append;
 }
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
@@ -259,23 +261,6 @@ export function Fn<T extends { readonly [key: string]: unknown }>(
     jsFunc: (args: T) => void,
 ): ShaderNodeFn<[ProxiedObject<T>]>;
 
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): (...args: ProxiedTuple<T>) => R;
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): (args: ProxiedObject<T>) => R;
-
 export const setCurrentStack: (stack: StackNode | null) => void;
 
 export const getCurrentStack: () => StackNode | null;
@@ -283,7 +268,7 @@ export const getCurrentStack: () => StackNode | null;
 export const If: (boolNode: Node, method: () => void) => StackNode;
 export const Switch: (expression: NodeRepresentation) => StackNode;
 
-export function append(node: Node): Node;
+export function Stack(node: Node): Node;
 
 interface ColorFunction {
     (color?: ColorRepresentation): ShaderNodeObject<ConstNode<Color>>;
@@ -323,3 +308,25 @@ export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<Arr
 export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
 export const convert: (node: NodeRepresentation, types: string) => ShaderNodeObject<Node>;
 export const split: (node: NodeRepresentation, channels?: string) => ShaderNodeObject<Node>;
+
+/**
+ * @deprecated append() has been renamed to Stack().
+ */
+export const append: (node: Node) => Node;
+
+/**
+ * @deprecated tslFn() has been renamed to Fn()
+ */
+export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
+/**
+ * @deprecated tslFn() has been renamed to Fn()
+ */
+export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
+    jsFunc: (args: T) => R,
+): (...args: ProxiedTuple<T>) => R;
+/**
+ * @deprecated tslFn() has been renamed to Fn()
+ */
+export function tslFn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
+    jsFunc: (args: T) => R,
+): (args: ProxiedObject<T>) => R;
