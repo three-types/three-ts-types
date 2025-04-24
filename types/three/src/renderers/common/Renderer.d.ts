@@ -258,6 +258,23 @@ declare class Renderer {
      */
     waitForGPU(): Promise<void>;
     /**
+     * Enables or disables high precision for model-view and normal-view matrices.
+     * When enabled, will use CPU 64-bit precision for higher precision instead of GPU 32-bit for higher performance.
+     *
+     * NOTE: 64-bit precision is not compatible with `InstancedMesh` and `SkinnedMesh`.
+     *
+     * @param {boolean} value - Whether to enable or disable high precision.
+     * @type {boolean}
+     */
+    set highPrecision(value: boolean);
+    /**
+     * Returns whether high precision is enabled or not.
+     *
+     * @return {boolean} Whether high precision is enabled or not.
+     * @type {boolean}
+     */
+    get highPrecision(): boolean;
+    /**
      * Sets the given MRT configuration.
      *
      * @param {MRTNode} mrt - The MRT node to set.
