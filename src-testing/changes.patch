@@ -803,7 +803,7 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index aceba20d..3816e99c 100644
+index aceba20d..e5febc39 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,25 +3,103 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1124,7 +1124,7 @@ index aceba20d..3816e99c 100644
       * @return {Node|string|null} The result of the build process, depending on the build stage.
       */
 -    build(builder, output = null) {
-+    build(builder: NodeBuilder, output: string | null = null): string | null {
++    build(builder: NodeBuilder, output: string | null = null): Node | string | null {
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
