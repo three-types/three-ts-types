@@ -249,6 +249,7 @@ interface Layout {
 interface ShaderNodeFn<Args extends readonly unknown[]> {
     (...args: Args): ShaderNodeObject<ShaderCallNodeInternal>;
     shaderNode: ShaderNodeObject<ShaderNodeInternal>;
+    id: number;
     setLayout: (layout: Layout) => this;
     once: () => this;
 }
