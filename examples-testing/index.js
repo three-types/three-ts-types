@@ -13,7 +13,6 @@ const exceptionList = [
     'webgl_depth_texture',
     'webgl_geometry_csg',
     'webgl_geometry_spline_editor',
-    'webgl_loader_3dtiles',
     'webgl_loader_collada_kinematics',
     'webgl_loader_gltf_variants',
     'webgl_loader_ifc',
