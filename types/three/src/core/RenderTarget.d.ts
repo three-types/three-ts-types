@@ -11,7 +11,6 @@ import { Texture } from "../textures/Texture.js";
 import { EventDispatcher } from "./EventDispatcher.js";
 
 export interface RenderTargetOptions {
-    depth?: number | undefined;
     wrapS?: Wrapping | undefined;
     wrapT?: Wrapping | undefined;
     magFilter?: MagnificationTextureFilter | undefined;
@@ -33,6 +32,7 @@ export interface RenderTargetOptions {
      */
     samples?: number | undefined;
     count?: number | undefined;
+    depth?: number | undefined;
     multiview?: boolean | undefined;
 }
 
