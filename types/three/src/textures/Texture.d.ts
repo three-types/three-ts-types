@@ -152,6 +152,21 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
     source: Source;
 
     /**
+     * The width of the texture in pixels.
+     */
+    get width(): number;
+
+    /**
+     * The height of the texture in pixels.
+     */
+    get height(): number;
+
+    /**
+     * The depth of the texture in pixels.
+     */
+    get depth(): number;
+
+    /**
      * An image object, typically created using the {@link THREE.TextureLoader.load | TextureLoader.load()} method.
      * @remarks This can be any image (e.g., PNG, JPG, GIF, DDS) or video (e.g., MP4, OGG/OGV) type supported by three.js.
      * @remarks To use video as a {@link Texture} you need to have a playing HTML5 video element as a source
