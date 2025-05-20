@@ -5117,7 +5117,7 @@ index 20a5e0d9..e9293211 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
-index 3176b95a..2463484a 100644
+index 3176b95a..d3f32d49 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -5159,8 +5159,9 @@ index 3176b95a..2463484a 100644
      const animations = gltf.animations;
      durationAnimation = Math.round(animations[0].duration * 60);
 -    const birdGeo = gltf.scene.children[0].geometry;
+-    const morphAttributes = birdGeo.morphAttributes.position;
 +    const birdGeo = (gltf.scene.children[0] as THREE.Mesh).geometry;
-     const morphAttributes = birdGeo.morphAttributes.position;
++    const morphAttributes = birdGeo.morphAttributes.position!;
      const tHeight = nextPowerOf2(durationAnimation);
      const tWidth = nextPowerOf2(birdGeo.getAttribute('position').count);
 -    indicesPerBird = birdGeo.index.count;
