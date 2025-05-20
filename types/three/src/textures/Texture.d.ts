@@ -397,7 +397,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      *
      * @default false
      */
-    isTextureArray: boolean;
+    isArrayTexture: boolean;
 
     /**
      * An object that can be used to store custom data about the texture.
