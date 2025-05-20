@@ -15126,7 +15126,7 @@ index c3d50629..3b56b5a6 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_spotlight.ts b/examples-testing/examples/webgpu_lights_spotlight.ts
-index 83860e63..3713fac3 100644
+index 83860e63..557ec97b 100644
 --- a/examples-testing/examples/webgpu_lights_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_spotlight.ts
 @@ -1,14 +1,14 @@
@@ -15162,8 +15162,9 @@ index 83860e63..3713fac3 100644
      scene.add(ambient);
  
 -    const boxAttenuationFn = Fn(([lightNode], builder) => {
+-        const light = lightNode.light;
 +    const boxAttenuationFn = Fn<[ShaderNodeObject<THREE.SpotLightNode>]>(([lightNode], builder) => {
-         const light = lightNode.light;
++        const light = lightNode.light!;
  
 -        const sdBox = Fn(([p, b]) => {
 +        const sdBox = Fn<[ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>]>(([p, b]) => {
