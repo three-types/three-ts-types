@@ -15126,14 +15126,14 @@ index c3d50629..3b56b5a6 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_spotlight.ts b/examples-testing/examples/webgpu_lights_spotlight.ts
-index 75238712..e03baeb9 100644
+index 83860e63..557ec97b 100644
 --- a/examples-testing/examples/webgpu_lights_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_spotlight.ts
 @@ -1,14 +1,14 @@
 -import * as THREE from 'three';
--import { Fn, vec2, length, abs, max, min, div, mul, clamp, acos } from 'three/tsl';
+-import { Fn, vec2, length, uniform, abs, max, min, sub, div, saturate, acos } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { Fn, vec2, length, abs, max, min, div, mul, clamp, acos, ShaderNodeObject } from 'three/tsl';
++import { Fn, vec2, length, uniform, abs, max, min, sub, div, saturate, acos, ShaderNodeObject } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -15148,7 +15148,7 @@ index 75238712..e03baeb9 100644
  
  init();
  
-@@ -43,7 +43,7 @@ function init() {
+@@ -46,7 +46,7 @@ function init() {
      const loader = new THREE.TextureLoader().setPath('textures/');
      const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
  
@@ -15157,18 +15157,21 @@ index 75238712..e03baeb9 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -57,8 +57,8 @@ function init() {
-         textures[filename] = texture;
-     }
+@@ -65,10 +65,10 @@ function init() {
+     const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.15);
+     scene.add(ambient);
  
 -    const boxAttenuationFn = Fn(([lightNode], builder) => {
--        const sdBox = Fn(([p, b]) => {
+-        const light = lightNode.light;
 +    const boxAttenuationFn = Fn<[ShaderNodeObject<THREE.SpotLightNode>]>(([lightNode], builder) => {
++        const light = lightNode.light!;
+ 
+-        const sdBox = Fn(([p, b]) => {
 +        const sdBox = Fn<[ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>]>(([p, b]) => {
              const d = vec2(abs(p).sub(b)).toVar();
  
              return length(max(d, 0.0)).add(min(max(d.x, d.y), 0.0));
-@@ -177,8 +177,8 @@ function init() {
+@@ -189,8 +189,8 @@ function init() {
          renderer.shadowMap.enabled = val;
  
          scene.traverse(function (child) {
@@ -18791,7 +18794,7 @@ index 0fd2b8af..8702c5e8 100644
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 76e09f1f..edefce0e 100644
+index 3f4cddb7..4bc3eb5a 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
 @@ -1,12 +1,16 @@
@@ -18819,8 +18822,8 @@ index 76e09f1f..edefce0e 100644
      // gui
  
      const gui = new GUI();
--    const waterNode = water.material.fragmentNode;
-+    const waterNode = water.material.fragmentNode as WaterNode;
+-    const waterNode = water.material.colorNode;
++    const waterNode = water.material.colorNode as WaterNode;
  
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
