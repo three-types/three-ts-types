@@ -6504,27 +6504,6 @@ index 707ef200..8e4cf0bb 100644
  
      stats = new Stats();
      container.appendChild(stats.dom);
-diff --git a/examples-testing/examples/webgl_lights_pointlights.ts b/examples-testing/examples/webgl_lights_pointlights.ts
-index ea95070c..020d2160 100644
---- a/examples-testing/examples/webgl_lights_pointlights.ts
-+++ b/examples-testing/examples/webgl_lights_pointlights.ts
-@@ -4,7 +4,15 @@ import Stats from 'three/addons/libs/stats.module.js';
- 
- import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
- 
--let camera, scene, renderer, light1, light2, light3, light4, object, stats;
-+let camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    renderer: THREE.WebGLRenderer,
-+    light1: THREE.PointLight,
-+    light2: THREE.PointLight,
-+    light3: THREE.PointLight,
-+    light4: THREE.PointLight,
-+    object: THREE.Group,
-+    stats: Stats;
- 
- const clock = new THREE.Clock();
- 
 diff --git a/examples-testing/examples/webgl_lights_rectarealight.ts b/examples-testing/examples/webgl_lights_rectarealight.ts
 index b841fa6b..f3051618 100644
 --- a/examples-testing/examples/webgl_lights_rectarealight.ts
@@ -10481,7 +10460,7 @@ index 82fc39be..1a14c2b9 100644
      diffuseMap.colorSpace = THREE.SRGBColorSpace;
  
 diff --git a/examples-testing/examples/webgl_postprocessing_afterimage.ts b/examples-testing/examples/webgl_postprocessing_afterimage.ts
-index 508f90b8..53e74b77 100644
+index 97353dcd..433322a3 100644
 --- a/examples-testing/examples/webgl_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgl_postprocessing_afterimage.ts
 @@ -7,10 +7,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -10536,11 +10515,11 @@ index 57a6a2db..f6d4c716 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_postprocessing_fxaa.ts b/examples-testing/examples/webgl_postprocessing_fxaa.ts
-index 9db3283e..c3f0f64d 100644
+index 6aaf4d6b..1f17f79d 100644
 --- a/examples-testing/examples/webgl_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgl_postprocessing_fxaa.ts
 @@ -7,14 +7,18 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
- import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+ import { FXAAPass } from 'three/addons/postprocessing/FXAAPass.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer, controls, container;
@@ -15052,6 +15031,50 @@ index 6a050726..7af6c37e 100644
      gui.add(params, 'exposure', 0, 1);
      gui.add(params, 'shadows');
      gui.open();
+diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
+index 936df5c6..62b0eb0b 100644
+--- a/examples-testing/examples/webgpu_lights_pointlights.ts
++++ b/examples-testing/examples/webgpu_lights_pointlights.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -17,9 +17,13 @@ import {
+     uniform,
+ } from 'three/tsl';
+ 
+-let camera, scene, timer, renderer, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    timer: Timer,
++    renderer: THREE.WebGPURenderer,
++    controls: OrbitControls;
+ 
+-let light1, light2;
++let light1: THREE.PointLight, light2: THREE.PointLight;
+ 
+ init();
+ 
+@@ -36,7 +40,7 @@ function init() {
+ 
+     const loader = new OBJLoader();
+     loader.load('models/obj/walt/WaltHead.obj', function (obj) {
+-        const mesh = obj.children[0];
++        const mesh = obj.children[0] as THREE.Mesh;
+         mesh.geometry = createGeometry(mesh.geometry);
+         mesh.material = createMaterial();
+ 
+@@ -126,7 +130,7 @@ function createMaterial() {
+     return material;
+ }
+ 
+-function createGeometry(geometry) {
++function createGeometry(geometry: THREE.BufferGeometry) {
+     const positionAttribute = geometry.getAttribute('position');
+ 
+     const v0 = new THREE.Vector3();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
 index 5638c902..a274a953 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts

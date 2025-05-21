@@ -1,8 +1,8 @@
-import { IUniform, ShaderMaterial, WebGLRenderTarget } from "three";
+import { IUniform, ShaderMaterial } from "three";
 
-import { FullScreenQuad, Pass } from "./Pass.js";
+import { Pass } from "./Pass.js";
 
-export class AfterimagePass extends Pass {
+declare class AfterimagePass extends Pass {
     uniforms: Record<string, IUniform>;
 
     compFsMaterial: ShaderMaterial;
@@ -13,3 +13,5 @@ export class AfterimagePass extends Pass {
     get damp(): number;
     set damp(value: number);
 }
+
+export { AfterimagePass };
