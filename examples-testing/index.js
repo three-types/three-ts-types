@@ -59,6 +59,7 @@ const exceptionList = [
     'webgpu_instance_sprites',
     'webgpu_instance_uniform',
     'webgpu_lights_custom',
+    'webgpu_lights_projector',
     'webgpu_lines_fat_wireframe',
     'webgpu_materials',
     'webgpu_mrt_mask',

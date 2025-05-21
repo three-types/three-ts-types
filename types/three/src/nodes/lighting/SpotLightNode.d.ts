@@ -13,9 +13,11 @@ declare class SpotLightNode extends AnalyticLightNode<SpotLight> {
     cutoffDistanceNode: Node;
     decayExponentNode: Node;
 
+    colorNode: Node;
+
     constructor(light?: SpotLight | null);
 
-    getSpotLightCoord(builder: NodeBuilder): ShaderNodeObject<Node>;
+    getLightCoord(builder: NodeBuilder): ShaderNodeObject<Node>;
 }
 
 declare module "three" {

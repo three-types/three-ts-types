@@ -9226,7 +9226,7 @@ index 5adfc8e6..6f3772f0 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgl_materials_texture_rotation.ts b/examples-testing/examples/webgl_materials_texture_rotation.ts
-index 90b9416d..e6034b82 100644
+index eedc80c6..e5c7131f 100644
 --- a/examples-testing/examples/webgl_materials_texture_rotation.ts
 +++ b/examples-testing/examples/webgl_materials_texture_rotation.ts
 @@ -3,7 +3,10 @@ import * as THREE from 'three';
@@ -15126,14 +15126,12 @@ index c3d50629..3b56b5a6 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_spotlight.ts b/examples-testing/examples/webgpu_lights_spotlight.ts
-index 83860e63..557ec97b 100644
+index b9388d9b..dbd27d70 100644
 --- a/examples-testing/examples/webgpu_lights_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_spotlight.ts
-@@ -1,14 +1,14 @@
+@@ -1,13 +1,13 @@
 -import * as THREE from 'three';
--import { Fn, vec2, length, uniform, abs, max, min, sub, div, saturate, acos } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import { Fn, vec2, length, uniform, abs, max, min, sub, div, saturate, acos, ShaderNodeObject } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -15148,7 +15146,7 @@ index 83860e63..557ec97b 100644
  
  init();
  
-@@ -46,7 +46,7 @@ function init() {
+@@ -45,7 +45,7 @@ function init() {
      const loader = new THREE.TextureLoader().setPath('textures/');
      const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
  
@@ -15157,21 +15155,7 @@ index 83860e63..557ec97b 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -65,10 +65,10 @@ function init() {
-     const ambient = new THREE.HemisphereLight(0xffffff, 0x8d8d8d, 0.15);
-     scene.add(ambient);
- 
--    const boxAttenuationFn = Fn(([lightNode], builder) => {
--        const light = lightNode.light;
-+    const boxAttenuationFn = Fn<[ShaderNodeObject<THREE.SpotLightNode>]>(([lightNode], builder) => {
-+        const light = lightNode.light!;
- 
--        const sdBox = Fn(([p, b]) => {
-+        const sdBox = Fn<[ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>]>(([p, b]) => {
-             const d = vec2(abs(p).sub(b)).toVar();
- 
-             return length(max(d, 0.0)).add(min(max(d.x, d.y), 0.0));
-@@ -189,8 +189,8 @@ function init() {
+@@ -166,8 +166,8 @@ function init() {
          renderer.shadowMap.enabled = val;
  
          scene.traverse(function (child) {
