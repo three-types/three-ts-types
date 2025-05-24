@@ -654,7 +654,7 @@ index 7cfff69f..99c39c40 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 3b93bec0..68acdeb1 100644
+index 33e6c559..e364eb61 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,5 +1,6 @@
@@ -691,7 +691,7 @@ index 3b93bec0..68acdeb1 100644
          super();
  
          /**
-@@ -65,15 +71,15 @@ class ContextNode extends Node {
+@@ -65,21 +71,20 @@ class ContextNode extends Node {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The node type.
       */
@@ -702,7 +702,13 @@ index 3b93bec0..68acdeb1 100644
  
 -    analyze(builder) {
 +    analyze(builder: NodeBuilder) {
+         const previousContext = builder.getContext();
+ 
+         builder.setContext({ ...builder.context, ...this.value });
+-
          this.node.build(builder);
+ 
+         builder.setContext(previousContext);
      }
  
 -    setup(builder) {
@@ -710,8 +716,8 @@ index 3b93bec0..68acdeb1 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -85,7 +91,7 @@ class ContextNode extends Node {
-         return node;
+@@ -89,7 +94,7 @@ class ContextNode extends Node {
+         builder.setContext(previousContext);
      }
  
 -    generate(builder, output) {
@@ -719,7 +725,7 @@ index 3b93bec0..68acdeb1 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -120,7 +126,7 @@ export const context = /*@__PURE__*/ nodeProxy(ContextNode).setParameterLength(1
+@@ -124,7 +129,7 @@ export const context = /*@__PURE__*/ nodeProxy(ContextNode).setParameterLength(1
   * @param {string} name - The name/label to set.
   * @returns {ContextNode}
   */
@@ -803,7 +809,7 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 12026a8b..77c29a6d 100644
+index d3ac8efb..7b2ffcd8 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,25 +3,105 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1130,7 +1136,7 @@ index 12026a8b..77c29a6d 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -558,14 +638,14 @@ class Node extends EventDispatcher {
+@@ -556,14 +636,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
@@ -1148,8 +1154,8 @@ index 12026a8b..77c29a6d 100644
 +                        (childNode as Node).build(builder);
                      }
                  }
- 
-@@ -630,10 +710,10 @@ class Node extends EventDispatcher {
+             }
+@@ -622,10 +702,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1162,7 +1168,7 @@ index 12026a8b..77c29a6d 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -641,7 +721,9 @@ class Node extends EventDispatcher {
+@@ -633,7 +713,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1173,7 +1179,7 @@ index 12026a8b..77c29a6d 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -657,33 +739,33 @@ class Node extends EventDispatcher {
+@@ -649,33 +731,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1217,7 +1223,7 @@ index 12026a8b..77c29a6d 100644
                  }
              }
          }
-@@ -695,7 +777,7 @@ class Node extends EventDispatcher {
+@@ -687,7 +769,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1226,7 +1232,7 @@ index 12026a8b..77c29a6d 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -704,18 +786,18 @@ class Node extends EventDispatcher {
+@@ -696,18 +778,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1248,7 +1254,7 @@ index 12026a8b..77c29a6d 100644
                  metadata: {
                      version: 4.6,
                      type: 'Node',
-@@ -723,7 +805,7 @@ class Node extends EventDispatcher {
+@@ -715,7 +797,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1257,7 +1263,7 @@ index 12026a8b..77c29a6d 100644
  
              this.serialize(data);
  
-@@ -732,12 +814,12 @@ class Node extends EventDispatcher {
+@@ -724,12 +806,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1272,7 +1278,7 @@ index 12026a8b..77c29a6d 100644
                  values.push(data);
              }
  
-@@ -745,9 +827,9 @@ class Node extends EventDispatcher {
+@@ -737,9 +819,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -10087,10 +10093,10 @@ index 3ec6f638..ff11d07a 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 4210b7fd..a6248ca7 100644
+index 709d2c29..5361a5fb 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1614,7 +1614,14 @@ class WebGPUBackend extends Backend {
+@@ -1615,7 +1615,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -10107,7 +10113,7 @@ index 4210b7fd..a6248ca7 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 3bce4ffd..5cb26510 100644
+index fabe7508..26e15076 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10143,7 +10149,7 @@ index 3bce4ffd..5cb26510 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -475,7 +483,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -465,7 +473,13 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [levelSnippet='0u'] - A WGSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The WGSL snippet.
       */
@@ -10158,7 +10164,7 @@ index 3bce4ffd..5cb26510 100644
          const wrapFunction = this.generateWrapFunction(texture);
          const textureDimension = this.generateTextureDimension(texture, textureProperty, levelSnippet);
  
-@@ -495,9 +509,14 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -485,9 +499,14 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [levelSnippet='0u'] - A WGSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The WGSL snippet.
       */
@@ -10175,7 +10181,7 @@ index 3bce4ffd..5cb26510 100644
          if (texture.isVideoTexture === true) {
              snippet = `textureLoad( ${textureProperty}, ${uvIndexSnippet} )`;
          } else if (depthSnippet) {
-@@ -598,11 +617,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -588,11 +607,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureGrad(
@@ -10192,7 +10198,7 @@ index 3bce4ffd..5cb26510 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -626,11 +645,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -616,11 +635,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureCompare(
@@ -10209,7 +10215,7 @@ index 3bce4ffd..5cb26510 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -658,11 +677,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -648,11 +667,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureLevel(
@@ -10226,7 +10232,7 @@ index 3bce4ffd..5cb26510 100644
          shaderStage = this.shaderStage,
      ) {
          let snippet = null;
-@@ -695,11 +714,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -678,11 +697,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureBias(
@@ -10243,7 +10249,7 @@ index 3bce4ffd..5cb26510 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -716,7 +735,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -699,7 +718,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -10252,7 +10258,7 @@ index 3bce4ffd..5cb26510 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -805,7 +824,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -788,7 +807,12 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10266,7 +10272,7 @@ index 3bce4ffd..5cb26510 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -940,7 +964,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -919,7 +943,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10275,7 +10281,7 @@ index 3bce4ffd..5cb26510 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1224,8 +1248,8 @@ ${flowData.code}
+@@ -1203,8 +1227,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10286,7 +10292,7 @@ index 3bce4ffd..5cb26510 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1359,8 +1383,8 @@ ${flowData.code}
+@@ -1338,8 +1362,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10297,7 +10303,7 @@ index 3bce4ffd..5cb26510 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1425,7 +1449,7 @@ ${flowData.code}
+@@ -1404,7 +1428,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
