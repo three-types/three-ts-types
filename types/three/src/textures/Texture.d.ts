@@ -407,6 +407,14 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
     userData: Record<string, any>;
 
     /**
+     * This can be used to only update a subregion or specific rows of the texture (for example, just the
+     * first 3 rows). Use the `addUpdateRange()` function to add ranges to this array.
+     *
+     * @type {Array<Object>}
+     */
+    updateRanges: Array<{ start: number; count: number }>;
+
+    /**
      * This starts at `0` and counts how many times {@link needsUpdate | .needsUpdate} is set to `true`.
      * @remarks Expects a `Integer`
      * @defaultValue `0`
@@ -475,6 +483,19 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
      * {@link center | .center}.
      */
     updateMatrix(): void;
+
+    /**
+     * Adds a range of data in the data texture to be updated on the GPU.
+     *
+     * @param {number} start - Position at which to start update.
+     * @param {number} count - The number of components to update.
+     */
+    addUpdateRange(start: number, count: number): void;
+
+    /**
+     * Clears the update ranges.
+     */
+    clearUpdateRanges(): void;
 
     /**
      * Make copy of the texture. Note this is not a "deep copy", the image is shared. Cloning the texture automatically
