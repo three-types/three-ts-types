@@ -1393,31 +1393,6 @@ index 9a14919b..2d52e37b 100644
      link.click();
  }
  
-diff --git a/examples-testing/examples/misc_lookat.ts b/examples-testing/examples/misc_lookat.ts
-index 280b6e2d..be88f897 100644
---- a/examples-testing/examples/misc_lookat.ts
-+++ b/examples-testing/examples/misc_lookat.ts
-@@ -2,9 +2,9 @@ import * as THREE from 'three';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
--let camera, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
- 
--let sphere;
-+let sphere: THREE.Mesh;
- 
- let mouseX = 0,
-     mouseY = 0;
-@@ -64,7 +64,7 @@ function onWindowResize() {
-     renderer.setSize(window.innerWidth, window.innerHeight);
- }
- 
--function onDocumentMouseMove(event) {
-+function onDocumentMouseMove(event: MouseEvent) {
-     mouseX = (event.clientX - windowHalfX) * 10;
-     mouseY = (event.clientY - windowHalfY) * 10;
- }
 diff --git a/examples-testing/examples/misc_uv_tests.ts b/examples-testing/examples/misc_uv_tests.ts
 index 4f782d45..0759cfca 100644
 --- a/examples-testing/examples/misc_uv_tests.ts
@@ -1453,11 +1428,12 @@ index 5cbee326..400763ef 100644
  init();
  
 diff --git a/examples-testing/examples/physics_jolt_instancing.ts b/examples-testing/examples/physics_jolt_instancing.ts
-index cdda64d9..f8abbbcb 100644
+index f761e4a1..e102f557 100644
 --- a/examples-testing/examples/physics_jolt_instancing.ts
 +++ b/examples-testing/examples/physics_jolt_instancing.ts
 @@ -1,12 +1,12 @@
- import * as THREE from 'three';
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { JoltPhysics } from 'three/addons/physics/JoltPhysics.js';
 +import { JoltPhysics, JoltPhysicsObject } from 'three/addons/physics/JoltPhysics.js';
@@ -1465,7 +1441,7 @@ index cdda64d9..f8abbbcb 100644
  
 -let camera, scene, renderer, stats;
 -let physics, position;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
 +let physics: JoltPhysicsObject, position: THREE.Vector3;
  
 -let boxes, spheres;
@@ -4251,35 +4227,6 @@ index 572601ac..136a3141 100644
  
  init();
  
-diff --git a/examples-testing/examples/webgl_geometry_dynamic.ts b/examples-testing/examples/webgl_geometry_dynamic.ts
-index bc2df96c..5f5ef696 100644
---- a/examples-testing/examples/webgl_geometry_dynamic.ts
-+++ b/examples-testing/examples/webgl_geometry_dynamic.ts
-@@ -5,9 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
- import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
- import { Timer } from 'three/addons/misc/Timer.js';
- 
--let camera, controls, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera,
-+    controls: FirstPersonControls,
-+    scene: THREE.Scene,
-+    renderer: THREE.WebGLRenderer,
-+    stats: Stats;
- 
--let mesh, geometry, material, timer;
-+let mesh: THREE.Mesh, geometry: THREE.PlaneGeometry, material: THREE.MeshBasicMaterial, timer: Timer;
- 
- const worldWidth = 128,
-     worldDepth = 128;
-@@ -28,7 +32,7 @@ function init() {
-     geometry = new THREE.PlaneGeometry(20000, 20000, worldWidth - 1, worldDepth - 1);
-     geometry.rotateX(-Math.PI / 2);
- 
--    const position = geometry.attributes.position;
-+    const position = geometry.attributes.position as THREE.BufferAttribute;
-     position.usage = THREE.DynamicDrawUsage;
- 
-     for (let i = 0; i < position.count; i++) {
 diff --git a/examples-testing/examples/webgl_geometry_extrude_shapes.ts b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 index ffcbc8d6..d7bb7dd5 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_shapes.ts
@@ -5589,21 +5536,41 @@ index a8c3b977..09ad778d 100644
          line.material.opacity = 0.25;
          line.material.transparent = true;
 diff --git a/examples-testing/examples/webgl_instancing_dynamic.ts b/examples-testing/examples/webgl_instancing_dynamic.ts
-index 88562fc5..a8b1e2d0 100644
+index ec28e1ed..a4bd3366 100644
 --- a/examples-testing/examples/webgl_instancing_dynamic.ts
 +++ b/examples-testing/examples/webgl_instancing_dynamic.ts
-@@ -3,9 +3,9 @@ import * as THREE from 'three';
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,15 +4,19 @@ import { Timer } from 'three/addons/misc/Timer.js';
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import TWEEN from 'three/addons/libs/tween.module.js';
  
--let camera, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+-let camera, scene, renderer, timer, mesh;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    timer: Timer,
++    mesh: THREE.InstancedMesh;
  
--let mesh;
-+let mesh: THREE.InstancedMesh;
- const amount = parseInt(window.location.search.slice(1)) || 10;
- const count = Math.pow(amount, 3);
+ const amount = 100;
+ 
+ const count = Math.pow(amount, 2);
  const dummy = new THREE.Object3D();
+ 
+-const seeds = [];
+-const baseColors = [];
++const seeds: number[] = [];
++const baseColors: number[] = [];
+ 
+ const color = new THREE.Color();
+ const colors = [new THREE.Color(0x00ffff), new THREE.Color(0xffff00), new THREE.Color(0xff00ff)];
+@@ -168,7 +172,7 @@ function animate() {
+     }
+ 
+     mesh.instanceMatrix.needsUpdate = true;
+-    if (animation.t > 0) mesh.instanceColor.needsUpdate = true;
++    if (animation.t > 0) mesh.instanceColor!.needsUpdate = true;
+ 
+     mesh.computeBoundingSphere();
+ 
 diff --git a/examples-testing/examples/webgl_instancing_morph.ts b/examples-testing/examples/webgl_instancing_morph.ts
 index 8686a75b..fb76abe3 100644
 --- a/examples-testing/examples/webgl_instancing_morph.ts
@@ -7042,7 +7009,7 @@ index c9947c69..69bf22b4 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 3b157a22..af4de6ac 100644
+index 249e90bf..f16bed7d 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -7062,7 +7029,7 @@ index 3b157a22..af4de6ac 100644
  
  const clock = new THREE.Clock();
  
-@@ -89,19 +95,22 @@ function init() {
+@@ -89,23 +95,26 @@ function init() {
      guiMorphsFolder = gui.addFolder('Morphs').hide();
  }
  
@@ -7071,18 +7038,23 @@ index 3b157a22..af4de6ac 100644
      loader.load('models/fbx/' + asset + '.fbx', function (group) {
          if (object) {
              object.traverse(function (child) {
+-                if (child.isSkinnedMesh) {
+-                    child.skeleton.dispose();
++                if ((child as THREE.SkinnedMesh).isSkinnedMesh) {
++                    (child as THREE.SkinnedMesh).skeleton.dispose();
+                 }
+ 
 -                if (child.material) {
 -                    const materials = Array.isArray(child.material) ? child.material : [child.material];
 +                if ((child as THREE.Mesh).material) {
 +                    const materials = Array.isArray((child as THREE.Mesh).material)
 +                        ? (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material[]>).material
-+                        : [(child as THREE.Mesh).material];
++                        : [(child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material];
                      materials.forEach(material => {
 -                        if (material.map) material.map.dispose();
--                        material.dispose();
 +                        if ((material as THREE.MeshPhongMaterial).map)
 +                            (material as THREE.MeshPhongMaterial).map!.dispose();
-+                        (material as THREE.MeshPhongMaterial).dispose();
+                         material.dispose();
                      });
                  }
  
@@ -7091,7 +7063,7 @@ index 3b157a22..af4de6ac 100644
              });
  
              scene.remove(object);
-@@ -124,15 +133,21 @@ function loadAsset(asset) {
+@@ -128,15 +137,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
@@ -7461,7 +7433,7 @@ index 4308aee7..f27d82d9 100644
              const percentComplete = (xhr.loaded / xhr.total) * 100;
              console.log(percentComplete.toFixed(2) + '% downloaded');
 diff --git a/examples-testing/examples/webgl_loader_pcd.ts b/examples-testing/examples/webgl_loader_pcd.ts
-index d69e3fa2..312ad67c 100644
+index dd0f0b0f..e47005a8 100644
 --- a/examples-testing/examples/webgl_loader_pcd.ts
 +++ b/examples-testing/examples/webgl_loader_pcd.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7473,6 +7445,15 @@ index d69e3fa2..312ad67c 100644
  
  init();
  render();
+@@ -30,7 +30,7 @@ function init() {
+ 
+     const loader = new PCDLoader();
+ 
+-    const loadPointCloud = function (file) {
++    const loadPointCloud = function (file: string) {
+         loader.load('./models/pcd/' + file, function (points) {
+             points.geometry.center();
+             points.geometry.rotateX(Math.PI);
 diff --git a/examples-testing/examples/webgl_loader_pdb.ts b/examples-testing/examples/webgl_loader_pdb.ts
 index b560efa7..9882dff5 100644
 --- a/examples-testing/examples/webgl_loader_pdb.ts
@@ -8283,28 +8264,28 @@ index 07244742..62111971 100644
          material.blendEquation = value;
      }
 diff --git a/examples-testing/examples/webgl_materials_bumpmap.ts b/examples-testing/examples/webgl_materials_bumpmap.ts
-index d954fab7..73947a37 100644
+index a09c2157..00fe46b6 100644
 --- a/examples-testing/examples/webgl_materials_bumpmap.ts
 +++ b/examples-testing/examples/webgl_materials_bumpmap.ts
-@@ -4,13 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
- 
+@@ -5,13 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
--let container, stats, loader;
-+let container: HTMLDivElement, stats: Stats, loader: GLTFLoader;
+-let container, loader;
++let container: HTMLDivElement, loader: GLTFLoader;
  
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
  
 -let mesh;
-+let mesh: THREE.Mesh;
++let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>;
  
 -let spotLight;
 +let spotLight: THREE.SpotLight;
  
- let mouseX = 0;
- let mouseY = 0;
-@@ -71,7 +71,7 @@ function init() {
+ const params = {
+     enableBumpMap: true,
+@@ -67,7 +67,7 @@ function init() {
  
      loader = new GLTFLoader();
      loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
@@ -8313,24 +8294,15 @@ index d954fab7..73947a37 100644
      });
  
      renderer = new THREE.WebGLRenderer({ antialias: true });
-@@ -93,7 +93,7 @@ function init() {
-     window.addEventListener('resize', onWindowResize);
+@@ -104,7 +104,7 @@ function init() {
+     controls.enableDamping = true;
  }
  
 -function createScene(geometry, scale, material) {
-+function createScene(geometry: THREE.BufferGeometry, scale: number, material: THREE.Material) {
++function createScene(geometry: THREE.BufferGeometry, scale: number, material: THREE.MeshPhongMaterial) {
      mesh = new THREE.Mesh(geometry, material);
  
      mesh.position.y = -0.5;
-@@ -114,7 +114,7 @@ function onWindowResize() {
-     camera.updateProjectionMatrix();
- }
- 
--function onDocumentMouseMove(event) {
-+function onDocumentMouseMove(event: MouseEvent) {
-     mouseX = event.clientX - windowHalfX;
-     mouseY = event.clientY - windowHalfY;
- }
 diff --git a/examples-testing/examples/webgl_materials_car.ts b/examples-testing/examples/webgl_materials_car.ts
 index e810f7b7..5f71ea26 100644
 --- a/examples-testing/examples/webgl_materials_car.ts
@@ -9456,11 +9428,12 @@ index 48480d10..97a81a97 100644
  }
  
 diff --git a/examples-testing/examples/webgl_math_orientation_transform.ts b/examples-testing/examples/webgl_math_orientation_transform.ts
-index 99be247d..2ff2bca4 100644
+index 2ae30cae..9a48421f 100644
 --- a/examples-testing/examples/webgl_math_orientation_transform.ts
 +++ b/examples-testing/examples/webgl_math_orientation_transform.ts
-@@ -1,6 +1,10 @@
- import * as THREE from 'three';
+@@ -2,7 +2,11 @@ import * as THREE from 'three';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, mesh, target;
 +let camera: THREE.PerspectiveCamera,
@@ -13216,19 +13189,20 @@ index 58615db8..1ae4e437 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_tonemapping.ts b/examples-testing/examples/webgl_tonemapping.ts
-index 9945826c..db817304 100644
+index 06ea9ab6..51c0af9b 100644
 --- a/examples-testing/examples/webgl_tonemapping.ts
 +++ b/examples-testing/examples/webgl_tonemapping.ts
-@@ -1,22 +1,35 @@
+@@ -1,23 +1,32 @@
  import * as THREE from 'three';
  
 -import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 +import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
--let mesh, renderer, scene, camera, controls;
+-let renderer, scene, camera, controls;
 -let gui,
 -    guiExposure = null;
 +type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral' | 'Custom';
@@ -13241,17 +13215,13 @@ index 9945826c..db817304 100644
 +    intensity: number;
 +}
 +
-+let mesh: THREE.Object3D,
-+    renderer: THREE.WebGLRenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    controls: OrbitControls;
++let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
 +let gui: GUI,
 +    guiExposure: NumberController<Params, 'exposure'> | null = null;
 +
 +const params: Params = {
      exposure: 1.0,
-     toneMapping: 'AgX',
+     toneMapping: 'Neutral',
      blurriness: 0.3,
      intensity: 1.0,
  };
@@ -13261,16 +13231,7 @@ index 9945826c..db817304 100644
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -88,7 +101,7 @@ async function init() {
- 
-     // model
- 
--    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514');
-+    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514')!;
-     scene.add(mesh);
- 
-     render();
-@@ -99,7 +112,7 @@ async function init() {
+@@ -112,11 +121,11 @@ async function init() {
      const toneMappingFolder = gui.addFolder('Tone Mapping');
  
      toneMappingFolder
@@ -13279,12 +13240,22 @@ index 9945826c..db817304 100644
  
          .name('type')
          .onChange(function () {
-@@ -140,11 +153,11 @@ async function init() {
+-            updateGUI(toneMappingFolder);
++            updateGUI();
+ 
+             renderer.toneMapping = toneMappingOptions[params.toneMapping];
+         });
+@@ -144,16 +153,16 @@ async function init() {
+             scene.backgroundIntensity = value;
+         });
+ 
+-    updateGUI(toneMappingFolder);
++    updateGUI();
+ 
      gui.open();
  }
  
--function updateGUI(folder) {
-+function updateGUI(folder: GUI) {
+ function updateGUI() {
      if (params.toneMapping === 'None') {
 -        guiExposure.hide();
 +        guiExposure!.hide();
@@ -18365,10 +18336,10 @@ index e8ebe87d..bc6886f0 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
-index 07fb8d27..ea32b4d6 100644
+index 0a836b80..5c24f347 100644
 --- a/examples-testing/examples/webgpu_tonemapping.ts
 +++ b/examples-testing/examples/webgpu_tonemapping.ts
-@@ -1,22 +1,35 @@
+@@ -1,23 +1,32 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
@@ -18376,51 +18347,39 @@ index 07fb8d27..ea32b4d6 100644
 +import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
--let mesh, renderer, scene, camera, controls;
+-let renderer, scene, camera, controls;
 -let gui,
 -    guiExposure = null;
-+let mesh: THREE.Object3D,
-+    renderer: THREE.WebGPURenderer,
-+    scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    controls: OrbitControls;
-+let gui: GUI,
-+    guiExposure: NumberController<Params, 'exposure'> | null = null;
-+
 +type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral';
-+
+ 
+-const params = {
 +interface Params {
 +    exposure: number;
 +    toneMapping: ToneMapping;
 +    blurriness: number;
 +    intensity: number;
 +}
- 
--const params = {
++
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
++let gui: GUI,
++    guiExposure: NumberController<Params, 'exposure'> | null = null;
++
 +const params: Params = {
      exposure: 1.0,
-     toneMapping: 'AgX',
+     toneMapping: 'Neutral',
      blurriness: 0.3,
      intensity: 1.0,
  };
  
 -const toneMappingOptions = {
-+const toneMappingOptions: { [Key in ToneMapping]: THREE.ToneMapping } = {
++const toneMappingOptions: { [K in ToneMapping]: THREE.ToneMapping } = {
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -70,7 +83,7 @@ async function init() {
- 
-     // model
- 
--    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514');
-+    mesh = gltf.scene.getObjectByName('node_damagedHelmet_-6514')!;
-     scene.add(mesh);
- 
-     window.addEventListener('resize', onWindowResize);
-@@ -79,7 +92,7 @@ async function init() {
+@@ -94,11 +103,11 @@ async function init() {
      const toneMappingFolder = gui.addFolder('Tone Mapping');
  
      toneMappingFolder
@@ -18429,12 +18388,22 @@ index 07fb8d27..ea32b4d6 100644
  
          .name('type')
          .onChange(function () {
-@@ -116,11 +129,11 @@ async function init() {
+-            updateGUI(toneMappingFolder);
++            updateGUI();
+ 
+             renderer.toneMapping = toneMappingOptions[params.toneMapping];
+         });
+@@ -126,16 +135,16 @@ async function init() {
+             scene.backgroundIntensity = value;
+         });
+ 
+-    updateGUI(toneMappingFolder);
++    updateGUI();
+ 
      gui.open();
  }
  
--function updateGUI(folder) {
-+function updateGUI(folder: GUI) {
+ function updateGUI() {
      if (params.toneMapping === 'None') {
 -        guiExposure.hide();
 +        guiExposure!.hide();
