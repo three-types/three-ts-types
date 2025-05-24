@@ -67,7 +67,6 @@ export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> exten
      * The number of instances of this sprite.
      * Can only be used with {@link WebGPURenderer}.
      *
-     * @type {number}
      * @default 1
      */
     count: number;

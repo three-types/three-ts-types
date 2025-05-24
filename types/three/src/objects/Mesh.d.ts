@@ -80,7 +80,6 @@ export class Mesh<
      * The number of instances of this mesh.
      * Can only be used with {@link WebGPURenderer}.
      *
-     * @type {number}
      * @default 1
      */
     count: number;
