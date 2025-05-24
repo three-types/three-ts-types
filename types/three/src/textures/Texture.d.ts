@@ -409,8 +409,6 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
     /**
      * This can be used to only update a subregion or specific rows of the texture (for example, just the
      * first 3 rows). Use the `addUpdateRange()` function to add ranges to this array.
-     *
-     * @type {Array<Object>}
      */
     updateRanges: Array<{ start: number; count: number }>;
 
