@@ -6241,7 +6241,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 90ca3bb9..c38772a7 100644
+index 19eae9c5..7c7ebb0c 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7012,7 +7012,7 @@ index 90ca3bb9..c38772a7 100644
          this._outputRenderTarget = renderTarget;
      }
  
-@@ -2083,7 +2292,19 @@ class Renderer {
+@@ -2096,7 +2305,19 @@ class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -7033,7 +7033,7 @@ index 90ca3bb9..c38772a7 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -2103,7 +2324,7 @@ class Renderer {
+@@ -2116,7 +2337,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -7042,7 +7042,7 @@ index 90ca3bb9..c38772a7 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -2116,7 +2337,7 @@ class Renderer {
+@@ -2129,7 +2350,7 @@ class Renderer {
  
          //
  
@@ -7051,7 +7051,7 @@ index 90ca3bb9..c38772a7 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -2131,9 +2352,9 @@ class Renderer {
+@@ -2144,9 +2365,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -7064,7 +7064,7 @@ index 90ca3bb9..c38772a7 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2189,7 +2410,7 @@ class Renderer {
+@@ -2202,7 +2423,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -7073,7 +7073,7 @@ index 90ca3bb9..c38772a7 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes);
-@@ -2202,13 +2423,13 @@ class Renderer {
+@@ -2215,13 +2436,13 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -7089,7 +7089,7 @@ index 90ca3bb9..c38772a7 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
-@@ -2221,7 +2442,7 @@ class Renderer {
+@@ -2234,7 +2455,7 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {boolean} Whether the feature is supported or not.
       */
@@ -7098,7 +7098,7 @@ index 90ca3bb9..c38772a7 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2250,10 +2471,10 @@ class Renderer {
+@@ -2263,10 +2484,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -7111,7 +7111,7 @@ index 90ca3bb9..c38772a7 100644
      }
  
      /**
-@@ -2264,14 +2485,14 @@ class Renderer {
+@@ -2277,14 +2498,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -7128,7 +7128,7 @@ index 90ca3bb9..c38772a7 100644
      }
  
      /**
-@@ -2280,7 +2501,7 @@ class Renderer {
+@@ -2293,7 +2514,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?Vector2|Vector4} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -7137,7 +7137,7 @@ index 90ca3bb9..c38772a7 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2331,7 +2552,14 @@ class Renderer {
+@@ -2344,7 +2565,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -7153,7 +7153,7 @@ index 90ca3bb9..c38772a7 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2351,7 +2579,15 @@ class Renderer {
+@@ -2364,7 +2592,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -7170,7 +7170,7 @@ index 90ca3bb9..c38772a7 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2365,49 +2601,63 @@ class Renderer {
+@@ -2378,49 +2614,63 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -7251,7 +7251,7 @@ index 90ca3bb9..c38772a7 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2417,7 +2667,7 @@ class Renderer {
+@@ -2430,7 +2680,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7260,7 +7260,7 @@ index 90ca3bb9..c38772a7 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2442,7 +2692,7 @@ class Renderer {
+@@ -2455,7 +2705,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7269,7 +7269,7 @@ index 90ca3bb9..c38772a7 100644
  
              renderList.begin();
  
-@@ -2470,7 +2720,7 @@ class Renderer {
+@@ -2483,7 +2733,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7278,7 +7278,7 @@ index 90ca3bb9..c38772a7 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2486,7 +2736,13 @@ class Renderer {
+@@ -2499,7 +2749,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7293,7 +7293,7 @@ index 90ca3bb9..c38772a7 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2524,17 +2780,23 @@ class Renderer {
+@@ -2537,17 +2793,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7323,7 +7323,7 @@ index 90ca3bb9..c38772a7 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2556,7 +2818,17 @@ class Renderer {
+@@ -2569,7 +2831,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7342,7 +7342,7 @@ index 90ca3bb9..c38772a7 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2648,14 +2920,23 @@ class Renderer {
+@@ -2661,14 +2933,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7369,7 +7369,7 @@ index 90ca3bb9..c38772a7 100644
              clippingContext,
              passId,
          );
-@@ -2664,18 +2945,18 @@ class Renderer {
+@@ -2677,18 +2958,18 @@ class Renderer {
  
          //
  
@@ -7394,7 +7394,7 @@ index 90ca3bb9..c38772a7 100644
  
          //
  
-@@ -2689,7 +2970,7 @@ class Renderer {
+@@ -2702,7 +2983,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7403,7 +7403,7 @@ index 90ca3bb9..c38772a7 100644
      }
  
      /**
-@@ -2706,14 +2987,23 @@ class Renderer {
+@@ -2719,14 +3000,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7430,7 +7430,7 @@ index 90ca3bb9..c38772a7 100644
              clippingContext,
              passId,
          );
-@@ -2722,16 +3012,16 @@ class Renderer {
+@@ -2735,16 +3025,16 @@ class Renderer {
  
          //
  
@@ -7607,7 +7607,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index ec2853e0..550fceed 100644
+index f330f6e9..52c6ee66 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -9,8 +9,46 @@ import {
@@ -7692,7 +7692,7 @@ index ec2853e0..550fceed 100644
          const renderTargetData = this.get(renderTarget);
  
          const sampleCount = renderTarget.samples === 0 ? 1 : renderTarget.samples;
-@@ -170,7 +215,7 @@ class Textures extends DataMap {
+@@ -171,7 +216,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update.
       * @param {Object} [options={}] - The options.
       */
@@ -7701,7 +7701,7 @@ index ec2853e0..550fceed 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -297,7 +342,7 @@ class Textures extends DataMap {
+@@ -298,7 +343,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -7710,7 +7710,7 @@ index ec2853e0..550fceed 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -305,12 +350,12 @@ class Textures extends DataMap {
+@@ -306,12 +351,12 @@ class Textures extends DataMap {
  
              target.width = image.width || 1;
              target.height = image.height || 1;
@@ -7725,7 +7725,7 @@ index ec2853e0..550fceed 100644
      }
  
      /**
-@@ -321,10 +366,10 @@ class Textures extends DataMap {
+@@ -322,10 +367,10 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7738,7 +7738,7 @@ index ec2853e0..550fceed 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -343,8 +388,8 @@ class Textures extends DataMap {
+@@ -344,8 +389,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -7749,7 +7749,7 @@ index ec2853e0..550fceed 100644
      }
  
      /**
-@@ -353,7 +398,7 @@ class Textures extends DataMap {
+@@ -354,7 +399,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -8201,7 +8201,7 @@ index 93cc042e..5ff6ce79 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index a7e7bb88..39fa5212 100644
+index c0562107..804ba35c 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -26,10 +26,60 @@ import { CylinderGeometry } from '../../geometries/CylinderGeometry.js';
@@ -8421,11 +8421,11 @@ index a7e7bb88..39fa5212 100644
          this._customReferenceSpace = space;
      }
  
-@@ -563,7 +689,16 @@ class XRManager extends EventDispatcher {
-         return this._useMultiview;
-     }
- 
--    createQuadLayer(width, height, translation, quaternion, pixelwidth, pixelheight, rendercall, attributes = []) {
+@@ -578,7 +704,16 @@ class XRManager extends EventDispatcher {
+      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+      * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
+      */
+-    createQuadLayer(width, height, translation, quaternion, pixelwidth, pixelheight, rendercall, attributes = {}) {
 +    createQuadLayer(
 +        width: number,
 +        height: number,
@@ -8439,7 +8439,7 @@ index a7e7bb88..39fa5212 100644
          const geometry = new PlaneGeometry(width, height);
          const renderTarget = new XRRenderTarget(pixelwidth, pixelheight, {
              format: RGBAFormat,
-@@ -593,7 +728,7 @@ class XRManager extends EventDispatcher {
+@@ -608,7 +743,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8448,7 +8448,7 @@ index a7e7bb88..39fa5212 100644
              type: 'quad',
              width: width,
              height: height,
-@@ -618,7 +753,7 @@ class XRManager extends EventDispatcher {
+@@ -633,7 +768,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8457,9 +8457,9 @@ index a7e7bb88..39fa5212 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -629,15 +764,15 @@ class XRManager extends EventDispatcher {
-     }
- 
+@@ -660,15 +795,15 @@ class XRManager extends EventDispatcher {
+      * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
+      */
      createCylinderLayer(
 -        radius,
 -        centralAngle,
@@ -8469,7 +8469,7 @@ index a7e7bb88..39fa5212 100644
 -        pixelwidth,
 -        pixelheight,
 -        rendercall,
--        attributes = [],
+-        attributes = {},
 +        radius: number,
 +        centralAngle: number,
 +        aspectratio: number,
@@ -8482,7 +8482,7 @@ index a7e7bb88..39fa5212 100644
      ) {
          const geometry = new CylinderGeometry(
              radius,
-@@ -677,7 +812,7 @@ class XRManager extends EventDispatcher {
+@@ -708,7 +843,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8491,7 +8491,7 @@ index a7e7bb88..39fa5212 100644
              type: 'cylinder',
              radius: radius,
              centralAngle: centralAngle,
-@@ -703,7 +838,7 @@ class XRManager extends EventDispatcher {
+@@ -734,7 +869,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8500,7 +8500,7 @@ index a7e7bb88..39fa5212 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -731,7 +866,7 @@ class XRManager extends EventDispatcher {
+@@ -768,7 +903,7 @@ class XRManager extends EventDispatcher {
                      layer.plane.getWorldQuaternion(quaternionObject),
                  );
  
@@ -8509,7 +8509,7 @@ index a7e7bb88..39fa5212 100644
                  this._renderer.backend.setXRRenderTargetTextures(
                      layer.renderTarget,
                      glSubImage.colorTexture,
-@@ -765,7 +900,7 @@ class XRManager extends EventDispatcher {
+@@ -802,7 +937,7 @@ class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -8518,7 +8518,7 @@ index a7e7bb88..39fa5212 100644
          const renderer = this._renderer;
          const backend = renderer.backend;
  
-@@ -795,9 +930,9 @@ class XRManager extends EventDispatcher {
+@@ -832,9 +967,9 @@ class XRManager extends EventDispatcher {
              this._currentPixelRatio = renderer.getPixelRatio();
              renderer.getSize(this._currentSize);
  
@@ -8531,7 +8531,7 @@ index a7e7bb88..39fa5212 100644
  
              //
  
-@@ -923,11 +1058,11 @@ class XRManager extends EventDispatcher {
+@@ -960,11 +1095,11 @@ class XRManager extends EventDispatcher {
  
              //
  
@@ -8547,7 +8547,7 @@ index a7e7bb88..39fa5212 100644
  
              this.isPresenting = true;
  
-@@ -942,7 +1077,7 @@ class XRManager extends EventDispatcher {
+@@ -979,7 +1114,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {PerspectiveCamera} camera - The camera.
       */
@@ -8556,7 +8556,7 @@ index a7e7bb88..39fa5212 100644
          const session = this._session;
  
          if (session === null) return;
-@@ -974,7 +1109,7 @@ class XRManager extends EventDispatcher {
+@@ -1011,7 +1146,7 @@ class XRManager extends EventDispatcher {
          cameraR.layers.mask = camera.layers.mask | 0b100;
          cameraXR.layers.mask = cameraL.layers.mask | cameraR.layers.mask;
  
@@ -8565,7 +8565,7 @@ index a7e7bb88..39fa5212 100644
          const cameras = cameraXR.cameras;
  
          updateCamera(cameraXR, parent);
-@@ -1005,7 +1140,7 @@ class XRManager extends EventDispatcher {
+@@ -1042,7 +1177,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The controller index.
       * @return {WebXRController} The XR controller.
       */
@@ -8574,7 +8574,7 @@ index a7e7bb88..39fa5212 100644
          let controller = this._controllers[index];
  
          if (controller === undefined) {
-@@ -1027,7 +1162,7 @@ class XRManager extends EventDispatcher {
+@@ -1064,7 +1199,7 @@ class XRManager extends EventDispatcher {
   * @param {PerspectiveCamera} cameraL - The left camera.
   * @param {PerspectiveCamera} cameraR - The right camera.
   */
@@ -8583,7 +8583,7 @@ index a7e7bb88..39fa5212 100644
      _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
      _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
  
-@@ -1091,7 +1226,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+@@ -1128,7 +1263,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
   * @param {Camera} camera - The camera to update.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8592,7 +8592,7 @@ index a7e7bb88..39fa5212 100644
      if (parent === null) {
          camera.matrixWorld.copy(camera.matrix);
      } else {
-@@ -1109,7 +1244,7 @@ function updateCamera(camera, parent) {
+@@ -1146,7 +1281,7 @@ function updateCamera(camera, parent) {
   * @param {ArrayCamera} cameraXR - The XR camera.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8601,7 +8601,7 @@ index a7e7bb88..39fa5212 100644
      if (parent === null) {
          camera.matrix.copy(cameraXR.matrixWorld);
      } else {
-@@ -1124,13 +1259,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+@@ -1161,13 +1296,14 @@ function updateUserCamera(camera, cameraXR, parent) {
      camera.projectionMatrix.copy(cameraXR.projectionMatrix);
      camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
  
@@ -8620,7 +8620,7 @@ index a7e7bb88..39fa5212 100644
      const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
  
      if (controllerIndex === -1) {
-@@ -1140,15 +1276,15 @@ function onSessionEvent(event) {
+@@ -1177,15 +1313,15 @@ function onSessionEvent(event) {
      const controller = this._controllers[controllerIndex];
  
      if (controller !== undefined) {
@@ -8639,16 +8639,15 @@ index a7e7bb88..39fa5212 100644
      const renderer = this._renderer;
  
      session.removeEventListener('select', this._onSessionEvent);
-@@ -1219,19 +1355,19 @@ function onSessionEnd() {
+@@ -1256,18 +1392,18 @@ function onSessionEnd() {
      this.isPresenting = false;
      this._useMultiview = false;
  
 -    renderer._animation.stop();
-+    renderer._animation!.stop();
- 
 -    renderer._animation.setAnimationLoop(this._currentAnimationLoop);
 -    renderer._animation.setContext(this._currentAnimationContext);
 -    renderer._animation.start();
++    renderer._animation!.stop();
 +    renderer._animation!.setAnimationLoop(this._currentAnimationLoop);
 +    renderer._animation!.setContext(this._currentAnimationContext!);
 +    renderer._animation!.start();
@@ -8665,7 +8664,7 @@ index a7e7bb88..39fa5212 100644
      const controllers = this._controllers;
      const controllerInputSources = this._controllerInputSources;
  
-@@ -1283,25 +1419,25 @@ function onInputSourcesChange(event) {
+@@ -1319,25 +1455,25 @@ function onInputSourcesChange(event) {
  }
  
  // Creation method for native WebXR layers
@@ -8698,7 +8697,7 @@ index a7e7bb88..39fa5212 100644
              viewPixelWidth: layer.pixelwidth,
              viewPixelHeight: layer.pixelheight,
          });
-@@ -1310,7 +1446,7 @@ function createXRLayer(layer) {
+@@ -1346,7 +1482,7 @@ function createXRLayer(layer) {
  
  // Animation Loop
  
@@ -8707,7 +8706,7 @@ index a7e7bb88..39fa5212 100644
      if (frame === undefined) return;
  
      const cameraXR = this._cameraXR;
-@@ -1319,16 +1455,16 @@ function onAnimationFrame(time, frame) {
+@@ -1355,16 +1491,16 @@ function onAnimationFrame(time, frame) {
  
      const glBaseLayer = this._glBaseLayer;
  
@@ -8727,7 +8726,7 @@ index a7e7bb88..39fa5212 100644
          }
  
          let cameraXRNeedsUpdate = false;
-@@ -1346,7 +1482,7 @@ function onAnimationFrame(time, frame) {
+@@ -1382,7 +1518,7 @@ function onAnimationFrame(time, frame) {
              let viewport;
  
              if (this._useLayers === true) {
@@ -8736,7 +8735,7 @@ index a7e7bb88..39fa5212 100644
                  viewport = glSubImage.viewport;
  
                  // For side-by-side projection, we only produce a single texture for both eyes.
-@@ -1354,13 +1490,13 @@ function onAnimationFrame(time, frame) {
+@@ -1390,13 +1526,13 @@ function onAnimationFrame(time, frame) {
                      backend.setXRRenderTargetTextures(
                          this._xrRenderTarget,
                          glSubImage.colorTexture,
@@ -8752,7 +8751,7 @@ index a7e7bb88..39fa5212 100644
              }
  
              let camera = this._cameras[i];
-@@ -1376,7 +1512,7 @@ function onAnimationFrame(time, frame) {
+@@ -1412,7 +1548,7 @@ function onAnimationFrame(time, frame) {
              camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
              camera.projectionMatrix.fromArray(view.projectionMatrix);
              camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
@@ -9205,7 +9204,7 @@ index 19a8dd2a..26f39bf2 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index a3d9ca3b..11647adb 100644
+index d5f60879..37f47e7c 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -17,6 +17,7 @@ import {
@@ -9424,7 +9423,7 @@ index a3d9ca3b..11647adb 100644
  
          if (cacheKeyData.callId !== callId) {
              const environmentNode = this.getEnvironmentNode(scene);
-@@ -376,7 +440,7 @@ class Nodes extends DataMap {
+@@ -379,7 +443,7 @@ class Nodes extends DataMap {
              cacheKeyData.callId = callId;
              cacheKeyData.cacheKey = hashArray(_cacheKeyValues);
  
@@ -9433,7 +9432,7 @@ index a3d9ca3b..11647adb 100644
  
              _cacheKeyValues.length = 0;
          }
-@@ -402,7 +466,7 @@ class Nodes extends DataMap {
+@@ -405,7 +469,7 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9442,7 +9441,7 @@ index a3d9ca3b..11647adb 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -417,7 +481,7 @@ class Nodes extends DataMap {
+@@ -420,7 +484,7 @@ class Nodes extends DataMap {
                      background,
                      () => {
                          if (
@@ -9451,7 +9450,7 @@ index a3d9ca3b..11647adb 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -427,18 +491,18 @@ class Nodes extends DataMap {
+@@ -430,18 +494,18 @@ class Nodes extends DataMap {
                              } else {
                                  let envMap;
  
@@ -9476,7 +9475,7 @@ index a3d9ca3b..11647adb 100644
                          }
                      },
                      forceUpdate,
-@@ -464,7 +528,12 @@ class Nodes extends DataMap {
+@@ -467,7 +531,12 @@ class Nodes extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -9490,7 +9489,7 @@ index a3d9ca3b..11647adb 100644
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -483,22 +552,22 @@ class Nodes extends DataMap {
+@@ -486,22 +555,22 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9521,7 +9520,7 @@ index a3d9ca3b..11647adb 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -521,14 +590,14 @@ class Nodes extends DataMap {
+@@ -524,14 +593,14 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9538,7 +9537,7 @@ index a3d9ca3b..11647adb 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -546,7 +615,13 @@ class Nodes extends DataMap {
+@@ -549,7 +618,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -9553,7 +9552,7 @@ index a3d9ca3b..11647adb 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -557,7 +632,7 @@ class Nodes extends DataMap {
+@@ -560,7 +635,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -9562,7 +9561,7 @@ index a3d9ca3b..11647adb 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -585,7 +660,7 @@ class Nodes extends DataMap {
+@@ -588,7 +663,7 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {boolean} Whether the output configuration has changed or not.
       */
@@ -9571,7 +9570,7 @@ index a3d9ca3b..11647adb 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -598,11 +673,11 @@ class Nodes extends DataMap {
+@@ -601,11 +676,11 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -9585,7 +9584,7 @@ index a3d9ca3b..11647adb 100644
              ? texture3D(outputTarget, vec3(screenUV, builtin('gl_ViewID_OVR'))).renderOutput(
                    renderer.toneMapping,
                    renderer.currentColorSpace,
-@@ -620,7 +695,7 @@ class Nodes extends DataMap {
+@@ -623,7 +698,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -9594,7 +9593,7 @@ index a3d9ca3b..11647adb 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -636,7 +711,7 @@ class Nodes extends DataMap {
+@@ -639,7 +714,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -9603,7 +9602,7 @@ index a3d9ca3b..11647adb 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -652,7 +727,7 @@ class Nodes extends DataMap {
+@@ -655,7 +730,7 @@ class Nodes extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -9612,7 +9611,7 @@ index a3d9ca3b..11647adb 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -667,7 +742,7 @@ class Nodes extends DataMap {
+@@ -670,7 +745,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -9621,7 +9620,7 @@ index a3d9ca3b..11647adb 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -682,7 +757,7 @@ class Nodes extends DataMap {
+@@ -685,7 +760,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
