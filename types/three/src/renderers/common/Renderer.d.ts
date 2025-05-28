@@ -677,6 +677,10 @@ declare class Renderer {
      */
     getOutputRenderTarget(): RenderTarget<Texture> | null;
     /**
+     * Resets the renderer to the initial state before WebXR started.
+     */
+    _resetXRState(): void;
+    /**
      * Callback for {@link Renderer#setRenderObjectFunction}.
      *
      * @callback renderObjectFunction
