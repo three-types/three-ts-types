@@ -7009,7 +7009,7 @@ index c9947c69..69bf22b4 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 249e90bf..f16bed7d 100644
+index 0c854125..095e78c9 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -14737,7 +14737,7 @@ index 2558f16b..8f914967 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_layers.ts b/examples-testing/examples/webgpu_layers.ts
-index cd065e39..981b1466 100644
+index 22d260da..d5bf39e6 100644
 --- a/examples-testing/examples/webgpu_layers.ts
 +++ b/examples-testing/examples/webgpu_layers.ts
 @@ -1,10 +1,10 @@
@@ -14753,7 +14753,7 @@ index cd065e39..981b1466 100644
  
  init();
  
-@@ -83,7 +83,7 @@ function init() {
+@@ -81,7 +81,7 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -15750,7 +15750,7 @@ index 2e466f0c..c3218846 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
-index 616645aa..288f6e84 100644
+index 5d3bc28d..e0765c70 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
 +++ b/examples-testing/examples/webgpu_materials_lightmap.ts
 @@ -1,12 +1,12 @@
@@ -15758,17 +15758,26 @@ index 616645aa..288f6e84 100644
 +import * as THREE from 'three/webgpu';
  import { vec4, color, positionLocal, mix } from 'three/tsl';
  
- import Stats from 'three/addons/libs/stats.module.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
--let container, stats;
+-let container;
 -let camera, scene, renderer;
-+let container: HTMLDivElement, stats: Stats;
++let container: HTMLDivElement;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
- init();
- 
+ const params = {
+     intensity: 1,
+@@ -80,7 +80,7 @@ async function init() {
+     gui.add(params, 'intensity', 0, 1)
+         .name('Light Map Intensity')
+         .onChange(value => {
+-            for (const material of object.material) {
++            for (const material of (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial[]>).material) {
+                 material.lightMapIntensity = value;
+             }
+         });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
 index d19b1196..267d0cc5 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
