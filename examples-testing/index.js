@@ -47,7 +47,7 @@ const exceptionList = [
     'webgpu_backdrop',
     'webgpu_backdrop_water',
     'webgpu_compute_birds',
-    'webgpu_compute_cloud',
+    'webgpu_compute_cloth',
     'webgpu_compute_geometry',
     'webgpu_compute_particles',
     'webgpu_compute_particles_rain',
