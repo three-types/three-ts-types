@@ -1,6 +1,7 @@
 import {
     AnyMapping,
     AnyPixelFormat,
+    ColorSpace,
     MagnificationTextureFilter,
     Mapping,
     MinificationTextureFilter,
@@ -16,6 +17,32 @@ import { Vector2 } from "../math/Vector2.js";
 import { CompressedTextureMipmap } from "./CompressedTexture.js";
 import { CubeTexture } from "./CubeTexture.js";
 import { Source } from "./Source.js";
+
+// NOTE: DOM upload fields are not implemented where parameters are accepted.
+export interface TextureParameters {
+    mapping: AnyMapping | undefined;
+    // image: TexImageSource | OffscreenCanvas | undefined;
+    // channel: number | undefined;
+
+    wrapS: Wrapping | undefined;
+    wrapT: Wrapping | undefined;
+    wrapR: Wrapping | undefined;
+
+    format: PixelFormat | undefined;
+    internalFormat: PixelFormatGPU | null | undefined;
+    type: TextureDataType | undefined;
+    colorSpace: ColorSpace | undefined;
+
+    magFilter: MinificationTextureFilter | undefined;
+    minFilter: MagnificationTextureFilter | undefined;
+    anisotropy: number | undefined;
+
+    flipY: boolean | undefined;
+
+    generateMipmaps: boolean | undefined;
+    // premultiplyAlpha: boolean | undefined;
+    // unpackAlignment: number | undefined;
+}
 
 export interface TextureJSON {
     metadata: { version: number; type: string; generator: string };
@@ -99,7 +126,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
         format?: PixelFormat,
         type?: TextureDataType,
         anisotropy?: number,
-        colorSpace?: string,
+        colorSpace?: ColorSpace,
     );
 
     /**
@@ -502,6 +529,12 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
     clone(): this;
 
     copy(source: Texture): this;
+
+    /**
+     * Sets this texture's properties based on `values`.
+	 * @param {Object} values - A container with texture parameters.
+     */
+    setValues(values: TextureParameters): void;
 
     /**
      * Convert the texture to three.js {@link https://github.com/mrdoob/three.js/wiki/JSON-Object-Scene-format-4 | JSON Object/Scene format}.
