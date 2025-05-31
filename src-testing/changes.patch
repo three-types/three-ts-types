@@ -3306,7 +3306,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 1bccd788..ce2fb206 100644
+index 8e147f1f..95b38ab0 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -6249,7 +6249,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 19eae9c5..7c7ebb0c 100644
+index 7b2f3e50..d5d4e367 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -6494,7 +6494,7 @@ index 19eae9c5..7c7ebb0c 100644
          /**
           * This flag can be used for type testing.
           *
-@@ -721,12 +928,12 @@ class Renderer {
+@@ -723,12 +930,12 @@ class Renderer {
              getShaderAsync: async (scene, camera, object) => {
                  await this.compileAsync(scene, camera);
  
@@ -6511,7 +6511,7 @@ index 19eae9c5..7c7ebb0c 100644
                      object,
                      material,
                      scene,
-@@ -758,7 +965,7 @@ class Renderer {
+@@ -760,7 +967,7 @@ class Renderer {
              return this._initPromise;
          }
  
@@ -6520,7 +6520,7 @@ index 19eae9c5..7c7ebb0c 100644
              let backend = this.backend;
  
              try {
-@@ -845,14 +1052,14 @@ class Renderer {
+@@ -847,14 +1054,14 @@ class Renderer {
       * @param {?Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {Promise<Array|undefined>} A Promise that resolves when the compile has been finished.
       */
@@ -6537,7 +6537,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -861,15 +1068,15 @@ class Renderer {
+@@ -863,15 +1070,15 @@ class Renderer {
  
          //
  
@@ -6556,7 +6556,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this.renderObject;
-@@ -898,7 +1105,7 @@ class Renderer {
+@@ -900,7 +1107,7 @@ class Renderer {
  
          //
  
@@ -6565,7 +6565,7 @@ index 19eae9c5..7c7ebb0c 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -906,8 +1113,8 @@ class Renderer {
+@@ -908,8 +1115,8 @@ class Renderer {
          // include lights from target scene
          if (targetScene !== scene) {
              targetScene.traverseVisible(function (object) {
@@ -6576,7 +6576,7 @@ index 19eae9c5..7c7ebb0c 100644
                  }
              });
          }
-@@ -917,12 +1124,12 @@ class Renderer {
+@@ -919,12 +1126,12 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6593,7 +6593,7 @@ index 19eae9c5..7c7ebb0c 100644
          } else {
              renderContext.textures = null;
              renderContext.depthTexture = null;
-@@ -930,7 +1137,7 @@ class Renderer {
+@@ -932,7 +1139,7 @@ class Renderer {
  
          //
  
@@ -6602,7 +6602,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          // process render lists
  
-@@ -967,7 +1174,7 @@ class Renderer {
+@@ -969,7 +1176,7 @@ class Renderer {
       * @param {Camera} camera - The camera.
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
@@ -6611,7 +6611,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._initialized === false) await this.init();
  
          this._renderScene(scene, camera);
-@@ -993,7 +1200,7 @@ class Renderer {
+@@ -995,7 +1202,7 @@ class Renderer {
       * @param {boolean} value - Whether to enable or disable high precision.
       * @type {boolean}
       */
@@ -6620,7 +6620,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (value === true) {
              this.overrideNodes.modelViewMatrix = highpModelViewMatrix;
              this.overrideNodes.modelNormalViewMatrix = highpModelNormalViewMatrix;
-@@ -1022,7 +1229,7 @@ class Renderer {
+@@ -1024,7 +1231,7 @@ class Renderer {
       * @param {MRTNode} mrt - The MRT node to set.
       * @return {Renderer} A reference to this renderer.
       */
@@ -6629,7 +6629,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._mrt = mrt;
  
          return this;
-@@ -1052,7 +1259,7 @@ class Renderer {
+@@ -1054,7 +1261,7 @@ class Renderer {
       * @private
       * @param {Object} info - Information about the context lost.
       */
@@ -6638,7 +6638,7 @@ index 19eae9c5..7c7ebb0c 100644
          let errorMessage = `THREE.WebGPURenderer: ${info.api} Device Lost:\n\nMessage: ${info.message}`;
  
          if (info.reason) {
-@@ -1072,14 +1279,14 @@ class Renderer {
+@@ -1074,14 +1281,14 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundle belongs to.
       * @param {LightsNode} lightsNode - The lights node.
       */
@@ -6656,7 +6656,7 @@ index 19eae9c5..7c7ebb0c 100644
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -1130,13 +1337,13 @@ class Renderer {
+@@ -1132,13 +1339,13 @@ class Renderer {
              for (let i = 0, l = renderObjects.length; i < l; i++) {
                  const renderObject = renderObjects[i];
  
@@ -6675,7 +6675,7 @@ index 19eae9c5..7c7ebb0c 100644
                  }
              }
          }
-@@ -1156,7 +1363,7 @@ class Renderer {
+@@ -1158,7 +1365,7 @@ class Renderer {
       * @return {?Promise} A Promise that resolve when the scene has been rendered.
       * Only returned when the renderer has not been initialized.
       */
@@ -6684,7 +6684,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
-@@ -1231,14 +1438,14 @@ class Renderer {
+@@ -1235,14 +1442,14 @@ class Renderer {
       * @param {boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
       * @return {RenderContext} The current render context.
       */
@@ -6701,7 +6701,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -1267,7 +1474,7 @@ class Renderer {
+@@ -1271,7 +1478,7 @@ class Renderer {
  
          //
  
@@ -6710,7 +6710,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -1355,7 +1562,7 @@ class Renderer {
+@@ -1359,7 +1566,7 @@ class Renderer {
              frustum.setFromProjectionMatrix(_projScreenMatrix, coordinateSystem);
          }
  
@@ -6719,7 +6719,7 @@ index 19eae9c5..7c7ebb0c 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -1369,14 +1576,14 @@ class Renderer {
+@@ -1373,14 +1580,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -6740,7 +6740,7 @@ index 19eae9c5..7c7ebb0c 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -1397,7 +1604,7 @@ class Renderer {
+@@ -1401,7 +1608,7 @@ class Renderer {
  
          //
  
@@ -6749,7 +6749,16 @@ index 19eae9c5..7c7ebb0c 100644
  
          //
  
-@@ -1454,11 +1661,11 @@ class Renderer {
+@@ -1452,7 +1659,7 @@ class Renderer {
+         return renderContext;
+     }
+ 
+-    _setXRLayerSize(width, height) {
++    _setXRLayerSize(width: number, height: number) {
+         this._width = width;
+         this._height = height;
+ 
+@@ -1467,11 +1674,11 @@ class Renderer {
       * @private
       * @param {RenderTarget} renderTarget - The current render target.
       */
@@ -6764,7 +6773,7 @@ index 19eae9c5..7c7ebb0c 100644
              quad.material.needsUpdate = true;
          }
  
-@@ -1512,10 +1719,10 @@ class Renderer {
+@@ -1525,10 +1732,10 @@ class Renderer {
       * @param {?Function} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -6777,7 +6786,7 @@ index 19eae9c5..7c7ebb0c 100644
      }
  
      /**
-@@ -1526,7 +1733,7 @@ class Renderer {
+@@ -1539,7 +1746,7 @@ class Renderer {
       * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
       * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -6786,7 +6795,7 @@ index 19eae9c5..7c7ebb0c 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -1554,7 +1761,7 @@ class Renderer {
+@@ -1567,7 +1774,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The drawing buffer size.
       */
@@ -6795,7 +6804,7 @@ index 19eae9c5..7c7ebb0c 100644
          return target.set(this._width * this._pixelRatio, this._height * this._pixelRatio).floor();
      }
  
-@@ -1564,7 +1771,7 @@ class Renderer {
+@@ -1577,7 +1784,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The renderer's size in logical pixels.
       */
@@ -6804,7 +6813,7 @@ index 19eae9c5..7c7ebb0c 100644
          return target.set(this._width, this._height);
      }
  
-@@ -1594,10 +1801,9 @@ class Renderer {
+@@ -1607,10 +1814,9 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {number} pixelRatio - The pixel ratio.
       */
@@ -6816,7 +6825,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._width = width;
          this._height = height;
  
-@@ -1618,10 +1824,9 @@ class Renderer {
+@@ -1632,10 +1838,9 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
       */
@@ -6828,7 +6837,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._width = width;
          this._height = height;
  
-@@ -1644,7 +1849,7 @@ class Renderer {
+@@ -1660,7 +1865,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6837,7 +6846,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._opaqueSort = method;
      }
  
-@@ -1654,7 +1859,7 @@ class Renderer {
+@@ -1670,7 +1875,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -6846,7 +6855,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._transparentSort = method;
      }
  
-@@ -1664,7 +1869,7 @@ class Renderer {
+@@ -1680,7 +1885,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The scissor rectangle.
       */
@@ -6855,7 +6864,7 @@ index 19eae9c5..7c7ebb0c 100644
          const scissor = this._scissor;
  
          target.x = scissor.x;
-@@ -1684,13 +1889,15 @@ class Renderer {
+@@ -1700,13 +1905,15 @@ class Renderer {
       * @param {number} width - The width of the scissor box in logical pixel unit.
       * @param {number} height - The height of the scissor box in logical pixel unit.
       */
@@ -6875,7 +6884,7 @@ index 19eae9c5..7c7ebb0c 100644
          }
      }
  
-@@ -1708,7 +1915,7 @@ class Renderer {
+@@ -1724,7 +1931,7 @@ class Renderer {
       *
       * @param {boolean} boolean - Whether the scissor test should be enabled or not.
       */
@@ -6884,7 +6893,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._scissorTest = boolean;
  
          this.backend.setScissorTest(boolean);
-@@ -1720,7 +1927,7 @@ class Renderer {
+@@ -1736,7 +1943,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The viewport definition.
       */
@@ -6893,7 +6902,7 @@ index 19eae9c5..7c7ebb0c 100644
          return target.copy(this._viewport);
      }
  
-@@ -1734,13 +1941,15 @@ class Renderer {
+@@ -1750,13 +1957,15 @@ class Renderer {
       * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
       * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
       */
@@ -6913,7 +6922,7 @@ index 19eae9c5..7c7ebb0c 100644
          }
  
          viewport.minDepth = minDepth;
-@@ -1753,7 +1962,7 @@ class Renderer {
+@@ -1769,7 +1978,7 @@ class Renderer {
       * @param {Color} target - The method writes the result in this target object.
       * @return {Color} The clear color.
       */
@@ -6922,7 +6931,7 @@ index 19eae9c5..7c7ebb0c 100644
          return target.copy(this._clearColor);
      }
  
-@@ -1763,7 +1972,7 @@ class Renderer {
+@@ -1779,7 +1988,7 @@ class Renderer {
       * @param {Color} color - The clear color.
       * @param {number} [alpha=1] - The clear alpha.
       */
@@ -6931,7 +6940,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -1782,7 +1991,7 @@ class Renderer {
+@@ -1798,7 +2007,7 @@ class Renderer {
       *
       * @param {number} alpha - The clear alpha.
       */
@@ -6940,7 +6949,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._clearColor.a = alpha;
      }
  
-@@ -1800,7 +2009,7 @@ class Renderer {
+@@ -1816,7 +2025,7 @@ class Renderer {
       *
       * @param {number} depth - The clear depth.
       */
@@ -6949,7 +6958,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._clearDepth = depth;
      }
  
-@@ -1818,7 +2027,7 @@ class Renderer {
+@@ -1834,7 +2043,7 @@ class Renderer {
       *
       * @param {number} stencil - The clear stencil.
       */
@@ -6958,7 +6967,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._clearStencil = stencil;
      }
  
-@@ -1830,7 +2039,7 @@ class Renderer {
+@@ -1846,7 +2055,7 @@ class Renderer {
       * @param {Object3D} object - The 3D object to test.
       * @return {boolean} Whether the 3D object is fully occluded or not.
       */
@@ -6967,7 +6976,7 @@ index 19eae9c5..7c7ebb0c 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -1859,9 +2068,9 @@ class Renderer {
+@@ -1875,9 +2084,9 @@ class Renderer {
          let renderContext = null;
  
          if (renderTarget !== null) {
@@ -6979,7 +6988,7 @@ index 19eae9c5..7c7ebb0c 100644
  
              renderContext = this._renderContexts.getForClear(renderTarget);
              renderContext.textures = renderTargetData.textures;
-@@ -1996,14 +2205,14 @@ class Renderer {
+@@ -2012,14 +2221,14 @@ class Renderer {
          this.info.dispose();
          this.backend.dispose();
  
@@ -7002,7 +7011,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          if (this._frameBufferTarget !== null) this._frameBufferTarget.dispose();
  
-@@ -2024,7 +2233,7 @@ class Renderer {
+@@ -2040,7 +2249,7 @@ class Renderer {
       * @param {number} [activeCubeFace=0] - The active cube face.
       * @param {number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -7011,7 +7020,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -2044,7 +2253,7 @@ class Renderer {
+@@ -2060,7 +2269,7 @@ class Renderer {
       *
       * @param {Object} renderTarget - The render target to set as the output target.
       */
@@ -7020,7 +7029,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._outputRenderTarget = renderTarget;
      }
  
-@@ -2096,7 +2305,19 @@ class Renderer {
+@@ -2112,7 +2321,19 @@ class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -7041,7 +7050,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -2116,7 +2337,7 @@ class Renderer {
+@@ -2132,7 +2353,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -7050,7 +7059,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -2129,7 +2350,7 @@ class Renderer {
+@@ -2145,7 +2366,7 @@ class Renderer {
  
          //
  
@@ -7059,7 +7068,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -2144,9 +2365,9 @@ class Renderer {
+@@ -2160,9 +2381,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -7072,7 +7081,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2202,7 +2423,7 @@ class Renderer {
+@@ -2218,7 +2439,7 @@ class Renderer {
       * @param {Node|Array<Node>} computeNodes - The compute node(s).
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -7081,7 +7090,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes);
-@@ -2215,13 +2436,13 @@ class Renderer {
+@@ -2231,13 +2452,13 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -7097,7 +7106,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
-@@ -2234,7 +2455,7 @@ class Renderer {
+@@ -2250,7 +2471,7 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {boolean} Whether the feature is supported or not.
       */
@@ -7106,7 +7115,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2263,10 +2484,10 @@ class Renderer {
+@@ -2279,10 +2500,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -7119,7 +7128,7 @@ index 19eae9c5..7c7ebb0c 100644
      }
  
      /**
-@@ -2277,14 +2498,14 @@ class Renderer {
+@@ -2293,14 +2514,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -7136,7 +7145,7 @@ index 19eae9c5..7c7ebb0c 100644
      }
  
      /**
-@@ -2293,7 +2514,7 @@ class Renderer {
+@@ -2309,7 +2530,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?Vector2|Vector4} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -7145,7 +7154,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2344,7 +2565,14 @@ class Renderer {
+@@ -2360,7 +2581,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -7161,7 +7170,7 @@ index 19eae9c5..7c7ebb0c 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2364,7 +2592,15 @@ class Renderer {
+@@ -2380,7 +2608,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -7178,7 +7187,7 @@ index 19eae9c5..7c7ebb0c 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2378,49 +2614,63 @@ class Renderer {
+@@ -2394,49 +2630,63 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -7259,7 +7268,7 @@ index 19eae9c5..7c7ebb0c 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2430,7 +2680,7 @@ class Renderer {
+@@ -2446,7 +2696,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7268,7 +7277,7 @@ index 19eae9c5..7c7ebb0c 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2455,7 +2705,7 @@ class Renderer {
+@@ -2471,7 +2721,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7277,7 +7286,7 @@ index 19eae9c5..7c7ebb0c 100644
  
              renderList.begin();
  
-@@ -2483,7 +2733,7 @@ class Renderer {
+@@ -2499,7 +2749,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7286,7 +7295,7 @@ index 19eae9c5..7c7ebb0c 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2499,7 +2749,13 @@ class Renderer {
+@@ -2515,7 +2765,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7301,7 +7310,7 @@ index 19eae9c5..7c7ebb0c 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2537,17 +2793,23 @@ class Renderer {
+@@ -2553,17 +2809,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7331,7 +7340,7 @@ index 19eae9c5..7c7ebb0c 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2569,7 +2831,17 @@ class Renderer {
+@@ -2585,7 +2847,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7350,7 +7359,7 @@ index 19eae9c5..7c7ebb0c 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2661,14 +2933,23 @@ class Renderer {
+@@ -2677,14 +2949,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7377,7 +7386,7 @@ index 19eae9c5..7c7ebb0c 100644
              clippingContext,
              passId,
          );
-@@ -2677,18 +2958,18 @@ class Renderer {
+@@ -2693,18 +2974,18 @@ class Renderer {
  
          //
  
@@ -7402,7 +7411,7 @@ index 19eae9c5..7c7ebb0c 100644
  
          //
  
-@@ -2702,7 +2983,7 @@ class Renderer {
+@@ -2718,7 +2999,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7411,7 +7420,7 @@ index 19eae9c5..7c7ebb0c 100644
      }
  
      /**
-@@ -2719,14 +3000,23 @@ class Renderer {
+@@ -2735,14 +3016,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7438,7 +7447,7 @@ index 19eae9c5..7c7ebb0c 100644
              clippingContext,
              passId,
          );
-@@ -2735,16 +3025,16 @@ class Renderer {
+@@ -2751,16 +3041,16 @@ class Renderer {
  
          //
  
@@ -8209,10 +8218,10 @@ index be2ca6bd..cf09d1ba 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index 07957179..d6073675 100644
+index 94d317fc..8c3245bd 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
-@@ -26,10 +26,60 @@ import { CylinderGeometry } from '../../geometries/CylinderGeometry.js';
+@@ -28,10 +28,61 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
  import { PlaneGeometry } from '../../geometries/PlaneGeometry.js';
  import { MeshBasicMaterial } from '../../materials/MeshBasicMaterial.js';
  import { Mesh } from '../../objects/Mesh.js';
@@ -8221,6 +8230,7 @@ index 07957179..d6073675 100644
 +import { Camera } from '../../cameras/Camera.js';
 +import { Object3D } from '../../core/Object3D.js';
 +import { Material } from '../../materials/Material.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
  
  const _cameraLPos = /*@__PURE__*/ new Vector3();
  const _cameraRPos = /*@__PURE__*/ new Vector3();
@@ -8273,7 +8283,7 @@ index 07957179..d6073675 100644
  /**
   * The XR manager is built on top of the WebXR Device API to
   * manage XR sessions with `WebGPURenderer`.
-@@ -38,14 +88,90 @@ const _cameraRPos = /*@__PURE__*/ new Vector3();
+@@ -40,14 +91,92 @@ const _cameraRPos = /*@__PURE__*/ new Vector3();
   *
   * @augments EventDispatcher
   */
@@ -8308,6 +8318,8 @@ index 07957179..d6073675 100644
 +    _layers: XRLayerObject[];
 +
 +    _supportsLayers: boolean;
++
++    _frameBufferTargets: WeakMap<XRRenderTarget, { frameBufferTarget: RenderTarget | null; quad: QuadMesh }> | null;
 +
 +    _createXRLayer: (layer: XRLayerObject) => XRLayer;
 +
@@ -8366,7 +8378,7 @@ index 07957179..d6073675 100644
          super();
  
          /**
-@@ -394,7 +520,7 @@ class XRManager extends EventDispatcher {
+@@ -398,7 +527,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8375,7 +8387,7 @@ index 07957179..d6073675 100644
          const controller = this._getController(index);
  
          return controller.getTargetRaySpace();
-@@ -408,7 +534,7 @@ class XRManager extends EventDispatcher {
+@@ -412,7 +541,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8384,7 +8396,7 @@ index 07957179..d6073675 100644
          const controller = this._getController(index);
  
          return controller.getGripSpace();
-@@ -422,7 +548,7 @@ class XRManager extends EventDispatcher {
+@@ -426,7 +555,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8393,7 +8405,7 @@ index 07957179..d6073675 100644
          const controller = this._getController(index);
  
          return controller.getHandSpace();
-@@ -447,7 +573,7 @@ class XRManager extends EventDispatcher {
+@@ -451,7 +580,7 @@ class XRManager extends EventDispatcher {
       * @param {number} foveation - A number in the range `[0,1]` where `0` means no foveation (full resolution)
       * and `1` means maximum foveation (the edges render at lower resolution).
       */
@@ -8402,7 +8414,7 @@ index 07957179..d6073675 100644
          this._foveation = foveation;
  
          if (this._glProjLayer !== null) {
-@@ -475,7 +601,7 @@ class XRManager extends EventDispatcher {
+@@ -479,7 +608,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {number} factor - The framebuffer scale factor.
       */
@@ -8411,7 +8423,7 @@ index 07957179..d6073675 100644
          this._framebufferScaleFactor = factor;
  
          if (this.isPresenting === true) {
-@@ -499,7 +625,7 @@ class XRManager extends EventDispatcher {
+@@ -503,7 +632,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {XRReferenceSpaceType} type - The reference space type.
       */
@@ -8420,7 +8432,7 @@ index 07957179..d6073675 100644
          this._referenceSpaceType = type;
  
          if (this.isPresenting === true) {
-@@ -521,7 +647,7 @@ class XRManager extends EventDispatcher {
+@@ -525,7 +654,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {XRReferenceSpace} space - The XR reference space.
       */
@@ -8429,7 +8441,7 @@ index 07957179..d6073675 100644
          this._customReferenceSpace = space;
      }
  
-@@ -578,7 +704,16 @@ class XRManager extends EventDispatcher {
+@@ -582,7 +711,16 @@ class XRManager extends EventDispatcher {
       * @param {Object} [attributes={}] - Allows to configure the layer's render target.
       * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
       */
@@ -8447,7 +8459,7 @@ index 07957179..d6073675 100644
          const geometry = new PlaneGeometry(width, height);
          const renderTarget = new XRRenderTarget(pixelwidth, pixelheight, {
              format: RGBAFormat,
-@@ -610,7 +745,7 @@ class XRManager extends EventDispatcher {
+@@ -614,7 +752,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8456,7 +8468,7 @@ index 07957179..d6073675 100644
              type: 'quad',
              width: width,
              height: height,
-@@ -635,7 +770,7 @@ class XRManager extends EventDispatcher {
+@@ -639,7 +777,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8465,7 +8477,7 @@ index 07957179..d6073675 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -662,15 +797,15 @@ class XRManager extends EventDispatcher {
+@@ -666,15 +804,15 @@ class XRManager extends EventDispatcher {
       * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
       */
      createCylinderLayer(
@@ -8490,7 +8502,7 @@ index 07957179..d6073675 100644
      ) {
          const geometry = new CylinderGeometry(
              radius,
-@@ -712,7 +847,7 @@ class XRManager extends EventDispatcher {
+@@ -716,7 +854,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8499,7 +8511,7 @@ index 07957179..d6073675 100644
              type: 'cylinder',
              radius: radius,
              centralAngle: centralAngle,
-@@ -738,7 +873,7 @@ class XRManager extends EventDispatcher {
+@@ -742,7 +880,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8508,16 +8520,22 @@ index 07957179..d6073675 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -773,7 +908,7 @@ class XRManager extends EventDispatcher {
+@@ -777,12 +915,12 @@ class XRManager extends EventDispatcher {
+             layer.renderTarget.hasExternalTextures = layer.renderTarget.isXRRenderTarget;
+ 
+             if (layer.renderTarget.isXRRenderTarget && this._supportsLayers) {
+-                layer.xrlayer.transform = new XRRigidTransform(
++                layer.xrlayer!.transform = new XRRigidTransform(
+                     layer.plane.getWorldPosition(translationObject),
                      layer.plane.getWorldQuaternion(quaternionObject),
                  );
  
 -                const glSubImage = this._glBinding.getSubImage(layer.xrlayer, this._xrFrame);
 +                const glSubImage = this._glBinding!.getSubImage(layer.xrlayer, this._xrFrame!);
-                 this._renderer.backend.setXRRenderTargetTextures(
-                     layer.renderTarget,
-                     glSubImage.colorTexture,
-@@ -813,7 +948,7 @@ class XRManager extends EventDispatcher {
+                 renderer.backend.setXRRenderTargetTextures(layer.renderTarget, glSubImage.colorTexture, undefined);
+ 
+                 renderer._setXRLayerSize(layer.renderTarget.width, layer.renderTarget.height);
+@@ -841,7 +979,7 @@ class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -8526,7 +8544,7 @@ index 07957179..d6073675 100644
          const renderer = this._renderer;
          const backend = renderer.backend;
  
-@@ -843,9 +978,9 @@ class XRManager extends EventDispatcher {
+@@ -871,9 +1009,9 @@ class XRManager extends EventDispatcher {
              this._currentPixelRatio = renderer.getPixelRatio();
              renderer.getSize(this._currentSize);
  
@@ -8539,7 +8557,7 @@ index 07957179..d6073675 100644
  
              //
  
-@@ -971,11 +1106,11 @@ class XRManager extends EventDispatcher {
+@@ -1000,11 +1138,11 @@ class XRManager extends EventDispatcher {
  
              //
  
@@ -8555,7 +8573,7 @@ index 07957179..d6073675 100644
  
              this.isPresenting = true;
  
-@@ -990,7 +1125,7 @@ class XRManager extends EventDispatcher {
+@@ -1019,7 +1157,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {PerspectiveCamera} camera - The camera.
       */
@@ -8564,7 +8582,7 @@ index 07957179..d6073675 100644
          const session = this._session;
  
          if (session === null) return;
-@@ -1022,7 +1157,7 @@ class XRManager extends EventDispatcher {
+@@ -1051,7 +1189,7 @@ class XRManager extends EventDispatcher {
          cameraR.layers.mask = camera.layers.mask | 0b100;
          cameraXR.layers.mask = cameraL.layers.mask | cameraR.layers.mask;
  
@@ -8573,7 +8591,7 @@ index 07957179..d6073675 100644
          const cameras = cameraXR.cameras;
  
          updateCamera(cameraXR, parent);
-@@ -1053,7 +1188,7 @@ class XRManager extends EventDispatcher {
+@@ -1082,7 +1220,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The controller index.
       * @return {WebXRController} The XR controller.
       */
@@ -8582,7 +8600,7 @@ index 07957179..d6073675 100644
          let controller = this._controllers[index];
  
          if (controller === undefined) {
-@@ -1075,7 +1210,7 @@ class XRManager extends EventDispatcher {
+@@ -1104,7 +1242,7 @@ class XRManager extends EventDispatcher {
   * @param {PerspectiveCamera} cameraL - The left camera.
   * @param {PerspectiveCamera} cameraR - The right camera.
   */
@@ -8591,7 +8609,7 @@ index 07957179..d6073675 100644
      _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
      _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
  
-@@ -1139,7 +1274,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+@@ -1168,7 +1306,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
   * @param {Camera} camera - The camera to update.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8600,7 +8618,7 @@ index 07957179..d6073675 100644
      if (parent === null) {
          camera.matrixWorld.copy(camera.matrix);
      } else {
-@@ -1157,7 +1292,7 @@ function updateCamera(camera, parent) {
+@@ -1186,7 +1324,7 @@ function updateCamera(camera, parent) {
   * @param {ArrayCamera} cameraXR - The XR camera.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8609,7 +8627,7 @@ index 07957179..d6073675 100644
      if (parent === null) {
          camera.matrix.copy(cameraXR.matrixWorld);
      } else {
-@@ -1172,13 +1307,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+@@ -1201,13 +1339,14 @@ function updateUserCamera(camera, cameraXR, parent) {
      camera.projectionMatrix.copy(cameraXR.projectionMatrix);
      camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
  
@@ -8628,7 +8646,7 @@ index 07957179..d6073675 100644
      const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
  
      if (controllerIndex === -1) {
-@@ -1188,15 +1324,15 @@ function onSessionEvent(event) {
+@@ -1217,15 +1356,15 @@ function onSessionEvent(event) {
      const controller = this._controllers[controllerIndex];
  
      if (controller !== undefined) {
@@ -8647,7 +8665,7 @@ index 07957179..d6073675 100644
      const renderer = this._renderer;
  
      session.removeEventListener('select', this._onSessionEvent);
-@@ -1267,18 +1403,18 @@ function onSessionEnd() {
+@@ -1296,18 +1435,18 @@ function onSessionEnd() {
      this.isPresenting = false;
      this._useMultiview = false;
  
@@ -8672,7 +8690,7 @@ index 07957179..d6073675 100644
      const controllers = this._controllers;
      const controllerInputSources = this._controllerInputSources;
  
-@@ -1330,23 +1466,23 @@ function onInputSourcesChange(event) {
+@@ -1359,24 +1498,24 @@ function onInputSourcesChange(event) {
  }
  
  // Creation method for native WebXR layers
@@ -8688,6 +8706,7 @@ index 07957179..d6073675 100644
 +            space: this._referenceSpace!,
              viewPixelWidth: layer.pixelwidth,
              viewPixelHeight: layer.pixelheight,
+             clearOnAccess: false,
          });
      } else {
 -        return this._glBinding.createCylinderLayer({
@@ -8700,8 +8719,8 @@ index 07957179..d6073675 100644
 +            space: this._referenceSpace!,
              viewPixelWidth: layer.pixelwidth,
              viewPixelHeight: layer.pixelheight,
-         });
-@@ -1355,7 +1491,7 @@ function createXRLayer(layer) {
+             clearOnAccess: false,
+@@ -1386,7 +1525,7 @@ function createXRLayer(layer) {
  
  // Animation Loop
  
@@ -8710,7 +8729,7 @@ index 07957179..d6073675 100644
      if (frame === undefined) return;
  
      const cameraXR = this._cameraXR;
-@@ -1364,16 +1500,16 @@ function onAnimationFrame(time, frame) {
+@@ -1395,16 +1534,16 @@ function onAnimationFrame(time, frame) {
  
      const glBaseLayer = this._glBaseLayer;
  
@@ -8730,7 +8749,7 @@ index 07957179..d6073675 100644
          }
  
          let cameraXRNeedsUpdate = false;
-@@ -1391,7 +1527,7 @@ function onAnimationFrame(time, frame) {
+@@ -1422,7 +1561,7 @@ function onAnimationFrame(time, frame) {
              let viewport;
  
              if (this._useLayers === true) {
@@ -8739,7 +8758,7 @@ index 07957179..d6073675 100644
                  viewport = glSubImage.viewport;
  
                  // For side-by-side projection, we only produce a single texture for both eyes.
-@@ -1399,13 +1535,13 @@ function onAnimationFrame(time, frame) {
+@@ -1430,13 +1569,13 @@ function onAnimationFrame(time, frame) {
                      backend.setXRRenderTargetTextures(
                          this._xrRenderTarget,
                          glSubImage.colorTexture,
@@ -8755,7 +8774,7 @@ index 07957179..d6073675 100644
              }
  
              let camera = this._cameras[i];
-@@ -1421,7 +1557,7 @@ function onAnimationFrame(time, frame) {
+@@ -1452,7 +1591,7 @@ function onAnimationFrame(time, frame) {
              camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
              camera.projectionMatrix.fromArray(view.projectionMatrix);
              camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
@@ -9634,7 +9653,7 @@ index d5f60879..37f47e7c 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 99396041..4ba2d023 100644
+index b13d5c61..5138f980 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -9645,7 +9664,7 @@ index 99396041..4ba2d023 100644
  
  /**
   * A backend implementation targeting WebGL 2.
-@@ -1186,7 +1187,14 @@ class WebGLBackend extends Backend {
+@@ -1189,7 +1190,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
