@@ -17,7 +17,6 @@ declare function fromHalfFloat(val: number): number;
 declare class DataUtils {
     static toHalfFloat(val: number): number;
     static fromHalfFloat(val: number): number;
-    static alignTo4ByteBoundary(byteLength: number): number;
 }
 
 export { DataUtils, fromHalfFloat, toHalfFloat };
