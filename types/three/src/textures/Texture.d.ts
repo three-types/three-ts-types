@@ -20,28 +20,28 @@ import { Source } from "./Source.js";
 
 // NOTE: DOM upload fields are not implemented where parameters are accepted.
 export interface TextureParameters {
-    mapping: AnyMapping | undefined;
-    // image: TexImageSource | OffscreenCanvas | undefined;
-    // channel: number | undefined;
+    mapping?: AnyMapping | undefined;
+    // image?: TexImageSource | OffscreenCanvas | undefined;
+    // channel?: number | undefined;
 
-    wrapS: Wrapping | undefined;
-    wrapT: Wrapping | undefined;
-    wrapR: Wrapping | undefined;
+    wrapS?: Wrapping | undefined;
+    wrapT?: Wrapping | undefined;
+    wrapR?: Wrapping | undefined;
 
-    format: PixelFormat | undefined;
-    internalFormat: PixelFormatGPU | null | undefined;
-    type: TextureDataType | undefined;
-    colorSpace: ColorSpace | undefined;
+    format?: PixelFormat | undefined;
+    internalFormat?: PixelFormatGPU | null | undefined;
+    type?: TextureDataType | undefined;
+    colorSpace?: ColorSpace | undefined;
 
-    magFilter: MinificationTextureFilter | undefined;
-    minFilter: MagnificationTextureFilter | undefined;
-    anisotropy: number | undefined;
+    magFilter?: MinificationTextureFilter | undefined;
+    minFilter?: MagnificationTextureFilter | undefined;
+    anisotropy?: number | undefined;
 
-    flipY: boolean | undefined;
+    flipY?: boolean | undefined;
 
-    generateMipmaps: boolean | undefined;
-    // premultiplyAlpha: boolean | undefined;
-    // unpackAlignment: number | undefined;
+    generateMipmaps?: boolean | undefined;
+    // premultiplyAlpha?: boolean | undefined;
+    // unpackAlignment?: number | undefined;
 }
 
 export interface TextureJSON {
