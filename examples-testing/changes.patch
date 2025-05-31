@@ -17120,7 +17120,7 @@ index f20978b8..46c08191 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 1957d7a9..b38fb89f 100644
+index 689dd2f0..7760a6ae 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
@@ -17135,17 +17135,16 @@ index 1957d7a9..b38fb89f 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -11,9 +11,18 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -10,9 +10,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer, postProcessing, controls, stats;
+-let camera, scene, renderer, postProcessing, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.PostProcessing,
-+    controls: OrbitControls,
-+    stats: Stats;
++    controls: OrbitControls;
  
 -let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
 +let aoPass: ShaderNodeObject<GTAONode>,
@@ -17156,7 +17155,7 @@ index 1957d7a9..b38fb89f 100644
  
  const params = {
      distanceExponent: 1,
-@@ -118,7 +127,8 @@ async function init() {
+@@ -114,7 +122,8 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
@@ -17958,7 +17957,7 @@ index 01248dc3..3ead3837 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_shadowmap_csm.ts b/examples-testing/examples/webgpu_shadowmap_csm.ts
-index fae69709..41f5b30c 100644
+index cf5c0097..b2f74866 100644
 --- a/examples-testing/examples/webgpu_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_csm.ts
 @@ -1,13 +1,34 @@
