@@ -7539,7 +7539,7 @@ index 0f4042b7..dff17d16 100644
      directionalLight.position.set(x, y, z);
      scene.add(directionalLight);
 diff --git a/examples-testing/examples/webgl_loader_svg.ts b/examples-testing/examples/webgl_loader_svg.ts
-index 45361b92..f5d72d3c 100644
+index a04b79de..48a055d4 100644
 --- a/examples-testing/examples/webgl_loader_svg.ts
 +++ b/examples-testing/examples/webgl_loader_svg.ts
 @@ -3,14 +3,24 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -7577,8 +7577,8 @@ index 45361b92..f5d72d3c 100644
 +function loadSVG(url: string) {
      //
  
-     scene = new THREE.Scene();
-@@ -126,12 +136,12 @@ function loadSVG(url) {
+     if (scene) disposeScene(scene);
+@@ -130,12 +140,12 @@ function loadSVG(url) {
          let renderOrder = 0;
  
          for (const path of data.paths) {
@@ -7593,7 +7593,7 @@ index 45361b92..f5d72d3c 100644
                      transparent: true,
                      side: THREE.DoubleSide,
                      depthWrite: false,
-@@ -149,12 +159,12 @@ function loadSVG(url) {
+@@ -153,12 +163,12 @@ function loadSVG(url) {
                  }
              }
  
@@ -7608,7 +7608,7 @@ index 45361b92..f5d72d3c 100644
                      transparent: true,
                      side: THREE.DoubleSide,
                      depthWrite: false,
-@@ -162,7 +172,7 @@ function loadSVG(url) {
+@@ -166,7 +176,7 @@ function loadSVG(url) {
                  });
  
                  for (const subPath of path.subPaths) {
@@ -7617,6 +7617,26 @@ index 45361b92..f5d72d3c 100644
  
                      if (geometry) {
                          const mesh = new THREE.Mesh(geometry, material);
+@@ -196,11 +206,15 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-function disposeScene(scene) {
++function disposeScene(scene: THREE.Scene) {
+     scene.traverse(function (object) {
+-        if (object.isMesh || object.isLine) {
+-            object.geometry.dispose();
+-            object.material.dispose();
++        if ((object as THREE.Mesh).isMesh || (object as THREE.Line).isLine) {
++            (object as THREE.Mesh | THREE.Line).geometry.dispose();
++            (
++                object as
++                    | THREE.Mesh<THREE.BufferGeometry, THREE.Material>
++                    | THREE.Line<THREE.BufferGeometry, THREE.Material>
++            ).material.dispose();
+         }
+     });
+ }
 diff --git a/examples-testing/examples/webgl_loader_texture_dds.ts b/examples-testing/examples/webgl_loader_texture_dds.ts
 index ba9b18e9..d4161ff3 100644
 --- a/examples-testing/examples/webgl_loader_texture_dds.ts
@@ -18888,7 +18908,7 @@ index 26608935..3481437a 100644
              INTERSECTED.material.emissive.setHex(0xff0000);
          }
 diff --git a/examples-testing/examples/webgpu_xr_native_layers.ts b/examples-testing/examples/webgpu_xr_native_layers.ts
-index baf4c4a4..50efbfea 100644
+index aa3c4935..029d6a7e 100644
 --- a/examples-testing/examples/webgpu_xr_native_layers.ts
 +++ b/examples-testing/examples/webgpu_xr_native_layers.ts
 @@ -1,4 +1,4 @@
@@ -19184,6 +19204,52 @@ index baf4c4a4..50efbfea 100644
  
      //
      const delta = clock.getDelta() * 0.8;
+diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
+index 5106c827..444d4f31 100644
+--- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
++++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import {
+     RollerCoasterGeometry,
+@@ -9,7 +9,7 @@ import {
+ } from 'three/addons/misc/RollerCoaster.js';
+ import { VRButton } from 'three/addons/webxr/VRButton.js';
+ 
+-let mesh, material, geometry;
++let mesh: THREE.Mesh, material: THREE.Material, geometry: THREE.BufferGeometry;
+ 
+ const renderer = new THREE.WebGPURenderer({
+     antialias: true,
+@@ -92,7 +92,7 @@ const curve = (function () {
+     const vector2 = new THREE.Vector3();
+ 
+     return {
+-        getPointAt: function (t) {
++        getPointAt: function (t: number) {
+             t = t * PI2;
+ 
+             const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
+@@ -102,7 +102,7 @@ const curve = (function () {
+             return vector.set(x, y, z).multiplyScalar(2);
+         },
+ 
+-        getTangentAt: function (t) {
++        getTangentAt: function (t: number) {
+             const delta = 0.0001;
+             const t1 = Math.max(0, t - delta);
+             const t2 = Math.min(1, t + delta);
+@@ -135,7 +135,7 @@ mesh = new THREE.Mesh(geometry, material);
+ mesh.position.y = 0.1;
+ scene.add(mesh);
+ 
+-const funfairs = [];
++const funfairs: THREE.Mesh[] = [];
+ 
+ //
+ 
 diff --git a/examples-testing/examples/webxr_ar_cones.ts b/examples-testing/examples/webxr_ar_cones.ts
 index 95eb3439..0e641cdb 100644
 --- a/examples-testing/examples/webxr_ar_cones.ts
