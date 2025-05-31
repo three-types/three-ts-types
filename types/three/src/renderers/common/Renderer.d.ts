@@ -341,7 +341,7 @@ declare class Renderer {
      * @return {RenderContext} The current render context.
      */
     _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget?: boolean): RenderContext | undefined;
-    _setXRLayerSize(width: any, height: any): void;
+    _setXRLayerSize(width: number, height: number): void;
     /**
      * The output pass performs tone mapping and color space conversion.
      *
