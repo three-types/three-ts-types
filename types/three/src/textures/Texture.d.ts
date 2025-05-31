@@ -532,7 +532,7 @@ export class Texture extends EventDispatcher<{ dispose: {} }> {
 
     /**
      * Sets this texture's properties based on `values`.
-     * @param {Object} values - A container with texture parameters.
+     * @param values - A container with texture parameters.
      */
     setValues(values: TextureParameters): void;
 
