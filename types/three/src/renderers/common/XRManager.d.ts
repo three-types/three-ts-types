@@ -1,6 +1,7 @@
 import { ArrayCamera } from "../../cameras/ArrayCamera.js";
 import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
 import { CylinderGeometry } from "../../geometries/CylinderGeometry.js";
 import { PlaneGeometry } from "../../geometries/PlaneGeometry.js";
 import { Material } from "../../materials/Material.js";
@@ -11,6 +12,7 @@ import { Vector3 } from "../../math/Vector3.js";
 import { Mesh } from "../../objects/Mesh.js";
 import { WebXRController } from "../webxr/WebXRController.js";
 import { AnimationContext } from "./Animation.js";
+import QuadMesh from "./QuadMesh.js";
 import Renderer from "./Renderer.js";
 import { XRRenderTarget } from "./XRRenderTarget.js";
 export interface XRManagerEventMap {
@@ -77,6 +79,12 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     _xrRenderTarget: XRRenderTarget | null;
     _layers: XRLayerObject[];
     _supportsLayers: boolean;
+    _frameBufferTargets:
+        | WeakMap<XRRenderTarget, {
+            frameBufferTarget: RenderTarget | null;
+            quad: QuadMesh;
+        }>
+        | null;
     _createXRLayer: (layer: XRLayerObject) => XRLayer;
     _gl: WebGL2RenderingContext | null;
     _currentAnimationContext: AnimationContext | null;
