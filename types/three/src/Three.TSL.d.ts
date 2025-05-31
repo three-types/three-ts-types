@@ -482,8 +482,6 @@ export const time: typeof TSL.time;
 export const timerDelta: typeof TSL.timerDelta;
 export const timerGlobal: typeof TSL.timerGlobal;
 export const timerLocal: typeof TSL.timerLocal;
-export const toOutputColorSpace: typeof TSL.toOutputColorSpace;
-export const toWorkingColorSpace: typeof TSL.toWorkingColorSpace;
 export const toneMapping: typeof TSL.toneMapping;
 export const toneMappingExposure: typeof TSL.toneMappingExposure;
 export const toonOutlinePass: typeof TSL.toonOutlinePass;
