@@ -327,6 +327,7 @@ export const mx_transform_uv: typeof TSL.mx_transform_uv;
 export const mx_worley_noise_float: typeof TSL.mx_worley_noise_float;
 export const mx_worley_noise_vec2: typeof TSL.mx_worley_noise_vec2;
 export const mx_worley_noise_vec3: typeof TSL.mx_worley_noise_vec3;
+export const namespace: typeof TSL.namespace;
 export const negate: typeof TSL.negate;
 export const neutralToneMapping: typeof TSL.neutralToneMapping;
 export const nodeArray: typeof TSL.nodeArray;
