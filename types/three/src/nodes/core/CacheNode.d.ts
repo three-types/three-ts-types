@@ -1,7 +1,7 @@
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
+import ContextNode from "./ContextNode.js";
 import Node from "./Node.js";
 import NodeCache from "./NodeCache.js";
-import ContextNode from './ContextNode.js';
 
 export default class CacheNode extends Node {
     node: Node;
