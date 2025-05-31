@@ -7,8 +7,6 @@ import StackNode from "../core/StackNode.js";
 import ConvertNode from "../utils/ConvertNode.js";
 
 export interface NodeElements {
-    toGlobal: (node: Node) => Node;
-
     toStack: typeof Stack;
 
     toColor: typeof color;
@@ -257,7 +255,7 @@ interface ShaderNodeFn<Args extends readonly unknown[]> {
 
     setLayout: (layout: Layout) => this;
 
-    once: () => this;
+    once: (namespace?: string | null) => this;
 }
 
 export function Fn(jsFunc: (builder: NodeBuilder) => void): ShaderNodeFn<[]>;
