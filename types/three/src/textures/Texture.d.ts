@@ -33,8 +33,8 @@ export interface TextureParameters {
     type?: TextureDataType | undefined;
     colorSpace?: ColorSpace | undefined;
 
-    magFilter?: MinificationTextureFilter | undefined;
-    minFilter?: MagnificationTextureFilter | undefined;
+    magFilter?: MagnificationTextureFilter | undefined;
+    minFilter?: MinificationTextureFilter | undefined;
     anisotropy?: number | undefined;
 
     flipY?: boolean | undefined;
