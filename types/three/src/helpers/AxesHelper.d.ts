@@ -1,6 +1,7 @@
+import { BufferGeometry } from "../core/BufferGeometry.js";
+import { LineBasicMaterial } from "../materials/LineBasicMaterial.js";
 import { ColorRepresentation } from "../math/Color.js";
 import { LineSegments } from "../objects/LineSegments.js";
-import { BufferGeometry, LineBasicMaterial } from "../Three.Core.js";
 
 /**
  * An axis object to visualize the 3 axes in a simple way.
