@@ -74,6 +74,7 @@ const exceptionList = [
     'webgpu_shadowmap_array',
     'webgpu_shadowmap_opacity',
     'webgpu_skinning_instancing',
+    'webgpu_skinning_points',
     'webgpu_texturegrad',
     'webgpu_textures_2d-array',
     'webgpu_tsl_angular_slicing',
