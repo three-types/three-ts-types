@@ -100,6 +100,7 @@ declare class NodeMaterial extends Material {
     setupLightingModel(builder: NodeBuilder): LightingModel;
     setupLighting(builder: NodeBuilder): Node;
     setupFog(builder: NodeBuilder, outputNode: Node): Node;
+    setupPremultipliedAlpha(builder: NodeBuilder, outputNode: Node): Node;
     setupOutput(builder: NodeBuilder, outputNode: Node): Node;
 
     setDefaultValues(material: Material): void;
