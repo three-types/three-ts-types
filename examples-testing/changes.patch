@@ -14090,10 +14090,10 @@ index 7bb91369..7f794094 100644
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
-index 4168292c..e0105655 100644
+index 4168292c..9d02417c 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
 +++ b/examples-testing/examples/webgpu_centroid_sampling.ts
-@@ -1,15 +1,15 @@
+@@ -1,15 +1,22 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  import { varying, uv, texture, Fn } from 'three/tsl';
@@ -14105,18 +14105,26 @@ index 4168292c..e0105655 100644
 -let camera;
 -let scene;
 -let gui;
+-
+-const effectController = {
 +let rendererAntialiasingEnabled: THREE.WebGPURenderer;
 +let rendererAntialiasingDisabled: THREE.WebGPURenderer;
 +let camera: THREE.PerspectiveCamera;
 +let scene: THREE.Scene;
 +let gui: GUI;
- 
--const effectController = {
-+const effectController: { sampling: THREE.InterpolationSamplingMode } = {
++
++const effectController: {
++    sampling:
++        | typeof THREE.InterpolationSamplingMode.NORMAL
++        | typeof THREE.InterpolationSamplingMode.CENTROID
++        | typeof THREE.InterpolationSamplingMode.SAMPLE
++        | 'flat first'
++        | 'flat either';
++} = {
      sampling: 'normal',
  };
  
-@@ -17,7 +17,7 @@ const atlasCanvas = document.createElement('canvas');
+@@ -17,7 +24,7 @@ const atlasCanvas = document.createElement('canvas');
  atlasCanvas.width = 16;
  atlasCanvas.height = 16;
  
@@ -14125,7 +14133,7 @@ index 4168292c..e0105655 100644
  ctx.fillStyle = 'red';
  ctx.fillRect(0, 0, 8, 8);
  
-@@ -62,7 +62,7 @@ function init() {
+@@ -62,7 +69,7 @@ function init() {
  
      scene = new THREE.Scene();
  
@@ -14134,7 +14142,7 @@ index 4168292c..e0105655 100644
          const geometry = new THREE.BufferGeometry();
          const positions = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
          geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-@@ -78,7 +78,7 @@ function init() {
+@@ -78,7 +85,7 @@ function init() {
      const material = new THREE.MeshBasicNodeMaterial();
      const testUV = varying(uv(), 'testUV');
  
@@ -14143,7 +14151,7 @@ index 4168292c..e0105655 100644
          return Fn(() => {
              testUV.setInterpolation(type, sampling);
  
-@@ -113,7 +113,7 @@ function init() {
+@@ -113,7 +120,7 @@ function init() {
  
      material.colorNode = withoutInterpolationShader();
  
@@ -14152,7 +14160,7 @@ index 4168292c..e0105655 100644
  
      for (let x = -5; x < 5; x++) {
          for (let y = -5; y < 5; y++) {
-@@ -142,13 +142,13 @@ function init() {
+@@ -142,13 +149,13 @@ function init() {
          forceWebGL: forceWebGL,
      });
  
@@ -14616,6 +14624,45 @@ index c3c78ca0..d964d0cd 100644
      position.x = matrix.elements[12];
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
+diff --git a/examples-testing/examples/webgpu_instance_path.ts b/examples-testing/examples/webgpu_instance_path.ts
+index 49879418..0f1977f7 100644
+--- a/examples-testing/examples/webgpu_instance_path.ts
++++ b/examples-testing/examples/webgpu_instance_path.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+@@ -18,7 +18,7 @@ import {
+     color,
+ } from 'three/tsl';
+ 
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+ 
+ const count = 1000;
+ 
+@@ -62,14 +62,14 @@ async function init() {
+     const v = new THREE.Vector3();
+     const c = new THREE.Color();
+ 
+-    const positions = [];
+-    const times = [];
+-    const seeds = [];
+-    const colors = [];
++    const positions: number[] = [];
++    const times: number[] = [];
++    const seeds: number[] = [];
++    const colors: number[] = [];
+ 
+     for (let i = 0; i < count; i++) {
+         const t = i / count;
+-        path.getPointAt(t, v);
++        path.getPointAt(t, v as unknown as THREE.Vector2);
+ 
+         v.x += 0.5 - Math.random();
+         v.y += 0.5 - Math.random();
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
 index 4b29d389..c793ca87 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
