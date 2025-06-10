@@ -11,9 +11,9 @@ export const blendOverlay: (base: NodeRepresentation, blend: NodeRepresentation)
 
 export const blendColor: (base: NodeRepresentation, blend: NodeRepresentation) => ShaderNodeObject<Node>;
 
-export const premult: (color: NodeRepresentation) => ShaderNodeObject<Node>;
+export const premultiplyAlpha: (color: NodeRepresentation) => ShaderNodeObject<Node>;
 
-export const unpremult: (color: NodeRepresentation) => ShaderNodeObject<Node>;
+export const unpremultiplyAlpha: (color: NodeRepresentation) => ShaderNodeObject<Node>;
 
 /**
  * @deprecated
