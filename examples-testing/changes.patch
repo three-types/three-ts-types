@@ -7376,62 +7376,18 @@ index 5b13e8f4..83aad15c 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_obj.ts b/examples-testing/examples/webgl_loader_obj.ts
-index f61eeb75..44b29b66 100644
+index d393c5ef..64e08310 100644
 --- a/examples-testing/examples/webgl_loader_obj.ts
 +++ b/examples-testing/examples/webgl_loader_obj.ts
-@@ -3,9 +3,9 @@ import * as THREE from 'three';
- import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
- 
--let object;
-+let object: THREE.Group;
- 
- init();
- 
-@@ -28,7 +28,8 @@ function init() {
- 
-     function loadModel() {
-         object.traverse(function (child) {
--            if (child.isMesh) child.material.map = texture;
-+            if ((child as THREE.Mesh).isMesh)
-+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map = texture;
-         });
- 
-         object.position.y = -0.95;
-@@ -48,7 +49,7 @@ function init() {
- 
-     // model
- 
--    function onProgress(xhr) {
-+    function onProgress(xhr: ProgressEvent) {
-         if (xhr.lengthComputable) {
-             const percentComplete = (xhr.loaded / xhr.total) * 100;
-             console.log('model ' + percentComplete.toFixed(2) + '% downloaded');
-diff --git a/examples-testing/examples/webgl_loader_obj_mtl.ts b/examples-testing/examples/webgl_loader_obj_mtl.ts
-index 4308aee7..f27d82d9 100644
---- a/examples-testing/examples/webgl_loader_obj_mtl.ts
-+++ b/examples-testing/examples/webgl_loader_obj_mtl.ts
 @@ -4,7 +4,7 @@ import { MTLLoader } from 'three/addons/loaders/MTLLoader.js';
  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+-let camera, scene, renderer, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
  
  init();
  
-@@ -25,7 +25,7 @@ function init() {
- 
-     // model
- 
--    const onProgress = function (xhr) {
-+    const onProgress = function (xhr: ProgressEvent) {
-         if (xhr.lengthComputable) {
-             const percentComplete = (xhr.loaded / xhr.total) * 100;
-             console.log(percentComplete.toFixed(2) + '% downloaded');
 diff --git a/examples-testing/examples/webgl_loader_pcd.ts b/examples-testing/examples/webgl_loader_pcd.ts
 index dd0f0b0f..e47005a8 100644
 --- a/examples-testing/examples/webgl_loader_pcd.ts
@@ -14134,7 +14090,7 @@ index 7bb91369..7f794094 100644
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
-index 18fbc872..c3c883d9 100644
+index 4168292c..e0105655 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
 +++ b/examples-testing/examples/webgpu_centroid_sampling.ts
 @@ -1,15 +1,15 @@
