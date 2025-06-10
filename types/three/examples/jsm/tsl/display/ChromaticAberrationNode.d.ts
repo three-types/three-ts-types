@@ -1,4 +1,5 @@
-import { Node, NodeRepresentation, ShaderNodeObject, TempNode, Vector2 } from "three/webgpu";
+import { NodeRepresentation, ShaderNodeObject } from "three/tsl";
+import { Node, TempNode, Vector2 } from "three/webgpu";
 
 declare class ChromaticAberrationNode extends TempNode {
     textureNode: Node;
