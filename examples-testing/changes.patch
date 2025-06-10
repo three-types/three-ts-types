@@ -17245,6 +17245,51 @@ index e4624db9..0cf7cf09 100644
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
+diff --git a/examples-testing/examples/webgpu_postprocessing_ca.ts b/examples-testing/examples/webgpu_postprocessing_ca.ts
+index a9695fa7..545eb21e 100644
+--- a/examples-testing/examples/webgpu_postprocessing_ca.ts
++++ b/examples-testing/examples/webgpu_postprocessing_ca.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { pass, renderOutput, uniform } from 'three/tsl';
+ 
+ import { chromaticAberration } from 'three/addons/tsl/display/ChromaticAberrationNode.js';
+@@ -15,8 +15,12 @@ const params = {
+     cameraDistance: 40,
+ };
+ 
+-let camera, scene, renderer, clock, mainGroup;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    clock: THREE.Clock,
++    mainGroup: THREE.Group;
++let postProcessing: THREE.PostProcessing;
+ 
+ init();
+ 
+@@ -111,8 +115,8 @@ async function init() {
+ }
+ 
+ function createShapes() {
+-    const shapes = [];
+-    const materials = [];
++    const shapes: THREE.Object3D[] = [];
++    const materials: THREE.MeshStandardMaterial[] = [];
+ 
+     // Define colors for different materials
+     const colors = [
+@@ -246,7 +250,7 @@ function animate() {
+                 // Central group
+                 child.rotation.y = time * 0.5;
+                 child.children.forEach((subChild, subIndex) => {
+-                    if (subChild.geometry) {
++                    if ((subChild as THREE.Mesh).geometry) {
+                         subChild.rotation.x = time * (1 + subIndex * 0.1);
+                         subChild.rotation.z = time * (1 - subIndex * 0.1);
+                     }
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
 index ef0e58fb..334ee7ba 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
