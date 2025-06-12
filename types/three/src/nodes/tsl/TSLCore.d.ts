@@ -10,6 +10,7 @@ import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import ConvertNode from "../utils/ConvertNode.js";
+import JoinNode from "../utils/JoinNode.js";
 
 export interface NodeElements {
     toStack: typeof Stack;
@@ -324,7 +325,8 @@ interface Vector2Function {
     (node: Node): ShaderNodeObject<Node>;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
-    // object. Not sure which cases are worth considering here.
+    // object.
+    (x: Node | number, y: Node | number): ShaderNodeObject<JoinNode>;
 }
 
 export const vec2: Vector2Function;
