@@ -356,11 +356,19 @@ export const uvec3: Vector3Function;
 export const bvec3: (node: Node) => ShaderNodeObject<Node>;
 
 interface Vector4Function {
-    (): ShaderNodeObject<Node>;
+    // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (x?: number, y?: number, z?: number, w?: number): ShaderNodeObject<ConstNode<Vector4>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter.
     (value: Vector4): ShaderNodeObject<ConstNode<Vector4>>;
-    (xyz: number): ShaderNodeObject<ConstNode<Vector4>>;
-    (x: number | Node, y: number | Node, z?: number | Node, w?: number | Node): ShaderNodeObject<Node>;
-    (node: Node): ShaderNodeObject<ConvertNode>;
+    (node: Node): ShaderNodeObject<Node>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
+    // object.
+    (x: Node | number, y: Node | number, z: Node | number, w: Node | number): ShaderNodeObject<JoinNode>;
 }
 
 export const vec4: Vector4Function;
