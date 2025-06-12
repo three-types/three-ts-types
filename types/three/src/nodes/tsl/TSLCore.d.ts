@@ -347,7 +347,7 @@ interface Vector3Function {
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z: Node | number): ShaderNodeObject<JoinNode>;
+    (x: Node | number, y: Node | number, z?: Node | number): ShaderNodeObject<JoinNode>;
 }
 
 export const vec3: Vector3Function;
@@ -368,7 +368,7 @@ interface Vector4Function {
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z: Node | number, w: Node | number): ShaderNodeObject<JoinNode>;
+    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): ShaderNodeObject<JoinNode>;
 }
 
 export const vec4: Vector4Function;
