@@ -281,9 +281,7 @@ export function Stack(node: Node): Node;
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (): ShaderNodeObject<ConstNode<Color>>;
-    (color: string): ShaderNodeObject<ConstNode<Color>>;
-    (color: number): ShaderNodeObject<ConstNode<Color>>;
+    (color?: string | number): ShaderNodeObject<ConstNode<Color>>;
     (r: number, g: number, b: number): ShaderNodeObject<ConstNode<Color>>;
 
     // The second branch does not apply because `cacheMap` is `null`
@@ -315,11 +313,18 @@ interface BooleanFunction {
 export const bool: BooleanFunction;
 
 interface Vector2Function {
-    (): ShaderNodeObject<Node>;
+    // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (x?: number, y?: number): ShaderNodeObject<ConstNode<Vector2>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter.
     (value: Vector2): ShaderNodeObject<ConstNode<Vector2>>;
-    (xy: number): ShaderNodeObject<ConstNode<Vector2>>;
-    (x: number | Node, y: number | Node): ShaderNodeObject<ConstNode<Vector2>>;
-    (node: Node): ShaderNodeObject<ConvertNode>;
+    (node: Node): ShaderNodeObject<Node>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
+    // object. Not sure which cases are worth considering here.
 }
 
 export const vec2: Vector2Function;
