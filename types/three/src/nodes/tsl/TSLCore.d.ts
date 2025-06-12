@@ -317,9 +317,8 @@ export const bvec2: (node: Node) => ShaderNodeObject<Node>;
 interface Vector3Function {
     (value: Vector3): ShaderNodeObject<ConstNode<Vector3>>;
     (xyz: number): ShaderNodeObject<ConstNode<Vector3>>;
-    (x?: number, y?: number, z?: number): ShaderNodeObject<ConstNode<Vector3>>;
+    (x: number | Node, y: number | Node, z?: number | Node): ShaderNodeObject<ConstNode<Vector3>>;
     (node: Node): ShaderNodeObject<Node>;
-    (x: Node, y: Node, z: Node): ShaderNodeObject<Node>;
 }
 
 export const vec3: Vector3Function;
