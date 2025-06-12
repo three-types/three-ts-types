@@ -303,6 +303,7 @@ interface BooleanFunction {
 export const bool: BooleanFunction;
 
 interface Vector2Function {
+    (): ShaderNodeObject<Node>;
     (value: Vector2): ShaderNodeObject<ConstNode<Vector2>>;
     (xy: number): ShaderNodeObject<ConstNode<Vector2>>;
     (x: number | Node, y: number | Node): ShaderNodeObject<ConstNode<Vector2>>;
@@ -315,6 +316,7 @@ export const uvec2: Vector2Function;
 export const bvec2: (node: Node) => ShaderNodeObject<Node>;
 
 interface Vector3Function {
+    (): ShaderNodeObject<Node>;
     (value: Vector3): ShaderNodeObject<ConstNode<Vector3>>;
     (xyz: number): ShaderNodeObject<ConstNode<Vector3>>;
     (x: number | Node, y: number | Node, z?: number | Node): ShaderNodeObject<ConstNode<Vector3>>;
@@ -327,6 +329,7 @@ export const uvec3: Vector3Function;
 export const bvec3: (node: Node) => ShaderNodeObject<Node>;
 
 interface Vector4Function {
+    (): ShaderNodeObject<Node>;
     (value: Vector4): ShaderNodeObject<ConstNode<Vector4>>;
     (xyz: number): ShaderNodeObject<ConstNode<Vector4>>;
     (x: number | Node, y: number | Node, z?: number | Node, w?: number | Node): ShaderNodeObject<Node>;
