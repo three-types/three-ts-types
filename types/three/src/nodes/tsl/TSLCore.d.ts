@@ -305,9 +305,8 @@ export const bool: BooleanFunction;
 interface Vector2Function {
     (value: Vector2): ShaderNodeObject<ConstNode<Vector2>>;
     (xy: number): ShaderNodeObject<ConstNode<Vector2>>;
-    (x?: number, y?: number): ShaderNodeObject<ConstNode<Vector2>>;
+    (x: number | Node, y: number | Node): ShaderNodeObject<ConstNode<Vector2>>;
     (node: Node): ShaderNodeObject<ConvertNode>;
-    (x: Node, y: Node): ShaderNodeObject<Node>;
 }
 
 export const vec2: Vector2Function;
