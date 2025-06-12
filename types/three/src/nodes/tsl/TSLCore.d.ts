@@ -14,23 +14,23 @@ import ConvertNode from "../utils/ConvertNode.js";
 export interface NodeElements {
     toStack: typeof Stack;
 
-    toColor: (node: Node) => ShaderNodeObject<ConvertNode>;
+    toColor: (node: Node) => ShaderNodeObject<Node>;
     toFloat: (node: Node) => ShaderNodeObject<Node>;
     toInt: (node: Node) => ShaderNodeObject<Node>;
     toUint: (node: Node) => ShaderNodeObject<Node>;
     toBool: (node: Node) => ShaderNodeObject<Node>;
-    toVec2: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toIvec2: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toUvec2: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toBvec2: (node: Node) => ShaderNodeObject<ConvertNode>;
+    toVec2: (node: Node) => ShaderNodeObject<Node>;
+    toIvec2: (node: Node) => ShaderNodeObject<Node>;
+    toUvec2: (node: Node) => ShaderNodeObject<Node>;
+    toBvec2: (node: Node) => ShaderNodeObject<Node>;
     toVec3: (node: Node) => ShaderNodeObject<Node>;
     toIvec3: (node: Node) => ShaderNodeObject<Node>;
     toUvec3: (node: Node) => ShaderNodeObject<Node>;
     toBvec3: (node: Node) => ShaderNodeObject<Node>;
-    toVec4: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toIvec4: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toUvec4: (node: Node) => ShaderNodeObject<ConvertNode>;
-    toBvec4: (node: Node) => ShaderNodeObject<ConvertNode>;
+    toVec4: (node: Node) => ShaderNodeObject<Node>;
+    toIvec4: (node: Node) => ShaderNodeObject<Node>;
+    toUvec4: (node: Node) => ShaderNodeObject<Node>;
+    toBvec4: (node: Node) => ShaderNodeObject<Node>;
     toMat2: (node: Node) => ShaderNodeObject<Node>;
     toMat3: (node: Node) => ShaderNodeObject<Node>;
     toMat4: (node: Node) => ShaderNodeObject<Node>;
@@ -279,9 +279,21 @@ export const Switch: (expression: NodeRepresentation) => StackNode;
 export function Stack(node: Node): Node;
 
 interface ColorFunction {
-    (color?: ColorRepresentation): ShaderNodeObject<ConstNode<Color>>;
+    // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (): ShaderNodeObject<ConstNode<Color>>;
+    (color: string): ShaderNodeObject<ConstNode<Color>>;
+    (color: number): ShaderNodeObject<ConstNode<Color>>;
     (r: number, g: number, b: number): ShaderNodeObject<ConstNode<Color>>;
-    (node: Node): ShaderNodeObject<ConvertNode>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter.
+    (color: Color): ShaderNodeObject<ConstNode<Color>>;
+    (node: Node): ShaderNodeObject<Node>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
+    // object. Not sure which cases are worth considering here.
 }
 
 export const color: ColorFunction;
