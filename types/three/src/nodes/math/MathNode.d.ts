@@ -219,6 +219,7 @@ export const rand: (uv: MathNodeParameter) => ShaderNodeObject<OperatorNode>;
 
 export const mixElement: Ternary;
 export const smoothstepElement: Ternary;
+export const stepElement: Binary;
 
 /**
  * @deprecated
@@ -270,7 +271,7 @@ declare module "../tsl/TSLCore.js" {
         atan2: typeof atan2;
         min: typeof min;
         max: typeof max;
-        step: typeof step;
+        step: typeof stepElement;
         reflect: typeof reflect;
         distance: typeof distance;
         dot: typeof dot;
