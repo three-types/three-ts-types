@@ -22,10 +22,7 @@ declare class NodeLibrary {
     materialNodes: Map<string, {
         new(): NodeMaterial;
     }>;
-    toneMappingNodes: Map<
-        ToneMapping,
-        (color: Node, exposure: Node) => ShaderNodeObject<Node>
-    >;
+    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => ShaderNodeObject<Node>>;
     /**
      * Constructs a new node library.
      */
@@ -57,9 +54,7 @@ declare class NodeLibrary {
      * @param {number} toneMapping - The tone mapping.
      * @return {?Function} The tone mapping node function. Returns `null` if no node function is found.
      */
-    getToneMappingFunction(
-        toneMapping: ToneMapping,
-    ): ((color: Node, exposure: Node) => ShaderNodeObject<Node>) | null;
+    getToneMappingFunction(toneMapping: ToneMapping): ((color: Node, exposure: Node) => ShaderNodeObject<Node>) | null;
     /**
      * Returns a node material class definition for a material type.
      *
