@@ -9,7 +9,6 @@ import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
-import ConvertNode from "../utils/ConvertNode.js";
 import JoinNode from "../utils/JoinNode.js";
 
 export interface NodeElements {
@@ -95,11 +94,8 @@ export type ShaderNodeObject<T extends Node> =
     }
     & Swizzable<T>;
 
-/** anything that can be passed to {@link nodeObject} and returns a proxy */
-export type NodeRepresentation<T extends Node = Node> = number | boolean | Vector3 | Node | ShaderNodeObject<T>;
-
 /** anything that can be passed to {@link nodeObject} */
-export type NodeObjectOption = NodeRepresentation | string;
+export type NodeObjectOption = Node | number | string;
 
 // same logic as in ShaderNodeObject: number,boolean,node->ShaderNodeObject, otherwise do nothing
 export type NodeObject<T> = T extends Node ? ShaderNodeObject<T>
@@ -107,7 +103,7 @@ export type NodeObject<T> = T extends Node ? ShaderNodeObject<T>
     : T;
 
 // opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
-type Proxied<T> = T extends Node ? NodeRepresentation<T> : T;
+type Proxied<T> = T extends Node | number ? Node | number : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
@@ -206,9 +202,9 @@ export const defined: (v: unknown) => unknown;
 export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
-    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
+    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => Node);
     call: (
-        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? ShaderNodeObject<Node> | Node : T[key] },
+        inputs: { [key in keyof T]: T[key] extends Node ? ShaderNodeObject<Node> | Node : T[key] },
         builder?: NodeBuilder,
     ) => ShaderNodeObject<R>;
 }
@@ -275,7 +271,7 @@ export const setCurrentStack: (stack: StackNode | null) => void;
 export const getCurrentStack: () => StackNode | null;
 
 export const If: (boolNode: Node, method: () => void) => StackNode;
-export const Switch: (expression: NodeRepresentation) => StackNode;
+export const Switch: (expression: Node) => StackNode;
 
 export function Stack(node: Node): Node;
 
@@ -431,9 +427,9 @@ export const mat4: Matrix4Function;
 export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
 
-export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
-export const convert: (node: NodeRepresentation, types: string) => ShaderNodeObject<Node>;
-export const split: (node: NodeRepresentation, channels?: string) => ShaderNodeObject<Node>;
+export const element: (node: Node, indexNode: Node) => ShaderNodeObject<Node>;
+export const convert: (node: Node, types: string) => ShaderNodeObject<Node>;
+export const split: (node: Node, channels?: string) => ShaderNodeObject<Node>;
 
 /**
  * @deprecated append() has been renamed to Stack().
