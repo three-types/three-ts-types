@@ -117,25 +117,12 @@ declare module "../tsl/TSLCore.js" {
 }
 
 /**
- * @deprecated .remainder() has been renamed to .modInt().
- */
-export const remainder: (
-    aNode: OperatorNodeParameter,
-    bNode: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => ShaderNodeObject<OperatorNode>;
-
-/**
  * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
  */
 export const modInt: (a: OperatorNodeParameter, b: OperatorNodeParameter) => ShaderNodeObject<OperatorNode>;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
-        /**
-         * @deprecated .remainder() has been renamed to .modInt().
-         */
-        remainder: typeof remainder;
         /**
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */

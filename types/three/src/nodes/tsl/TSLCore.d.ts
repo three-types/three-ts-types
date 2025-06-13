@@ -435,20 +435,3 @@ export const split: (node: Node, channels?: string) => ShaderNodeObject<Node>;
  * @deprecated append() has been renamed to Stack().
  */
 export const append: (node: Node) => Node;
-
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<R extends Node = ShaderNodeObject<Node>>(jsFunc: () => R): () => R;
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<T extends any[], R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): (...args: ProxiedTuple<T>) => R;
-/**
- * @deprecated tslFn() has been renamed to Fn()
- */
-export function tslFn<T extends { [key: string]: unknown }, R extends Node = ShaderNodeObject<Node>>(
-    jsFunc: (args: T) => R,
-): (args: ProxiedObject<T>) => R;

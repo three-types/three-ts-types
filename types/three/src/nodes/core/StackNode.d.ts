@@ -21,16 +21,6 @@ declare class StackNode extends Node {
     Case(...params: Node[]): this;
 
     Default(method: () => void): this;
-
-    /**
-     * @deprecated Use {@link StackNode#ElseIf Else()} instead.
-     */
-    elseif(boolNode: Node, method: () => void): this;
-
-    /**
-     * @deprecated Use {@link StackNode#Else Else()} instead.
-     */
-    else(method: () => void): this;
 }
 
 export default StackNode;

@@ -36,8 +36,3 @@ interface Loop {
 export const Loop: Loop;
 export const Continue: () => ShaderNodeObject<Node>;
 export const Break: () => ShaderNodeObject<Node>;
-
-/**
- * @deprecated loop() has been renamed to Loop()
- */
-export const loop: (...params: unknown[]) => ShaderNodeObject<Node>;
