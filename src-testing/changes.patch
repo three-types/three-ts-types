@@ -655,13 +655,12 @@ index 7cfff69f..99c39c40 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 33e6c559..e364eb61 100644
+index 33e6c559..fac8cc7b 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,5 +1,6 @@
  import Node from './Node.js';
--import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
-+import { addMethodChaining, nodeProxy, NodeRepresentation } from '../tsl/TSLCore.js';
+ import { addMethodChaining, nodeProxy } from '../tsl/TSLCore.js';
 +import NodeBuilder from './NodeBuilder.js';
  
  /**
@@ -731,7 +730,7 @@ index 33e6c559..e364eb61 100644
   * @returns {ContextNode}
   */
 -export const label = (node, name) => context(node, { label: name });
-+export const label = (node: NodeRepresentation, name: string) => context(node, { label: name });
++export const label = (node: Node, name: string) => context(node, { label: name });
  
  addMethodChaining('context', context);
  addMethodChaining('label', label);
@@ -3307,7 +3306,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index adc0b41a..a751ccd3 100644
+index adc0b41a..f51da32e 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3349,7 +3348,7 @@ index adc0b41a..a751ccd3 100644
  const NodeElements = new Map();
  
  export function addMethodChaining(name, nodeElement) {
-@@ -24,6 +53,141 @@ export function addMethodChaining(name, nodeElement) {
+@@ -24,6 +53,138 @@ export function addMethodChaining(name, nodeElement) {
      NodeElements.set(name, nodeElement);
  }
  
@@ -3381,11 +3380,8 @@ index adc0b41a..a751ccd3 100644
 +          : never;
 +} & Swizzable<T>;
 +
-+/** anything that can be passed to {@link nodeObject} and returns a proxy */
-+export type NodeRepresentation<T extends Node = Node> = number | boolean | Node | ShaderNodeObject<T>;
-+
 +/** anything that can be passed to {@link nodeObject} */
-+export type NodeObjectOption = NodeRepresentation | string;
++export type NodeObjectOption = Node | number | string;
 +
 +// same logic as in ShaderNodeObject: number,boolean,node->ShaderNodeObject, otherwise do nothing
 +export type NodeObject<T> = T extends Node
@@ -3395,7 +3391,7 @@ index adc0b41a..a751ccd3 100644
 +      : T;
 +
 +// opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
-+type Proxied<T> = T extends Node ? NodeRepresentation<T> : T;
++type Proxied<T> = T extends Node | number ? Node | number : T;
 +// https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 +export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 +export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
@@ -3491,7 +3487,7 @@ index adc0b41a..a751ccd3 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -120,7 +284,7 @@ const shaderNodeHandler = {
+@@ -120,7 +281,7 @@ const shaderNodeHandler = {
  const nodeObjectsCacheMap = new WeakMap();
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3500,7 +3496,7 @@ index adc0b41a..a751ccd3 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -228,7 +392,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -228,7 +389,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3511,7 +3507,7 @@ index adc0b41a..a751ccd3 100644
          super();
  
          this.shaderNode = shaderNode;
-@@ -237,7 +403,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -237,7 +400,7 @@ class ShaderCallNodeInternal extends Node {
          this.isShaderCallNodeInternal = true;
      }
  
@@ -3520,7 +3516,7 @@ index adc0b41a..a751ccd3 100644
          return this.shaderNode.nodeType || this.getOutputNode(builder).getNodeType(builder);
      }
  
-@@ -245,7 +411,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -245,7 +408,7 @@ class ShaderCallNodeInternal extends Node {
          return this.getOutputNode(builder).getMemberType(builder, name);
      }
  
@@ -3529,7 +3525,7 @@ index adc0b41a..a751ccd3 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -342,7 +508,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -342,7 +505,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3545,7 +3541,7 @@ index adc0b41a..a751ccd3 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -355,7 +529,7 @@ class ShaderNodeInternal extends Node {
+@@ -355,7 +526,7 @@ class ShaderNodeInternal extends Node {
          this.namespace = null;
      }
  
@@ -3554,7 +3550,7 @@ index adc0b41a..a751ccd3 100644
          this.layout = layout;
  
          return this;
-@@ -372,6 +546,8 @@ class ShaderNodeInternal extends Node {
+@@ -372,6 +543,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3563,7 +3559,7 @@ index adc0b41a..a751ccd3 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -465,10 +641,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -465,10 +638,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -8921,37 +8917,33 @@ index 42d80e47..a0e8c024 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index a08726f3..1563b212 100644
+index a08726f3..090d7b8f 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-@@ -1,3 +1,12 @@
+@@ -1,3 +1,11 @@
 +import { Material } from '../../../materials/Material.js';
 +import NodeMaterial from '../../../materials/nodes/NodeMaterial.js';
 +import { ToneMapping } from '../../../constants.js';
-+import { NodeRepresentation, ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
++import { ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
 +import Node from '../../../nodes/core/Node.js';
 +import { Light } from '../../../lights/Light.js';
 +import AnalyticLightNode from '../../../nodes/lighting/AnalyticLightNode.js';
-+import { ColorSpaceMethod } from '../../../nodes/display/ColorSpaceNode.js';
 +
  /**
   * The purpose of a node library is to assign node implementations
   * to existing library features. In `WebGPURenderer` lights, materials
-@@ -7,6 +16,13 @@
+@@ -7,6 +15,10 @@
   * @private
   */
  class NodeLibrary {
 +    lightNodes: WeakMap<{ new (): Light }, { new (light: Light): AnalyticLightNode<Light> }>;
 +    materialNodes: Map<string, { new (): NodeMaterial }>;
-+    toneMappingNodes: Map<
-+        ToneMapping,
-+        (color: NodeRepresentation, exposure: NodeRepresentation) => ShaderNodeObject<Node>
-+    >;
++    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => ShaderNodeObject<Node>>;
 +
      /**
       * Constructs a new node library.
       */
-@@ -44,8 +60,8 @@ class NodeLibrary {
+@@ -44,8 +56,8 @@ class NodeLibrary {
       * @param {Material} material - A material.
       * @return {NodeMaterial} The corresponding node material.
       */
@@ -8962,19 +8954,16 @@ index a08726f3..1563b212 100644
  
          let nodeMaterial = null;
  
-@@ -68,7 +84,10 @@ class NodeLibrary {
+@@ -68,7 +80,7 @@ class NodeLibrary {
       * @param {Function} toneMappingNode - The tone mapping node function.
       * @param {number} toneMapping - The tone mapping.
       */
 -    addToneMapping(toneMappingNode, toneMapping) {
-+    addToneMapping(
-+        toneMappingNode: (color: NodeRepresentation, exposure: NodeRepresentation) => ShaderNodeObject<Node>,
-+        toneMapping: ToneMapping,
-+    ) {
++    addToneMapping(toneMappingNode: (color: Node, exposure: Node) => ShaderNodeObject<Node>, toneMapping: ToneMapping) {
          this.addType(toneMappingNode, toneMapping, this.toneMappingNodes);
      }
  
-@@ -78,7 +97,7 @@ class NodeLibrary {
+@@ -78,7 +90,7 @@ class NodeLibrary {
       * @param {number} toneMapping - The tone mapping.
       * @return {?Function} The tone mapping node function. Returns `null` if no node function is found.
       */
@@ -8983,7 +8972,7 @@ index a08726f3..1563b212 100644
          return this.toneMappingNodes.get(toneMapping) || null;
      }
  
-@@ -88,7 +107,7 @@ class NodeLibrary {
+@@ -88,7 +100,7 @@ class NodeLibrary {
       * @param {string} materialType - The material type.
       * @return {?NodeMaterial.constructor} The node material class definition. Returns `null` if no node material is found.
       */
@@ -8992,7 +8981,7 @@ index a08726f3..1563b212 100644
          return this.materialNodes.get(materialType) || null;
      }
  
-@@ -98,7 +117,7 @@ class NodeLibrary {
+@@ -98,7 +110,7 @@ class NodeLibrary {
       * @param {NodeMaterial.constructor} materialNodeClass - The node material class definition.
       * @param {string} materialClassType - The material type.
       */
@@ -9001,7 +8990,7 @@ index a08726f3..1563b212 100644
          this.addType(materialNodeClass, materialClassType, this.materialNodes);
      }
  
-@@ -108,7 +127,7 @@ class NodeLibrary {
+@@ -108,7 +120,7 @@ class NodeLibrary {
       * @param {Light.constructor} light - The light class definition.
       * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
       */
@@ -9010,7 +8999,7 @@ index a08726f3..1563b212 100644
          return this.lightNodes.get(light) || null;
      }
  
-@@ -118,8 +137,18 @@ class NodeLibrary {
+@@ -118,8 +130,18 @@ class NodeLibrary {
       * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
       * @param {Light.constructor} lightClass - The light class definition.
       */
@@ -9031,7 +9020,7 @@ index a08726f3..1563b212 100644
      }
  
      /**
-@@ -129,7 +158,7 @@ class NodeLibrary {
+@@ -129,7 +151,7 @@ class NodeLibrary {
       * @param {number|string} type - The object type.
       * @param {Map} library - The type library.
       */
@@ -9040,7 +9029,7 @@ index a08726f3..1563b212 100644
          if (library.has(type)) {
              console.warn(`Redefinition of node ${type}`);
              return;
-@@ -149,7 +178,11 @@ class NodeLibrary {
+@@ -149,7 +171,11 @@ class NodeLibrary {
       * @param {any} baseClass - The class definition.
       * @param {WeakMap} library - The type library.
       */
