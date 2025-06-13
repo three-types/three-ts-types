@@ -1354,7 +1354,7 @@ index ff6d6e2b..105aeb07 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
-index 9a14919b..2d52e37b 100644
+index f1ce6548..5ec818dd 100644
 --- a/examples-testing/examples/misc_exporter_usdz.ts
 +++ b/examples-testing/examples/misc_exporter_usdz.ts
 @@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -1384,7 +1384,7 @@ index 9a14919b..2d52e37b 100644
      const gradient = context.createRadialGradient(
          canvas.width / 2,
          canvas.height / 2,
-@@ -118,7 +118,7 @@ function onWindowResize() {
+@@ -119,7 +119,7 @@ function onWindowResize() {
  }
  
  function exportUSDZ() {
@@ -4051,32 +4051,10 @@ index a8195417..46230b4a 100644
  
          render();
 diff --git a/examples-testing/examples/webgl_geometries.ts b/examples-testing/examples/webgl_geometries.ts
-index 2b2d0261..d5820b37 100644
+index 0eb50120..a8181348 100644
 --- a/examples-testing/examples/webgl_geometries.ts
 +++ b/examples-testing/examples/webgl_geometries.ts
-@@ -2,7 +2,7 @@ import * as THREE from 'three';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
--let camera, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
- 
- init();
- 
-@@ -127,7 +127,7 @@ function render() {
-     camera.lookAt(scene.position);
- 
-     scene.traverse(function (object) {
--        if (object.isMesh === true) {
-+        if ((object as THREE.Mesh).isMesh === true) {
-             object.rotation.x = timer * 5;
-             object.rotation.y = timer * 2.5;
-         }
-diff --git a/examples-testing/examples/webgl_geometries_parametric.ts b/examples-testing/examples/webgl_geometries_parametric.ts
-index b9a0f520..fe7792cf 100644
---- a/examples-testing/examples/webgl_geometries_parametric.ts
-+++ b/examples-testing/examples/webgl_geometries_parametric.ts
-@@ -5,12 +5,12 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
  import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
  
@@ -4085,13 +4063,7 @@ index b9a0f520..fe7792cf 100644
  
  init();
  
- function init() {
--    const container = document.getElementById('container');
-+    const container = document.getElementById('container')!;
- 
-     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-     camera.position.y = 400;
-@@ -93,7 +93,7 @@ function render() {
+@@ -155,7 +155,7 @@ function render() {
      camera.lookAt(scene.position);
  
      scene.traverse(function (object) {
@@ -8136,7 +8108,7 @@ index 1ecf95f2..2373eb7e 100644
  let needsUpdate = false;
  
 diff --git a/examples-testing/examples/webgl_materials_blending.ts b/examples-testing/examples/webgl_materials_blending.ts
-index 11cc009b..7f7fd73c 100644
+index fb2e6a91..6063485e 100644
 --- a/examples-testing/examples/webgl_materials_blending.ts
 +++ b/examples-testing/examples/webgl_materials_blending.ts
 @@ -1,7 +1,7 @@
@@ -8176,7 +8148,7 @@ index 11cc009b..7f7fd73c 100644
          for (let i = 0; i < blendings.length; i++) {
              const blending = blendings[i];
  
-@@ -115,9 +115,9 @@ function onWindowResize() {
+@@ -117,9 +117,9 @@ function onWindowResize() {
      camera.updateProjectionMatrix();
  }
  
@@ -8280,7 +8252,7 @@ index a09c2157..00fe46b6 100644
  
      mesh.position.y = -0.5;
 diff --git a/examples-testing/examples/webgl_materials_car.ts b/examples-testing/examples/webgl_materials_car.ts
-index e810f7b7..5f71ea26 100644
+index 4a0cd187..74be14c4 100644
 --- a/examples-testing/examples/webgl_materials_car.ts
 +++ b/examples-testing/examples/webgl_materials_car.ts
 @@ -8,16 +8,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -8641,7 +8613,7 @@ index c3f3f4f7..4ae4cb95 100644
          roughness: params.roughness,
          envMapIntensity: 1.0,
 diff --git a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
-index 48e0077f..09c67188 100644
+index 2c917caf..915aadca 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
 @@ -13,7 +13,7 @@ const params = {
@@ -18468,7 +18440,7 @@ index feec1fd5..fb8b6727 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index aefe757e..95d55f3c 100644
+index c4808ba0..f8ad5737 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 @@ -1,4 +1,4 @@
