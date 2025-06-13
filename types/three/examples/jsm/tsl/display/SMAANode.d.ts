@@ -1,5 +1,5 @@
 import { ShaderNodeObject } from "three/tsl";
-import { TempNode, TextureNode } from "three/webgpu";
+import { Node, TempNode, TextureNode } from "three/webgpu";
 
 declare class SMAANode extends TempNode {
     textureNode: TextureNode;
