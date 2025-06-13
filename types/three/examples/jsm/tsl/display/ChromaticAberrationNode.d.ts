@@ -1,4 +1,4 @@
-import { NodeRepresentation, ShaderNodeObject } from "three/tsl";
+import { ShaderNodeObject } from "three/tsl";
 import { Node, TempNode, Vector2 } from "three/webgpu";
 
 declare class ChromaticAberrationNode extends TempNode {
@@ -13,8 +13,8 @@ declare class ChromaticAberrationNode extends TempNode {
 export default ChromaticAberrationNode;
 
 export const chromaticAberration: (
-    node: NodeRepresentation,
-    strength?: NodeRepresentation,
-    center?: NodeRepresentation | Vector2 | null,
-    scale?: NodeRepresentation,
+    node: Node,
+    strength?: Node,
+    center?: Node | Vector2 | null,
+    scale?: Node,
 ) => ShaderNodeObject<ChromaticAberrationNode>;

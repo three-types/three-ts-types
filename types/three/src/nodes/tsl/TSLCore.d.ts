@@ -94,9 +94,6 @@ export type ShaderNodeObject<T extends Node> =
     }
     & Swizzable<T>;
 
-/** anything that can be passed to {@link nodeObject} and returns a proxy */
-export type NodeRepresentation = Node;
-
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
 
@@ -205,9 +202,9 @@ export const defined: (v: unknown) => unknown;
 export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
-    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => NodeRepresentation);
+    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => Node);
     call: (
-        inputs: { [key in keyof T]: T[key] extends NodeRepresentation ? ShaderNodeObject<Node> | Node : T[key] },
+        inputs: { [key in keyof T]: T[key] extends Node ? ShaderNodeObject<Node> | Node : T[key] },
         builder?: NodeBuilder,
     ) => ShaderNodeObject<R>;
 }
@@ -274,7 +271,7 @@ export const setCurrentStack: (stack: StackNode | null) => void;
 export const getCurrentStack: () => StackNode | null;
 
 export const If: (boolNode: Node, method: () => void) => StackNode;
-export const Switch: (expression: NodeRepresentation) => StackNode;
+export const Switch: (expression: Node) => StackNode;
 
 export function Stack(node: Node): Node;
 
@@ -430,9 +427,9 @@ export const mat4: Matrix4Function;
 export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
 
-export const element: (node: NodeRepresentation, indexNode: NodeRepresentation) => ShaderNodeObject<Node>;
-export const convert: (node: NodeRepresentation, types: string) => ShaderNodeObject<Node>;
-export const split: (node: NodeRepresentation, channels?: string) => ShaderNodeObject<Node>;
+export const element: (node: Node, indexNode: Node) => ShaderNodeObject<Node>;
+export const convert: (node: Node, types: string) => ShaderNodeObject<Node>;
+export const split: (node: Node, channels?: string) => ShaderNodeObject<Node>;
 
 /**
  * @deprecated append() has been renamed to Stack().

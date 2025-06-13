@@ -1,6 +1,6 @@
 import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
-import { NodeRepresentation, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class TriplanarTexturesNode extends Node {
     textureXNode: TextureNode;
@@ -23,14 +23,14 @@ export default class TriplanarTexturesNode extends Node {
 }
 
 export const triplanarTextures: (
-    textureXNode: NodeRepresentation,
-    textureYNode?: NodeRepresentation,
-    textureZNode?: NodeRepresentation,
-    scaleNode?: NodeRepresentation,
-    positionNode?: NodeRepresentation,
-    normalNode?: NodeRepresentation,
+    textureXNode: Node,
+    textureYNode?: Node,
+    textureZNode?: Node,
+    scaleNode?: Node,
+    positionNode?: Node,
+    normalNode?: Node,
 ) => ShaderNodeObject<TriplanarTexturesNode>;
 export const triplanarTexture: (
-    texture: NodeRepresentation,
-    ...params: NodeRepresentation[]
+    texture: Node,
+    ...params: Node[]
 ) => ShaderNodeObject<TriplanarTexturesNode>;
