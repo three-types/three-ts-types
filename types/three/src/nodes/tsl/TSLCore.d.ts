@@ -98,7 +98,7 @@ export type ShaderNodeObject<T extends Node> =
 export type NodeRepresentation = Node;
 
 /** anything that can be passed to {@link nodeObject} */
-export type NodeObjectOption = NodeRepresentation | string;
+export type NodeObjectOption = Node | number | string;
 
 // same logic as in ShaderNodeObject: number,boolean,node->ShaderNodeObject, otherwise do nothing
 export type NodeObject<T> = T extends Node ? ShaderNodeObject<T>
@@ -106,7 +106,7 @@ export type NodeObject<T> = T extends Node ? ShaderNodeObject<T>
     : T;
 
 // opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
-type Proxied<T> = T extends Node ? NodeRepresentation : T;
+type Proxied<T> = T extends Node | number ? Node | number : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
