@@ -13751,7 +13751,7 @@ index b0aed613..8607a01a 100644
          hip: 'mixamorigHips',
  
 diff --git a/examples-testing/examples/webgpu_backdrop.ts b/examples-testing/examples/webgpu_backdrop.ts
-index dc3024a9..6646b2e1 100644
+index dc3024a9..052adf95 100644
 --- a/examples-testing/examples/webgpu_backdrop.ts
 +++ b/examples-testing/examples/webgpu_backdrop.ts
 @@ -1,4 +1,4 @@
@@ -13774,7 +13774,18 @@ index dc3024a9..6646b2e1 100644
  
  init();
  
-@@ -67,7 +67,7 @@ function init() {
+@@ -51,7 +51,9 @@ function init() {
+         const object = gltf.scene;
+         mixer = new THREE.AnimationMixer(object);
+ 
+-        const material = object.children[0].children[0].material;
++        const material = (
++            object.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>
++        ).material;
+         material.outputNode = oscSine(time.mul(0.1)).mix(output, posterize(output.add(0.1), 4).mul(2));
+ 
+         const action = mixer.clipAction(gltf.animations[0]);
+@@ -67,7 +69,7 @@ function init() {
      portals = new THREE.Group();
      scene.add(portals);
  
