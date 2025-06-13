@@ -3,7 +3,7 @@ import TempNode from "../core/TempNode.js";
 import { ProxiedObject, ShaderNodeObject } from "../tsl/TSLCore.js";
 import FunctionNode, { FunctionNodeArguments } from "./FunctionNode.js";
 
-export default class FunctionCallNode<P extends Node[] | { [name: string]: Node }> extends TempNode {
+export default class FunctionCallNode<P extends Node[] | { [name: string]: Node | number }> extends TempNode {
     functionNode: FunctionNode<P>;
     parameters: { [name: string]: Node };
 

@@ -25,7 +25,7 @@ declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         toneMapping: (
             color: NodeRepresentation,
-            mapping?: NodeRepresentation,
+            mapping?: ToneMapping,
             exposure?: NodeRepresentation,
         ) => ShaderNodeObject<ToneMappingNode>;
     }
