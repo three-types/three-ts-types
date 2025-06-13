@@ -22,18 +22,3 @@ declare module "../tsl/TSLCore.js" {
         select: typeof select;
     }
 }
-
-/**
- * @deprecated cond() has been renamed to select()
- */
-export const cond: (
-    condNode: Node,
-    ifNode: Node | number,
-    elseNode?: Node | number | null,
-) => ShaderNodeObject<Node>;
-
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        cond: typeof cond;
-    }
-}

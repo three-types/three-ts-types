@@ -24,8 +24,3 @@ declare class UniformArrayNode extends BufferNode<unknown[]> {
 export default UniformArrayNode;
 
 export const uniformArray: (values: unknown[], nodeType?: string | null) => ShaderNodeObject<UniformArrayNode>;
-
-/**
- * @deprecated uniforms() has been renamed to uniformArray().
- */
-export const uniforms: (values: unknown[], nodeType?: string | null) => ShaderNodeObject<UniformArrayNode>;
