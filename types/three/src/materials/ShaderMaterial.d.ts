@@ -112,8 +112,8 @@ export interface ShaderMaterialProperties extends MaterialProperties {
      * - multiDraw: set to `true` to use vertex shader multi_draw / enable gl_DrawID
      */
     extensions: {
-        clipCullDistance: false;
-        multiDraw: false;
+        clipCullDistance: boolean;
+        multiDraw: boolean;
     };
     /**
      * When the rendered geometry doesn't include these attributes but the
