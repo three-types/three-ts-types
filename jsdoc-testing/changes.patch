@@ -996,10 +996,10 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..2c642cba 100644
+index 5c608790..afa58d7a 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
-@@ -1,41 +1,27 @@
+@@ -1,41 +1,32 @@
 -/**
 - * Abstract base class for materials.
 - *
@@ -1026,6 +1026,8 @@ index 5c608790..2c642cba 100644
 -    readonly uuid: string;
 +import { EventDispatcher } from '../core/EventDispatcher.js';
 +import { Color } from '../math/Color.js';
++import { EulerTuple } from '../math/Euler.js';
++import { Vector2Tuple } from '../math/Vector2.js';
 +import {
 +    Blending,
 +    BlendingDstFactor,
@@ -1039,7 +1041,10 @@ index 5c608790..2c642cba 100644
 +    StencilFunc,
 +    StencilOp,
 +} from "../constants.js";
++import { JSONMeta } from "../core/Object3D.js";
 +import { Plane } from "../math/Plane.js";
++import { SourceJSON } from "../textures/Source.d.ts";
++import { TextureJSON } from "../textures/Texture.js";
 +
 +export interface MaterialProperties {
      /**
@@ -1059,7 +1064,7 @@ index 5c608790..2c642cba 100644
      /**
       * Defines the blending type of the material.
       *
-@@ -46,14 +32,14 @@ export class Material extends EventDispatcher {
+@@ -46,14 +37,14 @@ export class Material extends EventDispatcher {
       * @type {(NoBlending|NormalBlending|AdditiveBlending|SubtractiveBlending|MultiplyBlending|CustomBlending)}
       * @default NormalBlending
       */
@@ -1076,7 +1081,7 @@ index 5c608790..2c642cba 100644
      /**
       * If set to `true`, vertex colors should be used.
       *
-@@ -103,42 +89,42 @@ export class Material extends EventDispatcher {
+@@ -103,42 +94,42 @@ export class Material extends EventDispatcher {
       * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
       * @default SrcAlphaFactor
       */
@@ -1125,7 +1130,7 @@ index 5c608790..2c642cba 100644
      /**
       * Represents the RGB values of the constant blend color.
       *
-@@ -163,7 +149,7 @@ export class Material extends EventDispatcher {
+@@ -163,7 +154,7 @@ export class Material extends EventDispatcher {
       * @type {(NeverDepth|AlwaysDepth|LessDepth|LessEqualDepth|EqualDepth|GreaterEqualDepth|GreaterDepth|NotEqualDepth)}
       * @default LessEqualDepth
       */
@@ -1134,7 +1139,7 @@ index 5c608790..2c642cba 100644
      /**
       * Whether to have depth test enabled when rendering this material.
       * When the depth test is disabled, the depth write will also be implicitly disabled.
-@@ -195,7 +181,7 @@ export class Material extends EventDispatcher {
+@@ -195,7 +186,7 @@ export class Material extends EventDispatcher {
       * @type {NeverStencilFunc|LessStencilFunc|EqualStencilFunc|LessEqualStencilFunc|GreaterStencilFunc|NotEqualStencilFunc|GreaterEqualStencilFunc|AlwaysStencilFunc}
       * @default AlwaysStencilFunc
       */
@@ -1143,7 +1148,7 @@ index 5c608790..2c642cba 100644
      /**
       * The value to use when performing stencil comparisons or stencil operations.
       *
-@@ -216,7 +202,7 @@ export class Material extends EventDispatcher {
+@@ -216,7 +207,7 @@ export class Material extends EventDispatcher {
       * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
@@ -1152,7 +1157,7 @@ index 5c608790..2c642cba 100644
      /**
       * Which stencil operation to perform when the comparison function returns
       * `true` but the depth test fails.
-@@ -224,7 +210,7 @@ export class Material extends EventDispatcher {
+@@ -224,7 +215,7 @@ export class Material extends EventDispatcher {
       * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
@@ -1161,7 +1166,7 @@ index 5c608790..2c642cba 100644
      /**
       * Which stencil operation to perform when the comparison function returns
       * `true` and the depth test passes.
-@@ -232,7 +218,7 @@ export class Material extends EventDispatcher {
+@@ -232,7 +223,7 @@ export class Material extends EventDispatcher {
       * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
@@ -1170,7 +1175,7 @@ index 5c608790..2c642cba 100644
      /**
       * Whether stencil operations are performed against the stencil buffer. In
       * order to perform writes or comparisons against the stencil buffer this
-@@ -280,7 +266,7 @@ export class Material extends EventDispatcher {
+@@ -280,7 +271,7 @@ export class Material extends EventDispatcher {
       * @type {?(FrontSide|BackSide|DoubleSide)}
       * @default null
       */
@@ -1179,13 +1184,174 @@ index 5c608790..2c642cba 100644
      /**
       * Whether to render the material's color.
       *
-@@ -392,6 +378,42 @@ export class Material extends EventDispatcher {
+@@ -391,7 +382,202 @@ export class Material extends EventDispatcher {
+      *
       * @type {Object}
       */
-     userData: Object;
+-    userData: Object;
++    userData: Record<string, any>;
 +}
 +
 +export interface MaterialParameters extends Partial<MaterialProperties> {}
++
++export interface MaterialJSON {
++    metadata: { version: number; type: string; generator: string };
++
++    uuid: string;
++    type: string;
++
++    name?: string;
++
++    color?: number;
++    roughness?: number;
++    metalness?: number;
++
++    sheen?: number;
++    sheenColor?: number;
++    sheenRoughness?: number;
++    emissive?: number;
++    emissiveIntensity?: number;
++
++    specular?: number;
++    specularIntensity?: number;
++    specularColor?: number;
++    shininess?: number;
++    clearcoat?: number;
++    clearcoatRoughness?: number;
++    clearcoatMap?: string;
++    clearcoatRoughnessMap?: string;
++    clearcoatNormalMap?: string;
++    clearcoatNormalScale?: Vector2Tuple;
++
++    dispersion?: number;
++
++    iridescence?: number;
++    iridescenceIOR?: number;
++    iridescenceThicknessRange?: number;
++    iridescenceMap?: string;
++    iridescenceThicknessMap?: string;
++
++    anisotropy?: number;
++    anisotropyRotation?: number;
++    anisotropyMap?: string;
++
++    map?: string;
++    matcap?: string;
++    alphaMap?: string;
++
++    lightMap?: string;
++    lightMapIntensity?: number;
++
++    aoMap?: string;
++    aoMapIntensity?: number;
++
++    bumpMap?: string;
++    bumpScale?: number;
++
++    normalMap?: string;
++    normalMapType?: NormalMapTypes;
++    normalScale?: Vector2Tuple;
++
++    displacementMap?: string;
++    displacementScale?: number;
++    displacementBias?: number;
++
++    roughnessMap?: string;
++    metalnessMap?: string;
++
++    emissiveMap?: string;
++    specularMap?: string;
++    specularIntensityMap?: string;
++    specularColorMap?: string;
++
++    envMap?: string;
++    combine?: Combine;
++
++    envMapRotation?: EulerTuple;
++    envMapIntensity?: number;
++    reflectivity?: number;
++    refractionRatio?: number;
++
++    gradientMap?: string;
++
++    transmission?: number;
++    transmissionMap?: string;
++    thickness?: number;
++    thicknessMap?: string;
++    attenuationDistance?: number;
++    attenuationColor?: number;
++
++    size?: number;
++    shadowSide?: number;
++    sizeAttenuation?: boolean;
++
++    blending?: Blending;
++    side?: Side;
++    vertexColors?: boolean;
++
++    opacity?: number;
++    transparent?: boolean;
++
++    blendSrc?: BlendingSrcFactor;
++    blendDst?: BlendingDstFactor;
++    blendEquation?: BlendingEquation;
++    blendSrcAlpha?: number | null;
++    blendDstAlpha?: number | null;
++    blendEquationAlpha?: number | null;
++    blendColor?: number;
++    blendAlpha?: number;
++
++    depthFunc?: DepthModes;
++    depthTest?: boolean;
++    depthWrite?: boolean;
++    colorWrite?: boolean;
++
++    stencilWriteMask?: number;
++    stencilFunc?: StencilFunc;
++    stencilRef?: number;
++    stencilFuncMask?: number;
++    stencilFail?: StencilOp;
++    stencilZFail?: StencilOp;
++    stencilZPass?: StencilOp;
++    stencilWrite?: boolean;
++
++    rotation?: number;
++
++    polygonOffset?: boolean;
++    polygonOffsetFactor?: number;
++    polygonOffsetUnits?: number;
++
++    linewidth?: number;
++    dashSize?: number;
++    gapSize?: number;
++    scale?: number;
++
++    dithering?: boolean;
++
++    alphaTest?: number;
++    alphaHash?: boolean;
++    alphaToCoverage?: boolean;
++    premultipliedAlpha?: boolean;
++    forceSinglePass?: boolean;
++
++    wireframe?: boolean;
++    wireframeLinewidth?: number;
++    wireframeLinecap?: string;
++    wireframeLinejoin?: string;
++
++    flatShading?: boolean;
++
++    visible?: boolean;
++
++    toneMapped?: boolean;
++
++    fog?: boolean;
++
++    userData?: Record<string, unknown>;
++
++    textures?: Array<Omit<TextureJSON, "metadata">>;
++    images?: SourceJSON[];
++}
 +
 +/**
 + * Abstract base class for materials.
@@ -1222,7 +1388,7 @@ index 5c608790..2c642cba 100644
      /**
       * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
       *
-@@ -401,7 +423,7 @@ export class Material extends EventDispatcher {
+@@ -401,7 +587,7 @@ export class Material extends EventDispatcher {
       */
      readonly version: number;
      _alphaTest: number;
@@ -1231,7 +1397,7 @@ index 5c608790..2c642cba 100644
      /**
       * Sets the alpha value to be used when running an alpha test. The material
       * will not be rendered if the opacity is lower than this value.
-@@ -410,7 +432,7 @@ export class Material extends EventDispatcher {
+@@ -410,7 +596,7 @@ export class Material extends EventDispatcher {
       * @readonly
       * @default 0
       */
@@ -1240,7 +1406,25 @@ index 5c608790..2c642cba 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -493,5 +515,5 @@ export class Material extends EventDispatcher {
+@@ -454,7 +640,7 @@ export class Material extends EventDispatcher {
+      *
+      * @param {Object} [values] - The material values to set.
+      */
+-    setValues(values?: Object): void;
++    setValues(values?: MaterialProperties): void;
+     /**
+      * Serializes the material into JSON.
+      *
+@@ -462,7 +648,7 @@ export class Material extends EventDispatcher {
+      * @return {Object} A JSON object representing the serialized material.
+      * @see {@link ObjectLoader#parse}
+      */
+-    toJSON(meta: (Object | string) | null): Object;
++    toJSON(meta?: JSONMeta): MaterialJSON;
+     /**
+      * Returns a new material with copied values from this instance.
+      *
+@@ -493,5 +679,5 @@ export class Material extends EventDispatcher {
       */
      set needsUpdate(value: boolean);
  }
