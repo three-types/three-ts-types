@@ -995,3 +995,256 @@ index 856db2d5..a7c734c2 100644
 +    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
+index 5c608790..2c642cba 100644
+--- a/jsdoc-testing/jsdoc/materials/Material.d.ts
++++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
+@@ -1,41 +1,27 @@
+-/**
+- * Abstract base class for materials.
+- *
+- * Materials define the appearance of renderable 3D objects.
+- *
+- * @abstract
+- * @augments EventDispatcher
+- */
+-export class Material extends EventDispatcher {
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isMaterial: boolean;
+-    /**
+-     * The UUID of the material.
+-     *
+-     * @type {string}
+-     * @readonly
+-     */
+-    readonly uuid: string;
++import { EventDispatcher } from '../core/EventDispatcher.js';
++import { Color } from '../math/Color.js';
++import {
++    Blending,
++    BlendingDstFactor,
++    BlendingEquation,
++    BlendingSrcFactor,
++    Combine,
++    DepthModes,
++    NormalMapTypes,
++    PixelFormat,
++    Side,
++    StencilFunc,
++    StencilOp,
++} from "../constants.js";
++import { Plane } from "../math/Plane.js";
++
++export interface MaterialProperties {
+     /**
+      * The name of the material.
+      *
+      * @type {string}
+      */
+     name: string;
+-    /**
+-     * The type property is used for detecting the object type
+-     * in context of serialization/deserialization.
+-     *
+-     * @type {string}
+-     * @readonly
+-     */
+-    readonly type: string;
+     /**
+      * Defines the blending type of the material.
+      *
+@@ -46,14 +32,14 @@ export class Material extends EventDispatcher {
+      * @type {(NoBlending|NormalBlending|AdditiveBlending|SubtractiveBlending|MultiplyBlending|CustomBlending)}
+      * @default NormalBlending
+      */
+-    blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
++    blending: Blending;
+     /**
+      * Defines which side of faces will be rendered - front, back or both.
+      *
+      * @type {(FrontSide|BackSide|DoubleSide)}
+      * @default FrontSide
+      */
+-    side: (number | BackSide | DoubleSide);
++    side: Side;
+     /**
+      * If set to `true`, vertex colors should be used.
+      *
+@@ -103,42 +89,42 @@ export class Material extends EventDispatcher {
+      * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+      * @default SrcAlphaFactor
+      */
+-    blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
++    blendSrc: BlendingSrcFactor;
+     /**
+      * Defines the blending destination factor.
+      *
+      * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+      * @default OneMinusSrcAlphaFactor
+      */
+-    blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
++    blendDst: BlendingDstFactor;
+     /**
+      * Defines the blending equation.
+      *
+      * @type {(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
+      * @default AddEquation
+      */
+-    blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
++    blendEquation: BlendingEquation;
+     /**
+      * Defines the blending source alpha factor.
+      *
+      * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+      * @default null
+      */
+-    blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
++    blendSrcAlpha: BlendingSrcFactor | null;
+     /**
+      * Defines the blending destination alpha factor.
+      *
+      * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+      * @default null
+      */
+-    blendDstAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
++    blendDstAlpha: BlendingDstFactor | null;
+     /**
+      * Defines the blending equation of the alpha channel.
+      *
+      * @type {?(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
+      * @default null
+      */
+-    blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
++    blendEquationAlpha: BlendingEquation | null;
+     /**
+      * Represents the RGB values of the constant blend color.
+      *
+@@ -163,7 +149,7 @@ export class Material extends EventDispatcher {
+      * @type {(NeverDepth|AlwaysDepth|LessDepth|LessEqualDepth|EqualDepth|GreaterEqualDepth|GreaterDepth|NotEqualDepth)}
+      * @default LessEqualDepth
+      */
+-    depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
++    depthFunc: DepthModes;
+     /**
+      * Whether to have depth test enabled when rendering this material.
+      * When the depth test is disabled, the depth write will also be implicitly disabled.
+@@ -195,7 +181,7 @@ export class Material extends EventDispatcher {
+      * @type {NeverStencilFunc|LessStencilFunc|EqualStencilFunc|LessEqualStencilFunc|GreaterStencilFunc|NotEqualStencilFunc|GreaterEqualStencilFunc|AlwaysStencilFunc}
+      * @default AlwaysStencilFunc
+      */
+-    stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
++    stencilFunc: StencilFunc;
+     /**
+      * The value to use when performing stencil comparisons or stencil operations.
+      *
+@@ -216,7 +202,7 @@ export class Material extends EventDispatcher {
+      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+      * @default KeepStencilOp
+      */
+-    stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
++    stencilFail: StencilOp;
+     /**
+      * Which stencil operation to perform when the comparison function returns
+      * `true` but the depth test fails.
+@@ -224,7 +210,7 @@ export class Material extends EventDispatcher {
+      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+      * @default KeepStencilOp
+      */
+-    stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
++    stencilZFail: StencilOp;
+     /**
+      * Which stencil operation to perform when the comparison function returns
+      * `true` and the depth test passes.
+@@ -232,7 +218,7 @@ export class Material extends EventDispatcher {
+      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+      * @default KeepStencilOp
+      */
+-    stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
++    stencilZPass: StencilOp;
+     /**
+      * Whether stencil operations are performed against the stencil buffer. In
+      * order to perform writes or comparisons against the stencil buffer this
+@@ -280,7 +266,7 @@ export class Material extends EventDispatcher {
+      * @type {?(FrontSide|BackSide|DoubleSide)}
+      * @default null
+      */
+-    shadowSide: (number | BackSide | DoubleSide) | null;
++    shadowSide: Side | null;
+     /**
+      * Whether to render the material's color.
+      *
+@@ -392,6 +378,42 @@ export class Material extends EventDispatcher {
+      * @type {Object}
+      */
+     userData: Object;
++}
++
++export interface MaterialParameters extends Partial<MaterialProperties> {}
++
++/**
++ * Abstract base class for materials.
++ *
++ * Materials define the appearance of renderable 3D objects.
++ *
++ * @abstract
++ * @augments EventDispatcher
++ */
++export class Material extends EventDispatcher<{ dispose: {} }> {
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isMaterial: boolean;
++    /**
++     * The UUID of the material.
++     *
++     * @type {string}
++     * @readonly
++     */
++    readonly uuid: string;
++    /**
++     * The type property is used for detecting the object type
++     * in context of serialization/deserialization.
++     *
++     * @type {string}
++     * @readonly
++     */
++    readonly type: string;
+     /**
+      * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
+      *
+@@ -401,7 +423,7 @@ export class Material extends EventDispatcher {
+      */
+     readonly version: number;
+     _alphaTest: number;
+-    readonly set alphaTest(value: number);
++    set alphaTest(value: number);
+     /**
+      * Sets the alpha value to be used when running an alpha test. The material
+      * will not be rendered if the opacity is lower than this value.
+@@ -410,7 +432,7 @@ export class Material extends EventDispatcher {
+      * @readonly
+      * @default 0
+      */
+-    readonly get alphaTest(): number;
++    get alphaTest(): number;
+     /**
+      * An optional callback that is executed immediately before the material is used to render a 3D object.
+      *
+@@ -493,5 +515,5 @@ export class Material extends EventDispatcher {
+      */
+     set needsUpdate(value: boolean);
+ }
+-import { EventDispatcher } from '../core/EventDispatcher.js';
+-import { Color } from '../math/Color.js';
++
++export interface Material extends MaterialProperties {}
