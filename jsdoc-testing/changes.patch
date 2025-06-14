@@ -6433,7 +6433,7 @@ index 1ffe1bd1..34bbb973 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
-index 9e689cf0..d11f7ef6 100644
+index 9e689cf0..90dad36d 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,23 @@
@@ -6460,7 +6460,7 @@ index 9e689cf0..d11f7ef6 100644
 -     * @default true
 -     */
 -    readonly isNodeMaterial: boolean;
-+import { Material } from '../Material.js';
++import { MapColorPropertiesToColorRepresentations, Material, MaterialParameters } from '../Material.js';
 +import NodeMaterialObserver from './manager/NodeMaterialObserver.js';
 +import LightsNode from "../../nodes/lighting/LightsNode.js";
 +import Node from "../../nodes/core/Node.js";
@@ -6693,7 +6693,7 @@ index 9e689cf0..d11f7ef6 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -296,19 +262,34 @@ declare class NodeMaterial extends Material {
+@@ -296,19 +262,33 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -6714,15 +6714,14 @@ index 9e689cf0..d11f7ef6 100644
 +    vertexNode: Node | null;
 +}
 +
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface NodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<NodeMaterialNodeProperties>>, MaterialParameters {}
++
 +/**
 + * Base class for all node materials.
 + */
 +declare class NodeMaterial extends Material {
 +    static get type(): string;
-+    /**
-+     * Represents the type of the node material.
-+     */
-+    get type(): string;
 +    /**
 +     * This flag can be used for type testing.
 +     *
@@ -6732,7 +6731,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -354,35 +335,35 @@ declare class NodeMaterial extends Material {
+@@ -354,35 +334,35 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -6773,7 +6772,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Abstract interface method that can be implemented by derived materials
       * to setup material-specific node variables.
-@@ -390,33 +371,33 @@ declare class NodeMaterial extends Material {
+@@ -390,33 +370,33 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -6812,7 +6811,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Setups the lights node based on the scene, environment and material.
       *
-@@ -439,7 +420,7 @@ declare class NodeMaterial extends Material {
+@@ -439,7 +419,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -6821,7 +6820,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Setup the fog.
       *
-@@ -447,7 +428,7 @@ declare class NodeMaterial extends Material {
+@@ -447,7 +427,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6830,7 +6829,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -455,7 +436,7 @@ declare class NodeMaterial extends Material {
+@@ -455,7 +435,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6839,7 +6838,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Setups the output node.
       *
-@@ -463,7 +444,7 @@ declare class NodeMaterial extends Material {
+@@ -463,7 +443,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6848,7 +6847,7 @@ index 9e689cf0..d11f7ef6 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -478,7 +459,10 @@ declare class NodeMaterial extends Material {
+@@ -478,7 +458,10 @@ declare class NodeMaterial extends Material {
       * @param {NodeMaterial} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
@@ -6863,12 +6862,12 @@ index 9e689cf0..d11f7ef6 100644
 +
 +export default NodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
-index 3ab3141d..df1dde1d 100644
+index 3ab3141d..c3cc9e56 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
 @@ -1,18 +1,18 @@
  export { default as NodeMaterialObserver } from "./manager/NodeMaterialObserver.js";
--export { default as NodeMaterial } from "./NodeMaterial.js";
+ export { default as NodeMaterial } from "./NodeMaterial.js";
 -export { default as LineBasicNodeMaterial } from "./LineBasicNodeMaterial.js";
 -export { default as LineDashedNodeMaterial } from "./LineDashedNodeMaterial.js";
 -export { default as Line2NodeMaterial } from "./Line2NodeMaterial.js";
@@ -6885,7 +6884,6 @@ index 3ab3141d..df1dde1d 100644
 -export { default as SpriteNodeMaterial } from "./SpriteNodeMaterial.js";
 -export { default as ShadowNodeMaterial } from "./ShadowNodeMaterial.js";
 -export { default as VolumeNodeMaterial } from "./VolumeNodeMaterial.js";
-+export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
 +export { default as LineBasicNodeMaterial, LineBasicNodeMaterialParameters } from "./LineBasicNodeMaterial.js";
 +export { default as LineDashedNodeMaterial, LineDashedNodeMaterialParameters } from "./LineDashedNodeMaterial.js";
 +export { default as Line2NodeMaterial, Line2NodeMaterialParameters } from "./Line2NodeMaterial.js";
