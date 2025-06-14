@@ -10140,24 +10140,84 @@ index 6a0a2c85..2c17e42c 100644
      }
  
 diff --git a/src-testing/src/renderers/webgpu/nodes/StandardNodeLibrary.ts b/src-testing/src/renderers/webgpu/nodes/StandardNodeLibrary.ts
-index 37784a05..ee437526 100644
+index 37784a05..7b08961a 100644
 --- a/src-testing/src/renderers/webgpu/nodes/StandardNodeLibrary.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/StandardNodeLibrary.ts
-@@ -59,6 +59,8 @@ import {
+@@ -59,6 +59,20 @@ import {
      neutralToneMapping,
  } from '../../../nodes/display/ToneMappingFunctions.js';
  
++import { MeshPhongNodeMaterialNodeProperties } from '../../../materials/nodes/MeshPhongNodeMaterial.js';
++import { MeshStandardNodeMaterialNodeProperties } from '../../../materials/nodes/MeshStandardNodeMaterial.js';
 +import { MeshPhysicalNodeMaterialNodeProperties } from '../../../materials/nodes/MeshPhysicalNodeMaterial.js';
++import { MeshToonNodeMaterialNodeProperties } from '../../../materials/nodes/MeshToonNodeMaterial.js';
++import { MeshBasicNodeMaterialNodeProperties } from '../../../materials/nodes/MeshBasicNodeMaterial.js';
++import { MeshLambertNodeMaterialNodeProperties } from '../../../materials/nodes/MeshLambertNodeMaterial.js';
++import { MeshNormalNodeMaterialNodeProperties } from '../../../materials/nodes/MeshNormalNodeMaterial.js';
++import { MeshMatcapNodeMaterialNodeProperties } from '../../../materials/nodes/MeshMatcapNodeMaterial.js';
++import { LineBasicNodeMaterialNodeProperties } from '../../../materials/nodes/LineBasicNodeMaterial.js';
++import { LineDashedNodeMaterialNodeProperties } from '../../../materials/nodes/LineDashedNodeMaterial.js';
++import { PointsNodeMaterialNodeProperties } from '../../../materials/nodes/PointsNodeMaterial.js';
++import { SpriteNodeMaterialNodeProperties } from '../../../materials/nodes/SpriteNodeMaterial.js';
++import { ShadowNodeMaterialNodeProperties } from '../../../materials/nodes/ShadowNodeMaterial.js';
 +
  /**
   * This version of a node library represents the standard version
   * used in {@link WebGPURenderer}. It maps lights, tone mapping
-@@ -107,4 +109,8 @@ class StandardNodeLibrary extends NodeLibrary {
+@@ -107,4 +121,56 @@ class StandardNodeLibrary extends NodeLibrary {
      }
  }
  
++declare module '../../../materials/MeshPhongMaterial.js' {
++    export interface MeshPhongMaterialProperties extends MeshPhongNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshStandardMaterial.js' {
++    export interface MeshStandardMaterialProperties extends MeshStandardNodeMaterialNodeProperties {}
++}
++
 +declare module '../../../materials/MeshPhysicalMaterial.js' {
 +    export interface MeshPhysicalMaterialProperties extends MeshPhysicalNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshToonMaterial.js' {
++    export interface MeshToonMaterialProperties extends MeshToonNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshBasicMaterial.js' {
++    export interface MeshBasicMaterialProperties extends MeshBasicNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshLambertMaterial.js' {
++    export interface MeshLambertMaterialProperties extends MeshLambertNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshNormalMaterial.js' {
++    export interface MeshNormalMaterialProperties extends MeshNormalNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/MeshMatcapMaterial.js' {
++    export interface MeshMatcapMaterialProperties extends MeshMatcapNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/LineBasicMaterial.js' {
++    export interface LineBasicMaterialProperties extends LineBasicNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/LineDashedMaterial.js' {
++    export interface LineDashedMaterialProperties extends LineDashedNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/PointsMaterial.js' {
++    export interface PointsMaterialProperties extends PointsNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/SpriteMaterial.js' {
++    export interface SpriteMaterialProperties extends SpriteNodeMaterialNodeProperties {}
++}
++
++declare module '../../../materials/ShadowMaterial.js' {
++    export interface ShadowMaterialProperties extends ShadowNodeMaterialNodeProperties {}
 +}
 +
  export default StandardNodeLibrary;
