@@ -240,8 +240,6 @@ export class ShaderMaterial extends Material {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isShaderMaterial: boolean;
