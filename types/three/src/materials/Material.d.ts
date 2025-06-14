@@ -343,10 +343,18 @@ export interface MaterialProperties {
      * should not hold references to functions as these will not be cloned.
      */
     userData: Record<string, any>;
+    set alphaTest(value: number);
+    /**
+     * Sets the alpha value to be used when running an alpha test. The material
+     * will not be rendered if the opacity is lower than this value.
+     *
+     * @default 0
+     */
+    get alphaTest(): number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MaterialParameters extends Partial<MaterialProperties> {
-    alphaTest?: number | undefined;
 }
 
 export interface MaterialJSON {
@@ -538,14 +546,6 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default 0
      */
     readonly version: number;
-    set alphaTest(value: number);
-    /**
-     * Sets the alpha value to be used when running an alpha test. The material
-     * will not be rendered if the opacity is lower than this value.
-     *
-     * @default 0
-     */
-    get alphaTest(): number;
     /**
      * An optional callback that is executed immediately before the material is used to render a 3D object.
      *
