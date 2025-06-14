@@ -51,6 +51,7 @@ declare class SpriteNodeMaterial extends NodeMaterial {
      * @param {Object} [parameters] - The configuration parameter.
      */
     constructor(parameters?: SpriteNodeMaterialParameters);
+    readonly isSpriteMaterial: boolean;
     /**
      * This flag can be used for type testing.
      *
