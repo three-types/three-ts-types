@@ -12,8 +12,13 @@ import {
     StencilOp,
 } from "../constants.js";
 import { EventDispatcher } from "../core/EventDispatcher.js";
+import { JSONMeta } from "../core/Object3D.js";
 import { Color } from "../math/Color.js";
+import { EulerTuple } from "../math/Euler.js";
 import { Plane } from "../math/Plane.js";
+import { Vector2Tuple } from "../math/Vector2.js";
+import { SourceJSON } from "../textures/Source.d.ts";
+import { TextureJSON } from "../textures/Texture.js";
 
 export interface MaterialProperties {
     /**
@@ -377,10 +382,169 @@ export interface MaterialProperties {
      *
      * @type {Object}
      */
-    userData: Object;
+    userData: Record<string, any>;
 }
 
 export interface MaterialParameters extends Partial<MaterialProperties> {}
+
+export interface MaterialJSON {
+    metadata: { version: number; type: string; generator: string };
+
+    uuid: string;
+    type: string;
+
+    name?: string;
+
+    color?: number;
+    roughness?: number;
+    metalness?: number;
+
+    sheen?: number;
+    sheenColor?: number;
+    sheenRoughness?: number;
+    emissive?: number;
+    emissiveIntensity?: number;
+
+    specular?: number;
+    specularIntensity?: number;
+    specularColor?: number;
+    shininess?: number;
+    clearcoat?: number;
+    clearcoatRoughness?: number;
+    clearcoatMap?: string;
+    clearcoatRoughnessMap?: string;
+    clearcoatNormalMap?: string;
+    clearcoatNormalScale?: Vector2Tuple;
+
+    dispersion?: number;
+
+    iridescence?: number;
+    iridescenceIOR?: number;
+    iridescenceThicknessRange?: number;
+    iridescenceMap?: string;
+    iridescenceThicknessMap?: string;
+
+    anisotropy?: number;
+    anisotropyRotation?: number;
+    anisotropyMap?: string;
+
+    map?: string;
+    matcap?: string;
+    alphaMap?: string;
+
+    lightMap?: string;
+    lightMapIntensity?: number;
+
+    aoMap?: string;
+    aoMapIntensity?: number;
+
+    bumpMap?: string;
+    bumpScale?: number;
+
+    normalMap?: string;
+    normalMapType?: NormalMapTypes;
+    normalScale?: Vector2Tuple;
+
+    displacementMap?: string;
+    displacementScale?: number;
+    displacementBias?: number;
+
+    roughnessMap?: string;
+    metalnessMap?: string;
+
+    emissiveMap?: string;
+    specularMap?: string;
+    specularIntensityMap?: string;
+    specularColorMap?: string;
+
+    envMap?: string;
+    combine?: Combine;
+
+    envMapRotation?: EulerTuple;
+    envMapIntensity?: number;
+    reflectivity?: number;
+    refractionRatio?: number;
+
+    gradientMap?: string;
+
+    transmission?: number;
+    transmissionMap?: string;
+    thickness?: number;
+    thicknessMap?: string;
+    attenuationDistance?: number;
+    attenuationColor?: number;
+
+    size?: number;
+    shadowSide?: number;
+    sizeAttenuation?: boolean;
+
+    blending?: Blending;
+    side?: Side;
+    vertexColors?: boolean;
+
+    opacity?: number;
+    transparent?: boolean;
+
+    blendSrc?: BlendingSrcFactor;
+    blendDst?: BlendingDstFactor;
+    blendEquation?: BlendingEquation;
+    blendSrcAlpha?: number | null;
+    blendDstAlpha?: number | null;
+    blendEquationAlpha?: number | null;
+    blendColor?: number;
+    blendAlpha?: number;
+
+    depthFunc?: DepthModes;
+    depthTest?: boolean;
+    depthWrite?: boolean;
+    colorWrite?: boolean;
+
+    stencilWriteMask?: number;
+    stencilFunc?: StencilFunc;
+    stencilRef?: number;
+    stencilFuncMask?: number;
+    stencilFail?: StencilOp;
+    stencilZFail?: StencilOp;
+    stencilZPass?: StencilOp;
+    stencilWrite?: boolean;
+
+    rotation?: number;
+
+    polygonOffset?: boolean;
+    polygonOffsetFactor?: number;
+    polygonOffsetUnits?: number;
+
+    linewidth?: number;
+    dashSize?: number;
+    gapSize?: number;
+    scale?: number;
+
+    dithering?: boolean;
+
+    alphaTest?: number;
+    alphaHash?: boolean;
+    alphaToCoverage?: boolean;
+    premultipliedAlpha?: boolean;
+    forceSinglePass?: boolean;
+
+    wireframe?: boolean;
+    wireframeLinewidth?: number;
+    wireframeLinecap?: string;
+    wireframeLinejoin?: string;
+
+    flatShading?: boolean;
+
+    visible?: boolean;
+
+    toneMapped?: boolean;
+
+    fog?: boolean;
+
+    userData?: Record<string, unknown>;
+
+    textures?: Array<Omit<TextureJSON, "metadata">>;
+    images?: SourceJSON[];
+}
 
 /**
  * Abstract base class for materials.
@@ -476,7 +640,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      *
      * @param {Object} [values] - The material values to set.
      */
-    setValues(values?: Object): void;
+    setValues(values?: MaterialProperties): void;
     /**
      * Serializes the material into JSON.
      *
@@ -484,7 +648,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @return {Object} A JSON object representing the serialized material.
      * @see {@link ObjectLoader#parse}
      */
-    toJSON(meta: (Object | string) | null): Object;
+    toJSON(meta?: JSONMeta): MaterialJSON;
     /**
      * Returns a new material with copied values from this instance.
      *
