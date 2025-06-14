@@ -6,17 +6,17 @@ export const grayscale: (color: Node) => ShaderNodeObject<Node>;
 
 export const saturation: (
     color: Node,
-    adjustment?: Node,
+    adjustment?: Node | number,
 ) => ShaderNodeObject<Node>;
 
 export const vibrance: (
     color: Node,
-    adjustment?: Node,
+    adjustment?: Node | number,
 ) => ShaderNodeObject<Node>;
 
 export const hue: (
     color: Node,
-    adjustment?: Node,
+    adjustment?: Node | number,
 ) => ShaderNodeObject<Node>;
 
 export const luminance: (

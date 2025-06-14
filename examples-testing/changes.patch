@@ -13750,6 +13750,50 @@ index b0aed613..8607a01a 100644
          // specify the name of the source's hip bone.
          hip: 'mixamorigHips',
  
+diff --git a/examples-testing/examples/webgpu_backdrop.ts b/examples-testing/examples/webgpu_backdrop.ts
+index dc3024a9..052adf95 100644
+--- a/examples-testing/examples/webgpu_backdrop.ts
++++ b/examples-testing/examples/webgpu_backdrop.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     float,
+     vec3,
+@@ -22,10 +22,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
+-let portals,
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let portals: THREE.Group,
+     rotate = true;
+-let mixer, clock;
++let mixer: THREE.AnimationMixer, clock: THREE.Clock;
+ 
+ init();
+ 
+@@ -51,7 +51,9 @@ function init() {
+         const object = gltf.scene;
+         mixer = new THREE.AnimationMixer(object);
+ 
+-        const material = object.children[0].children[0].material;
++        const material = (
++            object.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>
++        ).material;
+         material.outputNode = oscSine(time.mul(0.1)).mix(output, posterize(output.add(0.1), 4).mul(2));
+ 
+         const action = mixer.clipAction(gltf.animations[0]);
+@@ -67,7 +69,7 @@ function init() {
+     portals = new THREE.Group();
+     scene.add(portals);
+ 
+-    function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
++    function addBackdropSphere(backdropNode: THREE.Node, backdropAlphaNode: THREE.Node | null = null) {
+         const distance = 1;
+         const id = portals.children.length;
+         const rotation = THREE.MathUtils.degToRad(id * 45);
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
 index 53517e80..1fd4c8e2 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts

@@ -10,5 +10,5 @@ export default class PosterizeNode extends Node {
 
 export const posterize: (
     sourceNode: Node,
-    stepsNode: Node,
+    stepsNode: Node | number,
 ) => ShaderNodeObject<PosterizeNode>;
