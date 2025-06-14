@@ -5,7 +5,7 @@ import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
-import { Material } from "../Material.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialParameters } from "../Material.js";
 import NodeMaterialObserver from "./manager/NodeMaterialObserver.js";
 
 export interface NodeMaterialNodeProperties {
@@ -275,15 +275,16 @@ export interface NodeMaterialNodeProperties {
     vertexNode: Node | null;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface NodeMaterialParameters
+    extends Partial<MapColorPropertiesToColorRepresentations<NodeMaterialNodeProperties>>, MaterialParameters
+{}
+
 /**
  * Base class for all node materials.
  */
 declare class NodeMaterial extends Material {
     static get type(): string;
-    /**
-     * Represents the type of the node material.
-     */
-    get type(): string;
     /**
      * This flag can be used for type testing.
      *
