@@ -10,6 +10,7 @@ import { IUniform } from "../renderers/shaders/UniformsLib.js";
 import { Material, MaterialJSON, MaterialParameters } from "./Material.js";
 
 export interface ShaderMaterialParameters extends MaterialParameters {
+    defines?: { [key: string]: any } | undefined;
     uniforms?: { [uniform: string]: IUniform } | undefined;
     uniformsGroups?: UniformsGroup[] | undefined;
     vertexShader?: string | undefined;
