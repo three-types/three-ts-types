@@ -23,7 +23,7 @@ declare class ShadowNodeMaterial extends NodeMaterial {
      *
      * @param {Object} [parameters] - The configuration parameter.
      */
-    constructor(parameters?: Object);
+    constructor(parameters?: ShadowNodeMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
