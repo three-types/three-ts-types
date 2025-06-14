@@ -18,6 +18,7 @@ const files = [
     'animation/PropertyBinding',
     'animation/PropertyMixer',
     'materials/Material',
+    'materials/MeshPhysicalMaterial',
     'materials/MeshStandardMaterial',
 ];
 
