@@ -3,12 +3,7 @@ import { Color } from "../math/Color.js";
 import { Euler } from "../math/Euler.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Texture } from "../textures/Texture.js";
-import {
-    MapColorPropertiesToColorRepresentations,
-    Material,
-    MaterialParameters,
-    MaterialProperties,
-} from "./Material.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
 
 export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
