@@ -996,7 +996,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..b2e0f94c 100644
+index 5c608790..7085cbcb 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,35 @@
@@ -1389,7 +1389,7 @@ index 5c608790..b2e0f94c 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +335,217 @@ export class Material extends EventDispatcher {
+@@ -381,36 +335,216 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -1590,7 +1590,6 @@ index 5c608790..b2e0f94c 100644
 + * Materials define the appearance of renderable 3D objects.
 + *
 + * @abstract
-+ * @augments EventDispatcher
 + */
 +export class Material extends EventDispatcher<{ dispose: {} }> {
      /**
@@ -1622,7 +1621,7 @@ index 5c608790..b2e0f94c 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +558,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +557,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -1638,7 +1637,7 @@ index 5c608790..b2e0f94c 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +578,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +577,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -1647,7 +1646,7 @@ index 5c608790..b2e0f94c 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +596,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +595,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -1656,7 +1655,7 @@ index 5c608790..b2e0f94c 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,20 +604,20 @@ export class Material extends EventDispatcher {
+@@ -462,20 +603,20 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1680,7 +1679,7 @@ index 5c608790..b2e0f94c 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -487,11 +629,11 @@ export class Material extends EventDispatcher {
+@@ -487,11 +628,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
