@@ -357,7 +357,8 @@ export type MapColorPropertiesToColorRepresentations<T> = {
     [P in keyof T]: T[P] extends Color ? ColorRepresentation : T[P];
 };
 
-export type MaterialParameters = Partial<MapColorPropertiesToColorRepresentations<MaterialProperties>>;
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface MaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MaterialProperties>> {}
 
 export interface MaterialJSON {
     metadata: { version: number; type: string; generator: string };
