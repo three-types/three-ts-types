@@ -56,6 +56,6 @@ export class SpriteMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: SpriteMaterialParameters): void;
+    setValues(parameters?: SpriteMaterialParameters): void;
     copy(source: SpriteMaterial): this;
 }

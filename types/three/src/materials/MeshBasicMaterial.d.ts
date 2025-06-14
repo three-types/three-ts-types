@@ -130,5 +130,5 @@ export class MeshBasicMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: MeshBasicMaterialParameters): void;
+    setValues(parameters?: MeshBasicMaterialParameters): void;
 }

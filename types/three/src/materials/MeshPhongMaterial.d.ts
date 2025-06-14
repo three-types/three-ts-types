@@ -219,5 +219,5 @@ export class MeshPhongMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: MeshPhongMaterialParameters): void;
+    setValues(parameters?: MeshPhongMaterialParameters): void;
 }

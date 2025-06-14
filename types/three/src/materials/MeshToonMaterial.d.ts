@@ -169,5 +169,5 @@ export class MeshToonMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: MeshToonMaterialParameters): void;
+    setValues(parameters?: MeshToonMaterialParameters): void;
 }

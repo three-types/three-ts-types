@@ -31,5 +31,5 @@ export class LineDashedMaterial extends LineBasicMaterial {
      */
     gapSize: number;
 
-    setValues(parameters: LineDashedMaterialParameters): void;
+    setValues(parameters?: LineDashedMaterialParameters): void;
 }

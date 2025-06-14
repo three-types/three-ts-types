@@ -51,5 +51,5 @@ export class LineBasicMaterial extends Material {
      */
     map: Texture | null;
 
-    setValues(parameters: LineBasicMaterialParameters): void;
+    setValues(parameters?: LineBasicMaterialParameters): void;
 }

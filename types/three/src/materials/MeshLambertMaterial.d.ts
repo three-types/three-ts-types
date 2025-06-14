@@ -195,5 +195,5 @@ export class MeshLambertMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: MeshLambertMaterialParameters): void;
+    setValues(parameters?: MeshLambertMaterialParameters): void;
 }
