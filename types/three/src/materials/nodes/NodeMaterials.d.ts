@@ -11,7 +11,7 @@ export { default as MeshPhysicalNodeMaterial, MeshPhysicalNodeMaterialParameters
 export { default as MeshSSSNodeMaterial, MeshSSSNodeMaterialParameters } from "./MeshSSSNodeMaterial.js";
 export { default as MeshStandardNodeMaterial, MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
 export { default as MeshToonNodeMaterial, MeshToonNodeMaterialParameters } from "./MeshToonNodeMaterial.js";
-export { default as NodeMaterial } from "./NodeMaterial.js";
+export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
 export { default as PointsNodeMaterial, PointsNodeMaterialParameters } from "./PointsNodeMaterial.js";
 export { default as ShadowNodeMaterial, ShadowNodeMaterialParameters } from "./ShadowNodeMaterial.js";
 export { default as SpriteNodeMaterial, SpriteNodeMaterialParameters } from "./SpriteNodeMaterial.js";
