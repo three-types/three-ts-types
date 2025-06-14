@@ -339,7 +339,9 @@ export interface MaterialProperties {
     userData: Record<string, any>;
 }
 
-export interface MaterialParameters extends Partial<MaterialProperties> {}
+export interface MaterialParameters extends Partial<MaterialProperties> {
+    alphaTest?: number | undefined;
+}
 
 export interface MaterialJSON {
     metadata: { version: number; type: string; generator: string };
@@ -530,7 +532,6 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @default 0
      */
     readonly version: number;
-    _alphaTest: number;
     set alphaTest(value: number);
     /**
      * Sets the alpha value to be used when running an alpha test. The material
