@@ -6,7 +6,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
     /**
      * Type for depth packing.
      *
-     * @type {(BasicDepthPacking|RGBADepthPacking|RGBDepthPacking|RGDepthPacking)}
      * @default BasicDepthPacking
      */
     depthPacking: DepthPackingStrategies;
@@ -14,7 +13,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * The color map. May optionally include an alpha channel, typically combined
      * with {@link Material#transparent} or {@link Material#alphaTest}.
      *
-     * @type {?Texture}
      * @default null
      */
     map: Texture | null;
@@ -28,7 +26,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and
      * luminance/alpha textures will also still work as expected.
      *
-     * @type {?Texture}
      * @default null
      */
     alphaMap: Texture | null;
@@ -40,7 +37,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * of each pixel (white being the highest) is mapped against, and
      * repositions, the vertices of the mesh.
      *
-     * @type {?Texture}
      * @default null
      */
     displacementMap: Texture | null;
@@ -49,7 +45,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * displacement, and white is maximum displacement). Without a displacement
      * map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementScale: number;
@@ -58,14 +53,12 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * The bias is added to the scaled sample of the displacement map.
      * Without a displacement map set, this value is not applied.
      *
-     * @type {number}
      * @default 0
      */
     displacementBias: number;
     /**
      * Renders the geometry as a wireframe.
      *
-     * @type {boolean}
      * @default false
      */
     wireframe: boolean;
@@ -75,7 +68,6 @@ export interface MeshDepthMaterialProperties extends MaterialProperties {
      * WebGL and WebGPU ignore this property and always render
      * 1 pixel wide lines.
      *
-     * @type {number}
      * @default 1
      */
     wireframeLinewidth: number;
@@ -104,8 +96,6 @@ export class MeshDepthMaterial extends Material {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isMeshDepthMaterial: boolean;

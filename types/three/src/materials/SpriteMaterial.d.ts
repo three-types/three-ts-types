@@ -77,7 +77,7 @@ export class SpriteMaterial extends Material {
      * in here. Color values can be passed any type of value accepted
      * by {@link Color#set}.
      */
-    constructor(parameters?: Object);
+    constructor(parameters?: SpriteMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
