@@ -1,4 +1,4 @@
-import { MeshPhysicalNodeMaterialProperties } from "../../../materials/nodes/MeshPhysicalNodeMaterial.js";
+import { MeshPhysicalNodeMaterialNodeProperties } from "../../../materials/nodes/MeshPhysicalNodeMaterial.js";
 import NodeLibrary from "../../common/nodes/NodeLibrary.js";
 /**
  * This version of a node library represents the standard version
@@ -15,7 +15,7 @@ declare class StandardNodeLibrary extends NodeLibrary {
     constructor();
 }
 declare module "../../../materials/MeshPhysicalMaterial.js" {
-    interface MeshPhysicalMaterialProperties extends MeshPhysicalNodeMaterialProperties {
+    interface MeshPhysicalMaterialProperties extends MeshPhysicalNodeMaterialNodeProperties {
     }
 }
 export default StandardNodeLibrary;
