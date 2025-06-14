@@ -14,7 +14,7 @@ import {
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { EventDispatcher } from "../core/EventDispatcher.js";
 import { JSONMeta, Object3D } from "../core/Object3D.js";
-import { Color } from "../math/Color.js";
+import { Color, ColorRepresentation } from "../math/Color.js";
 import { EulerTuple } from "../math/Euler.js";
 import { Plane } from "../math/Plane.js";
 import { Vector2Tuple } from "../math/Vector2.js";
@@ -353,9 +353,12 @@ export interface MaterialProperties {
     get alphaTest(): number;
 }
 
+export type MapColorPropertiesToColorRepresentations<T> = {
+    [P in keyof T]: T[P] extends Color ? ColorRepresentation : T[P];
+};
+
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MaterialParameters extends Partial<MaterialProperties> {
-}
+export interface MaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MaterialProperties>> {}
 
 export interface MaterialJSON {
     metadata: { version: number; type: string; generator: string };
@@ -595,7 +598,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      *
      * @param {Object} [values] - The material values to set.
      */
-    setValues(values?: MaterialProperties): void;
+    setValues(values?: MaterialParameters): void;
     /**
      * Serializes the material into JSON.
      *
