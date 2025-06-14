@@ -10,7 +10,7 @@ import {
     MaterialProperties,
 } from "./Material.js";
 
-interface MeshStandardMaterialProperties extends MaterialProperties {
+export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
@@ -291,7 +291,7 @@ export class MeshStandardMaterial extends Material {
      * in here. Color values can be passed any type of value accepted
      * by {@link Color#set}.
      */
-    constructor(parameters?: Object);
+    constructor(parameters?: MeshStandardMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
