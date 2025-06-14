@@ -1696,10 +1696,10 @@ index 5c608790..04bb3409 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Material extends MaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/materials/MeshPhysicalMaterial.d.ts
-index f1a068a4..2b23939c 100644
+index f1a068a4..7e089054 100644
 --- a/jsdoc-testing/jsdoc/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/MeshPhysicalMaterial.d.ts
-@@ -1,47 +1,15 @@
+@@ -1,47 +1,19 @@
 -/**
 - * An extension of the {@link MeshStandardMaterial}, providing more advanced
 - * physically-based rendering properties:
@@ -1738,7 +1738,11 @@ index f1a068a4..2b23939c 100644
 -        STANDARD: string;
 -        PHYSICAL: string;
 -    };
-+import { MeshStandardMaterial, MeshStandardMaterialProperties } from './MeshStandardMaterial.js';
++import {
++    MeshStandardMaterial,
++    MeshStandardMaterialParameters,
++    MeshStandardMaterialProperties,
++} from './MeshStandardMaterial.js';
 +import { Vector2 } from '../math/Vector2.js';
 +import { Color } from '../math/Color.js';
 +import { Texture } from "../textures/Texture.js";
@@ -1754,7 +1758,7 @@ index f1a068a4..2b23939c 100644
       * @default 1
       */
      anisotropyRotation: number;
-@@ -50,7 +18,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -50,7 +22,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * bitangent space, to be rotated by `anisotropyRotation`. The blue channel
       * contains strength as `[0, 1]` to be multiplied by `anisotropy`.
       *
@@ -1762,7 +1766,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      anisotropyMap: Texture | null;
-@@ -58,14 +25,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -58,14 +29,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The red channel of this texture is multiplied against `clearcoat`,
       * for per-pixel control over a coating's intensity.
       *
@@ -1777,7 +1781,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      clearcoatRoughness: number;
-@@ -73,7 +38,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -73,7 +42,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The green channel of this texture is multiplied against
       * `clearcoatRoughness`, for per-pixel control over a coating's roughness.
       *
@@ -1785,7 +1789,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      clearcoatRoughnessMap: Texture | null;
-@@ -81,21 +45,18 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -81,21 +49,18 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * How much `clearcoatNormalMap` affects the clear coat layer, from
       * `(0,0)` to `(1,1)`.
       *
@@ -1807,7 +1811,7 @@ index f1a068a4..2b23939c 100644
       * @default 1.5
       */
      ior: number;
-@@ -103,7 +64,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -103,7 +68,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The red channel of this texture is multiplied against `iridescence`, for per-pixel
       * control over iridescence.
       *
@@ -1815,7 +1819,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      iridescenceMap: Texture | null;
-@@ -111,7 +71,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -111,7 +75,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * Strength of the iridescence RGB color shift effect, represented by an index-of-refraction.
       * Between `1.0` to `2.333`.
       *
@@ -1823,7 +1827,7 @@ index f1a068a4..2b23939c 100644
       * @default 1.3
       */
      iridescenceIOR: number;
-@@ -119,10 +78,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -119,10 +82,9 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *Array of exactly 2 elements, specifying minimum and maximum thickness of the iridescence layer.
       Thickness of iridescence layer has an equivalent effect of the one `thickness` has on `ior`.
       *
@@ -1835,7 +1839,7 @@ index f1a068a4..2b23939c 100644
      /**
       * A texture that defines the thickness of the iridescence layer, stored in the green channel.
       * Minimum and maximum values of thickness are defined by `iridescenceThicknessRange` array:
-@@ -130,14 +88,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -130,14 +92,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * - `1.0` in the green channel will result in thickness equal to second element of the array.
       * - Values in-between will linearly interpolate between the elements of the array.
       *
@@ -1850,7 +1854,7 @@ index f1a068a4..2b23939c 100644
       * @default (0,0,0)
       */
      sheenColor: Color;
-@@ -145,14 +101,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -145,14 +105,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The RGB channels of this texture are multiplied against  `sheenColor`, for per-pixel control
       * over sheen tint.
       *
@@ -1865,7 +1869,7 @@ index f1a068a4..2b23939c 100644
       * @default 1
       */
      sheenRoughness: number;
-@@ -160,7 +114,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -160,7 +118,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The alpha channel of this texture is multiplied against `sheenRoughness`, for per-pixel control
       * over sheen roughness.
       *
@@ -1873,7 +1877,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      sheenRoughnessMap: Texture | null;
-@@ -168,7 +121,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -168,7 +125,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The red channel of this texture is multiplied against `transmission`, for per-pixel control over
       * optical transparency.
       *
@@ -1881,7 +1885,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      transmissionMap: Texture | null;
-@@ -177,7 +129,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -177,7 +133,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * coordinate space of the mesh. If the value is `0` the material is
       * thin-walled. Otherwise the material is a volume boundary.
       *
@@ -1889,7 +1893,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      thickness: number;
-@@ -185,7 +136,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -185,7 +140,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * A texture that defines the thickness, stored in the green channel. This will
       * be multiplied by `thickness`.
       *
@@ -1897,7 +1901,7 @@ index f1a068a4..2b23939c 100644
       * @default null
       */
      thicknessMap: Texture | null;
-@@ -194,7 +144,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -194,7 +148,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * the medium before interacting with a particle. The value is given in world
       * space units, and must be greater than zero.
       *
@@ -1905,7 +1909,7 @@ index f1a068a4..2b23939c 100644
       * @default Infinity
       */
      attenuationDistance: number;
-@@ -202,7 +151,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -202,7 +155,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The color that white light turns into due to absorption when reaching the
       * attenuation distance.
       *
@@ -1913,7 +1917,7 @@ index f1a068a4..2b23939c 100644
       * @default (1,1,1)
       */
      attenuationColor: Color;
-@@ -210,7 +158,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -210,7 +162,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * A float that scales the amount of specular reflection for non-metals only.
       * When set to zero, the model is effectively Lambertian. From `0.0` to `1.0`.
       *
@@ -1921,7 +1925,7 @@ index f1a068a4..2b23939c 100644
       * @default 1
       */
      specularIntensity: number;
-@@ -218,14 +165,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -218,14 +169,12 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The alpha channel of this texture is multiplied against `specularIntensity`,
       * for per-pixel control over specular intensity.
       *
@@ -1936,7 +1940,7 @@ index f1a068a4..2b23939c 100644
       * @default (1,1,1)
       */
      specularColor: Color;
-@@ -233,21 +178,13 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -233,21 +182,13 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The RGB channels of this texture are multiplied against `specularColor`,
       * for per-pixel control over specular color.
       *
@@ -1958,7 +1962,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      get anisotropy(): number;
-@@ -257,7 +194,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -257,7 +198,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * clear coat related properties to enable multilayer materials that have a
       * thin translucent layer over the base layer.
       *
@@ -1966,7 +1970,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      get clearcoat(): number;
-@@ -266,7 +202,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -266,7 +206,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * The intensity of the iridescence layer, simulating RGB color shift based on the angle between
       * the surface and the viewer, from `0.0` to `1.0`.
       *
@@ -1974,7 +1978,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      get iridescence(): number;
-@@ -276,7 +211,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -276,7 +215,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       * through a relatively clear volume. Any value zero or larger is valid, the typical range of
       * realistic values is `[0, 1]`. This property can be only be used with transmissive objects.
       *
@@ -1982,7 +1986,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      get dispersion(): number;
-@@ -284,7 +218,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -284,7 +222,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The intensity of the sheen layer, from `0.0` to `1.0`.
       *
@@ -1990,7 +1994,7 @@ index f1a068a4..2b23939c 100644
       * @default 0
       */
      get sheen(): number;
-@@ -298,12 +231,48 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
+@@ -298,12 +235,49 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
       *
       * When transmission is non-zero, `opacity` should be  set to `1`.
       *
@@ -2033,6 +2037,7 @@ index f1a068a4..2b23939c 100644
 + * best results, always specify an environment map when using this material.
 + */
 +export class MeshPhysicalMaterial extends MeshStandardMaterial {
++    constructor(parameters?: MeshPhysicalMaterialParameters);
 +    /**
 +     * This flag can be used for type testing.
 +     *
