@@ -996,10 +996,10 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..9f33a66b 100644
+index 5c608790..2b3d6104 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
-@@ -1,41 +1,29 @@
+@@ -1,41 +1,35 @@
 -/**
 - * Abstract base class for materials.
 - *
@@ -1040,10 +1040,16 @@ index 5c608790..9f33a66b 100644
 +    StencilFunc,
 +    StencilOp,
 +} from "../constants.js";
-+import { JSONMeta } from "../core/Object3D.js";
++import { JSONMeta, Object3D } from "../core/Object3D.js";
 +import { Plane } from "../math/Plane.js";
 +import { SourceJSON } from "../textures/Source.js";
 +import { TextureJSON } from "../textures/Texture.js";
++import { Group } from "../objects/Group.js";
++import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
++import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
++import { Scene } from "../scenes/Scene.js";
++import { Camera } from "../cameras/Camera.js";
++import { BufferGeometry } from "../core/BufferGeometry.js";
 +
 +export interface MaterialProperties {
      /**
@@ -1063,7 +1069,7 @@ index 5c608790..9f33a66b 100644
      /**
       * Defines the blending type of the material.
       *
-@@ -43,24 +31,21 @@ export class Material extends EventDispatcher {
+@@ -43,24 +37,21 @@ export class Material extends EventDispatcher {
       * {@link Material#blendSrc}, {@link Material#blendDst} or {@link Material#blendEquation}
       * should have any effect.
       *
@@ -1090,7 +1096,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      vertexColors: boolean;
-@@ -71,7 +56,6 @@ export class Material extends EventDispatcher {
+@@ -71,7 +62,6 @@ export class Material extends EventDispatcher {
       * If the {@link Material#transparent} is not set to `true`,
       * the material will remain fully opaque and this value will only affect its color.
       *
@@ -1098,7 +1104,7 @@ index 5c608790..9f33a66b 100644
       * @default 1
       */
      opacity: number;
-@@ -83,7 +67,6 @@ export class Material extends EventDispatcher {
+@@ -83,7 +73,6 @@ export class Material extends EventDispatcher {
       * When set to true, the extent to which the material is transparent is
       * controlled by {@link Material#opacity}.
       *
@@ -1106,7 +1112,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      transparent: boolean;
-@@ -93,58 +76,50 @@ export class Material extends EventDispatcher {
+@@ -93,58 +82,50 @@ export class Material extends EventDispatcher {
       * a random threshold. Randomization introduces some grain or noise, but approximates alpha
       * blending without the associated problems of sorting. Using TAA can reduce the resulting noise.
       *
@@ -1171,7 +1177,7 @@ index 5c608790..9f33a66b 100644
       * @default (0,0,0)
       */
      blendColor: Color;
-@@ -153,22 +128,19 @@ export class Material extends EventDispatcher {
+@@ -153,22 +134,19 @@ export class Material extends EventDispatcher {
       *
       * This property has only an effect when using custom blending with `ConstantAlpha` or `OneMinusConstantAlpha`.
       *
@@ -1195,7 +1201,7 @@ index 5c608790..9f33a66b 100644
       * @default true
       */
      depthTest: boolean;
-@@ -178,67 +150,58 @@ export class Material extends EventDispatcher {
+@@ -178,67 +156,58 @@ export class Material extends EventDispatcher {
       * When drawing 2D overlays it can be useful to disable the depth writing in
       * order to layer several things together without creating z-index artifacts.
       *
@@ -1267,7 +1273,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      stencilWrite: boolean;
-@@ -249,7 +212,6 @@ export class Material extends EventDispatcher {
+@@ -249,7 +218,6 @@ export class Material extends EventDispatcher {
       * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
       * be `true`.
       *
@@ -1275,7 +1281,7 @@ index 5c608790..9f33a66b 100644
       * @default null
       */
      clippingPlanes: Array<Plane> | null;
-@@ -257,7 +219,6 @@ export class Material extends EventDispatcher {
+@@ -257,7 +225,6 @@ export class Material extends EventDispatcher {
       * Changes the behavior of clipping planes so that only their intersection is
       * clipped, rather than their union.
       *
@@ -1283,7 +1289,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      clipIntersection: boolean;
-@@ -265,7 +226,6 @@ export class Material extends EventDispatcher {
+@@ -265,7 +232,6 @@ export class Material extends EventDispatcher {
       * Defines whether to clip shadows according to the clipping planes specified
       * on this material.
       *
@@ -1291,7 +1297,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      clipShadows: boolean;
-@@ -277,24 +237,21 @@ export class Material extends EventDispatcher {
+@@ -277,24 +243,21 @@ export class Material extends EventDispatcher {
       * - When {@link Material#side} is set to `BackSide`, the front side cast shadows.
       * - When {@link Material#side} is set to `DoubleSide`, both sides cast shadows.
       *
@@ -1317,7 +1323,7 @@ index 5c608790..9f33a66b 100644
       * @default null
       */
      precision: ("highp" | "mediump" | "lowp") | null;
-@@ -307,28 +264,24 @@ export class Material extends EventDispatcher {
+@@ -307,28 +270,24 @@ export class Material extends EventDispatcher {
       * Can be useful for rendering hidden-line images, for applying decals to surfaces, and for
       * rendering solids with highlighted edges.
       *
@@ -1346,7 +1352,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      dithering: boolean;
-@@ -337,14 +290,12 @@ export class Material extends EventDispatcher {
+@@ -337,14 +296,12 @@ export class Material extends EventDispatcher {
       * (meaning when the renderer was created with *antialias* parameter set to `true`). Enabling this
       * will smooth aliasing on clip plane edges and alphaTest-clipped edges.
       *
@@ -1361,7 +1367,7 @@ index 5c608790..9f33a66b 100644
       * @default false
       */
      premultipliedAlpha: boolean;
-@@ -357,21 +308,18 @@ export class Material extends EventDispatcher {
+@@ -357,21 +314,18 @@ export class Material extends EventDispatcher {
       * vegetation like grass sprites. In these cases, set the `forceSinglePass` flag to `true` to
       * disable the two pass rendering to avoid performance issues.
       *
@@ -1383,7 +1389,7 @@ index 5c608790..9f33a66b 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +329,217 @@ export class Material extends EventDispatcher {
+@@ -381,36 +335,217 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -1611,7 +1617,32 @@ index 5c608790..9f33a66b 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -454,7 +583,7 @@ export class Material extends EventDispatcher {
+@@ -423,7 +558,14 @@ export class Material extends EventDispatcher {
+      * @param {Object3D} object - The 3D object.
+      * @param {Object} group - The geometry group data.
+      */
+-    onBeforeRender(): void;
++    onBeforeRender(
++        renderer: WebGLRenderer,
++        scene: Scene,
++        camera: Camera,
++        geometry: BufferGeometry,
++        object: Object3D,
++        group: Group
++    ): void;
+     /**
+      * An optional callback that is executed immediately before the shader
+      * program is compiled. This function is called with the shader source code
+@@ -436,7 +578,7 @@ export class Material extends EventDispatcher {
+      * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
+      * @param {WebGLRenderer} renderer - A reference to the renderer.
+      */
+-    onBeforeCompile(): void;
++    onBeforeCompile(parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
+     /**
+      * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
+      * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
+@@ -454,7 +596,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -1620,7 +1651,7 @@ index 5c608790..9f33a66b 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,13 +591,13 @@ export class Material extends EventDispatcher {
+@@ -462,13 +604,13 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1636,7 +1667,7 @@ index 5c608790..9f33a66b 100644
      /**
       * Copies the values of the given material to this instance.
       *
-@@ -487,11 +616,11 @@ export class Material extends EventDispatcher {
+@@ -487,11 +629,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
