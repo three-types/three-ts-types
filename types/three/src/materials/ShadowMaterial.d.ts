@@ -17,7 +17,7 @@ export interface ShadowMaterialProperties extends MaterialProperties {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShaderMaterialParameters
+export interface ShadowMaterialParameters
     extends Partial<MapColorPropertiesToColorRepresentations<ShadowMaterialProperties>>
 {}
 
@@ -47,7 +47,7 @@ export class ShadowMaterial extends Material {
      * in here. Color values can be passed any type of value accepted
      * by {@link Color#set}.
      */
-    constructor(parameters?: ShaderMaterialParameters);
+    constructor(parameters?: ShadowMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
