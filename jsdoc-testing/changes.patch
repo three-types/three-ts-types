@@ -4608,7 +4608,7 @@ index 4821ef3f..9a703d74 100644
  }
 -export {};
 diff --git a/jsdoc-testing/jsdoc/materials/ShaderMaterial.d.ts b/jsdoc-testing/jsdoc/materials/ShaderMaterial.d.ts
-index 760dec6e..edbf0adc 100644
+index 760dec6e..b2305732 100644
 --- a/jsdoc-testing/jsdoc/materials/ShaderMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/ShaderMaterial.d.ts
 @@ -1,84 +1,15 @@
@@ -4795,7 +4795,7 @@ index 760dec6e..edbf0adc 100644
       * @default false
       */
      clipping: boolean;
-@@ -195,8 +110,6 @@ export class ShaderMaterial extends Material {
+@@ -195,12 +110,10 @@ export class ShaderMaterial extends Material {
       *
       * - clipCullDistance: set to `true` to use vertex shader clipping
       * - multiDraw: set to `true` to use vertex shader multi_draw / enable gl_DrawID
@@ -4803,7 +4803,13 @@ index 760dec6e..edbf0adc 100644
 -     * @type {{clipCullDistance:false,multiDraw:false}}
       */
      extensions: {
-         clipCullDistance: false;
+-        clipCullDistance: false;
+-        multiDraw: false;
++        clipCullDistance: boolean;
++        multiDraw: boolean;
+     };
+     /**
+      * When the rendered geometry doesn't include these attributes but the
 @@ -210,15 +123,16 @@ export class ShaderMaterial extends Material {
       * - color: [ 1, 1, 1 ]
       * - uv: [ 0, 0 ]
