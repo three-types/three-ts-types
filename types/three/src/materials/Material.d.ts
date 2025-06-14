@@ -597,7 +597,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      *
      * @return {Material} A clone of this instance.
      */
-    clone(): Material;
+    clone(): this;
     /**
      * Copies the values of the given material to this instance.
      *
