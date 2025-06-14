@@ -3,7 +3,12 @@ import { Color } from "../math/Color.js";
 import { Euler } from "../math/Euler.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Texture } from "../textures/Texture.js";
-import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
+import {
+    MapColorPropertiesToColorRepresentations,
+    Material,
+    MaterialParameters,
+    MaterialProperties,
+} from "./Material.js";
 
 interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
@@ -293,6 +298,7 @@ export class MeshStandardMaterial extends Material {
      * @default true
      */
     readonly isMeshStandardMaterial: boolean;
+    setValues(values?: MeshStandardMaterialParameters): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

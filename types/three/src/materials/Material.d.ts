@@ -598,7 +598,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      *
      * @param {Object} [values] - The material values to set.
      */
-    setValues(values?: MaterialProperties): void;
+    setValues(values?: MaterialParameters): void;
     /**
      * Serializes the material into JSON.
      *
