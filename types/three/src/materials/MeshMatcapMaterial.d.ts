@@ -108,5 +108,5 @@ export class MeshMatcapMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: MeshMatcapMaterialParameters): void;
+    setValues(parameters?: MeshMatcapMaterialParameters): void;
 }

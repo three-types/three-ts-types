@@ -48,5 +48,5 @@ export class MeshDistanceMaterial extends Material {
      */
     displacementBias: number;
 
-    setValues(parameters: MeshDistanceMaterialParameters): void;
+    setValues(parameters?: MeshDistanceMaterialParameters): void;
 }

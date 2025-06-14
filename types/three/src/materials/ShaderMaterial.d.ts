@@ -156,7 +156,7 @@ export class ShaderMaterial extends Material {
      */
     glslVersion: GLSLVersion | null;
 
-    setValues(parameters: ShaderMaterialParameters): void;
+    setValues(parameters?: ShaderMaterialParameters): void;
 
     toJSON(meta?: JSONMeta): ShaderMaterialJSON;
 }

@@ -52,5 +52,5 @@ export class PointsMaterial extends Material {
      */
     fog: boolean;
 
-    setValues(parameters: PointsMaterialParameters): void;
+    setValues(parameters?: PointsMaterialParameters): void;
 }

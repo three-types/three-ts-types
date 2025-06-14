@@ -84,5 +84,5 @@ export class MeshNormalMaterial extends Material {
      */
     flatShading: boolean;
 
-    setValues(parameters: MeshNormalMaterialParameters): void;
+    setValues(parameters?: MeshNormalMaterialParameters): void;
 }
