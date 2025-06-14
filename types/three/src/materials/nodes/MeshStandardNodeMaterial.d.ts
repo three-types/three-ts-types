@@ -1,3 +1,4 @@
+import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import PhysicalLightingModel from "../../nodes/functions/PhysicalLightingModel.js";
 import EnvironmentNode from "../../nodes/lighting/EnvironmentNode.js";
