@@ -2153,10 +2153,10 @@ index 56a81e29..63cc4edf 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshBasicMaterial extends MeshBasicMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/MeshDepthMaterial.d.ts b/jsdoc-testing/jsdoc/materials/MeshDepthMaterial.d.ts
-index b3beb46d..903b8746 100644
+index b3beb46d..617a1ad1 100644
 --- a/jsdoc-testing/jsdoc/materials/MeshDepthMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/MeshDepthMaterial.d.ts
-@@ -1,36 +1,15 @@
+@@ -1,41 +1,18 @@
 -/**
 - * A material for drawing geometry by depth. Depth is based off of the camera
 - * near and far plane. White is nearest, black is farthest.
@@ -2191,7 +2191,7 @@ index b3beb46d..903b8746 100644
      /**
       * Type for depth packing.
       *
-      * @type {(BasicDepthPacking|RGBADepthPacking|RGBDepthPacking|RGDepthPacking)}
+-     * @type {(BasicDepthPacking|RGBADepthPacking|RGBDepthPacking|RGDepthPacking)}
       * @default BasicDepthPacking
       */
 -    depthPacking: (number | RGBADepthPacking | RGBDepthPacking | RGDepthPacking);
@@ -2199,7 +2199,55 @@ index b3beb46d..903b8746 100644
      /**
       * The color map. May optionally include an alpha channel, typically combined
       * with {@link Material#transparent} or {@link Material#alphaTest}.
-@@ -100,6 +79,35 @@ export class MeshDepthMaterial extends Material {
+      *
+-     * @type {?Texture}
+      * @default null
+      */
+     map: Texture | null;
+@@ -49,7 +26,6 @@ export class MeshDepthMaterial extends Material {
+      * green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and
+      * luminance/alpha textures will also still work as expected.
+      *
+-     * @type {?Texture}
+      * @default null
+      */
+     alphaMap: Texture | null;
+@@ -61,7 +37,6 @@ export class MeshDepthMaterial extends Material {
+      * of each pixel (white being the highest) is mapped against, and
+      * repositions, the vertices of the mesh.
+      *
+-     * @type {?Texture}
+      * @default null
+      */
+     displacementMap: Texture | null;
+@@ -70,7 +45,6 @@ export class MeshDepthMaterial extends Material {
+      * displacement, and white is maximum displacement). Without a displacement
+      * map set, this value is not applied.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     displacementScale: number;
+@@ -79,14 +53,12 @@ export class MeshDepthMaterial extends Material {
+      * The bias is added to the scaled sample of the displacement map.
+      * Without a displacement map set, this value is not applied.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     displacementBias: number;
+     /**
+      * Renders the geometry as a wireframe.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     wireframe: boolean;
+@@ -96,10 +68,36 @@ export class MeshDepthMaterial extends Material {
+      * WebGL and WebGPU ignore this property and always render
+      * 1 pixel wide lines.
+      *
+-     * @type {number}
       * @default 1
       */
      wireframeLinewidth: number;
@@ -2228,8 +2276,6 @@ index b3beb46d..903b8746 100644
 +    /**
 +     * This flag can be used for type testing.
 +     *
-+     * @type {boolean}
-+     * @readonly
 +     * @default true
 +     */
 +    readonly isMeshDepthMaterial: boolean;
@@ -5024,7 +5070,7 @@ index 2e66a566..270f8546 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface ShadowMaterial extends ShadowMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/SpriteMaterial.d.ts b/jsdoc-testing/jsdoc/materials/SpriteMaterial.d.ts
-index e44d5d72..56c5a25d 100644
+index e44d5d72..f3246607 100644
 --- a/jsdoc-testing/jsdoc/materials/SpriteMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/SpriteMaterial.d.ts
 @@ -1,41 +1,11 @@
@@ -5141,7 +5187,7 @@ index e44d5d72..56c5a25d 100644
 +     * in here. Color values can be passed any type of value accepted
 +     * by {@link Color#set}.
 +     */
-+    constructor(parameters?: Object);
++    constructor(parameters?: SpriteMaterialParameters);
 +    /**
 +     * This flag can be used for type testing.
 +     *
