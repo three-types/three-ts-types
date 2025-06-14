@@ -996,7 +996,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..5e2494f7 100644
+index 5c608790..9f33a66b 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,29 @@
@@ -1620,7 +1620,7 @@ index 5c608790..5e2494f7 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +591,7 @@ export class Material extends EventDispatcher {
+@@ -462,13 +591,13 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1628,6 +1628,13 @@ index 5c608790..5e2494f7 100644
 +    toJSON(meta?: JSONMeta): MaterialJSON;
      /**
       * Returns a new material with copied values from this instance.
+      *
+      * @return {Material} A clone of this instance.
+      */
+-    clone(): Material;
++    clone(): this;
+     /**
+      * Copies the values of the given material to this instance.
       *
 @@ -487,11 +616,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
