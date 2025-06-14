@@ -996,7 +996,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..2b3d6104 100644
+index 5c608790..a99854e6 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,35 @@
@@ -1651,7 +1651,7 @@ index 5c608790..2b3d6104 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,13 +604,13 @@ export class Material extends EventDispatcher {
+@@ -462,20 +604,20 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1667,6 +1667,14 @@ index 5c608790..2b3d6104 100644
      /**
       * Copies the values of the given material to this instance.
       *
+      * @param {Material} source - The material to copy.
+      * @return {Material} A reference to this instance.
+      */
+-    copy(source: Material): Material;
++    copy(source: Material): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
 @@ -487,11 +629,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
