@@ -2,7 +2,11 @@ import { Color } from "../math/Color.js";
 import { Vector2 } from "../math/Vector2.js";
 import { Texture } from "../textures/Texture.js";
 import { MapColorPropertiesToColorRepresentations } from "./Material.js";
-import { MeshStandardMaterial, MeshStandardMaterialProperties } from "./MeshStandardMaterial.js";
+import {
+    MeshStandardMaterial,
+    MeshStandardMaterialParameters,
+    MeshStandardMaterialProperties,
+} from "./MeshStandardMaterial.js";
 
 export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProperties {
     /**
@@ -265,6 +269,7 @@ export interface MeshPhysicalMaterialParameters
  * best results, always specify an environment map when using this material.
  */
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
+    constructor(parameters?: MeshPhysicalMaterialParameters);
     /**
      * This flag can be used for type testing.
      *
