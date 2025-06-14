@@ -996,7 +996,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..a99854e6 100644
+index 5c608790..b2e0f94c 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,35 @@
@@ -1400,12 +1400,29 @@ index 5c608790..a99854e6 100644
      /**
       * An object that can be used to store custom data about the Material. It
       * should not hold references to functions as these will not be cloned.
-+     */
+-     *
+-     * @type {Object}
+      */
+-    userData: Object;
 +    userData: Record<string, any>;
++    set alphaTest(value: number);
+     /**
+-     * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
++     * Sets the alpha value to be used when running an alpha test. The material
++     * will not be rendered if the opacity is lower than this value.
+      *
+-     * @type {number}
+-     * @readonly
+      * @default 0
+      */
+-    readonly version: number;
+-    _alphaTest: number;
+-    readonly set alphaTest(value: number);
++    get alphaTest(): number;
 +}
 +
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MaterialParameters extends Partial<MaterialProperties> {
-+    alphaTest?: number | undefined;
 +}
 +
 +export interface MaterialJSON {
@@ -1576,13 +1593,13 @@ index 5c608790..a99854e6 100644
 + * @augments EventDispatcher
 + */
 +export class Material extends EventDispatcher<{ dispose: {} }> {
-+    /**
+     /**
+-     * Sets the alpha value to be used when running an alpha test. The material
+-     * will not be rendered if the opacity is lower than this value.
 +     * This flag can be used for type testing.
-      *
--     * @type {Object}
++     *
 +     * @default true
-      */
--    userData: Object;
++     */
 +    readonly isMaterial: boolean;
 +    /**
 +     * The UUID of the material.
@@ -1593,27 +1610,15 @@ index 5c608790..a99854e6 100644
 +     * in context of serialization/deserialization.
 +     */
 +    readonly type: string;
-     /**
-      * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
-      *
--     * @type {number}
--     * @readonly
-      * @default 0
-      */
-     readonly version: number;
--    _alphaTest: number;
--    readonly set alphaTest(value: number);
-+    set alphaTest(value: number);
-     /**
-      * Sets the alpha value to be used when running an alpha test. The material
-      * will not be rendered if the opacity is lower than this value.
++    /**
++     * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
       *
 -     * @type {number}
 -     * @readonly
       * @default 0
       */
 -    readonly get alphaTest(): number;
-+    get alphaTest(): number;
++    readonly version: number;
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
