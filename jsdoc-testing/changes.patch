@@ -996,10 +996,10 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..be19cd97 100644
+index 5c608790..11806f99 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
-@@ -1,41 +1,31 @@
+@@ -1,41 +1,29 @@
 -/**
 - * Abstract base class for materials.
 - *
@@ -1048,8 +1048,8 @@ index 5c608790..be19cd97 100644
 +export interface MaterialProperties {
      /**
       * The name of the material.
-      *
-      * @type {string}
+-     *
+-     * @type {string}
       */
      name: string;
 -    /**
@@ -1063,8 +1063,11 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending type of the material.
       *
-@@ -46,14 +36,14 @@ export class Material extends EventDispatcher {
-      * @type {(NoBlending|NormalBlending|AdditiveBlending|SubtractiveBlending|MultiplyBlending|CustomBlending)}
+@@ -43,24 +31,21 @@ export class Material extends EventDispatcher {
+      * {@link Material#blendSrc}, {@link Material#blendDst} or {@link Material#blendEquation}
+      * should have any effect.
+      *
+-     * @type {(NoBlending|NormalBlending|AdditiveBlending|SubtractiveBlending|MultiplyBlending|CustomBlending)}
       * @default NormalBlending
       */
 -    blending: (NoBlending | number | AdditiveBlending | SubtractiveBlending | MultiplyBlending | CustomBlending);
@@ -1072,7 +1075,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines which side of faces will be rendered - front, back or both.
       *
-      * @type {(FrontSide|BackSide|DoubleSide)}
+-     * @type {(FrontSide|BackSide|DoubleSide)}
       * @default FrontSide
       */
 -    side: (number | BackSide | DoubleSide);
@@ -1080,8 +1083,41 @@ index 5c608790..be19cd97 100644
      /**
       * If set to `true`, vertex colors should be used.
       *
-@@ -103,42 +93,42 @@ export class Material extends EventDispatcher {
-      * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+      * The engine supports RGB and RGBA vertex colors depending on whether a three (RGB) or
+      * four (RGBA) component color buffer attribute is used.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     vertexColors: boolean;
+@@ -71,7 +56,6 @@ export class Material extends EventDispatcher {
+      * If the {@link Material#transparent} is not set to `true`,
+      * the material will remain fully opaque and this value will only affect its color.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     opacity: number;
+@@ -83,7 +67,6 @@ export class Material extends EventDispatcher {
+      * When set to true, the extent to which the material is transparent is
+      * controlled by {@link Material#opacity}.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     transparent: boolean;
+@@ -93,58 +76,50 @@ export class Material extends EventDispatcher {
+      * a random threshold. Randomization introduces some grain or noise, but approximates alpha
+      * blending without the associated problems of sorting. Using TAA can reduce the resulting noise.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     alphaHash: boolean;
+     /**
+      * Defines the blending source factor.
+      *
+-     * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
       * @default SrcAlphaFactor
       */
 -    blendSrc: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
@@ -1089,7 +1125,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending destination factor.
       *
-      * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+-     * @type {(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
       * @default OneMinusSrcAlphaFactor
       */
 -    blendDst: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor);
@@ -1097,7 +1133,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending equation.
       *
-      * @type {(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
+-     * @type {(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
       * @default AddEquation
       */
 -    blendEquation: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation);
@@ -1105,7 +1141,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending source alpha factor.
       *
-      * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+-     * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
       * @default null
       */
 -    blendSrcAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
@@ -1113,7 +1149,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending destination alpha factor.
       *
-      * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
+-     * @type {?(ZeroFactor|OneFactor|SrcColorFactor|OneMinusSrcColorFactor|SrcAlphaFactor|OneMinusSrcAlphaFactor|DstAlphaFactor|OneMinusDstAlphaFactor|DstColorFactor|OneMinusDstColorFactor|SrcAlphaSaturateFactor|ConstantColorFactor|OneMinusConstantColorFactor|ConstantAlphaFactor|OneMinusConstantAlphaFactor)}
       * @default null
       */
 -    blendDstAlpha: (ZeroFactor | OneFactor | SrcColorFactor | OneMinusSrcColorFactor | number | number | DstAlphaFactor | OneMinusDstAlphaFactor | DstColorFactor | OneMinusDstColorFactor | SrcAlphaSaturateFactor | ConstantColorFactor | OneMinusConstantColorFactor | ConstantAlphaFactor | OneMinusConstantAlphaFactor) | null;
@@ -1121,7 +1157,7 @@ index 5c608790..be19cd97 100644
      /**
       * Defines the blending equation of the alpha channel.
       *
-      * @type {?(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
+-     * @type {?(AddEquation|SubtractEquation|ReverseSubtractEquation|MinEquation|MaxEquation)}
       * @default null
       */
 -    blendEquationAlpha: (number | SubtractEquation | ReverseSubtractEquation | MinEquation | MaxEquation) | null;
@@ -1129,8 +1165,24 @@ index 5c608790..be19cd97 100644
      /**
       * Represents the RGB values of the constant blend color.
       *
-@@ -163,7 +153,7 @@ export class Material extends EventDispatcher {
-      * @type {(NeverDepth|AlwaysDepth|LessDepth|LessEqualDepth|EqualDepth|GreaterEqualDepth|GreaterDepth|NotEqualDepth)}
+      * This property has only an effect when using custom blending with `ConstantColor` or `OneMinusConstantColor`.
+      *
+-     * @type {Color}
+      * @default (0,0,0)
+      */
+     blendColor: Color;
+@@ -153,22 +128,19 @@ export class Material extends EventDispatcher {
+      *
+      * This property has only an effect when using custom blending with `ConstantAlpha` or `OneMinusConstantAlpha`.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     blendAlpha: number;
+     /**
+      * Defines the depth function.
+      *
+-     * @type {(NeverDepth|AlwaysDepth|LessDepth|LessEqualDepth|EqualDepth|GreaterEqualDepth|GreaterDepth|NotEqualDepth)}
       * @default LessEqualDepth
       */
 -    depthFunc: (NeverDepth | AlwaysDepth | LessDepth | number | EqualDepth | GreaterEqualDepth | GreaterDepth | NotEqualDepth);
@@ -1138,8 +1190,30 @@ index 5c608790..be19cd97 100644
      /**
       * Whether to have depth test enabled when rendering this material.
       * When the depth test is disabled, the depth write will also be implicitly disabled.
-@@ -195,7 +185,7 @@ export class Material extends EventDispatcher {
-      * @type {NeverStencilFunc|LessStencilFunc|EqualStencilFunc|LessEqualStencilFunc|GreaterStencilFunc|NotEqualStencilFunc|GreaterEqualStencilFunc|AlwaysStencilFunc}
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     depthTest: boolean;
+@@ -178,67 +150,58 @@ export class Material extends EventDispatcher {
+      * When drawing 2D overlays it can be useful to disable the depth writing in
+      * order to layer several things together without creating z-index artifacts.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     depthWrite: boolean;
+     /**
+      * The bit mask to use when writing to the stencil buffer.
+      *
+-     * @type {number}
+      * @default 0xff
+      */
+     stencilWriteMask: number;
+     /**
+      * The stencil comparison function to use.
+      *
+-     * @type {NeverStencilFunc|LessStencilFunc|EqualStencilFunc|LessEqualStencilFunc|GreaterStencilFunc|NotEqualStencilFunc|GreaterEqualStencilFunc|AlwaysStencilFunc}
       * @default AlwaysStencilFunc
       */
 -    stencilFunc: NeverStencilFunc | LessStencilFunc | EqualStencilFunc | LessEqualStencilFunc | GreaterStencilFunc | NotEqualStencilFunc | GreaterEqualStencilFunc | number;
@@ -1147,8 +1221,21 @@ index 5c608790..be19cd97 100644
      /**
       * The value to use when performing stencil comparisons or stencil operations.
       *
-@@ -216,7 +206,7 @@ export class Material extends EventDispatcher {
-      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+-     * @type {number}
+      * @default 0
+      */
+     stencilRef: number;
+     /**
+      * The bit mask to use when comparing against the stencil buffer.
+      *
+-     * @type {number}
+      * @default 0xff
+      */
+     stencilFuncMask: number;
+     /**
+      * Which stencil operation to perform when the comparison function returns `false`.
+      *
+-     * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
 -    stencilFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
@@ -1156,8 +1243,8 @@ index 5c608790..be19cd97 100644
      /**
       * Which stencil operation to perform when the comparison function returns
       * `true` but the depth test fails.
-@@ -224,7 +214,7 @@ export class Material extends EventDispatcher {
-      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+      *
+-     * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
 -    stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
@@ -1165,8 +1252,8 @@ index 5c608790..be19cd97 100644
      /**
       * Which stencil operation to perform when the comparison function returns
       * `true` and the depth test passes.
-@@ -232,7 +222,7 @@ export class Material extends EventDispatcher {
-      * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
+      *
+-     * @type {ZeroStencilOp|KeepStencilOp|ReplaceStencilOp|IncrementStencilOp|DecrementStencilOp|IncrementWrapStencilOp|DecrementWrapStencilOp|InvertStencilOp}
       * @default KeepStencilOp
       */
 -    stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
@@ -1174,8 +1261,41 @@ index 5c608790..be19cd97 100644
      /**
       * Whether stencil operations are performed against the stencil buffer. In
       * order to perform writes or comparisons against the stencil buffer this
-@@ -280,7 +270,7 @@ export class Material extends EventDispatcher {
-      * @type {?(FrontSide|BackSide|DoubleSide)}
+      * value must be `true`.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     stencilWrite: boolean;
+@@ -249,7 +212,6 @@ export class Material extends EventDispatcher {
+      * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
+      * be `true`.
+      *
+-     * @type {?Array<Plane>}
+      * @default null
+      */
+     clippingPlanes: Array<Plane> | null;
+@@ -257,7 +219,6 @@ export class Material extends EventDispatcher {
+      * Changes the behavior of clipping planes so that only their intersection is
+      * clipped, rather than their union.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     clipIntersection: boolean;
+@@ -265,7 +226,6 @@ export class Material extends EventDispatcher {
+      * Defines whether to clip shadows according to the clipping planes specified
+      * on this material.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     clipShadows: boolean;
+@@ -277,24 +237,21 @@ export class Material extends EventDispatcher {
+      * - When {@link Material#side} is set to `BackSide`, the front side cast shadows.
+      * - When {@link Material#side} is set to `DoubleSide`, both sides cast shadows.
+      *
+-     * @type {?(FrontSide|BackSide|DoubleSide)}
       * @default null
       */
 -    shadowSide: (number | BackSide | DoubleSide) | null;
@@ -1183,11 +1303,98 @@ index 5c608790..be19cd97 100644
      /**
       * Whether to render the material's color.
       *
-@@ -391,7 +381,202 @@ export class Material extends EventDispatcher {
+      * This can be used in conjunction with {@link Object3D#renderOder} to create invisible
+      * objects that occlude other objects.
       *
-      * @type {Object}
+-     * @type {boolean}
+      * @default true
       */
--    userData: Object;
+     colorWrite: boolean;
+     /**
+      * Override the renderer's default precision for this material.
+      *
+-     * @type {?('highp'|'mediump'|'lowp')}
+      * @default null
+      */
+     precision: ("highp" | "mediump" | "lowp") | null;
+@@ -307,28 +264,24 @@ export class Material extends EventDispatcher {
+      * Can be useful for rendering hidden-line images, for applying decals to surfaces, and for
+      * rendering solids with highlighted edges.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     polygonOffset: boolean;
+     /**
+      * Specifies a scale factor that is used to create a variable depth offset for each polygon.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     polygonOffsetFactor: number;
+     /**
+      * Is multiplied by an implementation-specific value to create a constant depth offset.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     polygonOffsetUnits: number;
+     /**
+      * Whether to apply dithering to the color to remove the appearance of banding.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     dithering: boolean;
+@@ -337,14 +290,12 @@ export class Material extends EventDispatcher {
+      * (meaning when the renderer was created with *antialias* parameter set to `true`). Enabling this
+      * will smooth aliasing on clip plane edges and alphaTest-clipped edges.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     alphaToCoverage: boolean;
+     /**
+      * Whether to premultiply the alpha (transparency) value.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     premultipliedAlpha: boolean;
+@@ -357,21 +308,18 @@ export class Material extends EventDispatcher {
+      * vegetation like grass sprites. In these cases, set the `forceSinglePass` flag to `true` to
+      * disable the two pass rendering to avoid performance issues.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     forceSinglePass: boolean;
+     /**
+      * Whether it's possible to override the material with {@link Scene#overrideMaterial} or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     allowOverride: boolean;
+     /**
+      * Defines whether 3D objects using this material are visible.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     visible: boolean;
+@@ -381,36 +329,216 @@ export class Material extends EventDispatcher {
+      * It is ignored when rendering to a render target or using post processing or when using
+      * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     toneMapped: boolean;
+     /**
+      * An object that can be used to store custom data about the Material. It
+      * should not hold references to functions as these will not be cloned.
++     */
 +    userData: Record<string, any>;
 +}
 +
@@ -1363,31 +1570,27 @@ index 5c608790..be19cd97 100644
 +export class Material extends EventDispatcher<{ dispose: {} }> {
 +    /**
 +     * This flag can be used for type testing.
-+     *
-+     * @type {boolean}
-+     * @readonly
+      *
+-     * @type {Object}
 +     * @default true
-+     */
+      */
+-    userData: Object;
 +    readonly isMaterial: boolean;
 +    /**
 +     * The UUID of the material.
-+     *
-+     * @type {string}
-+     * @readonly
 +     */
 +    readonly uuid: string;
 +    /**
 +     * The type property is used for detecting the object type
 +     * in context of serialization/deserialization.
-+     *
-+     * @type {string}
-+     * @readonly
 +     */
 +    readonly type: string;
      /**
       * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
       *
-@@ -401,7 +586,7 @@ export class Material extends EventDispatcher {
+-     * @type {number}
+-     * @readonly
+      * @default 0
       */
      readonly version: number;
      _alphaTest: number;
@@ -1396,8 +1599,9 @@ index 5c608790..be19cd97 100644
      /**
       * Sets the alpha value to be used when running an alpha test. The material
       * will not be rendered if the opacity is lower than this value.
-@@ -410,7 +595,7 @@ export class Material extends EventDispatcher {
-      * @readonly
+      *
+-     * @type {number}
+-     * @readonly
       * @default 0
       */
 -    readonly get alphaTest(): number;
@@ -1405,7 +1609,7 @@ index 5c608790..be19cd97 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -454,7 +639,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +582,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -1414,7 +1618,7 @@ index 5c608790..be19cd97 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +647,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +590,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1423,11 +1627,18 @@ index 5c608790..be19cd97 100644
      /**
       * Returns a new material with copied values from this instance.
       *
-@@ -493,5 +678,5 @@ export class Material extends EventDispatcher {
+@@ -487,11 +615,11 @@ export class Material extends EventDispatcher {
+      * Setting this property to `true` indicates the engine the material
+      * needs to be recompiled.
+      *
+-     * @type {boolean}
+      * @default false
+      * @param {boolean} value
       */
      set needsUpdate(value: boolean);
  }
 -import { EventDispatcher } from '../core/EventDispatcher.js';
 -import { Color } from '../math/Color.js';
 +
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Material extends MaterialProperties {}
