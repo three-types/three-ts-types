@@ -6,7 +6,6 @@ import {
     Combine,
     DepthModes,
     NormalMapTypes,
-    PixelFormat,
     Side,
     StencilFunc,
     StencilOp,
@@ -17,7 +16,7 @@ import { Color } from "../math/Color.js";
 import { EulerTuple } from "../math/Euler.js";
 import { Plane } from "../math/Plane.js";
 import { Vector2Tuple } from "../math/Vector2.js";
-import { SourceJSON } from "../textures/Source.d.ts";
+import { SourceJSON } from "../textures/Source.js";
 import { TextureJSON } from "../textures/Texture.js";
 
 export interface MaterialProperties {
