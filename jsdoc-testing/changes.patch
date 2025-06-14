@@ -996,7 +996,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index 5c608790..11806f99 100644
+index 5c608790..5e2494f7 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,29 @@
@@ -1383,7 +1383,7 @@ index 5c608790..11806f99 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +329,216 @@ export class Material extends EventDispatcher {
+@@ -381,36 +329,217 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -1398,7 +1398,9 @@ index 5c608790..11806f99 100644
 +    userData: Record<string, any>;
 +}
 +
-+export interface MaterialParameters extends Partial<MaterialProperties> {}
++export interface MaterialParameters extends Partial<MaterialProperties> {
++    alphaTest?: number | undefined;
++}
 +
 +export interface MaterialJSON {
 +    metadata: { version: number; type: string; generator: string };
@@ -1593,7 +1595,7 @@ index 5c608790..11806f99 100644
       * @default 0
       */
      readonly version: number;
-     _alphaTest: number;
+-    _alphaTest: number;
 -    readonly set alphaTest(value: number);
 +    set alphaTest(value: number);
      /**
@@ -1609,7 +1611,7 @@ index 5c608790..11806f99 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -454,7 +582,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +583,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -1618,7 +1620,7 @@ index 5c608790..11806f99 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +590,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +591,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -1627,7 +1629,7 @@ index 5c608790..11806f99 100644
      /**
       * Returns a new material with copied values from this instance.
       *
-@@ -487,11 +615,11 @@ export class Material extends EventDispatcher {
+@@ -487,11 +616,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
