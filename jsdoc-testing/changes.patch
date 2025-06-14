@@ -5196,3 +5196,2009 @@ index e44d5d72..f3246607 100644
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface SpriteMaterial extends SpriteMaterialProperties {}
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
+index 53d2c12e..f2760e37 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
+@@ -1,90 +1,62 @@
+-export default Line2NodeMaterial;
+-/**
+- * This node material can be used to render lines with a size larger than one
+- * by representing them as instanced meshes.
+- *
+- * @augments NodeMaterial
+- */
+-declare class Line2NodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new node material for wide line rendering.
+-     *
+-     * @param {Object} [parameters={}] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isLine2NodeMaterial: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { LineDashedMaterialParameters, LineDashedMaterialProperties } from "../LineDashedMaterial.js";
++import Node from "../../nodes/core/Node.js";
++
++export interface Line2NodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * Whether vertex colors should be used or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     useColor: boolean;
+     /**
+      * The dash offset.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     dashOffset: number;
+     /**
+      * The line width.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     lineWidth: number;
+     /**
+      * Defines the lines color.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    lineColorNode: Node<any> | null;
++    lineColorNode: Node | null;
+     /**
+      * Defines the offset.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    offsetNode: Node<any> | null;
++    offsetNode: Node | null;
+     /**
+      * Defines the dash scale.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    dashScaleNode: Node<any> | null;
++    dashScaleNode: Node | null;
+     /**
+      * Defines the dash size.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    dashSizeNode: Node<any> | null;
++    dashSizeNode: Node | null;
+     /**
+      * Defines the gap size.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    gapSizeNode: Node<any> | null;
+-    _useDash: any;
+-    _useAlphaToCoverage: boolean;
+-    _useWorldUnits: boolean;
++    gapSizeNode: Node | null;
+     set worldUnits(value: boolean);
+     /**
+      * Whether the lines should sized in world units or not.
+      * When set to `false` the unit is pixel.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     get worldUnits(): boolean;
+@@ -92,9 +64,34 @@ declare class Line2NodeMaterial extends NodeMaterial {
+     /**
+      * Whether the lines should be dashed or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     get dashed(): boolean;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface Line2NodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<Line2NodeMaterialNodeProperties>>, LineDashedMaterialParameters {}
++
++/**
++ * This node material can be used to render lines with a size larger than one
++ * by representing them as instanced meshes.
++ */
++declare class Line2NodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new node material for wide line rendering.
++     *
++     * @param {Object} [parameters={}] - The configuration parameter.
++     */
++    constructor(parameters?: Line2NodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isLine2NodeMaterial: boolean;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface Line2NodeMaterial extends Line2NodeMaterialNodeProperties, LineDashedMaterialProperties {}
++
++export default Line2NodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/LineBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/LineBasicNodeMaterial.d.ts
+index da65dc88..61b55db2 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/LineBasicNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/LineBasicNodeMaterial.d.ts
+@@ -1,4 +1,14 @@
+-export default LineBasicNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { LineBasicMaterialParameters, LineBasicMaterialProperties } from '../LineBasicMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface LineBasicNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface LineBasicNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<LineBasicNodeMaterialNodeProperties>>, LineBasicMaterialParameters {}
++
+ /**
+  * Node material version of {@link LineBasicMaterial}.
+  *
+@@ -10,7 +20,7 @@ declare class LineBasicNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: LineBasicNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -20,4 +30,8 @@ declare class LineBasicNodeMaterial extends NodeMaterial {
+      */
+     readonly isLineBasicNodeMaterial: boolean;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface LineBasicNodeMaterial extends LineBasicNodeMaterialNodeProperties, LineBasicMaterialProperties {}
++
++export default LineBasicNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/LineDashedNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/LineDashedNodeMaterial.d.ts
+index 89820e46..c6d37b43 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/LineDashedNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/LineDashedNodeMaterial.d.ts
+@@ -1,28 +1,12 @@
+-export default LineDashedNodeMaterial;
+-/**
+- * Node material version of  {@link LineDashedMaterial}.
+- *
+- * @augments NodeMaterial
+- */
+-declare class LineDashedNodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new line dashed node material.
+-     *
+-     * @param {Object} [parameters] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isLineDashedNodeMaterial: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { LineDashedMaterialParameters, LineDashedMaterialProperties } from '../LineDashedMaterial.js';
++import Node from "../../nodes/core/Node.js";
++
++export interface LineDashedNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * The dash offset.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     dashOffset: number;
+@@ -34,10 +18,9 @@ declare class LineDashedNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the offset but modify the existing
+      * value instead, use {@link materialLineDashOffset}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    offsetNode: Node<any> | null;
++    offsetNode: Node | null;
+     /**
+      * The scale of dash materials is by default inferred from the `scale`
+      * property. This node property allows to overwrite the default
+@@ -46,10 +29,9 @@ declare class LineDashedNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the scale but modify the existing
+      * value instead, use {@link materialLineScale}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    dashScaleNode: Node<any> | null;
++    dashScaleNode: Node | null;
+     /**
+      * The dash size of dash materials is by default inferred from the `dashSize`
+      * property. This node property allows to overwrite the default
+@@ -58,10 +40,9 @@ declare class LineDashedNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the dash size but modify the existing
+      * value instead, use {@link materialLineDashSize}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    dashSizeNode: Node<any> | null;
++    dashSizeNode: Node | null;
+     /**
+      * The gap size of dash materials is by default inferred from the `gapSize`
+      * property. This node property allows to overwrite the default
+@@ -70,9 +51,33 @@ declare class LineDashedNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the gap size but modify the existing
+      * value instead, use {@link materialLineGapSize}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    gapSizeNode: Node<any> | null;
++    gapSizeNode: Node | null;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface LineDashedNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<LineDashedNodeMaterialNodeProperties>>, LineDashedMaterialParameters {}
++
++/**
++ * Node material version of  {@link LineDashedMaterial}.
++ */
++declare class LineDashedNodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new line dashed node material.
++     *
++     * @param {Object} [parameters] - The configuration parameter.
++     */
++    constructor(parameters?: LineDashedNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isLineDashedNodeMaterial: boolean;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface LineDashedNodeMaterial extends LineDashedNodeMaterialNodeProperties, LineDashedMaterialProperties {}
++
++export default LineDashedNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
+index 97d6b1cb..c9dcc5c9 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
+@@ -1,8 +1,18 @@
+-export default MeshBasicNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
++import BasicLightingModel from '../../nodes/functions/BasicLightingModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshBasicMaterialParameters, MeshBasicMaterialProperties } from '../MeshBasicMaterial.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++
++export interface MeshBasicNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshBasicNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshBasicNodeMaterialNodeProperties>>, MeshBasicMaterialParameters {}
++
+ /**
+  * Node material version of {@link MeshBasicMaterial}.
+- *
+- * @augments NodeMaterial
+  */
+ declare class MeshBasicNodeMaterial extends NodeMaterial {
+     /**
+@@ -10,7 +20,7 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: MeshBasicNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -26,7 +36,7 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?BasicEnvironmentNode<vec3>} The environment node.
+      */
+-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
++    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
+     /**
+      * Setups the lighting model.
+      *
+@@ -34,6 +44,8 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+      */
+     setupLightingModel(): BasicLightingModel;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
+-import BasicLightingModel from '../../nodes/functions/BasicLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshBasicNodeMaterial extends MeshBasicNodeMaterialNodeProperties, MeshBasicMaterialProperties {}
++
++export default MeshBasicNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshLambertNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshLambertNodeMaterial.d.ts
+index a5e11090..88315069 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshLambertNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshLambertNodeMaterial.d.ts
+@@ -1,8 +1,19 @@
+-export default MeshLambertNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
++import PhongLightingModel from '../../nodes/functions/PhongLightingModel.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshLambertMaterialParameters, MeshLambertMaterialProperties } from '../MeshLambertMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshLambertNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshLambertNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshLambertNodeMaterialNodeProperties>>, MeshLambertMaterialParameters {}
++
+ /**
+  * Node material version of {@link MeshLambertMaterial}.
+- *
+- * @augments NodeMaterial
+  */
+ declare class MeshLambertNodeMaterial extends NodeMaterial {
+     /**
+@@ -10,7 +21,7 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: MeshLambertNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -26,7 +37,7 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?BasicEnvironmentNode<vec3>} The environment node.
+      */
+-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
++    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
+     /**
+      * Setups the lighting model.
+      *
+@@ -34,6 +45,8 @@ declare class MeshLambertNodeMaterial extends NodeMaterial {
+      */
+     setupLightingModel(): PhongLightingModel;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
+-import PhongLightingModel from '../../nodes/functions/PhongLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshLambertNodeMaterial extends MeshLambertNodeMaterialNodeProperties, MeshLambertMaterialProperties {}
++
++export default MeshLambertNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshMatcapNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshMatcapNodeMaterial.d.ts
+index 1a2d32c8..4463289d 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshMatcapNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshMatcapNodeMaterial.d.ts
+@@ -1,8 +1,17 @@
+-export default MeshMatcapNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshMatcapMaterialParameters, MeshMatcapMaterialProperties } from '../MeshMatcapMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshMatcapNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshMatcapNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshMatcapNodeMaterialNodeProperties>>, MeshMatcapMaterialParameters {}
++
+ /**
+  * Node material version of {@link MeshMatcapMaterial}.
+- *
+- * @augments NodeMaterial
+  */
+ declare class MeshMatcapNodeMaterial extends NodeMaterial {
+     /**
+@@ -10,12 +19,10 @@ declare class MeshMatcapNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: MeshMatcapNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isMeshMatcapNodeMaterial: boolean;
+@@ -26,4 +33,8 @@ declare class MeshMatcapNodeMaterial extends NodeMaterial {
+      */
+     setupVariants(builder: NodeBuilder): void;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshMatcapNodeMaterial extends MeshMatcapNodeMaterialNodeProperties, MeshMatcapMaterialProperties {}
++
++export default MeshMatcapNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshNormalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshNormalNodeMaterial.d.ts
+index effc5951..429fa3a4 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshNormalNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshNormalNodeMaterial.d.ts
+@@ -1,8 +1,16 @@
+-export default MeshNormalNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshNormalMaterialParameters, MeshNormalMaterialProperties } from '../MeshNormalMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshNormalNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshNormalNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshNormalNodeMaterialNodeProperties>>, MeshNormalMaterialParameters {}
++
+ /**
+  * Node material version of {@link MeshNormalMaterial}.
+- *
+- * @augments NodeMaterial
+  */
+ declare class MeshNormalNodeMaterial extends NodeMaterial {
+     /**
+@@ -10,13 +18,11 @@ declare class MeshNormalNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: MeshNormalNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+      * @type {boolean}
+-     * @readonly
+-     * @default true
+      */
+     readonly isMeshNormalNodeMaterial: boolean;
+     /**
+@@ -25,4 +31,8 @@ declare class MeshNormalNodeMaterial extends NodeMaterial {
+      */
+     setupDiffuseColor(): void;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshNormalNodeMaterial extends MeshNormalNodeMaterialNodeProperties, MeshNormalMaterialProperties {}
++
++export default MeshNormalNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshPhongNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshPhongNodeMaterial.d.ts
+index b55a9c94..9ccbd8cd 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshPhongNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshPhongNodeMaterial.d.ts
+@@ -1,24 +1,12 @@
+-export default MeshPhongNodeMaterial;
+-/**
+- * Node material version of {@link MeshPhongMaterial}.
+- *
+- * @augments NodeMaterial
+- */
+-declare class MeshPhongNodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new mesh lambert node material.
+-     *
+-     * @param {Object} [parameters] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isMeshPhongNodeMaterial: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
++import PhongLightingModel from '../../nodes/functions/PhongLightingModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import Node from "../../nodes/core/Node.js";
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { MeshPhongMaterialParameters, MeshPhongMaterialProperties } from '../MeshPhongMaterial.js';
++
++export interface MeshPhongNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * The shininess of phong materials is by default inferred from the `shininess`
+      * property. This node property allows to overwrite the default
+@@ -27,10 +15,9 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the shininess but modify the existing
+      * value instead, use {@link materialShininess}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    shininessNode: Node<any> | null;
++    shininessNode: Node | null;
+     /**
+      * The specular color of phong materials is by default inferred from the
+      * `specular` property. This node property allows to overwrite the default
+@@ -39,10 +26,30 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the specular color but modify the existing
+      * value instead, use {@link materialSpecular}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    specularNode: Node<vec3> | null;
++    specularNode: Node | null;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshPhongNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshPhongNodeMaterialNodeProperties>>, MeshPhongMaterialParameters {}
++
++/**
++ * Node material version of {@link MeshPhongMaterial}.
++ */
++declare class MeshPhongNodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new mesh lambert node material.
++     *
++     * @param {Object} [parameters] - The configuration parameter.
++     */
++    constructor(parameters?: MeshPhongNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isMeshPhongNodeMaterial: boolean;
+     /**
+      * Overwritten since this type of material uses {@link BasicEnvironmentNode}
+      * to implement the default environment mapping.
+@@ -50,15 +57,16 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?BasicEnvironmentNode<vec3>} The environment node.
+      */
+-    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode<vec3> | null;
++    setupEnvironment(builder: NodeBuilder): BasicEnvironmentNode | null;
+     /**
+      * Setups the lighting model.
+      *
+      * @return {PhongLightingModel} The lighting model.
+      */
+     setupLightingModel(): PhongLightingModel;
+-    copy(source: any): NodeMaterial;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
+-import PhongLightingModel from '../../nodes/functions/PhongLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshPhongNodeMaterial extends MeshPhongNodeMaterialNodeProperties, MeshPhongMaterialProperties {}
++
++export default MeshPhongNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshPhysicalNodeMaterial.d.ts
+index 0545af43..c261cb86 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshPhysicalNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshPhysicalNodeMaterial.d.ts
+@@ -1,18 +1,12 @@
+-export default MeshPhysicalNodeMaterial;
+-/**
+- * Node material version of {@link MeshPhysicalMaterial}.
+- *
+- * @augments MeshStandardNodeMaterial
+- */
+-declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isMeshPhysicalNodeMaterial: boolean;
++import MeshStandardNodeMaterial, {
++    MeshStandardNodeMaterialNodeProperties,
++} from './MeshStandardNodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import Node from "../../nodes/core/Node.js";
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from '../MeshPhysicalMaterial.js';
++
++export interface MeshPhysicalNodeMaterialNodeProperties extends MeshStandardNodeMaterialNodeProperties {
+     /**
+      * The clearcoat of physical materials is by default inferred from the `clearcoat`
+      * and `clearcoatMap` properties. This node property allows to overwrite the default
+@@ -21,10 +15,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the clearcoat but modify the existing
+      * value instead, use {@link materialClearcoat}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    clearcoatNode: Node<any> | null;
++    clearcoatNode: Node | null;
+     /**
+      * The clearcoat roughness of physical materials is by default inferred from the `clearcoatRoughness`
+      * and `clearcoatRoughnessMap` properties. This node property allows to overwrite the default
+@@ -33,10 +26,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the clearcoat roughness but modify the existing
+      * value instead, use {@link materialClearcoatRoughness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    clearcoatRoughnessNode: Node<any> | null;
++    clearcoatRoughnessNode: Node | null;
+     /**
+      * The clearcoat normal of physical materials is by default inferred from the `clearcoatNormalMap`
+      * property. This node property allows to overwrite the default
+@@ -45,10 +37,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the clearcoat normal but modify the existing
+      * value instead, use {@link materialClearcoatNormal}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    clearcoatNormalNode: Node<any> | null;
++    clearcoatNormalNode: Node | null;
+     /**
+      * The sheen of physical materials is by default inferred from the `sheen`, `sheenColor`
+      * and `sheenColorMap` properties. This node property allows to overwrite the default
+@@ -57,10 +48,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the sheen but modify the existing
+      * value instead, use {@link materialSheen}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    sheenNode: Node<any> | null;
++    sheenNode: Node | null;
+     /**
+      * The sheen roughness of physical materials is by default inferred from the `sheenRoughness` and
+      * `sheenRoughnessMap` properties. This node property allows to overwrite the default
+@@ -69,10 +59,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the sheen roughness but modify the existing
+      * value instead, use {@link materialSheenRoughness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    sheenRoughnessNode: Node<any> | null;
++    sheenRoughnessNode: Node | null;
+     /**
+      * The iridescence of physical materials is by default inferred from the `iridescence`
+      * property. This node property allows to overwrite the default
+@@ -81,10 +70,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the iridescence but modify the existing
+      * value instead, use {@link materialIridescence}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    iridescenceNode: Node<any> | null;
++    iridescenceNode: Node | null;
+     /**
+      * The iridescence IOR of physical materials is by default inferred from the `iridescenceIOR`
+      * property. This node property allows to overwrite the default
+@@ -93,10 +81,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the iridescence IOR but modify the existing
+      * value instead, use {@link materialIridescenceIOR}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    iridescenceIORNode: Node<any> | null;
++    iridescenceIORNode: Node | null;
+     /**
+      * The iridescence thickness of physical materials is by default inferred from the `iridescenceThicknessRange`
+      * and `iridescenceThicknessMap` properties. This node property allows to overwrite the default
+@@ -105,10 +92,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the iridescence thickness but modify the existing
+      * value instead, use {@link materialIridescenceThickness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    iridescenceThicknessNode: Node<any> | null;
++    iridescenceThicknessNode: Node | null;
+     /**
+      * The specular intensity of physical materials is by default inferred from the `specularIntensity`
+      * and `specularIntensityMap` properties. This node property allows to overwrite the default
+@@ -117,10 +103,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the specular intensity but modify the existing
+      * value instead, use {@link materialSpecularIntensity}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    specularIntensityNode: Node<any> | null;
++    specularIntensityNode: Node | null;
+     /**
+      * The specular color of physical materials is by default inferred from the `specularColor`
+      * and `specularColorMap` properties. This node property allows to overwrite the default
+@@ -129,10 +114,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the specular color but modify the existing
+      * value instead, use {@link materialSpecularColor}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    specularColorNode: Node<any> | null;
++    specularColorNode: Node | null;
+     /**
+      * The ior of physical materials is by default inferred from the `ior`
+      * property. This node property allows to overwrite the default
+@@ -141,10 +125,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the ior but modify the existing
+      * value instead, use {@link materialIOR}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    iorNode: Node<any> | null;
++    iorNode: Node | null;
+     /**
+      * The transmission of physical materials is by default inferred from the `transmission` and
+      * `transmissionMap` properties. This node property allows to overwrite the default
+@@ -153,10 +136,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the transmission but modify the existing
+      * value instead, use {@link materialTransmission}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    transmissionNode: Node<any> | null;
++    transmissionNode: Node | null;
+     /**
+      * The thickness of physical materials is by default inferred from the `thickness` and
+      * `thicknessMap` properties. This node property allows to overwrite the default
+@@ -165,10 +147,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the thickness but modify the existing
+      * value instead, use {@link materialThickness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    thicknessNode: Node<any> | null;
++    thicknessNode: Node | null;
+     /**
+      * The attenuation distance of physical materials is by default inferred from the
+      * `attenuationDistance` property. This node property allows to overwrite the default
+@@ -177,10 +158,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the attenuation distance but modify the existing
+      * value instead, use {@link materialAttenuationDistance}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    attenuationDistanceNode: Node<any> | null;
++    attenuationDistanceNode: Node | null;
+     /**
+      * The attenuation color of physical materials is by default inferred from the
+      * `attenuationColor` property. This node property allows to overwrite the default
+@@ -189,10 +169,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the attenuation color but modify the existing
+      * value instead, use {@link materialAttenuationColor}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    attenuationColorNode: Node<any> | null;
++    attenuationColorNode: Node | null;
+     /**
+      * The dispersion of physical materials is by default inferred from the
+      * `dispersion` property. This node property allows to overwrite the default
+@@ -201,10 +180,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the dispersion but modify the existing
+      * value instead, use {@link materialDispersion}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    dispersionNode: Node<any> | null;
++    dispersionNode: Node | null;
+     /**
+      * The anisotropy of physical materials is by default inferred from the
+      * `anisotropy` property. This node property allows to overwrite the default
+@@ -213,49 +191,58 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      * If you don't want to overwrite the anisotropy but modify the existing
+      * value instead, use {@link materialAnisotropy}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    anisotropyNode: Node<any> | null;
++    anisotropyNode: Node | null;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshPhysicalNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshPhysicalNodeMaterialNodeProperties>>, MeshPhysicalMaterialParameters {}
++
++/**
++ * Node material version of {@link MeshPhysicalMaterial}.
++ */
++declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
++    constructor(parameters?: MeshPhysicalNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isMeshPhysicalNodeMaterial: boolean;
+     /**
+      * Whether the lighting model should use clearcoat or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useClearcoat(): boolean;
+     /**
+      * Whether the lighting model should use iridescence or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useIridescence(): boolean;
+     /**
+      * Whether the lighting model should use sheen or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useSheen(): boolean;
+     /**
+      * Whether the lighting model should use anisotropy or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useAnisotropy(): boolean;
+     /**
+      * Whether the lighting model should use transmission or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useTransmission(): boolean;
+     /**
+      * Whether the lighting model should use dispersion or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useDispersion(): boolean;
+@@ -270,7 +257,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
+      *
+      * @return {Node<vec3>} The clearcoat normal.
+      */
+-    setupClearcoatNormal(): Node<any>;
+-    setup(builder: any): void;
++    setupClearcoatNormal(): Node;
+ }
+-import MeshStandardNodeMaterial from './MeshStandardNodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshPhysicalNodeMaterial extends MeshPhysicalNodeMaterialNodeProperties, MeshPhysicalMaterialProperties {}
++
++export default MeshPhysicalNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
+index 537251fc..5522ab75 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
+@@ -1,52 +1,88 @@
+-export default MeshSSSNodeMaterial;
++import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from './MeshPhysicalNodeMaterial.js';
++import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { LightingModelDirectInput } from '../../nodes/core/LightingModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from '../MeshPhysicalMaterial.js';
++import Node from "../../nodes/core/Node.js";
++import InputNode from "../../nodes/core/InputNode.js";
++
+ /**
+- * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
+- * that implements a Subsurface scattering (SSS) term.
+- *
+- * @augments MeshPhysicalNodeMaterial
++ * Represents the lighting model for {@link MeshSSSNodeMaterial}.
+  */
+-declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
++declare class SSSLightingModel extends PhysicalLightingModel {
++    /**
++     * Constructs a new physical lighting model.
++     *
++     * @param {boolean} [clearcoat=false] - Whether clearcoat is supported or not.
++     * @param {boolean} [sheen=false] - Whether sheen is supported or not.
++     * @param {boolean} [iridescence=false] - Whether iridescence is supported or not.
++     * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
++     * @param {boolean} [transmission=false] - Whether transmission is supported or not.
++     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
++     * @param {boolean} [sss=false] - Whether SSS is supported or not.
++     */
++    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, sss?: boolean);
++    /**
++     * Whether the lighting model should use SSS or not.
++     *
++     * @default false
++     */
++    useSSS: boolean;
++    /**
++     * Extends the default implementation with a SSS term.
++     *
++     * Reference: [Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look]{@link https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/}
++     *
++     * @param {Object} input - The input data.
++     * @param {NodeBuilder} builder - The current node builder.
++     */
++    direct(input: LightingModelDirectInput, builder: NodeBuilder): void;
++}
++
++export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMaterialNodeProperties {
+     /**
+      * Represents the thickness color.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    thicknessColorNode: Node<any> | null;
++    thicknessColorNode: Node | null;
+     /**
+      * Represents the distortion factor.
+-     *
+-     * @type {?Node<float>}
+      */
+-    thicknessDistortionNode: Node<any> | null;
++    thicknessDistortionNode: InputNode<number>;
+     /**
+      * Represents the thickness ambient factor.
+-     *
+-     * @type {?Node<float>}
+      */
+-    thicknessAmbientNode: Node<any> | null;
++    thicknessAmbientNode: InputNode<number>;
+     /**
+      * Represents the thickness attenuation.
+-     *
+-     * @type {?Node<float>}
+      */
+-    thicknessAttenuationNode: Node<any> | null;
++    thicknessAttenuationNode: InputNode<number>;
+     /**
+      * Represents the thickness power.
+-     *
+-     * @type {?Node<float>}
+      */
+-    thicknessPowerNode: Node<any> | null;
++    thicknessPowerNode: InputNode<number>;
+     /**
+      * Represents the thickness scale.
+-     *
+-     * @type {?Node<float>}
+      */
+-    thicknessScaleNode: Node<any> | null;
++    thicknessScaleNode: InputNode<number>;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshSSSNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshSSSNodeMaterialNodeProperties>>, MeshPhysicalMaterialParameters {}
++
++/**
++ * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
++ * that implements a Subsurface scattering (SSS) term.
++ *
++ * @augments MeshPhysicalNodeMaterial
++ */
++declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
++    constructor(parameters?: MeshSSSNodeMaterialParameters);
+     /**
+      * Whether the lighting model should use SSS or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     get useSSS(): boolean;
+@@ -57,40 +93,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+      */
+     setupLightingModel(): SSSLightingModel;
+ }
+-import MeshPhysicalNodeMaterial from './MeshPhysicalNodeMaterial.js';
+-/**
+- * Represents the lighting model for {@link MeshSSSNodeMaterial}.
+- *
+- * @augments PhysicalLightingModel
+- */
+-declare class SSSLightingModel extends PhysicalLightingModel {
+-    /**
+-     * Constructs a new physical lighting model.
+-     *
+-     * @param {boolean} [clearcoat=false] - Whether clearcoat is supported or not.
+-     * @param {boolean} [sheen=false] - Whether sheen is supported or not.
+-     * @param {boolean} [iridescence=false] - Whether iridescence is supported or not.
+-     * @param {boolean} [anisotropy=false] - Whether anisotropy is supported or not.
+-     * @param {boolean} [transmission=false] - Whether transmission is supported or not.
+-     * @param {boolean} [dispersion=false] - Whether dispersion is supported or not.
+-     * @param {boolean} [sss=false] - Whether SSS is supported or not.
+-     */
+-    constructor(clearcoat?: boolean, sheen?: boolean, iridescence?: boolean, anisotropy?: boolean, transmission?: boolean, dispersion?: boolean, sss?: boolean);
+-    /**
+-     * Whether the lighting model should use SSS or not.
+-     *
+-     * @type {boolean}
+-     * @default false
+-     */
+-    useSSS: boolean;
+-    /**
+-     * Extends the default implementation with a SSS term.
+-     *
+-     * Reference: [Approximating Translucency for a Fast, Cheap and Convincing Subsurface Scattering Look]{@link https://colinbarrebrisebois.com/2011/03/07/gdc-2011-approximating-translucency-for-a-fast-cheap-and-convincing-subsurface-scattering-look/}
+-     *
+-     * @param {Object} input - The input data.
+-     * @param {NodeBuilder} builder - The current node builder.
+-     */
+-    direct({ lightDirection, lightColor, reflectedLight }: Object, builder: NodeBuilder): void;
+-}
+-import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshSSSNodeMaterial extends MeshSSSNodeMaterialNodeProperties, MeshPhysicalMaterialProperties {}
++
++export default MeshSSSNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshStandardNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshStandardNodeMaterial.d.ts
+index 2128d963..6c0ebf24 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshStandardNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshStandardNodeMaterial.d.ts
+@@ -1,24 +1,11 @@
+-export default MeshStandardNodeMaterial;
+-/**
+- * Node material version of {@link MeshStandardMaterial}.
+- *
+- * @augments NodeMaterial
+- */
+-declare class MeshStandardNodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new mesh standard node material.
+-     *
+-     * @param {Object} [parameters] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isMeshStandardNodeMaterial: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import EnvironmentNode from '../../nodes/lighting/EnvironmentNode.js';
++import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { MeshStandardMaterialParameters, MeshStandardMaterialProperties } from '../MeshStandardMaterial.js';
++
++export interface MeshStandardNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * The emissive color of standard materials is by default inferred from the `emissive`,
+      * `emissiveIntensity` and `emissiveMap` properties. This node property allows to
+@@ -27,10 +14,9 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the emissive color but modify the existing
+      * value instead, use {@link materialEmissive}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    emissiveNode: Node<any> | null;
++    emissiveNode: Node | null;
+     /**
+      * The metalness of standard materials is by default inferred from the `metalness`,
+      * and `metalnessMap` properties. This node property allows to
+@@ -39,10 +25,9 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the metalness but modify the existing
+      * value instead, use {@link materialMetalness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    metalnessNode: Node<any> | null;
++    metalnessNode: Node | null;
+     /**
+      * The roughness of standard materials is by default inferred from the `roughness`,
+      * and `roughnessMap` properties. This node property allows to
+@@ -51,10 +36,30 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the roughness but modify the existing
+      * value instead, use {@link materialRoughness}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    roughnessNode: Node<any> | null;
++    roughnessNode: Node | null;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshStandardNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshStandardNodeMaterialNodeProperties>>, MeshStandardMaterialParameters {}
++
++/**
++ * Node material version of {@link MeshStandardMaterial}.
++ */
++declare class MeshStandardNodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new mesh standard node material.
++     *
++     * @param {Object} [parameters] - The configuration parameter.
++     */
++    constructor(parameters?: MeshStandardNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isMeshStandardNodeMaterial: boolean;
+     /**
+      * Overwritten since this type of material uses {@link EnvironmentNode}
+      * to implement the PBR (PMREM based) environment mapping. Besides, the
+@@ -63,7 +68,7 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?EnvironmentNode<vec3>} The environment node.
+      */
+-    setupEnvironment(builder: NodeBuilder): EnvironmentNode<any> | null;
++    setupEnvironment(builder: NodeBuilder): EnvironmentNode | null;
+     /**
+      * Setups the lighting model.
+      *
+@@ -74,8 +79,9 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
+      * Setups the specular related node variables.
+      */
+     setupSpecular(): void;
+-    copy(source: any): NodeMaterial;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import EnvironmentNode from '../../nodes/lighting/EnvironmentNode.js';
+-import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshStandardNodeMaterial extends MeshStandardNodeMaterialNodeProperties, MeshStandardMaterialProperties {}
++
++export default MeshStandardNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
+index 1ffe1bd1..34bbb973 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
+@@ -1,4 +1,15 @@
+-export default MeshToonNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import ToonLightingModel from '../../nodes/functions/ToonLightingModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { MeshToonMaterialParameters, MeshToonMaterialProperties } from '../MeshToonMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshToonNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface MeshToonNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<MeshToonNodeMaterialNodeProperties>>, MeshToonMaterialParameters {}
++
+ /**
+  * Node material version of {@link MeshToonMaterial}.
+  *
+@@ -10,7 +21,7 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+      *
+      * @param {Object} [parameters] - The configuration parameter.
+      */
+-    constructor(parameters?: Object);
++    constructor(parameters?: MeshToonNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -26,5 +37,8 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+      */
+     setupLightingModel(): ToonLightingModel;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import ToonLightingModel from '../../nodes/functions/ToonLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface MeshToonNodeMaterial extends MeshToonNodeMaterialNodeProperties, MeshToonMaterialProperties {}
++
++export default MeshToonNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
+index 9e689cf0..d11f7ef6 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
+@@ -1,37 +1,23 @@
+-export default NodeMaterial;
+-/**
+- * Base class for all node materials.
+- *
+- * @augments Material
+- */
+-declare class NodeMaterial extends Material {
+-    static get type(): string;
+-    set type(_value: string);
+-    /**
+-     * Represents the type of the node material.
+-     *
+-     * @type {string}
+-     */
+-    get type(): string;
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isNodeMaterial: boolean;
++import { Material } from '../Material.js';
++import NodeMaterialObserver from './manager/NodeMaterialObserver.js';
++import LightsNode from "../../nodes/lighting/LightsNode.js";
++import Node from "../../nodes/core/Node.js";
++import MRTNode from "../../nodes/core/MRTNode.js";
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import ClippingNode from "../../nodes/accessors/ClippingNode.js";
++import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
++import LightingModel from "../../nodes/core/LightingModel.js";
++
++export interface NodeMaterialNodeProperties {
+     /**
+      * Whether this material is affected by fog or not.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     fog: boolean;
+     /**
+      * Whether this material is affected by lights or not.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     lights: boolean;
+@@ -40,7 +26,6 @@ declare class NodeMaterial extends Material {
+      * This property is managed by the engine and should not be
+      * modified by apps.
+      *
+-     * @type {boolean}
+      * @default false
+      */
+     hardwareClipping: boolean;
+@@ -57,7 +42,6 @@ declare class NodeMaterial extends Material {
+      * material.lightsNode = customLightsNode;
+      * ```
+      *
+-     * @type {?LightsNode}
+      * @default null
+      */
+     lightsNode: LightsNode | null;
+@@ -71,10 +55,9 @@ declare class NodeMaterial extends Material {
+      * material.envNode = pmremTexture( renderTarget.texture );
+      * ```
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    envNode: Node<any> | null;
++    envNode: Node | null;
+     /**
+      * The lighting of node materials might be influenced by ambient occlusion.
+      * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
+@@ -84,10 +67,9 @@ declare class NodeMaterial extends Material {
+      * If you don't want to overwrite the diffuse color but modify the existing
+      * values instead, use {@link materialAO}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    aoNode: Node<any> | null;
++    aoNode: Node | null;
+     /**
+      * The diffuse color of node materials is by default inferred from the
+      * `color` and `map` properties. This node property allows to overwrite the default
+@@ -104,10 +86,9 @@ declare class NodeMaterial extends Material {
+      * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
+      * ```
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    colorNode: Node<any> | null;
++    colorNode: Node | null;
+     /**
+      * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
+      * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
+@@ -116,10 +97,9 @@ declare class NodeMaterial extends Material {
+      * If you don't want to overwrite the normals but modify the existing values instead,
+      * use {@link materialNormal}.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    normalNode: Node<any> | null;
++    normalNode: Node | null;
+     /**
+      * The opacity of node materials is by default inferred from the `opacity`
+      * and `alphaMap` properties. This node property allows to overwrite the default
+@@ -128,10 +108,9 @@ declare class NodeMaterial extends Material {
+      * If you don't want to overwrite the normals but modify the existing
+      * value instead, use {@link materialOpacity}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    opacityNode: Node<any> | null;
++    opacityNode: Node | null;
+     /**
+      * This node can be used to implement a variety of filter-like effects. The idea is
+      * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
+@@ -148,17 +127,15 @@ declare class NodeMaterial extends Material {
+      *
+      * Backdrop computations are part of the lighting so only lit materials can use this property.
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    backdropNode: Node<any> | null;
++    backdropNode: Node | null;
+     /**
+      * This node allows to modulate the influence of `backdropNode` to the outgoing light.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    backdropAlphaNode: Node<any> | null;
++    backdropAlphaNode: Node | null;
+     /**
+      * The alpha test of node materials is by default inferred from the `alphaTest`
+      * property. This node property allows to overwrite the default and define the
+@@ -167,17 +144,15 @@ declare class NodeMaterial extends Material {
+      * If you don't want to overwrite the alpha test but modify the existing
+      * value instead, use {@link materialAlphaTest}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    alphaTestNode: Node<any> | null;
++    alphaTestNode: Node | null;
+     /**
+      * Discards the fragment if the mask value is `false`.
+      *
+-     * @type {?Node<bool>}
+      * @default null
+      */
+-    maskNode: Node<any> | null;
++    maskNode: Node | null;
+     /**
+      * The local vertex positions are computed based on multiple factors like the
+      * attribute data, morphing or skinning. This node property allows to overwrite
+@@ -190,10 +165,9 @@ declare class NodeMaterial extends Material {
+      * material.positionNode = positionLocal.add( displace );
+      * ```
+      *
+-     * @type {?Node<vec3>}
+      * @default null
+      */
+-    positionNode: Node<any> | null;
++    positionNode: Node | null;
+     /**
+      * This node property is intended for logic which modifies geometry data once or per animation step.
+      * Apps usually place such logic randomly in initialization routines or in the animation loop.
+@@ -205,34 +179,30 @@ declare class NodeMaterial extends Material {
+      * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
+      * eventually assigned to `geometryNode`.
+      *
+-     * @type {?Function}
+      * @default null
+      */
+-    geometryNode: Function | null;
++    geometryNode: (() => Node) | null;
+     /**
+      * Allows to overwrite depth values in the fragment shader.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    depthNode: Node<any> | null;
++    depthNode: Node | null;
+     /**
+      * Allows to overwrite the position used for shadow map rendering which
+      * is by default {@link positionWorld}, the vertex position
+      * in world space.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    receivedShadowPositionNode: Node<any> | null;
++    receivedShadowPositionNode: Node | null;
+     /**
+      * Allows to overwrite the geometry position used for shadow map projection which
+      * is by default {@link positionLocal}, the vertex position in local space.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    castShadowPositionNode: Node<any> | null;
++    castShadowPositionNode: Node | null;
+     /**
+      * This node can be used to influence how an object using this node material
+      * receive shadows.
+@@ -245,10 +215,9 @@ declare class NodeMaterial extends Material {
+      * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
+      * } );
+      *
+-     * @type {?(Function|FunctionNode<vec4>)}
+      * @default null
+      */
+-    receivedShadowNode: (Function | FunctionNode<any>) | null;
++    receivedShadowNode: (() => Node) | null;
+     /**
+      * This node can be used to influence how an object using this node material
+      * casts shadows. To apply a color to shadows, you can simply do:
+@@ -268,26 +237,23 @@ declare class NodeMaterial extends Material {
+      * } )();
+      *  ```
+      *
+-     * @type {?Node<vec4>}
+      * @default null
+      */
+-    castShadowNode: Node<any> | null;
++    castShadowNode: Node | null;
+     /**
+      * This node can be used to define the final output of the material.
+      *
+      * TODO: Explain the differences to `fragmentNode`.
+      *
+-     * @type {?Node<vec4>}
+      * @default null
+      */
+-    outputNode: Node<any> | null;
++    outputNode: Node | null;
+     /**
+      * MRT configuration is done on renderer or pass level. This node allows to
+      * overwrite what values are written into MRT targets on material level. This
+      * can be useful for implementing selective FX features that should only affect
+      * specific objects.
+      *
+-     * @type {?MRTNode}
+      * @default null
+      */
+     mrtNode: MRTNode | null;
+@@ -296,19 +262,34 @@ declare class NodeMaterial extends Material {
+      * the fragment shader. Assigning a node will replace the built-in material
+      * logic used in the fragment stage.
+      *
+-     * @type {?Node<vec4>}
+      * @default null
+      */
+-    fragmentNode: Node<any> | null;
++    fragmentNode: Node | null;
+     /**
+      * This node property can be used if you need complete freedom in implementing
+      * the vertex shader. Assigning a node will replace the built-in material logic
+      * used in the vertex stage.
+      *
+-     * @type {?Node<vec4>}
+      * @default null
+      */
+-    vertexNode: Node<any> | null;
++    vertexNode: Node | null;
++}
++
++/**
++ * Base class for all node materials.
++ */
++declare class NodeMaterial extends Material {
++    static get type(): string;
++    /**
++     * Represents the type of the node material.
++     */
++    get type(): string;
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isNodeMaterial: boolean;
+     /**
+      * Builds this material with the given node builder.
+      *
+@@ -354,35 +335,35 @@ declare class NodeMaterial extends Material {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec3>} The position in view space.
+      */
+-    setupPositionView(): Node<any>;
++    setupPositionView(builder: NodeBuilder): Node;
+     /**
+      * Setups the position in clip space.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec4>} The position in view space.
+      */
+-    setupModelViewProjection(): Node<any>;
++    setupModelViewProjection(): Node;
+     /**
+      * Setups the logic for the vertex stage.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec4>} The position in clip space.
+      */
+-    setupVertex(builder: NodeBuilder): Node<any>;
++    setupVertex(builder: NodeBuilder): Node;
+     /**
+      * Setups the computation of the position in local space.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec3>} The position in local space.
+      */
+-    setupPosition(builder: NodeBuilder): Node<any>;
++    setupPosition(builder: NodeBuilder): Node;
+     /**
+      * Setups the computation of the material's diffuse color.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @param {BufferGeometry} geometry - The geometry.
+      */
+-    setupDiffuseColor({ object, geometry }: NodeBuilder): void;
++    setupDiffuseColor(builder: NodeBuilder): void;
+     /**
+      * Abstract interface method that can be implemented by derived materials
+      * to setup material-specific node variables.
+@@ -390,33 +371,33 @@ declare class NodeMaterial extends Material {
+      * @abstract
+      * @param {NodeBuilder} builder - The current node builder.
+      */
+-    setupVariants(): void;
++    setupVariants(builder: NodeBuilder): void;
+     /**
+      * Setups the outgoing light node variable
+      *
+      * @return {Node<vec3>} The outgoing light node.
+      */
+-    setupOutgoingLight(): Node<any>;
++    setupOutgoingLight(): Node;
+     /**
+      * Setups the normal node from the material.
+      *
+      * @return {Node<vec3>} The normal node.
+      */
+-    setupNormal(): Node<any>;
++    setupNormal(): ShaderNodeObject<Node>;
+     /**
+      * Setups the environment node from the material.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec4>} The environment node.
+      */
+-    setupEnvironment(): Node<any>;
++    setupEnvironment(builder: NodeBuilder): Node | null;
+     /**
+      * Setups the light map node from the material.
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec3>} The light map node.
+      */
+-    setupLightMap(builder: NodeBuilder): Node<any>;
++    setupLightMap(builder: NodeBuilder): Node;
+     /**
+      * Setups the lights node based on the scene, environment and material.
+      *
+@@ -439,7 +420,7 @@ declare class NodeMaterial extends Material {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {Node<vec3>} The outgoing light node.
+      */
+-    setupLighting(builder: NodeBuilder): Node<any>;
++    setupLighting(builder: NodeBuilder): Node;
+     /**
+      * Setup the fog.
+      *
+@@ -447,7 +428,7 @@ declare class NodeMaterial extends Material {
+      * @param {Node<vec4>} outputNode - The existing output node.
+      * @return {Node<vec4>} The output node.
+      */
+-    setupFog(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
++    setupFog(builder: NodeBuilder, outputNode: Node): Node;
+     /**
+      * Setups premultiplied alpha.
+      *
+@@ -455,7 +436,7 @@ declare class NodeMaterial extends Material {
+      * @param {Node<vec4>} outputNode - The existing output node.
+      * @return {Node<vec4>} The output node.
+      */
+-    setupPremultipliedAlpha(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
++    setupPremultipliedAlpha(builder: NodeBuilder, outputNode: Node): Node;
+     /**
+      * Setups the output node.
+      *
+@@ -463,7 +444,7 @@ declare class NodeMaterial extends Material {
+      * @param {Node<vec4>} outputNode - The existing output node.
+      * @return {Node<vec4>} The output node.
+      */
+-    setupOutput(builder: NodeBuilder, outputNode: Node<any>): Node<any>;
++    setupOutput(builder: NodeBuilder, outputNode: Node): Node;
+     /**
+      * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
+      * there is `MeshBasicNodeMaterial`. This utility method is intended for
+@@ -478,7 +459,10 @@ declare class NodeMaterial extends Material {
+      * @param {NodeMaterial} source - The material to copy.
+      * @return {NodeMaterial} A reference to this node material.
+      */
+-    copy(source: NodeMaterial): NodeMaterial;
++    copy(source: NodeMaterial): this;
+ }
+-import { Material } from '../Material.js';
+-import NodeMaterialObserver from './manager/NodeMaterialObserver.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface NodeMaterial extends NodeMaterialNodeProperties {}
++
++export default NodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
+index 3ab3141d..df1dde1d 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterials.d.ts
+@@ -1,18 +1,18 @@
+ export { default as NodeMaterialObserver } from "./manager/NodeMaterialObserver.js";
+-export { default as NodeMaterial } from "./NodeMaterial.js";
+-export { default as LineBasicNodeMaterial } from "./LineBasicNodeMaterial.js";
+-export { default as LineDashedNodeMaterial } from "./LineDashedNodeMaterial.js";
+-export { default as Line2NodeMaterial } from "./Line2NodeMaterial.js";
+-export { default as MeshNormalNodeMaterial } from "./MeshNormalNodeMaterial.js";
+-export { default as MeshBasicNodeMaterial } from "./MeshBasicNodeMaterial.js";
+-export { default as MeshLambertNodeMaterial } from "./MeshLambertNodeMaterial.js";
+-export { default as MeshPhongNodeMaterial } from "./MeshPhongNodeMaterial.js";
+-export { default as MeshStandardNodeMaterial } from "./MeshStandardNodeMaterial.js";
+-export { default as MeshPhysicalNodeMaterial } from "./MeshPhysicalNodeMaterial.js";
+-export { default as MeshSSSNodeMaterial } from "./MeshSSSNodeMaterial.js";
+-export { default as MeshToonNodeMaterial } from "./MeshToonNodeMaterial.js";
+-export { default as MeshMatcapNodeMaterial } from "./MeshMatcapNodeMaterial.js";
+-export { default as PointsNodeMaterial } from "./PointsNodeMaterial.js";
+-export { default as SpriteNodeMaterial } from "./SpriteNodeMaterial.js";
+-export { default as ShadowNodeMaterial } from "./ShadowNodeMaterial.js";
+-export { default as VolumeNodeMaterial } from "./VolumeNodeMaterial.js";
++export { default as NodeMaterial, NodeMaterialParameters } from "./NodeMaterial.js";
++export { default as LineBasicNodeMaterial, LineBasicNodeMaterialParameters } from "./LineBasicNodeMaterial.js";
++export { default as LineDashedNodeMaterial, LineDashedNodeMaterialParameters } from "./LineDashedNodeMaterial.js";
++export { default as Line2NodeMaterial, Line2NodeMaterialParameters } from "./Line2NodeMaterial.js";
++export { default as MeshNormalNodeMaterial, MeshNormalNodeMaterialParameters } from "./MeshNormalNodeMaterial.js";
++export { default as MeshBasicNodeMaterial, MeshBasicNodeMaterialParameters } from "./MeshBasicNodeMaterial.js";
++export { default as MeshLambertNodeMaterial, MeshLambertNodeMaterialParameters } from "./MeshLambertNodeMaterial.js";
++export { default as MeshPhongNodeMaterial, MeshPhongNodeMaterialParameters } from "./MeshPhongNodeMaterial.js";
++export { default as MeshStandardNodeMaterial, MeshStandardNodeMaterialParameters } from "./MeshStandardNodeMaterial.js";
++export { default as MeshPhysicalNodeMaterial, MeshPhysicalNodeMaterialParameters } from "./MeshPhysicalNodeMaterial.js";
++export { default as MeshSSSNodeMaterial, MeshSSSNodeMaterialParameters } from "./MeshSSSNodeMaterial.js";
++export { default as MeshToonNodeMaterial, MeshToonNodeMaterialParameters } from "./MeshToonNodeMaterial.js";
++export { default as MeshMatcapNodeMaterial, MeshMatcapNodeMaterialParameters } from "./MeshMatcapNodeMaterial.js";
++export { default as PointsNodeMaterial, PointsNodeMaterialParameters } from "./PointsNodeMaterial.js";
++export { default as SpriteNodeMaterial, SpriteNodeMaterialParameters } from "./SpriteNodeMaterial.js";
++export { default as ShadowNodeMaterial, ShadowNodeMaterialParameters } from "./ShadowNodeMaterial.js";
++export { default as VolumeNodeMaterial, VolumeNodeMaterialParameters } from "./VolumeNodeMaterial.js";
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/PointsNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/PointsNodeMaterial.d.ts
+index 330f030c..8a35891b 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/PointsNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/PointsNodeMaterial.d.ts
+@@ -1,27 +1,36 @@
+-export default PointsNodeMaterial;
+-/**
+- * Node material version of {@link PointsMaterial}.
+- *
+- * @augments SpriteNodeMaterial
+- */
+-declare class PointsNodeMaterial extends SpriteNodeMaterial {
++import SpriteNodeMaterial, {
++    SpriteNodeMaterialNodeProperties,
++} from './SpriteNodeMaterial.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import Node from "../../nodes/core/Node.js";
++import { PointsMaterialParameters, PointsMaterialProperties } from '../PointsMaterial.js';
++
++export interface PointsNodeMaterialNodeProperties extends SpriteNodeMaterialNodeProperties {
+     /**
+      * This node property provides an additional way to set the point size.
+      *
+-     * @type {?Node<vec2>}
+      * @default null
+      */
+-    sizeNode: Node<any> | null;
++    sizeNode: Node;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface PointsNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<PointsNodeMaterialNodeProperties>>, PointsMaterialParameters {}
++
++/**
++ * Node material version of {@link PointsMaterial}.
++ */
++declare class PointsNodeMaterial extends SpriteNodeMaterial {
++    constructor(parameters?: PointsNodeMaterialParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isPointsNodeMaterial: boolean;
+-    setupPositionView(): any;
+-    setupVertex(builder: any): any;
+-    _useAlphaToCoverage: any;
+ }
+-import SpriteNodeMaterial from './SpriteNodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface PointsNodeMaterial extends PointsNodeMaterialNodeProperties, PointsMaterialProperties {}
++
++export default PointsNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/ShadowNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/ShadowNodeMaterial.d.ts
+index edf90468..778c2a6c 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/ShadowNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/ShadowNodeMaterial.d.ts
+@@ -1,8 +1,17 @@
+-export default ShadowNodeMaterial;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import ShadowMaskModel from '../../nodes/functions/ShadowMaskModel.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import { ShadowMaterialParameters, ShadowMaterialProperties } from '../ShadowMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface ShadowNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface ShadowNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<ShadowNodeMaterialNodeProperties>>, ShadowMaterialParameters {}
++
+ /**
+  * Node material version of {@link ShadowMaterial}.
+- *
+- * @augments NodeMaterial
+  */
+ declare class ShadowNodeMaterial extends NodeMaterial {
+     /**
+@@ -14,8 +23,6 @@ declare class ShadowNodeMaterial extends NodeMaterial {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isShadowNodeMaterial: boolean;
+@@ -26,5 +33,8 @@ declare class ShadowNodeMaterial extends NodeMaterial {
+      */
+     setupLightingModel(): ShadowMaskModel;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import ShadowMaskModel from '../../nodes/functions/ShadowMaskModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface ShadowNodeMaterial extends ShadowNodeMaterialNodeProperties, ShadowMaterialProperties {}
++
++export default ShadowNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/SpriteNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/SpriteNodeMaterial.d.ts
+index 7f8da84d..888e618f 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/SpriteNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/SpriteNodeMaterial.d.ts
+@@ -1,25 +1,10 @@
+-export default SpriteNodeMaterial;
+-/**
+- * Node material version of {@link SpriteMaterial}.
+- *
+- * @augments NodeMaterial
+- */
+-declare class SpriteNodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new sprite node material.
+-     *
+-     * @param {Object} [parameters] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isSpriteNodeMaterial: boolean;
+-    _useSizeAttenuation: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import Node from '../../nodes/core/Node.js';
++import { MapColorPropertiesToColorRepresentations } from '../Material.js';
++import NodeBuilder from "../../nodes/core/NodeBuilder.js";
++import { SpriteMaterialParameters, SpriteMaterialProperties } from '../SpriteMaterial.js';
++
++export interface SpriteNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * The rotation of sprite materials is by default inferred from the `rotation`,
+      * property. This node property allows to overwrite the default and define
+@@ -28,28 +13,17 @@ declare class SpriteNodeMaterial extends NodeMaterial {
+      * If you don't want to overwrite the rotation but modify the existing
+      * value instead, use {@link materialRotation}.
+      *
+-     * @type {?Node<float>}
+      * @default null
+      */
+-    rotationNode: Node<any> | null;
++    rotationNode: Node | null;
+     /**
+      * This node property provides an additional way to scale sprites next to
+      * `Object3D.scale`. The scale transformation based in `Object3D.scale`
+      * is multiplied with the scale value of this node in the vertex shader.
+      *
+-     * @type {?Node<vec2>}
+      * @default null
+      */
+-    scaleNode: Node<any> | null;
+-    /**
+-     * Setups the position node in view space. This method implements
+-     * the sprite specific vertex shader.
+-     *
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @return {Node<vec3>} The position in view space.
+-     */
+-    setupPositionView(builder: NodeBuilder): Node<any>;
+-    copy(source: any): NodeMaterial;
++    scaleNode: Node | null;
+     set sizeAttenuation(value: boolean);
+     /**
+      * Whether to use size attenuation or not.
+@@ -59,4 +33,39 @@ declare class SpriteNodeMaterial extends NodeMaterial {
+      */
+     get sizeAttenuation(): boolean;
+ }
+-import NodeMaterial from './NodeMaterial.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface SpriteNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<SpriteNodeMaterialNodeProperties>>, SpriteMaterialParameters {}
++
++/**
++ * Node material version of {@link SpriteMaterial}.
++ */
++declare class SpriteNodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new sprite node material.
++     *
++     * @param {Object} [parameters] - The configuration parameter.
++     */
++    constructor(parameters?: SpriteNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isSpriteNodeMaterial: boolean;
++    /**
++     * Setups the position node in view space. This method implements
++     * the sprite specific vertex shader.
++     *
++     * @param {NodeBuilder} builder - The current node builder.
++     * @return {Node<vec3>} The position in view space.
++     */
++    setupPositionView(builder: NodeBuilder): Node;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface SpriteNodeMaterial extends SpriteNodeMaterialNodeProperties, SpriteMaterialProperties {}
++
++export default SpriteNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/VolumeNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/VolumeNodeMaterial.d.ts
+index 8b5885c3..ad8d7ebd 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/VolumeNodeMaterial.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/VolumeNodeMaterial.d.ts
+@@ -1,28 +1,13 @@
+-export default VolumeNodeMaterial;
+-/**
+- * Volume node material.
+- *
+- * @augments NodeMaterial
+- */
+-declare class VolumeNodeMaterial extends NodeMaterial {
+-    /**
+-     * Constructs a new volume node material.
+-     *
+-     * @param {Object} [parameters] - The configuration parameter.
+-     */
+-    constructor(parameters?: Object);
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isVolumeNodeMaterial: boolean;
++import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
++import VolumetricLightingModel from '../../nodes/functions/VolumetricLightingModel.js';
++import { MapColorPropertiesToColorRepresentations, MaterialParameters, MaterialProperties } from '../Material.js';
++import Node from "../../nodes/core/Node.js";
++import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
++
++export interface VolumeNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
+     /**
+      * Number of steps used for raymarching.
+      *
+-     * @type {number}
+      * @default 25
+      */
+     steps: number;
+@@ -30,19 +15,42 @@ declare class VolumeNodeMaterial extends NodeMaterial {
+      * Offsets the distance a ray has been traveled through a volume.
+      * Can be used to implement dithering to reduce banding.
+      *
+-     * @type {Node<float>}
+      * @default null
+      */
+-    offsetNode: Node<float>;
++    offsetNode: Node;
+     /**
+      * Node used for scattering calculations.
+      *
+-     * @type {Function|FunctionNode<vec4>}
+      * @default null
+      */
+-    scatteringNode: Function | FunctionNode<vec4>;
+-    side: number;
++    scatteringNode: (params: { positionRay: ShaderNodeObject<Node> }) => Node | null;
++}
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++export interface VolumeNodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<VolumeNodeMaterialNodeProperties>>, MaterialParameters {}
++
++/**
++ * Volume node material.
++ *
++ * @augments NodeMaterial
++ */
++declare class VolumeNodeMaterial extends NodeMaterial {
++    /**
++     * Constructs a new volume node material.
++     *
++     * @param {Object} [parameters] - The configuration parameter.
++     */
++    constructor(parameters?: VolumeNodeMaterialParameters);
++    /**
++     * This flag can be used for type testing.
++     *
++     * @default true
++     */
++    readonly isVolumeNodeMaterial: boolean;
+     setupLightingModel(): VolumetricLightingModel;
+ }
+-import NodeMaterial from './NodeMaterial.js';
+-import VolumetricLightingModel from '../../nodes/functions/VolumetricLightingModel.js';
++
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
++interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
++
++export default VolumeNodeMaterial;
