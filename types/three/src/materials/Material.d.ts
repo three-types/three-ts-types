@@ -1,3 +1,4 @@
+import { Camera } from "../cameras/Camera.js";
 import {
     Blending,
     BlendingDstFactor,
@@ -10,12 +11,17 @@ import {
     StencilFunc,
     StencilOp,
 } from "../constants.js";
+import { BufferGeometry } from "../core/BufferGeometry.js";
 import { EventDispatcher } from "../core/EventDispatcher.js";
-import { JSONMeta } from "../core/Object3D.js";
+import { JSONMeta, Object3D } from "../core/Object3D.js";
 import { Color } from "../math/Color.js";
 import { EulerTuple } from "../math/Euler.js";
 import { Plane } from "../math/Plane.js";
 import { Vector2Tuple } from "../math/Vector2.js";
+import { Group } from "../objects/Group.js";
+import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
+import { WebGLRenderer } from "../renderers/WebGLRenderer.js";
+import { Scene } from "../scenes/Scene.js";
 import { SourceJSON } from "../textures/Source.js";
 import { TextureJSON } from "../textures/Texture.js";
 
@@ -552,7 +558,14 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @param {Object3D} object - The 3D object.
      * @param {Object} group - The geometry group data.
      */
-    onBeforeRender(): void;
+    onBeforeRender(
+        renderer: WebGLRenderer,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        object: Object3D,
+        group: Group,
+    ): void;
     /**
      * An optional callback that is executed immediately before the shader
      * program is compiled. This function is called with the shader source code
@@ -565,7 +578,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
      * @param {WebGLRenderer} renderer - A reference to the renderer.
      */
-    onBeforeCompile(): void;
+    onBeforeCompile(parameters: WebGLProgramParametersWithUniforms, renderer: WebGLRenderer): void;
     /**
      * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
      * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
