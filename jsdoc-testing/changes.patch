@@ -1696,10 +1696,10 @@ index 5c608790..04bb3409 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Material extends MaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/MeshStandardMaterial.d.ts b/jsdoc-testing/jsdoc/materials/MeshStandardMaterial.d.ts
-index fa11c310..3d77632a 100644
+index fa11c310..bf181dea 100644
 --- a/jsdoc-testing/jsdoc/materials/MeshStandardMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/MeshStandardMaterial.d.ts
-@@ -1,63 +1,19 @@
+@@ -1,63 +1,18 @@
 -/**
 - * A standard physically based material, using Metallic-Roughness workflow.
 - *
@@ -1759,7 +1759,6 @@ index fa11c310..3d77632a 100644
 +import {
 +    MapColorPropertiesToColorRepresentations,
 +    Material,
-+    MaterialParameters,
 +    MaterialProperties,
 +} from './Material.js';
 +import { Color } from '../math/Color.js';
@@ -1776,7 +1775,7 @@ index fa11c310..3d77632a 100644
       * @default (1,1,1)
       */
      color: Color;
-@@ -66,7 +22,6 @@ export class MeshStandardMaterial extends Material {
+@@ -66,7 +21,6 @@ export class MeshStandardMaterial extends Material {
       * means fully diffuse. If `roughnessMap` is also provided,
       * both values are multiplied.
       *
@@ -1784,7 +1783,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      roughness: number;
-@@ -76,7 +31,6 @@ export class MeshStandardMaterial extends Material {
+@@ -76,7 +30,6 @@ export class MeshStandardMaterial extends Material {
       * A value between `0.0` and `1.0` could be used for a rusty metal look.
       * If `metalnessMap` is also provided, both values are multiplied.
       *
@@ -1792,7 +1791,7 @@ index fa11c310..3d77632a 100644
       * @default 0
       */
      metalness: number;
-@@ -85,21 +39,18 @@ export class MeshStandardMaterial extends Material {
+@@ -85,21 +38,18 @@ export class MeshStandardMaterial extends Material {
       * with {@link Material#transparent} or {@link Material#alphaTest}. The texture map
       * color is modulated by the diffuse `color`.
       *
@@ -1814,7 +1813,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      lightMapIntensity: number;
-@@ -107,7 +58,6 @@ export class MeshStandardMaterial extends Material {
+@@ -107,7 +57,6 @@ export class MeshStandardMaterial extends Material {
       * The red channel of this texture is used as the ambient occlusion map.
       * Requires a second set of UVs.
       *
@@ -1822,7 +1821,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      aoMap: Texture | null;
-@@ -116,7 +66,6 @@ export class MeshStandardMaterial extends Material {
+@@ -116,7 +65,6 @@ export class MeshStandardMaterial extends Material {
       * disables ambient occlusion. Where intensity is `1` and the AO map's
       * red channel is also `1`, ambient light is fully occluded on a surface.
       *
@@ -1830,7 +1829,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      aoMapIntensity: number;
-@@ -124,14 +73,12 @@ export class MeshStandardMaterial extends Material {
+@@ -124,14 +72,12 @@ export class MeshStandardMaterial extends Material {
       * Emissive (light) color of the material, essentially a solid color
       * unaffected by other lighting.
       *
@@ -1845,7 +1844,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      emissiveIntensity: number;
-@@ -140,7 +87,6 @@ export class MeshStandardMaterial extends Material {
+@@ -140,7 +86,6 @@ export class MeshStandardMaterial extends Material {
       * emissive color and the emissive intensity. If you have an emissive map,
       * be sure to set the emissive color to something other than black.
       *
@@ -1853,7 +1852,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      emissiveMap: Texture | null;
-@@ -150,14 +96,12 @@ export class MeshStandardMaterial extends Material {
+@@ -150,14 +95,12 @@ export class MeshStandardMaterial extends Material {
       * the geometry of the object, only the lighting. If a normal map is defined
       * this will be ignored.
       *
@@ -1868,7 +1867,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      bumpScale: number;
-@@ -169,21 +113,18 @@ export class MeshStandardMaterial extends Material {
+@@ -169,21 +112,18 @@ export class MeshStandardMaterial extends Material {
       * convention, the `y` component of `normalScale` should be negated to compensate
       * for the different handedness.
       *
@@ -1891,7 +1890,7 @@ index fa11c310..3d77632a 100644
       * @default (1,1)
       */
      normalScale: Vector2;
-@@ -195,7 +136,6 @@ export class MeshStandardMaterial extends Material {
+@@ -195,7 +135,6 @@ export class MeshStandardMaterial extends Material {
       * of each pixel (white being the highest) is mapped against, and
       * repositions, the vertices of the mesh.
       *
@@ -1899,7 +1898,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      displacementMap: Texture | null;
-@@ -204,7 +144,6 @@ export class MeshStandardMaterial extends Material {
+@@ -204,7 +143,6 @@ export class MeshStandardMaterial extends Material {
       * displacement, and white is maximum displacement). Without a displacement
       * map set, this value is not applied.
       *
@@ -1907,7 +1906,7 @@ index fa11c310..3d77632a 100644
       * @default 0
       */
      displacementScale: number;
-@@ -213,7 +152,6 @@ export class MeshStandardMaterial extends Material {
+@@ -213,7 +151,6 @@ export class MeshStandardMaterial extends Material {
       * The bias is added to the scaled sample of the displacement map.
       * Without a displacement map set, this value is not applied.
       *
@@ -1915,7 +1914,7 @@ index fa11c310..3d77632a 100644
       * @default 0
       */
      displacementBias: number;
-@@ -221,7 +159,6 @@ export class MeshStandardMaterial extends Material {
+@@ -221,7 +158,6 @@ export class MeshStandardMaterial extends Material {
       * The green channel of this texture is used to alter the roughness of the
       * material.
       *
@@ -1923,7 +1922,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      roughnessMap: Texture | null;
-@@ -229,7 +166,6 @@ export class MeshStandardMaterial extends Material {
+@@ -229,7 +165,6 @@ export class MeshStandardMaterial extends Material {
       * The blue channel of this texture is used to alter the metalness of the
       * material.
       *
@@ -1931,7 +1930,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      metalnessMap: Texture | null;
-@@ -243,7 +179,6 @@ export class MeshStandardMaterial extends Material {
+@@ -243,7 +178,6 @@ export class MeshStandardMaterial extends Material {
       * green in DXT-compressed and uncompressed RGB 565 formats. Luminance-only and
       * luminance/alpha textures will also still work as expected.
       *
@@ -1939,7 +1938,7 @@ index fa11c310..3d77632a 100644
       * @default null
       */
      alphaMap: Texture | null;
-@@ -251,28 +186,24 @@ export class MeshStandardMaterial extends Material {
+@@ -251,28 +185,24 @@ export class MeshStandardMaterial extends Material {
       * The environment map. To ensure a physically correct rendering, environment maps
       * are internally pre-processed with {@link PMREMGenerator}.
       *
@@ -1968,7 +1967,7 @@ index fa11c310..3d77632a 100644
       * @default false
       */
      wireframe: boolean;
-@@ -281,7 +212,6 @@ export class MeshStandardMaterial extends Material {
+@@ -281,7 +211,6 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -1976,7 +1975,7 @@ index fa11c310..3d77632a 100644
       * @default 1
       */
      wireframeLinewidth: number;
-@@ -290,7 +220,6 @@ export class MeshStandardMaterial extends Material {
+@@ -290,7 +219,6 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
@@ -1984,7 +1983,7 @@ index fa11c310..3d77632a 100644
       * @default 'round'
       */
      wireframeLinecap: ("round" | "bevel" | "miter");
-@@ -299,27 +228,76 @@ export class MeshStandardMaterial extends Material {
+@@ -299,27 +227,76 @@ export class MeshStandardMaterial extends Material {
       *
       * Can only be used with {@link SVGRenderer}.
       *
