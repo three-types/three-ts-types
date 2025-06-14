@@ -617,7 +617,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * @param {Material} source - The material to copy.
      * @return {Material} A reference to this instance.
      */
-    copy(source: Material): Material;
+    copy(source: Material): this;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.
