@@ -522,7 +522,6 @@ export interface MaterialJSON {
  * Materials define the appearance of renderable 3D objects.
  *
  * @abstract
- * @augments EventDispatcher
  */
 export class Material extends EventDispatcher<{ dispose: {} }> {
     /**
