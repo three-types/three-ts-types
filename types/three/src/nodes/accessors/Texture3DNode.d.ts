@@ -7,6 +7,8 @@ export default class Texture3DNode extends TextureNode {
     readonly isTexture3DNode: true;
 
     constructor(value: Texture, uvNode?: ShaderNodeObject<Node> | null, levelNode?: ShaderNodeObject<Node> | null);
+
+    normal(uvNode: Node): ShaderNodeObject<Node>;
 }
 
 export const texture3D: (
