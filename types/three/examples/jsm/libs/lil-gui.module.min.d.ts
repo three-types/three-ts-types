@@ -324,7 +324,7 @@ export class ColorController<T = Record<string, unknown>, K extends keyof T = ke
  * lil-gui
  * https://lil-gui.georgealways.com
  * @version 0.17.0
- * @author George Michael Browser
+ * @author George Michael Brower
  * @license MIT
  */
 /**
