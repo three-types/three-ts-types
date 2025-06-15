@@ -1,8 +1,8 @@
+import { Vector3 } from "../../math/Vector3.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import OperatorNode from "./OperatorNode.js";
-import { Vector3 } from '../../math/Vector3.js';
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
