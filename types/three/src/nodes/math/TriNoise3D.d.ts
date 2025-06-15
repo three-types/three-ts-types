@@ -6,7 +6,7 @@ export const tri: (x: Node) => ShaderNodeObject<Node>;
 export const tri3: (p: Node) => ShaderNodeObject<Node>;
 
 export const triNoise3D: (
-    p_immutable: Node,
-    spd: Node,
-    time: Node,
+    position: Node,
+    speed: Node | number,
+    time: Node | number,
 ) => ShaderNodeObject<Node>;

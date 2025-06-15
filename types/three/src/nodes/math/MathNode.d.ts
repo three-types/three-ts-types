@@ -1,3 +1,4 @@
+import { Vector3 } from "../../math/Vector3.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
@@ -154,7 +155,7 @@ export const sqrt: Unary;
 export const inverseSqrt: Unary;
 export const floor: Unary;
 export const ceil: Unary;
-export const normalize: Unary;
+export const normalize: (a: Node | Vector3) => ShaderNodeObject<MathNode>;
 export const fract: Unary;
 export const sin: Unary;
 export const cos: Unary;

@@ -11,5 +11,5 @@ export default class RotateNode extends TempNode {
 
 export const rotate: (
     positionNode: Node,
-    rotationNode: Node,
+    rotationNode: Node | number,
 ) => ShaderNodeObject<RotateNode>;
