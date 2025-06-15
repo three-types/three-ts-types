@@ -1328,7 +1328,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 98388937..92ac050d 100644
+index 4ca24a38..2710d13e 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -2826,7 +2826,7 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 1e59a404..a2791b6b 100644
+index 807e608d..08ffe8cf 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,14 @@
@@ -3306,7 +3306,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index adc0b41a..f51da32e 100644
+index 6d8db4b1..9b14d8f7 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -7634,7 +7634,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index f330f6e9..52c6ee66 100644
+index f330f6e9..2dcd8ddf 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -9,8 +9,46 @@ import {
@@ -7649,10 +7649,10 @@ index f330f6e9..52c6ee66 100644
 +import { CubeTexture } from '../../textures/CubeTexture.js';
 +import { CompressedTexture } from '../../textures/CompressedTexture.js';
 +
-+type SizeVector3Unitialized = Vector3 & { width?: number; height?: number; depth?: number };
++type SizeVector3Uninitialized = Vector3 & { width?: number; height?: number; depth?: number };
 +type SizeVector3 = Vector3 & { width: number; height: number; depth: number };
 +
-+const _size: SizeVector3Unitialized = /*@__PURE__*/ new Vector3();
++const _size: SizeVector3Uninitialized = /*@__PURE__*/ new Vector3();
 +
 +interface RenderTargetData {
 +    depthTextureMips?: { [activeMipmapLevel: number]: DepthTexture };
@@ -9658,7 +9658,7 @@ index d5f60879..37f47e7c 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 78ceb4bf..4d923e77 100644
+index f03db11e..f7c07d85 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -15,6 +15,7 @@ import { warnOnce } from '../../utils.js';
@@ -9669,7 +9669,7 @@ index 78ceb4bf..4d923e77 100644
  
  const _drawingBufferSize = /*@__PURE__*/ new Vector2();
  
-@@ -1252,7 +1253,14 @@ class WebGLBackend extends Backend {
+@@ -1241,7 +1242,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
