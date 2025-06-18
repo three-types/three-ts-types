@@ -13624,7 +13624,7 @@ index d0255e43..c924d666 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index b9c69307..3b7039b5 100644
+index 2011b5cf..df966f61 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -1,4 +1,4 @@
@@ -13636,7 +13636,7 @@ index b9c69307..3b7039b5 100644
 @@ -18,22 +18,23 @@ import {
      pow,
      blendDodge,
-     normalWorld,
+     normalWorldGeometry,
 +    ShaderNodeObject,
  } from 'three/tsl';
  
@@ -16279,7 +16279,7 @@ index ea14773f..0fd147cd 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 17bc8440..1f7bc551 100644
+index c779a3b2..58fee643 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -1,19 +1,19 @@
@@ -16294,7 +16294,7 @@ index 17bc8440..1f7bc551 100644
 -import { radixSort } from 'three/addons/utils/SortUtils.js';
 +import { radixSort, RadixSortOptions } from 'three/addons/utils/SortUtils.js';
  
- import { transformedNormalView, directionToColor, diffuseColor } from 'three/tsl';
+ import { normalView, directionToColor, diffuseColor } from 'three/tsl';
  
 -let camera, scene, renderer;
 -let controls, stats;
@@ -16534,7 +16534,7 @@ index ea9f8658..b81d7761 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index a749bd6d..16bcee89 100644
+index eeb1b61d..68ad678b 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
 @@ -1,4 +1,4 @@
@@ -16542,7 +16542,7 @@ index a749bd6d..16bcee89 100644
 +import * as THREE from 'three/webgpu';
  import {
      output,
-     transformedNormalView,
+     normalView,
 @@ -18,8 +18,8 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -16628,25 +16628,14 @@ index d6a60fc2..8fac5871 100644
  
      // render scene into target
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 989361b6..491df42d 100644
+index 7691e07d..e878484e 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-@@ -1,12 +1,30 @@
+@@ -1,12 +1,19 @@
 -import * as THREE from 'three';
--import { mix, step, texture, screenUV, mrt, output, transformedNormalWorld, uv, vec2 } from 'three/tsl';
+-import { mix, step, texture, screenUV, mrt, output, normalWorld, uv, vec2 } from 'three/tsl';
 +import * as THREE from 'three/webgpu';
-+import {
-+    mix,
-+    step,
-+    texture,
-+    screenUV,
-+    mrt,
-+    output,
-+    transformedNormalWorld,
-+    uv,
-+    vec2,
-+    ShaderNodeObject,
-+} from 'three/tsl';
++import { mix, step, texture, screenUV, mrt, output, normalWorld, uv, vec2, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16666,7 +16655,7 @@ index 989361b6..491df42d 100644
  
  const gui = new GUI();
  
-@@ -109,7 +127,7 @@ function onWindowResize() {
+@@ -109,7 +116,7 @@ function onWindowResize() {
      renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
  }
  
@@ -16675,7 +16664,7 @@ index 989361b6..491df42d 100644
      const selection = options.selection;
  
      torus.rotation.y = (time / 1000) * 0.4;
-@@ -143,12 +161,26 @@ async function readback() {
+@@ -143,12 +150,26 @@ async function readback() {
      const selection = options.selection;
  
      if (selection === 'diffuse') {
@@ -16994,16 +16983,16 @@ index a891b932..a405f85c 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-index ac86d2aa..f32d5ec9 100644
+index 2b0acc69..d47105f2 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
 +++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture } from 'three/tsl';
- 
- import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
-@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import {
+     normalWorldGeometry,
+     uniform,
+@@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -17013,16 +17002,16 @@ index ac86d2aa..f32d5ec9 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-index 79c23704..6a3d89db 100644
+index 8f65cac6..0a12a0db 100644
 --- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { normalWorld, uniform, normalView, positionViewDirection, cameraViewMatrix, pmremTexture } from 'three/tsl';
- 
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-@@ -7,7 +7,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import {
+     normalWorldGeometry,
+     uniform,
+@@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -17899,30 +17888,20 @@ index 06bf751e..4e685fb2 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 45ffecc1..ce082652 100644
+index 37d8400a..5eb4941c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-@@ -1,6 +1,16 @@
+@@ -1,6 +1,6 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, transformedNormalView, metalness, blendColor, screenUV, color } from 'three/tsl';
+-import { pass, mrt, output, normalView, metalness, blendColor, screenUV, color } from 'three/tsl';
 -import { ssr } from 'three/addons/tsl/display/SSRNode.js';
 +import * as THREE from 'three/webgpu';
-+import {
-+    pass,
-+    mrt,
-+    output,
-+    transformedNormalView,
-+    metalness,
-+    blendColor,
-+    screenUV,
-+    color,
-+    ShaderNodeObject,
-+} from 'three/tsl';
++import { pass, mrt, output, normalView, metalness, blendColor, screenUV, color, ShaderNodeObject } from 'three/tsl';
 +import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
  import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -17,8 +27,12 @@ const params = {
+@@ -17,8 +17,12 @@ const params = {
      enabled: true,
  };
  
@@ -17937,7 +17916,7 @@ index 45ffecc1..ce082652 100644
  
  init();
  
-@@ -37,9 +51,9 @@ async function init() {
+@@ -37,9 +41,9 @@ async function init() {
      loader.setDRACOLoader(dracoLoader);
      loader.load('models/gltf/steampunk_camera.glb', function (gltf) {
          gltf.scene.traverse(function (object) {
@@ -18125,13 +18104,13 @@ index 4a085f2f..d0de6c2c 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index f3b02634..5497d60b 100644
+index 24847b2a..2b3462ec 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { color, pass, reflector, normalWorld, texture, uv, screenUV } from 'three/tsl';
+ import { color, pass, reflector, normalWorldGeometry, texture, uv, screenUV } from 'three/tsl';
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
 @@ -8,11 +8,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18977,7 +18956,7 @@ index c582161d..4ef3b613 100644
                  child.castShadow = true;
                  child.receiveShadow = true;
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 3bf1b47a..101454b0 100644
+index 7846ba96..b5f52514 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -1,4 +1,4 @@
@@ -18985,7 +18964,7 @@ index 3bf1b47a..101454b0 100644
 +import * as THREE from 'three/webgpu';
  import {
      step,
-     normalWorld,
+     normalWorldGeometry,
 @@ -15,12 +15,18 @@ import {
      mix,
      uv,
