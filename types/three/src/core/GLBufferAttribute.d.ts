@@ -20,7 +20,14 @@ export class GLBufferAttribute {
      * @param count The expected number of vertices in VBO. See {@link GLBufferAttribute.count | .count}
      * @param {boolean} [normalized=false] - Whether the data are normalized or not.
      */
-    constructor(buffer: WebGLBuffer, type: GLenum, itemSize: number, elementSize: 1 | 2 | 4, count: number, normalized?: boolean);
+    constructor(
+        buffer: WebGLBuffer,
+        type: GLenum,
+        itemSize: number,
+        elementSize: 1 | 2 | 4,
+        count: number,
+        normalized?: boolean,
+    );
 
     /**
      * Read-only flag to check if a given object is of type {@link GLBufferAttribute}.
