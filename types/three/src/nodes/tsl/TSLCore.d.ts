@@ -255,7 +255,7 @@ interface ShaderNodeFn<Args extends readonly unknown[]> {
 
     setLayout: (layout: Layout) => this;
 
-    once: (namespace?: string | null) => this;
+    once: (subBuilds?: string[] | null) => this;
 }
 
 export function Fn(jsFunc: (builder: NodeBuilder) => void): ShaderNodeFn<[]>;
