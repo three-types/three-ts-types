@@ -10,6 +10,7 @@ const exceptionList = [
     'webgl_animation_skinning_blending',
     'webgl_animation_skinning_additive_blending',
     'webgl_animation_skinning_ik',
+    'webgl_batch_lod_bvh',
     'webgl_depth_texture',
     'webgl_geometry_csg',
     'webgl_geometry_spline_editor',
