@@ -458,7 +458,7 @@ export const storageTexture: typeof TSL.storageTexture;
 export const string: typeof TSL.string;
 export const struct: typeof TSL.struct;
 export const sub: typeof TSL.sub;
-export const subBuild = TSL.subBuild;
+export const subBuild: typeof TSL.subBuild;
 export const subgroupIndex: typeof TSL.subgroupIndex;
 export const subgroupSize: typeof TSL.subgroupSize;
 export const tan: typeof TSL.tan;
