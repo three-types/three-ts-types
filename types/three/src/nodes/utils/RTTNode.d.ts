@@ -22,7 +22,7 @@ declare class RTTNode extends TextureNode {
 
     constructor(node: Node, width?: number | null, height?: number | null, options?: RTTNodeOptions);
 
-    get autoSize(): boolean;
+    get autoResize(): boolean;
 
     setSize(width: number | null, height: number | null): void;
 
