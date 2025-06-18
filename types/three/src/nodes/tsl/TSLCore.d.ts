@@ -154,7 +154,7 @@ type OverloadedConstructorsOf<T> = T extends {
 type AnyConstructors = Constructors<any, any, any, any>;
 
 /**
- * Returns all constructors where the first paramter is assignable to given "scope"
+ * Returns all constructors where the first parameter is assignable to given "scope"
  */
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 type FilterConstructorsByScope<T extends AnyConstructors, S> = {
@@ -173,7 +173,7 @@ type ConstructorUnion<T extends AnyConstructors> =
     | Exclude<T["d"], undefined>;
 
 /**
- * Extract list of possible scopes - union of the first paramter
+ * Extract list of possible scopes - union of the first parameter
  * of all constructors, should it be string
  */
 type ExtractScopes<T extends AnyConstructors> =
