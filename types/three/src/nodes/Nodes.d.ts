@@ -39,6 +39,7 @@ export { default as PropertyNode } from "./core/PropertyNode.js";
 export { default as StackNode } from "./core/StackNode.js";
 export { default as StructNode } from "./core/StructNode.js";
 export { default as StructTypeNode } from "./core/StructTypeNode.js";
+export { default as SubBuildNode } from "./core/SubBuildNode.js";
 export { default as TempNode } from "./core/TempNode.js";
 export { default as UniformGroupNode } from "./core/UniformGroupNode.js";
 export { default as UniformNode } from "./core/UniformNode.js";
