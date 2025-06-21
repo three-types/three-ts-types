@@ -36,6 +36,7 @@ export * from "./utils/ReflectorNode.js";
 export * from "./utils/RemapNode.js";
 export * from "./utils/RotateNode.js";
 export * from "./utils/RTTNode.js";
+export * from "./utils/SampleNode.js";
 export * from "./utils/SpriteSheetUVNode.js";
 export * from "./utils/SpriteUtils.js";
 export * from "./utils/Timer.js";
