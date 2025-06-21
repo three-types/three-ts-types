@@ -17888,20 +17888,27 @@ index 06bf751e..4e685fb2 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 37d8400a..5eb4941c 100644
+index 6de40d2d..f26ed7b5 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-@@ -1,6 +1,6 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, normalView, metalness, blendColor, screenUV, color } from 'three/tsl';
--import { ssr } from 'three/addons/tsl/display/SSRNode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, normalView, metalness, blendColor, screenUV, color, ShaderNodeObject } from 'three/tsl';
-+import SSRNode, { ssr } from 'three/addons/tsl/display/SSRNode.js';
+ import {
+     pass,
+     mrt,
+@@ -11,8 +11,9 @@ import {
+     sample,
+     directionToColor,
+     colorToDirection,
++    ShaderNodeObject,
+ } from 'three/tsl';
+-import { ssr } from 'three/addons/tsl/display/SSRNode.js';
++import { ssr, SSRNode } from 'three/addons/tsl/display/SSRNode.js';
  import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -17,8 +17,12 @@ const params = {
+@@ -29,8 +30,12 @@ const params = {
      enabled: true,
  };
  
@@ -17916,7 +17923,7 @@ index 37d8400a..5eb4941c 100644
  
  init();
  
-@@ -37,9 +41,9 @@ async function init() {
+@@ -49,9 +54,9 @@ async function init() {
      loader.setDRACOLoader(dracoLoader);
      loader.load('models/gltf/steampunk_camera.glb', function (gltf) {
          gltf.scene.traverse(function (object) {
