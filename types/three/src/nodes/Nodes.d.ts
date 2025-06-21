@@ -57,7 +57,6 @@ export { default as EquirectUVNode } from "./utils/EquirectUVNode.js";
 export { default as FunctionOverloadingNode } from "./utils/FunctionOverloadingNode.js";
 export { default as JoinNode } from "./utils/JoinNode.js";
 export { default as LoopNode } from "./utils/LoopNode.js";
-export { default as MatcapUVNode } from "./utils/MatcapUVNode.js";
 export { default as MaxMipLevelNode } from "./utils/MaxMipLevelNode.js";
 export { default as MemberNode } from "./utils/MemberNode.js";
 export { default as ReflectorNode, ReflectorNodeParameters } from "./utils/ReflectorNode.js";
