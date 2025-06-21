@@ -5,6 +5,7 @@ import {
     FunctionDeclaration,
     Program,
     Statement,
+    Switch,
     Ternary,
     Uniform,
     VariableDeclaration,
@@ -21,6 +22,7 @@ export default class TSLEncoder {
     iife: boolean;
     uniqueNames: boolean;
     reference: boolean;
+    block: Statement | null;
 
     addImport(name: string): void;
     emitUniform(node: Uniform): string;
@@ -29,6 +31,7 @@ export default class TSLEncoder {
     emitTernary(node: Ternary): string;
     emitConditional(node: Conditional): string;
     emitLoop(node: For): string;
+    emitSwitch(switchNode: Switch): string;
     emitFor(node: For): string;
     emitForWhile(node: For): string;
     emitVariables(node: VariableDeclaration, isRoot?: boolean): string;

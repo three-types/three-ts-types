@@ -178,6 +178,18 @@ export class Discard {
     isDiscard: true;
 }
 
+export class Continue {
+    constructor();
+
+    isContinue: true;
+}
+
+export class Break {
+    constructor();
+
+    isBreak: true;
+}
+
 export class Accessor {
     constructor(property: string);
 
@@ -221,4 +233,27 @@ export class For {
     body: Statement[];
 
     isFor: true;
+}
+
+export class Switch {
+    constructor(discriminant: Statement);
+
+    body: Statement[];
+
+    discriminant: Statement;
+    case: Statement | null;
+    isSwitch: true;
+}
+
+export class SwitchCase {
+    constructor(caseCondition: Statement);
+
+    caseCondition: Statement;
+
+    body: Statement[];
+
+    nextCase: SwitchCase | null;
+
+    isDefault: boolean;
+    isSwitchCase: true;
 }
