@@ -39,7 +39,7 @@ export * from "./utils/RTTNode.js";
 export * from "./utils/SpriteSheetUVNode.js";
 export * from "./utils/SpriteUtils.js";
 export * from "./utils/Timer.js";
-export * from "./utils/TriplanarTexturesNode.js";
+export * from "./utils/TriplanarTextures.js";
 export * from "./utils/UVUtils.js";
 export * from "./utils/ViewportUtils.js";
 
