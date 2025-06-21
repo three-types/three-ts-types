@@ -417,6 +417,7 @@ export const round: typeof TSL.round;
 export const rtt: typeof TSL.rtt;
 export const sRGBTransferEOTF: typeof TSL.sRGBTransferEOTF;
 export const sRGBTransferOETF: typeof TSL.sRGBTransferOETF;
+export const sample: typeof TSL.sample;
 export const sampler: typeof TSL.sampler;
 export const samplerComparison: typeof TSL.samplerComparison;
 export const saturate: typeof TSL.saturate;
