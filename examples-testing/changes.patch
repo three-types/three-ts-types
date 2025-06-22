@@ -1450,10 +1450,10 @@ index f761e4a1..e102f557 100644
  init();
  
 diff --git a/examples-testing/examples/physics_rapier_basic.ts b/examples-testing/examples/physics_rapier_basic.ts
-index be7a46c9..0263765f 100644
+index 056a642c..3e447ff8 100644
 --- a/examples-testing/examples/physics_rapier_basic.ts
 +++ b/examples-testing/examples/physics_rapier_basic.ts
-@@ -1,11 +1,11 @@
+@@ -1,11 +1,15 @@
  import * as THREE from 'three';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
@@ -1461,13 +1461,31 @@ index be7a46c9..0263765f 100644
  import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
  import Stats from 'three/addons/libs/stats.module.js';
  
--let camera, scene, renderer, stats;
+-let camera, scene, renderer, stats, controls;
 -let physics, physicsHelper;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    stats: Stats,
++    controls: OrbitControls;
 +let physics: RapierPhysicsObject, physicsHelper: RapierHelper;
  
  init();
  
+@@ -119,10 +123,10 @@ function onWindowResize() {
+ 
+ function animate() {
+     for (const object of scene.children) {
+-        if (object.isMesh) {
++        if ((object as THREE.Mesh).isMesh) {
+             if (object.position.y < -10) {
+-                scene.remove(object);
+-                physics.removeMesh(object);
++                scene.remove(object as THREE.Mesh);
++                physics.removeMesh(object as THREE.Mesh);
+             }
+         }
+     }
 diff --git a/examples-testing/examples/physics_rapier_character_controller.ts b/examples-testing/examples/physics_rapier_character_controller.ts
 index 8e797a98..d9b8caa6 100644
 --- a/examples-testing/examples/physics_rapier_character_controller.ts
@@ -13590,39 +13608,6 @@ index 030f0560..41870e7a 100644
  }
  
  function upBloom() {
-diff --git a/examples-testing/examples/webgl_water.ts b/examples-testing/examples/webgl_water.ts
-index 496a5f85..379619a1 100644
---- a/examples-testing/examples/webgl_water.ts
-+++ b/examples-testing/examples/webgl_water.ts
-@@ -4,9 +4,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Water } from 'three/addons/objects/Water2.js';
- 
--let scene, camera, clock, renderer, water;
-+let scene: THREE.Scene,
-+    camera: THREE.PerspectiveCamera,
-+    clock: THREE.Clock,
-+    renderer: THREE.WebGLRenderer,
-+    water: Water;
- 
--let torusKnot;
-+let torusKnot: THREE.Mesh;
- 
- const params = {
-     color: '#ffffff',
-diff --git a/examples-testing/examples/webgl_water_flowmap.ts b/examples-testing/examples/webgl_water_flowmap.ts
-index d0255e43..c924d666 100644
---- a/examples-testing/examples/webgl_water_flowmap.ts
-+++ b/examples-testing/examples/webgl_water_flowmap.ts
-@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Water } from 'three/addons/objects/Water2.js';
- 
--let scene, camera, renderer, water;
-+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, water: Water;
- 
- init();
- 
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
 index 2011b5cf..df966f61 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
@@ -18146,6 +18131,29 @@ index 24847b2a..2b3462ec 100644
      scene.add(reflection.target);
  
      const floorMaterial = new THREE.MeshPhongNodeMaterial();
+diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
+index 11a0d91a..384449bc 100644
+--- a/examples-testing/examples/webgpu_reflection_roughness.ts
++++ b/examples-testing/examples/webgpu_reflection_roughness.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { Fn, vec2, vec4, texture, uv, textureBicubic, rangeFogFactor, reflector, time } from 'three/tsl';
+ 
+ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+@@ -7,9 +7,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer;
+-let controls;
+-let stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let stats: Stats;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
 index 4ce8b0a7..d41bc6f4 100644
 --- a/examples-testing/examples/webgpu_refraction.ts
@@ -19629,31 +19637,34 @@ index e6b3ef50..3830b9e1 100644
  
          RaymarchingBox(steps, ({ positionRay }) => {
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 3f4cddb7..4bc3eb5a 100644
+index d7ef864e..236323dc 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
-@@ -1,12 +1,16 @@
+@@ -1,15 +1,20 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
+ 
+ import { pass, mrt, output, emissive, color, screenUV } from 'three/tsl';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { WaterMesh } from 'three/addons/objects/Water2Mesh.js';
 +import { WaterMesh, WaterNode } from 'three/addons/objects/Water2Mesh.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
--let scene, camera, clock, renderer, water;
+-let scene, camera, renderer, water, postProcessing, controls;
 +let scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
-+    clock: THREE.Clock,
 +    renderer: THREE.WebGPURenderer,
-+    water: WaterMesh;
- 
--let torusKnot;
-+let torusKnot: THREE.Mesh;
++    water: WaterMesh,
++    postProcessing: THREE.PostProcessing,
++    controls: OrbitControls;
  
  const params = {
      color: '#ffffff',
-@@ -121,7 +125,7 @@ function init() {
+@@ -109,7 +114,7 @@ async function init() {
      // gui
  
      const gui = new GUI();
