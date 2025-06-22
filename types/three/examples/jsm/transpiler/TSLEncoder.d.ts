@@ -20,7 +20,6 @@ export default class TSLEncoder {
     global: Set<string>;
     overloadings: Map<string, string>;
     iife: boolean;
-    uniqueNames: boolean;
     reference: boolean;
     block: Statement | null;
 
