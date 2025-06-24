@@ -3745,10 +3745,10 @@ index 837cbce7..12a2da6a 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index 3708522d..b6f51892 100644
+index 3708522d..da16e95c 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
-@@ -1,10 +1,39 @@
+@@ -1,10 +1,38 @@
 -let _vector2 = null;
 -let _color4 = null;
 -
@@ -3756,7 +3756,7 @@ index 3708522d..b6f51892 100644
  import { Vector2 } from '../../math/Vector2.js';
  import { createCanvasElement, warnOnce } from '../../utils.js';
 -import { REVISION } from '../../constants.js';
-+import { CoordinateSystem, REVISION } from '../../constants.js';
++import { CoordinateSystem, REVISION, TimestampQuery } from '../../constants.js';
 +import RenderObject from './RenderObject.js';
 +import RenderContext from './RenderContext.js';
 +import RenderBundle from './RenderBundle.js';
@@ -3768,13 +3768,12 @@ index 3708522d..b6f51892 100644
 +import { Scene } from '../../scenes/Scene.js';
 +import NodeBuilder from '../../nodes/core/NodeBuilder.js';
 +import TimestampQueryPool from './TimestampQueryPool.js';
-+import { TimestampQuery } from '@types/three';
 +
 +let _vector2: Vector2 | null = null;
 +let _color4: Color4 | null = null;
 +
 +export interface BackendParameters {
-+    canvas?: HTMLCanvasElement | undefined;
++    canvas?: HTMLCanvasElement | OffscreenCanvas | undefined;
 +    antialias?: boolean;
 +}
 +
@@ -3792,7 +3791,7 @@ index 3708522d..b6f51892 100644
  
  /**
   * Most of the rendering related logic is implemented in the
-@@ -18,13 +47,25 @@ import { REVISION } from '../../constants.js';
+@@ -18,13 +46,25 @@ import { REVISION } from '../../constants.js';
   * @abstract
   * @private
   */
@@ -3804,7 +3803,7 @@ index 3708522d..b6f51892 100644
 +        RenderContextData | RenderBundleData | RenderObjectData | TextureData
 +    >;
 +    renderer: Renderer | null;
-+    domElement: HTMLCanvasElement | null;
++    domElement: HTMLCanvasElement | OffscreenCanvas | null;
 +    timestampQueryPool: {
 +        render: TimestampQueryPool | null;
 +        compute: TimestampQueryPool | null;
@@ -3820,7 +3819,7 @@ index 3708522d..b6f51892 100644
          /**
           * The parameters of the backend.
           *
-@@ -38,7 +79,10 @@ class Backend {
+@@ -38,7 +78,10 @@ class Backend {
           *
           * @type {WeakMap}
           */
@@ -3832,7 +3831,7 @@ index 3708522d..b6f51892 100644
  
          /**
           * A reference to the renderer.
-@@ -84,7 +128,7 @@ class Backend {
+@@ -84,7 +127,7 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {Promise} A Promise that resolves when the backend has been initialized.
       */
@@ -3841,7 +3840,7 @@ index 3708522d..b6f51892 100644
          this.renderer = renderer;
      }
  
-@@ -95,7 +139,9 @@ class Backend {
+@@ -95,7 +138,9 @@ class Backend {
       * @type {number}
       * @readonly
       */
@@ -3852,7 +3851,7 @@ index 3708522d..b6f51892 100644
  
      // render context
  
-@@ -263,7 +309,11 @@ class Backend {
+@@ -263,7 +308,11 @@ class Backend {
       * @param {Renderer} renderer - The renderer.
       * @return {NodeBuilder} The node builder.
       */
@@ -3865,7 +3864,7 @@ index 3708522d..b6f51892 100644
  
      // textures
  
-@@ -339,7 +389,14 @@ class Backend {
+@@ -339,7 +388,14 @@ class Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
@@ -3881,7 +3880,7 @@ index 3708522d..b6f51892 100644
  
      /**
       * Copies data of the given source texture to the given destination texture.
-@@ -444,7 +501,7 @@ class Backend {
+@@ -444,7 +500,7 @@ class Backend {
       * @param {Object3D} object - The 3D object to test.
       * @return {boolean} Whether the 3D object is fully occluded or not.
       */
@@ -3890,7 +3889,7 @@ index 3708522d..b6f51892 100644
  
      /**
       * Resolves the time stamp for the given render context and type.
-@@ -454,7 +511,7 @@ class Backend {
+@@ -454,7 +510,7 @@ class Backend {
       * @param {string} [type='render'] - The type of the time stamp.
       * @return {Promise<number>} A Promise that resolves with the time stamp.
       */
@@ -3899,7 +3898,7 @@ index 3708522d..b6f51892 100644
          if (!this.trackTimestamp) {
              warnOnce('WebGPURenderer: Timestamp tracking is disabled.');
              return;
-@@ -468,7 +525,7 @@ class Backend {
+@@ -468,7 +524,7 @@ class Backend {
  
          const duration = await queryPool.resolveQueriesAsync();
  
@@ -3908,7 +3907,7 @@ index 3708522d..b6f51892 100644
  
          return duration;
      }
-@@ -518,7 +575,7 @@ class Backend {
+@@ -518,7 +574,7 @@ class Backend {
       * @abstract
       * @return {number} The maximum anisotropy texture filtering value.
       */
@@ -3917,7 +3916,7 @@ index 3708522d..b6f51892 100644
  
      /**
       * Returns the drawing buffer size.
-@@ -528,7 +585,7 @@ class Backend {
+@@ -528,7 +584,7 @@ class Backend {
      getDrawingBufferSize() {
          _vector2 = _vector2 || new Vector2();
  
@@ -3926,7 +3925,7 @@ index 3708522d..b6f51892 100644
      }
  
      /**
-@@ -550,7 +607,7 @@ class Backend {
+@@ -550,7 +606,7 @@ class Backend {
  
          _color4 = _color4 || new Color4();
  
@@ -3935,7 +3934,7 @@ index 3708522d..b6f51892 100644
  
          _color4.getRGB(_color4);
  
-@@ -595,7 +652,11 @@ class Backend {
+@@ -595,7 +651,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
       */
@@ -3948,7 +3947,7 @@ index 3708522d..b6f51892 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -613,7 +674,7 @@ class Backend {
+@@ -613,7 +673,7 @@ class Backend {
       * @param {Object} object - The object.
       * @return {boolean} Whether a dictionary for the given object as been defined or not.
       */
@@ -3957,7 +3956,7 @@ index 3708522d..b6f51892 100644
          return this.data.has(object);
      }
  
-@@ -622,7 +683,7 @@ class Backend {
+@@ -622,7 +682,7 @@ class Backend {
       *
       * @param {Object} object - The object to delete.
       */
