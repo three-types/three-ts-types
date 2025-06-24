@@ -3967,7 +3967,7 @@ index 3708522d..b6f51892 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index f3aca666..40b295d2 100644
+index 92c00629..68f808ac 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -14,23 +14,38 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
@@ -4741,7 +4741,7 @@ index c2dfad4c..02330947 100644
  // size of a chunk in bytes (STD140 layout)
  
 diff --git a/src-testing/src/renderers/common/CubeRenderTarget.ts b/src-testing/src/renderers/common/CubeRenderTarget.ts
-index 1e217f88..e10f21ec 100644
+index 21bea83b..883eadb8 100644
 --- a/src-testing/src/renderers/common/CubeRenderTarget.ts
 +++ b/src-testing/src/renderers/common/CubeRenderTarget.ts
 @@ -9,6 +9,9 @@ import { CubeCamera } from '../../cameras/CubeCamera.js';
@@ -6260,7 +6260,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 51663d80..df816795 100644
+index 51663d80..0ccb2461 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -6536,7 +6536,7 @@ index 51663d80..df816795 100644
       * @return {Promise<Array|undefined>} A Promise that resolves when the compile has been finished.
       */
 -    async compileAsync(scene, camera, targetScene = null) {
-+    async compileAsync(scene: Object3D, camera: Camera, targetScene: Object3D | null = null) {
++    async compileAsync(scene: Object3D, camera: Camera, targetScene: Scene | null = null) {
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) await this.init();
@@ -6618,7 +6618,7 @@ index 51663d80..df816795 100644
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
 -    async renderAsync(scene, camera) {
-+    async renderAsync(scene: Scene, camera: Camera) {
++    async renderAsync(scene: Object3D, camera: Camera) {
          if (this._initialized === false) await this.init();
  
          this._renderScene(scene, camera);
@@ -6691,7 +6691,7 @@ index 51663d80..df816795 100644
       * Only returned when the renderer has not been initialized.
       */
 -    render(scene, camera) {
-+    render(scene: Scene, camera: Camera) {
++    render(scene: Object3D, camera: Camera) {
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.',
@@ -6700,7 +6700,7 @@ index 51663d80..df816795 100644
       * @return {RenderContext} The current render context.
       */
 -    _renderScene(scene, camera, useFrameBufferTarget = true) {
-+    _renderScene(scene: Scene, camera: Camera, useFrameBufferTarget = true) {
++    _renderScene(scene: Object3D, camera: Camera, useFrameBufferTarget = true) {
          if (this._isDeviceLost === true) return;
  
          const frameBufferTarget = useFrameBufferTarget ? this._getFrameBufferTarget() : null;
