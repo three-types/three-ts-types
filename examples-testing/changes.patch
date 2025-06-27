@@ -4091,7 +4091,7 @@ index 0eb50120..a8181348 100644
              object.rotation.y = timer * 2.5;
          }
 diff --git a/examples-testing/examples/webgl_geometry_colors.ts b/examples-testing/examples/webgl_geometry_colors.ts
-index bc0bf517..68466b5b 100644
+index 3166c03b..d2c22418 100644
 --- a/examples-testing/examples/webgl_geometry_colors.ts
 +++ b/examples-testing/examples/webgl_geometry_colors.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -4124,7 +4124,17 @@ index bc0bf517..68466b5b 100644
      const gradient = context.createRadialGradient(
          canvas.width / 2,
          canvas.height / 2,
-@@ -154,7 +154,7 @@ function onWindowResize() {
+@@ -77,7 +77,8 @@ function init() {
+     const geometry1 = new THREE.IcosahedronGeometry(radius, 1);
+ 
+     const count = geometry1.attributes.position.count;
+-    const arrayType = typeof Float16Array !== 'undefined' ? Float16Array : Float32Array;
++    // @ts-expect-error
++    const arrayType: THREE.TypedArrayConstructor = typeof Float16Array !== 'undefined' ? Float16Array : Float32Array;
+     geometry1.setAttribute('color', new THREE.BufferAttribute(new arrayType(count * 3), 3));
+ 
+     const geometry2 = geometry1.clone();
+@@ -155,7 +156,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -18132,7 +18142,7 @@ index 24847b2a..2b3462ec 100644
  
      const floorMaterial = new THREE.MeshPhongNodeMaterial();
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
-index 11a0d91a..384449bc 100644
+index afe3f71c..9863da51 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
 +++ b/examples-testing/examples/webgpu_reflection_roughness.ts
 @@ -1,4 +1,4 @@
