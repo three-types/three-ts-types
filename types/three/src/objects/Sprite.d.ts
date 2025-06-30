@@ -2,6 +2,7 @@ import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D, Object3DEventMap } from "../core/Object3D.js";
 import { SpriteMaterial } from "../materials/Materials.js";
 import { Vector2 } from "../math/Vector2.js";
+import SpriteNodeMaterial from '../materials/nodes/SpriteNodeMaterial.js';
 
 /**
  * A {@link Sprite} is a plane that always faces towards the camera, generally with a partially transparent texture applied.
@@ -23,7 +24,7 @@ export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> exten
      * Creates a new Sprite.
      * @param material An instance of {@link THREE.SpriteMaterial | SpriteMaterial}. Default {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
      */
-    constructor(material?: SpriteMaterial);
+    constructor(material?: SpriteMaterial | SpriteNodeMaterial);
 
     /**
      * Read-only flag to check if a given object is of type {@link Sprite}.
