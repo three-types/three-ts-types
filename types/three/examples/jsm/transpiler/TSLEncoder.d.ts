@@ -1,4 +1,5 @@
 import {
+    Comment,
     Conditional,
     Expression,
     For,
@@ -40,7 +41,7 @@ export default class TSLEncoder {
     emitOverloadingFunction(nodes: FunctionDeclaration[]): string;
     emitFunction(node: FunctionDeclaration): string;
     setLastStatement(statement: Statement | null): void;
-    emitComment(statement: Statement, body: Statement[]): string;
+    emitComment(statement: Comment, body: Statement[]): string;
     emitExtraLine(statement: Statement, body: Statement[]): string;
     emit(ast: Program): string;
 }

@@ -1,3 +1,11 @@
+export class Comment {
+    constructor(comment: string);
+
+    comment: string;
+
+    readonly isComment: true;
+}
+
 export class Program {
     constructor(body?: Statement[]);
 
