@@ -4228,7 +4228,7 @@ index 572601ac..136a3141 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_geometry_extrude_shapes.ts b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
-index ffcbc8d6..d7bb7dd5 100644
+index a905c8ea..00283d47 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -17438,7 +17438,7 @@ index e4624db9..0cf7cf09 100644
      }
  });
 diff --git a/examples-testing/examples/webgpu_postprocessing_ca.ts b/examples-testing/examples/webgpu_postprocessing_ca.ts
-index a9695fa7..545eb21e 100644
+index 13176233..3fc56bbf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ca.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ca.ts
 @@ -1,4 +1,4 @@
@@ -17446,23 +17446,23 @@ index a9695fa7..545eb21e 100644
 +import * as THREE from 'three/webgpu';
  import { pass, renderOutput, uniform } from 'three/tsl';
  
- import { chromaticAberration } from 'three/addons/tsl/display/ChromaticAberrationNode.js';
-@@ -15,8 +15,12 @@ const params = {
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -17,8 +17,12 @@ const params = {
      cameraDistance: 40,
  };
  
 -let camera, scene, renderer, clock, mainGroup;
--let postProcessing;
+-let controls, postProcessing;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    clock: THREE.Clock,
 +    mainGroup: THREE.Group;
-+let postProcessing: THREE.PostProcessing;
++let controls: OrbitControls, postProcessing: THREE.PostProcessing;
  
  init();
  
-@@ -111,8 +115,8 @@ async function init() {
+@@ -106,8 +110,8 @@ async function init() {
  }
  
  function createShapes() {
@@ -17473,7 +17473,7 @@ index a9695fa7..545eb21e 100644
  
      // Define colors for different materials
      const colors = [
-@@ -246,7 +250,7 @@ function animate() {
+@@ -243,7 +247,7 @@ function animate() {
                  // Central group
                  child.rotation.y = time * 0.5;
                  child.children.forEach((subChild, subIndex) => {
@@ -18142,7 +18142,7 @@ index 24847b2a..2b3462ec 100644
  
      const floorMaterial = new THREE.MeshPhongNodeMaterial();
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
-index afe3f71c..9863da51 100644
+index b2cb0a35..c0f76484 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
 +++ b/examples-testing/examples/webgpu_reflection_roughness.ts
 @@ -1,4 +1,4 @@
@@ -18150,8 +18150,8 @@ index afe3f71c..9863da51 100644
 +import * as THREE from 'three/webgpu';
  import { Fn, vec2, vec4, texture, uv, textureBicubic, rangeFogFactor, reflector, time } from 'three/tsl';
  
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-@@ -7,9 +7,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -6,9 +6,9 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -18164,6 +18164,15 @@ index afe3f71c..9863da51 100644
  
  init();
  
+@@ -118,7 +118,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     stats.update();
+ 
+     controls.update();
 diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
 index 4ce8b0a7..d41bc6f4 100644
 --- a/examples-testing/examples/webgpu_refraction.ts
@@ -19647,18 +19656,19 @@ index e6b3ef50..3830b9e1 100644
  
          RaymarchingBox(steps, ({ positionRay }) => {
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index d7ef864e..236323dc 100644
+index 4cdd96d6..ddb3fa8d 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
-@@ -1,15 +1,20 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
  import { pass, mrt, output, emissive, color, screenUV } from 'three/tsl';
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -8,11 +8,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
+ 
 -import { WaterMesh } from 'three/addons/objects/Water2Mesh.js';
 +import { WaterMesh, WaterNode } from 'three/addons/objects/Water2Mesh.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -19673,8 +19683,8 @@ index d7ef864e..236323dc 100644
 +    controls: OrbitControls;
  
  const params = {
-     color: '#ffffff',
-@@ -109,7 +114,7 @@ async function init() {
+     color: '#99e0ff',
+@@ -152,7 +157,7 @@ async function init() {
      // gui
  
      const gui = new GUI();
