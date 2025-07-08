@@ -22,7 +22,7 @@ import { Vector2 } from "../math/Vector2.js";
 export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
     /**
      * Creates a new Sprite.
-     * @param material An instance of {@link THREE.SpriteMaterial | SpriteMaterial}. Default {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
+     * @param material An instance of {@link THREE.SpriteMaterial | SpriteMaterial | SpriteNodeMaterial}. Default {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
      */
     constructor(material?: SpriteMaterial | SpriteNodeMaterial);
 
@@ -51,10 +51,10 @@ export class Sprite<TEventMap extends Object3DEventMap = Object3DEventMap> exten
     geometry: BufferGeometry;
 
     /**
-     * An instance of {@link THREE.SpriteMaterial | SpriteMaterial}, defining the object's appearance.
+     * An instance of {@link THREE.SpriteMaterial | SpriteMaterial | SpriteNodeMaterial}, defining the object's appearance.
      * @defaultValue {@link THREE.SpriteMaterial | `new SpriteMaterial()`}, _with white color_.
      */
-    material: SpriteMaterial;
+    material: SpriteMaterial | SpriteNodeMaterial;
 
     /**
      * The sprite's anchor point, and the point around which the {@link Sprite} rotates.
