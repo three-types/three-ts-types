@@ -1,4 +1,5 @@
 import {
+    Comment,
     Conditional,
     Expression,
     For,
@@ -10,6 +11,7 @@ import {
     Uniform,
     VariableDeclaration,
     Varying,
+    While,
 } from "./AST.js";
 
 export default class TSLEncoder {
@@ -25,7 +27,7 @@ export default class TSLEncoder {
 
     addImport(name: string): void;
     emitUniform(node: Uniform): string;
-    emitExpression(node: Expression): string;
+    emitExpression(node: Expression, output?: string | null): string;
     emitBody(body: Statement[]): string;
     emitTernary(node: Ternary): string;
     emitConditional(node: Conditional): string;
@@ -33,11 +35,13 @@ export default class TSLEncoder {
     emitSwitch(switchNode: Switch): string;
     emitFor(node: For): string;
     emitForWhile(node: For): string;
+    emitWhile(node: While): string;
     emitVariables(node: VariableDeclaration, isRoot?: boolean): string;
     emitVarying(node: Varying): string;
     emitOverloadingFunction(nodes: FunctionDeclaration[]): string;
     emitFunction(node: FunctionDeclaration): string;
     setLastStatement(statement: Statement | null): void;
-    emitExtraLine(statement: Statement): string;
+    emitComment(statement: Comment, body: Statement[]): string;
+    emitExtraLine(statement: Statement, body: Statement[]): string;
     emit(ast: Program): string;
 }
