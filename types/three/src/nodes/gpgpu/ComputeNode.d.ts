@@ -14,7 +14,7 @@ export default class ComputeNode extends Node {
 
     constructor(computeNode: Node, count: number, workgroupSize?: number[]);
 
-    label(name: string): void;
+    label(name: string): this;
 
     updateDispatchCount(): void;
 
