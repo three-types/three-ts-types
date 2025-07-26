@@ -463,7 +463,7 @@ index 1088b84b..02f1fa75 100644
          camera.setViewOffset(
              fullWidth || window.innerWidth,
 diff --git a/examples-testing/examples/css3d_sprites.ts b/examples-testing/examples/css3d_sprites.ts
-index dfe24e79..93f2c07b 100644
+index 39c3455a..b3092cf3 100644
 --- a/examples-testing/examples/css3d_sprites.ts
 +++ b/examples-testing/examples/css3d_sprites.ts
 @@ -4,12 +4,12 @@ import TWEEN from 'three/addons/libs/tween.module.js';
@@ -489,9 +489,9 @@ index dfe24e79..93f2c07b 100644
          for (let i = 0; i < particlesTotal; i++) {
 -            const object = new CSS3DSprite(image.cloneNode());
 +            const object = new CSS3DSprite(image.cloneNode() as typeof image);
-             (object.position.x = Math.random() * 4000 - 2000),
+             ((object.position.x = Math.random() * 4000 - 2000),
                  (object.position.y = Math.random() * 4000 - 2000),
-                 (object.position.z = Math.random() * 4000 - 2000);
+                 (object.position.z = Math.random() * 4000 - 2000));
 @@ -93,7 +93,7 @@ function init() {
  
      renderer = new CSS3DRenderer();
@@ -6605,7 +6605,7 @@ index 9da19ee2..68bc979b 100644
          }
      }
 diff --git a/examples-testing/examples/webgl_lines_dashed.ts b/examples-testing/examples/webgl_lines_dashed.ts
-index 4849e7c3..4bddc484 100644
+index 3e3ee304..0c098cd5 100644
 --- a/examples-testing/examples/webgl_lines_dashed.ts
 +++ b/examples-testing/examples/webgl_lines_dashed.ts
 @@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6625,7 +6625,7 @@ index 4849e7c3..4bddc484 100644
  
 -function box(width, height, depth) {
 +function box(width: number, height: number, depth: number) {
-     (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+     ((width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5));
  
      const geometry = new THREE.BufferGeometry();
 @@ -176,7 +176,7 @@ function render() {
@@ -11152,7 +11152,7 @@ index e55ab044..811417b6 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_ssr.ts b/examples-testing/examples/webgl_postprocessing_ssr.ts
-index 307cfd1d..6b864359 100644
+index ede000a3..0e6bd36b 100644
 --- a/examples-testing/examples/webgl_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgl_postprocessing_ssr.ts
 @@ -18,17 +18,17 @@ const params = {
