@@ -12,7 +12,6 @@ export default StructNode;
 
 export interface Struct {
     (): ShaderNodeObject<StructNode>;
-    (values: Node[]): ShaderNodeObject<StructNode>;
     (...values: Node[]): ShaderNodeObject<StructNode>;
     (values: Record<string, Node>): ShaderNodeObject<StructNode>;
     layout: StructTypeNode;
