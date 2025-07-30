@@ -463,7 +463,7 @@ index 1088b84b..02f1fa75 100644
          camera.setViewOffset(
              fullWidth || window.innerWidth,
 diff --git a/examples-testing/examples/css3d_sprites.ts b/examples-testing/examples/css3d_sprites.ts
-index dfe24e79..93f2c07b 100644
+index 39c3455a..b3092cf3 100644
 --- a/examples-testing/examples/css3d_sprites.ts
 +++ b/examples-testing/examples/css3d_sprites.ts
 @@ -4,12 +4,12 @@ import TWEEN from 'three/addons/libs/tween.module.js';
@@ -489,9 +489,9 @@ index dfe24e79..93f2c07b 100644
          for (let i = 0; i < particlesTotal; i++) {
 -            const object = new CSS3DSprite(image.cloneNode());
 +            const object = new CSS3DSprite(image.cloneNode() as typeof image);
-             (object.position.x = Math.random() * 4000 - 2000),
+             ((object.position.x = Math.random() * 4000 - 2000),
                  (object.position.y = Math.random() * 4000 - 2000),
-                 (object.position.z = Math.random() * 4000 - 2000);
+                 (object.position.z = Math.random() * 4000 - 2000));
 @@ -93,7 +93,7 @@ function init() {
  
      renderer = new CSS3DRenderer();
@@ -6605,7 +6605,7 @@ index 9da19ee2..68bc979b 100644
          }
      }
 diff --git a/examples-testing/examples/webgl_lines_dashed.ts b/examples-testing/examples/webgl_lines_dashed.ts
-index 4849e7c3..4bddc484 100644
+index 3e3ee304..0c098cd5 100644
 --- a/examples-testing/examples/webgl_lines_dashed.ts
 +++ b/examples-testing/examples/webgl_lines_dashed.ts
 @@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6625,7 +6625,7 @@ index 4849e7c3..4bddc484 100644
  
 -function box(width, height, depth) {
 +function box(width: number, height: number, depth: number) {
-     (width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5);
+     ((width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5));
  
      const geometry = new THREE.BufferGeometry();
 @@ -176,7 +176,7 @@ function render() {
@@ -11152,7 +11152,7 @@ index e55ab044..811417b6 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_ssr.ts b/examples-testing/examples/webgl_postprocessing_ssr.ts
-index 307cfd1d..6b864359 100644
+index ede000a3..0e6bd36b 100644
 --- a/examples-testing/examples/webgl_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgl_postprocessing_ssr.ts
 @@ -18,17 +18,17 @@ const params = {
@@ -14433,6 +14433,111 @@ index 30f075d8..56fae624 100644
          const posX = instanceIndex.mod(width);
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
+diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
+index b6b0e691..6cacb1e9 100644
+--- a/examples-testing/examples/webgpu_compute_texture_3d.ts
++++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     time,
+     mx_noise_vec3,
+@@ -13,6 +13,7 @@ import {
+     smoothstep,
+     texture3D,
+     uniform,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
+@@ -21,9 +22,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let renderer, scene, camera;
+-let mesh;
+-let computeNode;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.NodeMaterial>;
++let computeNode: ShaderNodeObject<THREE.ComputeNode>;
+ 
+ init();
+ 
+@@ -47,7 +48,7 @@ async function init() {
+     canvas.width = 1;
+     canvas.height = 32;
+ 
+-    const context = canvas.getContext('2d');
++    const context = canvas.getContext('2d')!;
+     const gradient = context.createLinearGradient(0, 0, 0, 32);
+     gradient.addColorStop(0.0, '#014a84');
+     gradient.addColorStop(0.5, '#0561a0');
+@@ -68,7 +69,7 @@ async function init() {
+ 
+     const size = 200;
+ 
+-    const computeCloud = Fn(({ storageTexture }) => {
++    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }>(({ storageTexture }) => {
+         const scale = float(0.05);
+         const id = instanceIndex;
+ 
+@@ -99,33 +100,37 @@ async function init() {
+ 
+     // Shader
+ 
+-    const transparentRaymarchingTexture = Fn(
+-        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
+-            const finalColor = vec4(0).toVar();
++    const transparentRaymarchingTexture = Fn<{
++        texture: ShaderNodeObject<THREE.Texture3DNode>;
++        range?: ShaderNodeObject<THREE.UniformNode<number>>;
++        threshold?: ShaderNodeObject<THREE.UniformNode<number>>;
++        opacity?: ShaderNodeObject<THREE.UniformNode<number>>;
++        steps?: ShaderNodeObject<THREE.UniformNode<number>>;
++    }>(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
++        const finalColor = vec4(0).toVar();
+ 
+-            RaymarchingBox(steps, ({ positionRay }) => {
+-                const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
++        RaymarchingBox(steps, ({ positionRay }) => {
++            const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
+ 
+-                mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
++            mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
+ 
+-                const shading = texture
+-                    .sample(positionRay.add(vec3(-0.01)))
+-                    .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
++            const shading = texture
++                .sample(positionRay.add(vec3(-0.01)))
++                .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
+ 
+-                const col = shading.mul(4.0).add(positionRay.x.add(positionRay.y).mul(0.5)).add(0.3);
++            const col = shading.mul(4.0).add(positionRay.x.add(positionRay.y).mul(0.5)).add(0.3);
+ 
+-                finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
++            finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
+ 
+-                finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
++            finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
+ 
+-                If(finalColor.a.greaterThanEqual(0.95), () => {
+-                    Break();
+-                });
++            If(finalColor.a.greaterThanEqual(0.95), () => {
++                Break();
+             });
++        });
+ 
+-            return finalColor;
+-        },
+-    );
++        return finalColor;
++    });
+ 
+     // Material
+ 
 diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
 index a3922dc7..0fd65713 100644
 --- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
