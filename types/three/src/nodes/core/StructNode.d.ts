@@ -6,7 +6,6 @@ declare class StructNode extends Node {
     values: Node[];
 
     constructor(structLayoutNode: StructTypeNode, values: Node[]);
-    get(name:string):ShaderNodeObject<Node>;
 }
 
 export default StructNode;
