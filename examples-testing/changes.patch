@@ -12076,7 +12076,7 @@ index f402fa20..8e71282d 100644
  
      // blur horizontally and draw in the renderTargetBlur
 diff --git a/examples-testing/examples/webgl_shadowmap.ts b/examples-testing/examples/webgl_shadowmap.ts
-index 6d0ac3ad..d03a38a3 100644
+index ba355a95..53170b65 100644
 --- a/examples-testing/examples/webgl_shadowmap.ts
 +++ b/examples-testing/examples/webgl_shadowmap.ts
 @@ -15,18 +15,18 @@ let SCREEN_WIDTH = window.innerWidth;
@@ -12104,7 +12104,7 @@ index 6d0ac3ad..d03a38a3 100644
  
  const clock = new THREE.Clock();
  
-@@ -121,7 +121,7 @@ function onWindowResize() {
+@@ -126,7 +126,7 @@ function onWindowResize() {
      controls.handleResize();
  }
  
@@ -12113,7 +12113,7 @@ index 6d0ac3ad..d03a38a3 100644
      switch (event.keyCode) {
          case 84 /*t*/:
              showHUD = !showHUD;
-@@ -172,7 +172,7 @@ function createScene() {
+@@ -177,7 +177,7 @@ function createScene() {
          });
  
          textGeo.computeBoundingBox();
@@ -12122,7 +12122,7 @@ index 6d0ac3ad..d03a38a3 100644
  
          const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
  
-@@ -212,7 +212,16 @@ function createScene() {
+@@ -217,7 +217,16 @@ function createScene() {
  
      mixer = new THREE.AnimationMixer(scene);
  
@@ -12140,7 +12140,7 @@ index 6d0ac3ad..d03a38a3 100644
          mesh = mesh.clone();
          mesh.material = mesh.material.clone();
  
-@@ -243,7 +252,7 @@ function createScene() {
+@@ -248,7 +257,7 @@ function createScene() {
      const gltfloader = new GLTFLoader();
  
      gltfloader.load('models/gltf/Horse.glb', function (gltf) {
@@ -12149,7 +12149,7 @@ index 6d0ac3ad..d03a38a3 100644
  
          const clip = gltf.animations[0];
  
-@@ -257,21 +266,21 @@ function createScene() {
+@@ -262,21 +271,21 @@ function createScene() {
      });
  
      gltfloader.load('models/gltf/Flamingo.glb', function (gltf) {
@@ -12174,7 +12174,7 @@ index 6d0ac3ad..d03a38a3 100644
          const clip = gltf.animations[0];
  
          addMorph(mesh, clip, 450, 0.5, 500 - Math.random() * 500, FLOOR + 300, 700);
-@@ -291,7 +300,7 @@ function render() {
+@@ -296,7 +305,7 @@ function render() {
      for (let i = 0; i < morphs.length; i++) {
          const morph = morphs[i];
  
@@ -18212,33 +18212,39 @@ index 4a085f2f..d0de6c2c 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 24847b2a..2b3462ec 100644
+index a1eb5257..012ed092 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { color, pass, reflector, normalWorldGeometry, texture, uv, screenUV } from 'three/tsl';
+ 
+ import {
+     abs,
+@@ -22,6 +22,7 @@ import {
+     uniform,
+     uv,
+     varyingProperty,
++    ShaderNodeObject,
+ } from 'three/tsl';
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
-@@ -8,11 +8,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
+@@ -30,10 +31,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import Stats from 'three/addons/libs/stats.module.js';
+ import TWEEN from 'three/addons/libs/tween.module.js';
  
 -let camera, scene, renderer;
--let model, mixer, clock;
 -let postProcessing;
 -let controls;
 -let stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let model: THREE.Group, mixer: THREE.AnimationMixer, clock: THREE.Clock;
 +let postProcessing: THREE.PostProcessing;
 +let controls: OrbitControls;
 +let stats: Stats;
  
- init();
+ // below uniforms will be animated via TWEEN.js
  
-@@ -82,7 +82,7 @@ function init() {
+@@ -87,7 +88,7 @@ function init() {
  
      const reflection = reflector({ resolution: 0.5 }); // 0.5 is half of the rendering view
      reflection.target.rotateX(-Math.PI / 2);
@@ -18247,6 +18253,39 @@ index 24847b2a..2b3462ec 100644
      scene.add(reflection.target);
  
      const floorMaterial = new THREE.MeshPhongNodeMaterial();
+@@ -198,10 +199,10 @@ function createTreeMesh() {
+     const angleRight = (Math.PI / 180) * 40;
+     const lengthMult = 0.88;
+ 
+-    const positions = [];
+-    const normals = [];
+-    const colors = [];
+-    const data = []; // will save seed, size and time
++    const positions: number[] = [];
++    const normals: number[] = [];
++    const colors: number[] = [];
++    const data: number[] = []; // will save seed, size and time
+ 
+     let instanceCount = 0;
+ 
+@@ -210,7 +211,7 @@ function createTreeMesh() {
+     const normal = new THREE.Vector3();
+     const color = new THREE.Color();
+ 
+-    function createTreePart(angle, x, y, z, length, count) {
++    function createTreePart(angle: number, x: number, y: number, z: number, length: number, count: number) {
+         if (count < maxSteps) {
+             const newLength = length * lengthMult;
+             const newX = x + Math.cos(angle) * length;
+@@ -323,7 +324,7 @@ function createTreeMesh() {
+ 
+         // accumulate different vertex animations
+ 
+-        let animated = positionLocal.add(instancePosition).toVar();
++        let animated: ShaderNodeObject<THREE.Node> = positionLocal.add(instancePosition).toVar();
+         const direction = positionGeometry.normalize().toConst();
+ 
+         animated = animated.add(direction.mul(effect.add(instanceSize)));
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
 index b2cb0a35..c0f76484 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
