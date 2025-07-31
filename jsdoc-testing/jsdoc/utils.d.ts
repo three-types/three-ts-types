@@ -1,0 +1,10 @@
+export function arrayMin(array: any): any;
+export function arrayMax(array: any): any;
+export function arrayNeedsUint32(array: any): boolean;
+export function getTypedArray(type: any, buffer: any): any;
+export function createElementNS(name: any): HTMLElement;
+export function createCanvasElement(): HTMLElement;
+export function warnOnce(message: any): void;
+export function probeAsync(gl: any, sync: any, interval: any): Promise<any>;
+export function toNormalizedProjectionMatrix(projectionMatrix: any): void;
+export function toReversedProjectionMatrix(projectionMatrix: any): void;
