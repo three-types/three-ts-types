@@ -34,7 +34,12 @@ export class KeyframeTrack {
      * @param {Array<number|string|boolean>} values - A list of keyframe values.
      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
      */
-    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number | string | boolean>, interpolation?: InterpolationModes);
+    constructor(
+        name: string,
+        times: ArrayLike<number>,
+        values: ArrayLike<number | string | boolean>,
+        interpolation?: InterpolationModes,
+    );
     /**
      * The track's name can refer to morph targets or bones or
      * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
