@@ -774,7 +774,11 @@ export type GLSLVersion = typeof GLSL1 | typeof GLSL3;
 
 export const WebGLCoordinateSystem: 2000;
 export const WebGPUCoordinateSystem: 2001;
-export type CoordinateSystem = typeof WebGLCoordinateSystem | typeof WebGPUCoordinateSystem;
+export const ReversedCoordinateSystem: 2002;
+export type CoordinateSystem =
+    | typeof WebGLCoordinateSystem
+    | typeof WebGPUCoordinateSystem
+    | typeof ReversedCoordinateSystem;
 
 export const TimestampQuery: {
     COMPUTE: "compute";
