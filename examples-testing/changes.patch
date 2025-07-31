@@ -1450,15 +1450,16 @@ index f761e4a1..e102f557 100644
  init();
  
 diff --git a/examples-testing/examples/physics_rapier_basic.ts b/examples-testing/examples/physics_rapier_basic.ts
-index 056a642c..3e447ff8 100644
+index 0bacda80..cb3c4e4b 100644
 --- a/examples-testing/examples/physics_rapier_basic.ts
 +++ b/examples-testing/examples/physics_rapier_basic.ts
-@@ -1,11 +1,15 @@
+@@ -1,12 +1,16 @@
  import * as THREE from 'three';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
 +import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
  import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
+ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
  import Stats from 'three/addons/libs/stats.module.js';
  
 -let camera, scene, renderer, stats, controls;
@@ -1472,7 +1473,7 @@ index 056a642c..3e447ff8 100644
  
  init();
  
-@@ -119,10 +123,10 @@ function onWindowResize() {
+@@ -126,10 +130,10 @@ function onWindowResize() {
  
  function animate() {
      for (const object of scene.children) {
@@ -7862,12 +7863,12 @@ index b54b8c29..40a692eb 100644
      document.removeEventListener('pointermove', onPointerMove);
      document.removeEventListener('pointerup', onPointerUp);
 diff --git a/examples-testing/examples/webgl_loader_usdz.ts b/examples-testing/examples/webgl_loader_usdz.ts
-index d75823d8..cdd7c733 100644
+index 373ecbd4..1e9f306b 100644
 --- a/examples-testing/examples/webgl_loader_usdz.ts
 +++ b/examples-testing/examples/webgl_loader_usdz.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
- import { USDZLoader } from 'three/addons/loaders/USDZLoader.js';
+ import { USDLoader } from 'three/addons/loaders/USDLoader.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
@@ -19761,16 +19762,16 @@ index e6b3ef50..3830b9e1 100644
  
          RaymarchingBox(steps, ({ positionRay }) => {
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 4cdd96d6..ddb3fa8d 100644
+index e92f92eb..7ad07671 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
 @@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
- import { pass, mrt, output, emissive, color, screenUV } from 'three/tsl';
+ import { pass, mrt, output, emissive, renderOutput } from 'three/tsl';
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
-@@ -8,11 +8,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -9,11 +9,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
@@ -19789,7 +19790,7 @@ index 4cdd96d6..ddb3fa8d 100644
  
  const params = {
      color: '#99e0ff',
-@@ -152,7 +157,7 @@ async function init() {
+@@ -157,7 +162,7 @@ async function init() {
      // gui
  
      const gui = new GUI();
