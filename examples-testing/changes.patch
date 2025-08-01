@@ -2748,11 +2748,11 @@ index bef2c264..c0887a8d 100644
      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
  
 diff --git a/examples-testing/examples/webgl_buffergeometry_lines.ts b/examples-testing/examples/webgl_buffergeometry_lines.ts
-index 025acf27..51a3811b 100644
+index d039e011..de321d5e 100644
 --- a/examples-testing/examples/webgl_buffergeometry_lines.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_lines.ts
-@@ -3,11 +3,11 @@ import * as THREE from 'three';
- import { Timer } from 'three/addons/misc/Timer.js';
+@@ -2,11 +2,11 @@ import * as THREE from 'three';
+ 
  import Stats from 'three/addons/libs/stats.module.js';
  
 -let container, stats, timer;
@@ -2766,7 +2766,7 @@ index 025acf27..51a3811b 100644
  
  const segments = 10000;
  const r = 800;
-@@ -16,7 +16,7 @@ let t = 0;
+@@ -15,7 +15,7 @@ let t = 0;
  init();
  
  function init() {
@@ -2775,7 +2775,7 @@ index 025acf27..51a3811b 100644
  
      //
  
-@@ -97,14 +97,14 @@ function animate() {
+@@ -96,14 +96,14 @@ function animate() {
      line.rotation.y = time * 0.5;
  
      t += delta * 0.5;
@@ -5539,10 +5539,10 @@ index a8c3b977..09ad778d 100644
          line.material.opacity = 0.25;
          line.material.transparent = true;
 diff --git a/examples-testing/examples/webgl_instancing_dynamic.ts b/examples-testing/examples/webgl_instancing_dynamic.ts
-index ec28e1ed..a4bd3366 100644
+index bc4a8866..5d916b7c 100644
 --- a/examples-testing/examples/webgl_instancing_dynamic.ts
 +++ b/examples-testing/examples/webgl_instancing_dynamic.ts
-@@ -4,15 +4,19 @@ import { Timer } from 'three/addons/misc/Timer.js';
+@@ -3,15 +3,19 @@ import * as THREE from 'three';
  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
@@ -5565,7 +5565,7 @@ index ec28e1ed..a4bd3366 100644
  
  const color = new THREE.Color();
  const colors = [new THREE.Color(0x00ffff), new THREE.Color(0xffff00), new THREE.Color(0xff00ff)];
-@@ -168,7 +172,7 @@ function animate() {
+@@ -167,7 +171,7 @@ function animate() {
      }
  
      mesh.instanceMatrix.needsUpdate = true;
@@ -9757,12 +9757,12 @@ index 2c29e9c0..5e285283 100644
  const radius = 600;
  let theta = 0;
 diff --git a/examples-testing/examples/webgl_morphtargets_sphere.ts b/examples-testing/examples/webgl_morphtargets_sphere.ts
-index 4821304f..1c1dc887 100644
+index 3e36f002..ce07eaba 100644
 --- a/examples-testing/examples/webgl_morphtargets_sphere.ts
 +++ b/examples-testing/examples/webgl_morphtargets_sphere.ts
-@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -3,9 +3,9 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { Timer } from 'three/addons/misc/Timer.js';
  
 -let camera, scene, renderer, timer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: Timer;
@@ -9772,7 +9772,7 @@ index 4821304f..1c1dc887 100644
  
  let sign = 1;
  const speed = 0.5;
-@@ -14,7 +14,7 @@ const speed = 0.5;
+@@ -13,7 +13,7 @@ const speed = 0.5;
  init();
  
  function init() {
@@ -9781,7 +9781,7 @@ index 4821304f..1c1dc887 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.2, 100);
      camera.position.set(0, 5, 5);
-@@ -36,7 +36,7 @@ function init() {
+@@ -35,7 +35,7 @@ function init() {
  
      const loader = new GLTFLoader();
      loader.load('models/gltf/AnimatedMorphSphere/glTF/AnimatedMorphSphere.gltf', function (gltf) {
@@ -9790,7 +9790,7 @@ index 4821304f..1c1dc887 100644
          mesh.rotation.z = Math.PI / 2;
          scene.add(mesh);
  
-@@ -95,9 +95,9 @@ function render() {
+@@ -94,9 +94,9 @@ function render() {
  
          mesh.rotation.y += step;
  
@@ -14698,10 +14698,10 @@ index baca16cb..b01cd750 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index c3c78ca0..d964d0cd 100644
+index 3080f71b..6e19dec1 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,26 +1,32 @@
+@@ -1,25 +1,31 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
@@ -14713,7 +14713,6 @@ index c3c78ca0..d964d0cd 100644
 +import AnaglyphPassNode, { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
 +import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Timer } from 'three/addons/misc/Timer.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, postProcessing;
@@ -14743,7 +14742,7 @@ index c3c78ca0..d964d0cd 100644
  
  init();
  
-@@ -93,7 +99,7 @@ function init() {
+@@ -92,7 +98,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -14752,7 +14751,7 @@ index c3c78ca0..d964d0cd 100644
      if (value === 'stereo') {
          postProcessing.outputNode = stereo;
      } else if (value === 'anaglyph') {
-@@ -112,7 +118,7 @@ function onWindowResize() {
+@@ -111,7 +117,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -15184,7 +15183,7 @@ index 6a050726..7af6c37e 100644
      gui.add(params, 'shadows');
      gui.open();
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index 936df5c6..62b0eb0b 100644
+index e841d300..df39dcf4 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
 @@ -1,4 +1,4 @@
@@ -15193,7 +15192,7 @@ index 936df5c6..62b0eb0b 100644
  
  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -17,9 +17,13 @@ import {
+@@ -16,9 +16,13 @@ import {
      uniform,
  } from 'three/tsl';
  
@@ -15209,7 +15208,7 @@ index 936df5c6..62b0eb0b 100644
  
  init();
  
-@@ -36,7 +40,7 @@ function init() {
+@@ -35,7 +39,7 @@ function init() {
  
      const loader = new OBJLoader();
      loader.load('models/obj/walt/WaltHead.obj', function (obj) {
@@ -15218,7 +15217,7 @@ index 936df5c6..62b0eb0b 100644
          mesh.geometry = createGeometry(mesh.geometry);
          mesh.material = createMaterial();
  
-@@ -126,7 +130,7 @@ function createMaterial() {
+@@ -125,7 +129,7 @@ function createMaterial() {
      return material;
  }
  
@@ -17589,7 +17588,7 @@ index 13176233..3fc56bbf 100644
                          subChild.rotation.z = time * (1 - subIndex * 0.1);
                      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
-index ef0e58fb..334ee7ba 100644
+index 9faabda5..66466ce5 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
 @@ -1,4 +1,4 @@
@@ -17598,7 +17597,7 @@ index ef0e58fb..334ee7ba 100644
  import { pass, luminance, saturation } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -10,8 +10,8 @@ const params = {
+@@ -9,8 +9,8 @@ const params = {
      speed: 0,
  };
  
@@ -17947,17 +17946,16 @@ index 1ee744c8..9e213114 100644
  
      scene.add(model);
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 06bf751e..4e685fb2 100644
+index 52170eb7..31b8a354 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-@@ -1,13 +1,14 @@
+@@ -1,12 +1,13 @@
 -import * as THREE from 'three';
 -import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 +import * as THREE from 'three/webgpu';
 +import { ShaderNodeObject } from 'three/tsl';
 +import SSAAPassNode, { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
  
- import { Timer } from 'three/addons/misc/Timer.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -17970,7 +17968,7 @@ index 06bf751e..4e685fb2 100644
  
  const params = {
      sampleLevel: 3,
-@@ -149,7 +150,7 @@ function animate() {
+@@ -148,7 +149,7 @@ function animate() {
          mesh.rotation.y += delta * 0.5;
      }
  
@@ -17979,7 +17977,7 @@ index 06bf751e..4e685fb2 100644
  
      switch (params.clearColor) {
          case 'blue':
-@@ -174,7 +175,7 @@ function animate() {
+@@ -173,7 +174,7 @@ function animate() {
  
      ssaaRenderPass.sampleLevel = params.sampleLevel;
  
