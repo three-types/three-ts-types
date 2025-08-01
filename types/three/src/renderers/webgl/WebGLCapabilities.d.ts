@@ -14,7 +14,7 @@ export interface WebGLCapabilitiesParameters {
     /**
      * default is false.
      */
-    reverseDepthBuffer?: boolean | undefined;
+    reversedDepthBuffer?: boolean | undefined;
 }
 
 export class WebGLCapabilities {
