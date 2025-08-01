@@ -3,23 +3,26 @@ import Node from "../core/Node.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class ComputeNode extends Node {
-    isComputeNode: true;
+    readonly isComputeNode: true;
 
-    count: number;
+    computeNode: Node;
     workgroupSize: number[];
-    dispatchCount: number;
+    count: number | null;
     name: string;
 
     onInitFunction: ((args: { renderer: Renderer }) => void) | null;
 
-    constructor(computeNode: Node, count: number, workgroupSize?: number[]);
+    constructor(computeNode: Node, workgroupSize: number[]);
+
+    setCount(count: number): this;
+    getCount(): number | null;
 
     label(name: string): this;
 
-    updateDispatchCount(): void;
-
     onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
 }
+
+export const computeKernel: (node: Node, workgroupSize?: number[]) => ShaderNodeObject<ComputeNode>;
 
 export const compute: (
     node: Node,
@@ -30,5 +33,6 @@ export const compute: (
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {
         compute: typeof compute;
+        computeKernel: typeof computeKernel;
     }
 }

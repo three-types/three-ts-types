@@ -742,17 +742,25 @@ declare class Renderer {
      * if the renderer has been initialized.
      *
      * @param {Node|Array<Node>} computeNodes - The compute node(s).
+     * @param {Array<number>|number} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
      * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
      */
-    compute(computeNodes: ComputeNode | ComputeNode[]): Promise<void> | undefined;
+    compute(
+        computeNodes: ComputeNode | ComputeNode[],
+        dispatchSizeOrCount?: number[] | number | null,
+    ): Promise<void> | undefined;
     /**
      * Execute a single or an array of compute nodes.
      *
      * @async
      * @param {Node|Array<Node>} computeNodes - The compute node(s).
+     * @param {Array<number>|number} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
      * @return {Promise} A Promise that resolve when the compute has finished.
      */
-    computeAsync(computeNodes: ComputeNode | ComputeNode[]): Promise<void>;
+    computeAsync(
+        computeNodes: ComputeNode | ComputeNode[],
+        dispatchSizeOrCount?: number[] | number | null,
+    ): Promise<void>;
     /**
      * Checks if the given feature is supported by the selected backend.
      *

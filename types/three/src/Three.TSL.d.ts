@@ -118,6 +118,7 @@ export const color: typeof TSL.color;
 export const colorSpaceToWorking: typeof TSL.colorSpaceToWorking;
 export const colorToDirection: typeof TSL.colorToDirection;
 export const compute: typeof TSL.compute;
+export const computeKernel: typeof TSL.computeKernel;
 export const computeSkinning: typeof TSL.computeSkinning;
 export const Const: typeof TSL.Const;
 export const context: typeof TSL.context;
