@@ -5209,10 +5209,10 @@ index e44d5d72..f3246607 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface SpriteMaterial extends SpriteMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
-index 53d2c12e..f2760e37 100644
+index 33e30ad8..87448da8 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/Line2NodeMaterial.d.ts
-@@ -1,90 +1,62 @@
+@@ -1,83 +1,56 @@
 -export default Line2NodeMaterial;
 -/**
 - * This node material can be used to render lines with a size larger than one
@@ -5255,13 +5255,6 @@ index 53d2c12e..f2760e37 100644
       * @default 0
       */
      dashOffset: number;
-     /**
-      * The line width.
-      *
--     * @type {number}
-      * @default 0
-      */
-     lineWidth: number;
      /**
       * Defines the lines color.
       *
@@ -5314,7 +5307,7 @@ index 53d2c12e..f2760e37 100644
       * @default false
       */
      get worldUnits(): boolean;
-@@ -92,9 +64,34 @@ declare class Line2NodeMaterial extends NodeMaterial {
+@@ -85,9 +58,34 @@ declare class Line2NodeMaterial extends NodeMaterial {
      /**
       * Whether the lines should be dashed or not.
       *
@@ -7220,48 +7213,3 @@ index 8b5885c3..ad8d7ebd 100644
 +interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
 +
 +export default VolumeNodeMaterial;
-diff --git a/types/three/src/animation/KeyframeTrack.d.ts b/types/three/src/animation/KeyframeTrack.d.ts
-index b91babad..830ee07d 100644
---- a/types/three/src/animation/KeyframeTrack.d.ts
-+++ b/types/three/src/animation/KeyframeTrack.d.ts
-@@ -31,10 +31,10 @@ export class KeyframeTrack {
-      *
-      * @param {string} name - The keyframe track's name.
-      * @param {Array<number>} times - A list of keyframe times.
--     * @param {Array<number>} values - A list of keyframe values.
-+     * @param {Array<number|string|boolean>} values - A list of keyframe values.
-      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
-      */
--    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
-+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number | string | boolean>, interpolation?: InterpolationModes);
-     /**
-      * The track's name can refer to morph targets or bones or
-      * possibly other values within an animated object. See {@link PropertyBinding#parseTrackName}
-diff --git a/types/three/src/animation/tracks/BooleanKeyframeTrack.d.ts b/types/three/src/animation/tracks/BooleanKeyframeTrack.d.ts
-index 92dbc1cb..fe457384 100644
---- a/types/three/src/animation/tracks/BooleanKeyframeTrack.d.ts
-+++ b/types/three/src/animation/tracks/BooleanKeyframeTrack.d.ts
-@@ -12,7 +12,7 @@ export class BooleanKeyframeTrack extends KeyframeTrack {
-      *
-      * @param {string} name - The keyframe track's name.
-      * @param {Array<number>} times - A list of keyframe times.
--     * @param {Array<number>} values - A list of keyframe values.
-+     * @param {Array<boolean>} values - A list of keyframe values.
-      */
--    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>);
-+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<boolean>);
- }
-diff --git a/types/three/src/animation/tracks/StringKeyframeTrack.d.ts b/types/three/src/animation/tracks/StringKeyframeTrack.d.ts
-index b501d492..70059fe3 100644
---- a/types/three/src/animation/tracks/StringKeyframeTrack.d.ts
-+++ b/types/three/src/animation/tracks/StringKeyframeTrack.d.ts
-@@ -12,7 +12,7 @@ export class StringKeyframeTrack extends KeyframeTrack {
-      *
-      * @param {string} name - The keyframe track's name.
-      * @param {Array<number>} times - A list of keyframe times.
--     * @param {Array<number>} values - A list of keyframe values.
-+     * @param {Array<string>} values - A list of keyframe values.
-      */
--    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>);
-+    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<string>);
- }
