@@ -2748,7 +2748,7 @@ index bef2c264..c0887a8d 100644
      camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 1000);
  
 diff --git a/examples-testing/examples/webgl_buffergeometry_lines.ts b/examples-testing/examples/webgl_buffergeometry_lines.ts
-index d039e011..de321d5e 100644
+index d039e011..0b39e912 100644
 --- a/examples-testing/examples/webgl_buffergeometry_lines.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_lines.ts
 @@ -2,11 +2,11 @@ import * as THREE from 'three';
@@ -2756,7 +2756,7 @@ index d039e011..de321d5e 100644
  import Stats from 'three/addons/libs/stats.module.js';
  
 -let container, stats, timer;
-+let container: HTMLElement, stats: Stats, timer: Timer;
++let container: HTMLElement, stats: Stats, timer: THREE.Timer;
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
@@ -5539,7 +5539,7 @@ index a8c3b977..09ad778d 100644
          line.material.opacity = 0.25;
          line.material.transparent = true;
 diff --git a/examples-testing/examples/webgl_instancing_dynamic.ts b/examples-testing/examples/webgl_instancing_dynamic.ts
-index bc4a8866..5d916b7c 100644
+index bc4a8866..105d30e1 100644
 --- a/examples-testing/examples/webgl_instancing_dynamic.ts
 +++ b/examples-testing/examples/webgl_instancing_dynamic.ts
 @@ -3,15 +3,19 @@ import * as THREE from 'three';
@@ -5550,7 +5550,7 @@ index bc4a8866..5d916b7c 100644
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
-+    timer: Timer,
++    timer: THREE.Timer,
 +    mesh: THREE.InstancedMesh;
  
  const amount = 100;
@@ -9757,7 +9757,7 @@ index 2c29e9c0..5e285283 100644
  const radius = 600;
  let theta = 0;
 diff --git a/examples-testing/examples/webgl_morphtargets_sphere.ts b/examples-testing/examples/webgl_morphtargets_sphere.ts
-index 3e36f002..ce07eaba 100644
+index 3e36f002..0c45a0cf 100644
 --- a/examples-testing/examples/webgl_morphtargets_sphere.ts
 +++ b/examples-testing/examples/webgl_morphtargets_sphere.ts
 @@ -3,9 +3,9 @@ import * as THREE from 'three';
@@ -9765,7 +9765,7 @@ index 3e36f002..ce07eaba 100644
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera, scene, renderer, timer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: Timer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, timer: THREE.Timer;
  
 -let mesh;
 +let mesh: THREE.Mesh;
@@ -14698,7 +14698,7 @@ index baca16cb..b01cd750 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 3080f71b..6e19dec1 100644
+index 3080f71b..d06faaf1 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
 @@ -1,25 +1,31 @@
@@ -14727,7 +14727,7 @@ index 3080f71b..6e19dec1 100644
 +    parallaxBarrier: ShaderNodeObject<ParallaxBarrierPassNode>;
  
 -let mesh, dummy, timer;
-+let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: Timer;
++let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: THREE.Timer;
  
  const position = new THREE.Vector3();
  
@@ -15183,7 +15183,7 @@ index 6a050726..7af6c37e 100644
      gui.add(params, 'shadows');
      gui.open();
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index e841d300..df39dcf4 100644
+index e841d300..c1855b9a 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
 @@ -1,4 +1,4 @@
@@ -15199,7 +15199,7 @@ index e841d300..df39dcf4 100644
 -let camera, scene, timer, renderer, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
-+    timer: Timer,
++    timer: THREE.Timer,
 +    renderer: THREE.WebGPURenderer,
 +    controls: OrbitControls;
  
@@ -17588,7 +17588,7 @@ index 13176233..3fc56bbf 100644
                          subChild.rotation.z = time * (1 - subIndex * 0.1);
                      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
-index 9faabda5..66466ce5 100644
+index 9faabda5..3c6eaadf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
 @@ -1,4 +1,4 @@
@@ -17604,7 +17604,7 @@ index 9faabda5..66466ce5 100644
 -let camera, renderer, postProcessing;
 -let timer, mesh, controls;
 +let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
-+let timer: Timer, mesh: THREE.Mesh, controls: OrbitControls;
++let timer: THREE.Timer, mesh: THREE.Mesh, controls: OrbitControls;
  
  init();
  
@@ -17946,7 +17946,7 @@ index 1ee744c8..9e213114 100644
  
      scene.add(model);
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 52170eb7..31b8a354 100644
+index 52170eb7..207a463b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 @@ -1,12 +1,13 @@
@@ -17964,7 +17964,7 @@ index 52170eb7..31b8a354 100644
 -let gui, stats, timer;
 +let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
 +let camera: THREE.PerspectiveCamera, ssaaRenderPass: ShaderNodeObject<SSAAPassNode>;
-+let gui: GUI | undefined, stats: Stats, timer: Timer;
++let gui: GUI | undefined, stats: Stats, timer: THREE.Timer;
  
  const params = {
      sampleLevel: 3,
