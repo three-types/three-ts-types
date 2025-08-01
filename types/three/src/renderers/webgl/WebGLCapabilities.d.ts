@@ -30,7 +30,7 @@ export class WebGLCapabilities {
 
     precision: string;
     logarithmicDepthBuffer: boolean;
-    reverseDepthBuffer: boolean;
+    reversedDepthBuffer: boolean;
 
     maxTextures: number;
     maxVertexTextures: number;
