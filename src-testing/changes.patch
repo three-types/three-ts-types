@@ -3307,7 +3307,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 5252d65c..6265bc43 100644
+index 9f566882..3bf34741 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3560,7 +3560,7 @@ index 5252d65c..6265bc43 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -488,10 +661,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -480,10 +653,27 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -7481,7 +7481,7 @@ index 51663d80..0ccb2461 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/SampledTexture.ts b/src-testing/src/renderers/common/SampledTexture.ts
-index 59359763..2950603b 100644
+index bc5a3f61..08cc8956 100644
 --- a/src-testing/src/renderers/common/SampledTexture.ts
 +++ b/src-testing/src/renderers/common/SampledTexture.ts
 @@ -1,4 +1,6 @@
@@ -7521,19 +7521,10 @@ index 59359763..2950603b 100644
       */
 -    needsBindingsUpdate(generation) {
 +    needsBindingsUpdate(generation: number) {
-         const { texture } = this;
- 
          if (generation !== this.generation) {
-@@ -82,7 +93,7 @@ class SampledTexture extends Binding {
-             return true;
-         }
+             this.generation = generation;
  
--        return texture.isVideoTexture;
-+        return (texture as VideoTexture).isVideoTexture;
-     }
- 
-     /**
-@@ -111,13 +122,15 @@ class SampledTexture extends Binding {
+@@ -109,13 +120,15 @@ class SampledTexture extends Binding {
   * @augments SampledTexture
   */
  class SampledArrayTexture extends SampledTexture {
@@ -7550,7 +7541,7 @@ index 59359763..2950603b 100644
          super(name, texture);
  
          /**
-@@ -138,13 +151,15 @@ class SampledArrayTexture extends SampledTexture {
+@@ -136,13 +149,15 @@ class SampledArrayTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class Sampled3DTexture extends SampledTexture {
@@ -7567,7 +7558,7 @@ index 59359763..2950603b 100644
          super(name, texture);
  
          /**
-@@ -165,13 +180,15 @@ class Sampled3DTexture extends SampledTexture {
+@@ -163,13 +178,15 @@ class Sampled3DTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class SampledCubeTexture extends SampledTexture {
@@ -7634,7 +7625,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index f330f6e9..2dcd8ddf 100644
+index 43cd8400..f78b4c21 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -9,8 +9,46 @@ import {
@@ -7737,12 +7728,13 @@ index f330f6e9..2dcd8ddf 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -306,12 +351,12 @@ class Textures extends DataMap {
- 
-             target.width = image.width || 1;
-             target.height = image.height || 1;
--            target.depth = texture.isCubeTexture ? 6 : image.depth || 1;
-+            target.depth = (texture as CubeTexture).isCubeTexture ? 6 : image.depth || 1;
+@@ -311,13 +356,13 @@ class Textures extends DataMap {
+             } else {
+                 target.width = image.width || 1;
+                 target.height = image.height || 1;
+-                target.depth = texture.isCubeTexture ? 6 : image.depth || 1;
++                target.depth = (texture as CubeTexture).isCubeTexture ? 6 : image.depth || 1;
+             }
          } else {
              target.width = target.height = target.depth = 1;
          }
@@ -7752,7 +7744,7 @@ index f330f6e9..2dcd8ddf 100644
      }
  
      /**
-@@ -322,10 +367,10 @@ class Textures extends DataMap {
+@@ -328,10 +373,10 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7765,7 +7757,7 @@ index f330f6e9..2dcd8ddf 100644
              if (texture.mipmaps) {
                  mipLevelCount = texture.mipmaps.length;
              } else {
-@@ -344,8 +389,8 @@ class Textures extends DataMap {
+@@ -350,8 +395,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -7776,7 +7768,7 @@ index f330f6e9..2dcd8ddf 100644
      }
  
      /**
-@@ -354,7 +399,7 @@ class Textures extends DataMap {
+@@ -360,7 +405,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -10120,7 +10112,7 @@ index c273fb8b..4c0c40cb 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 6a0a2c85..2c17e42c 100644
+index 1bacc55b..b66f5efa 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 @@ -1615,7 +1615,14 @@ class WebGPUBackend extends Backend {
@@ -10222,7 +10214,7 @@ index 37784a05..7b08961a 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index fabe7508..26e15076 100644
+index 7ad0a416..9294b0b2 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10234,7 +10226,7 @@ index fabe7508..26e15076 100644
  
  import { getFormat } from '../utils/WebGPUTextureUtils.js';
  
-@@ -28,6 +28,8 @@ import {
+@@ -27,6 +27,8 @@ import {
      MirroredRepeatWrapping,
      NearestFilter,
  } from '../../../constants.js';
@@ -10243,7 +10235,7 @@ index fabe7508..26e15076 100644
  
  // GPUShaderStage is not defined in browsers not supporting WebGPU
  const GPUShaderStage = typeof self !== 'undefined' ? self.GPUShaderStage : { VERTEX: 1, FRAGMENT: 2, COMPUTE: 4 };
-@@ -257,7 +259,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -246,7 +248,13 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The WGSL snippet.
       */
@@ -10258,7 +10250,7 @@ index fabe7508..26e15076 100644
          if (shaderStage === 'fragment') {
              if (depthSnippet) {
                  return `textureSample( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${depthSnippet} )`;
-@@ -465,7 +473,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -437,7 +445,13 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [levelSnippet='0u'] - A WGSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The WGSL snippet.
       */
@@ -10273,7 +10265,7 @@ index fabe7508..26e15076 100644
          const wrapFunction = this.generateWrapFunction(texture);
          const textureDimension = this.generateTextureDimension(texture, textureProperty, levelSnippet);
  
-@@ -485,9 +499,14 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -457,9 +471,14 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [levelSnippet='0u'] - A WGSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The WGSL snippet.
       */
@@ -10287,10 +10279,10 @@ index fabe7508..26e15076 100644
 +    ) {
          let snippet;
 -
-         if (texture.isVideoTexture === true) {
-             snippet = `textureLoad( ${textureProperty}, ${uvIndexSnippet} )`;
-         } else if (depthSnippet) {
-@@ -588,11 +607,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+         if (depthSnippet) {
+             snippet = `textureLoad( ${textureProperty}, ${uvIndexSnippet}, ${depthSnippet}, u32( ${levelSnippet} ) )`;
+         } else {
+@@ -556,11 +575,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureGrad(
@@ -10307,7 +10299,7 @@ index fabe7508..26e15076 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -616,11 +635,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -584,11 +603,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureCompare(
@@ -10324,24 +10316,22 @@ index fabe7508..26e15076 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -648,11 +667,11 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -615,7 +634,13 @@ class WGSLNodeBuilder extends NodeBuilder {
+      * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The WGSL snippet.
       */
-     generateTextureLevel(
--        texture,
--        textureProperty,
--        uvSnippet,
--        levelSnippet,
--        depthSnippet,
+-    generateTextureLevel(texture, textureProperty, uvSnippet, levelSnippet, depthSnippet) {
++    generateTextureLevel(
 +        texture: Texture,
 +        textureProperty: string,
 +        uvSnippet: string | null,
 +        levelSnippet: string | null,
 +        depthSnippet: string | null,
-         shaderStage = this.shaderStage,
-     ) {
-         let snippet = null;
-@@ -678,11 +697,11 @@ class WGSLNodeBuilder extends NodeBuilder {
++    ) {
+         if (this.isUnfilterable(texture) === false) {
+             return `textureSampleLevel( ${textureProperty}, ${textureProperty}_sampler, ${uvSnippet}, ${levelSnippet} )`;
+         } else if (this.isFilteredTexture(texture)) {
+@@ -637,11 +662,11 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @return {string} The WGSL snippet.
       */
      generateTextureBias(
@@ -10358,7 +10348,7 @@ index fabe7508..26e15076 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -699,7 +718,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -658,7 +683,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -10367,7 +10357,7 @@ index fabe7508..26e15076 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -788,7 +807,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -747,7 +772,12 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10381,7 +10371,7 @@ index fabe7508..26e15076 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -919,7 +943,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -882,7 +912,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10390,7 +10380,7 @@ index fabe7508..26e15076 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1203,8 +1227,8 @@ ${flowData.code}
+@@ -1166,8 +1196,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10401,7 +10391,7 @@ index fabe7508..26e15076 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1338,8 +1362,8 @@ ${flowData.code}
+@@ -1301,8 +1331,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10412,7 +10402,7 @@ index fabe7508..26e15076 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1404,7 +1428,7 @@ ${flowData.code}
+@@ -1367,7 +1397,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
