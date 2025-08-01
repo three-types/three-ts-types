@@ -1,6 +1,7 @@
 import { Camera } from "../../cameras/Camera.js";
 import { Layers } from "../../core/Layers.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
+import { Vector4 } from "../../math/Vector4.js";
 import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
@@ -62,6 +63,12 @@ declare class PassNode extends TempNode {
     getLinearDepthNode(name?: string): ShaderNodeObject<Node>;
 
     setSize(width: number, height: number): void;
+
+    setScissor(x: number, y: number, width: number, height: number): void;
+    setScissor(x: Vector4): void;
+
+    setViewport(x: number, y: number, width: number, height: number): void;
+    setViewport(x: Vector4): void;
 
     setPixelRatio(pixelRatio: number): void;
 
