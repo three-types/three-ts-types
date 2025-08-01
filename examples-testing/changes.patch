@@ -7012,7 +7012,7 @@ index c9947c69..69bf22b4 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index 0c854125..095e78c9 100644
+index ae1656e3..d41b05b8 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17420,42 +17420,42 @@ index f20978b8..46c08191 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 689dd2f0..7760a6ae 100644
+index 7a455fb3..f94634cd 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
 -import * as THREE from 'three';
--import { pass, mrt, output, normalView } from 'three/tsl';
+-import { pass, mrt, output, normalView, velocity } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
--import { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
+-import { traa } from 'three/addons/tsl/display/TRAANode.js';
 +import * as THREE from 'three/webgpu';
-+import { pass, mrt, output, normalView, ShaderNodeObject } from 'three/tsl';
++import { pass, mrt, output, normalView, velocity, ShaderNodeObject } from 'three/tsl';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
-+import DenoiseNode, { denoise } from 'three/addons/tsl/display/DenoiseNode.js';
++import TRAANode, { traa } from 'three/addons/tsl/display/TRAANode.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -10,9 +10,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- 
+@@ -11,9 +11,17 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import Stats from 'three/addons/libs/stats.module.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, postProcessing, controls, stats;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.PostProcessing,
-+    controls: OrbitControls;
++    controls: OrbitControls,
++    stats: Stats;
  
--let aoPass, denoisePass, blendPassAO, blendPassDenoise, scenePassColor;
+-let aoPass, traaPass, blendPassAO, scenePassColor;
 +let aoPass: ShaderNodeObject<GTAONode>,
-+    denoisePass: ShaderNodeObject<DenoiseNode>,
++    traaPass: ShaderNodeObject<TRAANode>,
 +    blendPassAO: ShaderNodeObject<THREE.Node>,
-+    blendPassDenoise: ShaderNodeObject<THREE.Node>,
 +    scenePassColor: ShaderNodeObject<THREE.TextureNode>;
  
  const params = {
      distanceExponent: 1,
-@@ -114,7 +122,8 @@ async function init() {
+@@ -119,7 +127,8 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
@@ -18035,14 +18035,14 @@ index 6de40d2d..e5a06ef1 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
-index 6e8509d1..7540235d 100644
+index de2215ee..ee4a7c8d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_traa.ts
 @@ -1,11 +1,14 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
- import { mrt, output, velocity } from 'three/tsl';
- import { traaPass } from 'three/addons/tsl/display/TRAAPassNode.js';
+ import { mrt, output, pass, velocity } from 'three/tsl';
+ import { traa } from 'three/addons/tsl/display/TRAANode.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
