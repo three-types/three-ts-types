@@ -43,6 +43,13 @@ export class Camera extends Object3D {
     override layers: Layers;
 
     /**
+     * The flag that indicates whether the camera uses a reversed depth buffer.
+     *
+     * @default false
+     */
+    reversedDepth: boolean;
+
+    /**
      * This is the inverse of matrixWorld.
      * @remarks MatrixWorld contains the Matrix which has the world transform of the {@link Camera} .
      * @defaultValue {@link Matrix4 | `new THREE.Matrix4()`}
