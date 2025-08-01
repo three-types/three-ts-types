@@ -6,13 +6,13 @@ export default class ComputeNode extends Node {
     readonly isComputeNode: true;
 
     computeNode: Node;
-    workgroupSize: number[];
+    workgroupSize: number[] | undefined;
     count: number | null;
     name: string;
 
     onInitFunction: ((args: { renderer: Renderer }) => void) | null;
 
-    constructor(computeNode: Node, workgroupSize: number[]);
+    constructor(computeNode: Node, workgroupSize: number[] | undefined);
 
     setCount(count: number): this;
     getCount(): number | null;
@@ -27,7 +27,7 @@ export const computeKernel: (node: Node, workgroupSize?: number[]) => ShaderNode
 export const compute: (
     node: Node,
     count: number,
-    workgroupSize: number[],
+    workgroupSize?: number[],
 ) => ShaderNodeObject<ComputeNode>;
 
 declare module "../tsl/TSLCore.js" {
