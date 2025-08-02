@@ -5,6 +5,7 @@ declare class Sampler extends Binding {
     texture: TextureNode | null;
     version: number;
     readonly isSampler: true;
+
     constructor(name: string, texture: TextureNode | null);
 }
 
