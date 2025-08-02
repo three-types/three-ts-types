@@ -3377,7 +3377,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index d0ca9754..24842a5f 100644
+index 39a9e4d0..c7530a7d 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3596,7 +3596,7 @@ index d0ca9754..24842a5f 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -380,7 +543,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -399,7 +562,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3612,7 +3612,7 @@ index d0ca9754..24842a5f 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -392,7 +563,7 @@ class ShaderNodeInternal extends Node {
+@@ -411,7 +582,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3621,7 +3621,7 @@ index d0ca9754..24842a5f 100644
          this.layout = layout;
  
          return this;
-@@ -409,6 +580,8 @@ class ShaderNodeInternal extends Node {
+@@ -428,6 +599,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3630,7 +3630,7 @@ index d0ca9754..24842a5f 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -494,11 +667,28 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -513,11 +686,28 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
@@ -4163,7 +4163,7 @@ index 0cdcb293..885a7b95 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 9aafe434..f6653f74 100644
+index 69e9c0f0..8aaa7d3f 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -4307,7 +4307,7 @@ index 9aafe434..f6653f74 100644
  
                  // every uniforms group is a uniform buffer. So if no update is required,
                  // we move one with the next binding. Otherwise the next if block will update the group.
-@@ -200,20 +234,21 @@ class Bindings extends DataMap {
+@@ -200,18 +234,18 @@ class Bindings extends DataMap {
                  this.attributes.update(attribute, attributeType);
              }
  
@@ -4321,36 +4321,29 @@ index 9aafe434..f6653f74 100644
 +                    backend.updateBinding(binding as UniformBuffer);
                  }
 -            } else if (binding.isSampledTexture) {
--                const texturesTextureData = this.textures.get(binding.texture);
-+            } else if ((binding as SampledTexture).isSampledTexture) {
-+                const texturesTextureData = this.textures.get((binding as SampledTexture).texture);
- 
--                if (binding.needsBindingsUpdate(texturesTextureData.generation)) needsBindingsUpdate = true;
-+                if ((binding as SampledTexture).needsBindingsUpdate(texturesTextureData.generation))
-+                    needsBindingsUpdate = true;
- 
 -                const updated = binding.update();
++            } else if ((binding as SampledTexture).isSampledTexture) {
 +                const updated = (binding as SampledTexture).update();
+ 
+                 // get the texture data after the update, to sync the texture reference from node
  
 -                const texture = binding.texture;
 +                const texture = (binding as SampledTexture).texture;
+                 const texturesTextureData = this.textures.get(texture);
  
                  if (updated) {
-                     this.textures.updateTexture(texture);
-@@ -236,10 +271,10 @@ class Bindings extends DataMap {
-                     // TODO: Remove this once we found why updated === false isn't bound to a texture in the WebGPU backend
-                     console.error(
-                         'Bindings._update: binding should be available:',
--                        binding,
-+                        binding as SampledTexture,
-                         updated,
-                         texture,
--                        binding.textureNode.value,
-+                        (binding as SampledTexture).textureNode.value,
-                         needsBindingsUpdate,
-                     );
+@@ -221,8 +255,8 @@ class Bindings extends DataMap {
  
-@@ -250,7 +285,7 @@ class Bindings extends DataMap {
+                     // generation: update the bindings if a new texture has been created
+ 
+-                    if (binding.generation !== texturesTextureData.generation) {
+-                        binding.generation = texturesTextureData.generation;
++                    if ((binding as SampledTexture).generation !== texturesTextureData.generation) {
++                        (binding as SampledTexture).generation = texturesTextureData.generation;
+ 
+                         needsBindingsUpdate = true;
+                     }
+@@ -240,7 +274,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true) {
                      const textureData = this.get(texture);
  
@@ -7551,7 +7544,7 @@ index 740c8592..c03c1a6f 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/SampledTexture.ts b/src-testing/src/renderers/common/SampledTexture.ts
-index a11840d2..f9f9bff7 100644
+index cf95dee4..03c70e00 100644
 --- a/src-testing/src/renderers/common/SampledTexture.ts
 +++ b/src-testing/src/renderers/common/SampledTexture.ts
 @@ -1,4 +1,5 @@
@@ -7581,16 +7574,7 @@ index a11840d2..f9f9bff7 100644
          super(name, texture);
  
          /**
-@@ -59,7 +66,7 @@ class SampledTexture extends Sampler {
-      * @param {number} generation - The generation.
-      * @return {boolean} Whether an update is required or not.
-      */
--    needsBindingsUpdate(generation) {
-+    needsBindingsUpdate(generation: number) {
-         if (generation !== this.generation) {
-             this.generation = generation;
- 
-@@ -77,13 +84,15 @@ class SampledTexture extends Sampler {
+@@ -51,13 +58,15 @@ class SampledTexture extends Sampler {
   * @augments SampledTexture
   */
  class SampledArrayTexture extends SampledTexture {
@@ -7607,7 +7591,7 @@ index a11840d2..f9f9bff7 100644
          super(name, texture);
  
          /**
-@@ -104,13 +113,15 @@ class SampledArrayTexture extends SampledTexture {
+@@ -78,13 +87,15 @@ class SampledArrayTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class Sampled3DTexture extends SampledTexture {
@@ -7624,7 +7608,7 @@ index a11840d2..f9f9bff7 100644
          super(name, texture);
  
          /**
-@@ -131,13 +142,15 @@ class Sampled3DTexture extends SampledTexture {
+@@ -105,13 +116,15 @@ class Sampled3DTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class SampledCubeTexture extends SampledTexture {
@@ -7642,7 +7626,7 @@ index a11840d2..f9f9bff7 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Sampler.ts b/src-testing/src/renderers/common/Sampler.ts
-index 8801eafd..a45953b0 100644
+index a9c7b31e..c0eae9b8 100644
 --- a/src-testing/src/renderers/common/Sampler.ts
 +++ b/src-testing/src/renderers/common/Sampler.ts
 @@ -7,13 +7,19 @@ import Binding from './Binding.js';
