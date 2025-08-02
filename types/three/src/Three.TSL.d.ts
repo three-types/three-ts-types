@@ -514,6 +514,7 @@ export const uvec2: typeof TSL.uvec2;
 export const uvec3: typeof TSL.uvec3;
 export const uvec4: typeof TSL.uvec4;
 export const Var: typeof TSL.Var;
+export const VarIntent: typeof TSL.VarIntent;
 export const varying: typeof TSL.varying;
 export const varyingProperty: typeof TSL.varyingProperty;
 export const vec2: typeof TSL.vec2;

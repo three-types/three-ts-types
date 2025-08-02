@@ -946,7 +946,7 @@ declare class Renderer {
      * @param {LightsNode} lightsNode - The current lights node.
      * @param {?{start: number, count: number}} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {?string} [passId=null] - An optional ID for identifying the pass.
+     * @param {string} [passId] - An optional ID for identifying the pass.
      */
     _renderObjectDirect(
         object: Object3D,
@@ -970,7 +970,7 @@ declare class Renderer {
      * @param {LightsNode} lightsNode - The current lights node.
      * @param {?{start: number, count: number}} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
      * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {?string} [passId=null] - An optional ID for identifying the pass.
+     * @param {string} [passId] - An optional ID for identifying the pass.
      */
     _createObjectPipeline(
         object: Object3D,

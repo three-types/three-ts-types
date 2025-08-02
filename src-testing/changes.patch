@@ -861,7 +861,7 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 9d109121..b2b791f1 100644
+index 5a11dc94..27595091 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,6 +3,8 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1111,7 +1111,16 @@ index 9d109121..b2b791f1 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -425,13 +505,13 @@ class Node extends EventDispatcher {
+@@ -423,7 +503,7 @@ class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?number} The number of elements in the node array.
+      */
+-    getArrayCount(/*builder*/) {
++    getArrayCount(builder: NodeBuilder): number | null {
+         return null;
+     }
+ 
+@@ -435,13 +515,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -1127,7 +1136,7 @@ index 9d109121..b2b791f1 100644
          }
  
          // return a outputNode if exists or null
-@@ -446,7 +526,7 @@ class Node extends EventDispatcher {
+@@ -456,7 +536,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @param {?Node} output - The target output node.
       */
@@ -1136,7 +1145,7 @@ index 9d109121..b2b791f1 100644
          const usageCount = builder.increaseUsage(this);
  
          if (this.parents === true) {
-@@ -462,8 +542,8 @@ class Node extends EventDispatcher {
+@@ -472,8 +552,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -1147,7 +1156,7 @@ index 9d109121..b2b791f1 100644
                  }
              }
          }
-@@ -477,7 +557,7 @@ class Node extends EventDispatcher {
+@@ -487,7 +567,7 @@ class Node extends EventDispatcher {
       * @param {?string} output - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -1156,7 +1165,7 @@ index 9d109121..b2b791f1 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -493,7 +573,7 @@ class Node extends EventDispatcher {
+@@ -503,7 +583,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1165,7 +1174,7 @@ index 9d109121..b2b791f1 100644
          console.warn('Abstract function.');
      }
  
-@@ -505,7 +585,7 @@ class Node extends EventDispatcher {
+@@ -515,7 +595,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1174,7 +1183,7 @@ index 9d109121..b2b791f1 100644
          console.warn('Abstract function.');
      }
  
-@@ -517,7 +597,7 @@ class Node extends EventDispatcher {
+@@ -527,7 +607,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1183,7 +1192,7 @@ index 9d109121..b2b791f1 100644
          console.warn('Abstract function.');
      }
  
-@@ -531,7 +611,7 @@ class Node extends EventDispatcher {
+@@ -541,7 +621,7 @@ class Node extends EventDispatcher {
       * @param {string|Node|null} [output=null] - Can be used to define the output type.
       * @return {Node|string|null} The result of the build process, depending on the build stage.
       */
@@ -1192,7 +1201,7 @@ index 9d109121..b2b791f1 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -591,14 +671,14 @@ class Node extends EventDispatcher {
+@@ -601,14 +681,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
@@ -1211,7 +1220,7 @@ index 9d109121..b2b791f1 100644
                      }
                  }
              }
-@@ -657,10 +737,10 @@ class Node extends EventDispatcher {
+@@ -667,10 +747,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1224,7 +1233,7 @@ index 9d109121..b2b791f1 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -668,7 +748,9 @@ class Node extends EventDispatcher {
+@@ -678,7 +758,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1235,7 +1244,7 @@ index 9d109121..b2b791f1 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -684,33 +766,33 @@ class Node extends EventDispatcher {
+@@ -694,33 +776,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1279,7 +1288,7 @@ index 9d109121..b2b791f1 100644
                  }
              }
          }
-@@ -722,7 +804,7 @@ class Node extends EventDispatcher {
+@@ -732,7 +814,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1288,7 +1297,7 @@ index 9d109121..b2b791f1 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -731,18 +813,18 @@ class Node extends EventDispatcher {
+@@ -741,18 +823,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1310,7 +1319,7 @@ index 9d109121..b2b791f1 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -750,7 +832,7 @@ class Node extends EventDispatcher {
+@@ -760,7 +842,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1319,7 +1328,7 @@ index 9d109121..b2b791f1 100644
  
              this.serialize(data);
  
-@@ -759,12 +841,12 @@ class Node extends EventDispatcher {
+@@ -769,12 +851,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1334,7 +1343,7 @@ index 9d109121..b2b791f1 100644
                  values.push(data);
              }
  
-@@ -772,9 +854,9 @@ class Node extends EventDispatcher {
+@@ -782,9 +864,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1380,7 +1389,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index f21e0f66..229ef4ff 100644
+index c01171ee..8033080c 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -2151,7 +2160,7 @@ index f21e0f66..229ef4ff 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
          let nodeUniform = nodeData.uniform;
-@@ -1584,7 +1732,13 @@ class NodeBuilder {
+@@ -1569,7 +1717,13 @@ class NodeBuilder {
       *
       * @return {NodeVar} The node variable.
       */
@@ -2166,7 +2175,7 @@ index f21e0f66..229ef4ff 100644
          const nodeData = this.getDataFromNode(node, shaderStage);
          const subBuildVariable = this.getSubBuildProperty('variable', nodeData.subBuilds);
  
-@@ -1669,11 +1823,11 @@ class NodeBuilder {
+@@ -1654,11 +1808,11 @@ class NodeBuilder {
       * @return {NodeVar} The node varying.
       */
      getVaryingFromNode(
@@ -2182,7 +2191,7 @@ index f21e0f66..229ef4ff 100644
      ) {
          const nodeData = this.getDataFromNode(node, 'any');
          const subBuildVarying = this.getSubBuildProperty('varying', nodeData.subBuilds);
-@@ -1745,7 +1899,7 @@ class NodeBuilder {
+@@ -1730,7 +1884,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} [shaderStage=this.shaderStage] - The shader stage.
       * @return {NodeCode} The node code.
       */
@@ -2191,7 +2200,7 @@ index f21e0f66..229ef4ff 100644
          const nodeData = this.getDataFromNode(node);
  
          let nodeCode = nodeData.code;
-@@ -1818,7 +1972,7 @@ class NodeBuilder {
+@@ -1803,7 +1957,7 @@ class NodeBuilder {
       * @param {?Node} [node= null] - Optional Node, can help the system understand if the Node is part of a code-block.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2200,7 +2209,7 @@ index f21e0f66..229ef4ff 100644
          if (code === '') return this;
  
          if (node !== null && this.context.nodeBlock) {
-@@ -1842,7 +1996,7 @@ class NodeBuilder {
+@@ -1827,7 +1981,7 @@ class NodeBuilder {
       * @param {string} code - Shader code.
       * @return {NodeBuilder} A reference to this node builder.
       */
@@ -2209,7 +2218,7 @@ index f21e0f66..229ef4ff 100644
          this.flow.code += code;
  
          return this;
-@@ -1878,7 +2032,7 @@ class NodeBuilder {
+@@ -1863,7 +2017,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {Object} The flow data.
       */
@@ -2218,7 +2227,7 @@ index f21e0f66..229ef4ff 100644
          return this.flowsData.get(node);
      }
  
-@@ -1888,7 +2042,7 @@ class NodeBuilder {
+@@ -1873,7 +2027,7 @@ class NodeBuilder {
       * @param {Node} node - The node to execute.
       * @return {Object} The code flow.
       */
@@ -2227,7 +2236,7 @@ index f21e0f66..229ef4ff 100644
          const output = node.getNodeType(this);
  
          const flowData = this.flowChildNode(node, output);
-@@ -1904,12 +2058,14 @@ class NodeBuilder {
+@@ -1889,12 +2043,14 @@ class NodeBuilder {
       * @param {Node} node - The node to include.
       * @returns {void}
       */
@@ -2243,7 +2252,7 @@ index f21e0f66..229ef4ff 100644
      /**
       * Returns the native shader operator name for a given generic name.
       * It is a similar type of method like {@link NodeBuilder#getMethod}.
-@@ -1917,7 +2073,7 @@ class NodeBuilder {
+@@ -1902,7 +2058,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node to build the function node with.
       * @return {FunctionNode} The build function node.
       */
@@ -2252,7 +2261,7 @@ index f21e0f66..229ef4ff 100644
          const fn = new FunctionNode();
  
          const previous = this.currentFunctionNode;
-@@ -1937,7 +2093,7 @@ class NodeBuilder {
+@@ -1922,7 +2078,7 @@ class NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - A function code will be generated based on the input.
       * @return {Object}
       */
@@ -2261,7 +2270,7 @@ index f21e0f66..229ef4ff 100644
          const layout = shaderNode.layout;
  
          const inputs = {
-@@ -1953,7 +2109,7 @@ class NodeBuilder {
+@@ -1938,7 +2094,7 @@ class NodeBuilder {
              },
          };
  
@@ -2270,7 +2279,7 @@ index f21e0f66..229ef4ff 100644
              inputs[input.name] = new ParameterNode(input.type, input.name);
          }
  
-@@ -1976,7 +2132,7 @@ class NodeBuilder {
+@@ -1981,7 +2137,7 @@ class NodeBuilder {
       * @param {?string} output - Expected output type. For example 'vec3'.
       * @return {Object}
       */
@@ -2279,7 +2288,7 @@ index f21e0f66..229ef4ff 100644
          const previousFlow = this.flow;
          const previousVars = this.vars;
          const previousDeclarations = this.declarations;
-@@ -1984,7 +2140,7 @@ class NodeBuilder {
+@@ -1989,7 +2145,7 @@ class NodeBuilder {
          const previousBuildStage = this.buildStage;
          const previousStack = this.stack;
  
@@ -2288,7 +2297,7 @@ index f21e0f66..229ef4ff 100644
              code: '',
          };
  
-@@ -2000,7 +2156,7 @@ class NodeBuilder {
+@@ -2005,7 +2161,7 @@ class NodeBuilder {
              flow.result = node.build(this, output);
          }
  
@@ -2297,7 +2306,7 @@ index f21e0f66..229ef4ff 100644
  
          this.flow = previousFlow;
          this.vars = previousVars;
-@@ -2043,10 +2199,10 @@ class NodeBuilder {
+@@ -2048,10 +2204,10 @@ class NodeBuilder {
       * @param {?string} output - Expected output type. For example 'vec3'.
       * @return {Object} The code flow.
       */
@@ -2310,7 +2319,7 @@ index f21e0f66..229ef4ff 100644
              code: '',
          };
  
-@@ -2071,7 +2227,12 @@ class NodeBuilder {
+@@ -2076,7 +2232,12 @@ class NodeBuilder {
       * @param {?string} propertyName - The property name to assign the result.
       * @return {Object|Node|null} The code flow or node.build() result.
       */
@@ -2324,7 +2333,7 @@ index f21e0f66..229ef4ff 100644
          const previousTab = this.tab;
          const previousCache = this.cache;
          const previousShaderStage = this.shaderStage;
-@@ -2127,9 +2288,7 @@ class NodeBuilder {
+@@ -2132,9 +2293,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The attribute code section.
       */
@@ -2335,7 +2344,7 @@ index f21e0f66..229ef4ff 100644
  
      /**
       * Returns the varying definitions as a shader string for the given shader stage.
-@@ -2138,9 +2297,7 @@ class NodeBuilder {
+@@ -2143,9 +2302,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The varying code section.
       */
@@ -2346,7 +2355,7 @@ index f21e0f66..229ef4ff 100644
  
      /**
       * Returns a single variable definition as a shader string for the given variable type and name.
-@@ -2150,7 +2307,7 @@ class NodeBuilder {
+@@ -2155,7 +2312,7 @@ class NodeBuilder {
       * @param {?number} [count=null] - The array length.
       * @return {string} The shader string.
       */
@@ -2355,7 +2364,7 @@ index f21e0f66..229ef4ff 100644
          return `${count !== null ? this.generateArrayDeclaration(type, count) : this.getType(type)} ${name}`;
      }
  
-@@ -2160,7 +2317,7 @@ class NodeBuilder {
+@@ -2165,7 +2322,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The variable code section.
       */
@@ -2364,7 +2373,7 @@ index f21e0f66..229ef4ff 100644
          let snippet = '';
  
          const vars = this.vars[shaderStage];
-@@ -2181,9 +2338,7 @@ class NodeBuilder {
+@@ -2186,9 +2343,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The uniform code section.
       */
@@ -2375,7 +2384,7 @@ index f21e0f66..229ef4ff 100644
  
      /**
       * Returns the native code definitions as a shader string for the given shader stage.
-@@ -2191,7 +2346,7 @@ class NodeBuilder {
+@@ -2196,7 +2351,7 @@ class NodeBuilder {
       * @param {('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage.
       * @return {string} The native code section.
       */
@@ -2384,7 +2393,7 @@ index f21e0f66..229ef4ff 100644
          const codes = this.codes[shaderStage];
  
          let code = '';
-@@ -2211,7 +2366,7 @@ class NodeBuilder {
+@@ -2216,7 +2371,7 @@ class NodeBuilder {
       * @return {string} The hash.
       */
      getHash() {
@@ -2393,7 +2402,7 @@ index f21e0f66..229ef4ff 100644
      }
  
      /**
-@@ -2219,7 +2374,7 @@ class NodeBuilder {
+@@ -2224,7 +2379,7 @@ class NodeBuilder {
       *
       * @param {?('vertex'|'fragment'|'compute'|'any')} shaderStage - The shader stage to set.
       */
@@ -2402,7 +2411,7 @@ index f21e0f66..229ef4ff 100644
          this.shaderStage = shaderStage;
      }
  
-@@ -2237,7 +2392,7 @@ class NodeBuilder {
+@@ -2242,7 +2397,7 @@ class NodeBuilder {
       *
       * @param {?('setup'|'analyze'|'generate')} buildStage - The build stage to set.
       */
@@ -2411,7 +2420,7 @@ index f21e0f66..229ef4ff 100644
          this.buildStage = buildStage;
      }
  
-@@ -2427,7 +2582,7 @@ class NodeBuilder {
+@@ -2432,7 +2587,7 @@ class NodeBuilder {
       * @param {string} type - The requested type.
       * @return {Uniform} The uniform.
       */
@@ -2420,7 +2429,7 @@ index f21e0f66..229ef4ff 100644
          if (type === 'float' || type === 'int' || type === 'uint') return new NumberNodeUniform(uniformNode);
          if (type === 'vec2' || type === 'ivec2' || type === 'uvec2') return new Vector2NodeUniform(uniformNode);
          if (type === 'vec3' || type === 'ivec3' || type === 'uvec3') return new Vector3NodeUniform(uniformNode);
-@@ -2450,7 +2605,7 @@ class NodeBuilder {
+@@ -2455,7 +2610,7 @@ class NodeBuilder {
       * @param {string} toType - The target type.
       * @return {string} The updated shader string.
       */
@@ -2878,7 +2887,7 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 6fd451d1..e67e7728 100644
+index ef839dbb..5af30413 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,14 @@
@@ -2959,8 +2968,8 @@ index 6fd451d1..e67e7728 100644
          this._currentCond.elseNode = new ShaderNode(method);
  
          return this;
-@@ -210,7 +228,7 @@ class StackNode extends Node {
-         return this;
+@@ -232,7 +250,7 @@ class StackNode extends Node {
+         return nodeProperties.outputNode || null;
      }
  
 -    build(builder, ...params) {
@@ -3359,7 +3368,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 9f566882..3bf34741 100644
+index d0ca9754..24842a5f 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3540,7 +3549,7 @@ index 9f566882..3bf34741 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -120,7 +281,7 @@ const shaderNodeHandler = {
+@@ -122,7 +283,7 @@ const shaderNodeHandler = {
  const nodeObjectsCacheMap = new WeakMap();
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3549,7 +3558,7 @@ index 9f566882..3bf34741 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -228,7 +389,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -242,7 +403,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3560,7 +3569,7 @@ index 9f566882..3bf34741 100644
          super();
  
          this.shaderNode = shaderNode;
-@@ -237,7 +400,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -251,7 +414,7 @@ class ShaderCallNodeInternal extends Node {
          this.isShaderCallNodeInternal = true;
      }
  
@@ -3569,7 +3578,7 @@ index 9f566882..3bf34741 100644
          return this.shaderNode.nodeType || this.getOutputNode(builder).getNodeType(builder);
      }
  
-@@ -245,7 +408,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -259,7 +422,7 @@ class ShaderCallNodeInternal extends Node {
          return this.getOutputNode(builder).getMemberType(builder, name);
      }
  
@@ -3578,7 +3587,7 @@ index 9f566882..3bf34741 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -366,7 +529,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -380,7 +543,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3594,7 +3603,7 @@ index 9f566882..3bf34741 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -378,7 +549,7 @@ class ShaderNodeInternal extends Node {
+@@ -392,7 +563,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3603,7 +3612,7 @@ index 9f566882..3bf34741 100644
          this.layout = layout;
  
          return this;
-@@ -395,6 +566,8 @@ class ShaderNodeInternal extends Node {
+@@ -409,6 +580,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3612,16 +3621,17 @@ index 9f566882..3bf34741 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -480,10 +653,27 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -494,11 +667,28 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
 -export const nodeObject = (val, altType = null) => /* new */ ShaderNodeObject(val, altType);
 +export const nodeObject = <T extends NodeObjectOption>(val: T, altType: string | null = null): NodeObject<T> =>
 +    /* new */ ShaderNodeObject(val, altType);
+ export const nodeObjectIntent = (val, altType = null) => /* new */ nodeObject(val, altType).toVarIntent();
  export const nodeObjects = (val, altType = null) => new ShaderNodeObjects(val, altType);
  export const nodeArray = (val, altType = null) => new ShaderNodeArray(val, altType);
--export const nodeProxy = (...params) => new ShaderNodeProxy(...params);
+-export const nodeProxy = (NodeClass, scope = null, factor = null, settings = null) =>
 +
 +interface NodeProxy {
 +    <T>(nodeClass: T): (...params: ProxiedTuple<GetConstructors<T>>) => ShaderNodeObject<ConstructedNode<T>>;
@@ -3638,10 +3648,10 @@ index 9f566882..3bf34741 100644
 +    ) => ShaderNodeObject<ConstructedNode<T>>;
 +}
 +
-+export const nodeProxy: NodeProxy = (...params) => new ShaderNodeProxy(...params);
- export const nodeImmutable = (...params) => new ShaderNodeImmutable(...params);
- 
- let fnId = 0;
++export const nodeProxy: NodeProxy = (NodeClass, scope = null, factor = null, settings = null) =>
+     new ShaderNodeProxy(NodeClass, scope, factor, settings);
+ export const nodeImmutable = (NodeClass, ...params) => new ShaderNodeImmutable(NodeClass, ...params);
+ export const nodeProxyIntent = (NodeClass, scope = null, factor = null, settings = {}) =>
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
 index 384007e1..2ad5cdd7 100644
 --- a/src-testing/src/renderers/common/Animation.ts
@@ -4684,7 +4694,7 @@ index 41243208..33f82c41 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Color4.ts b/src-testing/src/renderers/common/Color4.ts
-index 4a914d60..a0513578 100644
+index 6bb6739d..1e073e79 100644
 --- a/src-testing/src/renderers/common/Color4.ts
 +++ b/src-testing/src/renderers/common/Color4.ts
 @@ -1,4 +1,4 @@
@@ -6311,7 +6321,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 814fc1a0..70b74e3b 100644
+index 740c8592..c03c1a6f 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7426,7 +7436,7 @@ index 814fc1a0..70b74e3b 100644
          let overrideDepthNode;
 @@ -2679,14 +2954,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
-      * @param {?string} [passId=null] - An optional ID for identifying the pass.
+      * @param {string} [passId] - An optional ID for identifying the pass.
       */
 -    _renderObjectDirect(object, material, scene, camera, lightsNode, group, clippingContext, passId) {
 -        const renderObject = this._objects.get(
@@ -7487,7 +7497,7 @@ index 814fc1a0..70b74e3b 100644
      /**
 @@ -2737,14 +3021,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
-      * @param {?string} [passId=null] - An optional ID for identifying the pass.
+      * @param {string} [passId] - An optional ID for identifying the pass.
       */
 -    _createObjectPipeline(object, material, scene, camera, lightsNode, group, clippingContext, passId) {
 -        const renderObject = this._objects.get(
@@ -9707,18 +9717,18 @@ index d5f60879..37f47e7c 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 3eed7fe9..30023f21 100644
+index 2a55e2f8..ca4ce43b 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-@@ -15,6 +15,7 @@ import { warnOnce } from '../../utils.js';
+@@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
+ import { warnOnce } from '../../utils.js';
  import { WebGLCoordinateSystem } from '../../constants.js';
- import { Vector2 } from '../../math/Vector2.js';
  import WebGLTimestampQueryPool from './utils/WebGLTimestampQueryPool.js';
 +import { Texture } from '../../textures/Texture.js';
  
- const _drawingBufferSize = /*@__PURE__*/ new Vector2();
- 
-@@ -1250,7 +1251,14 @@ class WebGLBackend extends Backend {
+ /**
+  * A backend implementation targeting WebGL 2.
+@@ -1247,7 +1248,14 @@ class WebGLBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */

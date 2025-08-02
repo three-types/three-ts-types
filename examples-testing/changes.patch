@@ -12076,7 +12076,7 @@ index f402fa20..8e71282d 100644
  
      // blur horizontally and draw in the renderTargetBlur
 diff --git a/examples-testing/examples/webgl_shadowmap.ts b/examples-testing/examples/webgl_shadowmap.ts
-index b091b867..5db0059d 100644
+index 1abf4827..ce2f3427 100644
 --- a/examples-testing/examples/webgl_shadowmap.ts
 +++ b/examples-testing/examples/webgl_shadowmap.ts
 @@ -15,18 +15,18 @@ let SCREEN_WIDTH = window.innerWidth;
@@ -12104,7 +12104,7 @@ index b091b867..5db0059d 100644
  
  const clock = new THREE.Clock();
  
-@@ -122,7 +122,7 @@ function onWindowResize() {
+@@ -117,7 +117,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -12113,7 +12113,7 @@ index b091b867..5db0059d 100644
      switch (event.keyCode) {
          case 84 /*t*/:
              showHUD = !showHUD;
-@@ -173,7 +173,7 @@ function createScene() {
+@@ -168,7 +168,7 @@ function createScene() {
          });
  
          textGeo.computeBoundingBox();
@@ -12122,7 +12122,7 @@ index b091b867..5db0059d 100644
  
          const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
  
-@@ -213,7 +213,16 @@ function createScene() {
+@@ -208,7 +208,16 @@ function createScene() {
  
      mixer = new THREE.AnimationMixer(scene);
  
@@ -12140,7 +12140,7 @@ index b091b867..5db0059d 100644
          mesh = mesh.clone();
          mesh.material = mesh.material.clone();
  
-@@ -244,7 +253,7 @@ function createScene() {
+@@ -239,7 +248,7 @@ function createScene() {
      const gltfloader = new GLTFLoader();
  
      gltfloader.load('models/gltf/Horse.glb', function (gltf) {
@@ -12149,7 +12149,7 @@ index b091b867..5db0059d 100644
  
          const clip = gltf.animations[0];
  
-@@ -258,21 +267,21 @@ function createScene() {
+@@ -253,21 +262,21 @@ function createScene() {
      });
  
      gltfloader.load('models/gltf/Flamingo.glb', function (gltf) {
@@ -12174,7 +12174,7 @@ index b091b867..5db0059d 100644
          const clip = gltf.animations[0];
  
          addMorph(mesh, clip, 450, 0.5, 500 - Math.random() * 500, FLOOR + 300, 700);
-@@ -292,7 +301,7 @@ function render() {
+@@ -287,7 +296,7 @@ function render() {
      for (let i = 0; i < morphs.length; i++) {
          const morph = morphs[i];
  
@@ -17649,6 +17649,41 @@ index 7a89a8e4..ef11d62e 100644
      if (event.isPrimary === false) return;
  
      mouseX = event.clientX - windowHalfX;
+diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
+index f0c13ebd..dae6230d 100644
+--- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
++++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { mix, pass, renderOutput, smoothstep, uniform, vec3 } from 'three/tsl';
+ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+ import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
+@@ -10,7 +10,14 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import TWEEN from 'three/addons/libs/tween.module.js';
+ 
+-let camera, scene, timer, renderer, model, mixer, raycaster, postProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    timer: THREE.Timer,
++    renderer: THREE.WebGPURenderer,
++    model: THREE.Group,
++    mixer: THREE.AnimationMixer,
++    raycaster: THREE.Raycaster,
++    postProcessing: THREE.PostProcessing;
+ 
+ const pointerCoords = new THREE.Vector2();
+ const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
+@@ -103,7 +110,7 @@ async function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function onPointerDown(event) {
++function onPointerDown(event: PointerEvent) {
+     pointerCoords.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+ 
+     raycaster.setFromCamera(pointerCoords, camera);
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 index e5cd0791..8a310a42 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
@@ -19919,7 +19954,7 @@ index 26608935..3481437a 100644
              INTERSECTED.material.emissive.setHex(0xff0000);
          }
 diff --git a/examples-testing/examples/webgpu_xr_native_layers.ts b/examples-testing/examples/webgpu_xr_native_layers.ts
-index aa3c4935..029d6a7e 100644
+index 756594da..029d6a7e 100644
 --- a/examples-testing/examples/webgpu_xr_native_layers.ts
 +++ b/examples-testing/examples/webgpu_xr_native_layers.ts
 @@ -1,4 +1,4 @@
@@ -20132,15 +20167,6 @@ index aa3c4935..029d6a7e 100644
  
          horseMixer = new THREE.AnimationMixer(horseMesh);
  
-@@ -425,7 +424,7 @@ function init() {
-     gui.add(parameters, 'thickness', 0, 1).onChange(onThicknessChange);
-     gui.domElement.style.visibility = 'hidden';
- 
--    guiGroup = new InteractiveGroup(renderer, guiCamera);
-+    guiGroup = new InteractiveGroup();
-     guiScene.add(guiGroup);
- 
-     const mesh = new HTMLMesh(gui.domElement);
 @@ -452,16 +451,16 @@ function init() {
  }
  

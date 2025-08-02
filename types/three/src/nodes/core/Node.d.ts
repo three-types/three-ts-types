@@ -268,6 +268,13 @@ declare class Node extends EventDispatcher<{
      */
     getShared(builder: NodeBuilder): Node;
     /**
+     * Returns the number of elements in the node array.
+     *
+     * @param {NodeBuilder} builder - The current node builder.
+     * @return {?number} The number of elements in the node array.
+     */
+    getArrayCount(builder: NodeBuilder): number | null;
+    /**
      * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
      * This method is often overwritten in derived modules to prepare the node which is used as the output/result.
      * The output node must be returned in the `return` statement.
