@@ -2,6 +2,7 @@ import { Camera } from "../../cameras/Camera.js";
 import { Layers } from "../../core/Layers.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Vector4 } from "../../math/Vector4.js";
+import Renderer from "../../renderers/common/Renderer.js";
 import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
@@ -61,6 +62,8 @@ declare class PassNode extends TempNode {
     getViewZNode(name?: string): ShaderNodeObject<Node>;
 
     getLinearDepthNode(name?: string): ShaderNodeObject<Node>;
+
+    compileAsync(renderer: Renderer): Promise<void>;
 
     setSize(width: number, height: number): void;
 
