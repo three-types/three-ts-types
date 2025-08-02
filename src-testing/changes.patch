@@ -3124,7 +3124,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 267d4433..a369001b 100644
+index e32c25a3..80150b8b 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,24 +1,33 @@
@@ -3168,12 +3168,21 @@ index 267d4433..a369001b 100644
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
--    label(name) {
-+    label(name: string) {
+-    setName(name) {
++    setName(name: string) {
          this.name = name;
  
          return this;
-@@ -66,7 +75,7 @@ class UniformNode extends InputNode {
+@@ -67,7 +76,7 @@ class UniformNode extends InputNode {
+      * @param {string} name - The name of the uniform.
+      * @return {UniformNode} A reference to this node.
+      */
+-    label(name) {
++    label(name: string) {
+         console.warn('THREE.TSL: "label()" has been deprecated. Use "setName()" instead.'); // @deprecated r179
+ 
+         return this.setName(name);
+@@ -79,7 +88,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
       */
@@ -3182,7 +3191,7 @@ index 267d4433..a369001b 100644
          this.groupNode = group;
  
          return this;
-@@ -88,11 +97,11 @@ class UniformNode extends InputNode {
+@@ -101,11 +110,11 @@ class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The uniform hash.
       */
@@ -3196,7 +3205,7 @@ index 267d4433..a369001b 100644
          const self = this.getSelf();
  
          callback = callback.bind(self);
-@@ -106,12 +115,12 @@ class UniformNode extends InputNode {
+@@ -119,12 +128,12 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -3211,7 +3220,7 @@ index 267d4433..a369001b 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -124,7 +133,7 @@ class UniformNode extends InputNode {
+@@ -137,7 +146,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3220,7 +3229,7 @@ index 267d4433..a369001b 100644
              this.name || builder.context.label,
          );
          const propertyName = builder.getPropertyName(nodeUniform);
-@@ -146,11 +155,14 @@ export default UniformNode;
+@@ -159,11 +168,14 @@ export default UniformNode;
   * @param {string} [arg2] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
