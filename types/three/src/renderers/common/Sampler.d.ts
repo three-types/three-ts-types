@@ -1,4 +1,4 @@
-import { Texture } from "../../textures/Texture";
+import { Texture } from "../../textures/Texture.js";
 import Binding from "./Binding.js";
 
 declare class Sampler extends Binding {
