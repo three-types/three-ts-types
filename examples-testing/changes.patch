@@ -2251,7 +2251,7 @@ index f05369aa..5e9ce7d0 100644
      activeAction = actions[name];
  
 diff --git a/examples-testing/examples/webgl_animation_walk.ts b/examples-testing/examples/webgl_animation_walk.ts
-index b7408ef7..fb15299b 100644
+index 11595401..bcfa5802 100644
 --- a/examples-testing/examples/webgl_animation_walk.ts
 +++ b/examples-testing/examples/webgl_animation_walk.ts
 @@ -6,10 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -2308,26 +2308,22 @@ index b7408ef7..fb15299b 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
      camera.position.set(0, 2, -5);
-@@ -157,22 +178,34 @@ function loadModel() {
+@@ -156,21 +177,32 @@ function loadModel() {
          group.rotation.y = PI;
  
          model.traverse(function (object) {
 -            if (object.isMesh) {
--                if (object.name == 'vanguard_Mesh') {
++            if ((object as THREE.Mesh).isMesh) {
+                 if (object.name == 'vanguard_Mesh') {
 -                    object.castShadow = true;
 -                    object.receiveShadow = true;
--                    object.material.shadowSide = THREE.DoubleSide;
 -                    //object.material.envMapIntensity = 0.5;
 -                    object.material.metalness = 1.0;
 -                    object.material.roughness = 0.2;
 -                    object.material.color.set(1, 1, 1);
 -                    object.material.metalnessMap = object.material.map;
-+            if ((object as THREE.Mesh).isMesh) {
-+                if ((object as THREE.Mesh).name == 'vanguard_Mesh') {
 +                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).castShadow = true;
 +                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).receiveShadow = true;
-+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.shadowSide =
-+                        THREE.DoubleSide;
 +                    //(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.envMapIntensity = 0.5;
 +                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalness = 1.0;
 +                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0.2;
@@ -2358,7 +2354,7 @@ index b7408ef7..fb15299b 100644
                  }
              }
          });
-@@ -200,9 +233,9 @@ function loadModel() {
+@@ -199,9 +231,9 @@ function loadModel() {
          };
  
          for (const m in actions) {
@@ -2371,7 +2367,7 @@ index b7408ef7..fb15299b 100644
          }
  
          actions.Idle.play();
-@@ -211,7 +244,7 @@ function loadModel() {
+@@ -210,7 +242,7 @@ function loadModel() {
      });
  }
  
@@ -2380,7 +2376,7 @@ index b7408ef7..fb15299b 100644
      const fade = controls.fadeDuration;
      const key = controls.key;
      const up = controls.up;
-@@ -284,7 +317,7 @@ function updateCharacter(delta) {
+@@ -283,7 +315,7 @@ function updateCharacter(delta) {
      orbitControls.update();
  }
  
@@ -2389,7 +2385,7 @@ index b7408ef7..fb15299b 100644
      return Math.atan2(Math.sin(r), Math.cos(r));
  }
  
-@@ -298,13 +331,13 @@ function createPanel() {
+@@ -297,13 +329,13 @@ function createPanel() {
      panel.add(settings, 'fixe_transition');
  }
  
@@ -2405,7 +2401,7 @@ index b7408ef7..fb15299b 100644
      const key = controls.key;
      switch (event.code) {
          case 'ArrowUp':
-@@ -332,7 +365,7 @@ function onKeyDown(event) {
+@@ -331,7 +363,7 @@ function onKeyDown(event) {
      }
  }
  
@@ -14342,7 +14338,7 @@ index 8dcba7eb..cee29e7b 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index a19a8bc8..f7b77f28 100644
+index eee54cbb..59b40f0e 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -1,4 +1,4 @@
@@ -14370,16 +14366,16 @@ index a19a8bc8..f7b77f28 100644
  };
  
  const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
-@@ -148,7 +149,7 @@ async function init(forceGlobalSwap = false) {
+@@ -151,7 +152,7 @@ async function init(forceGlobalSwap = false) {
          .setPBO(true)
-         .label('RandomizedElements');
+         .setName('RandomizedElements');
  
 -    const getFlipIndices = (index, blockHeight) => {
 +    const getFlipIndices = (index: ShaderNodeObject<THREE.IndexNode>, blockHeight: ShaderNodeObject<THREE.VarNode>) => {
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
          const idx = uvec2(index.mod(halfHeight), blockHeight.sub(index.mod(halfHeight)).sub(1));
-@@ -158,7 +159,10 @@ async function init(forceGlobalSwap = false) {
+@@ -161,7 +162,10 @@ async function init(forceGlobalSwap = false) {
          return idx;
      };
  
@@ -14391,7 +14387,7 @@ index a19a8bc8..f7b77f28 100644
          const blockOffset = index.mul(2).div(blockHeight).mul(blockHeight);
          const halfHeight = blockHeight.div(2);
          const idx = uvec2(index.mod(halfHeight), index.mod(halfHeight).add(halfHeight));
-@@ -172,7 +176,7 @@ async function init(forceGlobalSwap = false) {
+@@ -175,7 +179,7 @@ async function init(forceGlobalSwap = false) {
      const localStorage = workgroupArray('uint', 64 * 2);
  
      // Swap the elements in local storage
@@ -14400,7 +14396,7 @@ index a19a8bc8..f7b77f28 100644
          If(localStorage.element(idxAfter).lessThan(localStorage.element(idxBefore)), () => {
              atomicAdd(counterStorage.element(0), 1);
              const temp = localStorage.element(idxBefore).toVar();
-@@ -181,7 +185,7 @@ async function init(forceGlobalSwap = false) {
+@@ -184,7 +188,7 @@ async function init(forceGlobalSwap = false) {
          });
      };
  
@@ -14435,7 +14431,7 @@ index 30f075d8..56fae624 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index b6b0e691..6cacb1e9 100644
+index e9c9e14d..14ac8edb 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -1,4 +1,4 @@
@@ -18245,7 +18241,7 @@ index 4a085f2f..d0de6c2c 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index bd496393..ee078bd9 100644
+index a69717b8..e1dc96e7 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -1,4 +1,4 @@
@@ -18254,15 +18250,15 @@ index bd496393..ee078bd9 100644
  
  import {
      abs,
-@@ -22,6 +22,7 @@ import {
+@@ -21,6 +21,7 @@ import {
      uniform,
      uv,
-     varyingProperty,
+     vec3,
 +    ShaderNodeObject,
  } from 'three/tsl';
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
-@@ -30,10 +31,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -29,10 +30,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
@@ -18277,7 +18273,7 @@ index bd496393..ee078bd9 100644
  
  // below uniforms will be animated via TWEEN.js
  
-@@ -87,7 +88,7 @@ function init() {
+@@ -93,7 +94,7 @@ async function init() {
  
      const reflection = reflector({ resolution: 0.5 }); // 0.5 is half of the rendering view
      reflection.target.rotateX(-Math.PI / 2);
@@ -18286,9 +18282,14 @@ index bd496393..ee078bd9 100644
      scene.add(reflection.target);
  
      const floorMaterial = new THREE.MeshPhongNodeMaterial();
-@@ -198,10 +199,10 @@ function createTreeMesh() {
-     const angleRight = (Math.PI / 180) * 40;
-     const lengthMult = 0.88;
+@@ -186,14 +187,14 @@ function random() {
+     return (Math.random() - 0.5) * 2.0;
+ }
+ 
+-function createTreeMesh(boxMap) {
++function createTreeMesh(boxMap: THREE.Texture) {
+     const maxSteps = 5;
+     const lengthMult = 0.8;
  
 -    const positions = [];
 -    const normals = [];
@@ -18301,16 +18302,18 @@ index bd496393..ee078bd9 100644
  
      let instanceCount = 0;
  
-@@ -210,7 +211,7 @@ function createTreeMesh() {
+@@ -202,9 +203,8 @@ function createTreeMesh(boxMap) {
      const normal = new THREE.Vector3();
      const color = new THREE.Color();
  
 -    function createTreePart(angle, x, y, z, length, count) {
 +    function createTreePart(angle: number, x: number, y: number, z: number, length: number, count: number) {
+         if (Math.random() > (maxSteps / count) * 0.25) return;
+-
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
-@@ -323,7 +324,7 @@ function createTreeMesh() {
+@@ -311,7 +311,7 @@ function createTreeMesh(boxMap) {
  
          // accumulate different vertex animations
  
