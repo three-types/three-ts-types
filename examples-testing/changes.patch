@@ -1428,12 +1428,11 @@ index 5cbee326..400763ef 100644
  init();
  
 diff --git a/examples-testing/examples/physics_jolt_instancing.ts b/examples-testing/examples/physics_jolt_instancing.ts
-index f761e4a1..e102f557 100644
+index 70980b8d..e102f557 100644
 --- a/examples-testing/examples/physics_jolt_instancing.ts
 +++ b/examples-testing/examples/physics_jolt_instancing.ts
 @@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { JoltPhysics } from 'three/addons/physics/JoltPhysics.js';
 +import { JoltPhysics, JoltPhysicsObject } from 'three/addons/physics/JoltPhysics.js';
@@ -13616,15 +13615,9 @@ index 030f0560..41870e7a 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 2011b5cf..df966f61 100644
+index d1a3a060..df966f61 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     color,
-     screenUV,
 @@ -18,22 +18,23 @@ import {
      pow,
      blendDodge,
@@ -13686,14 +13679,10 @@ index 2011b5cf..df966f61 100644
  
      const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);
 diff --git a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
-index b0aed613..8607a01a 100644
+index c0efb88f..8607a01a 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
-@@ -1,20 +1,20 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl';
- 
+@@ -4,17 +4,17 @@ import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl
  import Stats from 'three/addons/libs/stats.module.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13743,15 +13732,9 @@ index b0aed613..8607a01a 100644
          hip: 'mixamorigHips',
  
 diff --git a/examples-testing/examples/webgpu_backdrop.ts b/examples-testing/examples/webgpu_backdrop.ts
-index dc3024a9..052adf95 100644
+index 5ae04249..052adf95 100644
 --- a/examples-testing/examples/webgpu_backdrop.ts
 +++ b/examples-testing/examples/webgpu_backdrop.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     float,
-     vec3,
 @@ -22,10 +22,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13787,15 +13770,9 @@ index dc3024a9..052adf95 100644
          const id = portals.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 45);
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index 53517e80..1fd4c8e2 100644
+index 486727b6..1fd4c8e2 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     color,
-     positionWorld,
 @@ -20,8 +20,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -13824,13 +13801,12 @@ index 53517e80..1fd4c8e2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_camera.ts b/examples-testing/examples/webgpu_camera.ts
-index 45619da3..97df59b3 100644
+index ceac866c..97df59b3 100644
 --- a/examples-testing/examples/webgpu_camera.ts
 +++ b/examples-testing/examples/webgpu_camera.ts
 @@ -1,16 +1,16 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { color } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { color, ShaderNodeObject } from 'three/tsl';
  
  let SCREEN_WIDTH = window.innerWidth;
@@ -13862,12 +13838,10 @@ index 45619da3..97df59b3 100644
          case 79 /*O*/:
              activeCamera = cameraOrtho;
 diff --git a/examples-testing/examples/webgpu_camera_array.ts b/examples-testing/examples/webgpu_camera_array.ts
-index 919b7422..fb696689 100644
+index c2f6226a..fb696689 100644
 --- a/examples-testing/examples/webgpu_camera_array.ts
 +++ b/examples-testing/examples/webgpu_camera_array.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -13890,12 +13864,11 @@ index 919b7422..fb696689 100644
  
              subcamera.position.x = x / AMOUNT - 0.5;
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
-index 15527632..58f5cc14 100644
+index 64ebfe92..58f5cc14 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 +++ b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 @@ -1,6 +1,6 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 +import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
@@ -14068,15 +14041,9 @@ index 15527632..58f5cc14 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 7bb91369..7f794094 100644
+index 3a7d0b56..7f794094 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import {
-     uniform,
 @@ -22,9 +22,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -14100,13 +14067,10 @@ index 7bb91369..7f794094 100644
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
-index bfb77d59..4f84f80b 100644
+index 25ce6d50..4f84f80b 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
 +++ b/examples-testing/examples/webgpu_centroid_sampling.ts
-@@ -1,15 +1,22 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { varying, uv, texture, Fn } from 'three/tsl';
+@@ -3,13 +3,20 @@ import { varying, uv, texture, Fn } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14188,15 +14152,9 @@ index bfb77d59..4f84f80b 100644
      onWindowResize();
  
 diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
-index 0d5b70a2..0c147364 100644
+index 12b8c274..0c147364 100644
 --- a/examples-testing/examples/webgpu_clearcoat.ts
 +++ b/examples-testing/examples/webgpu_clearcoat.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -7,12 +7,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
  
  import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
@@ -14215,15 +14173,9 @@ index 0d5b70a2..0c147364 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index 3331adc8..17d73367 100644
+index 53c6c7b4..17d73367 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -6,7 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14248,13 +14200,12 @@ index 3331adc8..17d73367 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 4e567e9c..847c42ef 100644
+index b0524ac2..847c42ef 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -1,17 +1,27 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, color } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import {
 +    Fn,
 +    uniform,
@@ -14307,12 +14258,10 @@ index 4e567e9c..847c42ef 100644
          // delay
  
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index 8dcba7eb..cee29e7b 100644
+index b6a2d4ed..cee29e7b 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+@@ -2,12 +2,12 @@ import * as THREE from 'three/webgpu';
  
  import Stats from 'stats-gl';
  
@@ -14338,15 +14287,9 @@ index 8dcba7eb..cee29e7b 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index eee54cbb..59b40f0e 100644
+index 41bdf005..59b40f0e 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     storage,
-     If,
 @@ -21,6 +21,7 @@ import {
      atomicAdd,
      atomicStore,
@@ -14406,13 +14349,10 @@ index eee54cbb..59b40f0e 100644
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
-index 30f075d8..56fae624 100644
+index ef4b78c6..56fae624 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
 +++ b/examples-testing/examples/webgpu_compute_texture.ts
-@@ -1,9 +1,9 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'three/tsl';
+@@ -3,7 +3,7 @@ import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'th
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
@@ -14431,15 +14371,9 @@ index 30f075d8..56fae624 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index e9c9e14d..14ac8edb 100644
+index 81222c37..14ac8edb 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     time,
-     mx_noise_vec3,
 @@ -13,6 +13,7 @@ import {
      smoothstep,
      texture3D,
@@ -14536,13 +14470,12 @@ index e9c9e14d..14ac8edb 100644
      // Material
  
 diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
-index a3922dc7..0fd65713 100644
+index 01e979d7..0fd65713 100644
 --- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
 @@ -1,12 +1,14 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess, ShaderNodeObject } from 'three/tsl';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -14561,15 +14494,9 @@ index a3922dc7..0fd65713 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 46419734..73447d66 100644
+index 4a7eaed4..73447d66 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     uniform,
-     mix,
 @@ -11,6 +11,7 @@ import {
      normalWorld,
      positionWorldDirection,
@@ -14600,15 +14527,9 @@ index 46419734..73447d66 100644
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
 diff --git a/examples-testing/examples/webgpu_cubemap_dynamic.ts b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-index 91444a1a..f1c80ef1 100644
+index 8b04b5f2..f1c80ef1 100644
 --- a/examples-testing/examples/webgpu_cubemap_dynamic.ts
 +++ b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 @@ -6,12 +6,12 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import Stats from 'three/addons/libs/stats.module.js';
@@ -14636,15 +14557,9 @@ index 91444a1a..f1c80ef1 100644
  
      cube.position.x = Math.cos(time) * 30;
 diff --git a/examples-testing/examples/webgpu_cubemap_mix.ts b/examples-testing/examples/webgpu_cubemap_mix.ts
-index a0eb4509..fe906f73 100644
+index 5f382dfc..fe906f73 100644
 --- a/examples-testing/examples/webgpu_cubemap_mix.ts
 +++ b/examples-testing/examples/webgpu_cubemap_mix.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mix, oscSine, time, pmremTexture, float } from 'three/tsl';
- 
- import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
 @@ -6,7 +6,7 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14655,13 +14570,10 @@ index a0eb4509..fe906f73 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index 8d1529a0..dca24a7c 100644
+index 6639dfa2..dca24a7c 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld, uniform } from 'three/tsl';
+@@ -3,8 +3,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -14673,15 +14585,9 @@ index 8d1529a0..dca24a7c 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
-index baca16cb..b01cd750 100644
+index c544503c..b01cd750 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_background.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, color, rangeFogFactor } from 'three/tsl';
- 
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 @@ -6,8 +6,8 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14694,12 +14600,11 @@ index baca16cb..b01cd750 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 3080f71b..d06faaf1 100644
+index 9bebd426..d06faaf1 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
 @@ -1,25 +1,31 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
 -import { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
@@ -14757,15 +14662,10 @@ index 3080f71b..d06faaf1 100644
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
 diff --git a/examples-testing/examples/webgpu_instance_mesh.ts b/examples-testing/examples/webgpu_instance_mesh.ts
-index 07de4702..738521a4 100644
+index c5d325e3..738521a4 100644
 --- a/examples-testing/examples/webgpu_instance_mesh.ts
 +++ b/examples-testing/examples/webgpu_instance_mesh.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mix, range, normalWorld, oscSine, time } from 'three/tsl';
- 
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -14778,15 +14678,9 @@ index 07de4702..738521a4 100644
  const count = Math.pow(amount, 3);
  const dummy = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgpu_instance_path.ts b/examples-testing/examples/webgpu_instance_path.ts
-index 49879418..0f1977f7 100644
+index 6cf5397a..0f1977f7 100644
 --- a/examples-testing/examples/webgpu_instance_path.ts
 +++ b/examples-testing/examples/webgpu_instance_path.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 @@ -18,7 +18,7 @@ import {
      color,
  } from 'three/tsl';
@@ -14817,15 +14711,9 @@ index 49879418..0f1977f7 100644
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 4b29d389..c793ca87 100644
+index 2087cdf4..c793ca87 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     color,
-     storage,
 @@ -12,6 +12,7 @@ import {
      shapeCircle,
      mix,
@@ -14872,14 +14760,10 @@ index 4b29d389..c793ca87 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
-index 2558f16b..8f914967 100644
+index f10d7e55..8f914967 100644
 --- a/examples-testing/examples/webgpu_instancing_morph.ts
 +++ b/examples-testing/examples/webgpu_instancing_morph.ts
-@@ -1,10 +1,16 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -4,7 +4,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -14913,14 +14797,10 @@ index 2558f16b..8f914967 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_layers.ts b/examples-testing/examples/webgpu_layers.ts
-index 134c3300..7dba7684 100644
+index 9eb0aff3..7dba7684 100644
 --- a/examples-testing/examples/webgpu_layers.ts
 +++ b/examples-testing/examples/webgpu_layers.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { positionLocal, time, mod, instancedBufferAttribute, rotate, screenUV, color, vec2 } from 'three/tsl';
  
@@ -14939,15 +14819,10 @@ index 134c3300..7dba7684 100644
  
      const positions = [];
 diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
-index 8c157b4b..f297b64e 100644
+index 6d43c701..f297b64e 100644
 --- a/examples-testing/examples/webgpu_lensflares.ts
 +++ b/examples-testing/examples/webgpu_lensflares.ts
-@@ -1,14 +1,14 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
+@@ -5,10 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { FlyControls } from 'three/addons/controls/FlyControls.js';
  import { LensflareMesh, LensflareElement } from 'three/addons/objects/LensflareMesh.js';
  
@@ -14971,15 +14846,9 @@ index 8c157b4b..f297b64e 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
-index 66f9ffcb..0bcfb599 100644
+index 48c118dc..0bcfb599 100644
 --- a/examples-testing/examples/webgpu_lightprobe.ts
 +++ b/examples-testing/examples/webgpu_lightprobe.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
 @@ -8,12 +8,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
  
  import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
@@ -15010,14 +14879,10 @@ index 66f9ffcb..0bcfb599 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-index 612fade7..b7436e09 100644
+index ed45f279..b7436e09 100644
 --- a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
 +++ b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
-@@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
  import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js';
  
@@ -15039,12 +14904,11 @@ index 612fade7..b7436e09 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
-index 639418a7..af4696a1 100644
+index 2b414854..af4696a1 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 @@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { OrbitControls } from './jsm/controls/OrbitControls.js';
 +import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15079,15 +14943,9 @@ index 639418a7..af4696a1 100644
  
      for (let i = 0; i < lights.length; i++) {
 diff --git a/examples-testing/examples/webgpu_lights_phong.ts b/examples-testing/examples/webgpu_lights_phong.ts
-index 6aa8302d..935329d7 100644
+index 79a60721..935329d7 100644
 --- a/examples-testing/examples/webgpu_lights_phong.ts
 +++ b/examples-testing/examples/webgpu_lights_phong.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { color, fog, rangeFogFactor, checker, uv, mix, texture, lights, normalMap } from 'three/tsl';
- 
- import Stats from 'three/addons/libs/stats.module.js';
 @@ -6,7 +6,15 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -15115,15 +14973,10 @@ index 6aa8302d..935329d7 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_physical.ts b/examples-testing/examples/webgpu_lights_physical.ts
-index 6a050726..7af6c37e 100644
+index 445922dc..7af6c37e 100644
 --- a/examples-testing/examples/webgpu_lights_physical.ts
 +++ b/examples-testing/examples/webgpu_lights_physical.ts
-@@ -1,12 +1,18 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,8 +5,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15179,15 +15032,9 @@ index 6a050726..7af6c37e 100644
      gui.add(params, 'shadows');
      gui.open();
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index ab02cf83..ee12bb56 100644
+index e00d75b2..ee12bb56 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -16,9 +16,13 @@ import {
      uniform,
  } from 'three/tsl';
@@ -15223,15 +15070,9 @@ index ab02cf83..ee12bb56 100644
  
      const v0 = new THREE.Vector3();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
-index 5638c902..a274a953 100644
+index d6c2bc09..a274a953 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts
 +++ b/examples-testing/examples/webgpu_lights_rectarealight.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
  import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
@@ -15253,15 +15094,9 @@ index 5638c902..a274a953 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_selective.ts b/examples-testing/examples/webgpu_lights_selective.ts
-index c3d50629..3b56b5a6 100644
+index 02b43e6f..3b56b5a6 100644
 --- a/examples-testing/examples/webgpu_lights_selective.ts
 +++ b/examples-testing/examples/webgpu_lights_selective.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { fog, rangeFogFactor, color, lights, texture, normalMap } from 'three/tsl';
- 
- import Stats from 'three/addons/libs/stats.module.js';
 @@ -8,7 +8,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -15289,15 +15124,10 @@ index c3d50629..3b56b5a6 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_spotlight.ts b/examples-testing/examples/webgpu_lights_spotlight.ts
-index b9388d9b..dbd27d70 100644
+index e0c4e5b0..dbd27d70 100644
 --- a/examples-testing/examples/webgpu_lights_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_spotlight.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- 
+@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15330,13 +15160,12 @@ index b9388d9b..dbd27d70 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 1214909f..24a5b610 100644
+index 5bc585a9..24a5b610 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -1,8 +1,9 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { texture, uv, pass, normalMap, uniform, ShaderNodeObject } from 'three/tsl';
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
@@ -15396,13 +15225,12 @@ index 1214909f..24a5b610 100644
          .getBlock()
          .toColor()
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
-index 0500afd3..43926a20 100644
+index 96417888..43926a20 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
 +++ b/examples-testing/examples/webgpu_lines_fat.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { color } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { color, ShaderNodeObject } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -15439,15 +15267,9 @@ index 0500afd3..43926a20 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_lines_fat_raycasting.ts b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-index 8ca983b7..ea062729 100644
+index 08562a02..ea062729 100644
 --- a/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'stats-gl';
- 
 @@ -9,12 +9,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
  import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
@@ -15541,13 +15363,12 @@ index 8ca983b7..ea062729 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgpu_lines_fat_wireframe.ts b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
-index 41eba51d..de8dec55 100644
+index d52f85c8..de8dec55 100644
 --- a/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { color } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { color, ShaderNodeObject } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -15591,15 +15412,10 @@ index 41eba51d..de8dec55 100644
      const geometry = new WireframeGeometry2(geo);
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index afd9b7e4..feff7485 100644
+index 9d7390c8..feff7485 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
- 
+@@ -5,7 +5,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -15609,14 +15425,10 @@ index afd9b7e4..feff7485 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
-index d100e8c8..062846a5 100644
+index 6cd81e71..062846a5 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
@@ -15626,15 +15438,9 @@ index d100e8c8..062846a5 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf_compressed.ts b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
-index 9405b64a..60db096b 100644
+index 4d248bee..60db096b 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_compressed.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_compressed.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 @@ -6,7 +6,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15645,14 +15451,10 @@ index 9405b64a..60db096b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf_dispersion.ts b/examples-testing/examples/webgpu_loader_gltf_dispersion.ts
-index c0290b98..c7c8fb59 100644
+index 491e94be..c7c8fb59 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_dispersion.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_dispersion.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
@@ -15662,14 +15464,10 @@ index c0290b98..c7c8fb59 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf_iridescence.ts b/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
-index f163ea77..3f695e17 100644
+index 6bd35b79..3f695e17 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_iridescence.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
@@ -15679,15 +15477,9 @@ index f163ea77..3f695e17 100644
  init().catch(function (err) {
      console.error(err);
 diff --git a/examples-testing/examples/webgpu_loader_gltf_sheen.ts b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
-index 788ef2a8..cad87132 100644
+index fb316d32..cad87132 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_sheen.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 @@ -6,7 +6,7 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -15710,15 +15502,9 @@ index 788ef2a8..cad87132 100644
          const gui = new GUI();
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf_transmission.ts b/examples-testing/examples/webgpu_loader_gltf_transmission.ts
-index 04023326..05ee79b0 100644
+index 27986a7d..05ee79b0 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_transmission.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_transmission.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 @@ -6,7 +6,12 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -15734,12 +15520,11 @@ index 04023326..05ee79b0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 45721539..6cb28f07 100644
+index e3f74e1c..6cb28f07 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { OrbitControls } from './jsm/controls/OrbitControls.js';
 +import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15791,15 +15576,9 @@ index 45721539..6cb28f07 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
-index 9e4b627e..cc25f04e 100644
+index de51957d..cc25f04e 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
 +++ b/examples-testing/examples/webgpu_materials_alphahash.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 @@ -7,7 +7,14 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  
  import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
@@ -15817,13 +15596,10 @@ index 9e4b627e..cc25f04e 100644
  const amount = parseInt(window.location.search.slice(1)) || 3;
  const count = Math.pow(amount, 3);
 diff --git a/examples-testing/examples/webgpu_materials_arrays.ts b/examples-testing/examples/webgpu_materials_arrays.ts
-index 35a25f77..b893f2c0 100644
+index 438dac25..b893f2c0 100644
 --- a/examples-testing/examples/webgpu_materials_arrays.ts
 +++ b/examples-testing/examples/webgpu_materials_arrays.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
+@@ -3,9 +3,9 @@ import * as THREE from 'three/webgpu';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -15837,12 +15613,10 @@ index 35a25f77..b893f2c0 100644
  const api = {
      webgpu: true,
 diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
-index 0161a9c7..590f668d 100644
+index a1e23b17..590f668d 100644
 --- a/examples-testing/examples/webgpu_materials_basic.ts
 +++ b/examples-testing/examples/webgpu_materials_basic.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -15879,15 +15653,9 @@ index 0161a9c7..590f668d 100644
      mouseY = (event.clientY - windowHalfY) / 100;
  }
 diff --git a/examples-testing/examples/webgpu_materials_displacementmap.ts b/examples-testing/examples/webgpu_materials_displacementmap.ts
-index 54d26d65..824c087a 100644
+index 8aa1abe5..824c087a 100644
 --- a/examples-testing/examples/webgpu_materials_displacementmap.ts
 +++ b/examples-testing/examples/webgpu_materials_displacementmap.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -6,8 +6,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
@@ -15921,13 +15689,10 @@ index 54d26d65..824c087a 100644
  
          mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgpu_materials_envmaps.ts b/examples-testing/examples/webgpu_materials_envmaps.ts
-index e6201b97..b369c6c5 100644
+index ecbf46cf..b369c6c5 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps.ts
-@@ -1,11 +1,21 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
+@@ -3,9 +3,19 @@ import * as THREE from 'three/webgpu';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -15951,15 +15716,9 @@ index e6201b97..b369c6c5 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
-index 2e466f0c..c3218846 100644
+index 75278494..c3218846 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     bumpMap,
-     float,
 @@ -15,11 +15,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
  import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
@@ -15976,15 +15735,10 @@ index 2e466f0c..c3218846 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
-index 5d3bc28d..e0765c70 100644
+index 6048f400..e0765c70 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
 +++ b/examples-testing/examples/webgpu_materials_lightmap.ts
-@@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { vec4, color, positionLocal, mix } from 'three/tsl';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,8 +5,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16005,15 +15759,10 @@ index 5d3bc28d..e0765c70 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
-index d19b1196..267d0cc5 100644
+index 2cb5a411..267d0cc5 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
 +++ b/examples-testing/examples/webgpu_materials_matcap.ts
-@@ -1,11 +1,14 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,7 +5,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { EXRLoader } from 'three/addons/loaders/EXRLoader.js';
  
@@ -16160,15 +15909,9 @@ index 7a493c71..74e8e0d9 100644
      const thicknessControls = new ThicknessControls();
  
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
-index 1e9a2304..5f5dfef0 100644
+index b94318de..5f5dfef0 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
 +++ b/examples-testing/examples/webgpu_materials_toon.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { toonOutlinePass } from 'three/tsl';
- 
- import Stats from 'three/addons/libs/stats.module.js';
 @@ -6,18 +6,22 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { FontLoader } from 'three/addons/loaders/FontLoader.js';
@@ -16206,15 +15949,9 @@ index 1e9a2304..5f5dfef0 100644
              font: font,
  
 diff --git a/examples-testing/examples/webgpu_materials_transmission.ts b/examples-testing/examples/webgpu_materials_transmission.ts
-index 0e04ddad..058172b5 100644
+index 1678f86b..058172b5 100644
 --- a/examples-testing/examples/webgpu_materials_transmission.ts
 +++ b/examples-testing/examples/webgpu_materials_transmission.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -19,7 +19,7 @@ const params = {
      exposure: 1,
  };
@@ -16234,12 +15971,11 @@ index 0e04ddad..058172b5 100644
      context.fillRect(0, 1, 2, 1);
  
 diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
-index bd84aba0..f9d188c3 100644
+index 7f5df07f..f9d188c3 100644
 --- a/examples-testing/examples/webgpu_materials_video.ts
 +++ b/examples-testing/examples/webgpu_materials_video.ts
 @@ -1,10 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -let container;
 +let container: HTMLDivElement;
@@ -16348,15 +16084,9 @@ index bd84aba0..f9d188c3 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_materialx_noise.ts b/examples-testing/examples/webgpu_materialx_noise.ts
-index ea14773f..0fd147cd 100644
+index f7304672..0fd147cd 100644
 --- a/examples-testing/examples/webgpu_materialx_noise.ts
 +++ b/examples-testing/examples/webgpu_materialx_noise.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     normalWorld,
-     time,
 @@ -13,12 +13,12 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
@@ -16375,15 +16105,10 @@ index ea14773f..0fd147cd 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index c779a3b2..58fee643 100644
+index 1f19e5c0..58fee643 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
-@@ -1,19 +1,19 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
+@@ -5,15 +5,15 @@ import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16464,13 +16189,10 @@ index c779a3b2..58fee643 100644
          list[i].z *= factor;
      }
 diff --git a/examples-testing/examples/webgpu_mirror.ts b/examples-testing/examples/webgpu_mirror.ts
-index 989dd4d5..5e150190 100644
+index a5355d1f..5e150190 100644
 --- a/examples-testing/examples/webgpu_mirror.ts
 +++ b/examples-testing/examples/webgpu_mirror.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { reflector, uv, texture, color } from 'three/tsl';
+@@ -3,11 +3,11 @@ import { reflector, uv, texture, color } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16497,15 +16219,9 @@ index 989dd4d5..5e150190 100644
      const groundNode = texture(decalDiffuse).a.mix(color(0xffffff), groundReflector);
      const verticalNode = color(0x0000ff).mul(0.1).add(verticalReflector);
 diff --git a/examples-testing/examples/webgpu_modifier_curve.ts b/examples-testing/examples/webgpu_modifier_curve.ts
-index 4879a9e5..66fee55f 100644
+index 58199296..66fee55f 100644
 --- a/examples-testing/examples/webgpu_modifier_curve.ts
 +++ b/examples-testing/examples/webgpu_modifier_curve.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { TransformControls } from 'three/addons/controls/TransformControls.js';
- import Stats from 'three/addons/libs/stats.module.js';
- import { Flow } from 'three/addons/modifiers/CurveModifierGPU.js';
 @@ -7,17 +7,17 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
  
  const ACTION_SELECT = 1,
@@ -16543,14 +16259,10 @@ index 4879a9e5..66fee55f 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 diff --git a/examples-testing/examples/webgpu_morphtargets.ts b/examples-testing/examples/webgpu_morphtargets.ts
-index 9fb7075c..839ff818 100644
+index f9bf8c7f..839ff818 100644
 --- a/examples-testing/examples/webgpu_morphtargets.ts
 +++ b/examples-testing/examples/webgpu_morphtargets.ts
-@@ -1,15 +1,19 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,12 +4,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16594,15 +16306,9 @@ index 9fb7075c..839ff818 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_morphtargets_face.ts b/examples-testing/examples/webgpu_morphtargets_face.ts
-index ea9f8658..b81d7761 100644
+index 4c3c8116..b81d7761 100644
 --- a/examples-testing/examples/webgpu_morphtargets_face.ts
 +++ b/examples-testing/examples/webgpu_morphtargets_face.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -14,7 +14,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  init();
  
@@ -16630,15 +16336,9 @@ index ea9f8658..b81d7761 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index eeb1b61d..68ad678b 100644
+index b4694ef3..68ad678b 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     output,
-     normalView,
 @@ -18,8 +18,8 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -16651,15 +16351,9 @@ index eeb1b61d..68ad678b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_mrt_mask.ts b/examples-testing/examples/webgpu_mrt_mask.ts
-index 3d6bd5c6..4aa3cbac 100644
+index eec81e1c..4aa3cbac 100644
 --- a/examples-testing/examples/webgpu_mrt_mask.ts
 +++ b/examples-testing/examples/webgpu_mrt_mask.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { color, screenUV, mrt, output, pass, vec4 } from 'three/tsl';
- import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
- 
 @@ -6,11 +6,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16697,13 +16391,10 @@ index 3d6bd5c6..4aa3cbac 100644
          const id = spheres.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 90);
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets.ts b/examples-testing/examples/webgpu_multiple_rendertargets.ts
-index d6a60fc2..8fac5871 100644
+index 18d48cbf..8fac5871 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mix, vec2, step, texture, uv, screenUV, normalWorld, output, mrt } from 'three/tsl';
+@@ -3,8 +3,8 @@ import { mix, vec2, step, texture, uv, screenUV, normalWorld, output, mrt } from
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16724,13 +16415,12 @@ index d6a60fc2..8fac5871 100644
  
      // render scene into target
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 7691e07d..e878484e 100644
+index 6dcf0541..e878484e 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 @@ -1,12 +1,19 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { mix, step, texture, screenUV, mrt, output, normalWorld, uv, vec2 } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { mix, step, texture, screenUV, mrt, output, normalWorld, uv, vec2, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16790,13 +16480,10 @@ index 7691e07d..e878484e 100644
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
 diff --git a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
-index 6e69c3be..2cdd4ba7 100644
+index bfe21592..2cdd4ba7 100644
 --- a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
 +++ b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
-@@ -1,14 +1,14 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { texture } from 'three/tsl';
+@@ -3,12 +3,12 @@ import { texture } from 'three/tsl';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -16831,13 +16518,12 @@ index 6e69c3be..2cdd4ba7 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index d9eb32a2..02b0c1d9 100644
+index e49f98ce..02b0c1d9 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -1,12 +1,18 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { nodeObject, uniform } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { nodeObject, uniform, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16869,15 +16555,9 @@ index d9eb32a2..02b0c1d9 100644
          this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
      }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
-index 9eb9922d..b75024ec 100644
+index 6b1673cc..b75024ec 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
 +++ b/examples-testing/examples/webgpu_ocean.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- 
 @@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
  import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
@@ -16907,13 +16587,10 @@ index 9eb9922d..b75024ec 100644
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
-index 478c5bae..adbea486 100644
+index 658ae08d..adbea486 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
 +++ b/examples-testing/examples/webgpu_parallax_uv.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { texture, parallaxUV, blendOverlay, uv } from 'three/tsl';
+@@ -3,9 +3,9 @@ import { texture, parallaxUV, blendOverlay, uv } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16926,15 +16603,9 @@ index 478c5bae..adbea486 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
-index 2f7e7440..9279ea0f 100644
+index aaf23547..9279ea0f 100644
 --- a/examples-testing/examples/webgpu_particles.ts
 +++ b/examples-testing/examples/webgpu_particles.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { range, texture, mix, uv, color, rotateUV, positionLocal, time, uniform } from 'three/tsl';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 @@ -6,8 +6,8 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16956,15 +16627,9 @@ index 2f7e7440..9279ea0f 100644
      const uint32 = new Uint32Array(5);
      uint32[0] = indexCount; // indexCount
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
-index ca92a2ce..6f2dbe59 100644
+index a56c4bb6..6f2dbe59 100644
 --- a/examples-testing/examples/webgpu_performance.ts
 +++ b/examples-testing/examples/webgpu_performance.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'stats-gl';
- 
 @@ -10,17 +10,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
  import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
@@ -16989,15 +16654,9 @@ index ca92a2ce..6f2dbe59 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_performance_renderbundle.ts b/examples-testing/examples/webgpu_performance_renderbundle.ts
-index a891b932..a405f85c 100644
+index 913c28ab..a405f85c 100644
 --- a/examples-testing/examples/webgpu_performance_renderbundle.ts
 +++ b/examples-testing/examples/webgpu_performance_renderbundle.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'stats-gl';
- 
 @@ -6,12 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17079,15 +16738,9 @@ index a891b932..a405f85c 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-index 2b0acc69..d47105f2 100644
+index bb838c5c..d47105f2 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
 +++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     normalWorldGeometry,
-     uniform,
 @@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17098,15 +16751,9 @@ index 2b0acc69..d47105f2 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-index 8f65cac6..0a12a0db 100644
+index 591bdb57..0a12a0db 100644
 --- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     normalWorldGeometry,
-     uniform,
 @@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17117,15 +16764,10 @@ index 8f65cac6..0a12a0db 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_pmrem_scene.ts b/examples-testing/examples/webgpu_pmrem_scene.ts
-index 7c47aeee..8d638554 100644
+index 2be6ff05..8d638554 100644
 --- a/examples-testing/examples/webgpu_pmrem_scene.ts
 +++ b/examples-testing/examples/webgpu_pmrem_scene.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { normalWorld, uniform, pmremTexture } from 'three/tsl';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -17135,15 +16777,9 @@ index 7c47aeee..8d638554 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
-index c297a920..30265857 100644
+index 170ce407..30265857 100644
 --- a/examples-testing/examples/webgpu_portal.ts
 +++ b/examples-testing/examples/webgpu_portal.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     pass,
-     color,
 @@ -15,10 +15,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17190,13 +16826,10 @@ index c297a920..30265857 100644
  
                  applyFX(0);
 diff --git a/examples-testing/examples/webgpu_postprocessing.ts b/examples-testing/examples/webgpu_postprocessing.ts
-index 59914331..d41eb81e 100644
+index 7e1a536c..d41eb81e 100644
 --- a/examples-testing/examples/webgpu_postprocessing.ts
 +++ b/examples-testing/examples/webgpu_postprocessing.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass } from 'three/tsl';
+@@ -3,8 +3,8 @@ import { pass } from 'three/tsl';
  import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
  import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
  
@@ -17208,15 +16841,9 @@ index 59914331..d41eb81e 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index bdad9a52..b7fad821 100644
+index 27957fc3..b7fad821 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     mix,
-     mul,
 @@ -17,22 +17,33 @@ import {
      texture3D,
      uniform,
@@ -17336,14 +16963,13 @@ index bdad9a52..b7fad821 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 0c15a3b5..36f78a84 100644
+index a75d3801..36f78a84 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -1,12 +1,31 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { instancedBufferAttribute, mod, pass, texture, float, time, vec2, vec3, vec4, sin, cos } from 'three/tsl';
 -import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
-+import * as THREE from 'three/webgpu';
 +import {
 +    instancedBufferAttribute,
 +    mod,
@@ -17395,15 +17021,9 @@ index 0c15a3b5..36f78a84 100644
  
      postProcessing.render();
 diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-index f20978b8..46c08191 100644
+index 1730f5ea..46c08191 100644
 --- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, cubeTexture, screenUV, grayscale, uniform } from 'three/tsl';
- import { anamorphic } from 'three/addons/tsl/display/AnamorphicNode.js';
- 
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17416,15 +17036,14 @@ index f20978b8..46c08191 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 7a455fb3..f94634cd 100644
+index c6150680..f94634cd 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { pass, mrt, output, normalView, velocity } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
-+import * as THREE from 'three/webgpu';
 +import { pass, mrt, output, normalView, velocity, ShaderNodeObject } from 'three/tsl';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
 +import TRAANode, { traa } from 'three/addons/tsl/display/TRAANode.js';
@@ -17462,15 +17081,9 @@ index 7a455fb3..f94634cd 100644
  
      window.addEventListener('resize', onWindowResize);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index ad2028b4..0d7d6e66 100644
+index 5d7beb3c..0d7d6e66 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass } from 'three/tsl';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- 
 @@ -8,8 +8,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -17495,15 +17108,9 @@ index ad2028b4..0d7d6e66 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index a1f885c6..15a5c3fe 100644
+index 19c23cc3..15a5c3fe 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, mrt, output, emissive } from 'three/tsl';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- 
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17516,15 +17123,9 @@ index a1f885c6..15a5c3fe 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index e4624db9..0cf7cf09 100644
+index c5b89856..0cf7cf09 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, mrt, output, float, uniform } from 'three/tsl';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- 
 @@ -85,9 +85,10 @@ window.addEventListener('pointerdown', event => {
      const intersects = raycaster.intersectObjects(scene.children, false);
  
@@ -17539,15 +17140,9 @@ index e4624db9..0cf7cf09 100644
      }
  });
 diff --git a/examples-testing/examples/webgpu_postprocessing_ca.ts b/examples-testing/examples/webgpu_postprocessing_ca.ts
-index 13176233..3fc56bbf 100644
+index fdd74131..6b07afa4 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ca.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ca.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, renderOutput, uniform } from 'three/tsl';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -17,8 +17,12 @@ const params = {
      cameraDistance: 40,
  };
@@ -17563,7 +17158,7 @@ index 13176233..3fc56bbf 100644
  
  init();
  
-@@ -106,8 +110,8 @@ async function init() {
+@@ -108,8 +112,8 @@ async function init() {
  }
  
  function createShapes() {
@@ -17574,7 +17169,7 @@ index 13176233..3fc56bbf 100644
  
      // Define colors for different materials
      const colors = [
-@@ -243,7 +247,7 @@ function animate() {
+@@ -245,7 +249,7 @@ function animate() {
                  // Central group
                  child.rotation.y = time * 0.5;
                  child.children.forEach((subChild, subIndex) => {
@@ -17584,15 +17179,9 @@ index 13176233..3fc56bbf 100644
                          subChild.rotation.z = time * (1 - subIndex * 0.1);
                      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
-index 9faabda5..3c6eaadf 100644
+index c39b8793..3c6eaadf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, luminance, saturation } from 'three/tsl';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -9,8 +9,8 @@ const params = {
      speed: 0,
  };
@@ -17605,15 +17194,9 @@ index 9faabda5..3c6eaadf 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index 7a89a8e4..ef11d62e 100644
+index 8c1b8ca0..ef11d62e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { cubeTexture, positionWorld, oscSine, time, pass, uniform } from 'three/tsl';
- import { dof } from 'three/addons/tsl/display/DepthOfFieldNode.js';
- 
 @@ -8,7 +8,11 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  //
@@ -17646,15 +17229,9 @@ index 7a89a8e4..ef11d62e 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-index f0c13ebd..dae6230d 100644
+index 8067d306..dae6230d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mix, pass, renderOutput, smoothstep, uniform, vec3 } from 'three/tsl';
- import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
- import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
 @@ -10,7 +10,14 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
@@ -17681,15 +17258,9 @@ index f0c13ebd..dae6230d 100644
  
      raycaster.setFromCamera(pointerCoords, camera);
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
-index e5cd0791..8a310a42 100644
+index 9ebf2fa2..8a310a42 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, renderOutput } from 'three/tsl';
- import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
- 
 @@ -9,8 +9,12 @@ const params = {
      animated: false,
  };
@@ -17706,15 +17277,9 @@ index e5cd0791..8a310a42 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_lensflare.ts b/examples-testing/examples/webgpu_postprocessing_lensflare.ts
-index d0a1b51e..bfe5d434 100644
+index 59bff445..bfe5d434 100644
 --- a/examples-testing/examples/webgpu_postprocessing_lensflare.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_lensflare.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, mrt, output, emissive, uniform } from 'three/tsl';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- import { lensflare } from 'three/addons/tsl/display/LensflareNode.js';
 @@ -12,8 +12,12 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import Stats from 'three/addons/libs/stats.module.js';
@@ -17731,12 +17296,11 @@ index d0a1b51e..bfe5d434 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index fc87be20..5f8ab8b3 100644
+index eef9fdd0..5f8ab8b3 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -1,8 +1,8 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  import { pass, texture } from 'three/tsl';
  
 -let camera, postProcessing, renderer;
@@ -17756,15 +17320,9 @@ index fc87be20..5f8ab8b3 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index 94099064..ed1a095d 100644
+index b2cf6e62..ed1a095d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, texture, uniform, output, mrt, mix, velocity, uv, screenUV } from 'three/tsl';
- import { motionBlur } from 'three/addons/tsl/display/MotionBlur.js';
- 
 @@ -10,11 +10,11 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -17792,14 +17350,13 @@ index 94099064..ed1a095d 100644
                  child.receiveShadow = true;
              }
 diff --git a/examples-testing/examples/webgpu_postprocessing_outline.ts b/examples-testing/examples/webgpu_postprocessing_outline.ts
-index d25c12c5..a74590cf 100644
+index 7adebdb7..a74590cf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_outline.ts
 @@ -1,6 +1,6 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { pass, uniform, time, oscSine } from 'three/tsl';
 -import { outline } from 'three/addons/tsl/display/OutlineNode.js';
-+import * as THREE from 'three/webgpu';
 +import { pass, uniform, time, oscSine, ShaderNodeObject } from 'three/tsl';
 +import OutlineNode, { outline } from 'three/addons/tsl/display/OutlineNode.js';
  
@@ -17840,15 +17397,9 @@ index d25c12c5..a74590cf 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index ff53a4b4..ee8bb78b 100644
+index 29253b99..ee8bb78b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 @@ -6,8 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { uniform } from 'three/tsl';
  import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
@@ -17925,15 +17476,10 @@ index ff53a4b4..ee8bb78b 100644
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
 diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
-index 7040b08b..85db2b79 100644
+index 902e3e74..85db2b79 100644
 --- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_smaa.ts
-@@ -1,11 +1,15 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass } from 'three/tsl';
- import { smaa } from 'three/addons/tsl/display/SMAANode.js';
- 
+@@ -5,7 +5,11 @@ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -17947,15 +17493,9 @@ index 7040b08b..85db2b79 100644
  const params = {
      enabled: true,
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-index 1ee744c8..9e213114 100644
+index 3c243daa..9e213114 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, renderOutput } from 'three/tsl';
- import { sobel } from 'three/addons/tsl/display/SobelOperatorNode.js';
- 
 @@ -8,8 +8,8 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17977,13 +17517,12 @@ index 1ee744c8..9e213114 100644
  
      scene.add(model);
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 52170eb7..207a463b 100644
+index 45e298e7..207a463b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 @@ -1,12 +1,13 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
-+import * as THREE from 'three/webgpu';
 +import { ShaderNodeObject } from 'three/tsl';
 +import SSAAPassNode, { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
  
@@ -18018,15 +17557,9 @@ index 52170eb7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 6de40d2d..e5a06ef1 100644
+index 1579a8d8..e5a06ef1 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     pass,
-     mrt,
 @@ -11,8 +11,9 @@ import {
      sample,
      directionToColor,
@@ -18066,14 +17599,10 @@ index 6de40d2d..e5a06ef1 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
-index de2215ee..ee4a7c8d 100644
+index ac262097..ee4a7c8d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_traa.ts
-@@ -1,11 +1,14 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mrt, output, pass, velocity } from 'three/tsl';
- import { traa } from 'three/addons/tsl/display/TRAANode.js';
+@@ -4,8 +4,11 @@ import { traa } from 'three/addons/tsl/display/TRAANode.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -18088,12 +17617,11 @@ index de2215ee..ee4a7c8d 100644
  
  init();
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
-index dc70b8e9..ae7a2ade 100644
+index d4b197b3..ae7a2ade 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_transition.ts
 @@ -1,16 +1,31 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 +import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
@@ -18224,14 +17752,10 @@ index dc70b8e9..ae7a2ade 100644
  
  const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
 diff --git a/examples-testing/examples/webgpu_procedural_texture.ts b/examples-testing/examples/webgpu_procedural_texture.ts
-index 4a085f2f..d0de6c2c 100644
+index 98516c6c..d0de6c2c 100644
 --- a/examples-testing/examples/webgpu_procedural_texture.ts
 +++ b/examples-testing/examples/webgpu_procedural_texture.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { checker, uv, uniform, convertToTexture } from 'three/tsl';
- import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+@@ -4,7 +4,7 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
@@ -18241,15 +17765,9 @@ index 4a085f2f..d0de6c2c 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index a69717b8..e1dc96e7 100644
+index 0d26d131..e1dc96e7 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import {
-     abs,
 @@ -21,6 +21,7 @@ import {
      uniform,
      uv,
@@ -18323,15 +17841,9 @@ index a69717b8..e1dc96e7 100644
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
-index b2cb0a35..c0f76484 100644
+index 46ec5e9f..c0f76484 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
 +++ b/examples-testing/examples/webgpu_reflection_roughness.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { Fn, vec2, vec4, texture, uv, textureBicubic, rangeFogFactor, reflector, time } from 'three/tsl';
- 
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -6,9 +6,9 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -18355,13 +17867,10 @@ index b2cb0a35..c0f76484 100644
  
      controls.update();
 diff --git a/examples-testing/examples/webgpu_refraction.ts b/examples-testing/examples/webgpu_refraction.ts
-index 4ce8b0a7..d41bc6f4 100644
+index fcb82efc..d41bc6f4 100644
 --- a/examples-testing/examples/webgpu_refraction.ts
 +++ b/examples-testing/examples/webgpu_refraction.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { viewportSafeUV, viewportSharedTexture, screenUV, texture, uv } from 'three/tsl';
+@@ -3,11 +3,11 @@ import { viewportSafeUV, viewportSharedTexture, screenUV, texture, uv } from 'th
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -18377,15 +17886,10 @@ index 4ce8b0a7..d41bc6f4 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-index c5b163ef..b51824df 100644
+index d4e26b09..b51824df 100644
 --- a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 +++ b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-@@ -1,15 +1,26 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { vec2, uniform, screenUV, color, texture, diffuseColor, attribute, vec3, vec4 } from 'three/tsl';
- import Stats from 'three/addons/libs/stats.module.js';
- import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
+@@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { unzipSync } from 'three/addons/libs/fflate.module.js';
  
@@ -18448,12 +17952,11 @@ index c5b163ef..b51824df 100644
          const left = Math.floor(view.left * window.innerWidth);
          const bottom = Math.floor((1 - view.top - view.height) * window.innerHeight);
 diff --git a/examples-testing/examples/webgpu_rtt.ts b/examples-testing/examples/webgpu_rtt.ts
-index 01248dc3..3ead3837 100644
+index 099fac87..3ead3837 100644
 --- a/examples-testing/examples/webgpu_rtt.ts
 +++ b/examples-testing/examples/webgpu_rtt.ts
 @@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  import { texture, uniform, saturation, hue } from 'three/tsl';
  
 -let camera, scene, renderer;
@@ -18478,13 +17981,10 @@ index 01248dc3..3ead3837 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
-index 5bda465d..28d78b25 100644
+index 1af91807..28d78b25 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
 +++ b/examples-testing/examples/webgpu_shadowmap.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mx_fractal_noise_vec3, positionWorld, vec4, Fn, color, vertexIndex, hash } from 'three/tsl';
+@@ -3,9 +3,9 @@ import { mx_fractal_noise_vec3, positionWorld, vec4, Fn, color, vertexIndex, has
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -18507,15 +18007,9 @@ index 5bda465d..28d78b25 100644
  
      torusKnot.rotation.x += 0.25 * delta;
 diff --git a/examples-testing/examples/webgpu_shadowmap_array.ts b/examples-testing/examples/webgpu_shadowmap_array.ts
-index 35ad285a..80823da7 100644
+index 8279d632..80823da7 100644
 --- a/examples-testing/examples/webgpu_shadowmap_array.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_array.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { mx_fractal_noise_vec3, positionWorld, Fn, color } from 'three/tsl';
- 
- import { TileShadowNode } from 'three/addons/tsl/shadows/TileShadowNode.js';
 @@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import Stats from 'stats-gl';
@@ -18541,12 +18035,10 @@ index 35ad285a..80823da7 100644
  
      // Rotate the central torus knot
 diff --git a/examples-testing/examples/webgpu_shadowmap_csm.ts b/examples-testing/examples/webgpu_shadowmap_csm.ts
-index cf5c0097..b2f74866 100644
+index 94fe513f..b2f74866 100644
 --- a/examples-testing/examples/webgpu_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_csm.ts
-@@ -1,13 +1,34 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+@@ -2,12 +2,33 @@ import * as THREE from 'three/webgpu';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -18607,15 +18099,9 @@ index cf5c0097..b2f74866 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_shadowmap_progressive.ts b/examples-testing/examples/webgpu_shadowmap_progressive.ts
-index 5290c670..3bf0ecf6 100644
+index e146e57d..3bf0ecf6 100644
 --- a/examples-testing/examples/webgpu_shadowmap_progressive.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_progressive.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 @@ -9,17 +9,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMapGPU.js
  const shadowMapRes = 1024,
      lightMapRes = 1024,
@@ -18663,15 +18149,10 @@ index 5290c670..3bf0ecf6 100644
              } else {
                  child.layers.disableAll(); // Disable Rendering for this
 diff --git a/examples-testing/examples/webgpu_shadowmap_vsm.ts b/examples-testing/examples/webgpu_shadowmap_vsm.ts
-index a9f6f0e5..c68aa5fc 100644
+index e4142935..c68aa5fc 100644
 --- a/examples-testing/examples/webgpu_shadowmap_vsm.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_vsm.ts
-@@ -1,14 +1,24 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,10 +5,20 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -18706,13 +18187,10 @@ index a9f6f0e5..c68aa5fc 100644
  
      if (config.animate === true) {
 diff --git a/examples-testing/examples/webgpu_skinning.ts b/examples-testing/examples/webgpu_skinning.ts
-index 50e91d95..0895db7f 100644
+index e9c0548b..0895db7f 100644
 --- a/examples-testing/examples/webgpu_skinning.ts
 +++ b/examples-testing/examples/webgpu_skinning.ts
-@@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { color, screenUV } from 'three/tsl';
+@@ -3,9 +3,9 @@ import { color, screenUV } from 'three/tsl';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -18725,14 +18203,10 @@ index 50e91d95..0895db7f 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_skinning_instancing.ts b/examples-testing/examples/webgpu_skinning_instancing.ts
-index cd91aa8e..e274d5f2 100644
+index 235f4240..e274d5f2 100644
 --- a/examples-testing/examples/webgpu_skinning_instancing.ts
 +++ b/examples-testing/examples/webgpu_skinning_instancing.ts
-@@ -1,13 +1,13 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { pass, mix, range, color, oscSine, time } from 'three/tsl';
- import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+@@ -4,10 +4,10 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -18797,14 +18271,10 @@ index cd91aa8e..e274d5f2 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_sky.ts b/examples-testing/examples/webgpu_sky.ts
-index 097d06af..3836e7ee 100644
+index 1c3c6b22..3836e7ee 100644
 --- a/examples-testing/examples/webgpu_sky.ts
 +++ b/examples-testing/examples/webgpu_sky.ts
-@@ -1,12 +1,12 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,9 +4,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
@@ -18817,12 +18287,11 @@ index 097d06af..3836e7ee 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_sprites.ts b/examples-testing/examples/webgpu_sprites.ts
-index 1bc0e214..68a7b73a 100644
+index de9f219b..68a7b73a 100644
 --- a/examples-testing/examples/webgpu_sprites.ts
 +++ b/examples-testing/examples/webgpu_sprites.ts
 @@ -1,11 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  import { texture, uv, userData, fog, rangeFogFactor, color } from 'three/tsl';
  
 -let camera, scene, renderer;
@@ -18837,13 +18306,12 @@ index 1bc0e214..68a7b73a 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 175e9dee..ceca2ec9 100644
+index 983917f4..ceca2ec9 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -1,9 +1,9 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier, ShaderNodeObject } from 'three/tsl';
  
  const timestamps = {
@@ -18864,13 +18332,12 @@ index 175e9dee..ceca2ec9 100644
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
-index 9ae3cecc..9a12b3f1 100644
+index 1904f530..9a12b3f1 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
 +++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { struct, storage, wgslFn, instanceIndex, time, varyingProperty, attribute, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18884,24 +18351,13 @@ index 9ae3cecc..9a12b3f1 100644
  
  init();
  
-diff --git a/examples-testing/examples/webgpu_texturegrad.ts b/examples-testing/examples/webgpu_texturegrad.ts
-index 6ff17c36..5f775036 100644
---- a/examples-testing/examples/webgpu_texturegrad.ts
-+++ b/examples-testing/examples/webgpu_texturegrad.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { If, vec4, float, time, cos, pow, vec2, uv, texture, Fn } from 'three/tsl';
- 
- // WebGPU Backend
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index 72289cfe..28573410 100644
+index c50e5c7f..28573410 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -1,10 +1,14 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { texture, uv, time, oscTriangle } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { texture, uv, time, oscTriangle, ShaderNodeObject } from 'three/tsl';
  
  import Stats from 'three/addons/libs/stats.module.js';
@@ -18934,15 +18390,10 @@ index 72289cfe..28573410 100644
  
          let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
 diff --git a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
-index 3e8bf7ee..56db87fd 100644
+index b348e4ea..56db87fd 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
-@@ -1,11 +1,16 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { texture, uniform, uv } from 'three/tsl';
- 
+@@ -5,7 +5,12 @@ import { texture, uniform, uv } from 'three/tsl';
  import Stats from 'three/addons/libs/stats.module.js';
  import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
  
@@ -18957,12 +18408,10 @@ index 3e8bf7ee..56db87fd 100644
  const depth = uniform(0);
  
 diff --git a/examples-testing/examples/webgpu_textures_anisotropy.ts b/examples-testing/examples/webgpu_textures_anisotropy.ts
-index 7eb0ce1b..7528f59f 100644
+index 220f6a19..7528f59f 100644
 --- a/examples-testing/examples/webgpu_textures_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_textures_anisotropy.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -19000,12 +18449,11 @@ index 7eb0ce1b..7528f59f 100644
      const windowHalfY = window.innerHeight / 2;
  
 diff --git a/examples-testing/examples/webgpu_textures_partialupdate.ts b/examples-testing/examples/webgpu_textures_partialupdate.ts
-index e8ebe87d..bc6886f0 100644
+index 923a1487..bc6886f0 100644
 --- a/examples-testing/examples/webgpu_textures_partialupdate.ts
 +++ b/examples-testing/examples/webgpu_textures_partialupdate.ts
 @@ -1,6 +1,11 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -let camera, scene, renderer, clock, dataTexture, diffuseMap;
 +let camera: THREE.PerspectiveCamera,
@@ -19030,12 +18478,11 @@ index e8ebe87d..bc6886f0 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
-index ad44de1e..3e23fef6 100644
+index bc51795c..3e23fef6 100644
 --- a/examples-testing/examples/webgpu_tonemapping.ts
 +++ b/examples-testing/examples/webgpu_tonemapping.ts
 @@ -1,23 +1,32 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 +import { GUI, NumberController } from 'three/addons/libs/lil-gui.module.min.js';
@@ -19108,13 +18555,12 @@ index ad44de1e..3e23fef6 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index c582161d..4ef3b613 100644
+index def3eb84..4ef3b613 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -1,5 +1,17 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { If, PI2, atan, color, frontFacing, output, positionLocal, Fn, uniform, vec4 } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import {
 +    If,
 +    PI2,
@@ -19171,15 +18617,9 @@ index c582161d..4ef3b613 100644
                  child.castShadow = true;
                  child.receiveShadow = true;
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 7846ba96..b5f52514 100644
+index 20cdb7e7..b5f52514 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     step,
-     normalWorldGeometry,
 @@ -15,12 +15,18 @@ import {
      mix,
      uv,
@@ -19210,14 +18650,10 @@ index 7846ba96..b5f52514 100644
      atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index feec1fd5..fb8b6727 100644
+index 0d26a0f7..fb8b6727 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
-@@ -1,10 +1,10 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, PI2 } from 'three/tsl';
- 
+@@ -4,7 +4,7 @@ import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, PI2
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -19227,13 +18663,12 @@ index feec1fd5..fb8b6727 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 337bb904..27e4ff41 100644
+index ab3a0271..27e4ff41 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -1,11 +1,52 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { color, mix, normalWorld, output, Fn, uniform, vec4, rotate, screenCoordinate, screenSize } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import {
 +    color,
 +    mix,
@@ -19367,15 +18802,9 @@ index 337bb904..27e4ff41 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index b9f74f7f..290368ae 100644
+index 5b7f452c..290368ae 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     float,
-     mx_noise_float,
 @@ -13,12 +13,13 @@ import {
      uniform,
      Fn,
@@ -19401,15 +18830,9 @@ index b9f74f7f..290368ae 100644
  
          const elevation = mul(
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index c4808ba0..f8ad5737 100644
+index 8f335a76..f8ad5737 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     PI2,
-     oneMinus,
 @@ -18,7 +18,15 @@ import {
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19442,15 +18865,9 @@ index c4808ba0..f8ad5737 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index fa3953f7..a1a3ed62 100644
+index 6c7118d1..a1a3ed62 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- import {
-     luminance,
-     cos,
 @@ -18,13 +18,18 @@ import {
      vec2,
      vec3,
@@ -19510,12 +18927,11 @@ index fa3953f7..a1a3ed62 100644
          const elevation = position.y;
  
 diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
-index e409b3c0..78885bec 100644
+index f52b15ff..78885bec 100644
 --- a/examples-testing/examples/webgpu_video_panorama.ts
 +++ b/examples-testing/examples/webgpu_video_panorama.ts
 @@ -1,6 +1,6 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
+ import * as THREE from 'three/webgpu';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -19559,15 +18975,9 @@ index e409b3c0..78885bec 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index a88f55dc..41f6e7eb 100644
+index bf65c37a..41f6e7eb 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import {
-     uniform,
 @@ -19,6 +19,7 @@ import {
      Fn,
      vec2,
@@ -19616,13 +19026,12 @@ index a88f55dc..41f6e7eb 100644
  
          let density = sampleGrain(1);
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 679ce01a..50b5dadf 100644
+index 94211ec5..50b5dadf 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { float, vec3, vec4, If, Break, Fn, smoothstep, texture3D, uniform, ShaderNodeObject } from 'three/tsl';
  
  import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
@@ -19704,13 +19113,12 @@ index 679ce01a..50b5dadf 100644
      // Material
  
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index ead8196b..bbb782b6 100644
+index c0241956..bbb782b6 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19746,13 +19154,12 @@ index ead8196b..bbb782b6 100644
  
          let density = sampleGrain(0.1);
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 0fd2b8af..8702c5e8 100644
+index 1ada214e..8702c5e8 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19801,13 +19208,12 @@ index 0fd2b8af..8702c5e8 100644
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index e6b3ef50..3830b9e1 100644
+index 1899756f..3830b9e1 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -1,5 +1,5 @@
--import * as THREE from 'three';
+ import * as THREE from 'three/webgpu';
 -import { Break, If, vec3, vec4, texture3D, uniform, Fn } from 'three/tsl';
-+import * as THREE from 'three/webgpu';
 +import { Break, If, vec3, vec4, texture3D, uniform, Fn, ShaderNodeObject } from 'three/tsl';
  
  import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
@@ -19837,15 +19243,9 @@ index e6b3ef50..3830b9e1 100644
  
          RaymarchingBox(steps, ({ positionRay }) => {
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index e92f92eb..7ad07671 100644
+index a9597a78..7ad07671 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { pass, mrt, output, emissive, renderOutput } from 'three/tsl';
- import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 @@ -9,11 +9,16 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -19875,14 +19275,10 @@ index e92f92eb..7ad07671 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index 26608935..3481437a 100644
+index 27108eae..3481437a 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
-@@ -1,18 +1,22 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
+@@ -4,15 +4,19 @@ import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
  import { XRButton } from 'three/addons/webxr/XRButton.js';
  import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
  
@@ -19957,15 +19353,9 @@ index 26608935..3481437a 100644
              INTERSECTED.material.emissive.setHex(0xff0000);
          }
 diff --git a/examples-testing/examples/webgpu_xr_native_layers.ts b/examples-testing/examples/webgpu_xr_native_layers.ts
-index 756594da..029d6a7e 100644
+index b7beda04..029d6a7e 100644
 --- a/examples-testing/examples/webgpu_xr_native_layers.ts
 +++ b/examples-testing/examples/webgpu_xr_native_layers.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
- import { VRButton } from 'three/addons/webxr/VRButton.js';
 @@ -15,11 +15,11 @@ import {
  import { HTMLMesh } from 'three/addons/interactive/HTMLMesh.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -20245,15 +19635,9 @@ index 756594da..029d6a7e 100644
      //
      const delta = clock.getDelta() * 0.8;
 diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-index 5106c827..444d4f31 100644
+index 17dfa040..444d4f31 100644
 --- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
 +++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-@@ -1,4 +1,4 @@
--import * as THREE from 'three';
-+import * as THREE from 'three/webgpu';
- 
- import {
-     RollerCoasterGeometry,
 @@ -9,7 +9,7 @@ import {
  } from 'three/addons/misc/RollerCoaster.js';
  import { VRButton } from 'three/addons/webxr/VRButton.js';
