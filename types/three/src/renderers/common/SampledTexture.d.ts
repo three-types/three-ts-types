@@ -5,13 +5,10 @@ declare class SampledTexture extends Sampler {
     id: number;
 
     store: boolean;
-    generation: number | null;
 
     readonly isSampledTexture: true;
 
     constructor(name: string, texture: Texture | null);
-
-    needsBindingsUpdate(generation: number): boolean;
 }
 
 declare class SampledArrayTexture extends SampledTexture {
