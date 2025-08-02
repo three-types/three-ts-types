@@ -3124,7 +3124,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index e32c25a3..80150b8b 100644
+index 105882cc..93e816df 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,24 +1,33 @@
@@ -3205,8 +3205,17 @@ index e32c25a3..80150b8b 100644
          const self = this.getSelf();
  
          callback = callback.bind(self);
-@@ -119,12 +128,12 @@ class UniformNode extends InputNode {
+@@ -119,7 +128,7 @@ class UniformNode extends InputNode {
          }, updateType);
+     }
+ 
+-    getInputType(builder) {
++    getInputType(builder: NodeBuilder) {
+         let type = super.getInputType(builder);
+ 
+         if (type === 'bool') {
+@@ -129,12 +138,12 @@ class UniformNode extends InputNode {
+         return type;
      }
  
 -    generate(builder, output) {
@@ -3220,7 +3229,7 @@ index e32c25a3..80150b8b 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -137,7 +146,7 @@ class UniformNode extends InputNode {
+@@ -147,7 +156,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3228,8 +3237,8 @@ index e32c25a3..80150b8b 100644
 +            builder.shaderStage!,
              this.name || builder.context.label,
          );
-         const propertyName = builder.getPropertyName(nodeUniform);
-@@ -159,11 +168,14 @@ export default UniformNode;
+         const uniformName = builder.getPropertyName(nodeUniform);
+@@ -194,11 +203,14 @@ export default UniformNode;
   * @param {string} [arg2] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
@@ -10266,7 +10275,7 @@ index 37784a05..7b08961a 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index d6666b28..78ad6547 100644
+index 3f95a66c..7bea84c7 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10409,7 +10418,7 @@ index d6666b28..78ad6547 100644
          if (node.isNodeVarying === true && node.needsInterpolation === true) {
              if (shaderStage === 'vertex') {
                  return `varyings.${node.name}`;
-@@ -747,7 +772,12 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -755,7 +780,12 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10423,7 +10432,7 @@ index d6666b28..78ad6547 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -882,7 +912,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -890,7 +920,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10432,7 +10441,7 @@ index d6666b28..78ad6547 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1166,8 +1196,8 @@ ${flowData.code}
+@@ -1174,8 +1204,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10443,7 +10452,7 @@ index d6666b28..78ad6547 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1301,8 +1331,8 @@ ${flowData.code}
+@@ -1309,8 +1339,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10454,7 +10463,7 @@ index d6666b28..78ad6547 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1367,7 +1397,7 @@ ${flowData.code}
+@@ -1375,7 +1405,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
