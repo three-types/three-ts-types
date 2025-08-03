@@ -15520,27 +15520,11 @@ index 27986a7d..05ee79b0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index e3f74e1c..6cb28f07 100644
+index 8a2d2a0e..603f034c 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
-@@ -1,11 +1,11 @@
- import * as THREE from 'three/webgpu';
- 
--import { OrbitControls } from './jsm/controls/OrbitControls.js';
-+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
--import { RGBELoader } from './jsm/loaders/RGBELoader.js';
--import { GLTFLoader } from './jsm/loaders/GLTFLoader.js';
-+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- 
--import { MaterialXLoader } from './jsm/loaders/MaterialXLoader.js';
-+import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
- 
- const SAMPLE_PATH =
-     'https://raw.githubusercontent.com/materialx/MaterialX/main/resources/Materials/Examples/StandardSurface/';
-@@ -34,8 +34,8 @@ const samples = [
-     'standard_surface_wood_tiled.mtlx',
+@@ -59,8 +59,8 @@ const localSamples = [
+     'sheen_test.mtlx',
  ];
  
 -let camera, scene, renderer, prefab;
@@ -15550,18 +15534,18 @@ index e3f74e1c..6cb28f07 100644
  
  init();
  
-@@ -98,7 +98,7 @@ function updateModelsAlign() {
+@@ -129,7 +129,7 @@ function updateModelsAlign() {
      }
  }
  
--async function addSample(sample) {
-+async function addSample(sample: string) {
+-async function addSample(sample, path) {
++async function addSample(sample: string, path: string) {
      const model = prefab.clone();
  
      models.push(model);
-@@ -112,12 +112,12 @@ async function addSample(sample) {
+@@ -143,12 +143,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
-         .setPath(SAMPLE_PATH)
+         .setPath(path)
          .loadAsync(sample)
 -        .then(({ materials }) => Object.values(materials).pop());
 +        .then(({ materials }) => Object.values(materials).pop()!);
@@ -15570,11 +15554,23 @@ index e3f74e1c..6cb28f07 100644
 +    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
      calibrationMesh.material = material;
  
--    const Preview_Mesh = model.getObjectByName('Preview_Mesh');
-+    const Preview_Mesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
-     Preview_Mesh.material = material;
+-    const previewMesh = model.getObjectByName('Preview_Mesh');
++    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
+     previewMesh.material = material;
  }
  
+@@ -177,9 +177,9 @@ function addGUI() {
+         });
+ }
+ 
+-function setVisibility(name, visible) {
++function setVisibility(name: string, visible: boolean) {
+     scene.traverse(function (node) {
+-        if (node.isMesh) {
++        if ((node as THREE.Mesh).isMesh) {
+             if (node.name == name) node.visible = visible;
+         }
+     });
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
 index de51957d..cc25f04e 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
