@@ -157,7 +157,13 @@ export const mx_ifequal: (value1: Node, value2: Node, in1: Node, in2: Node) => S
 
 export const mx_separate: (in1: Node, channelOrOut?: string | number) => ShaderNodeObject<Node>;
 
-export const mx_place2d: (texcoord: Node, pivot?: Node, scale?: Node, rotate?: Node, offset?: Node) => ShaderNodeObject<Node>;
+export const mx_place2d: (
+    texcoord: Node,
+    pivot?: Node,
+    scale?: Node,
+    rotate?: Node,
+    offset?: Node,
+) => ShaderNodeObject<Node>;
 
 export const mx_rotate2d: (input: Node, amount: Node) => ShaderNodeObject<Node>;
 
