@@ -1,11 +1,11 @@
 import { Texture } from "./Texture.js";
 
-declare class RawTexture extends Texture {
+declare class ExternalTexture extends Texture {
     sourceTexture: WebGLTexture | null;
 
-    readonly isRawTexture: true;
+    readonly isExternalTexture: true;
 
     constructor(sourceTexture?: WebGLTexture | null);
 }
 
-export { RawTexture };
+export { ExternalTexture };
