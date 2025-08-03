@@ -2675,7 +2675,7 @@ index a161dada..ed07bd6d 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index d81417e9..a414aeae 100644
+index 4bed09e8..44bfa61f 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
 @@ -5,13 +5,14 @@ import { Matrix4 } from '../../math/Matrix4.js';
@@ -2757,7 +2757,7 @@ index d81417e9..a414aeae 100644
  
  /**
   * This generator function can be used to iterate over the node children
-@@ -96,29 +108,39 @@ export function getCacheKey(object, force = false) {
+@@ -96,32 +108,42 @@ export function getCacheKey(object, force = false) {
   * @param {boolean} [toJSON=false] - Whether to return JSON or not.
   * @yields {Object} A result node holding the property, index (if available) and the child node.
   */
@@ -2792,14 +2792,16 @@ index d81417e9..a414aeae 100644
 -            yield { property, childNode: object };
 +        } else if (object && (object as Node).isNode === true) {
 +            yield { property, childNode: object as Node };
-         } else if (typeof object === 'object') {
+         } else if (object && Object.getPrototypeOf(object) === Object.prototype) {
              for (const subProperty in object) {
+                 // Ignore private properties.
+                 if (subProperty.startsWith('_') === true) continue;
+ 
 -                const child = object[subProperty];
--
++                const child = object[subProperty as keyof typeof object];
+ 
 -                if (child && (child.isNode === true || (toJSON && typeof child.toJSON === 'function'))) {
 -                    yield { property, index: subProperty, childNode: child };
-+                const child = object[subProperty as keyof typeof object];
-+
 +                if (
 +                    child &&
 +                    ((child as Node).isNode === true ||
@@ -2809,7 +2811,7 @@ index d81417e9..a414aeae 100644
                  }
              }
          }
-@@ -240,7 +262,7 @@ export function getByteBoundaryFromType(type) {
+@@ -243,7 +265,7 @@ export function getByteBoundaryFromType(type) {
   * @param {any} value - The value.
   * @return {?string} The data type.
   */
@@ -6328,10 +6330,10 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 9750be19..de0be17c 100644
+index d89852fc..eb153566 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
-@@ -25,6 +25,7 @@ import { Frustum } from '../../math/Frustum.js';
+@@ -26,6 +26,7 @@ import { Frustum } from '../../math/Frustum.js';
  import { FrustumArray } from '../../math/FrustumArray.js';
  import { Matrix4 } from '../../math/Matrix4.js';
  import { Vector2 } from '../../math/Vector2.js';
