@@ -391,6 +391,8 @@ export const objectRadius: typeof TSL.objectRadius;
 export const objectScale: typeof TSL.objectScale;
 export const objectViewPosition: typeof TSL.objectViewPosition;
 export const objectWorldMatrix: typeof TSL.objectWorldMatrix;
+export const OnObjectUpdate: typeof TSL.OnObjectUpdate;
+export const OnMaterialUpdate: typeof TSL.OnMaterialUpdate;
 export const oneMinus: typeof TSL.oneMinus;
 export const or: typeof TSL.or;
 export const orthographicDepthToViewZ: typeof TSL.orthographicDepthToViewZ;
