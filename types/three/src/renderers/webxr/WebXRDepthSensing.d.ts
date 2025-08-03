@@ -1,10 +1,9 @@
 import { Mesh } from "../../objects/Mesh.js";
-import { Texture } from "../../textures/Texture.js";
-import { WebGLRenderer } from "../WebGLRenderer.js";
+import { RawTexture } from "../../textures/RawTexture.js";
 import { WebXRArrayCamera } from "./WebXRManager.js";
 
 export class WebXRDepthSensing {
-    texture: Texture | null;
+    texture: RawTexture | null;
     mesh: Mesh | null;
 
     depthNear: number;
@@ -12,11 +11,11 @@ export class WebXRDepthSensing {
 
     constructor();
 
-    init(renderer: WebGLRenderer, depthData: XRWebGLDepthInformation, renderState: XRRenderState): void;
+    init(depthData: XRWebGLDepthInformation, renderState: XRRenderState): void;
 
     getMesh(cameraXR: WebXRArrayCamera): Mesh | null;
 
     reset(): void;
 
-    getDepthTexture(): Texture | null;
+    getDepthTexture(): RawTexture | null;
 }
