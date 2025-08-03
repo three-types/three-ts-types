@@ -625,15 +625,15 @@ declare class Renderer {
      */
     clearStencilAsync(): Promise<void>;
     /**
-     * The current output tone mapping of the renderer. When a render target is set,
-     * the output tone mapping is always `NoToneMapping`.
+     * The current tone mapping of the renderer. When not producing screen output,
+     * the tone mapping is always `NoToneMapping`.
      *
      * @type {number}
      */
     get currentToneMapping(): ToneMapping;
     /**
-     * The current output color space of the renderer. When a render target is set,
-     * the output color space is always `LinearSRGBColorSpace`.
+     * The current color space of the renderer. When not producing screen output,
+     * the color space is always the working color space.
      *
      * @type {string}
      */
