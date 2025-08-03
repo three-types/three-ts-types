@@ -73,6 +73,7 @@ const exceptionList = [
     'webgpu_tsl_transpiler',
     'webgpu_tsl_vfx_linkedparticles',
     'webgpu_video_frame',
+    'webxr_ar_camera_access',
     'webxr_vr_handinput_cubes',
     'webxr_vr_handinput_profiles',
     'webxr_vr_handinput_pointerclick',
