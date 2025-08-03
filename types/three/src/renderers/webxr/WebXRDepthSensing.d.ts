@@ -1,9 +1,9 @@
 import { Mesh } from "../../objects/Mesh.js";
-import { RawTexture } from "../../textures/RawTexture.js";
+import { ExternalTexture } from "../../textures/ExternalTexture.js";
 import { WebXRArrayCamera } from "./WebXRManager.js";
 
 export class WebXRDepthSensing {
-    texture: RawTexture | null;
+    texture: ExternalTexture | null;
     mesh: Mesh | null;
 
     depthNear: number;
@@ -17,5 +17,5 @@ export class WebXRDepthSensing {
 
     reset(): void;
 
-    getDepthTexture(): RawTexture | null;
+    getDepthTexture(): ExternalTexture | null;
 }

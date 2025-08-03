@@ -5,7 +5,7 @@ import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { Vector4 } from "../../math/Vector4.js";
 import { Mesh } from "../../objects/Mesh.js";
-import { RawTexture } from "../../textures/RawTexture.js";
+import { ExternalTexture } from "../../textures/ExternalTexture.js";
 import { WebGLRenderer } from "../WebGLRenderer.js";
 import { XRGripSpace, XRHandSpace, XRTargetRaySpace } from "./WebXRController.js";
 
@@ -65,7 +65,7 @@ export class WebXRManager extends EventDispatcher<WebXRManagerEventMap> {
 
     getEnvironmentBlendMode: () => XREnvironmentBlendMode | undefined;
 
-    getDepthTexture: () => RawTexture | null;
+    getDepthTexture: () => ExternalTexture | null;
 
     updateCamera: (camera: PerspectiveCamera) => void;
 
@@ -79,7 +79,7 @@ export class WebXRManager extends EventDispatcher<WebXRManagerEventMap> {
 
     getDepthSensingMesh: () => Mesh | null;
 
-    getCameraTexture: (xrCamera: WebXRCamera) => RawTexture | undefined;
+    getCameraTexture: (xrCamera: WebXRCamera) => ExternalTexture | undefined;
 
     setAnimationLoop: (callback: XRFrameRequestCallback | null) => void;
 
