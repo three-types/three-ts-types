@@ -707,7 +707,7 @@ index 7cfff69f..99c39c40 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 33e6c559..fac8cc7b 100644
+index 7720d911..bedcf262 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,5 +1,6 @@
@@ -777,15 +777,15 @@ index 33e6c559..fac8cc7b 100644
          const previousContext = builder.getContext();
  
          builder.setContext({ ...builder.context, ...this.value });
-@@ -124,7 +129,7 @@ export const context = /*@__PURE__*/ nodeProxy(ContextNode).setParameterLength(1
+@@ -136,7 +141,7 @@ export const setName = (node, name) => context(node, { nodeName: name });
   * @param {string} name - The name/label to set.
   * @returns {ContextNode}
   */
--export const label = (node, name) => context(node, { label: name });
-+export const label = (node: Node, name: string) => context(node, { label: name });
+-export function label(node, name) {
++export function label(node: Node, name: string) {
+     console.warn('THREE.TSL: "label()" has been deprecated. Use "setName()" instead.'); // @deprecated r179
  
- addMethodChaining('context', context);
- addMethodChaining('label', label);
+     return setName(node, name);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
 index bf369c8a..fc36b429 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
@@ -861,7 +861,7 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 5a11dc94..27595091 100644
+index f5ff2ffb..3d296c90 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,6 +3,8 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1389,7 +1389,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index c01171ee..8033080c 100644
+index cb6bce93..7ea0be16 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -3126,7 +3126,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 105882cc..93e816df 100644
+index b87431d5..388dfcea 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,24 +1,33 @@
@@ -3237,7 +3237,7 @@ index 105882cc..93e816df 100644
              sharedNodeType,
 -            builder.shaderStage,
 +            builder.shaderStage!,
-             this.name || builder.context.label,
+             this.name || builder.context.nodeName,
          );
          const uniformName = builder.getPropertyName(nodeUniform);
 @@ -194,11 +203,14 @@ export default UniformNode;
@@ -9741,7 +9741,7 @@ index 2a55e2f8..ca4ce43b 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index c273fb8b..4c0c40cb 100644
+index a8afd8e9..33e7024c 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -9868,7 +9868,7 @@ index c273fb8b..4c0c40cb 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -363,7 +403,13 @@ ${flowData.code}
+@@ -368,7 +408,13 @@ ${flowData.code}
       * @param {string} [levelSnippet='0u'] - A GLSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The GLSL snippet.
       */
@@ -9883,7 +9883,7 @@ index c273fb8b..4c0c40cb 100644
          if (depthSnippet) {
              return `texelFetch( ${textureProperty}, ivec3( ${uvIndexSnippet}, ${depthSnippet} ), ${levelSnippet} )`;
          } else {
-@@ -380,7 +426,7 @@ ${flowData.code}
+@@ -385,7 +431,7 @@ ${flowData.code}
       * @param {?string} depthSnippet -  A GLSL snippet that represents the 0-based texture array index to sample.
       * @return {string} The GLSL snippet.
       */
@@ -9892,7 +9892,7 @@ index c273fb8b..4c0c40cb 100644
          if (texture.isDepthTexture) {
              if (depthSnippet) uvSnippet = `vec4( ${uvSnippet}, ${depthSnippet} )`;
  
-@@ -401,7 +447,12 @@ ${flowData.code}
+@@ -406,7 +452,12 @@ ${flowData.code}
       * @param {string} levelSnippet - A GLSL snippet that represents the mip level, with level 0 containing a full size version of the texture.
       * @return {string} The GLSL snippet.
       */
@@ -9906,7 +9906,7 @@ index c273fb8b..4c0c40cb 100644
          return `textureLod( ${textureProperty}, ${uvSnippet}, ${levelSnippet} )`;
      }
  
-@@ -414,7 +465,12 @@ ${flowData.code}
+@@ -419,7 +470,12 @@ ${flowData.code}
       * @param {string} biasSnippet - A GLSL snippet that represents the bias to apply to the mip level before sampling.
       * @return {string} The GLSL snippet.
       */
@@ -9920,7 +9920,7 @@ index c273fb8b..4c0c40cb 100644
          return `texture( ${textureProperty}, ${uvSnippet}, ${biasSnippet} )`;
      }
  
-@@ -427,7 +483,12 @@ ${flowData.code}
+@@ -432,7 +488,12 @@ ${flowData.code}
       * @param {Array<string>} gradSnippet - An array holding both gradient GLSL snippets.
       * @return {string} The GLSL snippet.
       */
@@ -9934,7 +9934,7 @@ index c273fb8b..4c0c40cb 100644
          return `textureGrad( ${textureProperty}, ${uvSnippet}, ${gradSnippet[0]}, ${gradSnippet[1]} )`;
      }
  
-@@ -444,11 +505,11 @@ ${flowData.code}
+@@ -449,11 +510,11 @@ ${flowData.code}
       * @return {string} The GLSL snippet.
       */
      generateTextureCompare(
@@ -9951,7 +9951,7 @@ index c273fb8b..4c0c40cb 100644
          shaderStage = this.shaderStage,
      ) {
          if (shaderStage === 'fragment') {
-@@ -461,6 +522,7 @@ ${flowData.code}
+@@ -466,6 +527,7 @@ ${flowData.code}
              console.error(
                  `WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`,
              );
@@ -9959,7 +9959,7 @@ index c273fb8b..4c0c40cb 100644
          }
      }
  
-@@ -470,8 +532,8 @@ ${flowData.code}
+@@ -475,8 +537,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the variables.
       */
@@ -9970,7 +9970,7 @@ index c273fb8b..4c0c40cb 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -490,7 +552,7 @@ ${flowData.code}
+@@ -495,7 +557,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the uniforms.
       */
@@ -9979,7 +9979,7 @@ index c273fb8b..4c0c40cb 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -586,7 +648,7 @@ ${flowData.code}
+@@ -591,7 +653,7 @@ ${flowData.code}
       * @param {BufferAttribute} attribute - The buffer attribute.
       * @return {string} The type.
       */
@@ -9988,7 +9988,7 @@ index c273fb8b..4c0c40cb 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -610,7 +672,7 @@ ${flowData.code}
+@@ -615,7 +677,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the shader attributes.
       */
@@ -9997,7 +9997,7 @@ index c273fb8b..4c0c40cb 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -632,8 +694,8 @@ ${flowData.code}
+@@ -637,8 +699,8 @@ ${flowData.code}
       * @param {StructTypeNode} struct - The struct type node.
       * @return {string} The GLSL snippet that defines the struct members.
       */
@@ -10008,7 +10008,7 @@ index c273fb8b..4c0c40cb 100644
  
          for (const member of struct.members) {
              snippets.push(`\t${member.type} ${member.name};`);
-@@ -648,7 +710,7 @@ ${flowData.code}
+@@ -653,7 +715,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the structs.
       */
@@ -10017,7 +10017,7 @@ index c273fb8b..4c0c40cb 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -681,7 +743,7 @@ ${flowData.code}
+@@ -686,7 +748,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the varyings.
       */
@@ -10026,7 +10026,7 @@ index c273fb8b..4c0c40cb 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -815,7 +877,7 @@ ${flowData.code}
+@@ -820,7 +882,7 @@ ${flowData.code}
       * @param {string} behavior - The extension behavior.
       * @param {string} [shaderStage=this.shaderStage] - The shader stage.
       */
@@ -10035,7 +10035,7 @@ index c273fb8b..4c0c40cb 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -832,7 +894,7 @@ ${flowData.code}
+@@ -837,7 +899,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the enabled extensions.
       */
@@ -10044,7 +10044,7 @@ index c273fb8b..4c0c40cb 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -870,7 +932,7 @@ ${flowData.code}
+@@ -875,7 +937,7 @@ ${flowData.code}
       * @param {string} name - The requested feature.
       * @return {boolean} Whether the requested feature is supported or not.
       */
@@ -10053,7 +10053,7 @@ index c273fb8b..4c0c40cb 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -939,7 +1001,7 @@ ${flowData.code}
+@@ -944,7 +1006,7 @@ ${flowData.code}
       * @param {string} varyingName - The varying name.
       * @param {AttributeNode} attributeNode - The attribute node.
       */
@@ -10062,7 +10062,7 @@ index c273fb8b..4c0c40cb 100644
          this.transforms.push({ varyingName, attributeNode });
      }
  
-@@ -949,7 +1011,7 @@ ${flowData.code}
+@@ -954,7 +1016,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the transforms.
       */
@@ -10071,7 +10071,7 @@ index c273fb8b..4c0c40cb 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -972,7 +1034,7 @@ ${flowData.code}
+@@ -977,7 +1039,7 @@ ${flowData.code}
       * @param {string} vars - The struct variables.
       * @return {string} The GLSL snippet representing a struct.
       */
@@ -10080,7 +10080,7 @@ index c273fb8b..4c0c40cb 100644
          return `
  layout( std140 ) uniform ${name} {
  ${vars}
-@@ -986,7 +1048,7 @@ ${vars}
+@@ -991,7 +1053,7 @@ ${vars}
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10089,7 +10089,7 @@ index c273fb8b..4c0c40cb 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1033,7 +1095,7 @@ void main() {
+@@ -1038,7 +1100,7 @@ void main() {
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10098,7 +10098,7 @@ index c273fb8b..4c0c40cb 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1072,19 +1134,20 @@ void main() {
+@@ -1077,19 +1139,20 @@ void main() {
       * Controls the code build of the shader stages.
       */
      buildCode() {
@@ -10123,7 +10123,7 @@ index c273fb8b..4c0c40cb 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -1110,24 +1173,24 @@ void main() {
+@@ -1115,24 +1178,24 @@ void main() {
                  }
              }
  
@@ -10160,7 +10160,7 @@ index c273fb8b..4c0c40cb 100644
          }
      }
  
-@@ -1144,7 +1207,12 @@ void main() {
+@@ -1149,7 +1212,12 @@ void main() {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
