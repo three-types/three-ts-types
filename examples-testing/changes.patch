@@ -15520,13 +15520,13 @@ index 27986a7d..05ee79b0 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index a790281e..b2740408 100644
+index eeeb2477..fc70029a 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
-@@ -1,6 +1,19 @@
+@@ -1,6 +1,18 @@
  import * as THREE from 'three/webgpu';
  
--import { Fn, length, fract, vec4, positionWorld, smoothstep, max, abs, float, cameraPosition, clamp } from 'three/tsl';
+-import { Fn, length, fract, vec4, positionWorld, smoothstep, max, abs, float, fwidth } from 'three/tsl';
 +import {
 +    Fn,
 +    length,
@@ -15537,14 +15537,13 @@ index a790281e..b2740408 100644
 +    max,
 +    abs,
 +    float,
-+    cameraPosition,
-+    clamp,
++    fwidth,
 +    ShaderNodeObject,
 +} from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
-@@ -61,9 +74,9 @@ const localSamples = [
+@@ -61,9 +73,9 @@ const localSamples = [
      'sheen_test.mtlx',
  ];
  
@@ -15557,31 +15556,31 @@ index a790281e..b2740408 100644
  
  init();
  
-@@ -89,29 +102,33 @@ function init() {
+@@ -89,29 +101,33 @@ function init() {
  
-     const material = new THREE.MeshStandardNodeMaterial();
+     const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = Fn(([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
--        const worldPos = positionWorld;
--        const grid = fract(worldPos.xz.div(gridSize));
+-        const coord = positionWorld.xz.div(gridSize);
+-        const grid = fract(coord);
 +    const gridXZ = Fn<[ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>]>(
 +        ([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
-+            const worldPos = positionWorld;
-+            const grid = fract(worldPos.xz.div(gridSize));
++            const coord = positionWorld.xz.div(gridSize);
++            const grid = fract(coord);
  
--        // Distance-based antialiasing
--        const distToCamera = length(worldPos.sub(cameraPosition));
--        const smoothing = clamp(distToCamera.div(100.0), 0.01, 0.02);
-+            // Distance-based antialiasing
-+            const distToCamera = length(worldPos.sub(cameraPosition));
-+            const smoothing = clamp(distToCamera.div(100.0), 0.01, 0.02);
+-        // Screen-space derivative for automatic antialiasing
+-        const fw = fwidth(coord);
+-        const smoothing = max(fw.x, fw.y).mul(0.5);
++            // Screen-space derivative for automatic antialiasing
++            const fw = fwidth(coord);
++            const smoothing = max(fw.x, fw.y).mul(0.5);
  
--        // Create dots at cell centers
--        const dotDist = length(grid.sub(0.5));
--        const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), dotDist);
-+            // Create dots at cell centers
-+            const dotDist = length(grid.sub(0.5));
-+            const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), dotDist);
+-        // Create squares at cell centers
+-        const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
+-        const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
++            // Create squares at cell centers
++            const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
++            const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
  
 -        // Create grid lines
 -        const lineX = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.x.sub(0.5)));
@@ -15608,8 +15607,8 @@ index a790281e..b2740408 100644
 +    );
  
      // Create grid pattern
-     const gridPattern = gridXZ(1.0, 0.04, 0.01);
-@@ -176,7 +193,7 @@ function updateModelsAlign() {
+     const gridPattern = gridXZ(1.0, 0.03, 0.005);
+@@ -176,7 +192,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -15618,7 +15617,7 @@ index a790281e..b2740408 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -190,12 +207,12 @@ async function addSample(sample, path) {
+@@ -190,12 +206,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
          .setPath(path)
          .loadAsync(sample)
@@ -15634,7 +15633,7 @@ index a790281e..b2740408 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -229,9 +246,9 @@ function addGUI() {
+@@ -229,9 +245,9 @@ function addGUI() {
          });
  }
  
@@ -16042,7 +16041,7 @@ index 1678f86b..058172b5 100644
      context.fillRect(0, 1, 2, 1);
  
 diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
-index 7f5df07f..f9d188c3 100644
+index bc837653..3148b5e1 100644
 --- a/examples-testing/examples/webgpu_materials_video.ts
 +++ b/examples-testing/examples/webgpu_materials_video.ts
 @@ -1,10 +1,13 @@
@@ -16097,7 +16096,7 @@ index 7f5df07f..f9d188c3 100644
      video.play();
      video.addEventListener('play', function () {
          this.currentTime = 3;
-@@ -122,7 +125,7 @@ function onWindowResize() {
+@@ -123,7 +126,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -16106,7 +16105,7 @@ index 7f5df07f..f9d188c3 100644
      const uvs = geometry.attributes.uv.array;
  
      for (let i = 0; i < uvs.length; i += 2) {
-@@ -131,7 +134,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+@@ -132,7 +135,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
      }
  }
  
@@ -16115,7 +16114,7 @@ index 7f5df07f..f9d188c3 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = (event.clientY - windowHalfY) * 0.3;
  }
-@@ -152,20 +155,20 @@ function render() {
+@@ -153,20 +156,20 @@ function render() {
      for (let i = 0; i < cube_count; i++) {
          material = materials[i];
  
@@ -16143,7 +16142,7 @@ index 7f5df07f..f9d188c3 100644
          }
      }
  
-@@ -173,8 +176,8 @@ function render() {
+@@ -174,8 +177,8 @@ function render() {
          for (let i = 0; i < cube_count; i++) {
              mesh = meshes[i];
  
@@ -17300,15 +17299,16 @@ index 8c1b8ca0..ef11d62e 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-index 8067d306..dae6230d 100644
+index 117f6888..9883f287 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-@@ -10,7 +10,14 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+@@ -11,7 +11,15 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
--let camera, scene, timer, renderer, model, mixer, raycaster, postProcessing;
+-let camera, controls, scene, timer, renderer, model, mixer, raycaster, postProcessing;
 +let camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
 +    scene: THREE.Scene,
 +    timer: THREE.Timer,
 +    renderer: THREE.WebGPURenderer,
@@ -17319,7 +17319,7 @@ index 8067d306..dae6230d 100644
  
  const pointerCoords = new THREE.Vector2();
  const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
-@@ -103,7 +110,7 @@ async function init() {
+@@ -110,7 +118,7 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -17842,18 +17842,18 @@ index 04630e74..01152c09 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 0d26d131..e1dc96e7 100644
+index 4a6967f6..e689713e 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
-@@ -21,6 +21,7 @@ import {
-     uniform,
+@@ -24,6 +24,7 @@ import {
      uv,
+     vec2,
      vec3,
 +    ShaderNodeObject,
  } from 'three/tsl';
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
-@@ -29,10 +30,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -32,10 +33,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
@@ -17868,21 +17868,20 @@ index 0d26d131..e1dc96e7 100644
  
  // below uniforms will be animated via TWEEN.js
  
-@@ -93,7 +94,7 @@ async function init() {
+@@ -94,10 +95,10 @@ async function init() {
  
-     const reflection = reflector({ resolution: 0.5 }); // 0.5 is half of the rendering view
+     const reflection = reflector({ resolution: 0.2 });
      reflection.target.rotateX(-Math.PI / 2);
 -    reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
 +    reflection.uvNode = reflection.uvNode!.add(floorNormalOffset);
      scene.add(reflection.target);
  
-     const floorMaterial = new THREE.MeshPhongNodeMaterial();
-@@ -186,14 +187,14 @@ function random() {
-     return (Math.random() - 0.5) * 2.0;
- }
- 
--function createTreeMesh(boxMap) {
-+function createTreeMesh(boxMap: THREE.Texture) {
+-    const floorMaterial = new THREE.MeshPhongNodeMaterial();
++    const floorMaterial = new THREE.MeshStandardNodeMaterial();
+     floorMaterial.colorNode = texture(floorColor, floorUV);
+     floorMaterial.emissiveNode = reflection.mul(0.25);
+     floorMaterial.normalMap = floorNormal;
+@@ -192,10 +193,10 @@ function createTreeMesh() {
      const maxSteps = 5;
      const lengthMult = 0.8;
  
@@ -17897,7 +17896,7 @@ index 0d26d131..e1dc96e7 100644
  
      let instanceCount = 0;
  
-@@ -202,9 +203,8 @@ function createTreeMesh(boxMap) {
+@@ -204,9 +205,8 @@ function createTreeMesh() {
      const normal = new THREE.Vector3();
      const color = new THREE.Color();
  
@@ -17908,7 +17907,7 @@ index 0d26d131..e1dc96e7 100644
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
-@@ -311,7 +311,7 @@ function createTreeMesh(boxMap) {
+@@ -313,7 +313,7 @@ function createTreeMesh() {
  
          // accumulate different vertex animations
  

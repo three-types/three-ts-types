@@ -471,6 +471,7 @@ export const scriptable: typeof TSL.scriptable;
 export const scriptableValue: typeof TSL.scriptableValue;
 export const select: typeof TSL.select;
 export const setCurrentStack: typeof TSL.setCurrentStack;
+export const setName: typeof TSL.setName;
 export const shaderStages: typeof TSL.shaderStages;
 export const shadow: typeof TSL.shadow;
 export const shadowPositionWorld: typeof TSL.shadowPositionWorld;
