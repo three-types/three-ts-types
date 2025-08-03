@@ -17842,7 +17842,7 @@ index 04630e74..01152c09 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 4a6967f6..928359a0 100644
+index 4a6967f6..e689713e 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -24,6 +24,7 @@ import {
@@ -17868,7 +17868,7 @@ index 4a6967f6..928359a0 100644
  
  // below uniforms will be animated via TWEEN.js
  
-@@ -94,7 +95,7 @@ async function init() {
+@@ -94,10 +95,10 @@ async function init() {
  
      const reflection = reflector({ resolution: 0.2 });
      reflection.target.rotateX(-Math.PI / 2);
@@ -17876,7 +17876,11 @@ index 4a6967f6..928359a0 100644
 +    reflection.uvNode = reflection.uvNode!.add(floorNormalOffset);
      scene.add(reflection.target);
  
-     const floorMaterial = new THREE.MeshPhongNodeMaterial();
+-    const floorMaterial = new THREE.MeshPhongNodeMaterial();
++    const floorMaterial = new THREE.MeshStandardNodeMaterial();
+     floorMaterial.colorNode = texture(floorColor, floorUV);
+     floorMaterial.emissiveNode = reflection.mul(0.25);
+     floorMaterial.normalMap = floorNormal;
 @@ -192,10 +193,10 @@ function createTreeMesh() {
      const maxSteps = 5;
      const lengthMult = 0.8;
