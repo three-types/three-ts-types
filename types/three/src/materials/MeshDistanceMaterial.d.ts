@@ -82,6 +82,7 @@ export class MeshDistanceMaterial extends Material {
      * @default true
      */
     readonly isMeshDistanceMaterial: boolean;
+    setValues(values?: MeshDistanceMaterialParameters): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
