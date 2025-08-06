@@ -5,10 +5,7 @@ import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import PhysicalLightingModel from "../../nodes/functions/PhysicalLightingModel.js";
 import { MapColorPropertiesToColorRepresentations } from "../Material.js";
 import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from "../MeshPhysicalMaterial.js";
-import MeshPhysicalNodeMaterial, {
-    MeshPhysicalNodeMaterialNodeProperties,
-    MeshPhysicalNodeMaterialParameters,
-} from "./MeshPhysicalNodeMaterial.js";
+import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from "./MeshPhysicalNodeMaterial.js";
 
 /**
  * Represents the lighting model for {@link MeshSSSNodeMaterial}.

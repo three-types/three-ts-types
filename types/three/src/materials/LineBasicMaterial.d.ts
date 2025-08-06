@@ -1,11 +1,6 @@
 import { Color } from "../math/Color.js";
 import { Texture } from "../textures/Texture.js";
-import {
-    MapColorPropertiesToColorRepresentations,
-    Material,
-    MaterialParameters,
-    MaterialProperties,
-} from "./Material.js";
+import { MapColorPropertiesToColorRepresentations, Material, MaterialProperties } from "./Material.js";
 
 export interface LineBasicMaterialProperties extends MaterialProperties {
     /**
