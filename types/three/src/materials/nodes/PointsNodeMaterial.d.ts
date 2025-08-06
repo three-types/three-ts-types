@@ -35,6 +35,7 @@ declare class PointsNodeMaterial extends SpriteNodeMaterial {
      * @default true
      */
     readonly isPointsNodeMaterial: boolean;
+    setValues(values?: PointsNodeMaterialParameters): void;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
