@@ -3,15 +3,15 @@ import { Matrix3 } from "../math/Matrix3.js";
 import { Matrix4 } from "../math/Matrix4.js";
 
 export type TypedArray =
-    | Int8Array
-    | Uint8Array
-    | Uint8ClampedArray
-    | Int16Array
-    | Uint16Array
-    | Int32Array
-    | Uint32Array
-    | Float32Array
-    | Float64Array;
+    | Int8Array<ArrayBuffer>
+    | Uint8Array<ArrayBuffer>
+    | Uint8ClampedArray<ArrayBuffer>
+    | Int16Array<ArrayBuffer>
+    | Uint16Array<ArrayBuffer>
+    | Int32Array<ArrayBuffer>
+    | Uint32Array<ArrayBuffer>
+    | Float32Array<ArrayBuffer>
+    | Float64Array<ArrayBuffer>;
 
 export type TypedArrayConstructor =
     | Int8ArrayConstructor
