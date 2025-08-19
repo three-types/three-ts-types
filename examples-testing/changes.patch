@@ -1113,7 +1113,7 @@ index 40a62fb1..cb9d3f59 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_exr.ts b/examples-testing/examples/misc_exporter_exr.ts
-index f4a189bb..1cd5fb27 100644
+index f4a189bb..bad30e18 100644
 --- a/examples-testing/examples/misc_exporter_exr.ts
 +++ b/examples-testing/examples/misc_exporter_exr.ts
 @@ -5,7 +5,14 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
@@ -1137,7 +1137,7 @@ index f4a189bb..1cd5fb27 100644
  }
  
 -function saveArrayBuffer(buffer, filename) {
-+function saveArrayBuffer(buffer: Uint8Array, filename: string) {
++function saveArrayBuffer(buffer: Uint8Array<ArrayBuffer>, filename: string) {
      const blob = new Blob([buffer], { type: 'image/x-exr' });
      const link = document.createElement('a');
  
@@ -1206,7 +1206,7 @@ index 323c5c49..faef7421 100644
  
      object.position.set(400, 0, 200);
 diff --git a/examples-testing/examples/misc_exporter_ktx2.ts b/examples-testing/examples/misc_exporter_ktx2.ts
-index 3a9f22ac..cc4b4655 100644
+index 3a9f22ac..f47b2248 100644
 --- a/examples-testing/examples/misc_exporter_ktx2.ts
 +++ b/examples-testing/examples/misc_exporter_ktx2.ts
 @@ -5,7 +5,14 @@ import { KTX2Exporter } from 'three/addons/exporters/KTX2Exporter.js';
@@ -1230,7 +1230,7 @@ index 3a9f22ac..cc4b4655 100644
  }
  
 -function saveArrayBuffer(buffer, filename) {
-+function saveArrayBuffer(buffer: Uint8Array, filename: string) {
++function saveArrayBuffer(buffer: Uint8Array<ArrayBuffer>, filename: string) {
      const blob = new Blob([buffer], { type: 'image/ktx2' });
      const link = document.createElement('a');
  
@@ -2538,7 +2538,7 @@ index 0dffa65c..96dd8910 100644
  
      stats = new Stats();
 diff --git a/examples-testing/examples/webgl_buffergeometry_drawrange.ts b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
-index 142ff43b..903b59ee 100644
+index 142ff43b..4b26ac2a 100644
 --- a/examples-testing/examples/webgl_buffergeometry_drawrange.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_drawrange.ts
 @@ -5,15 +5,15 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -2558,10 +2558,10 @@ index 142ff43b..903b59ee 100644
 +let container: HTMLElement, stats: Stats;
 +const particlesData: { velocity: THREE.Vector3; numConnections: number }[] = [];
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let positions: Float32Array, colors: Float32Array;
++let positions: Float32Array<ArrayBuffer>, colors: Float32Array<ArrayBuffer>;
 +let particles: THREE.BufferGeometry;
 +let pointCloud: THREE.Points;
-+let particlePositions: Float32Array;
++let particlePositions: Float32Array<ArrayBuffer>;
 +let linesMesh: THREE.LineSegments;
  
  const maxParticleCount = 1000;
@@ -3522,7 +3522,7 @@ index ecb6b42b..6efdbf5a 100644
      const baseMat = new THREE.MeshBasicMaterial();
      baseMat.depthWrite = false;
 diff --git a/examples-testing/examples/webgl_custom_attributes.ts b/examples-testing/examples/webgl_custom_attributes.ts
-index 0dc89774..8725fd46 100644
+index 0dc89774..431876d6 100644
 --- a/examples-testing/examples/webgl_custom_attributes.ts
 +++ b/examples-testing/examples/webgl_custom_attributes.ts
 @@ -2,11 +2,16 @@ import * as THREE from 'three';
@@ -3541,7 +3541,7 @@ index 0dc89774..8725fd46 100644
 +    };
  
 -let displacement, noise;
-+let displacement: Float32Array, noise: Float32Array;
++let displacement: Float32Array<ArrayBuffer>, noise: Float32Array;
  
  init();
  
@@ -5315,7 +5315,7 @@ index 30444ddb..e1c40aef 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 90e4e335..4f0e7958 100644
+index 90e4e335..85b867c5 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -4,7 +4,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5366,7 +5366,7 @@ index 90e4e335..4f0e7958 100644
 +let smoothShader: THREE.ShaderMaterial;
 +let readWaterLevelShader: THREE.ShaderMaterial;
 +let readWaterLevelRenderTarget: THREE.WebGLRenderTarget;
-+let readWaterLevelImage: Uint8Array;
++let readWaterLevelImage: Uint8Array<ArrayBuffer>;
  const waterNormal = new THREE.Vector3();
  
  const NUM_DUCK = 12;
@@ -14200,7 +14200,7 @@ index 53c6c7b4..17d73367 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index b0524ac2..847c42ef 100644
+index b0524ac2..6c75b804 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -1,17 +1,27 @@
@@ -14227,7 +14227,7 @@ index b0524ac2..847c42ef 100644
 -let currentAudio, currentAnalyser;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let computeNode: ShaderNodeObject<THREE.ComputeNode>;
-+let waveBuffer: Float32Array, sampleRate: number;
++let waveBuffer: Float32Array<ArrayBuffer>, sampleRate: number;
 +let waveArray: ShaderNodeObject<THREE.StorageBufferNode>;
 +let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
  const analyserBuffer = new Uint8Array(1024);
@@ -17962,7 +17962,7 @@ index fcb82efc..d41bc6f4 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-index d4e26b09..b51824df 100644
+index d4e26b09..302e4650 100644
 --- a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 +++ b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 @@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
@@ -18000,15 +18000,17 @@ index d4e26b09..b51824df 100644
          this.left = left;
          this.top = top;
          this.width = width;
-@@ -93,7 +104,7 @@ async function init() {
+@@ -93,8 +104,8 @@ async function init() {
      };
  
      new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
 -        const zip = unzipSync(new Uint8Array(data));
+-        const array = new Uint8Array(zip['head256x256x109'].buffer);
 +        const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
-         const array = new Uint8Array(zip['head256x256x109'].buffer);
++        const array = new Uint8Array(zip['head256x256x109'].buffer as ArrayBuffer);
  
          const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
+         map3D.name = 'Data3DTexture';
 @@ -159,7 +170,7 @@ async function init() {
          const quadMesh = new THREE.QuadMesh(materialQuad);
  
@@ -18428,7 +18430,7 @@ index 1904f530..9a12b3f1 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index c50e5c7f..28573410 100644
+index c50e5c7f..ade402dc 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -1,10 +1,14 @@
@@ -18453,8 +18455,9 @@ index c50e5c7f..28573410 100644
  
      new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
 -        const zip = unzipSync(new Uint8Array(data));
+-        const array = new Uint8Array(zip['head256x256x109'].buffer);
 +        const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
-         const array = new Uint8Array(zip['head256x256x109'].buffer);
++        const array = new Uint8Array(zip['head256x256x109'].buffer as ArrayBuffer);
  
          const map = new THREE.DataArrayTexture(array, 256, 256, 109);
          map.format = THREE.RedFormat;
