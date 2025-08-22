@@ -543,6 +543,7 @@ export const uniform: typeof TSL.uniform;
 export const uniformArray: typeof TSL.uniformArray;
 export const uniformCubeTexture: typeof TSL.uniformCubeTexture;
 export const uniformGroup: typeof TSL.uniformGroup;
+export const uniformFlow: typeof TSL.uniformFlow;
 export const uniformTexture: typeof TSL.uniformTexture;
 export const unpremultiplyAlpha: typeof TSL.unpremultiplyAlpha;
 export const userData: typeof TSL.userData;
