@@ -861,7 +861,7 @@ index bf369c8a..fc36b429 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index f5ff2ffb..3d296c90 100644
+index f3c192ec..476dcc40 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -3,6 +3,8 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1220,7 +1220,7 @@ index f5ff2ffb..3d296c90 100644
                      }
                  }
              }
-@@ -667,10 +747,10 @@ class Node extends EventDispatcher {
+@@ -675,10 +755,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1233,7 +1233,7 @@ index f5ff2ffb..3d296c90 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -678,7 +758,9 @@ class Node extends EventDispatcher {
+@@ -686,7 +766,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1244,7 +1244,7 @@ index f5ff2ffb..3d296c90 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -694,33 +776,33 @@ class Node extends EventDispatcher {
+@@ -702,33 +784,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1288,7 +1288,7 @@ index f5ff2ffb..3d296c90 100644
                  }
              }
          }
-@@ -732,7 +814,7 @@ class Node extends EventDispatcher {
+@@ -740,7 +822,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1297,7 +1297,7 @@ index f5ff2ffb..3d296c90 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -741,18 +823,18 @@ class Node extends EventDispatcher {
+@@ -749,18 +831,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1319,7 +1319,7 @@ index f5ff2ffb..3d296c90 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -760,7 +842,7 @@ class Node extends EventDispatcher {
+@@ -768,7 +850,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1328,7 +1328,7 @@ index f5ff2ffb..3d296c90 100644
  
              this.serialize(data);
  
-@@ -769,12 +851,12 @@ class Node extends EventDispatcher {
+@@ -777,12 +859,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1343,7 +1343,7 @@ index f5ff2ffb..3d296c90 100644
                  values.push(data);
              }
  
-@@ -782,9 +864,9 @@ class Node extends EventDispatcher {
+@@ -790,9 +872,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1389,7 +1389,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index cb6bce93..7ea0be16 100644
+index c5617c87..a26ab588 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -2889,7 +2889,7 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index ef839dbb..5af30413 100644
+index 3b2212eb..f2af2952 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -1,6 +1,14 @@
@@ -2931,19 +2931,24 @@ index ef839dbb..5af30413 100644
  
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder) {
-         return this.outputNode ? this.outputNode.getNodeType(builder) : 'void';
+         return this.hasOutput ? this.outputNode.getNodeType(builder) : 'void';
      }
  
-@@ -87,7 +105,7 @@ class StackNode extends Node {
+@@ -87,12 +105,11 @@ class StackNode extends Node {
       * @param {Node} node - The node to add.
       * @return {StackNode} A reference to this stack node.
       */
 -    add(node) {
 +    add(node: Node) {
+         if (node.isNode !== true) {
+             console.error('THREE.TSL: Invalid node added to stack.');
+             return this;
+         }
+-
          this.nodes.push(node);
  
          return this;
-@@ -100,7 +118,7 @@ class StackNode extends Node {
+@@ -105,7 +122,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2952,7 +2957,7 @@ index ef839dbb..5af30413 100644
          const methodNode = new ShaderNode(method);
          this._currentCond = select(boolNode, methodNode);
  
-@@ -114,7 +132,7 @@ class StackNode extends Node {
+@@ -119,7 +136,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2961,7 +2966,7 @@ index ef839dbb..5af30413 100644
          const methodNode = new ShaderNode(method);
          const ifNode = select(boolNode, methodNode);
  
-@@ -130,7 +148,7 @@ class StackNode extends Node {
+@@ -135,7 +152,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed in the `else` case.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2970,8 +2975,8 @@ index ef839dbb..5af30413 100644
          this._currentCond.elseNode = new ShaderNode(method);
  
          return this;
-@@ -232,7 +250,7 @@ class StackNode extends Node {
-         return nodeProperties.outputNode || null;
+@@ -241,7 +258,7 @@ class StackNode extends Node {
+         return this.outputNode && this.outputNode.isNode;
      }
  
 -    build(builder, ...params) {
@@ -3126,14 +3131,15 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index b87431d5..388dfcea 100644
+index d57dc5aa..58c264cb 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
-@@ -1,24 +1,33 @@
+@@ -1,25 +1,34 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
  import { nodeObject, getConstNodeType } from '../tsl/TSLCore.js';
+ import { getValueFromType } from './NodeUtils.js';
 +import Node from './Node.js';
 +import NodeBuilder from './NodeBuilder.js';
 +import NodeFrame from './NodeFrame.js';
@@ -3166,7 +3172,7 @@ index b87431d5..388dfcea 100644
          super(value, nodeType);
  
          /**
-@@ -54,7 +63,7 @@ class UniformNode extends InputNode {
+@@ -55,7 +64,7 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3175,7 +3181,7 @@ index b87431d5..388dfcea 100644
          this.name = name;
  
          return this;
-@@ -67,7 +76,7 @@ class UniformNode extends InputNode {
+@@ -68,7 +77,7 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3184,7 +3190,7 @@ index b87431d5..388dfcea 100644
          console.warn('THREE.TSL: "label()" has been deprecated. Use "setName()" instead.'); // @deprecated r179
  
          return this.setName(name);
-@@ -79,7 +88,7 @@ class UniformNode extends InputNode {
+@@ -80,7 +89,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
       */
@@ -3193,7 +3199,7 @@ index b87431d5..388dfcea 100644
          this.groupNode = group;
  
          return this;
-@@ -101,11 +110,11 @@ class UniformNode extends InputNode {
+@@ -102,11 +111,11 @@ class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The uniform hash.
       */
@@ -3207,7 +3213,7 @@ index b87431d5..388dfcea 100644
          const self = this.getSelf();
  
          callback = callback.bind(self);
-@@ -119,7 +128,7 @@ class UniformNode extends InputNode {
+@@ -120,7 +129,7 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -3216,7 +3222,7 @@ index b87431d5..388dfcea 100644
          let type = super.getInputType(builder);
  
          if (type === 'bool') {
-@@ -129,12 +138,12 @@ class UniformNode extends InputNode {
+@@ -130,12 +139,12 @@ class UniformNode extends InputNode {
          return type;
      }
  
@@ -3231,7 +3237,7 @@ index b87431d5..388dfcea 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -147,7 +156,7 @@ class UniformNode extends InputNode {
+@@ -148,7 +157,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3240,22 +3246,24 @@ index b87431d5..388dfcea 100644
              this.name || builder.context.nodeName,
          );
          const uniformName = builder.getPropertyName(nodeUniform);
-@@ -194,11 +203,14 @@ export default UniformNode;
-  * @param {string} [arg2] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+@@ -195,7 +204,7 @@ export default UniformNode;
+  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
--export const uniform = (arg1, arg2) => {
-+export const uniform = <TValue>(arg1: InputNode<TValue> | TValue, arg2?: Node | string) => {
-     const nodeType = getConstNodeType(arg2 || arg1);
+-export const uniform = (value, type) => {
++export const uniform = <TValue>(value: InputNode<TValue> | TValue, type?: Node | string) => {
+     const nodeType = getConstNodeType(type || value);
+ 
+     if (nodeType === value) {
+@@ -205,7 +214,7 @@ export const uniform = (value, type) => {
+     }
  
      // @TODO: get ConstNode from .traverse() in the future
--    const value = arg1 && arg1.isNode === true ? (arg1.node && arg1.node.value) || arg1.value : arg1;
-+    const value: TValue =
-+        arg1 && (arg1 as Node).isNode === true
-+            ? (arg1.node && arg1.node.value) || (arg1 as InputNode<TValue>).value
-+            : arg1;
+-    value = value && value.isNode === true ? (value.node && value.node.value) || value.value : value;
++    value = value && (value as Node).isNode === true ? (value.node && value.node.value) || value.value : value;
  
-     return nodeObject(new UniformNode(value, nodeType));
+-    return nodeObject(new UniformNode(value, nodeType));
++    return nodeObject(new UniformNode(value as TValue, nodeType));
  };
 diff --git a/src-testing/src/nodes/core/constants.ts b/src-testing/src/nodes/core/constants.ts
 index 1fe2dbbd..a431897f 100644
@@ -3388,7 +3396,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 39a9e4d0..c7530a7d 100644
+index 579c3b2f..42de2c8e 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -8,9 +8,38 @@ import FlipNode from '../utils/FlipNode.js';
@@ -3607,7 +3615,7 @@ index 39a9e4d0..c7530a7d 100644
          const { shaderNode, inputNodes } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -399,7 +562,15 @@ class ShaderCallNodeInternal extends Node {
+@@ -422,7 +585,15 @@ class ShaderCallNodeInternal extends Node {
      }
  }
  
@@ -3623,7 +3631,7 @@ index 39a9e4d0..c7530a7d 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -411,7 +582,7 @@ class ShaderNodeInternal extends Node {
+@@ -434,7 +605,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3632,7 +3640,7 @@ index 39a9e4d0..c7530a7d 100644
          this.layout = layout;
  
          return this;
-@@ -428,6 +599,8 @@ class ShaderNodeInternal extends Node {
+@@ -451,6 +622,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3641,7 +3649,7 @@ index 39a9e4d0..c7530a7d 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -513,11 +686,28 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -549,11 +722,28 @@ export function ShaderNode(jsFunc, nodeType) {
      return new Proxy(new ShaderNodeInternal(jsFunc, nodeType), shaderNodeHandler);
  }
  
