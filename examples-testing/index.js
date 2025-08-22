@@ -38,7 +38,7 @@ const exceptionList = [
     'webgl_points_dynamic',
     'webgl_raycaster_bvh',
     'webgl_renderer_pathtracer',
-    'webgl_reverse_depth_buffer',
+    'webgl_reversed_depth_buffer',
     'webgl_postprocessing_3dlut',
     'webgl_postprocessing_dof',
     'webgl_postprocessing_dof2',
