@@ -3131,7 +3131,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index d57dc5aa..73f8bfe7 100644
+index d57dc5aa..58c264cb 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,25 +1,34 @@
@@ -3262,7 +3262,8 @@ index d57dc5aa..73f8bfe7 100644
 -    value = value && value.isNode === true ? (value.node && value.node.value) || value.value : value;
 +    value = value && (value as Node).isNode === true ? (value.node && value.node.value) || value.value : value;
  
-     return nodeObject(new UniformNode(value, nodeType));
+-    return nodeObject(new UniformNode(value, nodeType));
++    return nodeObject(new UniformNode(value as TValue, nodeType));
  };
 diff --git a/src-testing/src/nodes/core/constants.ts b/src-testing/src/nodes/core/constants.ts
 index 1fe2dbbd..a431897f 100644
