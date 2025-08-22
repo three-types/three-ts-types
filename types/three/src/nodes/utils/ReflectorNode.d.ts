@@ -10,6 +10,8 @@ export interface ReflectorNodeParameters {
     resolution?: number | undefined;
     generateMipmaps?: boolean | undefined;
     bounces?: boolean | undefined;
+    depth?: boolean | undefined;
+    samples?: number | undefined;
 }
 
 declare class ReflectorNode extends TextureNode {
