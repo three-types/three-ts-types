@@ -17264,23 +17264,21 @@ index c39b8793..3c6eaadf 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index 8c1b8ca0..ef11d62e 100644
+index 238ed4e4..eef4c8f6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
-@@ -8,7 +8,11 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -9,12 +9,17 @@ import Stats from 'three/addons/libs/stats.module.js';
  
  //
  
--let camera, scene, renderer, mesh, stats;
+-let camera, scene, renderer, mesh, controls, stats;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    mesh: THREE.InstancedMesh,
++    controls: OrbitControls,
 +    stats: Stats;
  
- let mouseX = 0,
-     mouseY = 0;
-@@ -19,7 +23,7 @@ let windowHalfY = window.innerHeight / 2;
  let width = window.innerWidth;
  let height = window.innerHeight;
  
@@ -17289,15 +17287,6 @@ index 8c1b8ca0..ef11d62e 100644
  
  init();
  
-@@ -126,7 +130,7 @@ function init() {
-     gui.add(effectController.maxblur, 'value', 0.0, 0.01, 0.001).name('maxblur');
- }
- 
--function onPointerMove(event) {
-+function onPointerMove(event: PointerEvent) {
-     if (event.isPrimary === false) return;
- 
-     mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 index 117f6888..9883f287 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
