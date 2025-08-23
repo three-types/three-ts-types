@@ -5,7 +5,7 @@ declare class SSRNode extends TempNode {
     colorNode: ShaderNodeObject<Node>;
     depthNode: ShaderNodeObject<Node>;
     normalNode: ShaderNodeObject<Node>;
-    metalnessNode: ShaderNodeObject<Node>;
+    metalnessRoughnessNode: ShaderNodeObject<Node>;
     camera: Camera;
 
     resolutionScale: number;
@@ -14,13 +14,15 @@ declare class SSRNode extends TempNode {
     thickness: UniformNode<number>;
     opacity: UniformNode<number>;
     quality: UniformNode<number>;
+    blurQuality: UniformNode<number>;
 
     constructor(
         colorNode: ShaderNodeObject<Node>,
         depthNode: ShaderNodeObject<Node>,
         normalNode: ShaderNodeObject<Node>,
-        metalnessNode: ShaderNodeObject<Node>,
+        metalnessRoughnessNode: ShaderNodeObject<Node>,
         camera: Camera,
+        blurred?: boolean,
     );
 
     getTextureNode(): ShaderNodeObject<TextureNode>;
@@ -34,6 +36,7 @@ export const ssr: (
     colorNode: Node,
     depthNode: Node,
     normalNode: Node,
-    metalnessNode: Node,
+    metalnessRoughnessNode: Node,
     camera: Camera,
+    blurred?: boolean,
 ) => ShaderNodeObject<SSRNode>;
