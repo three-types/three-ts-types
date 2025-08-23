@@ -5603,7 +5603,7 @@ index d6c72696..3ae4005b 100644
  
          _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 16b7aca8..5be14117 100644
+index 0ac531cc..2d2c669f 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
 @@ -1,5 +1,9 @@
@@ -5666,9 +5666,9 @@ index 16b7aca8..5be14117 100644
   */
 -export function getCacheKey(renderContext) {
 +export function getCacheKey(renderContext: RenderContext) {
-     const { textures, activeCubeFace } = renderContext;
+     const { textures, activeCubeFace, activeMipmapLevel } = renderContext;
  
-     const values = [activeCubeFace];
+     const values = [activeCubeFace, activeMipmapLevel];
  
 -    for (const texture of textures) {
 +    for (const texture of textures!) {
@@ -7698,7 +7698,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 6615956d..ffc1fa3e 100644
+index 135fe87c..57db2a09 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -11,8 +11,46 @@ import {
@@ -7792,7 +7792,7 @@ index 6615956d..ffc1fa3e 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -309,7 +354,7 @@ class Textures extends DataMap {
+@@ -315,7 +360,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -7801,7 +7801,7 @@ index 6615956d..ffc1fa3e 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -326,13 +371,13 @@ class Textures extends DataMap {
+@@ -332,13 +377,13 @@ class Textures extends DataMap {
              } else {
                  target.width = image.width || 1;
                  target.height = image.height || 1;
@@ -7817,7 +7817,7 @@ index 6615956d..ffc1fa3e 100644
      }
  
      /**
-@@ -343,13 +388,13 @@ class Textures extends DataMap {
+@@ -349,13 +394,13 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7835,7 +7835,7 @@ index 6615956d..ffc1fa3e 100644
                  // it is not possible to compute mipmaps for compressed textures. So
                  // when no mipmaps are defined in "texture.mipmaps", force a texture
                  // level of 1
-@@ -369,8 +414,8 @@ class Textures extends DataMap {
+@@ -375,8 +420,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -7846,7 +7846,7 @@ index 6615956d..ffc1fa3e 100644
      }
  
      /**
-@@ -379,7 +424,7 @@ class Textures extends DataMap {
+@@ -385,7 +430,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -8298,7 +8298,7 @@ index be2ca6bd..cf09d1ba 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index 9a85421a..7d4d5c0c 100644
+index 7628bc95..d0fc677b 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -28,10 +28,61 @@ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
@@ -8363,7 +8363,7 @@ index 9a85421a..7d4d5c0c 100644
  /**
   * The XR manager is built on top of the WebXR Device API to
   * manage XR sessions with `WebGPURenderer`.
-@@ -40,14 +91,94 @@ const _cameraRPos = /*@__PURE__*/ new Vector3();
+@@ -40,14 +91,96 @@ const _cameraRPos = /*@__PURE__*/ new Vector3();
   *
   * @augments EventDispatcher
   */
@@ -8396,6 +8396,8 @@ index 9a85421a..7d4d5c0c 100644
 +    _xrRenderTarget: XRRenderTarget | null;
 +
 +    _layers: XRLayerObject[];
++
++    _sessionUsesLayers: boolean;
 +
 +    _supportsLayers: boolean;
 +
@@ -8460,7 +8462,7 @@ index 9a85421a..7d4d5c0c 100644
          super();
  
          /**
-@@ -407,7 +538,7 @@ class XRManager extends EventDispatcher {
+@@ -410,7 +543,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8469,7 +8471,7 @@ index 9a85421a..7d4d5c0c 100644
          const controller = this._getController(index);
  
          return controller.getTargetRaySpace();
-@@ -421,7 +552,7 @@ class XRManager extends EventDispatcher {
+@@ -424,7 +557,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8478,7 +8480,7 @@ index 9a85421a..7d4d5c0c 100644
          const controller = this._getController(index);
  
          return controller.getGripSpace();
-@@ -435,7 +566,7 @@ class XRManager extends EventDispatcher {
+@@ -438,7 +571,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -8487,7 +8489,7 @@ index 9a85421a..7d4d5c0c 100644
          const controller = this._getController(index);
  
          return controller.getHandSpace();
-@@ -460,7 +591,7 @@ class XRManager extends EventDispatcher {
+@@ -463,7 +596,7 @@ class XRManager extends EventDispatcher {
       * @param {number} foveation - A number in the range `[0,1]` where `0` means no foveation (full resolution)
       * and `1` means maximum foveation (the edges render at lower resolution).
       */
@@ -8496,7 +8498,7 @@ index 9a85421a..7d4d5c0c 100644
          this._foveation = foveation;
  
          if (this._glProjLayer !== null) {
-@@ -488,7 +619,7 @@ class XRManager extends EventDispatcher {
+@@ -491,7 +624,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {number} factor - The framebuffer scale factor.
       */
@@ -8505,7 +8507,7 @@ index 9a85421a..7d4d5c0c 100644
          this._framebufferScaleFactor = factor;
  
          if (this.isPresenting === true) {
-@@ -512,7 +643,7 @@ class XRManager extends EventDispatcher {
+@@ -515,7 +648,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {XRReferenceSpaceType} type - The reference space type.
       */
@@ -8514,7 +8516,7 @@ index 9a85421a..7d4d5c0c 100644
          this._referenceSpaceType = type;
  
          if (this.isPresenting === true) {
-@@ -534,7 +665,7 @@ class XRManager extends EventDispatcher {
+@@ -537,7 +670,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {XRReferenceSpace} space - The XR reference space.
       */
@@ -8523,7 +8525,16 @@ index 9a85421a..7d4d5c0c 100644
          this._customReferenceSpace = space;
      }
  
-@@ -591,7 +722,16 @@ class XRManager extends EventDispatcher {
+@@ -571,7 +704,7 @@ class XRManager extends EventDispatcher {
+      */
+     getBinding() {
+         if (this._glBinding === null && this._supportsGlBinding) {
+-            this._glBinding = new XRWebGLBinding(this._session, this._gl);
++            this._glBinding = new XRWebGLBinding(this._session!, this._gl);
+         }
+ 
+         return this._glBinding;
+@@ -610,7 +743,16 @@ class XRManager extends EventDispatcher {
       * @param {Object} [attributes={}] - Allows to configure the layer's render target.
       * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
       */
@@ -8541,7 +8552,7 @@ index 9a85421a..7d4d5c0c 100644
          const geometry = new PlaneGeometry(width, height);
          const renderTarget = new XRRenderTarget(pixelwidth, pixelheight, {
              format: RGBAFormat,
-@@ -623,7 +763,7 @@ class XRManager extends EventDispatcher {
+@@ -642,7 +784,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8550,7 +8561,7 @@ index 9a85421a..7d4d5c0c 100644
              type: 'quad',
              width: width,
              height: height,
-@@ -648,7 +788,7 @@ class XRManager extends EventDispatcher {
+@@ -667,7 +809,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8559,7 +8570,7 @@ index 9a85421a..7d4d5c0c 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -675,15 +815,15 @@ class XRManager extends EventDispatcher {
+@@ -694,15 +836,15 @@ class XRManager extends EventDispatcher {
       * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
       */
      createCylinderLayer(
@@ -8584,7 +8595,7 @@ index 9a85421a..7d4d5c0c 100644
      ) {
          const geometry = new CylinderGeometry(
              radius,
-@@ -725,7 +865,7 @@ class XRManager extends EventDispatcher {
+@@ -744,7 +886,7 @@ class XRManager extends EventDispatcher {
          plane.position.copy(translation);
          plane.quaternion.copy(quaternion);
  
@@ -8593,7 +8604,7 @@ index 9a85421a..7d4d5c0c 100644
              type: 'cylinder',
              radius: radius,
              centralAngle: centralAngle,
-@@ -751,7 +891,7 @@ class XRManager extends EventDispatcher {
+@@ -770,7 +912,7 @@ class XRManager extends EventDispatcher {
  
              layer.xrlayer = this._createXRLayer(layer);
  
@@ -8602,10 +8613,10 @@ index 9a85421a..7d4d5c0c 100644
              xrlayers.unshift(layer.xrlayer);
              this._session.updateRenderState({ layers: xrlayers });
          } else {
-@@ -786,12 +926,12 @@ class XRManager extends EventDispatcher {
+@@ -805,12 +947,12 @@ class XRManager extends EventDispatcher {
              layer.renderTarget._hasExternalTextures = layer.renderTarget.isXRRenderTarget;
  
-             if (layer.renderTarget.isXRRenderTarget && this._supportsLayers) {
+             if (layer.renderTarget.isXRRenderTarget && this._sessionUsesLayers) {
 -                layer.xrlayer.transform = new XRRigidTransform(
 +                layer.xrlayer!.transform = new XRRigidTransform(
                      layer.plane.getWorldPosition(translationObject),
@@ -8617,7 +8628,7 @@ index 9a85421a..7d4d5c0c 100644
                  renderer.backend.setXRRenderTargetTextures(layer.renderTarget, glSubImage.colorTexture, undefined);
  
                  renderer._setXRLayerSize(layer.renderTarget.width, layer.renderTarget.height);
-@@ -850,7 +990,7 @@ class XRManager extends EventDispatcher {
+@@ -869,7 +1011,7 @@ class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -8626,7 +8637,7 @@ index 9a85421a..7d4d5c0c 100644
          const renderer = this._renderer;
          const backend = renderer.backend;
  
-@@ -880,9 +1020,9 @@ class XRManager extends EventDispatcher {
+@@ -899,9 +1041,9 @@ class XRManager extends EventDispatcher {
              this._currentPixelRatio = renderer.getPixelRatio();
              renderer.getSize(this._currentSize);
  
@@ -8639,7 +8650,7 @@ index 9a85421a..7d4d5c0c 100644
  
              //
  
-@@ -1015,11 +1155,11 @@ class XRManager extends EventDispatcher {
+@@ -1028,11 +1170,11 @@ class XRManager extends EventDispatcher {
  
              //
  
@@ -8655,7 +8666,7 @@ index 9a85421a..7d4d5c0c 100644
  
              this.isPresenting = true;
  
-@@ -1034,7 +1174,7 @@ class XRManager extends EventDispatcher {
+@@ -1047,7 +1189,7 @@ class XRManager extends EventDispatcher {
       *
       * @param {PerspectiveCamera} camera - The camera.
       */
@@ -8664,7 +8675,7 @@ index 9a85421a..7d4d5c0c 100644
          const session = this._session;
  
          if (session === null) return;
-@@ -1067,7 +1207,7 @@ class XRManager extends EventDispatcher {
+@@ -1080,7 +1222,7 @@ class XRManager extends EventDispatcher {
          cameraL.layers.mask = cameraXR.layers.mask & 0b011;
          cameraR.layers.mask = cameraXR.layers.mask & 0b101;
  
@@ -8673,7 +8684,7 @@ index 9a85421a..7d4d5c0c 100644
          const cameras = cameraXR.cameras;
  
          updateCamera(cameraXR, parent);
-@@ -1098,7 +1238,7 @@ class XRManager extends EventDispatcher {
+@@ -1111,7 +1253,7 @@ class XRManager extends EventDispatcher {
       * @param {number} index - The controller index.
       * @return {WebXRController} The XR controller.
       */
@@ -8682,7 +8693,7 @@ index 9a85421a..7d4d5c0c 100644
          let controller = this._controllers[index];
  
          if (controller === undefined) {
-@@ -1120,7 +1260,7 @@ class XRManager extends EventDispatcher {
+@@ -1133,7 +1275,7 @@ class XRManager extends EventDispatcher {
   * @param {PerspectiveCamera} cameraL - The left camera.
   * @param {PerspectiveCamera} cameraR - The right camera.
   */
@@ -8691,7 +8702,7 @@ index 9a85421a..7d4d5c0c 100644
      _cameraLPos.setFromMatrixPosition(cameraL.matrixWorld);
      _cameraRPos.setFromMatrixPosition(cameraR.matrixWorld);
  
-@@ -1184,7 +1324,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
+@@ -1197,7 +1339,7 @@ function setProjectionFromUnion(camera, cameraL, cameraR) {
   * @param {Camera} camera - The camera to update.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8700,7 +8711,7 @@ index 9a85421a..7d4d5c0c 100644
      if (parent === null) {
          camera.matrixWorld.copy(camera.matrix);
      } else {
-@@ -1202,7 +1342,7 @@ function updateCamera(camera, parent) {
+@@ -1215,7 +1357,7 @@ function updateCamera(camera, parent) {
   * @param {ArrayCamera} cameraXR - The XR camera.
   * @param {Object3D} parent - The parent 3D object.
   */
@@ -8709,7 +8720,7 @@ index 9a85421a..7d4d5c0c 100644
      if (parent === null) {
          camera.matrix.copy(cameraXR.matrixWorld);
      } else {
-@@ -1217,13 +1357,14 @@ function updateUserCamera(camera, cameraXR, parent) {
+@@ -1230,13 +1372,14 @@ function updateUserCamera(camera, cameraXR, parent) {
      camera.projectionMatrix.copy(cameraXR.projectionMatrix);
      camera.projectionMatrixInverse.copy(cameraXR.projectionMatrixInverse);
  
@@ -8728,7 +8739,7 @@ index 9a85421a..7d4d5c0c 100644
      const controllerIndex = this._controllerInputSources.indexOf(event.inputSource);
  
      if (controllerIndex === -1) {
-@@ -1233,15 +1374,15 @@ function onSessionEvent(event) {
+@@ -1246,15 +1389,15 @@ function onSessionEvent(event) {
      const controller = this._controllers[controllerIndex];
  
      if (controller !== undefined) {
@@ -8747,7 +8758,7 @@ index 9a85421a..7d4d5c0c 100644
      const renderer = this._renderer;
  
      session.removeEventListener('select', this._onSessionEvent);
-@@ -1312,18 +1453,18 @@ function onSessionEnd() {
+@@ -1325,18 +1468,18 @@ function onSessionEnd() {
      this.isPresenting = false;
      this._useMultiview = false;
  
@@ -8772,7 +8783,7 @@ index 9a85421a..7d4d5c0c 100644
      const controllers = this._controllers;
      const controllerInputSources = this._controllerInputSources;
  
-@@ -1375,24 +1516,24 @@ function onInputSourcesChange(event) {
+@@ -1388,24 +1531,24 @@ function onInputSourcesChange(event) {
  }
  
  // Creation method for native WebXR layers
@@ -8802,7 +8813,7 @@ index 9a85421a..7d4d5c0c 100644
              viewPixelWidth: layer.pixelwidth,
              viewPixelHeight: layer.pixelheight,
              clearOnAccess: false,
-@@ -1402,7 +1543,7 @@ function createXRLayer(layer) {
+@@ -1415,7 +1558,7 @@ function createXRLayer(layer) {
  
  // Animation Loop
  
@@ -8811,7 +8822,7 @@ index 9a85421a..7d4d5c0c 100644
      if (frame === undefined) return;
  
      const cameraXR = this._cameraXR;
-@@ -1411,16 +1552,16 @@ function onAnimationFrame(time, frame) {
+@@ -1424,16 +1567,16 @@ function onAnimationFrame(time, frame) {
  
      const glBaseLayer = this._glBaseLayer;
  
@@ -8831,16 +8842,16 @@ index 9a85421a..7d4d5c0c 100644
          }
  
          let cameraXRNeedsUpdate = false;
-@@ -1438,7 +1579,7 @@ function onAnimationFrame(time, frame) {
+@@ -1451,7 +1594,7 @@ function onAnimationFrame(time, frame) {
              let viewport;
  
-             if (this._useLayers === true) {
+             if (this._supportsLayers === true) {
 -                const glSubImage = this._glBinding.getViewSubImage(this._glProjLayer, view);
 +                const glSubImage = this._glBinding!.getViewSubImage(this._glProjLayer!, view);
                  viewport = glSubImage.viewport;
  
                  // For side-by-side projection, we only produce a single texture for both eyes.
-@@ -1446,13 +1587,13 @@ function onAnimationFrame(time, frame) {
+@@ -1459,13 +1602,13 @@ function onAnimationFrame(time, frame) {
                      backend.setXRRenderTargetTextures(
                          this._xrRenderTarget,
                          glSubImage.colorTexture,
@@ -8856,7 +8867,7 @@ index 9a85421a..7d4d5c0c 100644
              }
  
              let camera = this._cameras[i];
-@@ -1468,7 +1609,7 @@ function onAnimationFrame(time, frame) {
+@@ -1481,7 +1624,7 @@ function onAnimationFrame(time, frame) {
              camera.matrix.decompose(camera.position, camera.quaternion, camera.scale);
              camera.projectionMatrix.fromArray(view.projectionMatrix);
              camera.projectionMatrixInverse.copy(camera.projectionMatrix).invert();
@@ -9730,7 +9741,7 @@ index d5f60879..37f47e7c 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 2a55e2f8..ca4ce43b 100644
+index 784f4eaf..911f0276 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
@@ -10192,10 +10203,10 @@ index fbd7719e..5228bad9 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index eadb1cd3..d7c26ca6 100644
+index 17acc43f..42e6c0d9 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1641,7 +1641,14 @@ class WebGPUBackend extends Backend {
+@@ -1639,7 +1639,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
