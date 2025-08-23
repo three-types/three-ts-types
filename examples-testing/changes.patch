@@ -17715,7 +17715,7 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index a86fbb61..c8131141 100644
+index 475cf195..d22ff881 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -13,8 +13,9 @@ import {
@@ -17729,14 +17729,15 @@ index a86fbb61..c8131141 100644
  import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -32,8 +33,12 @@ const params = {
+@@ -34,8 +35,13 @@ const params = {
      enabled: true,
  };
  
--let camera, scene, renderer, postProcessing, ssrPass;
+-let camera, scene, model, renderer, postProcessing, ssrPass;
 -let gui, stats, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
++    model: THREE.Group,
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.PostProcessing,
 +    ssrPass: ShaderNodeObject<SSRNode>;
@@ -17744,10 +17745,10 @@ index a86fbb61..c8131141 100644
  
  init();
  
-@@ -52,13 +57,12 @@ async function init() {
-     loader.setDRACOLoader(dracoLoader);
-     loader.load('models/gltf/steampunk_camera.glb', function (gltf) {
-         gltf.scene.traverse(function (object) {
+@@ -56,13 +62,12 @@ async function init() {
+         model = gltf.scene;
+ 
+         model.traverse(function (object) {
 -            if (object.material) {
 -                if (object.material.name === 'Lense_Casing') {
 -                    object.material.transparent = true;
@@ -17762,6 +17763,17 @@ index a86fbb61..c8131141 100644
              }
          });
  
+@@ -166,8 +171,8 @@ async function init() {
+         .max(1)
+         .onChange(value => {
+             model.traverse(function (object) {
+-                if (object.material) {
+-                    object.material.roughness = value;
++                if ((object as THREE.Mesh).material) {
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = value;
+                 }
+             });
+         });
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
 index ac262097..ee4a7c8d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
