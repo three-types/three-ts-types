@@ -26,7 +26,7 @@ export interface SSRPassParams {
     groundReflector: ReflectorForSSRPass | null;
 }
 
-export class SSRPass extends Pass {
+declare class SSRPass extends Pass {
     width: number;
     height: number;
     clear: boolean;
@@ -94,29 +94,8 @@ export class SSRPass extends Pass {
 
     constructor(params: SSRPassParams);
 
-    dispose: () => void;
-
-    renderPass: (
-        renderer: WebGLRenderer,
-        passMaterial: Material,
-        renderTarget: WebGLRenderTarget,
-        clearColor: ColorRepresentation,
-        clearAlpha: ColorRepresentation,
-    ) => void;
-
-    renderOverride: (
-        renderer: WebGLRenderer,
-        passMaterial: Material,
-        renderTarget: WebGLRenderTarget,
-        clearColor: ColorRepresentation,
-        clearAlpha: ColorRepresentation,
-    ) => void;
-
-    renderMetalness: (
-        renderer: WebGLRenderer,
-        passMaterial: Material,
-        renderTarget: WebGLRenderTarget,
-        clearColor: ColorRepresentation,
-        clearAlpha: ColorRepresentation,
-    ) => void;
+    get resolutionScale(): number;
+    set resolutionScale(value: number);
 }
+
+export { SSRPass };
