@@ -111,6 +111,7 @@ export const cameraPosition: typeof TSL.cameraPosition;
 export const cameraProjectionMatrix: typeof TSL.cameraProjectionMatrix;
 export const cameraProjectionMatrixInverse: typeof TSL.cameraProjectionMatrixInverse;
 export const cameraViewMatrix: typeof TSL.cameraViewMatrix;
+export const cameraViewport: typeof TSL.cameraViewport;
 export const cameraWorldMatrix: typeof TSL.cameraWorldMatrix;
 export const cbrt: typeof TSL.cbrt;
 export const cdl: typeof TSL.cdl;
