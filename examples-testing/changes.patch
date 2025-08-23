@@ -9523,10 +9523,10 @@ index f93e5fb8..ee612f75 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_mirror.ts b/examples-testing/examples/webgl_mirror.ts
-index 8b27363a..7d0f6cfb 100644
+index 8de83437..6c780eab 100644
 --- a/examples-testing/examples/webgl_mirror.ts
 +++ b/examples-testing/examples/webgl_mirror.ts
-@@ -3,18 +3,18 @@ import * as THREE from 'three';
+@@ -5,13 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Reflector } from 'three/addons/objects/Reflector.js';
  
@@ -9542,6 +9542,9 @@ index 8b27363a..7d0f6cfb 100644
 -let groundMirror, verticalMirror;
 +let groundMirror: Reflector, verticalMirror: Reflector;
  
+ let resolutionScale = 1; // render target scale factor in [ 0, 1 ]
+ 
+@@ -20,7 +20,7 @@ const size = new THREE.Vector2();
  init();
  
  function init() {
@@ -9550,6 +9553,15 @@ index 8b27363a..7d0f6cfb 100644
  
      // renderer
      renderer = new THREE.WebGLRenderer({ antialias: true });
+@@ -57,7 +57,7 @@ function init() {
+     groundMirror = new Reflector(geometry, {
+         clipBias: 0.003,
+         textureWidth: size.width,
+-        textureHeight: size.heignt,
++        textureHeight: size.height,
+         color: 0xb5b5b5,
+     });
+     groundMirror.position.y = 0.5;
 diff --git a/examples-testing/examples/webgl_modifier_edgesplit.ts b/examples-testing/examples/webgl_modifier_edgesplit.ts
 index 4725eff6..96620f50 100644
 --- a/examples-testing/examples/webgl_modifier_edgesplit.ts
@@ -14372,7 +14384,7 @@ index ef4b78c6..56fae624 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index 81222c37..14ac8edb 100644
+index d6294f32..6b0a13b6 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -13,6 +13,7 @@ import {
@@ -14383,9 +14395,9 @@ index 81222c37..14ac8edb 100644
  } from 'three/tsl';
  
  import { RaymarchingBox } from 'three/addons/tsl/utils/Raymarching.js';
-@@ -21,9 +22,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- 
+@@ -22,9 +23,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
 -let renderer, scene, camera;
 -let mesh;
@@ -14394,9 +14406,9 @@ index 81222c37..14ac8edb 100644
 +let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.NodeMaterial>;
 +let computeNode: ShaderNodeObject<THREE.ComputeNode>;
  
- init();
- 
-@@ -47,7 +48,7 @@ async function init() {
+ if (WebGPU.isAvailable() === false) {
+     document.body.appendChild(WebGPU.getErrorMessage());
+@@ -54,7 +55,7 @@ async function init() {
      canvas.width = 1;
      canvas.height = 32;
  
@@ -14405,7 +14417,7 @@ index 81222c37..14ac8edb 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -68,7 +69,7 @@ async function init() {
+@@ -75,7 +76,7 @@ async function init() {
  
      const size = 200;
  
@@ -14414,7 +14426,7 @@ index 81222c37..14ac8edb 100644
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -99,33 +100,37 @@ async function init() {
+@@ -106,33 +107,37 @@ async function init() {
  
      // Shader
  
@@ -17189,7 +17201,7 @@ index a75d3801..36f78a84 100644
  
      postProcessing.render();
 diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-index 7755dc1f..4d302325 100644
+index f6f87219..1c6007ce 100644
 --- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -17201,8 +17213,8 @@ index 7755dc1f..4d302325 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let postProcessing: THREE.PostProcessing;
  
- init();
- 
+ const params = {
+     resolutionScale: 0.2,
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
 index 774987c1..3b94f6a4 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
@@ -17715,7 +17727,7 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 475cf195..d22ff881 100644
+index 3cbf48d5..9c8e20f5 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -13,8 +13,9 @@ import {
