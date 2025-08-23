@@ -13,6 +13,7 @@ declare class SSRNode extends TempNode {
     maxDistance: UniformNode<number>;
     thickness: UniformNode<number>;
     opacity: UniformNode<number>;
+    quality: UniformNode<number>;
 
     constructor(
         colorNode: ShaderNodeObject<Node>,
