@@ -1,4 +1,4 @@
-import { HDR, HDRLoader } from "./HDRLoader";
+import { HDR, HDRLoader } from "./HDRLoader.js";
 
 /**
  * @deprecated RGBELoader has been deprecated. Please use HDRLoader instead.
