@@ -5998,7 +5998,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index cbb1dffb..6c363a1b 100644
+index 579aa58c..fb8b7f7f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6174,7 +6174,7 @@ index cbb1dffb..6c363a1b 100644
  
          const attributesId = {};
  
-@@ -779,7 +843,7 @@ class RenderObject {
+@@ -789,7 +853,7 @@ class RenderObject {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
          this.geometry.removeEventListener('dispose', this.onGeometryDispose);
  
@@ -7698,7 +7698,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 5b929721..d3827d5c 100644
+index 6615956d..ffc1fa3e 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -11,8 +11,46 @@ import {
@@ -7817,7 +7817,7 @@ index 5b929721..d3827d5c 100644
      }
  
      /**
-@@ -343,10 +388,10 @@ class Textures extends DataMap {
+@@ -343,13 +388,13 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -7825,23 +7825,28 @@ index 5b929721..d3827d5c 100644
 +    getMipLevels(texture: Texture, width: number, height: number) {
          let mipLevelCount;
  
--        if (texture.isCompressedTexture) {
-+        if ((texture as CompressedTexture).isCompressedTexture) {
-             if (texture.mipmaps) {
-                 mipLevelCount = texture.mipmaps.length;
-             } else {
-@@ -365,8 +410,8 @@ class Textures extends DataMap {
+-        if (texture.mipmaps.length > 0) {
+-            mipLevelCount = texture.mipmaps.length;
++        if (texture.mipmaps!.length > 0) {
++            mipLevelCount = texture.mipmaps!.length;
+         } else {
+-            if (texture.isCompressedTexture === true) {
++            if ((texture as CompressedTexture).isCompressedTexture === true) {
+                 // it is not possible to compute mipmaps for compressed textures. So
+                 // when no mipmaps are defined in "texture.mipmaps", force a texture
+                 // level of 1
+@@ -369,8 +414,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
 -    needsMipmaps(texture) {
--        return texture.isCompressedTexture === true || texture.generateMipmaps;
+-        return texture.generateMipmaps === true || texture.mipmaps.length > 0;
 +    needsMipmaps(texture: Texture) {
-+        return (texture as CompressedTexture).isCompressedTexture === true || texture.generateMipmaps;
++        return texture.generateMipmaps === true || texture.mipmaps!.length > 0;
      }
  
      /**
-@@ -375,7 +420,7 @@ class Textures extends DataMap {
+@@ -379,7 +424,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
