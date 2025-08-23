@@ -11,7 +11,7 @@ declare class GaussianBlurNode extends TempNode {
     directionNode: Node | null;
     sigma: number;
 
-    resolution: Vector2;
+    resolutionScale: number;
 
     premultipliedAlpha: boolean;
 
@@ -25,6 +25,15 @@ declare class GaussianBlurNode extends TempNode {
     setSize(width: number, height: number): void;
 
     getTextureNode(): TextureNode;
+
+    /**
+     * @deprecated The "resolution" property has been renamed to "resolutionScale" and is now of type `number`.
+     */
+    get resolution(): Vector2;
+    /**
+     * @deprecated The "resolution" property has been renamed to "resolutionScale" and is now of type `number`.
+     */
+    set resolution(value: Vector2);
 }
 
 export default GaussianBlurNode;
