@@ -7681,19 +7681,6 @@ index af66eb81..f7832073 100644
  
          meshes.push(new THREE.Mesh(geometry, material1));
          meshes.push(new THREE.Mesh(geometry, material2));
-diff --git a/examples-testing/examples/webgl_loader_texture_rgbm.ts b/examples-testing/examples/webgl_loader_texture_rgbm.ts
-index a882cdbc..a7cbf3e0 100644
---- a/examples-testing/examples/webgl_loader_texture_rgbm.ts
-+++ b/examples-testing/examples/webgl_loader_texture_rgbm.ts
-@@ -8,7 +8,7 @@ const params = {
-     exposure: 2.0,
- };
- 
--let renderer, scene, camera;
-+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.OrthographicCamera;
- 
- init();
- 
 diff --git a/examples-testing/examples/webgl_loader_texture_tga.ts b/examples-testing/examples/webgl_loader_texture_tga.ts
 index c4f65b79..fd6bab07 100644
 --- a/examples-testing/examples/webgl_loader_texture_tga.ts
@@ -8675,16 +8662,16 @@ index 2c917caf..915aadca 100644
          // shadow
          const mesh = new THREE.Mesh(
 diff --git a/examples-testing/examples/webgl_materials_envmaps_hdr.ts b/examples-testing/examples/webgl_materials_envmaps_hdr.ts
-index b4c6f64e..48b6c01c 100644
+index 2dc2b808..31851f3d 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_hdr.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_hdr.ts
-@@ -8,7 +8,13 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
- import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -7,7 +7,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
  import { DebugEnvironment } from 'three/addons/environments/DebugEnvironment.js';
  
 -const params = {
 +const params: {
-+    envMap: 'Generated' | 'LDR' | 'HDR' | 'RGBM16';
++    envMap: 'Generated' | 'LDR' | 'HDR';
 +    roughness: number;
 +    metalness: number;
 +    exposure: number;
@@ -8693,28 +8680,27 @@ index b4c6f64e..48b6c01c 100644
      envMap: 'HDR',
      roughness: 0.0,
      metalness: 0.0,
-@@ -16,11 +22,15 @@ const params = {
+@@ -15,11 +21,14 @@ const params = {
      debug: false,
  };
  
 -let container, stats;
 -let camera, scene, renderer, controls;
 -let torusMesh, planeMesh;
--let generatedCubeRenderTarget, ldrCubeRenderTarget, hdrCubeRenderTarget, rgbmCubeRenderTarget;
--let ldrCubeMap, hdrCubeMap, rgbmCubeMap;
+-let generatedCubeRenderTarget, ldrCubeRenderTarget, hdrCubeRenderTarget;
+-let ldrCubeMap, hdrCubeMap;
 +let container: HTMLDivElement, stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
 +let torusMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>,
 +    planeMesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>;
 +let generatedCubeRenderTarget: THREE.WebGLRenderTarget,
 +    ldrCubeRenderTarget: THREE.WebGLRenderTarget,
-+    hdrCubeRenderTarget: THREE.WebGLRenderTarget,
-+    rgbmCubeRenderTarget: THREE.WebGLRenderTarget;
-+let ldrCubeMap: THREE.CubeTexture, hdrCubeMap: THREE.CubeTexture, rgbmCubeMap: THREE.CubeTexture;
++    hdrCubeRenderTarget: THREE.WebGLRenderTarget;
++let ldrCubeMap: THREE.CubeTexture, hdrCubeMap: THREE.CubeTexture;
  
  init();
  
-@@ -39,9 +49,9 @@ function init() {
+@@ -38,9 +47,9 @@ function init() {
  
      //
  
@@ -14494,7 +14480,7 @@ index 01e979d7..0fd65713 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 4a7eaed4..73447d66 100644
+index 91786717..42596f73 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -11,6 +11,7 @@ import {
@@ -14504,7 +14490,7 @@ index 4a7eaed4..73447d66 100644
 +    ShaderNodeObject,
  } from 'three/tsl';
  
- import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
 @@ -20,7 +21,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -14514,7 +14500,7 @@ index 4a7eaed4..73447d66 100644
  
  init();
  
-@@ -71,7 +72,10 @@ async function init() {
+@@ -68,7 +69,10 @@ async function init() {
      const rotateY1Matrix = new THREE.Matrix4();
      const rotateY2Matrix = new THREE.Matrix4();
  
@@ -14527,10 +14513,10 @@ index 4a7eaed4..73447d66 100644
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
 diff --git a/examples-testing/examples/webgpu_cubemap_dynamic.ts b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-index 8b04b5f2..f1c80ef1 100644
+index 4a17c47b..0d3429e0 100644
 --- a/examples-testing/examples/webgpu_cubemap_dynamic.ts
 +++ b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-@@ -6,12 +6,12 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -6,12 +6,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -14547,7 +14533,7 @@ index 8b04b5f2..f1c80ef1 100644
  
  init();
  
-@@ -108,7 +108,7 @@ function onWindowResized() {
+@@ -105,7 +105,7 @@ function onWindowResized() {
      camera.updateProjectionMatrix();
  }
  
@@ -14557,10 +14543,10 @@ index 8b04b5f2..f1c80ef1 100644
  
      cube.position.x = Math.cos(time) * 30;
 diff --git a/examples-testing/examples/webgpu_cubemap_mix.ts b/examples-testing/examples/webgpu_cubemap_mix.ts
-index 5f382dfc..fe906f73 100644
+index 54d28cbd..54e87278 100644
 --- a/examples-testing/examples/webgpu_cubemap_mix.ts
 +++ b/examples-testing/examples/webgpu_cubemap_mix.ts
-@@ -6,7 +6,7 @@ import { RGBMLoader } from 'three/addons/loaders/RGBMLoader.js';
+@@ -6,7 +6,7 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -16808,7 +16794,7 @@ index 913c28ab..a405f85c 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-index bb838c5c..d47105f2 100644
+index cf895102..4d6c1a12 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
 +++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
 @@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17091,7 +17077,7 @@ index a75d3801..36f78a84 100644
  
      postProcessing.render();
 diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-index 1730f5ea..46c08191 100644
+index 7755dc1f..4d302325 100644
 --- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
