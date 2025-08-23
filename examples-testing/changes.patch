@@ -15708,6 +15708,57 @@ index a1e23b17..590f668d 100644
      mouseX = (event.clientX - windowHalfX) / 100;
      mouseY = (event.clientY - windowHalfY) / 100;
  }
+diff --git a/examples-testing/examples/webgpu_materials_cubemap_mipmaps.ts b/examples-testing/examples/webgpu_materials_cubemap_mipmaps.ts
+index 6c66f9d3..ccc9cd5e 100644
+--- a/examples-testing/examples/webgpu_materials_cubemap_mipmaps.ts
++++ b/examples-testing/examples/webgpu_materials_cubemap_mipmaps.ts
+@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let container;
++let container: HTMLDivElement;
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ init();
+ 
+@@ -12,10 +12,10 @@ init();
+ async function loadCubeTextureWithMipmaps() {
+     const path = 'textures/cube/angus/';
+     const format = '.jpg';
+-    const mipmaps = [];
++    const mipmaps: THREE.CubeTexture[] = [];
+     const maxLevel = 8;
+ 
+-    async function loadCubeTexture(urls) {
++    async function loadCubeTexture(urls: string[]): Promise<THREE.CubeTexture> {
+         return new Promise(function (resolve) {
+             new THREE.CubeTextureLoader().load(urls, function (cubeTexture) {
+                 resolve(cubeTexture);
+@@ -24,10 +24,10 @@ async function loadCubeTextureWithMipmaps() {
+     }
+ 
+     // load mipmaps
+-    const pendings = [];
++    const pendings: Promise<void>[] = [];
+ 
+     for (let level = 0; level <= maxLevel; ++level) {
+-        const urls = [];
++        const urls: string[] = [];
+ 
+         for (let face = 0; face < 6; ++face) {
+             urls.push(path + 'cube_m0' + level + '_c0' + face + format);
+@@ -44,7 +44,7 @@ async function loadCubeTextureWithMipmaps() {
+ 
+     await Promise.all(pendings);
+ 
+-    const customizedCubeTexture = mipmaps.shift();
++    const customizedCubeTexture = mipmaps.shift()!;
+     customizedCubeTexture.mipmaps = mipmaps;
+     customizedCubeTexture.colorSpace = THREE.SRGBColorSpace;
+     customizedCubeTexture.minFilter = THREE.LinearMipMapLinearFilter;
 diff --git a/examples-testing/examples/webgpu_materials_displacementmap.ts b/examples-testing/examples/webgpu_materials_displacementmap.ts
 index 8aa1abe5..824c087a 100644
 --- a/examples-testing/examples/webgpu_materials_displacementmap.ts
