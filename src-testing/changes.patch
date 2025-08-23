@@ -6342,7 +6342,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index d89852fc..eb153566 100644
+index ab2dee71..9a60a1e6 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -26,6 +26,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7081,30 +7081,30 @@ index d89852fc..eb153566 100644
  
              renderContext = this._renderContexts.getForClear(renderTarget);
              renderContext.textures = renderTargetData.textures;
-@@ -2012,14 +2221,14 @@ class Renderer {
-         this.info.dispose();
-         this.backend.dispose();
+@@ -2013,14 +2222,14 @@ class Renderer {
+             this.info.dispose();
+             this.backend.dispose();
  
--        this._animation.dispose();
--        this._objects.dispose();
--        this._pipelines.dispose();
--        this._nodes.dispose();
--        this._bindings.dispose();
--        this._renderLists.dispose();
--        this._renderContexts.dispose();
--        this._textures.dispose();
-+        this._animation!.dispose();
-+        this._objects!.dispose();
-+        this._pipelines!.dispose();
-+        this._nodes!.dispose();
-+        this._bindings!.dispose();
-+        this._renderLists!.dispose();
-+        this._renderContexts!.dispose();
-+        this._textures!.dispose();
+-            this._animation.dispose();
+-            this._objects.dispose();
+-            this._pipelines.dispose();
+-            this._nodes.dispose();
+-            this._bindings.dispose();
+-            this._renderLists.dispose();
+-            this._renderContexts.dispose();
+-            this._textures.dispose();
++            this._animation!.dispose();
++            this._objects!.dispose();
++            this._pipelines!.dispose();
++            this._nodes!.dispose();
++            this._bindings!.dispose();
++            this._renderLists!.dispose();
++            this._renderContexts!.dispose();
++            this._textures!.dispose();
  
-         if (this._frameBufferTarget !== null) this._frameBufferTarget.dispose();
+             if (this._frameBufferTarget !== null) this._frameBufferTarget.dispose();
  
-@@ -2040,7 +2249,7 @@ class Renderer {
+@@ -2042,7 +2251,7 @@ class Renderer {
       * @param {number} [activeCubeFace=0] - The active cube face.
       * @param {number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -7113,7 +7113,7 @@ index d89852fc..eb153566 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -2060,7 +2269,7 @@ class Renderer {
+@@ -2062,7 +2271,7 @@ class Renderer {
       *
       * @param {Object} renderTarget - The render target to set as the output target.
       */
@@ -7122,7 +7122,7 @@ index d89852fc..eb153566 100644
          this._outputRenderTarget = renderTarget;
      }
  
-@@ -2112,7 +2321,19 @@ class Renderer {
+@@ -2114,7 +2323,19 @@ class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -7143,7 +7143,7 @@ index d89852fc..eb153566 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -2133,7 +2354,7 @@ class Renderer {
+@@ -2135,7 +2356,7 @@ class Renderer {
       * @param {Array<number>|number} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -7152,7 +7152,7 @@ index d89852fc..eb153566 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -2146,7 +2367,7 @@ class Renderer {
+@@ -2148,7 +2369,7 @@ class Renderer {
  
          //
  
@@ -7161,7 +7161,7 @@ index d89852fc..eb153566 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -2161,9 +2382,9 @@ class Renderer {
+@@ -2163,9 +2384,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -7174,7 +7174,7 @@ index d89852fc..eb153566 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2220,7 +2441,10 @@ class Renderer {
+@@ -2222,7 +2443,10 @@ class Renderer {
       * @param {Array<number>|number} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -7186,7 +7186,7 @@ index d89852fc..eb153566 100644
          if (this._initialized === false) await this.init();
  
          this.compute(computeNodes, dispatchSizeOrCount);
-@@ -2233,13 +2457,13 @@ class Renderer {
+@@ -2235,13 +2459,13 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -7202,7 +7202,7 @@ index d89852fc..eb153566 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
-@@ -2252,7 +2476,7 @@ class Renderer {
+@@ -2254,7 +2478,7 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {boolean} Whether the feature is supported or not.
       */
@@ -7211,7 +7211,7 @@ index d89852fc..eb153566 100644
          if (this._initialized === false) {
              console.warn(
                  'THREE.Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2281,10 +2505,10 @@ class Renderer {
+@@ -2283,10 +2507,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -7224,7 +7224,7 @@ index d89852fc..eb153566 100644
      }
  
      /**
-@@ -2295,14 +2519,14 @@ class Renderer {
+@@ -2297,14 +2521,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -7241,7 +7241,7 @@ index d89852fc..eb153566 100644
      }
  
      /**
-@@ -2311,7 +2535,7 @@ class Renderer {
+@@ -2313,7 +2537,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?Vector2|Vector4} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -7250,7 +7250,7 @@ index d89852fc..eb153566 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2362,7 +2586,14 @@ class Renderer {
+@@ -2364,7 +2588,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -7266,7 +7266,7 @@ index d89852fc..eb153566 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2382,7 +2613,15 @@ class Renderer {
+@@ -2384,7 +2615,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -7283,7 +7283,7 @@ index d89852fc..eb153566 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2396,49 +2635,63 @@ class Renderer {
+@@ -2398,49 +2637,63 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -7364,7 +7364,7 @@ index d89852fc..eb153566 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2448,7 +2701,7 @@ class Renderer {
+@@ -2450,7 +2703,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7373,7 +7373,7 @@ index d89852fc..eb153566 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2473,7 +2726,7 @@ class Renderer {
+@@ -2475,7 +2728,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7382,7 +7382,7 @@ index d89852fc..eb153566 100644
  
              renderList.begin();
  
-@@ -2501,7 +2754,7 @@ class Renderer {
+@@ -2503,7 +2756,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7391,7 +7391,7 @@ index d89852fc..eb153566 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2517,7 +2770,13 @@ class Renderer {
+@@ -2519,7 +2772,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7406,7 +7406,7 @@ index d89852fc..eb153566 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2555,17 +2814,23 @@ class Renderer {
+@@ -2557,17 +2816,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7436,7 +7436,7 @@ index d89852fc..eb153566 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2587,7 +2852,17 @@ class Renderer {
+@@ -2589,7 +2854,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7455,7 +7455,7 @@ index d89852fc..eb153566 100644
          let overridePositionNode;
          let overrideColorNode;
          let overrideDepthNode;
-@@ -2679,14 +2954,23 @@ class Renderer {
+@@ -2681,14 +2956,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7482,7 +7482,7 @@ index d89852fc..eb153566 100644
              clippingContext,
              passId,
          );
-@@ -2695,18 +2979,18 @@ class Renderer {
+@@ -2697,18 +2981,18 @@ class Renderer {
  
          //
  
@@ -7507,7 +7507,7 @@ index d89852fc..eb153566 100644
  
          //
  
-@@ -2720,7 +3004,7 @@ class Renderer {
+@@ -2722,7 +3006,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7516,7 +7516,7 @@ index d89852fc..eb153566 100644
      }
  
      /**
-@@ -2737,14 +3021,23 @@ class Renderer {
+@@ -2739,14 +3023,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7543,7 +7543,7 @@ index d89852fc..eb153566 100644
              clippingContext,
              passId,
          );
-@@ -2753,16 +3046,16 @@ class Renderer {
+@@ -2755,16 +3048,16 @@ class Renderer {
  
          //
  
@@ -7698,7 +7698,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 135fe87c..57db2a09 100644
+index cf6595c0..2399afc0 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -11,8 +11,46 @@ import {
@@ -8920,7 +8920,7 @@ index c10c9850..7fff94ff 100644
  
          this._hasExternalTextures = source._hasExternalTextures;
 diff --git a/src-testing/src/renderers/common/nodes/NodeBuilderState.ts b/src-testing/src/renderers/common/nodes/NodeBuilderState.ts
-index 42d80e47..a0e8c024 100644
+index 5fe2b322..2013d057 100644
 --- a/src-testing/src/renderers/common/nodes/NodeBuilderState.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeBuilderState.ts
 @@ -1,4 +1,8 @@
@@ -8982,7 +8982,7 @@ index 42d80e47..a0e8c024 100644
      ) {
          /**
           * The native vertex shader code.
-@@ -128,14 +148,14 @@ class NodeBuilderState {
+@@ -128,7 +148,7 @@ class NodeBuilderState {
          const bindings = [];
  
          for (const instanceGroup of this.bindings) {
@@ -8990,7 +8990,8 @@ index 42d80e47..a0e8c024 100644
 +            const shared = (instanceGroup.bindings[0] as NodeUniformsGroup).groupNode.shared; // All bindings in the group must have the same groupNode.
  
              if (shared !== true) {
-                 const bindingsGroup = new BindGroup(instanceGroup.name, [], instanceGroup.index, instanceGroup);
+                 const bindingsGroup = new BindGroup(
+@@ -140,7 +160,7 @@ class NodeBuilderState {
                  bindings.push(bindingsGroup);
  
                  for (const instanceBinding of instanceGroup.bindings) {
@@ -9741,7 +9742,7 @@ index d5f60879..37f47e7c 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 784f4eaf..911f0276 100644
+index ce37cf51..baf9821d 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
