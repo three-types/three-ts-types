@@ -15964,6 +15964,52 @@ index 7a493c71..74e8e0d9 100644
  
      const thicknessControls = new ThicknessControls();
  
+diff --git a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
+index 09037272..2456b295 100644
+--- a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
++++ b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
+@@ -3,9 +3,9 @@ import * as THREE from 'three/webgpu';
+ const SCREEN_WIDTH = window.innerWidth;
+ const SCREEN_HEIGHT = window.innerHeight;
+ 
+-let container;
++let container: HTMLDivElement;
+ 
+-let camera, scene1, scene2, renderer;
++let camera: THREE.PerspectiveCamera, scene1: THREE.Scene, scene2: THREE.Scene, renderer: THREE.WebGPURenderer;
+ 
+ let mouseX = 0,
+     mouseY = 0;
+@@ -90,7 +90,7 @@ async function init() {
+     addPainting(scene1, mesh1);
+     addPainting(scene2, mesh2);
+ 
+-    function addPainting(zscene, zmesh) {
++    function addPainting(zscene: THREE.Scene, zmesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>) {
+         const image = texturePainting1.image;
+ 
+         zmesh.scale.x = image.width / 100;
+@@ -131,9 +131,9 @@ async function init() {
+     document.addEventListener('mousemove', onDocumentMouseMove);
+ }
+ 
+-function mipmap(size, color) {
++function mipmap(size: number, color: string) {
+     const imageCanvas = document.createElement('canvas');
+-    const context = imageCanvas.getContext('2d');
++    const context = imageCanvas.getContext('2d')!;
+ 
+     imageCanvas.width = imageCanvas.height = size;
+ 
+@@ -146,7 +146,7 @@ function mipmap(size, color) {
+     return imageCanvas;
+ }
+ 
+-function onDocumentMouseMove(event) {
++function onDocumentMouseMove(event: MouseEvent) {
+     mouseX = event.clientX - windowHalfX;
+     mouseY = event.clientY - windowHalfY;
+ }
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
 index b94318de..5f5dfef0 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
