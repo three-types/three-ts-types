@@ -16624,6 +16624,40 @@ index 6125b972..f579d340 100644
          const distance = 1;
          const id = spheres.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 90);
+diff --git a/examples-testing/examples/webgpu_multiple_elements.ts b/examples-testing/examples/webgpu_multiple_elements.ts
+index 65bd3e75..3d3f2fd9 100644
+--- a/examples-testing/examples/webgpu_multiple_elements.ts
++++ b/examples-testing/examples/webgpu_multiple_elements.ts
+@@ -1,16 +1,16 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { color } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let canvas, renderer;
++let canvas: HTMLCanvasElement, renderer: THREE.WebGPURenderer;
+ 
+-const scenes = [];
++const scenes: THREE.Object3D[] = [];
+ 
+ init();
+ 
+ function init() {
+-    canvas = document.getElementById('c');
++    canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+     const geometries = [
+         new THREE.BoxGeometry(1, 1, 1),
+@@ -19,7 +19,7 @@ function init() {
+         new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
+     ];
+ 
+-    const content = document.getElementById('content');
++    const content = document.getElementById('content')!;
+ 
+     for (let i = 0; i < 40; i++) {
+         const scene = new THREE.Scene();
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets.ts b/examples-testing/examples/webgpu_multiple_rendertargets.ts
 index 18d48cbf..8fac5871 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets.ts
