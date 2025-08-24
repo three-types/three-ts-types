@@ -15658,6 +15658,60 @@ index 0bf9e2e7..76ec782f 100644
              if (node.name == name) node.visible = visible;
          }
      });
+diff --git a/examples-testing/examples/webgpu_loader_texture_ktx2.ts b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
+index b7bf174f..9da5ff8a 100644
+--- a/examples-testing/examples/webgpu_loader_texture_ktx2.ts
++++ b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
+@@ -1,12 +1,18 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ 
+-let canvas, renderer;
++let canvas: HTMLCanvasElement, renderer: THREE.WebGPURenderer;
+ 
+-const scenes = [];
++const scenes: THREE.Scene[] = [];
+ 
+-const sections = [
++interface Section {
++    title: string;
++    description: string;
++    textures: { path: string; supported?: boolean }[];
++}
++
++const sections: Section[] = [
+     {
+         title: 'Uncompressed',
+         description:
+@@ -51,7 +57,7 @@ const sections = [
+ init();
+ 
+ async function init() {
+-    canvas = document.getElementById('c');
++    canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+     renderer = new THREE.WebGPURenderer({ canvas, antialias: true, forceWebGL: false });
+     renderer.setClearColor(0xffffff, 1);
+@@ -66,7 +72,7 @@ async function init() {
+ 
+     const geometry = flipY(new THREE.PlaneGeometry(1, 1));
+ 
+-    const content = document.getElementById('content');
++    const content = document.getElementById('content')!;
+ 
+     for (const section of sections) {
+         const sectionElement = document.createElement('section');
+@@ -132,7 +138,7 @@ function updateSize() {
+ 
+ // Rewrite UVs for `flipY=false` textures.
+ 
+-function flipY(geometry) {
++function flipY(geometry: THREE.PlaneGeometry) {
+     const uv = geometry.attributes.uv;
+ 
+     for (let i = 0; i < uv.count; i++) {
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
 index de51957d..cc25f04e 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
@@ -18840,7 +18894,7 @@ index 20cdb7e7..b5f52514 100644
      atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index 0d26a0f7..fb8b6727 100644
+index ded74b7e..0ab448d4 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
 @@ -4,7 +4,7 @@ import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, PI2
@@ -19020,7 +19074,7 @@ index 5b7f452c..290368ae 100644
  
          const elevation = mul(
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index 8f335a76..f8ad5737 100644
+index 2b0c0da3..9223a761 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 @@ -18,7 +18,15 @@ import {
