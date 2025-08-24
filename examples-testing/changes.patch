@@ -9523,7 +9523,7 @@ index f93e5fb8..ee612f75 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_mirror.ts b/examples-testing/examples/webgl_mirror.ts
-index 8de83437..6c780eab 100644
+index 4f1f17f7..6c780eab 100644
 --- a/examples-testing/examples/webgl_mirror.ts
 +++ b/examples-testing/examples/webgl_mirror.ts
 @@ -5,13 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -9553,15 +9553,6 @@ index 8de83437..6c780eab 100644
  
      // renderer
      renderer = new THREE.WebGLRenderer({ antialias: true });
-@@ -57,7 +57,7 @@ function init() {
-     groundMirror = new Reflector(geometry, {
-         clipBias: 0.003,
-         textureWidth: size.width,
--        textureHeight: size.heignt,
-+        textureHeight: size.height,
-         color: 0xb5b5b5,
-     });
-     groundMirror.position.y = 0.5;
 diff --git a/examples-testing/examples/webgl_modifier_edgesplit.ts b/examples-testing/examples/webgl_modifier_edgesplit.ts
 index 4725eff6..96620f50 100644
 --- a/examples-testing/examples/webgl_modifier_edgesplit.ts
@@ -15658,6 +15649,60 @@ index 0bf9e2e7..76ec782f 100644
              if (node.name == name) node.visible = visible;
          }
      });
+diff --git a/examples-testing/examples/webgpu_loader_texture_ktx2.ts b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
+index b7bf174f..9da5ff8a 100644
+--- a/examples-testing/examples/webgpu_loader_texture_ktx2.ts
++++ b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
+@@ -1,12 +1,18 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ 
+-let canvas, renderer;
++let canvas: HTMLCanvasElement, renderer: THREE.WebGPURenderer;
+ 
+-const scenes = [];
++const scenes: THREE.Scene[] = [];
+ 
+-const sections = [
++interface Section {
++    title: string;
++    description: string;
++    textures: { path: string; supported?: boolean }[];
++}
++
++const sections: Section[] = [
+     {
+         title: 'Uncompressed',
+         description:
+@@ -51,7 +57,7 @@ const sections = [
+ init();
+ 
+ async function init() {
+-    canvas = document.getElementById('c');
++    canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+     renderer = new THREE.WebGPURenderer({ canvas, antialias: true, forceWebGL: false });
+     renderer.setClearColor(0xffffff, 1);
+@@ -66,7 +72,7 @@ async function init() {
+ 
+     const geometry = flipY(new THREE.PlaneGeometry(1, 1));
+ 
+-    const content = document.getElementById('content');
++    const content = document.getElementById('content')!;
+ 
+     for (const section of sections) {
+         const sectionElement = document.createElement('section');
+@@ -132,7 +138,7 @@ function updateSize() {
+ 
+ // Rewrite UVs for `flipY=false` textures.
+ 
+-function flipY(geometry) {
++function flipY(geometry: THREE.PlaneGeometry) {
+     const uv = geometry.attributes.uv;
+ 
+     for (let i = 0; i < uv.count; i++) {
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
 index de51957d..cc25f04e 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
@@ -16570,6 +16615,40 @@ index 6125b972..f579d340 100644
          const distance = 1;
          const id = spheres.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 90);
+diff --git a/examples-testing/examples/webgpu_multiple_elements.ts b/examples-testing/examples/webgpu_multiple_elements.ts
+index 65bd3e75..3d3f2fd9 100644
+--- a/examples-testing/examples/webgpu_multiple_elements.ts
++++ b/examples-testing/examples/webgpu_multiple_elements.ts
+@@ -1,16 +1,16 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { color } from 'three/tsl';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let canvas, renderer;
++let canvas: HTMLCanvasElement, renderer: THREE.WebGPURenderer;
+ 
+-const scenes = [];
++const scenes: THREE.Object3D[] = [];
+ 
+ init();
+ 
+ function init() {
+-    canvas = document.getElementById('c');
++    canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+     const geometries = [
+         new THREE.BoxGeometry(1, 1, 1),
+@@ -19,7 +19,7 @@ function init() {
+         new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
+     ];
+ 
+-    const content = document.getElementById('content');
++    const content = document.getElementById('content')!;
+ 
+     for (let i = 0; i < 40; i++) {
+         const scene = new THREE.Scene();
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets.ts b/examples-testing/examples/webgpu_multiple_rendertargets.ts
 index 18d48cbf..8fac5871 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets.ts
@@ -18840,7 +18919,7 @@ index 20cdb7e7..b5f52514 100644
      atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index 0d26a0f7..fb8b6727 100644
+index ded74b7e..0ab448d4 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
 @@ -4,7 +4,7 @@ import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, PI2
@@ -19020,7 +19099,7 @@ index 5b7f452c..290368ae 100644
  
          const elevation = mul(
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index 8f335a76..f8ad5737 100644
+index 2b0c0da3..9223a761 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 @@ -18,7 +18,15 @@ import {

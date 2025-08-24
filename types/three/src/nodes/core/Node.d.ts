@@ -140,13 +140,6 @@ declare class Node extends EventDispatcher<{
      */
     onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown): this;
     /**
-     * The `this` reference might point to a Proxy so this method can be used
-     * to get the reference to the actual node instance.
-     *
-     * @return {Node} A reference to the node.
-     */
-    getSelf(): this;
-    /**
      * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
      * to such objects based on a given state (e.g. the current node frame or builder).
      *
