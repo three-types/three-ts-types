@@ -10466,10 +10466,10 @@ index 57a6a2db..f6d4c716 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_postprocessing_fxaa.ts b/examples-testing/examples/webgl_postprocessing_fxaa.ts
-index 6aaf4d6b..1f17f79d 100644
+index 1b66621c..e2588077 100644
 --- a/examples-testing/examples/webgl_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgl_postprocessing_fxaa.ts
-@@ -7,14 +7,18 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+@@ -6,14 +6,18 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
  import { FXAAPass } from 'three/addons/postprocessing/FXAAPass.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -12075,11 +12075,11 @@ index f402fa20..8e71282d 100644
  
      // blur horizontally and draw in the renderTargetBlur
 diff --git a/examples-testing/examples/webgl_shadowmap.ts b/examples-testing/examples/webgl_shadowmap.ts
-index 1abf4827..ce2f3427 100644
+index ef5d820c..791a91b1 100644
 --- a/examples-testing/examples/webgl_shadowmap.ts
 +++ b/examples-testing/examples/webgl_shadowmap.ts
-@@ -15,18 +15,18 @@ let SCREEN_WIDTH = window.innerWidth;
- let SCREEN_HEIGHT = window.innerHeight;
+@@ -15,18 +15,18 @@ const SCREEN_WIDTH = window.innerWidth;
+ const SCREEN_HEIGHT = window.innerHeight;
  const FLOOR = -250;
  
 -let camera, controls, scene, renderer;
@@ -13167,7 +13167,7 @@ index 58615db8..1ae4e437 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_tonemapping.ts b/examples-testing/examples/webgl_tonemapping.ts
-index 95b7b4f9..a7cb196e 100644
+index 2163e1b0..a7cb196e 100644
 --- a/examples-testing/examples/webgl_tonemapping.ts
 +++ b/examples-testing/examples/webgl_tonemapping.ts
 @@ -1,23 +1,32 @@
@@ -13209,7 +13209,7 @@ index 95b7b4f9..a7cb196e 100644
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -112,11 +121,11 @@ async function init() {
+@@ -112,7 +121,7 @@ async function init() {
      const toneMappingFolder = gui.addFolder('Tone Mapping');
  
      toneMappingFolder
@@ -13218,20 +13218,7 @@ index 95b7b4f9..a7cb196e 100644
  
          .name('type')
          .onChange(function () {
--            updateGUI(toneMappingFolder);
-+            updateGUI();
- 
-             renderer.toneMapping = toneMappingOptions[params.toneMapping];
-         });
-@@ -144,16 +153,16 @@ async function init() {
-             scene.backgroundIntensity = value;
-         });
- 
--    updateGUI(toneMappingFolder);
-+    updateGUI();
- 
-     gui.open();
- }
+@@ -151,9 +160,9 @@ async function init() {
  
  function updateGUI() {
      if (params.toneMapping === 'None') {
@@ -13805,15 +13792,10 @@ index 486727b6..1fd4c8e2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_camera.ts b/examples-testing/examples/webgpu_camera.ts
-index 12b5cee0..e4736e7e 100644
+index bf4724ac..b964cc5f 100644
 --- a/examples-testing/examples/webgpu_camera.ts
 +++ b/examples-testing/examples/webgpu_camera.ts
-@@ -1,16 +1,16 @@
- import * as THREE from 'three/webgpu';
--import { color } from 'three/tsl';
-+import { color, ShaderNodeObject } from 'three/tsl';
- 
- let SCREEN_WIDTH = window.innerWidth;
+@@ -4,11 +4,11 @@ let SCREEN_WIDTH = window.innerWidth;
  let SCREEN_HEIGHT = window.innerHeight;
  let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
  
@@ -13822,17 +13804,15 @@ index 12b5cee0..e4736e7e 100644
 -let cameraRig, activeCamera, activeHelper;
 -let cameraPerspective, cameraOrtho;
 -let cameraPerspectiveHelper, cameraOrthoHelper;
--let backgroundNode;
 +let container: HTMLDivElement;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, mesh: THREE.Mesh;
 +let cameraRig: THREE.Group, activeCamera: THREE.Camera, activeHelper: THREE.CameraHelper;
 +let cameraPerspective: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera;
 +let cameraPerspectiveHelper: THREE.CameraHelper, cameraOrthoHelper: THREE.CameraHelper;
-+let backgroundNode: ShaderNodeObject<THREE.Node>;
  const frustumSize = 600;
  
  init();
-@@ -118,7 +118,7 @@ function init() {
+@@ -116,7 +116,7 @@ function init() {
  
  //
  
@@ -15650,7 +15630,7 @@ index 0bf9e2e7..76ec782f 100644
          }
      });
 diff --git a/examples-testing/examples/webgpu_loader_texture_ktx2.ts b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
-index b7bf174f..9da5ff8a 100644
+index 1daf0f03..ee2cb370 100644
 --- a/examples-testing/examples/webgpu_loader_texture_ktx2.ts
 +++ b/examples-testing/examples/webgpu_loader_texture_ktx2.ts
 @@ -1,12 +1,18 @@
@@ -15676,7 +15656,7 @@ index b7bf174f..9da5ff8a 100644
      {
          title: 'Uncompressed',
          description:
-@@ -51,7 +57,7 @@ const sections = [
+@@ -52,7 +58,7 @@ const sections = [
  init();
  
  async function init() {
@@ -15685,7 +15665,7 @@ index b7bf174f..9da5ff8a 100644
  
      renderer = new THREE.WebGPURenderer({ canvas, antialias: true, forceWebGL: false });
      renderer.setClearColor(0xffffff, 1);
-@@ -66,7 +72,7 @@ async function init() {
+@@ -67,7 +73,7 @@ async function init() {
  
      const geometry = flipY(new THREE.PlaneGeometry(1, 1));
  
@@ -15694,7 +15674,7 @@ index b7bf174f..9da5ff8a 100644
  
      for (const section of sections) {
          const sectionElement = document.createElement('section');
-@@ -132,7 +138,7 @@ function updateSize() {
+@@ -133,7 +139,7 @@ function updateSize() {
  
  // Rewrite UVs for `flipY=false` textures.
  
@@ -17806,7 +17786,7 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 3cbf48d5..9c8e20f5 100644
+index 674b2c2f..473dcf61 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -13,8 +13,9 @@ import {
@@ -18032,10 +18012,10 @@ index 04630e74..01152c09 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 4a6967f6..e689713e 100644
+index 23730d33..9174c89b 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
-@@ -24,6 +24,7 @@ import {
+@@ -23,6 +23,7 @@ import {
      uv,
      vec2,
      vec3,
@@ -18043,7 +18023,7 @@ index 4a6967f6..e689713e 100644
  } from 'three/tsl';
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
-@@ -32,10 +33,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -31,10 +32,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import Stats from 'three/addons/libs/stats.module.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
@@ -18058,7 +18038,7 @@ index 4a6967f6..e689713e 100644
  
  // below uniforms will be animated via TWEEN.js
  
-@@ -94,10 +95,10 @@ async function init() {
+@@ -93,10 +94,10 @@ async function init() {
  
      const reflection = reflector({ resolution: 0.2 });
      reflection.target.rotateX(-Math.PI / 2);
@@ -18071,7 +18051,7 @@ index 4a6967f6..e689713e 100644
      floorMaterial.colorNode = texture(floorColor, floorUV);
      floorMaterial.emissiveNode = reflection.mul(0.25);
      floorMaterial.normalMap = floorNormal;
-@@ -192,10 +193,10 @@ function createTreeMesh() {
+@@ -191,10 +192,10 @@ function createTreeMesh() {
      const maxSteps = 5;
      const lengthMult = 0.8;
  
@@ -18086,7 +18066,7 @@ index 4a6967f6..e689713e 100644
  
      let instanceCount = 0;
  
-@@ -204,9 +205,8 @@ function createTreeMesh() {
+@@ -203,9 +204,8 @@ function createTreeMesh() {
      const normal = new THREE.Vector3();
      const color = new THREE.Color();
  
@@ -18097,7 +18077,7 @@ index 4a6967f6..e689713e 100644
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
-@@ -313,7 +313,7 @@ function createTreeMesh() {
+@@ -312,7 +312,7 @@ function createTreeMesh() {
  
          // accumulate different vertex animations
  
@@ -18107,7 +18087,7 @@ index 4a6967f6..e689713e 100644
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
-index 46ec5e9f..c0f76484 100644
+index 35aa1d9c..9548b656 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
 +++ b/examples-testing/examples/webgpu_reflection_roughness.ts
 @@ -6,9 +6,9 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -18747,7 +18727,7 @@ index 923a1487..bc6886f0 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
-index 5dcad110..fa5a7516 100644
+index 60789271..fa5a7516 100644
 --- a/examples-testing/examples/webgpu_tonemapping.ts
 +++ b/examples-testing/examples/webgpu_tonemapping.ts
 @@ -1,23 +1,32 @@
@@ -18789,7 +18769,7 @@ index 5dcad110..fa5a7516 100644
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -94,11 +103,11 @@ async function init() {
+@@ -94,7 +103,7 @@ async function init() {
      const toneMappingFolder = gui.addFolder('Tone Mapping');
  
      toneMappingFolder
@@ -18798,20 +18778,7 @@ index 5dcad110..fa5a7516 100644
  
          .name('type')
          .onChange(function () {
--            updateGUI(toneMappingFolder);
-+            updateGUI();
- 
-             renderer.toneMapping = toneMappingOptions[params.toneMapping];
-         });
-@@ -126,16 +135,16 @@ async function init() {
-             scene.backgroundIntensity = value;
-         });
- 
--    updateGUI(toneMappingFolder);
-+    updateGUI();
- 
-     gui.open();
- }
+@@ -133,9 +142,9 @@ async function init() {
  
  function updateGUI() {
      if (params.toneMapping === 'None') {
