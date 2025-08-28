@@ -19,6 +19,7 @@ export * from "./core/UniformNode.js";
 export * from "./core/VaryingNode.js";
 
 // math
+export * from "./math/BitcastNode.js";
 export * from "./math/Hash.js";
 export * from "./math/MathUtils.js";
 export * from "./math/TriNoise3D.js";
