@@ -14477,6 +14477,143 @@ index 01e979d7..0fd65713 100644
  let phase = true;
  let lastUpdate = -1;
  
+diff --git a/examples-testing/examples/webgpu_compute_water.ts b/examples-testing/examples/webgpu_compute_water.ts
+index 65bcd61c..b5363c61 100644
+--- a/examples-testing/examples/webgpu_compute_water.ts
++++ b/examples-testing/examples/webgpu_compute_water.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import {
+     instanceIndex,
+     struct,
+@@ -20,6 +20,7 @@ import {
+     max,
+     positionLocal,
+     transformNormalToView,
++    ShaderNodeObject,
+ } from 'three/tsl';
+ 
+ import { SimplexNoise } from 'three/addons/math/SimplexNoise.js';
+@@ -41,8 +42,8 @@ const limit = BOUNDS_HALF - 0.2;
+ 
+ const waterMaxHeight = 0.1;
+ 
+-let container, stats;
+-let camera, scene, renderer, controls;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+ 
+ let mouseDown = false;
+ let firstClick = true;
+@@ -63,12 +64,12 @@ const effectController = {
+     speed: 5,
+ };
+ 
+-let sun;
+-let waterMesh;
+-let poolBorder;
+-let meshRay;
+-let computeHeight, computeDucks;
+-let duckModel = null;
++let sun: THREE.DirectionalLight;
++let waterMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardNodeMaterial>;
++let poolBorder: THREE.Mesh<THREE.TorusGeometry, THREE.MeshStandardMaterial>;
++let meshRay: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicMaterial>;
++let computeHeight: ShaderNodeObject<THREE.ComputeNode>, computeDucks: ShaderNodeObject<THREE.ComputeNode>;
++let duckModel: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> | null = null;
+ 
+ const NUM_DUCKS = 100;
+ 
+@@ -76,7 +77,7 @@ const simplex = new SimplexNoise();
+ 
+ init();
+ 
+-function noise(x, y) {
++function noise(x: number, y: number) {
+     let multR = waterMaxHeight;
+     let mult = 0.025;
+     let r = 0;
+@@ -128,7 +129,7 @@ async function init() {
+     const prevHeightStorage = instancedArray(prevHeightArray).label('PrevHeight');
+ 
+     // Get Indices of Neighbor Values of an Index in the Simulation Grid
+-    const getNeighborIndicesTSL = index => {
++    const getNeighborIndicesTSL = (index: ShaderNodeObject<THREE.Node>) => {
+         const width = uint(WIDTH);
+ 
+         // Get 2-D compute coordinate from one-dimensional instanceIndex. The calculation will
+@@ -159,7 +160,10 @@ async function init() {
+     };
+ 
+     // Get simulation index neighbor values
+-    const getNeighborValuesTSL = (index, store) => {
++    const getNeighborValuesTSL = (
++        index: ShaderNodeObject<THREE.Node>,
++        store: ShaderNodeObject<THREE.StorageBufferNode>,
++    ) => {
+         const { northIndex, southIndex, eastIndex, westIndex } = getNeighborIndicesTSL(index);
+ 
+         const north = store.element(northIndex);
+@@ -171,7 +175,10 @@ async function init() {
+     };
+ 
+     // Get new normals of simulation area.
+-    const getNormalsFromHeightTSL = (index, store) => {
++    const getNormalsFromHeightTSL = (
++        index: ShaderNodeObject<THREE.Node>,
++        store: ShaderNodeObject<THREE.StorageBufferNode>,
++    ) => {
+         const { north, south, east, west } = getNeighborValuesTSL(index, store);
+ 
+         const normalX = west.sub(east).mul(WIDTH / BOUNDS);
+@@ -253,8 +260,8 @@ async function init() {
+     borderGeom.rotateY(Math.PI * 0.25);
+     poolBorder = new THREE.Mesh(borderGeom, new THREE.MeshStandardMaterial({ color: 0x908877, roughness: 0.2 }));
+     scene.add(poolBorder);
+-    borderGeom.receiveShadow = true;
+-    borderGeom.castShadow = true;
++    poolBorder.receiveShadow = true;
++    poolBorder.castShadow = true;
+ 
+     // THREE.Mesh just for mouse raycasting
+     const geometryRay = new THREE.PlaneGeometry(BOUNDS, BOUNDS, 1, 1);
+@@ -373,7 +380,7 @@ async function init() {
+     scene.backgroundBlurriness = 0.3;
+     scene.environmentIntensity = 1.25;
+ 
+-    duckModel = model.scene.children[0];
++    duckModel = model.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+     duckModel.receiveShadow = true;
+     duckModel.castShadow = true;
+     duckModel.material.positionNode = Fn(() => {
+@@ -424,7 +431,7 @@ async function init() {
+     gui.add(effectController, 'wireframe').onChange(() => {
+         waterMesh.material.wireframe = !waterMesh.material.wireframe;
+         poolBorder.material.wireframe = !poolBorder.material.wireframe;
+-        duckModel.material.wireframe = !duckModel.material.wireframe;
++        duckModel!.material.wireframe = !duckModel!.material.wireframe;
+         waterMesh.material.needsUpdate = true;
+         poolBorder.material.needsUpdate = true;
+     });
+@@ -437,7 +444,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function setMouseCoords(x, y) {
++function setMouseCoords(x: number, y: number) {
+     mouseCoords.set((x / renderer.domElement.clientWidth) * 2 - 1, -(y / renderer.domElement.clientHeight) * 2 + 1);
+ }
+ 
+@@ -455,7 +462,7 @@ function onPointerUp() {
+     controls.enabled = true;
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     if (event.isPrimary === false) return;
+ 
+     setMouseCoords(event.clientX, event.clientY);
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 index 91786717..42596f73 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
