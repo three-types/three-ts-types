@@ -7126,6 +7126,23 @@ index 52195156..7d8ec71a 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgl_loader_gltf_animation_pointer.ts b/examples-testing/examples/webgl_loader_gltf_animation_pointer.ts
+index e54ef8f7..bce14b60 100644
+--- a/examples-testing/examples/webgl_loader_gltf_animation_pointer.ts
++++ b/examples-testing/examples/webgl_loader_gltf_animation_pointer.ts
+@@ -10,10 +10,10 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
+ import { GLTFAnimationPointerExtension } from '@needle-tools/three-animation-pointer';
+ 
+-let mixer;
++let mixer: THREE.AnimationMixer;
+ 
+ const clock = new THREE.Clock();
+-const container = document.getElementById('container');
++const container = document.getElementById('container')!;
+ 
+ const stats = new Stats();
+ container.appendChild(stats.dom);
 diff --git a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts b/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
 index ca6cfd39..de8cde82 100644
 --- a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
@@ -19161,6 +19178,108 @@ index 6c7118d1..a1a3ed62 100644
 +    >(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
          const angle = atan(position.z, position.x).toVar();
          const elevation = position.y;
+ 
+diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
+index c6610620..dcef3bb5 100644
+--- a/examples-testing/examples/webgpu_tsl_wood.ts
++++ b/examples-testing/examples/webgpu_tsl_wood.ts
+@@ -1,18 +1,25 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import * as TSL from 'three/tsl';
+ import Stats from 'three/addons/libs/stats.module.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+ import { WoodNodeMaterial, WoodGenuses, Finishes } from 'three/addons/materials/WoodNodeMaterial.js';
+ 
+-let scene, base, camera, renderer, controls, stats, font, blockGeometry;
++let scene: THREE.Scene,
++    base: THREE.Group,
++    camera: THREE.PerspectiveCamera,
++    renderer: THREE.WebGPURenderer,
++    controls: OrbitControls,
++    stats: Stats,
++    font: Font,
++    blockGeometry: RoundedBoxGeometry;
+ 
+ // Helper function to get grid position
+-function getGridPosition(woodIndex, finishIndex) {
++function getGridPosition(woodIndex: number, finishIndex: number) {
+     return {
+         x: 0,
+         y: (finishIndex - Finishes.length / 2) * 1.0,
+@@ -24,7 +31,9 @@ function getGridPosition(woodIndex, finishIndex) {
+ function createGridPlane() {
+     const material = new THREE.MeshBasicNodeMaterial();
+ 
+-    const gridXZ = TSL.Fn(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
++    const gridXZ = TSL.Fn<
++        [TSL.ShaderNodeObject<THREE.Node>, TSL.ShaderNodeObject<THREE.Node>, TSL.ShaderNodeObject<THREE.Node>]
++    >(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
+         const coord = TSL.positionWorld.xz.div(gridSize);
+         const grid = TSL.fract(coord);
+ 
+@@ -44,7 +53,10 @@ function createGridPlane() {
+         return TSL.max(dots, lines);
+     });
+ 
+-    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
++    const radialGradient = TSL.Fn<
++        | [TSL.ShaderNodeObject<THREE.Node>, TSL.ShaderNodeObject<THREE.Node>, TSL.ShaderNodeObject<THREE.Node>]
++        | [TSL.ShaderNodeObject<THREE.Node>, TSL.ShaderNodeObject<THREE.Node>]
++    >(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
+         return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+     });
+ 
+@@ -65,7 +77,12 @@ function createGridPlane() {
+ }
+ 
+ // Helper function to create and position labels
+-function createLabel(text, font, material, position) {
++function createLabel(
++    text: string,
++    font: Font,
++    material: THREE.MeshStandardMaterial,
++    position: { x: number; y: number; z: number },
++) {
+     const txt_geo = new TextGeometry(text, {
+         font: font,
+         size: 0.1,
+@@ -75,9 +92,9 @@ function createLabel(text, font, material, position) {
+     });
+ 
+     txt_geo.computeBoundingBox();
+-    const offx = -0.5 * (txt_geo.boundingBox.max.x - txt_geo.boundingBox.min.x);
+-    const offy = -0.5 * (txt_geo.boundingBox.max.y - txt_geo.boundingBox.min.y);
+-    const offz = -0.5 * (txt_geo.boundingBox.max.z - txt_geo.boundingBox.min.z);
++    const offx = -0.5 * (txt_geo.boundingBox!.max.x - txt_geo.boundingBox!.min.x);
++    const offy = -0.5 * (txt_geo.boundingBox!.max.y - txt_geo.boundingBox!.min.y);
++    const offz = -0.5 * (txt_geo.boundingBox!.max.z - txt_geo.boundingBox!.min.z);
+     txt_geo.translate(offx, offy, offz);
+ 
+     const label = new THREE.Group();
+@@ -87,7 +104,7 @@ function createLabel(text, font, material, position) {
+     // Apply default rotation for labels
+     label.rotateY(-Math.PI / 2);
+ 
+-    label.children[0].material = material;
++    (label.children[0] as THREE.Mesh<TextGeometry, THREE.MeshStandardMaterial>).material = material;
+     label.position.copy(position);
+     base.add(label);
+ }
+@@ -184,7 +201,7 @@ if (WebGPU.isAvailable()) {
+     document.body.appendChild(WebGPU.getErrorMessage());
+ }
+ 
+-function add_custom_wood(text_mat) {
++function add_custom_wood(text_mat: THREE.MeshStandardMaterial) {
+     // Add "Custom" label (positioned at the end of the grid)
+     createLabel('custom', font, text_mat, getGridPosition(Math.round(WoodGenuses.length / 2 - 1), 5));
  
 diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
 index f52b15ff..78885bec 100644
