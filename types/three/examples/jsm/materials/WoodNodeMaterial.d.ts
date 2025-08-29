@@ -35,8 +35,8 @@ export interface WoodParameters {
     splotchIntensity: number;
     cellScale: number;
     cellSize: number;
-    darkGrainColor: string;
-    lightGrainColor: string;
+    darkGrainColor: string | THREE.Color;
+    lightGrainColor: string | THREE.Color;
     genus: WoodGenus;
     finish: WoodFinish;
     clearcoat: number;
