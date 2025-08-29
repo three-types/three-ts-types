@@ -49,11 +49,7 @@ export function GetWoodPreset(genus: WoodGenus, finish: WoodFinish): WoodParamet
 export class WoodNodeMaterial extends THREE.MeshPhysicalNodeMaterial {
     readonly isWoodNodeMaterial: true;
 
-    colorNode: THREE.Node;
-    clearcoatNode: number;
-    clearcoatRoughness: number;
-
     constructor(params?: Partial<WoodParameters>);
 
-    static fromPreset(genus?: WoodGenus, finish?: WoodFinish);
+    static fromPreset(genus?: WoodGenus, finish?: WoodFinish): WoodNodeMaterial;
 }
