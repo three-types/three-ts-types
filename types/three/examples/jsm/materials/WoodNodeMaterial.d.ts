@@ -1,4 +1,4 @@
-import * as THREE from "three/webgpu";
+import * as THREE from "three";
 
 export type WoodGenus =
     | "teak"
@@ -17,8 +17,7 @@ export const WoodGenuses: WoodGenus[];
 export const Finishes: WoodFinish[];
 
 export interface WoodParameters {
-    grainPosition: THREE.Vector3;
-    grainRotation: THREE.Vector3;
+    transformationMatrix: THREE.Matrix4;
     centerSize: number;
     largeWarpScale: number;
     largeGrainStretch: number;
@@ -26,7 +25,7 @@ export interface WoodParameters {
     smallWarpScale: number;
     fineWarpStrength: number;
     fineWarpScale: number;
-    ringCount: number;
+    ringThickness: number;
     ringBias: number;
     ringSizeVariance: number;
     ringVarianceScale: number;
@@ -46,8 +45,29 @@ export interface WoodParameters {
 
 export function GetWoodPreset(genus: WoodGenus, finish: WoodFinish): WoodParameters;
 
-export class WoodNodeMaterial extends THREE.MeshPhysicalNodeMaterial {
+export class WoodNodeMaterial extends THREE.MeshPhysicalMaterial {
     readonly isWoodNodeMaterial: true;
+
+    transformationMatrix: THREE.Matrix4;
+    centerSize: number;
+    largeWarpScale: number;
+    largeGrainStretch: number;
+    smallWarpStrength: number;
+    smallWarpScale: number;
+    fineWarpStrength: number;
+    fineWarpScale: number;
+    ringThickness: number;
+    ringBias: number;
+    ringSizeVariance: number;
+    ringVarianceScale: number;
+    barkThickness: number;
+    splotchScale: number;
+    splotchIntensity: number;
+    cellScale: number;
+    cellSize: number;
+    darkGrainColor: THREE.Color;
+    lightGrainColor: THREE.Color;
+    clearcoatDarken: number;
 
     constructor(params?: Partial<WoodParameters>);
 

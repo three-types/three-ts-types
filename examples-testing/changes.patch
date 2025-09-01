@@ -19180,10 +19180,10 @@ index 6c7118d1..a1a3ed62 100644
          const elevation = position.y;
  
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
-index c6610620..dcef3bb5 100644
+index bf9dcdd4..f64a91d8 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
 +++ b/examples-testing/examples/webgpu_tsl_wood.ts
-@@ -1,18 +1,25 @@
+@@ -1,19 +1,27 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  import * as TSL from 'three/tsl';
@@ -19194,10 +19194,11 @@ index c6610620..dcef3bb5 100644
 -import { FontLoader } from 'three/addons/loaders/FontLoader.js';
 +import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
  import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
  import { WoodNodeMaterial, WoodGenuses, Finishes } from 'three/addons/materials/WoodNodeMaterial.js';
  
--let scene, base, camera, renderer, controls, stats, font, blockGeometry;
+-let scene, base, camera, renderer, controls, stats, font, blockGeometry, gui;
 +let scene: THREE.Scene,
 +    base: THREE.Group,
 +    camera: THREE.PerspectiveCamera,
@@ -19205,7 +19206,8 @@ index c6610620..dcef3bb5 100644
 +    controls: OrbitControls,
 +    stats: Stats,
 +    font: Font,
-+    blockGeometry: RoundedBoxGeometry;
++    blockGeometry: RoundedBoxGeometry,
++    gui: GUI;
  
  // Helper function to get grid position
 -function getGridPosition(woodIndex, finishIndex) {
@@ -19213,7 +19215,7 @@ index c6610620..dcef3bb5 100644
      return {
          x: 0,
          y: (finishIndex - Finishes.length / 2) * 1.0,
-@@ -24,7 +31,9 @@ function getGridPosition(woodIndex, finishIndex) {
+@@ -25,7 +33,9 @@ function getGridPosition(woodIndex, finishIndex) {
  function createGridPlane() {
      const material = new THREE.MeshBasicNodeMaterial();
  
@@ -19224,7 +19226,7 @@ index c6610620..dcef3bb5 100644
          const coord = TSL.positionWorld.xz.div(gridSize);
          const grid = TSL.fract(coord);
  
-@@ -44,7 +53,10 @@ function createGridPlane() {
+@@ -45,7 +55,10 @@ function createGridPlane() {
          return TSL.max(dots, lines);
      });
  
@@ -19236,7 +19238,7 @@ index c6610620..dcef3bb5 100644
          return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
      });
  
-@@ -65,7 +77,12 @@ function createGridPlane() {
+@@ -66,7 +79,12 @@ function createGridPlane() {
  }
  
  // Helper function to create and position labels
@@ -19250,7 +19252,7 @@ index c6610620..dcef3bb5 100644
      const txt_geo = new TextGeometry(text, {
          font: font,
          size: 0.1,
-@@ -75,9 +92,9 @@ function createLabel(text, font, material, position) {
+@@ -76,9 +94,9 @@ function createLabel(text, font, material, position) {
      });
  
      txt_geo.computeBoundingBox();
@@ -19263,7 +19265,7 @@ index c6610620..dcef3bb5 100644
      txt_geo.translate(offx, offy, offz);
  
      const label = new THREE.Group();
-@@ -87,7 +104,7 @@ function createLabel(text, font, material, position) {
+@@ -88,7 +106,7 @@ function createLabel(text, font, material, position) {
      // Apply default rotation for labels
      label.rotateY(-Math.PI / 2);
  
@@ -19272,7 +19274,7 @@ index c6610620..dcef3bb5 100644
      label.position.copy(position);
      base.add(label);
  }
-@@ -184,7 +201,7 @@ if (WebGPU.isAvailable()) {
+@@ -189,7 +207,7 @@ if (WebGPU.isAvailable()) {
      document.body.appendChild(WebGPU.getErrorMessage());
  }
  
