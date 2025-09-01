@@ -410,6 +410,17 @@ interface Matrix3Function {
     ): ShaderNodeObject<ConstNode<Matrix3>>;
     (): ShaderNodeObject<ConstNode<Matrix3>>;
     (node: Node): ShaderNodeObject<Node>;
+    (
+        n11: Node | number,
+        n12: Node | number,
+        n13: Node | number,
+        n21: Node | number,
+        n22: Node | number,
+        n23: Node | number,
+        n31: Node | number,
+        n32: Node | number,
+        n33: Node | number,
+    ): ShaderNodeObject<JoinNode>;
 }
 
 export const mat3: Matrix3Function;
@@ -436,6 +447,24 @@ interface Matrix4Function {
     ): ShaderNodeObject<ConstNode<Matrix4>>;
     (): ShaderNodeObject<ConstNode<Matrix4>>;
     (node: Node): ShaderNodeObject<Node>;
+    (
+        n11: Node | number,
+        n12: Node | number,
+        n13: Node | number,
+        n14: Node | number,
+        n21: Node | number,
+        n22: Node | number,
+        n23: Node | number,
+        n24: Node | number,
+        n31: Node | number,
+        n32: Node | number,
+        n33: Node | number,
+        n34: Node | number,
+        n41: Node | number,
+        n42: Node | number,
+        n43: Node | number,
+        n44: Node | number,
+    ): ShaderNodeObject<JoinNode>;
 }
 
 export const mat4: Matrix4Function;
