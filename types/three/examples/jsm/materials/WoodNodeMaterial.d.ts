@@ -48,6 +48,27 @@ export function GetWoodPreset(genus: WoodGenus, finish: WoodFinish): WoodParamet
 export class WoodNodeMaterial extends THREE.MeshPhysicalMaterial {
     readonly isWoodNodeMaterial: true;
 
+    transformationMatrix: THREE.Matrix4;
+    centerSize: number;
+    largeWarpScale: number;
+    largeGrainStretch: number;
+    smallWarpStrength: number;
+    smallWarpScale: number;
+    fineWarpStrength: number;
+    fineWarpScale: number;
+    ringThickness: number;
+    ringBias: number;
+    ringSizeVariance: number;
+    ringVarianceScale: number;
+    barkThickness: number;
+    splotchScale: number;
+    splotchIntensity: number;
+    cellScale: number;
+    cellSize: number;
+    darkGrainColor: THREE.Color;
+    lightGrainColor: THREE.Color;
+    clearcoatDarken: number;
+
     constructor(params?: Partial<WoodParameters>);
 
     static fromPreset(genus?: WoodGenus, finish?: WoodFinish): WoodNodeMaterial;
