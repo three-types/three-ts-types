@@ -1,4 +1,6 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { MemberNode } from "../Nodes.js";
+import { assign } from "./AssignNode.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
@@ -356,5 +358,8 @@ declare class Node extends EventDispatcher<{
      * @return {Object} The serialized node.
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
+    assign(...params: Parameters<typeof assign>): this;
+    toVarIntent(): this;
+    get(value: string): MemberNode;
 }
 export default Node;
