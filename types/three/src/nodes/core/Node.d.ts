@@ -358,7 +358,7 @@ declare class Node extends EventDispatcher<{
      * @return {Object} The serialized node.
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
-    assign(...params: Parameters<typeof assign>): this;
+    assign(sourceNode: Node | number): this;
     toVarIntent(): this;
     get(value: string): MemberNode;
 }
