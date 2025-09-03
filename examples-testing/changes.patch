@@ -38,6 +38,33 @@ index 48a2d1f0..e7260210 100644
      moon = new THREE.Mesh(moonGeometry, moonMaterial);
      scene.add(moon);
  
+diff --git a/examples-testing/examples/css3d_mixed.ts b/examples-testing/examples/css3d_mixed.ts
+index 2b6c88e9..2907eeec 100644
+--- a/examples-testing/examples/css3d_mixed.ts
++++ b/examples-testing/examples/css3d_mixed.ts
+@@ -3,8 +3,11 @@ import * as THREE from 'three';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+ 
+-let camera, scene, rendererCSS3D, rendererWebGL;
+-let controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    rendererCSS3D: CSS3DRenderer,
++    rendererWebGL: THREE.WebGLRenderer;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -101,7 +104,7 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
+-function buildFrame(width, height, thickness) {
++function buildFrame(width: number, height: number, thickness: number) {
+     const group = new THREE.Group();
+     const material = new THREE.MeshStandardMaterial({ color: 0x2200ff });
+ 
 diff --git a/examples-testing/examples/css3d_molecules.ts b/examples-testing/examples/css3d_molecules.ts
 index 53847260..f08bb34a 100644
 --- a/examples-testing/examples/css3d_molecules.ts
@@ -8657,6 +8684,38 @@ index c3f3f4f7..4ae4cb95 100644
          metalness: params.metalness,
          roughness: params.roughness,
          envMapIntensity: 1.0,
+diff --git a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
+index e4691f7a..c77e15cd 100644
+--- a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
++++ b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
+@@ -13,8 +13,8 @@ const params = {
+     backgroundBlurriness: 0.0,
+ };
+ 
+-let container, stats;
+-let camera, scene, renderer, controls;
++let container: HTMLDivElement, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
+ 
+ init();
+ 
+@@ -31,7 +31,6 @@ function init() {
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(window.innerWidth, window.innerHeight);
+     renderer.setAnimationLoop(animate);
+-    renderer.backgroundBlurryness = params.backgroundBlurryness;
+ 
+     container.appendChild(renderer.domElement);
+ 
+@@ -97,7 +96,7 @@ function init() {
+ 
+     const loader = new KTX2Loader().setTranscoderPath('jsm/libs/basis/').detectSupport(renderer);
+ 
+-    function loadTexture(url) {
++    function loadTexture(url: string) {
+         loader.load(url, texture => {
+             texture.mapping = THREE.CubeUVReflectionMapping;
+             scene.environment = texture;
 diff --git a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts b/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
 index c1e0ed83..f7acbbb3 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_groundprojected.ts
