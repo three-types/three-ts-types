@@ -1,5 +1,6 @@
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
+import { VarNode } from "../Nodes.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 interface LoopNodeObjectParameter {
@@ -10,6 +11,7 @@ interface LoopNodeObjectParameter {
     start: number | Node;
     end: number | Node;
     condition?: string;
+    update?: ShaderNodeObject<VarNode> | number | string;
 }
 
 type LoopNodeParameter = Node | number | LoopNodeObjectParameter;
