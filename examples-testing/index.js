@@ -54,7 +54,6 @@ const exceptionList = [
     'webgpu_compute_particles_rain',
     'webgpu_compute_particles_snow',
     'webgpu_compute_reduce',
-    'webgpu_compute_water',
     'webgpu_depth_texture',
     'webgpu_equirectangular',
     'webgpu_instance_sprites',
