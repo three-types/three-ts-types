@@ -409,6 +409,11 @@ interface Matrix3Function {
         n33: number,
     ): ShaderNodeObject<ConstNode<Matrix3>>;
     (): ShaderNodeObject<ConstNode<Matrix3>>;
+    (
+        p1: ShaderNodeObject<Node>,
+        p2: ShaderNodeObject<Node>,
+        p3: ShaderNodeObject<Node>,
+    ): ShaderNodeObject<ConstNode<Matrix3>>;
     (node: Node): ShaderNodeObject<Node>;
 }
 
@@ -435,6 +440,12 @@ interface Matrix4Function {
         n44: number,
     ): ShaderNodeObject<ConstNode<Matrix4>>;
     (): ShaderNodeObject<ConstNode<Matrix4>>;
+    (
+        p1: ShaderNodeObject<Node>,
+        p2: ShaderNodeObject<Node>,
+        p3: ShaderNodeObject<Node>,
+        p4: ShaderNodeObject<Node>,
+    ): ShaderNodeObject<ConstNode<Matrix3>>;
     (node: Node): ShaderNodeObject<Node>;
 }
 
