@@ -133,7 +133,15 @@ export default class MathNode extends TempNode {
 export const EPSILON: ShaderNodeObject<Node>;
 export const INFINITY: ShaderNodeObject<Node>;
 export const PI: ShaderNodeObject<Node>;
+
+/**
+ * @deprecated Please use the non-deprecated version `TWO_PI`.
+ */
 export const PI2: ShaderNodeObject<Node>;
+
+export const TWO_PI: ShaderNodeObject<Node>;
+
+export const HALF_PI: ShaderNodeObject<Node>;
 
 type MathNodeParameter = Node | number;
 

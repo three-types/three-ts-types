@@ -24,6 +24,8 @@ export const PCFShadowFilter: typeof TSL.PCFShadowFilter;
 export const PCFSoftShadowFilter: typeof TSL.PCFSoftShadowFilter;
 export const PI: typeof TSL.PI;
 export const PI2: typeof TSL.PI2;
+export const TWO_PI: typeof TSL.TWO_PI;
+export const HALF_PI: typeof TSL.HALF_PI;
 export const PointShadowFilter: typeof TSL.PointShadowFilter;
 export const Return: typeof TSL.Return;
 export const Schlick_to_F0: typeof TSL.Schlick_to_F0;
