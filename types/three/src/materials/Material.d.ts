@@ -541,7 +541,7 @@ export class Material extends EventDispatcher<{ dispose: {} }> {
      * The type property is used for detecting the object type
      * in context of serialization/deserialization.
      */
-    readonly type: string;
+    type: string;
     /**
      * This starts at `0` and counts how many times {@link Material#needsUpdate} is set to `true`.
      *
