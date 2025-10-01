@@ -160,4 +160,4 @@ export * from "./textures/Source.js";
 export * from "./textures/Texture.js";
 export * from "./textures/VideoFrameTexture.js";
 export * from "./textures/VideoTexture.js";
-export { createCanvasElement } from "./utils.js";
+export { createCanvasElement, setConsoleFunction, getConsoleFunction, log, warn, error, warnOnce } from './utils.js';
