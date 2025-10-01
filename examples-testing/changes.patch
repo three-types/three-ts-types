@@ -8685,7 +8685,7 @@ index c3f3f4f7..4ae4cb95 100644
          roughness: params.roughness,
          envMapIntensity: 1.0,
 diff --git a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
-index e4691f7a..c77e15cd 100644
+index d5684a9b..c77e15cd 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
 @@ -13,8 +13,8 @@ const params = {
@@ -8699,15 +8699,7 @@ index e4691f7a..c77e15cd 100644
  
  init();
  
-@@ -31,7 +31,6 @@ function init() {
-     renderer.setPixelRatio(window.devicePixelRatio);
-     renderer.setSize(window.innerWidth, window.innerHeight);
-     renderer.setAnimationLoop(animate);
--    renderer.backgroundBlurryness = params.backgroundBlurryness;
- 
-     container.appendChild(renderer.domElement);
- 
-@@ -97,7 +96,7 @@ function init() {
+@@ -96,7 +96,7 @@ function init() {
  
      const loader = new KTX2Loader().setTranscoderPath('jsm/libs/basis/').detectSupport(renderer);
  
@@ -18867,15 +18859,15 @@ index 60789271..fa5a7516 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index 1735a5c8..6b4ea544 100644
+index b1a89643..f6ecf61f 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -1,5 +1,17 @@
  import * as THREE from 'three/webgpu';
--import { If, PI2, atan, color, frontFacing, output, positionLocal, Fn, uniform, vec4 } from 'three/tsl';
+-import { If, TWO_PI, atan, color, frontFacing, output, positionLocal, Fn, uniform, vec4 } from 'three/tsl';
 +import {
 +    If,
-+    PI2,
++    TWO_PI,
 +    atan,
 +    color,
 +    frontFacing,
@@ -18903,12 +18895,12 @@ index 1735a5c8..6b4ea544 100644
      // TSL functions
  
 -    const inAngle = Fn(([position, angleStart, angleArc]) => {
--        const angle = atan(position.y, position.x).sub(angleStart).mod(PI2).toVar();
+-        const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
 -        return angle.greaterThan(0).and(angle.lessThan(angleArc));
 -    });
 +    const inAngle = Fn<[ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>, ShaderNodeObject<THREE.Node>]>(
 +        ([position, angleStart, angleArc]) => {
-+            const angle = atan(position.y, position.x).sub(angleStart).mod(PI2).toVar();
++            const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
 +            return angle.greaterThan(0).and(angle.lessThan(angleArc));
 +        },
 +    );
@@ -18962,10 +18954,10 @@ index 20cdb7e7..b5f52514 100644
      atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index ded74b7e..0ab448d4 100644
+index 698818f3..c86b1294 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
-@@ -4,7 +4,7 @@ import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, PI2
+@@ -4,7 +4,7 @@ import { color, cos, float, mix, range, sin, time, uniform, uv, vec3, vec4, TWO_
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -19142,7 +19134,7 @@ index 5b7f452c..290368ae 100644
  
          const elevation = mul(
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
-index 2b0c0da3..9223a761 100644
+index 296dfb75..7d540e1c 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 @@ -18,7 +18,15 @@ import {
@@ -19177,7 +19169,7 @@ index 2b0c0da3..9223a761 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 6c7118d1..a1a3ed62 100644
+index ea0351f6..a505272b 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -18,13 +18,18 @@ import {
