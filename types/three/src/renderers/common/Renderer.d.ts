@@ -373,7 +373,7 @@ declare class Renderer {
      * for best compatibility.
      *
      * @async
-     * @param {?Function} callback - The application's animation loop.
+     * @param {?onAnimationCallback} callback - The application's animation loop.
      * @return {Promise} A Promise that resolves when the set has been executed.
      */
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
@@ -910,6 +910,14 @@ declare class Renderer {
         passId?: string | null,
     ): void;
     /**
+     * Retrieves shadow nodes for the given material. This is used to setup shadow passes.
+     * The result is cached per material and updated when the material's version changes.
+     *
+     * @param {Material} material
+     * @returns {Object} - The shadow nodes for the material.
+     */
+    _getShadowNodes(material: Material): any;
+    /**
      * This method represents the default render object function that manages the render lifecycle
      * of the object.
      *
@@ -993,4 +1001,11 @@ declare class Renderer {
      */
     get compile(): (scene: Object3D, camera: Camera, targetScene?: Scene | null) => Promise<void>;
 }
+/**
+ * Animation loop parameter of `renderer.setAnimationLoop()`.
+ *
+ * @callback onAnimationCallback
+ * @param {DOMHighResTimeStamp} time - A timestamp indicating the end time of the previous frame's rendering.
+ * @param {XRFrame} [frame] - A reference to the current XR frame. Only relevant when using XR rendering.
+ */
 export default Renderer;
