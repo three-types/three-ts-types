@@ -4188,7 +4188,7 @@ index 0cdcb293..885a7b95 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 01fe92f5..b8d96b35 100644
+index 01fe92f5..53999daf 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -4285,6 +4285,24 @@ index 01fe92f5..b8d96b35 100644
          this._updateBindings(this.getForRender(renderObject));
      }
  
+@@ -139,7 +173,7 @@ class Bindings extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    deleteForCompute(computeNode) {
++    deleteForCompute(computeNode: ComputeNode) {
+         const bindings = this.nodes.getForCompute(computeNode).bindings;
+ 
+         for (const bindGroup of bindings) {
+@@ -152,7 +186,7 @@ class Bindings extends DataMap {
+      *
+      * @param {RenderObject} renderObject - The renderObject.
+      */
+-    deleteForRender(renderObject) {
++    deleteForRender(renderObject: RenderObject) {
+         const bindings = renderObject.getBindings();
+ 
+         for (const bindGroup of bindings) {
 @@ -165,7 +199,7 @@ class Bindings extends DataMap {
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
@@ -6338,7 +6356,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index afae1cff..462218fd 100644
+index afae1cff..bd08ea4d 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -26,6 +26,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7433,6 +7451,15 @@ index afae1cff..462218fd 100644
                  lightsNode,
                  clippingContext,
                  passId,
+@@ -2600,7 +2865,7 @@ class Renderer {
+      * @param {Material} material
+      * @returns {Object} - The shadow nodes for the material.
+      */
+-    _getShadowNodes(material) {
++    _getShadowNodes(material: Material) {
+         const version = material.version;
+ 
+         let cache = this._cacheShadowNodes.get(material);
 @@ -2674,7 +2939,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
@@ -7695,7 +7722,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 76fe772f..aed14e13 100644
+index 76fe772f..4bafb3b6 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -12,8 +12,46 @@ import {
@@ -7788,6 +7815,15 @@ index 76fe772f..aed14e13 100644
 +    updateTexture(texture: Texture, options: TextureOptions = {}) {
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
+ 
+@@ -312,7 +357,7 @@ class Textures extends DataMap {
+      * @param {Texture} texture - The texture to update the sampler for.
+      * @return {string} The current sampler key.
+      */
+-    updateSampler(texture) {
++    updateSampler(texture: Texture) {
+         return this.backend.updateSampler(texture);
+     }
  
 @@ -328,7 +373,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
