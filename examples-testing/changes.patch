@@ -17811,23 +17811,40 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index 608b6c5f..d5b65b16 100644
+index 3c7b70ac..4554138a 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-@@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
--let camera, scene, renderer, postProcessing, controls, stats;
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer, postProcessing, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    postProcessing: THREE.PostProcessing,
-+    controls: OrbitControls,
-+    stats: Stats;
++    controls: OrbitControls;
  
  init();
  
+@@ -39,7 +43,7 @@ async function init() {
+     document.body.appendChild(renderer.domElement);
+ 
+     renderer.inspector = new Inspector();
+-    document.body.appendChild(renderer.inspector.domElement);
++    document.body.appendChild((renderer.inspector as Inspector).domElement);
+ 
+     //
+ 
+@@ -198,7 +202,7 @@ async function init() {
+ 
+     const types = { Combined: 0, Direct: 3, AO: 1, GI: 2 };
+ 
+-    const gui = renderer.inspector.createParameters('SSGI settings');
++    const gui = (renderer.inspector as Inspector).createParameters('SSGI settings');
+     gui.add(params, 'output', types).onChange(updatePostprocessing);
+     gui.add(giPass.sliceCount, 'value', 1, 4).step(1).name('slice count');
+     gui.add(giPass.stepCount, 'value', 1, 32).step(1).name('step count');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 index 674b2c2f..473dcf61 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
