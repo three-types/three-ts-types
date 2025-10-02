@@ -10,7 +10,9 @@ declare abstract class TimestampQueryPool {
     queryOffsets: Map<number, number>;
     isDisposed: boolean;
     lastValue: number;
+    frames: number[];
     pendingResolve: boolean;
+    timestamps: Map<string, number>;
     /**
      * Creates a new timestamp query pool.
      *
@@ -22,14 +24,14 @@ declare abstract class TimestampQueryPool {
      *
      * @return {Array<number>} The timestamp frames.
      */
-    getTimestampFrames(): any;
+    getTimestampFrames(): number[];
     /**
      * Returns the timestamp for a given render context.
      *
      * @param {string} uid - A unique identifier for the render context.
      * @return {?number} The timestamp, or undefined if not available.
      */
-    getTimestamp(uid: any): any;
+    getTimestamp(uid: string): number;
     /**
      * Allocate queries for a specific uid.
      *
