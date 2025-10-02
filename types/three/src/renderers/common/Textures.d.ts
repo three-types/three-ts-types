@@ -99,7 +99,7 @@ declare class Textures extends DataMap<{
      * @param {Texture} texture - The texture to update the sampler for.
      * @return {string} The current sampler key.
      */
-    updateSampler(texture: any): void;
+    updateSampler(texture: Texture): void;
     /**
      * Computes the size of the given texture and writes the result
      * into the target vector. This vector is also returned by the

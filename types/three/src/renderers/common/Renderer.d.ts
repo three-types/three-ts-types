@@ -916,7 +916,7 @@ declare class Renderer {
      * @param {Material} material
      * @returns {Object} - The shadow nodes for the material.
      */
-    _getShadowNodes(material: any): any;
+    _getShadowNodes(material: Material): any;
     /**
      * This method represents the default render object function that manages the render lifecycle
      * of the object.
