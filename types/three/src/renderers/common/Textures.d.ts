@@ -88,6 +88,19 @@ declare class Textures extends DataMap<{
      */
     updateTexture(texture: Texture, options?: TextureOptions): void;
     /**
+     * Updates the sampler for the given texture. This method has no effect
+     * for the WebGL backend since it has no concept of samplers. Texture
+     * parameters are configured with the `texParameter()` command for each
+     * texture.
+     *
+     * In WebGPU, samplers are objects like textures and it's possible to share
+     * them when the texture parameters match.
+     *
+     * @param {Texture} texture - The texture to update the sampler for.
+     * @return {string} The current sampler key.
+     */
+    updateSampler(texture: any): void;
+    /**
      * Computes the size of the given texture and writes the result
      * into the target vector. This vector is also returned by the
      * method.
