@@ -72,7 +72,7 @@ declare class Renderer {
     readonly isRenderer: true;
     domElement: HTMLCanvasElement;
     backend: Backend;
-    samples: number;
+    _samples: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -657,7 +657,7 @@ declare class Renderer {
      * @type {number}
      * @default 0
      */
-    get samples(): any;
+    get samples(): number;
     /**
      * The current number of samples used for multi-sample anti-aliasing (MSAA).
      *
@@ -667,7 +667,7 @@ declare class Renderer {
      *
      * @type {number}
      */
-    get currentSamples(): any;
+    get currentSamples(): number;
     /**
      * The current tone mapping of the renderer. When not producing screen output,
      * the tone mapping is always `NoToneMapping`.
