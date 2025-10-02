@@ -27,6 +27,7 @@ import ClippingContext from "./ClippingContext.js";
 import Color4 from "./Color4.js";
 import Geometries from "./Geometries.js";
 import Info from "./Info.js";
+import InspectorBase from "./InspectorBase.js";
 import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
 import Nodes from "./nodes/Nodes.js";
@@ -87,6 +88,7 @@ declare class Renderer {
     info: Info;
     library: NodeLibrary;
     lighting: Lighting;
+    _inspector: InspectorBase;
     _getFallback: ((error: unknown) => Backend) | null;
     _pixelRatio: number;
     _width: number;
@@ -258,6 +260,13 @@ declare class Renderer {
      */
     waitForGPU(): Promise<void>;
     /**
+     * Sets the inspector instance. The inspector can be any class that extends from `InspectorBase`.
+     *
+     * @param {InspectorBase} value - The new inspector.
+     */
+    set inspector(value: InspectorBase);
+    get inspector(): InspectorBase;
+    /**
      * Enables or disables high precision for model-view and normal-view matrices.
      * When enabled, will use CPU 64-bit precision for higher precision instead of GPU 32-bit for higher performance.
      *
@@ -323,6 +332,13 @@ declare class Renderer {
      */
     render(scene: Object3D, camera: Camera): Promise<void> | undefined;
     /**
+     * Returns whether the renderer has been initialized or not.
+     *
+     * @readonly
+     * @return {boolean} Whether the renderer has been initialized or not.
+     */
+    get initialized(): boolean;
+    /**
      * Returns an internal render target which is used when computing the output tone mapping
      * and color space conversion. Unlike in `WebGLRenderer`, this is done in a separate render
      * pass and not inline to achieve more correct results.
@@ -377,6 +393,12 @@ declare class Renderer {
      * @return {Promise} A Promise that resolves when the set has been executed.
      */
     setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
+    /**
+     * Returns the current animation loop callback.
+     *
+     * @return {?Function} The current animation loop callback.
+     */
+    getAnimationLoop(): ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
     /**
      * Can be used to transfer buffer data from a storage buffer attribute
      * from the GPU to the CPU in context of compute shaders.
