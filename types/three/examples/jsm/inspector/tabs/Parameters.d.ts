@@ -1,5 +1,5 @@
 import { Tab } from "../ui/Tab.js";
-import { ValueCheckbox, ValueNumber, ValueSelect } from "../ui/Values";
+import { ValueCheckbox, ValueNumber, ValueSelect } from "../ui/Values.js";
 
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
@@ -50,3 +50,4 @@ declare class Parameters extends Tab {
 }
 
 export { Parameters };
+export type { ParametersGroup };
