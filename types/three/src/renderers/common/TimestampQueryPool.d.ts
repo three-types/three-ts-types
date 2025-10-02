@@ -18,13 +18,27 @@ declare abstract class TimestampQueryPool {
      */
     constructor(maxQueries?: number);
     /**
+     * Returns all timestamp frames.
+     *
+     * @return {Array<number>} The timestamp frames.
+     */
+    getTimestampFrames(): any;
+    /**
+     * Returns the timestamp for a given render context.
+     *
+     * @param {string} uid - A unique identifier for the render context.
+     * @return {?number} The timestamp, or undefined if not available.
+     */
+    getTimestamp(uid: any): any;
+    /**
      * Allocate queries for a specific uid.
      *
      * @abstract
      * @param {string} uid - A unique identifier for the render context.
+     * @param {number} frameId - The current frame identifier.
      * @returns {?number}
      */
-    abstract allocateQueriesForContext(uid: string): number | null;
+    abstract allocateQueriesForContext(uid: string, frameId: number): number | null;
     /**
      * Resolve all timestamps and return data (or process them).
      *
