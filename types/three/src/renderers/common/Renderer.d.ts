@@ -72,7 +72,7 @@ declare class Renderer {
     readonly isRenderer: true;
     domElement: HTMLCanvasElement;
     backend: Backend;
-    samples: number;
+    _samples: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -646,6 +646,28 @@ declare class Renderer {
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearStencilAsync(): Promise<void>;
+    /**
+     * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
+     * If this is the case, the renderer allocates an internal render target for that purpose.
+     */
+    get needsFrameBufferTarget(): boolean;
+    /**
+     * The number of samples used for multi-sample anti-aliasing (MSAA).
+     *
+     * @type {number}
+     * @default 0
+     */
+    get samples(): number;
+    /**
+     * The current number of samples used for multi-sample anti-aliasing (MSAA).
+     *
+     * When rendering to a custom render target, the number of samples of that render target is used.
+     * If the renderer needs an internal framebuffer target for tone mapping or color space conversion,
+     * the number of samples is set to 0.
+     *
+     * @type {number}
+     */
+    get currentSamples(): number;
     /**
      * The current tone mapping of the renderer. When not producing screen output,
      * the tone mapping is always `NoToneMapping`.
