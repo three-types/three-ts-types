@@ -8013,10 +8013,10 @@ index 76fe772f..4bafb3b6 100644
              // if a texture is not ready for use, it falls back to a default texture so it's possible
              // to use it for rendering. If a texture in this state is disposed, it's important to
 diff --git a/src-testing/src/renderers/common/TimestampQueryPool.ts b/src-testing/src/renderers/common/TimestampQueryPool.ts
-index f46665bf..30291038 100644
+index f46665bf..67eb6bdb 100644
 --- a/src-testing/src/renderers/common/TimestampQueryPool.ts
 +++ b/src-testing/src/renderers/common/TimestampQueryPool.ts
-@@ -5,7 +5,15 @@ import { warn } from '../../utils.js';
+@@ -5,7 +5,17 @@ import { warn } from '../../utils.js';
   *
   * @abstract
   */
@@ -8028,12 +8028,23 @@ index f46665bf..30291038 100644
 +    queryOffsets: Map<number, number>;
 +    isDisposed: boolean;
 +    lastValue: number;
++    frames: number[];
 +    pendingResolve: boolean;
++    timestamps: Map<string, number>;
 +
      /**
       * Creates a new timestamp query pool.
       *
-@@ -117,7 +125,7 @@ class TimestampQueryPool {
+@@ -97,7 +107,7 @@ class TimestampQueryPool {
+      * @param {string} uid - A unique identifier for the render context.
+      * @return {?number} The timestamp, or undefined if not available.
+      */
+-    getTimestamp(uid) {
++    getTimestamp(uid: string) {
+         let timestamp = this.timestamps.get(uid);
+ 
+         if (timestamp === undefined) {
+@@ -117,7 +127,7 @@ class TimestampQueryPool {
       * @param {number} frameId - The current frame identifier.
       * @returns {?number}
       */
@@ -8042,7 +8053,7 @@ index f46665bf..30291038 100644
  
      /**
       * Resolve all timestamps and return data (or process them).
-@@ -126,14 +134,14 @@ class TimestampQueryPool {
+@@ -126,14 +136,14 @@ class TimestampQueryPool {
       * @async
       * @returns {Promise<number>|number} The resolved timestamp value.
       */
