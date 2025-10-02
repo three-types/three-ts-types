@@ -37,8 +37,18 @@ declare class PassNode extends TempNode {
 
     constructor(scope: PassNodeScope, scene: Scene, camera: Camera, options?: RenderTargetOptions);
 
+    setResolutionScale(resolution: number): this;
+
+    getResolutionScale(): number;
+
+    /**
+     * @deprecated Use {@link PassNode#setResolutionScale `setResolutionScale()`} instead.
+     */
     setResolution(resolution: number): this;
 
+    /**
+     * @deprecated Use {@link PassNode#getResolutionScale `getResolutionScale()`} instead.
+     */
     getResolution(): number;
 
     setLayers(layers: Layers): this;

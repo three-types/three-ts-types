@@ -1,5 +1,5 @@
 import { Tab } from "../ui/Tab.js";
-import { ValueCheckbox, ValueNumber, ValueSelect } from "../ui/Values.js";
+import { ValueCheckbox, ValueColor, ValueNumber, ValueSelect } from '../ui/Values.js';
 
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
@@ -18,6 +18,12 @@ interface ValueCheckboxWithName<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, boolean> = KeyToValueOfType<T, boolean>,
 > extends ValueCheckbox<T, K> {
+    name: (name: string) => this;
+}
+
+interface ValueColorWithName<
+    T = Record<string, unknown>, K extends keyof T = keyof T
+> extends ValueColor<T, K> {
     name: (name: string) => this;
 }
 
@@ -43,6 +49,10 @@ declare class ParametersGroup {
         property: K,
         options?: never,
     ): ValueCheckboxWithName<T, K>;
+
+    addFolder(name: string): ParametersGroup;
+
+    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ValueColorWithName<T, K>;
 }
 
 declare class Parameters extends Tab {
