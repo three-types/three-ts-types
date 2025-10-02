@@ -19384,7 +19384,7 @@ index f52b15ff..78885bec 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index bf65c37a..41f6e7eb 100644
+index ae338a78..d832c9fd 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -19,6 +19,7 @@ import {
@@ -19395,22 +19395,20 @@ index bf65c37a..41f6e7eb 100644
  } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-@@ -33,10 +34,10 @@ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
- 
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -31,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { bayer16 } from 'three/addons/tsl/math/Bayer.js';
+ import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
 -let camera, scene, renderer, controls;
 -let postProcessing;
--let stats;
 -let gltf;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 +let postProcessing: THREE.PostProcessing;
-+let stats: Stats;
 +let gltf: THREE.Group;
  
  init();
  
-@@ -83,7 +84,7 @@ async function init() {
+@@ -80,7 +81,7 @@ async function init() {
  
      // Material
  
@@ -19419,7 +19417,16 @@ index bf65c37a..41f6e7eb 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
-@@ -226,12 +227,12 @@ async function init() {
+@@ -160,7 +161,7 @@ async function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Volumetric Caustics');
++    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Caustics');
+     gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
+     gui.addColor(duck.material, 'color').name('material color');
+ 
+@@ -224,12 +225,12 @@ async function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
@@ -19522,7 +19529,7 @@ index 94211ec5..50b5dadf 100644
      // Material
  
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index c0241956..bbb782b6 100644
+index 3edecb90..2d824854 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -1,5 +1,5 @@
@@ -19530,24 +19537,22 @@ index c0241956..bbb782b6 100644
 -import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass } from 'three/tsl';
 +import { vec3, Fn, time, texture3D, screenUV, uniform, screenCoordinate, pass, ShaderNodeObject } from 'three/tsl';
  
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
-@@ -12,10 +12,10 @@ import Stats from 'three/addons/libs/stats.module.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
+ import { bayer16 } from 'three/addons/tsl/math/Bayer.js';
+ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
 -let renderer, scene, camera;
 -let volumetricMesh, teapot, pointLight, spotLight;
 -let postProcessing;
--let stats;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 +let volumetricMesh: THREE.Mesh, teapot: THREE.Mesh, pointLight: THREE.PointLight, spotLight: THREE.SpotLight;
 +let postProcessing: THREE.PostProcessing;
-+let stats: Stats;
  
  init();
  
-@@ -91,12 +91,12 @@ function init() {
+@@ -86,12 +86,12 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
@@ -19562,8 +19567,17 @@ index c0241956..bbb782b6 100644
              texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
          let density = sampleGrain(0.1);
+@@ -199,7 +199,7 @@ function init() {
+         denoise: true,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Volumetric Lighting');
++    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
+ 
+     const rayMarching = gui.addFolder('Ray Marching');
+     rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 1ada214e..8702c5e8 100644
+index 4089b3f7..a2cd9bbc 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -1,5 +1,5 @@
@@ -19573,26 +19587,24 @@ index 1ada214e..8702c5e8 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
-@@ -12,12 +12,12 @@ import Stats from 'three/addons/libs/stats.module.js';
- 
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { bayer16 } from 'three/addons/tsl/math/Bayer.js';
+ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
 -let renderer, scene, camera;
 -let volumetricMesh, meshKnot;
 -let rectLight1, rectLight2, rectLight3;
 -let clock;
 -let postProcessing;
--let stats;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 +let volumetricMesh: THREE.Mesh, meshKnot: THREE.Mesh;
 +let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
 +let clock: THREE.Clock;
 +let postProcessing: THREE.PostProcessing;
-+let stats: Stats;
  
  init();
  
-@@ -93,12 +93,12 @@ function init() {
+@@ -88,12 +88,12 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
@@ -19607,7 +19619,7 @@ index 1ada214e..8702c5e8 100644
              texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
          let density = sampleGrain(0.1);
-@@ -134,7 +134,7 @@ function init() {
+@@ -129,7 +129,7 @@ function init() {
  
      //
  
@@ -19616,6 +19628,15 @@ index 1ada214e..8702c5e8 100644
          const geometry = new THREE.PlaneGeometry(4, 10);
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
+@@ -211,7 +211,7 @@ function init() {
+         denoise: true,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Volumetric Lighting');
++    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
+ 
+     const rayMarching = gui.addFolder('Ray Marching');
+     rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
 index 1899756f..3830b9e1 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
