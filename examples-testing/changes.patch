@@ -39,7 +39,7 @@ index 48a2d1f0..e7260210 100644
      scene.add(moon);
  
 diff --git a/examples-testing/examples/css3d_mixed.ts b/examples-testing/examples/css3d_mixed.ts
-index 2b6c88e9..2907eeec 100644
+index eb506115..a2905757 100644
 --- a/examples-testing/examples/css3d_mixed.ts
 +++ b/examples-testing/examples/css3d_mixed.ts
 @@ -3,8 +3,11 @@ import * as THREE from 'three';
@@ -5069,7 +5069,7 @@ index 20a5e0d9..e9293211 100644
  
      mouseX = event.clientX - windowHalfX;
 diff --git a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
-index 3176b95a..d3f32d49 100644
+index 05f81a86..f86d0d38 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 +++ b/examples-testing/examples/webgl_gpgpu_birds_gltf.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -5081,7 +5081,7 @@ index 3176b95a..d3f32d49 100644
  
  /* TEXTURE WIDTH FOR SIMULATION */
  const WIDTH = 64;
-@@ -10,16 +10,20 @@ const BIRDS = WIDTH * WIDTH;
+@@ -10,9 +10,13 @@ const BIRDS = WIDTH * WIDTH;
  
  /* BAKE ANIMATION INTO TEXTURE and CREATE GEOMETRY FROM BASE MODEL */
  const BirdGeometry = new THREE.BufferGeometry();
@@ -5097,16 +5097,7 @@ index 3176b95a..d3f32d49 100644
      return Math.pow(2, Math.ceil(Math.log(n) / Math.log(2)));
  }
  
--Math.lerp = function (value1, value2, amount) {
-+function lerp(value1: number, value2: number, amount: number) {
-     amount = Math.max(Math.min(amount, 1), 0);
-     return value1 + (value2 - value1) * amount;
--};
-+}
- 
- const gltfs = ['models/gltf/Parrot.glb', 'models/gltf/Flamingo.glb'];
- const colors = [0xccffff, 0xffdeff];
-@@ -28,11 +32,11 @@ const selectModel = Math.floor(Math.random() * gltfs.length);
+@@ -23,11 +27,11 @@ const selectModel = Math.floor(Math.random() * gltfs.length);
  new GLTFLoader().load(gltfs[selectModel], function (gltf) {
      const animations = gltf.animations;
      durationAnimation = Math.round(animations[0].duration * 60);
@@ -5121,28 +5112,7 @@ index 3176b95a..d3f32d49 100644
      const tData = new Float32Array(4 * tWidth * tHeight);
  
      for (let i = 0; i < tWidth; i++) {
-@@ -50,17 +54,17 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
-                 d0 = morphAttributes[curMorph].array[i * 3];
-                 d1 = morphAttributes[nextMorph].array[i * 3];
- 
--                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = Math.lerp(d0, d1, lerpAmount);
-+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4] = lerp(d0, d1, lerpAmount);
- 
-                 d0 = morphAttributes[curMorph].array[i * 3 + 1];
-                 d1 = morphAttributes[nextMorph].array[i * 3 + 1];
- 
--                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = Math.lerp(d0, d1, lerpAmount);
-+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 1] = lerp(d0, d1, lerpAmount);
- 
-                 d0 = morphAttributes[curMorph].array[i * 3 + 2];
-                 d1 = morphAttributes[nextMorph].array[i * 3 + 2];
- 
--                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = Math.lerp(d0, d1, lerpAmount);
-+                if (d0 !== undefined && d1 !== undefined) tData[offset + i * 4 + 2] = lerp(d0, d1, lerpAmount);
- 
-                 tData[offset + i * 4 + 3] = 1;
-             }
-@@ -94,9 +98,9 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+@@ -92,9 +96,9 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
          seeds.push(bird, r, Math.random(), Math.random());
      }
  
@@ -5155,7 +5125,7 @@ index 3176b95a..d3f32d49 100644
      }
  
      BirdGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(vertices), 3));
-@@ -110,8 +114,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
+@@ -108,8 +112,8 @@ new GLTFLoader().load(gltfs[selectModel], function (gltf) {
      init();
  });
  
@@ -5166,7 +5136,7 @@ index 3176b95a..d3f32d49 100644
  let mouseX = 0,
      mouseY = 0;
  
-@@ -123,11 +127,20 @@ const BOUNDS = 800,
+@@ -121,11 +125,20 @@ const BOUNDS = 800,
  
  let last = performance.now();
  
@@ -5192,7 +5162,7 @@ index 3176b95a..d3f32d49 100644
  
  function init() {
      container = document.createElement('div');
-@@ -212,12 +225,12 @@ function initComputeRenderer() {
+@@ -210,12 +223,12 @@ function initComputeRenderer() {
  
      velocityVariable = gpuCompute.addVariable(
          'textureVelocity',
@@ -5207,7 +5177,7 @@ index 3176b95a..d3f32d49 100644
          dtPosition,
      );
  
-@@ -251,7 +264,7 @@ function initComputeRenderer() {
+@@ -249,7 +262,7 @@ function initComputeRenderer() {
      }
  }
  
@@ -5216,7 +5186,7 @@ index 3176b95a..d3f32d49 100644
      const geometry = BirdGeometry;
  
      const m = new THREE.MeshStandardMaterial({
-@@ -331,8 +344,8 @@ function initBirds(effectController) {
+@@ -329,8 +342,8 @@ function initBirds(effectController) {
      scene.add(birdMesh);
  }
  
@@ -5227,7 +5197,7 @@ index 3176b95a..d3f32d49 100644
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
          const x = Math.random() * BOUNDS - BOUNDS_HALF;
-@@ -346,8 +359,8 @@ function fillPositionTexture(texture) {
+@@ -344,8 +357,8 @@ function fillPositionTexture(texture) {
      }
  }
  
@@ -5238,7 +5208,7 @@ index 3176b95a..d3f32d49 100644
  
      for (let k = 0, kl = theArray.length; k < kl; k += 4) {
          const x = Math.random() - 0.5;
-@@ -371,7 +384,7 @@ function onWindowResize() {
+@@ -369,7 +382,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -5342,7 +5312,7 @@ index 30444ddb..e1c40aef 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 823396dd..6cf5c8bc 100644
+index 9a724d17..6cf5c8bc 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -4,7 +4,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5411,17 +5381,6 @@ index 823396dd..6cf5c8bc 100644
      duckModel.receiveShadow = true;
      duckModel.castShadow = true;
  
-@@ -178,8 +178,8 @@ function initWater() {
-     borderGeom.rotateY(Math.PI * 0.25);
-     poolBorder = new THREE.Mesh(borderGeom, new THREE.MeshStandardMaterial({ color: 0x908877, roughness: 0.2 }));
-     scene.add(poolBorder);
--    borderGeom.receiveShadow = true;
--    borderGeom.castShadow = true;
-+    poolBorder.receiveShadow = true;
-+    poolBorder.castShadow = true;
- 
-     // THREE.Mesh just for mouse raycasting
-     const geometryRay = new THREE.PlaneGeometry(BOUNDS, BOUNDS, 1, 1);
 @@ -211,13 +211,13 @@ function initWater() {
      if (error !== null) console.error(error);
  
@@ -6693,7 +6652,7 @@ index ee5631a5..f4298618 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-index 6d214de1..e4fe9c44 100644
+index 4b188680..18a9e7e7 100644
 --- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
 @@ -10,12 +10,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
@@ -8685,7 +8644,7 @@ index c3f3f4f7..4ae4cb95 100644
          roughness: params.roughness,
          envMapIntensity: 1.0,
 diff --git a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
-index d5684a9b..c77e15cd 100644
+index de8715eb..18b6ed98 100644
 --- a/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
 +++ b/examples-testing/examples/webgl_materials_envmaps_fasthdr.ts
 @@ -13,8 +13,8 @@ const params = {
@@ -13581,7 +13540,7 @@ index a98f9a68..5689cf91 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_watch.ts b/examples-testing/examples/webgl_watch.ts
-index c94d9723..3d35c0e3 100644
+index 747cca29..79ee4619 100644
 --- a/examples-testing/examples/webgl_watch.ts
 +++ b/examples-testing/examples/webgl_watch.ts
 @@ -1,5 +1,5 @@
@@ -13606,9 +13565,9 @@ index c94d9723..3d35c0e3 100644
 +    fxaaPass: ShaderPass | null;
  let ready = false;
  
--const meshs = {};
+-const meshes = {};
 -const materials = {};
-+const meshs: { [name: string]: THREE.Mesh | THREE.Group } = {};
++const meshes: { [name: string]: THREE.Mesh | THREE.Group } = {};
 +const materials: { [name: string]: THREE.MeshStandardMaterial } = {};
  const torad = Math.PI / 180;
  
@@ -13643,15 +13602,15 @@ index c94d9723..3d35c0e3 100644
                          }
                      }
  
--                    meshs[child.name] = child;
-+                    meshs[child.name] = child as THREE.Mesh | THREE.Group;
+-                    meshes[child.name] = child;
++                    meshes[child.name] = child as THREE.Mesh | THREE.Group;
                  }
              });
  
              scene.add(gltf.scene);
  
--            meshs.glass.material = new THREE.MeshPhysicalMaterial({
-+            (meshs.glass as THREE.Mesh).material = new THREE.MeshPhysicalMaterial({
+-            meshes.glass.material = new THREE.MeshPhysicalMaterial({
++            (meshes.glass as THREE.Mesh).material = new THREE.MeshPhysicalMaterial({
                  color: 0x020205,
                  transparent: true,
                  opacity: setting.opacity,
@@ -13668,8 +13627,8 @@ index c94d9723..3d35c0e3 100644
  function upMaterial() {
      materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
      materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
--    meshs.glass.material.opacity = setting.opacity;
-+    (meshs.glass as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = setting.opacity;
+-    meshes.glass.material.opacity = setting.opacity;
++    (meshes.glass as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = setting.opacity;
  }
  
  function upBloom() {
@@ -15319,7 +15278,7 @@ index 96417888..43926a20 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_lines_fat_raycasting.ts b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-index 08562a02..ea062729 100644
+index a9fe2913..81a21923 100644
 --- a/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 @@ -9,12 +9,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
@@ -15353,17 +15312,15 @@ index 08562a02..ea062729 100644
  
  const matLine = new THREE.Line2NodeMaterial({
      color: 0xffffff,
-@@ -51,8 +52,8 @@ const params = {
+@@ -51,7 +52,7 @@ const params = {
      'visualize threshold': matThresholdLine.visible,
      width: matLine.linewidth,
      alphaToCoverage: matLine.alphaToCoverage,
 -    threshold: raycaster.params.Line2.threshold,
--    translation: raycaster.params.Line2.threshold,
 +    threshold: raycaster.params.Line2!.threshold,
-+    translation: raycaster.params.Line2!.threshold,
+     translation: 0,
      animate: true,
  };
- 
 @@ -169,7 +170,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -17343,15 +17300,15 @@ index f6f87219..1c6007ce 100644
  const params = {
      resolutionScale: 0.2,
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 774987c1..3b94f6a4 100644
+index 6fa6bc86..de34221d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
  import * as THREE from 'three/webgpu';
--import { pass, mrt, output, normalView, velocity } from 'three/tsl';
+-import { pass, mrt, output, normalView, velocity, vec3, vec4 } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
-+import { pass, mrt, output, normalView, velocity, ShaderNodeObject } from 'three/tsl';
++import { pass, mrt, output, normalView, velocity, vec3, vec4, ShaderNodeObject } from 'three/tsl';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
 +import TRAANode, { traa } from 'three/addons/tsl/display/TRAANode.js';
  
@@ -17376,8 +17333,8 @@ index 774987c1..3b94f6a4 100644
 +    scenePassColor: ShaderNodeObject<THREE.TextureNode>;
  
  const params = {
-     distanceExponent: 1,
-@@ -119,7 +127,8 @@ async function init() {
+     samples: 16,
+@@ -114,7 +122,8 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
@@ -17853,6 +17810,24 @@ index 45e298e7..207a463b 100644
  
      postProcessing.render();
  
+diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
+index 608b6c5f..d5b65b16 100644
+--- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
++++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
+@@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import Stats from 'three/addons/libs/stats.module.js';
+ 
+-let camera, scene, renderer, postProcessing, controls, stats;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    controls: OrbitControls,
++    stats: Stats;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 index 674b2c2f..473dcf61 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
@@ -18080,7 +18055,7 @@ index 04630e74..01152c09 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 23730d33..9174c89b 100644
+index 77d06446..7ce314e7 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -23,6 +23,7 @@ import {
@@ -18108,7 +18083,7 @@ index 23730d33..9174c89b 100644
  
 @@ -93,10 +94,10 @@ async function init() {
  
-     const reflection = reflector({ resolution: 0.2 });
+     const reflection = reflector({ resolutionScale: 0.2 });
      reflection.target.rotateX(-Math.PI / 2);
 -    reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
 +    reflection.uvNode = reflection.uvNode!.add(floorNormalOffset);
