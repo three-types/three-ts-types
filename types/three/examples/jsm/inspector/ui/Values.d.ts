@@ -1,4 +1,4 @@
-import { ColorRepresentation, EventDispatcher } from 'three';
+import { ColorRepresentation, EventDispatcher } from "three";
 
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
@@ -64,4 +64,4 @@ declare class ValueColor<T = Record<string, unknown>, K extends keyof T = keyof 
     constructor(params: ValueColorParams);
 }
 
-export { Value, ValueNumber, ValueCheckbox, ValueSlider, ValueSelect, ValueColor };
+export { Value, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider };
