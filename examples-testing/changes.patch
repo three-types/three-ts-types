@@ -17811,7 +17811,7 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index 3c7b70ac..4554138a 100644
+index 3c7b70ac..8232480f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17845,6 +17845,15 @@ index 3c7b70ac..4554138a 100644
      gui.add(params, 'output', types).onChange(updatePostprocessing);
      gui.add(giPass.sliceCount, 'value', 1, 4).step(1).name('slice count');
      gui.add(giPass.stepCount, 'value', 1, 32).step(1).name('step count');
+@@ -212,7 +216,7 @@ async function init() {
+     gui.add(giPass.useScreenSpaceSampling, 'value').name('screen-space sampling');
+     gui.add(giPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
+ 
+-    function updatePostprocessing(value) {
++    function updatePostprocessing(value: number | boolean) {
+         if (value === 1) {
+             postProcessing.outputNode = vec4(vec3(ao), 1);
+         } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 index 674b2c2f..473dcf61 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
