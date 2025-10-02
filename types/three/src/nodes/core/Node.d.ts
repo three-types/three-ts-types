@@ -72,6 +72,7 @@ declare class Node extends EventDispatcher<{
     updateAfterType: NodeUpdateType;
     uuid: string;
     version: number;
+    name: string;
     _cacheKey: number | null;
     _cacheKeyVersion: number;
     global: boolean;
