@@ -218,7 +218,7 @@ declare class Renderer {
      *
      * @type {HTMLCanvasElement|OffscreenCanvas}
      */
-    get domElement(): OffscreenCanvas | HTMLCanvasElement;
+    get domElement(): HTMLCanvasElement;
     /**
      * The coordinate system of the renderer. The value of this property
      * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or

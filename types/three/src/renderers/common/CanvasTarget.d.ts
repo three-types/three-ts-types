@@ -17,7 +17,7 @@ export interface CanvasTargetOptions {
  * @augments EventDispatcher
  */
 declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
-    domElement: HTMLCanvasElement | OffscreenCanvas;
+    domElement: HTMLCanvasElement;
     _pixelRatio: number;
     _width: number;
     _height: number;
@@ -41,7 +41,7 @@ declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
      * @param {HTMLCanvasElement|OffscreenCanvas} domElement - The canvas element to render to.
      * @param {Object} [parameters={}] - The parameters.
      */
-    constructor(domElement: HTMLCanvasElement | OffscreenCanvas, parameters?: CanvasTargetOptions);
+    constructor(domElement: HTMLCanvasElement, parameters?: CanvasTargetOptions);
     /**
      * The number of samples used for multi-sample anti-aliasing (MSAA).
      *
