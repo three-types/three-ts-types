@@ -52,6 +52,7 @@ const files = [
     'renderers/common/Buffer',
     'renderers/common/BufferUtils',
     'renderers/common/BundleGroup',
+    'renderers/common/CanvasTarget',
     'renderers/common/ChainMap',
     'renderers/common/ClippingContext',
     'renderers/common/Color4',

@@ -23,6 +23,7 @@ import Attributes from "./Attributes.js";
 import Backend from "./Backend.js";
 import Background from "./Background.js";
 import Bindings from "./Bindings.js";
+import CanvasTarget from "./CanvasTarget.js";
 import ClippingContext from "./ClippingContext.js";
 import Color4 from "./Color4.js";
 import Geometries from "./Geometries.js";
@@ -70,9 +71,7 @@ export interface RendererParameters {
  */
 declare class Renderer {
     readonly isRenderer: true;
-    domElement: HTMLCanvasElement;
     backend: Backend;
-    _samples: number;
     autoClear: boolean;
     autoClearColor: boolean;
     autoClearDepth: boolean;
@@ -88,14 +87,9 @@ declare class Renderer {
     info: Info;
     library: NodeLibrary;
     lighting: Lighting;
+    _canvasTarget: CanvasTarget;
     _inspector: InspectorBase;
     _getFallback: ((error: unknown) => Backend) | null;
-    _pixelRatio: number;
-    _width: number;
-    _height: number;
-    _viewport: Vector4;
-    _scissor: Vector4;
-    _scissorTest: boolean;
     _attributes: Attributes | null;
     _geometries: Geometries | null;
     _nodes: Nodes | null;
@@ -217,6 +211,14 @@ declare class Renderer {
      * @return {Promise<this>} A Promise that resolves when the renderer has been initialized.
      */
     init(): Promise<this>;
+    /**
+     * A reference to the canvas element the renderer is drawing to.
+     * This value of this property will automatically be created by
+     * the renderer.
+     *
+     * @type {HTMLCanvasElement|OffscreenCanvas}
+     */
+    get domElement(): HTMLCanvasElement;
     /**
      * The coordinate system of the renderer. The value of this property
      * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
@@ -722,6 +724,19 @@ declare class Renderer {
      */
     getOutputRenderTarget(): RenderTarget<Texture> | null;
     /**
+     * Sets the canvas target. The canvas target manages the HTML canvas
+     * or the offscreen canvas the renderer draws into.
+     *
+     * @param {CanvasTarget} canvasTarget - The canvas target.
+     */
+    setCanvasTarget(canvasTarget: CanvasTarget): void;
+    /**
+     * Returns the current canvas target.
+     *
+     * @return {CanvasTarget} The current canvas target.
+     */
+    getCanvasTarget(): CanvasTarget;
+    /**
      * Resets the renderer to the initial state before WebXR started.
      */
     _resetXRState(): void;
@@ -1034,6 +1049,12 @@ declare class Renderer {
         clippingContext: ClippingContext | null,
         passId?: string,
     ): void;
+    /**
+     * Callback when the canvas has been resized.
+     *
+     * @private
+     */
+    _onCanvasTargetResize(): void;
     /**
      * Alias for `compileAsync()`.
      *
