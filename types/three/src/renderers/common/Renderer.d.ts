@@ -729,7 +729,7 @@ declare class Renderer {
      *
      * @param {CanvasTarget} canvasTarget - The canvas target.
      */
-    setCanvasTarget(canvasTarget: any): void;
+    setCanvasTarget(canvasTarget: CanvasTarget): void;
     /**
      * Returns the current canvas target.
      *
