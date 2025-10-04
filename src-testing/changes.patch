@@ -4502,7 +4502,7 @@ index c684ced9..52f90d47 100644
      }
  }
 diff --git a/src-testing/src/renderers/common/CanvasTarget.ts b/src-testing/src/renderers/common/CanvasTarget.ts
-index 99d13892..d9d029e2 100644
+index 99d13892..01a75de6 100644
 --- a/src-testing/src/renderers/common/CanvasTarget.ts
 +++ b/src-testing/src/renderers/common/CanvasTarget.ts
 @@ -2,13 +2,37 @@ import { EventDispatcher } from '../../core/EventDispatcher.js';
@@ -4528,7 +4528,7 @@ index 99d13892..d9d029e2 100644
   */
 -class CanvasTarget extends EventDispatcher {
 +class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
-+    domElement: HTMLCanvasElement | OffscreenCanvas;
++    domElement: HTMLCanvasElement;
 +
 +    _pixelRatio: number;
 +    _width: number;
@@ -4549,7 +4549,7 @@ index 99d13892..d9d029e2 100644
       * @param {Object} [parameters={}] - The parameters.
       */
 -    constructor(domElement, parameters = {}) {
-+    constructor(domElement: HTMLCanvasElement | OffscreenCanvas, parameters: CanvasTargetOptions = {}) {
++    constructor(domElement: HTMLCanvasElement, parameters: CanvasTargetOptions = {}) {
          super();
  
          const { antialias = false, samples = 0 } = parameters;
