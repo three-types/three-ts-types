@@ -1,4 +1,5 @@
-import { Node, Renderer, ShaderNodeObject } from "three/tsl";
+import { ShaderNodeObject } from "three/tsl";
+import { Node, Renderer } from "three/webgpu";
 
 export const getBitonicFlipIndices: (index: Node, blockHeight: Node) => ShaderNodeObject<Node>;
 
