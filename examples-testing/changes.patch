@@ -17249,7 +17249,7 @@ index 27957fc3..b7fad821 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 962f0688..1666dd98 100644
+index 962f0688..13730ea3 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -12,14 +12,21 @@ import {
@@ -17277,6 +17277,15 @@ index 962f0688..1666dd98 100644
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
+@@ -108,7 +115,7 @@ function init() {
+     //
+ 
+     const gui = new GUI({ title: 'Damp setting' });
+-    gui.add(afterImagePass.damp, 'value', 0.25, 1);
++    gui.add(afterImagePass.damp as THREE.UniformNode<number>, 'value', 0.25, 1);
+     gui.add(params, 'enabled').onChange(updatePassChain);
+ 
+     //
 @@ -129,7 +136,7 @@ function updatePassChain() {
      postProcessing.needsUpdate = true;
  }
