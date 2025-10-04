@@ -11763,7 +11763,7 @@ index 72c7054d..0e584dc0 100644
      circleTexture.needsUpdate = true;
  }
 diff --git a/examples-testing/examples/webgl_read_float_buffer.ts b/examples-testing/examples/webgl_read_float_buffer.ts
-index 68452a12..51fbce5e 100644
+index 69f84772..e0e975c4 100644
 --- a/examples-testing/examples/webgl_read_float_buffer.ts
 +++ b/examples-testing/examples/webgl_read_float_buffer.ts
 @@ -2,9 +2,14 @@ import * as THREE from 'three';
@@ -11859,7 +11859,7 @@ index 572575af..169120a1 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webgl_rtt.ts b/examples-testing/examples/webgl_rtt.ts
-index 9f16fdab..9c70a341 100644
+index b80e78ed..47e8e8b3 100644
 --- a/examples-testing/examples/webgl_rtt.ts
 +++ b/examples-testing/examples/webgl_rtt.ts
 @@ -2,9 +2,16 @@ import * as THREE from 'three';
@@ -14672,6 +14672,28 @@ index 9bebd426..d06faaf1 100644
      position.x = matrix.elements[12];
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
+diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
+index c7d814cb..4ebf1dcb 100644
+--- a/examples-testing/examples/webgpu_hdr.ts
++++ b/examples-testing/examples/webgpu_hdr.ts
+@@ -17,7 +17,7 @@ const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
+ 
+ function updateHDRWarning() {
+     const displayIsHDR = hdrMediaQuery.matches;
+-    document.querySelector('#no-hdr').style.display = displayIsHDR ? 'none' : '';
++    (document.querySelector('#no-hdr') as HTMLDivElement).style.display = displayIsHDR ? 'none' : '';
+ }
+ 
+ hdrMediaQuery.addEventListener('change', updateHDRWarning);
+@@ -78,7 +78,7 @@ const brushMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), brushMat);
+ brushMesh.scale.set(300, 300, 1); // ~300px default brush size
+ brushScene.add(brushMesh);
+ 
+-function onPointerMove(e) {
++function onPointerMove(e: PointerEvent) {
+     const rect = renderer.domElement.getBoundingClientRect();
+     const x = e.clientX - rect.left;
+     const y = e.clientY - rect.top;
 diff --git a/examples-testing/examples/webgpu_instance_mesh.ts b/examples-testing/examples/webgpu_instance_mesh.ts
 index c5d325e3..738521a4 100644
 --- a/examples-testing/examples/webgpu_instance_mesh.ts
@@ -17227,27 +17249,16 @@ index 27957fc3..b7fad821 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index a75d3801..36f78a84 100644
+index 962f0688..13730ea3 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-@@ -1,12 +1,31 @@
- import * as THREE from 'three/webgpu';
--import { instancedBufferAttribute, mod, pass, texture, float, time, vec2, vec3, vec4, sin, cos } from 'three/tsl';
--import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
-+import {
-+    instancedBufferAttribute,
-+    mod,
-+    pass,
-+    texture,
-+    float,
-+    time,
-+    vec2,
-+    vec3,
-+    vec4,
-+    sin,
-+    cos,
+@@ -12,14 +12,21 @@ import {
+     vec4,
+     sin,
+     cos,
 +    ShaderNodeObject,
-+} from 'three/tsl';
+ } from 'three/tsl';
+-import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
 +import AfterImageNode, { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
  
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -17265,8 +17276,17 @@ index a75d3801..36f78a84 100644
 +    scenePass: ShaderNodeObject<THREE.PassNode>;
  
  const params = {
-     damp: 0.8,
-@@ -116,7 +135,7 @@ function updatePassChain() {
+     damp: uniform(0.8, 'float').setName('damp'),
+@@ -108,7 +115,7 @@ function init() {
+     //
+ 
+     const gui = new GUI({ title: 'Damp setting' });
+-    gui.add(afterImagePass.damp, 'value', 0.25, 1);
++    gui.add(afterImagePass.damp as THREE.UniformNode<number>, 'value', 0.25, 1);
+     gui.add(params, 'enabled').onChange(updatePassChain);
+ 
+     //
+@@ -129,7 +136,7 @@ function updatePassChain() {
      postProcessing.needsUpdate = true;
  }
  
@@ -17275,7 +17295,7 @@ index a75d3801..36f78a84 100644
      const angle = Math.random() * Math.PI * 2;
      const u = Math.random() * 2 - 1;
  
-@@ -136,7 +155,7 @@ function onWindowResize() {
+@@ -149,7 +156,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
