@@ -74,4 +74,4 @@ export default UniformNode;
 export declare const uniform: <TValue>(
     value: InputNode<TValue> | TValue,
     type?: Node | string,
-) => import("../tsl/TSLCore.js").ShaderNodeObject<UniformNode<TValue>>;
+) => string | Node | import("./ConstNode.js").default<number | boolean>;
