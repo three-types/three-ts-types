@@ -87,6 +87,7 @@ declare class Renderer {
     info: Info;
     library: NodeLibrary;
     lighting: Lighting;
+    _samples: number;
     _canvasTarget: CanvasTarget;
     _inspector: InspectorBase;
     _getFallback: ((error: unknown) => Backend) | null;
@@ -659,7 +660,7 @@ declare class Renderer {
      * @type {number}
      * @default 0
      */
-    get samples(): any;
+    get samples(): number;
     /**
      * The current number of samples used for multi-sample anti-aliasing (MSAA).
      *
@@ -669,7 +670,7 @@ declare class Renderer {
      *
      * @type {number}
      */
-    get currentSamples(): any;
+    get currentSamples(): number;
     /**
      * The current tone mapping of the renderer. When not producing screen output,
      * the tone mapping is always `NoToneMapping`.

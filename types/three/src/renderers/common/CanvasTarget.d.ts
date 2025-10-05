@@ -20,7 +20,6 @@ declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
     _viewport: Vector4;
     _scissor: Vector4;
     _scissorTest: boolean;
-    _samples: number;
     colorTexture: FramebufferTexture;
     depthTexture: DepthTexture;
     /**
