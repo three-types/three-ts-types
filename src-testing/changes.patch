@@ -869,19 +869,20 @@ index ffb7734e..d71c6d24 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index b352c6b4..fce09a2a 100644
+index b352c6b4..031db84f 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -4,6 +4,8 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
+@@ -4,6 +4,9 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
  import { warn, error } from '../../utils.js';
 +import NodeFrame from './NodeFrame.js';
 +import NodeBuilder from './NodeBuilder.js';
++import { NodeExtensions } from '../tsl/TSLCore.js';
  
  const _parentBuildStage = {
      analyze: 'setup',
-@@ -12,22 +14,102 @@ const _parentBuildStage = {
+@@ -12,22 +15,102 @@ const _parentBuildStage = {
  
  let _nodeId = 0;
  
@@ -986,7 +987,7 @@ index b352c6b4..fce09a2a 100644
          super();
  
          /**
-@@ -144,7 +226,7 @@ class Node extends EventDispatcher {
+@@ -144,7 +227,7 @@ class Node extends EventDispatcher {
       * @default false
       * @param {boolean} value
       */
@@ -995,7 +996,7 @@ index b352c6b4..fce09a2a 100644
          if (value === true) {
              this.version++;
          }
-@@ -157,7 +239,7 @@ class Node extends EventDispatcher {
+@@ -157,7 +240,7 @@ class Node extends EventDispatcher {
       * @readonly
       */
      get type() {
@@ -1004,7 +1005,7 @@ index b352c6b4..fce09a2a 100644
      }
  
      /**
-@@ -167,7 +249,7 @@ class Node extends EventDispatcher {
+@@ -167,7 +250,7 @@ class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -1013,7 +1014,7 @@ index b352c6b4..fce09a2a 100644
          this.updateType = updateType;
          this.update = callback.bind(this);
  
-@@ -181,7 +263,7 @@ class Node extends EventDispatcher {
+@@ -181,7 +264,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1022,7 +1023,7 @@ index b352c6b4..fce09a2a 100644
          return this.onUpdate(callback, NodeUpdateType.FRAME);
      }
  
-@@ -192,7 +274,7 @@ class Node extends EventDispatcher {
+@@ -192,7 +275,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1031,7 +1032,7 @@ index b352c6b4..fce09a2a 100644
          return this.onUpdate(callback, NodeUpdateType.RENDER);
      }
  
-@@ -203,7 +285,7 @@ class Node extends EventDispatcher {
+@@ -203,7 +286,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1040,7 +1041,7 @@ index b352c6b4..fce09a2a 100644
          return this.onUpdate(callback, NodeUpdateType.OBJECT);
      }
  
-@@ -213,7 +295,7 @@ class Node extends EventDispatcher {
+@@ -213,7 +296,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1049,7 +1050,7 @@ index b352c6b4..fce09a2a 100644
          this.updateReference = callback.bind(this);
  
          return this;
-@@ -226,7 +308,7 @@ class Node extends EventDispatcher {
+@@ -226,7 +309,7 @@ class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -1058,7 +1059,7 @@ index b352c6b4..fce09a2a 100644
          return this;
      }
  
-@@ -238,7 +320,7 @@ class Node extends EventDispatcher {
+@@ -238,7 +321,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -1067,7 +1068,7 @@ index b352c6b4..fce09a2a 100644
          return this.global;
      }
  
-@@ -274,7 +356,7 @@ class Node extends EventDispatcher {
+@@ -274,7 +357,7 @@ class Node extends EventDispatcher {
       *
       * @param {traverseCallback} callback - A callback that is executed per node.
       */
@@ -1076,7 +1077,7 @@ index b352c6b4..fce09a2a 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -325,7 +407,7 @@ class Node extends EventDispatcher {
+@@ -325,7 +408,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -1085,7 +1086,7 @@ index b352c6b4..fce09a2a 100644
          return this.uuid;
      }
  
-@@ -364,7 +446,7 @@ class Node extends EventDispatcher {
+@@ -364,7 +447,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1094,7 +1095,7 @@ index b352c6b4..fce09a2a 100644
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-@@ -378,7 +460,7 @@ class Node extends EventDispatcher {
+@@ -378,7 +461,7 @@ class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -1103,7 +1104,7 @@ index b352c6b4..fce09a2a 100644
          return 'void';
      }
  
-@@ -388,7 +470,7 @@ class Node extends EventDispatcher {
+@@ -388,7 +471,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1112,7 +1113,7 @@ index b352c6b4..fce09a2a 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -407,7 +489,7 @@ class Node extends EventDispatcher {
+@@ -407,7 +490,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node} The shared node if possible. Otherwise `this` is returned.
       */
@@ -1121,7 +1122,7 @@ index b352c6b4..fce09a2a 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -420,7 +502,7 @@ class Node extends EventDispatcher {
+@@ -420,7 +503,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -1130,7 +1131,7 @@ index b352c6b4..fce09a2a 100644
          return null;
      }
  
-@@ -432,13 +514,13 @@ class Node extends EventDispatcher {
+@@ -432,13 +515,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -1146,7 +1147,7 @@ index b352c6b4..fce09a2a 100644
          }
  
          // return a outputNode if exists or null
-@@ -453,7 +535,7 @@ class Node extends EventDispatcher {
+@@ -453,7 +536,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @param {?Node} output - The target output node.
       */
@@ -1155,7 +1156,7 @@ index b352c6b4..fce09a2a 100644
          const usageCount = builder.increaseUsage(this);
  
          if (this.parents === true) {
-@@ -469,8 +551,8 @@ class Node extends EventDispatcher {
+@@ -469,8 +552,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -1166,7 +1167,7 @@ index b352c6b4..fce09a2a 100644
                  }
              }
          }
-@@ -484,7 +566,7 @@ class Node extends EventDispatcher {
+@@ -484,7 +567,7 @@ class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -1175,7 +1176,7 @@ index b352c6b4..fce09a2a 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -500,7 +582,7 @@ class Node extends EventDispatcher {
+@@ -500,7 +583,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1184,7 +1185,7 @@ index b352c6b4..fce09a2a 100644
          warn('Abstract function.');
      }
  
-@@ -512,7 +594,7 @@ class Node extends EventDispatcher {
+@@ -512,7 +595,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1193,7 +1194,7 @@ index b352c6b4..fce09a2a 100644
          warn('Abstract function.');
      }
  
-@@ -524,7 +606,7 @@ class Node extends EventDispatcher {
+@@ -524,7 +607,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1202,7 +1203,7 @@ index b352c6b4..fce09a2a 100644
          warn('Abstract function.');
      }
  
-@@ -538,7 +620,7 @@ class Node extends EventDispatcher {
+@@ -538,7 +621,7 @@ class Node extends EventDispatcher {
       * @param {?(string|Node)} [output=null] - Can be used to define the output type.
       * @return {?(Node|string)} The result of the build process, depending on the build stage.
       */
@@ -1211,7 +1212,7 @@ index b352c6b4..fce09a2a 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -598,14 +680,14 @@ class Node extends EventDispatcher {
+@@ -598,14 +681,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
@@ -1230,7 +1231,7 @@ index b352c6b4..fce09a2a 100644
                      }
                  }
              }
-@@ -672,10 +754,10 @@ class Node extends EventDispatcher {
+@@ -672,10 +755,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1243,7 +1244,7 @@ index b352c6b4..fce09a2a 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -683,7 +765,9 @@ class Node extends EventDispatcher {
+@@ -683,7 +766,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1254,7 +1255,7 @@ index b352c6b4..fce09a2a 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -699,33 +783,33 @@ class Node extends EventDispatcher {
+@@ -699,33 +784,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1298,7 +1299,7 @@ index b352c6b4..fce09a2a 100644
                  }
              }
          }
-@@ -737,7 +821,7 @@ class Node extends EventDispatcher {
+@@ -737,7 +822,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1307,7 +1308,7 @@ index b352c6b4..fce09a2a 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -746,18 +830,18 @@ class Node extends EventDispatcher {
+@@ -746,18 +831,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1329,7 +1330,7 @@ index b352c6b4..fce09a2a 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -765,7 +849,7 @@ class Node extends EventDispatcher {
+@@ -765,7 +850,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1338,7 +1339,7 @@ index b352c6b4..fce09a2a 100644
  
              this.serialize(data);
  
-@@ -774,12 +858,12 @@ class Node extends EventDispatcher {
+@@ -774,12 +859,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1353,7 +1354,7 @@ index b352c6b4..fce09a2a 100644
                  values.push(data);
              }
  
-@@ -787,9 +871,9 @@ class Node extends EventDispatcher {
+@@ -787,9 +872,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1366,6 +1367,13 @@ index b352c6b4..fce09a2a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
+@@ -800,4 +885,6 @@ class Node extends EventDispatcher {
+     }
+ }
+ 
++interface Node extends NodeExtensions {}
++
+ export default Node;
 diff --git a/src-testing/src/nodes/core/NodeAttribute.ts b/src-testing/src/nodes/core/NodeAttribute.ts
 index 393325c3..5daf1095 100644
 --- a/src-testing/src/nodes/core/NodeAttribute.ts
@@ -3404,14 +3412,15 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index f938f0de..32af2c8d 100644
+index f938f0de..52904327 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
-@@ -9,9 +9,38 @@ import ConstNode from '../core/ConstNode.js';
+@@ -9,9 +9,39 @@ import ConstNode from '../core/ConstNode.js';
  import MemberNode from '../utils/MemberNode.js';
  import { getValueFromType, getValueType } from '../core/NodeUtils.js';
  import { warn, error } from '../../utils.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
++import { NodeElementProperties } from '@types/three/src/nodes/tsl/TSLCore.js';
  
  let currentStack = null;
  
@@ -3446,37 +3455,58 @@ index f938f0de..32af2c8d 100644
  const NodeElements = new Map();
  
  // Extend Node Class for TSL using prototype
-@@ -45,6 +74,138 @@ export function addMethodChaining(name, nodeElement) {
+@@ -45,6 +75,159 @@ export function addMethodChaining(name, nodeElement) {
      }
  }
  
-+export type SwizzleCharacter = 'x' | 'y' | 'z' | 'w' | 'r' | 'g' | 'b' | 'a' | 's' | 't' | 'p' | 'q';
++type XYZWCharacter = 'x' | 'y' | 'z' | 'w';
++type RGBACharacter = 'r' | 'g' | 'b' | 'a';
++type STPQCharacter = 's' | 't' | 'p' | 'q';
 +
-+export type SwizzleOption = Exclude<
-+    | `${SwizzleCharacter}`
-+    | `${SwizzleCharacter}${SwizzleCharacter}`
-+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`
-+    | `${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}${SwizzleCharacter}`,
-+    'abs' | 'sqrt'
-+>;
++type XYZWSwizzle =
++    | `${XYZWCharacter}`
++    | `${XYZWCharacter}${XYZWCharacter}`
++    | `${XYZWCharacter}${XYZWCharacter}${XYZWCharacter}`
++    | `${XYZWCharacter}${XYZWCharacter}${XYZWCharacter}${XYZWCharacter}`;
 +
-+export type Swizzable<T extends Node = Node> = T & {
-+    [key in SwizzleOption | number]: ShaderNodeObject<Node>;
++type RGBASwizzle =
++    | `${RGBACharacter}`
++    | `${RGBACharacter}${RGBACharacter}`
++    | `${RGBACharacter}${RGBACharacter}${RGBACharacter}`
++    | `${RGBACharacter}${RGBACharacter}${RGBACharacter}${RGBACharacter}`;
++
++type STPQSwizzle =
++    | `${STPQCharacter}`
++    | `${STPQCharacter}${STPQCharacter}`
++    | `${STPQCharacter}${STPQCharacter}${STPQCharacter}`
++    | `${STPQCharacter}${STPQCharacter}${STPQCharacter}${STPQCharacter}`;
++
++export type SwizzleOption = XYZWSwizzle | RGBASwizzle | STPQSwizzle;
++
++export type Swizzable = {
++    [Key in SwizzleOption | number]: ShaderNodeObject<Node>;
++} & {
++    [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => ShaderNodeObject<Node>;
++} & {
++    [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => ShaderNodeObject<Node>;
 +};
 +
-+export type ShaderNodeObject<T extends Node> = T & {
-+    [Key in keyof NodeElements]: T extends { [K in Key]: infer M }
-+        ? M
-+        : NodeElements[Key] extends (node: T, ...args: infer Args) => infer R
-+          ? (...args: Args) => R
-+          : never;
++export type ShaderNodeObject<T extends Node> = T;
++
++export type NodeElementProperties = {
++    [Key in keyof NodeElements]: NodeElements[Key] extends (node: Node, ...args: infer Args) => infer R
++        ? (...args: Args) => R
++        : never;
 +} & {
-+    [Key in keyof NodeElements as `${Key}Assign`]: T extends { [K in Key]: infer M }
-+        ? M
-+        : NodeElements[Key] extends (node: T, ...args: infer Args) => unknown
-+          ? (...args: Args) => ShaderNodeObject<T>
-+          : never;
-+} & Swizzable<T>;
++    [Key in keyof NodeElements as `${Key}Assign`]: NodeElements[Key] extends (
++        node: Node,
++        ...args: infer Args
++    ) => unknown
++        ? (...args: Args) => ShaderNodeObject<Node>
++        : never;
++};
++
++export interface NodeExtensions extends Swizzable, NodeElementProperties {}
 +
 +/** anything that can be passed to {@link nodeObject} */
 +export type NodeObjectOption = Node | number | string;
@@ -3585,7 +3615,7 @@ index f938f0de..32af2c8d 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -245,7 +406,7 @@ Object.defineProperties(Node.prototype, proto);
+@@ -245,7 +428,7 @@ Object.defineProperties(Node.prototype, proto);
  
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3594,7 +3624,7 @@ index f938f0de..32af2c8d 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -356,7 +517,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -356,7 +539,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3605,7 +3635,7 @@ index f938f0de..32af2c8d 100644
          super();
  
          this.shaderNode = shaderNode;
-@@ -365,7 +528,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -365,7 +550,7 @@ class ShaderCallNodeInternal extends Node {
          this.isShaderCallNodeInternal = true;
      }
  
@@ -3614,7 +3644,7 @@ index f938f0de..32af2c8d 100644
          return this.shaderNode.nodeType || this.getOutputNode(builder).getNodeType(builder);
      }
  
-@@ -373,7 +536,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -373,7 +558,7 @@ class ShaderCallNodeInternal extends Node {
          return this.getOutputNode(builder).getMemberType(builder, name);
      }
  
@@ -3623,7 +3653,7 @@ index f938f0de..32af2c8d 100644
          const { shaderNode, rawInputs } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -586,7 +749,15 @@ function getProxyParameters(params) {
+@@ -586,7 +771,15 @@ function getProxyParameters(params) {
      });
  }
  
@@ -3639,7 +3669,7 @@ index f938f0de..32af2c8d 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -598,7 +769,7 @@ class ShaderNodeInternal extends Node {
+@@ -598,7 +791,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3648,7 +3678,7 @@ index f938f0de..32af2c8d 100644
          this.layout = layout;
  
          return this;
-@@ -613,6 +784,8 @@ class ShaderNodeInternal extends Node {
+@@ -613,6 +806,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3657,7 +3687,7 @@ index f938f0de..32af2c8d 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -711,11 +884,28 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -711,11 +906,28 @@ export function ShaderNode(jsFunc, nodeType) {
      return new ShaderNodeInternal(jsFunc, nodeType);
  }
  
@@ -10517,10 +10547,10 @@ index 99289b68..332fa9a4 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 4c6df15b..4f92ec0e 100644
+index 5dca0147..38349095 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1656,7 +1656,14 @@ class WebGPUBackend extends Backend {
+@@ -1658,7 +1658,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
