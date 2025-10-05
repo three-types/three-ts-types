@@ -274,12 +274,14 @@ interface ShaderNodeFn<Args extends readonly unknown[]> {
     once: (subBuilds?: string[] | null) => this;
 }
 
-export function Fn(jsFunc: (builder: NodeBuilder) => void): ShaderNodeFn<[]>;
+export function Fn(jsFunc: (builder: NodeBuilder) => void, layout?: string | Record<string, string>): ShaderNodeFn<[]>;
 export function Fn<T extends readonly unknown[]>(
     jsFunc: (args: T, builder: NodeBuilder) => void,
+    layout?: string | Record<string, string>,
 ): ShaderNodeFn<ProxiedTuple<T>>;
 export function Fn<T extends { readonly [key: string]: unknown }>(
     jsFunc: (args: T, builder: NodeBuilder) => void,
+    layout?: string | Record<string, string>,
 ): ShaderNodeFn<[ProxiedObject<T>]>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
