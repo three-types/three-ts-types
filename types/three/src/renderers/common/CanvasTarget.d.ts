@@ -7,10 +7,6 @@ export interface CanvasTargetEventMap {
     resize: {};
     dispose: {};
 }
-export interface CanvasTargetOptions {
-    antialias?: boolean | undefined;
-    samples?: number | undefined;
-}
 /**
  * CanvasTarget is a class that represents the final output destination of the renderer.
  *
@@ -28,27 +24,11 @@ declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
     colorTexture: FramebufferTexture;
     depthTexture: DepthTexture;
     /**
-     * CanvasTarget options.
-     *
-     * @typedef {Object} CanvasTarget~Options
-     * @property {boolean} [antialias=false] - Whether MSAA as the default anti-aliasing should be enabled or not.
-     * @property {number} [samples=0] - When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0
-     * to overwrite the default.
-     */
-    /**
      * Constructs a new CanvasTarget.
      *
      * @param {HTMLCanvasElement|OffscreenCanvas} domElement - The canvas element to render to.
-     * @param {Object} [parameters={}] - The parameters.
      */
-    constructor(domElement: HTMLCanvasElement, parameters?: CanvasTargetOptions);
-    /**
-     * The number of samples used for multi-sample anti-aliasing (MSAA).
-     *
-     * @type {number}
-     * @default 0
-     */
-    get samples(): number;
+    constructor(domElement: HTMLCanvasElement);
     /**
      * Returns the pixel ratio.
      *

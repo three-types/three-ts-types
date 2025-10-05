@@ -659,7 +659,7 @@ declare class Renderer {
      * @type {number}
      * @default 0
      */
-    get samples(): number;
+    get samples(): any;
     /**
      * The current number of samples used for multi-sample anti-aliasing (MSAA).
      *
@@ -669,7 +669,7 @@ declare class Renderer {
      *
      * @type {number}
      */
-    get currentSamples(): number;
+    get currentSamples(): any;
     /**
      * The current tone mapping of the renderer. When not producing screen output,
      * the tone mapping is always `NoToneMapping`.
