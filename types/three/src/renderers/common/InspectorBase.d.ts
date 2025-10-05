@@ -47,6 +47,12 @@ declare class InspectorBase {
      */
     finish(): void;
     /**
+     * Inspects a node.
+     *
+     * @param {Node} node - The node to inspect.
+     */
+    inspect(): void;
+    /**
      * When a compute operation is performed.
      *
      * @param {ComputeNode} computeNode - The compute node being executed.

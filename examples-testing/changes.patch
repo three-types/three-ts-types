@@ -17947,7 +17947,7 @@ index 45e298e7..207a463b 100644
      postProcessing.render();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index 3c7b70ac..8232480f 100644
+index c574e5c4..9eaf41cc 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17963,16 +17963,7 @@ index 3c7b70ac..8232480f 100644
  
  init();
  
-@@ -39,7 +43,7 @@ async function init() {
-     document.body.appendChild(renderer.domElement);
- 
-     renderer.inspector = new Inspector();
--    document.body.appendChild(renderer.inspector.domElement);
-+    document.body.appendChild((renderer.inspector as Inspector).domElement);
- 
-     //
- 
-@@ -198,7 +202,7 @@ async function init() {
+@@ -199,7 +203,7 @@ async function init() {
  
      const types = { Combined: 0, Direct: 3, AO: 1, GI: 2 };
  
@@ -17981,7 +17972,7 @@ index 3c7b70ac..8232480f 100644
      gui.add(params, 'output', types).onChange(updatePostprocessing);
      gui.add(giPass.sliceCount, 'value', 1, 4).step(1).name('slice count');
      gui.add(giPass.stepCount, 'value', 1, 32).step(1).name('step count');
-@@ -212,7 +216,7 @@ async function init() {
+@@ -213,7 +217,7 @@ async function init() {
      gui.add(giPass.useScreenSpaceSampling, 'value').name('screen-space sampling');
      gui.add(giPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
  
@@ -19520,7 +19511,7 @@ index f52b15ff..78885bec 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index ae338a78..d832c9fd 100644
+index b11f4dd3..e7ce0918 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -19,6 +19,7 @@ import {

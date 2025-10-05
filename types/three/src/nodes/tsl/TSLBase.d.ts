@@ -6,6 +6,7 @@ export * from "../core/AssignNode.js";
 export * from "../core/BypassNode.js";
 export * from "../core/CacheNode.js";
 export * from "../core/ContextNode.js";
+export * from "../core/InspectorNode.js";
 export * from "../core/PropertyNode.js";
 export * from "../core/SubBuildNode.js";
 export * from "../core/UniformNode.js";
