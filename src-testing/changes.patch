@@ -3146,7 +3146,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 174f7585..67d65bb4 100644
+index 174f7585..1bdf4d1d 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,26 +1,35 @@
@@ -3188,24 +3188,34 @@ index 174f7585..67d65bb4 100644
          super(value, nodeType);
  
          /**
-@@ -56,7 +65,7 @@ class UniformNode extends InputNode {
+@@ -56,11 +65,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
 -    setName(name) {
-+    setName(name: string) {
++    setName = (name: string) => {
          this.name = name;
  
          return this;
-@@ -69,7 +78,7 @@ class UniformNode extends InputNode {
+-    }
++    };
+ 
+     /**
+      * Sets the {@link UniformNode#name} property.
+@@ -69,11 +78,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
 -    label(name) {
-+    label(name: string) {
++    label = (name: string) => {
          warn('TSL: "label()" has been deprecated. Use "setName()" instead.'); // @deprecated r179
  
          return this.setName(name);
+-    }
++    };
+ 
+     /**
+      * Sets the {@link UniformNode#groupNode} property.
 @@ -81,7 +90,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
