@@ -3146,7 +3146,7 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 174f7585..a3a64799 100644
+index 174f7585..67d65bb4 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,26 +1,35 @@
@@ -3267,7 +3267,7 @@ index 174f7585..a3a64799 100644
   * @returns {UniformNode}
   */
 -export const uniform = (value, type) => {
-+export const uniform = <TValue>(value: InputNode<TValue> | TValue, type?: Node | string) => {
++export const uniform = <TValue>(value: InputNode<TValue> | TValue, type?: Node | string): UniformNode<TValue> => {
      const nodeType = getConstNodeType(type || value);
  
      if (nodeType === value) {
