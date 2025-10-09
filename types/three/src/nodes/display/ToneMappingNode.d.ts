@@ -5,7 +5,6 @@ import TempNode from "../core/TempNode.js";
 import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class ToneMappingNode extends TempNode {
-    toneMapping: ToneMapping;
     exposureNode: Node;
     colorNode: Node | null;
 

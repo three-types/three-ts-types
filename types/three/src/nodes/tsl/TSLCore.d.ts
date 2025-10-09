@@ -78,17 +78,17 @@ export type Swizzable =
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => ShaderNodeObject<Node>;
     };
 
-export type ShaderNodeObject<T extends Node> = T;
+export type ShaderNodeObject<T> = T;
 
 export type NodeElementProperties =
     & {
-        [Key in keyof NodeElements]: NodeElements[Key] extends (node: Node, ...args: infer Args) => infer R
+        [Key in keyof NodeElements]: NodeElements[Key] extends (node: any, ...args: infer Args) => infer R
             ? (...args: Args) => R
             : never;
     }
     & {
         [Key in keyof NodeElements as `${Key}Assign`]: NodeElements[Key] extends
-            (node: Node, ...args: infer Args) => unknown ? (...args: Args) => ShaderNodeObject<Node>
+            (node: any, ...args: infer Args) => unknown ? (...args: Args) => ShaderNodeObject<Node>
             : never;
     };
 
