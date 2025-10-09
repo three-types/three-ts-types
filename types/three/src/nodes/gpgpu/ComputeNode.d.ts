@@ -17,12 +17,12 @@ export default class ComputeNode extends Node {
     setCount(count: number): this;
     getCount(): number | null;
 
-    setName(name: string): this;
+    setName: (name: string) => this;
 
     /**
      * @deprecated "label()" has been deprecated. Use "setName()" instead.
      */
-    label(name: string): this;
+    label: (name: string) => this;
 
     onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
 }

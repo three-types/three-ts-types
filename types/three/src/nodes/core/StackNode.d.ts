@@ -8,8 +8,6 @@ declare class StackNode extends Node {
 
     constructor();
 
-    add(node: Node): this;
-
     If(boolNode: Node, method: () => void): this;
 
     ElseIf(boolNode: Node, method: () => void): this;

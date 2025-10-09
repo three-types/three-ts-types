@@ -67,8 +67,7 @@ type STPQSwizzle =
 
 export type SwizzleOption = XYZWSwizzle | RGBASwizzle | STPQSwizzle;
 
-export type Swizzable<T extends Node = Node> =
-    & T
+export type Swizzable =
     & {
         [Key in SwizzleOption | number]: ShaderNodeObject<Node>;
     }
@@ -79,20 +78,21 @@ export type Swizzable<T extends Node = Node> =
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => ShaderNodeObject<Node>;
     };
 
-export type ShaderNodeObject<T extends Node> =
-    & T
+export type ShaderNodeObject<T> = T;
+
+export type NodeElementProperties =
     & {
-        [Key in keyof NodeElements]: T extends { [K in Key]: infer M } ? M
-            : NodeElements[Key] extends (node: T, ...args: infer Args) => infer R ? (...args: Args) => R
+        [Key in keyof NodeElements]: NodeElements[Key] extends (node: any, ...args: infer Args) => infer R
+            ? (...args: Args) => R
             : never;
     }
     & {
-        [Key in keyof NodeElements as `${Key}Assign`]: T extends { [K in Key]: infer M } ? M
-            : NodeElements[Key] extends (node: T, ...args: infer Args) => unknown
-                ? (...args: Args) => ShaderNodeObject<T>
+        [Key in keyof NodeElements as `${Key}Assign`]: NodeElements[Key] extends
+            (node: any, ...args: infer Args) => unknown ? (...args: Args) => ShaderNodeObject<Node>
             : never;
-    }
-    & Swizzable<T>;
+    };
+
+export interface NodeExtensions extends Swizzable, NodeElementProperties {}
 
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;

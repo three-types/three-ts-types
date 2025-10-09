@@ -5,7 +5,6 @@ import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class RenderOutputNode extends TempNode {
     colorNode: Node;
-    toneMapping: ToneMapping | null;
     outputColorSpace: string | null;
 
     readonly isRenderOutput: true;

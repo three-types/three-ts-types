@@ -28,10 +28,6 @@ declare module "../tsl/TSLCore.js" {
         toVertexStage: typeof vertexStage;
 
         /**
-         * @deprecated .varying() has been renamed to .toVarying().
-         */
-        varying: typeof varying;
-        /**
          * @deprecated .vertexStage() has been renamed to .toVertexStage().
          */
         vertexStage: typeof vertexStage;

@@ -17,12 +17,12 @@ export const context: (node: Node, context?: NodeBuilderContext) => ShaderNodeOb
 
 export const uniformFlow: (node: Node) => ShaderNodeObject<ContextNode>;
 
-export const setName: (node: Node, label: string) => ShaderNodeObject<ContextNode>;
+export const setName: (node: Node, label: string) => Node;
 
 /**
  * @deprecated "label()" has been deprecated. Use "setName()" instead.
  */
-export function label(node: Node, label: string): ShaderNodeObject<ContextNode>;
+export function label(node: Node, label: string): Node;
 
 declare module "../tsl/TSLCore.js" {
     interface NodeElements {

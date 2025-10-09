@@ -7,7 +7,7 @@ import { ConstNode, MaterialNode, Node, PropertyNode } from "three/webgpu";
 
 // just to type check
 // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
-function assertSwizzable<T extends Node>(_s: Swizzable<T>) {}
+function assertSwizzable(_s: Swizzable) {}
 
 const s = color(1);
 s.xyz;
@@ -17,19 +17,19 @@ aa[0].xy = s;
 aa[1].w = s;
 aa[2] = "hello";
 
-assertSwizzable<MaterialNode>(nodeImmutable(MaterialNode, MaterialNode.ROTATION));
-assertSwizzable<PropertyNode>(nodeImmutable(PropertyNode, "vec4", "DiffuseColor"));
+assertSwizzable(nodeImmutable(MaterialNode, MaterialNode.ROTATION));
+assertSwizzable(nodeImmutable(PropertyNode, "vec4", "DiffuseColor"));
 
 const shader = new ShaderNode<{ a: Node; b: Node }>(params => {
     return params.a;
 });
-assertSwizzable<Node>(shader.call({ a: s, b: new ConstNode(1) }));
+assertSwizzable(shader.call({ a: s, b: new ConstNode(1) }));
 
 const fnWithoutArgs = Fn(() => vec3(1, 2, 3));
-assertSwizzable<Node>(fnWithoutArgs());
+assertSwizzable(fnWithoutArgs());
 
 const fnWithArrayArgs = Fn(([a, b]: [a: ShaderNodeObject<Node>, b: ShaderNodeObject<Node>]) => a.add(b));
-assertSwizzable<Node>(fnWithArrayArgs(0.5, color(0.0, 0.25, 0.5)));
+assertSwizzable(fnWithArrayArgs(0.5, color(0.0, 0.25, 0.5)));
 
 const fnWithArgs = Fn(({ a, b }: { a: ShaderNodeObject<Node>; b: ShaderNodeObject<Node> }) => a.add(b));
-assertSwizzable<Node>(fnWithArgs({ a: 0.5, b: color(0.0, 0.25, 0.5) }));
+assertSwizzable(fnWithArgs({ a: 0.5, b: color(0.0, 0.25, 0.5) }));
