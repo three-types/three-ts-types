@@ -8,7 +8,6 @@ import UniformGroupNode from "../../../nodes/core/UniformGroupNode.js";
 import ComputeNode from "../../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../../nodes/lighting/LightsNode.js";
 import { NodeFrame } from "../../../nodes/Nodes.js";
-import { ShaderNodeObject } from "../../../nodes/TSL.js";
 import { Fog } from "../../../scenes/Fog.js";
 import { FogExp2 } from "../../../scenes/FogExp2.js";
 import { Scene } from "../../../scenes/Scene.js";
@@ -33,11 +32,11 @@ interface ComputeNodeData {
 }
 interface SceneData {
     background?: Color | Texture | CubeTexture | undefined;
-    backgroundNode?: ShaderNodeObject<Node> | undefined;
+    backgroundNode?: Node | undefined;
     fog?: Fog | FogExp2 | undefined;
-    fogNode?: ShaderNodeObject<Node> | undefined;
+    fogNode?: Node | undefined;
     environment?: Texture | undefined;
-    environmentNode?: ShaderNodeObject<Node> | undefined;
+    environmentNode?: Node | undefined;
 }
 interface CacheKeyData {
     callId: number;
@@ -45,9 +44,9 @@ interface CacheKeyData {
 }
 declare module "../../../scenes/Scene.js" {
     interface Scene {
-        environmentNode?: ShaderNodeObject<Node> | null | undefined;
-        backgroundNode?: ShaderNodeObject<Node> | null | undefined;
-        fogNode?: ShaderNodeObject<Node> | null | undefined;
+        environmentNode?: Node | null | undefined;
+        backgroundNode?: Node | null | undefined;
+        fogNode?: Node | null | undefined;
     }
 }
 /**
@@ -90,7 +89,7 @@ declare class Nodes extends DataMap<{
         version?: number;
     }>;
     cacheLib: {
-        [type: string]: WeakMap<object, ShaderNodeObject<Node> | undefined>;
+        [type: string]: WeakMap<object, Node | undefined>;
     };
     constructor(renderer: Renderer, backend: Backend);
     /**
@@ -199,7 +198,7 @@ declare class Nodes extends DataMap<{
     getCacheNode(
         type: string,
         object: object,
-        callback: () => ShaderNodeObject<Node> | undefined,
+        callback: () => Node | undefined,
         forceUpdate?: boolean,
     ): Node | undefined;
     /**
