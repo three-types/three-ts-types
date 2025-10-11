@@ -1,5 +1,4 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
-import { NodeExtensions } from "../tsl/TSLCore.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
@@ -358,7 +357,5 @@ declare class Node extends EventDispatcher<{
      * @return {Object} The serialized node.
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
-}
-interface Node extends NodeExtensions {
 }
 export default Node;
