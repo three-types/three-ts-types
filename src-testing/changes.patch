@@ -1,3 +1,13 @@
+diff --git a/src-testing/src/Three.TSL.d.ts b/src-testing/src/Three.TSL.d.ts
+index 9a483cae..9cc32532 100644
+--- a/src-testing/src/Three.TSL.d.ts
++++ b/src-testing/src/Three.TSL.d.ts
+@@ -614,4 +614,4 @@ export const workgroupId: typeof TSL.workgroupId;
+ export const workingToColorSpace: typeof TSL.workingToColorSpace;
+ export const xor: typeof TSL.xor;
+ 
+-export type { ProxiedObject, ShaderNodeObject, Swizzable } from "./nodes/TSL.js";
++export type { ProxiedObject, Swizzable } from "./nodes/TSL.js";
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 index 47e15577..cdddcd46 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
@@ -194,14 +204,10 @@ index 47e15577..cdddcd46 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index d207da78..e799fb0c 100644
+index d207da78..ea038eec 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-@@ -1,10 +1,15 @@
- import InputNode from '../core/InputNode.js';
--import { nodeObject, addMethodChaining } from '../tsl/TSLCore.js';
-+import { nodeObject, addMethodChaining, ShaderNodeObject } from '../tsl/TSLCore.js';
- import { varying } from '../core/VaryingNode.js';
+@@ -4,7 +4,11 @@ import { varying } from '../core/VaryingNode.js';
  
  import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
  import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
@@ -210,12 +216,11 @@ index d207da78..e799fb0c 100644
 +import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
 +import { InstancedBufferAttribute } from '../../core/InstancedBufferAttribute.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
-+import { array } from '@types/three/src/nodes/core/ArrayNode.js';
 +import BufferNode from './BufferNode.js';
  
  /**
   * In earlier `three.js` versions it was only possible to define attribute data
-@@ -28,11 +33,22 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
+@@ -28,11 +32,22 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
   * ```
   * @augments InputNode
   */
@@ -239,7 +244,7 @@ index d207da78..e799fb0c 100644
      /**
       * Constructs a new buffer attribute node.
       *
-@@ -41,7 +57,12 @@ class BufferAttributeNode extends InputNode {
+@@ -41,7 +56,12 @@ class BufferAttributeNode extends InputNode {
       * @param {number} [bufferStride=0] - The buffer stride.
       * @param {number} [bufferOffset=0] - The buffer offset.
       */
@@ -253,7 +258,7 @@ index d207da78..e799fb0c 100644
          super(value, bufferType);
  
          /**
-@@ -110,10 +131,10 @@ class BufferAttributeNode extends InputNode {
+@@ -110,10 +130,10 @@ class BufferAttributeNode extends InputNode {
           */
          this.global = true;
  
@@ -268,7 +273,7 @@ index d207da78..e799fb0c 100644
          }
      }
  
-@@ -124,7 +145,7 @@ class BufferAttributeNode extends InputNode {
+@@ -124,7 +144,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -277,7 +282,7 @@ index d207da78..e799fb0c 100644
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
-@@ -149,7 +170,7 @@ class BufferAttributeNode extends InputNode {
+@@ -149,7 +169,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The node type.
       */
@@ -286,7 +291,7 @@ index d207da78..e799fb0c 100644
          if (this.bufferType === null) {
              this.bufferType = builder.getTypeFromAttribute(this.attribute);
          }
-@@ -164,16 +185,19 @@ class BufferAttributeNode extends InputNode {
+@@ -164,16 +184,19 @@ class BufferAttributeNode extends InputNode {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -309,7 +314,7 @@ index d207da78..e799fb0c 100644
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
  
          buffer.setUsage(this.usage);
-@@ -188,13 +212,13 @@ class BufferAttributeNode extends InputNode {
+@@ -188,13 +211,13 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The generated code snippet.
       */
@@ -325,7 +330,7 @@ index d207da78..e799fb0c 100644
  
          if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
              this.name = propertyName;
-@@ -225,11 +249,11 @@ class BufferAttributeNode extends InputNode {
+@@ -225,11 +248,11 @@ class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -340,7 +345,7 @@ index d207da78..e799fb0c 100644
          }
  
          return this;
-@@ -241,7 +265,7 @@ class BufferAttributeNode extends InputNode {
+@@ -241,7 +264,7 @@ class BufferAttributeNode extends InputNode {
       * @param {boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -349,7 +354,7 @@ index d207da78..e799fb0c 100644
          this.instanced = value;
  
          return this;
-@@ -261,8 +285,12 @@ export default BufferAttributeNode;
+@@ -261,8 +284,12 @@ export default BufferAttributeNode;
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -364,7 +369,7 @@ index d207da78..e799fb0c 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage.
-@@ -276,8 +304,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+@@ -276,8 +303,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -379,7 +384,7 @@ index d207da78..e799fb0c 100644
  
  /**
   * TSL function for creating a buffer attribute node but with enabled instancing
-@@ -290,8 +322,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+@@ -290,8 +321,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -394,7 +399,7 @@ index d207da78..e799fb0c 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -304,7 +340,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -304,7 +339,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -418,18 +423,10 @@ index d207da78..e799fb0c 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index 50a620a0..b64da995 100644
+index 50a620a0..03c248d4 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
-@@ -4,13 +4,17 @@ import { textureSize } from './TextureSizeNode.js';
- import { colorSpaceToWorking } from '../display/ColorSpaceNode.js';
- import { expression } from '../code/ExpressionNode.js';
- import { maxMipLevel } from '../utils/MaxMipLevelNode.js';
--import { nodeProxy, vec3, nodeObject, int } from '../tsl/TSLBase.js';
-+import { nodeProxy, vec3, nodeObject, int, ShaderNodeObject } from '../tsl/TSLBase.js';
- import { NodeUpdateType } from '../core/constants.js';
- 
- import { IntType, NearestFilter, UnsignedIntType } from '../../constants.js';
+@@ -11,6 +11,10 @@ import { IntType, NearestFilter, UnsignedIntType } from '../../constants.js';
  
  import { Texture } from '../../textures/Texture.js';
  import { warn } from '../../utils.js';
@@ -452,9 +449,9 @@ index 50a620a0..b64da995 100644
  
 +    readonly isTextureNode: true;
 +
-+    uvNode: ShaderNodeObject<Node> | null;
-+    levelNode: ShaderNodeObject<Node> | null;
-+    biasNode: ShaderNodeObject<Node> | null;
++    uvNode: Node | null;
++    levelNode: Node | null;
++    biasNode: Node | null;
 +    compareNode: Node | null;
 +    depthNode: Node | null;
 +    gradNode: Node | null;
@@ -465,7 +462,7 @@ index 50a620a0..b64da995 100644
 +    referenceNode: this | null;
 +
 +    _value: Texture;
-+    _matrixUniform: ShaderNodeObject<UniformNode<Matrix3>> | null;
++    _matrixUniform: UniformNode<Matrix3> | null;
 +
      /**
       * Constructs a new texture node.
@@ -477,9 +474,9 @@ index 50a620a0..b64da995 100644
 -    constructor(value = EmptyTexture, uvNode = null, levelNode = null, biasNode = null) {
 +    constructor(
 +        value: Texture = EmptyTexture,
-+        uvNode: ShaderNodeObject<Node> | null = null,
-+        levelNode: ShaderNodeObject<Node> | null = null,
-+        biasNode: ShaderNodeObject<Node> | null = null,
++        uvNode: Node | null = null,
++        levelNode: Node | null = null,
++        biasNode: Node | null = null,
 +    ) {
          super(value);
  
@@ -586,7 +583,7 @@ index 50a620a0..b64da995 100644
       * @return {TextureNode} A texture node representing the texture sample.
       */
 -    uv(uvNode) {
-+    uv(uvNode: ShaderNodeObject<Node> | null) {
++    uv(uvNode: Node | null) {
          // @deprecated, r172
  
          warn('TextureNode: .uv() has been renamed. Use .sample() instead.');
@@ -595,7 +592,7 @@ index 50a620a0..b64da995 100644
       * @return {TextureNode} A texture node representing the texture sample.
       */
 -    blur(amountNode) {
-+    blur(amountNode: ShaderNodeObject<Node>) {
++    blur(amountNode: Node) {
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getBase();
@@ -604,7 +601,7 @@ index 50a620a0..b64da995 100644
       * @return {TextureNode} A texture node representing the texture sample.
       */
 -    level(levelNode) {
-+    level(levelNode: ShaderNodeObject<Node> | null) {
++    level(levelNode: Node | null) {
          const textureNode = this.clone();
          textureNode.levelNode = nodeObject(levelNode);
          textureNode.referenceNode = this.getBase();
@@ -1400,7 +1397,7 @@ index 393325c3..5daf1095 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index aa3194a5..ddf91767 100644
+index aa3194a5..4451ef4c 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -1419,7 +1416,7 @@ index aa3194a5..ddf91767 100644
 -import { stack } from './StackNode.js';
 -import { getCurrentStack, setCurrentStack } from '../tsl/TSLBase.js';
 +import StackNode, { stack } from './StackNode.js';
-+import { getCurrentStack, setCurrentStack, ShaderNodeInternal, ShaderNodeObject } from '../tsl/TSLBase.js';
++import { getCurrentStack, setCurrentStack, ShaderNodeInternal } from '../tsl/TSLBase.js';
  
  import CubeRenderTarget from '../../renderers/common/CubeRenderTarget.js';
  import ChainMap from '../../renderers/common/ChainMap.js';
@@ -1532,8 +1529,8 @@ index aa3194a5..ddf91767 100644
 +    observer: NodeMaterialObserver | null;
 +
 +    lightsNode: LightsNode | null;
-+    environmentNode: ShaderNodeObject<Node> | null;
-+    fogNode: ShaderNodeObject<Node> | null;
++    environmentNode: Node | null;
++    fogNode: Node | null;
 +
 +    clippingContext: ClippingContext | null;
 +
@@ -1564,8 +1561,8 @@ index aa3194a5..ddf91767 100644
 +    vars: { vertex?: NodeVar[] | undefined; fragment?: NodeVar[] | undefined; compute?: NodeVar[] | undefined };
 +    flow: Flow;
 +    chaining: Node[];
-+    stack: ShaderNodeObject<StackNode>;
-+    stacks: ShaderNodeObject<StackNode>[];
++    stack: StackNode;
++    stacks: StackNode[];
 +    tab: string;
 +
 +    currentFunctionNode: FunctionNode | null;
@@ -2900,44 +2897,35 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 2d871ddf..563e4354 100644
+index 2d871ddf..e7a25593 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
-@@ -1,7 +1,15 @@
- import Node from './Node.js';
+@@ -2,6 +2,7 @@ import Node from './Node.js';
  import { select } from '../math/ConditionalNode.js';
--import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack, nodeObject } from '../tsl/TSLBase.js';
-+import {
-+    ShaderNode,
-+    nodeProxy,
-+    getCurrentStack,
-+    setCurrentStack,
-+    nodeObject,
-+    ShaderNodeObject,
-+} from '../tsl/TSLBase.js';
+ import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack, nodeObject } from '../tsl/TSLBase.js';
  import { error } from '../../utils.js';
 +import NodeBuilder from './NodeBuilder.js';
  
  /**
   * Stack is a helper for Nodes that need to produce stack-based code instead of continuous flow.
-@@ -14,6 +22,16 @@ class StackNode extends Node {
+@@ -14,6 +15,16 @@ class StackNode extends Node {
          return 'StackNode';
      }
  
 +    nodes: Node[];
 +    outputNode: Node | null;
 +
-+    parent: ShaderNodeObject<StackNode> | null;
++    parent: StackNode | null;
 +
-+    _currentCond: ShaderNodeObject<Node> | null;
-+    _expressionNode: ShaderNodeObject<Node> | null;
++    _currentCond: Node | null;
++    _expressionNode: Node | null;
 +
 +    readonly isStackNode: true;
 +
      /**
       * Constructs a new stack node.
       *
-@@ -74,7 +92,7 @@ class StackNode extends Node {
+@@ -74,7 +85,7 @@ class StackNode extends Node {
          this.isStackNode = true;
      }
  
@@ -2946,7 +2934,7 @@ index 2d871ddf..563e4354 100644
          return this.hasOutput ? this.outputNode.getNodeType(builder) : 'void';
      }
  
-@@ -88,7 +106,7 @@ class StackNode extends Node {
+@@ -88,7 +99,7 @@ class StackNode extends Node {
       * @param {Node} node - The node to add.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2955,7 +2943,7 @@ index 2d871ddf..563e4354 100644
          if (node.isNode !== true) {
              error('TSL: Invalid node added to stack.');
              return this;
-@@ -106,7 +124,7 @@ class StackNode extends Node {
+@@ -106,7 +117,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2964,7 +2952,7 @@ index 2d871ddf..563e4354 100644
          const methodNode = new ShaderNode(method);
          this._currentCond = select(boolNode, methodNode);
  
-@@ -120,7 +138,7 @@ class StackNode extends Node {
+@@ -120,7 +131,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2973,7 +2961,7 @@ index 2d871ddf..563e4354 100644
          const methodNode = new ShaderNode(method);
          const ifNode = select(boolNode, methodNode);
  
-@@ -136,7 +154,7 @@ class StackNode extends Node {
+@@ -136,7 +147,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed in the `else` case.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2982,7 +2970,7 @@ index 2d871ddf..563e4354 100644
          this._currentCond.elseNode = new ShaderNode(method);
  
          return this;
-@@ -242,7 +260,7 @@ class StackNode extends Node {
+@@ -242,7 +253,7 @@ class StackNode extends Node {
          return this.outputNode && this.outputNode.isNode;
      }
  
@@ -3333,27 +3321,26 @@ index 1fe2dbbd..a431897f 100644
 +export const shaderStages: NodeShaderStage[] = [...defaultShaderStages, 'compute'];
  export const vectorComponents = ['x', 'y', 'z', 'w'];
 diff --git a/src-testing/src/nodes/lighting/LightingContextNode.ts b/src-testing/src/nodes/lighting/LightingContextNode.ts
-index ee5cf92a..c58f0886 100644
+index ee5cf92a..7240bb88 100644
 --- a/src-testing/src/nodes/lighting/LightingContextNode.ts
 +++ b/src-testing/src/nodes/lighting/LightingContextNode.ts
 @@ -1,5 +1,23 @@
  import ContextNode from '../core/ContextNode.js';
--import { nodeProxy, float, vec3 } from '../tsl/TSLBase.js';
-+import { nodeProxy, float, vec3, ShaderNodeObject } from '../tsl/TSLBase.js';
+ import { nodeProxy, float, vec3 } from '../tsl/TSLBase.js';
 +import Node from '../core/Node.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import LightingModel from '../core/LightingModel.js';
 +
 +interface LightingContext {
-+    radiance: ShaderNodeObject<Node>;
-+    irradiance: ShaderNodeObject<Node>;
-+    iblIrradiance: ShaderNodeObject<Node>;
-+    ambientOcclusion: ShaderNodeObject<Node>;
++    radiance: Node;
++    irradiance: Node;
++    iblIrradiance: Node;
++    ambientOcclusion: Node;
 +    reflectedLight: {
-+        directDiffuse: ShaderNodeObject<Node>;
-+        directSpecular: ShaderNodeObject<Node>;
-+        indirectDiffuse: ShaderNodeObject<Node>;
-+        indirectSpecular: ShaderNodeObject<Node>;
++        directDiffuse: Node;
++        directSpecular: Node;
++        indirectDiffuse: Node;
++        indirectSpecular: Node;
 +    };
 +    backdrop: Node | null;
 +    backdropAlpha: Node | null;
@@ -3415,7 +3402,7 @@ index ee5cf92a..c58f0886 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index f938f0de..8e687c22 100644
+index f938f0de..aa55fb0d 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -9,9 +9,38 @@ import ConstNode from '../core/ConstNode.js';
@@ -3457,7 +3444,7 @@ index f938f0de..8e687c22 100644
  const NodeElements = new Map();
  
  // Extend Node Class for TSL using prototype
-@@ -45,6 +74,157 @@ export function addMethodChaining(name, nodeElement) {
+@@ -45,6 +74,144 @@ export function addMethodChaining(name, nodeElement) {
      }
  }
  
@@ -3486,39 +3473,26 @@ index f938f0de..8e687c22 100644
 +export type SwizzleOption = XYZWSwizzle | RGBASwizzle | STPQSwizzle;
 +
 +export type Swizzable = {
-+    [Key in SwizzleOption | number]: ShaderNodeObject<Node>;
++    [Key in SwizzleOption | number]: Node;
 +} & {
-+    [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => ShaderNodeObject<Node>;
++    [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => Node;
 +} & {
-+    [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => ShaderNodeObject<Node>;
++    [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
 +};
 +
-+export type ShaderNodeObject<T extends Node> = T;
-+
-+export type NodeElementProperties = {
-+    [Key in keyof NodeElements]: NodeElements[Key] extends (node: Node, ...args: infer Args) => infer R
-+        ? (...args: Args) => R
-+        : never;
-+} & {
-+    [Key in keyof NodeElements as `${Key}Assign`]: NodeElements[Key] extends (
-+        node: Node,
-+        ...args: infer Args
-+    ) => unknown
-+        ? (...args: Args) => ShaderNodeObject<Node>
-+        : never;
-+};
++declare module '../Nodes.js' {
++    interface Node extends Swizzable {
++        assign: (sourceNode: Node | number) => Node;
++    }
++}
 +
 +/** anything that can be passed to {@link nodeObject} */
 +export type NodeObjectOption = Node | number | string;
 +
-+// same logic as in ShaderNodeObject: number,boolean,node->ShaderNodeObject, otherwise do nothing
-+export type NodeObject<T> = T extends Node
-+    ? ShaderNodeObject<T>
-+    : T extends number | boolean
-+      ? ShaderNodeObject<ConstNode<number | boolean>>
-+      : T;
++// same logic as in ShaderNodeObject: number,boolean,node->node, otherwise do nothing
++export type NodeObject<T> = T extends Node ? T : T extends number | boolean ? ConstNode<number | boolean> : T;
 +
-+// opposite of NodeObject: node -> node|ShaderNodeObject|boolean|number, otherwise do nothing
++// opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
 +type Proxied<T> = T extends Node | number ? Node | number : T;
 +// https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 +export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
@@ -3606,7 +3580,7 @@ index f938f0de..8e687c22 100644
 +type GetConstructors<T> = ConstructorUnion<OverloadedConstructorsOf<T>>;
 +type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
 +
-+export type ConvertType = (...params: unknown[]) => ShaderNodeObject<Node>;
++export type ConvertType = (...params: unknown[]) => Node;
 +
 +type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
 +type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
@@ -3615,7 +3589,7 @@ index f938f0de..8e687c22 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -245,7 +425,7 @@ Object.defineProperties(Node.prototype, proto);
+@@ -245,7 +412,7 @@ Object.defineProperties(Node.prototype, proto);
  
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3624,7 +3598,7 @@ index f938f0de..8e687c22 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -356,7 +536,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -356,7 +523,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3635,7 +3609,7 @@ index f938f0de..8e687c22 100644
          super();
  
          this.shaderNode = shaderNode;
-@@ -365,7 +547,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -365,7 +534,7 @@ class ShaderCallNodeInternal extends Node {
          this.isShaderCallNodeInternal = true;
      }
  
@@ -3644,7 +3618,7 @@ index f938f0de..8e687c22 100644
          return this.shaderNode.nodeType || this.getOutputNode(builder).getNodeType(builder);
      }
  
-@@ -373,7 +555,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -373,7 +542,7 @@ class ShaderCallNodeInternal extends Node {
          return this.getOutputNode(builder).getMemberType(builder, name);
      }
  
@@ -3653,7 +3627,7 @@ index f938f0de..8e687c22 100644
          const { shaderNode, rawInputs } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -586,7 +768,15 @@ function getProxyParameters(params) {
+@@ -586,7 +755,15 @@ function getProxyParameters(params) {
      });
  }
  
@@ -3669,7 +3643,7 @@ index f938f0de..8e687c22 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -598,7 +788,7 @@ class ShaderNodeInternal extends Node {
+@@ -598,7 +775,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3678,7 +3652,7 @@ index f938f0de..8e687c22 100644
          this.layout = layout;
  
          return this;
-@@ -613,6 +803,8 @@ class ShaderNodeInternal extends Node {
+@@ -613,6 +790,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3687,7 +3661,7 @@ index f938f0de..8e687c22 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -711,11 +903,28 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -711,11 +890,26 @@ export function ShaderNode(jsFunc, nodeType) {
      return new ShaderNodeInternal(jsFunc, nodeType);
  }
  
@@ -3700,18 +3674,16 @@ index f938f0de..8e687c22 100644
 -export const nodeProxy = (NodeClass, scope = null, factor = null, settings = null) =>
 +
 +interface NodeProxy {
-+    <T>(nodeClass: T): (...params: ProxiedTuple<GetConstructors<T>>) => ShaderNodeObject<ConstructedNode<T>>;
++    <T>(nodeClass: T): (...params: ProxiedTuple<GetConstructors<T>>) => ConstructedNode<T>;
 +    <T, S extends GetPossibleScopes<T>>(
 +        nodeClass: T,
 +        scope: S,
-+    ): (...params: ProxiedTuple<RemoveTail<GetConstructorsByScope<T, S>>>) => ShaderNodeObject<ConstructedNode<T>>;
++    ): (...params: ProxiedTuple<RemoveTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 +    <T, S extends GetPossibleScopes<T>>(
 +        nodeClass: T,
 +        scope: S,
 +        factor: NodeObjectOption,
-+    ): (
-+        ...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>
-+    ) => ShaderNodeObject<ConstructedNode<T>>;
++    ): (...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 +}
 +
 +export const nodeProxy: NodeProxy = (NodeClass, scope = null, factor = null, settings = null) =>
@@ -9332,33 +9304,32 @@ index 5fe2b322..2013d057 100644
              } else {
                  bindings.push(instanceGroup);
 diff --git a/src-testing/src/renderers/common/nodes/NodeLibrary.ts b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-index 7c61c35c..a0366a83 100644
+index 7c61c35c..04e6eb0d 100644
 --- a/src-testing/src/renderers/common/nodes/NodeLibrary.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeLibrary.ts
-@@ -1,4 +1,11 @@
+@@ -1,4 +1,10 @@
  import { warn } from '../../../utils.js';
 +import { Material } from '../../../materials/Material.js';
 +import NodeMaterial from '../../../materials/nodes/NodeMaterial.js';
 +import { ToneMapping } from '../../../constants.js';
-+import { ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
 +import Node from '../../../nodes/core/Node.js';
 +import { Light } from '../../../lights/Light.js';
 +import AnalyticLightNode from '../../../nodes/lighting/AnalyticLightNode.js';
  
  /**
   * The purpose of a node library is to assign node implementations
-@@ -9,6 +16,10 @@ import { warn } from '../../../utils.js';
+@@ -9,6 +15,10 @@ import { warn } from '../../../utils.js';
   * @private
   */
  class NodeLibrary {
 +    lightNodes: WeakMap<{ new (): Light }, { new (light: Light): AnalyticLightNode<Light> }>;
 +    materialNodes: Map<string, { new (): NodeMaterial }>;
-+    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => ShaderNodeObject<Node>>;
++    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => Node>;
 +
      /**
       * Constructs a new node library.
       */
-@@ -46,8 +57,8 @@ class NodeLibrary {
+@@ -46,8 +56,8 @@ class NodeLibrary {
       * @param {Material} material - A material.
       * @return {NodeMaterial} The corresponding node material.
       */
@@ -9369,16 +9340,16 @@ index 7c61c35c..a0366a83 100644
  
          let nodeMaterial = null;
  
-@@ -70,7 +81,7 @@ class NodeLibrary {
+@@ -70,7 +80,7 @@ class NodeLibrary {
       * @param {Function} toneMappingNode - The tone mapping node function.
       * @param {number} toneMapping - The tone mapping.
       */
 -    addToneMapping(toneMappingNode, toneMapping) {
-+    addToneMapping(toneMappingNode: (color: Node, exposure: Node) => ShaderNodeObject<Node>, toneMapping: ToneMapping) {
++    addToneMapping(toneMappingNode: (color: Node, exposure: Node) => Node, toneMapping: ToneMapping) {
          this.addType(toneMappingNode, toneMapping, this.toneMappingNodes);
      }
  
-@@ -80,7 +91,7 @@ class NodeLibrary {
+@@ -80,7 +90,7 @@ class NodeLibrary {
       * @param {number} toneMapping - The tone mapping.
       * @return {?Function} The tone mapping node function. Returns `null` if no node function is found.
       */
@@ -9387,7 +9358,7 @@ index 7c61c35c..a0366a83 100644
          return this.toneMappingNodes.get(toneMapping) || null;
      }
  
-@@ -90,7 +101,7 @@ class NodeLibrary {
+@@ -90,7 +100,7 @@ class NodeLibrary {
       * @param {string} materialType - The material type.
       * @return {?NodeMaterial.constructor} The node material class definition. Returns `null` if no node material is found.
       */
@@ -9396,7 +9367,7 @@ index 7c61c35c..a0366a83 100644
          return this.materialNodes.get(materialType) || null;
      }
  
-@@ -100,7 +111,7 @@ class NodeLibrary {
+@@ -100,7 +110,7 @@ class NodeLibrary {
       * @param {NodeMaterial.constructor} materialNodeClass - The node material class definition.
       * @param {string} materialClassType - The material type.
       */
@@ -9405,7 +9376,7 @@ index 7c61c35c..a0366a83 100644
          this.addType(materialNodeClass, materialClassType, this.materialNodes);
      }
  
-@@ -110,7 +121,7 @@ class NodeLibrary {
+@@ -110,7 +120,7 @@ class NodeLibrary {
       * @param {Light.constructor} light - The light class definition.
       * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
       */
@@ -9414,7 +9385,7 @@ index 7c61c35c..a0366a83 100644
          return this.lightNodes.get(light) || null;
      }
  
-@@ -120,8 +131,18 @@ class NodeLibrary {
+@@ -120,8 +130,18 @@ class NodeLibrary {
       * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
       * @param {Light.constructor} lightClass - The light class definition.
       */
@@ -9435,7 +9406,7 @@ index 7c61c35c..a0366a83 100644
      }
  
      /**
-@@ -131,7 +152,7 @@ class NodeLibrary {
+@@ -131,7 +151,7 @@ class NodeLibrary {
       * @param {number|string} type - The object type.
       * @param {Map<number|string,Node.constructor>} library - The type library.
       */
@@ -9444,7 +9415,7 @@ index 7c61c35c..a0366a83 100644
          if (library.has(type)) {
              warn(`Redefinition of node ${type}`);
              return;
-@@ -151,7 +172,11 @@ class NodeLibrary {
+@@ -151,7 +171,11 @@ class NodeLibrary {
       * @param {Node.constructor} baseClass - The class definition.
       * @param {WeakMap<Node.constructor, Node.constructor>} library - The type library.
       */
@@ -9647,18 +9618,10 @@ index 19a8dd2a..26f39bf2 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 1081b69a..42c01821 100644
+index 1081b69a..5133e4a1 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
-@@ -17,6 +17,7 @@ import {
-     reference,
-     pmremTexture,
-     screenUV,
-+    ShaderNodeObject,
- } from '../../../nodes/TSL.js';
- import { builtin } from '../../../nodes/accessors/BuiltinNode.js';
- 
-@@ -27,10 +28,63 @@ import {
+@@ -27,10 +27,63 @@ import {
  } from '../../../constants.js';
  import { hashArray } from '../../../nodes/core/NodeUtils.js';
  import { error } from '../../../utils.js';
@@ -9696,11 +9659,11 @@ index 1081b69a..42c01821 100644
 +
 +interface SceneData {
 +    background?: Color | Texture | CubeTexture | undefined;
-+    backgroundNode?: ShaderNodeObject<Node> | undefined;
++    backgroundNode?: Node | undefined;
 +    fog?: Fog | FogExp2 | undefined;
-+    fogNode?: ShaderNodeObject<Node> | undefined;
++    fogNode?: Node | undefined;
 +    environment?: Texture | undefined;
-+    environmentNode?: ShaderNodeObject<Node> | undefined;
++    environmentNode?: Node | undefined;
 +}
 +
 +interface CacheKeyData {
@@ -9710,9 +9673,9 @@ index 1081b69a..42c01821 100644
 +
 +declare module '../../../scenes/Scene.js' {
 +    interface Scene {
-+        environmentNode?: ShaderNodeObject<Node> | null | undefined;
-+        backgroundNode?: ShaderNodeObject<Node> | null | undefined;
-+        fogNode?: ShaderNodeObject<Node> | null | undefined;
++        environmentNode?: Node | null | undefined;
++        backgroundNode?: Node | null | undefined;
++        fogNode?: Node | null | undefined;
 +    }
 +}
  
@@ -9724,7 +9687,7 @@ index 1081b69a..42c01821 100644
  
  /**
   * This renderer module manages node-related objects and is the
-@@ -39,14 +93,27 @@ const _cacheKeyValues = [];
+@@ -39,14 +92,27 @@ const _cacheKeyValues = [];
   * @private
   * @augments DataMap
   */
@@ -9748,13 +9711,13 @@ index 1081b69a..42c01821 100644
 +    nodeBuilderCache: Map<string, NodeBuilderState>;
 +    callHashCache: ChainMap<readonly [Scene, LightsNode], CacheKeyData>;
 +    groupsData: ChainMap<readonly [UniformGroupNode, NodeUniformsGroup], { version?: number }>;
-+    cacheLib: { [type: string]: WeakMap<object, ShaderNodeObject<Node> | undefined> };
++    cacheLib: { [type: string]: WeakMap<object, Node | undefined> };
 +
 +    constructor(renderer: Renderer, backend: Backend) {
          super();
  
          /**
-@@ -106,7 +173,7 @@ class Nodes extends DataMap {
+@@ -106,7 +172,7 @@ class Nodes extends DataMap {
       * @param {NodeUniformsGroup} nodeUniformsGroup - The node uniforms group.
       * @return {boolean} Whether the node uniforms group requires an update or not.
       */
@@ -9763,7 +9726,7 @@ index 1081b69a..42c01821 100644
          const groupNode = nodeUniformsGroup.groupNode;
          const name = groupNode.name;
  
-@@ -169,7 +236,7 @@ class Nodes extends DataMap {
+@@ -169,7 +235,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {number} The cache key.
       */
@@ -9772,7 +9735,7 @@ index 1081b69a..42c01821 100644
          return renderObject.initialCacheKey;
      }
  
-@@ -179,7 +246,7 @@ class Nodes extends DataMap {
+@@ -179,7 +245,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -9781,7 +9744,7 @@ index 1081b69a..42c01821 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -226,13 +293,13 @@ class Nodes extends DataMap {
+@@ -226,13 +292,13 @@ class Nodes extends DataMap {
       * @param {any} object - The object to delete.
       * @return {?Object} The deleted dictionary.
       */
@@ -9799,7 +9762,7 @@ index 1081b69a..42c01821 100644
              }
          }
  
-@@ -245,7 +312,7 @@ class Nodes extends DataMap {
+@@ -245,7 +311,7 @@ class Nodes extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -9808,7 +9771,7 @@ index 1081b69a..42c01821 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -269,7 +336,7 @@ class Nodes extends DataMap {
+@@ -269,7 +335,7 @@ class Nodes extends DataMap {
       * @param {NodeBuilder} nodeBuilder - The node builder.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -9817,7 +9780,7 @@ index 1081b69a..42c01821 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -291,9 +358,8 @@ class Nodes extends DataMap {
+@@ -291,9 +357,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene environment.
       */
@@ -9828,7 +9791,7 @@ index 1081b69a..42c01821 100644
          let environmentNode = null;
  
          if (scene.environmentNode && scene.environmentNode.isNode) {
-@@ -316,9 +382,8 @@ class Nodes extends DataMap {
+@@ -316,9 +381,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene background.
       */
@@ -9839,7 +9802,7 @@ index 1081b69a..42c01821 100644
          let backgroundNode = null;
  
          if (scene.backgroundNode && scene.backgroundNode.isNode) {
-@@ -340,9 +405,8 @@ class Nodes extends DataMap {
+@@ -340,9 +404,8 @@ class Nodes extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene fog.
       */
@@ -9850,7 +9813,7 @@ index 1081b69a..42c01821 100644
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
-@@ -356,13 +420,13 @@ class Nodes extends DataMap {
+@@ -356,13 +419,13 @@ class Nodes extends DataMap {
       * @param {LightsNode} lightsNode - The lights node.
       * @return {number} The cache key.
       */
@@ -9866,7 +9829,7 @@ index 1081b69a..42c01821 100644
  
          if (cacheKeyData.callId !== callId) {
              const environmentNode = this.getEnvironmentNode(scene);
-@@ -380,7 +444,7 @@ class Nodes extends DataMap {
+@@ -380,7 +443,7 @@ class Nodes extends DataMap {
              cacheKeyData.callId = callId;
              cacheKeyData.cacheKey = hashArray(_cacheKeyValues);
  
@@ -9875,7 +9838,7 @@ index 1081b69a..42c01821 100644
  
              _cacheKeyValues.length = 0;
          }
-@@ -406,7 +470,7 @@ class Nodes extends DataMap {
+@@ -406,7 +469,7 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9884,7 +9847,7 @@ index 1081b69a..42c01821 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -421,7 +485,7 @@ class Nodes extends DataMap {
+@@ -421,7 +484,7 @@ class Nodes extends DataMap {
                      background,
                      () => {
                          if (
@@ -9893,7 +9856,7 @@ index 1081b69a..42c01821 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -431,18 +495,18 @@ class Nodes extends DataMap {
+@@ -431,18 +494,18 @@ class Nodes extends DataMap {
                              } else {
                                  let envMap;
  
@@ -9918,21 +9881,16 @@ index 1081b69a..42c01821 100644
                          }
                      },
                      forceUpdate,
-@@ -468,7 +532,12 @@ class Nodes extends DataMap {
+@@ -468,7 +531,7 @@ class Nodes extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
 -    getCacheNode(type, object, callback, forceUpdate = false) {
-+    getCacheNode(
-+        type: string,
-+        object: object,
-+        callback: () => ShaderNodeObject<Node> | undefined,
-+        forceUpdate = false,
-+    ) {
++    getCacheNode(type: string, object: object, callback: () => Node | undefined, forceUpdate = false) {
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -487,22 +556,22 @@ class Nodes extends DataMap {
+@@ -487,22 +550,22 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9963,7 +9921,7 @@ index 1081b69a..42c01821 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -525,14 +594,14 @@ class Nodes extends DataMap {
+@@ -525,14 +588,14 @@ class Nodes extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -9980,7 +9938,7 @@ index 1081b69a..42c01821 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -550,7 +619,13 @@ class Nodes extends DataMap {
+@@ -550,7 +613,13 @@ class Nodes extends DataMap {
          }
      }
  
@@ -9995,7 +9953,7 @@ index 1081b69a..42c01821 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -561,7 +636,7 @@ class Nodes extends DataMap {
+@@ -561,7 +630,7 @@ class Nodes extends DataMap {
          return nodeFrame;
      }
  
@@ -10004,7 +9962,7 @@ index 1081b69a..42c01821 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -589,7 +664,7 @@ class Nodes extends DataMap {
+@@ -589,7 +658,7 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {boolean} Whether the output configuration has changed or not.
       */
@@ -10013,7 +9971,7 @@ index 1081b69a..42c01821 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -602,11 +677,11 @@ class Nodes extends DataMap {
+@@ -602,11 +671,11 @@ class Nodes extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -10023,11 +9981,11 @@ index 1081b69a..42c01821 100644
          const cacheKey = this.getOutputCacheKey();
  
 -        const output = outputTarget.isArrayTexture
-+        const output: ShaderNodeObject<Node> = outputTarget.isArrayTexture
++        const output: Node = outputTarget.isArrayTexture
              ? texture3D(outputTarget, vec3(screenUV, builtin('gl_ViewID_OVR'))).renderOutput(
                    renderer.toneMapping,
                    renderer.currentColorSpace,
-@@ -624,7 +699,7 @@ class Nodes extends DataMap {
+@@ -624,7 +693,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10036,7 +9994,7 @@ index 1081b69a..42c01821 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -640,7 +715,7 @@ class Nodes extends DataMap {
+@@ -640,7 +709,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10045,7 +10003,7 @@ index 1081b69a..42c01821 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -656,7 +731,7 @@ class Nodes extends DataMap {
+@@ -656,7 +725,7 @@ class Nodes extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -10054,7 +10012,7 @@ index 1081b69a..42c01821 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -671,7 +746,7 @@ class Nodes extends DataMap {
+@@ -671,7 +740,7 @@ class Nodes extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10063,7 +10021,7 @@ index 1081b69a..42c01821 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -686,7 +761,7 @@ class Nodes extends DataMap {
+@@ -686,7 +755,7 @@ class Nodes extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
@@ -10101,7 +10059,7 @@ index 6ef44d03..c84ad301 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index 99289b68..332fa9a4 100644
+index 99289b68..83abfdf5 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,4 @@
@@ -10124,7 +10082,7 @@ index 99289b68..332fa9a4 100644
 +import { Texture } from '../../../textures/Texture.js';
 +import { BufferAttribute } from '../../../core/BufferAttribute.js';
 +import { InterleavedBufferAttribute } from '../../../core/InterleavedBufferAttribute.js';
-+import { ShaderNodeInternal, ShaderNodeObject } from '../../../nodes/tsl/TSLCore.js';
++import { ShaderNodeInternal } from '../../../nodes/tsl/TSLCore.js';
 +import StorageBufferNode from '../../../nodes/accessors/StorageBufferNode.js';
 +import StorageArrayElementNode from '../../../nodes/utils/StorageArrayElementNode.js';
 +
@@ -10138,7 +10096,7 @@ index 99289b68..332fa9a4 100644
  
 +export interface Transform {
 +    varyingName: string | null | undefined;
-+    attributeNode: ShaderNodeObject<BufferAttributeNode>;
++    attributeNode: BufferAttributeNode;
 +}
 +
 +interface StageData {
@@ -10430,7 +10388,7 @@ index 99289b68..332fa9a4 100644
       * @param {AttributeNode} attributeNode - The attribute node.
       */
 -    registerTransform(varyingName, attributeNode) {
-+    registerTransform(varyingName: string | null | undefined, attributeNode: ShaderNodeObject<BufferAttributeNode>) {
++    registerTransform(varyingName: string | null | undefined, attributeNode: BufferAttributeNode) {
          this.transforms.push({ varyingName, attributeNode });
      }
  
