@@ -194,7 +194,7 @@ index 47e15577..cdddcd46 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index d207da78..9c25d5cc 100644
+index d207da78..e799fb0c 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -1,10 +1,15 @@
@@ -394,7 +394,7 @@ index d207da78..9c25d5cc 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -304,7 +340,17 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -304,7 +340,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode}
   */
@@ -411,9 +411,10 @@ index d207da78..9c25d5cc 100644
 +
 +addMethodChaining('toAttribute', <TValue>(bufferNode: BufferNode<TValue>) => bufferAttribute(bufferNode.value));
 +
-+declare module '../tsl/TSLCore.js' {
-+    interface NodeElements {
-+        toAttribute: <TValue>(bufferNode: BufferNode<TValue>) => ShaderNodeObject<BufferAttributeNode>;
++declare module '../Nodes.js' {
++    interface BufferNode<TValue> {
++        toAttribute: () => BufferAttributeNode;
++        toAttributeAssign: () => this;
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
