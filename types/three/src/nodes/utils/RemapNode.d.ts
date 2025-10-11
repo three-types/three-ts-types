@@ -1,5 +1,4 @@
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class RemapNode extends Node {
     node: Node;
@@ -19,14 +18,14 @@ export const remap: (
     inHighNode: Node | number,
     outLowNode?: Node | number,
     outHighNode?: Node | number,
-) => ShaderNodeObject<RemapNode>;
+) => RemapNode;
 export const remapClamp: (
     node: Node,
     inLowNode: Node | number,
     inHighNode: Node | number,
     outLowNode?: Node | number,
     outHighNode?: Node | number,
-) => ShaderNodeObject<RemapNode>;
+) => RemapNode;
 
 declare module "../Nodes.js" {
     interface Node {

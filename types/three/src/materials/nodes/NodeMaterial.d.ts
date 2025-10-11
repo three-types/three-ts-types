@@ -4,7 +4,6 @@ import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
-import { ShaderNodeObject } from "../../nodes/tsl/TSLCore.js";
 import { MapColorPropertiesToColorRepresentations, Material, MaterialParameters } from "../Material.js";
 import NodeMaterialObserver from "./manager/NodeMaterialObserver.js";
 
@@ -385,7 +384,7 @@ declare class NodeMaterial extends Material {
      *
      * @return {Node<vec3>} The normal node.
      */
-    setupNormal(): ShaderNodeObject<Node>;
+    setupNormal(): Node;
     /**
      * Setups the environment node from the material.
      *

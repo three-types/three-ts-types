@@ -1,4 +1,3 @@
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
 import { NodeBuilderContext } from "./NodeBuilder.js";
 
@@ -13,9 +12,9 @@ declare class ContextNode extends Node {
 
 export default ContextNode;
 
-export const context: (node: Node, context?: NodeBuilderContext) => ShaderNodeObject<ContextNode>;
+export const context: (node: Node, context?: NodeBuilderContext) => ContextNode;
 
-export const uniformFlow: (node: Node) => ShaderNodeObject<ContextNode>;
+export const uniformFlow: (node: Node) => ContextNode;
 
 export const setName: (node: Node, label: string) => Node;
 

@@ -1,7 +1,6 @@
 import { Vector3 } from "../../math/Vector3.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import OperatorNode from "./OperatorNode.js";
 
 export type MathNodeMethod1 =
@@ -130,22 +129,22 @@ export default class MathNode extends TempNode {
     constructor(method: MathNodeMethod3, aNode: Node, bNode: Node, cNode: Node);
 }
 
-export const EPSILON: ShaderNodeObject<Node>;
-export const INFINITY: ShaderNodeObject<Node>;
-export const PI: ShaderNodeObject<Node>;
+export const EPSILON: Node;
+export const INFINITY: Node;
+export const PI: Node;
 
 /**
  * @deprecated Please use the non-deprecated version `TWO_PI`.
  */
-export const PI2: ShaderNodeObject<Node>;
+export const PI2: Node;
 
-export const TWO_PI: ShaderNodeObject<Node>;
+export const TWO_PI: Node;
 
-export const HALF_PI: ShaderNodeObject<Node>;
+export const HALF_PI: Node;
 
 type MathNodeParameter = Node | number;
 
-type Unary = (a: MathNodeParameter) => ShaderNodeObject<MathNode>;
+type Unary = (a: MathNodeParameter) => MathNode;
 
 export const all: Unary;
 export const any: Unary;
@@ -165,14 +164,14 @@ export const sqrt: Unary;
 export const inverseSqrt: Unary;
 export const floor: Unary;
 export const ceil: Unary;
-export const normalize: (a: Node | Vector3) => ShaderNodeObject<MathNode>;
+export const normalize: (a: Node | Vector3) => MathNode;
 export const fract: Unary;
 export const sin: Unary;
 export const cos: Unary;
 export const tan: Unary;
 export const asin: Unary;
 export const acos: Unary;
-export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => ShaderNodeObject<MathNode>;
+export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => MathNode;
 export const abs: Unary;
 export const sign: Unary;
 export const length: Unary;
@@ -185,27 +184,27 @@ export const reciprocal: Unary;
 export const trunc: Unary;
 export const fwidth: Unary;
 export const transpose: Unary;
-export const determinant: (x: Node) => ShaderNodeObject<MathNode>;
-export const inverse: (x: Node) => ShaderNodeObject<MathNode>;
+export const determinant: (x: Node) => MathNode;
+export const inverse: (x: Node) => MathNode;
 
-type Binary = (a: MathNodeParameter, b: MathNodeParameter) => ShaderNodeObject<MathNode>;
+type Binary = (a: MathNodeParameter, b: MathNodeParameter) => MathNode;
 
 export const min: (
     x: MathNodeParameter,
     y: MathNodeParameter,
     ...values: MathNodeParameter[]
-) => ShaderNodeObject<MathNode>;
+) => MathNode;
 export const max: (
     x: MathNodeParameter,
     y: MathNodeParameter,
     ...values: MathNodeParameter[]
-) => ShaderNodeObject<MathNode>;
+) => MathNode;
 export const step: Binary;
 export const reflect: Binary;
 export const distance: Binary;
 export const difference: Binary;
 export const dot: Binary;
-export const cross: (x: Node, y: Node) => ShaderNodeObject<MathNode>;
+export const cross: (x: Node, y: Node) => MathNode;
 export const pow: Binary;
 export const pow2: Unary;
 export const pow3: Unary;
@@ -214,20 +213,20 @@ export const transformDirection: Binary;
 export const cbrt: Unary;
 export const lengthSq: Unary;
 
-type Ternary = (a: MathNodeParameter, b: MathNodeParameter, c: MathNodeParameter) => ShaderNodeObject<MathNode>;
+type Ternary = (a: MathNodeParameter, b: MathNodeParameter, c: MathNodeParameter) => MathNode;
 
 export const mix: Ternary;
 export const clamp: (
     a: MathNodeParameter,
     b?: MathNodeParameter,
     c?: MathNodeParameter,
-) => ShaderNodeObject<MathNode>;
+) => MathNode;
 export const saturate: Unary;
 export const refract: Ternary;
 export const smoothstep: Ternary;
 export const faceForward: Ternary;
 
-export const rand: (uv: MathNodeParameter) => ShaderNodeObject<OperatorNode>;
+export const rand: (uv: MathNodeParameter) => OperatorNode;
 
 export const mixElement: Ternary;
 export const smoothstepElement: Ternary;

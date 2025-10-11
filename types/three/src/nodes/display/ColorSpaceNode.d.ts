@@ -2,7 +2,6 @@ import { LinearSRGBColorSpace, SRGBColorSpace } from "../../constants.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import TempNode from "../core/TempNode.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export type WorkingOrOutputColorSpace = "WorkingColorSpace" | "OutputColorSpace";
 
@@ -30,17 +29,17 @@ export default class ColorSpaceNode extends TempNode {
 export const workingToColorSpace: (
     node: Node,
     targetColorSpace: string,
-) => ShaderNodeObject<ColorSpaceNode>;
+) => ColorSpaceNode;
 export const colorSpaceToWorking: (
     node: Node,
     sourceColorSpace: string,
-) => ShaderNodeObject<ColorSpaceNode>;
+) => ColorSpaceNode;
 
 export const convertColorSpace: (
     node: Node,
     sourceColorSpace: string,
     targetColorSpace: string,
-) => ShaderNodeObject<ColorSpaceNode>;
+) => ColorSpaceNode;
 
 declare module "../Nodes.js" {
     interface Node {

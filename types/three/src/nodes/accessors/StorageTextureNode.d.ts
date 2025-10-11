@@ -2,7 +2,6 @@ import { Texture } from "../../textures/Texture.js";
 import { NodeAccess } from "../core/constants.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import TextureNode from "./TextureNode.js";
 
 export default class StorageTextureNode extends TextureNode {
@@ -14,7 +13,7 @@ export default class StorageTextureNode extends TextureNode {
 
     constructor(
         value: Texture,
-        uvNode?: ShaderNodeObject<Node> | null,
+        uvNode?: Node | null,
         storeNode?: Node | null,
     );
 
@@ -33,10 +32,10 @@ export const storageTexture: (
     value: Texture,
     uvNode?: Node | null,
     storeNode?: Node,
-) => ShaderNodeObject<StorageTextureNode>;
+) => StorageTextureNode;
 
 export const textureStore: (
     value: Texture,
     uvNode?: Node | null,
     storeNode?: Node,
-) => ShaderNodeObject<StorageTextureNode>;
+) => StorageTextureNode;

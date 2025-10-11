@@ -2,9 +2,8 @@ import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import NodeFunction from "../core/NodeFunction.js";
 import NodeFunctionInput from "../core/NodeFunctionInput.js";
-import { ProxiedObject, ProxiedTuple, ShaderNodeObject } from "../tsl/TSLCore.js";
+import { ProxiedObject, ProxiedTuple } from "../tsl/TSLCore.js";
 import CodeNode, { CodeNodeInclude } from "./CodeNode.js";
-import FunctionCallNode from "./FunctionCallNode.js";
 
 export type FunctionNodeArguments = Array<Node | number> | { [name: string]: Node | number };
 
@@ -23,15 +22,15 @@ export const nativeFn: <P extends FunctionNodeArguments>(
     includes?: CodeNodeInclude[],
     language?: string,
     // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
-) => (...params: FnParameters<P>) => ShaderNodeObject<Node>;
+) => (...params: FnParameters<P>) => Node;
 
 export const glslFn: <P extends FunctionNodeArguments>(
     code: string,
     includes?: CodeNodeInclude[],
     // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
-) => (...params: FnParameters<P>) => ShaderNodeObject<Node>;
+) => (...params: FnParameters<P>) => Node;
 export const wgslFn: <P extends FunctionNodeArguments>(
     code: string,
     includes?: CodeNodeInclude[],
     // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
-) => (...params: FnParameters<P>) => ShaderNodeObject<Node>;
+) => (...params: FnParameters<P>) => Node;

@@ -1,4 +1,3 @@
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import TempNode from "./TempNode.js";
@@ -13,4 +12,4 @@ declare class AssignNode extends TempNode {
 
 export default AssignNode;
 
-export const assign: (targetNode: Node, sourceNode: Node | number) => ShaderNodeObject<AssignNode>;
+export const assign: (targetNode: Node, sourceNode: Node | number) => AssignNode;

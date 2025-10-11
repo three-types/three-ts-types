@@ -1,4 +1,3 @@
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
 
 export default class BypassNode extends Node {
@@ -9,7 +8,7 @@ export default class BypassNode extends Node {
     constructor(returnNode: Node, callNode: Node);
 }
 
-export const bypass: (returnNode: Node, callNode: Node) => ShaderNodeObject<BypassNode>;
+export const bypass: (returnNode: Node, callNode: Node) => BypassNode;
 
 declare module "../Nodes.js" {
     interface Node {

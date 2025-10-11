@@ -1,6 +1,5 @@
 import Renderer from "../../renderers/common/Renderer.js";
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export default class ComputeNode extends Node {
     readonly isComputeNode: true;
@@ -27,13 +26,13 @@ export default class ComputeNode extends Node {
     onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
 }
 
-export const computeKernel: (node: Node, workgroupSize?: number[]) => ShaderNodeObject<ComputeNode>;
+export const computeKernel: (node: Node, workgroupSize?: number[]) => ComputeNode;
 
 export const compute: (
     node: Node,
     count: number,
     workgroupSize?: number[],
-) => ShaderNodeObject<ComputeNode>;
+) => ComputeNode;
 
 declare module "../Nodes.js" {
     interface Node {
