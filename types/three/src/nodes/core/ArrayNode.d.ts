@@ -19,8 +19,9 @@ interface ArrayFunction {
 
 export const array: ArrayFunction;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        toArray: typeof array;
+declare module "../Nodes.js" {
+    interface Node {
+        toArray: (count: number) => ArrayNode;
+        toArrayAssign: (count: number) => this;
     }
 }

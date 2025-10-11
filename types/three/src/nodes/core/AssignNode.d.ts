@@ -14,9 +14,3 @@ declare class AssignNode extends TempNode {
 export default AssignNode;
 
 export const assign: (targetNode: Node, sourceNode: Node | number) => ShaderNodeObject<AssignNode>;
-
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        assign: typeof assign;
-    }
-}

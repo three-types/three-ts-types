@@ -22,14 +22,21 @@ export const varying: (node: Node, name?: string) => ShaderNodeObject<VaryingNod
 
 export const vertexStage: (node: Node) => ShaderNodeObject<VaryingNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        toVarying: typeof varying;
-        toVertexStage: typeof vertexStage;
+declare module "../Nodes.js" {
+    interface Node {
+        toVarying: (name?: string) => VaryingNode;
+        toVaryingAssign: (name?: string) => this;
+
+        toVertexStage: () => VaryingNode;
+        toVertexStageAssign: () => this;
 
         /**
          * @deprecated .vertexStage() has been renamed to .toVertexStage().
          */
-        vertexStage: typeof vertexStage;
+        vertexStage: () => VaryingNode;
+        /**
+         * @deprecated .vertexStage() has been renamed to .toVertexStage().
+         */
+        vertexStageAssign: () => this;
     }
 }

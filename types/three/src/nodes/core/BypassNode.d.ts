@@ -11,8 +11,9 @@ export default class BypassNode extends Node {
 
 export const bypass: (returnNode: Node, callNode: Node) => ShaderNodeObject<BypassNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        bypass: typeof bypass;
+declare module "../Nodes.js" {
+    interface Node {
+        bypass: (callNode: Node) => BypassNode;
+        bypassAssign: (callNode: Node) => this;
     }
 }

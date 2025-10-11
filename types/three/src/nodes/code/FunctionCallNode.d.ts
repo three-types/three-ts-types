@@ -20,8 +20,9 @@ export const call: <P extends FunctionNodeArguments>(
     parameters?: ProxiedObject<P>,
 ) => ShaderNodeObject<FunctionCallNode<P>>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        call: typeof call;
+declare module "../Nodes.js" {
+    interface FunctionNode<P extends FunctionNodeArguments> {
+        call: (parameters?: ProxiedObject<P>) => FunctionCallNode<P>;
+        callAssign: (parameters?: ProxiedObject<P>) => this;
     }
 }

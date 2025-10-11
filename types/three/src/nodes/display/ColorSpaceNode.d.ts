@@ -42,9 +42,20 @@ export const convertColorSpace: (
     targetColorSpace: string,
 ) => ShaderNodeObject<ColorSpaceNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        workingToColorSpace: typeof workingToColorSpace;
-        colorSpaceToWorking: typeof colorSpaceToWorking;
+declare module "../Nodes.js" {
+    interface Node {
+        workingToColorSpace: (
+            targetColorSpace: string,
+        ) => ColorSpaceNode;
+        workingToColorSpaceAssign: (
+            targetColorSpace: string,
+        ) => this;
+
+        colorSpaceToWorking: (
+            sourceColorSpace: string,
+        ) => ColorSpaceNode;
+        colorSpaceToWorkingAssign: (
+            sourceColorSpace: string,
+        ) => this;
     }
 }

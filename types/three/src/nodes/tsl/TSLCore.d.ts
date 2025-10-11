@@ -92,7 +92,11 @@ export type NodeElementProperties =
             : never;
     };
 
-export interface NodeExtensions extends Swizzable, NodeElementProperties {}
+declare module "../Nodes.js" {
+    interface Node extends Swizzable, NodeElementProperties {
+        assign: (sourceNode: Node | number) => Node;
+    }
+}
 
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
