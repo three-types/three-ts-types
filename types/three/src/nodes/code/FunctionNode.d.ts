@@ -13,7 +13,6 @@ export default class FunctionNode<P extends Array<Node | number> | { [name: stri
 
     getInputs(builder: NodeBuilder): NodeFunctionInput[];
     getNodeFunction(builder: NodeBuilder): NodeFunction;
-    call(parameters: P): FunctionCallNode<P>;
 }
 
 type FnParameters<P extends FunctionNodeArguments> = P extends readonly [...unknown[]] ? ProxiedTuple<P>

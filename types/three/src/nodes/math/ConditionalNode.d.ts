@@ -17,8 +17,15 @@ export const select: (
     elseNode?: Node | number | null,
 ) => ShaderNodeObject<Node>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        select: typeof select;
+declare module "../Nodes.js" {
+    interface Node {
+        select: (
+            ifNode: Node | number,
+            elseNode?: Node | number | null,
+        ) => Node;
+        selectAssign: (
+            ifNode: Node | number,
+            elseNode?: Node | number | null,
+        ) => this;
     }
 }

@@ -5,7 +5,6 @@ import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class RenderOutputNode extends TempNode {
     colorNode: Node;
-    toneMapping: ToneMapping | null;
     outputColorSpace: string | null;
 
     readonly isRenderOutput: true;
@@ -21,8 +20,15 @@ export const renderOutput: (
     outputColorSpace?: string | null,
 ) => ShaderNodeObject<RenderOutputNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        renderOutput: typeof renderOutput;
+declare module "../Nodes.js" {
+    interface Node {
+        renderOutput: (
+            toneMapping?: ToneMapping | null,
+            outputColorSpace?: string | null,
+        ) => RenderOutputNode;
+        renderOutputAssign: (
+            toneMapping?: ToneMapping | null,
+            outputColorSpace?: string | null,
+        ) => this;
     }
 }

@@ -25,7 +25,7 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
         bufferCount?: number,
     );
 
-    element(indexNode: Node | number): ShaderNodeObject<StorageArrayElementNode>;
+    element: (indexNode: Node | number) => ShaderNodeObject<StorageArrayElementNode>;
 
     setPBO(value: boolean): this;
 

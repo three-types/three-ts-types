@@ -17,12 +17,12 @@ export default class ComputeNode extends Node {
     setCount(count: number): this;
     getCount(): number | null;
 
-    setName(name: string): this;
+    setName: (name: string) => this;
 
     /**
      * @deprecated "label()" has been deprecated. Use "setName()" instead.
      */
-    label(name: string): this;
+    label: (name: string) => this;
 
     onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
 }
@@ -35,9 +35,18 @@ export const compute: (
     workgroupSize?: number[],
 ) => ShaderNodeObject<ComputeNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        compute: typeof compute;
-        computeKernel: typeof computeKernel;
+declare module "../Nodes.js" {
+    interface Node {
+        compute: (
+            count: number,
+            workgroupSize?: number[],
+        ) => ComputeNode;
+        computeAssign: (
+            count: number,
+            workgroupSize?: number[],
+        ) => this;
+
+        computeKernel: (workgroupSize?: number[]) => ComputeNode;
+        computeKernelAssign: (workgroupSize?: number[]) => this;
     }
 }
