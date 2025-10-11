@@ -4,7 +4,6 @@ import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import InputNode from "../core/InputNode.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import BufferNode from "./BufferNode.js";
 /**
  * In earlier `three.js` versions it was only possible to define attribute data
  * on geometry level. With `BufferAttributeNode`, it is also possible to do this
@@ -173,8 +172,9 @@ export declare const instancedDynamicBufferAttribute: (
     stride?: number,
     offset?: number,
 ) => BufferAttributeNode;
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        toAttribute: <TValue>(bufferNode: BufferNode<TValue>) => ShaderNodeObject<BufferAttributeNode>;
+declare module "../Nodes.js" {
+    interface BufferNode<TValue> {
+        toAttribute: () => BufferAttributeNode;
+        toAttributeAssign: () => this;
     }
 }
