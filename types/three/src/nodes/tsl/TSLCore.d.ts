@@ -11,36 +11,6 @@ import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import JoinNode from "../utils/JoinNode.js";
 
-export interface NodeElements {
-    toStack: typeof Stack;
-
-    toColor: (node: Node) => ShaderNodeObject<Node>;
-    toFloat: (node: Node) => ShaderNodeObject<Node>;
-    toInt: (node: Node) => ShaderNodeObject<Node>;
-    toUint: (node: Node) => ShaderNodeObject<Node>;
-    toBool: (node: Node) => ShaderNodeObject<Node>;
-    toVec2: (node: Node) => ShaderNodeObject<Node>;
-    toIvec2: (node: Node) => ShaderNodeObject<Node>;
-    toUvec2: (node: Node) => ShaderNodeObject<Node>;
-    toBvec2: (node: Node) => ShaderNodeObject<Node>;
-    toVec3: (node: Node) => ShaderNodeObject<Node>;
-    toIvec3: (node: Node) => ShaderNodeObject<Node>;
-    toUvec3: (node: Node) => ShaderNodeObject<Node>;
-    toBvec3: (node: Node) => ShaderNodeObject<Node>;
-    toVec4: (node: Node) => ShaderNodeObject<Node>;
-    toIvec4: (node: Node) => ShaderNodeObject<Node>;
-    toUvec4: (node: Node) => ShaderNodeObject<Node>;
-    toBvec4: (node: Node) => ShaderNodeObject<Node>;
-    toMat2: (node: Node) => ShaderNodeObject<Node>;
-    toMat3: (node: Node) => ShaderNodeObject<Node>;
-    toMat4: (node: Node) => ShaderNodeObject<Node>;
-
-    element: typeof element;
-    convert: typeof convert;
-
-    append: typeof append;
-}
-
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
 type XYZWCharacter = "x" | "y" | "z" | "w";
@@ -80,20 +50,8 @@ export type Swizzable =
 
 export type ShaderNodeObject<T> = T;
 
-export type NodeElementProperties =
-    & {
-        [Key in keyof NodeElements]: NodeElements[Key] extends (node: any, ...args: infer Args) => infer R
-            ? (...args: Args) => R
-            : never;
-    }
-    & {
-        [Key in keyof NodeElements as `${Key}Assign`]: NodeElements[Key] extends
-            (node: any, ...args: infer Args) => unknown ? (...args: Args) => ShaderNodeObject<Node>
-            : never;
-    };
-
 declare module "../Nodes.js" {
-    interface Node extends Swizzable, NodeElementProperties {
+    interface Node extends Swizzable {
         assign: (sourceNode: Node | number) => Node;
     }
 }
@@ -297,6 +255,13 @@ export const Switch: (expression: Node) => StackNode;
 
 export function Stack(node: Node): Node;
 
+declare module "../Nodes.js" {
+    interface Node {
+        toStack: () => Node;
+        toStackAssign: () => this;
+    }
+}
+
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
@@ -449,11 +414,98 @@ export const mat4: Matrix4Function;
 export const string: (value?: string) => ShaderNodeObject<ConstNode<string>>;
 export const arrayBuffer: (value: ArrayBuffer) => ShaderNodeObject<ConstNode<ArrayBuffer>>;
 
+declare module "../Nodes.js" {
+    interface Node {
+        toColor: () => Node;
+        toColorAssign: () => this;
+
+        toFloat: () => Node;
+        toFloatAssign: () => this;
+
+        toInt: () => Node;
+        toIntAssign: () => this;
+
+        toUint: () => Node;
+        toUintAssign: () => this;
+
+        toBool: () => Node;
+        toBoolAssign: () => this;
+
+        toVec2: () => Node;
+        toVec2Assign: () => this;
+
+        toIvec2: () => Node;
+        toIvec2Assign: () => this;
+
+        toUvec2: () => Node;
+        toUvec2Assign: () => this;
+
+        toBvec2: () => Node;
+        toBvec2Assign: () => this;
+
+        toVec3: () => Node;
+        toVec3Assign: () => this;
+
+        toIvec3: () => Node;
+        toIvec3Assign: () => this;
+
+        toUvec3: () => Node;
+        toUvec3Assign: () => this;
+
+        toBvec3: () => Node;
+        ttoBvec3Assign: () => this;
+
+        toVec4: () => Node;
+        toVec4Assign: () => this;
+
+        toIvec4: () => Node;
+        toIvec4Assign: () => this;
+
+        toUvec4: () => Node;
+        toUvec4Assign: () => this;
+
+        toBvec4: () => Node;
+        toBvec4Assign: () => this;
+
+        toMat2: () => Node;
+        toMat2Assign: () => this;
+
+        toMat3: () => Node;
+        toMat3Assign: () => this;
+
+        toMat4: () => Node;
+        toMat4Assign: () => this;
+    }
+}
+
 export const element: (node: Node, indexNode: Node) => ShaderNodeObject<Node>;
 export const convert: (node: Node, types: string) => ShaderNodeObject<Node>;
 export const split: (node: Node, channels?: string) => ShaderNodeObject<Node>;
+
+declare module "../Nodes.js" {
+    interface Node {
+        element: (indexNode: Node) => Node;
+        elementAssign: (indexNode: Node) => this;
+
+        convert: (types: string) => Node;
+        convertAssign: (types: string) => this;
+    }
+}
 
 /**
  * @deprecated append() has been renamed to Stack().
  */
 export const append: (node: Node) => Node;
+
+declare module "../Nodes.js" {
+    interface Node {
+        /**
+         * @deprecated append() has been renamed to Stack().
+         */
+        append: () => Node;
+        /**
+         * @deprecated append() has been renamed to Stack().
+         */
+        appendAssign: () => this;
+    }
+}

@@ -14,8 +14,13 @@ export const debug: (
     callback?: ((node: NodeBuilder, code: string) => void) | null,
 ) => ShaderNodeObject<DebugNode>;
 
-declare module "../tsl/TSLCore.js" {
-    interface NodeElements {
-        debug: typeof debug;
+declare module "../Nodes.js" {
+    interface Node {
+        debug: (
+            callback?: ((node: NodeBuilder, code: string) => void) | null,
+        ) => DebugNode;
+        debugAssign: (
+            callback?: ((node: NodeBuilder, code: string) => void) | null,
+        ) => this;
     }
 }
