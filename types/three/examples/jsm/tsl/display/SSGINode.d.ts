@@ -1,4 +1,3 @@
-import { ShaderNodeObject } from "three/tsl";
 import { Node, PerspectiveCamera, TempNode, UniformNode } from "three/webgpu";
 
 declare class SSGINode extends TempNode {
@@ -28,4 +27,4 @@ export const ssgi: (
     depthNode: Node,
     normalNode: Node,
     camera: PerspectiveCamera,
-) => ShaderNodeObject<SSGINode>;
+) => SSGINode;
