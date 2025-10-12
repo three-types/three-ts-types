@@ -9,7 +9,6 @@ import TextureNode from "../accessors/TextureNode.js";
 import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
@@ -65,13 +64,13 @@ declare class PassNode extends TempNode {
 
     toggleTexture(name: string): void;
 
-    getTextureNode(name?: string): ShaderNodeObject<TextureNode>;
+    getTextureNode(name?: string): TextureNode;
 
-    getPreviousTextureNode(name?: string): ShaderNodeObject<Node>;
+    getPreviousTextureNode(name?: string): Node;
 
-    getViewZNode(name?: string): ShaderNodeObject<Node>;
+    getViewZNode(name?: string): Node;
 
-    getLinearDepthNode(name?: string): ShaderNodeObject<Node>;
+    getLinearDepthNode(name?: string): Node;
 
     compileAsync(renderer: Renderer): Promise<void>;
 
@@ -95,6 +94,6 @@ export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;
 
 export default PassNode;
 
-export const pass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => ShaderNodeObject<PassNode>;
-export const passTexture: (pass: PassNode, texture: Texture) => ShaderNodeObject<PassTextureNode>;
-export const depthPass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => ShaderNodeObject<PassNode>;
+export const pass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => PassNode;
+export const passTexture: (pass: PassNode, texture: Texture) => PassTextureNode;
+export const depthPass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => PassNode;

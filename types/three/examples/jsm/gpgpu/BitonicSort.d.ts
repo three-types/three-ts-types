@@ -1,16 +1,15 @@
-import { ShaderNodeObject } from "three/tsl";
 import { Node, Renderer, StorageBufferNode } from "three/webgpu";
 
-export const getBitonicFlipIndices: (index: Node, blockHeight: Node) => ShaderNodeObject<Node>;
+export const getBitonicFlipIndices: (index: Node, blockHeight: Node) => Node;
 
-export const getBitonicDisperseIndices: (index: Node, swapSpan: Node) => ShaderNodeObject<Node>;
+export const getBitonicDisperseIndices: (index: Node, swapSpan: Node) => Node;
 
 export interface BitonicSortOptions {
     workgroupSize?: number | undefined;
 }
 
 export class BitonicSort {
-    infoStorage: ShaderNodeObject<StorageBufferNode>;
+    infoStorage: StorageBufferNode;
 
     swapOpCount: number;
     stepCount: number;

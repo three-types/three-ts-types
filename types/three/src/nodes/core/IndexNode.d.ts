@@ -1,4 +1,3 @@
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
 
 export type IndexNodeScope =
@@ -22,9 +21,9 @@ declare class IndexNode extends Node {
 
 export default IndexNode;
 
-export const vertexIndex: ShaderNodeObject<IndexNode>;
-export const instanceIndex: ShaderNodeObject<IndexNode>;
-export const subgroupIndex: ShaderNodeObject<IndexNode>;
-export const invocationSubgroupIndex: ShaderNodeObject<IndexNode>;
-export const invocationLocalIndex: ShaderNodeObject<IndexNode>;
-export const drawIndex: ShaderNodeObject<IndexNode>;
+export const vertexIndex: IndexNode;
+export const instanceIndex: IndexNode;
+export const subgroupIndex: IndexNode;
+export const invocationSubgroupIndex: IndexNode;
+export const invocationLocalIndex: IndexNode;
+export const drawIndex: IndexNode;
