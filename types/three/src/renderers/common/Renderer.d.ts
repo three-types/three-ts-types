@@ -87,6 +87,7 @@ declare class Renderer {
     info: Info;
     library: NodeLibrary;
     lighting: Lighting;
+    _samples: number;
     _canvasTarget: CanvasTarget;
     _inspector: InspectorBase;
     _getFallback: ((error: unknown) => Backend) | null;
