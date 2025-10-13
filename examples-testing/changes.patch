@@ -14802,7 +14802,7 @@ index a5bce322..d542dc64 100644
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 40912937..ef9c68d9 100644
+index 40912937..e43bcee2 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14836,6 +14836,15 @@ index 40912937..ef9c68d9 100644
 +let computeSize: THREE.ComputeNode;
  
  init();
+ 
+@@ -136,7 +145,7 @@ async function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(material, 'alphaToCoverage');
  
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
 index 5a554178..dd9943ca 100644
