@@ -337,6 +337,6 @@ export enum GPUFeatureName {
 }
 
 export enum GPUFeatureMap {
-    'texture-compression-s3tc' = 'texture-compression-bc',
-    'texture-compression-etc1' = 'texture-compression-etc2'
+    "texture-compression-s3tc" = "texture-compression-bc",
+    "texture-compression-etc1" = "texture-compression-etc2",
 }
