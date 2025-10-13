@@ -14094,13 +14094,14 @@ index 355e9f21..37be7171 100644
      gui.addColor(duck.material, 'color').name('material color');
      gui.add({ model: 'duck' }, 'model', ['duck', 'glass']).onChange(model => {
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
-index ca159d04..197ed28a 100644
+index ca159d04..24b0ee88 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
 +++ b/examples-testing/examples/webgpu_centroid_sampling.ts
-@@ -3,13 +3,20 @@ import { varying, uv, texture, Fn } from 'three/tsl';
+@@ -2,14 +2,22 @@ import * as THREE from 'three/webgpu';
+ import { varying, uv, texture, Fn } from 'three/tsl';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
- 
+-
 -let rendererAntialiasingEnabled;
 -let rendererAntialiasingDisabled;
 -let camera;
@@ -14108,11 +14109,13 @@ index ca159d04..197ed28a 100644
 -let gui;
 -
 -const effectController = {
++import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
++
 +let rendererAntialiasingEnabled: THREE.WebGPURenderer;
 +let rendererAntialiasingDisabled: THREE.WebGPURenderer;
 +let camera: THREE.PerspectiveCamera;
 +let scene: THREE.Scene;
-+let gui: GUI;
++let gui: ParametersGroup;
 +
 +const effectController: {
 +    sampling:
@@ -14125,7 +14128,7 @@ index ca159d04..197ed28a 100644
      sampling: 'normal',
  };
  
-@@ -17,7 +24,7 @@ const atlasCanvas = document.createElement('canvas');
+@@ -17,7 +25,7 @@ const atlasCanvas = document.createElement('canvas');
  atlasCanvas.width = 16;
  atlasCanvas.height = 16;
  
@@ -14134,7 +14137,7 @@ index ca159d04..197ed28a 100644
  ctx.fillStyle = 'red';
  ctx.fillRect(0, 0, 8, 8);
  
-@@ -62,7 +69,7 @@ function init() {
+@@ -62,7 +70,7 @@ function init() {
  
      scene = new THREE.Scene();
  
@@ -14143,7 +14146,7 @@ index ca159d04..197ed28a 100644
          const geometry = new THREE.BufferGeometry();
          const positions = [-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
          geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
-@@ -78,7 +85,7 @@ function init() {
+@@ -78,7 +86,7 @@ function init() {
      const material = new THREE.MeshBasicNodeMaterial();
      const testUV = varying(uv(), 'testUV');
  
@@ -14152,7 +14155,7 @@ index ca159d04..197ed28a 100644
          return Fn(() => {
              testUV.setInterpolation(type, sampling);
  
-@@ -113,7 +120,7 @@ function init() {
+@@ -113,7 +121,7 @@ function init() {
  
      material.colorNode = withoutInterpolationShader();
  
@@ -14161,7 +14164,7 @@ index ca159d04..197ed28a 100644
  
      for (let x = -5; x < 5; x++) {
          for (let y = -5; y < 5; y++) {
-@@ -142,14 +149,14 @@ function init() {
+@@ -142,20 +150,20 @@ function init() {
          forceWebGL: forceWebGL,
      });
  
@@ -14179,6 +14182,13 @@ index ca159d04..197ed28a 100644
  
      onWindowResize();
  
+     window.addEventListener('resize', onWindowResize);
+ 
+-    gui = rendererAntialiasingEnabled.inspector.createParameters('Settings');
++    gui = (rendererAntialiasingEnabled.inspector as Inspector).createParameters('Settings');
+     gui.add(effectController, 'sampling', [
+         THREE.InterpolationSamplingMode.NORMAL,
+         THREE.InterpolationSamplingMode.CENTROID,
 diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
 index 02fbacb9..d3ee1763 100644
 --- a/examples-testing/examples/webgpu_clearcoat.ts
@@ -14233,7 +14243,7 @@ index e07e6046..2e0d4855 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index fa3c0afb..86b3f4ae 100644
+index fa3c0afb..5d6cafb3 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14277,6 +14287,15 @@ index fa3c0afb..86b3f4ae 100644
  
          // delay
  
+@@ -147,7 +147,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Audio');
++    const gui = (renderer.inspector as Inspector).createParameters('Audio');
+ 
+     gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
+     gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
 index ab8bfb48..83ab9fc5 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
@@ -14442,7 +14461,7 @@ index ef4b78c6..56fae624 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index 7a259893..968d2679 100644
+index 7a259893..0321482c 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14532,6 +14551,15 @@ index 7a259893..968d2679 100644
  
      // Material
  
+@@ -170,7 +174,7 @@ async function init() {
+     await renderer.init();
+     await renderer.computeAsync(computeNode);
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
+     gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
+     gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
 index 01e979d7..73c557d4 100644
 --- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
@@ -14903,7 +14931,7 @@ index 5a554178..dd9943ca 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_layers.ts b/examples-testing/examples/webgpu_layers.ts
-index c1db7d60..0dcd8517 100644
+index c1db7d60..15b6851c 100644
 --- a/examples-testing/examples/webgpu_layers.ts
 +++ b/examples-testing/examples/webgpu_layers.ts
 @@ -4,7 +4,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14915,6 +14943,15 @@ index c1db7d60..0dcd8517 100644
  
  init();
  
+@@ -54,7 +54,7 @@ function init() {
+         Green: true,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Layers');
++    const gui = (renderer.inspector as Inspector).createParameters('Layers');
+ 
+     gui.add(layers, 'Red').onChange(() => {
+         camera.layers.toggle(0);
 @@ -73,7 +73,7 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  }
@@ -14952,10 +14989,18 @@ index cfd67fde..90af446b 100644
          light.color.setHSL(h, s, l);
          light.position.set(x, y, z);
 diff --git a/examples-testing/examples/webgpu_lightprobe.ts b/examples-testing/examples/webgpu_lightprobe.ts
-index 3e90b6f6..6b5f90c7 100644
+index 3e90b6f6..34208354 100644
 --- a/examples-testing/examples/webgpu_lightprobe.ts
 +++ b/examples-testing/examples/webgpu_lightprobe.ts
-@@ -8,12 +8,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
+@@ -1,6 +1,7 @@
+ import * as THREE from 'three/webgpu';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
++import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+@@ -8,12 +9,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
  
  import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
  
@@ -14966,7 +15011,7 @@ index 3e90b6f6..6b5f90c7 100644
 +    camera: THREE.PerspectiveCamera;
  
 -let gui;
-+let gui: GUI;
++let gui: ParametersGroup;
  
 -let lightProbe;
 -let directionalLight;
@@ -14975,7 +15020,7 @@ index 3e90b6f6..6b5f90c7 100644
  
  // linear color space
  const API = {
-@@ -59,7 +62,7 @@ function init() {
+@@ -59,7 +63,7 @@ function init() {
      scene.add(directionalLight);
  
      // envmap
@@ -14984,6 +15029,15 @@ index 3e90b6f6..6b5f90c7 100644
          return [
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
+@@ -100,7 +104,7 @@ function init() {
+     });
+ 
+     // gui
+-    gui = renderer.inspector.createParameters('Intensity');
++    gui = (renderer.inspector as Inspector).createParameters('Intensity');
+ 
+     gui.add(API, 'lightProbeIntensity', 0, 1, 0.02)
+         .name('light probe')
 diff --git a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts b/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
 index 5ea520a5..839ff0fc 100644
 --- a/examples-testing/examples/webgpu_lightprobe_cubecamera.ts
@@ -15010,7 +15064,7 @@ index 5ea520a5..839ff0fc 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_ies_spotlight.ts b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
-index edfc51ef..28ba9495 100644
+index edfc51ef..d3f6e377 100644
 --- a/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_ies_spotlight.ts
 @@ -1,13 +1,13 @@
@@ -15039,6 +15093,15 @@ index edfc51ef..28ba9495 100644
          for (let i = 0; i < lights.length; i++) {
              lights[i].userData.helper.visible = value;
          }
+@@ -133,7 +133,7 @@ async function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add({ helper: false }, 'helper').onChange(v => setHelperVisible(v));
+ 
+     //
 @@ -148,7 +148,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -15615,7 +15678,7 @@ index 8007d5e6..dc83ae61 100644
  init().catch(function (err) {
      console.error(err);
 diff --git a/examples-testing/examples/webgpu_loader_gltf_sheen.ts b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
-index 444a3b4f..bc724ca2 100644
+index 444a3b4f..6f440d8a 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_sheen.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
 @@ -6,7 +6,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
@@ -15627,7 +15690,7 @@ index 444a3b4f..bc724ca2 100644
  
  init();
  
-@@ -25,7 +25,10 @@ function init() {
+@@ -25,9 +25,12 @@ function init() {
      new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
          scene.add(gltf.scene);
  
@@ -15637,8 +15700,11 @@ index 444a3b4f..bc724ca2 100644
 +            THREE.MeshPhysicalMaterial
 +        >;
  
-         const gui = renderer.inspector.createParameters('SheenChair_fabric');
+-        const gui = renderer.inspector.createParameters('SheenChair_fabric');
++        const gui = (renderer.inspector as Inspector).createParameters('SheenChair_fabric');
  
+         gui.add(object.material, 'sheen', 0, 1);
+     });
 diff --git a/examples-testing/examples/webgpu_loader_gltf_transmission.ts b/examples-testing/examples/webgpu_loader_gltf_transmission.ts
 index f32ae782..33f9d163 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_transmission.ts
@@ -15658,7 +15724,7 @@ index f32ae782..33f9d163 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 4dde3561..4812f0fa 100644
+index 4dde3561..6777cd37 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -61,9 +61,9 @@ const localSamples = [
@@ -15745,6 +15811,15 @@ index 4dde3561..4812f0fa 100644
      previewMesh.material = material;
  
      if (material.transparent) {
+@@ -206,7 +208,7 @@ async function addSample(sample, path) {
+ }
+ 
+ function addGUI() {
+-    const gui = renderer.inspector.createParameters('MaterialX Loader');
++    const gui = (renderer.inspector as Inspector).createParameters('MaterialX Loader');
+ 
+     const API = {
+         showCalibrationMesh: true,
 @@ -226,9 +228,9 @@ function addGUI() {
          });
  }
@@ -15840,7 +15915,7 @@ index 12c014ac..5052d882 100644
      gui.add(params, 'alpha', 0, 1).onChange(onMaterialUpdate);
      gui.add(params, 'alphaHash').onChange(onMaterialUpdate);
 diff --git a/examples-testing/examples/webgpu_materials_arrays.ts b/examples-testing/examples/webgpu_materials_arrays.ts
-index e6d15853..80887ef0 100644
+index e6d15853..154e3803 100644
 --- a/examples-testing/examples/webgpu_materials_arrays.ts
 +++ b/examples-testing/examples/webgpu_materials_arrays.ts
 @@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15856,8 +15931,17 @@ index e6d15853..80887ef0 100644
  
  const api = {
      webgpu: true,
+@@ -114,7 +114,7 @@ function animate() {
+ 
+ // gui
+ 
+-const gui = renderer.inspector.createParameters('Parameters');
++const gui = (renderer!.inspector as Inspector).createParameters('Parameters');
+ 
+ gui.add(api, 'webgpu').onChange(() => {
+     init(!api.webgpu);
 diff --git a/examples-testing/examples/webgpu_materials_basic.ts b/examples-testing/examples/webgpu_materials_basic.ts
-index 6aca76c9..17f370b3 100644
+index 6aca76c9..fe08f13b 100644
 --- a/examples-testing/examples/webgpu_materials_basic.ts
 +++ b/examples-testing/examples/webgpu_materials_basic.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
@@ -15887,6 +15971,15 @@ index 6aca76c9..17f370b3 100644
      color: '#ffffff',
      mapping: THREE.CubeReflectionMapping,
      refractionRatio: 0.98,
+@@ -74,7 +80,7 @@ function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.addColor(params, 'color').onChange(value => material.color.set(value));
+     gui.add(params, 'mapping', mappings).onChange(value => {
 @@ -103,7 +109,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
@@ -15991,10 +16084,10 @@ index 17a01f32..1ecf1a86 100644
  
          mesh = new THREE.Mesh(geometry, material);
 diff --git a/examples-testing/examples/webgpu_materials_envmaps.ts b/examples-testing/examples/webgpu_materials_envmaps.ts
-index 6862caee..840f6d61 100644
+index 6862caee..97cae265 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps.ts
-@@ -4,9 +4,19 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -4,9 +4,18 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -16006,8 +16099,7 @@ index 6862caee..840f6d61 100644
 +let sphereMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicMaterial>,
 +    sphereMaterial: THREE.MeshBasicMaterial,
 +    params: {
-+        Cube: () => void;
-+        Equirectangular: () => void;
++        Type: 'Cube' | 'Equirectangular';
 +        Refraction: boolean;
 +        backgroundRotationX: boolean;
 +        backgroundRotationY: boolean;
@@ -16017,8 +16109,17 @@ index 6862caee..840f6d61 100644
  
  init();
  
+@@ -68,7 +77,7 @@ function init() {
+         syncMaterial: false,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     gui.add(params, 'Type', ['Cube', 'Equirectangular']).onChange(function (value) {
+         if (value === 'Cube') {
+             scene.background = textureCube;
 diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
-index fa394d91..18be0b2e 100644
+index fa394d91..16ca3dd9 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 @@ -16,11 +16,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16036,8 +16137,17 @@ index fa394d91..18be0b2e 100644
  
  init();
  
+@@ -164,7 +164,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     const params = {
+         'box projected': true,
+     };
 diff --git a/examples-testing/examples/webgpu_materials_lightmap.ts b/examples-testing/examples/webgpu_materials_lightmap.ts
-index 081de95a..d0170d3f 100644
+index 081de95a..78b575f1 100644
 --- a/examples-testing/examples/webgpu_materials_lightmap.ts
 +++ b/examples-testing/examples/webgpu_materials_lightmap.ts
 @@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16051,7 +16161,13 @@ index 081de95a..d0170d3f 100644
  
  const params = {
      intensity: 1,
-@@ -81,7 +81,7 @@ async function init() {
+@@ -76,12 +76,12 @@ async function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
      gui.add(params, 'intensity', 0, 1)
          .name('Light Map Intensity')
          .onChange(value => {
@@ -16061,7 +16177,7 @@ index 081de95a..d0170d3f 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
-index 86b04c83..c5531ee9 100644
+index 86b04c83..7b37d6bd 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
 +++ b/examples-testing/examples/webgpu_materials_matcap.ts
 @@ -6,7 +6,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16085,6 +16201,15 @@ index 86b04c83..c5531ee9 100644
          mesh.position.y = -0.25;
  
          mesh.material = new THREE.MeshMatcapNodeMaterial({
+@@ -68,7 +71,7 @@ function init() {
+     });
+ 
+     // gui
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.addColor(API, 'color')
+         .listen()
 @@ -103,7 +106,7 @@ function render() {
  // drag and drop anywhere in document
  //
@@ -16299,7 +16424,7 @@ index 56ef372c..f634dff9 100644
              font: font,
  
 diff --git a/examples-testing/examples/webgpu_materials_transmission.ts b/examples-testing/examples/webgpu_materials_transmission.ts
-index 6c9bc2df..ba8d045c 100644
+index 6c9bc2df..3ddebb65 100644
 --- a/examples-testing/examples/webgpu_materials_transmission.ts
 +++ b/examples-testing/examples/webgpu_materials_transmission.ts
 @@ -20,7 +20,7 @@ const params = {
@@ -16311,6 +16436,15 @@ index 6c9bc2df..ba8d045c 100644
  
  let mesh;
  
+@@ -90,7 +90,7 @@ function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.addColor(params, 'color').onChange(function () {
+         material.color.set(params.color);
 @@ -160,7 +160,7 @@ function generateTexture() {
      canvas.width = 2;
      canvas.height = 2;
@@ -16619,7 +16753,7 @@ index c465ddc5..9fa79745 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 diff --git a/examples-testing/examples/webgpu_morphtargets.ts b/examples-testing/examples/webgpu_morphtargets.ts
-index bd9539f2..0d1e9ea8 100644
+index bd9539f2..0f740ce7 100644
 --- a/examples-testing/examples/webgpu_morphtargets.ts
 +++ b/examples-testing/examples/webgpu_morphtargets.ts
 @@ -4,12 +4,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16650,7 +16784,13 @@ index bd9539f2..0d1e9ea8 100644
      const direction = new THREE.Vector3(1, 0, 0);
      const vertex = new THREE.Vector3();
  
-@@ -106,12 +110,12 @@ function initGUI() {
+@@ -101,17 +105,17 @@ function initGUI() {
+         Twist: 0,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Morph Targets');
++    const gui = (renderer.inspector as Inspector).createParameters('Morph Targets');
+ 
      gui.add(params, 'Spherify', 0, 1)
          .step(0.01)
          .onChange(function (value) {
@@ -16666,7 +16806,7 @@ index bd9539f2..0d1e9ea8 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_morphtargets_face.ts b/examples-testing/examples/webgpu_morphtargets_face.ts
-index 3ce470ed..d04cc3a8 100644
+index 3ce470ed..456f4d64 100644
 --- a/examples-testing/examples/webgpu_morphtargets_face.ts
 +++ b/examples-testing/examples/webgpu_morphtargets_face.ts
 @@ -12,7 +12,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16687,7 +16827,8 @@ index 3ce470ed..d04cc3a8 100644
 +            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
 +            const influences = head.morphTargetInfluences!;
  
-             const gui = renderer.inspector.createParameters('Morph Targets');
+-            const gui = renderer.inspector.createParameters('Morph Targets');
++            const gui = (renderer.inspector as Inspector).createParameters('Morph Targets');
  
 -            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
 +            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
@@ -16848,7 +16989,7 @@ index 18d48cbf..8fac5871 100644
  
      // render scene into target
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 4eee79fb..43295f8e 100644
+index 4eee79fb..520710ba 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 @@ -5,8 +5,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16869,6 +17010,15 @@ index 4eee79fb..43295f8e 100644
  
  const options = {
      selection: 'mrt',
+@@ -27,7 +34,7 @@ function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(options, 'selection', ['mrt', 'diffuse', 'normal']);
+ 
+     // Create a multi render target with Float buffers
 @@ -114,7 +121,7 @@ function onWindowResize() {
      renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
  }
@@ -16908,7 +17058,7 @@ index 4eee79fb..43295f8e 100644
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
 diff --git a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
-index f82d6ff1..9d254005 100644
+index f82d6ff1..4d07b8df 100644
 --- a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
 +++ b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
 @@ -3,12 +3,12 @@ import { texture } from 'three/tsl';
@@ -16936,6 +17086,15 @@ index f82d6ff1..9d254005 100644
      const radius = i % 2 === 0 ? fullRadius : halfRadius;
  
      const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
+@@ -39,7 +39,7 @@ init();
+ initGUI();
+ 
+ function initGUI() {
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(params, 'samples', 0, 4).step(1);
+     gui.add(params, 'animated');
+ }
 @@ -98,7 +98,7 @@ function init() {
      quadMesh = new THREE.QuadMesh(materialFX);
  }
@@ -17028,7 +17187,7 @@ index 658ae08d..adbea486 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
-index 9e81f076..28741b46 100644
+index 9e81f076..da9ee875 100644
 --- a/examples-testing/examples/webgpu_particles.ts
 +++ b/examples-testing/examples/webgpu_particles.ts
 @@ -7,8 +7,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17051,6 +17210,15 @@ index 9e81f076..28741b46 100644
  
      const uint32 = new Uint32Array(5);
      uint32[0] = indexCount; // indexCount
+@@ -132,7 +132,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(speed, 'value', 0, 1, 0.01).name('speed');
+ }
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
 index 570a4dee..6270f96d 100644
 --- a/examples-testing/examples/webgpu_performance.ts
@@ -17172,7 +17340,7 @@ index 913c28ab..a405f85c 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-index fbe75a59..7999b5f5 100644
+index fbe75a59..876da125 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
 +++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
 @@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17184,8 +17352,17 @@ index fbe75a59..7999b5f5 100644
  
  init();
  
+@@ -65,7 +65,7 @@ async function init() {
+ 
+             // gui
+ 
+-            const gui = renderer.inspector.createParameters('Settings');
++            const gui = (renderer.inspector as Inspector).createParameters('Settings');
+             gui.add(pmremRoughness, 'value', 0, 1, 0.001)
+                 .name('roughness')
+                 .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-index 2c5f6639..853904de 100644
+index 2c5f6639..9ffeaa43 100644
 --- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 @@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17197,8 +17374,17 @@ index 2c5f6639..853904de 100644
  
  init();
  
+@@ -65,7 +65,7 @@ async function init() {
+ 
+         // gui
+ 
+-        const gui = renderer.inspector.createParameters('Settings');
++        const gui = (renderer.inspector as Inspector).createParameters('Settings');
+         gui.add(pmremRoughness, 'value', 0, 1, 0.001)
+             .name('roughness')
+             .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_pmrem_scene.ts b/examples-testing/examples/webgpu_pmrem_scene.ts
-index deab005f..c9c6068a 100644
+index deab005f..36ca1c7d 100644
 --- a/examples-testing/examples/webgpu_pmrem_scene.ts
 +++ b/examples-testing/examples/webgpu_pmrem_scene.ts
 @@ -5,7 +5,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17210,6 +17396,15 @@ index deab005f..c9c6068a 100644
  
  init();
  
+@@ -84,7 +84,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(pmremRoughness, 'value', 0, 1, 0.001)
+         .name('roughness')
+         .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
 index 3dc3ceb4..aad91a01 100644
 --- a/examples-testing/examples/webgpu_portal.ts
@@ -18364,7 +18559,7 @@ index c4c88665..fc7976ff 100644
      gui.add(effectController, 'animateScene').name('Animate Scene');
      gui.add(effectController, 'animateTransition').name('Animate Transition');
 diff --git a/examples-testing/examples/webgpu_procedural_texture.ts b/examples-testing/examples/webgpu_procedural_texture.ts
-index 03f0108f..3372d4fb 100644
+index 03f0108f..4755bb13 100644
 --- a/examples-testing/examples/webgpu_procedural_texture.ts
 +++ b/examples-testing/examples/webgpu_procedural_texture.ts
 @@ -4,7 +4,7 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
@@ -18376,6 +18571,15 @@ index 03f0108f..3372d4fb 100644
  
  init();
  render();
+@@ -52,7 +52,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Procedural Texture');
++    const gui = (renderer.inspector as Inspector).createParameters('Procedural Texture');
+     gui.add(uvScale, 'value', 1, 10).name('uv scale ( before rtt )');
+     gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
+     gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
 index 76592b8c..53dbdbba 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
@@ -18700,7 +18904,7 @@ index 52b67f70..ac1aa837 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_shadowmap_progressive.ts b/examples-testing/examples/webgpu_shadowmap_progressive.ts
-index 71bc3777..771fd95c 100644
+index 71bc3777..307250ce 100644
 --- a/examples-testing/examples/webgpu_shadowmap_progressive.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_progressive.ts
 @@ -11,17 +11,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMapGPU.js
@@ -18749,6 +18953,15 @@ index 71bc3777..771fd95c 100644
                  progressiveSurfacemap.addObjectsToLightMap(lightmapObjects);
              } else {
                  child.layers.disableAll(); // Disable Rendering for this
+@@ -153,7 +153,7 @@ function init() {
+ }
+ 
+ function createGUI() {
+-    const gui = renderer.inspector.createParameters('Accumulation Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Accumulation Settings');
+     gui.add(params, 'Enable');
+     gui.add(params, 'Blur Edges');
+     gui.add(params, 'Blend Window', 1, 500).step(1);
 diff --git a/examples-testing/examples/webgpu_shadowmap_vsm.ts b/examples-testing/examples/webgpu_shadowmap_vsm.ts
 index 12fe5fe4..8342b4af 100644
 --- a/examples-testing/examples/webgpu_shadowmap_vsm.ts
@@ -18869,7 +19082,7 @@ index 235f4240..e274d5f2 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_sky.ts b/examples-testing/examples/webgpu_sky.ts
-index cd865eef..cc3ec3e0 100644
+index cd865eef..5c7515e9 100644
 --- a/examples-testing/examples/webgpu_sky.ts
 +++ b/examples-testing/examples/webgpu_sky.ts
 @@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18884,6 +19097,15 @@ index cd865eef..cc3ec3e0 100644
  
  init();
  
+@@ -47,7 +47,7 @@ function initSky() {
+         renderer.toneMappingExposure = effectController.exposure;
+     }
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(effectController, 'turbidity', 0.0, 20.0, 0.1).onChange(guiChanged);
+     gui.add(effectController, 'rayleigh', 0.0, 4, 0.001).onChange(guiChanged);
 diff --git a/examples-testing/examples/webgpu_sprites.ts b/examples-testing/examples/webgpu_sprites.ts
 index de9f219b..68a7b73a 100644
 --- a/examples-testing/examples/webgpu_sprites.ts
@@ -19118,7 +19340,7 @@ index 766233f9..e37fc625 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index f0711aba..6a4862ca 100644
+index f0711aba..d7e61dea 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -19152,8 +19374,17 @@ index f0711aba..6a4862ca 100644
  
                  child.castShadow = true;
                  child.receiveShadow = true;
+@@ -160,7 +160,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     gui.add(sliceStart, 'value', -Math.PI, Math.PI, 0.001).name('sliceStart');
+     gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
+     gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c14890..b551d7a7 100644
+index 14c14890..6d022baa 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19179,8 +19410,17 @@ index 14c14890..b551d7a7 100644
      alpha = alpha.mul(sunOrientation.smoothstep(-0.5, 1));
      atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
+@@ -136,7 +141,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.addColor({ color: atmosphereDayColor.value.getHex(THREE.SRGBColorSpace) }, 'color')
+         .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index 73913850..611d9974 100644
+index 73913850..46c0eead 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
 @@ -5,7 +5,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19192,8 +19432,17 @@ index 73913850..611d9974 100644
  
  init();
  
+@@ -68,7 +68,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.add(size, 'value', 0, 1, 0.001).name('size');
+ 
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f..971a2900 100644
+index 143d577f..dc289242 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19233,6 +19482,15 @@ index 143d577f..971a2900 100644
 +    halftoneSettings: HalftoneSettings[];
  
  init();
+ 
+@@ -31,7 +60,7 @@ function init() {
+ 
+     renderer.inspector = new Inspector();
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     // lights
  
 @@ -81,7 +110,7 @@ function init() {
  
@@ -19306,7 +19564,7 @@ index 143d577f..971a2900 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d07..fdba544b 100644
+index cb513d07..9b867d08 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19327,6 +19585,15 @@ index cb513d07..fdba544b 100644
          // large waves
  
          const elevation = mul(
+@@ -132,7 +132,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.addColor({ color: material.color.getHex(THREE.SRGBColorSpace) }, 'color')
+         .name('color')
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_flames.ts b/examples-testing/examples/webgpu_tsl_vfx_flames.ts
 index f1e42344..34df22c9 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_flames.ts
@@ -19363,7 +19630,7 @@ index f1e42344..34df22c9 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0..a714708d 100644
+index 571b7ea0..78c200d0 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19426,6 +19693,15 @@ index 571b7ea0..a714708d 100644
  
      // uniforms
  
+@@ -260,7 +266,7 @@ function init() {
+ 
+     // debug
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
+         .onChange(value => emissiveColor.value.set(value))
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
 index 5a4e0650..21088360 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
@@ -19670,7 +19946,7 @@ index b11f4dd3..c62579f1 100644
  
          let density = sampleGrain(1);
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 1d46c354..9873351d 100644
+index 1d46c354..0b4d8513 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -19749,6 +20025,15 @@ index 1d46c354..9873351d 100644
  
      // Material
  
+@@ -142,7 +146,7 @@ function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
+     gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
+     gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
 index 3edecb90..ef458d0a 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
@@ -19845,7 +20130,7 @@ index 4089b3f7..da8ee7b5 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd..4824d70f 100644
+index fb6f2bbd..5705090e 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -19872,6 +20157,15 @@ index fb6f2bbd..4824d70f 100644
          const finalColor = vec4(0).toVar();
  
          RaymarchingBox(steps, ({ positionRay }) => {
+@@ -95,7 +99,7 @@ function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
+     gui.add(steps, 'value', 0, 300, 1).name('steps');
+ 
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
 index 2cd3e701..422194a2 100644
 --- a/examples-testing/examples/webgpu_water.ts
