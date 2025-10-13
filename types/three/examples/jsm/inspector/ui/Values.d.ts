@@ -3,7 +3,7 @@ import { ColorRepresentation, EventDispatcher } from "three";
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
 declare class Value<T = Record<string, unknown>, K extends keyof T = keyof T> extends EventDispatcher {
-    onChange(callback: (value: T[K]) => void): void;
+    onChange(callback: (value: T[K]) => void): this;
 }
 
 export interface ValueNumberParams {
@@ -45,6 +45,9 @@ declare class ValueSlider<
     K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
 > extends Value<T, K> {
     constructor(params: ValueSliderParams);
+
+    setValue(val: number): this;
+    step(value: number): this;
 }
 
 export interface ValueSelectParams<T, K extends keyof T> {
