@@ -3,7 +3,9 @@ import Node from "./Node.js";
 export type IndexNodeScope =
     | typeof IndexNode.VERTEX
     | typeof IndexNode.INSTANCE
+    | typeof IndexNode.SUBGROUP
     | typeof IndexNode.INVOCATION_LOCAL
+    | typeof IndexNode.INVOCATION_SUBGROUP
     | typeof IndexNode.DRAW;
 
 declare class IndexNode extends Node {
@@ -15,7 +17,9 @@ declare class IndexNode extends Node {
 
     static VERTEX: "vertex";
     static INSTANCE: "instance";
+    static SUBGROUP: "subgroup";
     static INVOCATION_LOCAL: "invocationLocal";
+    static INVOCATION_SUBGROUP: "invocationSubgroup";
     static DRAW: "draw";
 }
 
