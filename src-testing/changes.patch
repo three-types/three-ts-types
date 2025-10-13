@@ -3848,7 +3848,7 @@ index 59ca2d5a..46160831 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index a41d0e8b..de6996e9 100644
+index 3d48d63b..626e62ec 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,38 @@
@@ -3983,7 +3983,7 @@ index a41d0e8b..de6996e9 100644
  
      /**
       * Copies data of the given source texture to the given destination texture.
-@@ -483,7 +539,7 @@ class Backend {
+@@ -519,7 +575,7 @@ class Backend {
       * @param {Object3D} object - The 3D object to test.
       * @return {boolean} Whether the 3D object is fully occluded or not.
       */
@@ -3992,7 +3992,7 @@ index a41d0e8b..de6996e9 100644
  
      /**
       * Resolves the time stamp for the given render context and type.
-@@ -493,7 +549,7 @@ class Backend {
+@@ -529,7 +585,7 @@ class Backend {
       * @param {string} [type='render'] - The type of the time stamp.
       * @return {Promise<number>} A Promise that resolves with the time stamp.
       */
@@ -4001,7 +4001,7 @@ index a41d0e8b..de6996e9 100644
          if (!this.trackTimestamp) {
              warnOnce('WebGPURenderer: Timestamp tracking is disabled.');
              return;
-@@ -507,7 +563,7 @@ class Backend {
+@@ -543,7 +599,7 @@ class Backend {
  
          const duration = await queryPool.resolveQueriesAsync();
  
@@ -4010,7 +4010,7 @@ index a41d0e8b..de6996e9 100644
  
          return duration;
      }
-@@ -557,7 +613,7 @@ class Backend {
+@@ -593,7 +649,7 @@ class Backend {
       * @abstract
       * @return {number} The maximum anisotropy texture filtering value.
       */
@@ -4019,7 +4019,7 @@ index a41d0e8b..de6996e9 100644
  
      /**
       * Returns the drawing buffer size.
-@@ -567,7 +623,7 @@ class Backend {
+@@ -603,7 +659,7 @@ class Backend {
      getDrawingBufferSize() {
          _vector2 = _vector2 || new Vector2();
  
@@ -4028,7 +4028,7 @@ index a41d0e8b..de6996e9 100644
      }
  
      /**
-@@ -589,7 +645,7 @@ class Backend {
+@@ -625,7 +681,7 @@ class Backend {
  
          _color4 = _color4 || new Color4();
  
@@ -4037,7 +4037,7 @@ index a41d0e8b..de6996e9 100644
  
          _color4.getRGB(_color4);
  
-@@ -634,7 +690,11 @@ class Backend {
+@@ -670,7 +726,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
       */
@@ -4050,7 +4050,7 @@ index a41d0e8b..de6996e9 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -652,7 +712,7 @@ class Backend {
+@@ -688,7 +748,7 @@ class Backend {
       * @param {Object} object - The object.
       * @return {boolean} Whether a dictionary for the given object as been defined or not.
       */
@@ -4059,7 +4059,7 @@ index a41d0e8b..de6996e9 100644
          return this.data.has(object);
      }
  
-@@ -661,7 +721,7 @@ class Backend {
+@@ -697,7 +757,7 @@ class Backend {
       *
       * @param {Object} object - The object to delete.
       */
@@ -8138,7 +8138,7 @@ index 2034fee1..05c726b4 100644
              // if a texture is not ready for use, it falls back to a default texture so it's possible
              // to use it for rendering. If a texture in this state is disposed, it's important to
 diff --git a/src-testing/src/renderers/common/TimestampQueryPool.ts b/src-testing/src/renderers/common/TimestampQueryPool.ts
-index f46665bf..67eb6bdb 100644
+index a2e65be3..13eaff31 100644
 --- a/src-testing/src/renderers/common/TimestampQueryPool.ts
 +++ b/src-testing/src/renderers/common/TimestampQueryPool.ts
 @@ -5,7 +5,17 @@ import { warn } from '../../utils.js';
@@ -8169,7 +8169,7 @@ index f46665bf..67eb6bdb 100644
          let timestamp = this.timestamps.get(uid);
  
          if (timestamp === undefined) {
-@@ -117,7 +127,7 @@ class TimestampQueryPool {
+@@ -127,7 +137,7 @@ class TimestampQueryPool {
       * @param {number} frameId - The current frame identifier.
       * @returns {?number}
       */
@@ -8178,7 +8178,7 @@ index f46665bf..67eb6bdb 100644
  
      /**
       * Resolve all timestamps and return data (or process them).
-@@ -126,14 +136,14 @@ class TimestampQueryPool {
+@@ -136,14 +146,14 @@ class TimestampQueryPool {
       * @async
       * @returns {Promise<number>|number} The resolved timestamp value.
       */
