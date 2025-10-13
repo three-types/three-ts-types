@@ -6480,7 +6480,7 @@ index b841fa6b..f3051618 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_lights_spotlight.ts b/examples-testing/examples/webgl_lights_spotlight.ts
-index 43f70706..9668964e 100644
+index 24d7d8c1..93318d4d 100644
 --- a/examples-testing/examples/webgl_lights_spotlight.ts
 +++ b/examples-testing/examples/webgl_lights_spotlight.ts
 @@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -6490,12 +6490,12 @@ index 43f70706..9668964e 100644
 -let renderer, scene, camera;
 +let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
  
--let spotLight, lightHelper;
-+let spotLight: THREE.SpotLight, lightHelper: THREE.SpotLightHelper;
+-let spotLight;
++let spotLight: THREE.SpotLight & { lightHelper?: THREE.SpotLightHelper; shadowCameraHelper?: THREE.CameraHelper };
  
  init();
  
-@@ -42,7 +42,7 @@ function init() {
+@@ -45,7 +45,7 @@ function init() {
      const loader = new THREE.TextureLoader().setPath('textures/');
      const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
  
@@ -6504,17 +6504,26 @@ index 43f70706..9668964e 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -156,8 +156,8 @@ function init() {
-         renderer.shadowMap.enabled = val;
- 
-         scene.traverse(function (child) {
--            if (child.material) {
--                child.material.needsUpdate = true;
-+            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
-+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
-             }
-         });
+@@ -176,8 +176,8 @@ function init() {
      });
+ 
+     gui.add(params, 'helpers').onChange(function (val) {
+-        spotLight.lightHelper.visible = val;
+-        spotLight.shadowCameraHelper.visible = val;
++        spotLight.lightHelper!.visible = val;
++        spotLight.shadowCameraHelper!.visible = val;
+     });
+ 
+     gui.open();
+@@ -196,7 +196,7 @@ function animate() {
+     spotLight.position.x = Math.cos(time) * 2.5;
+     spotLight.position.z = Math.sin(time) * 2.5;
+ 
+-    spotLight.lightHelper.update();
++    spotLight.lightHelper!.update();
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgl_lights_spotlights.ts b/examples-testing/examples/webgl_lights_spotlights.ts
 index 70caf5a5..fc4817fb 100644
 --- a/examples-testing/examples/webgl_lights_spotlights.ts
@@ -15210,22 +15219,22 @@ index 02b43e6f..3b56b5a6 100644
          material.colorNode = color(hexColor);
          material.lights = false;
 diff --git a/examples-testing/examples/webgpu_lights_spotlight.ts b/examples-testing/examples/webgpu_lights_spotlight.ts
-index e0c4e5b0..dbd27d70 100644
+index db2de889..0a91b1a1 100644
 --- a/examples-testing/examples/webgpu_lights_spotlight.ts
 +++ b/examples-testing/examples/webgpu_lights_spotlight.ts
-@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let renderer, scene, camera;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
  
--let spotLight, lightHelper;
-+let spotLight: THREE.SpotLight, lightHelper: THREE.SpotLightHelper;
+-let spotLight;
++let spotLight: THREE.SpotLight & { lightHelper?: THREE.SpotLightHelper; shadowCameraHelper?: THREE.CameraHelper };
  
  init();
  
-@@ -45,7 +45,7 @@ function init() {
+@@ -47,7 +47,7 @@ function init() {
      const loader = new THREE.TextureLoader().setPath('textures/');
      const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
  
@@ -15234,17 +15243,35 @@ index e0c4e5b0..dbd27d70 100644
  
      for (let i = 0; i < filenames.length; i++) {
          const filename = filenames[i];
-@@ -166,8 +166,8 @@ function init() {
-         renderer.shadowMap.enabled = val;
+@@ -126,7 +126,7 @@ function init() {
  
-         scene.traverse(function (child) {
--            if (child.material) {
--                child.material.needsUpdate = true;
-+            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material) {
-+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
-             }
-         });
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     const params = {
+         map: textures['disturb.jpg'],
+@@ -178,8 +178,8 @@ function init() {
      });
+ 
+     gui.add(params, 'helpers').onChange(function (val) {
+-        spotLight.lightHelper.visible = val;
+-        spotLight.shadowCameraHelper.visible = val;
++        spotLight.lightHelper!.visible = val;
++        spotLight.shadowCameraHelper!.visible = val;
+     });
+ }
+ 
+@@ -196,7 +196,7 @@ function animate() {
+     spotLight.position.x = Math.cos(time) * 2.5;
+     spotLight.position.z = Math.sin(time) * 2.5;
+ 
+-    spotLight.lightHelper.update();
++    spotLight.lightHelper!.update();
+ 
+     renderer.render(scene, camera);
+ }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
 index 5bc585a9..f141b84b 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
