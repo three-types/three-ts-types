@@ -1,5 +1,5 @@
 import { Tab } from "../ui/Tab.js";
-import { ValueCheckbox, ValueColor, ValueNumber, ValueSelect } from "../ui/Values.js";
+import { ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider } from "../ui/Values.js";
 
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
@@ -11,6 +11,13 @@ interface ValueNumberWithName<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
 > extends ValueNumber<T, K> {
+    name: (name: string) => this;
+}
+
+interface ValueSliderWithName<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
+> extends ValueSlider<T, K> {
     name: (name: string) => this;
 }
 
@@ -38,6 +45,13 @@ declare class ParametersGroup {
         property: K,
         options: ReadonlyArray<T[K]> | Record<string, T[K]>,
     ): ValueSelectWithName<T, K>;
+    add<T, K extends KeyToValueOfType<T, number>>(
+        object: T,
+        property: K,
+        min: number,
+        max: number,
+        step?: number,
+    ): ValueSliderWithName<T, K>;
     add<T, K extends KeyToValueOfType<T, number>>(
         object: T,
         property: K,
