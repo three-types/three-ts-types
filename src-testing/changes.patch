@@ -8138,7 +8138,7 @@ index 2034fee1..05c726b4 100644
              // if a texture is not ready for use, it falls back to a default texture so it's possible
              // to use it for rendering. If a texture in this state is disposed, it's important to
 diff --git a/src-testing/src/renderers/common/TimestampQueryPool.ts b/src-testing/src/renderers/common/TimestampQueryPool.ts
-index a2e65be3..13eaff31 100644
+index a2e65be3..e32dd793 100644
 --- a/src-testing/src/renderers/common/TimestampQueryPool.ts
 +++ b/src-testing/src/renderers/common/TimestampQueryPool.ts
 @@ -5,7 +5,17 @@ import { warn } from '../../utils.js';
@@ -8169,6 +8169,15 @@ index a2e65be3..13eaff31 100644
          let timestamp = this.timestamps.get(uid);
  
          if (timestamp === undefined) {
+@@ -115,7 +125,7 @@ class TimestampQueryPool {
+      * @param {string} uid - A unique identifier for the render context.
+      * @return {boolean} True if a timestamp is available, false otherwise.
+      */
+-    hasTimestamp(uid) {
++    hasTimestamp(uid: string) {
+         return this.timestamps.has(uid);
+     }
+ 
 @@ -127,7 +137,7 @@ class TimestampQueryPool {
       * @param {number} frameId - The current frame identifier.
       * @returns {?number}
