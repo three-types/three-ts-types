@@ -14291,7 +14291,7 @@ index 7f00aaca..aa5623f0 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index e89d48af..859fe0fe 100644
+index ce0b5a5e..a133aa63 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14381,15 +14381,7 @@ index e89d48af..859fe0fe 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -230,7 +234,6 @@ async function initBitonicSort() {
- 
-     const bitonicSortModule = new BitonicSort(renderer, currentElementsStorage, {
-         workgroupSize: 64,
--        sideEffectBuffers: [2, 3],
-     });
- 
-     scene.add(createDisplayMesh2(currentElementsStorage, bitonicSortModule.infoStorage));
-@@ -301,7 +304,7 @@ async function initGlobalSwapOnly() {
+@@ -286,7 +290,7 @@ async function initGlobalSwapOnly() {
  
      const scene = new THREE.Scene();
  
@@ -14398,7 +14390,7 @@ index e89d48af..859fe0fe 100644
      const infoBuffer = new THREE.StorageInstancedBufferAttribute(infoArray, 1);
      const infoStorage = storage(infoBuffer, 'uint', infoBuffer.count).setPBO(true).setName('TheInfo');
  
-@@ -332,7 +335,7 @@ async function initGlobalSwapOnly() {
+@@ -317,7 +321,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
      // Swap the elements in local storage
@@ -14623,12 +14615,12 @@ index 6fbdb55a..fd5ec570 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index 6639dfa2..dca24a7c 100644
+index fcae79b9..0ce427a3 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
-@@ -3,8 +3,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
- 
+@@ -4,8 +4,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
 -let controls;
@@ -14638,7 +14630,7 @@ index 6639dfa2..dca24a7c 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
-index d2282f15..afa44546 100644
+index a073f57e..fa503405 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_background.ts
 @@ -6,8 +6,8 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
@@ -14653,7 +14645,7 @@ index d2282f15..afa44546 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 9bebd426..a43e539c 100644
+index 90204a3d..58e2ccff 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
 @@ -1,25 +1,28 @@
@@ -14666,7 +14658,7 @@ index 9bebd426..a43e539c 100644
 +import AnaglyphPassNode, { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
 +import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, postProcessing;
 +let camera: THREE.PerspectiveCamera,
@@ -14693,7 +14685,16 @@ index 9bebd426..a43e539c 100644
  
  init();
  
-@@ -92,7 +95,7 @@ function init() {
+@@ -77,7 +80,7 @@ function init() {
+ 
+     postProcessing.outputNode = stereo;
+ 
+-    const gui = renderer.inspector.createParameters('Stereo Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Stereo Settings');
+     gui.add(params, 'effect', effects).onChange(update);
+     gui.add(params, 'eyeSep', 0.001, 0.15, 0.001).onChange(function (value) {
+         stereo.stereo.eyeSep = value;
+@@ -93,7 +96,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -14702,7 +14703,7 @@ index 9bebd426..a43e539c 100644
      if (value === 'stereo') {
          postProcessing.outputNode = stereo;
      } else if (value === 'anaglyph') {
-@@ -111,7 +114,7 @@ function onWindowResize() {
+@@ -112,7 +115,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14712,7 +14713,7 @@ index 9bebd426..a43e539c 100644
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
-index c7d814cb..4ebf1dcb 100644
+index bb1dd4a1..44814fa5 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
 +++ b/examples-testing/examples/webgpu_hdr.ts
 @@ -17,7 +17,7 @@ const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
@@ -14724,7 +14725,7 @@ index c7d814cb..4ebf1dcb 100644
  }
  
  hdrMediaQuery.addEventListener('change', updateHDRWarning);
-@@ -78,7 +78,7 @@ const brushMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), brushMat);
+@@ -79,7 +79,7 @@ const brushMesh = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), brushMat);
  brushMesh.scale.set(300, 300, 1); // ~300px default brush size
  brushScene.add(brushMesh);
  
@@ -14733,27 +14734,45 @@ index c7d814cb..4ebf1dcb 100644
      const rect = renderer.domElement.getBoundingClientRect();
      const x = e.clientX - rect.left;
      const y = e.clientY - rect.top;
+@@ -96,7 +96,7 @@ renderer.domElement.addEventListener('touchmove', e => e.preventDefault(), { pas
+ renderer.domElement.addEventListener('touchend', e => e.preventDefault(), { passive: false });
+ 
+ // GUI setup
+-const gui = renderer.inspector.createParameters('Settings');
++const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+ const colorFolder = gui.addFolder('HDR');
+ colorFolder.add(params.intensity, 'value', 0, 10, 0.1).name('Intensity');
 diff --git a/examples-testing/examples/webgpu_instance_mesh.ts b/examples-testing/examples/webgpu_instance_mesh.ts
-index c5d325e3..738521a4 100644
+index c376d8b2..48c92c41 100644
 --- a/examples-testing/examples/webgpu_instance_mesh.ts
 +++ b/examples-testing/examples/webgpu_instance_mesh.ts
-@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
+@@ -3,9 +3,9 @@ import { mix, range, normalWorld, oscSine, time } from 'three/tsl';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
 -let mesh;
 +let mesh: THREE.InstancedMesh;
  const amount = parseInt(window.location.search.slice(1)) || 10;
  const count = Math.pow(amount, 3);
  const dummy = new THREE.Object3D();
+@@ -38,7 +38,7 @@ function init() {
+ 
+         //
+ 
+-        const gui = renderer.inspector.createParameters('Settings');
++        const gui = (renderer.inspector as Inspector).createParameters('Settings');
+         gui.add(mesh, 'count', 1, count).step(1).name('instance count');
+     });
+ 
 diff --git a/examples-testing/examples/webgpu_instance_path.ts b/examples-testing/examples/webgpu_instance_path.ts
-index 6cf5397a..0f1977f7 100644
+index a5bce322..d542dc64 100644
 --- a/examples-testing/examples/webgpu_instance_path.ts
 +++ b/examples-testing/examples/webgpu_instance_path.ts
-@@ -18,7 +18,7 @@ import {
+@@ -19,7 +19,7 @@ import {
      color,
  } from 'three/tsl';
  
@@ -14762,7 +14781,7 @@ index 6cf5397a..0f1977f7 100644
  
  const count = 1000;
  
-@@ -62,14 +62,14 @@ async function init() {
+@@ -63,14 +63,14 @@ async function init() {
      const v = new THREE.Vector3();
      const c = new THREE.Color();
  
@@ -14783,17 +14802,15 @@ index 6cf5397a..0f1977f7 100644
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 2087cdf4..aafb41fc 100644
+index 40912937..ef9c68d9 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
-@@ -21,18 +21,28 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
  
 -let renderer, scene, camera, camera2, controls, backgroundNode;
 -let material;
--let stats;
--let gui;
 -let effectController;
 +let renderer: THREE.WebGPURenderer,
 +    scene: THREE.Scene,
@@ -14802,13 +14819,10 @@ index 2087cdf4..aafb41fc 100644
 +    controls: OrbitControls,
 +    backgroundNode: THREE.Node;
 +let material: THREE.PointsNodeMaterial;
-+let stats: Stats;
-+let gui: GUI;
 +let effectController: {
 +    pulseSpeed: THREE.UniformNode<number>;
 +    minWidth: THREE.UniformNode<number>;
 +    maxWidth: THREE.UniformNode<number>;
-+    alphaToCoverage: boolean;
 +};
  
  // viewport
@@ -14824,25 +14838,24 @@ index 2087cdf4..aafb41fc 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_instancing_morph.ts b/examples-testing/examples/webgpu_instancing_morph.ts
-index f10d7e55..8f914967 100644
+index 5a554178..dd9943ca 100644
 --- a/examples-testing/examples/webgpu_instancing_morph.ts
 +++ b/examples-testing/examples/webgpu_instancing_morph.ts
-@@ -4,7 +4,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -3,7 +3,12 @@ import * as THREE from 'three/webgpu';
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
- import Stats from 'three/addons/libs/stats.module.js';
- 
--let camera, scene, renderer, stats, mesh, mixer, dummy;
+-let camera, scene, renderer, mesh, mixer, dummy;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    stats: Stats,
 +    mesh: THREE.InstancedMesh,
 +    mixer: THREE.AnimationMixer,
 +    dummy: THREE.Mesh;
  
  const offset = 5000;
  
-@@ -70,7 +76,7 @@ function init() {
+@@ -66,7 +71,7 @@ function init() {
      const loader = new GLTFLoader();
  
      loader.load('models/gltf/Horse.glb', function (glb) {
@@ -14851,7 +14864,7 @@ index f10d7e55..8f914967 100644
  
          mesh = new THREE.InstancedMesh(
              dummy.geometry,
-@@ -140,7 +146,7 @@ function animate() {
+@@ -137,7 +142,7 @@ function animate() {
              mesh.setMorphAt(i, dummy);
          }
  
@@ -14883,15 +14896,15 @@ index 9eb0aff3..7dba7684 100644
  
      const positions = [];
 diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
-index 6d43c701..f297b64e 100644
+index cfd67fde..90af446b 100644
 --- a/examples-testing/examples/webgpu_lensflares.ts
 +++ b/examples-testing/examples/webgpu_lensflares.ts
-@@ -5,10 +5,10 @@ import Stats from 'three/addons/libs/stats.module.js';
- import { FlyControls } from 'three/addons/controls/FlyControls.js';
+@@ -4,10 +4,10 @@ import { FlyControls } from 'three/addons/controls/FlyControls.js';
  import { LensflareMesh, LensflareElement } from 'three/addons/objects/LensflareMesh.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let container, stats;
-+let container: HTMLDivElement, stats: Stats;
+-let container;
++let container: HTMLDivElement;
  
 -let camera, scene, renderer;
 -let controls;
@@ -14900,7 +14913,7 @@ index 6d43c701..f297b64e 100644
  
  const clock = new THREE.Clock();
  
-@@ -73,7 +73,7 @@ function init() {
+@@ -72,7 +72,7 @@ function init() {
      addLight(0.1, 0.85, 0.65, 0, 0, -1000);
      addLight(0.995, 0.5, 0.95, 5000, 5000, -1000);
  
@@ -20466,16 +20479,3 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/examples/jsm/inspector/tabs/Parameters.d.ts b/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
-index e5680066..7e9a1a66 100644
---- a/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
-+++ b/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
-@@ -36,7 +36,7 @@ declare class ParametersGroup {
-     add<T, K extends keyof T>(
-         object: T,
-         property: K,
--        options: Record<string, T[K]>,
-+        options: ReadonlyArray<T[K]> | Record<string, T[K]>,
-     ): ValueSelectWithName<T, K>;
-     add<T, K extends KeyToValueOfType<T, number>>(
-         object: T,
