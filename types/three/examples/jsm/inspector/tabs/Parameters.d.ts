@@ -36,7 +36,7 @@ declare class ParametersGroup {
     add<T, K extends keyof T>(
         object: T,
         property: K,
-        options: Record<string, T[K]>,
+        options: ReadonlyArray<T[K]> | Record<string, T[K]>,
     ): ValueSelectWithName<T, K>;
     add<T, K extends KeyToValueOfType<T, number>>(
         object: T,
