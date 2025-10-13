@@ -55,6 +55,7 @@ declare class ParametersGroup {
     add<T, K extends KeyToValueOfType<T, number>>(
         object: T,
         property: K,
+        min?: number,
     ): ValueNumberWithName<T, K>;
     add<T, K extends KeyToValueOfType<T, boolean>>(
         object: T,
