@@ -4,7 +4,7 @@ export * from "../code/FunctionCallNode.js";
 export * from "../core/ArrayNode.js";
 export * from "../core/AssignNode.js";
 export * from "../core/BypassNode.js";
-export * from "../core/CacheNode.js";
+export * from "../core/IsolateNode.js";
 export * from "../core/ContextNode.js";
 export * from "../core/InspectorNode.js";
 export * from "../core/PropertyNode.js";
