@@ -13633,16 +13633,16 @@ index 747cca29..79ee4619 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index d1a3a060..0c0c4bf0 100644
+index 91bc961d..374525a2 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
-@@ -23,17 +23,17 @@ import {
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -21,17 +21,17 @@ import {
+ } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 +import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
  
@@ -13657,16 +13657,22 @@ index d1a3a060..0c0c4bf0 100644
          new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
      }),
  ]);
-@@ -45,7 +45,7 @@ const clock = new THREE.Clock();
- const stats = new Stats();
- document.body.appendChild(stats.dom);
+@@ -40,7 +40,7 @@ const [sourceModel, targetModel] = await Promise.all([
+ 
+ const clock = new THREE.Clock();
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
 +export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node]>(([suv_immutable]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
-@@ -170,7 +170,13 @@ gui.add(helpers, 'visible').name('helpers');
+@@ -161,12 +161,18 @@ controls.maxDistance = 12;
+ controls.target.set(0, 1, 0);
+ controls.maxPolarAngle = Math.PI / 2;
+ 
+-const gui = renderer.inspector.createParameters('Scene settings');
++const gui = (renderer.inspector as Inspector).createParameters('Scene settings');
+ gui.add(helpers, 'visible').name('show helpers');
  
  //
  
@@ -13681,7 +13687,7 @@ index d1a3a060..0c0c4bf0 100644
      const clip = sourceModel.animations[0];
  
      const helper = new THREE.SkeletonHelper(sourceModel.scene);
-@@ -184,7 +190,7 @@ function getSource(sourceModel) {
+@@ -180,7 +186,7 @@ function getSource(sourceModel) {
      return { clip, skeleton, mixer };
  }
  
@@ -13691,16 +13697,17 @@ index d1a3a060..0c0c4bf0 100644
  
      const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);
 diff --git a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
-index c0efb88f..8607a01a 100644
+index 32befa2e..12bf346f 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting_readyplayer.ts
-@@ -4,17 +4,17 @@ import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -2,18 +2,18 @@ import * as THREE from 'three/webgpu';
+ import { screenUV, color, vec2, vec4, reflector, positionWorld } from 'three/tsl';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 -import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 +import { GLTFLoader, GLTF } from 'three/addons/loaders/GLTFLoader.js';
  import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
  
@@ -13715,7 +13722,7 @@ index c0efb88f..8607a01a 100644
          new GLTFLoader().load('./models/gltf/readyplayer.me.glb', resolve, undefined, reject);
      }),
  ]);
-@@ -102,7 +102,13 @@ scene.add(floor);
+@@ -99,7 +99,13 @@ scene.add(floor);
  
  //
  
@@ -13730,7 +13737,7 @@ index c0efb88f..8607a01a 100644
      const clip = sourceModel.animations[0];
  
      const helper = new THREE.SkeletonHelper(sourceModel);
-@@ -114,10 +120,10 @@ function getSource(sourceModel) {
+@@ -111,10 +117,10 @@ function getSource(sourceModel) {
      return { clip, skeleton, mixer };
  }
  
@@ -13782,7 +13789,7 @@ index 5ae04249..052adf95 100644
          const id = portals.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 45);
 diff --git a/examples-testing/examples/webgpu_backdrop_area.ts b/examples-testing/examples/webgpu_backdrop_area.ts
-index 486727b6..1fd4c8e2 100644
+index bfac0778..f6a86f95 100644
 --- a/examples-testing/examples/webgpu_backdrop_area.ts
 +++ b/examples-testing/examples/webgpu_backdrop_area.ts
 @@ -20,8 +20,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13797,16 +13804,17 @@ index 486727b6..1fd4c8e2 100644
  init();
  
 @@ -127,13 +127,13 @@ function init() {
+         pixel: pixelMaterial,
      };
  
-     const gui = new GUI();
 -    const options = { material: 'blurred' };
 +    const options: { material: keyof typeof materials } = { material: 'blurred' };
- 
      box.material = materials[options.material];
  
-     gui.add(box.scale, 'x', 0.1, 2, 0.01);
-     gui.add(box.scale, 'z', 0.1, 2, 0.01);
+-    const gui = renderer.inspector.createParameters('Scene settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Scene settings');
+     gui.add(box.scale, 'x', 0.1, 2).step(0.01).name('box scale x');
+     gui.add(box.scale, 'y', 0.1, 2).step(0.01).name('box scale y');
 -    gui.add(options, 'material', Object.keys(materials)).onChange(name => {
 +    gui.add(options, 'material', Object.keys(materials) as (keyof typeof materials)[]).onChange(name => {
          box.material = materials[name];
@@ -13843,23 +13851,20 @@ index bf4724ac..b964cc5f 100644
          case 79 /*O*/:
              activeCamera = cameraOrtho;
 diff --git a/examples-testing/examples/webgpu_camera_array.ts b/examples-testing/examples/webgpu_camera_array.ts
-index c2f6226a..fb696689 100644
+index 4ae08d66..14334d41 100644
 --- a/examples-testing/examples/webgpu_camera_array.ts
 +++ b/examples-testing/examples/webgpu_camera_array.ts
-@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
- 
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -1,7 +1,7 @@
+ import * as THREE from 'three/webgpu';
  
 -let camera, scene, renderer;
 -let mesh;
--let stats;
 +let camera: THREE.ArrayCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let mesh: THREE.Mesh;
-+let stats: Stats;
  
  const AMOUNT = 6;
  
-@@ -82,7 +82,7 @@ function updateCameras() {
+@@ -74,7 +74,7 @@ function updateCameras() {
              const subcamera = camera.cameras[AMOUNT * y + x];
              subcamera.copy(camera); // copy fov, aspect ratio, near, far from the root camera
  
@@ -14046,23 +14051,21 @@ index 64ebfe92..58f5cc14 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 3a7d0b56..7f794094 100644
+index 355e9f21..37be7171 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
-@@ -22,9 +22,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
- import Stats from 'three/addons/libs/stats.module.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, controls;
--let stats;
 -let gltf;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
-+let stats: Stats;
 +let gltf: THREE.Group;
  
  init();
  
-@@ -68,7 +68,7 @@ async function init() {
+@@ -65,7 +65,7 @@ async function init() {
  
      // objects / material
  
@@ -14071,6 +14074,15 @@ index 3a7d0b56..7f794094 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
+@@ -162,7 +162,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
+     gui.addColor(duck.material, 'color').name('material color');
+     gui.add({ model: 'duck' }, 'model', ['duck', 'glass']).onChange(model => {
 diff --git a/examples-testing/examples/webgpu_centroid_sampling.ts b/examples-testing/examples/webgpu_centroid_sampling.ts
 index 25ce6d50..4f84f80b 100644
 --- a/examples-testing/examples/webgpu_centroid_sampling.ts
@@ -14157,15 +14169,12 @@ index 25ce6d50..4f84f80b 100644
      onWindowResize();
  
 diff --git a/examples-testing/examples/webgpu_clearcoat.ts b/examples-testing/examples/webgpu_clearcoat.ts
-index 12b8c274..0c147364 100644
+index 02fbacb9..d3ee1763 100644
 --- a/examples-testing/examples/webgpu_clearcoat.ts
 +++ b/examples-testing/examples/webgpu_clearcoat.ts
-@@ -7,12 +7,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
+@@ -7,10 +7,10 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
  
  import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
- 
--let container, stats;
-+let container: HTMLDivElement, stats: Stats;
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -14178,24 +14187,32 @@ index 12b8c274..0c147364 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index 53c6c7b4..17d73367 100644
+index e07e6046..2e0d4855 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
-@@ -6,7 +6,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -4,7 +4,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
--let camera, scene, renderer, startTime, object, stats;
+-let camera, scene, renderer, startTime, object;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    startTime: number,
-+    object: THREE.Mesh,
-+    stats: Stats;
++    object: THREE.Mesh;
  
  init();
  
-@@ -196,7 +201,7 @@ function onWindowResize() {
+@@ -110,7 +114,7 @@ function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Clipping settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Clipping settings');
+     const props = {
+         alphaToCoverage: true,
+     };
+@@ -192,7 +196,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14523,12 +14540,12 @@ index 01e979d7..73c557d4 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 91786717..cd1b64de 100644
+index 429d2ff4..e6ffdb5b 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -14544,17 +14561,26 @@ index 91786717..cd1b64de 100644
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
+@@ -134,7 +134,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add({ blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01).onChange(value => {
+         blurNode.value = value;
 diff --git a/examples-testing/examples/webgpu_cubemap_dynamic.ts b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-index 4a17c47b..0d3429e0 100644
+index f897b99e..9b67fca9 100644
 --- a/examples-testing/examples/webgpu_cubemap_dynamic.ts
 +++ b/examples-testing/examples/webgpu_cubemap_dynamic.ts
-@@ -6,12 +6,12 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
- import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import Stats from 'three/addons/libs/stats.module.js';
+@@ -4,12 +4,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, stats;
+-let camera, scene, renderer;
 -let cube, sphere, torus, material;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, stats: Stats;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let cube: THREE.Mesh, sphere: THREE.Mesh, torus: THREE.Mesh, material: THREE.MeshStandardNodeMaterial;
  
 -let cubeCamera, cubeRenderTarget;
@@ -14565,7 +14591,16 @@ index 4a17c47b..0d3429e0 100644
  
  init();
  
-@@ -105,7 +105,7 @@ function onWindowResized() {
+@@ -86,7 +86,7 @@ async function init() {
+     controls = new OrbitControls(camera, renderer.domElement);
+     controls.autoRotate = true;
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(material, 'roughness', 0, 1);
+     gui.add(material, 'metalness', 0, 1);
+     gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
+@@ -101,7 +101,7 @@ function onWindowResized() {
      camera.updateProjectionMatrix();
  }
  
@@ -14575,12 +14610,12 @@ index 4a17c47b..0d3429e0 100644
  
      cube.position.x = Math.cos(time) * 30;
 diff --git a/examples-testing/examples/webgpu_cubemap_mix.ts b/examples-testing/examples/webgpu_cubemap_mix.ts
-index 54d28cbd..54e87278 100644
+index 6fbdb55a..fd5ec570 100644
 --- a/examples-testing/examples/webgpu_cubemap_mix.ts
 +++ b/examples-testing/examples/webgpu_cubemap_mix.ts
-@@ -6,7 +6,7 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -18242,12 +18277,12 @@ index d4e26b09..302e4650 100644
          const left = Math.floor(view.left * window.innerWidth);
          const bottom = Math.floor((1 - view.top - view.height) * window.innerHeight);
 diff --git a/examples-testing/examples/webgpu_rtt.ts b/examples-testing/examples/webgpu_rtt.ts
-index 099fac87..3ead3837 100644
+index fa7577ea..b4c7a8c3 100644
 --- a/examples-testing/examples/webgpu_rtt.ts
 +++ b/examples-testing/examples/webgpu_rtt.ts
-@@ -1,12 +1,12 @@
- import * as THREE from 'three/webgpu';
- import { texture, uniform, saturation, hue } from 'three/tsl';
+@@ -3,12 +3,12 @@ import { texture, uniform, saturation, hue } from 'three/tsl';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -18261,8 +18296,8 @@ index 099fac87..3ead3837 100644
  
  const dpr = window.devicePixelRatio;
  
-@@ -61,7 +61,7 @@ function init() {
-     quadMesh = new THREE.QuadMesh(materialFX);
+@@ -65,7 +65,7 @@ function init() {
+     quadMesh.name = 'Post-Processing';
  }
  
 -function onWindowMouseMove(e) {
@@ -20431,28 +20466,16 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/nodes/core/InspectorNode.d.ts b/types/three/src/nodes/core/InspectorNode.d.ts
-index 51ef2526..93ec3d69 100644
---- a/types/three/src/nodes/core/InspectorNode.d.ts
-+++ b/types/three/src/nodes/core/InspectorNode.d.ts
-@@ -1,4 +1,3 @@
--import { ShaderNodeObject } from "../tsl/TSLCore.js";
- import Node from "./Node.js";
- 
- declare class InspectorNode extends Node {
-@@ -7,10 +6,11 @@ declare class InspectorNode extends Node {
- 
- export default InspectorNode;
- 
--export function inspector(node: Node, name?: string, callback?: (node: Node) => Node): ShaderNodeObject<Node>;
-+export function inspector<T extends Node>(node: T, name?: string, callback?: (node: T) => Node): T;
- 
--declare module "../tsl/TSLCore.js" {
--    interface NodeElements {
--        toInspector: typeof inspector;
-+declare module "../Nodes.js" {
-+    interface Node {
-+        toInspector: (name?: string, callback?: (node: this) => Node) => this;
-+        toInspectorAssign: (name?: string, callback?: (node: this) => Node) => this;
-     }
- }
+diff --git a/types/three/examples/jsm/inspector/tabs/Parameters.d.ts b/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
+index e5680066..7e9a1a66 100644
+--- a/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
++++ b/types/three/examples/jsm/inspector/tabs/Parameters.d.ts
+@@ -36,7 +36,7 @@ declare class ParametersGroup {
+     add<T, K extends keyof T>(
+         object: T,
+         property: K,
+-        options: Record<string, T[K]>,
++        options: ReadonlyArray<T[K]> | Record<string, T[K]>,
+     ): ValueSelectWithName<T, K>;
+     add<T, K extends KeyToValueOfType<T, number>>(
+         object: T,
