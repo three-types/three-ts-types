@@ -33,6 +33,13 @@ declare abstract class TimestampQueryPool {
      */
     getTimestamp(uid: string): number;
     /**
+     * Returns whether a timestamp is available for a given render context.
+     *
+     * @param {string} uid - A unique identifier for the render context.
+     * @return {boolean} True if a timestamp is available, false otherwise.
+     */
+    hasTimestamp(uid: any): boolean;
+    /**
      * Allocate queries for a specific uid.
      *
      * @abstract
