@@ -10055,21 +10055,26 @@ index f4e1307d..85accfa6 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index 63a2704f..e6d27472 100644
+index f8a30032..de05421a 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-@@ -1,4 +1,4 @@
--import { GLSLNodeParser, NodeBuilder, TextureNode, vectorComponents } from '../../../nodes/Nodes.js';
-+import { GLSLNodeParser, NodeBuilder, NodeShaderStage, TextureNode, vectorComponents } from '../../../nodes/Nodes.js';
+@@ -1,4 +1,11 @@
+-import { GLSLNodeParser, NodeBuilder, TextureNode, vectorComponents, CodeNode } from '../../../nodes/Nodes.js';
++import {
++    GLSLNodeParser,
++    NodeBuilder,
++    NodeShaderStage,
++    TextureNode,
++    vectorComponents,
++    CodeNode,
++} from '../../../nodes/Nodes.js';
  
  import NodeUniformBuffer from '../../common/nodes/NodeUniformBuffer.js';
  import NodeUniformsGroup from '../../common/nodes/NodeUniformsGroup.js';
-@@ -29,8 +29,19 @@ import {
+@@ -29,6 +36,17 @@ import {
  } from '../../../constants.js';
  import { DataTexture } from '../../../textures/DataTexture.js';
  import { error } from '../../../utils.js';
--
--const glslMethods = {
 +import Renderer from '../../common/Renderer.js';
 +import StructTypeNode from '../../../nodes/core/StructTypeNode.js';
 +import BufferAttributeNode from '../../../nodes/accessors/BufferAttributeNode.js';
@@ -10081,12 +10086,19 @@ index 63a2704f..e6d27472 100644
 +import { ShaderNodeInternal } from '../../../nodes/tsl/TSLCore.js';
 +import StorageBufferNode from '../../../nodes/accessors/StorageBufferNode.js';
 +import StorageArrayElementNode from '../../../nodes/utils/StorageArrayElementNode.js';
-+
+ 
+ const glslPolyfills = {
+     bitcast_int_uint: new CodeNode(
+@@ -39,7 +57,7 @@ const glslPolyfills = {
+     ),
+ };
+ 
+-const glslMethods = {
 +const glslMethods: { [method: string]: string } = {
      textureDimensions: 'textureSize',
      equals: 'equal',
      bitcast_float_int: 'floatBitsToInt',
-@@ -82,6 +93,23 @@ precision lowp sampler2DArrayShadow;
+@@ -93,6 +111,23 @@ precision lowp sampler2DArrayShadow;
  precision lowp samplerCubeShadow;
  `;
  
@@ -10110,7 +10122,7 @@ index 63a2704f..e6d27472 100644
  /**
   * A node builder targeting GLSL.
   *
-@@ -93,13 +121,25 @@ precision lowp samplerCubeShadow;
+@@ -104,13 +139,25 @@ precision lowp samplerCubeShadow;
   * @augments NodeBuilder
   */
  class GLSLNodeBuilder extends NodeBuilder {
@@ -10137,16 +10149,20 @@ index 63a2704f..e6d27472 100644
          super(object, renderer, new GLSLNodeParser());
  
          /**
-@@ -149,7 +189,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -177,11 +224,10 @@ class GLSLNodeBuilder extends NodeBuilder {
       * @param {string} method - The method name to resolve.
       * @return {string} The resolved GLSL method name.
       */
 -    getMethod(method) {
 +    getMethod(method: string) {
+         if (glslPolyfills[method] !== undefined) {
+             this._include(method);
+         }
+-
          return glslMethods[method] || method;
      }
  
-@@ -191,7 +231,7 @@ class GLSLNodeBuilder extends NodeBuilder {
+@@ -223,7 +269,7 @@ class GLSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The GLSL function code.
       */
@@ -10155,7 +10171,7 @@ index 63a2704f..e6d27472 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -223,7 +263,7 @@ ${flowData.code}
+@@ -255,7 +301,7 @@ ${flowData.code}
       *
       * @param {StorageBufferNode} storageBufferNode - The storage buffer node.
       */
@@ -10164,7 +10180,7 @@ index 63a2704f..e6d27472 100644
          const attribute = storageBufferNode.value;
  
          if (attribute.pbo === undefined) {
-@@ -294,7 +334,7 @@ ${flowData.code}
+@@ -326,7 +372,7 @@ ${flowData.code}
       * @param {string} [shaderStage=this.shaderStage] - The shader stage this code snippet is generated for.
       * @return {string} The property name.
       */
@@ -10173,7 +10189,7 @@ index 63a2704f..e6d27472 100644
          if (node.isNodeUniform && node.node.isTextureNode !== true && node.node.isBufferNode !== true) {
              return shaderStage.charAt(0) + '_' + node.name;
          }
-@@ -309,7 +349,7 @@ ${flowData.code}
+@@ -341,7 +387,7 @@ ${flowData.code}
       * @param {StorageArrayElementNode} storageArrayElementNode - The storage array element node.
       * @return {string} The property name.
       */
@@ -10182,7 +10198,7 @@ index 63a2704f..e6d27472 100644
          const { node, indexNode } = storageArrayElementNode;
          const attribute = node.value;
  
-@@ -397,7 +437,14 @@ ${flowData.code}
+@@ -429,7 +475,14 @@ ${flowData.code}
       * @param {?string} offsetSnippet - A GLSL snippet that represents the offset that will be applied to the unnormalized texture coordinate before sampling the texture.
       * @return {string} The GLSL snippet.
       */
@@ -10198,7 +10214,7 @@ index 63a2704f..e6d27472 100644
          if (levelSnippet === null) levelSnippet = '0';
  
          let snippet;
-@@ -433,9 +480,14 @@ ${flowData.code}
+@@ -465,9 +518,14 @@ ${flowData.code}
       * @param {?string} offsetSnippet - A GLSL snippet that represents the offset that will be applied to the unnormalized texture coordinate before sampling the texture.
       * @return {string} The GLSL snippet.
       */
@@ -10215,7 +10231,7 @@ index 63a2704f..e6d27472 100644
          if (texture.isDepthTexture) {
              if (offsetSnippet) return `textureOffset( ${textureProperty}, ${uvSnippet}, ${offsetSnippet} ).x`;
  
-@@ -457,7 +509,13 @@ ${flowData.code}
+@@ -489,7 +547,13 @@ ${flowData.code}
       * @param {?string} offsetSnippet - A GLSL snippet that represents the offset that will be applied to the unnormalized texture coordinate before sampling the texture.
       * @return {string} The GLSL snippet.
       */
@@ -10230,7 +10246,7 @@ index 63a2704f..e6d27472 100644
          if (offsetSnippet) {
              return `textureLodOffset( ${textureProperty}, ${uvSnippet}, ${levelSnippet}, ${offsetSnippet} )`;
          }
-@@ -475,7 +533,13 @@ ${flowData.code}
+@@ -507,7 +571,13 @@ ${flowData.code}
       * @param {?string} offsetSnippet - A GLSL snippet that represents the offset that will be applied to the unnormalized texture coordinate before sampling the texture.
       * @return {string} The GLSL snippet.
       */
@@ -10245,7 +10261,7 @@ index 63a2704f..e6d27472 100644
          if (offsetSnippet) {
              return `textureOffset( ${textureProperty}, ${uvSnippet}, ${offsetSnippet}, ${biasSnippet} )`;
          }
-@@ -493,7 +557,13 @@ ${flowData.code}
+@@ -525,7 +595,13 @@ ${flowData.code}
       * @param {?string} offsetSnippet - A GLSL snippet that represents the offset that will be applied to the unnormalized texture coordinate before sampling the texture.
       * @return {string} The GLSL snippet.
       */
@@ -10260,7 +10276,7 @@ index 63a2704f..e6d27472 100644
          if (offsetSnippet) {
              return `textureGradOffset( ${textureProperty}, ${uvSnippet}, ${gradSnippet[0]}, ${gradSnippet[1]}, ${offsetSnippet} )`;
          }
-@@ -515,11 +585,11 @@ ${flowData.code}
+@@ -547,11 +623,11 @@ ${flowData.code}
       * @return {string} The GLSL snippet.
       */
      generateTextureCompare(
@@ -10277,7 +10293,7 @@ index 63a2704f..e6d27472 100644
          offsetSnippet,
          shaderStage = this.shaderStage,
      ) {
-@@ -539,6 +609,7 @@ ${flowData.code}
+@@ -571,6 +647,7 @@ ${flowData.code}
              return `texture( ${textureProperty}, vec3( ${uvSnippet}, ${compareSnippet} ) )`;
          } else {
              error(`WebGPURenderer: THREE.DepthTexture.compareFunction() does not support ${shaderStage} shader.`);
@@ -10285,7 +10301,7 @@ index 63a2704f..e6d27472 100644
          }
      }
  
-@@ -548,8 +619,8 @@ ${flowData.code}
+@@ -580,8 +657,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the variables.
       */
@@ -10296,7 +10312,7 @@ index 63a2704f..e6d27472 100644
  
          const vars = this.vars[shaderStage];
  
-@@ -568,7 +639,7 @@ ${flowData.code}
+@@ -600,7 +677,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the uniforms.
       */
@@ -10305,7 +10321,7 @@ index 63a2704f..e6d27472 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -664,7 +735,7 @@ ${flowData.code}
+@@ -696,7 +773,7 @@ ${flowData.code}
       * @param {BufferAttribute} attribute - The buffer attribute.
       * @return {string} The type.
       */
@@ -10314,7 +10330,7 @@ index 63a2704f..e6d27472 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -688,7 +759,7 @@ ${flowData.code}
+@@ -720,7 +797,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the shader attributes.
       */
@@ -10323,7 +10339,7 @@ index 63a2704f..e6d27472 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -710,8 +781,8 @@ ${flowData.code}
+@@ -742,8 +819,8 @@ ${flowData.code}
       * @param {StructTypeNode} struct - The struct type node.
       * @return {string} The GLSL snippet that defines the struct members.
       */
@@ -10334,7 +10350,7 @@ index 63a2704f..e6d27472 100644
  
          for (const member of struct.members) {
              snippets.push(`\t${member.type} ${member.name};`);
-@@ -726,7 +797,7 @@ ${flowData.code}
+@@ -758,7 +835,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the structs.
       */
@@ -10343,7 +10359,7 @@ index 63a2704f..e6d27472 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -759,7 +830,7 @@ ${flowData.code}
+@@ -791,7 +868,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the varyings.
       */
@@ -10352,7 +10368,7 @@ index 63a2704f..e6d27472 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -915,7 +986,7 @@ ${flowData.code}
+@@ -947,7 +1024,7 @@ ${flowData.code}
       * @param {string} behavior - The extension behavior.
       * @param {string} [shaderStage=this.shaderStage] - The shader stage.
       */
@@ -10361,7 +10377,7 @@ index 63a2704f..e6d27472 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -932,7 +1003,7 @@ ${flowData.code}
+@@ -964,7 +1041,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the enabled extensions.
       */
@@ -10370,7 +10386,7 @@ index 63a2704f..e6d27472 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -970,7 +1041,7 @@ ${flowData.code}
+@@ -1002,7 +1079,7 @@ ${flowData.code}
       * @param {string} name - The requested feature.
       * @return {boolean} Whether the requested feature is supported or not.
       */
@@ -10379,7 +10395,7 @@ index 63a2704f..e6d27472 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -1039,7 +1110,7 @@ ${flowData.code}
+@@ -1071,7 +1148,7 @@ ${flowData.code}
       * @param {string} varyingName - The varying name.
       * @param {AttributeNode} attributeNode - The attribute node.
       */
@@ -10388,7 +10404,7 @@ index 63a2704f..e6d27472 100644
          this.transforms.push({ varyingName, attributeNode });
      }
  
-@@ -1049,7 +1120,7 @@ ${flowData.code}
+@@ -1081,7 +1158,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the transforms.
       */
@@ -10397,7 +10413,7 @@ index 63a2704f..e6d27472 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -1072,7 +1143,7 @@ ${flowData.code}
+@@ -1104,7 +1181,7 @@ ${flowData.code}
       * @param {string} vars - The struct variables.
       * @return {string} The GLSL snippet representing a struct.
       */
@@ -10406,7 +10422,7 @@ index 63a2704f..e6d27472 100644
          return `
  layout( std140 ) uniform ${name} {
  ${vars}
-@@ -1086,7 +1157,7 @@ ${vars}
+@@ -1118,7 +1195,7 @@ ${vars}
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10415,7 +10431,7 @@ index 63a2704f..e6d27472 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1133,7 +1204,7 @@ void main() {
+@@ -1165,7 +1242,7 @@ void main() {
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10424,7 +10440,7 @@ index 63a2704f..e6d27472 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1172,19 +1243,20 @@ void main() {
+@@ -1204,19 +1281,20 @@ void main() {
       * Controls the code build of the shader stages.
       */
      buildCode() {
@@ -10449,7 +10465,7 @@ index 63a2704f..e6d27472 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -1210,24 +1282,24 @@ void main() {
+@@ -1242,24 +1320,24 @@ void main() {
                  }
              }
  
@@ -10486,7 +10502,7 @@ index 63a2704f..e6d27472 100644
          }
      }
  
-@@ -1244,7 +1316,12 @@ void main() {
+@@ -1276,7 +1354,12 @@ void main() {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10603,7 +10619,7 @@ index 37784a05..7b08961a 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 3fbe39af..d36a2e7d 100644
+index d57801e6..2d315b9f 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {

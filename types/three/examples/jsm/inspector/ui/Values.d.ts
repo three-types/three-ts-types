@@ -67,4 +67,16 @@ declare class ValueColor<T = Record<string, unknown>, K extends keyof T = keyof 
     constructor(params: ValueColorParams);
 }
 
-export { Value, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider };
+export interface ValueButtonParams {
+    text?: string;
+    value?: () => void;
+}
+
+declare class ValueButton<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, (this: T) => void> = KeyToValueOfType<T, (this: T) => void>,
+> extends Value<T, K> {
+    constructor(params: ValueColorParams);
+}
+
+export { Value, ValueButton, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider };
