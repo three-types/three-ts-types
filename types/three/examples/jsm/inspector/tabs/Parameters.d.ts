@@ -1,38 +1,53 @@
 import { Tab } from "../ui/Tab.js";
-import { ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider } from "../ui/Values.js";
+import { ValueButton, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider } from "../ui/Values.js";
 
 type KeyToValueOfType<T, V> = { [K in keyof T]: T[K] extends V ? K : never }[keyof T];
 
-interface ValueSelectWithName<T = Record<string, unknown>, K extends keyof T = keyof T> extends ValueSelect<T, K> {
+interface ValueSelectWithParameters<T = Record<string, unknown>, K extends keyof T = keyof T>
+    extends ValueSelect<T, K>
+{
     name: (name: string) => this;
+    listen: () => this;
 }
 
-interface ValueNumberWithName<
+interface ValueNumberWithParameters<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
 > extends ValueNumber<T, K> {
     name: (name: string) => this;
+    listen: () => this;
 }
 
-interface ValueSliderWithName<
+interface ValueSliderWithParameters<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
 > extends ValueSlider<T, K> {
     name: (name: string) => this;
+    listen: () => this;
 }
 
-interface ValueCheckboxWithName<
+interface ValueCheckboxWithParameters<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, boolean> = KeyToValueOfType<T, boolean>,
 > extends ValueCheckbox<T, K> {
     name: (name: string) => this;
+    listen: () => this;
 }
 
-interface ValueColorWithName<
+interface ValueButtonWithParameters<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, (this: T) => void> = KeyToValueOfType<T, (this: T) => void>,
+> extends ValueButton<T, K> {
+    name: (name: string) => this;
+    listen: () => this;
+}
+
+interface ValueColorWithParameters<
     T = Record<string, unknown>,
     K extends keyof T = keyof T,
 > extends ValueColor<T, K> {
     name: (name: string) => this;
+    listen: () => this;
 }
 
 declare class ParametersGroup {
@@ -44,28 +59,33 @@ declare class ParametersGroup {
         object: T,
         property: K,
         options: ReadonlyArray<T[K]> | Record<string, T[K]>,
-    ): ValueSelectWithName<T, K>;
+    ): ValueSelectWithParameters<T, K>;
     add<T, K extends KeyToValueOfType<T, number>>(
         object: T,
         property: K,
         min: number,
         max: number,
         step?: number,
-    ): ValueSliderWithName<T, K>;
+    ): ValueSliderWithParameters<T, K>;
     add<T, K extends KeyToValueOfType<T, number>>(
         object: T,
         property: K,
         min?: number,
-    ): ValueNumberWithName<T, K>;
+    ): ValueNumberWithParameters<T, K>;
     add<T, K extends KeyToValueOfType<T, boolean>>(
         object: T,
         property: K,
         options?: never,
-    ): ValueCheckboxWithName<T, K>;
+    ): ValueCheckboxWithParameters<T, K>;
+    add<T, K extends KeyToValueOfType<T, (this: T) => void>>(
+        object: T,
+        property: K,
+        options?: never,
+    ): ValueButtonWithParameters<T, K>;
 
     addFolder(name: string): ParametersGroup;
 
-    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ValueColorWithName<T, K>;
+    addColor<T, K extends keyof T>(object: T, property: K, rgbScale?: number): ValueColorWithParameters<T, K>;
 }
 
 declare class Parameters extends Tab {
