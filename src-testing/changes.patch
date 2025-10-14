@@ -5255,7 +5255,7 @@ index 085b1980..69664324 100644
  
          let index = geometry.index;
 diff --git a/src-testing/src/renderers/common/Info.ts b/src-testing/src/renderers/common/Info.ts
-index 4daa1549..241ea3f6 100644
+index 17e7f872..b22127bd 100644
 --- a/src-testing/src/renderers/common/Info.ts
 +++ b/src-testing/src/renderers/common/Info.ts
 @@ -1,4 +1,10 @@
@@ -6612,7 +6612,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 61135804..24ee88cd 100644
+index b9763d4f..8e342583 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -6959,16 +6959,16 @@ index 61135804..24ee88cd 100644
  
          // process render lists
  
-@@ -968,7 +1169,7 @@ class Renderer {
+@@ -969,7 +1170,7 @@ class Renderer {
       * @param {Camera} camera - The camera.
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
 -    async renderAsync(scene, camera) {
 +    async renderAsync(scene: Object3D, camera: Camera) {
-         if (this._initialized === false) await this.init();
- 
-         this._renderScene(scene, camera);
-@@ -992,7 +1193,7 @@ class Renderer {
+         warnOnce(
+             'Renderer: "renderAsync()" has been deprecated. Use "render()" and "await renderer.init();" when creating the renderer.',
+         ); // @deprecated r181
+@@ -995,7 +1196,7 @@ class Renderer {
       *
       * @param {InspectorBase} value - The new inspector.
       */
@@ -6977,7 +6977,7 @@ index 61135804..24ee88cd 100644
          if (this._inspector !== null) {
              this._inspector.setRenderer(null);
          }
-@@ -1014,7 +1215,7 @@ class Renderer {
+@@ -1017,7 +1218,7 @@ class Renderer {
       * @param {boolean} value - Whether to enable or disable high precision.
       * @type {boolean}
       */
@@ -6986,7 +6986,7 @@ index 61135804..24ee88cd 100644
          if (value === true) {
              this.overrideNodes.modelViewMatrix = highpModelViewMatrix;
              this.overrideNodes.modelNormalViewMatrix = highpModelNormalViewMatrix;
-@@ -1043,7 +1244,7 @@ class Renderer {
+@@ -1046,7 +1247,7 @@ class Renderer {
       * @param {MRTNode} mrt - The MRT node to set.
       * @return {Renderer} A reference to this renderer.
       */
@@ -6995,7 +6995,7 @@ index 61135804..24ee88cd 100644
          this._mrt = mrt;
  
          return this;
-@@ -1073,7 +1274,7 @@ class Renderer {
+@@ -1076,7 +1277,7 @@ class Renderer {
       * @private
       * @param {Object} info - Information about the context lost.
       */
@@ -7004,7 +7004,7 @@ index 61135804..24ee88cd 100644
          let errorMessage = `THREE.WebGPURenderer: ${info.api} Device Lost:\n\nMessage: ${info.message}`;
  
          if (info.reason) {
-@@ -1093,14 +1294,14 @@ class Renderer {
+@@ -1096,14 +1297,14 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundle belongs to.
       * @param {LightsNode} lightsNode - The lights node.
       */
@@ -7022,7 +7022,7 @@ index 61135804..24ee88cd 100644
          const renderBundleData = this.backend.get(renderBundle);
  
          if (renderBundleData.renderContexts === undefined) renderBundleData.renderContexts = new Set();
-@@ -1151,13 +1352,13 @@ class Renderer {
+@@ -1154,13 +1355,13 @@ class Renderer {
              for (let i = 0, l = renderObjects.length; i < l; i++) {
                  const renderObject = renderObjects[i];
  
@@ -7041,16 +7041,16 @@ index 61135804..24ee88cd 100644
                  }
              }
          }
-@@ -1177,7 +1378,7 @@ class Renderer {
-      * @return {?Promise} A Promise that resolve when the scene has been rendered.
-      * Only returned when the renderer has not been initialized.
+@@ -1183,7 +1384,7 @@ class Renderer {
+      * @param {Object3D} scene - The scene or 3D object to render.
+      * @param {Camera} camera - The camera to render the scene with.
       */
 -    render(scene, camera) {
 +    render(scene: Object3D, camera: Camera) {
          if (this._initialized === false) {
-             warn('Renderer: .render() called before the backend is initialized. Try using .renderAsync() instead.');
- 
-@@ -1271,7 +1472,7 @@ class Renderer {
+             throw new Error(
+                 'Renderer: .render() called before the backend is initialized. Use "await renderer.init();" before rendering.',
+@@ -1277,7 +1478,7 @@ class Renderer {
       * @param {boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
       * @return {RenderContext} The current render context.
       */
@@ -7059,7 +7059,7 @@ index 61135804..24ee88cd 100644
          if (this._isDeviceLost === true) return;
  
          //
-@@ -1280,7 +1481,7 @@ class Renderer {
+@@ -1286,7 +1487,7 @@ class Renderer {
  
          // preserve render tree
  
@@ -7068,7 +7068,7 @@ index 61135804..24ee88cd 100644
  
          const previousRenderId = nodeFrame.renderId;
          const previousRenderContext = this._currentRenderContext;
-@@ -1309,7 +1510,7 @@ class Renderer {
+@@ -1315,7 +1516,7 @@ class Renderer {
  
          //
  
@@ -7077,7 +7077,7 @@ index 61135804..24ee88cd 100644
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
-@@ -1405,7 +1606,7 @@ class Renderer {
+@@ -1411,7 +1612,7 @@ class Renderer {
              frustum.setFromProjectionMatrix(_projScreenMatrix, camera.coordinateSystem, camera.reversedDepth);
          }
  
@@ -7086,7 +7086,7 @@ index 61135804..24ee88cd 100644
          renderList.begin();
  
          this._projectObject(scene, camera, 0, renderList, renderContext.clippingContext);
-@@ -1419,14 +1620,14 @@ class Renderer {
+@@ -1425,14 +1626,14 @@ class Renderer {
          //
  
          if (renderTarget !== null) {
@@ -7107,7 +7107,7 @@ index 61135804..24ee88cd 100644
              renderContext.renderTarget = renderTarget;
              renderContext.depth = renderTarget.depthBuffer;
              renderContext.stencil = renderTarget.stencilBuffer;
-@@ -1459,7 +1660,7 @@ class Renderer {
+@@ -1465,7 +1666,7 @@ class Renderer {
  
          //
  
@@ -7116,7 +7116,7 @@ index 61135804..24ee88cd 100644
  
          //
  
-@@ -1514,7 +1715,7 @@ class Renderer {
+@@ -1520,7 +1721,7 @@ class Renderer {
          return renderContext;
      }
  
@@ -7125,7 +7125,7 @@ index 61135804..24ee88cd 100644
          // TODO: Find a better solution to resize the canvas when in XR.
  
          this._canvasTarget._width = width;
-@@ -1529,11 +1730,11 @@ class Renderer {
+@@ -1535,11 +1736,11 @@ class Renderer {
       * @private
       * @param {RenderTarget} renderTarget - The current render target.
       */
@@ -7140,7 +7140,7 @@ index 61135804..24ee88cd 100644
              quad.material.needsUpdate = true;
          }
  
-@@ -1587,10 +1788,10 @@ class Renderer {
+@@ -1593,10 +1794,10 @@ class Renderer {
       * @param {?onAnimationCallback} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -7153,7 +7153,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -1610,7 +1811,7 @@ class Renderer {
+@@ -1616,7 +1817,7 @@ class Renderer {
       * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
       * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -7162,7 +7162,7 @@ index 61135804..24ee88cd 100644
          return await this.backend.getArrayBufferAsync(attribute);
      }
  
-@@ -1638,7 +1839,7 @@ class Renderer {
+@@ -1644,7 +1845,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The drawing buffer size.
       */
@@ -7171,7 +7171,7 @@ index 61135804..24ee88cd 100644
          return this._canvasTarget.getDrawingBufferSize(target);
      }
  
-@@ -1648,7 +1849,7 @@ class Renderer {
+@@ -1654,7 +1855,7 @@ class Renderer {
       * @param {Vector2} target - The method writes the result in this target object.
       * @return {Vector2} The renderer's size in logical pixels.
       */
@@ -7180,7 +7180,7 @@ index 61135804..24ee88cd 100644
          return this._canvasTarget.getSize(target);
      }
  
-@@ -1674,7 +1875,7 @@ class Renderer {
+@@ -1680,7 +1881,7 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {number} pixelRatio - The pixel ratio.
       */
@@ -7189,7 +7189,7 @@ index 61135804..24ee88cd 100644
          // Renderer can't be resized while presenting in XR.
          if (this.xr && this.xr.isPresenting) return;
  
-@@ -1688,7 +1889,7 @@ class Renderer {
+@@ -1694,7 +1895,7 @@ class Renderer {
       * @param {number} height - The height in logical pixels.
       * @param {boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
       */
@@ -7198,7 +7198,7 @@ index 61135804..24ee88cd 100644
          // Renderer can't be resized while presenting in XR.
          if (this.xr && this.xr.isPresenting) return;
  
-@@ -1701,7 +1902,7 @@ class Renderer {
+@@ -1707,7 +1908,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -7207,7 +7207,7 @@ index 61135804..24ee88cd 100644
          this._opaqueSort = method;
      }
  
-@@ -1711,7 +1912,7 @@ class Renderer {
+@@ -1717,7 +1918,7 @@ class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -7216,7 +7216,7 @@ index 61135804..24ee88cd 100644
          this._transparentSort = method;
      }
  
-@@ -1721,7 +1922,7 @@ class Renderer {
+@@ -1727,7 +1928,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The scissor rectangle.
       */
@@ -7225,7 +7225,7 @@ index 61135804..24ee88cd 100644
          return this._canvasTarget.getScissor(target);
      }
  
-@@ -1734,8 +1935,10 @@ class Renderer {
+@@ -1740,8 +1941,10 @@ class Renderer {
       * @param {number} width - The width of the scissor box in logical pixel unit.
       * @param {number} height - The height of the scissor box in logical pixel unit.
       */
@@ -7238,7 +7238,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -1752,7 +1955,7 @@ class Renderer {
+@@ -1758,7 +1961,7 @@ class Renderer {
       *
       * @param {boolean} boolean - Whether the scissor test should be enabled or not.
       */
@@ -7247,7 +7247,7 @@ index 61135804..24ee88cd 100644
          this._canvasTarget.setScissorTest(boolean);
  
          // TODO: Move it to CanvasTarget event listener.
-@@ -1766,7 +1969,7 @@ class Renderer {
+@@ -1772,7 +1975,7 @@ class Renderer {
       * @param {Vector4} target - The method writes the result in this target object.
       * @return {Vector4} The viewport definition.
       */
@@ -7256,7 +7256,7 @@ index 61135804..24ee88cd 100644
          return this._canvasTarget.getViewport(target);
      }
  
-@@ -1780,8 +1983,10 @@ class Renderer {
+@@ -1786,8 +1989,10 @@ class Renderer {
       * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
       * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
       */
@@ -7269,7 +7269,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -1790,7 +1995,7 @@ class Renderer {
+@@ -1796,7 +2001,7 @@ class Renderer {
       * @param {Color} target - The method writes the result in this target object.
       * @return {Color} The clear color.
       */
@@ -7278,7 +7278,7 @@ index 61135804..24ee88cd 100644
          return target.copy(this._clearColor);
      }
  
-@@ -1800,7 +2005,7 @@ class Renderer {
+@@ -1806,7 +2011,7 @@ class Renderer {
       * @param {Color} color - The clear color.
       * @param {number} [alpha=1] - The clear alpha.
       */
@@ -7287,7 +7287,7 @@ index 61135804..24ee88cd 100644
          this._clearColor.set(color);
          this._clearColor.a = alpha;
      }
-@@ -1819,7 +2024,7 @@ class Renderer {
+@@ -1825,7 +2030,7 @@ class Renderer {
       *
       * @param {number} alpha - The clear alpha.
       */
@@ -7296,7 +7296,7 @@ index 61135804..24ee88cd 100644
          this._clearColor.a = alpha;
      }
  
-@@ -1837,7 +2042,7 @@ class Renderer {
+@@ -1843,7 +2048,7 @@ class Renderer {
       *
       * @param {number} depth - The clear depth.
       */
@@ -7305,7 +7305,7 @@ index 61135804..24ee88cd 100644
          this._clearDepth = depth;
      }
  
-@@ -1855,7 +2060,7 @@ class Renderer {
+@@ -1861,7 +2066,7 @@ class Renderer {
       *
       * @param {number} stencil - The clear stencil.
       */
@@ -7314,7 +7314,7 @@ index 61135804..24ee88cd 100644
          this._clearStencil = stencil;
      }
  
-@@ -1867,7 +2072,7 @@ class Renderer {
+@@ -1873,7 +2078,7 @@ class Renderer {
       * @param {Object3D} object - The 3D object to test.
       * @return {boolean} Whether the 3D object is fully occluded or not.
       */
@@ -7323,7 +7323,7 @@ index 61135804..24ee88cd 100644
          const renderContext = this._currentRenderContext;
  
          return renderContext && this.backend.isOccluded(renderContext, object);
-@@ -1894,9 +2099,9 @@ class Renderer {
+@@ -1900,9 +2105,9 @@ class Renderer {
          let renderContext = null;
  
          if (renderTarget !== null) {
@@ -7335,7 +7335,7 @@ index 61135804..24ee88cd 100644
  
              renderContext = this._renderContexts.getForClear(renderTarget);
              renderContext.textures = renderTargetData.textures;
-@@ -2075,15 +2280,15 @@ class Renderer {
+@@ -2081,15 +2286,15 @@ class Renderer {
              this.info.dispose();
              this.backend.dispose();
  
@@ -7359,7 +7359,7 @@ index 61135804..24ee88cd 100644
  
              if (this._frameBufferTarget !== null) this._frameBufferTarget.dispose();
  
-@@ -2105,7 +2310,7 @@ class Renderer {
+@@ -2111,7 +2316,7 @@ class Renderer {
       * @param {number} [activeCubeFace=0] - The active cube face.
       * @param {number} [activeMipmapLevel=0] - The active mipmap level.
       */
@@ -7368,7 +7368,7 @@ index 61135804..24ee88cd 100644
          this._renderTarget = renderTarget;
          this._activeCubeFace = activeCubeFace;
          this._activeMipmapLevel = activeMipmapLevel;
-@@ -2125,7 +2330,7 @@ class Renderer {
+@@ -2131,7 +2336,7 @@ class Renderer {
       *
       * @param {Object} renderTarget - The render target to set as the output target.
       */
@@ -7377,7 +7377,7 @@ index 61135804..24ee88cd 100644
          this._outputRenderTarget = renderTarget;
      }
  
-@@ -2144,7 +2349,7 @@ class Renderer {
+@@ -2150,7 +2355,7 @@ class Renderer {
       *
       * @param {CanvasTarget} canvasTarget - The canvas target.
       */
@@ -7386,7 +7386,7 @@ index 61135804..24ee88cd 100644
          this._canvasTarget.removeEventListener('resize', this._onCanvasTargetResize);
  
          this._canvasTarget = canvasTarget;
-@@ -2199,7 +2404,19 @@ class Renderer {
+@@ -2205,7 +2410,19 @@ class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -7407,7 +7407,7 @@ index 61135804..24ee88cd 100644
          this._renderObjectFunction = renderObjectFunction;
      }
  
-@@ -2220,7 +2437,7 @@ class Renderer {
+@@ -2226,7 +2443,7 @@ class Renderer {
       * @param {?(Array<number>|number)} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -7416,7 +7416,7 @@ index 61135804..24ee88cd 100644
          if (this._isDeviceLost === true) return;
  
          if (this._initialized === false) {
-@@ -2231,7 +2448,7 @@ class Renderer {
+@@ -2237,7 +2454,7 @@ class Renderer {
  
          //
  
@@ -7425,7 +7425,7 @@ index 61135804..24ee88cd 100644
  
          const previousRenderId = nodeFrame.renderId;
  
-@@ -2252,9 +2469,9 @@ class Renderer {
+@@ -2258,9 +2475,9 @@ class Renderer {
          //
  
          const backend = this.backend;
@@ -7438,7 +7438,7 @@ index 61135804..24ee88cd 100644
  
          const computeList = Array.isArray(computeNodes) ? computeNodes : [computeNodes];
  
-@@ -2315,7 +2532,10 @@ class Renderer {
+@@ -2321,7 +2538,10 @@ class Renderer {
       * @param {?(Array<number>|number)} [dispatchSizeOrCount=null] - Array with [ x, y, z ] values for dispatch or a single number for the count.
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -7450,7 +7450,7 @@ index 61135804..24ee88cd 100644
          if (this._initialized === false) await this.init();
  
          this._inspector.computeAsync(computeNodes, dispatchSizeOrCount);
-@@ -2330,13 +2550,13 @@ class Renderer {
+@@ -2336,13 +2556,13 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
@@ -7466,7 +7466,7 @@ index 61135804..24ee88cd 100644
          if (this._initialized === false) await this.init();
  
          return this.backend.resolveTimestampsAsync(type);
-@@ -2349,7 +2569,7 @@ class Renderer {
+@@ -2355,7 +2575,7 @@ class Renderer {
       * @param {string} name - The feature's name.
       * @return {boolean} Whether the feature is supported or not.
       */
@@ -7475,7 +7475,7 @@ index 61135804..24ee88cd 100644
          if (this._initialized === false) {
              warn(
                  'Renderer: .hasFeature() called before the backend is initialized. Try using .hasFeatureAsync() instead.',
-@@ -2378,10 +2598,10 @@ class Renderer {
+@@ -2384,10 +2604,10 @@ class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -7488,7 +7488,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -2392,14 +2612,14 @@ class Renderer {
+@@ -2398,14 +2618,14 @@ class Renderer {
       *
       * @param {Texture} texture - The texture.
       */
@@ -7505,7 +7505,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -2408,7 +2628,7 @@ class Renderer {
+@@ -2414,7 +2634,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?(Vector2|Vector4)} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -7514,7 +7514,7 @@ index 61135804..24ee88cd 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2461,7 +2681,14 @@ class Renderer {
+@@ -2467,7 +2687,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -7530,7 +7530,7 @@ index 61135804..24ee88cd 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2483,7 +2710,15 @@ class Renderer {
+@@ -2489,7 +2716,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -7547,7 +7547,7 @@ index 61135804..24ee88cd 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2497,49 +2732,63 @@ class Renderer {
+@@ -2503,49 +2738,63 @@ class Renderer {
       * @param {RenderList} renderList - The current render list.
       * @param {ClippingContext} clippingContext - The current clipping context.
       */
@@ -7628,7 +7628,7 @@ index 61135804..24ee88cd 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2549,7 +2798,7 @@ class Renderer {
+@@ -2555,7 +2804,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -7637,7 +7637,7 @@ index 61135804..24ee88cd 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2574,7 +2823,7 @@ class Renderer {
+@@ -2580,7 +2829,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -7646,7 +7646,7 @@ index 61135804..24ee88cd 100644
  
              renderList.begin();
  
-@@ -2602,7 +2851,7 @@ class Renderer {
+@@ -2608,7 +2857,7 @@ class Renderer {
       * @param {Scene} sceneRef - The scene the render bundles belong to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7655,7 +7655,7 @@ index 61135804..24ee88cd 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2618,7 +2867,13 @@ class Renderer {
+@@ -2624,7 +2873,13 @@ class Renderer {
       * @param {Scene} scene - The scene the render list belongs to.
       * @param {LightsNode} lightsNode - The current lights node.
       */
@@ -7670,7 +7670,7 @@ index 61135804..24ee88cd 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2656,17 +2911,23 @@ class Renderer {
+@@ -2662,17 +2917,23 @@ class Renderer {
       * @param {LightsNode} lightsNode - The current lights node.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7700,7 +7700,7 @@ index 61135804..24ee88cd 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2681,7 +2942,7 @@ class Renderer {
+@@ -2687,7 +2948,7 @@ class Renderer {
       * @param {Material} material
       * @returns {Object} - The shadow nodes for the material.
       */
@@ -7709,7 +7709,7 @@ index 61135804..24ee88cd 100644
          const version = material.version;
  
          let cache = this._cacheShadowNodes.get(material);
-@@ -2755,7 +3016,17 @@ class Renderer {
+@@ -2761,7 +3022,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7728,7 +7728,7 @@ index 61135804..24ee88cd 100644
          let materialOverride = false;
          let materialColorNode;
          let materialDepthNode;
-@@ -2842,14 +3113,23 @@ class Renderer {
+@@ -2848,14 +3119,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7755,7 +7755,7 @@ index 61135804..24ee88cd 100644
              clippingContext,
              passId,
          );
-@@ -2858,18 +3138,18 @@ class Renderer {
+@@ -2864,18 +3144,18 @@ class Renderer {
  
          //
  
@@ -7780,7 +7780,7 @@ index 61135804..24ee88cd 100644
  
          //
  
-@@ -2883,7 +3163,7 @@ class Renderer {
+@@ -2889,7 +3169,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7789,7 +7789,7 @@ index 61135804..24ee88cd 100644
      }
  
      /**
-@@ -2900,14 +3180,23 @@ class Renderer {
+@@ -2906,14 +3186,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7816,7 +7816,7 @@ index 61135804..24ee88cd 100644
              clippingContext,
              passId,
          );
-@@ -2916,16 +3205,16 @@ class Renderer {
+@@ -2922,16 +3211,16 @@ class Renderer {
  
          //
  
