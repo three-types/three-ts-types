@@ -597,35 +597,25 @@ declare class Renderer {
      * @param {boolean} [color=true] - Whether the color buffer should be cleared or not.
      * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
      * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
-     * @return {Promise} A Promise that resolves when the clear operation has been executed.
-     * Only returned when the renderer has not been initialized.
      */
-    clear(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void> | undefined;
+    clear(color?: boolean, depth?: boolean, stencil?: boolean): void;
     /**
      * Performs a manual clear operation of the color buffer. This method ignores `autoClear` properties.
-     *
-     * @return {Promise} A Promise that resolves when the clear operation has been executed.
-     * Only returned when the renderer has not been initialized.
      */
-    clearColor(): Promise<void> | undefined;
+    clearColor(): void;
     /**
      * Performs a manual clear operation of the depth buffer. This method ignores `autoClear` properties.
-     *
-     * @return {Promise} A Promise that resolves when the clear operation has been executed.
-     * Only returned when the renderer has not been initialized.
      */
-    clearDepth(): Promise<void> | undefined;
+    clearDepth(): void;
     /**
      * Performs a manual clear operation of the stencil buffer. This method ignores `autoClear` properties.
-     *
-     * @return {Promise} A Promise that resolves when the clear operation has been executed.
-     * Only returned when the renderer has not been initialized.
      */
-    clearStencil(): Promise<void> | undefined;
+    clearStencil(): void;
     /**
      * Async version of {@link Renderer#clear}.
      *
      * @async
+     * @deprecated
      * @param {boolean} [color=true] - Whether the color buffer should be cleared or not.
      * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
      * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
@@ -636,6 +626,7 @@ declare class Renderer {
      * Async version of {@link Renderer#clearColor}.
      *
      * @async
+     * @deprecated
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearColorAsync(): Promise<void>;
@@ -643,6 +634,7 @@ declare class Renderer {
      * Async version of {@link Renderer#clearDepth}.
      *
      * @async
+     * @deprecated
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearDepthAsync(): Promise<void>;
@@ -650,6 +642,7 @@ declare class Renderer {
      * Async version of {@link Renderer#clearStencil}.
      *
      * @async
+     * @deprecated
      * @return {Promise} A Promise that resolves when the clear operation has been executed.
      */
     clearStencilAsync(): Promise<void>;
@@ -829,6 +822,7 @@ declare class Renderer {
      * Checks if the given feature is supported by the selected backend.
      *
      * @async
+     * @deprecated
      * @param {string} name - The feature's name.
      * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
      */
@@ -841,7 +835,7 @@ declare class Renderer {
      * @param {string} name - The feature's name.
      * @return {boolean} Whether the feature is supported or not.
      */
-    hasFeature(name: string): false | void;
+    hasFeature(name: string): void;
     /**
      * Returns `true` when the renderer has been initialized.
      *
@@ -853,6 +847,7 @@ declare class Renderer {
      * (which can cause noticeable lags due to decode and GPU upload overhead).
      *
      * @async
+     * @deprecated
      * @param {Texture} texture - The texture.
      * @return {Promise} A Promise that resolves when the texture has been initialized.
      */
