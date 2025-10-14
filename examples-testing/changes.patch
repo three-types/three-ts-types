@@ -9692,7 +9692,7 @@ index 4600fc6c..83af66a7 100644
  
      controls = new TrackballControls(camera, renderer.domElement);
 diff --git a/examples-testing/examples/webgl_morphtargets.ts b/examples-testing/examples/webgl_morphtargets.ts
-index 40d605f8..5965ef35 100644
+index d8a4bbe8..92ef3836 100644
 --- a/examples-testing/examples/webgl_morphtargets.ts
 +++ b/examples-testing/examples/webgl_morphtargets.ts
 @@ -3,12 +3,16 @@ import * as THREE from 'three';
@@ -9723,19 +9723,17 @@ index 40d605f8..5965ef35 100644
      const direction = new THREE.Vector3(1, 0, 0);
      const vertex = new THREE.Vector3();
  
-@@ -103,12 +107,12 @@ function initGUI() {
-     gui.add(params, 'Spherify', 0, 1)
-         .step(0.01)
-         .onChange(function (value) {
--            mesh.morphTargetInfluences[0] = value;
-+            mesh.morphTargetInfluences![0] = value;
-         });
-     gui.add(params, 'Twist', 0, 1)
-         .step(0.01)
-         .onChange(function (value) {
--            mesh.morphTargetInfluences[1] = value;
-+            mesh.morphTargetInfluences![1] = value;
-         });
+@@ -101,10 +105,10 @@ function initGUI() {
+     const gui = new GUI({ title: 'Morph Targets' });
+ 
+     gui.add(params, 'Spherify', 0, 1, 0.01).onChange(function (value) {
+-        mesh.morphTargetInfluences[0] = value;
++        mesh.morphTargetInfluences![0] = value;
+     });
+     gui.add(params, 'Twist', 0, 1, 0.01).onChange(function (value) {
+-        mesh.morphTargetInfluences[1] = value;
++        mesh.morphTargetInfluences![1] = value;
+     });
  }
  
 diff --git a/examples-testing/examples/webgl_morphtargets_face.ts b/examples-testing/examples/webgl_morphtargets_face.ts
@@ -15567,7 +15565,7 @@ index 4e283f4a..a8dd4a32 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgpu_lines_fat_wireframe.ts b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
-index ebfa9cdc..aa3029fb 100644
+index 9ab5c44c..dee04a5a 100644
 --- a/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 @@ -2,19 +2,26 @@ import * as THREE from 'three/webgpu';
@@ -15612,7 +15610,7 @@ index ebfa9cdc..aa3029fb 100644
  
      const geometry = new WireframeGeometry2(geo);
  
-@@ -129,7 +136,7 @@ function animate() {
+@@ -135,7 +142,7 @@ function animate() {
  //
  
  function initGui() {
@@ -16607,7 +16605,7 @@ index 229c26a8..46060513 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
-index 11182f4d..d16a627d 100644
+index c20dc4b5..3c821864 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
 +++ b/examples-testing/examples/webgpu_mesh_batch.ts
 @@ -1,17 +1,18 @@
@@ -16771,7 +16769,7 @@ index c465ddc5..9fa79745 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 diff --git a/examples-testing/examples/webgpu_morphtargets.ts b/examples-testing/examples/webgpu_morphtargets.ts
-index bd9539f2..0f740ce7 100644
+index cde3ae83..c6e68d05 100644
 --- a/examples-testing/examples/webgpu_morphtargets.ts
 +++ b/examples-testing/examples/webgpu_morphtargets.ts
 @@ -4,12 +4,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16802,25 +16800,21 @@ index bd9539f2..0f740ce7 100644
      const direction = new THREE.Vector3(1, 0, 0);
      const vertex = new THREE.Vector3();
  
-@@ -101,17 +105,17 @@ function initGUI() {
+@@ -101,13 +105,13 @@ function initGUI() {
          Twist: 0,
      };
  
 -    const gui = renderer.inspector.createParameters('Morph Targets');
 +    const gui = (renderer.inspector as Inspector).createParameters('Morph Targets');
  
-     gui.add(params, 'Spherify', 0, 1)
-         .step(0.01)
-         .onChange(function (value) {
--            mesh.morphTargetInfluences[0] = value;
-+            mesh.morphTargetInfluences![0] = value;
-         });
-     gui.add(params, 'Twist', 0, 1)
-         .step(0.01)
-         .onChange(function (value) {
--            mesh.morphTargetInfluences[1] = value;
-+            mesh.morphTargetInfluences![1] = value;
-         });
+     gui.add(params, 'Spherify', 0, 1, 0.01).onChange(function (value) {
+-        mesh.morphTargetInfluences[0] = value;
++        mesh.morphTargetInfluences![0] = value;
+     });
+     gui.add(params, 'Twist', 0, 1, 0.01).onChange(function (value) {
+-        mesh.morphTargetInfluences[1] = value;
++        mesh.morphTargetInfluences![1] = value;
+     });
  }
  
 diff --git a/examples-testing/examples/webgpu_morphtargets_face.ts b/examples-testing/examples/webgpu_morphtargets_face.ts
@@ -17076,7 +17070,7 @@ index 4eee79fb..520710ba 100644
          pixelBufferTexture.image.data = pixelBuffer;
          pixelBufferTexture.needsUpdate = true;
 diff --git a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
-index f82d6ff1..4d07b8df 100644
+index 05098c8d..9164cb14 100644
 --- a/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
 +++ b/examples-testing/examples/webgpu_multisampled_renderbuffers.ts
 @@ -3,12 +3,12 @@ import { texture } from 'three/tsl';
@@ -17110,7 +17104,7 @@ index f82d6ff1..4d07b8df 100644
  function initGUI() {
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(params, 'samples', 0, 4).step(1);
+     gui.add(params, 'samples', 0, 4, 1);
      gui.add(params, 'animated');
  }
 @@ -98,7 +98,7 @@ function init() {
@@ -17157,17 +17151,17 @@ index e49f98ce..148171a6 100644
          this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
      }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
-index 6b1673cc..b75024ec 100644
+index 0b8ae766..2cf5a936 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
 +++ b/examples-testing/examples/webgpu_ocean.ts
-@@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -6,14 +6,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
  import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
--let container, stats;
+-let container;
 -let camera, scene, renderer;
 -let controls, water, sun, mesh;
-+let container: HTMLElement, stats: Stats;
++let container: HTMLElement;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh;
  
@@ -17188,6 +17182,15 @@ index 6b1673cc..b75024ec 100644
  
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
+@@ -116,7 +116,7 @@ function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     const folderSky = gui.addFolder('Sky');
+     folderSky.add(parameters, 'elevation', 0, 90, 0.1).onChange(updateSun);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
 index 658ae08d..adbea486 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
@@ -17683,7 +17686,7 @@ index 65ddd737..58bbbc74 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index eb311e6f..c9393dab 100644
+index 5c39831e..2f78e099 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
@@ -17727,11 +17730,11 @@ index eb311e6f..c9393dab 100644
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(params, 'samples', 4, 32).step(1).onChange(updateParameters);
+     gui.add(params, 'samples', 4, 32, 1).onChange(updateParameters);
      gui.add(params, 'distanceExponent', 1, 2).onChange(updateParameters);
      gui.add(params, 'distanceFallOff', 0.01, 1).onChange(updateParameters);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index 4a4a4eca..ee947112 100644
+index 3c13f131..faf98fd2 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 @@ -7,8 +7,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18316,7 +18319,7 @@ index 68a48068..b6d9684f 100644
      postProcessing.render();
  }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index c574e5c4..9eaf41cc 100644
+index d47b8e56..dbfda18b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18339,8 +18342,8 @@ index c574e5c4..9eaf41cc 100644
 -    const gui = renderer.inspector.createParameters('SSGI settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('SSGI settings');
      gui.add(params, 'output', types).onChange(updatePostprocessing);
-     gui.add(giPass.sliceCount, 'value', 1, 4).step(1).name('slice count');
-     gui.add(giPass.stepCount, 'value', 1, 32).step(1).name('step count');
+     gui.add(giPass.sliceCount, 'value', 1, 4, 1).name('slice count');
+     gui.add(giPass.stepCount, 'value', 1, 32, 1).name('step count');
 @@ -213,7 +217,7 @@ async function init() {
      gui.add(giPass.useScreenSpaceSampling, 'value').name('screen-space sampling');
      gui.add(giPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
@@ -18351,7 +18354,7 @@ index c574e5c4..9eaf41cc 100644
              postProcessing.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 9a28a0de..afda27a8 100644
+index e007e81c..dcaf0e51 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -14,7 +14,7 @@ import {
@@ -18405,7 +18408,7 @@ index 9a28a0de..afda27a8 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
      const ssrFolder = gui.addFolder('SSR');
      ssrFolder.add(params, 'quality', 0, 1).onChange(updateParameters);
-     ssrFolder.add(params, 'blurQuality', 1, 3).step(1).onChange(updateParameters);
+     ssrFolder.add(params, 'blurQuality', 1, 3, 1).onChange(updateParameters);
 @@ -165,8 +169,8 @@ async function init() {
      const modelFolder = gui.addFolder('Model');
      modelFolder.add(params, 'roughness', 0, 1).onChange(value => {
@@ -18849,7 +18852,7 @@ index 3797d5a9..2274476f 100644
  
      // Rotate the central torus knot
 diff --git a/examples-testing/examples/webgpu_shadowmap_csm.ts b/examples-testing/examples/webgpu_shadowmap_csm.ts
-index 52b67f70..ac1aa837 100644
+index 00a486a3..d9c57bba 100644
 --- a/examples-testing/examples/webgpu_shadowmap_csm.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_csm.ts
 @@ -4,12 +4,33 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18899,7 +18902,7 @@ index 52b67f70..ac1aa837 100644
  
      gui.add(params, 'orthographic').onChange(function (value) {
          csm.camera = value ? orthoCamera : camera;
-@@ -202,8 +223,8 @@ function init() {
+@@ -201,8 +222,8 @@ function init() {
          .name('shadow near')
          .onChange(function (value) {
              for (let i = 0; i < csm.lights.length; i++) {
@@ -18910,7 +18913,7 @@ index 52b67f70..ac1aa837 100644
              }
          });
  
-@@ -211,8 +232,8 @@ function init() {
+@@ -210,8 +231,8 @@ function init() {
          .name('shadow far')
          .onChange(function (value) {
              for (let i = 0; i < csm.lights.length; i++) {
@@ -18922,7 +18925,7 @@ index 52b67f70..ac1aa837 100644
          });
  
 diff --git a/examples-testing/examples/webgpu_shadowmap_progressive.ts b/examples-testing/examples/webgpu_shadowmap_progressive.ts
-index 71bc3777..307250ce 100644
+index 567f5288..583c8f33 100644
 --- a/examples-testing/examples/webgpu_shadowmap_progressive.ts
 +++ b/examples-testing/examples/webgpu_shadowmap_progressive.ts
 @@ -11,17 +11,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMapGPU.js
@@ -18979,7 +18982,7 @@ index 71bc3777..307250ce 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Accumulation Settings');
      gui.add(params, 'Enable');
      gui.add(params, 'Blur Edges');
-     gui.add(params, 'Blend Window', 1, 500).step(1);
+     gui.add(params, 'Blend Window', 1, 500, 1);
 diff --git a/examples-testing/examples/webgpu_shadowmap_vsm.ts b/examples-testing/examples/webgpu_shadowmap_vsm.ts
 index 12fe5fe4..8342b4af 100644
 --- a/examples-testing/examples/webgpu_shadowmap_vsm.ts
@@ -20185,7 +20188,7 @@ index fb6f2bbd..5705090e 100644
      gui.add(steps, 'value', 0, 300, 1).name('steps');
  
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 2cd3e701..422194a2 100644
+index 0f9db99e..9d7abec1 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
 @@ -9,11 +9,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';

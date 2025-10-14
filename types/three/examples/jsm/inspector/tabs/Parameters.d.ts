@@ -39,7 +39,6 @@ interface ValueButtonWithParameters<
     K extends KeyToValueOfType<T, (this: T) => void> = KeyToValueOfType<T, (this: T) => void>,
 > extends ValueButton<T, K> {
     name: (name: string) => this;
-    listen: () => this;
 }
 
 interface ValueColorWithParameters<
