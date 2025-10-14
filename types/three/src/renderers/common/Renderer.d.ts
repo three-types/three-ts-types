@@ -260,6 +260,7 @@ declare class Renderer {
      * the CPU waits for the GPU to complete its operation (e.g. a compute task).
      *
      * @async
+     * @deprecated
      * @return {Promise} A Promise that resolves when synchronization has been finished.
      */
     waitForGPU(): Promise<void>;
