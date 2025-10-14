@@ -14428,7 +14428,7 @@ index d81014af..a133aa63 100644
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
-index ef4b78c6..56fae624 100644
+index be183040..a7508e7c 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
 +++ b/examples-testing/examples/webgpu_compute_texture.ts
 @@ -3,7 +3,7 @@ import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'th
@@ -14438,9 +14438,9 @@ index ef4b78c6..56fae624 100644
 -let camera, scene, renderer;
 +let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
- init();
- render();
-@@ -31,7 +31,7 @@ function init() {
+ init().then(render);
+ 
+@@ -30,7 +30,7 @@ async function init() {
  
      // create function
  
@@ -14667,7 +14667,7 @@ index fcae79b9..0ce427a3 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
-index a073f57e..fa503405 100644
+index a5ff8413..b729718f 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_background.ts
 @@ -6,8 +6,8 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
@@ -15610,7 +15610,7 @@ index 9ab5c44c..dee04a5a 100644
      const param = {
          'line type': 0,
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 7b7c89a8..a31f0d59 100644
+index 9e5ad445..4e1c9609 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -5,7 +5,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
@@ -15620,10 +15620,10 @@ index 7b7c89a8..a31f0d59 100644
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
- init();
- render();
+ init().then(render);
+ 
 diff --git a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
-index 4b0166a7..af826471 100644
+index dfb0e964..0308a517 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16174,7 +16174,7 @@ index 081de95a..78b575f1 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
-index 86b04c83..7b37d6bd 100644
+index 0a841ae2..847b3df3 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
 +++ b/examples-testing/examples/webgpu_materials_matcap.ts
 @@ -6,7 +6,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16189,16 +16189,16 @@ index 86b04c83..7b37d6bd 100644
  
  const API = {
      color: 0xffffff, // sRGB
-@@ -55,7 +58,7 @@ function init() {
+@@ -51,7 +54,7 @@ function init() {
  
      // model
-     new GLTFLoader(manager).load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+     new GLTFLoader().load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
 -        mesh = gltf.scene.children[0];
 +        mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshMatcapNodeMaterial>;
          mesh.position.y = -0.25;
  
          mesh.material = new THREE.MeshMatcapNodeMaterial({
-@@ -68,7 +71,7 @@ function init() {
+@@ -64,7 +67,7 @@ function init() {
      });
  
      // gui
@@ -16207,7 +16207,7 @@ index 86b04c83..7b37d6bd 100644
  
      gui.addColor(API, 'color')
          .listen()
-@@ -103,7 +106,7 @@ function render() {
+@@ -99,7 +102,7 @@ function animate() {
  // drag and drop anywhere in document
  //
  
@@ -16216,7 +16216,7 @@ index 86b04c83..7b37d6bd 100644
      if (mesh.material.matcap) {
          mesh.material.matcap.dispose();
      }
-@@ -115,11 +118,11 @@ function updateMatcap(texture) {
+@@ -111,11 +114,11 @@ function updateMatcap(texture) {
      mesh.material.needsUpdate = true; // because the color space can change
  }
  
@@ -16231,7 +16231,7 @@ index 86b04c83..7b37d6bd 100644
  
          texture.colorSpace = THREE.SRGBColorSpace;
  
-@@ -130,11 +133,11 @@ function handleJPG(event) {
+@@ -126,11 +129,11 @@ function handleJPG(event) {
  
      img.onload = imgCallback;
  
@@ -16246,7 +16246,7 @@ index 86b04c83..7b37d6bd 100644
  
      const loader = new EXRLoader();
  
-@@ -159,9 +162,9 @@ function handleEXR(event) {
+@@ -155,9 +158,9 @@ function handleEXR(event) {
      updateMatcap(texture);
  }
  
@@ -16258,7 +16258,7 @@ index 86b04c83..7b37d6bd 100644
  
      if (extension === 'exr') {
          const reader = new FileReader();
-@@ -187,12 +190,12 @@ function loadFile(file) {
+@@ -183,12 +186,12 @@ function loadFile(file) {
  function initDragAndDrop() {
      document.addEventListener('dragover', function (event) {
          event.preventDefault();
@@ -16430,7 +16430,7 @@ index 56ef372c..f634dff9 100644
              font: font,
  
 diff --git a/examples-testing/examples/webgpu_materials_transmission.ts b/examples-testing/examples/webgpu_materials_transmission.ts
-index 6c9bc2df..3ddebb65 100644
+index 9e8eca5c..5788d096 100644
 --- a/examples-testing/examples/webgpu_materials_transmission.ts
 +++ b/examples-testing/examples/webgpu_materials_transmission.ts
 @@ -20,7 +20,7 @@ const params = {
@@ -16442,7 +16442,7 @@ index 6c9bc2df..3ddebb65 100644
  
  let mesh;
  
-@@ -90,7 +90,7 @@ function init() {
+@@ -89,7 +89,7 @@ function init() {
  
      //
  
@@ -16451,7 +16451,7 @@ index 6c9bc2df..3ddebb65 100644
  
      gui.addColor(params, 'color').onChange(function () {
          material.color.set(params.color);
-@@ -160,7 +160,7 @@ function generateTexture() {
+@@ -159,7 +159,7 @@ function generateTexture() {
      canvas.width = 2;
      canvas.height = 2;
  
@@ -19128,7 +19128,7 @@ index de9f219b..68a7b73a 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 983917f4..5d7b1061 100644
+index 17d4c4a7..694f0900 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -19256,7 +19256,7 @@ index 0444823f..fdcb1a01 100644
      const windowHalfY = window.innerHeight / 2;
  
 diff --git a/examples-testing/examples/webgpu_textures_partialupdate.ts b/examples-testing/examples/webgpu_textures_partialupdate.ts
-index 923a1487..bc6886f0 100644
+index 66b02130..92fcbcdc 100644
 --- a/examples-testing/examples/webgpu_textures_partialupdate.ts
 +++ b/examples-testing/examples/webgpu_textures_partialupdate.ts
 @@ -1,6 +1,11 @@
@@ -19272,7 +19272,7 @@ index 923a1487..bc6886f0 100644
  
  let last = 0;
  const position = new THREE.Vector2();
-@@ -78,9 +83,9 @@ async function animate() {
+@@ -77,9 +82,9 @@ function animate() {
      }
  }
  
