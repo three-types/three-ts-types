@@ -249,6 +249,7 @@ declare class Renderer {
      * Renders the scene in an async fashion.
      *
      * @async
+     * @deprecated
      * @param {Object3D} scene - The scene or 3D object to render.
      * @param {Camera} camera - The camera.
      * @return {Promise} A Promise that resolves when the render has been finished.
@@ -323,17 +324,20 @@ declare class Renderer {
     _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
     /**
      * Renders the scene or 3D object with the given camera. This method can only be called
-     * if the renderer has been initialized.
+     * if the renderer has been initialized. When using `render()` inside an animation loop,
+     * it's guaranteed the renderer will be initialized. The animation loop must be defined
+     * with {@link Renderer#setAnimationLoop} though.
+     *
+     * For all other use cases (like when using on-demand rendering), you must call
+     * {@link Renderer#init} before rendering.
      *
      * The target of the method is the default framebuffer (meaning the canvas)
      * or alternatively a render target when specified via `setRenderTarget()`.
      *
      * @param {Object3D} scene - The scene or 3D object to render.
      * @param {Camera} camera - The camera to render the scene with.
-     * @return {?Promise} A Promise that resolve when the scene has been rendered.
-     * Only returned when the renderer has not been initialized.
      */
-    render(scene: Object3D, camera: Camera): Promise<void> | undefined;
+    render(scene: Object3D, camera: Camera): void;
     /**
      * Returns whether the renderer has been initialized or not.
      *
