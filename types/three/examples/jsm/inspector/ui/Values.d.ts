@@ -18,8 +18,6 @@ declare class ValueNumber<
     K extends KeyToValueOfType<T, number> = KeyToValueOfType<T, number>,
 > extends Value<T, K> {
     constructor(params: ValueNumberParams);
-
-    step(value: number): this;
 }
 
 export interface ValueCheckboxParams {
