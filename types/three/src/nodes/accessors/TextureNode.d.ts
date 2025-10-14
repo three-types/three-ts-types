@@ -76,6 +76,12 @@ export const textureLoad: (
     biasNode?: Node,
 ) => TextureNode;
 
+export const textureLevel: (
+    value: Texture | TextureNode,
+    uv: Node,
+    level: Node,
+) => TextureNode;
+
 export const sampler: (value: Texture | TextureNode) => Node;
 
 export const samplerComparison: (value: Texture | TextureNode) => Node;

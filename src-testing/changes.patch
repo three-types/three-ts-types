@@ -413,7 +413,7 @@ index d207da78..ea038eec 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index b735d8c8..a0921526 100644
+index cfb15fb4..505088da 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -11,6 +11,10 @@ import { IntType, NearestFilter, UnsignedIntType } from '../../constants.js';
@@ -4195,7 +4195,7 @@ index 0cdcb293..885a7b95 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index 01fe92f5..53999daf 100644
+index 9b2722b5..1f27d6cc 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -4387,7 +4387,7 @@ index 01fe92f5..53999daf 100644
  
                  if (updated) {
 @@ -270,7 +304,7 @@ class Bindings extends DataMap {
-                 if (texture.isStorageTexture === true) {
+                 if (texture.isStorageTexture === true && texture.mipmapsAutoUpdate === true) {
                      const textureData = this.get(texture);
  
 -                    if (binding.store === true) {
@@ -5325,7 +5325,7 @@ index 4daa1549..241ea3f6 100644
          } else {
              error('WebGPUInfo: Unknown object type.');
 diff --git a/src-testing/src/renderers/common/InspectorBase.ts b/src-testing/src/renderers/common/InspectorBase.ts
-index c88d241d..8a4c6071 100644
+index 5219fa00..3d776052 100644
 --- a/src-testing/src/renderers/common/InspectorBase.ts
 +++ b/src-testing/src/renderers/common/InspectorBase.ts
 @@ -1,9 +1,18 @@
@@ -5391,7 +5391,7 @@ index c88d241d..8a4c6071 100644
 +    finishCompute(uid: string) {}
  
      /**
-      * Called whean a render operation begins.
+      * Called when a render operation begins.
 @@ -108,14 +117,14 @@ class InspectorBase {
       * @param {Camera} camera - The camera being used for rendering.
       * @param {?WebGLRenderTarget} renderTarget - The render target, if any.
@@ -7840,7 +7840,7 @@ index 61135804..24ee88cd 100644
  
      /**
 diff --git a/src-testing/src/renderers/common/SampledTexture.ts b/src-testing/src/renderers/common/SampledTexture.ts
-index 3bc74f93..ad02b9d4 100644
+index 70282d04..fd7dc5a1 100644
 --- a/src-testing/src/renderers/common/SampledTexture.ts
 +++ b/src-testing/src/renderers/common/SampledTexture.ts
 @@ -1,4 +1,5 @@
@@ -7870,7 +7870,7 @@ index 3bc74f93..ad02b9d4 100644
          super(name, texture);
  
          /**
-@@ -51,13 +58,15 @@ class SampledTexture extends Sampler {
+@@ -59,13 +66,15 @@ class SampledTexture extends Sampler {
   * @augments SampledTexture
   */
  class SampledArrayTexture extends SampledTexture {
@@ -7887,7 +7887,7 @@ index 3bc74f93..ad02b9d4 100644
          super(name, texture);
  
          /**
-@@ -78,13 +87,15 @@ class SampledArrayTexture extends SampledTexture {
+@@ -86,13 +95,15 @@ class SampledArrayTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class Sampled3DTexture extends SampledTexture {
@@ -7904,7 +7904,7 @@ index 3bc74f93..ad02b9d4 100644
          super(name, texture);
  
          /**
-@@ -105,13 +116,15 @@ class Sampled3DTexture extends SampledTexture {
+@@ -113,13 +124,15 @@ class Sampled3DTexture extends SampledTexture {
   * @augments SampledTexture
   */
  class SampledCubeTexture extends SampledTexture {
@@ -7971,7 +7971,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 2034fee1..05c726b4 100644
+index 75ae87a9..8846234c 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -12,8 +12,46 @@ import {
@@ -8065,7 +8065,7 @@ index 2034fee1..05c726b4 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -313,7 +358,7 @@ class Textures extends DataMap {
+@@ -317,7 +362,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update the sampler for.
       * @return {string} The current sampler key.
       */
@@ -8074,7 +8074,7 @@ index 2034fee1..05c726b4 100644
          return this.backend.updateSampler(texture);
      }
  
-@@ -329,7 +374,7 @@ class Textures extends DataMap {
+@@ -333,7 +378,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -8083,7 +8083,7 @@ index 2034fee1..05c726b4 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -346,13 +391,13 @@ class Textures extends DataMap {
+@@ -350,13 +395,13 @@ class Textures extends DataMap {
              } else {
                  target.width = image.width || 1;
                  target.height = image.height || 1;
@@ -8099,7 +8099,7 @@ index 2034fee1..05c726b4 100644
      }
  
      /**
-@@ -363,13 +408,13 @@ class Textures extends DataMap {
+@@ -367,13 +412,13 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -8117,7 +8117,7 @@ index 2034fee1..05c726b4 100644
                  // it is not possible to compute mipmaps for compressed textures. So
                  // when no mipmaps are defined in "texture.mipmaps", force a texture
                  // level of 1
-@@ -389,8 +434,8 @@ class Textures extends DataMap {
+@@ -393,8 +438,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -8128,7 +8128,7 @@ index 2034fee1..05c726b4 100644
      }
  
      /**
-@@ -399,7 +444,7 @@ class Textures extends DataMap {
+@@ -403,7 +448,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -10055,7 +10055,7 @@ index f4e1307d..85accfa6 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index f8a30032..de05421a 100644
+index 75b9f49c..7dc8f3c1 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,11 @@
@@ -10619,7 +10619,7 @@ index 37784a05..7b08961a 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index d57801e6..2d315b9f 100644
+index 74298732..c9e30f77 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10779,7 +10779,7 @@ index d57801e6..2d315b9f 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -960,7 +988,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -962,7 +990,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10788,7 +10788,7 @@ index d57801e6..2d315b9f 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1245,8 +1273,8 @@ ${flowData.code}
+@@ -1247,8 +1275,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10799,7 +10799,7 @@ index d57801e6..2d315b9f 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1380,8 +1408,8 @@ ${flowData.code}
+@@ -1382,8 +1410,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10810,7 +10810,7 @@ index d57801e6..2d315b9f 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1446,7 +1474,7 @@ ${flowData.code}
+@@ -1448,7 +1476,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
