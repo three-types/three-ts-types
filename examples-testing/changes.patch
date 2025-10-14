@@ -14328,7 +14328,7 @@ index ab8bfb48..83ab9fc5 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index ce0b5a5e..a133aa63 100644
+index d81014af..a133aa63 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14418,15 +14418,6 @@ index ce0b5a5e..a133aa63 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -286,7 +290,7 @@ async function initGlobalSwapOnly() {
- 
-     const scene = new THREE.Scene();
- 
--    const infoArray = new Uint32Array(3, 2, 2);
-+    const infoArray = new Uint32Array([3, 2, 2]);
-     const infoBuffer = new THREE.StorageInstancedBufferAttribute(infoArray, 1);
-     const infoStorage = storage(infoBuffer, 'uint', infoBuffer.count).setPBO(true).setName('TheInfo');
- 
 @@ -317,7 +321,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
@@ -15110,14 +15101,14 @@ index edfc51ef..d3f6e377 100644
  
      for (let i = 0; i < lights.length; i++) {
 diff --git a/examples-testing/examples/webgpu_lights_phong.ts b/examples-testing/examples/webgpu_lights_phong.ts
-index 688a809a..f34f762d 100644
+index c2cdf439..64116a21 100644
 --- a/examples-testing/examples/webgpu_lights_phong.ts
 +++ b/examples-testing/examples/webgpu_lights_phong.ts
-@@ -6,7 +6,15 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -6,7 +6,14 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
  
--let camera, scene, renderer, light1, light2, light3, light4, stats, controls;
+-let camera, scene, renderer, light1, light2, light3, light4, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -15125,12 +15116,11 @@ index 688a809a..f34f762d 100644
 +    light2: THREE.PointLight,
 +    light3: THREE.PointLight,
 +    light4: THREE.PointLight,
-+    stats: Stats,
 +    controls: OrbitControls;
  
  init();
  
-@@ -33,7 +41,7 @@ function init() {
+@@ -33,7 +40,7 @@ function init() {
  
      // lights
  
@@ -15238,7 +15228,7 @@ index e00d75b2..ee12bb56 100644
  
      const v0 = new THREE.Vector3();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
-index 330c8396..138f9fc6 100644
+index ecb1ec0d..2268ab86 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts
 +++ b/examples-testing/examples/webgpu_lights_rectarealight.ts
 @@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15246,9 +15236,9 @@ index 330c8396..138f9fc6 100644
  import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
  
 -let renderer, scene, camera;
--let stats, meshKnot;
+-let meshKnot;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-+let stats: Stats, meshKnot: THREE.Mesh;
++let meshKnot: THREE.Mesh;
  
  init();
  
@@ -17734,7 +17724,7 @@ index 5c39831e..2f78e099 100644
      gui.add(params, 'distanceExponent', 1, 2).onChange(updateParameters);
      gui.add(params, 'distanceFallOff', 0.01, 1).onChange(updateParameters);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index 3c13f131..faf98fd2 100644
+index f0ebcefa..d0dbc81d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 @@ -7,8 +7,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -17751,16 +17741,7 @@ index 3c13f131..faf98fd2 100644
  
  const params = {
      threshold: 0,
-@@ -20,7 +23,7 @@ const params = {
- init();
- 
- async function init() {
--    const container = document.getElementById('container');
-+    const container = document.getElementById('container')!;
- 
-     clock = new THREE.Clock();
- 
-@@ -75,7 +78,7 @@ async function init() {
+@@ -73,7 +76,7 @@ async function init() {
  
      //
  
@@ -18319,7 +18300,7 @@ index 68a48068..b6d9684f 100644
      postProcessing.render();
  }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index d47b8e56..dbfda18b 100644
+index 087a8444..241471a9 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19304,10 +19285,10 @@ index 923a1487..bc6886f0 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
-index 766233f9..e37fc625 100644
+index 0036c6eb..e371e494 100644
 --- a/examples-testing/examples/webgpu_tonemapping.ts
 +++ b/examples-testing/examples/webgpu_tonemapping.ts
-@@ -1,24 +1,34 @@
+@@ -1,23 +1,33 @@
  import * as THREE from 'three/webgpu';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19319,9 +19300,10 @@ index 766233f9..e37fc625 100644
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
 -let renderer, scene, camera, controls;
--let gui,
+-let gui = null;
 +type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral';
-+
+ 
+-const params = {
 +interface Params {
 +    exposure: number;
 +    toneMapping: ToneMapping;
@@ -19330,10 +19312,8 @@ index 766233f9..e37fc625 100644
 +}
 +
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
-+let gui: ParametersGroup,
-     guiExposure = null;
- 
--const params = {
++let gui: ParametersGroup;
++
 +const params: Params = {
      exposure: 1.0,
      toneMapping: 'Neutral',
@@ -19346,7 +19326,7 @@ index 766233f9..e37fc625 100644
      None: THREE.NoToneMapping,
      Linear: THREE.LinearToneMapping,
      Reinhard: THREE.ReinhardToneMapping,
-@@ -92,11 +102,11 @@ async function init() {
+@@ -91,11 +101,11 @@ async function init() {
  
      //
  
