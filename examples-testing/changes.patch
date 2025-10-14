@@ -15449,7 +15449,7 @@ index 96417888..2ec8e8b1 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_lines_fat_raycasting.ts b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-index 4e283f4a..7226565a 100644
+index 4e283f4a..a8dd4a32 100644
 --- a/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 @@ -1,6 +1,7 @@
@@ -15528,16 +15528,25 @@ index 4e283f4a..7226565a 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -240,7 +242,7 @@ function switchLine(val) {
+@@ -240,13 +242,11 @@ function switchLine(val) {
  }
  
  function initGui() {
 -    gui = renderer.inspector.createParameters('Settings');
 +    gui = (renderer.inspector as Inspector).createParameters('Settings');
  
-     gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 })
-         .onChange(function (val) {
-@@ -262,7 +264,7 @@ function initGui() {
+-    gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 })
+-        .onChange(function (val) {
+-            switchLine(val);
+-        })
+-        .setValue(1);
++    gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 }).onChange(function (val) {
++        switchLine(val);
++    });
+ 
+     gui.add(params, 'world units').onChange(function (val) {
+         matLine.worldUnits = val;
+@@ -262,7 +262,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -15546,7 +15555,7 @@ index 4e283f4a..7226565a 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -270,8 +272,8 @@ function initGui() {
+@@ -270,8 +270,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
