@@ -549,6 +549,7 @@ export const textureBicubicLevel: typeof TSL.textureBicubicLevel;
 export const textureCubeUV: typeof TSL.textureCubeUV;
 export const textureLoad: typeof TSL.textureLoad;
 export const textureSize: typeof TSL.textureSize;
+export const textureLevel: typeof TSL.textureLevel;
 export const textureStore: typeof TSL.textureStore;
 export const thickness: typeof TSL.thickness;
 export const time: typeof TSL.time;

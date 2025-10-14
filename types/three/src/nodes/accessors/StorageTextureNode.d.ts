@@ -7,6 +7,8 @@ import TextureNode from "./TextureNode.js";
 export default class StorageTextureNode extends TextureNode {
     storeNode: Node | null;
 
+    mipLevel: number;
+
     readonly isStorageTextureNode: true;
 
     access: NodeAccess;
@@ -18,6 +20,8 @@ export default class StorageTextureNode extends TextureNode {
     );
 
     setAccess(value: NodeAccess): this;
+
+    setMipLevel(level: number): this;
 
     toReadWrite(): this;
 
