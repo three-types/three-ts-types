@@ -13831,6 +13831,51 @@ index 3ec30a76..5a3faadc 100644
          box.material = materials[name];
      });
  }
+diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
+index 1b780ce9..5d7ada58 100644
+--- a/examples-testing/examples/webgpu_backdrop_water.ts
++++ b/examples-testing/examples/webgpu_backdrop_water.ts
+@@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
+-let mixer, objects, clock;
+-let model, floor, floorPosition;
+-let postProcessing;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let mixer: THREE.AnimationMixer, objects: THREE.Group, clock: THREE.Clock;
++let model: THREE.Group,
++    floor: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshStandardNodeMaterial>,
++    floorPosition: THREE.Vector3;
++let postProcessing: THREE.PostProcessing;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -164,10 +166,10 @@ function init() {
+ 
+     const waterPosY = positionWorld.y.sub(water.position.y);
+ 
+-    let transition = waterPosY.add(0.1).saturate().oneMinus();
++    let transition: THREE.Node = waterPosY.add(0.1).saturate().oneMinus();
+     transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
+ 
+-    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
++    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
+ 
+     //material.colorNode = colorNode;
+     floor.material.colorNode = colorNode;
+@@ -192,7 +194,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     floorPosition = new THREE.Vector3(0, 0.2, 0);
+ 
 diff --git a/examples-testing/examples/webgpu_camera.ts b/examples-testing/examples/webgpu_camera.ts
 index bf4724ac..b964cc5f 100644
 --- a/examples-testing/examples/webgpu_camera.ts
@@ -14298,6 +14343,167 @@ index 229033d7..b7bd1fde 100644
  
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
+diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
+index 6f4c3b61..ba6b3132 100644
+--- a/examples-testing/examples/webgpu_compute_cloth.ts
++++ b/examples-testing/examples/webgpu_compute_cloth.ts
+@@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let renderer, scene, camera, controls;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+ 
+ const clothWidth = 1;
+ const clothHeight = 1;
+@@ -32,18 +32,41 @@ const clothNumSegmentsX = 30;
+ const clothNumSegmentsY = 30;
+ const sphereRadius = 0.15;
+ 
+-let vertexPositionBuffer, vertexForceBuffer, vertexParamsBuffer;
+-let springVertexIdBuffer, springRestLengthBuffer, springForceBuffer;
+-let springListBuffer;
+-let computeSpringForces, computeVertexForces;
+-let dampeningUniform, spherePositionUniform, stiffnessUniform, sphereUniform, windUniform;
+-let vertexWireframeObject, springWireframeObject;
+-let clothMesh, clothMaterial, sphere;
++let vertexPositionBuffer: THREE.StorageBufferNode,
++    vertexForceBuffer: THREE.StorageBufferNode,
++    vertexParamsBuffer: THREE.StorageBufferNode;
++let springVertexIdBuffer: THREE.StorageBufferNode,
++    springRestLengthBuffer: THREE.StorageBufferNode,
++    springForceBuffer: THREE.StorageBufferNode;
++let springListBuffer: THREE.StorageBufferNode;
++let computeSpringForces: THREE.ComputeNode, computeVertexForces: THREE.ComputeNode;
++let dampeningUniform: THREE.UniformNode<number>,
++    spherePositionUniform: THREE.UniformNode<THREE.Vector3>,
++    stiffnessUniform: THREE.UniformNode<number>,
++    sphereUniform: THREE.UniformNode<number>,
++    windUniform: THREE.UniformNode<number>;
++let vertexWireframeObject: THREE.Mesh, springWireframeObject: THREE.Line;
++let clothMesh: THREE.Mesh, clothMaterial: THREE.MeshPhysicalNodeMaterial, sphere: THREE.Mesh;
+ let timeSinceLastStep = 0;
+ let timestamp = 0;
+-const verletVertices = [];
+-const verletSprings = [];
+-const verletVertexColumns = [];
++
++interface VerletVertex {
++    id: number;
++    position: THREE.Vector3;
++    isFixed: boolean;
++    springIds: number[];
++}
++
++const verletVertices: VerletVertex[] = [];
++
++interface VerletSpring {
++    id: number;
++    vertex0: VerletVertex;
++    vertex1: VerletVertex;
++}
++
++const verletSprings: VerletSpring[] = [];
++const verletVertexColumns: VerletVertex[][] = [];
+ 
+ const clock = new THREE.Clock();
+ 
+@@ -98,7 +121,7 @@ async function init() {
+ 
+     setupCloth();
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(stiffnessUniform, 'value', 0.1, 0.5, 0.01).name('stiffness');
+     gui.add(params, 'wireframe');
+     gui.add(params, 'sphere');
+@@ -123,7 +146,7 @@ async function init() {
+ function setupVerletGeometry() {
+     // this function sets up the geometry of the verlet system, a grid of vertices connected by springs
+ 
+-    const addVerletVertex = (x, y, z, isFixed) => {
++    const addVerletVertex = (x: number, y: number, z: number, isFixed: boolean) => {
+         const id = verletVertices.length;
+         const vertex = {
+             id,
+@@ -135,7 +158,7 @@ function setupVerletGeometry() {
+         return vertex;
+     };
+ 
+-    const addVerletSpring = (vertex0, vertex1) => {
++    const addVerletSpring = (vertex0: VerletVertex, vertex1: VerletVertex) => {
+         const id = verletSprings.length;
+         const spring = {
+             id,
+@@ -382,7 +405,7 @@ function setupClothMesh() {
+     const verletVertexIdArray = new Uint32Array(vertexCount * 4);
+     const indices = [];
+ 
+-    const getIndex = (x, y) => {
++    const getIndex = (x: number, y: number) => {
+         return y * clothNumSegmentsX + x;
+     };
+ 
+@@ -436,7 +459,7 @@ function setupClothMesh() {
+         const normal = cross(tangent, bitangent);
+ 
+         // send the normalView from the vertex shader to the fragment shader
+-        material.normalNode = transformNormalToView(normal).toVarying();
++        (material as THREE.MeshPhysicalNodeMaterial).normalNode = transformNormalToView(normal).toVarying();
+ 
+         return v0.add(v1).add(v2).add(v3).mul(0.25);
+     })();
+diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
+index 1f76c981..f12346d8 100644
+--- a/examples-testing/examples/webgpu_compute_particles_snow.ts
++++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
+@@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ const maxParticleCount = 100000;
+ 
+-let camera, scene, renderer;
+-let controls;
+-let computeParticles;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let computeParticles: THREE.ComputeNode;
++let postProcessing: THREE.PostProcessing;
+ 
+-let collisionCamera, collisionPosRT, collisionPosMaterial;
++let collisionCamera: THREE.OrthographicCamera,
++    collisionPosRT: THREE.RenderTarget,
++    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
+ 
+ init();
+ 
+@@ -124,7 +126,7 @@ async function init() {
+     const speed = 0.4;
+ 
+     const computeUpdate = Fn(() => {
+-        const getCoord = pos => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
+ 
+         const position = positionBuffer.element(instanceIndex);
+         const scale = scaleBuffer.element(instanceIndex);
+@@ -159,7 +161,7 @@ async function init() {
+ 
+     const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
+ 
+-    function particle(staticParticles) {
++    function particle(staticParticles?: boolean) {
+         const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
+         const layer = staticParticles ? 1 : 2;
+ 
+@@ -291,7 +293,7 @@ async function init() {
+ 
+     // compose
+ 
+-    let totalPass = scenePass.toInspector('Scene');
++    let totalPass: THREE.Node = scenePass.toInspector('Scene');
+     totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
+     totalPass = totalPass.mul(vignette);
+     totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
 index b51bafea..34d18d6e 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
@@ -14753,6 +14959,30 @@ index 90204a3d..58e2ccff 100644
      position.x = matrix.elements[12];
      position.y = matrix.elements[13];
      position.z = matrix.elements[14];
+diff --git a/examples-testing/examples/webgpu_equirectangular.ts b/examples-testing/examples/webgpu_equirectangular.ts
+index 9e159e46..128e18b7 100644
+--- a/examples-testing/examples/webgpu_equirectangular.ts
++++ b/examples-testing/examples/webgpu_equirectangular.ts
+@@ -4,8 +4,8 @@ import { texture, equirectUV } from 'three/tsl';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -36,7 +36,7 @@ function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(scene, 'backgroundIntensity', 0, 1).name('background intensity');
+ 
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
 index bb1dd4a1..44814fa5 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
@@ -19572,6 +19802,53 @@ index 143d577f..dc289242 100644
  
      renderer.render(scene, camera);
  }
+diff --git a/examples-testing/examples/webgpu_tsl_interoperability.ts b/examples-testing/examples/webgpu_tsl_interoperability.ts
+index e57c66ee..31838ac1 100644
+--- a/examples-testing/examples/webgpu_tsl_interoperability.ts
++++ b/examples-testing/examples/webgpu_tsl_interoperability.ts
+@@ -23,13 +23,13 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let renderer, camera, scene;
++let renderer: THREE.WebGPURenderer, camera: THREE.OrthographicCamera, scene: THREE.Scene;
+ const dpr = window.devicePixelRatio;
+ 
+ const crtWidthUniform = uniform(1608);
+ const crtHeightUniform = uniform(1608);
+ 
+-const canvas = document.getElementById('c');
++const canvas = document.getElementById('c') as HTMLCanvasElement;
+ 
+ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -195,7 +195,7 @@ function init() {
+         samplePoint.x = samplePoint.x.add(fract(scaledTime.div(20)));
+         samplePoint.y = samplePoint.y.sub(1.5);
+ 
+-        let color = texture(planetTexture, samplePoint);
++        let color: THREE.Node = texture(planetTexture, samplePoint);
+ 
+         const ind = floor(subCoord.x).mod(3);
+ 
+@@ -215,7 +215,7 @@ function init() {
+         color = color.mul(maskColor);
+ 
+         const pixelDampen = pixel.y.div(pulseWidthUniform);
+-        let pulse = sin(pixelDampen.add(time.mul(pulseRateUniform)));
++        let pulse: THREE.Node = sin(pixelDampen.add(time.mul(pulseRateUniform)));
+         pulse = pulse.mul(pulseIntensityUniform);
+         color = color.mul(float(1.0).add(pulse));
+ 
+@@ -249,7 +249,7 @@ function init() {
+ 
+     window.addEventListener('resize', onWindowResize);
+ 
+-    const gui = renderer.inspector.createParameters('Parameters');
++    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
+ 
+     gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
+     gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 index cb513d07..9b867d08 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts

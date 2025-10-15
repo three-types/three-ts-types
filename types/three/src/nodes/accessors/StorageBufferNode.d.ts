@@ -1,3 +1,4 @@
+import { BufferAttribute } from "../../core/BufferAttribute.js";
 import StorageBufferAttribute from "../../renderers/common/StorageBufferAttribute.js";
 import StorageInstancedBufferAttribute from "../../renderers/common/StorageInstancedBufferAttribute.js";
 import { NodeAccess } from "../core/constants.js";
@@ -40,7 +41,7 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
 }
 
 export const storage: (
-    value: StorageBufferAttribute | StorageInstancedBufferAttribute,
+    value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
     type?: string | Struct | null,
     count?: number,
 ) => StorageBufferNode;

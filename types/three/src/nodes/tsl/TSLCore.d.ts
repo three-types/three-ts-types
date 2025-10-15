@@ -367,15 +367,15 @@ export const mat2: Matrix2Function;
 interface Matrix3Function {
     (value: Matrix3): ConstNode<Matrix3>;
     (
-        n11: number,
-        n12: number,
-        n13: number,
-        n21: number,
-        n22: number,
-        n23: number,
-        n31: number,
-        n32: number,
-        n33: number,
+        n11: number | Node,
+        n12: number | Node,
+        n13: number | Node,
+        n21: number | Node,
+        n22: number | Node,
+        n23: number | Node,
+        n31: number | Node,
+        n32: number | Node,
+        n33: number | Node,
     ): ConstNode<Matrix3>;
     (): ConstNode<Matrix3>;
     (node: Node): Node;
@@ -386,22 +386,22 @@ export const mat3: Matrix3Function;
 interface Matrix4Function {
     (value: Matrix4): ConstNode<Matrix4>;
     (
-        n11: number,
-        n12: number,
-        n13: number,
-        n14: number,
-        n21: number,
-        n22: number,
-        n23: number,
-        n24: number,
-        n31: number,
-        n32: number,
-        n33: number,
-        n34: number,
-        n41: number,
-        n42: number,
-        n43: number,
-        n44: number,
+        n11: number | Node,
+        n12: number | Node,
+        n13: number | Node,
+        n14: number | Node,
+        n21: number | Node,
+        n22: number | Node,
+        n23: number | Node,
+        n24: number | Node,
+        n31: number | Node,
+        n32: number | Node,
+        n33: number | Node,
+        n34: number | Node,
+        n41: number | Node,
+        n42: number | Node,
+        n43: number | Node,
+        n44: number | Node,
     ): ConstNode<Matrix4>;
     (): ConstNode<Matrix4>;
     (node: Node): Node;
