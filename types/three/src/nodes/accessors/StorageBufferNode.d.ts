@@ -1,3 +1,4 @@
+import { BufferAttribute } from "../../core/BufferAttribute.js";
 import StorageBufferAttribute from "../../renderers/common/StorageBufferAttribute.js";
 import StorageInstancedBufferAttribute from "../../renderers/common/StorageInstancedBufferAttribute.js";
 import { NodeAccess } from "../core/constants.js";
@@ -6,7 +7,6 @@ import { Struct } from "../core/StructNode.js";
 import StructTypeNode from "../core/StructTypeNode.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
-import { BufferAttribute } from '../../core/BufferAttribute.js';
 
 export default class StorageBufferNode extends BufferNode<StorageBufferAttribute | StorageInstancedBufferAttribute> {
     readonly isStorageBufferNode: true;

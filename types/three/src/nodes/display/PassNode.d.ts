@@ -1,5 +1,6 @@
 import { Camera } from "../../cameras/Camera.js";
 import { Layers } from "../../core/Layers.js";
+import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Vector4 } from "../../math/Vector4.js";
 import Renderer from "../../renderers/common/Renderer.js";
@@ -8,7 +9,6 @@ import TextureNode from "../accessors/TextureNode.js";
 import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { Object3D } from '../../core/Object3D.js';
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
