@@ -733,7 +733,7 @@ index e2f141f9..a2e43b58 100644
      scene.add(mesh);
  
 diff --git a/examples-testing/examples/misc_boxselection.ts b/examples-testing/examples/misc_boxselection.ts
-index e7079c40..89676cd4 100644
+index e7079c40..e1d6904d 100644
 --- a/examples-testing/examples/misc_boxselection.ts
 +++ b/examples-testing/examples/misc_boxselection.ts
 @@ -5,8 +5,8 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -759,34 +759,38 @@ index e7079c40..89676cd4 100644
  document.addEventListener('pointerdown', function (event) {
      for (const item of selectionBox.collection) {
 -        item.material.emissive.set(0x000000);
-+        (item.material as THREE.MeshLambertMaterial).emissive.set(0x000000);
++        (item as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(0x000000);
      }
  
      selectionBox.startPoint.set(
-@@ -105,7 +105,7 @@ document.addEventListener('pointerdown', function (event) {
+@@ -105,7 +105,9 @@ document.addEventListener('pointerdown', function (event) {
  document.addEventListener('pointermove', function (event) {
      if (helper.isDown) {
          for (let i = 0; i < selectionBox.collection.length; i++) {
 -            selectionBox.collection[i].material.emissive.set(0x000000);
-+            (selectionBox.collection[i].material as THREE.MeshLambertMaterial).emissive.set(0x000000);
++            (
++                selectionBox.collection[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>
++            ).material.emissive.set(0x000000);
          }
  
          selectionBox.endPoint.set(
-@@ -117,7 +117,7 @@ document.addEventListener('pointermove', function (event) {
+@@ -117,7 +119,9 @@ document.addEventListener('pointermove', function (event) {
          const allSelected = selectionBox.select();
  
          for (let i = 0; i < allSelected.length; i++) {
 -            allSelected[i].material.emissive.set(0xffffff);
-+            (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
++            (allSelected[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(
++                0xffffff,
++            );
          }
      }
  });
-@@ -132,6 +132,6 @@ document.addEventListener('pointerup', function (event) {
+@@ -132,6 +136,6 @@ document.addEventListener('pointerup', function (event) {
      const allSelected = selectionBox.select();
  
      for (let i = 0; i < allSelected.length; i++) {
 -        allSelected[i].material.emissive.set(0xffffff);
-+        (allSelected[i].material as THREE.MeshLambertMaterial).emissive.set(0xffffff);
++        (allSelected[i] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial>).material.emissive.set(0xffffff);
      }
  });
 diff --git a/examples-testing/examples/misc_controls_arcball.ts b/examples-testing/examples/misc_controls_arcball.ts
@@ -16893,7 +16897,7 @@ index 6125b972..f579d340 100644
          const id = spheres.children.length;
          const rotation = THREE.MathUtils.degToRad(id * 90);
 diff --git a/examples-testing/examples/webgpu_multiple_canvas.ts b/examples-testing/examples/webgpu_multiple_canvas.ts
-index a7f30f20..caeb5d84 100644
+index db55fe16..caeb5d84 100644
 --- a/examples-testing/examples/webgpu_multiple_canvas.ts
 +++ b/examples-testing/examples/webgpu_multiple_canvas.ts
 @@ -1,4 +1,4 @@
@@ -16923,15 +16927,6 @@ index a7f30f20..caeb5d84 100644
  
      for (let i = 0; i < 40; i++) {
          const scene = new THREE.Scene();
-@@ -46,7 +46,7 @@ function init() {
-         descriptionElement.innerText = 'Scene ' + (i + 1);
-         element.appendChild(descriptionElement);
- 
--        const canvasTarget = new THREE.CanvasTarget(sceneCanvas, { antialias: true });
-+        const canvasTarget = new THREE.CanvasTarget(sceneCanvas);
-         canvasTarget.setPixelRatio(window.devicePixelRatio);
-         canvasTarget.setSize(200, 200);
- 
 diff --git a/examples-testing/examples/webgpu_multiple_elements.ts b/examples-testing/examples/webgpu_multiple_elements.ts
 index 65bd3e75..3d3f2fd9 100644
 --- a/examples-testing/examples/webgpu_multiple_elements.ts
