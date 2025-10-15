@@ -3,12 +3,12 @@ import { Layers } from "../../core/Layers.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Vector4 } from "../../math/Vector4.js";
 import Renderer from "../../renderers/common/Renderer.js";
-import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
 import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
+import { Object3D } from '../../core/Object3D.js';
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
@@ -27,14 +27,14 @@ declare class PassMultipleTextureNode extends PassTextureNode {
 
 declare class PassNode extends TempNode {
     scope: PassNodeScope;
-    scene: Scene;
+    scene: Object3D;
     camera: Camera;
 
     renderTarget: RenderTarget;
 
     readonly isPassNode: true;
 
-    constructor(scope: PassNodeScope, scene: Scene, camera: Camera, options?: RenderTargetOptions);
+    constructor(scope: PassNodeScope, scene: Object3D, camera: Camera, options?: RenderTargetOptions);
 
     setResolutionScale(resolution: number): this;
 
@@ -94,6 +94,6 @@ export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;
 
 export default PassNode;
 
-export const pass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => PassNode;
+export const pass: (scene: Object3D, camera: Camera, options?: RenderTargetOptions) => PassNode;
 export const passTexture: (pass: PassNode, texture: Texture) => PassTextureNode;
-export const depthPass: (scene: Scene, camera: Camera, options?: RenderTargetOptions) => PassNode;
+export const depthPass: (scene: Object3D, camera: Camera, options?: RenderTargetOptions) => PassNode;
