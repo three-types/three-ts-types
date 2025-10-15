@@ -9,6 +9,7 @@ export interface MeshStandardMaterialProperties extends MaterialProperties {
     /**
      * Color of the material.
      *
+     * @type {Color}
      * @default (1,1,1)
      */
     color: Color;
@@ -275,6 +276,8 @@ export interface MeshStandardMaterialParameters
  * Technical details of the approach used in three.js (and most other PBR systems) can be found is this
  * [paper from Disney]{@link https://media.disneyanimation.com/uploads/production/publication_asset/48/asset/s2012_pbs_disney_brdf_notes_v3.pdf}
  * (pdf), by Brent Burley.
+ *
+ * @demo scenes/material-browser.html#MeshStandardMaterial
  */
 export class MeshStandardMaterial extends Material {
     /**

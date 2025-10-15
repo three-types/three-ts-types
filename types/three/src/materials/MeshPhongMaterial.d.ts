@@ -263,6 +263,8 @@ export interface MeshPhongMaterialParameters
  * Performance will generally be greater when using this material over the
  * {@link MeshStandardMaterial} or {@link MeshPhysicalMaterial}, at the cost of
  * some graphical accuracy.
+ *
+ * @demo scenes/material-browser.html#MeshPhongMaterial
  */
 export class MeshPhongMaterial extends Material {
     /**

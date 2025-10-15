@@ -144,6 +144,8 @@ export interface MeshMatcapMaterialParameters
  * baked lighting. It will cast a shadow onto an object that receives shadows
  * (and shadow clipping works), but it will not self-shadow or receive
  * shadows.
+ *
+ * @demo scenes/material-browser.html#MeshMatcapMaterial
  */
 export class MeshMatcapMaterial extends Material {
     /**

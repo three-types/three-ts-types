@@ -81,6 +81,8 @@ export interface MeshDepthMaterialParameters
 /**
  * A material for drawing geometry by depth. Depth is based off of the camera
  * near and far plane. White is nearest, black is farthest.
+ *
+ * @demo scenes/material-browser.html#MeshDepthMaterial
  */
 export class MeshDepthMaterial extends Material {
     /**

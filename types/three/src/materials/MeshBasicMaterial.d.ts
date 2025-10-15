@@ -149,6 +149,7 @@ export interface MeshBasicMaterialParameters
  * A material for drawing geometries in a simple shaded (flat or wireframe) way.
  *
  * This material is not affected by lights.
+ * @demo scenes/material-browser.html#MeshBasicMaterial
  */
 export class MeshBasicMaterial extends Material {
     /**
