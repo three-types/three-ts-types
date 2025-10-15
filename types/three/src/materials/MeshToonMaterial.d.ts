@@ -198,8 +198,6 @@ export interface MeshToonMaterialParameters
 
 /**
  * A material implementing toon shading.
- *
- * @demo scenes/material-browser.html#MeshToonMaterial
  */
 export class MeshToonMaterial extends Material {
     /**

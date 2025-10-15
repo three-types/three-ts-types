@@ -275,8 +275,6 @@ export interface MeshPhysicalMaterialParameters
  * higher performance cost, per pixel, than other three.js materials. Most
  * effects are disabled by default, and add cost as they are enabled. For
  * best results, always specify an environment map when using this material.
- *
- * @demo scenes/material-browser.html#MeshPhysicalMaterial
  */
 export class MeshPhysicalMaterial extends MeshStandardMaterial {
     constructor(parameters?: MeshPhysicalMaterialParameters);

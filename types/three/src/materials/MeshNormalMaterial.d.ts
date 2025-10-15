@@ -99,8 +99,6 @@ export interface MeshNormalMaterialParameters
 
 /**
  * A material that maps the normal vectors to RGB colors.
- *
- * @demo scenes/material-browser.html#MeshNormalMaterial
  */
 export class MeshNormalMaterial extends Material {
     /**
