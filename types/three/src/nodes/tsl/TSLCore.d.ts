@@ -10,14 +10,13 @@ import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import JoinNode from "../utils/JoinNode.js";
-import MemberNode from '../utils/MemberNode.js';
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
 declare module "../Nodes.js" {
     interface Node {
         assign: (sourceNode: Node | number) => this;
-        get: (value: string) => MemberNode;
+        get: (value: string) => Node;
     }
 }
 
@@ -57,6 +56,11 @@ export type Swizzable =
     & {
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
     };
+
+declare module "../Nodes.js" {
+    interface Node extends Swizzable {
+    }
+}
 
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
