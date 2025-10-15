@@ -13,7 +13,7 @@ declare class MRTNode extends OutputStructNode {
 
     has(name: string): boolean;
 
-    get(name: string): Node;
+    get: (name: string) => Node;
 
     merge(mrtNode: MRTNode): MRTNode;
 }
