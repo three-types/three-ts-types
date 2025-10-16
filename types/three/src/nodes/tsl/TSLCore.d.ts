@@ -416,13 +416,13 @@ interface Matrix3Function {
         n31: number | Node,
         n32: number | Node,
         n33: number | Node,
-    ): ConstNode<Matrix3>;
+    ): Node;
     (): ConstNode<Matrix3>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
-    ): ConstNode<Matrix3>;
+    ): Node;
     (node: Node): Node;
 }
 
@@ -447,14 +447,14 @@ interface Matrix4Function {
         n42: number | Node,
         n43: number | Node,
         n44: number | Node,
-    ): ConstNode<Matrix4>;
+    ): Node;
     (): ConstNode<Matrix4>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
         p4: Node,
-    ): ConstNode<Matrix3>;
+    ): Node;
     (node: Node): Node;
 }
 
