@@ -26,11 +26,11 @@ declare class LoopNode extends Node {
 export default LoopNode;
 
 interface Loop {
-    (i: LoopNodeParameter, func: (inputs: { readonly i: number }) => void): Node;
+    (i: LoopNodeParameter, func: (inputs: { readonly i: Node }) => void): Node;
     (
         i: LoopNodeParameter,
         j: LoopNodeParameter,
-        func: (inputs: { readonly i: number; readonly j: number }) => void,
+        func: (inputs: { readonly i: Node; readonly j: Node }) => void,
     ): Node;
 }
 
