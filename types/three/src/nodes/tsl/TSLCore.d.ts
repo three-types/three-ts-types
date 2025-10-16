@@ -260,7 +260,7 @@ interface Layout {
     }[];
 }
 
-interface ShaderNodeFn<Args extends readonly unknown[]> {
+export interface ShaderNodeFn<Args extends readonly unknown[]> {
     (...args: Args): ShaderCallNodeInternal;
 
     shaderNode: ShaderNodeInternal;
