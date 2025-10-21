@@ -1,7 +1,7 @@
 import Node from "../../core/Node.js";
 import OperatorNode from "../../math/OperatorNode.js";
 
-declare const BRDF_GGX: (args: {
+declare const BRDF_GGX_Multiscatter: (args: {
     lightDirection: Node;
     f0: Node;
     f90: Node;
@@ -11,4 +11,4 @@ declare const BRDF_GGX: (args: {
     USE_ANISOTROPY?: Node | undefined;
 }) => OperatorNode;
 
-export default BRDF_GGX;
+export default BRDF_GGX_Multiscatter;
