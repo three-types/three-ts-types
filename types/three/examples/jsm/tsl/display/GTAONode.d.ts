@@ -14,6 +14,8 @@ declare class GTAONode extends TempNode {
     scale: UniformNode<number>;
     samples: UniformNode<number>;
 
+    useTemporalFiltering: boolean;
+
     constructor(depthNode: Node, normalNode: Node, camera: Camera);
 
     getTextureNode(): TextureNode;
