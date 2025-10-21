@@ -292,13 +292,6 @@ declare class NodeMaterial extends Material {
     readonly isNodeMaterial: boolean;
     setValues(values?: NodeMaterialParameters): void;
     /**
-     * Returns an array of child nodes for this material.
-     *
-     * @private
-     * @returns {Array<{property: string, childNode: Node}>}
-     */
-    private _getNodeChildren;
-    /**
      * Builds this material with the given node builder.
      *
      * @param {NodeBuilder} builder - The current node builder.
