@@ -18031,7 +18031,7 @@ index 65ddd7375..58bbbc744 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 5c39831ef..2f78e0996 100644
+index a9d9c0fe2..fba97060a 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
@@ -18060,7 +18060,7 @@ index 5c39831ef..2f78e0996 100644
  
  const params = {
      samples: 16,
-@@ -113,14 +117,15 @@ async function init() {
+@@ -114,14 +118,15 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
@@ -18106,7 +18106,7 @@ index f0ebcefa4..d0dbc81d4 100644
      const bloomFolder = gui.addFolder('bloom');
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index 746e7ebe0..e4b2368a7 100644
+index 20d0a36eb..3e6d4e06d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18120,7 +18120,7 @@ index 746e7ebe0..e4b2368a7 100644
  
  init();
  
-@@ -78,7 +78,7 @@ function init() {
+@@ -79,7 +79,7 @@ function init() {
  
      //
  
@@ -18757,7 +18757,7 @@ index e007e81c7..dcaf0e51c 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_sss.ts b/examples-testing/examples/webgpu_postprocessing_sss.ts
-index 7a88bd3ec..a0d6a537c 100644
+index ac2bb2bae..3c1d3da40 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sss.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sss.ts
 @@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18788,27 +18788,13 @@ index 7a88bd3ec..a0d6a537c 100644
      });
 @@ -135,7 +139,7 @@ async function init() {
  
-     const types = { 'Sceen with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
+     const types = { 'Scene with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
  
 -    const gui = renderer.inspector.createParameters('SSS settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('SSS settings');
      gui.add(params, 'output', types).onChange(updatePostprocessing);
      gui.add(sssPass.shadowIntensity, 'value', 0, 1).name('shadow intensity');
      gui.add(sssPass.maxDistance, 'value', 0.01, 1).name('max ray distance');
-@@ -143,10 +147,10 @@ async function init() {
-     gui.add(sssPass.thickness, 'value', 0.01, 0.1).name('thickness');
-     gui.add(sssPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
- 
--    function updatePostprocessing(value) {
--        if (value === 1) {
-+    function updatePostprocessing() {
-+        if (params.output === 1) {
-             postProcessing.outputNode = scenePassColor;
--        } else if (value === 2) {
-+        } else if (params.output === 2) {
-             postProcessing.outputNode = vec4(vec3(sssPass.r), 1);
-         } else {
-             postProcessing.outputNode = sssPass.useTemporalFiltering ? traaPass : compositePass;
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
 index eb138a8f3..91ffad479 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts

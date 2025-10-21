@@ -104,7 +104,7 @@ export interface NodeMaterialNodeProperties {
      * and `alphaMap` properties. This node property allows to overwrite the default
      * and define the opacity with a node instead.
      *
-     * If you don't want to overwrite the normals but modify the existing
+     * If you don't want to overwrite the opacity but modify the existing
      * value instead, use {@link materialOpacity}.
      *
      * @default null
