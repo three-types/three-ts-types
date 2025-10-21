@@ -4917,48 +4917,67 @@ index d9633cd15..c2b07d41f 100644
              if (shape.holes && shape.holes.length > 0) {
                  for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_geometry_text_stroke.ts b/examples-testing/examples/webgl_geometry_text_stroke.ts
-index 25dde2765..ae7afcac5 100644
+index 373892c74..9bf589244 100644
 --- a/examples-testing/examples/webgl_geometry_text_stroke.ts
 +++ b/examples-testing/examples/webgl_geometry_text_stroke.ts
-@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
- import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+@@ -5,7 +5,7 @@ import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+ import { Font } from 'three/addons/loaders/FontLoader.js';
+ import { unzipSync, strFromU8 } from 'three/addons/libs/fflate.module.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
  
-@@ -33,13 +33,13 @@ function init() {
+@@ -19,7 +19,7 @@ function init() {
+     new THREE.FileLoader()
+         .setResponseType('arraybuffer')
+         .load('fonts/MPLUSRounded1c/MPLUSRounded1c-Regular.typeface.json.zip', function (data) {
+-            const zip = unzipSync(new Uint8Array(data));
++            const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
+             const strArray = strFromU8(new Uint8Array(zip['MPLUSRounded1c-Regular.typeface.json'].buffer));
  
-         const message = '   Three.js\nStroke text.';
+             const font = new Font(JSON.parse(strArray));
+@@ -82,16 +82,22 @@ function init() {
+     window.addEventListener('resize', onWindowResize);
+ } // end init
  
--        const shapes = font.generateShapes(message, 100);
-+        const shapes: THREE.Path[] = font.generateShapes(message, 100);
+-function generateStrokeText(font, material, message, size, direction = 'ltr') {
+-    const shapes = font.generateShapes(message, size, direction);
++function generateStrokeText(
++    font: Font,
++    material: { dark: THREE.MeshBasicMaterial; lite: THREE.MeshBasicMaterial; color: THREE.Color },
++    message: string,
++    size: number,
++    direction: 'ltr' | 'rtl' | 'tb' = 'ltr',
++) {
++    const shapes: THREE.Path[] = font.generateShapes(message, size, direction);
  
--        const geometry = new THREE.ShapeGeometry(shapes);
-+        const geometry = new THREE.ShapeGeometry(shapes as THREE.Shape[]);
+-    const geometry = new THREE.ShapeGeometry(shapes);
++    const geometry = new THREE.ShapeGeometry(shapes as THREE.Shape[]);
  
-         geometry.computeBoundingBox();
+     const strokeText = new THREE.Group();
  
--        const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
-+        const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
+     geometry.computeBoundingBox();
  
-         geometry.translate(xMid, 0, 0);
+-    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
++    const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
  
-@@ -51,10 +51,10 @@ function init() {
+     geometry.translate(xMid, 0, 0);
  
-         // make line shape ( N.B. edge view remains visible )
+@@ -105,10 +111,10 @@ function generateStrokeText(font, material, message, size, direction = 'ltr') {
  
--        const holeShapes = [];
-+        const holeShapes: THREE.Path[] = [];
+     // make line shape ( N.B. edge view remains visible )
  
-         for (let i = 0; i < shapes.length; i++) {
--            const shape = shapes[i];
-+            const shape = shapes[i] as THREE.Shape;
+-    const holeShapes = [];
++    const holeShapes: THREE.Path[] = [];
  
-             if (shape.holes && shape.holes.length > 0) {
-                 for (let j = 0; j < shape.holes.length; j++) {
+     for (let i = 0; i < shapes.length; i++) {
+-        const shape = shapes[i];
++        const shape = shapes[i] as THREE.Shape;
+ 
+         if (shape.holes && shape.holes.length > 0) {
+             for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_gpgpu_birds.ts b/examples-testing/examples/webgl_gpgpu_birds.ts
 index 20a5e0d97..e9293211c 100644
 --- a/examples-testing/examples/webgl_gpgpu_birds.ts
@@ -21604,39 +21623,3 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/renderers/common/extras/PMREMGenerator.d.ts b/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
-index 28719bd2b..a939d8355 100644
---- a/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
-+++ b/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
-@@ -2,6 +2,7 @@ import { RenderTarget } from "../../../core/RenderTarget.js";
- import { Vector3 } from "../../../math/Vector3.js";
- import { Scene } from "../../../scenes/Scene.js";
- import Renderer from "../Renderer.js";
-+import { Texture } from '../../../textures/Texture.js';
- 
- export interface PMREMGeneratorOptions {
-     size?: number | undefined;
-@@ -19,7 +20,6 @@ declare class PMREMGenerator {
-         far?: number,
-         options?: PMREMGeneratorOptions,
-     ): RenderTarget;
--
-     fromSceneAsync(
-         scene: Scene,
-         sigma?: number,
-@@ -28,6 +28,15 @@ declare class PMREMGenerator {
-         options?: PMREMGeneratorOptions,
-     ): Promise<RenderTarget>;
- 
-+    fromEquirectangular(equirectangular: Texture, renderTarget?: RenderTarget | null): RenderTarget;
-+    fromEquirectangularAsync(equirectangular: Texture, renderTarget?: RenderTarget | null): Promise<RenderTarget>;
-+
-+    fromCubemap(cubemap: Texture, renderTarget?: RenderTarget | null): RenderTarget;
-+    fromCubemapAsync(cubemap: Texture, renderTarget?: RenderTarget | null): Promise<RenderTarget>;
-+
-+    compileCubemapShader(): Promise<void>;
-+    compileEquirectangularShader(): Promise<void>;
-+
-     dispose(): void;
- }
- 
