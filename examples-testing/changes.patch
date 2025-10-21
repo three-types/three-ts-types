@@ -10178,6 +10178,32 @@ index d6d2bdfc9..7c412fa17 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgl_pmrem_cubemap.ts b/examples-testing/examples/webgl_pmrem_cubemap.ts
+index fb5bdafc1..c432f8d35 100644
+--- a/examples-testing/examples/webgl_pmrem_cubemap.ts
++++ b/examples-testing/examples/webgl_pmrem_cubemap.ts
+@@ -4,7 +4,7 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_pmrem_equirectangular.ts b/examples-testing/examples/webgl_pmrem_equirectangular.ts
+index 7f04d9700..67cef6639 100644
+--- a/examples-testing/examples/webgl_pmrem_equirectangular.ts
++++ b/examples-testing/examples/webgl_pmrem_equirectangular.ts
+@@ -4,7 +4,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgl_pmrem_test.ts b/examples-testing/examples/webgl_pmrem_test.ts
 index 3c482338f..292f01c3d 100644
 --- a/examples-testing/examples/webgl_pmrem_test.ts
@@ -15731,7 +15757,7 @@ index 96417888c..2ec8e8b1f 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_lines_fat_raycasting.ts b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
-index 4e283f4a3..a8dd4a327 100644
+index 8ab71af1b..692aa233e 100644
 --- a/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_raycasting.ts
 @@ -1,6 +1,7 @@
@@ -15780,7 +15806,7 @@ index 4e283f4a3..a8dd4a327 100644
      translation: 0,
      animate: true,
  };
-@@ -166,7 +168,7 @@ function onWindowResize() {
+@@ -168,7 +170,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -15789,7 +15815,7 @@ index 4e283f4a3..a8dd4a327 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -195,9 +197,9 @@ async function animate() {
+@@ -197,9 +199,9 @@ async function animate() {
          sphereOnLine.visible = true;
  
          sphereInter.position.copy(intersects[0].point);
@@ -15801,7 +15827,7 @@ index 4e283f4a3..a8dd4a327 100644
          const colors = obj.geometry.getAttribute('instanceColorStart');
  
          color.fromBufferAttribute(colors, index);
-@@ -217,7 +219,7 @@ async function animate() {
+@@ -219,7 +221,7 @@ async function animate() {
  
  //
  
@@ -15810,25 +15836,16 @@ index 4e283f4a3..a8dd4a327 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -240,13 +242,11 @@ function switchLine(val) {
+@@ -242,7 +244,7 @@ function switchLine(val) {
  }
  
  function initGui() {
 -    gui = renderer.inspector.createParameters('Settings');
 +    gui = (renderer.inspector as Inspector).createParameters('Settings');
  
--    gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 })
--        .onChange(function (val) {
--            switchLine(val);
--        })
--        .setValue(1);
-+    gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 }).onChange(function (val) {
-+        switchLine(val);
-+    });
- 
-     gui.add(params, 'world units').onChange(function (val) {
-         matLine.worldUnits = val;
-@@ -262,7 +262,7 @@ function initGui() {
+     gui.add(params, 'line type', { LineGeometry: 0, LineSegmentsGeometry: 1 }).onChange(function (val) {
+         switchLine(val);
+@@ -262,7 +264,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -15837,7 +15854,7 @@ index 4e283f4a3..a8dd4a327 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -270,8 +270,8 @@ function initGui() {
+@@ -270,8 +272,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
@@ -17649,49 +17666,31 @@ index 4b6647078..bf2bf8b5d 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-index fbe75a59b..876da1256 100644
+index bd751ba33..9f58dc8b0 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
 +++ b/examples-testing/examples/webgpu_pmrem_cubemap.ts
-@@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,7 +5,7 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
  
- import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
  init();
  
-@@ -65,7 +65,7 @@ async function init() {
- 
-             // gui
- 
--            const gui = renderer.inspector.createParameters('Settings');
-+            const gui = (renderer.inspector as Inspector).createParameters('Settings');
-             gui.add(pmremRoughness, 'value', 0, 1, 0.001)
-                 .name('roughness')
-                 .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-index 2c5f66395..9ffeaa43f 100644
+index 564b7a8d1..a34e25056 100644
 --- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-@@ -14,7 +14,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,7 +5,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
- import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
  
  init();
  
-@@ -65,7 +65,7 @@ async function init() {
- 
-         // gui
- 
--        const gui = renderer.inspector.createParameters('Settings');
-+        const gui = (renderer.inspector as Inspector).createParameters('Settings');
-         gui.add(pmremRoughness, 'value', 0, 1, 0.001)
-             .name('roughness')
-             .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_pmrem_scene.ts b/examples-testing/examples/webgpu_pmrem_scene.ts
 index deab005fc..36ca1c7d1 100644
 --- a/examples-testing/examples/webgpu_pmrem_scene.ts
@@ -17714,6 +17713,38 @@ index deab005fc..36ca1c7d1 100644
      gui.add(pmremRoughness, 'value', 0, 1, 0.001)
          .name('roughness')
          .onChange(() => render());
+diff --git a/examples-testing/examples/webgpu_pmrem_test.ts b/examples-testing/examples/webgpu_pmrem_test.ts
+index ab47c9665..dd4d63aab 100644
+--- a/examples-testing/examples/webgpu_pmrem_test.ts
++++ b/examples-testing/examples/webgpu_pmrem_test.ts
+@@ -1,4 +1,4 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let scene, camera, controls, renderer;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGPURenderer;
+ 
+ async function init() {
+     const width = window.innerWidth;
+@@ -72,8 +72,10 @@ async function init() {
+             directionalLight.intensity = value ? 0 : 1;
+ 
+             scene.traverse(function (child) {
+-                if (child.isMesh) {
+-                    child.material.envMapIntensity = 1 - directionalLight.intensity;
++                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>).isMesh) {
++                    (
++                        child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>
++                    ).material.envMapIntensity = 1 - directionalLight.intensity;
+                 }
+             });
+ 
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
 index 3dc3ceb4f..aad91a01c 100644
 --- a/examples-testing/examples/webgpu_portal.ts
@@ -18699,6 +18730,59 @@ index e007e81c7..dcaf0e51c 100644
              }
          });
      });
+diff --git a/examples-testing/examples/webgpu_postprocessing_sss.ts b/examples-testing/examples/webgpu_postprocessing_sss.ts
+index 7a88bd3ec..a0d6a537c 100644
+--- a/examples-testing/examples/webgpu_postprocessing_sss.ts
++++ b/examples-testing/examples/webgpu_postprocessing_sss.ts
+@@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer, postProcessing, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    controls: OrbitControls;
+ 
+ init();
+ 
+@@ -68,10 +72,10 @@ async function init() {
+         scene.add(model);
+ 
+         model.traverse(function (object) {
+-            if (object.isMesh) {
++            if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).isMesh) {
+                 object.castShadow = true;
+                 object.receiveShadow = true;
+-                object.material.aoMap = null; // remove AO to better see the effect of shadows
++                (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.aoMap = null; // remove AO to better see the effect of shadows
+             }
+         });
+     });
+@@ -135,7 +139,7 @@ async function init() {
+ 
+     const types = { 'Sceen with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
+ 
+-    const gui = renderer.inspector.createParameters('SSS settings');
++    const gui = (renderer.inspector as Inspector).createParameters('SSS settings');
+     gui.add(params, 'output', types).onChange(updatePostprocessing);
+     gui.add(sssPass.shadowIntensity, 'value', 0, 1).name('shadow intensity');
+     gui.add(sssPass.maxDistance, 'value', 0.01, 1).name('max ray distance');
+@@ -143,10 +147,10 @@ async function init() {
+     gui.add(sssPass.thickness, 'value', 0.01, 0.1).name('thickness');
+     gui.add(sssPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
+ 
+-    function updatePostprocessing(value) {
+-        if (value === 1) {
++    function updatePostprocessing() {
++        if (params.output === 1) {
+             postProcessing.outputNode = scenePassColor;
+-        } else if (value === 2) {
++        } else if (params.output === 2) {
+             postProcessing.outputNode = vec4(vec3(sssPass.r), 1);
+         } else {
+             postProcessing.outputNode = sssPass.useTemporalFiltering ? traaPass : compositePass;
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
 index eb138a8f3..91ffad479 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
@@ -19583,7 +19667,7 @@ index b989670df..9512c0c64 100644
      // generate a random color and update texture data
  
 diff --git a/examples-testing/examples/webgpu_tonemapping.ts b/examples-testing/examples/webgpu_tonemapping.ts
-index 0036c6ebc..e371e494c 100644
+index 4140a49fd..e371e494c 100644
 --- a/examples-testing/examples/webgpu_tonemapping.ts
 +++ b/examples-testing/examples/webgpu_tonemapping.ts
 @@ -1,23 +1,33 @@
@@ -19598,7 +19682,7 @@ index 0036c6ebc..e371e494c 100644
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
 -let renderer, scene, camera, controls;
--let gui = null;
+-let gui;
 +type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral';
  
 -const params = {
@@ -21520,3 +21604,39 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/renderers/common/extras/PMREMGenerator.d.ts b/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
+index 28719bd2b..a939d8355 100644
+--- a/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
++++ b/types/three/src/renderers/common/extras/PMREMGenerator.d.ts
+@@ -2,6 +2,7 @@ import { RenderTarget } from "../../../core/RenderTarget.js";
+ import { Vector3 } from "../../../math/Vector3.js";
+ import { Scene } from "../../../scenes/Scene.js";
+ import Renderer from "../Renderer.js";
++import { Texture } from '../../../textures/Texture.js';
+ 
+ export interface PMREMGeneratorOptions {
+     size?: number | undefined;
+@@ -19,7 +20,6 @@ declare class PMREMGenerator {
+         far?: number,
+         options?: PMREMGeneratorOptions,
+     ): RenderTarget;
+-
+     fromSceneAsync(
+         scene: Scene,
+         sigma?: number,
+@@ -28,6 +28,15 @@ declare class PMREMGenerator {
+         options?: PMREMGeneratorOptions,
+     ): Promise<RenderTarget>;
+ 
++    fromEquirectangular(equirectangular: Texture, renderTarget?: RenderTarget | null): RenderTarget;
++    fromEquirectangularAsync(equirectangular: Texture, renderTarget?: RenderTarget | null): Promise<RenderTarget>;
++
++    fromCubemap(cubemap: Texture, renderTarget?: RenderTarget | null): RenderTarget;
++    fromCubemapAsync(cubemap: Texture, renderTarget?: RenderTarget | null): Promise<RenderTarget>;
++
++    compileCubemapShader(): Promise<void>;
++    compileEquirectangularShader(): Promise<void>;
++
+     dispose(): void;
+ }
+ 
