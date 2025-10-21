@@ -42,3 +42,5 @@ export const getNormalFromDepth: (
     depthTexture: Node,
     projectionMatrixInverse: Node,
 ) => Node;
+
+export const interleavedGradientNoise: (position: Node) => Node;
