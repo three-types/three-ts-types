@@ -163,7 +163,7 @@ declare class Node extends EventDispatcher<{
      * @generator
      * @yields {Node} A child node.
      */
-    getChildren(): Generator<Node, void, unknown>;
+    getChildren(): Generator<any, void, unknown>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
@@ -182,12 +182,33 @@ declare class Node extends EventDispatcher<{
      */
     traverse(callback: (node: Node) => void): void;
     /**
+     * Returns the child nodes of this node.
+     *
+     * @private
+     * @param {Set<Node>} [ignores=new Set()] - A set of nodes to ignore during the search to avoid circular references.
+     * @returns {Array<Object>} An array of objects describing the child nodes.
+     */
+    _getChildren(ignores?: Set<unknown>): ({
+        property: string;
+        index: number;
+        childNode: any;
+    } | {
+        property: string;
+        childNode: any;
+        index?: undefined;
+    } | {
+        property: string;
+        index: string;
+        childNode: any;
+    })[];
+    /**
      * Returns the cache key for this node.
      *
      * @param {boolean} [force=false] - When set to `true`, a recomputation of the cache key is forced.
+     * @param {Set<Node>} [ignores=null] - A set of nodes to ignore during the computation of the cache key.
      * @return {number} The cache key of the node.
      */
-    getCacheKey(force?: boolean): number;
+    getCacheKey(force?: boolean, ignores?: null): number;
     /**
      * Generate a custom cache key for this node.
      *
@@ -338,7 +359,19 @@ declare class Node extends EventDispatcher<{
      *
      * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
      */
-    getSerializeChildren(): Generator<import("./NodeUtils.js").NodeChild, void, unknown>;
+    getSerializeChildren(): ({
+        property: string;
+        index: number;
+        childNode: any;
+    } | {
+        property: string;
+        childNode: any;
+        index?: undefined;
+    } | {
+        property: string;
+        index: string;
+        childNode: any;
+    })[];
     /**
      * Serializes the node to JSON.
      *
