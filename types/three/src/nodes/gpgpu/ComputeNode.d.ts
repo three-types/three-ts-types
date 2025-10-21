@@ -6,15 +6,15 @@ export default class ComputeNode extends Node {
 
     computeNode: Node;
     workgroupSize: number[];
-    count: number | null;
+    count: number | number[] | null;
     name: string;
 
     onInitFunction: ((args: { renderer: Renderer }) => void) | null;
 
     constructor(computeNode: Node, workgroupSize: number[]);
 
-    setCount(count: number): this;
-    getCount(): number | null;
+    setCount(count: number | number[]): this;
+    getCount(): number | number[] | null;
 
     setName: (name: string) => this;
 
