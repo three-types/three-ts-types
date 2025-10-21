@@ -6526,7 +6526,7 @@ index 1ffe1bd1b..94d4efb05 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
-index 482292a54..e591542d1 100644
+index 482292a54..63e021e5b 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,22 @@
@@ -6785,7 +6785,7 @@ index 482292a54..e591542d1 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -296,19 +261,34 @@ declare class NodeMaterial extends Material {
+@@ -296,26 +261,34 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -6814,17 +6814,21 @@ index 482292a54..e591542d1 100644
 + */
 +declare class NodeMaterial extends Material {
 +    static get type(): string;
-+    /**
+     /**
+-     * Returns an array of child nodes for this material.
 +     * This flag can be used for type testing.
-+     *
+      *
+-     * @private
+-     * @returns {Array<{property: string, childNode: Node}>}
 +     * @default true
-+     */
+      */
+-    private _getNodeChildren;
 +    readonly isNodeMaterial: boolean;
 +    setValues(values?: NodeMaterialParameters): void;
      /**
-      * Returns an array of child nodes for this material.
+      * Builds this material with the given node builder.
       *
-@@ -361,35 +341,35 @@ declare class NodeMaterial extends Material {
+@@ -361,35 +334,35 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -6865,7 +6869,7 @@ index 482292a54..e591542d1 100644
      /**
       * Abstract interface method that can be implemented by derived materials
       * to setup material-specific node variables.
-@@ -397,33 +377,33 @@ declare class NodeMaterial extends Material {
+@@ -397,33 +370,33 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -6904,7 +6908,7 @@ index 482292a54..e591542d1 100644
      /**
       * Setups the lights node based on the scene, environment and material.
       *
-@@ -446,7 +426,7 @@ declare class NodeMaterial extends Material {
+@@ -446,7 +419,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -6913,7 +6917,7 @@ index 482292a54..e591542d1 100644
      /**
       * Setup the fog.
       *
-@@ -454,7 +434,7 @@ declare class NodeMaterial extends Material {
+@@ -454,7 +427,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6922,7 +6926,7 @@ index 482292a54..e591542d1 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -462,7 +442,7 @@ declare class NodeMaterial extends Material {
+@@ -462,7 +435,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6931,7 +6935,7 @@ index 482292a54..e591542d1 100644
      /**
       * Setups the output node.
       *
-@@ -470,7 +450,7 @@ declare class NodeMaterial extends Material {
+@@ -470,7 +443,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -6940,7 +6944,7 @@ index 482292a54..e591542d1 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -485,7 +465,10 @@ declare class NodeMaterial extends Material {
+@@ -485,7 +458,10 @@ declare class NodeMaterial extends Material {
       * @param {NodeMaterial} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
