@@ -11428,7 +11428,7 @@ index d05466131..8c5fb8719 100644
  
      const dummy = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
-index 53ec2fe2f..b407c23e8 100644
+index ddcf5e6e5..b386e1cb5 100644
 --- a/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
 +++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom.ts
 @@ -10,8 +10,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -11452,19 +11452,19 @@ index 53ec2fe2f..b407c23e8 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
-index d633806ee..a25f53b5e 100644
+index c3079d15b..bd541cf35 100644
 --- a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
 +++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
-@@ -22,7 +22,7 @@ const params = {
+@@ -23,7 +23,7 @@ const params = {
  };
  
  const darkMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
 -const materials = {};
 +const materials: Record<string, THREE.Material | THREE.Material[]> = {};
  
- const renderer = new THREE.WebGLRenderer({ antialias: true });
+ const renderer = new THREE.WebGLRenderer({ antialias: false });
  renderer.setPixelRatio(window.devicePixelRatio);
-@@ -60,8 +60,8 @@ const mixPass = new ShaderPass(
+@@ -66,8 +66,8 @@ const mixPass = new ShaderPass(
              baseTexture: { value: null },
              bloomTexture: { value: bloomComposer.renderTarget2.texture },
          },
@@ -11475,7 +11475,7 @@ index d633806ee..a25f53b5e 100644
          defines: {},
      }),
      'baseTexture',
-@@ -112,7 +112,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
+@@ -122,7 +122,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
  
  setupScene();
  
@@ -11484,7 +11484,7 @@ index d633806ee..a25f53b5e 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
  
-@@ -165,9 +165,9 @@ function setupScene() {
+@@ -175,9 +175,9 @@ function setupScene() {
      render();
  }
  
@@ -11497,7 +11497,7 @@ index d633806ee..a25f53b5e 100644
      }
  }
  
-@@ -180,16 +180,16 @@ function render() {
+@@ -190,16 +190,16 @@ function render() {
      finalComposer.render();
  }
  
@@ -13596,7 +13596,7 @@ index a98f9a682..5689cf914 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_watch.ts b/examples-testing/examples/webgl_watch.ts
-index 747cca298..79ee46192 100644
+index b65f53093..0b83eab46 100644
 --- a/examples-testing/examples/webgl_watch.ts
 +++ b/examples-testing/examples/webgl_watch.ts
 @@ -1,5 +1,5 @@
@@ -13606,19 +13606,19 @@ index 747cca298..79ee46192 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -15,12 +15,17 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
- import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
- import { FXAAShader } from 'three/addons/shaders/FXAAShader.js';
+@@ -13,12 +13,17 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
+ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+ import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
  
 -let composer, camera, scene, renderer;
--let gui, dirLight, pointLight, controls, bloomPass, fxaaPass;
+-let gui, dirLight, pointLight, controls, bloomPass, taaPass;
 +let composer: EffectComposer | null, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 +let gui: GUI,
 +    dirLight: THREE.DirectionalLight,
 +    pointLight: THREE.PointLight,
 +    controls: OrbitControls,
 +    bloomPass: UnrealBloomPass | null,
-+    fxaaPass: ShaderPass | null;
++    taaPass: TAARenderPass | null;
  let ready = false;
  
 -const meshes = {};
@@ -13628,7 +13628,7 @@ index 747cca298..79ee46192 100644
  const torad = Math.PI / 180;
  
  const setting = {
-@@ -36,7 +41,7 @@ const setting = {
+@@ -34,7 +39,7 @@ const setting = {
  init();
  
  function init() {
@@ -13637,7 +13637,7 @@ index 747cca298..79ee46192 100644
  
      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
      camera.position.set(0.8, 0.5, -1.5);
-@@ -69,23 +74,26 @@ function init() {
+@@ -67,23 +72,26 @@ function init() {
              gltf.scene.rotation.x = Math.PI * 0.25;
  
              gltf.scene.traverse(child => {
@@ -13670,7 +13670,7 @@ index 747cca298..79ee46192 100644
                  color: 0x020205,
                  transparent: true,
                  opacity: setting.opacity,
-@@ -163,7 +171,7 @@ function moveCamera() {
+@@ -161,7 +169,7 @@ function moveCamera() {
          .start();
  }
  
@@ -13679,7 +13679,7 @@ index 747cca298..79ee46192 100644
      if (b) {
          if (composer) return;
  
-@@ -217,7 +225,7 @@ function createGUI() {
+@@ -207,7 +215,7 @@ function createGUI() {
  function upMaterial() {
      materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
      materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
@@ -17733,25 +17733,24 @@ index deab005fc..36ca1c7d1 100644
          .name('roughness')
          .onChange(() => render());
 diff --git a/examples-testing/examples/webgpu_pmrem_test.ts b/examples-testing/examples/webgpu_pmrem_test.ts
-index ab47c9665..dd4d63aab 100644
+index 3e1ea3ef9..6f383f5d3 100644
 --- a/examples-testing/examples/webgpu_pmrem_test.ts
 +++ b/examples-testing/examples/webgpu_pmrem_test.ts
-@@ -1,4 +1,4 @@
+@@ -1,11 +1,11 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-@@ -7,7 +7,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
- import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let scene, camera, controls, renderer;
 +let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGPURenderer;
  
  async function init() {
      const width = window.innerWidth;
-@@ -72,8 +72,10 @@ async function init() {
+@@ -71,8 +71,10 @@ async function init() {
              directionalLight.intensity = value ? 0 : 1;
  
              scene.traverse(function (child) {
@@ -17763,7 +17762,7 @@ index ab47c9665..dd4d63aab 100644
 +                    ).material.envMapIntensity = 1 - directionalLight.intensity;
                  }
              });
- 
+         });
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
 index 3dc3ceb4f..aad91a01c 100644
 --- a/examples-testing/examples/webgpu_portal.ts
