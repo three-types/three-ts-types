@@ -855,7 +855,7 @@ index ffb7734e..d71c6d24 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 92843d34..1bb0f744 100644
+index 2ae53ee1..6813d5f6 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { getNodeChildren, getCacheKey, hash } from './NodeUtils.js';
@@ -1221,7 +1221,7 @@ index 92843d34..1bb0f744 100644
                      }
                  }
              }
-@@ -696,10 +778,10 @@ class Node extends EventDispatcher {
+@@ -701,10 +783,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1234,7 +1234,7 @@ index 92843d34..1bb0f744 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -707,7 +789,9 @@ class Node extends EventDispatcher {
+@@ -712,7 +794,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1245,7 +1245,7 @@ index 92843d34..1bb0f744 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -723,33 +807,33 @@ class Node extends EventDispatcher {
+@@ -728,33 +812,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1289,7 +1289,7 @@ index 92843d34..1bb0f744 100644
                  }
              }
          }
-@@ -761,7 +845,7 @@ class Node extends EventDispatcher {
+@@ -766,7 +850,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1298,7 +1298,7 @@ index 92843d34..1bb0f744 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -770,18 +854,18 @@ class Node extends EventDispatcher {
+@@ -775,18 +859,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1320,7 +1320,7 @@ index 92843d34..1bb0f744 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -789,7 +873,7 @@ class Node extends EventDispatcher {
+@@ -794,7 +878,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1329,7 +1329,7 @@ index 92843d34..1bb0f744 100644
  
              this.serialize(data);
  
-@@ -798,12 +882,12 @@ class Node extends EventDispatcher {
+@@ -803,12 +887,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1344,7 +1344,7 @@ index 92843d34..1bb0f744 100644
                  values.push(data);
              }
  
-@@ -811,9 +895,9 @@ class Node extends EventDispatcher {
+@@ -816,9 +900,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -2678,7 +2678,7 @@ index 09ff8b51..9a5b8384 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index 79abc513..205df99e 100644
+index ecb048da..720e34ab 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
 @@ -6,13 +6,14 @@ import { Vector2 } from '../../math/Vector2.js';
@@ -2697,7 +2697,7 @@ index 79abc513..205df99e 100644
      let h1 = 0xdeadbeef ^ seed,
          h2 = 0x41c6ce57 ^ seed;
  
-@@ -45,7 +46,7 @@ function cyrb53(value, seed = 0) {
+@@ -46,7 +47,7 @@ function cyrb53(value, seed = 0) {
   * @param {string} str - The string to be hashed.
   * @return {number} The hash.
   */
@@ -2706,7 +2706,7 @@ index 79abc513..205df99e 100644
  
  /**
   * Computes a hash for the given array.
-@@ -54,7 +55,7 @@ export const hashString = str => cyrb53(str);
+@@ -56,7 +57,7 @@ export const hashString = str => cyrb53(str);
   * @param {Array<number>} array - The array to be hashed.
   * @return {number} The hash.
   */
@@ -2715,7 +2715,7 @@ index 79abc513..205df99e 100644
  
  /**
   * Computes a hash for the given list of parameters.
-@@ -63,7 +64,7 @@ export const hashArray = array => cyrb53(array);
+@@ -66,7 +67,7 @@ export const hashArray = array => cyrb53(array);
   * @param {...number} params - A list of parameters.
   * @return {number} The hash.
   */
@@ -2724,7 +2724,7 @@ index 79abc513..205df99e 100644
  
  /**
   * Computes a cache key for the given node.
-@@ -73,11 +74,11 @@ export const hash = (...params) => cyrb53(params);
+@@ -77,11 +78,11 @@ export const hash = (...params) => cyrb53(params);
   * @param {boolean} [force=false] - Whether to force a cache key computation or not.
   * @return {number} The hash.
   */
@@ -2740,7 +2740,7 @@ index 79abc513..205df99e 100644
      }
  
      for (const { property, childNode } of getNodeChildren(object)) {
-@@ -86,6 +87,17 @@ export function getCacheKey(object, force = false) {
+@@ -90,6 +91,17 @@ export function getCacheKey(object, force = false) {
  
      return cyrb53(values);
  }
@@ -2758,7 +2758,7 @@ index 79abc513..205df99e 100644
  
  /**
   * This generator function can be used to iterate over the node children
-@@ -96,32 +108,42 @@ export function getCacheKey(object, force = false) {
+@@ -101,32 +113,42 @@ export function getCacheKey(object, force = false) {
   * @param {boolean} [toJSON=false] - Whether to return JSON or not.
   * @yields {Object} A result node holding the property, index (if available) and the child node.
   */
@@ -2812,7 +2812,7 @@ index 79abc513..205df99e 100644
                  }
              }
          }
-@@ -243,7 +265,7 @@ export function getByteBoundaryFromType(type) {
+@@ -254,7 +276,7 @@ export function getByteBoundaryFromType(type) {
   * @param {any} value - The value.
   * @return {?string} The data type.
   */
@@ -2890,7 +2890,7 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 5c356cd5..05d13702 100644
+index a718de6c..89fe1fff 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -2,6 +2,7 @@ import Node from './Node.js';
@@ -2931,8 +2931,8 @@ index 5c356cd5..05d13702 100644
       * @param {Node} node - The node to add.
       * @return {StackNode} A reference to this stack node.
       */
--    add(node) {
-+    add(node: Node) {
+-    addToStack(node) {
++    addToStack(node: Node) {
          if (node.isNode !== true) {
              error('TSL: Invalid node added to stack.');
              return this;
@@ -3395,7 +3395,7 @@ index ee5cf92a..7240bb88 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index f4aff643..e69ca0a4 100644
+index 2a873eae..0a0cf01f 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -9,9 +9,38 @@ import ConstNode from '../core/ConstNode.js';
