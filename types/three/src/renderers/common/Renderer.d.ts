@@ -354,7 +354,7 @@ declare class Renderer {
      * @private
      * @return {?RenderTarget} The render target. The method returns `null` if no output conversion should be applied.
      */
-    _getFrameBufferTarget(): RenderTarget<Texture> | null;
+    _getFrameBufferTarget(): RenderTarget<Texture<unknown>> | null;
     /**
      * Renders the scene or 3D object with the given camera.
      *
@@ -709,7 +709,7 @@ declare class Renderer {
      *
      * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
      */
-    getRenderTarget(): RenderTarget<Texture> | null;
+    getRenderTarget(): RenderTarget<Texture<unknown>> | null;
     /**
      * Sets the output render target for the renderer.
      *
@@ -721,7 +721,7 @@ declare class Renderer {
      *
      * @return {?RenderTarget} The current output render target. Returns `null` if no output target is set.
      */
-    getOutputRenderTarget(): RenderTarget<Texture> | null;
+    getOutputRenderTarget(): RenderTarget<Texture<unknown>> | null;
     /**
      * Sets the canvas target. The canvas target manages the HTML canvas
      * or the offscreen canvas the renderer draws into.

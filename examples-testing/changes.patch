@@ -4171,7 +4171,7 @@ index 3166c03bc..d2c22418f 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgl_geometry_colors_lookuptable.ts b/examples-testing/examples/webgl_geometry_colors_lookuptable.ts
-index 6b0138529..382a9b7a6 100644
+index 6b0138529..c46e067e6 100644
 --- a/examples-testing/examples/webgl_geometry_colors_lookuptable.ts
 +++ b/examples-testing/examples/webgl_geometry_colors_lookuptable.ts
 @@ -5,19 +5,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -4214,7 +4214,7 @@ index 6b0138529..382a9b7a6 100644
      colors.needsUpdate = true;
  
 -    const map = sprite.material.map;
-+    const map = sprite.material.map!;
++    const map = sprite.material.map as THREE.Texture<HTMLCanvasElement>;
      lut.updateCanvas(map.image);
      map.needsUpdate = true;
  }
@@ -7298,7 +7298,7 @@ index 2c770e774..04d2acf53 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_imagebitmap.ts b/examples-testing/examples/webgl_loader_imagebitmap.ts
-index 27c61b14d..4f1ba6d5d 100644
+index 27c61b14d..4663b587b 100644
 --- a/examples-testing/examples/webgl_loader_imagebitmap.ts
 +++ b/examples-testing/examples/webgl_loader_imagebitmap.ts
 @@ -1,7 +1,7 @@
@@ -7311,6 +7311,15 @@ index 27c61b14d..4f1ba6d5d 100644
  
  init();
  
+@@ -15,7 +15,7 @@ function addImageBitmap() {
+ 
+             // ImageBitmap should be disposed when done with it.
+ 
+-            texture.onUpdate = disposeImageBitmap;
++            texture.onUpdate = disposeImageBitmap as (texture: THREE.Texture) => void;
+ 
+             addCube(material);
+         },
 @@ -41,7 +41,7 @@ function addImage() {
  
  const geometry = new THREE.BoxGeometry();
@@ -7325,7 +7334,7 @@ index 27c61b14d..4f1ba6d5d 100644
  }
  
 -function disposeImageBitmap(texture) {
-+function disposeImageBitmap(texture: THREE.Texture) {
++function disposeImageBitmap(texture: THREE.Texture<ImageBitmap>) {
      texture.source.data.close();
      texture.onUpdate = null; // make sure this callback is executed only once per texture
  }
@@ -12864,7 +12873,7 @@ index 4ab6dc895..adea084a0 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_sprites.ts b/examples-testing/examples/webgl_sprites.ts
-index 2e4189347..c9f616909 100644
+index 2e4189347..3ff04b108 100644
 --- a/examples-testing/examples/webgl_sprites.ts
 +++ b/examples-testing/examples/webgl_sprites.ts
 @@ -1,13 +1,17 @@
@@ -12906,19 +12915,19 @@ index 2e4189347..c9f616909 100644
  }
  
 -function createHUDSprites(texture) {
-+function createHUDSprites(texture: THREE.Texture) {
++function createHUDSprites(texture: THREE.Texture<HTMLImageElement>) {
      texture.colorSpace = THREE.SRGBColorSpace;
  
      const material = new THREE.SpriteMaterial({ map: texture });
  
 -    const width = material.map.image.width;
 -    const height = material.map.image.height;
-+    const width = material.map!.image.width;
-+    const height = material.map!.image.height;
++    const width = (material.map!.image as HTMLImageElement).width;
++    const height = (material.map!.image as HTMLImageElement).height;
  
      spriteTL = new THREE.Sprite(material);
      spriteTL.center.set(0.0, 1.0);
-@@ -156,7 +160,7 @@ function animate() {
+@@ -156,16 +160,16 @@ function animate() {
      const time = Date.now() / 1000;
  
      for (let i = 0, l = group.children.length; i < l; i++) {
@@ -12927,6 +12936,18 @@ index 2e4189347..c9f616909 100644
          const material = sprite.material;
          const scale = Math.sin(time + sprite.position.x * 0.01) * 0.3 + 1.0;
  
+         let imageWidth = 1;
+         let imageHeight = 1;
+ 
+-        if (material.map && material.map.image && material.map.image.width) {
+-            imageWidth = material.map.image.width;
+-            imageHeight = material.map.image.height;
++        if (material.map && material.map.image && (material.map.image as HTMLImageElement).width) {
++            imageWidth = (material.map.image as HTMLImageElement).width;
++            imageHeight = (material.map.image as HTMLImageElement).height;
+         }
+ 
+         sprite.material.rotation += 0.1 * (i / l);
 diff --git a/examples-testing/examples/webgl_test_memory.ts b/examples-testing/examples/webgl_test_memory.ts
 index f5d0e112d..128862a27 100644
 --- a/examples-testing/examples/webgl_test_memory.ts
