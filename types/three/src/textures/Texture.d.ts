@@ -176,7 +176,7 @@ export class Texture<TImage = unknown> extends EventDispatcher<{ dispose: {} }> 
      * This is often useful in context of spritesheets where multiple textures render the same data
      * but with different {@link Texture} transformations.
      */
-    source: Source;
+    source: Source<TImage>;
 
     /**
      * The width of the texture in pixels.
@@ -474,7 +474,7 @@ export class Texture<TImage = unknown> extends EventDispatcher<{ dispose: {} }> 
      * The Global default value for {@link Texture.image | .image}.
      * @defaultValue `null`.
      */
-    static DEFAULT_IMAGE: any;
+    static DEFAULT_IMAGE: null;
 
     /**
      * The Global default value for {@link mapping | .mapping}.
@@ -487,7 +487,7 @@ export class Texture<TImage = unknown> extends EventDispatcher<{ dispose: {} }> 
     /**
      * A callback function, called when the texture is updated _(e.g., when needsUpdate has been set to true and then the texture is used)_.
      */
-    onUpdate: ((texture: Texture) => void) | null;
+    onUpdate: ((texture: Texture<TImage>) => void) | null;
 
     /**
      * Transform the **UV** based on the value of this texture's
@@ -528,7 +528,7 @@ export class Texture<TImage = unknown> extends EventDispatcher<{ dispose: {} }> 
      */
     clone(): this;
 
-    copy(source: Texture): this;
+    copy(source: Texture<TImage>): this;
 
     /**
      * Sets this texture's properties based on `values`.
