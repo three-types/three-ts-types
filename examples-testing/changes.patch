@@ -7298,7 +7298,7 @@ index 2c770e774..04d2acf53 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_imagebitmap.ts b/examples-testing/examples/webgl_loader_imagebitmap.ts
-index 27c61b14d..4f1ba6d5d 100644
+index 27c61b14d..4663b587b 100644
 --- a/examples-testing/examples/webgl_loader_imagebitmap.ts
 +++ b/examples-testing/examples/webgl_loader_imagebitmap.ts
 @@ -1,7 +1,7 @@
@@ -7311,6 +7311,15 @@ index 27c61b14d..4f1ba6d5d 100644
  
  init();
  
+@@ -15,7 +15,7 @@ function addImageBitmap() {
+ 
+             // ImageBitmap should be disposed when done with it.
+ 
+-            texture.onUpdate = disposeImageBitmap;
++            texture.onUpdate = disposeImageBitmap as (texture: THREE.Texture) => void;
+ 
+             addCube(material);
+         },
 @@ -41,7 +41,7 @@ function addImage() {
  
  const geometry = new THREE.BoxGeometry();
@@ -7325,7 +7334,7 @@ index 27c61b14d..4f1ba6d5d 100644
  }
  
 -function disposeImageBitmap(texture) {
-+function disposeImageBitmap(texture: THREE.Texture) {
++function disposeImageBitmap(texture: THREE.Texture<ImageBitmap>) {
      texture.source.data.close();
      texture.onUpdate = null; // make sure this callback is executed only once per texture
  }
@@ -21628,24 +21637,3 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/loaders/TextureLoader.d.ts b/types/three/src/loaders/TextureLoader.d.ts
-index 3cc07f5c3..c41af0498 100644
---- a/types/three/src/loaders/TextureLoader.d.ts
-+++ b/types/three/src/loaders/TextureLoader.d.ts
-@@ -6,13 +6,13 @@ import { LoadingManager } from "./LoadingManager.js";
-  * Class for loading a texture.
-  * Unlike other loaders, this one emits events instead of using predefined callbacks. So if you're interested in getting notified when things happen, you need to add listeners to the object.
-  */
--export class TextureLoader extends Loader<Texture> {
-+export class TextureLoader extends Loader<Texture<HTMLImageElement>> {
-     constructor(manager?: LoadingManager);
- 
-     load(
-         url: string,
--        onLoad?: (data: Texture) => void,
-+        onLoad?: (data: Texture<HTMLImageElement>) => void,
-         onProgress?: (event: ProgressEvent) => void,
-         onError?: (err: unknown) => void,
--    ): Texture;
-+    ): Texture<HTMLImageElement>;
- }
