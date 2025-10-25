@@ -67,10 +67,11 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare class Node extends EventDispatcher<{
+declare class Node<TValue = unknown> extends EventDispatcher<{
     dispose: {};
 }> {
     static get type(): string;
+    private _value;
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
@@ -168,7 +169,7 @@ declare class Node extends EventDispatcher<{
      * @generator
      * @yields {Node} A child node.
      */
-    getChildren(): Generator<Node, void, unknown>;
+    getChildren(): Generator<Node<unknown>, void, unknown>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
@@ -274,7 +275,7 @@ declare class Node extends EventDispatcher<{
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node} The shared node if possible. Otherwise `this` is returned.
      */
-    getShared(builder: NodeBuilder): Node;
+    getShared(builder: NodeBuilder): Node<unknown>;
     /**
      * Returns the number of elements in the node array.
      *
