@@ -71,7 +71,7 @@ declare class Node<TValue = unknown> extends EventDispatcher<{
     dispose: {};
 }> {
     static get type(): string;
-    private _value;
+    __value__: TValue;
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
