@@ -2,7 +2,7 @@
 
 import { Texture } from "./Texture.js";
 
-declare class ExternalTexture extends Texture {
+declare class ExternalTexture extends Texture<null> {
     sourceTexture: WebGLTexture | GPUTexture | null;
 
     readonly isExternalTexture: true;
