@@ -17,7 +17,7 @@ import { Texture } from "./Texture.js";
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/CanvasTexture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/textures/CanvasTexture.js | Source}
  */
-export class CanvasTexture extends Texture<HTMLCanvasElement> {
+export class CanvasTexture<TCanvas = HTMLCanvasElement> extends Texture<TCanvas> {
     /**
      * This creates a new {@link THREE.CanvasTexture | CanvasTexture} object.
      * @param canvas The HTML canvas element from which to load the texture.
@@ -31,7 +31,7 @@ export class CanvasTexture extends Texture<HTMLCanvasElement> {
      * @param anisotropy See {@link Texture.anisotropy | .anisotropy}. Default {@link THREE.Texture.DEFAULT_ANISOTROPY}
      */
     constructor(
-        canvas?: HTMLCanvasElement,
+        canvas?: TCanvas,
         mapping?: Mapping,
         wrapS?: Wrapping,
         wrapT?: Wrapping,
