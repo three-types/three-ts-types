@@ -19,8 +19,8 @@ export const renderOutput: (
     outputColorSpace?: string | null,
 ) => RenderOutputNode;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         renderOutput: (
             toneMapping?: ToneMapping | null,
             outputColorSpace?: string | null,

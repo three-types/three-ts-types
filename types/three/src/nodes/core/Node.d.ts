@@ -378,5 +378,7 @@ declare const Node: {
     new(nodeType?: string | null): Node;
     get type(): string;
 };
-type Node<TValue = unknown> = NodeInterface & { __TypeScript_VALUE__: TValue };
+export interface NodeElements {
+}
+type Node<TValue = unknown> = NodeInterface & NodeElements & { __TypeScript_VALUE__: TValue };
 export default Node;

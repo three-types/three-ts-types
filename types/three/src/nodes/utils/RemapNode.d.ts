@@ -27,8 +27,8 @@ export const remapClamp: (
     outHighNode?: Node | number,
 ) => RemapNode;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         remap: (
             inLowNode: Node | number,
             inHighNode: Node | number,

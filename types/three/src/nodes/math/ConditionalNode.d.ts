@@ -16,8 +16,8 @@ export const select: (
     elseNode?: Node | number | null,
 ) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         select: (
             ifNode: Node | number,
             elseNode?: Node | number | null,

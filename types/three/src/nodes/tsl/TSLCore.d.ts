@@ -13,8 +13,8 @@ import JoinNode from "../utils/JoinNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         assign: (sourceNode: Node | number) => this;
         get: (value: string) => Node;
     }
@@ -89,8 +89,8 @@ export type Swizzable =
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
     };
 
-declare module "../Nodes.js" {
-    interface Node extends Swizzable {
+declare module "../core/Node.js" {
+    interface NodeElements extends Swizzable {
     }
 }
 
@@ -293,8 +293,8 @@ export const Switch: (expression: Node) => StackNode;
 
 export function Stack(node: Node): Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         toStack: () => Node;
         toStackAssign: () => this;
     }
@@ -463,8 +463,8 @@ export const mat4: Matrix4Function;
 export const string: (value?: string) => ConstNode<string>;
 export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         toColor: () => Node;
         toColorAssign: () => this;
 
@@ -531,8 +531,8 @@ export const element: (node: Node, indexNode: Node) => Node;
 export const convert: (node: Node, types: string) => Node;
 export const split: (node: Node, channels?: string) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         element: (indexNode: Node) => Node;
         elementAssign: (indexNode: Node) => this;
 
@@ -546,8 +546,8 @@ declare module "../Nodes.js" {
  */
 export const append: (node: Node) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         /**
          * @deprecated append() has been renamed to Stack().
          */
