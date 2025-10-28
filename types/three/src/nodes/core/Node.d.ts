@@ -1,4 +1,5 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { ArrayElementIndex, SwizzleOption } from "../tsl/TSLCore.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
@@ -380,5 +381,63 @@ declare const Node: {
 };
 export interface NodeElements {
 }
-type Node<TValue = unknown> = NodeInterface & NodeElements & { __TypeScript_VALUE__: TValue };
+type XY = "x" | "y";
+type RG = "r" | "g";
+type ST = "s" | "t";
+type Vec2Swizzle =
+    & {
+        [Key in XY | RG | ST]: Node<"float">;
+    }
+    & {
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"vec4">;
+    };
+type XYZ = "x" | "y" | "z";
+type RGB = "r" | "g" | "b";
+type STP = "s" | "t" | "p";
+type Vec3Swizzle =
+    & {
+        [Key in XYZ | RGB | STP]: Node<"float">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"vec4">;
+    };
+type XYZW = "x" | "y" | "z" | "w";
+type RGBA = "r" | "g" | "b" | "a";
+type STPQ = "s" | "t" | "p" | "q";
+type Vec4Swizzle =
+    & {
+        [Key in XYZW | RGBA | STPQ]: Node<"float">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+            "vec4"
+        >;
+    };
+type Node<TValue = unknown> =
+    & NodeInterface
+    & NodeElements
+    & (TValue extends "vec2" ? Vec2Swizzle : {})
+    & (TValue extends "vec3" ? Vec3Swizzle : {})
+    & (TValue extends "vec4" ? Vec4Swizzle : {})
+    & {
+        __TypeScript_VALUE__: TValue;
+    };
 export default Node;
