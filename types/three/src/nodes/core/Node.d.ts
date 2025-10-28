@@ -67,10 +67,9 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare class Node extends EventDispatcher<{
+declare interface NodeInterface extends EventDispatcher<{
     dispose: {};
 }> {
-    static get type(): string;
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
@@ -85,12 +84,6 @@ declare class Node extends EventDispatcher<{
     readonly isNode: true;
     readonly id: number;
     self?: this;
-    /**
-     * Constructs a new node.
-     *
-     * @param {?string} nodeType - The node type.
-     */
-    constructor(nodeType?: string | null);
     /**
      * Set this property to `true` when the node should be regenerated.
      *
@@ -373,4 +366,15 @@ declare class Node extends EventDispatcher<{
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
+declare const Node: {
+    prototype: Node;
+    /**
+     * Constructs a new node.
+     *
+     * @param {?string} nodeType - The node type.
+     */
+    new(nodeType?: string | null): Node;
+    get type(): string;
+};
+type Node<TValue = unknown> = NodeInterface & { __TypeScript_VALUE__: TValue };
 export default Node;
