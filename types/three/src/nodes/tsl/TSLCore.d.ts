@@ -332,23 +332,23 @@ export const bool: BooleanFunction;
 interface Vector2Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number): ConstNode<Vector2>;
+    (x?: number, y?: number): Node<"vec2">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector2): ConstNode<Vector2>;
-    (node: Node): Node;
+    (value: Vector2): Node<"vec2">;
+    (node: Node): Node<"vec2">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number): JoinNode;
+    (x: Node | number, y: Node | number): Node<"vec2">;
 }
 
 export const vec2: Vector2Function;
 export const ivec2: Vector2Function;
 export const uvec2: Vector2Function;
-export const bvec2: (node: Node) => Node;
+export const bvec2: (node: Node) => Node<"vec2">;
 
 interface Vector3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
