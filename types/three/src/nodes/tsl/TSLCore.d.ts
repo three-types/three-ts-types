@@ -89,11 +89,6 @@ export type Swizzable =
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
     };
 
-declare module "../core/Node.js" {
-    interface NodeElements extends Swizzable {
-    }
-}
-
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
 
