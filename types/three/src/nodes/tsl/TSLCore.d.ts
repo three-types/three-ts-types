@@ -22,7 +22,7 @@ declare module "../Nodes.js" {
 
 type XYZWCharacter = "x" | "y" | "z" | "w";
 type RGBACharacter = "r" | "g" | "b" | "a";
-type STPQCharacter = "s" | "t" | "p" | "q";
+// type STPQCharacter = "s" | "t" | "p" | "q";
 
 type XYZWSwizzle =
     | `${XYZWCharacter}`
@@ -36,13 +36,7 @@ type RGBASwizzle =
     | `${RGBACharacter}${RGBACharacter}${RGBACharacter}`
     | `${RGBACharacter}${RGBACharacter}${RGBACharacter}${RGBACharacter}`;
 
-type STPQSwizzle =
-    | `${STPQCharacter}`
-    | `${STPQCharacter}${STPQCharacter}`
-    | `${STPQCharacter}${STPQCharacter}${STPQCharacter}`
-    | `${STPQCharacter}${STPQCharacter}${STPQCharacter}${STPQCharacter}`;
-
-export type SwizzleOption = XYZWSwizzle | RGBASwizzle | STPQSwizzle;
+export type SwizzleOption = XYZWSwizzle | RGBASwizzle;
 
 export type ArrayElementIndex =
     | 0
