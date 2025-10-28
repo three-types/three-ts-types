@@ -67,9 +67,11 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare interface NodeInterface extends EventDispatcher<{
-    dispose: {};
-}> {
+declare interface NodeInterface extends
+    EventDispatcher<{
+        dispose: {};
+    }>
+{
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
