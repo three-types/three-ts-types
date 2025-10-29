@@ -103,8 +103,10 @@ declare const BufferAttributeNode: {
         bufferOffset?: number,
     ): BufferAttributeNode<TNodeValue>;
     get type(): string;
-}
-type BufferAttributeNode<TNodeValue> = InputNode<TNodeValue, TypedArray | InterleavedBuffer | BufferAttribute> & BufferAttributeNodeInterface;
+};
+type BufferAttributeNode<TNodeValue> =
+    & InputNode<TNodeValue, TypedArray | InterleavedBuffer | BufferAttribute>
+    & BufferAttributeNodeInterface;
 export default BufferAttributeNode;
 /**
  * TSL function for creating a buffer attribute node.
