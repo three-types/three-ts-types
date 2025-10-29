@@ -135,7 +135,7 @@ declare class Textures extends DataMap<{
      *
      * @param {RenderTarget} renderTarget - The render target to destroy.
      */
-    _destroyRenderTarget(renderTarget: any): void;
+    _destroyRenderTarget(renderTarget: RenderTarget): void;
     /**
      * Frees internal resource when the given texture isn't
      * required anymore.
