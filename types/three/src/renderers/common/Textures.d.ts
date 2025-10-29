@@ -130,6 +130,13 @@ declare class Textures extends DataMap<{
      */
     needsMipmaps(texture: Texture): boolean;
     /**
+     * Frees internal resources when the given render target isn't
+     * required anymore.
+     *
+     * @param {RenderTarget} renderTarget - The render target to destroy.
+     */
+    _destroyRenderTarget(renderTarget: any): void;
+    /**
      * Frees internal resource when the given texture isn't
      * required anymore.
      *
