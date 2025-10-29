@@ -25,7 +25,7 @@ export const transition: (
     node: Node,
     nodeB: Node,
     mixTexture: Node,
-    mixRatio: UniformNode<number>,
-    threshold: UniformNode<number>,
-    useTexture: UniformNode<number>,
+    mixRatio: UniformNode<"float", number>,
+    threshold: UniformNode<"float", number>,
+    useTexture: UniformNode<"float", number>,
 ) => TransitionNode;

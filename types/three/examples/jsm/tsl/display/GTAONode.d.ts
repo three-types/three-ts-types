@@ -6,13 +6,13 @@ declare class GTAONode extends TempNode {
 
     resolutionScale: number;
 
-    radius: UniformNode<number>;
-    resolution: UniformNode<Vector2>;
-    thickness: UniformNode<number>;
-    distanceExponent: UniformNode<number>;
-    distanceFallOff: UniformNode<number>;
-    scale: UniformNode<number>;
-    samples: UniformNode<number>;
+    radius: UniformNode<"float", number>;
+    resolution: UniformNode<"vec2", Vector2>;
+    thickness: UniformNode<"float", number>;
+    distanceExponent: UniformNode<"float", number>;
+    distanceFallOff: UniformNode<"float", number>;
+    scale: UniformNode<"float", number>;
+    samples: UniformNode<"float", number>;
 
     useTemporalFiltering: boolean;
 

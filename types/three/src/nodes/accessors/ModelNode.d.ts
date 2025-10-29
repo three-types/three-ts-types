@@ -17,7 +17,7 @@ export const modelScale: ModelNode;
 export const modelViewPosition: ModelNode;
 export const modelRadius: ModelNode;
 export const modelNormalMatrix: Node;
-export const modelWorldMatrixInverse: UniformNode<Matrix4>;
+export const modelWorldMatrixInverse: UniformNode<"mat4", Matrix4>;
 
 export const modelViewMatrix: ModelNode;
 

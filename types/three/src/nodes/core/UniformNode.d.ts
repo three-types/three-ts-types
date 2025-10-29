@@ -9,18 +9,10 @@ import UniformGroupNode from "./UniformGroupNode.js";
  *
  * @augments InputNode
  */
-declare class UniformNode<TValue> extends InputNode<TValue> {
-    static get type(): string;
+interface UniformNodeInterface<TValue> {
     readonly isUniformNode: true;
     name: string;
     groupNode: UniformGroupNode;
-    /**
-     * Constructs a new uniform node.
-     *
-     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
-     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
-     */
-    constructor(value: TValue, nodeType?: string | null);
     /**
      * Sets the {@link UniformNode#name} property.
      *
@@ -61,6 +53,17 @@ declare class UniformNode<TValue> extends InputNode<TValue> {
     getInputType(builder: NodeBuilder): string | null;
     generate(builder: NodeBuilder, output: string | null): string;
 }
+declare const UniformNode: {
+    /**
+     * Constructs a new uniform node.
+     *
+     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+     */
+    new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
+    get type(): string;
+};
+type UniformNode<TNodeValue, TValue> = InputNode<TNodeValue, TValue> & UniformNodeInterface<TValue>;
 export default UniformNode;
 /**
  * TSL function for creating a uniform node.
@@ -71,4 +74,7 @@ export default UniformNode;
  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
  * @returns {UniformNode}
  */
-export declare const uniform: <TValue>(value: InputNode<TValue> | TValue, type?: Node | string) => UniformNode<TValue>;
+export declare const uniform: <TNodeValue, TValue>(
+    value: InputNode<TNodeValue, TValue> | TValue,
+    type?: Node | string,
+) => UniformNode<TNodeValue, TValue>;

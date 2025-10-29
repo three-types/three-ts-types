@@ -1,9 +1,16 @@
 import InputNode from "./InputNode.js";
 import NodeBuilder from "./NodeBuilder.js";
 
-export default class ConstNode<Value> extends InputNode<Value> {
+interface ConstNodeInterface {
     isConstNode: true;
-    constructor(value: Value, nodeType?: string | null);
 
     generateConst(builder: NodeBuilder): string;
 }
+
+declare const ConstNode: {
+    new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): ConstNode<TNodeValue, TValue>;
+};
+
+type ConstNode<TNodeValue, TValue> = InputNode<TNodeValue, TValue> & ConstNodeInterface;
+
+export default ConstNode;

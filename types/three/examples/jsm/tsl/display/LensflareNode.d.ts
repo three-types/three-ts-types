@@ -12,11 +12,11 @@ interface LensflareNodeParams {
 declare class LensflareNode extends TempNode {
     textureNode: TextureNode;
 
-    ghostTintNode: UniformNode<Vector3>;
-    thresholdNode: UniformNode<number>;
-    ghostSamplesNode: UniformNode<number>;
-    ghostSpacingNode: UniformNode<number>;
-    ghostAttenuationFactorNode: UniformNode<number>;
+    ghostTintNode: UniformNode<"vec3", Vector3>;
+    thresholdNode: UniformNode<"float", number>;
+    ghostSamplesNode: UniformNode<"float", number>;
+    ghostSpacingNode: UniformNode<"float", number>;
+    ghostAttenuationFactorNode: UniformNode<"float", number>;
     downSampleRatio: number;
 
     constructor(textureNode: TextureNode, params?: LensflareNodeParams);
