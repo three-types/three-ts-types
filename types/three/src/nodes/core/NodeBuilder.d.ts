@@ -92,7 +92,10 @@ export default abstract class NodeBuilder {
 
     getAttribute(name: string, type: string): NodeAttribute;
 
-    getPropertyName<TNodeValue, TValue>(node: NodeVar | NodeUniform<TNodeValue, TValue>, shaderStage: NodeShaderStage): string;
+    getPropertyName<TNodeValue, TValue>(
+        node: NodeVar | NodeUniform<TNodeValue, TValue>,
+        shaderStage: NodeShaderStage,
+    ): string;
     isVector(type: string): boolean;
 
     isMatrix(type: string): boolean;
