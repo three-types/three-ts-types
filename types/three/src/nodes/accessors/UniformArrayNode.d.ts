@@ -6,7 +6,7 @@ declare class UniformArrayElementNode extends ArrayElementNode {
     constructor(arrayBuffer: Node, indexNode: Node);
 }
 
-declare class UniformArrayNode extends BufferNode<unknown[]> {
+declare class UniformArrayNode extends BufferNode<unknown, unknown[]> {
     array: unknown[];
     elementType: string | null;
     paddedType: string;

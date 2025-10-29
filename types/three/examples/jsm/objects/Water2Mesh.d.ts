@@ -37,12 +37,12 @@ declare class WaterNode extends TempNode {
     normalMap1: TextureNode;
     flowMap: TextureNode;
 
-    color: UniformNode<Color>;
-    flowDirection: UniformNode<Vector2>;
-    flowSpeed: UniformNode<number>;
-    reflectivity: UniformNode<number>;
-    scale: UniformNode<number>;
-    flowConfig: UniformNode<Vector3>;
+    color: UniformNode<"color", Color>;
+    flowDirection: UniformNode<"vec2", Vector2>;
+    flowSpeed: UniformNode<"float", number>;
+    reflectivity: UniformNode<"float", number>;
+    scale: UniformNode<"float", number>;
+    flowConfig: UniformNode<"vec3", Vector3>;
 
     constructor(options: WaterMeshOptions, waterBody: WaterMesh);
 

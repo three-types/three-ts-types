@@ -1,5 +1,4 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
-import { ArrayElementIndex, SwizzleOption } from "../tsl/TSLCore.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
@@ -68,7 +67,7 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare interface NodeInterface extends
+interface NodeInterface extends
     EventDispatcher<{
         dispose: {};
     }>
