@@ -7,7 +7,7 @@ export type ScreenNodeScope =
     | typeof ScreenNode.UV
     | typeof ScreenNode.DPR;
 
-declare interface ScreenNodeInterface {
+interface ScreenNodeInterface {
     scope: ScreenNodeScope;
 
     readonly isViewportNode: true;

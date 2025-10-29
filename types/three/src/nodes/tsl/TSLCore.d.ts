@@ -5,11 +5,9 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
-import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
-import JoinNode from "../utils/JoinNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
@@ -94,7 +92,8 @@ export type NodeObjectOption = Node | number | string;
 
 // same logic as in ShaderNodeObject: number,boolean,node->node, otherwise do nothing
 export type NodeObject<T> = T extends Node ? T
-    : T extends number | boolean ? ConstNode<number | boolean>
+    : T extends number ? Node<"float">
+    : T extends boolean ? Node<"bool">
     : T;
 
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
@@ -298,14 +297,14 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): ConstNode<Color>;
-    (r: number, g: number, b: number): ConstNode<Color>;
+    (color?: string | number): Node<"color">;
+    (r: number, g: number, b: number): Node<"color">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): ConstNode<Color>;
-    (node: Node): Node;
+    (color: Color): Node<"color">;
+    (node: Node): Node<"color">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
@@ -313,18 +312,30 @@ interface ColorFunction {
 
 export const color: ColorFunction;
 
-interface NumberFunction {
-    (value?: number): ConstNode<number>;
-    (node: Node): Node;
+interface FloatFunction {
+    (value?: number): Node<"float">;
+    (node: Node): Node<"float">;
 }
 
-export const float: NumberFunction;
-export const int: NumberFunction;
-export const uint: NumberFunction;
+export const float: FloatFunction;
+
+interface IntFunction {
+    (value?: number): Node<"int">;
+    (node: Node): Node<"int">;
+}
+
+export const int: IntFunction;
+
+interface UintFunction {
+    (value?: number): Node<"uint">;
+    (node: Node): Node<"uint">;
+}
+
+export const uint: UintFunction;
 
 interface BooleanFunction {
-    (value?: boolean): ConstNode<boolean>;
-    (node: Node): Node;
+    (value?: boolean): Node<"bool">;
+    (node: Node): Node<"bool">;
 }
 
 export const bool: BooleanFunction;
@@ -346,61 +357,61 @@ interface Vector2Function {
 }
 
 export const vec2: Vector2Function;
-export const ivec2: Vector2Function;
-export const uvec2: Vector2Function;
-export const bvec2: (node: Node) => Node<"vec2">;
+export const ivec2: (node: Node) => Node<"ivec2">;
+export const uvec2: (node: Node) => Node<"uvec2">;
+export const bvec2: (node: Node) => Node<"bvec2">;
 
 interface Vector3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number): ConstNode<Vector3>;
+    (x?: number, y?: number, z?: number): Node<"vec3">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector3): ConstNode<Vector3>;
-    (node: Node): Node;
+    (value: Vector3): Node<"vec3">;
+    (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number): Node<"vec3">;
 }
 
 export const vec3: Vector3Function;
-export const ivec3: Vector3Function;
-export const uvec3: Vector3Function;
-export const bvec3: (node: Node) => Node;
+export const ivec3: (node: Node) => Node<"ivec3">;
+export const uvec3: (node: Node) => Node<"uvec3">;
+export const bvec3: (node: Node) => Node<"bvec3">;
 
 interface Vector4Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number, w?: number): ConstNode<Vector4>;
+    (x?: number, y?: number, z?: number, w?: number): Node<"vec4">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector4): ConstNode<Vector4>;
-    (node: Node): Node;
+    (value: Vector4): Node<"vec4">;
+    (node: Node): Node<"vec4">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): Node<"vec4">;
 }
 
 export const vec4: Vector4Function;
-export const ivec4: Vector4Function;
-export const uvec4: Vector4Function;
-export const bvec4: (node: Node) => Node;
+export const ivec4: (node: Node) => Node<"ivec4">;
+export const uvec4: (node: Node) => Node<"uvec4">;
+export const bvec4: (node: Node) => Node<"bvec4">;
 
 interface Matrix2Function {
-    (value: Matrix2): ConstNode<Matrix2>;
-    (node: Node): Node;
+    (value: Matrix2): Node<"mat2">;
+    (node: Node): Node<"mat2">;
 }
 
 export const mat2: Matrix2Function;
 
 interface Matrix3Function {
-    (value: Matrix3): ConstNode<Matrix3>;
+    (value: Matrix3): Node<"mat3">;
     (
         n11: number | Node,
         n12: number | Node,
@@ -411,20 +422,20 @@ interface Matrix3Function {
         n31: number | Node,
         n32: number | Node,
         n33: number | Node,
-    ): Node;
-    (): ConstNode<Matrix3>;
+    ): Node<"mat3">;
+    (): Node<"mat3">;
     (
         p1: Node,
         p2: Node,
         p3: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat3">;
+    (node: Node): Node<"mat3">;
 }
 
 export const mat3: Matrix3Function;
 
 interface Matrix4Function {
-    (value: Matrix4): ConstNode<Matrix4>;
+    (value: Matrix4): Node<"mat4">;
     (
         n11: number | Node,
         n12: number | Node,
@@ -442,21 +453,21 @@ interface Matrix4Function {
         n42: number | Node,
         n43: number | Node,
         n44: number | Node,
-    ): Node;
-    (): ConstNode<Matrix4>;
+    ): Node<"mat4">;
+    (): Node<"mat4">;
     (
         p1: Node,
         p2: Node,
         p3: Node,
         p4: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat4">;
+    (node: Node): Node<"mat4">;
 }
 
 export const mat4: Matrix4Function;
 
-export const string: (value?: string) => ConstNode<string>;
-export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
+export const string: (value?: string) => Node<"string">;
+export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface NodeElements {
