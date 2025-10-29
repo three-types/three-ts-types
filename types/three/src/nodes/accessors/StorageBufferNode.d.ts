@@ -8,7 +8,9 @@ import StructTypeNode from "../core/StructTypeNode.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
-export default class StorageBufferNode extends BufferNode<unknown, StorageBufferAttribute | StorageInstancedBufferAttribute> {
+export default class StorageBufferNode
+    extends BufferNode<unknown, StorageBufferAttribute | StorageInstancedBufferAttribute>
+{
     readonly isStorageBufferNode: true;
 
     structTypeNode: StructTypeNode | null;

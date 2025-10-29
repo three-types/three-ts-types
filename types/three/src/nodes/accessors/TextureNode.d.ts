@@ -17,7 +17,6 @@ interface TextureNodeInterface {
 
     referenceNode: Node | null;
 
-
     getDefaultUV(): Node;
 
     setSampler(value: boolean): this;
@@ -59,7 +58,7 @@ declare const TextureNode: {
         levelNode?: Node | null,
         biasNode?: Node | null,
     ): TextureNode;
-}
+};
 
 type TextureNode<TNodeValue = "vec4"> = UniformNode<TNodeValue, Texture> & TextureNodeInterface;
 

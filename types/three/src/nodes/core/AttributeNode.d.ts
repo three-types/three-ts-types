@@ -9,7 +9,7 @@ interface AttributeNodeInterface {
 
 declare const AttributeNode: {
     new<TNodeType>(attributeName: string, nodeType?: string | null): AttributeNode<TNodeType>;
-}
+};
 
 type AttributeNode<TNodeType> = Node<TNodeType> & AttributeNodeInterface;
 
