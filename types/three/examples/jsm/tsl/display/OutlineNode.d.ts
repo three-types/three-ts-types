@@ -7,7 +7,7 @@ export interface OutlineNodeParams {
     downSampleRatio?: number | undefined;
 }
 
-declare class OutlineNode extends TempNode {
+declare class OutlineNode extends TempNode<"vec4"> {
     scene: Scene;
     camera: Camera;
     selectedObjects: Object3D[];

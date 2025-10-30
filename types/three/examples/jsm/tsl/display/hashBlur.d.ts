@@ -1,13 +1,12 @@
 import { Node } from "three/webgpu";
 
 interface HashBlurOptions {
-    size?: Node | undefined;
-    mask?: Node | null | undefined;
+    repeats?: Node<"float"> | number | undefined;
     premultipliedAlpha?: boolean | undefined;
 }
 
 export const hashBlur: (
-    textureNode: Node,
-    bluramount?: Node | number,
+    textureNode: Node<"vec4">,
+    bluramount?: Node<"float"> | number,
     options?: HashBlurOptions,
-) => Node;
+) => Node<"vec4">;

@@ -5,7 +5,7 @@ export interface GaussianBlurNodeOptions {
     resolution?: Vector2 | undefined;
 }
 
-declare class GaussianBlurNode extends TempNode {
+declare class GaussianBlurNode extends TempNode<"vec4"> {
     textureNode: TextureNode;
     directionNode: Node | null;
     sigma: number;
