@@ -8,7 +8,7 @@ interface PropertyNodeInterface extends Node {
 }
 
 declare const PropertyNode: {
-    constructor<TNodeValue>(
+    new<TNodeValue = unknown>(
         nodeType?: string | null,
         name?: string | null,
         varying?: boolean,

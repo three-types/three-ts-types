@@ -1,6 +1,6 @@
 import { Camera, Node, TempNode, UniformNode } from "three/webgpu";
 
-declare class DenoiseNode extends TempNode {
+declare class DenoiseNode extends TempNode<"vec4"> {
     textureNode: Node;
     depthNode: Node;
     normalNode: Node;
