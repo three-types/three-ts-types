@@ -375,6 +375,7 @@ declare const Node: {
      *
      * @param {?string} nodeType - The node type.
      */
+    new<TNodeValue>(nodeType?: string | null): Node<TNodeValue>;
     new(nodeType?: string | null): Node;
     get type(): string;
 };
@@ -430,12 +431,26 @@ type Vec4Swizzle =
             "vec4"
         >;
     };
+export interface NodeExtensions<TValue> {
+}
+export interface BoolExtensions {
+}
+export interface FloatExtensions {
+}
+export interface VectorExtensions<TValue> {
+}
+export interface Vector4Extensions {
+}
 type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
-    & (TValue extends "vec2" ? Vec2Swizzle : {})
-    & (TValue extends "vec3" ? Vec3Swizzle : {})
-    & (TValue extends "vec4" ? Vec4Swizzle : {})
+    & NodeExtensions<TValue>
+    & (TValue extends "bool" ? BoolExtensions : {})
+    & (TValue extends "float" ? FloatExtensions : {})
+    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
+    & (TValue extends "color" ? Vec3Swizzle & VectorExtensions<TValue> : {})
     & {
         __TypeScript_VALUE__: TValue;
     };

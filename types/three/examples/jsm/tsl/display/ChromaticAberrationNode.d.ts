@@ -1,6 +1,6 @@
 import { Node, TempNode, Vector2 } from "three/webgpu";
 
-declare class ChromaticAberrationNode extends TempNode {
+declare class ChromaticAberrationNode extends TempNode<"vec4"> {
     textureNode: Node;
     strengthNode: Node;
     centerNode: Node;

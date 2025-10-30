@@ -1,10 +1,16 @@
 import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 
-export default class TempNode extends Node {
+interface TempNodeInterface {
     isTempNode: true;
-
-    constructor(type: string | null);
 
     hasDependencies(builder: NodeBuilder): boolean;
 }
+
+declare const TempNode: {
+    new<TNodeValue>(type: string | null): TempNode<TNodeValue>;
+};
+
+type TempNode<TNodeValue> = Node<TNodeValue> & TempNodeInterface;
+
+export default TempNode;

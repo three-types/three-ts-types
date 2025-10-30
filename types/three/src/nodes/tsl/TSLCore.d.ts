@@ -186,10 +186,9 @@ type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends 
 
 export type NodeOrType = Node | string;
 
-declare class ShaderCallNodeInternal extends Node {
-}
+type ShaderCallNodeInternal<TNodeType> = Node<TNodeType>;
 
-declare class ShaderNodeInternal extends Node {}
+type ShaderNodeInternal<TNodeType> = Node<TNodeType>;
 
 export const defined: (v: unknown) => unknown;
 
@@ -254,10 +253,10 @@ interface Layout {
     }[];
 }
 
-export interface ShaderNodeFn<Args extends readonly unknown[]> {
-    (...args: Args): ShaderCallNodeInternal;
+export interface FnNode<Args extends readonly unknown[], TReturn> {
+    (...args: Args): TReturn;
 
-    shaderNode: ShaderNodeInternal;
+    shaderNode: ShaderNodeInternal<TReturn>;
     id: number;
 
     getNodeType: (builder: NodeBuilder) => string | null;
@@ -268,15 +267,18 @@ export interface ShaderNodeFn<Args extends readonly unknown[]> {
     once: (subBuilds?: string[] | null) => this;
 }
 
-export function Fn(jsFunc: (builder: NodeBuilder) => void, layout?: string | Record<string, string>): ShaderNodeFn<[]>;
-export function Fn<T extends readonly unknown[]>(
-    jsFunc: (args: T, builder: NodeBuilder) => void,
+export function Fn<TReturn>(
+    jsFunc: (builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
-): ShaderNodeFn<ProxiedTuple<T>>;
-export function Fn<T extends { readonly [key: string]: unknown }>(
-    jsFunc: (args: T, builder: NodeBuilder) => void,
+): FnNode<[], TReturn>;
+export function Fn<TArgs extends readonly unknown[], TReturn>(
+    jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
-): ShaderNodeFn<[ProxiedObject<T>]>;
+): FnNode<ProxiedTuple<TArgs>, TReturn>;
+export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
+    jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
+    layout?: string | Record<string, string>,
+): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
 

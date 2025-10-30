@@ -25,7 +25,7 @@ declare class PassMultipleTextureNode extends PassTextureNode {
     updateTexture(): void;
 }
 
-declare class PassNode extends TempNode {
+declare class PassNode extends TempNode<"vec4"> {
     scope: PassNodeScope;
     scene: Object3D;
     camera: Camera;
@@ -70,7 +70,7 @@ declare class PassNode extends TempNode {
 
     getViewZNode(name?: string): Node;
 
-    getLinearDepthNode(name?: string): Node;
+    getLinearDepthNode(name?: string): Node<"float">;
 
     compileAsync(renderer: Renderer): Promise<void>;
 

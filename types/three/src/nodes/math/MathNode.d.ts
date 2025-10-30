@@ -166,9 +166,9 @@ export const floor: Unary;
 export const ceil: Unary;
 export const normalize: (a: Node | Vector3) => MathNode;
 export const fract: Unary;
-export const sin: Unary;
-export const cos: Unary;
-export const tan: Unary;
+export const sin: (e: Node<"float"> | number) => Node<"float">;
+export const cos: (e: Node<"float"> | number) => Node<"float">;
+export const tan: (e: Node<"float"> | number) => Node<"float">;
 export const asin: Unary;
 export const acos: Unary;
 export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => MathNode;
@@ -205,7 +205,7 @@ export const distance: Binary;
 export const difference: Binary;
 export const dot: Binary;
 export const cross: (x: Node, y: Node) => MathNode;
-export const pow: Binary;
+export const pow: (x: Node<"float"> | number, y: Node<"float"> | number) => Node<"float">;
 export const pow2: Unary;
 export const pow3: Unary;
 export const pow4: Unary;
@@ -222,7 +222,14 @@ export const clamp: (
     c?: MathNodeParameter,
 ) => MathNode;
 export const saturate: Unary;
-export const refract: Ternary;
+
+interface Refract {
+    (e1: Node<"vec2">, e2: Node<"vec2">, e3: Node<"float">): Node<"vec2">;
+    (e1: Node<"vec3">, e2: Node<"vec3">, e3: Node<"float">): Node<"vec3">;
+    (e1: Node<"vec4">, e2: Node<"vec4">, e3: Node<"float">): Node<"vec4">;
+}
+
+export const refract: Refract;
 export const smoothstep: Ternary;
 export const faceForward: Ternary;
 
@@ -241,6 +248,13 @@ export const atan2: Binary;
 
 export const faceforward: typeof faceForward;
 export const inversesqrt: typeof inverseSqrt;
+
+interface MixFloat {
+    (b: Node<"float"> | number, c: Node<"float"> | number): Node<"float">;
+    (b: Node<"color"> | number, c: Node<"color"> | number): Node<"color">;
+    (b: Node<"vec3"> | number, c: Node<"vec3"> | number): Node<"vec3">;
+    (b: Node<"vec4"> | number, c: Node<"vec4"> | number): Node<"vec4">;
+}
 
 // Method chaining
 
@@ -285,14 +299,8 @@ declare module "../core/Node.js" {
         inverseSqrt: () => MathNode;
         inverseSqrtAssign: () => this;
 
-        floor: () => MathNode;
-        floorAssign: () => this;
-
         ceil: () => MathNode;
         ceilAssign: () => this;
-
-        normalize: () => MathNode;
-        normalizeAssign: () => this;
 
         fract: () => MathNode;
         fractAssign: () => this;
@@ -326,12 +334,6 @@ declare module "../core/Node.js" {
 
         lengthSq: () => MathNode;
         lengthSqAssign: () => this;
-
-        negate: () => MathNode;
-        negateAssign: () => this;
-
-        oneMinus: () => MathNode;
-        oneMinusAssign: () => this;
 
         dFdx: () => MathNode;
         dFdxAssign: () => this;
@@ -384,17 +386,11 @@ declare module "../core/Node.js" {
         reflect: (b: MathNodeParameter) => MathNode;
         reflectAssign: (b: MathNodeParameter) => this;
 
-        distance: (b: MathNodeParameter) => MathNode;
-        distanceAssign: (b: MathNodeParameter) => this;
-
         dot: (b: MathNodeParameter) => MathNode;
         dotAssign: (b: MathNodeParameter) => this;
 
         cross: (y: Node) => MathNode;
         crossAssign: (y: Node) => this;
-
-        pow: (b: MathNodeParameter) => MathNode;
-        powAssign: (b: MathNodeParameter) => this;
 
         pow2: () => MathNode;
         pow2Assign: () => this;
@@ -408,26 +404,14 @@ declare module "../core/Node.js" {
         transformDirection: (b: MathNodeParameter) => MathNode;
         transformDirectionAssign: (b: MathNodeParameter) => this;
 
-        mix: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        mixAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
-
-        clamp: (b?: MathNodeParameter, c?: MathNodeParameter) => MathNode;
-        clampAssign: (b?: MathNodeParameter, c?: MathNodeParameter) => this;
-
         refract: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
         refractAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
-
-        smoothstep: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        smoothstepAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         faceForward: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
         faceForwardAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         difference: (b: MathNodeParameter) => MathNode;
         differenceAssign: (b: MathNodeParameter) => this;
-
-        saturate: () => MathNode;
-        saturateAssign: () => this;
 
         cbrt: () => MathNode;
         cbrtAssign: () => this;
@@ -443,5 +427,51 @@ declare module "../core/Node.js" {
 
         rand: () => OperatorNode;
         randAssign: () => this;
+    }
+
+    interface FloatExtensions {
+        oneMinus: () => Node<"float">;
+        oneMinusAssign: () => this;
+
+        pow: (b: Node<"float"> | number) => Node<"float">;
+        powAssign: (b: Node<"float"> | number) => this;
+
+        mix: MixFloat;
+        mixAssign: (b: Node<"color">, c: Node<"color">) => this;
+
+        clamp: (b?: Node<"float"> | number, c?: Node<"float"> | number) => Node<"float">;
+        clampAssign: (b?: Node<"float"> | number, c?: Node<"float"> | number) => this;
+
+        floor: () => Node<"float">;
+        floorAssign: () => this;
+
+        distance: (b: Node<"float"> | number) => Node<"float">;
+        distanceAssign: (b: Node<"float">) => this;
+
+        smoothstep: (b: Node<"float"> | number, c: Node<"float"> | number) => Node<"float">;
+        smoothstepAssign: (b: Node<"float"> | number, c: Node<"float"> | number) => this;
+
+        saturate: () => Node<"float">;
+        saturateAssign: () => this;
+    }
+
+    interface VectorExtensions<TValue> {
+        distance: (b: Node<TValue> | number) => Node<"float">;
+        distanceAssign: (b: Node<TValue>) => this;
+
+        normalize: () => Node<TValue>;
+        normalizeAssign: () => this;
+
+        negate: () => Node<TValue>;
+        negateAssign: () => this;
+
+        clamp: (b?: Node<TValue>, c?: Node<TValue>) => Node<TValue>;
+        clampAssign: (b?: Node<TValue>, c?: Node<TValue>) => this;
+
+        oneMinus: () => Node<TValue>;
+        oneMinusAssign: () => this;
+
+        floor: () => Node<TValue>;
+        floorAssign: () => this;
     }
 }
