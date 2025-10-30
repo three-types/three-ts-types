@@ -8,7 +8,7 @@ interface TempNodeInterface {
 }
 
 declare const TempNode: {
-    new<TNodeValue>(type: string | null): TempNode<TNodeValue>;
+    new<TNodeValue = unknown>(type: string | null): TempNode<TNodeValue>;
 };
 
 type TempNode<TNodeValue> = Node<TNodeValue> & TempNodeInterface;
