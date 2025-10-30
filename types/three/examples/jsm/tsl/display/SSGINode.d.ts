@@ -1,6 +1,6 @@
 import { Node, PerspectiveCamera, TempNode, UniformNode } from "three/webgpu";
 
-declare class SSGINode extends TempNode {
+declare class SSGINode extends TempNode<"vec4"> {
     beautyNode: Node;
     depthNode: Node;
     normalNode: Node;

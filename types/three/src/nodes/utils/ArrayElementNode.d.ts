@@ -1,7 +1,6 @@
 import Node from "../core/Node.js";
-import { TempNode } from "../Nodes.js";
 
-export default class ArrayElementNode extends TempNode {
+export default class ArrayElementNode extends Node {
     node: Node;
     indexNode: Node;
 

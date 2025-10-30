@@ -3,7 +3,7 @@ import RendererReferenceNode from "../accessors/RendererReferenceNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
-declare class ToneMappingNode extends TempNode {
+declare class ToneMappingNode extends TempNode<"vec3"> {
     exposureNode: Node;
     colorNode: Node | null;
 

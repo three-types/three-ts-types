@@ -1,6 +1,6 @@
-import { Node, TempNode, UniformNode, Vector2 } from "three/webgpu";
+import { Node, TempNode, UniformNode } from "three/webgpu";
 
-declare class DotScreenNode extends TempNode {
+declare class DotScreenNode extends TempNode<"vec4"> {
     inputNode: Node;
     angle: UniformNode<"float", number>;
     scale: UniformNode<"float", number>;

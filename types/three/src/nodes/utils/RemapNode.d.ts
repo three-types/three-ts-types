@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 
-export default class RemapNode extends Node {
+export default class RemapNode extends Node<"float"> {
     node: Node;
     inLowNode: Node;
     inHighNode: Node;
@@ -28,31 +28,31 @@ export const remapClamp: (
 ) => RemapNode;
 
 declare module "../core/Node.js" {
-    interface NodeElements {
+    interface FloatExtensions {
         remap: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
+            inLowNode: Node<"float"> | number,
+            inHighNode: Node<"float"> | number,
+            outLowNode?: Node<"float"> | number,
+            outHighNode?: Node<"float"> | number,
         ) => RemapNode;
         remapAssign: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
+            inLowNode: Node<"float"> | number,
+            inHighNode: Node<"float"> | number,
+            outLowNode?: Node<"float"> | number,
+            outHighNode?: Node<"float"> | number,
         ) => this;
 
         remapClamp: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
+            inLowNode: Node<"float"> | number,
+            inHighNode: Node<"float"> | number,
+            outLowNode?: Node<"float"> | number,
+            outHighNode?: Node<"float"> | number,
         ) => RemapNode;
         remapClampAssign: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
+            inLowNode: Node<"float"> | number,
+            inHighNode: Node<"float"> | number,
+            outLowNode?: Node<"float"> | number,
+            outHighNode?: Node<"float"> | number,
         ) => this;
     }
 }

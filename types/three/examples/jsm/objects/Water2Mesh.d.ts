@@ -30,7 +30,7 @@ declare class WaterMesh extends Mesh<BufferGeometry, NodeMaterial> {
     constructor(geometry: BufferGeometry, options: WaterMeshOptions);
 }
 
-declare class WaterNode extends TempNode {
+declare class WaterNode extends TempNode<"vec4"> {
     waterBody: WaterMesh;
 
     normalMap0: TextureNode;

@@ -1,6 +1,6 @@
 import { Camera, DirectionalLight, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
-declare class SSSNode extends TempNode {
+declare class SSSNode extends TempNode<"float"> {
     depthNode: TextureNode;
 
     maxDistance: UniformNode<"float", number>;

@@ -1,30 +1,38 @@
 import Node from "../core/Node.js";
 
-declare class ConditionalNode extends Node {
+interface ConditionalNodeInterface {
     condNode: Node;
     ifNode: Node;
     elseNode: Node | null;
-
-    constructor(condNode: Node, ifNode: Node, elseNode?: Node | null);
 }
+
+declare const ConditionalNode: {
+    new<TNodeValue>(
+        condNode: Node<"bool">,
+        ifNode: Node<TNodeValue>,
+        elseNode?: Node<TNodeValue> | null,
+    ): ConditionalNode<TNodeValue>;
+};
+
+type ConditionalNode<TNodeValue> = Node<TNodeValue> & ConditionalNodeInterface;
 
 export default ConditionalNode;
 
-export const select: (
-    condNode: Node,
-    ifNode: Node | number,
-    elseNode?: Node | number | null,
+export const select: <TNodeValue>(
+    condNode: Node<"bool">,
+    ifNode: Node<TNodeValue>,
+    elseNode?: Node<TNodeValue> | null,
 ) => Node;
 
 declare module "../core/Node.js" {
-    interface NodeElements {
-        select: (
-            ifNode: Node | number,
-            elseNode?: Node | number | null,
-        ) => Node;
-        selectAssign: (
-            ifNode: Node | number,
-            elseNode?: Node | number | null,
+    interface BoolExtensions {
+        select: <TNodeValue>(
+            ifNode: Node<TNodeValue>,
+            elseNode?: Node<TNodeValue> | null,
+        ) => Node<TNodeValue>;
+        selectAssign: <TNodeValue>(
+            ifNode: Node<TNodeValue>,
+            elseNode?: Node<TNodeValue> | null,
         ) => this;
     }
 }

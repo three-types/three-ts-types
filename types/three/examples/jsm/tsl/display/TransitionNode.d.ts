@@ -1,6 +1,6 @@
 import { Node, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
-declare class TransitionNode extends TempNode {
+declare class TransitionNode extends TempNode<"vec4"> {
     textureNodeA: TextureNode;
     textureNodeB: TextureNode;
     mixTextureNode: TextureNode;

@@ -9,7 +9,7 @@ interface LensflareNodeParams {
     downSampleRatio?: number | undefined;
 }
 
-declare class LensflareNode extends TempNode {
+declare class LensflareNode extends TempNode<"vec4"> {
     textureNode: TextureNode;
 
     ghostTintNode: UniformNode<"vec3", Vector3>;
