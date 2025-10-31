@@ -9,7 +9,7 @@ interface ArrayNodeInterface {
 
 declare const ArrayNode: {
     new<TNodeValue>(nodeType: string, count: number, values: Node[]): ArrayNode<TNodeValue>;
-}
+};
 
 type ArrayNode<TNodeValue> = TempNode<TNodeValue> & ArrayNodeInterface;
 

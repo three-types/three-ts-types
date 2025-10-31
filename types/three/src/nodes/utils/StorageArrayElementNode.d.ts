@@ -12,8 +12,11 @@ interface StorageArrayElementNodeInterface<TNodeType> {
 }
 
 declare const StorageArrayElementNode: {
-    new<TNodeType>(storageBufferNode: StorageBufferNode<TNodeType>, indexNode: Node): StorageArrayElementNode<TNodeType>;
-}
+    new<TNodeType>(
+        storageBufferNode: StorageBufferNode<TNodeType>,
+        indexNode: Node,
+    ): StorageArrayElementNode<TNodeType>;
+};
 
 type StorageArrayElementNode<TNodeType> = ArrayElementNode<TNodeType> & StorageArrayElementNodeInterface<TNodeType>;
 

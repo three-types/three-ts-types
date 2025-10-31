@@ -10,7 +10,7 @@ interface AssignNodeInterface {
 
 declare const AssignNode: {
     new<TNodeValue>(targetNode: Node, sourceNode: Node): AssignNode<TNodeValue>;
-}
+};
 
 type AssignNode<TNodeValue> = TempNode<TNodeValue> & AssignNodeInterface;
 
