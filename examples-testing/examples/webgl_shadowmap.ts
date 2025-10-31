@@ -15,18 +15,18 @@ const SCREEN_WIDTH = window.innerWidth;
 const SCREEN_HEIGHT = window.innerHeight;
 const FLOOR = -250;
 
-let camera, controls, scene, renderer;
-let container, stats;
+let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let container: HTMLDivElement, stats: Stats;
 
 const NEAR = 10,
     FAR = 3000;
 
-let mixer;
+let mixer: THREE.AnimationMixer;
 
-const morphs = [];
+const morphs: (THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> & { speed?: number })[] = [];
 
-let light;
-let lightShadowMapViewer;
+let light: THREE.DirectionalLight;
+let lightShadowMapViewer: ShadowMapViewer;
 
 const clock = new THREE.Clock();
 
@@ -117,7 +117,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onKeyDown(event) {
+function onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
         case 84 /*t*/:
             showHUD = !showHUD;
@@ -168,7 +168,7 @@ function createScene() {
         });
 
         textGeo.computeBoundingBox();
-        const centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+        const centerOffset = -0.5 * (textGeo.boundingBox!.max.x - textGeo.boundingBox!.min.x);
 
         const textMaterial = new THREE.MeshPhongMaterial({ color: 0xff0000, specular: 0xffffff });
 
@@ -208,7 +208,16 @@ function createScene() {
 
     mixer = new THREE.AnimationMixer(scene);
 
-    function addMorph(mesh, clip, speed, duration, x, y, z, fudgeColor) {
+    function addMorph(
+        mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial> & { speed?: number },
+        clip: THREE.AnimationClip,
+        speed: number,
+        duration: number,
+        x: number,
+        y: number,
+        z: number,
+        fudgeColor?: boolean,
+    ) {
         mesh = mesh.clone();
         mesh.material = mesh.material.clone();
 
@@ -239,7 +248,7 @@ function createScene() {
     const gltfloader = new GLTFLoader();
 
     gltfloader.load('models/gltf/Horse.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
 
         const clip = gltf.animations[0];
 
@@ -253,21 +262,21 @@ function createScene() {
     });
 
     gltfloader.load('models/gltf/Flamingo.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
         const clip = gltf.animations[0];
 
         addMorph(mesh, clip, 500, 1, 500 - Math.random() * 500, FLOOR + 350, 40);
     });
 
     gltfloader.load('models/gltf/Stork.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
         const clip = gltf.animations[0];
 
         addMorph(mesh, clip, 350, 1, 500 - Math.random() * 500, FLOOR + 350, 340);
     });
 
     gltfloader.load('models/gltf/Parrot.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
         const clip = gltf.animations[0];
 
         addMorph(mesh, clip, 450, 0.5, 500 - Math.random() * 500, FLOOR + 300, 700);
@@ -287,7 +296,7 @@ function render() {
     for (let i = 0; i < morphs.length; i++) {
         const morph = morphs[i];
 
-        morph.position.x += morph.speed * delta;
+        morph.position.x += morph.speed! * delta;
 
         if (morph.position.x > 2000) {
             morph.position.x = -1000 - Math.random() * 500;

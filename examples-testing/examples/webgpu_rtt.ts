@@ -3,12 +3,12 @@ import { texture, uniform, saturation, hue } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 const mouse = new THREE.Vector2();
 
-let quadMesh, renderTarget;
+let quadMesh: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
 
-let box;
+let box: THREE.Mesh;
 
 const dpr = window.devicePixelRatio;
 
@@ -65,7 +65,7 @@ function init() {
     quadMesh.name = 'Post-Processing';
 }
 
-function onWindowMouseMove(e) {
+function onWindowMouseMove(e: MouseEvent) {
     mouse.x = e.offsetX / window.innerWidth;
     mouse.y = e.offsetY / window.innerHeight;
 }

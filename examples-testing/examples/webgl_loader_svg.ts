@@ -3,14 +3,24 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
 
-let renderer, scene, camera, gui, guiData;
+let renderer: THREE.WebGLRenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    gui: GUI,
+    guiData: {
+        currentURL: string;
+        drawFillShapes: boolean;
+        drawStrokes: boolean;
+        fillShapesWireframe: boolean;
+        strokesWireframe: boolean;
+    };
 
 init();
 
 //
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     //
 
@@ -100,7 +110,7 @@ function createGUI() {
     }
 }
 
-function loadSVG(url) {
+function loadSVG(url: string) {
     //
 
     if (scene) disposeScene(scene);
@@ -130,12 +140,12 @@ function loadSVG(url) {
         let renderOrder = 0;
 
         for (const path of data.paths) {
-            const fillColor = path.userData.style.fill;
+            const fillColor = path.userData!.style.fill;
 
             if (guiData.drawFillShapes && fillColor !== undefined && fillColor !== 'none') {
                 const material = new THREE.MeshBasicMaterial({
                     color: new THREE.Color().setStyle(fillColor),
-                    opacity: path.userData.style.fillOpacity,
+                    opacity: path.userData!.style.fillOpacity,
                     transparent: true,
                     side: THREE.DoubleSide,
                     depthWrite: false,
@@ -153,12 +163,12 @@ function loadSVG(url) {
                 }
             }
 
-            const strokeColor = path.userData.style.stroke;
+            const strokeColor = path.userData!.style.stroke;
 
             if (guiData.drawStrokes && strokeColor !== undefined && strokeColor !== 'none') {
                 const material = new THREE.MeshBasicMaterial({
                     color: new THREE.Color().setStyle(strokeColor),
-                    opacity: path.userData.style.strokeOpacity,
+                    opacity: path.userData!.style.strokeOpacity,
                     transparent: true,
                     side: THREE.DoubleSide,
                     depthWrite: false,
@@ -166,7 +176,7 @@ function loadSVG(url) {
                 });
 
                 for (const subPath of path.subPaths) {
-                    const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData.style);
+                    const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData!.style);
 
                     if (geometry) {
                         const mesh = new THREE.Mesh(geometry, material);
@@ -196,11 +206,15 @@ function render() {
     renderer.render(scene, camera);
 }
 
-function disposeScene(scene) {
+function disposeScene(scene: THREE.Scene) {
     scene.traverse(function (object) {
-        if (object.isMesh || object.isLine) {
-            object.geometry.dispose();
-            object.material.dispose();
+        if ((object as THREE.Mesh).isMesh || (object as THREE.Line).isLine) {
+            (object as THREE.Mesh | THREE.Line).geometry.dispose();
+            (
+                object as
+                    | THREE.Mesh<THREE.BufferGeometry, THREE.Material>
+                    | THREE.Line<THREE.BufferGeometry, THREE.Material>
+            ).material.dispose();
         }
     });
 }

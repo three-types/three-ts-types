@@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 const maxParticleCount = 100000;
 
-let camera, scene, renderer;
-let controls;
-let computeParticles;
-let postProcessing;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let computeParticles: THREE.ComputeNode;
+let postProcessing: THREE.PostProcessing;
 
-let collisionCamera, collisionPosRT, collisionPosMaterial;
+let collisionCamera: THREE.OrthographicCamera,
+    collisionPosRT: THREE.RenderTarget,
+    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
 
 init();
 
@@ -124,7 +126,7 @@ async function init() {
     const speed = 0.4;
 
     const computeUpdate = Fn(() => {
-        const getCoord = pos => pos.add(50).div(100);
+        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
 
         const position = positionBuffer.element(instanceIndex);
         const scale = scaleBuffer.element(instanceIndex);
@@ -159,7 +161,7 @@ async function init() {
 
     const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
 
-    function particle(staticParticles) {
+    function particle(staticParticles?: boolean) {
         const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
         const layer = staticParticles ? 1 : 2;
 
@@ -291,7 +293,7 @@ async function init() {
 
     // compose
 
-    let totalPass = scenePass.toInspector('Scene');
+    let totalPass: THREE.Node = scenePass.toInspector('Scene');
     totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
     totalPass = totalPass.mul(vignette);
     totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));

@@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { unzipSync } from 'three/addons/libs/fflate.module.js';
 
-let renderer;
-let views = [];
+let renderer: THREE.WebGPURenderer;
+let views: View[] = [];
 
 class View {
-    constructor(left, top, width, height) {
+    left: number;
+    top: number;
+    width: number;
+    height: number;
+
+    camera: THREE.PerspectiveCamera;
+
+    scene: THREE.Scene;
+
+    controls?: OrbitControls;
+
+    constructor(left: number, top: number, width: number, height: number) {
         this.left = left;
         this.top = top;
         this.width = width;
@@ -41,7 +52,7 @@ class View {
     }
 
     // Method to handle viewport resize
-    updateSize(left, top, width, height) {
+    updateSize(left: number, top: number, width: number, height: number) {
         this.left = left;
         this.top = top;
         this.width = width;
@@ -93,8 +104,8 @@ async function init() {
     };
 
     new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
-        const zip = unzipSync(new Uint8Array(data));
-        const array = new Uint8Array(zip['head256x256x109'].buffer);
+        const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
+        const array = new Uint8Array(zip['head256x256x109'].buffer as ArrayBuffer);
 
         const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
         map3D.name = 'Data3DTexture';
@@ -159,7 +170,7 @@ async function init() {
         const quadMesh = new THREE.QuadMesh(materialQuad);
 
         // In WebGPU we need to clear all the layers of the 3D render target before rendering to it (WebGPU limitation?)
-        if (renderer.backend.isWebGPUBackend) {
+        if ((renderer.backend as { isWebGPUBackend?: boolean }).isWebGPUBackend) {
             const materialClear = new THREE.NodeMaterial();
             materialClear.outputNode = vec4(0);
             const clearQuadMesh = new THREE.QuadMesh(materialClear);
@@ -218,7 +229,7 @@ function onWindowResize() {
 
 function animate() {
     views.forEach(view => {
-        view.controls.update();
+        view.controls!.update();
 
         const left = Math.floor(view.left * window.innerWidth);
         const bottom = Math.floor((1 - view.top - view.height) * window.innerHeight);

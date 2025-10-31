@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, mesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, mesh: THREE.Mesh;
 
 init();
 
@@ -27,8 +27,8 @@ function init() {
         uniforms: {
             seed: { value: 42 },
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         side: THREE.DoubleSide,
         glslVersion: THREE.GLSL3,
     });
@@ -48,7 +48,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
 }
 
-function animate(time) {
+function animate(time: number) {
     mesh.rotation.x = (time / 1000.0) * 0.25;
     mesh.rotation.y = (time / 1000.0) * 0.5;
 

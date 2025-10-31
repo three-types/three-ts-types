@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, renderer;
-let geometry, mesh, material;
-let mouse, center;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer;
+let geometry: THREE.BufferGeometry, mesh: THREE.Points, material: THREE.ShaderMaterial;
+let mouse: THREE.Vector3, center: THREE.Vector3;
 
 init();
 
@@ -24,7 +24,7 @@ function init() {
     center = new THREE.Vector3();
     center.z = -1000;
 
-    const video = document.getElementById('video');
+    const video = document.getElementById('video') as HTMLVideoElement;
 
     const texture = new THREE.VideoTexture(video);
     texture.minFilter = THREE.NearestFilter;
@@ -57,8 +57,8 @@ function init() {
             pointSize: { value: 2 },
             zOffset: { value: 1000 },
         },
-        vertexShader: document.getElementById('vs').textContent,
-        fragmentShader: document.getElementById('fs').textContent,
+        vertexShader: document.getElementById('vs')!.textContent!,
+        fragmentShader: document.getElementById('fs')!.textContent!,
         blending: THREE.AdditiveBlending,
         depthTest: false,
         depthWrite: false,
@@ -100,7 +100,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouse.x = (event.clientX - window.innerWidth / 2) * 8;
     mouse.y = (event.clientY - window.innerHeight / 2) * 8;
 }

@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let renderer, scene, camera, stats;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
 
-let sphere;
+let sphere: THREE.Points;
 
 const WIDTH = window.innerWidth;
 const HEIGHT = window.innerHeight;
@@ -56,8 +56,8 @@ function init() {
             color: { value: new THREE.Color(0xffffff) },
             pointTexture: { value: new THREE.TextureLoader().load('textures/sprites/spark1.png') },
         },
-        vertexShader: document.getElementById('vertexshader').textContent,
-        fragmentShader: document.getElementById('fragmentshader').textContent,
+        vertexShader: document.getElementById('vertexshader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
 
         blending: THREE.AdditiveBlending,
         depthTest: false,
@@ -76,7 +76,7 @@ function init() {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.setAnimationLoop(animate);
 
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
     container.appendChild(renderer.domElement);
 
     stats = new Stats();

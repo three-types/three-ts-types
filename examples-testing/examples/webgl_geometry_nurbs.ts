@@ -7,10 +7,10 @@ import { NURBSSurface } from 'three/addons/curves/NURBSSurface.js';
 import { NURBSVolume } from 'three/addons/curves/NURBSVolume.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 
-let container, stats;
+let container: HTMLDivElement, stats: Stats;
 
-let camera, scene, renderer;
-let group;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let group: THREE.Group;
 
 let targetRotation = 0;
 let targetRotationOnPointerDown = 0;
@@ -78,7 +78,7 @@ function init() {
     group.add(nurbsLine);
 
     const nurbsControlPointsGeometry = new THREE.BufferGeometry();
-    nurbsControlPointsGeometry.setFromPoints(nurbsCurve.controlPoints);
+    nurbsControlPointsGeometry.setFromPoints(nurbsCurve.controlPoints as THREE.Vector3[]);
 
     const nurbsControlPointsMaterial = new THREE.LineBasicMaterial({
         color: 0x333333,
@@ -123,7 +123,7 @@ function init() {
         map.anisotropy = 16;
         map.colorSpace = THREE.SRGBColorSpace;
 
-        function getSurfacePoint(u, v, target) {
+        function getSurfacePoint(u: number, v: number, target: THREE.Vector3) {
             return nurbsSurface.getPoint(u, v, target);
         }
 
@@ -174,23 +174,23 @@ function init() {
         // we create evaluation functions for different surfaces with one of the three
         // parameter values (u, v, w) kept constant and create multiple THREE.Mesh
         // objects one for each surface
-        function getSurfacePointFront(u, v, target) {
+        function getSurfacePointFront(u: number, v: number, target: THREE.Vector3) {
             return nurbsVolume.getPoint(u, v, 0, target);
         }
 
-        function getSurfacePointMiddle(u, v, target) {
+        function getSurfacePointMiddle(u: number, v: number, target: THREE.Vector3) {
             return nurbsVolume.getPoint(u, v, 0.5, target);
         }
 
-        function getSurfacePointBack(u, v, target) {
+        function getSurfacePointBack(u: number, v: number, target: THREE.Vector3) {
             return nurbsVolume.getPoint(u, v, 1, target);
         }
 
-        function getSurfacePointTop(u, w, target) {
+        function getSurfacePointTop(u: number, w: number, target: THREE.Vector3) {
             return nurbsVolume.getPoint(u, 1, w, target);
         }
 
-        function getSurfacePointSide(v, w, target) {
+        function getSurfacePointSide(v: number, w: number, target: THREE.Vector3) {
             return nurbsVolume.getPoint(0, v, w, target);
         }
 
@@ -260,7 +260,7 @@ function onWindowResize() {
 
 //
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     pointerXOnPointerDown = event.clientX - windowHalfX;
@@ -270,7 +270,7 @@ function onPointerDown(event) {
     document.addEventListener('pointerup', onPointerUp);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     pointerX = event.clientX - windowHalfX;
@@ -278,7 +278,7 @@ function onPointerMove(event) {
     targetRotation = targetRotationOnPointerDown + (pointerX - pointerXOnPointerDown) * 0.02;
 }
 
-function onPointerUp(event) {
+function onPointerUp(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     document.removeEventListener('pointermove', onPointerMove);

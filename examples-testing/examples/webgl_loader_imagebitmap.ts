@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
-let group, cubes;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let group: THREE.Group, cubes: THREE.Group;
 
 init();
 
@@ -15,7 +15,7 @@ function addImageBitmap() {
 
             // ImageBitmap should be disposed when done with it.
 
-            texture.onUpdate = disposeImageBitmap;
+            texture.onUpdate = disposeImageBitmap as (texture: THREE.Texture) => void;
 
             addCube(material);
         },
@@ -41,7 +41,7 @@ function addImage() {
 
 const geometry = new THREE.BoxGeometry();
 
-function addCube(material) {
+function addCube(material: THREE.MeshBasicMaterial) {
     const cube = new THREE.Mesh(geometry, material);
     cube.position.set(Math.random() * 2 - 1, Math.random() * 2 - 1, Math.random() * 2 - 1);
     cube.rotation.set(Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI, Math.random() * 2 * Math.PI);
@@ -107,7 +107,7 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function disposeImageBitmap(texture) {
+function disposeImageBitmap(texture: THREE.Texture<ImageBitmap>) {
     texture.source.data.close();
     texture.onUpdate = null; // make sure this callback is executed only once per texture
 }

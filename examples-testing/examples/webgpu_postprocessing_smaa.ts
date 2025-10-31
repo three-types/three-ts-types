@@ -4,7 +4,10 @@ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing;
 
 const params = {
     enabled: true,
@@ -57,7 +60,7 @@ function init() {
 
     window.addEventListener('resize', onWindowResize);
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const smaaFolder = gui.addFolder('SMAA');
     smaaFolder.add(params, 'enabled').onChange(value => {

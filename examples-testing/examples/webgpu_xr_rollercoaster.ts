@@ -9,7 +9,7 @@ import {
 } from 'three/addons/misc/RollerCoaster.js';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
-let mesh, material, geometry;
+let mesh: THREE.Mesh, material: THREE.Material, geometry: THREE.BufferGeometry;
 
 const renderer = new THREE.WebGPURenderer({
     antialias: true,
@@ -92,7 +92,7 @@ const curve = (function () {
     const vector2 = new THREE.Vector3();
 
     return {
-        getPointAt: function (t) {
+        getPointAt: function (t: number) {
             t = t * PI2;
 
             const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
@@ -102,7 +102,7 @@ const curve = (function () {
             return vector.set(x, y, z).multiplyScalar(2);
         },
 
-        getTangentAt: function (t) {
+        getTangentAt: function (t: number) {
             const delta = 0.0001;
             const t1 = Math.max(0, t - delta);
             const t2 = Math.min(1, t + delta);
@@ -135,7 +135,7 @@ mesh = new THREE.Mesh(geometry, material);
 mesh.position.y = 0.1;
 scene.add(mesh);
 
-const funfairs = [];
+const funfairs: THREE.Mesh[] = [];
 
 //
 

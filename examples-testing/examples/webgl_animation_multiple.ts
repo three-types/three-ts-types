@@ -4,11 +4,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, clock;
-let model, animations;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
+let model: THREE.Group, animations: THREE.AnimationClip[];
 
-const mixers = [],
-    objects = [];
+const mixers: THREE.AnimationMixer[] = [],
+    objects: THREE.Object3D[] = [];
 
 const params = {
     sharedSkeleton: false,
@@ -60,7 +60,7 @@ function init() {
         animations = gltf.animations;
 
         model.traverse(function (object) {
-            if (object.isMesh) object.castShadow = true;
+            if ((object as THREE.Mesh).isMesh) object.castShadow = true;
         });
 
         setupDefaultScene();
@@ -102,7 +102,7 @@ function clearScene() {
         scene.remove(object);
 
         scene.traverse(function (child) {
-            if (child.isSkinnedMesh) child.skeleton.dispose();
+            if ((child as THREE.SkinnedMesh).isSkinnedMesh) (child as THREE.SkinnedMesh).skeleton.dispose();
         });
     }
 }
@@ -138,9 +138,9 @@ function setupSharedSkeletonScene() {
     // all models share the same animation state
 
     const sharedModel = SkeletonUtils.clone(model);
-    const shareSkinnedMesh = sharedModel.getObjectByName('vanguard_Mesh');
+    const shareSkinnedMesh = sharedModel.getObjectByName('vanguard_Mesh') as THREE.SkinnedMesh;
     const sharedSkeleton = shareSkinnedMesh.skeleton;
-    const sharedParentBone = sharedModel.getObjectByName('mixamorigHips');
+    const sharedParentBone = sharedModel.getObjectByName('mixamorigHips')!;
     scene.add(sharedParentBone); // the bones need to be in the scene for the animation to work
 
     const model1 = shareSkinnedMesh.clone();

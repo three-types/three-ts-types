@@ -2,15 +2,15 @@ import * as THREE from 'three';
 
 const N = 100;
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let geometry;
+let geometry: THREE.SphereGeometry;
 
-const meshes = [];
+const meshes: THREE.Mesh<THREE.SphereGeometry, THREE.ShaderMaterial>[] = [];
 
-let fragmentShader, vertexShader;
+let fragmentShader: string, vertexShader: string;
 
 init();
 setInterval(render, 1000 / 60);
@@ -19,8 +19,8 @@ function init() {
     container = document.createElement('div');
     document.body.appendChild(container);
 
-    vertexShader = document.getElementById('vertexShader').textContent;
-    fragmentShader = document.getElementById('fragmentShader').textContent;
+    vertexShader = document.getElementById('vertexShader')!.textContent!;
+    fragmentShader = document.getElementById('fragmentShader')!.textContent!;
 
     camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 2000;
@@ -70,12 +70,12 @@ function render() {
 
     renderer.render(scene, camera);
 
-    console.log('before', renderer.info.programs.length);
+    console.log('before', renderer.info.programs!.length);
 
     for (let i = 0; i < N; i++) {
         const mesh = meshes[i];
         mesh.material.dispose();
     }
 
-    console.log('after', renderer.info.programs.length);
+    console.log('after', renderer.info.programs!.length);
 }

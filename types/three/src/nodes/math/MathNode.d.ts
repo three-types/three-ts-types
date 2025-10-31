@@ -1,4 +1,3 @@
-import { Vector3 } from "../../math/Vector3.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 import OperatorNode from "./OperatorNode.js";
@@ -160,11 +159,11 @@ export const exp: Unary;
 export const exp2: Unary;
 export const log: Unary;
 export const log2: Unary;
-export const sqrt: Unary;
+export const sqrt: (e: Node<"float">) => Node<"float">;
 export const inverseSqrt: Unary;
 export const floor: Unary;
 export const ceil: Unary;
-export const normalize: (a: Node | Vector3) => MathNode;
+export const normalize: (a: Node<"vec3">) => Node<"vec3">;
 export const fract: Unary;
 export const sin: (e: Node<"float"> | number) => Node<"float">;
 export const cos: (e: Node<"float"> | number) => Node<"float">;
@@ -174,7 +173,7 @@ export const acos: Unary;
 export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => MathNode;
 export const abs: Unary;
 export const sign: Unary;
-export const length: Unary;
+export const length: (e: Node<"vec2"> | Node<"vec3"> | Node<"vec4">) => Node<"float">;
 export const negate: Unary;
 export const oneMinus: Unary;
 export const dFdx: Unary;
@@ -190,20 +189,28 @@ export const inverse: (x: Node) => MathNode;
 type Binary = (a: MathNodeParameter, b: MathNodeParameter) => MathNode;
 
 export const min: (
-    x: MathNodeParameter,
-    y: MathNodeParameter,
-    ...values: MathNodeParameter[]
-) => MathNode;
+    x: Node<"float"> | number,
+    y: Node<"float"> | number,
+    ...values: (Node<"float"> | number)[]
+) => Node<"float">;
 export const max: (
-    x: MathNodeParameter,
-    y: MathNodeParameter,
-    ...values: MathNodeParameter[]
-) => MathNode;
+    x: Node<"float"> | number,
+    y: Node<"float"> | number,
+    ...values: (Node<"float"> | number)[]
+) => Node<"float">;
+
 export const step: Binary;
 export const reflect: Binary;
 export const distance: Binary;
 export const difference: Binary;
-export const dot: Binary;
+
+interface Dot {
+    (e1: Node<"vec2">, e2: Node<"vec2">): Node<"vec2">;
+    (e1: Node<"vec3">, e2: Node<"vec3">): Node<"vec3">;
+    (e1: Node<"vec4">, e2: Node<"vec4">): Node<"vec4">;
+}
+
+export const dot: Dot;
 export const cross: (x: Node, y: Node) => MathNode;
 export const pow: (x: Node<"float"> | number, y: Node<"float"> | number) => Node<"float">;
 export const pow2: Unary;
@@ -329,12 +336,6 @@ declare module "../core/Node.js" {
         sign: () => MathNode;
         signAssign: () => this;
 
-        length: () => MathNode;
-        lengthAssign: () => this;
-
-        lengthSq: () => MathNode;
-        lengthSqAssign: () => this;
-
         dFdx: () => MathNode;
         dFdxAssign: () => this;
 
@@ -361,24 +362,6 @@ declare module "../core/Node.js" {
          * @deprecated
          */
         atan2Assign: (b: MathNodeParameter) => this;
-
-        min: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => MathNode;
-        minAssign: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => this;
-
-        max: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => MathNode;
-        maxAssign: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => this;
 
         step: (b: MathNodeParameter) => MathNode;
         stepAssign: (b: MathNodeParameter) => this;
@@ -453,6 +436,24 @@ declare module "../core/Node.js" {
 
         saturate: () => Node<"float">;
         saturateAssign: () => this;
+
+        min: (
+            y: Node<"float"> | number,
+            ...values: (Node<"float"> | number)[]
+        ) => Node<"float">;
+        minAssign: (
+            y: Node<"float"> | number,
+            ...values: (Node<"float"> | number)[]
+        ) => this;
+
+        max: (
+            y: Node<"float"> | number,
+            ...values: (Node<"float"> | number)[]
+        ) => Node<"float">;
+        maxAssign: (
+            y: Node<"float"> | number,
+            ...values: (Node<"float"> | number)[]
+        ) => this;
     }
 
     interface VectorExtensions<TValue> {
@@ -473,5 +474,11 @@ declare module "../core/Node.js" {
 
         floor: () => Node<TValue>;
         floorAssign: () => this;
+
+        length: () => MathNode;
+        lengthAssign: () => this;
+
+        lengthSq: () => MathNode;
+        lengthSqAssign: () => this;
     }
 }

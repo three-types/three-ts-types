@@ -1,12 +1,18 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 
-let canvas, renderer;
+let canvas: HTMLCanvasElement, renderer: THREE.WebGPURenderer;
 
-const scenes = [];
+const scenes: THREE.Scene[] = [];
 
-const sections = [
+interface Section {
+    title: string;
+    description: string;
+    textures: { path: string; supported?: boolean }[];
+}
+
+const sections: Section[] = [
     {
         title: 'Uncompressed',
         description:
@@ -52,7 +58,7 @@ const sections = [
 init();
 
 async function init() {
-    canvas = document.getElementById('c');
+    canvas = document.getElementById('c') as HTMLCanvasElement;
 
     renderer = new THREE.WebGPURenderer({ canvas, antialias: true, forceWebGL: false });
     renderer.setClearColor(0xffffff, 1);
@@ -67,7 +73,7 @@ async function init() {
 
     const geometry = flipY(new THREE.PlaneGeometry(1, 1));
 
-    const content = document.getElementById('content');
+    const content = document.getElementById('content')!;
 
     for (const section of sections) {
         const sectionElement = document.createElement('section');
@@ -133,7 +139,7 @@ function updateSize() {
 
 // Rewrite UVs for `flipY=false` textures.
 
-function flipY(geometry) {
+function flipY(geometry: THREE.PlaneGeometry) {
     const uv = geometry.attributes.uv;
 
     for (let i = 0; i < uv.count; i++) {

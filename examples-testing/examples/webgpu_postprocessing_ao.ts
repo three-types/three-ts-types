@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
 import { pass, mrt, output, normalView, velocity, vec3, vec4 } from 'three/tsl';
-import { ao } from 'three/addons/tsl/display/GTAONode.js';
-import { traa } from 'three/addons/tsl/display/TRAANode.js';
+import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
+import TRAANode, { traa } from 'three/addons/tsl/display/TRAANode.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -10,9 +10,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, postProcessing, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    controls: OrbitControls;
 
-let aoPass, traaPass, blendPassAO, scenePassColor;
+let aoPass: GTAONode, traaPass: TRAANode, blendPassAO: THREE.Node, scenePassColor: THREE.TextureNode;
 
 const params = {
     samples: 16,
@@ -114,14 +118,15 @@ async function init() {
         // first place. Besides, normal estimation is computationally more expensive than just sampling a
         // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
 
-        if (o.material) o.material.depthWrite = true;
+        if ((o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
+            (o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.depthWrite = true;
     });
 
     window.addEventListener('resize', onWindowResize);
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'samples', 4, 32, 1).onChange(updateParameters);
     gui.add(params, 'distanceExponent', 1, 2).onChange(updateParameters);
     gui.add(params, 'distanceFallOff', 0.01, 1).onChange(updateParameters);

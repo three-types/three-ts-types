@@ -1,12 +1,12 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, position;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let physics: RapierPhysicsObject, position: THREE.Vector3;
 
-let boxes, spheres;
+let boxes: THREE.InstancedMesh, spheres: THREE.InstancedMesh;
 
 init();
 

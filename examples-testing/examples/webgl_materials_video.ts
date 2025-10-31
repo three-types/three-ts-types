@@ -5,13 +5,16 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { BloomPass } from 'three/addons/postprocessing/BloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let video, texture, material, mesh;
+let video,
+    texture,
+    material: THREE.MeshLambertMaterial & { hue?: number; saturation?: number },
+    mesh: THREE.Mesh & { dx?: number; dy?: number };
 
-let composer;
+let composer: EffectComposer;
 
 let mouseX = 0;
 let mouseY = 0;
@@ -19,20 +22,20 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-let cube_count;
+let cube_count: number;
 
-const meshes = [],
-    materials = [],
+const meshes: THREE.Mesh[] = [],
+    materials: (THREE.MeshLambertMaterial & { hue?: number; saturation?: number })[] = [],
     xgrid = 20,
     ygrid = 10;
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', function () {
     init();
 });
 
 function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
     container = document.createElement('div');
@@ -53,7 +56,7 @@ function init() {
     renderer.setAnimationLoop(animate);
     container.appendChild(renderer.domElement);
 
-    video = document.getElementById('video');
+    video = document.getElementById('video') as HTMLVideoElement;
     video.play();
     video.addEventListener('play', function () {
         this.currentTime = 3;
@@ -145,7 +148,7 @@ function onWindowResize() {
     composer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+function change_uvs(geometry: THREE.BoxGeometry, unitx: number, unity: number, offsetx: number, offsety: number) {
     const uvs = geometry.attributes.uv.array;
 
     for (let i = 0; i < uvs.length; i += 2) {
@@ -154,7 +157,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
     }
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = event.clientX - windowHalfX;
     mouseY = (event.clientY - windowHalfY) * 0.3;
 }
@@ -175,20 +178,20 @@ function animate() {
     for (let i = 0; i < cube_count; i++) {
         material = materials[i];
 
-        h = ((360 * (material.hue + time)) % 360) / 360;
-        material.color.setHSL(h, material.saturation, 0.5);
+        h = ((360 * (material.hue! + time)) % 360) / 360;
+        material.color.setHSL(h, material.saturation!, 0.5);
     }
 
     if (counter % 1000 > 200) {
         for (let i = 0; i < cube_count; i++) {
             mesh = meshes[i];
 
-            mesh.rotation.x += 10 * mesh.dx;
-            mesh.rotation.y += 10 * mesh.dy;
+            mesh.rotation.x += 10 * mesh.dx!;
+            mesh.rotation.y += 10 * mesh.dy!;
 
-            mesh.position.x -= 150 * mesh.dx;
-            mesh.position.y += 150 * mesh.dy;
-            mesh.position.z += 300 * mesh.dx;
+            mesh.position.x -= 150 * mesh.dx!;
+            mesh.position.y += 150 * mesh.dy!;
+            mesh.position.z += 300 * mesh.dx!;
         }
     }
 
@@ -196,8 +199,8 @@ function animate() {
         for (let i = 0; i < cube_count; i++) {
             mesh = meshes[i];
 
-            mesh.dx *= -1;
-            mesh.dy *= -1;
+            mesh.dx! *= -1;
+            mesh.dy! *= -1;
         }
     }
 

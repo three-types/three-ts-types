@@ -5,9 +5,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.js';
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
-let container, stats;
-let camera, controls, scene, renderer;
-let mesh, texture;
+let container: HTMLElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, controls: FirstPersonControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let mesh: THREE.Mesh, texture: THREE.CanvasTexture;
 
 const worldWidth = 256,
     worldDepth = 256;
@@ -16,7 +16,7 @@ const clock = new THREE.Clock();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 10000);
 
@@ -73,7 +73,7 @@ function onWindowResize() {
     controls.handleResize();
 }
 
-function generateHeight(width, height) {
+function generateHeight(width: number, height: number) {
     let seed = Math.PI / 4;
     window.Math.random = function () {
         const x = Math.sin(seed++) * 10000;
@@ -100,7 +100,7 @@ function generateHeight(width, height) {
     return data;
 }
 
-function generateTexture(data, width, height) {
+function generateTexture(data: Uint8Array, width: number, height: number) {
     let context, image, imageData, shade;
 
     const vector3 = new THREE.Vector3(0, 0, 0);
@@ -112,7 +112,7 @@ function generateTexture(data, width, height) {
     canvas.width = width;
     canvas.height = height;
 
-    context = canvas.getContext('2d');
+    context = canvas.getContext('2d')!;
     context.fillStyle = '#000';
     context.fillRect(0, 0, width, height);
 
@@ -140,7 +140,7 @@ function generateTexture(data, width, height) {
     canvasScaled.width = width * 4;
     canvasScaled.height = height * 4;
 
-    context = canvasScaled.getContext('2d');
+    context = canvasScaled.getContext('2d')!;
     context.scale(4, 4);
     context.drawImage(canvas, 0, 0);
 

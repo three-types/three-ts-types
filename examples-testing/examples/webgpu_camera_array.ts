@@ -1,7 +1,7 @@
 import * as THREE from 'three/webgpu';
 
-let camera, scene, renderer;
-let mesh;
+let camera: THREE.ArrayCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let mesh: THREE.Mesh;
 
 const AMOUNT = 6;
 
@@ -74,7 +74,7 @@ function updateCameras() {
             const subcamera = camera.cameras[AMOUNT * y + x];
             subcamera.copy(camera); // copy fov, aspect ratio, near, far from the root camera
 
-            subcamera.viewport.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
+            subcamera.viewport!.set(Math.floor(x * WIDTH), Math.floor(y * HEIGHT), Math.ceil(WIDTH), Math.ceil(HEIGHT));
             subcamera.updateProjectionMatrix();
 
             subcamera.position.x = x / AMOUNT - 0.5;

@@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, postProcessing, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    controls: OrbitControls;
 
 init();
 
@@ -199,7 +203,7 @@ async function init() {
 
     const types = { Combined: 0, Direct: 3, AO: 1, GI: 2 };
 
-    const gui = renderer.inspector.createParameters('SSGI settings');
+    const gui = (renderer.inspector as Inspector).createParameters('SSGI settings');
     gui.add(params, 'output', types).onChange(updatePostprocessing);
     gui.add(giPass.sliceCount, 'value', 1, 4, 1).name('slice count');
     gui.add(giPass.stepCount, 'value', 1, 32, 1).name('step count');
@@ -213,7 +217,7 @@ async function init() {
     gui.add(giPass.useScreenSpaceSampling, 'value').name('screen-space sampling');
     gui.add(giPass, 'useTemporalFiltering').name('temporal filtering').onChange(updatePostprocessing);
 
-    function updatePostprocessing(value) {
+    function updatePostprocessing(value: number | boolean) {
         if (value === 1) {
             postProcessing.outputNode = vec4(vec3(ao), 1);
         } else if (value === 2) {

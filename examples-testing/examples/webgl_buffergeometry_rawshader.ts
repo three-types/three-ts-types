@@ -2,14 +2,14 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10);
     camera.position.z = 2;
@@ -53,8 +53,8 @@ function init() {
         uniforms: {
             time: { value: 1.0 },
         },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
+        vertexShader: document.getElementById('vertexShader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentShader')!.textContent!,
         side: THREE.DoubleSide,
         transparent: true,
     });
@@ -86,7 +86,7 @@ function onWindowResize() {
 function animate() {
     const time = performance.now();
 
-    const object = scene.children[0];
+    const object = scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.RawShaderMaterial>;
 
     object.rotation.y = time * 0.0005;
     object.material.uniforms.time.value = time * 0.005;

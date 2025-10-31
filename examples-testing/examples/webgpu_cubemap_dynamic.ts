@@ -4,12 +4,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let cube, sphere, torus, material;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let cube: THREE.Mesh, sphere: THREE.Mesh, torus: THREE.Mesh, material: THREE.MeshStandardNodeMaterial;
 
-let cubeCamera, cubeRenderTarget;
+let cubeCamera: THREE.CubeCamera, cubeRenderTarget: THREE.WebGLCubeRenderTarget;
 
-let controls;
+let controls: OrbitControls;
 
 init();
 
@@ -86,7 +86,7 @@ async function init() {
     controls = new OrbitControls(camera, renderer.domElement);
     controls.autoRotate = true;
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(material, 'roughness', 0, 1);
     gui.add(material, 'metalness', 0, 1);
     gui.add(renderer, 'toneMappingExposure', 0, 2).name('exposure');
@@ -101,7 +101,7 @@ function onWindowResized() {
     camera.updateProjectionMatrix();
 }
 
-function animation(msTime) {
+function animation(msTime: DOMHighResTimeStamp) {
     const time = msTime / 1000;
 
     cube.position.x = Math.cos(time) * 30;

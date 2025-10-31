@@ -5,7 +5,7 @@ import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
 import { Font } from 'three/addons/loaders/FontLoader.js';
 import { unzipSync, strFromU8 } from 'three/addons/libs/fflate.module.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -19,7 +19,7 @@ function init() {
     new THREE.FileLoader()
         .setResponseType('arraybuffer')
         .load('fonts/MPLUSRounded1c/MPLUSRounded1c-Regular.typeface.json.zip', function (data) {
-            const zip = unzipSync(new Uint8Array(data));
+            const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
             const strArray = strFromU8(new Uint8Array(zip['MPLUSRounded1c-Regular.typeface.json'].buffer));
 
             const font = new Font(JSON.parse(strArray));
@@ -82,16 +82,22 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 } // end init
 
-function generateStrokeText(font, material, message, size, direction = 'ltr') {
-    const shapes = font.generateShapes(message, size, direction);
+function generateStrokeText(
+    font: Font,
+    material: { dark: THREE.MeshBasicMaterial; lite: THREE.MeshBasicMaterial; color: THREE.Color },
+    message: string,
+    size: number,
+    direction: 'ltr' | 'rtl' | 'tb' = 'ltr',
+) {
+    const shapes: THREE.Path[] = font.generateShapes(message, size, direction);
 
-    const geometry = new THREE.ShapeGeometry(shapes);
+    const geometry = new THREE.ShapeGeometry(shapes as THREE.Shape[]);
 
     const strokeText = new THREE.Group();
 
     geometry.computeBoundingBox();
 
-    const xMid = -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x);
+    const xMid = -0.5 * (geometry.boundingBox!.max.x - geometry.boundingBox!.min.x);
 
     geometry.translate(xMid, 0, 0);
 
@@ -105,10 +111,10 @@ function generateStrokeText(font, material, message, size, direction = 'ltr') {
 
     // make line shape ( N.B. edge view remains visible )
 
-    const holeShapes = [];
+    const holeShapes: THREE.Path[] = [];
 
     for (let i = 0; i < shapes.length; i++) {
-        const shape = shapes[i];
+        const shape = shapes[i] as THREE.Shape;
 
         if (shape.holes && shape.holes.length > 0) {
             for (let j = 0; j < shape.holes.length; j++) {

@@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let postProcessing;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let postProcessing: THREE.PostProcessing;
 
 const params = {
     resolutionScale: 0.2,
@@ -77,7 +77,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(intensity, 'value', 0, 4, 0.1).name('intensity');
     gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
     gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');

@@ -1,15 +1,16 @@
 import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let controls;
-let gui;
-let geometries, group;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls;
+let gui: ParametersGroup;
+let geometries: THREE.BufferGeometry[], group: THREE.Group;
 
-let renderTimeAverages = [];
+let renderTimeAverages: number[] = [];
 //
 
 const position = new THREE.Vector3();
@@ -33,7 +34,7 @@ init(!api.webgpu);
 
 //
 
-function randomizeMatrix(matrix) {
+function randomizeMatrix(matrix: THREE.Matrix4) {
     position.x = Math.random() * 80 - 40;
     position.y = Math.random() * 80 - 40;
     position.z = Math.random() * 80 - 40;
@@ -50,7 +51,7 @@ function randomizeMatrix(matrix) {
     return matrix.compose(position, quaternion, scale);
 }
 
-function randomizeRotationSpeed(rotation) {
+function randomizeRotationSpeed(rotation: THREE.Euler) {
     rotation.x = Math.random() * 0.05;
     rotation.y = Math.random() * 0.05;
     rotation.z = Math.random() * 0.05;
@@ -79,20 +80,20 @@ function initGeometries() {
 
 function cleanup() {
     if (group) {
-        group.parent.remove(group);
+        group.parent!.remove(group);
 
-        if (group.dispose) {
-            group.dispose();
+        if ((group as unknown as { dispose(): void }).dispose) {
+            (group as unknown as { dispose(): void }).dispose();
         }
     }
 }
 
-function initMesh(count) {
+function initMesh(count: number) {
     cleanup();
     initRegularMesh(count);
 }
 
-function initRegularMesh(count) {
+function initRegularMesh(count: number) {
     group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
 
     for (let i = 0; i < count; i++) {
@@ -159,7 +160,7 @@ async function init(forceWebGL = false) {
 
     // gui
 
-    gui = renderer.inspector.createParameters('Settings');
+    gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(api, 'renderBundle')
         .name('render bundle')
         .onChange(() => {
@@ -186,7 +187,7 @@ async function init(forceWebGL = false) {
         camera.updateProjectionMatrix();
 
         renderer.setSize(width, height);
-        group.needsUpdate = true;
+        (group as THREE.BundleGroup).needsUpdate = true;
     }
 
     async function animate() {
@@ -203,7 +204,7 @@ async function init(forceWebGL = false) {
 
         const average = renderTimeAverages.reduce((a, b) => a + b, 0) / renderTimeAverages.length;
 
-        document.getElementById('backend').innerText =
+        document.getElementById('backend')!.innerText =
             `Average Render Time ${api.renderBundle ? '(Bundle)' : ''}: ` + average.toFixed(2) + 'ms';
     }
 

@@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { radixSort } from 'three/addons/utils/SortUtils.js';
+import { RadixSortOptions, radixSort } from 'three/addons/utils/SortUtils.js';
 
-let stats, gui, guiStatsEl;
-let camera, controls, scene, renderer;
-let geometries, mesh, material;
-const ids = [];
+let stats: Stats, gui: GUI, guiStatsEl: HTMLLIElement;
+let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let geometries: THREE.BufferGeometry[], mesh: THREE.Group | THREE.BatchedMesh, material: THREE.MeshNormalMaterial;
+const ids: number[] = [];
 const matrix = new THREE.Matrix4();
 
 //
@@ -45,7 +45,7 @@ initMesh();
 
 //
 
-function randomizeMatrix(matrix) {
+function randomizeMatrix(matrix: THREE.Matrix4) {
     position.x = Math.random() * 40 - 20;
     position.y = Math.random() * 40 - 20;
     position.z = Math.random() * 40 - 20;
@@ -61,7 +61,7 @@ function randomizeMatrix(matrix) {
     return matrix.compose(position, quaternion, scale);
 }
 
-function randomizeRotationSpeed(rotation) {
+function randomizeRotationSpeed(rotation: THREE.Euler) {
     rotation.x = Math.random() * 0.01;
     rotation.y = Math.random() * 0.01;
     rotation.z = Math.random() * 0.01;
@@ -86,10 +86,10 @@ function createMaterial() {
 
 function cleanup() {
     if (mesh) {
-        mesh.parent.remove(mesh);
+        mesh.parent!.remove(mesh);
 
-        if (mesh.dispose) {
-            mesh.dispose();
+        if ((mesh as THREE.BatchedMesh).dispose) {
+            (mesh as THREE.BatchedMesh).dispose();
         }
     }
 }
@@ -219,14 +219,18 @@ function init() {
 
 //
 
-function sortFunction(list) {
+type BatchedMeshWithOptions = THREE.BatchedMesh & {
+    _options?: RadixSortOptions<{ start: number; count: number; z: number }>;
+};
+
+function sortFunction(this: THREE.BatchedMesh, list: { start: number; count: number; z: number }[]) {
     // initialize options
-    this._options = this._options || {
+    (this as BatchedMeshWithOptions)._options = (this as BatchedMeshWithOptions)._options || {
         get: el => el.z,
         aux: new Array(this.maxInstanceCount),
     };
 
-    const options = this._options;
+    const options = (this as BatchedMeshWithOptions)._options!;
     options.reversed = this.material.transparent;
 
     let minZ = Infinity;
@@ -276,9 +280,9 @@ function animateMeshes() {
             const rotationMatrix = mesh.userData.rotationSpeeds[i];
             const id = ids[i];
 
-            mesh.getMatrixAt(id, matrix);
+            (mesh as THREE.BatchedMesh).getMatrixAt(id, matrix);
             matrix.multiply(rotationMatrix);
-            mesh.setMatrixAt(id, matrix);
+            (mesh as THREE.BatchedMesh).setMatrixAt(id, matrix);
         }
     } else {
         for (let i = 0; i < loopNum; i++) {
@@ -295,10 +299,10 @@ function animateMeshes() {
 }
 
 function render() {
-    if (mesh.isBatchedMesh) {
-        mesh.sortObjects = api.sortObjects;
-        mesh.perObjectFrustumCulled = api.perObjectFrustumCulled;
-        mesh.setCustomSort(api.useCustomSort ? sortFunction : null);
+    if ((mesh as THREE.BatchedMesh).isBatchedMesh) {
+        (mesh as THREE.BatchedMesh).sortObjects = api.sortObjects;
+        (mesh as THREE.BatchedMesh).perObjectFrustumCulled = api.perObjectFrustumCulled;
+        (mesh as THREE.BatchedMesh).setCustomSort(api.useCustomSort ? sortFunction : null);
     }
 
     renderer.render(scene, camera);

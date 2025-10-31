@@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container;
-let camera, scene, renderer;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 const params = {
     intensity: 1,
@@ -76,12 +76,12 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.add(params, 'intensity', 0, 1)
         .name('Light Map Intensity')
         .onChange(value => {
-            for (const material of object.material) {
+            for (const material of (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial[]>).material) {
                 material.lightMapIntensity = value;
             }
         });

@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { MapControls } from 'three/addons/controls/MapControls.js';
 
-let camera, controls, scene, renderer;
+let camera: THREE.PerspectiveCamera, controls: MapControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 //render(); // remove when using animation loop

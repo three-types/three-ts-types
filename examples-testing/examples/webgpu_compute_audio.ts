@@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let computeNode;
-let waveBuffer, sampleRate;
-let waveArray;
-let currentAudio, currentAnalyser;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let computeNode: THREE.ComputeNode;
+let waveBuffer: Float32Array<ArrayBuffer>, sampleRate: number;
+let waveArray: THREE.StorageBufferNode<"float">;
+let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
 const analyserBuffer = new Uint8Array(1024);
-let analyserTexture;
+let analyserTexture: THREE.DataTexture;
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', init);
 
 async function playAudioBuffer() {
@@ -46,7 +46,7 @@ async function playAudioBuffer() {
 }
 
 async function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
     // audio buffer
@@ -69,7 +69,7 @@ async function init() {
 
     // read-only buffer
 
-    const originalWave = instancedArray(waveBuffer).toReadOnly();
+    const originalWave = instancedArray<"float">(waveBuffer).toReadOnly();
 
     // The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
     // As used in `renderer.getArrayBufferAsync( waveArray.value )`.
@@ -79,9 +79,9 @@ async function init() {
 
     // params
 
-    const pitch = uniform(1.5);
-    const delayVolume = uniform(0.2);
-    const delayOffset = uniform(0.55);
+    const pitch = uniform<"float", number>(1.5);
+    const delayVolume = uniform<"float", number>(0.2);
+    const delayOffset = uniform<"float", number>(0.55);
 
     // compute (shader-node)
 
@@ -92,7 +92,7 @@ async function init() {
 
         const time = index.mul(pitch);
 
-        let wave = originalWave.element(time);
+        let wave: THREE.Node<"float"> = originalWave.element(time);
 
         // delay
 
@@ -149,7 +149,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Audio');
+    const gui = (renderer.inspector as Inspector).createParameters('Audio');
 
     gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
     gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');

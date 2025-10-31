@@ -3,8 +3,11 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
 
-let camera, scene, rendererCSS3D, rendererWebGL;
-let controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    rendererCSS3D: CSS3DRenderer,
+    rendererWebGL: THREE.WebGLRenderer;
+let controls: OrbitControls;
 
 init();
 
@@ -81,7 +84,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function buildFrame(width, height, thickness) {
+function buildFrame(width: number, height: number, thickness: number) {
     const group = new THREE.Group();
     const material = new THREE.MeshStandardMaterial({ color: 0x2200ff });
 

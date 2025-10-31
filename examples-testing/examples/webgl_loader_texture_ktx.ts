@@ -17,8 +17,8 @@ import { KTXLoader } from 'three/addons/loaders/KTXLoader.js';
 	ASTC_4x4, ASTC8x8 - transparent textures with full alpha range
 	*/
 
-let camera, scene, renderer;
-const meshes = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+const meshes: THREE.Mesh[] = [];
 
 init();
 
@@ -51,14 +51,14 @@ function init() {
         material1 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/disturb_PVR2bpp.ktx'),
         });
-        material1.map.colorSpace = THREE.SRGBColorSpace;
+        material1.map!.colorSpace = THREE.SRGBColorSpace;
         material2 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/lensflare_PVR4bpp.ktx'),
             depthTest: false,
             transparent: true,
             side: THREE.DoubleSide,
         });
-        material2.map.colorSpace = THREE.SRGBColorSpace;
+        material2.map!.colorSpace = THREE.SRGBColorSpace;
 
         meshes.push(new THREE.Mesh(geometry, material1));
         meshes.push(new THREE.Mesh(geometry, material2));
@@ -68,14 +68,14 @@ function init() {
         material1 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/disturb_BC1.ktx'),
         });
-        material1.map.colorSpace = THREE.SRGBColorSpace;
+        material1.map!.colorSpace = THREE.SRGBColorSpace;
         material2 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/lensflare_BC3.ktx'),
             depthTest: false,
             transparent: true,
             side: THREE.DoubleSide,
         });
-        material2.map.colorSpace = THREE.SRGBColorSpace;
+        material2.map!.colorSpace = THREE.SRGBColorSpace;
 
         meshes.push(new THREE.Mesh(geometry, material1));
         meshes.push(new THREE.Mesh(geometry, material2));
@@ -93,14 +93,14 @@ function init() {
         material1 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/disturb_ASTC4x4.ktx'),
         });
-        material1.map.colorSpace = THREE.SRGBColorSpace;
+        material1.map!.colorSpace = THREE.SRGBColorSpace;
         material2 = new THREE.MeshBasicMaterial({
             map: loader.load('textures/compressed/lensflare_ASTC8x8.ktx'),
             depthTest: false,
             transparent: true,
             side: THREE.DoubleSide,
         });
-        material2.map.colorSpace = THREE.SRGBColorSpace;
+        material2.map!.colorSpace = THREE.SRGBColorSpace;
 
         meshes.push(new THREE.Mesh(geometry, material1));
         meshes.push(new THREE.Mesh(geometry, material2));

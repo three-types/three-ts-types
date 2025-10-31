@@ -5,13 +5,13 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Reflector } from 'three/addons/objects/Reflector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let cameraControls;
+let cameraControls: OrbitControls;
 
-let sphereGroup, smallSphere;
+let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
 
-let groundMirror, verticalMirror;
+let groundMirror: Reflector, verticalMirror: Reflector;
 
 let resolutionScale = 1; // render target scale factor in [ 0, 1 ]
 
@@ -20,7 +20,7 @@ const size = new THREE.Vector2();
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     // renderer
     renderer = new THREE.WebGLRenderer({ antialias: true });

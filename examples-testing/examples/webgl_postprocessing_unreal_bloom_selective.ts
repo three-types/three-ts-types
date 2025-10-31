@@ -23,7 +23,7 @@ const params = {
 };
 
 const darkMaterial = new THREE.MeshBasicMaterial({ color: 'black' });
-const materials = {};
+const materials: Record<string, THREE.Material | THREE.Material[]> = {};
 
 const renderer = new THREE.WebGLRenderer({ antialias: false });
 renderer.setPixelRatio(window.devicePixelRatio);
@@ -66,8 +66,8 @@ const mixPass = new ShaderPass(
             baseTexture: { value: null },
             bloomTexture: { value: bloomComposer.renderTarget2.texture },
         },
-        vertexShader: document.getElementById('vertexshader').textContent,
-        fragmentShader: document.getElementById('fragmentshader').textContent,
+        vertexShader: document.getElementById('vertexshader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
         defines: {},
     }),
     'baseTexture',
@@ -122,7 +122,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
 
 setupScene();
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
     mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
@@ -175,9 +175,9 @@ function setupScene() {
     render();
 }
 
-function disposeMaterial(obj) {
-    if (obj.material) {
-        obj.material.dispose();
+function disposeMaterial(obj: THREE.Object3D) {
+    if ((obj as THREE.Mesh).material) {
+        ((obj as THREE.Mesh).material as THREE.Material).dispose();
     }
 }
 
@@ -190,16 +190,16 @@ function render() {
     finalComposer.render();
 }
 
-function darkenNonBloomed(obj) {
-    if (obj.isMesh && bloomLayer.test(obj.layers) === false) {
-        materials[obj.uuid] = obj.material;
-        obj.material = darkMaterial;
+function darkenNonBloomed(obj: THREE.Object3D) {
+    if ((obj as THREE.Mesh).isMesh && bloomLayer.test(obj.layers) === false) {
+        materials[obj.uuid] = (obj as THREE.Mesh).material;
+        (obj as THREE.Mesh).material = darkMaterial;
     }
 }
 
-function restoreMaterial(obj) {
+function restoreMaterial(obj: THREE.Object3D) {
     if (materials[obj.uuid]) {
-        obj.material = materials[obj.uuid];
+        (obj as THREE.Mesh).material = materials[obj.uuid];
         delete materials[obj.uuid];
     }
 }

@@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
-let camera, scene, renderer, controls, drag;
+interface Drag {
+    screenCoords: THREE.Vector2;
+    prevWorldCoords: THREE.Vector3;
+    worldCoords: THREE.Vector3;
+    raycaster: THREE.Raycaster;
+    down: boolean;
+    hover: boolean;
+
+    object: THREE.Mesh;
+
+    getIntersect: () => THREE.Intersection | null;
+
+    update: () => void;
+}
+
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    drag: Drag;
 
 init();
 
@@ -83,7 +102,7 @@ function init() {
     const vNormal = varying(vec3());
     const vPosition = varying(vec3());
 
-    const terrainElevation = Fn(([position]) => {
+    const terrainElevation = Fn<[THREE.Node]>(([position]) => {
         const warpedPosition = position.add(offset).toVar();
         warpedPosition.addAssign(
             mx_noise_float(warpedPosition.mul(positionFrequency).mul(warpFrequency), 1, 0).mul(warpStrength),
@@ -183,7 +202,7 @@ function init() {
 
     // drag
 
-    drag = {};
+    drag = {} as Drag;
     drag.screenCoords = new THREE.Vector2();
     drag.prevWorldCoords = new THREE.Vector3();
     drag.worldCoords = new THREE.Vector3();
@@ -217,7 +236,7 @@ function init() {
         }
 
         if (drag.hover && drag.down) {
-            drag.worldCoords.copy(intersect.point);
+            drag.worldCoords.copy(intersect!.point);
             const delta = drag.prevWorldCoords.sub(drag.worldCoords);
 
             offset.value.x += delta.x;
@@ -240,7 +259,7 @@ function init() {
     // inspector
 
     renderer.inspector = new Inspector();
-    document.body.appendChild(renderer.inspector.domElement);
+    document.body.appendChild((renderer.inspector as Inspector).domElement);
 
     // controls
 
@@ -253,7 +272,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     const terrainGui = gui.addFolder('🏔️ terrain');
 
@@ -288,7 +307,7 @@ function init() {
             drag.down = true;
             drag.object.scale.setScalar(10);
 
-            const intersect = drag.getIntersect();
+            const intersect = drag.getIntersect()!;
             drag.prevWorldCoords.copy(intersect.point);
             drag.worldCoords.copy(intersect.point);
         }

@@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer, postProcessing, controls, timer, light;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    controls: OrbitControls,
+    timer: THREE.Timer,
+    light: THREE.PointLight;
 
-let updateParticles, spawnParticles; // TSL compute nodes
-let getInstanceColor; // TSL function
+let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
+let getInstanceColor: THREE.TSL.ShaderNodeFn<[THREE.Node]>; // TSL function
 
 const screenPointer = new THREE.Vector2();
 const scenePointer = new THREE.Vector3();
@@ -102,7 +108,7 @@ async function init() {
 
     // TSL function
     // current color from index
-    getInstanceColor = Fn(([i]) => {
+    getInstanceColor = Fn<[THREE.Node]>(([i]) => {
         return hue(
             color(0x0000ff),
             colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
@@ -366,7 +372,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.add(controls, 'autoRotate').name('Auto Rotate');
     gui.add(controls, 'autoRotateSpeed', -10.0, 10.0, 0.01).name('Auto Rotate Speed');
@@ -401,7 +407,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(e) {
+function onPointerMove(e: PointerEvent) {
     screenPointer.x = (e.clientX / window.innerWidth) * 2 - 1;
     screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
 }

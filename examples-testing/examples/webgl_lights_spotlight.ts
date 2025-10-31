@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let renderer, scene, camera;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 
-let spotLight;
+let spotLight: THREE.SpotLight & { lightHelper?: THREE.SpotLightHelper; shadowCameraHelper?: THREE.CameraHelper };
 
 init();
 
@@ -45,7 +45,7 @@ function init() {
     const loader = new THREE.TextureLoader().setPath('textures/');
     const filenames = ['disturb.jpg', 'colors.png', 'uv_grid_opengl.jpg'];
 
-    const textures = { none: null };
+    const textures: Record<string, THREE.Texture | null> = { none: null };
 
     for (let i = 0; i < filenames.length; i++) {
         const filename = filenames[i];
@@ -176,8 +176,8 @@ function init() {
     });
 
     gui.add(params, 'helpers').onChange(function (val) {
-        spotLight.lightHelper.visible = val;
-        spotLight.shadowCameraHelper.visible = val;
+        spotLight.lightHelper!.visible = val;
+        spotLight.shadowCameraHelper!.visible = val;
     });
 
     gui.open();
@@ -196,7 +196,7 @@ function animate() {
     spotLight.position.x = Math.cos(time) * 2.5;
     spotLight.position.z = Math.sin(time) * 2.5;
 
-    spotLight.lightHelper.update();
+    spotLight.lightHelper!.update();
 
     renderer.render(scene, camera);
 }

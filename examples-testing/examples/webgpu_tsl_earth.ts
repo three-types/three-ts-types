@@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls, globe, clock;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    globe: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardNodeMaterial>,
+    clock: THREE.Clock;
 
 init();
 
@@ -106,7 +111,7 @@ function init() {
     // atmosphere
 
     const atmosphereMaterial = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide, transparent: true });
-    let alpha = fresnel.remap(0.73, 1, 1, 0).pow(3);
+    let alpha: THREE.Node = fresnel.remap(0.73, 1, 1, 0).pow(3);
     alpha = alpha.mul(sunOrientation.smoothstep(-0.5, 1));
     atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
 
@@ -136,7 +141,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.addColor({ color: atmosphereDayColor.value.getHex(THREE.SRGBColorSpace) }, 'color')
         .onChange(value => {

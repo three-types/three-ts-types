@@ -11,7 +11,15 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 import TWEEN from 'three/addons/libs/tween.module.js';
 
-let camera, controls, scene, timer, renderer, model, mixer, raycaster, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    scene: THREE.Scene,
+    timer: THREE.Timer,
+    renderer: THREE.WebGPURenderer,
+    model: THREE.Group,
+    mixer: THREE.AnimationMixer,
+    raycaster: THREE.Raycaster,
+    postProcessing: THREE.PostProcessing;
 
 const pointerCoords = new THREE.Vector2();
 const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
@@ -100,7 +108,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(minDistance, 'value', 0, 3).name('min distance');
     gui.add(maxDistance, 'value', 0, 5).name('max distance');
     gui.add(blurSize, 'value', 1, 3, 1).name('blur size');
@@ -115,7 +123,7 @@ async function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     pointerCoords.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
 
     raycaster.setFromCamera(pointerCoords, camera);

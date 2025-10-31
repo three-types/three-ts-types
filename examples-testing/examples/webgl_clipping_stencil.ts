@@ -3,9 +3,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, object, stats;
-let planes, planeObjects, planeHelpers;
-let clock;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    object: THREE.Group,
+    stats: Stats;
+let planes: THREE.Plane[], planeObjects: THREE.Mesh[], planeHelpers: THREE.PlaneHelper[];
+let clock: THREE.Clock;
 
 const params = {
     animate: true,
@@ -28,7 +32,7 @@ const params = {
 
 init();
 
-function createPlaneStencilGroup(geometry, plane, renderOrder) {
+function createPlaneStencilGroup(geometry: THREE.TorusKnotGeometry, plane: THREE.Plane, renderOrder: number) {
     const group = new THREE.Group();
     const baseMat = new THREE.MeshBasicMaterial();
     baseMat.depthWrite = false;

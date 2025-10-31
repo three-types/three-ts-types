@@ -2,19 +2,26 @@ import * as THREE from 'three/webgpu';
 import { color } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { Wireframe } from 'three/addons/lines/webgpu/Wireframe.js';
 import { WireframeGeometry2 } from 'three/addons/lines/WireframeGeometry2.js';
 
-let wireframe, renderer, scene, camera, camera2, controls, backgroundNode;
-let wireframe1;
-let matLine, matLineBasic, matLineDashed;
-let gui;
+let wireframe: Wireframe,
+    renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    camera2: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    backgroundNode: THREE.Node;
+let wireframe1: THREE.LineSegments;
+let matLine: THREE.Line2NodeMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
+let gui: ParametersGroup;
 
 // viewport
-let insetWidth;
-let insetHeight;
+let insetWidth: number;
+let insetHeight: number;
 
 init();
 
@@ -43,7 +50,7 @@ function init() {
 
     // Wireframe ( WireframeGeometry2, Line2NodeMaterial )
 
-    let geo = new THREE.IcosahedronGeometry(20, 1);
+    let geo: THREE.BufferGeometry = new THREE.IcosahedronGeometry(20, 1);
 
     const geometry = new WireframeGeometry2(geo);
 
@@ -135,7 +142,7 @@ function animate() {
 //
 
 function initGui() {
-    gui = renderer.inspector.createParameters('Settings');
+    gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const param = {
         'line type': 0,

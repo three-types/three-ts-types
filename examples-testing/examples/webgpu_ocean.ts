@@ -6,14 +6,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 
-let container;
-let camera, scene, renderer;
-let controls, water, sun, mesh;
+let container: HTMLElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     //
 
@@ -75,7 +75,7 @@ function init() {
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
     const sceneEnv = new THREE.Scene();
 
-    let renderTarget;
+    let renderTarget: THREE.RenderTarget | undefined;
 
     function updateSun() {
         const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
@@ -116,7 +116,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const folderSky = gui.addFolder('Sky');
     folderSky.add(parameters, 'elevation', 0, 90, 0.1).onChange(updateSun);

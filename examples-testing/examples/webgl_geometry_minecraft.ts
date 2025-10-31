@@ -6,9 +6,9 @@ import { FirstPersonControls } from 'three/addons/controls/FirstPersonControls.j
 import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, controls, scene, renderer;
+let camera: THREE.PerspectiveCamera, controls: FirstPersonControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 const worldWidth = 128,
     worldDepth = 128;
@@ -21,7 +21,7 @@ const clock = new THREE.Clock();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 20000);
     camera.position.y = getY(worldHalfWidth, worldHalfDepth) * 100 + 100;
@@ -143,7 +143,7 @@ function onWindowResize() {
     controls.handleResize();
 }
 
-function generateHeight(width, height) {
+function generateHeight(width: number, height: number) {
     const data = [],
         perlin = new ImprovedNoise(),
         size = width * height,
@@ -166,7 +166,7 @@ function generateHeight(width, height) {
     return data;
 }
 
-function getY(x, z) {
+function getY(x: number, z: number) {
     return (data[x + z * worldWidth] * 0.15) | 0;
 }
 

@@ -3,7 +3,12 @@ import * as THREE from 'three';
 import Stats from 'three/addons/libs/stats.module.js';
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 
-let camera, scene, mesh, renderer, stats, clock;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.ShaderMaterial>,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    clock: THREE.Clock;
 
 const planeWidth = 50;
 const planeHeight = 25;
@@ -43,8 +48,8 @@ function init() {
                 depth: { value: 55 },
                 size: { value: new THREE.Vector2(planeWidth, planeHeight) },
             },
-            vertexShader: document.getElementById('vs').textContent.trim(),
-            fragmentShader: document.getElementById('fs').textContent.trim(),
+            vertexShader: document.getElementById('vs')!.textContent!.trim(),
+            fragmentShader: document.getElementById('fs')!.textContent!.trim(),
             glslVersion: THREE.GLSL3,
         });
 

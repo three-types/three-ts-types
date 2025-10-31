@@ -6,7 +6,11 @@ import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 
 //
 
-let camera, scene, mesh, renderer, clock;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    mesh: THREE.Mesh,
+    renderer: THREE.WebGPURenderer,
+    clock: THREE.Clock;
 
 const depth = uniform(0);
 

@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let sky, sun;
+let sky: SkyMesh, sun: THREE.Vector3;
 
 init();
 
@@ -47,7 +47,7 @@ function initSky() {
         renderer.toneMappingExposure = effectController.exposure;
     }
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(effectController, 'turbidity', 0.0, 20.0, 0.1).onChange(guiChanged);
     gui.add(effectController, 'rayleigh', 0.0, 4, 0.001).onChange(guiChanged);

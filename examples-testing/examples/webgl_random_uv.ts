@@ -6,14 +6,24 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+import { IUniform } from 'three';
 
-let camera, scene, renderer, dirLight, ground, gui, material, materialIn, uniforms, uniformsIn;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    dirLight: THREE.DirectionalLight,
+    ground: THREE.Mesh<THREE.PlaneGeometry, THREE.ShadowMaterial>,
+    gui: GUI,
+    material: THREE.MeshStandardMaterial,
+    materialIn: THREE.MeshStandardMaterial,
+    uniforms: { [uniform: string]: IUniform },
+    uniformsIn: { [uniform: string]: IUniform };
 
 init();
 render();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 20);
     camera.position.set(-0.8, 0.6, 1.5);
@@ -95,12 +105,14 @@ function init() {
                 shaderBall.children[i].renderOrder = n++;
             }
 
-            material = shaderBall.children[0].material;
+            material = (shaderBall.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>)
+                .material;
             material.map = map;
             material.alphaMap = disolveMap;
             material.transparent = true;
 
-            materialIn = shaderBall.children[1].material;
+            materialIn = (shaderBall.children[1] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>)
+                .material;
             materialIn.alphaMap = disolveMap;
             materialIn.transparent = true;
 

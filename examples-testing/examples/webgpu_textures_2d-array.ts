@@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
 
 //
 
-let camera, scene, mesh, renderer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    mesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshBasicNodeMaterial>,
+    renderer: THREE.WebGPURenderer;
 
 const planeWidth = 50;
 const planeHeight = 50;
@@ -24,14 +27,14 @@ function init() {
     // width 256, height 256, depth 109, 8-bit, zip archived raw data
 
     new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
-        const zip = unzipSync(new Uint8Array(data));
-        const array = new Uint8Array(zip['head256x256x109'].buffer);
+        const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
+        const array = new Uint8Array(zip['head256x256x109'].buffer as ArrayBuffer);
 
         const map = new THREE.DataArrayTexture(array, 256, 256, 109);
         map.format = THREE.RedFormat;
         map.needsUpdate = true;
 
-        let coord = uv();
+        let coord: THREE.Node = uv();
         coord = coord.setY(coord.y.oneMinus()); // flip y
 
         let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation

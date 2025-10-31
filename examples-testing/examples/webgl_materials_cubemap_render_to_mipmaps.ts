@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container;
-let camera, scene, renderer;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 const CubemapFilterShader = {
     name: 'CubemapFilterShader',
@@ -55,15 +55,15 @@ const CubemapFilterShader = {
 
 init();
 
-async function loadCubeTexture(urls) {
-    return new Promise(function (resolve) {
+async function loadCubeTexture(urls: string[]) {
+    return new Promise<THREE.CubeTexture>(function (resolve) {
         new THREE.CubeTextureLoader().load(urls, function (cubeTexture) {
             resolve(cubeTexture);
         });
     });
 }
 
-function allocateCubemapRenderTarget(cubeMapSize) {
+function allocateCubemapRenderTarget(cubeMapSize: number) {
     const params = {
         magFilter: THREE.LinearFilter,
         minFilter: THREE.LinearMipMapLinearFilter,
@@ -77,13 +77,13 @@ function allocateCubemapRenderTarget(cubeMapSize) {
     const rt = new THREE.WebGLCubeRenderTarget(cubeMapSize, params);
 
     const mipLevels = Math.log(cubeMapSize) * Math.LOG2E + 1.0;
-    for (let i = 0; i < mipLevels; i++) rt.texture.mipmaps.push({});
+    for (let i = 0; i < mipLevels; i++) (rt.texture.mipmaps as THREE.CubeTexture[]).push({} as THREE.CubeTexture);
 
     rt.texture.mapping = THREE.CubeReflectionMapping;
     return rt;
 }
 
-function renderToCubeTexture(cubeMapRenderTarget, sourceCubeTexture) {
+function renderToCubeTexture(cubeMapRenderTarget: THREE.WebGLCubeRenderTarget, sourceCubeTexture: THREE.CubeTexture) {
     const geometry = new THREE.BoxGeometry(5, 5, 5);
 
     const material = new THREE.ShaderMaterial({

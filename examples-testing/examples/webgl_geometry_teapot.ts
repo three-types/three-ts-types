@@ -5,22 +5,30 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 let cameraControls;
-let effectController;
+let effectController: {
+    newTess: number;
+    bottom: boolean;
+    lid: boolean;
+    body: boolean;
+    fitLid: boolean;
+    nonblinn: boolean;
+    newShading: string;
+};
 const teapotSize = 300;
-let ambientLight, light;
+let ambientLight: THREE.AmbientLight, light: THREE.DirectionalLight;
 
 let tess = -1; // force initialization
-let bBottom;
-let bLid;
-let bBody;
-let bFitLid;
-let bNonBlinn;
-let shading;
+let bBottom: boolean;
+let bLid: boolean;
+let bBody: boolean;
+let bFitLid: boolean;
+let bNonBlinn: boolean;
+let shading: string;
 
-let teapot, textureCube;
-const materials = {};
+let teapot: THREE.Mesh, textureCube: THREE.CubeTexture;
+const materials: Record<string, THREE.Material> = {};
 
 init();
 render();

@@ -2,9 +2,9 @@ import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-const spheres = [];
+const spheres: THREE.Mesh[] = [];
 
 let mouseX = 0;
 let mouseY = 0;
@@ -12,7 +12,13 @@ let mouseY = 0;
 let windowHalfX = window.innerWidth / 2;
 let windowHalfY = window.innerHeight / 2;
 
-const params = {
+const params: {
+    color: string;
+    mapping: THREE.CubeTextureMapping;
+    refractionRatio: number;
+    transparent: boolean;
+    opacity: number;
+} = {
     color: '#ffffff',
     mapping: THREE.CubeReflectionMapping,
     refractionRatio: 0.98,
@@ -74,7 +80,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.addColor(params, 'color').onChange(value => material.color.set(value));
     gui.add(params, 'mapping', mappings).onChange(value => {
@@ -103,7 +109,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = (event.clientX - windowHalfX) / 100;
     mouseY = (event.clientY - windowHalfY) / 100;
 }

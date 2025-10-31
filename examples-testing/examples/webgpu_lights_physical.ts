@@ -4,8 +4,13 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, bulbLight, bulbMat, hemiLight;
-let ballMat, cubeMat, floorMat;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    bulbLight: THREE.PointLight,
+    bulbMat: THREE.MeshStandardMaterial,
+    hemiLight: THREE.HemisphereLight;
+let ballMat: THREE.MeshStandardMaterial, cubeMat: THREE.MeshStandardMaterial, floorMat: THREE.MeshStandardMaterial;
 
 let previousShadowMap = false;
 
@@ -36,17 +41,22 @@ const hemiLuminousIrradiances = {
     '50000 lx (Direct Sun)': 50000,
 };
 
-const params = {
+const params: {
+    shadows: boolean;
+    exposure: number;
+    bulbPower: keyof typeof bulbLuminousPowers;
+    hemiIrradiance: keyof typeof hemiLuminousIrradiances;
+} = {
     shadows: true,
     exposure: 0.68,
-    bulbPower: Object.keys(bulbLuminousPowers)[4],
-    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0],
+    bulbPower: Object.keys(bulbLuminousPowers)[4] as keyof typeof bulbLuminousPowers,
+    hemiIrradiance: Object.keys(hemiLuminousIrradiances)[0] as keyof typeof hemiLuminousIrradiances,
 };
 
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     //
 
@@ -196,9 +206,9 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
-    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances));
-    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers));
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+    gui.add(params, 'hemiIrradiance', Object.keys(hemiLuminousIrradiances) as (keyof typeof hemiLuminousIrradiances)[]);
+    gui.add(params, 'bulbPower', Object.keys(bulbLuminousPowers) as (keyof typeof bulbLuminousPowers)[]);
     gui.add(params, 'exposure', 0, 1);
     gui.add(params, 'shadows');
 }

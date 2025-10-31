@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 
-let container, stats;
+let container: HTMLDivElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let mouseX = 0,
     mouseY = 0;
@@ -84,7 +84,12 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function createScene(geometry, m1, m2, m3) {
+function createScene(
+    geometry: THREE.BufferGeometry,
+    m1: THREE.MeshPhongMaterial,
+    m2: THREE.MeshPhongMaterial,
+    m3: THREE.MeshPhongMaterial,
+) {
     geometry.computeVertexNormals();
 
     const s = 1.5;
@@ -104,7 +109,7 @@ function createScene(geometry, m1, m2, m3) {
     scene.add(mesh);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = (event.clientX - windowHalfX) * 4;
     mouseY = (event.clientY - windowHalfY) * 4;
 }

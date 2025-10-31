@@ -1,6 +1,11 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer, clock, dataTexture, diffuseMap;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    clock: THREE.Clock,
+    dataTexture: THREE.DataTexture,
+    diffuseMap: THREE.Texture;
 
 let last = 0;
 const position = new THREE.Vector2();
@@ -77,9 +82,9 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function updateDataTexture(texture) {
+function updateDataTexture(texture: THREE.DataTexture) {
     const size = texture.image.width * texture.image.height;
-    const data = texture.image.data;
+    const data = texture.image.data as Uint8Array;
 
     // generate a random color and update texture data
 

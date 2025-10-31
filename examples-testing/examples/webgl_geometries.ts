@@ -5,7 +5,7 @@ import Stats from 'three/addons/libs/stats.module.js';
 import { ParametricGeometry } from 'three/addons/geometries/ParametricGeometry.js';
 import { plane, klein, mobius } from 'three/addons/geometries/ParametricFunctions.js';
 
-let camera, scene, renderer, stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
 
 init();
 
@@ -155,7 +155,7 @@ function render() {
     camera.lookAt(scene.position);
 
     scene.traverse(function (object) {
-        if (object.isMesh === true) {
+        if ((object as THREE.Mesh).isMesh === true) {
             object.rotation.x = timer * 5;
             object.rotation.y = timer * 2.5;
         }

@@ -86,16 +86,17 @@ window.addEventListener('pointerdown', event => {
     const intersects = raycaster.intersectObjects(scene.children, false);
 
     if (intersects.length > 0) {
-        const material = intersects[0].object.material;
+        const material = (intersects[0].object as THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicNodeMaterial>)
+            .material;
 
-        const bloomIntensity = material.mrtNode.get('bloomIntensity');
+        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<number>;
         bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
     }
 });
 
 // gui
 
-const gui = renderer.inspector.createParameters('Settings');
+const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
 const bloomFolder = gui.addFolder('Bloom');
 bloomFolder.add(bloomPass.threshold, 'value', 0.0, 1.0).name('threshold');

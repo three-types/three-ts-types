@@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.NodeMaterial>;
 
 init();
 
@@ -58,7 +58,11 @@ function init() {
 
     // Shader
 
-    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
+    const opaqueRaymarchingTexture = Fn<{
+        texture: THREE.Texture3DNode;
+        steps: THREE.Node;
+        threshold: THREE.Node;
+    }>(({ texture, steps, threshold }) => {
         const finalColor = vec4(0).toVar();
 
         RaymarchingBox(steps, ({ positionRay }) => {
@@ -95,7 +99,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
     gui.add(steps, 'value', 0, 300, 1).name('steps');
 

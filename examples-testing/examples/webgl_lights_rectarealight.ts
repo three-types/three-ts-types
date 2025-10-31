@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
 
-let renderer, scene, camera;
-let stats, meshKnot;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let stats: Stats, meshKnot: THREE.Mesh;
 
 init();
 
@@ -70,7 +70,7 @@ function onWindowResize() {
     camera.updateProjectionMatrix();
 }
 
-function animation(time) {
+function animation(time: DOMHighResTimeStamp) {
     meshKnot.rotation.y = time / 1000;
 
     renderer.render(scene, camera);

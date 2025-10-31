@@ -4,7 +4,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { PLYExporter } from 'three/addons/exporters/PLYExporter.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, renderer, exporter, mesh;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGLRenderer,
+    exporter: PLYExporter,
+    mesh: THREE.Mesh;
 
 const params = {
     exportASCII: exportASCII,
@@ -141,16 +145,16 @@ const link = document.createElement('a');
 link.style.display = 'none';
 document.body.appendChild(link);
 
-function save(blob, filename) {
+function save(blob: Blob, filename: string) {
     link.href = URL.createObjectURL(blob);
     link.download = filename;
     link.click();
 }
 
-function saveString(text, filename) {
+function saveString(text: string, filename: string) {
     save(new Blob([text], { type: 'text/plain' }), filename);
 }
 
-function saveArrayBuffer(buffer, filename) {
+function saveArrayBuffer(buffer: BufferSource, filename: string) {
     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
 }

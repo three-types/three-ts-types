@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import { color } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15,9 +15,9 @@ if (WebGPU.isAvailable() === false) {
 
 //
 
-let renderer;
+let renderer: THREE.WebGPURenderer;
 
-const scenes = [];
+const scenes: THREE.Scene[] = [];
 
 init();
 
@@ -29,7 +29,7 @@ function init() {
         new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
     ];
 
-    const content = document.getElementById('content');
+    const content = document.getElementById('content')!;
 
     for (let i = 0; i < 40; i++) {
         const scene = new THREE.Scene();

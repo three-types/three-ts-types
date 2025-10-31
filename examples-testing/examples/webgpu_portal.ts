@@ -17,10 +17,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, sceneMain, scenePortal, renderer;
-let clock;
+let camera: THREE.PerspectiveCamera, sceneMain: THREE.Scene, scenePortal: THREE.Scene, renderer: THREE.WebGPURenderer;
+let clock: THREE.Clock;
 
-const mixers = [];
+const mixers: THREE.AnimationMixer[] = [];
 
 init();
 
@@ -60,7 +60,7 @@ function init() {
 
     const loader = new GLTFLoader();
     loader.load('models/gltf/Xbot.glb', function (gltf) {
-        const createModel = (colorNode = null) => {
+        const createModel = (colorNode: THREE.Node | null = null) => {
             let object;
 
             if (mixers.length === 0) {
@@ -70,10 +70,17 @@ function init() {
 
                 const children = object.children[0].children;
 
-                const applyFX = index => {
-                    children[index].material = children[index].material.clone();
-                    children[index].material.colorNode = colorNode;
-                    children[index].material.wireframe = true;
+                const applyFX = (index: number) => {
+                    (children[index] as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material =
+                        (
+                            children[index] as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+                        ).material.clone();
+                    (
+                        children[index] as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+                    ).material.colorNode = colorNode;
+                    (
+                        children[index] as THREE.SkinnedMesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+                    ).material.wireframe = true;
                 };
 
                 applyFX(0);

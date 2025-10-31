@@ -2,22 +2,22 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let scene, camera, renderer, clock;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, clock: THREE.Clock;
 
-const objects = [];
+const objects: THREE.Mesh[] = [];
 
 const speed = 2.5;
 const height = 3;
 const offset = 0.5;
 
-const startButton = document.getElementById('startButton');
+const startButton = document.getElementById('startButton')!;
 startButton.addEventListener('click', init);
 
 function init() {
-    const overlay = document.getElementById('overlay');
+    const overlay = document.getElementById('overlay')!;
     overlay.remove();
 
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
 
@@ -141,7 +141,7 @@ function animate() {
             if (ball.userData.down === true) {
                 // ball changed direction from down to up
 
-                const audio = ball.children[0];
+                const audio = ball.children[0] as THREE.Audio;
                 audio.play(); // play audio with perfect timing when ball hits the surface
                 ball.userData.down = false;
             }

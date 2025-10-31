@@ -28,7 +28,7 @@ scene.background = new THREE.Color(0x00001f);
 camera.position.set(1, 1, 1);
 const controls = new OrbitControls(camera, renderer.domElement);
 
-let computeDrawBuffer, computeInitDrawBuffer;
+let computeDrawBuffer: THREE.ComputeNode, computeInitDrawBuffer: THREE.ComputeNode;
 
 init();
 

@@ -1,12 +1,16 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject } from 'three/addons/physics/RapierPhysics.js';
 import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats, controls;
-let physics, physicsHelper;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    controls: OrbitControls;
+let physics: RapierPhysicsObject, physicsHelper: RapierHelper;
 
 init();
 
@@ -126,10 +130,10 @@ function onWindowResize() {
 
 function animate() {
     for (const object of scene.children) {
-        if (object.isMesh) {
+        if ((object as THREE.Mesh).isMesh) {
             if (object.position.y < -10) {
-                scene.remove(object);
-                physics.removeMesh(object);
+                scene.remove(object as THREE.Mesh);
+                physics.removeMesh(object as THREE.Mesh);
             }
         }
     }

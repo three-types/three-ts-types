@@ -3,9 +3,19 @@ import * as THREE from 'three';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let controls, camera, scene, renderer;
-let textureEquirec, textureCube;
-let sphereMesh, sphereMaterial, params;
+let controls: OrbitControls, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let textureEquirec: THREE.Texture, textureCube: THREE.CubeTexture;
+let sphereMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshBasicMaterial>,
+    sphereMaterial: THREE.MeshBasicMaterial,
+    params: {
+        Cube: () => void;
+        Equirectangular: () => void;
+        Refraction: boolean;
+        backgroundRotationX: boolean;
+        backgroundRotationY: boolean;
+        backgroundRotationZ: boolean;
+        syncMaterial: boolean;
+    };
 
 init();
 

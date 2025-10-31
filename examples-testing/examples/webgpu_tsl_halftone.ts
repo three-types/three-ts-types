@@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, scene, renderer, controls, clock, halftoneSettings;
+interface HalftoneSettings {
+    count: number;
+    color: string;
+    direction: THREE.Vector3;
+    start: number;
+    end: number;
+    mixLow: number;
+    mixHigh: number;
+    radius: number;
+
+    uniforms?: Uniforms;
+}
+
+interface Uniforms {
+    count: THREE.UniformNode<number>;
+    color: THREE.UniformNode<THREE.Color>;
+    direction: THREE.UniformNode<THREE.Vector3>;
+    start: THREE.UniformNode<number>;
+    end: THREE.UniformNode<number>;
+    mixLow: THREE.UniformNode<number>;
+    mixHigh: THREE.UniformNode<number>;
+    radius: THREE.UniformNode<number>;
+}
+
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    clock: THREE.Clock,
+    halftoneSettings: HalftoneSettings[];
 
 init();
 
@@ -31,7 +60,7 @@ function init() {
 
     renderer.inspector = new Inspector();
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     // lights
 
@@ -81,7 +110,7 @@ function init() {
 
         // uniforms
 
-        const uniforms = {};
+        const uniforms = {} as Uniforms;
 
         uniforms.count = uniform(settings.count);
         uniforms.color = uniform(color(settings.color));
@@ -112,7 +141,9 @@ function init() {
 
     // halftone functions
 
-    const halftone = Fn(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
+    const halftone = Fn<
+        [THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]
+    >(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
         // grid pattern
 
         let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
@@ -133,19 +164,19 @@ function init() {
         return vec4(color, mask);
     });
 
-    const halftones = Fn(([input]) => {
+    const halftones = Fn<[THREE.Node]>(([input]) => {
         const halftonesOutput = input;
 
         for (const settings of halftoneSettings) {
             const halfToneOutput = halftone(
-                settings.uniforms.count,
-                settings.uniforms.color,
-                settings.uniforms.direction,
-                settings.uniforms.start,
-                settings.uniforms.end,
-                settings.uniforms.radius,
-                settings.uniforms.mixLow,
-                settings.uniforms.mixHigh,
+                settings.uniforms!.count,
+                settings.uniforms!.color,
+                settings.uniforms!.direction,
+                settings.uniforms!.start,
+                settings.uniforms!.end,
+                settings.uniforms!.radius,
+                settings.uniforms!.mixLow,
+                settings.uniforms!.mixHigh,
             );
             halftonesOutput.rgb.assign(mix(halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a));
         }
@@ -177,7 +208,9 @@ function init() {
         model.position.y = -2;
         model.scale.setScalar(2.5);
         model.traverse(child => {
-            if (child.isMesh) child.material.outputNode = halftones(output);
+            if ((child as THREE.Mesh).isMesh)
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.outputNode =
+                    halftones(output);
         });
 
         scene.add(model);
@@ -204,8 +237,8 @@ async function animate() {
     controls.update();
 
     const time = clock.getElapsedTime();
-    halftoneSettings[1].uniforms.direction.value.x = Math.cos(time);
-    halftoneSettings[1].uniforms.direction.value.y = Math.sin(time);
+    halftoneSettings[1].uniforms!.direction.value.x = Math.cos(time);
+    halftoneSettings[1].uniforms!.direction.value.y = Math.sin(time);
 
     renderer.render(scene, camera);
 }

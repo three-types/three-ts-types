@@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
-let boxLeft, boxRight, model, mixer, clock;
-let postProcessing;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let boxLeft: THREE.Mesh, boxRight: THREE.Mesh, model: THREE.Group, mixer: THREE.AnimationMixer, clock: THREE.Clock;
+let postProcessing: THREE.PostProcessing;
+let controls: OrbitControls;
 
 const params = {
     speed: 1.0,
@@ -57,7 +57,7 @@ function init() {
         model.rotation.y = Math.PI / 2;
 
         model.traverse(function (child) {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
             }
@@ -163,7 +163,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Motion Blur Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Motion Blur Settings');
     gui.add(controls, 'autoRotate');
     gui.add(blurAmount, 'value', 0, 3).name('blur amount');
     gui.add(params, 'speed', 0, 2);

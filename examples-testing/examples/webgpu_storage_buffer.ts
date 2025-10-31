@@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
 import { storage, If, vec3, uv, uint, float, Fn, instanceIndex, workgroupBarrier } from 'three/tsl';
 
 const timestamps = {
-    webgpu: document.getElementById('timestamps'),
-    webgl: document.getElementById('timestamps_webgl'),
+    webgpu: document.getElementById('timestamps')!,
+    webgl: document.getElementById('timestamps_webgl')!,
 };
 
 // WebGPU Backend
@@ -26,7 +26,7 @@ async function init(forceWebGL = false) {
 
     const type = ['float', 'vec2', 'vec3', 'vec4'];
 
-    const arrayBufferNodes = [];
+    const arrayBufferNodes: THREE.StorageBufferNode[] = [];
 
     for (let i = 0; i < type.length; i++) {
         const typeSize = i + 1;

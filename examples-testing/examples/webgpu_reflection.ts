@@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import TWEEN from 'three/addons/libs/tween.module.js';
 
-let camera, scene, renderer;
-let postProcessing;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let postProcessing: THREE.PostProcessing;
+let controls: OrbitControls;
 
 // below uniforms will be animated via TWEEN.js
 
@@ -93,10 +93,10 @@ async function init() {
 
     const reflection = reflector({ resolutionScale: 0.2 });
     reflection.target.rotateX(-Math.PI / 2);
-    reflection.uvNode = reflection.uvNode.add(floorNormalOffset);
+    reflection.uvNode = reflection.uvNode!.add(floorNormalOffset);
     scene.add(reflection.target);
 
-    const floorMaterial = new THREE.MeshPhongNodeMaterial();
+    const floorMaterial = new THREE.MeshStandardNodeMaterial();
     floorMaterial.colorNode = texture(floorColor, floorUV);
     floorMaterial.emissiveNode = reflection.mul(0.25);
     floorMaterial.normalMap = floorNormal;
@@ -187,10 +187,10 @@ function createTreeMesh() {
     const maxSteps = 5;
     const lengthMult = 0.8;
 
-    const positions = [];
-    const normals = [];
-    const colors = [];
-    const data = []; // will save seed, size and time
+    const positions: number[] = [];
+    const normals: number[] = [];
+    const colors: number[] = [];
+    const data: number[] = []; // will save seed, size and time
 
     let instanceCount = 0;
 
@@ -199,9 +199,8 @@ function createTreeMesh() {
     const normal = new THREE.Vector3();
     const color = new THREE.Color();
 
-    function createTreePart(angle, x, y, z, length, count) {
+    function createTreePart(angle: number, x: number, y: number, z: number, length: number, count: number) {
         if (Math.random() > (maxSteps / count) * 0.25) return;
-
         if (count < maxSteps) {
             const newLength = length * lengthMult;
             const newX = x + Math.cos(angle) * length;
@@ -308,7 +307,7 @@ function createTreeMesh() {
 
         // accumulate different vertex animations
 
-        let animated = positionLocal.add(instancePosition).toVar();
+        let animated: THREE.Node = positionLocal.add(instancePosition).toVar();
         const direction = positionGeometry.normalize().toConst();
 
         animated = animated.add(direction.mul(effect.add(instanceSize)));

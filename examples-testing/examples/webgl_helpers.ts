@@ -5,10 +5,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { VertexNormalsHelper } from 'three/addons/helpers/VertexNormalsHelper.js';
 import { VertexTangentsHelper } from 'three/addons/helpers/VertexTangentsHelper.js';
 
-let scene, renderer;
-let camera, light;
-let vnh;
-let vth;
+let scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let camera: THREE.PerspectiveCamera, light: THREE.PointLight;
+let vnh: VertexNormalsHelper;
+let vth: VertexTangentsHelper;
 
 init();
 
@@ -44,7 +44,7 @@ function init() {
 
     const loader = new GLTFLoader();
     loader.load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
-        const mesh = gltf.scene.children[0];
+        const mesh = gltf.scene.children[0] as THREE.Mesh;
 
         mesh.geometry.computeTangents(); // generates bad data due to degenerate UVs
 
@@ -66,7 +66,7 @@ function init() {
         scene.add(new THREE.BoxHelper(mesh));
 
         const wireframe = new THREE.WireframeGeometry(mesh.geometry);
-        let line = new THREE.LineSegments(wireframe);
+        let line: THREE.LineSegments<THREE.BufferGeometry, THREE.LineBasicMaterial> = new THREE.LineSegments(wireframe);
         line.material.depthTest = false;
         line.material.opacity = 0.25;
         line.material.transparent = true;

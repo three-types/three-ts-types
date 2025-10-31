@@ -2,10 +2,10 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let renderer, scene, camera;
-let group;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let group: THREE.Group;
 
-let selectedObject = null;
+let selectedObject: THREE.Mesh<THREE.BufferGeometry, THREE.SpriteMaterial> | null = null;
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
@@ -77,7 +77,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (selectedObject) {
         selectedObject.material.color.set('#69f');
         selectedObject = null;
@@ -96,7 +96,7 @@ function onPointerMove(event) {
         })[0];
 
         if (res && res.object) {
-            selectedObject = res.object;
+            selectedObject = res.object as THREE.Mesh<THREE.BufferGeometry, THREE.SpriteMaterial>;
             selectedObject.material.color.set('#f00');
         }
     }

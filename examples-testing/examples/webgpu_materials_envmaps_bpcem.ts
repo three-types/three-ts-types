@@ -16,11 +16,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
 import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let controls, cubeCamera;
+let controls: OrbitControls, cubeCamera: THREE.CubeCamera;
 
-let groundPlane, wallMat;
+let groundPlane: THREE.Mesh, wallMat: THREE.MeshStandardNodeMaterial;
 
 init();
 
@@ -164,7 +164,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     const params = {
         'box projected': true,
     };

@@ -7,17 +7,42 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { MarchingCubes } from 'three/addons/objects/MarchingCubes.js';
 import { ToonShader1, ToonShader2, ToonShaderHatching, ToonShaderDotted } from 'three/addons/shaders/ToonShader.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let materials, current_material;
+type Material =
+    | 'shiny'
+    | 'chrome'
+    | 'liquid'
+    | 'matte'
+    | 'flat'
+    | 'textured'
+    | 'colors'
+    | 'multiColors'
+    | 'plastic'
+    | 'toon1'
+    | 'toon2'
+    | 'hatching'
+    | 'dotted';
 
-let light, pointLight, ambientLight;
+let materials: { [M in Material]: THREE.Material }, current_material: Material;
 
-let effect, resolution;
+let light: THREE.DirectionalLight, pointLight: THREE.PointLight, ambientLight: THREE.AmbientLight;
 
-let effectController;
+let effect: MarchingCubes, resolution: number;
+
+let effectController: {
+    material: Material;
+    speed: number;
+    numBlobs: number;
+    resolution: number;
+    isolation: number;
+    floor: boolean;
+    wallx: boolean;
+    wallz: boolean;
+    dummy: () => void;
+} & { [M in Material]?: () => void };
 
 let time = 0;
 
@@ -26,7 +51,7 @@ const clock = new THREE.Clock();
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     // CAMERA
 
@@ -164,7 +189,11 @@ function generateMaterials() {
     return materials;
 }
 
-function createShaderMaterial(shader, light, ambientLight) {
+function createShaderMaterial(
+    shader: { uniforms: Record<string, THREE.IUniform>; vertexShader: string; fragmentShader: string },
+    light: THREE.DirectionalLight,
+    ambientLight: THREE.AmbientLight,
+) {
     const u = THREE.UniformsUtils.clone(shader.uniforms);
 
     const vs = shader.vertexShader;
@@ -183,7 +212,7 @@ function createShaderMaterial(shader, light, ambientLight) {
 //
 
 function setupGui() {
-    const createHandler = function (id) {
+    const createHandler = function (id: Material) {
         return function () {
             current_material = id;
 
@@ -217,8 +246,8 @@ function setupGui() {
     h = gui.addFolder('Materials');
 
     for (const m in materials) {
-        effectController[m] = createHandler(m);
-        h.add(effectController, m).name(m);
+        effectController[m as Material] = createHandler(m as Material);
+        h.add(effectController as Required<typeof effectController>, m as Material).name(m);
     }
 
     // simulation
@@ -237,7 +266,14 @@ function setupGui() {
 
 // this controls content of marching cubes voxel field
 
-function updateCubes(object, time, numblobs, floor, wallx, wallz) {
+function updateCubes(
+    object: MarchingCubes,
+    time: number,
+    numblobs: number,
+    floor: boolean,
+    wallx: boolean,
+    wallz: boolean,
+) {
     object.reset();
 
     // fill the field with some metaballs

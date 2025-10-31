@@ -5,8 +5,8 @@ import { Rhino3dmLoader } from 'three/addons/loaders/3DMLoader.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
-let controls, gui;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let controls: OrbitControls, gui: GUI;
 
 init();
 
@@ -38,7 +38,7 @@ function init() {
             initGUI(object.userData.layers);
 
             // hide spinner
-            document.getElementById('loader').style.display = 'none';
+            document.getElementById('loader')!.style.display = 'none';
         },
         function (progress) {
             console.log((progress.loaded / progress.total) * 100 + '%');
@@ -68,7 +68,7 @@ function animate() {
     renderer.render(scene, camera);
 }
 
-function initGUI(layers) {
+function initGUI(layers: { name: string; visible: boolean }[]) {
     gui = new GUI({ title: 'layers' });
 
     for (let i = 0; i < layers.length; i++) {

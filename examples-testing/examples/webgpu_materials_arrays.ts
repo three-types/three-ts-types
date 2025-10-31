@@ -4,9 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let renderer, scene, camera, controls;
-let planeMesh, boxMesh, boxMeshWireframe, planeMeshWireframe;
-let materials;
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let planeMesh: THREE.Mesh, boxMesh: THREE.Mesh, boxMeshWireframe: THREE.Mesh, planeMeshWireframe: THREE.Mesh;
+let materials: THREE.MeshBasicMaterial[];
 
 const api = {
     webgpu: true,
@@ -114,7 +114,7 @@ function animate() {
 
 // gui
 
-const gui = renderer.inspector.createParameters('Parameters');
+const gui = (renderer!.inspector as Inspector).createParameters('Parameters');
 
 gui.add(api, 'webgpu').onChange(() => {
     init(!api.webgpu);

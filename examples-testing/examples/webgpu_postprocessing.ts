@@ -4,8 +4,8 @@ import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
 import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, renderer, postProcessing;
-let object;
+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
+let object: THREE.Object3D;
 
 init();
 

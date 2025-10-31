@@ -6,9 +6,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { FBXLoader } from 'three/addons/loaders/FBXLoader.js';
 
-let container;
-let camera, scene, renderer;
-let model;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let model: THREE.Mesh;
 
 init();
 
@@ -58,7 +58,7 @@ function init() {
     //
 
     renderer.inspector = new Inspector();
-    document.body.appendChild(renderer.inspector.domElement);
+    document.body.appendChild((renderer.inspector as Inspector).domElement);
 
     //
 
@@ -93,7 +93,7 @@ function initMaterial() {
 
     const loaderFBX = new FBXLoader();
     loaderFBX.load('models/fbx/stanford-bunny.fbx', function (object) {
-        model = object.children[0];
+        model = object.children[0] as THREE.Mesh;
         model.position.set(0, 0, 10);
         model.scale.setScalar(1);
         model.material = material;
@@ -103,16 +103,24 @@ function initMaterial() {
     initGUI(material);
 }
 
-function initGUI(material) {
-    const gui = renderer.inspector.createParameters('Parameters');
+function initGUI(material: THREE.MeshSSSNodeMaterial) {
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
-    const ThicknessControls = function () {
-        this.distortion = material.thicknessDistortionNode.value;
-        this.ambient = material.thicknessAmbientNode.value;
-        this.attenuation = material.thicknessAttenuationNode.value;
-        this.power = material.thicknessPowerNode.value;
-        this.scale = material.thicknessScaleNode.value;
-    };
+    class ThicknessControls {
+        distortion: number;
+        ambient: number;
+        attenuation: number;
+        power: number;
+        scale: number;
+
+        constructor() {
+            this.distortion = material.thicknessDistortionNode.value;
+            this.ambient = material.thicknessAmbientNode.value;
+            this.attenuation = material.thicknessAttenuationNode.value;
+            this.power = material.thicknessPowerNode.value;
+            this.scale = material.thicknessScaleNode.value;
+        }
+    }
 
     const thicknessControls = new ThicknessControls();
 

@@ -6,7 +6,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { VRMLLoader } from 'three/addons/loaders/VRMLLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, stats, controls, loader;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    controls: OrbitControls,
+    loader: VRMLLoader;
 
 const params = {
     asset: 'house',
@@ -29,7 +34,7 @@ const assets = [
     'points',
 ];
 
-let vrmlScene;
+let vrmlScene: THREE.Scene;
 
 init();
 
@@ -82,9 +87,14 @@ function init() {
     gui.add(params, 'asset', assets).onChange(function (value) {
         if (vrmlScene) {
             vrmlScene.traverse(function (object) {
-                if (object.material) object.material.dispose();
-                if (object.material && object.material.map) object.material.map.dispose();
-                if (object.geometry) object.geometry.dispose();
+                if ((object as THREE.Mesh).material)
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
+                if (
+                    (object as THREE.Mesh).material &&
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map
+                )
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhongMaterial>).material.map!.dispose();
+                if ((object as THREE.Mesh).geometry) (object as THREE.Mesh).geometry.dispose();
             });
 
             scene.remove(vrmlScene);
@@ -94,7 +104,7 @@ function init() {
     });
 }
 
-function loadAsset(asset) {
+function loadAsset(asset: string) {
     loader.load('models/vrml/' + asset + '.wrl', function (object) {
         vrmlScene = object;
         scene.add(object);

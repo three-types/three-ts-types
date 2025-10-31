@@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-function planesFromMesh(vertices, indices) {
+function planesFromMesh(vertices: THREE.Vector3[], indices: number[]) {
     // creates a clipping volume from a convex triangular mesh
     // specified by the arrays 'vertices' and 'indices'
 
@@ -23,23 +23,23 @@ function planesFromMesh(vertices, indices) {
     return result;
 }
 
-function createPlanes(n) {
+function createPlanes(n: number) {
     // creates an array of n uninitialized plane objects
 
-    const result = new Array(n);
+    const result = new Array<THREE.Plane>(n);
 
     for (let i = 0; i !== n; ++i) result[i] = new THREE.Plane();
 
     return result;
 }
 
-function assignTransformedPlanes(planesOut, planesIn, matrix) {
+function assignTransformedPlanes(planesOut: THREE.Plane[], planesIn: THREE.Plane[], matrix: THREE.Matrix4) {
     // sets an array of existing planes to transformed 'planesIn'
 
     for (let i = 0, n = planesIn.length; i !== n; ++i) planesOut[i].copy(planesIn[i]).applyMatrix4(matrix);
 }
 
-function cylindricalPlanes(n, innerRadius) {
+function cylindricalPlanes(n: number, innerRadius: number) {
     const result = createPlanes(n);
 
     for (let i = 0; i !== n; ++i) {
@@ -62,7 +62,7 @@ const planeToMatrix = (function () {
         yAxis = new THREE.Vector3(),
         trans = new THREE.Vector3();
 
-    return function planeToMatrix(plane) {
+    return function planeToMatrix(plane: THREE.Plane) {
         const zAxis = plane.normal,
             matrix = new THREE.Matrix4();
 
@@ -111,9 +111,17 @@ const Vertices = [
     Planes = planesFromMesh(Vertices, Indices),
     PlaneMatrices = Planes.map(planeToMatrix),
     GlobalClippingPlanes = cylindricalPlanes(5, 2.5),
-    Empty = Object.freeze([]);
+    Empty = Object.freeze<THREE.Plane[]>([]);
 
-let camera, scene, renderer, startTime, stats, object, clipMaterial, volumeVisualization, globalClippingPlanes;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    startTime: number,
+    stats: Stats,
+    object: THREE.InstancedMesh,
+    clipMaterial: THREE.MeshPhongMaterial,
+    volumeVisualization: THREE.Group,
+    globalClippingPlanes: THREE.Plane[];
 
 function init() {
     camera = new THREE.PerspectiveCamera(36, window.innerWidth / window.innerHeight, 0.25, 16);
@@ -196,7 +204,7 @@ function init() {
 
             // clip to the others to show the volume (wildly
             // intersecting transparent planes look bad)
-            clippingPlanes: clipMaterial.clippingPlanes.filter(function (_, j) {
+            clippingPlanes: clipMaterial.clippingPlanes!.filter(function (_, j) {
                 return j !== i;
             }),
 
@@ -236,7 +244,7 @@ function init() {
     container.appendChild(renderer.domElement);
     // Clipping setup:
     globalClippingPlanes = createPlanes(GlobalClippingPlanes.length);
-    renderer.clippingPlanes = Empty;
+    renderer.clippingPlanes = Empty as THREE.Plane[];
     renderer.localClippingEnabled = true;
 
     window.addEventListener('resize', onWindowResize);
@@ -292,7 +300,7 @@ function init() {
                 return renderer.clippingPlanes !== Empty;
             },
             set Enabled(v) {
-                renderer.clippingPlanes = v ? globalClippingPlanes : Empty;
+                renderer.clippingPlanes = v ? globalClippingPlanes : (Empty as THREE.Plane[]);
             },
         },
         'Enabled',
@@ -310,12 +318,12 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function setObjectWorldMatrix(object, matrix) {
+function setObjectWorldMatrix(object: THREE.Object3D, matrix: THREE.Matrix4) {
     // set the orientation of an object based on a world matrix
 
     const parent = object.parent;
     scene.updateMatrixWorld();
-    object.matrix.copy(parent.matrixWorld).invert();
+    object.matrix.copy(parent!.matrixWorld).invert();
     object.applyMatrix4(matrix);
 }
 
@@ -336,7 +344,7 @@ function animate() {
     const bouncy = Math.cos(time * 0.5) * 0.5 + 0.7;
     transform.multiply(tmpMatrix.makeScale(bouncy, bouncy, bouncy));
 
-    assignTransformedPlanes(clipMaterial.clippingPlanes, Planes, transform);
+    assignTransformedPlanes(clipMaterial.clippingPlanes!, Planes, transform);
 
     const planeMeshes = volumeVisualization.children;
 

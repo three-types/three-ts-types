@@ -2,9 +2,13 @@ import * as THREE from 'three';
 
 import { AnaglyphEffect } from 'three/addons/effects/AnaglyphEffect.js';
 
-let container, camera, scene, renderer, effect;
+let container: HTMLDivElement,
+    camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    effect: AnaglyphEffect;
 
-const spheres = [];
+const spheres: THREE.Mesh[] = [];
 
 let mouseX = 0;
 let mouseY = 0;
@@ -84,7 +88,7 @@ function onWindowResize() {
     effect.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = (event.clientX - windowHalfX) / 100;
     mouseY = (event.clientY - windowHalfY) / 100;
 }
