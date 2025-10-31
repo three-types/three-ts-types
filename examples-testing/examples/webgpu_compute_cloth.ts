@@ -259,11 +259,11 @@ function setupVerletSpringBuffers() {
 }
 
 function setupUniforms() {
-    dampeningUniform = uniform(0.99);
-    spherePositionUniform = uniform(new THREE.Vector3(0, 0, 0));
-    sphereUniform = uniform(1.0);
-    windUniform = uniform(1.0);
-    stiffnessUniform = uniform(0.2);
+    dampeningUniform = uniform<"float", number>(0.99);
+    spherePositionUniform = uniform<"vec3", THREE.Vector3>(new THREE.Vector3(0, 0, 0));
+    sphereUniform = uniform<"float", number>(1.0);
+    windUniform = uniform<"float", number>(1.0);
+    stiffnessUniform = uniform<"float", number>(0.2);
 }
 
 function setupComputeShaders() {
