@@ -13706,7 +13706,7 @@ index b65f53093..0b83eab46 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 91bc961d7..374525a21 100644
+index 91bc961d7..e48af49ee 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -21,17 +21,17 @@ import {
@@ -13735,7 +13735,7 @@ index 91bc961d7..374525a21 100644
  const clock = new THREE.Clock();
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
-+export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node]>(([suv_immutable]) => {
++export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node], THREE.Node<'vec3'>>(([suv_immutable]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
@@ -13894,7 +13894,7 @@ index 3ec30a762..5a3faadc2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 1b780ce90..5d7ada584 100644
+index 1b780ce90..c8b336398 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13921,7 +13921,7 @@ index 1b780ce90..5d7ada584 100644
      const waterPosY = positionWorld.y.sub(water.position.y);
  
 -    let transition = waterPosY.add(0.1).saturate().oneMinus();
-+    let transition: THREE.Node = waterPosY.add(0.1).saturate().oneMinus();
++    let transition: THREE.Node<'float'> = waterPosY.add(0.1).saturate().oneMinus();
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
@@ -14170,7 +14170,7 @@ index 0a05626a1..0d9d160da 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 355e9f212..37be71714 100644
+index 355e9f212..2d17ffce7 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
 @@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -14193,6 +14193,24 @@ index 355e9f212..37be71714 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
+@@ -79,7 +79,7 @@ async function init() {
+ 
+     // tsl shader
+ 
+-    const causticOcclusion = uniform(20);
++    const causticOcclusion = uniform<'float', number>(20);
+ 
+     duck.material.castShadowPositionNode = Fn(() => {
+         // optional: add some distortion to the geometry shadow position if needed
+@@ -97,7 +97,7 @@ async function init() {
+ 
+         const textureUV = refractionVector.xy.mul(0.6);
+ 
+-        const causticColor = uniform(duck.material.color);
++        const causticColor = uniform<'vec3', THREE.Color>(duck.material.color);
+         const chromaticAberrationOffset = normalView.z.pow(-0.9).mul(0.004);
+ 
+         const causticProjection = vec3(
 @@ -162,7 +162,7 @@ async function init() {
  
      // gui
@@ -14352,7 +14370,7 @@ index e07e60463..2e0d4855a 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 229033d79..b7bd1fde4 100644
+index 229033d79..95d4680b3 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14367,7 +14385,7 @@ index 229033d79..b7bd1fde4 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let computeNode: THREE.ComputeNode;
 +let waveBuffer: Float32Array<ArrayBuffer>, sampleRate: number;
-+let waveArray: THREE.StorageBufferNode;
++let waveArray: THREE.StorageBufferNode<'float'>;
 +let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
  const analyserBuffer = new Uint8Array(1024);
 -let analyserTexture;
@@ -14387,12 +14405,34 @@ index 229033d79..b7bd1fde4 100644
      overlay.remove();
  
      // audio buffer
+@@ -69,7 +69,7 @@ async function init() {
+ 
+     // read-only buffer
+ 
+-    const originalWave = instancedArray(waveBuffer).toReadOnly();
++    const originalWave = instancedArray<'float'>(waveBuffer).toReadOnly();
+ 
+     // The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
+     // As used in `renderer.getArrayBufferAsync( waveArray.value )`.
+@@ -79,9 +79,9 @@ async function init() {
+ 
+     // params
+ 
+-    const pitch = uniform(1.5);
+-    const delayVolume = uniform(0.2);
+-    const delayOffset = uniform(0.55);
++    const pitch = uniform<'float', number>(1.5);
++    const delayVolume = uniform<'float', number>(0.2);
++    const delayOffset = uniform<'float', number>(0.55);
+ 
+     // compute (shader-node)
+ 
 @@ -92,7 +92,7 @@ async function init() {
  
          const time = index.mul(pitch);
  
 -        let wave = originalWave.element(time);
-+        let wave: THREE.Node = originalWave.element(time);
++        let wave: THREE.Node<'float'> = originalWave.element(time);
  
          // delay
  
@@ -14406,7 +14446,7 @@ index 229033d79..b7bd1fde4 100644
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index c602920ee..266f691e1 100644
+index c602920ee..d68104bbb 100644
 --- a/examples-testing/examples/webgpu_compute_birds.ts
 +++ b/examples-testing/examples/webgpu_compute_birds.ts
 @@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14426,14 +14466,14 @@ index c602920ee..266f691e1 100644
 +let computeVelocity: THREE.ComputeNode,
 +    computePosition: THREE.ComputeNode,
 +    effectController: {
-+        separation: THREE.UniformNode<number>;
-+        alignment: THREE.UniformNode<number>;
-+        cohesion: THREE.UniformNode<number>;
-+        freedom: THREE.UniformNode<number>;
-+        now: THREE.UniformNode<number>;
-+        deltaTime: THREE.UniformNode<number>;
-+        rayOrigin: THREE.UniformNode<THREE.Vector3>;
-+        rayDirection: THREE.UniformNode<THREE.Vector3>;
++        separation: THREE.UniformNode<'float', number>;
++        alignment: THREE.UniformNode<'float', number>;
++        cohesion: THREE.UniformNode<'float', number>;
++        freedom: THREE.UniformNode<'float', number>;
++        now: THREE.UniformNode<'float', number>;
++        deltaTime: THREE.UniformNode<'float', number>;
++        rayOrigin: THREE.UniformNode<'vec3', THREE.Vector3>;
++        rayDirection: THREE.UniformNode<'vec3', THREE.Vector3>;
 +    };
  
  const BIRDS = 16384;
@@ -14447,6 +14487,42 @@ index c602920ee..266f691e1 100644
              for (let i = 0; i < arguments.length; i++) {
                  vertices.array[v++] = arguments[i];
              }
+@@ -163,9 +174,9 @@ function init() {
+     // Labels applied to storage nodes and uniform nodes are reflected within the shader output,
+     // and are useful for debugging purposes.
+ 
+-    const positionStorage = instancedArray(positionArray, 'vec3').setName('positionStorage');
+-    const velocityStorage = instancedArray(velocityArray, 'vec3').setName('velocityStorage');
+-    const phaseStorage = instancedArray(phaseArray, 'float').setName('phaseStorage');
++    const positionStorage = instancedArray<'vec3'>(positionArray, 'vec3').setName('positionStorage');
++    const velocityStorage = instancedArray<'vec3'>(velocityArray, 'vec3').setName('velocityStorage');
++    const phaseStorage = instancedArray<'float'>(phaseArray, 'float').setName('phaseStorage');
+ 
+     // The Pixel Buffer Object (PBO) is required to get the GPU computed data in the WebGL2 fallback.
+ 
+@@ -176,14 +187,14 @@ function init() {
+     // Define Uniforms. Uniforms only need to be defined once rather than per shader.
+ 
+     effectController = {
+-        separation: uniform(15.0).setName('separation'),
+-        alignment: uniform(20.0).setName('alignment'),
+-        cohesion: uniform(20.0).setName('cohesion'),
+-        freedom: uniform(0.75).setName('freedom'),
+-        now: uniform(0.0),
+-        deltaTime: uniform(0.0).setName('deltaTime'),
+-        rayOrigin: uniform(new THREE.Vector3()).setName('rayOrigin'),
+-        rayDirection: uniform(new THREE.Vector3()).setName('rayDirection'),
++        separation: uniform<'float', number>(15.0).setName('separation'),
++        alignment: uniform<'float', number>(20.0).setName('alignment'),
++        cohesion: uniform<'float', number>(20.0).setName('cohesion'),
++        freedom: uniform<'float', number>(0.75).setName('freedom'),
++        now: uniform<'float', number>(0.0),
++        deltaTime: uniform<'float', number>(0.0).setName('deltaTime'),
++        rayOrigin: uniform<'vec3', THREE.Vector3>(new THREE.Vector3()).setName('rayOrigin'),
++        rayDirection: uniform<'vec3', THREE.Vector3>(new THREE.Vector3()).setName('rayDirection'),
+     };
+ 
+     // Create geometry
 @@ -374,7 +385,7 @@ function init() {
  
      window.addEventListener('resize', onWindowResize);
@@ -14466,7 +14542,7 @@ index c602920ee..266f691e1 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 6f4c3b61b..ba6b31324 100644
+index 6f4c3b61b..456598863 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14489,19 +14565,19 @@ index 6f4c3b61b..ba6b31324 100644
 -let dampeningUniform, spherePositionUniform, stiffnessUniform, sphereUniform, windUniform;
 -let vertexWireframeObject, springWireframeObject;
 -let clothMesh, clothMaterial, sphere;
-+let vertexPositionBuffer: THREE.StorageBufferNode,
-+    vertexForceBuffer: THREE.StorageBufferNode,
-+    vertexParamsBuffer: THREE.StorageBufferNode;
-+let springVertexIdBuffer: THREE.StorageBufferNode,
-+    springRestLengthBuffer: THREE.StorageBufferNode,
-+    springForceBuffer: THREE.StorageBufferNode;
-+let springListBuffer: THREE.StorageBufferNode;
++let vertexPositionBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexForceBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexParamsBuffer: THREE.StorageBufferNode<'uvec3'>;
++let springVertexIdBuffer: THREE.StorageBufferNode<'uvec2'>,
++    springRestLengthBuffer: THREE.StorageBufferNode<'float'>,
++    springForceBuffer: THREE.StorageBufferNode<'vec3'>;
++let springListBuffer: THREE.StorageBufferNode<'uint'>;
 +let computeSpringForces: THREE.ComputeNode, computeVertexForces: THREE.ComputeNode;
-+let dampeningUniform: THREE.UniformNode<number>,
-+    spherePositionUniform: THREE.UniformNode<THREE.Vector3>,
-+    stiffnessUniform: THREE.UniformNode<number>,
-+    sphereUniform: THREE.UniformNode<number>,
-+    windUniform: THREE.UniformNode<number>;
++let dampeningUniform: THREE.UniformNode<'float', number>,
++    spherePositionUniform: THREE.UniformNode<'vec3', THREE.Vector3>,
++    stiffnessUniform: THREE.UniformNode<'float', number>,
++    sphereUniform: THREE.UniformNode<'float', number>,
++    windUniform: THREE.UniformNode<'float', number>;
 +let vertexWireframeObject: THREE.Mesh, springWireframeObject: THREE.Line;
 +let clothMesh: THREE.Mesh, clothMaterial: THREE.MeshPhysicalNodeMaterial, sphere: THREE.Mesh;
  let timeSinceLastStep = 0;
@@ -14557,6 +14633,54 @@ index 6f4c3b61b..ba6b31324 100644
          const id = verletSprings.length;
          const spring = {
              id,
+@@ -208,11 +231,11 @@ function setupVerletVertexBuffers() {
+         }
+     }
+ 
+-    vertexPositionBuffer = instancedArray(vertexPositionArray, 'vec3').setPBO(true); // setPBO(true) is only important for the WebGL Fallback
++    vertexPositionBuffer = instancedArray<'vec3'>(vertexPositionArray, 'vec3').setPBO(true); // setPBO(true) is only important for the WebGL Fallback
+     vertexForceBuffer = instancedArray(vertexCount, 'vec3');
+     vertexParamsBuffer = instancedArray(vertexParamsArray, 'uvec3');
+ 
+-    springListBuffer = instancedArray(new Uint32Array(springListArray), 'uint').setPBO(true);
++    springListBuffer = instancedArray<'uint'>(new Uint32Array(springListArray), 'uint').setPBO(true);
+ }
+ 
+ function setupVerletSpringBuffers() {
+@@ -230,17 +253,17 @@ function setupVerletSpringBuffers() {
+         springRestLengthArray[i] = spring.vertex0.position.distanceTo(spring.vertex1.position);
+     }
+ 
+-    springVertexIdBuffer = instancedArray(springVertexIdArray, 'uvec2').setPBO(true);
++    springVertexIdBuffer = instancedArray<'uvec2'>(springVertexIdArray, 'uvec2').setPBO(true);
+     springRestLengthBuffer = instancedArray(springRestLengthArray, 'float');
+-    springForceBuffer = instancedArray(springCount * 3, 'vec3').setPBO(true);
++    springForceBuffer = instancedArray<'vec3'>(springCount * 3, 'vec3').setPBO(true);
+ }
+ 
+ function setupUniforms() {
+-    dampeningUniform = uniform(0.99);
+-    spherePositionUniform = uniform(new THREE.Vector3(0, 0, 0));
+-    sphereUniform = uniform(1.0);
+-    windUniform = uniform(1.0);
+-    stiffnessUniform = uniform(0.2);
++    dampeningUniform = uniform<'float', number>(0.99);
++    spherePositionUniform = uniform<'vec3', THREE.Vector3>(new THREE.Vector3(0, 0, 0));
++    sphereUniform = uniform<'float', number>(1.0);
++    windUniform = uniform<'float', number>(1.0);
++    stiffnessUniform = uniform<'float', number>(0.2);
+ }
+ 
+ function setupComputeShaders() {
+@@ -349,7 +372,7 @@ function setupWireframe() {
+     const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
+     springWireframeMaterial.positionNode = Fn(() => {
+         const vertexIds = springVertexIdBuffer.element(instanceIndex);
+-        const vertexId = select(attribute('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
++        const vertexId = select(attribute<'uint'>('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
+         return vertexPositionBuffer.element(vertexId);
+     })();
+ 
 @@ -382,7 +405,7 @@ function setupClothMesh() {
      const verletVertexIdArray = new Uint32Array(vertexCount * 4);
      const indices = [];
@@ -14566,6 +14690,15 @@ index 6f4c3b61b..ba6b31324 100644
          return y * clothNumSegmentsX + x;
      };
  
+@@ -419,7 +442,7 @@ function setupClothMesh() {
+ 
+     clothMaterial.positionNode = Fn(({ material }) => {
+         // gather the position of the 4 verlet vertices and calculate the center position and normal from that
+-        const vertexIds = attribute('vertexIds');
++        const vertexIds = attribute<'uvec4'>('vertexIds');
+         const v0 = vertexPositionBuffer.element(vertexIds.x).toVar();
+         const v1 = vertexPositionBuffer.element(vertexIds.y).toVar();
+         const v2 = vertexPositionBuffer.element(vertexIds.z).toVar();
 @@ -436,7 +459,7 @@ function setupClothMesh() {
          const normal = cross(tangent, bitangent);
  
