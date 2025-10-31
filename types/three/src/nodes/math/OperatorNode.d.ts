@@ -93,6 +93,9 @@ interface MulFloat {
     (
         b: Node<"color">,
     ): Node<"color">;
+    (
+        b: Node<"vec3">,
+    ): Node<"vec3">;
 }
 
 interface MulMat3 {
@@ -323,6 +326,42 @@ declare module "../core/Node.js" {
         ) => Node<"bool">;
         greaterThanEqualAssign: (
             b: Node<"uint"> | number,
+        ) => this;
+
+        add: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        addAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        subAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        mul: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        mulAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        div: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        divAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
         ) => this;
     }
 
