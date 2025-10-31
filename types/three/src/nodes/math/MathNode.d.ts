@@ -475,10 +475,10 @@ declare module "../core/Node.js" {
         floor: () => Node<TValue>;
         floorAssign: () => this;
 
-        length: () => MathNode;
+        length: () => Node<"float">;
         lengthAssign: () => this;
 
-        lengthSq: () => MathNode;
+        lengthSq: () => Node<"float">;
         lengthSqAssign: () => this;
     }
 }
