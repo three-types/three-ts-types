@@ -18052,12 +18052,12 @@ index 65ddd7375..58bbbc744 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 88375e129..117c86eb6 100644
+index 20c773049..fbd257ef0 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
  import * as THREE from 'three/webgpu';
- import { pass, mrt, output, normalView, velocity, vec3, vec4, directionToColor } from 'three/tsl';
+ import { pass, mrt, output, normalView, velocity, vec3, vec4, directionToColor, colorSpaceToWorking } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
@@ -18081,18 +18081,7 @@ index 88375e129..117c86eb6 100644
  
  const params = {
      samples: 16,
-@@ -76,9 +80,7 @@ async function init() {
-     const scenePassDepth = scenePass.getTextureNode('depth').toInspector('Depth', () => {
-         return scenePass.getLinearDepthNode();
-     });
--    const scenePassNormal = scenePass.getTextureNode('normal').toInspector('Normal', () => {
--        return directionToColor(scenePassNormal.sample());
--    });
-+    const scenePassNormal = scenePass.getTextureNode('normal').toInspector('Normal');
-     const scenePassVelocity = scenePass.getTextureNode('velocity').toInspector('Velocity');
- 
-     // ao
-@@ -116,14 +118,15 @@ async function init() {
+@@ -116,14 +120,15 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
