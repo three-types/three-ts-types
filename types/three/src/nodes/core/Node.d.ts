@@ -402,14 +402,14 @@ type Uvec2Swizzle =
         [Key in XY | RG | ST]: Node<"uint">;
     }
     & {
-    [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"uvec2">;
-}
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"uvec2">;
+    }
     & {
-    [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"uvec3">;
-}
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"uvec3">;
+    }
     & {
-    [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"uvec4">;
-};
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"uvec4">;
+    };
 type XYZ = "x" | "y" | "z";
 type RGB = "r" | "g" | "b";
 type STP = "s" | "t" | "p";
@@ -431,14 +431,14 @@ type Uvec3Swizzle =
         [Key in XYZ | RGB | STP]: Node<"uint">;
     }
     & {
-    [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"uvec2">;
-}
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"uvec2">;
+    }
     & {
-    [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"uvec3">;
-}
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"uvec3">;
+    }
     & {
-    [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"uvec4">;
-};
+        [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"uvec4">;
+    };
 type XYZW = "x" | "y" | "z" | "w";
 type RGBA = "r" | "g" | "b" | "a";
 type STPQ = "s" | "t" | "p" | "q";
@@ -462,16 +462,16 @@ type Uvec4Swizzle =
         [Key in XYZW | RGBA | STPQ]: Node<"uint">;
     }
     & {
-    [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"uvec2">;
-}
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"uvec2">;
+    }
     & {
-    [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"uvec3">;
-}
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"uvec3">;
+    }
     & {
-    [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
-        "uvec4"
-    >;
-};
+        [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+            "uvec4"
+        >;
+    };
 export interface NodeExtensions<in out TValue> {
 }
 export interface BoolExtensions {
