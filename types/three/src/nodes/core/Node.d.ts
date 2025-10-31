@@ -457,7 +457,7 @@ type Vec4Swizzle =
             "vec4"
         >;
     };
-export interface NodeExtensions<TValue> {
+export interface NodeExtensions<in out TValue> {
 }
 export interface BoolExtensions {
 }
@@ -465,7 +465,7 @@ export interface FloatExtensions {
 }
 export interface UintExtensions {
 }
-export interface VectorExtensions<TValue> {
+export interface VectorExtensions<in out TValue> {
 }
 export interface Vector4Extensions {
 }
