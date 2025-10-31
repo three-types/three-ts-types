@@ -63,7 +63,7 @@ declare const UniformNode: {
     new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
     get type(): string;
 };
-type UniformNode<TNodeValue, TValue> = InputNode<TNodeValue, TValue> & UniformNodeInterface<TValue>;
+type UniformNode<TNodeValue, TValue> = UniformNodeInterface<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
 /**
  * TSL function for creating a uniform node.

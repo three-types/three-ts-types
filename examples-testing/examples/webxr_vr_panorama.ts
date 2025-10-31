@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import { VRButton } from 'three/addons/webxr/VRButton.js';
 
-let camera;
-let renderer;
-let scene;
+let camera: THREE.PerspectiveCamera;
+let renderer: THREE.WebGLRenderer;
+let scene: THREE.Scene;
 
 init();
 
@@ -53,8 +53,8 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
-    const textures = [];
+function getTexturesFromAtlasFile(atlasImgUrl: string, tilesNum: number) {
+    const textures: THREE.Texture[] = [];
 
     for (let i = 0; i < tilesNum; i++) {
         textures[i] = new THREE.Texture();
@@ -67,7 +67,7 @@ function getTexturesFromAtlasFile(atlasImgUrl, tilesNum) {
 
         for (let i = 0; i < textures.length; i++) {
             canvas = document.createElement('canvas');
-            context = canvas.getContext('2d');
+            context = canvas.getContext('2d')!;
             canvas.height = tileWidth;
             canvas.width = tileWidth;
             context.drawImage(imageObj, tileWidth * i, 0, tileWidth, tileWidth, 0, 0, tileWidth, tileWidth);

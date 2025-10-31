@@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 const params = {
     clipIntersection: true,
@@ -80,8 +80,8 @@ function init() {
 
     gui.add(params, 'alphaToCoverage').onChange(function (value) {
         group.children.forEach(c => {
-            c.material.alphaToCoverage = Boolean(value);
-            c.material.needsUpdate = true;
+            (c as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.alphaToCoverage = Boolean(value);
+            (c as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.needsUpdate = true;
         });
 
         render();
@@ -93,7 +93,7 @@ function init() {
             const children = group.children;
 
             for (let i = 0; i < children.length; i++) {
-                children[i].material.clipIntersection = value;
+                ((children[i] as THREE.Mesh).material as THREE.Material).clipIntersection = value;
             }
 
             render();

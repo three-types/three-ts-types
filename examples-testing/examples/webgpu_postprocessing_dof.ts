@@ -7,12 +7,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 //
 
-let camera, scene, renderer, mesh, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    mesh: THREE.InstancedMesh,
+    controls: OrbitControls;
 
 let width = window.innerWidth;
 let height = window.innerHeight;
 
-let postProcessing;
+let postProcessing: THREE.PostProcessing;
 
 init();
 
@@ -109,7 +113,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(effectController.focusDistance, 'value', 10.0, 3000.0).name('focus distance');
     gui.add(effectController.focalLength, 'value', 50, 750).name('focal length');
     gui.add(effectController.bokehScale, 'value', 1, 20).name('bokeh scale');

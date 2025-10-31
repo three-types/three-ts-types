@@ -5,10 +5,10 @@ import { PDBLoader } from 'three/addons/loaders/PDBLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, labelRenderer;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, labelRenderer: CSS2DRenderer;
+let controls: TrackballControls;
 
-let root;
+let root: THREE.Group;
 
 const MOLECULES = {
     Ethanol: 'ethanol.pdb',
@@ -64,14 +64,14 @@ function init() {
     renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setAnimationLoop(animate);
-    document.getElementById('container').appendChild(renderer.domElement);
+    document.getElementById('container')!.appendChild(renderer.domElement);
 
     labelRenderer = new CSS2DRenderer();
     labelRenderer.setSize(window.innerWidth, window.innerHeight);
     labelRenderer.domElement.style.position = 'absolute';
     labelRenderer.domElement.style.top = '0px';
     labelRenderer.domElement.style.pointerEvents = 'none';
-    document.getElementById('container').appendChild(labelRenderer.domElement);
+    document.getElementById('container')!.appendChild(labelRenderer.domElement);
 
     //
 
@@ -97,12 +97,12 @@ function init() {
 
 //
 
-function loadMolecule(model) {
+function loadMolecule(model: string) {
     const url = 'models/pdb/' + model;
 
     while (root.children.length > 0) {
         const object = root.children[0];
-        object.parent.remove(object);
+        object.parent!.remove(object);
     }
 
     loader.load(url, function (pdb) {
@@ -114,7 +114,7 @@ function loadMolecule(model) {
         const sphereGeometry = new THREE.IcosahedronGeometry(1, 3);
 
         geometryAtoms.computeBoundingBox();
-        geometryAtoms.boundingBox.getCenter(offset).negate();
+        geometryAtoms.boundingBox!.getCenter(offset).negate();
 
         geometryAtoms.translate(offset.x, offset.y, offset.z);
         geometryBonds.translate(offset.x, offset.y, offset.z);

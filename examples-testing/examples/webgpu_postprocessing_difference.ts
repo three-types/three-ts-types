@@ -9,8 +9,8 @@ const params = {
     speed: 0,
 };
 
-let camera, renderer, postProcessing;
-let timer, mesh, controls;
+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
+let timer: THREE.Timer, mesh: THREE.Mesh, controls: OrbitControls;
 
 init();
 
@@ -71,7 +71,7 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'speed', 0, 2);
 }
 

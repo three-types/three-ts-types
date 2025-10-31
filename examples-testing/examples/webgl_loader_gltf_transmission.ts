@@ -6,7 +6,12 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-let camera, scene, renderer, controls, clock, mixer;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    controls: OrbitControls,
+    clock: THREE.Clock,
+    mixer: THREE.AnimationMixer;
 
 init();
 

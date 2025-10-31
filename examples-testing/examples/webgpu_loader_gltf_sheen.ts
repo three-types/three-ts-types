@@ -6,7 +6,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -25,9 +25,12 @@ function init() {
     new GLTFLoader().setPath('models/gltf/').load('SheenChair.glb', function (gltf) {
         scene.add(gltf.scene);
 
-        const object = gltf.scene.getObjectByName('SheenChair_fabric');
+        const object = gltf.scene.getObjectByName('SheenChair_fabric') as THREE.Mesh<
+            THREE.BufferGeometry,
+            THREE.MeshPhysicalMaterial
+        >;
 
-        const gui = renderer.inspector.createParameters('SheenChair_fabric');
+        const gui = (renderer.inspector as Inspector).createParameters('SheenChair_fabric');
 
         gui.add(object.material, 'sheen', 0, 1);
     });

@@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, postProcessing, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing,
+    controls: OrbitControls;
 
 init();
 
@@ -68,10 +72,10 @@ async function init() {
         scene.add(model);
 
         model.traverse(function (object) {
-            if (object.isMesh) {
+            if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).isMesh) {
                 object.castShadow = true;
                 object.receiveShadow = true;
-                object.material.aoMap = null; // remove AO to better see the effect of shadows
+                (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.aoMap = null; // remove AO to better see the effect of shadows
             }
         });
     });
@@ -135,7 +139,7 @@ async function init() {
 
     const types = { 'Scene with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
 
-    const gui = renderer.inspector.createParameters('SSS settings');
+    const gui = (renderer.inspector as Inspector).createParameters('SSS settings');
     gui.add(params, 'output', types).onChange(updatePostprocessing);
     gui.add(sssPass.shadowIntensity, 'value', 0, 1).name('shadow intensity');
     gui.add(sssPass.maxDistance, 'value', 0.01, 1).name('max ray distance');

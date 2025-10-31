@@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
-let gltf;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let gltf: THREE.Group;
 
 init();
 
@@ -65,7 +65,7 @@ async function init() {
 
     // objects / material
 
-    const duck = gltf.children[0];
+    const duck = gltf.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>;
     duck.material = new THREE.MeshPhysicalNodeMaterial();
     duck.material.side = THREE.DoubleSide;
     duck.material.transparent = true;
@@ -79,7 +79,7 @@ async function init() {
 
     // tsl shader
 
-    const causticOcclusion = uniform(20);
+    const causticOcclusion = uniform<"float", number>(20);
 
     duck.material.castShadowPositionNode = Fn(() => {
         // optional: add some distortion to the geometry shadow position if needed
@@ -162,7 +162,7 @@ async function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
     gui.addColor(duck.material, 'color').name('material color');
     gui.add({ model: 'duck' }, 'model', ['duck', 'glass']).onChange(model => {

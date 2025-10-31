@@ -2,16 +2,16 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let container, stats;
+let container: HTMLElement, stats: Stats;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
-let parent_node;
+let parent_node: THREE.Object3D;
 
 init();
 
 function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(27, window.innerWidth / window.innerHeight, 1, 10000);
     camera.position.z = 9000;
@@ -21,9 +21,9 @@ function init() {
     const geometry = new THREE.BufferGeometry();
     const material = new THREE.LineBasicMaterial({ vertexColors: true });
 
-    const indices = [];
-    const positions = [];
-    const colors = [];
+    const indices: number[] = [];
+    const positions: number[] = [];
+    const colors: number[] = [];
 
     let next_positions_index = 0;
 
@@ -32,7 +32,7 @@ function init() {
     const iteration_count = 4;
     const rangle = (60 * Math.PI) / 180.0;
 
-    function add_vertex(v) {
+    function add_vertex(v: THREE.Vector3) {
         positions.push(v.x, v.y, v.z);
         colors.push(Math.random() * 0.5 + 0.5, Math.random() * 0.5 + 0.5, 1);
 
@@ -41,7 +41,7 @@ function init() {
 
     // simple Koch curve
 
-    function snowflake_iteration(p0, p4, depth) {
+    function snowflake_iteration(p0: THREE.Vector3, p4: THREE.Vector3, depth: number) {
         if (--depth < 0) {
             const i = next_positions_index - 1; // p0 already there
             add_vertex(p4);
@@ -68,7 +68,7 @@ function init() {
         snowflake_iteration(p3, p4, depth);
     }
 
-    function snowflake(points, loop, x_offset) {
+    function snowflake(points: THREE.Vector3[], loop: boolean, x_offset: number) {
         for (let iteration = 0; iteration != iteration_count; iteration++) {
             add_vertex(points[0]);
 

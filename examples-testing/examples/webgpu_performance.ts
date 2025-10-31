@@ -8,17 +8,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
-let camera, scene, renderer;
-let model;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let model: THREE.Group;
 
 const options = { static: true };
 
 init();
 
-function setStatic(object, value) {
+function setStatic(object: THREE.Group, value: boolean) {
     object.traverse(child => {
-        if (child.isMesh) {
-            child.static = value;
+        if ((child as THREE.Mesh).isMesh) {
+            (child as THREE.Mesh).static = value;
         }
     });
 }
@@ -79,7 +79,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(options, 'static').onChange(() => {
         setStatic(model, options.static);
     });

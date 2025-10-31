@@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -45,7 +45,7 @@ function init() {
 
     // TSL functions
 
-    const inAngle = Fn(([position, angleStart, angleArc]) => {
+    const inAngle = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([position, angleStart, angleArc]) => {
         const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
         return angle.greaterThan(0).and(angle.lessThan(angleArc));
     });
@@ -112,9 +112,9 @@ function init() {
         const model = gltf.scene;
 
         model.traverse(child => {
-            if (child.isMesh) {
-                if (child.name === 'outerHull') child.material = slicedMaterial;
-                else child.material = defaultMaterial;
+            if ((child as THREE.Mesh).isMesh) {
+                if (child.name === 'outerHull') (child as THREE.Mesh).material = slicedMaterial;
+                else (child as THREE.Mesh).material = defaultMaterial;
 
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -160,7 +160,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
     gui.add(sliceStart, 'value', -Math.PI, Math.PI, 0.001).name('sliceStart');
     gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
     gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>

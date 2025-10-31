@@ -1,13 +1,17 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
-let cameraOrtho, sceneOrtho;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let cameraOrtho: THREE.OrthographicCamera, sceneOrtho: THREE.Scene;
 
-let spriteTL, spriteTR, spriteBL, spriteBR, spriteC;
+let spriteTL: THREE.Sprite,
+    spriteTR: THREE.Sprite,
+    spriteBL: THREE.Sprite,
+    spriteBR: THREE.Sprite,
+    spriteC: THREE.Sprite;
 
-let mapC;
+let mapC: THREE.Texture;
 
-let group;
+let group: THREE.Group;
 
 init();
 
@@ -57,8 +61,8 @@ function init() {
         } else {
             material = materialC.clone();
             material.color.setHSL(0.5 * Math.random(), 0.75, 0.5);
-            material.map.offset.set(-0.5, -0.5);
-            material.map.repeat.set(2, 2);
+            material.map!.offset.set(-0.5, -0.5);
+            material.map!.repeat.set(2, 2);
         }
 
         const sprite = new THREE.Sprite(material);
@@ -87,13 +91,13 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function createHUDSprites(texture) {
+function createHUDSprites(texture: THREE.Texture<HTMLImageElement>) {
     texture.colorSpace = THREE.SRGBColorSpace;
 
     const material = new THREE.SpriteMaterial({ map: texture });
 
-    const width = material.map.image.width;
-    const height = material.map.image.height;
+    const width = (material.map!.image as HTMLImageElement).width;
+    const height = (material.map!.image as HTMLImageElement).height;
 
     spriteTL = new THREE.Sprite(material);
     spriteTL.center.set(0.0, 1.0);
@@ -156,16 +160,16 @@ function animate() {
     const time = Date.now() / 1000;
 
     for (let i = 0, l = group.children.length; i < l; i++) {
-        const sprite = group.children[i];
+        const sprite = group.children[i] as THREE.Sprite;
         const material = sprite.material;
         const scale = Math.sin(time + sprite.position.x * 0.01) * 0.3 + 1.0;
 
         let imageWidth = 1;
         let imageHeight = 1;
 
-        if (material.map && material.map.image && material.map.image.width) {
-            imageWidth = material.map.image.width;
-            imageHeight = material.map.image.height;
+        if (material.map && material.map.image && (material.map.image as HTMLImageElement).width) {
+            imageWidth = (material.map.image as HTMLImageElement).width;
+            imageHeight = (material.map.image as HTMLImageElement).height;
         }
 
         sprite.material.rotation += 0.1 * (i / l);

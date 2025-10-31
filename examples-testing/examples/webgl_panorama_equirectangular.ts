@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 let isUserInteracting = false,
     onPointerDownMouseX = 0,
@@ -15,7 +15,7 @@ let isUserInteracting = false,
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
 
@@ -54,7 +54,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onPointerDown(event) {
+function onPointerDown(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     isUserInteracting = true;
@@ -69,14 +69,14 @@ function onPointerDown(event) {
     document.addEventListener('pointerup', onPointerUp);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     lon = (onPointerDownMouseX - event.clientX) * 0.1 + onPointerDownLon;
     lat = (event.clientY - onPointerDownMouseY) * 0.1 + onPointerDownLat;
 }
 
-function onPointerUp(event) {
+function onPointerUp(event: PointerEvent) {
     if (event.isPrimary === false) return;
 
     isUserInteracting = false;
@@ -85,7 +85,7 @@ function onPointerUp(event) {
     document.removeEventListener('pointerup', onPointerUp);
 }
 
-function onDocumentMouseWheel(event) {
+function onDocumentMouseWheel(event: WheelEvent) {
     const fov = camera.fov + event.deltaY * 0.05;
 
     camera.fov = THREE.MathUtils.clamp(fov, 10, 75);

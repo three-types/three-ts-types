@@ -2,16 +2,16 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let renderer, scene, camera, stats;
-let pointclouds;
-let raycaster;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+let pointclouds: THREE.Points[];
+let raycaster: THREE.Raycaster;
 let intersection = null;
 let spheresIndex = 0;
-let clock;
+let clock: THREE.Clock;
 let toggle = 0;
 
 const pointer = new THREE.Vector2();
-const spheres = [];
+const spheres: THREE.Mesh[] = [];
 
 const threshold = 0.1;
 const pointSize = 0.05;
@@ -21,7 +21,7 @@ const rotateY = new THREE.Matrix4().makeRotationY(0.005);
 
 init();
 
-function generatePointCloudGeometry(color, width, length) {
+function generatePointCloudGeometry(color: THREE.Color, width: number, length: number) {
     const geometry = new THREE.BufferGeometry();
     const numPoints = width * length;
 
@@ -58,14 +58,14 @@ function generatePointCloudGeometry(color, width, length) {
     return geometry;
 }
 
-function generatePointcloud(color, width, length) {
+function generatePointcloud(color: THREE.Color, width: number, length: number) {
     const geometry = generatePointCloudGeometry(color, width, length);
     const material = new THREE.PointsMaterial({ size: pointSize, vertexColors: true });
 
     return new THREE.Points(geometry, material);
 }
 
-function generateIndexedPointcloud(color, width, length) {
+function generateIndexedPointcloud(color: THREE.Color, width: number, length: number) {
     const geometry = generatePointCloudGeometry(color, width, length);
     const numPoints = width * length;
     const indices = new Uint16Array(numPoints);
@@ -86,7 +86,7 @@ function generateIndexedPointcloud(color, width, length) {
     return new THREE.Points(geometry, material);
 }
 
-function generateIndexedWithOffsetPointcloud(color, width, length) {
+function generateIndexedWithOffsetPointcloud(color: THREE.Color, width: number, length: number) {
     const geometry = generatePointCloudGeometry(color, width, length);
     const numPoints = width * length;
     const indices = new Uint16Array(numPoints);
@@ -109,7 +109,7 @@ function generateIndexedWithOffsetPointcloud(color, width, length) {
 }
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     scene = new THREE.Scene();
 
@@ -174,7 +174,7 @@ function init() {
     document.addEventListener('pointermove', onPointerMove);
 }
 
-function onPointerMove(event) {
+function onPointerMove(event: PointerEvent) {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
 }

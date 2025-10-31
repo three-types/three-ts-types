@@ -48,4 +48,9 @@ declare module "./Node.js" {
         setName: (label: string) => Node;
         setNameAssign: (label: string) => this;
     }
+
+    interface NodeExtensions<TValue> {
+        setName: (label: string) => Node<TValue>;
+        setNameAssign: (label: string) => this;
+    }
 }

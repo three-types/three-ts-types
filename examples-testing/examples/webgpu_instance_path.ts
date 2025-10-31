@@ -19,7 +19,7 @@ import {
     color,
 } from 'three/tsl';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 const count = 1000;
 
@@ -63,14 +63,14 @@ async function init() {
     const v = new THREE.Vector3();
     const c = new THREE.Color();
 
-    const positions = [];
-    const times = [];
-    const seeds = [];
-    const colors = [];
+    const positions: number[] = [];
+    const times: number[] = [];
+    const seeds: number[] = [];
+    const colors: number[] = [];
 
     for (let i = 0; i < count; i++) {
         const t = i / count;
-        path.getPointAt(t, v);
+        path.getPointAt(t, v as unknown as THREE.Vector2);
 
         v.x += 0.5 - Math.random();
         v.y += 0.5 - Math.random();

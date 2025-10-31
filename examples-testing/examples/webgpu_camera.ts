@@ -4,11 +4,11 @@ let SCREEN_WIDTH = window.innerWidth;
 let SCREEN_HEIGHT = window.innerHeight;
 let aspect = SCREEN_WIDTH / SCREEN_HEIGHT;
 
-let container;
-let camera, scene, renderer, mesh;
-let cameraRig, activeCamera, activeHelper;
-let cameraPerspective, cameraOrtho;
-let cameraPerspectiveHelper, cameraOrthoHelper;
+let container: HTMLDivElement;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, mesh: THREE.Mesh;
+let cameraRig: THREE.Group, activeCamera: THREE.Camera, activeHelper: THREE.CameraHelper;
+let cameraPerspective: THREE.PerspectiveCamera, cameraOrtho: THREE.OrthographicCamera;
+let cameraPerspectiveHelper: THREE.CameraHelper, cameraOrthoHelper: THREE.CameraHelper;
 const frustumSize = 600;
 
 init();
@@ -116,7 +116,7 @@ function init() {
 
 //
 
-function onKeyDown(event) {
+function onKeyDown(event: KeyboardEvent) {
     switch (event.keyCode) {
         case 79 /*O*/:
             activeCamera = cameraOrtho;

@@ -2,8 +2,8 @@ import * as THREE from 'three';
 
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let geometry, mesh;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let geometry: THREE.BufferGeometry, mesh: THREE.LineSegments;
 const numLat = 100;
 const numLng = 200;
 let numLinesCulled = 0;
@@ -23,10 +23,10 @@ function init() {
 
     addLines(1.0);
 
-    const hideLinesButton = document.getElementById('hideLines');
+    const hideLinesButton = document.getElementById('hideLines')!;
     hideLinesButton.addEventListener('click', hideLines);
 
-    const showAllLinesButton = document.getElementById('showAllLines');
+    const showAllLinesButton = document.getElementById('showAllLines')!;
     showAllLinesButton.addEventListener('click', showAllLines);
 
     renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -36,7 +36,7 @@ function init() {
     document.body.appendChild(renderer.domElement);
 }
 
-function addLines(radius) {
+function addLines(radius: number) {
     geometry = new THREE.BufferGeometry();
     const linePositions = new Float32Array(numLat * numLng * 3 * 2);
     const lineColors = new Float32Array(numLat * numLng * 3 * 2);
@@ -81,8 +81,8 @@ function addLines(radius) {
     geometry.computeBoundingSphere();
 
     const shaderMaterial = new THREE.ShaderMaterial({
-        vertexShader: document.getElementById('vertexshader').textContent,
-        fragmentShader: document.getElementById('fragmentshader').textContent,
+        vertexShader: document.getElementById('vertexshader')!.textContent!,
+        fragmentShader: document.getElementById('fragmentshader')!.textContent!,
     });
 
     mesh = new THREE.LineSegments(geometry, shaderMaterial);
@@ -98,7 +98,7 @@ function updateCount() {
         ' lines, ' +
         numLinesCulled +
         ' culled (<a target="_blank" href="http://callum.com">author</a>)';
-    document.getElementById('title').innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    document.getElementById('title')!.innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
 function hideLines() {
