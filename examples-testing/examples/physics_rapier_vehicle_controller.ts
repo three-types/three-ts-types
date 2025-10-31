@@ -1,12 +1,23 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { RapierPhysics } from 'three/addons/physics/RapierPhysics.js';
+import { RapierPhysics, RapierPhysicsObject, RAPIER } from 'three/addons/physics/RapierPhysics.js';
 import { RapierHelper } from 'three/addons/helpers/RapierHelper.js';
 import Stats from 'three/addons/libs/stats.module.js';
 
-let camera, scene, renderer, stats;
-let physics, physicsHelper, controls;
-let car, chassis, wheels, movement, vehicleController;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let physics: RapierPhysicsObject, physicsHelper: RapierHelper, controls: OrbitControls;
+let car: THREE.Mesh,
+    chassis: InstanceType<RAPIER['RigidBody']>,
+    wheels: THREE.Mesh[],
+    movement: {
+        forward: number;
+        right: number;
+        brake: number;
+        reset: boolean;
+        accelerateForce: { value: number; min: number; max: number; step: number };
+        brakeForce: { value: number; min: number; max: number; step: number };
+    },
+    vehicleController: InstanceType<RAPIER['DynamicRayCastVehicleController']>;
 
 init();
 
@@ -148,7 +159,7 @@ function createCar() {
     vehicleController.setWheelSteering(1, Math.PI / 4);
 }
 
-function addWheel(index, pos, carMesh) {
+function addWheel(index: number, pos: { x: number; y: number; z: number }, carMesh: THREE.Mesh) {
     // Define wheel properties
     const wheelRadius = 0.3;
     const wheelWidth = 0.4;
@@ -167,7 +178,7 @@ function addWheel(index, pos, carMesh) {
     vehicleController.setWheelFrictionSlip(index, 1000.0);
 
     // Enable steering for the wheel
-    vehicleController.setWheelSteering(index, pos.z < 0);
+    vehicleController.setWheelSteering(index, (pos.z < 0) as unknown as number);
 
     // Create a wheel mesh
     const geometry = new THREE.CylinderGeometry(wheelRadius, wheelRadius, wheelWidth, 16);
@@ -193,8 +204,8 @@ function updateWheels() {
     //const chassisPosition = chassis.translation();
 
     wheels.forEach((wheel, index) => {
-        const wheelAxleCs = vehicleController.wheelAxleCs(index);
-        const connection = vehicleController.wheelChassisConnectionPointCs(index).y || 0;
+        const wheelAxleCs = vehicleController.wheelAxleCs(index)!;
+        const connection = vehicleController.wheelChassisConnectionPointCs(index)!.y || 0;
         const suspension = vehicleController.wheelSuspensionLength(index) || 0;
         const steering = vehicleController.wheelSteering(index) || 0;
         const rotationRad = vehicleController.wheelRotation(index) || 0;
@@ -254,7 +265,7 @@ function updateCarControl() {
     vehicleController.setWheelEngineForce(0, engineForce);
     vehicleController.setWheelEngineForce(1, engineForce);
 
-    const currentSteering = vehicleController.wheelSteering(0);
+    const currentSteering = vehicleController.wheelSteering(0)!;
     const steerDirection = movement.right;
     const steerAngle = Math.PI / 4;
 

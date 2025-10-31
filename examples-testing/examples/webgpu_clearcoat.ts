@@ -7,10 +7,10 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
 
 import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let particleLight;
-let group;
+let particleLight: THREE.Mesh;
+let group: THREE.Group;
 
 init();
 

@@ -5,11 +5,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let cameraControls;
+let cameraControls: OrbitControls;
 
-let sphereGroup, smallSphere;
+let sphereGroup: THREE.Object3D, smallSphere: THREE.Mesh;
 
 init();
 
@@ -74,8 +74,8 @@ function init() {
     const groundUVOffset = texture(decalNormal).xy.mul(2).sub(1).mul(groundNormalScale);
     const verticalUVOffset = texture(floorNormal, uv().mul(5)).xy.mul(2).sub(1).mul(verticalNormalScale);
 
-    groundReflector.uvNode = groundReflector.uvNode.add(groundUVOffset);
-    verticalReflector.uvNode = verticalReflector.uvNode.add(verticalUVOffset);
+    groundReflector.uvNode = groundReflector.uvNode!.add(groundUVOffset);
+    verticalReflector.uvNode = verticalReflector.uvNode!.add(verticalUVOffset);
 
     const groundNode = texture(decalDiffuse).a.mix(color(0xffffff), groundReflector);
     const verticalNode = color(0x0000ff).mul(0.1).add(verticalReflector);

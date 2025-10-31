@@ -7,7 +7,13 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 
-let camera, scene, renderer, controls, mesh, material, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    mesh: THREE.InstancedMesh,
+    material: THREE.MeshStandardMaterial,
+    postProcessing: THREE.PostProcessing;
 
 const amount = parseInt(window.location.search.slice(1)) || 3;
 const count = Math.pow(amount, 3);
@@ -95,7 +101,7 @@ async function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.add(params, 'alpha', 0, 1).onChange(onMaterialUpdate);
     gui.add(params, 'alphaHash').onChange(onMaterialUpdate);

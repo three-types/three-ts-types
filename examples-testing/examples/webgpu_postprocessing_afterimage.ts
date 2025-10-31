@@ -13,12 +13,12 @@ import {
     sin,
     cos,
 } from 'three/tsl';
-import { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
+import AfterImageNode, { afterImage } from 'three/addons/tsl/display/AfterImageNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, particles;
-let postProcessing, afterImagePass, scenePass;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, particles: THREE.Sprite;
+let postProcessing: THREE.PostProcessing, afterImagePass: AfterImageNode, scenePass: THREE.PassNode;
 
 const params = {
     damp: uniform(0.8, 'float').setName('damp'),
@@ -107,8 +107,8 @@ function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
-    gui.add(afterImagePass.damp, 'value', 0.25, 1);
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+    gui.add(afterImagePass.damp as THREE.UniformNode<number>, 'value', 0.25, 1);
     gui.add(params, 'enabled').onChange(updatePassChain);
 
     window.addEventListener('resize', onWindowResize);
@@ -124,7 +124,7 @@ function updatePassChain() {
     postProcessing.needsUpdate = true;
 }
 
-function getRandomPointOnSphere(r, v) {
+function getRandomPointOnSphere(r: number, v: THREE.Vector3) {
     const angle = Math.random() * Math.PI * 2;
     const u = Math.random() * 2 - 1;
 
@@ -144,7 +144,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: number) {
     particles.rotation.z = time * 0.001;
 
     postProcessing.render();

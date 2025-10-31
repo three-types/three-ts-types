@@ -6,10 +6,19 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
-let scene, renderer, camera, floor, orbitControls;
-let group, followGroup, model, skeleton, mixer, clock;
+let scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    camera: THREE.PerspectiveCamera,
+    floor: THREE.Mesh,
+    orbitControls: OrbitControls;
+let group: THREE.Group,
+    followGroup: THREE.Group,
+    model: THREE.Group,
+    skeleton: THREE.SkeletonHelper,
+    mixer: THREE.AnimationMixer,
+    clock: THREE.Clock;
 
-let actions;
+let actions: { Idle: THREE.AnimationAction; Walk: THREE.AnimationAction; Run: THREE.AnimationAction };
 
 const settings = {
     show_skeleton: false,
@@ -19,7 +28,19 @@ const settings = {
 const PI = Math.PI;
 const PI90 = Math.PI / 2;
 
-const controls = {
+const controls: {
+    key: number[];
+    ease: THREE.Vector3;
+    position: THREE.Vector3;
+    up: THREE.Vector3;
+    rotate: THREE.Quaternion;
+    current: keyof typeof actions;
+    fadeDuration: number;
+    runVelocity: number;
+    walkVelocity: number;
+    rotateSpeed: number;
+    floorDecale: number;
+} = {
     key: [0, 0],
     ease: new THREE.Vector3(),
     position: new THREE.Vector3(),
@@ -36,7 +57,7 @@ const controls = {
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
     camera.position.set(0, 2, -5);
@@ -156,21 +177,32 @@ function loadModel() {
         group.rotation.y = PI;
 
         model.traverse(function (object) {
-            if (object.isMesh) {
+            if ((object as THREE.Mesh).isMesh) {
                 if (object.name == 'vanguard_Mesh') {
-                    object.castShadow = true;
-                    object.receiveShadow = true;
-                    //object.material.envMapIntensity = 0.5;
-                    object.material.metalness = 1.0;
-                    object.material.roughness = 0.2;
-                    object.material.color.set(1, 1, 1);
-                    object.material.metalnessMap = object.material.map;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).castShadow = true;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).receiveShadow = true;
+                    //(object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.envMapIntensity = 0.5;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalness = 1.0;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0.2;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.color.set(
+                        1,
+                        1,
+                        1,
+                    );
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalnessMap = (
+                        object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+                    ).material.map;
                 } else {
-                    object.material.metalness = 1;
-                    object.material.roughness = 0;
-                    object.material.transparent = true;
-                    object.material.opacity = 0.8;
-                    object.material.color.set(1, 1, 1);
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.metalness = 1;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.roughness = 0;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.transparent =
+                        true;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = 0.8;
+                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.color.set(
+                        1,
+                        1,
+                        1,
+                    );
                 }
             }
         });
@@ -199,9 +231,9 @@ function loadModel() {
         };
 
         for (const m in actions) {
-            actions[m].enabled = true;
-            actions[m].setEffectiveTimeScale(1);
-            if (m !== 'Idle') actions[m].setEffectiveWeight(0);
+            actions[m as keyof typeof actions].enabled = true;
+            actions[m as keyof typeof actions].setEffectiveTimeScale(1);
+            if (m !== 'Idle') actions[m as keyof typeof actions].setEffectiveWeight(0);
         }
 
         actions.Idle.play();
@@ -210,7 +242,7 @@ function loadModel() {
     });
 }
 
-function updateCharacter(delta) {
+function updateCharacter(delta: number) {
     const fade = controls.fadeDuration;
     const key = controls.key;
     const up = controls.up;
@@ -283,7 +315,7 @@ function updateCharacter(delta) {
     orbitControls.update();
 }
 
-function unwrapRad(r) {
+function unwrapRad(r: number) {
     return Math.atan2(Math.sin(r), Math.cos(r));
 }
 
@@ -297,13 +329,13 @@ function createPanel() {
     panel.add(settings, 'fixe_transition');
 }
 
-function setWeight(action, weight) {
+function setWeight(action: THREE.AnimationAction, weight: number) {
     action.enabled = true;
     action.setEffectiveTimeScale(1);
     action.setEffectiveWeight(weight);
 }
 
-function onKeyDown(event) {
+function onKeyDown(event: KeyboardEvent) {
     const key = controls.key;
     switch (event.code) {
         case 'ArrowUp':
@@ -331,7 +363,7 @@ function onKeyDown(event) {
     }
 }
 
-function onKeyUp(event) {
+function onKeyUp(event: KeyboardEvent) {
     const key = controls.key;
     switch (event.code) {
         case 'ArrowUp':

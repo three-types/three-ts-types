@@ -13,8 +13,8 @@ const params = {
     backgroundBlurriness: 0.0,
 };
 
-let container, stats;
-let camera, scene, renderer, controls;
+let container: HTMLDivElement, stats: Stats;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
 
 init();
 
@@ -96,7 +96,7 @@ function init() {
 
     const loader = new KTX2Loader().setTranscoderPath('jsm/libs/basis/').detectSupport(renderer);
 
-    function loadTexture(url) {
+    function loadTexture(url: string) {
         loader.load(url, texture => {
             texture.mapping = THREE.CubeUVReflectionMapping;
             scene.environment = texture;

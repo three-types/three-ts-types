@@ -8,10 +8,10 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-let mixer;
+let mixer: THREE.AnimationMixer;
 
 const clock = new THREE.Clock();
-const container = document.getElementById('container');
+const container = document.getElementById('container')!;
 
 const stats = new Stats();
 container.appendChild(stats.dom);

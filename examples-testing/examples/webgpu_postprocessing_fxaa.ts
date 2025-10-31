@@ -9,8 +9,12 @@ const params = {
     animated: false,
 };
 
-let camera, scene, renderer, clock, group;
-let postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    clock: THREE.Clock,
+    group: THREE.Group;
+let postProcessing: THREE.PostProcessing;
 
 init();
 
@@ -90,7 +94,7 @@ async function init() {
 
     //
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'enabled').onChange(value => {
         if (value === true) {
             postProcessing.outputNode = fxaaPass;

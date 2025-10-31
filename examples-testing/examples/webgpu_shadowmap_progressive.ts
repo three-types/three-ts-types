@@ -11,17 +11,17 @@ import { ProgressiveLightMap } from 'three/addons/misc/ProgressiveLightMapGPU.js
 const shadowMapRes = 1024,
     lightMapRes = 1024,
     lightCount = 4;
-let camera,
-    scene,
-    renderer,
-    controls,
-    control,
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    control: TransformControls,
     control2,
-    object = new THREE.Mesh(),
-    lightOrigin = null,
-    progressiveSurfacemap;
-const dirLights = [],
-    lightmapObjects = [];
+    object: THREE.Object3D = new THREE.Mesh(),
+    lightOrigin: THREE.Group,
+    progressiveSurfacemap: ProgressiveLightMap;
+const dirLights: THREE.DirectionalLight[] = [],
+    lightmapObjects: THREE.Object3D[] = [];
 const params = {
     Enable: true,
     'Blur Edges': true,
@@ -102,14 +102,14 @@ function init() {
     // model
     function loadModel() {
         object.traverse(function (child) {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh).isMesh) {
                 child.name = 'Loaded Mesh';
                 child.castShadow = true;
                 child.receiveShadow = true;
-                child.material = new THREE.MeshPhongMaterial();
+                (child as THREE.Mesh).material = new THREE.MeshPhongMaterial();
 
                 // This adds the model to the lightmap
-                lightmapObjects.push(child);
+                lightmapObjects.push(child as THREE.Mesh);
                 progressiveSurfacemap.addObjectsToLightMap(lightmapObjects);
             } else {
                 child.layers.disableAll(); // Disable Rendering for this
@@ -153,7 +153,7 @@ function init() {
 }
 
 function createGUI() {
-    const gui = renderer.inspector.createParameters('Accumulation Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Accumulation Settings');
     gui.add(params, 'Enable');
     gui.add(params, 'Blur Edges');
     gui.add(params, 'Blend Window', 1, 500, 1);

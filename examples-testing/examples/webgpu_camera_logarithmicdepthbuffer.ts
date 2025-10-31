@@ -2,7 +2,7 @@ import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 // 1 micrometer to 100 billion light years in one scene, with 1 unit = 1 meter?  preposterous!  and yet...
@@ -17,8 +17,16 @@ let zoompos = -100,
     minzoomspeed = 0.015;
 let zoomspeed = minzoomspeed;
 
-let container, border;
-const objects = {};
+let container: HTMLElement, border: HTMLElement;
+
+interface ObjectView {
+    container: HTMLElement;
+    renderer: THREE.WebGPURenderer;
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera;
+}
+
+const objects: { normal?: ObjectView; logzbuf?: ObjectView } = {};
 
 // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
 // Try to use some descriptive real-world examples of objects at each scale
@@ -44,7 +52,7 @@ const labeldata = [
 init().then(animate);
 
 async function init() {
-    container = document.getElementById('container');
+    container = document.getElementById('container')!;
 
     const loader = new FontLoader();
     const font = await loader.loadAsync('fonts/helvetiker_regular.typeface.json');
@@ -56,7 +64,7 @@ async function init() {
     objects.logzbuf = await initView(scene, 'logzbuf', true);
 
     // Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
-    border = document.getElementById('renderer_border');
+    border = document.getElementById('renderer_border')!;
     border.addEventListener('pointerdown', onBorderPointerDown);
 
     window.addEventListener('mousemove', onMouseMove);
@@ -64,8 +72,8 @@ async function init() {
     window.addEventListener('wheel', onMouseWheel);
 }
 
-async function initView(scene, name, logDepthBuf) {
-    const framecontainer = document.getElementById('container_' + name);
+async function initView(scene: THREE.Scene, name: string, logDepthBuf: boolean) {
+    const framecontainer = document.getElementById('container_' + name)!;
 
     const camera = new THREE.PerspectiveCamera(50, (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT, NEAR, FAR);
     scene.add(camera);
@@ -83,7 +91,7 @@ async function initView(scene, name, logDepthBuf) {
     return { container: framecontainer, renderer: renderer, scene: scene, camera: camera };
 }
 
-function initScene(font) {
+function initScene(font: Font) {
     const scene = new THREE.Scene();
 
     scene.add(new THREE.AmbientLight(0x777777));
@@ -92,7 +100,7 @@ function initScene(font) {
     light.position.set(100, 100, 100);
     scene.add(light);
 
-    const materialargs = {
+    const materialargs: { color: THREE.ColorRepresentation; specular: number; shininess: number; emissive: number } = {
         color: 0xffffff,
         specular: 0x050505,
         shininess: 50,
@@ -113,7 +121,7 @@ function initScene(font) {
         labelgeo.computeBoundingSphere();
 
         // center text
-        labelgeo.translate(-labelgeo.boundingSphere.radius, 0, 0);
+        labelgeo.translate(-labelgeo.boundingSphere!.radius, 0, 0);
 
         materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
 
@@ -146,16 +154,16 @@ function updateRendererSizes() {
 
     screensplit_right = 1 - screensplit;
 
-    objects.normal.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
-    objects.normal.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
-    objects.normal.camera.updateProjectionMatrix();
-    objects.normal.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
-    objects.normal.container.style.width = screensplit * 100 + '%';
+    objects.normal!.renderer.setSize(screensplit * SCREEN_WIDTH, SCREEN_HEIGHT);
+    objects.normal!.camera.aspect = (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT;
+    objects.normal!.camera.updateProjectionMatrix();
+    objects.normal!.camera.setViewOffset(SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0, SCREEN_WIDTH * screensplit, SCREEN_HEIGHT);
+    objects.normal!.container.style.width = screensplit * 100 + '%';
 
-    objects.logzbuf.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
-    objects.logzbuf.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
-    objects.logzbuf.camera.updateProjectionMatrix();
-    objects.logzbuf.camera.setViewOffset(
+    objects.logzbuf!.renderer.setSize(screensplit_right * SCREEN_WIDTH, SCREEN_HEIGHT);
+    objects.logzbuf!.camera.aspect = (screensplit_right * SCREEN_WIDTH) / SCREEN_HEIGHT;
+    objects.logzbuf!.camera.updateProjectionMatrix();
+    objects.logzbuf!.camera.setViewOffset(
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
         SCREEN_WIDTH * screensplit,
@@ -163,7 +171,7 @@ function updateRendererSizes() {
         SCREEN_WIDTH * screensplit_right,
         SCREEN_HEIGHT,
     );
-    objects.logzbuf.container.style.width = screensplit_right * 100 + '%';
+    objects.logzbuf!.container.style.width = screensplit_right * 100 + '%';
 
     border.style.left = screensplit * 100 + '%';
 }
@@ -188,22 +196,22 @@ function animate() {
     zoompos += zoomspeed;
     zoomspeed *= damping;
 
-    objects.normal.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
-    objects.normal.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
-    objects.normal.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
-    objects.normal.camera.lookAt(objects.normal.scene.position);
+    objects.normal!.camera.position.x = Math.sin(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+    objects.normal!.camera.position.y = Math.sin(0.25 * Math.PI * (mouse[1] - 0.5)) * zoom;
+    objects.normal!.camera.position.z = Math.cos(0.5 * Math.PI * (mouse[0] - 0.5)) * zoom;
+    objects.normal!.camera.lookAt(objects.normal!.scene.position);
 
     // Clone camera settings across both scenes
-    objects.logzbuf.camera.position.copy(objects.normal.camera.position);
-    objects.logzbuf.camera.quaternion.copy(objects.normal.camera.quaternion);
+    objects.logzbuf!.camera.position.copy(objects.normal!.camera.position);
+    objects.logzbuf!.camera.quaternion.copy(objects.normal!.camera.quaternion);
 
     // Update renderer sizes if the split has changed
     if (screensplit_right != 1 - screensplit) {
         updateRendererSizes();
     }
 
-    objects.normal.renderer.render(objects.normal.scene, objects.normal.camera);
-    objects.logzbuf.renderer.render(objects.logzbuf.scene, objects.logzbuf.camera);
+    objects.normal!.renderer.render(objects.normal!.scene, objects.normal!.camera);
+    objects.logzbuf!.renderer.render(objects.logzbuf!.scene, objects.logzbuf!.camera);
 }
 
 function onWindowResize() {
@@ -216,7 +224,7 @@ function onBorderPointerDown() {
     window.addEventListener('pointerup', onBorderPointerUp);
 }
 
-function onBorderPointerMove(ev) {
+function onBorderPointerMove(ev: PointerEvent) {
     screensplit = Math.max(0, Math.min(1, ev.clientX / window.innerWidth));
 }
 
@@ -225,12 +233,12 @@ function onBorderPointerUp() {
     window.removeEventListener('pointerup', onBorderPointerUp);
 }
 
-function onMouseMove(ev) {
+function onMouseMove(ev: MouseEvent) {
     mouse[0] = ev.clientX / window.innerWidth;
     mouse[1] = ev.clientY / window.innerHeight;
 }
 
-function onMouseWheel(ev) {
+function onMouseWheel(ev: WheelEvent) {
     const amount = ev.deltaY;
     if (amount === 0) return;
     const dir = amount / Math.abs(amount);

@@ -12,7 +12,13 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, stats, mixer, clock, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    stats: Stats,
+    mixer: THREE.AnimationMixer,
+    clock: THREE.Clock,
+    controls: OrbitControls;
 
 init();
 
@@ -51,13 +57,13 @@ function init() {
 
             // GUI
 
-            const head = mesh.getObjectByName('mesh_2');
-            const influences = head.morphTargetInfluences;
+            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh;
+            const influences = head.morphTargetInfluences!;
 
             const gui = new GUI();
             gui.close();
 
-            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
+            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
                 gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
             }
         });

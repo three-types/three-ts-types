@@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, stats;
-let pointLight, pointLight2;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
+let pointLight: THREE.PointLight, pointLight2: THREE.PointLight;
 
 init();
 
@@ -18,7 +18,7 @@ function init() {
 
     // lights
 
-    function createLight(color) {
+    function createLight(color: number) {
         const intensity = 200;
 
         const light = new THREE.PointLight(color, intensity, 20);
@@ -26,9 +26,9 @@ function init() {
         light.shadow.bias = -0.005; // reduces self-shadowing on double-sided objects
 
         let geometry = new THREE.SphereGeometry(0.3, 12, 6);
-        let material = new THREE.MeshBasicMaterial({ color: color });
+        let material: THREE.MeshBasicMaterial | THREE.MeshPhongMaterial = new THREE.MeshBasicMaterial({ color: color });
         material.color.multiplyScalar(intensity);
-        let sphere = new THREE.Mesh(geometry, material);
+        let sphere = new THREE.Mesh<THREE.BufferGeometry, THREE.Material>(geometry, material);
         light.add(sphere);
 
         const texture = new THREE.CanvasTexture(generateTexture());
@@ -107,7 +107,7 @@ function generateTexture() {
     canvas.width = 2;
     canvas.height = 2;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     context.fillStyle = 'white';
     context.fillRect(0, 1, 2, 1);
 

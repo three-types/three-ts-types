@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let container;
+let container: HTMLDivElement;
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -12,11 +12,11 @@ init();
 async function loadCubeTextureWithMipmaps() {
     const path = 'textures/cube/angus/';
     const format = '.jpg';
-    const mipmaps = [];
+    const mipmaps: THREE.CubeTexture[] = [];
     const maxLevel = 8;
 
-    async function loadCubeTexture(urls) {
-        return new Promise(function (resolve) {
+    async function loadCubeTexture(urls: string[]) {
+        return new Promise<THREE.CubeTexture>(function (resolve) {
             new THREE.CubeTextureLoader().load(urls, function (cubeTexture) {
                 resolve(cubeTexture);
             });
@@ -44,7 +44,7 @@ async function loadCubeTextureWithMipmaps() {
 
     await Promise.all(pendings);
 
-    const customizedCubeTexture = mipmaps.shift();
+    const customizedCubeTexture = mipmaps.shift()!;
     customizedCubeTexture.mipmaps = mipmaps;
     customizedCubeTexture.colorSpace = THREE.SRGBColorSpace;
     customizedCubeTexture.minFilter = THREE.LinearMipMapLinearFilter;

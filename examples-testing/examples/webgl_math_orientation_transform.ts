@@ -2,7 +2,11 @@ import * as THREE from 'three';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer, mesh, target;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    mesh: THREE.Mesh,
+    target: THREE.Mesh;
 
 const spherical = new THREE.Spherical();
 const rotationMatrix = new THREE.Matrix4();

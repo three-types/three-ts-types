@@ -1,22 +1,30 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 import * as TSL from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
+import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
 import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { WoodNodeMaterial, WoodGenuses, Finishes } from 'three/addons/materials/WoodNodeMaterial.js';
 
-let scene, base, camera, renderer, controls, font, blockGeometry, gui;
+let scene: THREE.Scene,
+    base: THREE.Group,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls,
+    font: Font,
+    blockGeometry: RoundedBoxGeometry,
+    gui: ParametersGroup;
 
 // Helper function to get grid position
-function getGridPosition(woodIndex, finishIndex) {
+function getGridPosition(woodIndex: number, finishIndex: number) {
     return {
         x: 0,
         y: (finishIndex - Finishes.length / 2) * 1.0,
@@ -28,29 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
 function createGridPlane() {
     const material = new THREE.MeshBasicNodeMaterial();
 
-    const gridXZ = TSL.Fn(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
-        const coord = TSL.positionWorld.xz.div(gridSize);
-        const grid = TSL.fract(coord);
+    const gridXZ = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node]>(
+        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
+            const coord = TSL.positionWorld.xz.div(gridSize);
+            const grid = TSL.fract(coord);
 
-        // Screen-space derivative for automatic antialiasing
-        const fw = TSL.fwidth(coord);
-        const smoothing = TSL.max(fw.x, fw.y).mul(0.5);
+            // Screen-space derivative for automatic antialiasing
+            const fw = TSL.fwidth(coord);
+            const smoothing = TSL.max(fw.x, fw.y).mul(0.5);
 
-        // Create squares at cell centers
-        const squareDist = TSL.max(TSL.abs(grid.x.sub(0.5)), TSL.abs(grid.y.sub(0.5)));
-        const dots = TSL.smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
+            // Create squares at cell centers
+            const squareDist = TSL.max(TSL.abs(grid.x.sub(0.5)), TSL.abs(grid.y.sub(0.5)));
+            const dots = TSL.smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
 
-        // Create grid lines
-        const lineX = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.x.sub(0.5)));
-        const lineZ = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.y.sub(0.5)));
-        const lines = TSL.max(lineX, lineZ);
+            // Create grid lines
+            const lineX = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.x.sub(0.5)));
+            const lineZ = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.y.sub(0.5)));
+            const lines = TSL.max(lineX, lineZ);
 
-        return TSL.max(dots, lines);
-    });
+            return TSL.max(dots, lines);
+        },
+    );
 
-    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
-        return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
-    });
+    const radialGradient = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node] | [THREE.Node, THREE.Node]>(
+        ([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
+            return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+        },
+    );
 
     // Create grid pattern
     const gridPattern = gridXZ(1.0, 0.03, 0.005);
@@ -69,7 +81,12 @@ function createGridPlane() {
 }
 
 // Helper function to create and position labels
-function createLabel(text, font, material, position) {
+function createLabel(
+    text: string,
+    font: Font,
+    material: THREE.MeshStandardMaterial,
+    position: { x: number; y: number; z: number },
+) {
     const txt_geo = new TextGeometry(text, {
         font: font,
         size: 0.1,
@@ -79,9 +96,9 @@ function createLabel(text, font, material, position) {
     });
 
     txt_geo.computeBoundingBox();
-    const offx = -0.5 * (txt_geo.boundingBox.max.x - txt_geo.boundingBox.min.x);
-    const offy = -0.5 * (txt_geo.boundingBox.max.y - txt_geo.boundingBox.min.y);
-    const offz = -0.5 * (txt_geo.boundingBox.max.z - txt_geo.boundingBox.min.z);
+    const offx = -0.5 * (txt_geo.boundingBox!.max.x - txt_geo.boundingBox!.min.x);
+    const offy = -0.5 * (txt_geo.boundingBox!.max.y - txt_geo.boundingBox!.min.y);
+    const offz = -0.5 * (txt_geo.boundingBox!.max.z - txt_geo.boundingBox!.min.z);
     txt_geo.translate(offx, offy, offz);
 
     const label = new THREE.Group();
@@ -91,7 +108,7 @@ function createLabel(text, font, material, position) {
     // Apply default rotation for labels
     label.rotateY(-Math.PI / 2);
 
-    label.children[0].material = material;
+    (label.children[0] as THREE.Mesh<TextGeometry, THREE.MeshStandardMaterial>).material = material;
     label.position.copy(position);
     base.add(label);
 }
@@ -115,7 +132,7 @@ async function init() {
     controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 0, 0.548);
 
-    gui = renderer.inspector.createParameters('Parameters');
+    gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     font = await new FontLoader().loadAsync('./fonts/helvetiker_regular.typeface.json');
 
@@ -189,7 +206,7 @@ if (WebGPU.isAvailable()) {
     document.body.appendChild(WebGPU.getErrorMessage());
 }
 
-function add_custom_wood(text_mat) {
+function add_custom_wood(text_mat: THREE.MeshStandardMaterial) {
     // Add "Custom" label (positioned at the end of the grid)
     createLabel('custom', font, text_mat, getGridPosition(Math.round(WoodGenuses.length / 2 - 1), 5));
 

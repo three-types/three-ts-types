@@ -3,9 +3,13 @@ import * as THREE from 'three';
 import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
 import { TrackballControls } from 'three/addons/controls/TrackballControls.js';
 
-let camera, controls, scene, renderer, effect;
+let camera: THREE.PerspectiveCamera,
+    controls: TrackballControls,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    effect: AsciiEffect;
 
-let sphere, plane;
+let sphere: THREE.Mesh, plane: THREE.Mesh;
 
 const start = Date.now();
 

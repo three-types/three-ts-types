@@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, startTime, object, stats;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    startTime: number,
+    object: THREE.Mesh,
+    stats: Stats;
 
 init();
 
@@ -93,8 +98,8 @@ function init() {
 
     // ***** Clipping setup (renderer): *****
     const globalPlanes = [globalPlane],
-        Empty = Object.freeze([]);
-    renderer.clippingPlanes = Empty; // GUI sets it to globalPlanes
+        Empty = Object.freeze<THREE.Plane[]>([]);
+    renderer.clippingPlanes = Empty as THREE.Plane[]; // GUI sets it to globalPlanes
     renderer.localClippingEnabled = true;
 
     // Stats
@@ -143,7 +148,7 @@ function init() {
                 return renderer.clippingPlanes !== Empty;
             },
             set Enabled(v) {
-                renderer.clippingPlanes = v ? globalPlanes : Empty;
+                renderer.clippingPlanes = v ? globalPlanes : (Empty as THREE.Plane[]);
             },
 
             get Plane() {

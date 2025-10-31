@@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
 import { pass, texture } from 'three/tsl';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, postProcessing, renderer;
-let box, torus;
+let camera: THREE.PerspectiveCamera, postProcessing: THREE.PostProcessing, renderer: THREE.WebGPURenderer;
+let box: THREE.Mesh, torus: THREE.Mesh;
 
 init();
 
@@ -53,7 +53,7 @@ function init() {
     const sceneMask1 = pass(maskScene1, camera).a;
     const sceneMask2 = pass(maskScene2, camera).a;
 
-    let compose = base;
+    let compose: THREE.Node = base;
     compose = sceneMask1.mix(compose, texture(texture1));
     compose = sceneMask2.mix(compose, texture(texture2));
 

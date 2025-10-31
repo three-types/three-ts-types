@@ -1,11 +1,11 @@
-import * as THREE from 'three';
+import * as THREE from 'three/webgpu';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let scene, camera, controls, renderer;
+let scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls, renderer: THREE.WebGPURenderer;
 
 async function init() {
     const width = window.innerWidth;
@@ -64,15 +64,17 @@ async function init() {
     // angle of the pixel in steradians. This image is 1024 x 512,
     // so the value is 1 / ( sin( phi ) * ( pi / 512 ) ^ 2 ) = 27,490 nits.
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add({ enabled: true }, 'enabled')
         .name('PMREM')
         .onChange(value => {
             directionalLight.intensity = value ? 0 : 1;
 
             scene.traverse(function (child) {
-                if (child.isMesh) {
-                    child.material.envMapIntensity = 1 - directionalLight.intensity;
+                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>).isMesh) {
+                    (
+                        child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>
+                    ).material.envMapIntensity = 1 - directionalLight.intensity;
                 }
             });
         });

@@ -22,10 +22,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let portals,
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let portals: THREE.Group,
     rotate = true;
-let mixer, clock;
+let mixer: THREE.AnimationMixer, clock: THREE.Clock;
 
 init();
 
@@ -51,7 +51,9 @@ function init() {
         const object = gltf.scene;
         mixer = new THREE.AnimationMixer(object);
 
-        const material = object.children[0].children[0].material;
+        const material = (
+            object.children[0].children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>
+        ).material;
         material.outputNode = oscSine(time.mul(0.1)).mix(output, posterize(output.add(0.1), 4).mul(2));
 
         const action = mixer.clipAction(gltf.animations[0]);
@@ -67,7 +69,7 @@ function init() {
     portals = new THREE.Group();
     scene.add(portals);
 
-    function addBackdropSphere(backdropNode, backdropAlphaNode = null) {
+    function addBackdropSphere(backdropNode: THREE.Node, backdropAlphaNode: THREE.Node | null = null) {
         const distance = 1;
         const id = portals.children.length;
         const rotation = THREE.MathUtils.degToRad(id * 45);

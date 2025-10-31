@@ -4,9 +4,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, clock;
-let dirLight, spotLight;
-let torusKnot, dirGroup;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, clock: THREE.Clock;
+let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
+let torusKnot: THREE.Mesh, dirGroup: THREE.Group;
 
 const config = {
     spotlightRadius: 4,
@@ -23,7 +23,7 @@ function init() {
     initMisc();
 
     // Init gui
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     const spotlightFolder = gui.addFolder('Spotlight');
     spotlightFolder
@@ -178,7 +178,7 @@ function onWindowResize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-function animate(time) {
+function animate(time: DOMHighResTimeStamp) {
     const delta = clock.getDelta();
 
     if (config.animate === true) {

@@ -3,10 +3,10 @@ import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess } from
 
 import WebGPU from 'three/addons/capabilities/WebGPU.js';
 
-let camera, scene, renderer;
-let computeInitNode, computeToPing, computeToPong;
-let pingTexture, pongTexture;
-let material;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let computeInitNode: THREE.ComputeNode, computeToPing: THREE.ComputeNode, computeToPong: THREE.ComputeNode;
+let pingTexture: THREE.StorageTexture, pongTexture: THREE.StorageTexture;
+let material: THREE.MeshBasicMaterial;
 let phase = true;
 let lastUpdate = -1;
 

@@ -2,14 +2,14 @@ import * as THREE from 'three';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let canvas, renderer;
+let canvas: HTMLCanvasElement, renderer: THREE.WebGLRenderer;
 
-const scenes = [];
+const scenes: THREE.Scene[] = [];
 
 init();
 
 function init() {
-    canvas = document.getElementById('c');
+    canvas = document.getElementById('c') as HTMLCanvasElement;
 
     const geometries = [
         new THREE.BoxGeometry(1, 1, 1),
@@ -18,7 +18,7 @@ function init() {
         new THREE.CylinderGeometry(0.5, 0.5, 1, 12),
     ];
 
-    const content = document.getElementById('content');
+    const content = document.getElementById('content')!;
 
     for (let i = 0; i < 40; i++) {
         const scene = new THREE.Scene();

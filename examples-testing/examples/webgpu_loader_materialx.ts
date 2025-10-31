@@ -61,9 +61,9 @@ const localSamples = [
     'sheen_test.mtlx',
 ];
 
-let camera, scene, renderer;
-let controls, prefab;
-const models = [];
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let controls: OrbitControls, prefab: THREE.Group;
+const models: THREE.Group[] = [];
 
 init();
 
@@ -90,27 +90,29 @@ function init() {
 
     const material = new THREE.MeshBasicNodeMaterial();
 
-    const gridXZ = Fn(([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
-        const coord = positionWorld.xz.div(gridSize);
-        const grid = fract(coord);
+    const gridXZ = Fn<[THREE.Node, THREE.Node, THREE.Node]>(
+        ([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
+            const coord = positionWorld.xz.div(gridSize);
+            const grid = fract(coord);
 
-        // Screen-space derivative for automatic antialiasing
-        const fw = fwidth(coord);
-        const smoothing = max(fw.x, fw.y).mul(0.5);
+            // Screen-space derivative for automatic antialiasing
+            const fw = fwidth(coord);
+            const smoothing = max(fw.x, fw.y).mul(0.5);
 
-        // Create squares at cell centers
-        const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
-        const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
+            // Create squares at cell centers
+            const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
+            const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
 
-        // Create grid lines
-        const lineX = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.x.sub(0.5)));
-        const lineZ = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.y.sub(0.5)));
-        const lines = max(lineX, lineZ);
+            // Create grid lines
+            const lineX = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.x.sub(0.5)));
+            const lineZ = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.y.sub(0.5)));
+            const lines = max(lineX, lineZ);
 
-        return max(dots, lines);
-    });
+            return max(dots, lines);
+        },
+    );
 
-    const radialGradient = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
+    const radialGradient = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
     });
 
@@ -177,7 +179,7 @@ function updateModelsAlign() {
     }
 }
 
-async function addSample(sample, path) {
+async function addSample(sample: string, path: string) {
     const model = prefab.clone();
 
     models.push(model);
@@ -191,12 +193,12 @@ async function addSample(sample, path) {
     const material = await new MaterialXLoader()
         .setPath(path)
         .loadAsync(sample)
-        .then(({ materials }) => Object.values(materials).pop());
+        .then(({ materials }) => Object.values(materials).pop()!);
 
-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
+    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
     calibrationMesh.material = material;
 
-    const previewMesh = model.getObjectByName('Preview_Mesh');
+    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh;
     previewMesh.material = material;
 
     if (material.transparent) {
@@ -206,7 +208,7 @@ async function addSample(sample, path) {
 }
 
 function addGUI() {
-    const gui = renderer.inspector.createParameters('MaterialX Loader');
+    const gui = (renderer.inspector as Inspector).createParameters('MaterialX Loader');
 
     const API = {
         showCalibrationMesh: true,
@@ -226,9 +228,9 @@ function addGUI() {
         });
 }
 
-function setVisibility(name, visible) {
+function setVisibility(name: string, visible: boolean) {
     scene.traverse(function (node) {
-        if (node.isMesh) {
+        if ((node as THREE.Mesh).isMesh) {
             if (node.name == name) node.visible = visible;
         }
     });

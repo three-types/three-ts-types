@@ -1,16 +1,16 @@
 import * as THREE from 'three/webgpu';
 import { pass, uniform, time, oscSine } from 'three/tsl';
-import { outline } from 'three/addons/tsl/display/OutlineNode.js';
+import OutlineNode, { outline } from 'three/addons/tsl/display/OutlineNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
 
-let camera, scene, renderer, controls;
-let postProcessing, outlinePass;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let postProcessing: THREE.PostProcessing, outlinePass: OutlineNode;
 
-let selectedObjects = [];
+let selectedObjects: THREE.Object3D[] = [];
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
@@ -164,7 +164,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(edgeStrength, 'value', 0.01, 10).name('edgeStrength');
     gui.add(edgeGlow, 'value', 0.0, 1).name('edgeGlow');
     gui.add(edgeThickness, 'value', 1, 4).name('edgeThickness');
@@ -187,7 +187,7 @@ function init() {
     renderer.domElement.style.touchAction = 'none';
     renderer.domElement.addEventListener('pointermove', onPointerMove);
 
-    function onPointerMove(event) {
+    function onPointerMove(event: PointerEvent) {
         if (event.isPrimary === false) return;
 
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -196,7 +196,7 @@ function init() {
         checkIntersection();
     }
 
-    function addSelectedObject(object) {
+    function addSelectedObject(object: THREE.Object3D) {
         selectedObjects = [];
         selectedObjects.push(object);
     }

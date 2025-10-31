@@ -2,9 +2,13 @@ import * as THREE from 'three';
 
 import { StereoEffect } from 'three/addons/effects/StereoEffect.js';
 
-let container, camera, scene, renderer, effect;
+let container: HTMLDivElement,
+    camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGLRenderer,
+    effect: StereoEffect;
 
-const spheres = [];
+const spheres: THREE.Mesh[] = [];
 
 let mouseX = 0,
     mouseY = 0;
@@ -73,7 +77,7 @@ function onWindowResize() {
     effect.setSize(window.innerWidth, window.innerHeight);
 }
 
-function onDocumentMouseMove(event) {
+function onDocumentMouseMove(event: MouseEvent) {
     mouseX = (event.clientX - windowHalfX) * 10;
     mouseY = (event.clientY - windowHalfY) * 10;
 }

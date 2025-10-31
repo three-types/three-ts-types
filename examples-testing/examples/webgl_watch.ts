@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as TWEEN from 'tween';
+import * as TWEEN from 'three/addons/libs/tween.module.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13,12 +13,17 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
 
-let composer, camera, scene, renderer;
-let gui, dirLight, pointLight, controls, bloomPass, taaPass;
+let composer: EffectComposer | null, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let gui: GUI,
+    dirLight: THREE.DirectionalLight,
+    pointLight: THREE.PointLight,
+    controls: OrbitControls,
+    bloomPass: UnrealBloomPass | null,
+    taaPass: TAARenderPass | null;
 let ready = false;
 
-const meshes = {};
-const materials = {};
+const meshes: { [name: string]: THREE.Mesh | THREE.Group } = {};
+const materials: { [name: string]: THREE.MeshStandardMaterial } = {};
 const torad = Math.PI / 180;
 
 const setting = {
@@ -34,7 +39,7 @@ const setting = {
 init();
 
 function init() {
-    const container = document.getElementById('container');
+    const container = document.getElementById('container')!;
 
     camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
     camera.position.set(0.8, 0.5, -1.5);
@@ -67,23 +72,26 @@ function init() {
             gltf.scene.rotation.x = Math.PI * 0.25;
 
             gltf.scene.traverse(child => {
-                if (child.isMesh || child.isGroup) {
-                    if (child.isMesh) {
-                        child.material.vertexColors = false;
-                        materials[child.material.name] = child.material;
+                if ((child as THREE.Mesh).isMesh || (child as THREE.Group).isGroup) {
+                    if ((child as THREE.Mesh).isMesh) {
+                        (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.vertexColors =
+                            false;
+                        materials[(child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.name] = (
+                            child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>
+                        ).material;
                         if (child.name !== 'glass') {
                             child.receiveShadow = true;
                             child.castShadow = true;
                         }
                     }
 
-                    meshes[child.name] = child;
+                    meshes[child.name] = child as THREE.Mesh | THREE.Group;
                 }
             });
 
             scene.add(gltf.scene);
 
-            meshes.glass.material = new THREE.MeshPhysicalMaterial({
+            (meshes.glass as THREE.Mesh).material = new THREE.MeshPhysicalMaterial({
                 color: 0x020205,
                 transparent: true,
                 opacity: setting.opacity,
@@ -161,7 +169,7 @@ function moveCamera() {
         .start();
 }
 
-function postProcess(b) {
+function postProcess(b: boolean) {
     if (b) {
         if (composer) return;
 
@@ -207,7 +215,7 @@ function createGUI() {
 function upMaterial() {
     materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
     materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
-    meshes.glass.material.opacity = setting.opacity;
+    (meshes.glass as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.opacity = setting.opacity;
 }
 
 function upBloom() {

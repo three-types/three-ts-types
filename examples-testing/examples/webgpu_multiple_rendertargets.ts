@@ -3,8 +3,8 @@ import { mix, vec2, step, texture, uv, screenUV, normalWorld, output, mrt } from
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer, torus;
-let postProcessing, renderTarget;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
+let postProcessing: THREE.PostProcessing, renderTarget: THREE.RenderTarget;
 
 init();
 
@@ -84,7 +84,7 @@ function onWindowResize() {
     renderTarget.setSize(window.innerWidth * dpr, window.innerHeight * dpr);
 }
 
-function render(time) {
+function render(time: DOMHighResTimeStamp) {
     torus.rotation.y = (time / 1000) * 0.4;
 
     // render scene into target

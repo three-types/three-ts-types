@@ -17,8 +17,12 @@ const params = {
     cameraDistance: 40,
 };
 
-let camera, scene, renderer, clock, mainGroup;
-let controls, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    clock: THREE.Clock,
+    mainGroup: THREE.Group;
+let controls: OrbitControls, postProcessing: THREE.PostProcessing;
 
 init();
 
@@ -86,7 +90,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(params, 'enabled').onChange(value => {
         postProcessing.outputNode = value ? caPass : outputPass;
@@ -108,8 +112,8 @@ async function init() {
 }
 
 function createShapes() {
-    const shapes = [];
-    const materials = [];
+    const shapes: THREE.Object3D[] = [];
+    const materials: THREE.MeshStandardMaterial[] = [];
 
     // Define colors for different materials
     const colors = [
@@ -245,7 +249,7 @@ function animate() {
                 // Central group
                 child.rotation.y = time * 0.5;
                 child.children.forEach((subChild, subIndex) => {
-                    if (subChild.geometry) {
+                    if ((subChild as THREE.Mesh).geometry) {
                         subChild.rotation.x = time * (1 + subIndex * 0.1);
                         subChild.rotation.z = time * (1 - subIndex * 0.1);
                     }

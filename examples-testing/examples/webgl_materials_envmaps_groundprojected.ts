@@ -13,7 +13,7 @@ const params = {
     enabled: true,
 };
 
-let camera, scene, renderer, skybox;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, skybox: GroundedSkybox;
 
 init().then(render);
 
@@ -68,15 +68,15 @@ async function init() {
         carModel.scale.multiplyScalar(4);
         carModel.rotation.y = Math.PI;
 
-        carModel.getObjectByName('body').material = bodyMaterial;
+        (carModel.getObjectByName('body') as THREE.Mesh).material = bodyMaterial;
 
-        carModel.getObjectByName('rim_fl').material = detailsMaterial;
-        carModel.getObjectByName('rim_fr').material = detailsMaterial;
-        carModel.getObjectByName('rim_rr').material = detailsMaterial;
-        carModel.getObjectByName('rim_rl').material = detailsMaterial;
-        carModel.getObjectByName('trim').material = detailsMaterial;
+        (carModel.getObjectByName('rim_fl') as THREE.Mesh).material = detailsMaterial;
+        (carModel.getObjectByName('rim_fr') as THREE.Mesh).material = detailsMaterial;
+        (carModel.getObjectByName('rim_rr') as THREE.Mesh).material = detailsMaterial;
+        (carModel.getObjectByName('rim_rl') as THREE.Mesh).material = detailsMaterial;
+        (carModel.getObjectByName('trim') as THREE.Mesh).material = detailsMaterial;
 
-        carModel.getObjectByName('glass').material = glassMaterial;
+        (carModel.getObjectByName('glass') as THREE.Mesh).material = glassMaterial;
 
         // shadow
         const mesh = new THREE.Mesh(

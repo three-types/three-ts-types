@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let renderer, scene, camera;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 
 init();
 
@@ -38,19 +38,23 @@ function init() {
     // model
     new GLTFLoader().load('models/gltf/Nefertiti/Nefertiti.glb', function (gltf) {
         gltf.scene.traverse(function (child) {
-            if (child.isMesh) {
+            if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).isMesh) {
                 // glTF currently supports only tangent-space normal maps.
                 // this model has been modified to demonstrate the use of an object-space normal map.
 
-                child.material.normalMapType = THREE.ObjectSpaceNormalMap;
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.normalMapType =
+                    THREE.ObjectSpaceNormalMap;
 
                 // attribute normals are not required with an object-space normal map. remove them.
 
-                child.geometry.deleteAttribute('normal');
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).geometry.deleteAttribute(
+                    'normal',
+                );
 
                 //
 
-                child.material.side = THREE.DoubleSide;
+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>).material.side =
+                    THREE.DoubleSide;
 
                 child.scale.multiplyScalar(0.5);
 

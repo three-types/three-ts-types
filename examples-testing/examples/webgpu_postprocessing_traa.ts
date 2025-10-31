@@ -4,7 +4,10 @@ import { traa } from 'three/addons/tsl/display/TRAANode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, postProcessing;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    renderer: THREE.WebGPURenderer,
+    postProcessing: THREE.PostProcessing;
 let index = 0;
 
 init();

@@ -95,26 +95,30 @@ interface MulFloat {
     ): Node<"color">;
 }
 
+interface MulMat3 {
+    (
+        b: Node<"mat3">,
+    ): Node<"mat3">;
+    (
+        b: Node<"vec4">,
+    ): Node<"vec3">;
+}
+
+interface MulMat4 {
+    (
+        b: Node<"mat4">,
+    ): Node<"mat4">;
+    (
+        b: Node<"vec3"> | Node<"vec4">,
+    ): Node<"vec4">;
+}
+
 declare module "../core/Node.js" {
     interface NodeElements {
         mod: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
         modAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        equal: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        equalAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        notEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        notEqualAssign: (
             b: OperatorNodeParameter,
         ) => this;
 
@@ -202,6 +206,20 @@ declare module "../core/Node.js" {
     }
 
     interface FloatExtensions {
+        equal: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        equalAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        notEqual: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        notEqualAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
         lessThan: (
             b: Node<"float"> | number,
         ) => Node<"bool">;
@@ -264,12 +282,65 @@ declare module "../core/Node.js" {
         ) => this;
     }
 
+    interface UintExtensions {
+        equal: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        equalAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        notEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        notEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        lessThan: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        lessThanAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        greaterThan: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        greaterThanAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        lessThanEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        lessThanEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        greaterThanEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        greaterThanEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+    }
+
     interface VectorExtensions<TValue> {
         add: (
             b: Node<TValue> | Node<"float"> | number,
             ...params: (Node<TValue> | Node<"float"> | number)[]
         ) => Node<TValue>;
         addAssign: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => Node<TValue>;
+        subAssign: (
             b: Node<TValue> | Node<"float"> | number,
             ...params: (Node<TValue> | Node<"float"> | number)[]
         ) => this;
@@ -306,6 +377,17 @@ declare module "../core/Node.js" {
         ) => Node<"vec4">;
         mulAssign: (
             b: Node<"color">,
+        ) => this;
+    }
+
+    interface Matrix3Extensions {
+        mul: MulMat3;
+    }
+
+    interface Matrix4Extensions {
+        mul: MulMat4;
+        mulAssign: (
+            b: Node<"vec3"> | Node<"vec4">,
         ) => this;
     }
 }

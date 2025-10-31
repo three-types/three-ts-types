@@ -3,9 +3,9 @@ import { color, screenUV } from 'three/tsl';
 
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
-let mixer, clock;
+let mixer: THREE.AnimationMixer, clock: THREE.Clock;
 
 init();
 

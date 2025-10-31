@@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, clock;
-let dirLight;
-let torusKnot, dirGroup;
-let tsmHelper;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, clock: THREE.Clock;
+let dirLight: THREE.DirectionalLight;
+let torusKnot: THREE.Mesh<THREE.TorusKnotGeometry, THREE.MeshPhongNodeMaterial>, dirGroup: THREE.Group;
+let tsmHelper: TileShadowNodeHelper;
 
 init();
 
@@ -311,7 +311,7 @@ function resize() {
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-async function animate(time) {
+async function animate(time: number) {
     const delta = clock.getDelta();
 
     // Rotate the central torus knot
