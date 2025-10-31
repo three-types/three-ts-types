@@ -457,6 +457,21 @@ type Vec4Swizzle =
             "vec4"
         >;
     };
+type Uvec4Swizzle =
+    & {
+        [Key in XYZW | RGBA | STPQ]: Node<"uint">;
+    }
+    & {
+    [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"uvec2">;
+}
+    & {
+    [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"uvec3">;
+}
+    & {
+    [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+        "uvec4"
+    >;
+};
 export interface NodeExtensions<in out TValue> {
 }
 export interface BoolExtensions {
@@ -485,6 +500,7 @@ type Node<TValue = unknown> =
     & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> : {})
     & (TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> : {})
     & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
+    & (TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> : {})
     & (TValue extends "mat3" ? Matrix3Extensions : {})
     & (TValue extends "mat4" ? Matrix4Extensions : {})
     & (TValue extends "color" ? Vec3Swizzle & VectorExtensions<TValue> : {})
