@@ -482,8 +482,6 @@ export interface UintExtensions {
 }
 export interface BoolExtensions {
 }
-export interface VectorExtensions<in out TValue> {
-}
 export interface Vector2Extensions {
 }
 export interface Vector3Extensions {
@@ -504,12 +502,12 @@ type Node<TValue = unknown> =
     & (TValue extends "int" ? IntExtensions : {})
     & (TValue extends "uint" ? UintExtensions : {})
     & (TValue extends "bool" ? BoolExtensions : {})
-    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions : {})
-    & (TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> : {})
-    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions : {})
-    & (TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> : {})
-    & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
-    & (TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec2" ? Vec2Swizzle & Vector2Extensions : {})
+    & (TValue extends "uvec2" ? Uvec2Swizzle : {})
+    & (TValue extends "vec3" ? Vec3Swizzle & Vector3Extensions : {})
+    & (TValue extends "uvec3" ? Uvec3Swizzle : {})
+    & (TValue extends "vec4" ? Vec4Swizzle & Vector4Extensions : {})
+    & (TValue extends "uvec4" ? Uvec4Swizzle : {})
     & (TValue extends "mat2" ? Matrix2Extensions : {})
     & (TValue extends "mat3" ? Matrix3Extensions : {})
     & (TValue extends "mat4" ? Matrix4Extensions : {})
