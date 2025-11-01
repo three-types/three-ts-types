@@ -4,7 +4,7 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.OrthographicCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 
 init();
 
@@ -51,7 +51,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Procedural Texture');
+    const gui = (renderer.inspector as Inspector).createParameters('Procedural Texture');
     gui.add(uvScale, 'value', 1, 10).name('uv scale ( before rtt )');
     gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
     gui.add(proceduralToTexture, 'autoUpdate').name('auto update');

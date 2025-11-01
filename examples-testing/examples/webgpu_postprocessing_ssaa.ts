@@ -1,11 +1,11 @@
 import * as THREE from 'three/webgpu';
-import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
+import SSAAPassNode, { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let scene, mesh, renderer, postProcessing;
-let camera, ssaaRenderPass;
-let timer;
+let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
+let camera: THREE.PerspectiveCamera, ssaaRenderPass: SSAAPassNode;
+let timer: THREE.Timer;
 
 const params = {
     sampleLevel: 3,
@@ -102,7 +102,7 @@ function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(params, 'sampleLevel', {
         'Level 0: 1 Sample': 0,
@@ -139,7 +139,7 @@ function animate() {
         mesh.rotation.y += delta * 0.5;
     }
 
-    let newColor = ssaaRenderPass.clearColor;
+    let newColor: THREE.ColorRepresentation = ssaaRenderPass.clearColor;
 
     switch (params.clearColor) {
         case 'blue':
@@ -164,7 +164,7 @@ function animate() {
 
     ssaaRenderPass.sampleLevel = params.sampleLevel;
 
-    camera.view.offsetX = params.viewOffsetX;
+    camera.view!.offsetX = params.viewOffsetX;
 
     postProcessing.render();
 }

@@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let renderer, scene, camera, camera2, controls, backgroundNode;
-let material;
-let effectController;
+let renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    camera2: THREE.PerspectiveCamera,
+    controls: OrbitControls,
+    backgroundNode: THREE.Node;
+let material: THREE.PointsNodeMaterial;
+let effectController: {
+    pulseSpeed: THREE.UniformNode<number>;
+    minWidth: THREE.UniformNode<number>;
+    maxWidth: THREE.UniformNode<number>;
+};
 
 // viewport
-let insetWidth;
-let insetHeight;
+let insetWidth: number;
+let insetHeight: number;
 
 // compute
-let computeSize;
+let computeSize: THREE.ComputeNode;
 
 init();
 
@@ -136,7 +145,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     gui.add(material, 'alphaToCoverage');
 

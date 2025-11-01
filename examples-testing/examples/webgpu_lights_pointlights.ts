@@ -16,9 +16,13 @@ import {
     uniform,
 } from 'three/tsl';
 
-let camera, scene, timer, renderer, controls;
+let camera: THREE.PerspectiveCamera,
+    scene: THREE.Scene,
+    timer: THREE.Timer,
+    renderer: THREE.WebGPURenderer,
+    controls: OrbitControls;
 
-let light1, light2;
+let light1: THREE.PointLight, light2: THREE.PointLight;
 
 init();
 
@@ -35,7 +39,7 @@ function init() {
 
     const loader = new OBJLoader();
     loader.load('models/obj/walt/WaltHead.obj', function (obj) {
-        const mesh = obj.children[0];
+        const mesh = obj.children[0] as THREE.Mesh;
         mesh.geometry = createGeometry(mesh.geometry);
         mesh.material = createMaterial();
 
@@ -125,7 +129,7 @@ function createMaterial() {
     return material;
 }
 
-function createGeometry(geometry) {
+function createGeometry(geometry: THREE.BufferGeometry) {
     const positionAttribute = geometry.getAttribute('position');
 
     const v0 = new THREE.Vector3();

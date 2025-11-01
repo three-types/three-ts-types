@@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-let camera, scene, renderer;
-let mixer, objects, clock;
-let model, floor, floorPosition;
-let postProcessing;
-let controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
+let mixer: THREE.AnimationMixer, objects: THREE.Group, clock: THREE.Clock;
+let model: THREE.Group,
+    floor: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshStandardNodeMaterial>,
+    floorPosition: THREE.Vector3;
+let postProcessing: THREE.PostProcessing;
+let controls: OrbitControls;
 
 init();
 
@@ -164,10 +166,10 @@ function init() {
 
     const waterPosY = positionWorld.y.sub(water.position.y);
 
-    let transition = waterPosY.add(0.1).saturate().oneMinus();
+    let transition: THREE.Node<'float'> = waterPosY.add(0.1).saturate().oneMinus();
     transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
 
-    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
+    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
 
     //material.colorNode = colorNode;
     floor.material.colorNode = colorNode;
@@ -192,7 +194,7 @@ function init() {
 
     // gui
 
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
 
     floorPosition = new THREE.Vector3(0, 0.2, 0);
 

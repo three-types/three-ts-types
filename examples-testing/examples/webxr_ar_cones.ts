@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import { ARButton } from 'three/addons/webxr/ARButton.js';
 
-let camera, scene, renderer;
-let controller;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+let controller: THREE.XRTargetRaySpace;
 
 init();
 

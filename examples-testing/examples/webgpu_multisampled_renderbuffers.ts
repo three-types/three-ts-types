@@ -3,12 +3,12 @@ import { texture } from 'three/tsl';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 const mouse = new THREE.Vector2();
 
-let quadMesh, renderTarget;
+let quadMesh: THREE.QuadMesh, renderTarget: THREE.RenderTarget;
 
-let box, box2;
+let box: THREE.InstancedMesh, box2: THREE.InstancedMesh;
 
 const dpr = 1;
 
@@ -22,7 +22,7 @@ const mat4 = new THREE.Matrix4();
 const count = 50;
 const fullRadius = 20; // Radius of the sphere
 const halfRadius = 10; // Radius of the sphere
-const positions = new Array(count).fill().map((_, i) => {
+const positions = new Array(count).fill(undefined).map((_, i) => {
     const radius = i % 2 === 0 ? fullRadius : halfRadius;
 
     const phi = Math.acos(2 * Math.random() - 1) - Math.PI / 2; // phi: latitude, range -π/2 to π/2
@@ -39,7 +39,7 @@ init();
 initGUI();
 
 function initGUI() {
-    const gui = renderer.inspector.createParameters('Settings');
+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
     gui.add(params, 'samples', 0, 4, 1);
     gui.add(params, 'animated');
 }
@@ -98,7 +98,7 @@ function init() {
     quadMesh = new THREE.QuadMesh(materialFX);
 }
 
-function onWindowMouseMove(e) {
+function onWindowMouseMove(e: MouseEvent) {
     mouse.x = e.offsetX / window.innerWidth;
     mouse.y = e.offsetY / window.innerHeight;
 }

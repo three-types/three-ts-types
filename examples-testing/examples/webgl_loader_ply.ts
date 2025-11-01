@@ -4,9 +4,9 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
 
-let container, stats;
+let container: HTMLDivElement, stats: Stats;
 
-let camera, cameraTarget, scene, renderer;
+let camera: THREE.PerspectiveCamera, cameraTarget: THREE.Vector3, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 init();
 
@@ -100,7 +100,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function addShadowedLight(x, y, z, color, intensity) {
+function addShadowedLight(x: number, y: number, z: number, color: number, intensity: number) {
     const directionalLight = new THREE.DirectionalLight(color, intensity);
     directionalLight.position.set(x, y, z);
     scene.add(directionalLight);

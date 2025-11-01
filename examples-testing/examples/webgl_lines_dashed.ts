@@ -4,8 +4,8 @@ import Stats from 'three/addons/libs/stats.module.js';
 
 import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
 
-let renderer, scene, camera, stats;
-const objects = [];
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, stats: Stats;
+const objects: THREE.Object3D[] = [];
 
 const WIDTH = window.innerWidth,
     HEIGHT = window.innerHeight;
@@ -63,7 +63,7 @@ function init() {
     window.addEventListener('resize', onWindowResize);
 }
 
-function box(width, height, depth) {
+function box(width: number, height: number, depth: number) {
     ((width = width * 0.5), (height = height * 0.5), (depth = depth * 0.5));
 
     const geometry = new THREE.BufferGeometry();
@@ -176,7 +176,7 @@ function render() {
     const time = Date.now() * 0.001;
 
     scene.traverse(function (object) {
-        if (object.isLine) {
+        if ((object as THREE.Line).isLine) {
             object.rotation.x = 0.25 * time;
             object.rotation.y = 0.25 * time;
         }

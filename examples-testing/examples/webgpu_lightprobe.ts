@@ -1,6 +1,7 @@
 import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -8,12 +9,15 @@ import { LightProbeGenerator } from 'three/addons/lights/LightProbeGenerator.js'
 
 import { LightProbeHelper } from 'three/addons/helpers/LightProbeHelperGPU.js';
 
-let mesh, renderer, scene, camera;
+let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshStandardMaterial>,
+    renderer: THREE.WebGPURenderer,
+    scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera;
 
-let gui;
+let gui: ParametersGroup;
 
-let lightProbe;
-let directionalLight;
+let lightProbe: THREE.LightProbe;
+let directionalLight: THREE.DirectionalLight;
 
 // linear color space
 const API = {
@@ -59,7 +63,7 @@ function init() {
     scene.add(directionalLight);
 
     // envmap
-    const genCubeUrls = function (prefix, postfix) {
+    const genCubeUrls = function (prefix: string, postfix: string) {
         return [
             prefix + 'px' + postfix,
             prefix + 'nx' + postfix,
@@ -100,7 +104,7 @@ function init() {
     });
 
     // gui
-    gui = renderer.inspector.createParameters('Intensity');
+    gui = (renderer.inspector as Inspector).createParameters('Intensity');
 
     gui.add(API, 'lightProbeIntensity', 0, 1, 0.02)
         .name('light probe')

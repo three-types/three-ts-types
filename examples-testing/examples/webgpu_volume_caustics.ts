@@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 import { bayer16 } from 'three/addons/tsl/math/Bayer.js';
 import { bloom } from 'three/addons/tsl/display/BloomNode.js';
 
-let camera, scene, renderer, controls;
-let postProcessing;
-let gltf;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
+let postProcessing: THREE.PostProcessing;
+let gltf: THREE.Group;
 
 init();
 
@@ -80,7 +80,7 @@ async function init() {
 
     // Material
 
-    const duck = gltf.children[0];
+    const duck = gltf.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalNodeMaterial>;
     duck.material = new THREE.MeshPhysicalNodeMaterial();
     duck.material.side = THREE.DoubleSide;
     duck.material.transparent = true;
@@ -160,7 +160,7 @@ async function init() {
 
     // GUI
 
-    const gui = renderer.inspector.createParameters('Volumetric Caustics');
+    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Caustics');
     gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
     gui.addColor(duck.material, 'color').name('material color');
 
@@ -224,12 +224,12 @@ async function init() {
     const volumetricMaterial = new THREE.VolumeNodeMaterial();
     volumetricMaterial.steps = 20;
     volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
+    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node }>(({ positionRay }) => {
         // Return the amount of fog based on the noise texture
 
         const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
 
-        const sampleGrain = (scale, timeScale = 1) =>
+        const sampleGrain = (scale: number, timeScale = 1) =>
             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
 
         let density = sampleGrain(1);

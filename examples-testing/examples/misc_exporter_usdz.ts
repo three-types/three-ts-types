@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let camera, scene, renderer;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 
 const params = {
     exportUSDZ: exportUSDZ,
@@ -50,7 +50,7 @@ function init() {
         const arraybuffer = await exporter.parseAsync(gltf.scene);
         const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
 
-        const link = document.getElementById('link');
+        const link = document.getElementById('link') as HTMLAnchorElement;
         link.href = URL.createObjectURL(blob);
     });
 
@@ -78,7 +78,7 @@ function createSpotShadowMesh() {
     canvas.width = 128;
     canvas.height = 128;
 
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')!;
     const gradient = context.createRadialGradient(
         canvas.width / 2,
         canvas.height / 2,
@@ -119,7 +119,7 @@ function onWindowResize() {
 }
 
 function exportUSDZ() {
-    const link = document.getElementById('link');
+    const link = document.getElementById('link')!;
     link.click();
 }
 

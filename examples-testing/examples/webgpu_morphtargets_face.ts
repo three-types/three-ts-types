@@ -12,7 +12,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
 init();
 
 async function init() {
-    let mixer;
+    let mixer: THREE.AnimationMixer;
 
     const clock = new THREE.Clock();
 
@@ -53,12 +53,12 @@ async function init() {
 
             // GUI
 
-            const head = mesh.getObjectByName('mesh_2');
-            const influences = head.morphTargetInfluences;
+            const head = mesh.getObjectByName('mesh_2') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+            const influences = head.morphTargetInfluences!;
 
-            const gui = renderer.inspector.createParameters('Morph Targets');
+            const gui = (renderer.inspector as Inspector).createParameters('Morph Targets');
 
-            for (const [key, value] of Object.entries(head.morphTargetDictionary)) {
+            for (const [key, value] of Object.entries(head.morphTargetDictionary!)) {
                 gui.add(influences, value, 0, 1, 0.01).name(key.replace('blendShape1.', '')).listen();
             }
         });

@@ -1,23 +1,33 @@
 import * as THREE from 'three/webgpu';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
+import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 
-let renderer, scene, camera, controls;
-let gui;
+type ToneMapping = 'None' | 'Linear' | 'Reinhard' | 'Cineon' | 'ACESFilmic' | 'AgX' | 'Neutral';
 
-const params = {
+interface Params {
+    exposure: number;
+    toneMapping: ToneMapping;
+    blurriness: number;
+    intensity: number;
+}
+
+let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
+let gui: ParametersGroup;
+
+const params: Params = {
     exposure: 1.0,
     toneMapping: 'Neutral',
     blurriness: 0.3,
     intensity: 1.0,
 };
 
-const toneMappingOptions = {
+const toneMappingOptions: { [K in ToneMapping]: THREE.ToneMapping } = {
     None: THREE.NoToneMapping,
     Linear: THREE.LinearToneMapping,
     Reinhard: THREE.ReinhardToneMapping,
@@ -91,11 +101,11 @@ async function init() {
 
     //
 
-    gui = renderer.inspector.createParameters('Settings');
+    gui = (renderer.inspector as Inspector).createParameters('Settings');
     const toneMappingFolder = gui.addFolder('Tone Mapping');
 
     toneMappingFolder
-        .add(params, 'toneMapping', Object.keys(toneMappingOptions))
+        .add(params, 'toneMapping', Object.keys(toneMappingOptions) as ToneMapping[])
 
         .name('type')
         .onChange(function () {

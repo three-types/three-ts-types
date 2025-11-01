@@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
-let camera, scene, renderer, controls;
+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
 
 init();
 
@@ -54,7 +54,7 @@ function init() {
 
     // TSL functions
 
-    const wavesElevation = Fn(([position]) => {
+    const wavesElevation = Fn<[THREE.Node]>(([position]) => {
         // large waves
 
         const elevation = mul(
@@ -132,7 +132,7 @@ function init() {
 
     // debug
 
-    const gui = renderer.inspector.createParameters('Parameters');
+    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
 
     gui.addColor({ color: material.color.getHex(THREE.SRGBColorSpace) }, 'color')
         .name('color')

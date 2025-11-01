@@ -21,17 +21,17 @@ import {
 } from 'three/tsl';
 
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { GLTF, GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { Inspector } from 'three/addons/inspector/Inspector.js';
 
 import * as SkeletonUtils from 'three/addons/utils/SkeletonUtils.js';
 
 const [sourceModel, targetModel] = await Promise.all([
-    new Promise((resolve, reject) => {
+    new Promise<GLTF>((resolve, reject) => {
         new GLTFLoader().load('./models/gltf/Michelle.glb', resolve, undefined, reject);
     }),
 
-    new Promise((resolve, reject) => {
+    new Promise<GLTF>((resolve, reject) => {
         new GLTFLoader().load('./models/gltf/Soldier.glb', resolve, undefined, reject);
     }),
 ]);
@@ -40,7 +40,7 @@ const [sourceModel, targetModel] = await Promise.all([
 
 const clock = new THREE.Clock();
 
-export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
+export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node], THREE.Node<'vec3'>>(([suv_immutable]) => {
     // forked from https://www.shadertoy.com/view/7ly3D1
 
     const suv = vec2(suv_immutable);
@@ -161,12 +161,18 @@ controls.maxDistance = 12;
 controls.target.set(0, 1, 0);
 controls.maxPolarAngle = Math.PI / 2;
 
-const gui = renderer.inspector.createParameters('Scene settings');
+const gui = (renderer.inspector as Inspector).createParameters('Scene settings');
 gui.add(helpers, 'visible').name('show helpers');
 
 //
 
-function getSource(sourceModel) {
+interface Source {
+    clip: THREE.AnimationClip;
+    skeleton: THREE.Skeleton;
+    mixer: THREE.AnimationMixer;
+}
+
+function getSource(sourceModel: GLTF): Source {
     const clip = sourceModel.animations[0];
 
     const helper = new THREE.SkeletonHelper(sourceModel.scene);
@@ -180,7 +186,7 @@ function getSource(sourceModel) {
     return { clip, skeleton, mixer };
 }
 
-function retargetModel(sourceModel, targetModel) {
+function retargetModel(sourceModel: Source, targetModel: GLTF) {
     const targetSkin = targetModel.scene.children[0].children[0];
 
     const targetSkelHelper = new THREE.SkeletonHelper(targetModel.scene);

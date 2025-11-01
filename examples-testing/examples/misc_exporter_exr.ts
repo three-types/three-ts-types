@@ -5,7 +5,14 @@ import { EXRExporter, ZIP_COMPRESSION, ZIPS_COMPRESSION, NO_COMPRESSION } from '
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let scene, camera, renderer, exporter, mesh, controls, renderTarget, dataTexture;
+let scene: THREE.Scene,
+    camera: THREE.PerspectiveCamera,
+    renderer: THREE.WebGLRenderer,
+    exporter: EXRExporter,
+    mesh: THREE.Mesh,
+    controls: OrbitControls,
+    renderTarget: THREE.WebGLRenderTarget,
+    dataTexture: THREE.DataTexture;
 
 const params = {
     target: 'pmrem',
@@ -148,7 +155,7 @@ async function exportFile() {
     saveArrayBuffer(result, params.target + '.exr');
 }
 
-function saveArrayBuffer(buffer, filename) {
+function saveArrayBuffer(buffer: Uint8Array<ArrayBuffer>, filename: string) {
     const blob = new Blob([buffer], { type: 'image/x-exr' });
     const link = document.createElement('a');
 

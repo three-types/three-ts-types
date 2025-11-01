@@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
 
 import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
 
-let renderer, scene, camera;
-let mesh;
+let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
+let mesh: THREE.Mesh<THREE.BoxGeometry, THREE.RawShaderMaterial>;
 
 init();
 
@@ -202,7 +202,7 @@ function onWindowResize() {
 }
 
 function animate() {
-    mesh.material.uniforms.cameraPos.value.copy(camera.position);
+    (mesh.material.uniforms.cameraPos.value as THREE.Vector3).copy(camera.position);
 
     renderer.render(scene, camera);
 }
