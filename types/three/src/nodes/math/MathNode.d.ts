@@ -455,30 +455,4 @@ declare module "../core/Node.js" {
             ...values: (Node<"float"> | number)[]
         ) => this;
     }
-
-    interface VectorExtensions<TValue> {
-        distance: (b: Node<TValue> | number) => Node<"float">;
-        distanceAssign: (b: Node<TValue>) => this;
-
-        normalize: () => Node<TValue>;
-        normalizeAssign: () => this;
-
-        negate: () => Node<TValue>;
-        negateAssign: () => this;
-
-        clamp: (b?: Node<TValue>, c?: Node<TValue>) => Node<TValue>;
-        clampAssign: (b?: Node<TValue>, c?: Node<TValue>) => this;
-
-        oneMinus: () => Node<TValue>;
-        oneMinusAssign: () => this;
-
-        floor: () => Node<TValue>;
-        floorAssign: () => this;
-
-        length: () => Node<"float">;
-        lengthAssign: () => this;
-
-        lengthSq: () => Node<"float">;
-        lengthSqAssign: () => this;
-    }
 }
