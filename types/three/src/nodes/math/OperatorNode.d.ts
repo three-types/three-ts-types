@@ -32,244 +32,242 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-type OperatorNodeParameter = Node | number;
+type FloatOrNumber = Node<"float"> | number;
+type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
+type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
+type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
 
-export const add: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const sub: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const mul: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const div: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const mod: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const equal: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const notEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const lessThan: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const greaterThan: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const lessThanEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const greaterThanEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const and: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const or: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const not: (value: OperatorNodeParameter) => OperatorNode;
-export const xor: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitAnd: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitNot: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitOr: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitXor: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const shiftLeft: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const shiftRight: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
+type Vec2OrLess = Node<"vec2">;
+type Vec3OrLess = Vec2OrLess | Node<"vec3">;
+type Vec4OrLess = Vec3OrLess | Node<"vec4">;
 
-export const incrementBefore: (a: OperatorNodeParameter) => Node;
-export const decrementBefore: (a: OperatorNodeParameter) => Node;
-export const increment: (a: OperatorNodeParameter) => Node;
-export const decrement: (a: OperatorNodeParameter) => Node;
+interface AddSub {
+    (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 
-declare module "../Nodes.js" {
-    interface Node {
-        add: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        addAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
+    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
+    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
+}
+export const add: AddSub;
+export const sub: AddSub;
 
-        sub: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        subAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface Mul {
+    (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 
-        mul: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        mulAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+    (a: Node<"mat2">, b: Vec4OrLess): Node<"vec2">;
+    (a: Node<"mat3">, b: Vec4OrLess): Node<"vec3">;
+    (a: Node<"mat4">, b: Vec4OrLess): Node<"vec4">;
 
-        div: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        divAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
+    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
+    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
+}
+export const mul: Mul;
 
-        mod: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        modAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface Div {
+    (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+export const div: Div;
 
-        equal: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        equalAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface Mod {
+    (a: FloatOrNumber, b: FloatOrNumber): Node<"float">;
+}
+export const mod: unknown;
 
-        notEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        notEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+type IntOrNumber = Node<"int"> | number;
+type UintOrNumber = Node<"uint"> | number;
 
-        lessThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        lessThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface ComparisonOperator {
+    (a: FloatOrNumber, b: FloatOrNumber): Node<"bool">;
+    (a: IntOrNumber, b: IntOrNumber): Node<"bool">;
+    (a: UintOrNumber, b: UintOrNumber): Node<"bool">;
+}
+export const equal: ComparisonOperator;
+export const notEqual: ComparisonOperator;
+export const lessThan: ComparisonOperator;
+export const greaterThan: ComparisonOperator;
+export const lessThanEqual: ComparisonOperator;
+export const greaterThanEqual: ComparisonOperator;
 
-        greaterThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AndOr {
+    (a: Node<"bool">, b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+}
+export const and: AndOr;
+export const or: AndOr;
 
-        lessThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        lessThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+export const not: unknown;
+export const xor: unknown;
+export const bitAnd: unknown;
+export const bitNot: unknown;
+export const bitOr: unknown;
+export const bitXor: unknown;
+export const shiftLeft: unknown;
+export const shiftRight: unknown;
 
-        greaterThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+export const incrementBefore: unknown;
+export const decrementBefore: unknown;
+export const increment: unknown;
+export const decrement: unknown;
 
-        and: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        andAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface AddSubMulDivFloatExtension {
+    (b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
 
-        or: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        orAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface ModFloatExtension {
+    (b: FloatOrNumber): Node<"float">;
+}
 
-        not: () => OperatorNode;
-        notAssign: () => this;
+interface AddSubMulDivVec2Extension {
+    (b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
 
-        xor: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        xorAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AddSubMulDivVec3Extension {
+    (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
 
-        bitAnd: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        bitAndAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AddSubMulDivVec4Extension {
+    (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
 
-        bitNot: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        bitNotAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AddSubMat2Extension {
+    (b: Node<"mat2">): Node<"mat2">;
+}
 
-        bitOr: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        bitOrAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface MulMat2Extension {
+    (b: Vec4OrLess): Node<"vec2">;
+    (b: Node<"mat2">): Node<"mat2">;
+}
 
-        bitXor: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        bitXorAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AddSubMat3Extension {
+    (b: Node<"mat3">): Node<"mat3">;
+}
 
-        shiftLeft: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        shiftLeftAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface MulMat3Extension {
+    (b: Vec4OrLess): Node<"vec3">;
+    (b: Node<"mat3">): Node<"mat3">;
+}
 
-        shiftRight: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        shiftRightAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
+interface AddSubMat4Extension {
+    (b: Node<"mat4">): Node<"mat4">;
+}
 
-        incrementBefore: () => OperatorNode;
-        incrementBeforeAssign: () => this;
+interface MulMat4Extension {
+    (b: Vec4OrLess): Node<"vec4">;
+    (b: Node<"mat4">): Node<"mat4">;
+}
 
-        decrementBefore: () => OperatorNode;
-        decrementBeforeAssign: () => this;
+interface ComparisonOperatorFloatExtension {
+    (b: FloatOrNumber): Node<"bool">;
+}
 
-        increment: () => OperatorNode;
-        incrementAssign: () => this;
+interface ComparisonOperatorIntExtension {
+    (b: IntOrNumber): Node<"bool">;
+}
 
-        decrement: () => OperatorNode;
-        decrementAssign: () => this;
+interface ComparisonOperatorUintExtension {
+    (b: UintOrNumber): Node<"bool">;
+}
+
+interface AndOrBoolExtensions {
+    (b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+}
+
+declare module '../core/Node.js' {
+    interface FloatExtensions {
+        add: AddSubMulDivFloatExtension;
+        sub: AddSubMulDivFloatExtension;
+        mul: AddSubMulDivFloatExtension;
+        div: AddSubMulDivFloatExtension;
+
+        mod: ModFloatExtension;
+
+        equal: ComparisonOperatorFloatExtension;
+        notEqual: ComparisonOperatorFloatExtension;
+        lessThan: ComparisonOperatorFloatExtension;
+        greaterThan: ComparisonOperatorFloatExtension;
+        lessThanEqual: ComparisonOperatorFloatExtension;
+        greaterThanEqual: ComparisonOperatorFloatExtension;
+    }
+
+    interface IntExtensions {
+        equal: ComparisonOperatorIntExtension;
+        notEqual: ComparisonOperatorIntExtension;
+        lessThan: ComparisonOperatorIntExtension;
+        greaterThan: ComparisonOperatorIntExtension;
+        lessThanEqual: ComparisonOperatorIntExtension;
+        greaterThanEqual: ComparisonOperatorIntExtension;
+    }
+
+    interface UintExtensions {
+        equal: ComparisonOperatorUintExtension;
+        notEqual: ComparisonOperatorUintExtension;
+        lessThan: ComparisonOperatorUintExtension;
+        greaterThan: ComparisonOperatorUintExtension;
+        lessThanEqual: ComparisonOperatorUintExtension;
+        greaterThanEqual: ComparisonOperatorUintExtension;
+    }
+
+    interface BoolExtensions {
+        and: AndOrBoolExtensions;
+        or: AndOrBoolExtensions;
+    }
+
+    interface Vector2Extensions {
+        add: AddSubMulDivVec2Extension;
+        sub: AddSubMulDivVec2Extension;
+        mul: AddSubMulDivVec2Extension;
+        div: AddSubMulDivVec2Extension;
+    }
+
+    interface Vector3Extensions {
+        add: AddSubMulDivVec3Extension;
+        sub: AddSubMulDivVec3Extension;
+        mul: AddSubMulDivVec3Extension;
+        div: AddSubMulDivVec3Extension;
+    }
+
+    interface Vector4Extensions {
+        add: AddSubMulDivVec4Extension;
+        sub: AddSubMulDivVec4Extension;
+        mul: AddSubMulDivVec4Extension;
+        div: AddSubMulDivVec4Extension;
+    }
+
+    interface Matrix2Extensions {
+        add: AddSubMat2Extension;
+        sub: AddSubMat2Extension;
+        mul: MulMat2Extension;
+    }
+
+    interface Matrix3Extensions {
+        add: AddSubMat3Extension;
+        sub: AddSubMat3Extension;
+        mul: MulMat3Extension;
+    }
+
+    interface Matrix4Extensions {
+        add: AddSubMat4Extension;
+        sub: AddSubMat4Extension;
+        mul: MulMat4Extension;
     }
 }
 
 /**
  * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
  */
-export const modInt: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-
-declare module "../Nodes.js" {
-    interface Nodes {
-        /**
-         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
-         */
-        modInt: (b: OperatorNodeParameter) => OperatorNode;
-        /**
-         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
-         */
-        modIntAssign: (b: OperatorNodeParameter) => this;
-    }
-}
+export const modInt: unknown;

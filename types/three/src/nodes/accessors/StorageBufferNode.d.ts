@@ -8,7 +8,9 @@ import StructTypeNode from "../core/StructTypeNode.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
-export default class StorageBufferNode extends BufferNode<StorageBufferAttribute | StorageInstancedBufferAttribute> {
+export default class StorageBufferNode<TElementType>
+    extends BufferNode<unknown, StorageBufferAttribute | StorageInstancedBufferAttribute>
+{
     readonly isStorageBufferNode: true;
 
     structTypeNode: StructTypeNode | null;
@@ -25,7 +27,7 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
         bufferCount?: number,
     );
 
-    element: (indexNode: Node | number) => StorageArrayElementNode;
+    element: (indexNode: Node | number) => StorageArrayElementNode<TElementType>;
 
     setPBO(value: boolean): this;
 
@@ -40,17 +42,17 @@ export default class StorageBufferNode extends BufferNode<StorageBufferAttribute
     toAtomic(): this;
 }
 
-export const storage: (
+export const storage: <TElementType>(
     value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
     type?: string | Struct | null,
     count?: number,
-) => StorageBufferNode;
+) => StorageBufferNode<TElementType>;
 
 /**
  * @deprecated
  */
-export const storageObject: (
+export const storageObject: <TElementType>(
     value: StorageBufferAttribute | StorageInstancedBufferAttribute,
     type?: string | Struct | null,
     count?: number,
-) => StorageBufferNode;
+) => StorageBufferNode<TElementType>;
