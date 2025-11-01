@@ -299,14 +299,14 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): Node<"color">;
-    (r: number, g: number, b: number): Node<"color">;
+    (color?: string | number): Node<"vec3">;
+    (r: number, g: number, b: number): Node<"vec3">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): Node<"color">;
-    (node: Node): Node<"color">;
+    (color: Color): Node<"vec3">;
+    (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
