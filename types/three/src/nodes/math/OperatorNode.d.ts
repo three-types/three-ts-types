@@ -63,10 +63,18 @@ interface AddSubMulDivFloatVecFloatExtensions {
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 }
 
+interface AddSubMulDivFloatVecFloatAssignExtensions {
+    (b: FloatOrNumber, ...params: FloatOrNumber[]): this;
+}
+
 interface AddSubMulDivFloatVecVec2Extensions {
     (b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
     (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+
+interface AddSubMulDivFloatVecVec2AssignExtensions {
+    (b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): this;
 }
 
 interface AddSubMulDivFloatVecVec3Extensions {
@@ -74,8 +82,16 @@ interface AddSubMulDivFloatVecVec3Extensions {
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 }
 
+interface AddSubMulDivFloatVecVec3AssignExtensions {
+    (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): this;
+}
+
 interface AddSubMulDivFloatVecVec4Extensions {
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+
+interface AddSubMulDivFloatVecVec4AssignExtensions {
+    (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): this;
 }
 
 // add/sub/mul mats
@@ -90,12 +106,24 @@ interface AddSubMulMat2Extensions {
     (b: Node<"mat2">): Node<"mat2">;
 }
 
+interface AddSubMulMat2AssignExtensions {
+    (b: Node<"mat2">): this;
+}
+
 interface AddSubMulMat3Extensions {
     (b: Node<"mat3">): Node<"mat3">;
 }
 
+interface AddSubMulMat3AssignExtensions {
+    (b: Node<"mat3">): this;
+}
+
 interface AddSubMulMat4Extensions {
     (b: Node<"mat4">): Node<"mat4">;
+}
+
+interface AddSubMulMat4AssignExtensions {
+    (b: Node<"mat3">): this;
 }
 
 // mut mats and vecs
@@ -150,6 +178,11 @@ declare module "../core/Node.js" {
         sub: AddSubMulDivFloatVecFloatExtensions;
         mul: AddSubMulDivFloatVecFloatExtensions;
         div: AddSubMulDivFloatVecFloatExtensions;
+
+        addAssign: AddSubMulDivFloatVecFloatAssignExtensions;
+        subAssign: AddSubMulDivFloatVecFloatAssignExtensions;
+        mulAssign: AddSubMulDivFloatVecFloatAssignExtensions;
+        divAssign: AddSubMulDivFloatVecFloatAssignExtensions;
     }
 
     interface Vector2Extensions {
@@ -157,6 +190,11 @@ declare module "../core/Node.js" {
         sub: AddSubMulDivFloatVecVec2Extensions;
         mul: AddSubMulDivFloatVecVec2Extensions;
         div: AddSubMulDivFloatVecVec2Extensions;
+
+        addAssign: AddSubMulDivFloatVecVec2AssignExtensions;
+        subAssign: AddSubMulDivFloatVecVec2AssignExtensions;
+        mulAssign: AddSubMulDivFloatVecVec2AssignExtensions;
+        divAssign: AddSubMulDivFloatVecVec2AssignExtensions;
     }
 
     interface Vector3Extensions {
@@ -164,6 +202,11 @@ declare module "../core/Node.js" {
         sub: AddSubMulDivFloatVecVec3Extensions;
         mul: AddSubMulDivFloatVecVec3Extensions;
         div: AddSubMulDivFloatVecVec3Extensions;
+
+        addAssign: AddSubMulDivFloatVecVec3AssignExtensions;
+        subAssign: AddSubMulDivFloatVecVec3AssignExtensions;
+        mulAssign: AddSubMulDivFloatVecVec3AssignExtensions;
+        divAssign: AddSubMulDivFloatVecVec3AssignExtensions;
     }
 
     interface Vector4Extensions {
@@ -171,24 +214,41 @@ declare module "../core/Node.js" {
         sub: AddSubMulDivFloatVecVec4Extensions;
         mul: AddSubMulDivFloatVecVec4Extensions;
         div: AddSubMulDivFloatVecVec4Extensions;
+
+        addAssign: AddSubMulDivFloatVecVec4AssignExtensions;
+        subAssign: AddSubMulDivFloatVecVec4AssignExtensions;
+        mulAssign: AddSubMulDivFloatVecVec4AssignExtensions;
+        divAssign: AddSubMulDivFloatVecVec4AssignExtensions;
     }
 
     interface Matrix2Extensions {
         add: AddSubMulMat2Extensions;
         sub: AddSubMulMat2Extensions;
         mul: MulMat2Extensions;
+
+        addAssign: AddSubMulMat2AssignExtensions;
+        subAssign: AddSubMulMat2AssignExtensions;
+        mulAssign: AddSubMulMat2AssignExtensions;
     }
 
     interface Matrix3Extensions {
         add: AddSubMulMat3Extensions;
         sub: AddSubMulMat3Extensions;
         mul: MulMat3Extensions;
+
+        addAssign: AddSubMulMat3AssignExtensions;
+        subAssign: AddSubMulMat3AssignExtensions;
+        mulAssign: AddSubMulMat3AssignExtensions;
     }
 
     interface Matrix4Extensions {
         add: AddSubMulMat4Extensions;
         sub: AddSubMulMat4Extensions;
         mul: MulMat4Extensions;
+
+        addAssign: AddSubMulMat4AssignExtensions;
+        subAssign: AddSubMulMat4AssignExtensions;
+        mulAssign: AddSubMulMat4AssignExtensions;
     }
 }
 
@@ -203,9 +263,15 @@ interface ModFloatExtension {
     (b: FloatOrNumber): Node<"float">;
 }
 
+interface ModFloatAssignExtension {
+    (b: FloatOrNumber): this;
+}
+
 declare module "../core/Node.js" {
     interface FloatExtensions {
         mod: ModFloatExtension;
+
+        modAssign: ModFloatAssignExtension;
     }
 }
 
