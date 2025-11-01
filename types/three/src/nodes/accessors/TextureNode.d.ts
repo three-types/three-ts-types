@@ -2,7 +2,7 @@ import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
-export default class TextureNode extends UniformNode<Texture> {
+interface TextureNodeInterface<TNodeType> {
     readonly isTextureNode: true;
 
     uvNode: Node | null;
@@ -17,13 +17,6 @@ export default class TextureNode extends UniformNode<Texture> {
 
     referenceNode: Node | null;
 
-    constructor(
-        value?: Texture,
-        uvNode?: Node | null,
-        levelNode?: Node | null,
-        biasNode?: Node | null,
-    );
-
     getDefaultUV(): Node;
 
     setSampler(value: boolean): this;
@@ -35,7 +28,7 @@ export default class TextureNode extends UniformNode<Texture> {
      */
     uv(uvNode: Node): Node;
 
-    sample(uvNode: Node): Node;
+    sample(uvNode: Node): Node<TNodeType>;
 
     load(uvNode: Node): Node;
 
@@ -57,6 +50,19 @@ export default class TextureNode extends UniformNode<Texture> {
 
     clone(): this;
 }
+
+declare const TextureNode: {
+    new(
+        value?: Texture,
+        uvNode?: Node | null,
+        levelNode?: Node | null,
+        biasNode?: Node | null,
+    ): TextureNode;
+};
+
+type TextureNode<TNodeValue = "vec4"> = TextureNodeInterface<TNodeValue> & UniformNode<TNodeValue, Texture>;
+
+export default TextureNode;
 
 export const texture: (
     value?: Texture | TextureNode,

@@ -82,7 +82,10 @@ export default class WGSLNodeBuilder extends NodeBuilder {
         shaderStage: NodeShaderStage,
     ): string;
 
-    getPropertyName<TValue>(node: NodeVar | NodeUniform<TValue>, shaderStage: NodeShaderStage): string;
+    getPropertyName<TNodeValue, TValue>(
+        node: NodeVar | NodeUniform<TNodeValue, TValue>,
+        shaderStage: NodeShaderStage,
+    ): string;
 
     getOutputStructName(): string;
 

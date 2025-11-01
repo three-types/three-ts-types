@@ -5,16 +5,28 @@ import { Vector4 } from "../../math/Vector4.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 
-export default class RangeNode extends Node {
-    minNode: Node;
-    maxNode: Node;
+interface RangeNodeInterface<TNodeType> {
+    minNode: Node<TNodeType>;
+    maxNode: Node<TNodeType>;
 
-    constructor(minNode: Node, maxNode: Node);
+    constructor(minNode: Node<TNodeType>, maxNode: Node<TNodeType>);
 
     getVectorLength(builder: NodeBuilder): number;
 }
 
-export const range: (
-    minNode: Node | number | Color | Vector2 | Vector3 | Vector4,
-    maxNode: Node | number | Color | Vector2 | Vector3 | Vector4,
-) => RangeNode;
+declare const RangeNode: {
+    new<TNodeType>(minNode: Node<TNodeType>, maxNode: Node<TNodeType>): RangeNode<TNodeType>;
+};
+
+type RangeNode<TNodeType> = RangeNodeInterface<TNodeType> & Node<TNodeType>;
+
+export default RangeNode;
+
+interface Range {
+    (
+        minNode: Color,
+        maxNode: Color,
+    ): RangeNode<"vec3">;
+}
+
+export const range: Range;

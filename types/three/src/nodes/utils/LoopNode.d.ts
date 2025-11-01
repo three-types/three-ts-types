@@ -1,6 +1,5 @@
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
-import { VarNode } from "../Nodes.js";
 
 interface LoopNodeObjectParameter {
     // TODO Expand to other types and update loop function types appropriately
@@ -10,7 +9,7 @@ interface LoopNodeObjectParameter {
     start: number | Node;
     end: number | Node;
     condition?: string;
-    update?: VarNode | number | string;
+    update?: Node | number | string;
 }
 
 type LoopNodeParameter = Node | number | LoopNodeObjectParameter;

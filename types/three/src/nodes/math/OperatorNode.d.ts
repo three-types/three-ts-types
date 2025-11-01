@@ -34,27 +34,36 @@ export default class OperatorNode extends TempNode {
 
 type OperatorNodeParameter = Node | number;
 
-export const add: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
+interface Add {
+    (
+        a: Node<"float"> | number,
+        b: Node<"float"> | number,
+        ...params: (Node<"float"> | number)[]
+    ): Node<"float">;
+    (
+        a: Node<"vec3">,
+        b: Node<"vec3">,
+        ...params: Node<"vec3">[]
+    ): Node<"vec3">;
+}
+
+export const add: Add;
 export const sub: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
+    a: Node<"float"> | number,
+    b: Node<"float"> | number,
+    ...params: (Node<"float"> | number)[]
+) => Node<"float">;
 export const mul: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
+    a: Node<"float"> | number,
+    b: Node<"float"> | number,
+    ...params: (Node<"float"> | number)[]
+) => Node<"float">;
 export const div: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const mod: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
+    a: Node<"float"> | number,
+    b: Node<"float"> | number,
+    ...params: (Node<"float"> | number)[]
+) => Node<"float">;
+export const mod: (a: Node<"float"> | number, b: Node<"float"> | number) => Node<"float">;
 export const equal: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
 export const notEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
 export const lessThan: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
@@ -85,93 +94,39 @@ export const decrementBefore: (a: OperatorNodeParameter) => Node;
 export const increment: (a: OperatorNodeParameter) => Node;
 export const decrement: (a: OperatorNodeParameter) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
-        add: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        addAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface MulFloat {
+    (
+        b: Node<"float"> | number,
+        ...params: (Node<"float"> | number)[]
+    ): Node<"float">;
+    (
+        b: Node<"color">,
+    ): Node<"color">;
+    (
+        b: Node<"vec3">,
+    ): Node<"vec3">;
+}
 
-        sub: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        subAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface MulMat3 {
+    (
+        b: Node<"mat3">,
+    ): Node<"mat3">;
+    (
+        b: Node<"vec4">,
+    ): Node<"vec3">;
+}
 
-        mul: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        mulAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
+interface MulMat4 {
+    (
+        b: Node<"mat4">,
+    ): Node<"mat4">;
+    (
+        b: Node<"vec3"> | Node<"vec4">,
+    ): Node<"vec4">;
+}
 
-        div: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        divAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
-
-        mod: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        modAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        equal: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        equalAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        notEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        notEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        lessThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        lessThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        greaterThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        lessThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        lessThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
-        greaterThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
-
+declare module "../core/Node.js" {
+    interface NodeElements {
         and: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
@@ -253,6 +208,329 @@ declare module "../Nodes.js" {
 
         decrement: () => OperatorNode;
         decrementAssign: () => this;
+    }
+
+    interface FloatExtensions {
+        equal: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        equalAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        notEqual: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        notEqualAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        lessThan: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        lessThanAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        greaterThan: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        greaterThanAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        lessThanEqual: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        lessThanEqualAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        greaterThanEqual: (
+            b: Node<"float"> | number,
+        ) => Node<"bool">;
+        greaterThanEqualAssign: (
+            b: Node<"float"> | number,
+        ) => this;
+
+        add: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => Node<"float">;
+        addAssign: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => Node<"float">;
+        subAssign: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => this;
+
+        mul: MulFloat;
+        mulAssign: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => this;
+
+        div: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => Node<"float">;
+        divAssign: (
+            b: Node<"float"> | Node<"int"> | number,
+            ...params: (Node<"float"> | Node<"int"> | number)[]
+        ) => this;
+
+        mod: (
+            b: Node<"float"> | number,
+        ) => Node<"float">;
+        modAssign: (
+            b: Node<"float">,
+        ) => this;
+    }
+
+    interface IntExtensions {
+        equal: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        equalAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        notEqual: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        notEqualAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        lessThan: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        lessThanAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        greaterThan: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        greaterThanAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        lessThanEqual: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        lessThanEqualAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        greaterThanEqual: (
+            b: Node<"int"> | number,
+        ) => Node<"bool">;
+        greaterThanEqualAssign: (
+            b: Node<"int"> | number,
+        ) => this;
+
+        add: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => Node<"int">;
+        addAssign: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => Node<"int">;
+        subAssign: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => this;
+
+        mul: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => Node<"int">;
+        mulAssign: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => this;
+
+        div: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => Node<"int">;
+        divAssign: (
+            b: Node<"int"> | number,
+            ...params: (Node<"int"> | number)[]
+        ) => this;
+
+        mod: (
+            b: Node<"int">,
+        ) => Node<"int">;
+        modAssign: (
+            b: Node<"int">,
+        ) => this;
+    }
+
+    interface UintExtensions {
+        equal: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        equalAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        notEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        notEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        lessThan: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        lessThanAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        greaterThan: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        greaterThanAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        lessThanEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        lessThanEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        greaterThanEqual: (
+            b: Node<"uint"> | number,
+        ) => Node<"bool">;
+        greaterThanEqualAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+
+        add: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        addAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        subAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        mul: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        mulAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        div: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => Node<"uint">;
+        divAssign: (
+            b: Node<"uint"> | number,
+            ...params: (Node<"uint"> | number)[]
+        ) => this;
+
+        mod: (
+            b: Node<"uint"> | number,
+        ) => Node<"uint">;
+        modAssign: (
+            b: Node<"uint"> | number,
+        ) => this;
+    }
+
+    interface VectorExtensions<TValue> {
+        add: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => Node<TValue>;
+        addAssign: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => this;
+
+        sub: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => Node<TValue>;
+        subAssign: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => this;
+
+        mul: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => Node<TValue>;
+        mulAssign: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => this;
+
+        div: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => Node<TValue>;
+        divAssign: (
+            b: Node<TValue> | Node<"float"> | number,
+            ...params: (Node<TValue> | Node<"float"> | number)[]
+        ) => this;
+    }
+
+    interface Vector4Extensions {
+        add: (
+            b: Node<"color">,
+        ) => Node<"vec4">;
+        addAssign: (
+            b: Node<"color">,
+        ) => this;
+
+        mul: (
+            b: Node<"color">,
+        ) => Node<"vec4">;
+        mulAssign: (
+            b: Node<"color">,
+        ) => this;
+    }
+
+    interface Matrix3Extensions {
+        mul: MulMat3;
+    }
+
+    interface Matrix4Extensions {
+        mul: MulMat4;
+        mulAssign: (
+            b: Node<"vec3"> | Node<"vec4">,
+        ) => this;
     }
 }
 
