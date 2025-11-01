@@ -164,14 +164,30 @@ export const inverseSqrt: Unary;
 export const floor: Unary;
 export const ceil: Unary;
 export const normalize: (a: Node<"vec3">) => Node<"vec3">;
-export const fract: Unary;
+
+interface Fract {
+    (a: Node<"float">): Node<"float">;
+    (a: Node<"vec2">): Node<"vec2">;
+    (a: Node<"vec3">): Node<"vec3">;
+    (a: Node<"vec4">): Node<"vec4">;
+}
+
+export const fract: Fract;
+
 export const sin: (e: Node<"float"> | number) => Node<"float">;
 export const cos: (e: Node<"float"> | number) => Node<"float">;
 export const tan: (e: Node<"float"> | number) => Node<"float">;
 export const asin: Unary;
 export const acos: Unary;
 export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => MathNode;
-export const abs: Unary;
+
+interface Abs {
+    (a: Node<"float">): Node<"float">;
+    (a: Node<"int">): Node<"int">;
+}
+
+export const abs: Abs;
+
 export const sign: Unary;
 export const length: (e: Node<"vec2"> | Node<"vec3"> | Node<"vec4">) => Node<"float">;
 export const negate: Unary;
@@ -181,7 +197,15 @@ export const dFdy: Unary;
 export const round: Unary;
 export const reciprocal: Unary;
 export const trunc: Unary;
-export const fwidth: Unary;
+
+interface Fwidth {
+    (a: Node<"float">): Node<"float">;
+    (a: Node<"vec2">): Node<"vec2">;
+    (a: Node<"vec3">): Node<"vec3">;
+    (a: Node<"vec4">): Node<"vec4">;
+}
+
+export const fwidth: Fwidth;
 export const transpose: Unary;
 export const determinant: (x: Node) => MathNode;
 export const inverse: (x: Node) => MathNode;
@@ -201,7 +225,9 @@ export const max: (
 
 export const step: Binary;
 export const reflect: Binary;
-export const distance: Binary;
+
+export const distance: (a: Node<"vec3">, b: Node<"vec3"> | Node<"vec4">) => Node<"float">;
+
 export const difference: Binary;
 
 interface Dot {
@@ -222,7 +248,7 @@ export const lengthSq: Unary;
 
 type Ternary = (a: MathNodeParameter, b: MathNodeParameter, c: MathNodeParameter) => MathNode;
 
-export const mix: Ternary;
+export const mix: (a: Node<"vec3">, b: Node<"vec3">, c: Node<"vec3"> | Node<"float">) => Node<"vec3">;
 export const clamp: (
     a: MathNodeParameter,
     b?: MathNodeParameter,
@@ -237,7 +263,11 @@ interface Refract {
 }
 
 export const refract: Refract;
-export const smoothstep: Ternary;
+export const smoothstep: (
+    a: Node<"float"> | number,
+    b: Node<"float"> | number,
+    c: Node<"float"> | number,
+) => Node<"float">;
 export const faceForward: Ternary;
 
 export const rand: (uv: MathNodeParameter) => OperatorNode;
@@ -300,41 +330,14 @@ declare module "../core/Node.js" {
         log2: () => MathNode;
         log2Assign: () => this;
 
-        sqrt: () => MathNode;
-        sqrtAssign: () => this;
-
-        inverseSqrt: () => MathNode;
-        inverseSqrtAssign: () => this;
-
         ceil: () => MathNode;
         ceilAssign: () => this;
 
         fract: () => MathNode;
         fractAssign: () => this;
 
-        sin: () => MathNode;
-        sinAssign: () => this;
-
-        cos: () => MathNode;
-        cosAssign: () => this;
-
-        tan: () => MathNode;
-        tanAssign: () => this;
-
-        asin: () => MathNode;
-        asinAssign: () => this;
-
-        acos: () => MathNode;
-        acosAssign: () => this;
-
         atan: (b?: MathNodeParameter) => MathNode;
         atanAssign: (b?: MathNodeParameter) => this;
-
-        abs: () => MathNode;
-        absAssign: () => this;
-
-        sign: () => MathNode;
-        signAssign: () => this;
 
         dFdx: () => MathNode;
         dFdxAssign: () => this;
@@ -454,6 +457,36 @@ declare module "../core/Node.js" {
             y: Node<"float"> | number,
             ...values: (Node<"float"> | number)[]
         ) => this;
+
+        sin: () => Node<"float">;
+        sinAssign: () => this;
+
+        cos: () => Node<"float">;
+        cosAssign: () => this;
+
+        tan: () => Node<"float">;
+        tanAssign: () => this;
+
+        asin: () => Node<"float">;
+        asinAssign: () => this;
+
+        acos: () => Node<"float">;
+        acosAssign: () => this;
+
+        abs: () => Node<"float">;
+        absAssign: () => this;
+
+        negate: () => Node<"float">;
+        negateAssign: () => this;
+
+        sqrt: () => Node<"float">;
+        sqrtAssign: () => this;
+
+        inverseSqrt: () => Node<"float">;
+        inverseSqrtAssign: () => this;
+
+        sign: () => Node<"float">;
+        signAssign: () => this;
     }
 
     interface VectorExtensions<TValue> {
@@ -480,5 +513,19 @@ declare module "../core/Node.js" {
 
         lengthSq: () => Node<"float">;
         lengthSqAssign: () => this;
+
+        min: (
+            y: Node<TValue>,
+        ) => Node<TValue>;
+        minAssign: (
+            y: Node<TValue>,
+        ) => this;
+
+        max: (
+            y: Node<TValue>,
+        ) => Node<TValue>;
+        maxAssign: (
+            y: Node<TValue>,
+        ) => this;
     }
 }

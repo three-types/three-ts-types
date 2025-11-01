@@ -478,6 +478,8 @@ export interface BoolExtensions {
 }
 export interface FloatExtensions {
 }
+export interface IntExtensions {
+}
 export interface UintExtensions {
 }
 export interface VectorExtensions<in out TValue> {
@@ -494,6 +496,7 @@ type Node<TValue = unknown> =
     & NodeExtensions<TValue>
     & (TValue extends "bool" ? BoolExtensions : {})
     & (TValue extends "float" ? FloatExtensions : {})
+    & (TValue extends "int" ? IntExtensions : {})
     & (TValue extends "uint" ? UintExtensions : {})
     & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> : {})
     & (TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> : {})
