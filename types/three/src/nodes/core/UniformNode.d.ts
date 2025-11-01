@@ -41,13 +41,6 @@ interface UniformNodeInterface<TValue> {
      * @return {UniformGroupNode} The uniform group.
      */
     getGroup(): UniformGroupNode;
-    /**
-     * By default, this method returns the result of {@link Node#getHash} but derived
-     * classes might overwrite this method with a different implementation.
-     *
-     * @param {NodeBuilder} builder - The current node builder.
-     * @return {string} The uniform hash.
-     */
     getUniformHash(builder: NodeBuilder): string;
     onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
     getInputType(builder: NodeBuilder): string | null;
