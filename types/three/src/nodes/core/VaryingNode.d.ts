@@ -21,6 +21,8 @@ declare const VaryingNode: {
 
 type VaryingNode<TNodeType> = VaryingNodeInterface & Node<TNodeType>;
 
+export default VaryingNode;
+
 export const varying: <TNodeType>(node: Node<TNodeType>, name?: string) => VaryingNode<TNodeType>;
 
 export const vertexStage: <TNodeType>(node: Node<TNodeType>) => VaryingNode<TNodeType>;
