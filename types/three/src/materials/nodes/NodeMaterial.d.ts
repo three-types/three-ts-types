@@ -88,7 +88,7 @@ export interface NodeMaterialNodeProperties {
      *
      * @default null
      */
-    colorNode: Node<"color"> | Node<"vec3"> | Node<"vec4"> | null;
+    colorNode: Node<"vec3"> | Node<"vec4"> | null;
     /**
      * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
      * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
