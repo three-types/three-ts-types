@@ -41,31 +41,46 @@ type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
 
-type Mat2OrLess = Node<"mat2">;
-type Mat3OrLess = Mat2OrLess | Node<"mat3">;
-type Mat4OrLess = Mat3OrLess | Node<"mat4">;
-
-interface AddSubDiv {
+interface AddSub {
     (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
     (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
     (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
     (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+
+    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
+    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
+    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
 }
-export const add: AddSubDiv;
-export const sub: AddSubDiv;
+export const add: AddSub;
+export const sub: AddSub;
+
 interface Mul {
     (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
     (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
     (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
     (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 
-    (a: Mat2OrLess, b: Vec2OrLess): Node<"vec2">;
-    (a: Mat3OrLess, b: Vec3OrLess): Node<"vec3">;
-    (a: Mat4OrLess, b: Vec4OrLess): Node<"vec4">;
+    (a: Node<"mat2">, b: Vec4OrLess): Node<"vec2">;
+    (a: Node<"mat3">, b: Vec4OrLess): Node<"vec3">;
+    (a: Node<"mat4">, b: Vec4OrLess): Node<"vec4">;
+
+    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
+    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
+    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
 }
 export const mul: Mul;
-export const div: AddSubDiv;
 
+interface Div {
+    (a: FloatOrNumber, b: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+export const div: Div;
+
+interface Mod {
+    (a: FloatOrNumber, b: FloatOrNumber): Node<"float">;
+}
 export const mod: unknown;
 
 type IntOrNumber = Node<"int"> | number;
@@ -110,6 +125,10 @@ interface AddSubMulDivFloatExtension {
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 }
 
+interface ModFloatExtension {
+    (b: FloatOrNumber): Node<"float">;
+}
+
 interface AddSubMulDivVec2Extension {
     (b: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
     (b: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
@@ -125,19 +144,31 @@ interface AddSubMulDivVec4Extension {
     (b: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
 }
 
+interface AddSubMat2Extension {
+    (b: Node<"mat2">): Node<"mat2">;
+}
+
 interface MulMat2Extension {
-    (b: Vec2OrLess): Node<"vec2">;
-    (b: Vec3OrLess): Node<"vec3">;
-    (b: Vec4OrLess): Node<"vec4">;
+    (b: Vec4OrLess): Node<"vec2">;
+    (b: Node<"mat2">): Node<"mat2">;
+}
+
+interface AddSubMat3Extension {
+    (b: Node<"mat3">): Node<"mat3">;
 }
 
 interface MulMat3Extension {
-    (b: Vec3OrLess): Node<"vec3">;
-    (b: Vec4OrLess): Node<"vec4">;
+    (b: Vec4OrLess): Node<"vec3">;
+    (b: Node<"mat3">): Node<"mat3">;
+}
+
+interface AddSubMat4Extension {
+    (b: Node<"mat4">): Node<"mat4">;
 }
 
 interface MulMat4Extension {
     (b: Vec4OrLess): Node<"vec4">;
+    (b: Node<"mat4">): Node<"mat4">;
 }
 
 interface ComparisonOperatorFloatExtension {
@@ -162,6 +193,8 @@ declare module '../core/Node.js' {
         sub: AddSubMulDivFloatExtension;
         mul: AddSubMulDivFloatExtension;
         div: AddSubMulDivFloatExtension;
+
+        mod: ModFloatExtension;
 
         equal: ComparisonOperatorFloatExtension;
         notEqual: ComparisonOperatorFloatExtension;
@@ -216,14 +249,20 @@ declare module '../core/Node.js' {
     }
 
     interface Matrix2Extensions {
+        add: AddSubMat2Extension;
+        sub: AddSubMat2Extension;
         mul: MulMat2Extension;
     }
 
     interface Matrix3Extensions {
+        add: AddSubMat3Extension;
+        sub: AddSubMat3Extension;
         mul: MulMat3Extension;
     }
 
     interface Matrix4Extensions {
+        add: AddSubMat4Extension;
+        sub: AddSubMat4Extension;
         mul: MulMat4Extension;
     }
 }
