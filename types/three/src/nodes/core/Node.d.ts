@@ -474,15 +474,23 @@ type Uvec4Swizzle =
     };
 export interface NodeExtensions<in out TValue> {
 }
-export interface BoolExtensions {
-}
 export interface FloatExtensions {
+}
+export interface IntExtensions {
 }
 export interface UintExtensions {
 }
+export interface BoolExtensions {
+}
 export interface VectorExtensions<in out TValue> {
 }
+export interface Vector2Extensions {
+}
+export interface Vector3Extensions {
+}
 export interface Vector4Extensions {
+}
+export interface Matrix2Extensions {
 }
 export interface Matrix3Extensions {
 }
@@ -492,18 +500,19 @@ type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
     & NodeExtensions<TValue>
-    & (TValue extends "bool" ? BoolExtensions : {})
     & (TValue extends "float" ? FloatExtensions : {})
+    & (TValue extends "int" ? IntExtensions : {})
     & (TValue extends "uint" ? UintExtensions : {})
-    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "bool" ? BoolExtensions : {})
+    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions : {})
     & (TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> : {})
-    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions : {})
     & (TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> : {})
     & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
     & (TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "mat2" ? Matrix2Extensions : {})
     & (TValue extends "mat3" ? Matrix3Extensions : {})
     & (TValue extends "mat4" ? Matrix4Extensions : {})
-    & (TValue extends "color" ? Vec3Swizzle & VectorExtensions<TValue> : {})
     & {
         __TypeScript_VALUE__: TValue;
     };
