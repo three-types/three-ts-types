@@ -34,8 +34,8 @@ export const compute: (
     workgroupSize?: number[],
 ) => ComputeNode;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         compute: (
             count: number,
             workgroupSize?: number[],

@@ -67,10 +67,11 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare class Node extends EventDispatcher<{
-    dispose: {};
-}> {
-    static get type(): string;
+interface NodeInterface extends
+    EventDispatcher<{
+        dispose: {};
+    }>
+{
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
@@ -85,12 +86,6 @@ declare class Node extends EventDispatcher<{
     readonly isNode: true;
     readonly id: number;
     self?: this;
-    /**
-     * Constructs a new node.
-     *
-     * @param {?string} nodeType - The node type.
-     */
-    constructor(nodeType?: string | null);
     /**
      * Set this property to `true` when the node should be regenerated.
      *
@@ -373,4 +368,152 @@ declare class Node extends EventDispatcher<{
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
+declare const Node: {
+    prototype: Node;
+    /**
+     * Constructs a new node.
+     *
+     * @param {?string} nodeType - The node type.
+     */
+    new<TNodeValue>(nodeType?: string | null): Node<TNodeValue>;
+    new(nodeType?: string | null): Node;
+    get type(): string;
+};
+export interface NodeElements {
+}
+type XY = "x" | "y";
+type RG = "r" | "g";
+type ST = "s" | "t";
+type Vec2Swizzle =
+    & {
+        [Key in XY | RG | ST]: Node<"float">;
+    }
+    & {
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"vec4">;
+    };
+type Uvec2Swizzle =
+    & {
+        [Key in XY | RG | ST]: Node<"uint">;
+    }
+    & {
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"uvec2">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"uvec3">;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"uvec4">;
+    };
+type XYZ = "x" | "y" | "z";
+type RGB = "r" | "g" | "b";
+type STP = "s" | "t" | "p";
+type Vec3Swizzle =
+    & {
+        [Key in XYZ | RGB | STP]: Node<"float">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"vec4">;
+    };
+type Uvec3Swizzle =
+    & {
+        [Key in XYZ | RGB | STP]: Node<"uint">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"uvec2">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"uvec3">;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"uvec4">;
+    };
+type XYZW = "x" | "y" | "z" | "w";
+type RGBA = "r" | "g" | "b" | "a";
+type STPQ = "s" | "t" | "p" | "q";
+type Vec4Swizzle =
+    & {
+        [Key in XYZW | RGBA | STPQ]: Node<"float">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"vec2">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"vec3">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+            "vec4"
+        >;
+    };
+type Uvec4Swizzle =
+    & {
+        [Key in XYZW | RGBA | STPQ]: Node<"uint">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"uvec2">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"uvec3">;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+            "uvec4"
+        >;
+    };
+export interface NodeExtensions<in out TValue> {
+}
+export interface FloatExtensions {
+}
+export interface IntExtensions {
+}
+export interface UintExtensions {
+}
+export interface BoolExtensions {
+}
+export interface VectorExtensions<in out TValue> {
+}
+export interface Vector2Extensions {
+}
+export interface Vector3Extensions {
+}
+export interface Vector4Extensions {
+}
+export interface Matrix2Extensions {
+}
+export interface Matrix3Extensions {
+}
+export interface Matrix4Extensions {
+}
+type Node<TValue = unknown> =
+    & NodeInterface
+    & NodeElements
+    & NodeExtensions<TValue>
+    & (TValue extends "float" ? FloatExtensions : {})
+    & (TValue extends "int" ? IntExtensions : {})
+    & (TValue extends "uint" ? UintExtensions : {})
+    & (TValue extends "bool" ? BoolExtensions : {})
+    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions : {})
+    & (TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions : {})
+    & (TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
+    & (TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> : {})
+    & (TValue extends "mat2" ? Matrix2Extensions : {})
+    & (TValue extends "mat3" ? Matrix3Extensions : {})
+    & (TValue extends "mat4" ? Matrix4Extensions : {})
+    & {
+        __TypeScript_VALUE__: TValue;
+    };
 export default Node;

@@ -1,17 +1,17 @@
 import { Camera, Node, TempNode, UniformNode } from "three/webgpu";
 
-declare class DenoiseNode extends TempNode {
+declare class DenoiseNode extends TempNode<"vec4"> {
     textureNode: Node;
     depthNode: Node;
     normalNode: Node;
 
     noiseNode: Node;
 
-    lumaPhi: UniformNode<number>;
-    depthPhi: UniformNode<number>;
-    normalPhi: UniformNode<number>;
-    radius: UniformNode<number>;
-    index: UniformNode<number>;
+    lumaPhi: UniformNode<"float", number>;
+    depthPhi: UniformNode<"float", number>;
+    normalPhi: UniformNode<"float", number>;
+    radius: UniformNode<"float", number>;
+    index: UniformNode<"float", number>;
 
     constructor(textureNode: Node, depthNode: Node, normalNode: Node, noiseNode: Node, camera: Camera);
 }

@@ -22,7 +22,7 @@ export interface ShaderStageNodeData {
         | undefined;
     bufferAttribute?: NodeAttribute | undefined;
     structType?: StructType | undefined;
-    uniform?: NodeUniform<unknown> | undefined;
+    uniform?: NodeUniform<unknown, unknown> | undefined;
     variable?: NodeVar | undefined;
     varying?: NodeVarying | undefined;
     code?: NodeCode | undefined;
@@ -38,7 +38,7 @@ interface NodeData {
     any?: ShaderStageNodeData | undefined;
 }
 interface BufferAttributeData {
-    node: BufferAttributeNode;
+    node: BufferAttributeNode<unknown>;
 }
 /**
  * This utility class is used in {@link NodeBuilder} as an internal

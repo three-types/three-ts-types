@@ -1,6 +1,6 @@
 import { Node, TempNode, TextureNode } from "three/webgpu";
 
-export default class AfterImageNode extends TempNode {
+export default class AfterImageNode extends TempNode<"vec4"> {
     textureNode: TextureNode;
     textureNodeOld: Node;
     damp: Node;

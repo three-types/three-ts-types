@@ -23,8 +23,8 @@ export const setName: (node: Node, label: string) => Node;
  */
 export function label(node: Node, label: string): Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "./Node.js" {
+    interface NodeElements {
         context: (context?: NodeBuilderContext) => ContextNode;
         contextAssign: (context?: NodeBuilderContext) => this;
 
@@ -41,6 +41,11 @@ declare module "../Nodes.js" {
         uniformFlowAssign: () => this;
 
         setName: (label: string) => Node;
+        setNameAssign: (label: string) => this;
+    }
+
+    interface NodeExtensions<TValue> {
+        setName: (label: string) => Node<TValue>;
         setNameAssign: (label: string) => this;
     }
 }

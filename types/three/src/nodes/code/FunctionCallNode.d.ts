@@ -3,26 +3,35 @@ import TempNode from "../core/TempNode.js";
 import { ProxiedObject } from "../tsl/TSLCore.js";
 import FunctionNode, { FunctionNodeArguments } from "./FunctionNode.js";
 
-export default class FunctionCallNode<P extends Array<Node | number> | { [name: string]: Node | number }>
-    extends TempNode
-{
+interface FunctionCallNodeInterface<P extends Array<Node | number> | { [name: string]: Node | number }> {
     functionNode: FunctionNode<P>;
     parameters: { [name: string]: Node };
-
-    constructor(functionNode?: FunctionNode<P>, parameters?: P);
 
     setParameters(parameters: P): this;
     getParameters(): P;
 }
 
-export const call: <P extends FunctionNodeArguments>(
+declare const FunctionCallNode: {
+    new<TNodeValue, P extends Array<Node | number> | { [name: string]: Node | number }>(
+        functionNode?: FunctionNode<P>,
+        parameters?: P,
+    ): FunctionCallNode<TNodeValue, P>;
+};
+
+type FunctionCallNode<TNodeValue, P extends Array<Node | number> | { [name: string]: Node | number }> =
+    & TempNode<TNodeValue>
+    & FunctionCallNodeInterface<P>;
+
+export default FunctionCallNode;
+
+export const call: <TNodeValue, P extends FunctionNodeArguments>(
     functionNode?: FunctionNode<P>,
     parameters?: ProxiedObject<P>,
-) => FunctionCallNode<P>;
+) => FunctionCallNode<TNodeValue, P>;
 
 declare module "../Nodes.js" {
     interface FunctionNode<P extends FunctionNodeArguments> {
-        call: (parameters?: ProxiedObject<P>) => FunctionCallNode<P>;
+        call: <TNodeValue>(parameters?: ProxiedObject<P>) => FunctionCallNode<TNodeValue, P>;
         callAssign: (parameters?: ProxiedObject<P>) => this;
     }
 }

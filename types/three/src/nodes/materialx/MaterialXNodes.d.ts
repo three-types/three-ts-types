@@ -97,15 +97,15 @@ export const mx_unifiednoise3d: (
 export function mx_worley_noise_float(
     texcoord?: Node,
     jitter?: Node | number,
-): Node;
+): Node<"float">;
 export function mx_worley_noise_vec2(
     texcoord?: Node,
     jitter?: Node | number,
-): Node;
+): Node<"vec2">;
 export function mx_worley_noise_vec3(
     texcoord?: Node,
     jitter?: Node | number,
-): Node;
+): Node<"vec3">;
 
 export function mx_cell_noise_float(texcoord?: Node): Node;
 
