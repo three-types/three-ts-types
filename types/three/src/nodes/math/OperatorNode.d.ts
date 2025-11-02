@@ -1,4 +1,4 @@
-import Node from "../core/Node.js";
+import Node, { NumberType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type OperatorNodeOp =
@@ -35,8 +35,6 @@ export default class OperatorNode extends TempNode {
 type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
-
-type NumberType = "float" | "int" | "uint";
 
 type NumberToVec = {
     float: "vec";
@@ -219,112 +217,40 @@ declare module "../core/Node.js" {
         divAssign: AddSubMulDivNumberVecNumberAssignExtensions;
     }
 
-    interface Vector2Extensions {
-        add: AddSubMulDivNumberVecVec2Extensions<"float">;
-        sub: AddSubMulDivNumberVecVec2Extensions<"float">;
-        mul: AddSubMulDivNumberVecVec2Extensions<"float">;
-        div: AddSubMulDivNumberVecVec2Extensions<"float">;
+    interface Vector2Extensions<TNumber extends NumberType> {
+        add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+        sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+        mul: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+        div: AddSubMulDivNumberVecVec2Extensions<TNumber>;
 
-        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
-        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
-        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
-        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
+        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
     }
 
-    interface Ivec2Extensions {
-        add: AddSubMulDivNumberVecVec2Extensions<"int">;
-        sub: AddSubMulDivNumberVecVec2Extensions<"int">;
-        mul: AddSubMulDivNumberVecVec2Extensions<"int">;
-        div: AddSubMulDivNumberVecVec2Extensions<"int">;
+    interface Vector3Extensions<TNumber extends NumberType> {
+        add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+        sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+        mul: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+        div: AddSubMulDivNumberVecVec3Extensions<TNumber>;
 
-        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<"int">;
-        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<"int">;
-        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<"int">;
-        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<"int">;
+        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
     }
 
-    interface Uvec2Extensions {
-        add: AddSubMulDivNumberVecVec2Extensions<"uint">;
-        sub: AddSubMulDivNumberVecVec2Extensions<"uint">;
-        mul: AddSubMulDivNumberVecVec2Extensions<"uint">;
-        div: AddSubMulDivNumberVecVec2Extensions<"uint">;
+    interface Vector4Extensions<TNumber extends NumberType> {
+        add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+        sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+        mul: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+        div: AddSubMulDivNumberVecVec4Extensions<TNumber>;
 
-        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<"uint">;
-        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<"uint">;
-        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<"uint">;
-        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<"uint">;
-    }
-
-    interface Vector3Extensions {
-        add: AddSubMulDivNumberVecVec3Extensions<"float">;
-        sub: AddSubMulDivNumberVecVec3Extensions<"float">;
-        mul: AddSubMulDivNumberVecVec3Extensions<"float">;
-        div: AddSubMulDivNumberVecVec3Extensions<"float">;
-
-        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<"float">;
-        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<"float">;
-        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<"float">;
-        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<"float">;
-    }
-
-    interface Ivec3Extensions {
-        add: AddSubMulDivNumberVecVec3Extensions<"int">;
-        sub: AddSubMulDivNumberVecVec3Extensions<"int">;
-        mul: AddSubMulDivNumberVecVec3Extensions<"int">;
-        div: AddSubMulDivNumberVecVec3Extensions<"int">;
-
-        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<"int">;
-        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<"int">;
-        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<"int">;
-        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<"int">;
-    }
-
-    interface Uvec3Extensions {
-        add: AddSubMulDivNumberVecVec3Extensions<"uint">;
-        sub: AddSubMulDivNumberVecVec3Extensions<"uint">;
-        mul: AddSubMulDivNumberVecVec3Extensions<"uint">;
-        div: AddSubMulDivNumberVecVec3Extensions<"uint">;
-
-        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<"uint">;
-        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<"uint">;
-        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<"uint">;
-        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<"uint">;
-    }
-
-    interface Vector4Extensions {
-        add: AddSubMulDivNumberVecVec4Extensions<"float">;
-        sub: AddSubMulDivNumberVecVec4Extensions<"float">;
-        mul: AddSubMulDivNumberVecVec4Extensions<"float">;
-        div: AddSubMulDivNumberVecVec4Extensions<"float">;
-
-        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<"float">;
-        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<"float">;
-        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<"float">;
-        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<"float">;
-    }
-
-    interface Ivec4Extensions {
-        add: AddSubMulDivNumberVecVec4Extensions<"int">;
-        sub: AddSubMulDivNumberVecVec4Extensions<"int">;
-        mul: AddSubMulDivNumberVecVec4Extensions<"int">;
-        div: AddSubMulDivNumberVecVec4Extensions<"int">;
-
-        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<"int">;
-        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<"int">;
-        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<"int">;
-        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<"int">;
-    }
-
-    interface Uvec4Extensions {
-        add: AddSubMulDivNumberVecVec4Extensions<"uint">;
-        sub: AddSubMulDivNumberVecVec4Extensions<"uint">;
-        mul: AddSubMulDivNumberVecVec4Extensions<"uint">;
-        div: AddSubMulDivNumberVecVec4Extensions<"uint">;
-
-        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<"uint">;
-        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<"uint">;
-        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<"uint">;
-        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<"uint">;
+        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
+        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
+        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
+        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
     }
 
     interface Matrix2Extensions {
