@@ -402,14 +402,14 @@ type Ivec2Swizzle =
         [Key in XY | RG | ST]: Node<"int">;
     }
     & {
-    [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"ivec2">;
-}
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}`]: Node<"ivec2">;
+    }
     & {
-    [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"ivec3">;
-}
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}`]: Node<"ivec3">;
+    }
     & {
-    [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"ivec4">;
-};
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}`]: Node<"ivec4">;
+    };
 type Uvec2Swizzle =
     & {
         [Key in XY | RG | ST]: Node<"uint">;
@@ -444,14 +444,14 @@ type Ivec3Swizzle =
         [Key in XYZ | RGB | STP]: Node<"int">;
     }
     & {
-    [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"ivec2">;
-}
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}`]: Node<"ivec2">;
+    }
     & {
-    [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"ivec3">;
-}
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}`]: Node<"ivec3">;
+    }
     & {
-    [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"ivec4">;
-};
+        [Key in `${XYZ}${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}${STP}`]: Node<"ivec4">;
+    };
 type Uvec3Swizzle =
     & {
         [Key in XYZ | RGB | STP]: Node<"uint">;
@@ -488,16 +488,16 @@ type Ivec4Swizzle =
         [Key in XYZW | RGBA | STPQ]: Node<"int">;
     }
     & {
-    [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"ivec2">;
-}
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}`]: Node<"ivec2">;
+    }
     & {
-    [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"ivec3">;
-}
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}`]: Node<"ivec3">;
+    }
     & {
-    [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
-        "ivec4"
-    >;
-};
+        [Key in `${XYZW}${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}${STPQ}`]: Node<
+            "ivec4"
+        >;
+    };
 type Uvec4Swizzle =
     & {
         [Key in XYZW | RGBA | STPQ]: Node<"uint">;
@@ -513,7 +513,7 @@ type Uvec4Swizzle =
             "uvec4"
         >;
     };
-export interface NodeExtensions<in out TValue> {
+export interface NodeExtensions<TValue> {
 }
 export interface FloatExtensions {
 }
@@ -523,7 +523,7 @@ export interface UintExtensions {
 }
 export interface BoolExtensions {
 }
-export interface VectorExtensions<in out TValue> {
+export interface VectorExtensions<TValue> {
 }
 export interface Vector2Extensions {
 }
@@ -553,22 +553,22 @@ type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
     & NodeExtensions<TValue>
-    & (TValue extends "float" ? FloatExtensions : {})
-    & (TValue extends "int" ? IntExtensions : {})
-    & (TValue extends "uint" ? UintExtensions : {})
-    & (TValue extends "bool" ? BoolExtensions : {})
-    & (TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions : {})
-    & (TValue extends "ivec2" ? Ivec2Swizzle & VectorExtensions<TValue> & Ivec2Extensions : {})
-    & (TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> & Uvec2Extensions : {})
-    & (TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions : {})
-    & (TValue extends "ivec3" ? Ivec3Swizzle & VectorExtensions<TValue> & Ivec3Extensions : {})
-    & (TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> & Uvec3Extensions : {})
-    & (TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions : {})
-    & (TValue extends "ivec4" ? Ivec4Swizzle & VectorExtensions<TValue> & Ivec4Extensions : {})
-    & (TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> & Uvec4Extensions : {})
-    & (TValue extends "mat2" ? Matrix2Extensions : {})
-    & (TValue extends "mat3" ? Matrix3Extensions : {})
-    & (TValue extends "mat4" ? Matrix4Extensions : {})
+    & (TValue extends "float" ? FloatExtensions : TValue extends "int" ? IntExtensions
+    : TValue extends "uint" ? UintExtensions
+    : TValue extends "bool" ? BoolExtensions
+    : TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions
+    : TValue extends "ivec2" ? Ivec2Swizzle & VectorExtensions<TValue> & Ivec2Extensions
+    : TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> & Uvec2Extensions
+    : TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions
+    : TValue extends "ivec3" ? Ivec3Swizzle & VectorExtensions<TValue> & Ivec3Extensions
+    : TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> & Uvec3Extensions
+    : TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions
+    : TValue extends "ivec4" ? Ivec4Swizzle & VectorExtensions<TValue> & Ivec4Extensions
+    : TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> & Uvec4Extensions
+    : TValue extends "mat2" ? Matrix2Extensions
+    : TValue extends "mat3" ? Matrix3Extensions
+    : TValue extends "mat4" ? Matrix4Extensions
+    : {})
     & {
         __TypeScript_VALUE__: TValue;
     };
