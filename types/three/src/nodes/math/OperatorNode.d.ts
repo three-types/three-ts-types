@@ -1,4 +1,4 @@
-import Node, { NumberType } from "../core/Node.js";
+import Node, { IntegerType, NumberType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type OperatorNodeOp =
@@ -354,19 +354,90 @@ declare module "../core/Node.js" {
     }
 }
 
-export const bitAnd: unknown;
-export const bitNot: unknown;
-export const bitOr: unknown;
-export const bitXor: unknown;
-export const shiftLeft: unknown;
-export const shiftRight: unknown;
+// bit operators
 
-export const incrementBefore: unknown;
-export const decrementBefore: unknown;
-export const increment: unknown;
-export const decrement: unknown;
+interface UnaryBitOperator {
+    (a: Number<"int">): Node<"int">;
+    (a: Number<"uint">): Node<"uint">;
+}
+
+interface BinaryBitOperator {
+    (a: Number<"int">, b: Number<"int">): Node<"int">;
+    (a: Number<"uint">, b: Number<"uint">): Node<"uint">;
+}
+
+export const bitAnd: BinaryBitOperator;
+export const bitNot: UnaryBitOperator;
+export const bitOr: BinaryBitOperator;
+export const bitXor: BinaryBitOperator;
+export const shiftLeft: BinaryBitOperator;
+export const shiftRight: BinaryBitOperator;
+
+interface BinaryBitOperatorIntegerExtensions<TInteger extends IntegerType> {
+    (b: Number<TInteger>): Node<TInteger>;
+}
+
+interface BinaryBitOperatorIntegerAssignExtensions<TInteger extends IntegerType> {
+    (b: Number<TInteger>): this;
+}
+
+declare module "../core/Node.js" {
+    interface IntegerExtensions<TInteger extends IntegerType> {
+        bitAnd: BinaryBitOperatorIntegerExtensions<TInteger>;
+        bitNot: () => Node<TInteger>;
+        bitOr: BinaryBitOperatorIntegerExtensions<TInteger>;
+        bitXor: BinaryBitOperatorIntegerExtensions<TInteger>;
+        shiftLeft: BinaryBitOperatorIntegerExtensions<TInteger>;
+        shiftRight: BinaryBitOperatorIntegerExtensions<TInteger>;
+
+        bitAndAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        bitNotAssign: () => this;
+        bitOrAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        bitXorAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        shiftLeftAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        shiftRightAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+    }
+}
+
+// increment/decrement
+
+interface IncrementDecrement {
+    (a: Number<"int">): Node<"int">;
+    (a: Number<"uint">): Node<"uint">;
+}
+
+export const incrementBefore: IncrementDecrement;
+export const decrementBefore: IncrementDecrement;
+export const increment: IncrementDecrement;
+export const decrement: IncrementDecrement;
+
+interface IncrementDecrementIntegerExtensions<TInteger extends IntegerType> {
+    (): Node<TInteger>;
+}
+
+declare module "../core/Node.js" {
+    interface IntegerExtensions<TInteger extends IntegerType> {
+        incrementBefore: IncrementDecrementIntegerExtensions<TInteger>;
+        decrementBefore: IncrementDecrementIntegerExtensions<TInteger>;
+        increment: IncrementDecrementIntegerExtensions<TInteger>;
+        decrement: IncrementDecrementIntegerExtensions<TInteger>;
+    }
+}
 
 /**
  * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
  */
-export const modInt: unknown;
+export const modInt: Mod;
+
+declare module "../core/Node.js" {
+    interface NumberExtensions<TNumber extends NumberType> {
+        /**
+         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
+         */
+        modInt: (b: Number<TNumber>) => Node<TNumber>;
+        /**
+         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
+         */
+        modIntAssign: (b: Number<TNumber>) => this;
+    }
+}
