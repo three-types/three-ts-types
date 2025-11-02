@@ -1,6 +1,5 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import OperatorNode from "./OperatorNode.js";
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
@@ -128,404 +127,107 @@ export default class MathNode extends TempNode {
     constructor(method: MathNodeMethod3, aNode: Node, bNode: Node, cNode: Node);
 }
 
-export const EPSILON: Node;
-export const INFINITY: Node;
-export const PI: Node;
+export const EPSILON: unknown;
+export const INFINITY: unknown;
+export const PI: unknown;
 
 /**
  * @deprecated Please use the non-deprecated version `TWO_PI`.
  */
-export const PI2: Node;
+export const PI2: unknown;
 
-export const TWO_PI: Node;
+export const TWO_PI: unknown;
 
-export const HALF_PI: Node;
+export const HALF_PI: unknown;
 
-type MathNodeParameter = Node | number;
-
-type Unary = (a: MathNodeParameter) => MathNode;
-
-export const all: Unary;
-export const any: Unary;
+export const all: unknown;
+export const any: unknown;
 
 /**
  * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
  */
-export const equals: Unary;
+export const equals: unknown;
 
-export const radians: Unary;
-export const degrees: Unary;
-export const exp: Unary;
-export const exp2: Unary;
-export const log: Unary;
-export const log2: Unary;
-export const sqrt: (e: Node<"float">) => Node<"float">;
-export const inverseSqrt: Unary;
-export const floor: Unary;
-export const ceil: Unary;
-export const normalize: (a: Node<"vec3">) => Node<"vec3">;
+export const radians: unknown;
+export const degrees: unknown;
+export const exp: unknown;
+export const exp2: unknown;
+export const log: unknown;
+export const log2: unknown;
+export const sqrt: unknown;
+export const inverseSqrt: unknown;
+export const floor: unknown;
+export const ceil: unknown;
+export const normalize: unknown;
 
-interface Fract {
-    (a: Node<"float">): Node<"float">;
-    (a: Node<"vec2">): Node<"vec2">;
-    (a: Node<"vec3">): Node<"vec3">;
-    (a: Node<"vec4">): Node<"vec4">;
-}
+export const fract: unknown;
 
-export const fract: Fract;
+export const sin: unknown;
+export const cos: unknown;
+export const tan: unknown;
+export const asin: unknown;
+export const acos: unknown;
+export const atan: unknown;
 
-export const sin: (e: Node<"float"> | number) => Node<"float">;
-export const cos: (e: Node<"float"> | number) => Node<"float">;
-export const tan: (e: Node<"float"> | number) => Node<"float">;
-export const asin: Unary;
-export const acos: Unary;
-export const atan: (a: MathNodeParameter, b?: MathNodeParameter) => MathNode;
+export const abs: unknown;
 
-interface Abs {
-    (a: Node<"float">): Node<"float">;
-    (a: Node<"int">): Node<"int">;
-}
+export const sign: unknown;
+export const length: unknown;
+export const negate: unknown;
+export const oneMinus: unknown;
+export const dFdx: unknown;
+export const dFdy: unknown;
+export const round: unknown;
+export const reciprocal: unknown;
+export const trunc: unknown;
 
-export const abs: Abs;
+export const fwidth: unknown;
+export const transpose: unknown;
+export const determinant: unknown;
+export const inverse: unknown;
 
-export const sign: Unary;
-export const length: (e: Node<"vec2"> | Node<"vec3"> | Node<"vec4">) => Node<"float">;
-export const negate: Unary;
-export const oneMinus: Unary;
-export const dFdx: Unary;
-export const dFdy: Unary;
-export const round: Unary;
-export const reciprocal: Unary;
-export const trunc: Unary;
+export const min: unknown;
+export const max: unknown;
 
-interface Fwidth {
-    (a: Node<"float">): Node<"float">;
-    (a: Node<"vec2">): Node<"vec2">;
-    (a: Node<"vec3">): Node<"vec3">;
-    (a: Node<"vec4">): Node<"vec4">;
-}
+export const step: unknown;
+export const reflect: unknown;
 
-export const fwidth: Fwidth;
-export const transpose: Unary;
-export const determinant: (x: Node) => MathNode;
-export const inverse: (x: Node) => MathNode;
+export const distance: unknown;
 
-type Binary = (a: MathNodeParameter, b: MathNodeParameter) => MathNode;
+export const difference: unknown;
 
-export const min: (
-    x: Node<"float"> | number,
-    y: Node<"float"> | number,
-    ...values: (Node<"float"> | number)[]
-) => Node<"float">;
-export const max: (
-    x: Node<"float"> | number,
-    y: Node<"float"> | number,
-    ...values: (Node<"float"> | number)[]
-) => Node<"float">;
+export const dot: unknown;
+export const cross: unknown;
+export const pow: unknown;
+export const pow2: unknown;
+export const pow3: unknown;
+export const pow4: unknown;
+export const transformDirection: unknown;
+export const cbrt: unknown;
+export const lengthSq: unknown;
 
-export const step: Binary;
-export const reflect: Binary;
+export const mix: unknown;
+export const clamp: unknown;
+export const saturate: unknown;
 
-export const distance: (a: Node<"vec3">, b: Node<"vec3"> | Node<"vec4">) => Node<"float">;
+export const refract: unknown;
+export const smoothstep: unknown;
+export const faceForward: unknown;
 
-export const difference: Binary;
+export const rand: unknown;
 
-interface Dot {
-    (e1: Node<"vec2">, e2: Node<"vec2">): Node<"vec2">;
-    (e1: Node<"vec3">, e2: Node<"vec3">): Node<"vec3">;
-    (e1: Node<"vec4">, e2: Node<"vec4">): Node<"vec4">;
-}
-
-export const dot: Dot;
-export const cross: (x: Node, y: Node) => MathNode;
-export const pow: (x: Node<"float"> | number, y: Node<"float"> | number) => Node<"float">;
-export const pow2: Unary;
-export const pow3: Unary;
-export const pow4: Unary;
-export const transformDirection: Binary;
-export const cbrt: Unary;
-export const lengthSq: Unary;
-
-type Ternary = (a: MathNodeParameter, b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-
-export const mix: (a: Node<"vec3">, b: Node<"vec3">, c: Node<"vec3"> | Node<"float">) => Node<"vec3">;
-export const clamp: (
-    a: MathNodeParameter,
-    b?: MathNodeParameter,
-    c?: MathNodeParameter,
-) => MathNode;
-export const saturate: Unary;
-
-interface Refract {
-    (e1: Node<"vec2">, e2: Node<"vec2">, e3: Node<"float">): Node<"vec2">;
-    (e1: Node<"vec3">, e2: Node<"vec3">, e3: Node<"float">): Node<"vec3">;
-    (e1: Node<"vec4">, e2: Node<"vec4">, e3: Node<"float">): Node<"vec4">;
-}
-
-export const refract: Refract;
-export const smoothstep: (
-    a: Node<"float"> | number,
-    b: Node<"float"> | number,
-    c: Node<"float"> | number,
-) => Node<"float">;
-export const faceForward: Ternary;
-
-export const rand: (uv: MathNodeParameter) => OperatorNode;
-
-export const mixElement: Ternary;
-export const smoothstepElement: Ternary;
-export const stepElement: Binary;
+export const mixElement: unknown;
+export const smoothstepElement: unknown;
+export const stepElement: unknown;
 
 /**
  * @deprecated
  */
-export const atan2: Binary;
+export const atan2: unknown;
 
 // GLSL alias function
 
 export const faceforward: typeof faceForward;
 export const inversesqrt: typeof inverseSqrt;
 
-interface MixFloat {
-    (b: Node<"float"> | number, c: Node<"float"> | number): Node<"float">;
-    (b: Node<"color"> | number, c: Node<"color"> | number): Node<"color">;
-    (b: Node<"vec3"> | number, c: Node<"vec3"> | number): Node<"vec3">;
-    (b: Node<"vec4"> | number, c: Node<"vec4"> | number): Node<"vec4">;
-}
-
 // Method chaining
-
-declare module "../core/Node.js" {
-    interface NodeElements {
-        all: () => MathNode;
-        allAssign: () => this;
-
-        any: () => MathNode;
-        anyAssign: () => this;
-
-        /**
-         * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
-         */
-        equals: () => MathNode;
-        /**
-         * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
-         */
-        equalsAssign: () => this;
-
-        radians: () => MathNode;
-        radiansAssign: () => this;
-
-        degrees: () => MathNode;
-        degreesAssign: () => this;
-
-        exp: () => MathNode;
-        expAssign: () => this;
-
-        exp2: () => MathNode;
-        exp2Assign: () => this;
-
-        log: () => MathNode;
-        logAssign: () => this;
-
-        log2: () => MathNode;
-        log2Assign: () => this;
-
-        ceil: () => MathNode;
-        ceilAssign: () => this;
-
-        fract: () => MathNode;
-        fractAssign: () => this;
-
-        atan: (b?: MathNodeParameter) => MathNode;
-        atanAssign: (b?: MathNodeParameter) => this;
-
-        dFdx: () => MathNode;
-        dFdxAssign: () => this;
-
-        dFdy: () => MathNode;
-        dFdyAssign: () => this;
-
-        round: () => MathNode;
-        roundAssign: () => this;
-
-        reciprocal: () => MathNode;
-        reciprocalAssign: () => this;
-
-        trunc: () => MathNode;
-        truncAssign: () => this;
-
-        fwidth: () => MathNode;
-        fwidthAssign: () => this;
-
-        /**
-         * @deprecated
-         */
-        atan2: (b: MathNodeParameter) => MathNode;
-        /**
-         * @deprecated
-         */
-        atan2Assign: (b: MathNodeParameter) => this;
-
-        step: (b: MathNodeParameter) => MathNode;
-        stepAssign: (b: MathNodeParameter) => this;
-
-        reflect: (b: MathNodeParameter) => MathNode;
-        reflectAssign: (b: MathNodeParameter) => this;
-
-        dot: (b: MathNodeParameter) => MathNode;
-        dotAssign: (b: MathNodeParameter) => this;
-
-        cross: (y: Node) => MathNode;
-        crossAssign: (y: Node) => this;
-
-        pow2: () => MathNode;
-        pow2Assign: () => this;
-
-        pow3: () => MathNode;
-        pow3Assign: () => this;
-
-        pow4: () => MathNode;
-        pow4Assign: () => this;
-
-        transformDirection: (b: MathNodeParameter) => MathNode;
-        transformDirectionAssign: (b: MathNodeParameter) => this;
-
-        refract: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        refractAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
-
-        faceForward: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        faceForwardAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
-
-        difference: (b: MathNodeParameter) => MathNode;
-        differenceAssign: (b: MathNodeParameter) => this;
-
-        cbrt: () => MathNode;
-        cbrtAssign: () => this;
-
-        transpose: () => MathNode;
-        transposeAssign: () => this;
-
-        determinant: () => MathNode;
-        determinantAssign: () => this;
-
-        inverse: () => MathNode;
-        inverseAssign: () => this;
-
-        rand: () => OperatorNode;
-        randAssign: () => this;
-    }
-
-    interface FloatExtensions {
-        oneMinus: () => Node<"float">;
-        oneMinusAssign: () => this;
-
-        pow: (b: Node<"float"> | number) => Node<"float">;
-        powAssign: (b: Node<"float"> | number) => this;
-
-        mix: MixFloat;
-        mixAssign: (b: Node<"color">, c: Node<"color">) => this;
-
-        clamp: (b?: Node<"float"> | number, c?: Node<"float"> | number) => Node<"float">;
-        clampAssign: (b?: Node<"float"> | number, c?: Node<"float"> | number) => this;
-
-        floor: () => Node<"float">;
-        floorAssign: () => this;
-
-        distance: (b: Node<"float"> | number) => Node<"float">;
-        distanceAssign: (b: Node<"float">) => this;
-
-        smoothstep: (b: Node<"float"> | number, c: Node<"float"> | number) => Node<"float">;
-        smoothstepAssign: (b: Node<"float"> | number, c: Node<"float"> | number) => this;
-
-        saturate: () => Node<"float">;
-        saturateAssign: () => this;
-
-        min: (
-            y: Node<"float"> | number,
-            ...values: (Node<"float"> | number)[]
-        ) => Node<"float">;
-        minAssign: (
-            y: Node<"float"> | number,
-            ...values: (Node<"float"> | number)[]
-        ) => this;
-
-        max: (
-            y: Node<"float"> | number,
-            ...values: (Node<"float"> | number)[]
-        ) => Node<"float">;
-        maxAssign: (
-            y: Node<"float"> | number,
-            ...values: (Node<"float"> | number)[]
-        ) => this;
-
-        sin: () => Node<"float">;
-        sinAssign: () => this;
-
-        cos: () => Node<"float">;
-        cosAssign: () => this;
-
-        tan: () => Node<"float">;
-        tanAssign: () => this;
-
-        asin: () => Node<"float">;
-        asinAssign: () => this;
-
-        acos: () => Node<"float">;
-        acosAssign: () => this;
-
-        abs: () => Node<"float">;
-        absAssign: () => this;
-
-        negate: () => Node<"float">;
-        negateAssign: () => this;
-
-        sqrt: () => Node<"float">;
-        sqrtAssign: () => this;
-
-        inverseSqrt: () => Node<"float">;
-        inverseSqrtAssign: () => this;
-
-        sign: () => Node<"float">;
-        signAssign: () => this;
-    }
-
-    interface VectorExtensions<TValue> {
-        distance: (b: Node<TValue> | number) => Node<"float">;
-        distanceAssign: (b: Node<TValue>) => this;
-
-        normalize: () => Node<TValue>;
-        normalizeAssign: () => this;
-
-        negate: () => Node<TValue>;
-        negateAssign: () => this;
-
-        clamp: (b?: Node<TValue>, c?: Node<TValue>) => Node<TValue>;
-        clampAssign: (b?: Node<TValue>, c?: Node<TValue>) => this;
-
-        oneMinus: () => Node<TValue>;
-        oneMinusAssign: () => this;
-
-        floor: () => Node<TValue>;
-        floorAssign: () => this;
-
-        length: () => Node<"float">;
-        lengthAssign: () => this;
-
-        lengthSq: () => Node<"float">;
-        lengthSqAssign: () => this;
-
-        min: (
-            y: Node<TValue>,
-        ) => Node<TValue>;
-        minAssign: (
-            y: Node<TValue>,
-        ) => this;
-
-        max: (
-            y: Node<TValue>,
-        ) => Node<TValue>;
-        maxAssign: (
-            y: Node<TValue>,
-        ) => this;
-    }
-}
