@@ -521,6 +521,8 @@ export interface IntExtensions {
 }
 export interface UintExtensions {
 }
+export interface NumberExtensions<TNumber extends "float" | "int" | "uint"> {
+}
 export interface BoolExtensions {
 }
 export interface VectorExtensions<TValue> {
@@ -553,22 +555,23 @@ type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
     & NodeExtensions<TValue>
-    & (TValue extends "float" ? FloatExtensions : TValue extends "int" ? IntExtensions
-    : TValue extends "uint" ? UintExtensions
-    : TValue extends "bool" ? BoolExtensions
-    : TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions
-    : TValue extends "ivec2" ? Ivec2Swizzle & VectorExtensions<TValue> & Ivec2Extensions
-    : TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> & Uvec2Extensions
-    : TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions
-    : TValue extends "ivec3" ? Ivec3Swizzle & VectorExtensions<TValue> & Ivec3Extensions
-    : TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> & Uvec3Extensions
-    : TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions
-    : TValue extends "ivec4" ? Ivec4Swizzle & VectorExtensions<TValue> & Ivec4Extensions
-    : TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> & Uvec4Extensions
-    : TValue extends "mat2" ? Matrix2Extensions
-    : TValue extends "mat3" ? Matrix3Extensions
-    : TValue extends "mat4" ? Matrix4Extensions
-    : {})
+    & (TValue extends "float" ? FloatExtensions & NumberExtensions<"float">
+        : TValue extends "int" ? IntExtensions & NumberExtensions<"int">
+        : TValue extends "uint" ? UintExtensions & NumberExtensions<"uint">
+        : TValue extends "bool" ? BoolExtensions
+        : TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vector2Extensions
+        : TValue extends "ivec2" ? Ivec2Swizzle & VectorExtensions<TValue> & Ivec2Extensions
+        : TValue extends "uvec2" ? Uvec2Swizzle & VectorExtensions<TValue> & Uvec2Extensions
+        : TValue extends "vec3" ? Vec3Swizzle & VectorExtensions<TValue> & Vector3Extensions
+        : TValue extends "ivec3" ? Ivec3Swizzle & VectorExtensions<TValue> & Ivec3Extensions
+        : TValue extends "uvec3" ? Uvec3Swizzle & VectorExtensions<TValue> & Uvec3Extensions
+        : TValue extends "vec4" ? Vec4Swizzle & VectorExtensions<TValue> & Vector4Extensions
+        : TValue extends "ivec4" ? Ivec4Swizzle & VectorExtensions<TValue> & Ivec4Extensions
+        : TValue extends "uvec4" ? Uvec4Swizzle & VectorExtensions<TValue> & Uvec4Extensions
+        : TValue extends "mat2" ? Matrix2Extensions
+        : TValue extends "mat3" ? Matrix3Extensions
+        : TValue extends "mat4" ? Matrix4Extensions
+        : {})
     & {
         __TypeScript_VALUE__: TValue;
     };
