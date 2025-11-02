@@ -1,20 +1,24 @@
 import Node from "./Node.js";
 import { NodeBuilderContext } from "./NodeBuilder.js";
 
-declare class ContextNode extends Node {
+declare class ContextNodeInterface<TNodeType> extends Node {
     readonly isContextNode: true;
 
-    node: Node;
+    node: Node<TNodeType>;
     value: NodeBuilderContext;
-
-    constructor(node: Node, value?: NodeBuilderContext);
 }
+
+declare const ContextNode: {
+    new<TNodeType>(node: Node<TNodeType>, value?: NodeBuilderContext): ContextNode<TNodeType>;
+};
+
+type ContextNode<TNodeType> = ContextNodeInterface<TNodeType> & Node<TNodeType>;
 
 export default ContextNode;
 
-export const context: (node: Node, context?: NodeBuilderContext) => ContextNode;
+export const context: <TNodeType>(node: Node<TNodeType>, context?: NodeBuilderContext) => ContextNode<TNodeType>;
 
-export const uniformFlow: (node: Node) => ContextNode;
+export const uniformFlow: <TNodeType>(node: Node<TNodeType>) => ContextNode<TNodeType>;
 
 export const setName: (node: Node, label: string) => Node;
 
@@ -25,9 +29,6 @@ export function label(node: Node, label: string): Node;
 
 declare module "./Node.js" {
     interface NodeElements {
-        context: (context?: NodeBuilderContext) => ContextNode;
-        contextAssign: (context?: NodeBuilderContext) => this;
-
         /**
          * @deprecated "label()" has been deprecated. Use "setName()" instead.
          */
@@ -36,15 +37,15 @@ declare module "./Node.js" {
          * @deprecated "label()" has been deprecated. Use "setName()" instead.
          */
         labelAssign: (label: string) => this;
-
-        uniformFlow: () => ContextNode;
-        uniformFlowAssign: () => this;
-
-        setName: (label: string) => Node;
-        setNameAssign: (label: string) => this;
     }
 
     interface NodeExtensions<TValue> {
+        context: (context?: NodeBuilderContext) => ContextNode<TValue>;
+        contextAssign: (context?: NodeBuilderContext) => this;
+
+        uniformFlow: () => ContextNode<TValue>;
+        uniformFlowAssign: () => this;
+
         setName: (label: string) => Node<TValue>;
         setNameAssign: (label: string) => this;
     }

@@ -360,7 +360,7 @@ interface Vector2Function {
 
 export const vec2: Vector2Function;
 export const ivec2: (node: Node) => Node<"ivec2">;
-export const uvec2: (node: Node) => Node<"uvec2">;
+export const uvec2: (x: Node<"uint">, y: Node<"uint">) => Node<"uvec2">;
 export const bvec2: (node: Node) => Node<"bvec2">;
 
 interface Vector3Function {
@@ -473,7 +473,7 @@ export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        toColor: () => Node;
+        toColor: () => Node<"vec3">;
         toColorAssign: () => this;
 
         toFloat: () => Node;

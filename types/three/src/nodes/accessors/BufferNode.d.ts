@@ -12,7 +12,7 @@ declare const BufferNode: {
     new<TNodeValue, TValue>(value: TValue, bufferType: string, bufferCount?: number): BufferNode<TNodeValue, TValue>;
 };
 
-export interface BufferNodeExtensions<TNodeValue, TValue> {
+export interface BufferNodeExtensions<TNodeType, TValue> {
 }
 
 type BufferNode<TNodeValue, TValue> =

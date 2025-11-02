@@ -55,17 +55,17 @@ export const mx_noise_float: (
     texcoord?: Node,
     amplitude?: Node | number,
     pivot?: Node | number,
-) => Node;
+) => Node<"float">;
 export const mx_noise_vec3: (
     texcoord?: Node,
     amplitude?: Node | number,
     pivot?: Node | number,
-) => Node;
+) => Node<"vec3">;
 export const mx_noise_vec4: (
     texcoord?: Node,
     amplitude?: Node | number,
     pivot?: Node | number,
-) => Node;
+) => Node<"vec4">;
 
 export const mx_unifiednoise2d: (
     noiseType: Node,
