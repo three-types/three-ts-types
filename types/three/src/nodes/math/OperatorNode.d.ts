@@ -253,10 +253,10 @@ declare module "../core/Node.js" {
         mul: AddSubMulDivNumberVecVec2Extensions<"float">;
         div: AddSubMulDivNumberVecVec2Extensions<"float">;
 
-        addAssign: AddSubMulDivFloatVecVec2AssignExtensions<"float">;
-        subAssign: AddSubMulDivFloatVecVec2AssignExtensions<"float">;
-        mulAssign: AddSubMulDivFloatVecVec2AssignExtensions<"float">;
-        divAssign: AddSubMulDivFloatVecVec2AssignExtensions<"float">;
+        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
+        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
+        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
+        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<"float">;
     }
 
     interface Ivec2Extensions {
