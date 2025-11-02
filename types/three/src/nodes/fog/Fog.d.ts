@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 
-export const rangeFogFactor: (near: Node | number, far: Node | number) => Node;
+export const rangeFogFactor: (near: Node<"float"> | number, far: Node<"float"> | number) => Node<"float">;
 
 export const densityFogFactor: (density: Node) => Node;
 

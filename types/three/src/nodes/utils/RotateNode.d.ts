@@ -1,14 +1,20 @@
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
-export default class RotateNode extends TempNode {
-    positionNode: Node;
-    rotationNode: Node;
-
-    constructor(positionNode: Node, rotationNode: Node);
+interface RotateNodeInterface<TNodeType> {
+    positionNode: Node<TNodeType>;
+    rotationNode: Node<TNodeType>;
 }
 
-export const rotate: (
-    positionNode: Node,
-    rotationNode: Node | number,
-) => RotateNode;
+declare const RotateNode: {
+    new<TNodeType>(positionNode: Node<TNodeType>, rotationNode: Node<TNodeType>): RotateNode<TNodeType>;
+};
+
+type RotateNode<TNodeType> = RotateNodeInterface<TNodeType> & TempNode<TNodeType>;
+
+export default RotateNode;
+
+export const rotate: <TNodeType>(
+    positionNode: Node<TNodeType>,
+    rotationNode: Node<TNodeType>,
+) => RotateNode<TNodeType>;
