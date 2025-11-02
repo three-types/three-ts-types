@@ -514,6 +514,7 @@ type Uvec4Swizzle =
         >;
     };
 export type NumberType = "float" | "int" | "uint";
+export type IntegerType = "int" | "uint";
 export interface NodeExtensions<TValue> {
 }
 export interface FloatExtensions {
@@ -523,6 +524,8 @@ export interface IntExtensions {
 export interface UintExtensions {
 }
 export interface NumberExtensions<TNumber extends NumberType> {
+}
+export interface IntegerExtensions<TInteger extends IntegerType> {
 }
 export interface BoolExtensions {
 }
@@ -563,8 +566,8 @@ type Node<TValue = unknown> =
     & NodeElements
     & NodeExtensions<TValue>
     & (TValue extends "float" ? FloatExtensions & NumberExtensions<"float">
-        : TValue extends "int" ? IntExtensions & NumberExtensions<"int">
-        : TValue extends "uint" ? UintExtensions & NumberExtensions<"uint">
+        : TValue extends "int" ? IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int">
+        : TValue extends "uint" ? UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint">
         : TValue extends "bool" ? BoolExtensions
         : TValue extends "vec2" ? Vec2Swizzle & VectorExtensions<TValue> & Vec2Extensions & Vector2Extensions<"float">
         : TValue extends "ivec2" ? Ivec2Swizzle & VectorExtensions<TValue> & Ivec2Extensions & Vector2Extensions<"int">
