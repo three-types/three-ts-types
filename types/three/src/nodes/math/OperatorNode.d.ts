@@ -32,14 +32,6 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-type FloatOrNumber = Node<"float"> | number;
-type IntOrNumber = Node<"int"> | number;
-type UintOrNumber = Node<"uint"> | number;
-
-type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
-type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
-type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
-
 type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
@@ -61,13 +53,17 @@ type Vec2OrLessOrNumber<TNumber extends NumberType> = Number<TNumber> | Node<Num
 type Vec3OrLessOrNumber<TNumber extends NumberType> = Vec2OrLessOrNumber<TNumber> | Node<NumberToVec3<TNumber>>;
 type Vec4OrLessOrNumber<TNumber extends NumberType> = Vec3OrLessOrNumber<TNumber> | Node<NumberToVec4<TNumber>>;
 
+type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
+
 // add/sub/mul/div
 
 // add/sub/mul/div numbers and/or vecs
 // Every parameter gets converted to the longest type
+// If the parameters are the same length, it gets converted to the first type
+// FIXME We handle the case of converting number types, but not converting between vectors of different number types
 
 interface AddSubMulDivNumberVec<TNumber extends NumberType> {
-    (a: Number<TNumber>, b: Number<TNumber>, ...params: Number<TNumber>[]): Node<TNumber>;
+    (a: Number<TNumber>, b: AnyNumber, ...params: AnyNumber[]): Node<TNumber>;
     (
         a: Vec2OrLessOrNumber<TNumber>,
         b: Vec2OrLessOrNumber<TNumber>,
@@ -86,14 +82,14 @@ interface AddSubMulDivNumberVec<TNumber extends NumberType> {
 }
 
 interface AddSubMulDivNumberVecNumberExtensions<TNumber extends NumberType> {
-    (b: Number<TNumber>, ...params: Number<TNumber>[]): Node<TNumber>;
+    (b: AnyNumber, ...params: AnyNumber[]): Node<TNumber>;
     (b: Vec2OrLessOrNumber<TNumber>, ...params: Vec2OrLessOrNumber<TNumber>[]): Node<NumberToVec2<TNumber>>;
     (b: Vec3OrLessOrNumber<TNumber>, ...params: Vec3OrLessOrNumber<TNumber>[]): Node<NumberToVec3<TNumber>>;
     (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): Node<NumberToVec4<TNumber>>;
 }
 
-interface AddSubMulDivNumberVecNumberAssignExtensions<TNumber extends NumberType> {
-    (b: Number<TNumber>, ...params: Number<TNumber>[]): this;
+interface AddSubMulDivNumberVecNumberAssignExtensions {
+    (b: AnyNumber, ...params: AnyNumber[]): this;
 }
 
 interface AddSubMulDivNumberVecVec2Extensions<TNumber extends NumberType> {
@@ -211,40 +207,16 @@ interface Div extends AddSubMulDivNumberVec<"float">, AddSubMulDivNumberVec<"int
 export const div: Div;
 
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        add: AddSubMulDivNumberVecNumberExtensions<"float">;
-        sub: AddSubMulDivNumberVecNumberExtensions<"float">;
-        mul: AddSubMulDivNumberVecNumberExtensions<"float">;
-        div: AddSubMulDivNumberVecNumberExtensions<"float">;
+    interface NumberExtensions<TNumber extends NumberType> {
+        add: AddSubMulDivNumberVecNumberExtensions<TNumber>;
+        sub: AddSubMulDivNumberVecNumberExtensions<TNumber>;
+        mul: AddSubMulDivNumberVecNumberExtensions<TNumber>;
+        div: AddSubMulDivNumberVecNumberExtensions<TNumber>;
 
-        addAssign: AddSubMulDivNumberVecNumberAssignExtensions<"float">;
-        subAssign: AddSubMulDivNumberVecNumberAssignExtensions<"float">;
-        mulAssign: AddSubMulDivNumberVecNumberAssignExtensions<"float">;
-        divAssign: AddSubMulDivNumberVecNumberAssignExtensions<"float">;
-    }
-
-    interface IntExtensions {
-        add: AddSubMulDivNumberVecNumberExtensions<"int">;
-        sub: AddSubMulDivNumberVecNumberExtensions<"int">;
-        mul: AddSubMulDivNumberVecNumberExtensions<"int">;
-        div: AddSubMulDivNumberVecNumberExtensions<"int">;
-
-        addAssign: AddSubMulDivNumberVecNumberAssignExtensions<"int">;
-        subAssign: AddSubMulDivNumberVecNumberAssignExtensions<"int">;
-        mulAssign: AddSubMulDivNumberVecNumberAssignExtensions<"int">;
-        divAssign: AddSubMulDivNumberVecNumberAssignExtensions<"int">;
-    }
-
-    interface UintExtensions {
-        add: AddSubMulDivNumberVecNumberExtensions<"uint">;
-        sub: AddSubMulDivNumberVecNumberExtensions<"uint">;
-        mul: AddSubMulDivNumberVecNumberExtensions<"uint">;
-        div: AddSubMulDivNumberVecNumberExtensions<"uint">;
-
-        addAssign: AddSubMulDivNumberVecNumberAssignExtensions<"uint">;
-        subAssign: AddSubMulDivNumberVecNumberAssignExtensions<"uint">;
-        mulAssign: AddSubMulDivNumberVecNumberAssignExtensions<"uint">;
-        divAssign: AddSubMulDivNumberVecNumberAssignExtensions<"uint">;
+        addAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        subAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        mulAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        divAssign: AddSubMulDivNumberVecNumberAssignExtensions;
     }
 
     interface Vector2Extensions {
@@ -389,32 +361,26 @@ declare module "../core/Node.js" {
 // mod
 
 interface Mod {
-    (a: FloatOrNumber, b: FloatOrNumber): Node<"float">;
+    (a: Number<"float">, b: Number<"float">): Node<"float">;
+    (a: Number<"int">, b: Number<"int">): Node<"int">;
+    (a: Number<"uint">, b: Number<"uint">): Node<"uint">;
 }
+
 export const mod: Mod;
 
-interface ModFloatExtension {
-    (b: FloatOrNumber): Node<"float">;
-}
-
-interface ModFloatAssignExtension {
-    (b: FloatOrNumber): this;
-}
-
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        mod: ModFloatExtension;
-
-        modAssign: ModFloatAssignExtension;
+    interface NumberExtensions<TNumber extends NumberType> {
+        mod: (b: Number<TNumber>) => Node<TNumber>;
+        modAssign: (b: Number<TNumber>) => this;
     }
 }
 
 // Comparison operators
 
 interface ComparisonOperator {
-    (a: FloatOrNumber, b: FloatOrNumber): Node<"bool">;
-    (a: IntOrNumber, b: IntOrNumber): Node<"bool">;
-    (a: UintOrNumber, b: UintOrNumber): Node<"bool">;
+    (a: Number<"float">, b: Number<"float">): Node<"bool">;
+    (a: Number<"int">, b: Number<"int">): Node<"bool">;
+    (a: Number<"uint">, b: Number<"uint">): Node<"bool">;
 }
 export const equal: ComparisonOperator;
 export const notEqual: ComparisonOperator;
@@ -423,48 +389,22 @@ export const greaterThan: ComparisonOperator;
 export const lessThanEqual: ComparisonOperator;
 export const greaterThanEqual: ComparisonOperator;
 
-interface ComparisonOperatorFloatExtensions {
-    (b: FloatOrNumber): Node<"bool">;
-}
-
-interface ComparisonOperatorIntExtensions {
-    (b: IntOrNumber): Node<"bool">;
-}
-
-interface ComparisonOperatorUintExtensions {
-    (b: UintOrNumber): Node<"bool">;
+interface ComparisonOperatorNumberExtensions<TNumber extends NumberType> {
+    (b: Number<TNumber>): Node<"bool">;
 }
 
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        equal: ComparisonOperatorFloatExtensions;
-        notEqual: ComparisonOperatorFloatExtensions;
-        lessThan: ComparisonOperatorFloatExtensions;
-        greaterThan: ComparisonOperatorFloatExtensions;
-        lessThanEqual: ComparisonOperatorFloatExtensions;
-        greaterThanEqual: ComparisonOperatorFloatExtensions;
-    }
-
-    interface IntExtensions {
-        equal: ComparisonOperatorIntExtensions;
-        notEqual: ComparisonOperatorIntExtensions;
-        lessThan: ComparisonOperatorIntExtensions;
-        greaterThan: ComparisonOperatorIntExtensions;
-        lessThanEqual: ComparisonOperatorIntExtensions;
-        greaterThanEqual: ComparisonOperatorIntExtensions;
-    }
-
-    interface UintExtensions {
-        equal: ComparisonOperatorUintExtensions;
-        notEqual: ComparisonOperatorUintExtensions;
-        lessThan: ComparisonOperatorUintExtensions;
-        greaterThan: ComparisonOperatorUintExtensions;
-        lessThanEqual: ComparisonOperatorUintExtensions;
-        greaterThanEqual: ComparisonOperatorUintExtensions;
+    interface NumberExtensions<TNumber extends NumberType> {
+        equal: ComparisonOperatorNumberExtensions<TNumber>;
+        notEqual: ComparisonOperatorNumberExtensions<TNumber>;
+        lessThan: ComparisonOperatorNumberExtensions<TNumber>;
+        greaterThan: ComparisonOperatorNumberExtensions<TNumber>;
+        lessThanEqual: ComparisonOperatorNumberExtensions<TNumber>;
+        greaterThanEqual: ComparisonOperatorNumberExtensions<TNumber>;
     }
 }
 
-// and/or
+// and/or/not/xor
 
 interface AndOr {
     (a: Node<"bool">, b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
@@ -476,15 +416,18 @@ interface AndOrBoolExtensions {
     (b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
 }
 
+export const not: (a: Node<"bool">) => Node<"bool">;
+export const xor: (a: Node<"bool">, b: Node<"bool">) => Node<"bool">;
+
 declare module "../core/Node.js" {
     interface BoolExtensions {
         and: AndOrBoolExtensions;
         or: AndOrBoolExtensions;
+        not: () => Node<"bool">;
+        xor: (b: Node<"bool">) => Node<"bool">;
     }
 }
 
-export const not: unknown;
-export const xor: unknown;
 export const bitAnd: unknown;
 export const bitNot: unknown;
 export const bitOr: unknown;
