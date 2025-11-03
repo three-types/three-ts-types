@@ -15007,7 +15007,7 @@ index 43d162ab5..81e920f55 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index ccdfba0be..b34e2efea 100644
+index ccdfba0be..dead41adc 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15105,7 +15105,7 @@ index ccdfba0be..b34e2efea 100644
 -    const threshold = uniform(0.08);
 -    const opacity = uniform(0.08);
 -    const steps = uniform(100);
-+    const baseColor = uniform<'color', THREE.Color>(new THREE.Color(0x798aa0));
++    const baseColor = uniform<'vec3', THREE.Color>(new THREE.Color(0x798aa0));
 +    const range = uniform<'float', number>(0.1);
 +    const threshold = uniform<'float', number>(0.08);
 +    const opacity = uniform<'float', number>(0.08);
@@ -15142,7 +15142,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..3cffd2705 100644
+index 429d2ff40..9c7100a3b 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -15154,7 +15154,7 @@ index 429d2ff40..3cffd2705 100644
  
  init();
  
-@@ -59,16 +59,16 @@ async function init() {
+@@ -59,18 +59,18 @@ async function init() {
          saturation: 1,
      };
  
@@ -15173,10 +15173,14 @@ index 429d2ff40..3cffd2705 100644
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
+-        const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
+-        const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
 +    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
-         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
-         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
++        const custom1UV = reflectNode.xyz.mul(uniform<'mat4', THREE.Matrix4>(rotateY1Matrix));
++        const custom2UV = reflectNode.xyz.mul(uniform<'mat4', THREE.Matrix4>(rotateY2Matrix));
          const mixCubeMaps = mix(
+             pmremTexture(cube1Texture, custom1UV),
+             pmremTexture(cube2Texture, custom2UV),
 @@ -134,7 +134,7 @@ async function init() {
  
      // gui
