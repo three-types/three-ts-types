@@ -127,6 +127,15 @@ export default class MathNode extends TempNode {
     constructor(method: MathNodeMethod3, aNode: Node, bNode: Node, cNode: Node);
 }
 
+type FloatOrNumber = Node<"float"> | number;
+type IntOrNumber = Node<"int"> | number;
+type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
+type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
+
+type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
+type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
+type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
+
 export const EPSILON: unknown;
 export const INFINITY: unknown;
 export const PI: unknown;
@@ -148,57 +157,257 @@ export const any: unknown;
  */
 export const equals: unknown;
 
-export const radians: unknown;
-export const degrees: unknown;
-export const exp: unknown;
-export const exp2: unknown;
-export const log: unknown;
-export const log2: unknown;
-export const sqrt: unknown;
-export const inverseSqrt: unknown;
-export const floor: unknown;
-export const ceil: unknown;
-export const normalize: unknown;
+interface UnaryFunction {
+    (x: FloatOrNumber): Node<"float">;
+}
+export const radians: UnaryFunction;
+export const degrees: UnaryFunction;
+export const exp: UnaryFunction;
+export const exp2: UnaryFunction;
+export const log: UnaryFunction;
+export const log2: UnaryFunction;
+export const sqrt: UnaryFunction;
+export const inverseSqrt: UnaryFunction;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        radians: () => Node<"float">;
+        degrees: () => Node<"float">;
+        exp: () => Node<"float">;
+        exp2: () => Node<"float">;
+        log: () => Node<"float">;
+        log2: () => Node<"float">;
+        sqrt: () => Node<"float">;
+        inverseSqrt: () => Node<"float">;
+    }
+}
 
-export const fract: unknown;
+interface FloorCeil {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const floor: FloorCeil;
+export const ceil: FloorCeil;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        floor: () => Node<"float">;
+        ceil: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        floor: () => Node<TVec>;
+        ceil: () => Node<TVec>;
+    }
+}
 
-export const sin: unknown;
-export const cos: unknown;
-export const tan: unknown;
-export const asin: unknown;
-export const acos: unknown;
-export const atan: unknown;
+interface Normalize {
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const normalize: Normalize;
+declare module "../core/Node.js" {
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        normalize: () => Node<TVec>;
+    }
+}
 
-export const abs: unknown;
+interface Fract {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const fract: Fract;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        fract: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        fract: () => Node<TVec>;
+    }
+}
 
-export const sign: unknown;
-export const length: unknown;
-export const negate: unknown;
-export const oneMinus: unknown;
+export const sin: (x: FloatOrNumber) => Node<"float">;
+export const cos: (x: FloatOrNumber) => Node<"float">;
+export const tan: (x: FloatOrNumber) => Node<"float">;
+export const asin: (x: FloatOrNumber) => Node<"float">;
+export const acos: (x: FloatOrNumber) => Node<"float">;
+export const atan: (y: FloatOrNumber, x?: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        sin: () => Node<"float">;
+        cos: () => Node<"float">;
+        tan: () => Node<"float">;
+        asin: () => Node<"float">;
+        acos: () => Node<"float">;
+        atan: (x?: FloatOrNumber) => Node<"float">;
+    }
+}
+
+interface Abs {
+    (x: FloatOrNumber): Node<"float">;
+    (x: IntOrNumber): Node<"int">;
+}
+export const abs: Abs;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        abs: () => Node<"float">;
+    }
+    interface IntExtensions {
+        abs: () => Node<"int">;
+    }
+}
+
+export const sign: (x: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        sign: () => Node<"float">;
+    }
+}
+
+export const length: (x: FloatVector) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        length: () => Node<"float">;
+    }
+}
+
+interface Negate {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const negate: Negate;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        negate: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        negate: () => Node<TVec>;
+    }
+}
+
+interface OneMinus {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const oneMinus: OneMinus;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        oneMinus: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        oneMinus: () => Node<TVec>;
+    }
+}
+
 export const dFdx: unknown;
 export const dFdy: unknown;
 export const round: unknown;
 export const reciprocal: unknown;
 export const trunc: unknown;
 
-export const fwidth: unknown;
+interface Fwidth {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const fwidth: Fwidth;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        fwidth: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        fwidth: () => Node<TVec>;
+    }
+}
+
 export const transpose: unknown;
 export const determinant: unknown;
 export const inverse: unknown;
 
-export const min: unknown;
-export const max: unknown;
+interface MinMax {
+    (x: FloatOrNumber, y: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (x: Vec2OrLessOrFloat, y: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (x: Vec3OrLessOrFloat, y: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (x: Vec4OrLessOrFloat, y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+export const min: MinMax;
+export const max: MinMax;
+interface MinMaxFloatExtension {
+    (y: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
+    (y: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (y: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+interface MinMaxVec2Extension {
+    (y: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
+    (y: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+interface MinMaxVec3Extension {
+    (y: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
+    (y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+interface MinMaxVec4Extension {
+    (y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        min: MinMaxFloatExtension;
+        max: MinMaxFloatExtension;
+    }
+    interface Vec2Extensions {
+        min: MinMaxVec2Extension;
+        max: MinMaxVec2Extension;
+    }
+    interface Vec3Extensions {
+        min: MinMaxVec3Extension;
+        max: MinMaxVec3Extension;
+    }
+    interface Vec4Extensions {
+        min: MinMaxVec4Extension;
+        max: MinMaxVec4Extension;
+    }
+}
 
-export const step: unknown;
+export const step: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
+
 export const reflect: unknown;
 
-export const distance: unknown;
+export const distance: (x: FloatVectorOrNumber, y: FloatVectorOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        distance: (y: FloatVectorOrNumber) => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        distance: (y: FloatVectorOrNumber) => Node<"float">;
+    }
+}
 
 export const difference: unknown;
 
-export const dot: unknown;
-export const cross: unknown;
-export const pow: unknown;
+export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
+export const cross: (x: FloatVector, y: FloatVector) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        dot: (y: FloatVector) => Node<"float">;
+        cross: (y: FloatVector) => Node<"float">;
+    }
+}
+
+export const pow: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        pow: (y: FloatOrNumber) => Node<"float">;
+    }
+}
+
 export const pow2: unknown;
 export const pow3: unknown;
 export const pow4: unknown;
@@ -206,24 +415,179 @@ export const transformDirection: unknown;
 export const cbrt: unknown;
 export const lengthSq: unknown;
 
-export const mix: unknown;
-export const clamp: unknown;
-export const saturate: unknown;
+interface Mix {
+    (a: FloatOrNumber, b: FloatOrNumber, t: FloatOrNumber): Node<"float">;
+    (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, t: FloatOrNumber): Node<"vec2">;
+    (a: Vec3OrLessOrFloat, b: Vec3OrLessOrFloat, t: FloatOrNumber): Node<"vec3">;
+    (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, t: FloatOrNumber): Node<"vec4">;
+}
+export const mix: Mix;
 
-export const refract: unknown;
-export const smoothstep: unknown;
-export const faceForward: unknown;
+interface Clamp {
+    (value: FloatOrNumber, low?: FloatOrNumber, high?: FloatOrNumber): Node<"float">;
+    (value: Vec2OrLessOrFloat, low?: Vec2OrLessOrFloat, high?: Vec2OrLessOrFloat): Node<"vec2">;
+    (value: Vec3OrLessOrFloat, low?: Vec3OrLessOrFloat, high?: Vec3OrLessOrFloat): Node<"vec3">;
+    (value: Vec4OrLessOrFloat, low?: Vec4OrLessOrFloat, high?: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const clamp: Clamp;
+interface ClampFloatExtension {
+    (low?: FloatOrNumber, high?: FloatOrNumber): Node<"float">;
+    (low?: Vec2OrLessOrFloat, high?: Vec2OrLessOrFloat): Node<"vec2">;
+    (low?: Vec3OrLessOrFloat, high?: Vec3OrLessOrFloat): Node<"vec3">;
+    (low?: Vec4OrLessOrFloat, high?: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface ClampVec2Extension {
+    (low?: Vec2OrLessOrFloat, high?: Vec2OrLessOrFloat): Node<"vec2">;
+    (low?: Vec3OrLessOrFloat, high?: Vec3OrLessOrFloat): Node<"vec3">;
+    (low?: Vec4OrLessOrFloat, high?: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface ClampVec3Extension {
+    (low?: Vec3OrLessOrFloat, high?: Vec3OrLessOrFloat): Node<"vec3">;
+    (low?: Vec4OrLessOrFloat, high?: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface ClampVec4Extension {
+    (low?: Vec4OrLessOrFloat, high?: Vec4OrLessOrFloat): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        clamp: ClampFloatExtension;
+    }
+    interface Vec2Extensions {
+        clamp: ClampVec2Extension;
+    }
+    interface Vec3Extensions {
+        clamp: ClampVec3Extension;
+    }
+    interface Vec4Extensions {
+        clamp: ClampVec4Extension;
+    }
+}
 
-export const rand: unknown;
+interface Saturate {
+    (value: FloatOrNumber, low?: FloatOrNumber, high?: FloatOrNumber): Node<"float">;
+}
+export const saturate: Saturate;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        saturate: () => Node<"float">;
+    }
+}
 
-export const mixElement: unknown;
-export const smoothstepElement: unknown;
-export const stepElement: unknown;
+interface Refract {
+    (I: Vec2OrLessOrFloat, N: Vec2OrLessOrFloat, ratio: FloatOrNumber): Node<"vec2">;
+    (I: Vec3OrLessOrFloat, N: Vec3OrLessOrFloat, ratio: FloatOrNumber): Node<"vec3">;
+    (I: Vec4OrLessOrFloat, N: Vec4OrLessOrFloat, ratio: FloatOrNumber): Node<"vec4">;
+}
+export const refract: Refract;
+interface RefractVec2Extension {
+    (N: Vec2OrLessOrFloat, ratio: FloatOrNumber): Node<"vec2">;
+    (N: Vec3OrLessOrFloat, ratio: FloatOrNumber): Node<"vec3">;
+    (N: Vec4OrLessOrFloat, ratio: FloatOrNumber): Node<"vec4">;
+}
+interface RefractVec3Extension {
+    (N: Vec3OrLessOrFloat, ratio: FloatOrNumber): Node<"vec3">;
+    (N: Vec4OrLessOrFloat, ratio: FloatOrNumber): Node<"vec4">;
+}
+interface RefractVec4Extension {
+    (N: Vec4OrLessOrFloat, ratio: FloatOrNumber): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface Vec2Extensions {
+        refract: RefractVec2Extension;
+    }
+    interface Vec3Extensions {
+        refract: RefractVec3Extension;
+    }
+    interface Vec4Extensions {
+        refract: RefractVec4Extension;
+    }
+}
+
+interface Smoothstep {
+    (low: FloatOrNumber, high: FloatOrNumber, x: FloatOrNumber): Node<"float">;
+}
+export const smoothstep: Smoothstep;
+
+interface FaceForward {
+    (N: Vec2OrLessOrFloat, I: Vec2OrLessOrFloat, Nref: Vec2OrLessOrFloat): Node<"vec2">;
+    (N: Vec3OrLessOrFloat, I: Vec3OrLessOrFloat, Nref: Vec3OrLessOrFloat): Node<"vec3">;
+    (N: Vec4OrLessOrFloat, I: Vec4OrLessOrFloat, Nref: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const faceForward: FaceForward;
+interface FaceForwardVec2Extension {
+    (I: Vec2OrLessOrFloat, Nref: Vec2OrLessOrFloat): Node<"vec2">;
+    (I: Vec3OrLessOrFloat, Nref: Vec3OrLessOrFloat): Node<"vec3">;
+    (I: Vec4OrLessOrFloat, Nref: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface FaceForwardVec3Extension {
+    (N: Vec3OrLessOrFloat, ratio: Vec3OrLessOrFloat): Node<"vec3">;
+    (N: Vec4OrLessOrFloat, ratio: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface FaceForwardVec4Extension {
+    (N: Vec4OrLessOrFloat, ratio: Vec4OrLessOrFloat): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface Vec2Extensions {
+        faceForward: FaceForwardVec2Extension;
+    }
+    interface Vec3Extensions {
+        faceForward: FaceForwardVec3Extension;
+    }
+    interface Vec4Extensions {
+        faceForward: FaceForwardVec4Extension;
+    }
+}
+
+export const rand: (uv: Node<"vec2">) => Node<"float">;
+declare module "../core/Node.js" {
+    interface Vec2Extensions {
+        rand: () => Node<"float">;
+    }
+}
+
+interface MixElement {
+    (t: FloatOrNumber, e1: FloatOrNumber, e2: FloatOrNumber): Node<"float">;
+    (t: FloatOrNumber, e1: Vec2OrLessOrFloat, e2: Vec2OrLessOrFloat): Node<"vec2">;
+    (t: FloatOrNumber, e1: Vec3OrLessOrFloat, e2: Vec3OrLessOrFloat): Node<"vec3">;
+    (t: FloatOrNumber, e1: Vec4OrLessOrFloat, e2: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const mixElement: MixElement;
+interface MixExtension {
+    (e1: FloatOrNumber, e2: FloatOrNumber): Node<"float">;
+    (e1: Vec2OrLessOrFloat, e2: Vec2OrLessOrFloat): Node<"vec2">;
+    (e1: Vec3OrLessOrFloat, e2: Vec3OrLessOrFloat): Node<"vec3">;
+    (e1: Vec4OrLessOrFloat, e2: Vec4OrLessOrFloat): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        mix: MixExtension;
+    }
+}
+
+interface SmoothstepElement {
+    (x: FloatOrNumber, low: FloatOrNumber, high: FloatOrNumber): Node<"float">;
+}
+export const smoothstepElement: SmoothstepElement;
+interface SmoothstepExtension {
+    (low: FloatOrNumber, high: FloatOrNumber): Node<"float">;
+}
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        smoothstep: SmoothstepExtension;
+    }
+}
+
+export const stepElement: (x: FloatOrNumber, edge: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        step: (edge: FloatOrNumber) => Node<"float">;
+    }
+}
 
 /**
  * @deprecated
  */
-export const atan2: unknown;
+export const atan2: typeof atan;
 
 // GLSL alias function
 

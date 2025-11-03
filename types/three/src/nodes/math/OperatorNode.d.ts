@@ -156,6 +156,9 @@ interface MulMatVec {
     (a: Node<"mat2">, b: Vec4OrLess): Node<"vec2">;
     (a: Node<"mat3">, b: Vec4OrLess): Node<"vec3">;
     (a: Node<"mat4">, b: Vec4OrLess): Node<"vec4">;
+    (a: Vec4OrLess, b: Node<"mat2">): Node<"vec2">;
+    (a: Vec4OrLess, b: Node<"mat3">): Node<"vec3">;
+    (a: Vec4OrLess, b: Node<"mat4">): Node<"vec4">;
 }
 
 interface MulVecMatMat2Extensions {
@@ -168,6 +171,12 @@ interface MulVecMatMat3Extensions {
 
 interface MulVecMatMat4Extensions {
     (b: Vec4OrLess): Node<"vec4">;
+}
+
+interface MulVecMatVecExtensions {
+    (b: Node<"mat2">): Node<"vec2">;
+    (b: Node<"mat3">): Node<"vec3">;
+    (b: Node<"mat4">): Node<"vec4">;
 }
 
 // Exports
@@ -186,6 +195,21 @@ interface Mul
         AddSubMulDivNumberVec<"uint">,
         AddSubMulMat,
         MulMatVec
+{
+}
+
+interface MulVec2Extensions<TNumber extends NumberType>
+    extends AddSubMulDivNumberVecVec2Extensions<TNumber>, MulVecMatVecExtensions
+{
+}
+
+interface MulVec3Extensions<TNumber extends NumberType>
+    extends AddSubMulDivNumberVecVec3Extensions<TNumber>, MulVecMatVecExtensions
+{
+}
+
+interface MulVec4Extensions<TNumber extends NumberType>
+    extends AddSubMulDivNumberVecVec4Extensions<TNumber>, MulVecMatVecExtensions
 {
 }
 
@@ -220,7 +244,7 @@ declare module "../core/Node.js" {
     interface Vector2Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
-        mul: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+        mul: MulVec2Extensions<TNumber>;
         div: AddSubMulDivNumberVecVec2Extensions<TNumber>;
 
         addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
@@ -232,7 +256,7 @@ declare module "../core/Node.js" {
     interface Vector3Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
-        mul: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+        mul: MulVec3Extensions<TNumber>;
         div: AddSubMulDivNumberVecVec3Extensions<TNumber>;
 
         addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
@@ -244,7 +268,7 @@ declare module "../core/Node.js" {
     interface Vector4Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
-        mul: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+        mul: MulVec4Extensions<TNumber>;
         div: AddSubMulDivNumberVecVec4Extensions<TNumber>;
 
         addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
