@@ -132,6 +132,8 @@ type IntOrNumber = Node<"int"> | number;
 type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 
+type BoolVector = Node<"bvec2"> | Node<"bvec3"> | Node<"bvec4">;
+
 type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
 type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
 type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
@@ -149,8 +151,8 @@ export const TWO_PI: Node<"float">;
 
 export const HALF_PI: Node<"float">;
 
-export const all: (x: Node<"bool">) => Node<"bool">;
-export const any: (x: Node<"bool">) => Node<"bool">;
+export const all: (x: BoolVector) => Node<"bool">;
+export const any: (x: BoolVector) => Node<"bool">;
 declare module "../core/Node.js" {
     interface BvecExtensions {
         all: () => Node<"bool">;
