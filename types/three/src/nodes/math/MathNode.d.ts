@@ -136,26 +136,27 @@ type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
 type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
 type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
 
-export const EPSILON: unknown;
-export const INFINITY: unknown;
-export const PI: unknown;
+export const EPSILON: Node<"float">;
+export const INFINITY: Node<"float">;
+export const PI: Node<"float">;
 
 /**
  * @deprecated Please use the non-deprecated version `TWO_PI`.
  */
-export const PI2: unknown;
+export const PI2: Node<"float">;
 
-export const TWO_PI: unknown;
+export const TWO_PI: Node<"float">;
 
-export const HALF_PI: unknown;
+export const HALF_PI: Node<"float">;
 
-export const all: unknown;
-export const any: unknown;
-
-/**
- * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
- */
-export const equals: unknown;
+export const all: (x: Node<"bool">) => Node<"bool">;
+export const any: (x: Node<"bool">) => Node<"bool">;
+declare module "../core/Node.js" {
+    interface BvecExtensions {
+        all: () => Node<"bool">;
+        any: () => Node<"bool">;
+    }
+}
 
 interface UnaryFunction {
     (x: FloatOrNumber): Node<"float">;
