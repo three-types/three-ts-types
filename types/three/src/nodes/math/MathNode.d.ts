@@ -382,6 +382,13 @@ declare module "../core/Node.js" {
     }
 }
 
+export const equals: (x: FloatOrNumber, y: FloatOrNumber) => Node<"bool">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        equals: (y: FloatOrNumber) => Node<"bool">;
+    }
+}
+
 interface MinMax {
     (x: FloatOrNumber, y: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
     (x: Vec2OrLessOrFloat, y: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
@@ -730,10 +737,16 @@ declare module "../core/Node.js" {
  * @deprecated
  */
 export const atan2: typeof atan;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        /**
+         * @deprecated
+         */
+        atan2: (x?: FloatOrNumber) => Node<"float">;
+    }
+}
 
 // GLSL alias function
 
 export const faceforward: typeof faceForward;
 export const inversesqrt: typeof inverseSqrt;
-
-// Method chaining

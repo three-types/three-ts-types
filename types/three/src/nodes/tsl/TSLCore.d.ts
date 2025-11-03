@@ -195,7 +195,7 @@ export const defined: (v: unknown) => unknown;
 export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
-    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => Node);
+    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => R);
     call: (
         inputs: { [key in keyof T]: T[key] extends Node ? Node : T[key] },
         builder?: NodeBuilder,
