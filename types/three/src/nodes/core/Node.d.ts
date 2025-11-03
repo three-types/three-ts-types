@@ -516,6 +516,7 @@ type Uvec4Swizzle =
 export type NumberType = "float" | "int" | "uint";
 export type IntegerType = "int" | "uint";
 export type FloatVectorType = "vec2" | "vec3" | "vec4";
+export type MatrixType = "mat2" | "mat3" | "mat4";
 export interface NodeExtensions<TValue> {
 }
 export interface FloatExtensions {
@@ -564,6 +565,8 @@ export interface Matrix3Extensions {
 }
 export interface Matrix4Extensions {
 }
+export interface MatrixExtensions<TMat extends MatrixType> {
+}
 type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
@@ -587,9 +590,9 @@ type Node<TValue = unknown> =
         : TValue extends "ivec4" ? Ivec4Swizzle & Ivec4Extensions & Vector4Extensions<"int">
         : TValue extends "uvec4" ? Uvec4Swizzle & Uvec4Extensions & Vector4Extensions<"uint">
         : TValue extends "bvec4" ? BvecExtensions
-        : TValue extends "mat2" ? Matrix2Extensions
-        : TValue extends "mat3" ? Matrix3Extensions
-        : TValue extends "mat4" ? Matrix4Extensions
+        : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<'mat2'>
+        : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<'mat3'>
+        : TValue extends "mat4" ? Matrix4Extensions & MatrixExtensions<'mat4'>
         : {})
     & {
         __TypeScript_VALUE__: TValue;

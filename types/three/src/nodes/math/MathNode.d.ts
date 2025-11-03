@@ -1,4 +1,4 @@
-import Node from "../core/Node.js";
+import Node, { MatrixType } from '../core/Node.js';
 import TempNode from "../core/TempNode.js";
 
 export type MathNodeMethod1 =
@@ -133,6 +133,8 @@ type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 
 type BoolVector = Node<"bvec2"> | Node<"bvec3"> | Node<"bvec4">;
+
+type Matrix = Node<"mat2"> | Node<"mat3"> | Node<"mat4">;
 
 type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
 type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
@@ -308,11 +310,30 @@ declare module "../core/Node.js" {
     }
 }
 
-export const dFdx: unknown;
-export const dFdy: unknown;
-export const round: unknown;
-export const reciprocal: unknown;
-export const trunc: unknown;
+interface Derivative {
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const dFdx: Derivative;
+export const dFdy: Derivative;
+declare module "../core/Node.js" {
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        dFdx: () => Node<TVec>;
+        dFdy: () => Node<TVec>;
+    }
+}
+
+export const round: (x: FloatOrNumber) => Node<"float">;
+export const reciprocal: (x: FloatOrNumber) => Node<"float">;
+export const trunc: (x: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        round: () => Node<"float">;
+        reciprocal: () => Node<"float">;
+        trunc: () => Node<"float">;
+    }
+}
 
 interface Fwidth {
     (x: FloatOrNumber): Node<"float">;
@@ -330,9 +351,36 @@ declare module "../core/Node.js" {
     }
 }
 
-export const transpose: unknown;
-export const determinant: unknown;
-export const inverse: unknown;
+interface Transpose {
+    (x: Node<"mat2">): Node<"mat2">;
+    (x: Node<"mat3">): Node<"mat3">;
+    (x: Node<"mat4">): Node<"mat4">;
+}
+export const transpose: Transpose;
+declare module "../core/Node.js" {
+    interface MatrixExtensions<TMat extends MatrixType> {
+        transpose: () => Node<TMat>;
+    }
+}
+
+export const determinant: (x: Matrix) => Node<"float">;
+declare module "../core/Node.js" {
+    interface MatrixExtensions<TMat extends MatrixType> {
+        determinant: () => Node<"float">;
+    }
+}
+
+interface Inverse {
+    (x: Node<"mat2">): Node<"mat2">;
+    (x: Node<"mat3">): Node<"mat3">;
+    (x: Node<"mat4">): Node<"mat4">;
+}
+export const inverse: Inverse;
+declare module "../core/Node.js" {
+    interface MatrixExtensions<TMat extends MatrixType> {
+        inverse: () => Node<TMat>;
+    }
+}
 
 interface MinMax {
     (x: FloatOrNumber, y: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
@@ -381,7 +429,35 @@ declare module "../core/Node.js" {
 
 export const step: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
 
-export const reflect: unknown;
+interface Reflect {
+    (I: Vec2OrLessOrFloat, N: Vec2OrLessOrFloat): Node<"vec2">;
+    (I: Vec3OrLessOrFloat, N: Vec3OrLessOrFloat): Node<"vec3">;
+    (I: Vec4OrLessOrFloat, N: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const reflect: Reflect;
+interface ReflectVec2Extension {
+    (N: Vec2OrLessOrFloat): Node<"vec2">;
+    (N: Vec3OrLessOrFloat): Node<"vec3">;
+    (N: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface ReflectVec3Extension {
+    (N: Vec3OrLessOrFloat): Node<"vec3">;
+    (N: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface ReflectVec4Extension {
+    (N: Vec4OrLessOrFloat): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface Vec2Extensions {
+        reflect: ReflectVec2Extension;
+    }
+    interface Vec3Extensions {
+        reflect: ReflectVec3Extension;
+    }
+    interface Vec4Extensions {
+        reflect: ReflectVec4Extension;
+    }
+}
 
 export const distance: (x: FloatVectorOrNumber, y: FloatVectorOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
@@ -393,7 +469,45 @@ declare module "../core/Node.js" {
     }
 }
 
-export const difference: unknown;
+interface Difference {
+    (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
+    (x: Vec2OrLessOrFloat, y: Vec2OrLessOrFloat): Node<"vec2">;
+    (x: Vec3OrLessOrFloat, y: Vec3OrLessOrFloat): Node<"vec3">;
+    (x: Vec4OrLessOrFloat, y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const difference: Difference;
+interface DifferenceFloatExtension {
+    (y: FloatOrNumber): Node<"float">;
+    (y: Vec2OrLessOrFloat): Node<"vec2">;
+    (y: Vec3OrLessOrFloat): Node<"vec3">;
+    (y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface DifferenceVec2Extension {
+    (y: Vec2OrLessOrFloat): Node<"vec2">;
+    (y: Vec3OrLessOrFloat): Node<"vec3">;
+    (y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface DifferenceVec3Extension {
+    (y: Vec3OrLessOrFloat): Node<"vec3">;
+    (y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+interface DifferenceVec4Extension {
+    (y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        difference: DifferenceFloatExtension;
+    }
+    interface Vec2Extensions {
+        difference: DifferenceVec2Extension;
+    }
+    interface Vec3Extensions {
+        difference: DifferenceVec3Extension;
+    }
+    interface Vec4Extensions {
+        difference: DifferenceVec4Extension;
+    }
+}
 
 export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
 export const cross: (x: FloatVector, y: FloatVector) => Node<"float">;
