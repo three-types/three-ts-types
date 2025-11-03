@@ -9,8 +9,6 @@ interface RangeNodeInterface<TNodeType> {
     minNode: Node<TNodeType>;
     maxNode: Node<TNodeType>;
 
-    constructor(minNode: Node<TNodeType>, maxNode: Node<TNodeType>);
-
     getVectorLength(builder: NodeBuilder): number;
 }
 
