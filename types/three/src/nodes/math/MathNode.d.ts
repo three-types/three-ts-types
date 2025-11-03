@@ -1,4 +1,4 @@
-import Node, { MatrixType } from '../core/Node.js';
+import Node, { MatrixType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type MathNodeMethod1 =
@@ -525,12 +525,37 @@ declare module "../core/Node.js" {
     }
 }
 
-export const pow2: unknown;
-export const pow3: unknown;
-export const pow4: unknown;
-export const transformDirection: unknown;
-export const cbrt: unknown;
-export const lengthSq: unknown;
+export const pow2: (x: FloatOrNumber) => Node<"float">;
+export const pow3: (x: FloatOrNumber) => Node<"float">;
+export const pow4: (x: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        pow2: () => Node<"float">;
+        pow3: () => Node<"float">;
+        pow4: () => Node<"float">;
+    }
+}
+
+export const transformDirection: (direction: Node<"vec3">, matrix: Node<"mat3"> | Node<"mat4">) => Node<"vec3">;
+declare module "../core/Node.js" {
+    interface Vec3Extensions {
+        transformDirection: (matrix: Node<"mat3"> | Node<"mat4">) => Node<"vec3">;
+    }
+}
+
+export const cbrt: (a: FloatOrNumber) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        cbrt: () => Node<"float">;
+    }
+}
+
+export const lengthSq: (a: FloatVector) => Node<"float">;
+declare module "../core/Node.js" {
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        lengthSq: () => Node<"float">;
+    }
+}
 
 interface Mix {
     (a: FloatOrNumber, b: FloatOrNumber, t: FloatOrNumber): Node<"float">;
