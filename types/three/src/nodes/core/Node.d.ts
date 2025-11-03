@@ -556,6 +556,8 @@ export interface Vector4Extensions<TNumber extends NumberType> {
 }
 export interface FloatVectorExtensions<TVec extends FloatVectorType> {
 }
+export interface BvecExtensions {
+}
 export interface Matrix2Extensions {
 }
 export interface Matrix3Extensions {
@@ -574,14 +576,17 @@ type Node<TValue = unknown> =
             ? Vec2Swizzle & Vec2Extensions & Vector2Extensions<"float"> & FloatVectorExtensions<"vec2">
         : TValue extends "ivec2" ? Ivec2Swizzle & Ivec2Extensions & Vector2Extensions<"int">
         : TValue extends "uvec2" ? Uvec2Swizzle & Uvec2Extensions & Vector2Extensions<"uint">
+        : TValue extends "bvec2" ? BvecExtensions
         : TValue extends "vec3"
             ? Vec3Swizzle & Vec3Extensions & Vector3Extensions<"float"> & FloatVectorExtensions<"vec2">
         : TValue extends "ivec3" ? Ivec3Swizzle & Ivec3Extensions & Vector3Extensions<"int">
         : TValue extends "uvec3" ? Uvec3Swizzle & Uvec3Extensions & Vector3Extensions<"uint">
+        : TValue extends "bvec3" ? BvecExtensions
         : TValue extends "vec4"
             ? Vec4Swizzle & Vec4Extensions & Vector4Extensions<"float"> & FloatVectorExtensions<"vec2">
         : TValue extends "ivec4" ? Ivec4Swizzle & Ivec4Extensions & Vector4Extensions<"int">
         : TValue extends "uvec4" ? Uvec4Swizzle & Uvec4Extensions & Vector4Extensions<"uint">
+        : TValue extends "bvec4" ? BvecExtensions
         : TValue extends "mat2" ? Matrix2Extensions
         : TValue extends "mat3" ? Matrix3Extensions
         : TValue extends "mat4" ? Matrix4Extensions
