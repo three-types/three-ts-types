@@ -1,4 +1,4 @@
-import Node, { MatrixType } from "../core/Node.js";
+import Node, { FloatVectorType, MatrixType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type MathNodeMethod1 =
@@ -252,6 +252,9 @@ declare module "../core/Node.js" {
 
 interface Abs {
     (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
     (x: IntOrNumber): Node<"int">;
 }
 export const abs: Abs;
@@ -261,6 +264,9 @@ declare module "../core/Node.js" {
     }
     interface IntExtensions {
         abs: () => Node<"int">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        abs: () => Node<TVec>;
     }
 }
 
@@ -613,12 +619,18 @@ declare module "../core/Node.js" {
 }
 
 interface Saturate {
-    (value: FloatOrNumber, low?: FloatOrNumber, high?: FloatOrNumber): Node<"float">;
+    (value: FloatOrNumber): Node<"float">;
+    (value: Node<"vec2">): Node<"vec2">;
+    (value: Node<"vec3">): Node<"vec3">;
+    (value: Node<"vec4">): Node<"vec4">;
 }
 export const saturate: Saturate;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         saturate: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        saturate: () => Node<TVec>;
     }
 }
 

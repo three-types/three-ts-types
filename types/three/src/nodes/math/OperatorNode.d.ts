@@ -311,17 +311,40 @@ declare module "../core/Node.js" {
 // mod
 
 interface Mod {
-    (a: Number<"float">, b: Number<"float">): Node<"float">;
-    (a: Number<"int">, b: Number<"int">): Node<"int">;
-    (a: Number<"uint">, b: Number<"uint">): Node<"uint">;
+    (a: Number<"float">, b: Vec4OrLessOrNumber<"float">): Node<"float">;
+    (a: Node<"vec2">, b: Vec4OrLessOrNumber<"float">): Node<"vec2">;
+    (a: Node<"vec3">, b: Vec4OrLessOrNumber<"float">): Node<"vec3">;
+    (a: Node<"vec4">, b: Vec4OrLessOrNumber<"float">): Node<"vec4">;
+
+    (a: Number<"int">, b: Vec4OrLessOrNumber<"int">): Node<"int">;
+    (a: Node<"ivec2">, b: Vec4OrLessOrNumber<"int">): Node<"ivec2">;
+    (a: Node<"ivec3">, b: Vec4OrLessOrNumber<"int">): Node<"ivec3">;
+    (a: Node<"ivec4">, b: Vec4OrLessOrNumber<"int">): Node<"ivec4">;
+
+    (a: Number<"uint">, b: Vec4OrLessOrNumber<"uint">): Node<"uint">;
+    (a: Node<"uvec2">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec2">;
+    (a: Node<"uvec3">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec3">;
+    (a: Node<"uvec4">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec4">;
 }
 
 export const mod: Mod;
 
 declare module "../core/Node.js" {
     interface NumberExtensions<TNumber extends NumberType> {
-        mod: (b: Number<TNumber>) => Node<TNumber>;
-        modAssign: (b: Number<TNumber>) => this;
+        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
+        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    }
+    interface Vector2Extensions<TNumber extends NumberType> {
+        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec2<TNumber>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    }
+    interface Vector3Extensions<TNumber extends NumberType> {
+        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    }
+    interface Vector4Extensions<TNumber extends NumberType> {
+        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
     }
 }
 
