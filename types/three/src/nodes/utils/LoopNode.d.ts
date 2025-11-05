@@ -1,18 +1,17 @@
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 
-interface LoopNodeObjectParameter {
+type LoopNodeType = "int" | "uint" | "float";
+
+interface LoopNodeObjectParameter<TNodeType extends LoopNodeType> {
     // TODO Expand to other types and update loop function types appropriately
-    type?: "int" | "uint" | "float";
+    type?: TNodeType;
     // TODO The variable name should affect the type of the loop function
     // name?: string;
-    start: number | Node;
-    end: number | Node;
+    start: Node<TNodeType> | number;
+    end: Node<TNodeType> | number;
     condition?: string;
-    update?: Node | number | string;
 }
-
-type LoopNodeParameter = Node | number | LoopNodeObjectParameter;
 
 declare class LoopNode extends Node {
     params: unknown[];
@@ -25,11 +24,14 @@ declare class LoopNode extends Node {
 export default LoopNode;
 
 interface Loop {
-    (i: LoopNodeParameter, func: (inputs: { readonly i: Node }) => void): Node;
-    (
-        i: LoopNodeParameter,
-        j: LoopNodeParameter,
-        func: (inputs: { readonly i: Node; readonly j: Node }) => void,
+    <TNodeType extends LoopNodeType>(
+        i: LoopNodeObjectParameter<TNodeType>,
+        func: (inputs: { readonly i: Node<TNodeType> }) => void,
+    ): Node;
+    <TNodeType extends LoopNodeType>(
+        i: LoopNodeObjectParameter<TNodeType>,
+        j: LoopNodeObjectParameter<TNodeType>,
+        func: (inputs: { readonly i: Node<TNodeType>; readonly j: Node<TNodeType> }) => void,
     ): Node;
 }
 

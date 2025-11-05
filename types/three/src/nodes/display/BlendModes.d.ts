@@ -1,12 +1,24 @@
 import Node from "../core/Node.js";
 
-export const blendBurn: (base: Node<"vec3"> | Node<"vec4">, blend: Node<"vec3"> | Node<"vec4">) => Node<"vec3">;
+export const blendBurn: (
+    base: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+    blend: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+) => Node<"vec3">;
 
-export const blendDodge: (base: Node<"vec3"> | Node<"vec4">, blend: Node<"vec3"> | Node<"vec4">) => Node<"vec3">;
+export const blendDodge: (
+    base: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+    blend: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+) => Node<"vec3">;
 
-export const blendScreen: (base: Node<"vec3"> | Node<"vec4">, blend: Node<"vec3"> | Node<"vec4">) => Node<"vec3">;
+export const blendScreen: (
+    base: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+    blend: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+) => Node<"vec3">;
 
-export const blendOverlay: (base: Node<"vec3"> | Node<"vec4">, blend: Node<"vec3"> | Node<"vec4">) => Node<"vec3">;
+export const blendOverlay: (
+    base: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+    blend: number | Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4">,
+) => Node<"vec3">;
 
 export const blendColor: (base: Node<"vec4">, blend: Node<"vec4">) => Node<"vec4">;
 
