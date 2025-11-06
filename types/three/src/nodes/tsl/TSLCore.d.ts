@@ -477,61 +477,61 @@ declare module "../core/Node.js" {
         toColor: () => Node<"vec3">;
         toColorAssign: () => this;
 
-        toFloat: () => Node;
+        toFloat: () => Node<"float">;
         toFloatAssign: () => this;
 
-        toInt: () => Node;
+        toInt: () => Node<"int">;
         toIntAssign: () => this;
 
-        toUint: () => Node;
+        toUint: () => Node<"uint">;
         toUintAssign: () => this;
 
-        toBool: () => Node;
+        toBool: () => Node<"bool">;
         toBoolAssign: () => this;
 
-        toVec2: () => Node;
+        toVec2: () => Node<"vec2">;
         toVec2Assign: () => this;
 
-        toIVec2: () => Node;
+        toIVec2: () => Node<"ivec2">;
         toIVec2Assign: () => this;
 
-        toUVec2: () => Node;
+        toUVec2: () => Node<"uvec2">;
         toUVec2Assign: () => this;
 
-        toBVec2: () => Node;
+        toBVec2: () => Node<"bvec2">;
         toBVec2Assign: () => this;
 
-        toVec3: () => Node;
+        toVec3: () => Node<"vec3">;
         toVec3Assign: () => this;
 
-        toIVec3: () => Node;
+        toIVec3: () => Node<"ivec3">;
         toIVec3Assign: () => this;
 
-        toUVec3: () => Node;
+        toUVec3: () => Node<"uvec3">;
         toUVec3Assign: () => this;
 
-        toBVec3: () => Node;
+        toBVec3: () => Node<"bvec3">;
         toBVec3Assign: () => this;
 
-        toVec4: () => Node;
+        toVec4: () => Node<"vec4">;
         toVec4Assign: () => this;
 
-        toIVec4: () => Node;
+        toIVec4: () => Node<"ivec4">;
         toIVec4Assign: () => this;
 
-        toUVec4: () => Node;
+        toUVec4: () => Node<"uvec4">;
         toUVec4Assign: () => this;
 
-        toBVec4: () => Node;
+        toBVec4: () => Node<"bvec4">;
         toBVec4Assign: () => this;
 
-        toMat2: () => Node;
+        toMat2: () => Node<"mat2">;
         toMat2Assign: () => this;
 
-        toMat3: () => Node;
+        toMat3: () => Node<"mat3">;
         toMat3Assign: () => this;
 
-        toMat4: () => Node;
+        toMat4: () => Node<"mat4">;
         toMat4Assign: () => this;
     }
 }
