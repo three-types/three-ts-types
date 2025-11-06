@@ -538,14 +538,25 @@ declare module "../core/Node.js" {
     }
 }
 
-export const pow2: (x: FloatOrNumber) => Node<"float">;
-export const pow3: (x: FloatOrNumber) => Node<"float">;
-export const pow4: (x: FloatOrNumber) => Node<"float">;
+interface PowConstant {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const pow2: PowConstant;
+export const pow3: PowConstant;
+export const pow4: PowConstant;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         pow2: () => Node<"float">;
         pow3: () => Node<"float">;
         pow4: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        pow2: () => Node<TVec>;
+        pow3: () => Node<TVec>;
+        pow4: () => Node<TVec>;
     }
 }
 

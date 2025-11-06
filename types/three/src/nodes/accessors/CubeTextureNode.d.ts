@@ -4,12 +4,12 @@ import TextureNode from "./TextureNode.js";
 
 declare class CubeTextureNode extends TextureNode {
     isCubeTextureNode: boolean;
-    uvNode: Node | null;
+    uvNode: Node<"vec3"> | null;
     levelNode: Node | null;
 
     constructor(
         value: CubeTexture,
-        uvNode?: Node | null,
+        uvNode?: Node<"vec3"> | null,
         levelNode?: Node | null,
         biasNode?: Node | null,
     );
