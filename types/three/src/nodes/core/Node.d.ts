@@ -2485,16 +2485,176 @@ interface Swizzle4In4Out<TNumber extends NumberType> extends Swizzle3In4Out<TNum
     set qqqq(value: Vec4OrLessOrNumber<TNumber>);
 }
 
+type XY = "x" | "y";
+type RG = "r" | "g";
+type ST = "s" | "t";
+type Vec2SwizzleMethods<TNumber extends NumberType> =
+    & {
+        [Key in XY | RG | ST as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec2<TNumber>>;
+    }
+    & {
+        [Key in XY | RG | ST as `flip${Uppercase<Key>}`]: () => Node<NumberToVec2<TNumber>>;
+    }
+    & {
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec2<TNumber>>;
+    }
+    & {
+        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}` as `flip${Uppercase<Key>}`]: () => Node<
+            NumberToVec2<TNumber>
+        >;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec2<TNumber>>;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}` as `flip${Uppercase<Key>}`]: () => Node<
+            NumberToVec2<TNumber>
+        >;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec2<TNumber>>;
+    }
+    & {
+        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}` as `flip${Uppercase<Key>}`]:
+            () => Node<NumberToVec2<TNumber>>;
+    };
+
+type XYZ = "x" | "y" | "z";
+type RGB = "r" | "g" | "b";
+type STP = "s" | "t" | "p";
+
+type Vec3SwizzleMethods<TNumber extends NumberType> =
+    & {
+        [Key in XYZ | RGB | STP as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [Key in XYZ | RGB | STP as `flip${Uppercase<Key>}`]: () => Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}` as `flip${Uppercase<Key>}`]: () => Node<
+            NumberToVec3<TNumber>
+        >;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}` as `flip${Uppercase<Key>}`]: () =>
+            Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [
+            Key in
+                | `${XYZ}${XYZ}${XYZ}${XYZ}`
+                | `${RGB}${RGB}${RGB}${RGB}`
+                | `${STP}${STP}${STP}${STP}` as `set${Uppercase<Key>}`
+        ]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec3<TNumber>>;
+    }
+    & {
+        [
+            Key in
+                | `${XYZ}${XYZ}${XYZ}${XYZ}`
+                | `${RGB}${RGB}${RGB}${RGB}`
+                | `${STP}${STP}${STP}${STP}` as `flip${Uppercase<Key>}`
+        ]: () => Node<NumberToVec3<TNumber>>;
+    };
+
+type XYZW = "x" | "y" | "z" | "w";
+type RGBA = "r" | "g" | "b" | "a";
+type STPQ = "s" | "t" | "p" | "q";
+
+type Vec4SwizzleMethods<TNumber extends NumberType> =
+    & {
+        [Key in XYZW | RGBA | STPQ as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [Key in XYZW | RGBA | STPQ as `flip${Uppercase<Key>}`]: () => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}` as `flip${Uppercase<Key>}`]: () => Node<
+            NumberToVec4<TNumber>
+        >;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`]:
+            (
+                value: Vec4OrLessOrNumber<TNumber>,
+            ) => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`]:
+            () => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [
+            Key in
+                | `${XYZW}${XYZW}${XYZW}${XYZW}`
+                | `${RGBA}${RGBA}${RGBA}${RGBA}`
+                | `${STPQ}${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`
+        ]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<NumberToVec4<TNumber>>;
+    }
+    & {
+        [
+            Key in
+                | `${XYZW}${XYZW}${XYZW}${XYZW}`
+                | `${RGBA}${RGBA}${RGBA}${RGBA}`
+                | `${STPQ}${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`
+        ]: () => Node<NumberToVec4<TNumber>>;
+    };
+
 interface Vec2Swizzle<TNumber extends NumberType>
-    extends Swizzle2In1Out<TNumber>, Swizzle2In2Out<TNumber>, Swizzle2In3Out<TNumber>, Swizzle2In4Out<TNumber>
+    extends
+        Swizzle2In1Out<TNumber>,
+        Swizzle2In2Out<TNumber>,
+        Swizzle2In3Out<TNumber>,
+        Swizzle2In4Out<TNumber>,
+        Vec2SwizzleMethods<TNumber>
 {}
 
 interface Vec3Swizzle<TNumber extends NumberType>
-    extends Swizzle3In1Out<TNumber>, Swizzle3In2Out<TNumber>, Swizzle3In3Out<TNumber>, Swizzle3In4Out<TNumber>
+    extends
+        Swizzle3In1Out<TNumber>,
+        Swizzle3In2Out<TNumber>,
+        Swizzle3In3Out<TNumber>,
+        Swizzle3In4Out<TNumber>,
+        Vec3SwizzleMethods<TNumber>
 {}
 
 interface Vec4Swizzle<TNumber extends NumberType>
-    extends Swizzle4In1Out<TNumber>, Swizzle4In2Out<TNumber>, Swizzle4In3Out<TNumber>, Swizzle4In4Out<TNumber>
+    extends
+        Swizzle4In1Out<TNumber>,
+        Swizzle4In2Out<TNumber>,
+        Swizzle4In3Out<TNumber>,
+        Swizzle4In4Out<TNumber>,
+        Vec4SwizzleMethods<TNumber>
 {}
 
 export type NumberType = "float" | "int" | "uint";
