@@ -22,6 +22,22 @@ export default RangeNode;
 
 interface Range {
     (
+        minNode: number,
+        maxNode: number,
+    ): RangeNode<"float">;
+    (
+        minNode: Vector2,
+        maxNode: Vector2,
+    ): RangeNode<"vec2">;
+    (
+        minNode: Vector3,
+        maxNode: Vector3,
+    ): RangeNode<"vec3">;
+    (
+        minNode: Vector4,
+        maxNode: Vector4,
+    ): RangeNode<"vec4">;
+    (
         minNode: Color,
         maxNode: Color,
     ): RangeNode<"vec3">;
