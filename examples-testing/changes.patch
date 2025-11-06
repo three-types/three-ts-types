@@ -20435,7 +20435,7 @@ index 14c148902..2eec825a4 100644
      gui.addColor({ color: atmosphereDayColor.value.getHex(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index 739138504..46c0eead5 100644
+index 739138504..e8c5523ba 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
 @@ -5,7 +5,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20447,6 +20447,15 @@ index 739138504..46c0eead5 100644
  
  init();
  
+@@ -23,7 +23,7 @@ function init() {
+         blending: THREE.AdditiveBlending,
+     });
+ 
+-    const size = uniform(0.08);
++    const size = uniform<'float', number>(0.08);
+     material.scaleNode = range(0, 1).mul(size);
+ 
+     const radiusRatio = range(0, 1);
 @@ -68,7 +68,7 @@ function init() {
  
      // debug
@@ -20457,7 +20466,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f1..f0ecb2bf2 100644
+index 143d577f1..7e37f3df3 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20480,7 +20489,7 @@ index 143d577f1..f0ecb2bf2 100644
 +
 +interface Uniforms {
 +    count: THREE.UniformNode<'float', number>;
-+    color: THREE.UniformNode<'vec3', THREE.Node<'vec3'>>;
++    color: THREE.UniformNode<'vec3', THREE.Color>;
 +    direction: THREE.UniformNode<'vec3', THREE.Vector3>;
 +    start: THREE.UniformNode<'float', number>;
 +    end: THREE.UniformNode<'float', number>;
@@ -20659,7 +20668,7 @@ index e57c66eeb..fcaefeb9e 100644
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
-index ef87d67ba..15245c7ba 100644
+index ef87d67ba..9dbc0803a 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 +++ b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 @@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20710,7 +20719,7 @@ index ef87d67ba..15245c7ba 100644
 +    const warpFrequency = uniform<'float', number>(6);
 +    const warpStrength = uniform<'float', number>(1);
 +    const strength = uniform<'float', number>(10);
-+    const offset = uniform<'vec2', THREE.Node<'vec2'>>(vec2(0, 0));
++    const offset = uniform<'vec2', THREE.Vector2>(vec2(0, 0));
 +    const normalLookUpShift = uniform<'float', number>(0.01);
 +    const colorSand = uniform<'vec3', THREE.Node<'vec3'>>(color('#ffe894'));
 +    const colorGrass = uniform<'vec3', THREE.Node<'vec3'>>(color('#85d534'));
@@ -20771,7 +20780,7 @@ index ef87d67ba..15245c7ba 100644
              drag.worldCoords.copy(intersect.point);
          }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d075..6bd9295e4 100644
+index cb513d075..96fc4447c 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20799,11 +20808,11 @@ index cb513d075..6bd9295e4 100644
 -    const smallWavesSpeed = uniform(0.3);
 -    const smallWavesMultiplier = uniform(0.18);
 -    const normalComputeShift = uniform(0.01);
-+    const emissiveColor = uniform<'vec3', THREE.Node<'vec3'>>(color('#ff0a81'));
++    const emissiveColor = uniform<'vec3', THREE.Color>(color('#ff0a81'));
 +    const emissiveLow = uniform<'float', number>(-0.25);
 +    const emissiveHigh = uniform<'float', number>(0.2);
 +    const emissivePower = uniform<'float', number>(7);
-+    const largeWavesFrequency = uniform<'vec2', THREE.Node<'vec2'>>(vec2(3, 1));
++    const largeWavesFrequency = uniform<'vec2', THREE.Vector2>(vec2(3, 1));
 +    const largeWavesSpeed = uniform<'float', number>(1.25);
 +    const largeWavesMultiplier = uniform<'float', number>(0.15);
 +    const smallWavesIterations = uniform<'float', number>(3);
@@ -20864,7 +20873,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..6ec89772b 100644
+index 4c4ee68ee..0575f881e 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20913,8 +20922,8 @@ index 4c4ee68ee..6ec89772b 100644
 -const previousSpawnPosition = uniform(vec3(0.0));
 +const spawnIndex = uniform<'float', number>(0);
 +const nbToSpawn = uniform<'float', number>(5);
-+const spawnPosition = uniform<'vec3', THREE.Node<'vec3'>>(vec3(0.0));
-+const previousSpawnPosition = uniform<'vec3', THREE.Node<'vec3'>>(vec3(0.0));
++const spawnPosition = uniform<'vec3', THREE.Vector3>(vec3(0.0));
++const previousSpawnPosition = uniform<'vec3', THREE.Vector3>(vec3(0.0));
  
 -const turbFrequency = uniform(0.5);
 -const turbAmplitude = uniform(0.5);
@@ -20998,7 +21007,7 @@ index 4c4ee68ee..6ec89772b 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..a98916a92 100644
+index 571b7ea0b..d8e3efbf4 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -21052,7 +21061,7 @@ index 571b7ea0b..a98916a92 100644
 -    const parabolStrength = uniform(1);
 -    const parabolOffset = uniform(0.3);
 -    const parabolAmplitude = uniform(0.2);
-+    const emissiveColor = uniform<'vec3', THREE.Node<'vec3'>>(color('#ff8b4d'));
++    const emissiveColor = uniform<'vec3', THREE.Color>(color('#ff8b4d'));
 +    const timeScale = uniform<'float', number>(0.2);
 +    const parabolStrength = uniform<'float', number>(1);
 +    const parabolOffset = uniform<'float', number>(0.3);
