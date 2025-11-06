@@ -11457,7 +11457,7 @@ index ddcf5e6e5..b386e1cb5 100644
      clock = new THREE.Clock();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
-index c3079d15b..bd541cf35 100644
+index 288b4477d..e56fedad4 100644
 --- a/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
 +++ b/examples-testing/examples/webgl_postprocessing_unreal_bloom_selective.ts
 @@ -23,7 +23,7 @@ const params = {
@@ -11469,9 +11469,9 @@ index c3079d15b..bd541cf35 100644
  
  const renderer = new THREE.WebGLRenderer({ antialias: false });
  renderer.setPixelRatio(window.devicePixelRatio);
-@@ -66,8 +66,8 @@ const mixPass = new ShaderPass(
-             baseTexture: { value: null },
+@@ -67,8 +67,8 @@ const mixPass = new ShaderPass(
              bloomTexture: { value: bloomComposer.renderTarget2.texture },
+             bloomStrength: { value: params.strength },
          },
 -        vertexShader: document.getElementById('vertexshader').textContent,
 -        fragmentShader: document.getElementById('fragmentshader').textContent,
@@ -11480,7 +11480,7 @@ index c3079d15b..bd541cf35 100644
          defines: {},
      }),
      'baseTexture',
-@@ -122,7 +122,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
+@@ -125,7 +125,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
  
  setupScene();
  
@@ -11489,7 +11489,7 @@ index c3079d15b..bd541cf35 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
  
-@@ -175,9 +175,9 @@ function setupScene() {
+@@ -178,9 +178,9 @@ function setupScene() {
      render();
  }
  
@@ -11502,7 +11502,7 @@ index c3079d15b..bd541cf35 100644
      }
  }
  
-@@ -190,16 +190,16 @@ function render() {
+@@ -193,16 +193,16 @@ function render() {
      finalComposer.render();
  }
  
@@ -14170,7 +14170,7 @@ index 0a05626a1..0d9d160da 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 355e9f212..2d17ffce7 100644
+index 7c5f5a5d1..8479536f0 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
 @@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -18480,12 +18480,12 @@ index 65ddd7375..b9a4cdbb9 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index a9d9c0fe2..fba97060a 100644
+index 20c773049..fbd257ef0 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -1,7 +1,7 @@
  import * as THREE from 'three/webgpu';
- import { pass, mrt, output, normalView, velocity, vec3, vec4 } from 'three/tsl';
+ import { pass, mrt, output, normalView, velocity, vec3, vec4, directionToColor, colorSpaceToWorking } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
@@ -18509,7 +18509,7 @@ index a9d9c0fe2..fba97060a 100644
  
  const params = {
      samples: 16,
-@@ -114,14 +118,15 @@ async function init() {
+@@ -116,14 +120,15 @@ async function init() {
          // first place. Besides, normal estimation is computationally more expensive than just sampling a
          // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
@@ -21256,7 +21256,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index b11f4dd3d..ff89ba958 100644
+index 5250dc919..de8ca04ae 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
