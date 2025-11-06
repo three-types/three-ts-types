@@ -17823,7 +17823,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..bdc1474f2 100644
+index e49f98ce7..49a2760f6 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17833,8 +17833,9 @@ index e49f98ce7..bdc1474f2 100644
 -let camera, scene, renderer, controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
  
- class OcclusionNode extends THREE.Node {
+-class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
++class OcclusionNode extends THREE.Node<'vec3'> {
 +    uniformNode: THREE.UniformNode<'vec3', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
