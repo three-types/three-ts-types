@@ -11469,9 +11469,9 @@ index c3079d15b..bd541cf35 100644
  
  const renderer = new THREE.WebGLRenderer({ antialias: false });
  renderer.setPixelRatio(window.devicePixelRatio);
-@@ -67,8 +67,8 @@ const mixPass = new ShaderPass(
+@@ -66,8 +66,8 @@ const mixPass = new ShaderPass(
+             baseTexture: { value: null },
              bloomTexture: { value: bloomComposer.renderTarget2.texture },
-             bloomStrength: { value: params.strength },
          },
 -        vertexShader: document.getElementById('vertexshader').textContent,
 -        fragmentShader: document.getElementById('fragmentshader').textContent,
@@ -11480,7 +11480,7 @@ index c3079d15b..bd541cf35 100644
          defines: {},
      }),
      'baseTexture',
-@@ -125,7 +125,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
+@@ -122,7 +122,7 @@ toneMappingFolder.add(params, 'exposure', 0.1, 2).onChange(function (value) {
  
  setupScene();
  
@@ -11489,7 +11489,7 @@ index c3079d15b..bd541cf35 100644
      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
  
-@@ -178,9 +178,9 @@ function setupScene() {
+@@ -175,9 +175,9 @@ function setupScene() {
      render();
  }
  
@@ -11502,7 +11502,7 @@ index c3079d15b..bd541cf35 100644
      }
  }
  
-@@ -193,16 +193,16 @@ function render() {
+@@ -190,16 +190,16 @@ function render() {
      finalComposer.render();
  }
  
@@ -18483,10 +18483,9 @@ diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-te
 index a9d9c0fe2..fba97060a 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
-@@ -13,8 +13,8 @@ import {
-     colorToDirection,
-     colorSpaceToWorking,
- } from 'three/tsl';
+@@ -1,7 +1,7 @@
+ import * as THREE from 'three/webgpu';
+ import { pass, mrt, output, normalView, velocity, vec3, vec4 } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
@@ -18510,9 +18509,9 @@ index a9d9c0fe2..fba97060a 100644
  
  const params = {
      samples: 16,
-@@ -115,7 +119,7 @@ async function init() {
-     aoPass.resolutionScale = 0.5; // running AO in half resolution is often sufficient
-     aoPass.useTemporalFiltering = true;
+@@ -114,14 +118,15 @@ async function init() {
+         // first place. Besides, normal estimation is computationally more expensive than just sampling a
+         // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
  
 -    const aoPassOutput = aoPass.getTextureNode('output');
 +    const aoPassOutput = aoPass.getTextureNode();
