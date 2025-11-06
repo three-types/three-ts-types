@@ -41,6 +41,22 @@ interface Range {
         minNode: Color,
         maxNode: Color,
     ): RangeNode<"vec3">;
+    (
+        minNode: Node<"float">,
+        maxNode: Node<"float">,
+    ): RangeNode<"float">;
+    (
+        minNode: Node<"vec2">,
+        maxNode: Node<"vec2">,
+    ): RangeNode<"vec2">;
+    (
+        minNode: Node<"vec3">,
+        maxNode: Node<"vec3">,
+    ): RangeNode<"vec3">;
+    (
+        minNode: Node<"vec4">,
+        maxNode: Node<"vec4">,
+    ): RangeNode<"vec4">;
 }
 
 export const range: Range;

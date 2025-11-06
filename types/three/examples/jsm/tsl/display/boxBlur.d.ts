@@ -1,8 +1,8 @@
 import { Node } from "three/webgpu";
 
 export interface BoxBlurOptions {
-    size?: Node<"int"> | undefined;
-    separation?: Node<"int"> | undefined;
+    size?: Node<"int"> | Node<"float"> | undefined;
+    separation?: Node<"int"> | Node<"float"> | undefined;
     premultipliedAlpha?: boolean | undefined;
 }
 

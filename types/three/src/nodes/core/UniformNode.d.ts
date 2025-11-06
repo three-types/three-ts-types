@@ -1,6 +1,5 @@
 import { NodeUpdateType } from "./constants.js";
 import InputNode from "./InputNode.js";
-import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 import UniformGroupNode from "./UniformGroupNode.js";
@@ -58,6 +57,10 @@ declare const UniformNode: {
 };
 type UniformNode<TNodeValue, TValue> = UniformNodeInterface<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
+interface Uniform {
+    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>, type?: string): UniformNode<TNodeValue, TValue>;
+    <TNodeValue, TValue>(value: TValue, type?: string): UniformNode<TNodeValue, TValue>;
+}
 /**
  * TSL function for creating a uniform node.
  *
@@ -67,7 +70,4 @@ export default UniformNode;
  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
  * @returns {UniformNode}
  */
-export declare const uniform: <TNodeValue, TValue>(
-    value: InputNode<TNodeValue, TValue> | TValue,
-    type?: Node | string,
-) => UniformNode<TNodeValue, TValue>;
+export declare const uniform: Uniform;
