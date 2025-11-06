@@ -15492,7 +15492,7 @@ index a5bce3225..8b2fa4ad7 100644
      const localTime = instanceTime.add(time);
      const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..0a065693c 100644
+index 409129373..31a039394 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15540,7 +15540,7 @@ index 409129373..0a065693c 100644
      };
  
      // Position and THREE.Color Data
-@@ -94,7 +103,7 @@ async function init() {
+@@ -94,10 +103,10 @@ async function init() {
  
      // Material / Sprites
  
@@ -15548,7 +15548,11 @@ index 409129373..0a065693c 100644
 +    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
      const pointColors = mix(
          vec3(0.0),
-         instancedBufferAttribute(colorsAttribute),
+-        instancedBufferAttribute(colorsAttribute),
++        instancedBufferAttribute<'vec3'>(colorsAttribute),
+         attributeRange.div(float(effectController.maxWidth)),
+     );
+ 
 @@ -136,7 +145,7 @@ async function init() {
  
      // GUI
