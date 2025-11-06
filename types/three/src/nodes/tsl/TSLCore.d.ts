@@ -5,6 +5,7 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
+import ConstNode from "../core/ConstNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
@@ -299,13 +300,13 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): Node<"vec3">;
-    (r: number, g: number, b: number): Node<"vec3">;
+    (color?: string | number): ConstNode<"vec3", Color>;
+    (r: number, g: number, b: number): ConstNode<"vec3", Color>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): Node<"vec3">;
+    (color: Color): ConstNode<"vec3", Color>;
     (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -315,28 +316,28 @@ interface ColorFunction {
 export const color: ColorFunction;
 
 interface FloatFunction {
-    (value?: number): Node<"float">;
+    (value?: number): ConstNode<"float", number>;
     (node: Node): Node<"float">;
 }
 
 export const float: FloatFunction;
 
 interface IntFunction {
-    (value?: number): Node<"int">;
+    (value?: number): ConstNode<"int", number>;
     (node: Node): Node<"int">;
 }
 
 export const int: IntFunction;
 
 interface UintFunction {
-    (value?: number): Node<"uint">;
+    (value?: number): ConstNode<"uint", number>;
     (node: Node): Node<"uint">;
 }
 
 export const uint: UintFunction;
 
 interface BooleanFunction {
-    (value?: boolean): Node<"bool">;
+    (value?: boolean): ConstNode<"bool", number>;
     (node: Node): Node<"bool">;
 }
 
@@ -345,12 +346,12 @@ export const bool: BooleanFunction;
 interface Vector2Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number): Node<"vec2">;
+    (x?: number, y?: number): ConstNode<"vec2", Vector2>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector2): Node<"vec2">;
+    (value: Vector2): ConstNode<"vec2", Vector2>;
     (node: Node): Node<"vec2">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -366,12 +367,12 @@ export const bvec2: (node: Node) => Node<"bvec2">;
 interface Vector3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number): Node<"vec3">;
+    (x?: number, y?: number, z?: number): ConstNode<"vec3", Vector3>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector3): Node<"vec3">;
+    (value: Vector3): ConstNode<"vec3", Vector3>;
     (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -387,12 +388,12 @@ export const bvec3: (node: Node) => Node<"bvec3">;
 interface Vector4Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number, w?: number): Node<"vec4">;
+    (x?: number, y?: number, z?: number, w?: number): ConstNode<"vec4", Vector4>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector4): Node<"vec4">;
+    (value: Vector4): ConstNode<"vec4", Vector4>;
     (node: Node): Node<"vec4">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -406,14 +407,14 @@ export const uvec4: (node: Node) => Node<"uvec4">;
 export const bvec4: (node: Node) => Node<"bvec4">;
 
 interface Matrix2Function {
-    (value: Matrix2): Node<"mat2">;
+    (value: Matrix2): ConstNode<"mat2", Matrix2>;
     (node: Node): Node<"mat2">;
 }
 
 export const mat2: Matrix2Function;
 
 interface Matrix3Function {
-    (value: Matrix3): Node<"mat3">;
+    (value: Matrix3): ConstNode<"mat3", Matrix3>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -425,7 +426,7 @@ interface Matrix3Function {
         n32: number | Node,
         n33: number | Node,
     ): Node<"mat3">;
-    (): Node<"mat3">;
+    (): ConstNode<"mat3", Matrix3>;
     (
         p1: Node,
         p2: Node,
@@ -437,7 +438,7 @@ interface Matrix3Function {
 export const mat3: Matrix3Function;
 
 interface Matrix4Function {
-    (value: Matrix4): Node<"mat4">;
+    (value: Matrix4): ConstNode<"mat4", Matrix4>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -456,7 +457,7 @@ interface Matrix4Function {
         n43: number | Node,
         n44: number | Node,
     ): Node<"mat4">;
-    (): Node<"mat4">;
+    (): ConstNode<"mat4", Matrix4>;
     (
         p1: Node,
         p2: Node,
