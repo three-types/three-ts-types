@@ -107,7 +107,7 @@ export function mx_worley_noise_vec3(
     jitter?: Node | number,
 ): Node<"vec3">;
 
-export function mx_cell_noise_float(texcoord?: Node): Node;
+export function mx_cell_noise_float(texcoord?: Node): Node<"float">;
 
 export function mx_fractal_noise_float(
     position?: Node,
