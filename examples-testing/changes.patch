@@ -16999,7 +16999,7 @@ index 0a841ae27..847b3df3e 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_materials_sss.ts b/examples-testing/examples/webgpu_materials_sss.ts
-index c76df99dc..9c9fb02d2 100644
+index c76df99dc..b94767b77 100644
 --- a/examples-testing/examples/webgpu_materials_sss.ts
 +++ b/examples-testing/examples/webgpu_materials_sss.ts
 @@ -6,9 +6,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -17033,7 +17033,7 @@ index c76df99dc..9c9fb02d2 100644
          model.position.set(0, 0, 10);
          model.scale.setScalar(1);
          model.material = material;
-@@ -103,16 +103,24 @@ function initMaterial() {
+@@ -103,37 +103,45 @@ function initMaterial() {
      initGUI(material);
  }
  
@@ -17058,15 +17058,41 @@ index c76df99dc..9c9fb02d2 100644
 +        scale: number;
 +
 +        constructor() {
-+            this.distortion = material.thicknessDistortionNode.value;
-+            this.ambient = material.thicknessAmbientNode.value;
-+            this.attenuation = material.thicknessAttenuationNode.value;
-+            this.power = material.thicknessPowerNode.value;
-+            this.scale = material.thicknessScaleNode.value;
++            this.distortion = (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value;
++            this.ambient = (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value;
++            this.attenuation = (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value;
++            this.power = (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value;
++            this.scale = (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value;
 +        }
 +    }
  
      const thicknessControls = new ThicknessControls();
+ 
+     gui.add(thicknessControls, 'distortion', 0.01, 1, 0.01).onChange(function () {
+-        material.thicknessDistortionNode.value = thicknessControls.distortion;
++        (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value = thicknessControls.distortion;
+     });
+ 
+     gui.add(thicknessControls, 'ambient', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAmbientNode.value = thicknessControls.ambient;
++        (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value = thicknessControls.ambient;
+     });
+ 
+     gui.add(thicknessControls, 'attenuation', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAttenuationNode.value = thicknessControls.attenuation;
++        (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value = thicknessControls.attenuation;
+     });
+ 
+     gui.add(thicknessControls, 'power', 0.01, 16.0, 0.1).onChange(function () {
+-        material.thicknessPowerNode.value = thicknessControls.power;
++        (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value = thicknessControls.power;
+     });
+ 
+     gui.add(thicknessControls, 'scale', 0.01, 50.0, 0.1).onChange(function () {
+-        material.thicknessScaleNode.value = thicknessControls.scale;
++        (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value = thicknessControls.scale;
+     });
+ }
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
 index 090372729..2456b2959 100644
@@ -18162,7 +18188,7 @@ index 3e1ea3ef9..e0e11ef81 100644
              });
          });
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
-index 3dc3ceb4f..aad91a01c 100644
+index 3dc3ceb4f..52882cad2 100644
 --- a/examples-testing/examples/webgpu_portal.ts
 +++ b/examples-testing/examples/webgpu_portal.ts
 @@ -17,10 +17,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18184,7 +18210,7 @@ index 3dc3ceb4f..aad91a01c 100644
      const loader = new GLTFLoader();
      loader.load('models/gltf/Xbot.glb', function (gltf) {
 -        const createModel = (colorNode = null) => {
-+        const createModel = (colorNode: THREE.Node | null = null) => {
++        const createModel = (colorNode: THREE.Node<'vec3'> | null = null) => {
              let object;
  
              if (mixers.length === 0) {
@@ -18226,7 +18252,7 @@ index 9bbbceb12..aed754f55 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index f23b09c18..166d3b929 100644
+index f23b09c18..0bae944cf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 @@ -18,21 +18,31 @@ import {
@@ -18338,8 +18364,12 @@ index f23b09c18..166d3b929 100644
      gui.add(params, 'intensity', 0, 1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -219,7 +240,7 @@ async function animate() {
-     lutPass.intensityNode.value = params.intensity;
+@@ -216,10 +237,10 @@ function onWindowResize() {
+ async function animate() {
+     controls.update();
+ 
+-    lutPass.intensityNode.value = params.intensity;
++    (lutPass.intensityNode as THREE.UniformNode<'float', number>).value = params.intensity;
  
      if (lutMap[params.lut]) {
 -        const lut = lutMap[params.lut];
@@ -18348,7 +18378,7 @@ index f23b09c18..166d3b929 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 88a0c635d..d56783bd8 100644
+index 88a0c635d..fe398d4a1 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -13,12 +13,12 @@ import {
@@ -18367,7 +18397,14 @@ index 88a0c635d..d56783bd8 100644
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
-@@ -78,7 +78,7 @@ function init() {
+@@ -72,13 +72,13 @@ function init() {
+ 
+     const material = new THREE.SpriteNodeMaterial({ blending: THREE.AdditiveBlending, depthWrite: false });
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.1));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.1));
+     const modTime = mod(localTime, 1.0);
+     const accTime = modTime.mul(modTime);
  
      const angle = accTime.mul(40.0);
      const pulse = vec2(sin(angle).mul(20.0), cos(angle).mul(20.0));
@@ -20118,7 +20155,7 @@ index 4e1e0a4e6..0a4a14d54 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index a1a354ff7..ef09a1bc2 100644
+index a1a354ff7..940a35c89 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
@@ -20133,7 +20170,7 @@ index a1a354ff7..ef09a1bc2 100644
  
  const planeWidth = 50;
  const planeHeight = 50;
-@@ -24,8 +27,8 @@ function init() {
+@@ -24,14 +27,14 @@ function init() {
      // width 256, height 256, depth 109, 8-bit, zip archived raw data
  
      new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
@@ -20144,6 +20181,13 @@ index a1a354ff7..ef09a1bc2 100644
  
          const map = new THREE.DataArrayTexture(array, 256, 256, 109);
          map.format = THREE.RedFormat;
+         map.needsUpdate = true;
+ 
+-        let coord = uv();
++        let coord: THREE.Node<'vec2'> = uv();
+         coord = coord.setY(coord.y.oneMinus()); // flip y
+ 
+         let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
 diff --git a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
 index cb8ea8f3d..d17d8b487 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
