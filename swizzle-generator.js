@@ -55,7 +55,12 @@ for (let a = 0; a < 4; a++) {
     }
 }
 
-const getType = ["Node<TNumber>", "NumberToVec2<TNumber>", "NumberToVec3<TNumber>", "NumberToVec4<TNumber>"];
+const getType = [
+    "Node<TNumber>",
+    "Node<NumberToVec2<TNumber>>",
+    "Node<NumberToVec3<TNumber>>",
+    "Node<NumberToVec4<TNumber>>",
+];
 
 for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
@@ -65,7 +70,7 @@ for (let i = 0; i < 4; i++) {
         console.log(interfaceLine);
         const arr = swizzleOptions[i][j];
         for (const val of arr) {
-            console.log(`    get ${val}(): ${getType[i]}`);
+            console.log(`    get ${val}(): ${getType[i]};`);
             console.log(`    set ${val}(value: Vec4OrLessOrNumber<TNumber>);`);
         }
         console.log("}");
