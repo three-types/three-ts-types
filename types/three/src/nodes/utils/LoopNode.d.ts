@@ -13,7 +13,7 @@ interface LoopNodeObjectParameter<TNodeType extends LoopNodeType> {
     condition?: string;
 }
 
-declare class LoopNode extends Node {
+declare class LoopNode extends Node<"void"> {
     params: unknown[];
 
     constructor(params?: unknown[]);
@@ -24,15 +24,19 @@ declare class LoopNode extends Node {
 export default LoopNode;
 
 interface Loop {
+    (
+        i: number,
+        func: (inputs: { readonly i: Node<"int"> }) => void,
+    ): LoopNode;
     <TNodeType extends LoopNodeType>(
         i: LoopNodeObjectParameter<TNodeType>,
         func: (inputs: { readonly i: Node<TNodeType> }) => void,
-    ): Node;
+    ): LoopNode;
     <TNodeType extends LoopNodeType>(
         i: LoopNodeObjectParameter<TNodeType>,
         j: LoopNodeObjectParameter<TNodeType>,
         func: (inputs: { readonly i: Node<TNodeType>; readonly j: Node<TNodeType> }) => void,
-    ): Node;
+    ): LoopNode;
 }
 
 export const Loop: Loop;

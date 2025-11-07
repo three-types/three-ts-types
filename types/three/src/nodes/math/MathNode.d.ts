@@ -270,10 +270,19 @@ declare module "../core/Node.js" {
     }
 }
 
-export const sign: (x: FloatOrNumber) => Node<"float">;
+interface Sign {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+export const sign: Sign;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         sign: () => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        sign: () => Node<TVec>;
     }
 }
 
@@ -531,10 +540,19 @@ declare module "../core/Node.js" {
     }
 }
 
+interface Pow {
+    (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">, y: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">, y: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">, y: Node<"vec4">): Node<"vec4">;
+}
 export const pow: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         pow: (y: FloatOrNumber) => Node<"float">;
+    }
+    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+        pow: (y: Node<TVec>) => Node<TVec>;
     }
 }
 

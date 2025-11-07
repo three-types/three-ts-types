@@ -352,8 +352,7 @@ declare module "../core/Node.js" {
 
 interface ComparisonOperator {
     (a: Number<"float">, b: Number<"float">): Node<"bool">;
-    (a: Number<"int">, b: Number<"int">): Node<"bool">;
-    (a: Number<"uint">, b: Number<"uint">): Node<"bool">;
+    (a: Number<"int"> | Number<"uint">, b: Number<"int"> | Number<"uint">): Node<"bool">;
 }
 export const equal: ComparisonOperator;
 export const notEqual: ComparisonOperator;
@@ -367,13 +366,31 @@ interface ComparisonOperatorNumberExtensions<TNumber extends NumberType> {
 }
 
 declare module "../core/Node.js" {
-    interface NumberExtensions<TNumber extends NumberType> {
-        equal: ComparisonOperatorNumberExtensions<TNumber>;
-        notEqual: ComparisonOperatorNumberExtensions<TNumber>;
-        lessThan: ComparisonOperatorNumberExtensions<TNumber>;
-        greaterThan: ComparisonOperatorNumberExtensions<TNumber>;
-        lessThanEqual: ComparisonOperatorNumberExtensions<TNumber>;
-        greaterThanEqual: ComparisonOperatorNumberExtensions<TNumber>;
+    interface FloatExtensions {
+        equal: ComparisonOperatorNumberExtensions<"float">;
+        notEqual: ComparisonOperatorNumberExtensions<"float">;
+        lessThan: ComparisonOperatorNumberExtensions<"float">;
+        greaterThan: ComparisonOperatorNumberExtensions<"float">;
+        lessThanEqual: ComparisonOperatorNumberExtensions<"float">;
+        greaterThanEqual: ComparisonOperatorNumberExtensions<"float">;
+    }
+
+    interface IntExtensions {
+        equal: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        notEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+    }
+
+    interface UintExtensions {
+        equal: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        notEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
     }
 }
 
