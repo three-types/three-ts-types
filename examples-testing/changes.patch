@@ -20873,7 +20873,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..0575f881e 100644
+index 4c4ee68ee..d6e228348 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20945,7 +20945,7 @@ index 4c4ee68ee..0575f881e 100644
      // TSL function
      // current color from index
 -    getInstanceColor = Fn(([i]) => {
-+    getInstanceColor = Fn<[THREE.Node]>(([i]) => {
++    getInstanceColor = Fn<[THREE.IndexNode], THREE.Node<'vec3'>>(([i]) => {
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
