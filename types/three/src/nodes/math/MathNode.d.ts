@@ -1,8 +1,8 @@
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
-import { Vector2 } from '../../math/Vector2.js';
-import { Vector3 } from '../../math/Vector3.js';
-import { Vector4 } from '../../math/Vector4.js';
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
