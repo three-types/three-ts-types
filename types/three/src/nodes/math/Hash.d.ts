@@ -1,3 +1,3 @@
 import Node from "../core/Node.js";
 
-export const hash: (seed: Node<"uint">) => Node<"float">;
+export const hash: (seed: Node<"int"> | Node<"uint">) => Node<"float">;

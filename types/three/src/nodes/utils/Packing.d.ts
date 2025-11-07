@@ -1,5 +1,10 @@
 import Node from "../core/Node.js";
 
-export const directionToColor: (node: Node<"vec3">) => Node<"vec3">;
-export const colorToDirection: (node: Node<"vec3">) => Node<"vec3">;
+interface PackingFunction {
+    (node: Node<"vec3">): Node<"vec3">;
+    (node: Node<"vec4">): Node<"vec4">;
+}
+
+export const directionToColor: PackingFunction;
+export const colorToDirection: PackingFunction;
 export const unpackNormal: (xy: Node<"vec2">) => Node<"vec3">;
