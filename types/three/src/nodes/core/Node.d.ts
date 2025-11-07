@@ -2485,6 +2485,45 @@ interface Swizzle4In4Out<TNumber extends NumberType> extends Swizzle3In4Out<TNum
     set qqqq(value: Vec4OrLessOrNumber<TNumber>);
 }
 
+type X = "x";
+type R = "r";
+type S = "s";
+type NumberSwizzleMethods<TNumber extends NumberType> =
+    & {
+        [Key in X | R | S as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<TNumber>;
+    }
+    & {
+        [Key in X | R | S as `flip${Uppercase<Key>}`]: () => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}` | `${R}${R}` | `${S}${S}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}` | `${R}${R}` | `${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}${X}` | `${R}${R}${R}` | `${S}${S}${S}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}${X}` | `${R}${R}${R}` | `${S}${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}${X}${X}` | `${R}${R}${R}${R}` | `${S}${S}${S}${S}` as `set${Uppercase<Key>}`]: (
+            value: Vec4OrLessOrNumber<TNumber>,
+        ) => Node<TNumber>;
+    }
+    & {
+        [Key in `${X}${X}${X}${X}` | `${R}${R}${R}${R}` | `${S}${S}${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<
+            TNumber
+        >;
+    };
+
 type XY = "x" | "y";
 type RG = "r" | "g";
 type ST = "s" | "t";
@@ -2630,6 +2669,15 @@ type Vec4SwizzleMethods<TNumber extends NumberType> =
         ]: () => Node<NumberToVec4<TNumber>>;
     };
 
+interface NumberSwizzle<TNumber extends NumberType>
+    extends
+        Swizzle1In1Out<TNumber>,
+        Swizzle1In2Out<TNumber>,
+        Swizzle1In3Out<TNumber>,
+        Swizzle1In4Out<TNumber>,
+        NumberSwizzleMethods<TNumber>
+{}
+
 interface Vec2Swizzle<TNumber extends NumberType>
     extends
         Swizzle2In1Out<TNumber>,
@@ -2715,9 +2763,11 @@ type Node<TValue = unknown> =
     & NodeInterface
     & NodeElements
     & NodeExtensions<TValue>
-    & (TValue extends "float" ? FloatExtensions & NumberExtensions<"float">
-        : TValue extends "int" ? IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int">
-        : TValue extends "uint" ? UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint">
+    & (TValue extends "float" ? NumberSwizzle<"float"> & FloatExtensions & NumberExtensions<"float">
+        : TValue extends "int"
+            ? NumberSwizzle<"int"> & IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int">
+        : TValue extends "uint"
+            ? NumberSwizzle<"uint"> & UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint">
         : TValue extends "bool" ? BoolExtensions
         : TValue extends "vec2"
             ? Vec2Swizzle<"float"> & Vec2Extensions & Vector2Extensions<"float"> & FloatVectorExtensions<"vec2">
