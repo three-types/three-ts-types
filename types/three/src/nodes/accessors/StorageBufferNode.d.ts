@@ -8,9 +8,7 @@ import StructTypeNode from "../core/StructTypeNode.js";
 import StorageArrayElementNode from "../utils/StorageArrayElementNode.js";
 import BufferNode from "./BufferNode.js";
 
-export default class StorageBufferNode<TElementType>
-    extends BufferNode<unknown, StorageBufferAttribute | StorageInstancedBufferAttribute>
-{
+interface StorageBufferNodeInterface<TNodeType> {
     readonly isStorageBufferNode: true;
 
     structTypeNode: StructTypeNode | null;
@@ -21,13 +19,7 @@ export default class StorageBufferNode<TElementType>
 
     bufferObject: boolean;
 
-    constructor(
-        value: StorageBufferAttribute | StorageInstancedBufferAttribute,
-        bufferType?: string | Struct | null,
-        bufferCount?: number,
-    );
-
-    element: (indexNode: Node | number) => StorageArrayElementNode<TElementType>;
+    element: (indexNode: Node | number) => StorageArrayElementNode<TNodeType>;
 
     setPBO(value: boolean): this;
 
@@ -42,17 +34,31 @@ export default class StorageBufferNode<TElementType>
     toAtomic(): this;
 }
 
-export const storage: <TElementType>(
+declare const StorageBufferNode: {
+    new<TNodeType>(
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute,
+        bufferType?: string | Struct | null,
+        bufferCount?: number,
+    ): StorageBufferNode<TNodeType>;
+};
+
+type StorageBufferNode<TNodeType> =
+    & StorageBufferNodeInterface<TNodeType>
+    & BufferNode<TNodeType, StorageBufferAttribute | StorageInstancedBufferAttribute>;
+
+export default StorageBufferNode;
+
+export const storage: <TNodeType>(
     value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
     type?: string | Struct | null,
     count?: number,
-) => StorageBufferNode<TElementType>;
+) => StorageBufferNode<TNodeType>;
 
 /**
  * @deprecated
  */
-export const storageObject: <TElementType>(
+export const storageObject: <TNodeType>(
     value: StorageBufferAttribute | StorageInstancedBufferAttribute,
     type?: string | Struct | null,
     count?: number,
-) => StorageBufferNode<TElementType>;
+) => StorageBufferNode<TNodeType>;
