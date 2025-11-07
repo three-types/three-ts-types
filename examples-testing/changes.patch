@@ -19633,7 +19633,7 @@ index d475ed2de..3d0c4e82b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-index 627fd6b18..ededdfd58 100644
+index 627fd6b18..9dc934c0f 100644
 --- a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 +++ b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 @@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
@@ -19682,6 +19682,24 @@ index 627fd6b18..ededdfd58 100644
  
          const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
          map3D.name = 'Data3DTexture';
+@@ -109,7 +120,7 @@ async function init() {
+         // 3D
+         const helper3D = new TextureHelper(map3D, 10, 10, depth);
+         helper3D.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[1].scene.add(helper3D);
+@@ -135,7 +146,7 @@ async function init() {
+ 
+         const helperArray = new TextureHelper(mapArray, 10, 10, depth);
+         helperArray.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.div(size.depth).mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.div(size.depth).mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[0].scene.add(helperArray);
 @@ -159,7 +170,7 @@ async function init() {
          const quadMesh = new THREE.QuadMesh(materialQuad);
  
