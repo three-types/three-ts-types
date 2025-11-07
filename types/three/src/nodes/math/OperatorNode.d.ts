@@ -87,7 +87,10 @@ interface AddSubMulDivNumberVecNumberExtensions<TNumber extends NumberType> {
 }
 
 interface AddSubMulDivNumberVecNumberAssignExtensions {
-    (b: AnyNumber, ...params: AnyNumber[]): this;
+    (
+        b: Vec4OrLessOrNumber<"float"> | Vec4OrLessOrNumber<"int"> | Vec4OrLessOrNumber<"uint">,
+        ...params: (Vec4OrLessOrNumber<"float"> | Vec4OrLessOrNumber<"int"> | Vec4OrLessOrNumber<"uint">)[]
+    ): this;
 }
 
 interface AddSubMulDivNumberVecVec2Extensions<TNumber extends NumberType> {
@@ -97,7 +100,7 @@ interface AddSubMulDivNumberVecVec2Extensions<TNumber extends NumberType> {
 }
 
 interface AddSubMulDivNumberVecVec2AssignExtensions<TNumber extends NumberType> {
-    (b: Vec2OrLessOrNumber<TNumber>, ...params: Vec2OrLessOrNumber<TNumber>[]): this;
+    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): this;
 }
 
 interface AddSubMulDivNumberVecVec3Extensions<TNumber extends NumberType> {
@@ -106,7 +109,7 @@ interface AddSubMulDivNumberVecVec3Extensions<TNumber extends NumberType> {
 }
 
 interface AddSubMulDivNumberVecVec3AssignExtensions<TNumber extends NumberType> {
-    (b: Vec3OrLessOrNumber<TNumber>, ...params: Vec3OrLessOrNumber<TNumber>[]): this;
+    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): this;
 }
 
 interface AddSubMulDivNumberVecVec4Extensions<TNumber extends NumberType> {
