@@ -1,5 +1,8 @@
-import Node, { FloatVectorType, MatrixType } from "../core/Node.js";
+import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
+import { Vector2 } from '../../math/Vector2.js';
+import { Vector3 } from '../../math/Vector3.js';
+import { Vector4 } from '../../math/Vector4.js';
 
 export type MathNodeMethod1 =
     | typeof MathNode.RADIANS
@@ -206,9 +209,9 @@ declare module "../core/Node.js" {
 }
 
 interface Normalize {
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
+    (x: Node<"vec2"> | Vector2): Node<"vec2">;
+    (x: Node<"vec3"> | Vector3): Node<"vec3">;
+    (x: Node<"vec4"> | Vector4): Node<"vec4">;
 }
 export const normalize: Normalize;
 declare module "../core/Node.js" {
