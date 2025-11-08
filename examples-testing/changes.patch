@@ -14352,7 +14352,7 @@ index e07e60463..2e0d4855a 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 229033d79..d2ac9b717 100644
+index 229033d79..da8f94d50 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14387,15 +14387,6 @@ index 229033d79..d2ac9b717 100644
      overlay.remove();
  
      // audio buffer
-@@ -69,7 +69,7 @@ async function init() {
- 
-     // read-only buffer
- 
--    const originalWave = instancedArray(waveBuffer).toReadOnly();
-+    const originalWave = instancedArray<'float'>(waveBuffer).toReadOnly();
- 
-     // The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
-     // As used in `renderer.getArrayBufferAsync( waveArray.value )`.
 @@ -92,7 +92,7 @@ async function init() {
  
          const time = index.mul(pitch);
@@ -14415,7 +14406,7 @@ index 229033d79..d2ac9b717 100644
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index c602920ee..4be9be5f7 100644
+index c602920ee..802afddb6 100644
 --- a/examples-testing/examples/webgpu_compute_birds.ts
 +++ b/examples-testing/examples/webgpu_compute_birds.ts
 @@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14456,19 +14447,6 @@ index c602920ee..4be9be5f7 100644
              for (let i = 0; i < arguments.length; i++) {
                  vertices.array[v++] = arguments[i];
              }
-@@ -163,9 +174,9 @@ function init() {
-     // Labels applied to storage nodes and uniform nodes are reflected within the shader output,
-     // and are useful for debugging purposes.
- 
--    const positionStorage = instancedArray(positionArray, 'vec3').setName('positionStorage');
--    const velocityStorage = instancedArray(velocityArray, 'vec3').setName('velocityStorage');
--    const phaseStorage = instancedArray(phaseArray, 'float').setName('phaseStorage');
-+    const positionStorage = instancedArray<'vec3'>(positionArray, 'vec3').setName('positionStorage');
-+    const velocityStorage = instancedArray<'vec3'>(velocityArray, 'vec3').setName('velocityStorage');
-+    const phaseStorage = instancedArray<'float'>(phaseArray, 'float').setName('phaseStorage');
- 
-     // The Pixel Buffer Object (PBO) is required to get the GPU computed data in the WebGL2 fallback.
- 
 @@ -374,7 +385,7 @@ function init() {
  
      window.addEventListener('resize', onWindowResize);
@@ -14488,7 +14466,7 @@ index c602920ee..4be9be5f7 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 6f4c3b61b..30fe6b939 100644
+index 6f4c3b61b..ffdcddf00 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14579,32 +14557,6 @@ index 6f4c3b61b..30fe6b939 100644
          const id = verletSprings.length;
          const spring = {
              id,
-@@ -208,11 +231,11 @@ function setupVerletVertexBuffers() {
-         }
-     }
- 
--    vertexPositionBuffer = instancedArray(vertexPositionArray, 'vec3').setPBO(true); // setPBO(true) is only important for the WebGL Fallback
-+    vertexPositionBuffer = instancedArray<'vec3'>(vertexPositionArray, 'vec3').setPBO(true); // setPBO(true) is only important for the WebGL Fallback
-     vertexForceBuffer = instancedArray(vertexCount, 'vec3');
-     vertexParamsBuffer = instancedArray(vertexParamsArray, 'uvec3');
- 
--    springListBuffer = instancedArray(new Uint32Array(springListArray), 'uint').setPBO(true);
-+    springListBuffer = instancedArray<'uint'>(new Uint32Array(springListArray), 'uint').setPBO(true);
- }
- 
- function setupVerletSpringBuffers() {
-@@ -230,9 +253,9 @@ function setupVerletSpringBuffers() {
-         springRestLengthArray[i] = spring.vertex0.position.distanceTo(spring.vertex1.position);
-     }
- 
--    springVertexIdBuffer = instancedArray(springVertexIdArray, 'uvec2').setPBO(true);
-+    springVertexIdBuffer = instancedArray<'uvec2'>(springVertexIdArray, 'uvec2').setPBO(true);
-     springRestLengthBuffer = instancedArray(springRestLengthArray, 'float');
--    springForceBuffer = instancedArray(springCount * 3, 'vec3').setPBO(true);
-+    springForceBuffer = instancedArray<'vec3'>(springCount * 3, 'vec3').setPBO(true);
- }
- 
- function setupUniforms() {
 @@ -349,7 +372,7 @@ function setupWireframe() {
      const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
      springWireframeMaterial.positionNode = Fn(() => {
@@ -14642,7 +14594,7 @@ index 6f4c3b61b..30fe6b939 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 1f76c981c..039b6ebd2 100644
+index 1f76c981c..e21935c61 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14664,21 +14616,6 @@ index 1f76c981c..039b6ebd2 100644
 +    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
  
  init();
- 
-@@ -83,10 +85,10 @@ async function init() {
- 
-     //
- 
--    const positionBuffer = instancedArray(maxParticleCount, 'vec3');
--    const scaleBuffer = instancedArray(maxParticleCount, 'vec3');
--    const staticPositionBuffer = instancedArray(maxParticleCount, 'vec3');
--    const dataBuffer = instancedArray(maxParticleCount, 'vec4');
-+    const positionBuffer = instancedArray<'vec3'>(maxParticleCount, 'vec3');
-+    const scaleBuffer = instancedArray<'vec3'>(maxParticleCount, 'vec3');
-+    const staticPositionBuffer = instancedArray<'vec3'>(maxParticleCount, 'vec3');
-+    const dataBuffer = instancedArray<'vec4'>(maxParticleCount, 'vec4');
- 
-     // compute
  
 @@ -124,7 +126,7 @@ async function init() {
      const speed = 0.4;
@@ -14708,7 +14645,7 @@ index 1f76c981c..039b6ebd2 100644
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index b51bafeab..5666bc88c 100644
+index b51bafeab..34d18d6ef 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
 @@ -4,8 +4,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14722,17 +14659,6 @@ index b51bafeab..5666bc88c 100644
  
  const pointerVector = new THREE.Vector2(-10.0, -10.0); // Out of bounds first
  const scaleVector = new THREE.Vector2(1, 1);
-@@ -22,8 +22,8 @@ async function init() {
- 
-     const particlesCount = 300000;
- 
--    const particleArray = instancedArray(particlesCount, 'vec2');
--    const velocityArray = instancedArray(particlesCount, 'vec2');
-+    const particleArray = instancedArray<'vec2'>(particlesCount, 'vec2');
-+    const velocityArray = instancedArray<'vec2'>(particlesCount, 'vec2');
- 
-     // create function
- 
 @@ -96,7 +96,7 @@ async function init() {
  
      // gui
