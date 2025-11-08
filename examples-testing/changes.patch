@@ -14678,7 +14678,7 @@ index b51bafeab..34d18d6ef 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..4da3309d2 100644
+index 9a37a9ece..723e4ffbd 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14771,46 +14771,7 @@ index 9a37a9ece..4da3309d2 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -202,7 +209,9 @@ async function initBitonicSort() {
-     randomizeDataArray(array);
- 
-     const currentElementsBuffer = new THREE.StorageInstancedBufferAttribute(array, 1);
--    const currentElementsStorage = storage(currentElementsBuffer, 'uint', size).setPBO(true).setName('Elements');
-+    const currentElementsStorage = storage<'uint'>(currentElementsBuffer, 'uint', size)
-+        .setPBO(true)
-+        .setName('Elements');
-     const randomizedElementsBuffer = new THREE.StorageInstancedBufferAttribute(size, 1);
-     const randomizedElementsStorage = storage(randomizedElementsBuffer, 'uint', size)
-         .setPBO(true)
-@@ -290,13 +299,13 @@ async function initGlobalSwapOnly() {
- 
-     const infoArray = new Uint32Array([3, 2, 2]);
-     const infoBuffer = new THREE.StorageInstancedBufferAttribute(infoArray, 1);
--    const infoStorage = storage(infoBuffer, 'uint', infoBuffer.count).setPBO(true).setName('TheInfo');
-+    const infoStorage = storage<'uint'>(infoBuffer, 'uint', infoBuffer.count).setPBO(true).setName('TheInfo');
- 
-     const nextBlockHeightBuffer = new THREE.StorageInstancedBufferAttribute(new Uint32Array(1).fill(2), 1);
--    const nextBlockHeightStorage = storage(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
-+    const nextBlockHeightStorage = storage<'uint'>(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
-         .setPBO(true)
-         .setName('NextBlockHeight');
--    const nextBlockHeightRead = storage(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
-+    const nextBlockHeightRead = storage<'uint'>(nextBlockHeightBuffer, 'uint', nextBlockHeightBuffer.count)
-         .setPBO(true)
-         .setName('NextBlockHeight')
-         .toReadOnly();
-@@ -310,7 +319,9 @@ async function initGlobalSwapOnly() {
-     randomizeDataArray(array);
- 
-     const currentElementsBuffer = new THREE.StorageInstancedBufferAttribute(array, 1);
--    const currentElementsStorage = storage(currentElementsBuffer, 'uint', size).setPBO(true).setName('Elements');
-+    const currentElementsStorage = storage<'uint'>(currentElementsBuffer, 'uint', size)
-+        .setPBO(true)
-+        .setName('Elements');
-     const tempBuffer = new THREE.StorageInstancedBufferAttribute(array, 1);
-     const tempStorage = storage(tempBuffer, 'uint', size).setPBO(true).setName('Temp');
-     const randomizedElementsBuffer = new THREE.StorageInstancedBufferAttribute(size, 1);
-@@ -319,7 +330,7 @@ async function initGlobalSwapOnly() {
+@@ -319,7 +326,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
      // Swap the elements in local storage
@@ -19806,7 +19767,7 @@ index de9f219b8..68a7b73a8 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 1b4461d33..53e66f6a6 100644
+index 1b4461d33..0d3c1af80 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -19829,6 +19790,15 @@ index 1b4461d33..53e66f6a6 100644
  
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
+@@ -34,7 +34,7 @@ async function init(forceWebGL = false) {
+ 
+         const arrayBuffer = new THREE.StorageInstancedBufferAttribute(new Float32Array(array), typeSize);
+ 
+-        arrayBufferNodes.push(storage(arrayBuffer, type[i], size).setPBO(true));
++        arrayBufferNodes.push(storage(arrayBuffer, type[i] as 'float', size).setPBO(true));
+     }
+ 
+     const computeInitOrder = Fn(() => {
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
 index 4e1e0a4e6..0a4a14d54 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
@@ -20451,7 +20421,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..aa3831c1a 100644
+index 4c4ee68ee..736edf556 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20483,46 +20453,7 @@ index 4c4ee68ee..aa3831c1a 100644
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
-@@ -111,8 +117,16 @@ async function init() {
- 
-     // Particles
-     // storage buffers
--    const particlePositions = storage(new THREE.StorageInstancedBufferAttribute(nbParticles, 4), 'vec4', nbParticles);
--    const particleVelocities = storage(new THREE.StorageInstancedBufferAttribute(nbParticles, 4), 'vec4', nbParticles);
-+    const particlePositions = storage<'vec4'>(
-+        new THREE.StorageInstancedBufferAttribute(nbParticles, 4),
-+        'vec4',
-+        nbParticles,
-+    );
-+    const particleVelocities = storage<'vec4'>(
-+        new THREE.StorageInstancedBufferAttribute(nbParticles, 4),
-+        'vec4',
-+        nbParticles,
-+    );
- 
-     // init particles buffers
-     renderer.compute(
-@@ -191,7 +205,7 @@ async function init() {
-     linksMaterial.depthWrite = false;
-     linksMaterial.depthTest = false;
-     linksMaterial.blending = THREE.AdditiveBlending;
--    linksMaterial.opacityNode = storage(linksColorsSBA, 'vec4', linksColorsSBA.count).toAttribute().w;
-+    linksMaterial.opacityNode = storage<'vec4'>(linksColorsSBA, 'vec4', linksColorsSBA.count).toAttribute().w;
- 
-     const linksMesh = new THREE.Mesh(linksGeom, linksMaterial);
-     linksMesh.frustumCulled = false;
-@@ -252,8 +266,8 @@ async function init() {
-             });
- 
-             // then we update the links correspondingly
--            const linksPositions = storage(linksVerticesSBA, 'vec4', linksVerticesSBA.count);
--            const linksColors = storage(linksColorsSBA, 'vec4', linksColorsSBA.count);
-+            const linksPositions = storage<'vec4'>(linksVerticesSBA, 'vec4', linksVerticesSBA.count);
-+            const linksColors = storage<'vec4'>(linksColorsSBA, 'vec4', linksColorsSBA.count);
-             const firstLinkIndex = instanceIndex.mul(8);
-             const secondLinkIndex = firstLinkIndex.add(4);
- 
-@@ -366,7 +380,7 @@ async function init() {
+@@ -366,7 +372,7 @@ async function init() {
  
      // GUI
  
@@ -20531,7 +20462,7 @@ index 4c4ee68ee..aa3831c1a 100644
  
      gui.add(controls, 'autoRotate').name('Auto Rotate');
      gui.add(controls, 'autoRotateSpeed', -10.0, 10.0, 0.01).name('Auto Rotate Speed');
-@@ -401,7 +415,7 @@ function onWindowResize() {
+@@ -401,7 +407,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
