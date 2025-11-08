@@ -13894,7 +13894,7 @@ index 3ec30a762..5a3faadc2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 1b780ce90..c8b336398 100644
+index 1b780ce90..63b8469c4 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13925,7 +13925,7 @@ index 1b780ce90..c8b336398 100644
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
++    const colorNode = transition.mix(material.colorNode as THREE.Node<'vec4'>, material.colorNode!.add(waterLayer0));
  
      //material.colorNode = colorNode;
      floor.material.colorNode = colorNode;
@@ -17686,7 +17686,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..49a2760f6 100644
+index e49f98ce7..e7061f5d2 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17699,7 +17699,7 @@ index e49f98ce7..49a2760f6 100644
 -class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
 +class OcclusionNode extends THREE.Node<'vec3'> {
-+    uniformNode: THREE.UniformNode<'vec3', THREE.Color>;
++    uniformNode: THREE.UniformNode<'color', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
 +    normalColor: THREE.Color;
@@ -20194,7 +20194,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f1..7e37f3df3 100644
+index 143d577f1..ea49a87ee 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20217,7 +20217,7 @@ index 143d577f1..7e37f3df3 100644
 +
 +interface Uniforms {
 +    count: THREE.UniformNode<'float', number>;
-+    color: THREE.UniformNode<'vec3', THREE.Color>;
++    color: THREE.UniformNode<'color', THREE.Color>;
 +    direction: THREE.UniformNode<'vec3', THREE.Vector3>;
 +    start: THREE.UniformNode<'float', number>;
 +    end: THREE.UniformNode<'float', number>;
