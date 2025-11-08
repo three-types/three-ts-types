@@ -73,7 +73,7 @@ interface Uniform {
     (value: Matrix2): UniformNode<"mat2", Matrix2>;
     (value: Matrix3): UniformNode<"mat3", Matrix3>;
     (value: Matrix4): UniformNode<"mat4", Matrix4>;
-    (value: Color): UniformNode<"vec3", Color>;
+    (value: Color): UniformNode<"color", Color>;
     <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
 }
 /**
