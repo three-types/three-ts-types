@@ -48,17 +48,42 @@ type StorageBufferNode<TNodeType> =
 
 export default StorageBufferNode;
 
-export const storage: <TNodeType>(
-    value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
-    type?: string | Struct | null,
-    count?: number,
-) => StorageBufferNode<TNodeType>;
+interface Storage {
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "float",
+        count: number,
+    ): StorageBufferNode<"float">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "uint",
+        count: number,
+    ): StorageBufferNode<"uint">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "vec2",
+        count: number,
+    ): StorageBufferNode<"vec2">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "vec3",
+        count: number,
+    ): StorageBufferNode<"vec3">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "vec4",
+        count: number,
+    ): StorageBufferNode<"vec4">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: Struct,
+        count: number,
+    ): StorageBufferNode<"struct">;
+}
+
+export const storage: Storage;
 
 /**
  * @deprecated
  */
-export const storageObject: <TNodeType>(
-    value: StorageBufferAttribute | StorageInstancedBufferAttribute,
-    type?: string | Struct | null,
-    count?: number,
-) => StorageBufferNode<TNodeType>;
+export const storageObject: Storage;
