@@ -2787,6 +2787,7 @@ type Node<TValue = unknown> =
         : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<"mat2">
         : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<"mat3">
         : TValue extends "mat4" ? Matrix4Extensions & MatrixExtensions<"mat4">
+        : TValue extends "color" ? Vec3Swizzle<"float">
         : {})
     & {
         __TypeScript_VALUE__: TValue;
