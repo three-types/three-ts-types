@@ -58,8 +58,9 @@ declare const UniformNode: {
 type UniformNode<TNodeValue, TValue> = UniformNodeInterface<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
 interface Uniform {
-    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>, type?: string): UniformNode<TNodeValue, TValue>;
-    <TNodeValue, TValue>(value: TValue, type?: string): UniformNode<TNodeValue, TValue>;
+    (value: number): UniformNode<"float", number>;
+    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>, type: TNodeValue): UniformNode<TNodeValue, TValue>;
+    <TNodeValue, TValue>(value: TValue, type: TNodeValue): UniformNode<TNodeValue, TValue>;
 }
 /**
  * TSL function for creating a uniform node.
