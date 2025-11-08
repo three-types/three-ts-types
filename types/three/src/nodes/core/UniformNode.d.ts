@@ -1,3 +1,10 @@
+import { Color } from "../../math/Color.js";
+import { Matrix2 } from "../../math/Matrix2.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import { NodeUpdateType } from "./constants.js";
 import InputNode from "./InputNode.js";
 import NodeBuilder from "./NodeBuilder.js";
@@ -58,9 +65,16 @@ declare const UniformNode: {
 type UniformNode<TNodeValue, TValue> = UniformNodeInterface<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
 interface Uniform {
-    (value: number): UniformNode<"float", number>;
-    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>, type: TNodeValue): UniformNode<TNodeValue, TValue>;
-    <TNodeValue, TValue>(value: TValue, type: TNodeValue): UniformNode<TNodeValue, TValue>;
+    (value: number, type?: "float"): UniformNode<"float", number>;
+    (value: boolean): UniformNode<"bool", boolean>;
+    (value: Vector2): UniformNode<"vec2", Vector2>;
+    (value: Vector3): UniformNode<"vec3", Vector3>;
+    (value: Vector4): UniformNode<"vec4", Vector4>;
+    (value: Matrix2): UniformNode<"mat2", Matrix2>;
+    (value: Matrix3): UniformNode<"mat3", Matrix3>;
+    (value: Matrix4): UniformNode<"mat4", Matrix4>;
+    (value: Color): UniformNode<"vec3", Color>;
+    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
 }
 /**
  * TSL function for creating a uniform node.
