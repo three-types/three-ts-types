@@ -14170,7 +14170,7 @@ index 0a05626a1..0d9d160da 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 7c5f5a5d1..8479536f0 100644
+index 7c5f5a5d1..32543f3a1 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
 @@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -14193,24 +14193,6 @@ index 7c5f5a5d1..8479536f0 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
-@@ -79,7 +79,7 @@ async function init() {
- 
-     // tsl shader
- 
--    const causticOcclusion = uniform(20);
-+    const causticOcclusion = uniform<'float', number>(20);
- 
-     duck.material.castShadowPositionNode = Fn(() => {
-         // optional: add some distortion to the geometry shadow position if needed
-@@ -97,7 +97,7 @@ async function init() {
- 
-         const textureUV = refractionVector.xy.mul(0.6);
- 
--        const causticColor = uniform(duck.material.color);
-+        const causticColor = uniform<'vec3', THREE.Color>(duck.material.color);
-         const chromaticAberrationOffset = normalView.z.pow(-0.9).mul(0.004);
- 
-         const causticProjection = vec3(
 @@ -162,7 +162,7 @@ async function init() {
  
      // gui
@@ -14370,7 +14352,7 @@ index e07e60463..2e0d4855a 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 229033d79..95d4680b3 100644
+index 229033d79..d2ac9b717 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14414,19 +14396,6 @@ index 229033d79..95d4680b3 100644
  
      // The Pixel Buffer Object (PBO) is required to get the GPU computed data to the CPU in the WebGL2 fallback.
      // As used in `renderer.getArrayBufferAsync( waveArray.value )`.
-@@ -79,9 +79,9 @@ async function init() {
- 
-     // params
- 
--    const pitch = uniform(1.5);
--    const delayVolume = uniform(0.2);
--    const delayOffset = uniform(0.55);
-+    const pitch = uniform<'float', number>(1.5);
-+    const delayVolume = uniform<'float', number>(0.2);
-+    const delayOffset = uniform<'float', number>(0.55);
- 
-     // compute (shader-node)
- 
 @@ -92,7 +92,7 @@ async function init() {
  
          const time = index.mul(pitch);
@@ -14446,7 +14415,7 @@ index 229033d79..95d4680b3 100644
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index c602920ee..d68104bbb 100644
+index c602920ee..4be9be5f7 100644
 --- a/examples-testing/examples/webgpu_compute_birds.ts
 +++ b/examples-testing/examples/webgpu_compute_birds.ts
 @@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14500,29 +14469,6 @@ index c602920ee..d68104bbb 100644
  
      // The Pixel Buffer Object (PBO) is required to get the GPU computed data in the WebGL2 fallback.
  
-@@ -176,14 +187,14 @@ function init() {
-     // Define Uniforms. Uniforms only need to be defined once rather than per shader.
- 
-     effectController = {
--        separation: uniform(15.0).setName('separation'),
--        alignment: uniform(20.0).setName('alignment'),
--        cohesion: uniform(20.0).setName('cohesion'),
--        freedom: uniform(0.75).setName('freedom'),
--        now: uniform(0.0),
--        deltaTime: uniform(0.0).setName('deltaTime'),
--        rayOrigin: uniform(new THREE.Vector3()).setName('rayOrigin'),
--        rayDirection: uniform(new THREE.Vector3()).setName('rayDirection'),
-+        separation: uniform<'float', number>(15.0).setName('separation'),
-+        alignment: uniform<'float', number>(20.0).setName('alignment'),
-+        cohesion: uniform<'float', number>(20.0).setName('cohesion'),
-+        freedom: uniform<'float', number>(0.75).setName('freedom'),
-+        now: uniform<'float', number>(0.0),
-+        deltaTime: uniform<'float', number>(0.0).setName('deltaTime'),
-+        rayOrigin: uniform<'vec3', THREE.Vector3>(new THREE.Vector3()).setName('rayOrigin'),
-+        rayDirection: uniform<'vec3', THREE.Vector3>(new THREE.Vector3()).setName('rayDirection'),
-     };
- 
-     // Create geometry
 @@ -374,7 +385,7 @@ function init() {
  
      window.addEventListener('resize', onWindowResize);
@@ -14542,7 +14488,7 @@ index c602920ee..d68104bbb 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 6f4c3b61b..456598863 100644
+index 6f4c3b61b..30fe6b939 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14647,7 +14593,7 @@ index 6f4c3b61b..456598863 100644
  }
  
  function setupVerletSpringBuffers() {
-@@ -230,17 +253,17 @@ function setupVerletSpringBuffers() {
+@@ -230,9 +253,9 @@ function setupVerletSpringBuffers() {
          springRestLengthArray[i] = spring.vertex0.position.distanceTo(spring.vertex1.position);
      }
  
@@ -14659,19 +14605,6 @@ index 6f4c3b61b..456598863 100644
  }
  
  function setupUniforms() {
--    dampeningUniform = uniform(0.99);
--    spherePositionUniform = uniform(new THREE.Vector3(0, 0, 0));
--    sphereUniform = uniform(1.0);
--    windUniform = uniform(1.0);
--    stiffnessUniform = uniform(0.2);
-+    dampeningUniform = uniform<'float', number>(0.99);
-+    spherePositionUniform = uniform<'vec3', THREE.Vector3>(new THREE.Vector3(0, 0, 0));
-+    sphereUniform = uniform<'float', number>(1.0);
-+    windUniform = uniform<'float', number>(1.0);
-+    stiffnessUniform = uniform<'float', number>(0.2);
- }
- 
- function setupComputeShaders() {
 @@ -349,7 +372,7 @@ function setupWireframe() {
      const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
      springWireframeMaterial.positionNode = Fn(() => {
@@ -14775,7 +14708,7 @@ index 1f76c981c..039b6ebd2 100644
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index b51bafeab..989b3ba7f 100644
+index b51bafeab..5666bc88c 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
 @@ -4,8 +4,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14800,17 +14733,6 @@ index b51bafeab..989b3ba7f 100644
  
      // create function
  
-@@ -31,8 +31,8 @@ async function init() {
-         const particle = particleArray.element(instanceIndex);
-         const velocity = velocityArray.element(instanceIndex);
- 
--        const pointer = uniform(pointerVector);
--        const limit = uniform(scaleVector);
-+        const pointer = uniform<'vec2', THREE.Vector2>(pointerVector);
-+        const limit = uniform<'vec2', THREE.Vector2>(scaleVector);
- 
-         const position = particle.add(velocity).toVar();
- 
 @@ -96,7 +96,7 @@ async function init() {
  
      // gui
@@ -14830,7 +14752,7 @@ index b51bafeab..989b3ba7f 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..2f0fa1b61 100644
+index 9a37a9ece..4da3309d2 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14844,19 +14766,6 @@ index 9a37a9ece..2f0fa1b61 100644
  };
  
  const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
-@@ -39,9 +39,9 @@ const MAX_STEPS = getNumSteps();
- 
- const effectController = {
-     // Sqr root of 16834
--    gridWidth: uniform(gridDim),
--    gridHeight: uniform(gridDim),
--    highlight: uniform(1),
-+    gridWidth: uniform<'float', number>(gridDim),
-+    gridHeight: uniform<'float', number>(gridDim),
-+    highlight: uniform<'float', number>(1),
-     stepBitonic: true,
-     'Display Mode': 'Swap Zone Highlight',
- };
 @@ -63,7 +63,7 @@ if (WebGPU.isAvailable() === false) {
  
  // Display utilities
@@ -15007,7 +14916,7 @@ index 43d162ab5..81e920f55 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index ccdfba0be..dead41adc 100644
+index ccdfba0be..d4ea0e51a 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15041,7 +14950,7 @@ index ccdfba0be..dead41adc 100644
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -110,41 +110,48 @@ async function init() {
+@@ -110,33 +110,40 @@ async function init() {
  
      // Shader
  
@@ -15100,19 +15009,6 @@ index ccdfba0be..dead41adc 100644
  
      // Material
  
--    const baseColor = uniform(new THREE.Color(0x798aa0));
--    const range = uniform(0.1);
--    const threshold = uniform(0.08);
--    const opacity = uniform(0.08);
--    const steps = uniform(100);
-+    const baseColor = uniform<'vec3', THREE.Color>(new THREE.Color(0x798aa0));
-+    const range = uniform<'float', number>(0.1);
-+    const threshold = uniform<'float', number>(0.08);
-+    const opacity = uniform<'float', number>(0.08);
-+    const steps = uniform<'float', number>(100);
- 
-     const cloud3d = transparentRaymarchingTexture({
-         texture: texture3D(storageTexture, null, 0),
 @@ -171,7 +178,7 @@ async function init() {
  
      renderer.compute(computeNode);
@@ -15142,7 +15038,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..9c7100a3b 100644
+index 429d2ff40..3cffd2705 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -15154,7 +15050,7 @@ index 429d2ff40..9c7100a3b 100644
  
  init();
  
-@@ -59,18 +59,18 @@ async function init() {
+@@ -59,16 +59,16 @@ async function init() {
          saturation: 1,
      };
  
@@ -15173,14 +15069,10 @@ index 429d2ff40..9c7100a3b 100644
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
--        const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
--        const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
 +    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
-+        const custom1UV = reflectNode.xyz.mul(uniform<'mat4', THREE.Matrix4>(rotateY1Matrix));
-+        const custom2UV = reflectNode.xyz.mul(uniform<'mat4', THREE.Matrix4>(rotateY2Matrix));
+         const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
+         const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
-             pmremTexture(cube1Texture, custom1UV),
-             pmremTexture(cube2Texture, custom2UV),
 @@ -134,7 +134,7 @@ async function init() {
  
      // gui
@@ -15243,7 +15135,7 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index fcae79b96..b2a54742f 100644
+index fcae79b96..0ce427a37 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
 @@ -4,8 +4,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
@@ -15257,15 +15149,6 @@ index fcae79b96..b2a54742f 100644
  
  init();
  
-@@ -27,7 +27,7 @@ function init() {
-     const groundFogArea = float(distance).sub(positionWorld.y).div(distance).pow(3).saturate().mul(alpha);
- 
-     // a alternative way to create a TimerNode
--    const timer = uniform(0).onFrameUpdate(frame => frame.time);
-+    const timer = uniform<'float', number>(0).onFrameUpdate(frame => frame.time);
- 
-     const fogNoiseA = triNoise3D(positionWorld.mul(0.005), 0.2, timer);
-     const fogNoiseB = triNoise3D(positionWorld.mul(0.01), 0.2, timer.mul(1.2));
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index a5ff84131..b729718f7 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
@@ -15374,24 +15257,10 @@ index 9e159e465..128e18b7b 100644
      gui.add(scene, 'backgroundIntensity', 0, 1).name('background intensity');
  
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
-index bb1dd4a15..ea7628276 100644
+index bb1dd4a15..44814fa58 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
 +++ b/examples-testing/examples/webgpu_hdr.ts
-@@ -7,17 +7,17 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
- import { ExtendedSRGBColorSpace, ExtendedSRGBColorSpaceImpl } from 'three/addons/math/ColorSpaces.js';
- 
- const params = {
--    intensity: uniform(4.0, 'float').setName('intensity'),
--    hardness: uniform(0.4, 'float').setName('hardness'),
--    radius: uniform(0.5, 'float').setName('radius'),
--    afterImageDecay: uniform(0.985, 'float').setName('afterImageDecay'),
-+    intensity: uniform<'float', number>(4.0, 'float').setName('intensity'),
-+    hardness: uniform<'float', number>(0.4, 'float').setName('hardness'),
-+    radius: uniform<'float', number>(0.5, 'float').setName('radius'),
-+    afterImageDecay: uniform<'float', number>(0.985, 'float').setName('afterImageDecay'),
- };
- 
- const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
+@@ -17,7 +17,7 @@ const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
  
  function updateHDRWarning() {
      const displayIsHDR = hdrMediaQuery.matches;
@@ -15492,7 +15361,7 @@ index a5bce3225..8b2fa4ad7 100644
      const localTime = instanceTime.add(time);
      const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..31a039394 100644
+index 409129373..d2ce322f4 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15527,19 +15396,6 @@ index 409129373..31a039394 100644
  
  init();
  
-@@ -44,9 +53,9 @@ async function init() {
-     backgroundNode = color(0x222222);
- 
-     effectController = {
--        pulseSpeed: uniform(6),
--        minWidth: uniform(6),
--        maxWidth: uniform(20),
-+        pulseSpeed: uniform<'float', number>(6),
-+        minWidth: uniform<'float', number>(6),
-+        maxWidth: uniform<'float', number>(20),
-     };
- 
-     // Position and THREE.Color Data
 @@ -94,10 +103,10 @@ async function init() {
  
      // Material / Sprites
@@ -15885,7 +15741,7 @@ index 43d7ce723..616ed8e6b 100644
      gui.add(params, 'shadows');
  }
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index e00d75b21..3ab6a9e4f 100644
+index e00d75b21..c0d16ef13 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
 @@ -16,9 +16,13 @@ import {
@@ -15913,7 +15769,7 @@ index e00d75b21..3ab6a9e4f 100644
          mesh.geometry = createGeometry(mesh.geometry);
          mesh.material = createMaterial();
  
-@@ -102,13 +106,13 @@ function animate() {
+@@ -102,10 +106,10 @@ function animate() {
  function createMaterial() {
      const material = new THREE.MeshPhongNodeMaterial();
  
@@ -15925,13 +15781,8 @@ index e00d75b21..3ab6a9e4f 100644
 -    const localTime = attribute('time').add(time);
 +    const localTime = attribute<'float'>('time').add(time);
  
--    const effector1 = uniform(light1.position).toVar();
--    const effector2 = uniform(light2.position).toVar();
-+    const effector1 = uniform<'vec3', THREE.Vector3>(light1.position).toVar();
-+    const effector2 = uniform<'vec3', THREE.Vector3>(light2.position).toVar();
- 
-     const distance1 = distance(positionLocal, modelWorldMatrixInverse.mul(effector1));
-     const distance2 = distance(positionLocal, modelWorldMatrixInverse.mul(effector2));
+     const effector1 = uniform(light1.position).toVar();
+     const effector2 = uniform(light2.position).toVar();
 @@ -125,7 +129,7 @@ function createMaterial() {
      return material;
  }
@@ -16058,7 +15909,7 @@ index db2de8891..0a91b1a14 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index c30e0bb55..cde02f600 100644
+index c30e0bb55..5c950c94b 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -16097,15 +15948,6 @@ index c30e0bb55..cde02f600 100644
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
          light.power = power;
-@@ -126,7 +137,7 @@ function init() {
-     // compose
- 
-     compose = scenePass.add(bloomPass);
--    tileInfluence = uniform(0);
-+    tileInfluence = uniform<'float', number>(0);
- 
-     postProcessing = new THREE.PostProcessing(renderer);
- 
 @@ -134,15 +145,14 @@ function init() {
  
      // gui
@@ -16836,7 +16678,7 @@ index 6862caeed..97cae265b 100644
          if (value === 'Cube') {
              scene.background = textureCube;
 diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
-index fa394d910..253fbc3f8 100644
+index fa394d910..16ca3dd91 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 @@ -16,11 +16,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16854,15 +16696,6 @@ index fa394d910..253fbc3f8 100644
  
  init();
  
-@@ -56,7 +56,7 @@ function init() {
-     rMap.wrapT = THREE.RepeatWrapping;
-     rMap.repeat.set(2, 1);
- 
--    const roughnessUniform = uniform(0.25);
-+    const roughnessUniform = uniform<'float', number>(0.25);
- 
-     const defaultMat = new THREE.MeshStandardNodeMaterial();
-     defaultMat.envNode = pmremTexture(renderTarget.texture);
 @@ -164,7 +164,7 @@ function init() {
  
      // gui
@@ -17945,7 +17778,7 @@ index 658ae08db..adbea4866 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
-index 9e81f0761..225f7898d 100644
+index 9e81f0761..da9ee8757 100644
 --- a/examples-testing/examples/webgpu_particles.ts
 +++ b/examples-testing/examples/webgpu_particles.ts
 @@ -7,8 +7,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17959,15 +17792,6 @@ index 9e81f0761..225f7898d 100644
  
  init();
  
-@@ -37,7 +37,7 @@ function init() {
-     const lifeRange = range(0.1, 1);
-     const offsetRange = range(new THREE.Vector3(-2, 3, -2), new THREE.Vector3(2, 5, 2));
- 
--    const speed = uniform(0.2);
-+    const speed = uniform<'float', number>(0.2);
-     const scaledTime = time.add(5).mul(speed);
- 
-     const lifeTime = scaledTime.mul(lifeRange).mod(1);
 @@ -92,7 +92,7 @@ function init() {
      // indirect draw ( optional )
      // each indirect draw call is 5 uint32 values for indexes ( different structure for non-indexed draw calls using 4 uint32 values )
@@ -18447,7 +18271,7 @@ index 88a0c635d..fe398d4a1 100644
  
      postProcessing.render();
 diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-index 65ddd7375..b9a4cdbb9 100644
+index 65ddd7375..58bbbc744 100644
 --- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18461,19 +18285,6 @@ index 65ddd7375..b9a4cdbb9 100644
  
  const params = {
      resolutionScale: 0.2,
-@@ -58,9 +58,9 @@ async function init() {
- 
-     const scenePass = pass(scene, camera);
- 
--    const threshold = uniform(1.4);
--    const scaleNode = uniform(5);
--    const intensity = uniform(1);
-+    const threshold = uniform<'float', number>(1.4);
-+    const scaleNode = uniform<'float', number>(5);
-+    const intensity = uniform<'float', number>(1);
-     const samples = 64;
- 
-     const anamorphicPass = anamorphic(
 @@ -77,7 +77,7 @@ async function init() {
  
      // gui
@@ -18712,7 +18523,7 @@ index 1ab1e7cbb..31b407f98 100644
      gui.add(effectController.focalLength, 'value', 50, 750).name('focal length');
      gui.add(effectController.bokehScale, 'value', 1, 20).name('bokeh scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-index 32a04c2a6..a711d9b48 100644
+index 32a04c2a6..f6fdda04d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 @@ -11,7 +11,15 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -18732,21 +18543,6 @@ index 32a04c2a6..a711d9b48 100644
  
  const pointerCoords = new THREE.Vector2();
  const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
-@@ -75,10 +83,10 @@ async function init() {
- 
-     // DOF uniforms
- 
--    const blurSize = uniform(2); // determines the kernel size of the blur
--    const blurSpread = uniform(4); // determines how far the blur is spread
--    const minDistance = uniform(1); // all positions at or below minDistance will be completely in focus.
--    const maxDistance = uniform(3); // all positions at or beyond maxDistance will be completely out of focus.
-+    const blurSize = uniform<'float', number>(2); // determines the kernel size of the blur
-+    const blurSpread = uniform<'float', number>(4); // determines how far the blur is spread
-+    const minDistance = uniform<'float', number>(1); // all positions at or below minDistance will be completely in focus.
-+    const maxDistance = uniform<'float', number>(3); // all positions at or beyond maxDistance will be completely out of focus.
- 
-     // beauty and blur/out-of-focus pass
- 
 @@ -100,7 +108,7 @@ async function init() {
  
      // GUI
@@ -18842,7 +18638,7 @@ index 160be467f..1898cd29b 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index 0c97476ca..28a7a7018 100644
+index 0c97476ca..a686ba28e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 @@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18869,15 +18665,6 @@ index 0c97476ca..28a7a7018 100644
                  child.castShadow = true;
                  child.receiveShadow = true;
              }
-@@ -140,7 +140,7 @@ function init() {
- 
-     // post-processing
- 
--    const blurAmount = uniform(1);
-+    const blurAmount = uniform<'float', number>(1);
- 
-     const scenePass = pass(scene, camera);
- 
 @@ -163,7 +163,7 @@ function init() {
  
      //
@@ -18888,7 +18675,7 @@ index 0c97476ca..28a7a7018 100644
      gui.add(blurAmount, 'value', 0, 3).name('blur amount');
      gui.add(params, 'speed', 0, 2);
 diff --git a/examples-testing/examples/webgpu_postprocessing_outline.ts b/examples-testing/examples/webgpu_postprocessing_outline.ts
-index e8b1fa489..bfcdc5bac 100644
+index e8b1fa489..2fa6c2639 100644
 --- a/examples-testing/examples/webgpu_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_outline.ts
 @@ -1,16 +1,16 @@
@@ -18912,25 +18699,6 @@ index e8b1fa489..bfcdc5bac 100644
  
  const raycaster = new THREE.Raycaster();
  const mouse = new THREE.Vector2();
-@@ -134,12 +134,12 @@ function init() {
- 
-     // outline pass
- 
--    const edgeStrength = uniform(3.0);
--    const edgeGlow = uniform(0.0);
--    const edgeThickness = uniform(1.0);
--    const pulsePeriod = uniform(0);
--    const visibleEdgeColor = uniform(new THREE.Color(0xffffff));
--    const hiddenEdgeColor = uniform(new THREE.Color(0x4e3636));
-+    const edgeStrength = uniform<'float', number>(3.0);
-+    const edgeGlow = uniform<'float', number>(0.0);
-+    const edgeThickness = uniform<'float', number>(1.0);
-+    const pulsePeriod = uniform<'float', number>(0);
-+    const visibleEdgeColor = uniform<'vec3', THREE.Color>(new THREE.Color(0xffffff));
-+    const hiddenEdgeColor = uniform<'vec3', THREE.Color>(new THREE.Color(0x4e3636));
- 
-     outlinePass = outline(scene, camera, {
-         selectedObjects,
 @@ -164,7 +164,7 @@ function init() {
  
      // gui
@@ -19479,7 +19247,7 @@ index c4c88665c..ee47e6ddd 100644
      gui.add(effectController, 'animateScene').name('Animate Scene');
      gui.add(effectController, 'animateTransition').name('Animate Transition');
 diff --git a/examples-testing/examples/webgpu_procedural_texture.ts b/examples-testing/examples/webgpu_procedural_texture.ts
-index 21fb4a3c2..64a5b3af1 100644
+index 21fb4a3c2..d3a164bef 100644
 --- a/examples-testing/examples/webgpu_procedural_texture.ts
 +++ b/examples-testing/examples/webgpu_procedural_texture.ts
 @@ -4,7 +4,7 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
@@ -19491,17 +19259,6 @@ index 21fb4a3c2..64a5b3af1 100644
  
  init();
  
-@@ -17,8 +17,8 @@ function init() {
- 
-     // procedural to texture
- 
--    const uvScale = uniform(4);
--    const blurAmount = uniform(0.5);
-+    const uvScale = uniform<'float', number>(4);
-+    const blurAmount = uniform<'float', number>(0.5);
- 
-     const procedural = checker(uv().mul(uvScale));
-     const proceduralToTexture = convertToTexture(procedural, 512, 512); // ( node, width, height )
 @@ -51,7 +51,7 @@ function init() {
  
      // gui
@@ -19512,10 +19269,10 @@ index 21fb4a3c2..64a5b3af1 100644
      gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
      gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 76592b8cb..653aa8cea 100644
+index 76592b8cb..ad9d5018a 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
-@@ -32,14 +32,14 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import TWEEN from 'three/addons/libs/tween.module.js';
  
@@ -19527,13 +19284,6 @@ index 76592b8cb..653aa8cea 100644
 +let controls: OrbitControls;
  
  // below uniforms will be animated via TWEEN.js
- 
--const uniformEffector1 = uniform(-0.2);
--const uniformEffector2 = uniform(-0.2);
-+const uniformEffector1 = uniform<'float', number>(-0.2);
-+const uniformEffector2 = uniform<'float', number>(-0.2);
- 
- init();
  
 @@ -93,10 +93,10 @@ async function init() {
  
@@ -19719,7 +19469,7 @@ index 627fd6b18..9dc934c0f 100644
          const left = Math.floor(view.left * window.innerWidth);
          const bottom = Math.floor((1 - view.top - view.height) * window.innerHeight);
 diff --git a/examples-testing/examples/webgpu_rtt.ts b/examples-testing/examples/webgpu_rtt.ts
-index fa7577ea8..9abf3c85d 100644
+index fa7577ea8..b4c7a8c39 100644
 --- a/examples-testing/examples/webgpu_rtt.ts
 +++ b/examples-testing/examples/webgpu_rtt.ts
 @@ -3,12 +3,12 @@ import { texture, uniform, saturation, hue } from 'three/tsl';
@@ -19737,15 +19487,6 @@ index fa7577ea8..9abf3c85d 100644
 +let box: THREE.Mesh;
  
  const dpr = window.devicePixelRatio;
- 
-@@ -54,7 +54,7 @@ function init() {
- 
-     // modulate the final color based on the mouse position
- 
--    const screenFXNode = uniform(mouse);
-+    const screenFXNode = uniform<'vec2', THREE.Vector2>(mouse);
- 
-     const materialFX = new THREE.MeshBasicNodeMaterial();
  
 @@ -65,7 +65,7 @@ function init() {
      quadMesh.name = 'Post-Processing';
@@ -20352,7 +20093,7 @@ index 4140a49fd..e371e494c 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index f0711aba3..4108fce3b 100644
+index f0711aba3..31a703891 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20381,17 +20122,6 @@ index f0711aba3..4108fce3b 100644
  
      // materials
  
-@@ -69,8 +71,8 @@ function init() {
- 
-     // uniforms
- 
--    const sliceStart = uniform(1.75);
--    const sliceArc = uniform(1.25);
-+    const sliceStart = uniform<'float', number>(1.75);
-+    const sliceArc = uniform<'float', number>(1.25);
-     const sliceColor = uniform(color('#b62f58'));
- 
-     // output
 @@ -112,9 +114,9 @@ function init() {
          const model = gltf.scene;
  
@@ -20415,7 +20145,7 @@ index f0711aba3..4108fce3b 100644
      gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
      gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c148902..2eec825a4 100644
+index 14c148902..07a99252d 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20432,17 +20162,6 @@ index 14c148902..2eec825a4 100644
  
  init();
  
-@@ -43,8 +48,8 @@ function init() {
- 
-     const atmosphereDayColor = uniform(color('#4db2ff'));
-     const atmosphereTwilightColor = uniform(color('#bc490b'));
--    const roughnessLow = uniform(0.25);
--    const roughnessHigh = uniform(0.35);
-+    const roughnessLow = uniform<'float', number>(0.25);
-+    const roughnessHigh = uniform<'float', number>(0.35);
- 
-     // textures
- 
 @@ -136,7 +141,7 @@ function init() {
  
      // debug
@@ -20453,7 +20172,7 @@ index 14c148902..2eec825a4 100644
      gui.addColor({ color: atmosphereDayColor.value.getHex(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_tsl_galaxy.ts b/examples-testing/examples/webgpu_tsl_galaxy.ts
-index 739138504..e8c5523ba 100644
+index 739138504..46c0eead5 100644
 --- a/examples-testing/examples/webgpu_tsl_galaxy.ts
 +++ b/examples-testing/examples/webgpu_tsl_galaxy.ts
 @@ -5,7 +5,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20465,15 +20184,6 @@ index 739138504..e8c5523ba 100644
  
  init();
  
-@@ -23,7 +23,7 @@ function init() {
-         blending: THREE.AdditiveBlending,
-     });
- 
--    const size = uniform(0.08);
-+    const size = uniform<'float', number>(0.08);
-     material.scaleNode = range(0, 1).mul(size);
- 
-     const radiusRatio = range(0, 1);
 @@ -68,7 +68,7 @@ function init() {
  
      // debug
@@ -20616,7 +20326,7 @@ index 143d577f1..7e37f3df3 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_tsl_interoperability.ts b/examples-testing/examples/webgpu_tsl_interoperability.ts
-index e57c66eeb..fcaefeb9e 100644
+index e57c66eeb..e414f5f0c 100644
 --- a/examples-testing/examples/webgpu_tsl_interoperability.ts
 +++ b/examples-testing/examples/webgpu_tsl_interoperability.ts
 @@ -23,13 +23,13 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -20644,29 +20354,6 @@ index e57c66eeb..fcaefeb9e 100644
  
      // In WGSL, access varying properties from the varying struct
      const wgslVertexShader = wgslFn(
-@@ -137,14 +137,14 @@ function init() {
-     // Node Uniforms:
-     // Passed to WGSL Functions.
-     // Manipulated directly in TSL Functions.
--    const cellOffsetUniform = uniform(0.5);
--    const cellSizeUniform = uniform(6);
--    const borderMaskUniform = uniform(1);
--    const pulseIntensityUniform = uniform(0.06);
--    const pulseWidthUniform = uniform(60);
--    const pulseRateUniform = uniform(20);
--    const wgslShaderSpeedUniform = uniform(1.0);
--    const tslShaderSpeedUniform = uniform(1.0);
-+    const cellOffsetUniform = uniform<'float', number>(0.5);
-+    const cellSizeUniform = uniform<'float', number>(6);
-+    const borderMaskUniform = uniform<'float', number>(1);
-+    const pulseIntensityUniform = uniform<'float', number>(0.06);
-+    const pulseWidthUniform = uniform<'float', number>(60);
-+    const pulseRateUniform = uniform<'float', number>(20);
-+    const wgslShaderSpeedUniform = uniform<'float', number>(1.0);
-+    const tslShaderSpeedUniform = uniform<'float', number>(1.0);
- 
-     //
- 
 @@ -195,7 +195,7 @@ function init() {
          samplePoint.x = samplePoint.x.add(fract(scaledTime.div(20)));
          samplePoint.y = samplePoint.y.sub(1.5);
@@ -20686,7 +20373,7 @@ index e57c66eeb..fcaefeb9e 100644
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
-index ef87d67ba..9dbc0803a 100644
+index ef87d67ba..d2639cafc 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 +++ b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 @@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20717,33 +20404,7 @@ index ef87d67ba..9dbc0803a 100644
  
  init();
  
-@@ -68,22 +87,22 @@ function init() {
-         color: '#85d534',
-     });
- 
--    const noiseIterations = uniform(3);
--    const positionFrequency = uniform(0.175);
--    const warpFrequency = uniform(6);
--    const warpStrength = uniform(1);
--    const strength = uniform(10);
--    const offset = uniform(vec2(0, 0));
--    const normalLookUpShift = uniform(0.01);
--    const colorSand = uniform(color('#ffe894'));
--    const colorGrass = uniform(color('#85d534'));
--    const colorSnow = uniform(color('#ffffff'));
--    const colorRock = uniform(color('#bfbd8d'));
-+    const noiseIterations = uniform<'float', number>(3);
-+    const positionFrequency = uniform<'float', number>(0.175);
-+    const warpFrequency = uniform<'float', number>(6);
-+    const warpStrength = uniform<'float', number>(1);
-+    const strength = uniform<'float', number>(10);
-+    const offset = uniform<'vec2', THREE.Vector2>(vec2(0, 0));
-+    const normalLookUpShift = uniform<'float', number>(0.01);
-+    const colorSand = uniform<'vec3', THREE.Node<'vec3'>>(color('#ffe894'));
-+    const colorGrass = uniform<'vec3', THREE.Node<'vec3'>>(color('#85d534'));
-+    const colorSnow = uniform<'vec3', THREE.Node<'vec3'>>(color('#ffffff'));
-+    const colorRock = uniform<'vec3', THREE.Node<'vec3'>>(color('#bfbd8d'));
- 
+@@ -83,7 +102,7 @@ function init() {
      const vNormal = varying(vec3());
      const vPosition = varying(vec3());
  
@@ -20798,7 +20459,7 @@ index ef87d67ba..9dbc0803a 100644
              drag.worldCoords.copy(intersect.point);
          }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d075..96fc4447c 100644
+index cb513d075..b032e3c2e 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20810,34 +20471,7 @@ index cb513d075..96fc4447c 100644
  
  init();
  
-@@ -39,22 +39,22 @@ function init() {
- 
-     const material = new THREE.MeshStandardNodeMaterial({ color: '#271442', roughness: 0.15 });
- 
--    const emissiveColor = uniform(color('#ff0a81'));
--    const emissiveLow = uniform(-0.25);
--    const emissiveHigh = uniform(0.2);
--    const emissivePower = uniform(7);
--    const largeWavesFrequency = uniform(vec2(3, 1));
--    const largeWavesSpeed = uniform(1.25);
--    const largeWavesMultiplier = uniform(0.15);
--    const smallWavesIterations = uniform(3);
--    const smallWavesFrequency = uniform(2);
--    const smallWavesSpeed = uniform(0.3);
--    const smallWavesMultiplier = uniform(0.18);
--    const normalComputeShift = uniform(0.01);
-+    const emissiveColor = uniform<'vec3', THREE.Color>(color('#ff0a81'));
-+    const emissiveLow = uniform<'float', number>(-0.25);
-+    const emissiveHigh = uniform<'float', number>(0.2);
-+    const emissivePower = uniform<'float', number>(7);
-+    const largeWavesFrequency = uniform<'vec2', THREE.Vector2>(vec2(3, 1));
-+    const largeWavesSpeed = uniform<'float', number>(1.25);
-+    const largeWavesMultiplier = uniform<'float', number>(0.15);
-+    const smallWavesIterations = uniform<'float', number>(3);
-+    const smallWavesFrequency = uniform<'float', number>(2);
-+    const smallWavesSpeed = uniform<'float', number>(0.3);
-+    const smallWavesMultiplier = uniform<'float', number>(0.18);
-+    const normalComputeShift = uniform<'float', number>(0.01);
+@@ -54,7 +54,7 @@ function init() {
  
      // TSL functions
  
@@ -20891,7 +20525,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..57d1b664c 100644
+index 4c4ee68ee..aa3831c1a 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20914,50 +20548,6 @@ index 4c4ee68ee..57d1b664c 100644
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();
-@@ -49,26 +55,26 @@ const raycaster = new THREE.Raycaster();
- 
- const nbParticles = Math.pow(2, 13);
- 
--const timeScale = uniform(1.0);
--const particleLifetime = uniform(0.5);
--const particleSize = uniform(1.0);
--const linksWidth = uniform(0.005);
-+const timeScale = uniform<'float', number>(1.0);
-+const particleLifetime = uniform<'float', number>(0.5);
-+const particleSize = uniform<'float', number>(1.0);
-+const linksWidth = uniform<'float', number>(0.005);
- 
--const colorOffset = uniform(0.0);
--const colorVariance = uniform(2.0);
--const colorRotationSpeed = uniform(1.0);
-+const colorOffset = uniform<'float', number>(0.0);
-+const colorVariance = uniform<'float', number>(2.0);
-+const colorRotationSpeed = uniform<'float', number>(1.0);
- 
--const spawnIndex = uniform(0);
--const nbToSpawn = uniform(5);
--const spawnPosition = uniform(vec3(0.0));
--const previousSpawnPosition = uniform(vec3(0.0));
-+const spawnIndex = uniform<'float', number>(0);
-+const nbToSpawn = uniform<'float', number>(5);
-+const spawnPosition = uniform<'vec3', THREE.Vector3>(vec3(0.0));
-+const previousSpawnPosition = uniform<'vec3', THREE.Vector3>(vec3(0.0));
- 
--const turbFrequency = uniform(0.5);
--const turbAmplitude = uniform(0.5);
--const turbOctaves = uniform(2);
--const turbLacunarity = uniform(2.0);
--const turbGain = uniform(0.5);
--const turbFriction = uniform(0.01);
-+const turbFrequency = uniform<'float', number>(0.5);
-+const turbAmplitude = uniform<'float', number>(0.5);
-+const turbOctaves = uniform<'float', number>(2);
-+const turbLacunarity = uniform<'float', number>(2.0);
-+const turbGain = uniform<'float', number>(0.5);
-+const turbFriction = uniform<'float', number>(0.01);
- 
- init();
- 
 @@ -102,7 +108,7 @@ async function init() {
  
      // TSL function
@@ -21025,7 +20615,7 @@ index 4c4ee68ee..57d1b664c 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..d8e3efbf4 100644
+index 571b7ea0b..85552d4f8 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -21069,23 +20659,6 @@ index 571b7ea0b..d8e3efbf4 100644
 +    >(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
          const angle = atan(position.z, position.x).toVar();
          const elevation = position.y;
- 
-@@ -77,11 +87,11 @@ function init() {
- 
-     // uniforms
- 
--    const emissiveColor = uniform(color('#ff8b4d'));
--    const timeScale = uniform(0.2);
--    const parabolStrength = uniform(1);
--    const parabolOffset = uniform(0.3);
--    const parabolAmplitude = uniform(0.2);
-+    const emissiveColor = uniform<'vec3', THREE.Color>(color('#ff8b4d'));
-+    const timeScale = uniform<'float', number>(0.2);
-+    const parabolStrength = uniform<'float', number>(1);
-+    const parabolOffset = uniform<'float', number>(0.3);
-+    const parabolAmplitude = uniform<'float', number>(0.2);
- 
-     // tornado floor
  
 @@ -260,7 +270,7 @@ function init() {
  
@@ -21287,7 +20860,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index 5250dc919..de8ca04ae 100644
+index 5250dc919..062c1f9cc 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21312,24 +20885,6 @@ index 5250dc919..de8ca04ae 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
-@@ -94,7 +94,7 @@ async function init() {
- 
-     // TSL Shader
- 
--    const causticOcclusion = uniform(1);
-+    const causticOcclusion = uniform<'float', number>(1);
- 
-     const causticEffect = Fn(() => {
-         const refractionVector = refract(
-@@ -106,7 +106,7 @@ async function init() {
- 
-         const textureUV = refractionVector.xy.mul(0.6);
- 
--        const causticColor = uniform(duck.material.color);
-+        const causticColor = uniform<'vec3', THREE.Color>(duck.material.color);
-         const chromaticAberrationOffset = normalView.z.pow(-0.9).mul(0.004);
- 
-         const causticProjection = vec3(
 @@ -160,7 +160,7 @@ async function init() {
  
      // GUI
@@ -21339,22 +20894,7 @@ index 5250dc919..de8ca04ae 100644
      gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
      gui.addColor(duck.material, 'color').name('material color');
  
-@@ -170,7 +170,7 @@ async function init() {
- 
-     // Layers
- 
--    const volumetricLightingIntensity = uniform(0.7);
-+    const volumetricLightingIntensity = uniform<'float', number>(0.7);
- 
-     const volumetricLayer = new THREE.Layers();
-     volumetricLayer.disableAll();
-@@ -219,25 +219,27 @@ async function init() {
- 
-     const noiseTexture3D = createTexture3D();
- 
--    const smokeAmount = uniform(3);
-+    const smokeAmount = uniform<'float', number>(3);
- 
+@@ -224,20 +224,22 @@ async function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
@@ -21388,7 +20928,7 @@ index 5250dc919..de8ca04ae 100644
      const volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 1.5), volumetricMaterial);
      volumetricMesh.receiveShadow = true;
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 1d46c3543..0e6824272 100644
+index 1d46c3543..3f7da644c 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -21411,7 +20951,7 @@ index 1d46c3543..0e6824272 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -86,41 +86,48 @@ function init() {
+@@ -86,33 +86,40 @@ function init() {
  
      // Shader
  
@@ -21470,19 +21010,6 @@ index 1d46c3543..0e6824272 100644
  
      // Material
  
--    const baseColor = uniform(new THREE.Color(0x798aa0));
--    const range = uniform(0.1);
--    const threshold = uniform(0.25);
--    const opacity = uniform(0.25);
--    const steps = uniform(100);
-+    const baseColor = uniform<'vec3', THREE.Color>(new THREE.Color(0x798aa0));
-+    const range = uniform<'float', number>(0.1);
-+    const threshold = uniform<'float', number>(0.25);
-+    const opacity = uniform<'float', number>(0.25);
-+    const steps = uniform<'float', number>(100);
- 
-     const cloud3d = transparentRaymarchingTexture({
-         texture: texture3D(texture, null, 0),
 @@ -142,7 +149,7 @@ function init() {
  
      //
@@ -21493,7 +21020,7 @@ index 1d46c3543..0e6824272 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index 3edecb902..af0ddbd85 100644
+index 3edecb902..de39970e0 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -21509,13 +21036,7 @@ index 3edecb902..af0ddbd85 100644
  
  init();
  
-@@ -81,25 +81,27 @@ function init() {
- 
-     const noiseTexture3D = createTexture3D();
- 
--    const smokeAmount = uniform(2);
-+    const smokeAmount = uniform<'float', number>(2);
- 
+@@ -86,20 +86,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
@@ -21548,15 +21069,6 @@ index 3edecb902..af0ddbd85 100644
  
      volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(20, 10, 20), volumetricMaterial);
      volumetricMesh.receiveShadow = true;
-@@ -160,7 +162,7 @@ function init() {
- 
-     // Layers
- 
--    const volumetricLightingIntensity = uniform(1);
-+    const volumetricLightingIntensity = uniform<'float', number>(1);
- 
-     const volumetricLayer = new THREE.Layers();
-     volumetricLayer.disableAll();
 @@ -199,7 +201,7 @@ function init() {
          denoise: true,
      };
@@ -21567,7 +21079,7 @@ index 3edecb902..af0ddbd85 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 4089b3f72..2c02d8e28 100644
+index 4089b3f72..de4c74a53 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21587,13 +21099,7 @@ index 4089b3f72..2c02d8e28 100644
  
  init();
  
-@@ -83,25 +83,27 @@ function init() {
- 
-     const noiseTexture3D = createTexture3D();
- 
--    const smokeAmount = uniform(2);
-+    const smokeAmount = uniform<'float', number>(2);
- 
+@@ -88,20 +88,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
@@ -21635,15 +21141,6 @@ index 4089b3f72..2c02d8e28 100644
          const geometry = new THREE.PlaneGeometry(4, 10);
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
-@@ -173,7 +175,7 @@ function init() {
- 
-     // Layers
- 
--    const volumetricLightingIntensity = uniform(1);
-+    const volumetricLightingIntensity = uniform<'float', number>(1);
- 
-     const volumetricLayer = new THREE.Layers();
-     volumetricLayer.disableAll();
 @@ -211,7 +213,7 @@ function init() {
          denoise: true,
      };
@@ -21654,7 +21151,7 @@ index 4089b3f72..2c02d8e28 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..1a4127e69 100644
+index fb6f2bbd5..05639c677 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -21684,17 +21181,6 @@ index fb6f2bbd5..1a4127e69 100644
          const finalColor = vec4(0).toVar();
  
          RaymarchingBox(steps, ({ positionRay }) => {
-@@ -78,8 +85,8 @@ function init() {
- 
-     //
- 
--    const threshold = uniform(0.6);
--    const steps = uniform(200);
-+    const threshold = uniform<'float', number>(0.6);
-+    const steps = uniform<'float', number>(200);
- 
-     const material = new THREE.NodeMaterial();
-     material.colorNode = opaqueRaymarchingTexture({
 @@ -95,7 +102,7 @@ function init() {
  
      //
