@@ -300,14 +300,14 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): ConstNode<"vec3", Color>;
-    (r: number, g: number, b: number): ConstNode<"vec3", Color>;
+    (color?: string | number): ConstNode<"color", Color>;
+    (r: number, g: number, b: number): ConstNode<"color", Color>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): ConstNode<"vec3", Color>;
-    (node: Node): Node<"vec3">;
+    (color: Color): ConstNode<"color", Color>;
+    (node: Node): Node<"color">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
@@ -474,7 +474,7 @@ export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        toColor: () => Node<"vec3">;
+        toColor: () => Node<"color">;
         toColorAssign: () => this;
 
         toFloat: () => Node<"float">;
