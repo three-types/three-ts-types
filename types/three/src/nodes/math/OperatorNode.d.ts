@@ -232,6 +232,10 @@ interface Div extends AddSubMulDivNumberVec<"float">, AddSubMulDivNumberVec<"int
 export const div: Div;
 
 declare module "../core/Node.js" {
+    interface FloatExtensions {
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
     interface NumberExtensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecNumberExtensions<TNumber>;
         sub: AddSubMulDivNumberVecNumberExtensions<TNumber>;
@@ -242,6 +246,28 @@ declare module "../core/Node.js" {
         subAssign: AddSubMulDivNumberVecNumberAssignExtensions;
         mulAssign: AddSubMulDivNumberVecNumberAssignExtensions;
         divAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+    }
+
+    interface Vec2Extensions {
+        add: (b: Node<"color">) => Node<"vec3">;
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
+    interface Vec3Extensions {
+        add: (b: Node<"color">) => Node<"vec3">;
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
+    interface Vec4Extensions {
+        add: (b: Node<"color">) => Node<"vec4">;
+        mul: (b: Node<"color">) => Node<"vec4">;
+    }
+
+    interface ColorExtensions {
+        add: (b: Number<"float">) => Node<"vec3">;
+        sub: (b: Number<"float">) => Node<"vec3">;
+        mul: (b: Number<"float">) => Node<"vec3">;
+        div: (b: Number<"float">) => Node<"vec3">;
     }
 
     interface Vector2Extensions<TNumber extends NumberType> {
