@@ -897,7 +897,7 @@ index ffb7734e..d71c6d24 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3..fc05498a 100644
+index 335f0bf3..e2fa3c88 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1423,10 +1423,21 @@ index 335f0bf3..fc05498a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,2365 @@ class Node extends EventDispatcher {
+@@ -890,4 +980,2376 @@ class Node extends EventDispatcher {
      }
  }
  
++declare const Node: {
++    /**
++     * Constructs a new node.
++     *
++     * @param {?string} nodeType - The node type.
++     */
++    new <TNodeValue>(nodeType?: string | null): Node<TNodeValue>;
++    new (nodeType?: string | null): Node;
++    get type(): string;
++};
++
 +export interface NodeElements {}
 +
 +type NumberToVec = {
