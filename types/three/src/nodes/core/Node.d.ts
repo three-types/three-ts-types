@@ -67,11 +67,10 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-interface NodeInterface extends
-    EventDispatcher<{
-        dispose: {};
-    }>
-{
+declare class NodeClass extends EventDispatcher<{
+    dispose: {};
+}> {
+    static get type(): string;
     nodeType: string | null;
     updateType: NodeUpdateType;
     updateBeforeType: NodeUpdateType;
@@ -86,6 +85,12 @@ interface NodeInterface extends
     readonly isNode: true;
     readonly id: number;
     self?: this;
+    /**
+     * Constructs a new node.
+     *
+     * @param {?string} nodeType - The node type.
+     */
+    constructor(nodeType?: string | null);
     /**
      * Set this property to `true` when the node should be regenerated.
      *
@@ -163,7 +168,7 @@ interface NodeInterface extends
      * @generator
      * @yields {Node} A child node.
      */
-    getChildren(): Generator<Node, void, unknown>;
+    getChildren(): Generator<Node<unknown>, void, unknown>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
@@ -244,7 +249,7 @@ interface NodeInterface extends
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The type of the node.
      */
-    getElementType(builder: NodeBuilder): "bool" | "int" | "float" | "vec2" | "vec3" | "vec4" | "uint" | null;
+    getElementType(builder: NodeBuilder): "float" | "int" | "uint" | "bool" | "vec2" | "vec3" | "vec4" | null;
     /**
      * Returns the node member type for the given name.
      *
@@ -369,7 +374,6 @@ interface NodeInterface extends
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
 declare const Node: {
-    prototype: Node;
     /**
      * Constructs a new node.
      *
@@ -381,22 +385,18 @@ declare const Node: {
 };
 export interface NodeElements {
 }
-
 type NumberToVec = {
     float: "vec";
     int: "ivec";
     uint: "uvec";
 };
-
 type NumberToVec2<TNumber extends NumberType> = `${NumberToVec[TNumber]}2`;
 type NumberToVec3<TNumber extends NumberType> = `${NumberToVec[TNumber]}3`;
 type NumberToVec4<TNumber extends NumberType> = `${NumberToVec[TNumber]}4`;
-
 type Number<TNumber extends NumberType> = Node<TNumber> | number;
 type Vec2OrLessOrNumber<TNumber extends NumberType> = Number<TNumber> | Node<NumberToVec2<TNumber>>;
 type Vec3OrLessOrNumber<TNumber extends NumberType> = Vec2OrLessOrNumber<TNumber> | Node<NumberToVec3<TNumber>>;
 type Vec4OrLessOrNumber<TNumber extends NumberType> = Vec3OrLessOrNumber<TNumber> | Node<NumberToVec4<TNumber>>;
-
 interface Swizzle1In1Out<TNumber extends NumberType> {
     get x(): Node<TNumber>;
     set x(value: Vec4OrLessOrNumber<TNumber>);
@@ -405,7 +405,6 @@ interface Swizzle1In1Out<TNumber extends NumberType> {
     get s(): Node<TNumber>;
     set s(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle2In1Out<TNumber extends NumberType> extends Swizzle1In1Out<TNumber> {
     get y(): Node<TNumber>;
     set y(value: Vec4OrLessOrNumber<TNumber>);
@@ -414,7 +413,6 @@ interface Swizzle2In1Out<TNumber extends NumberType> extends Swizzle1In1Out<TNum
     get t(): Node<TNumber>;
     set t(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle3In1Out<TNumber extends NumberType> extends Swizzle2In1Out<TNumber> {
     get z(): Node<TNumber>;
     set z(value: Vec4OrLessOrNumber<TNumber>);
@@ -423,7 +421,6 @@ interface Swizzle3In1Out<TNumber extends NumberType> extends Swizzle2In1Out<TNum
     get p(): Node<TNumber>;
     set p(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle4In1Out<TNumber extends NumberType> extends Swizzle3In1Out<TNumber> {
     get w(): Node<TNumber>;
     set w(value: Vec4OrLessOrNumber<TNumber>);
@@ -432,7 +429,6 @@ interface Swizzle4In1Out<TNumber extends NumberType> extends Swizzle3In1Out<TNum
     get q(): Node<TNumber>;
     set q(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle1In2Out<TNumber extends NumberType> {
     get xx(): Node<NumberToVec2<TNumber>>;
     set xx(value: Vec4OrLessOrNumber<TNumber>);
@@ -441,7 +437,6 @@ interface Swizzle1In2Out<TNumber extends NumberType> {
     get ss(): Node<NumberToVec2<TNumber>>;
     set ss(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle2In2Out<TNumber extends NumberType> extends Swizzle1In2Out<TNumber> {
     get xy(): Node<NumberToVec2<TNumber>>;
     set xy(value: Vec4OrLessOrNumber<TNumber>);
@@ -462,7 +457,6 @@ interface Swizzle2In2Out<TNumber extends NumberType> extends Swizzle1In2Out<TNum
     get tt(): Node<NumberToVec2<TNumber>>;
     set tt(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle3In2Out<TNumber extends NumberType> extends Swizzle2In2Out<TNumber> {
     get xz(): Node<NumberToVec2<TNumber>>;
     set xz(value: Vec4OrLessOrNumber<TNumber>);
@@ -495,7 +489,6 @@ interface Swizzle3In2Out<TNumber extends NumberType> extends Swizzle2In2Out<TNum
     get pp(): Node<NumberToVec2<TNumber>>;
     set pp(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle4In2Out<TNumber extends NumberType> extends Swizzle3In2Out<TNumber> {
     get xw(): Node<NumberToVec2<TNumber>>;
     set xw(value: Vec4OrLessOrNumber<TNumber>);
@@ -540,7 +533,6 @@ interface Swizzle4In2Out<TNumber extends NumberType> extends Swizzle3In2Out<TNum
     get qq(): Node<NumberToVec2<TNumber>>;
     set qq(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle1In3Out<TNumber extends NumberType> {
     get xxx(): Node<NumberToVec3<TNumber>>;
     set xxx(value: Vec4OrLessOrNumber<TNumber>);
@@ -549,7 +541,6 @@ interface Swizzle1In3Out<TNumber extends NumberType> {
     get sss(): Node<NumberToVec3<TNumber>>;
     set sss(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle2In3Out<TNumber extends NumberType> extends Swizzle1In3Out<TNumber> {
     get xxy(): Node<NumberToVec3<TNumber>>;
     set xxy(value: Vec4OrLessOrNumber<TNumber>);
@@ -594,7 +585,6 @@ interface Swizzle2In3Out<TNumber extends NumberType> extends Swizzle1In3Out<TNum
     get ttt(): Node<NumberToVec3<TNumber>>;
     set ttt(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle3In3Out<TNumber extends NumberType> extends Swizzle2In3Out<TNumber> {
     get xxz(): Node<NumberToVec3<TNumber>>;
     set xxz(value: Vec4OrLessOrNumber<TNumber>);
@@ -711,7 +701,6 @@ interface Swizzle3In3Out<TNumber extends NumberType> extends Swizzle2In3Out<TNum
     get ppp(): Node<NumberToVec3<TNumber>>;
     set ppp(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle4In3Out<TNumber extends NumberType> extends Swizzle3In3Out<TNumber> {
     get xxw(): Node<NumberToVec3<TNumber>>;
     set xxw(value: Vec4OrLessOrNumber<TNumber>);
@@ -936,7 +925,6 @@ interface Swizzle4In3Out<TNumber extends NumberType> extends Swizzle3In3Out<TNum
     get qqq(): Node<NumberToVec3<TNumber>>;
     set qqq(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle1In4Out<TNumber extends NumberType> {
     get xxxx(): Node<NumberToVec4<TNumber>>;
     set xxxx(value: Vec4OrLessOrNumber<TNumber>);
@@ -945,7 +933,6 @@ interface Swizzle1In4Out<TNumber extends NumberType> {
     get ssss(): Node<NumberToVec4<TNumber>>;
     set ssss(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle2In4Out<TNumber extends NumberType> extends Swizzle1In4Out<TNumber> {
     get xxxy(): Node<NumberToVec4<TNumber>>;
     set xxxy(value: Vec4OrLessOrNumber<TNumber>);
@@ -1038,7 +1025,6 @@ interface Swizzle2In4Out<TNumber extends NumberType> extends Swizzle1In4Out<TNum
     get tttt(): Node<NumberToVec4<TNumber>>;
     set tttt(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle3In4Out<TNumber extends NumberType> extends Swizzle2In4Out<TNumber> {
     get xxxz(): Node<NumberToVec4<TNumber>>;
     set xxxz(value: Vec4OrLessOrNumber<TNumber>);
@@ -1431,7 +1417,6 @@ interface Swizzle3In4Out<TNumber extends NumberType> extends Swizzle2In4Out<TNum
     get pppp(): Node<NumberToVec4<TNumber>>;
     set pppp(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 interface Swizzle4In4Out<TNumber extends NumberType> extends Swizzle3In4Out<TNumber> {
     get xxxw(): Node<NumberToVec4<TNumber>>;
     set xxxw(value: Vec4OrLessOrNumber<TNumber>);
@@ -2484,15 +2469,12 @@ interface Swizzle4In4Out<TNumber extends NumberType> extends Swizzle3In4Out<TNum
     get qqqq(): Node<NumberToVec4<TNumber>>;
     set qqqq(value: Vec4OrLessOrNumber<TNumber>);
 }
-
 type X = "x";
 type R = "r";
 type S = "s";
 type NumberSwizzleMethods<TNumber extends NumberType> =
     & {
-        [Key in X | R | S as `set${Uppercase<Key>}`]: (
-            value: Vec4OrLessOrNumber<TNumber>,
-        ) => Node<TNumber>;
+        [Key in X | R | S as `set${Uppercase<Key>}`]: (value: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
     }
     & {
         [Key in X | R | S as `flip${Uppercase<Key>}`]: () => Node<TNumber>;
@@ -2523,7 +2505,6 @@ type NumberSwizzleMethods<TNumber extends NumberType> =
             TNumber
         >;
     };
-
 type XY = "x" | "y";
 type RG = "r" | "g";
 type ST = "s" | "t";
@@ -2565,11 +2546,9 @@ type Vec2SwizzleMethods<TNumber extends NumberType> =
         [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}` as `flip${Uppercase<Key>}`]:
             () => Node<NumberToVec2<TNumber>>;
     };
-
 type XYZ = "x" | "y" | "z";
 type RGB = "r" | "g" | "b";
 type STP = "s" | "t" | "p";
-
 type Vec3SwizzleMethods<TNumber extends NumberType> =
     & {
         [Key in XYZ | RGB | STP as `set${Uppercase<Key>}`]: (
@@ -2604,9 +2583,7 @@ type Vec3SwizzleMethods<TNumber extends NumberType> =
                 | `${XYZ}${XYZ}${XYZ}${XYZ}`
                 | `${RGB}${RGB}${RGB}${RGB}`
                 | `${STP}${STP}${STP}${STP}` as `set${Uppercase<Key>}`
-        ]: (
-            value: Vec4OrLessOrNumber<TNumber>,
-        ) => Node<NumberToVec3<TNumber>>;
+        ]: (value: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
     }
     & {
         [
@@ -2616,11 +2593,9 @@ type Vec3SwizzleMethods<TNumber extends NumberType> =
                 | `${STP}${STP}${STP}${STP}` as `flip${Uppercase<Key>}`
         ]: () => Node<NumberToVec3<TNumber>>;
     };
-
 type XYZW = "x" | "y" | "z" | "w";
 type RGBA = "r" | "g" | "b" | "a";
 type STPQ = "s" | "t" | "p" | "q";
-
 type Vec4SwizzleMethods<TNumber extends NumberType> =
     & {
         [Key in XYZW | RGBA | STPQ as `set${Uppercase<Key>}`]: (
@@ -2642,9 +2617,7 @@ type Vec4SwizzleMethods<TNumber extends NumberType> =
     }
     & {
         [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`]:
-            (
-                value: Vec4OrLessOrNumber<TNumber>,
-            ) => Node<NumberToVec4<TNumber>>;
+            (value: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
     }
     & {
         [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`]:
@@ -2656,9 +2629,7 @@ type Vec4SwizzleMethods<TNumber extends NumberType> =
                 | `${XYZW}${XYZW}${XYZW}${XYZW}`
                 | `${RGBA}${RGBA}${RGBA}${RGBA}`
                 | `${STPQ}${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`
-        ]: (
-            value: Vec4OrLessOrNumber<TNumber>,
-        ) => Node<NumberToVec4<TNumber>>;
+        ]: (value: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
     }
     & {
         [
@@ -2668,7 +2639,6 @@ type Vec4SwizzleMethods<TNumber extends NumberType> =
                 | `${STPQ}${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`
         ]: () => Node<NumberToVec4<TNumber>>;
     };
-
 interface NumberSwizzle<TNumber extends NumberType>
     extends
         Swizzle1In1Out<TNumber>,
@@ -2676,8 +2646,8 @@ interface NumberSwizzle<TNumber extends NumberType>
         Swizzle1In3Out<TNumber>,
         Swizzle1In4Out<TNumber>,
         NumberSwizzleMethods<TNumber>
-{}
-
+{
+}
 interface Vec2Swizzle<TNumber extends NumberType>
     extends
         Swizzle2In1Out<TNumber>,
@@ -2685,8 +2655,8 @@ interface Vec2Swizzle<TNumber extends NumberType>
         Swizzle2In3Out<TNumber>,
         Swizzle2In4Out<TNumber>,
         Vec2SwizzleMethods<TNumber>
-{}
-
+{
+}
 interface Vec3Swizzle<TNumber extends NumberType>
     extends
         Swizzle3In1Out<TNumber>,
@@ -2694,8 +2664,8 @@ interface Vec3Swizzle<TNumber extends NumberType>
         Swizzle3In3Out<TNumber>,
         Swizzle3In4Out<TNumber>,
         Vec3SwizzleMethods<TNumber>
-{}
-
+{
+}
 interface Vec4Swizzle<TNumber extends NumberType>
     extends
         Swizzle4In1Out<TNumber>,
@@ -2703,8 +2673,8 @@ interface Vec4Swizzle<TNumber extends NumberType>
         Swizzle4In3Out<TNumber>,
         Swizzle4In4Out<TNumber>,
         Vec4SwizzleMethods<TNumber>
-{}
-
+{
+}
 export type NumberType = "float" | "int" | "uint";
 export type IntegerType = "int" | "uint";
 export type FloatVectorType = "vec2" | "vec3" | "vec4";
@@ -2762,7 +2732,7 @@ export interface MatrixExtensions<TMat extends MatrixType> {
 export interface ColorExtensions {
 }
 type Node<TValue = unknown> =
-    & NodeInterface
+    & NodeClass
     & NodeElements
     & NodeExtensions<TValue>
     & (TValue extends "float" ? NumberSwizzle<"float"> & FloatExtensions & NumberExtensions<"float">
