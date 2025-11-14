@@ -1,8 +1,7 @@
 import Node from "../core/Node.js";
-import ConditionalNode from "../math/ConditionalNode.js";
 
 export const getDistanceAttenuation: (args: {
-    lightDistance: Node;
-    cutoffDistance: Node;
-    decayExponent: Node;
-}) => ConditionalNode;
+    lightDistance: Node<"float">;
+    cutoffDistance: Node<"float">;
+    decayExponent: Node<"float">;
+}) => Node<"float">;

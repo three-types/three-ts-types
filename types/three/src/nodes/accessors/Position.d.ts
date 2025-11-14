@@ -1,9 +1,9 @@
 import Node from "../core/Node.js";
 
-export const positionGeometry: Node;
-export const positionLocal: Node;
-export const positionPrevious: Node;
-export const positionWorld: Node;
-export const positionWorldDirection: Node;
-export const positionView: Node;
-export const positionViewDirection: Node;
+export const positionGeometry: Node<"vec3">;
+export const positionLocal: Node<"vec3">;
+export const positionPrevious: Node<"vec3">;
+export const positionWorld: Node<"vec3">;
+export const positionWorldDirection: Node<"vec3">;
+export const positionView: Node<"vec3">;
+export const positionViewDirection: Node<"vec3">;

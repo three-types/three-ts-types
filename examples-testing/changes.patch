@@ -13710,7 +13710,7 @@ index b65f53093..0b83eab46 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 91bc961d7..374525a21 100644
+index 91bc961d7..e48af49ee 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -21,17 +21,17 @@ import {
@@ -13739,7 +13739,7 @@ index 91bc961d7..374525a21 100644
  const clock = new THREE.Clock();
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
-+export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node]>(([suv_immutable]) => {
++export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node], THREE.Node<'vec3'>>(([suv_immutable]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
@@ -13898,7 +13898,7 @@ index 3ec30a762..5a3faadc2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 1b780ce90..5d7ada584 100644
+index 1b780ce90..63b8469c4 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -13925,11 +13925,11 @@ index 1b780ce90..5d7ada584 100644
      const waterPosY = positionWorld.y.sub(water.position.y);
  
 -    let transition = waterPosY.add(0.1).saturate().oneMinus();
-+    let transition: THREE.Node = waterPosY.add(0.1).saturate().oneMinus();
++    let transition: THREE.Node<'float'> = waterPosY.add(0.1).saturate().oneMinus();
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
++    const colorNode = transition.mix(material.colorNode as THREE.Node<'vec4'>, material.colorNode!.add(waterLayer0));
  
      //material.colorNode = colorNode;
      floor.material.colorNode = colorNode;
@@ -14174,7 +14174,7 @@ index 0a05626a1..0d9d160da 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 355e9f212..37be71714 100644
+index 7c5f5a5d1..32543f3a1 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
 @@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -14356,7 +14356,7 @@ index e07e60463..2e0d4855a 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 229033d79..b7bd1fde4 100644
+index 229033d79..da8f94d50 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14371,7 +14371,7 @@ index 229033d79..b7bd1fde4 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let computeNode: THREE.ComputeNode;
 +let waveBuffer: Float32Array<ArrayBuffer>, sampleRate: number;
-+let waveArray: THREE.StorageBufferNode;
++let waveArray: THREE.StorageBufferNode<'float'>;
 +let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
  const analyserBuffer = new Uint8Array(1024);
 -let analyserTexture;
@@ -14396,7 +14396,7 @@ index 229033d79..b7bd1fde4 100644
          const time = index.mul(pitch);
  
 -        let wave = originalWave.element(time);
-+        let wave: THREE.Node = originalWave.element(time);
++        let wave: THREE.Node<'float'> = originalWave.element(time);
  
          // delay
  
@@ -14410,7 +14410,7 @@ index 229033d79..b7bd1fde4 100644
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index c602920ee..266f691e1 100644
+index c602920ee..802afddb6 100644
 --- a/examples-testing/examples/webgpu_compute_birds.ts
 +++ b/examples-testing/examples/webgpu_compute_birds.ts
 @@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14430,14 +14430,14 @@ index c602920ee..266f691e1 100644
 +let computeVelocity: THREE.ComputeNode,
 +    computePosition: THREE.ComputeNode,
 +    effectController: {
-+        separation: THREE.UniformNode<number>;
-+        alignment: THREE.UniformNode<number>;
-+        cohesion: THREE.UniformNode<number>;
-+        freedom: THREE.UniformNode<number>;
-+        now: THREE.UniformNode<number>;
-+        deltaTime: THREE.UniformNode<number>;
-+        rayOrigin: THREE.UniformNode<THREE.Vector3>;
-+        rayDirection: THREE.UniformNode<THREE.Vector3>;
++        separation: THREE.UniformNode<'float', number>;
++        alignment: THREE.UniformNode<'float', number>;
++        cohesion: THREE.UniformNode<'float', number>;
++        freedom: THREE.UniformNode<'float', number>;
++        now: THREE.UniformNode<'float', number>;
++        deltaTime: THREE.UniformNode<'float', number>;
++        rayOrigin: THREE.UniformNode<'vec3', THREE.Vector3>;
++        rayDirection: THREE.UniformNode<'vec3', THREE.Vector3>;
 +    };
  
  const BIRDS = 16384;
@@ -14470,7 +14470,7 @@ index c602920ee..266f691e1 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 6f4c3b61b..ba6b31324 100644
+index 6f4c3b61b..ffdcddf00 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14493,19 +14493,19 @@ index 6f4c3b61b..ba6b31324 100644
 -let dampeningUniform, spherePositionUniform, stiffnessUniform, sphereUniform, windUniform;
 -let vertexWireframeObject, springWireframeObject;
 -let clothMesh, clothMaterial, sphere;
-+let vertexPositionBuffer: THREE.StorageBufferNode,
-+    vertexForceBuffer: THREE.StorageBufferNode,
-+    vertexParamsBuffer: THREE.StorageBufferNode;
-+let springVertexIdBuffer: THREE.StorageBufferNode,
-+    springRestLengthBuffer: THREE.StorageBufferNode,
-+    springForceBuffer: THREE.StorageBufferNode;
-+let springListBuffer: THREE.StorageBufferNode;
++let vertexPositionBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexForceBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexParamsBuffer: THREE.StorageBufferNode<'uvec3'>;
++let springVertexIdBuffer: THREE.StorageBufferNode<'uvec2'>,
++    springRestLengthBuffer: THREE.StorageBufferNode<'float'>,
++    springForceBuffer: THREE.StorageBufferNode<'vec3'>;
++let springListBuffer: THREE.StorageBufferNode<'uint'>;
 +let computeSpringForces: THREE.ComputeNode, computeVertexForces: THREE.ComputeNode;
-+let dampeningUniform: THREE.UniformNode<number>,
-+    spherePositionUniform: THREE.UniformNode<THREE.Vector3>,
-+    stiffnessUniform: THREE.UniformNode<number>,
-+    sphereUniform: THREE.UniformNode<number>,
-+    windUniform: THREE.UniformNode<number>;
++let dampeningUniform: THREE.UniformNode<'float', number>,
++    spherePositionUniform: THREE.UniformNode<'vec3', THREE.Vector3>,
++    stiffnessUniform: THREE.UniformNode<'float', number>,
++    sphereUniform: THREE.UniformNode<'float', number>,
++    windUniform: THREE.UniformNode<'float', number>;
 +let vertexWireframeObject: THREE.Mesh, springWireframeObject: THREE.Line;
 +let clothMesh: THREE.Mesh, clothMaterial: THREE.MeshPhysicalNodeMaterial, sphere: THREE.Mesh;
  let timeSinceLastStep = 0;
@@ -14561,6 +14561,15 @@ index 6f4c3b61b..ba6b31324 100644
          const id = verletSprings.length;
          const spring = {
              id,
+@@ -349,7 +372,7 @@ function setupWireframe() {
+     const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
+     springWireframeMaterial.positionNode = Fn(() => {
+         const vertexIds = springVertexIdBuffer.element(instanceIndex);
+-        const vertexId = select(attribute('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
++        const vertexId = select(attribute<'uint'>('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
+         return vertexPositionBuffer.element(vertexId);
+     })();
+ 
 @@ -382,7 +405,7 @@ function setupClothMesh() {
      const verletVertexIdArray = new Uint32Array(vertexCount * 4);
      const indices = [];
@@ -14570,6 +14579,15 @@ index 6f4c3b61b..ba6b31324 100644
          return y * clothNumSegmentsX + x;
      };
  
+@@ -419,7 +442,7 @@ function setupClothMesh() {
+ 
+     clothMaterial.positionNode = Fn(({ material }) => {
+         // gather the position of the 4 verlet vertices and calculate the center position and normal from that
+-        const vertexIds = attribute('vertexIds');
++        const vertexIds = attribute<'uvec4'>('vertexIds');
+         const v0 = vertexPositionBuffer.element(vertexIds.x).toVar();
+         const v1 = vertexPositionBuffer.element(vertexIds.y).toVar();
+         const v2 = vertexPositionBuffer.element(vertexIds.z).toVar();
 @@ -436,7 +459,7 @@ function setupClothMesh() {
          const normal = cross(tangent, bitangent);
  
@@ -14580,7 +14598,7 @@ index 6f4c3b61b..ba6b31324 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 1f76c981c..f12346d8c 100644
+index 1f76c981c..e21935c61 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14608,7 +14626,7 @@ index 1f76c981c..f12346d8c 100644
  
      const computeUpdate = Fn(() => {
 -        const getCoord = pos => pos.add(50).div(100);
-+        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
@@ -14626,7 +14644,7 @@ index 1f76c981c..f12346d8c 100644
      // compose
  
 -    let totalPass = scenePass.toInspector('Scene');
-+    let totalPass: THREE.Node = scenePass.toInspector('Scene');
++    let totalPass: THREE.Node<'vec4'> = scenePass.toInspector('Scene');
      totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
@@ -14664,7 +14682,7 @@ index b51bafeab..34d18d6ef 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..b277be895 100644
+index 9a37a9ece..723e4ffbd 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14683,7 +14701,7 @@ index 9a37a9ece..b277be895 100644
  // Display utilities
  
 -const getElementIndex = Fn(
-+const getElementIndex = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
++const getElementIndex = Fn<readonly [THREE.Node<'vec2'>, THREE.Node<'uint'>, THREE.Node<'uint'>], THREE.Node<'uint'>>(
      ([uvNode, gridWidth, gridHeight]) => {
          const newUV = uvNode.mul(vec2(gridWidth, gridHeight));
          const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
@@ -14692,7 +14710,7 @@ index 9a37a9ece..b277be895 100644
  );
  
 -const getColor = Fn(
-+const getColor = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
++const getColor = Fn<readonly [THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'vec3'>>(
      ([colorChanger, gridWidth, gridHeight]) => {
          const subtracter = colorChanger.div(gridWidth.mul(gridHeight));
          return vec3(subtracter.oneMinus()).toVar();
@@ -14729,23 +14747,26 @@ index 9a37a9ece..b277be895 100644
  
 -const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStorage = null) => {
 +const createDisplayMesh = (
-+    elementsStorage: THREE.StorageBufferNode,
-+    algoStorage: THREE.StorageBufferNode | null = null,
-+    blockHeightStorage: THREE.StorageBufferNode | null = null,
++    elementsStorage: THREE.StorageBufferNode<'uint'>,
++    algoStorage: THREE.StorageBufferNode<'uint'> | null = null,
++    blockHeightStorage: THREE.StorageBufferNode<'uint'> | null = null,
 +) => {
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -151,7 +155,7 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
+@@ -151,7 +155,10 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
      return plane;
  };
  
 -const createDisplayMesh2 = (elementsStorage, infoStorage) => {
-+const createDisplayMesh2 = (elementsStorage: THREE.StorageBufferNode, infoStorage: THREE.StorageBufferNode) => {
++const createDisplayMesh2 = (
++    elementsStorage: THREE.StorageBufferNode<'uint'>,
++    infoStorage: THREE.StorageBufferNode<'uint'>,
++) => {
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -175,7 +179,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
+@@ -175,7 +182,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
      return plane;
  };
  
@@ -14754,7 +14775,7 @@ index 9a37a9ece..b277be895 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -319,7 +323,7 @@ async function initGlobalSwapOnly() {
+@@ -319,7 +326,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
      // Swap the elements in local storage
@@ -14764,7 +14785,7 @@ index 9a37a9ece..b277be895 100644
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
-index 43d162ab5..99033e0e7 100644
+index 43d162ab5..81e920f55 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
 +++ b/examples-testing/examples/webgpu_compute_texture.ts
 @@ -3,7 +3,7 @@ import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'th
@@ -14781,12 +14802,12 @@ index 43d162ab5..99033e0e7 100644
      // create function
  
 -    const computeTexture = Fn(({ storageTexture }) => {
-+    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
++    const computeTexture = Fn<{ storageTexture: THREE.Texture }, void>(({ storageTexture }) => {
          const posX = instanceIndex.mod(width);
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index ccdfba0be..eb7643907 100644
+index ccdfba0be..d4ea0e51a 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14816,24 +14837,27 @@ index ccdfba0be..eb7643907 100644
      const size = 200;
  
 -    const computeCloud = Fn(({ storageTexture }) => {
-+    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }>(({ storageTexture }) => {
++    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }, void>(({ storageTexture }) => {
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -110,33 +110,37 @@ async function init() {
+@@ -110,33 +110,40 @@ async function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        range?: THREE.UniformNode<number>;
-+        threshold?: THREE.UniformNode<number>;
-+        opacity?: THREE.UniformNode<number>;
-+        steps?: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.Texture3DNode;
++            range?: THREE.UniformNode<'float', number>;
++            threshold?: THREE.UniformNode<'float', number>;
++            opacity?: THREE.UniformNode<'float', number>;
++            steps?: THREE.UniformNode<'float', number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -14876,7 +14900,7 @@ index ccdfba0be..eb7643907 100644
  
      // Material
  
-@@ -171,7 +175,7 @@ async function init() {
+@@ -171,7 +178,7 @@ async function init() {
  
      renderer.compute(computeNode);
  
@@ -14905,7 +14929,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..e6ffdb5b3 100644
+index 429d2ff40..3cffd2705 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14917,12 +14941,26 @@ index 429d2ff40..e6ffdb5b3 100644
  
  init();
  
-@@ -68,7 +68,7 @@ async function init() {
+@@ -59,16 +59,16 @@ async function init() {
+         saturation: 1,
+     };
+ 
+-    const mixNode = reference('mix', 'float', adjustments);
+-    const proceduralNode = reference('procedural', 'float', adjustments);
+-    const intensityNode = reference('intensity', 'float', adjustments);
+-    const hueNode = reference('hue', 'float', adjustments);
+-    const saturationNode = reference('saturation', 'float', adjustments);
++    const mixNode = reference<'float', typeof adjustments>('mix', 'float', adjustments);
++    const proceduralNode = reference<'float', typeof adjustments>('procedural', 'float', adjustments);
++    const intensityNode = reference<'float', typeof adjustments>('intensity', 'float', adjustments);
++    const hueNode = reference<'float', typeof adjustments>('hue', 'float', adjustments);
++    const saturationNode = reference<'float', typeof adjustments>('saturation', 'float', adjustments);
+ 
      const rotateY1Matrix = new THREE.Matrix4();
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
-+    const getEnvironmentNode = (reflectNode: THREE.Node, positionNode: THREE.Node) => {
++    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
@@ -15166,7 +15204,7 @@ index 0abd2f26c..30705fb0c 100644
      });
  
 diff --git a/examples-testing/examples/webgpu_instance_path.ts b/examples-testing/examples/webgpu_instance_path.ts
-index a5bce3225..d542dc648 100644
+index a5bce3225..8b2fa4ad7 100644
 --- a/examples-testing/examples/webgpu_instance_path.ts
 +++ b/examples-testing/examples/webgpu_instance_path.ts
 @@ -19,7 +19,7 @@ import {
@@ -15198,8 +15236,23 @@ index a5bce3225..d542dc648 100644
  
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
+@@ -92,10 +92,10 @@ async function init() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceColor = instancedBufferAttribute(colorAttribute);
+-    const instanceSeed = instancedBufferAttribute(seedAttribute);
+-    const instanceTime = instancedBufferAttribute(timeAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceColor = instancedBufferAttribute<'vec3'>(colorAttribute);
++    const instanceSeed = instancedBufferAttribute<'float'>(seedAttribute);
++    const instanceTime = instancedBufferAttribute<'float'>(timeAttribute);
+ 
+     const localTime = instanceTime.add(time);
+     const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..e43bcee28 100644
+index 409129373..d2ce322f4 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15217,9 +15270,9 @@ index 409129373..e43bcee28 100644
 +    backgroundNode: THREE.Node;
 +let material: THREE.PointsNodeMaterial;
 +let effectController: {
-+    pulseSpeed: THREE.UniformNode<number>;
-+    minWidth: THREE.UniformNode<number>;
-+    maxWidth: THREE.UniformNode<number>;
++    pulseSpeed: THREE.UniformNode<'float', number>;
++    minWidth: THREE.UniformNode<'float', number>;
++    maxWidth: THREE.UniformNode<'float', number>;
 +};
  
  // viewport
@@ -15233,6 +15286,19 @@ index 409129373..e43bcee28 100644
 +let computeSize: THREE.ComputeNode;
  
  init();
+ 
+@@ -94,10 +103,10 @@ async function init() {
+ 
+     // Material / Sprites
+ 
+-    const attributeRange = instancedBufferAttribute(instanceSizeBufferAttribute);
++    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
+     const pointColors = mix(
+         vec3(0.0),
+-        instancedBufferAttribute(colorsAttribute),
++        instancedBufferAttribute<'vec3'>(colorsAttribute),
+         attributeRange.div(float(effectController.maxWidth)),
+     );
  
 @@ -136,7 +145,7 @@ async function init() {
  
@@ -15280,7 +15346,7 @@ index 5a554178b..dd9943ca3 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_layers.ts b/examples-testing/examples/webgpu_layers.ts
-index c1db7d60c..15b6851cd 100644
+index c1db7d60c..319d54e83 100644
 --- a/examples-testing/examples/webgpu_layers.ts
 +++ b/examples-testing/examples/webgpu_layers.ts
 @@ -4,7 +4,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15310,6 +15376,22 @@ index c1db7d60c..15b6851cd 100644
      // instance data
  
      const positions = [];
+@@ -117,11 +117,11 @@ function getMaterial(count, color, sprite) {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceDirection = instancedBufferAttribute(directionAttribute);
+-    const instanceRotation = instancedBufferAttribute(rotationAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceDirection = instancedBufferAttribute<'vec3'>(directionAttribute);
++    const instanceRotation = instancedBufferAttribute<'vec3'>(rotationAttribute);
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.02));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.02));
+     const modTime = mod(localTime, 1.0);
+ 
+     const rotatedPosition = rotate(positionLocal, instanceRotation.mul(modTime.mul(20)));
 diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
 index cfd67fdee..90af446b8 100644
 --- a/examples-testing/examples/webgpu_lensflares.ts
@@ -15550,7 +15632,7 @@ index 43d7ce723..616ed8e6b 100644
      gui.add(params, 'shadows');
  }
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index e00d75b21..ee12bb569 100644
+index e00d75b21..c0d16ef13 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
 @@ -16,9 +16,13 @@ import {
@@ -15578,6 +15660,20 @@ index e00d75b21..ee12bb569 100644
          mesh.geometry = createGeometry(mesh.geometry);
          mesh.material = createMaterial();
  
+@@ -102,10 +106,10 @@ function animate() {
+ function createMaterial() {
+     const material = new THREE.MeshPhongNodeMaterial();
+ 
+-    const seedAttribute = attribute('seed');
+-    const displaceNormalAttribute = attribute('displaceNormal');
++    const seedAttribute = attribute<'float'>('seed');
++    const displaceNormalAttribute = attribute<'vec3'>('displaceNormal');
+ 
+-    const localTime = attribute('time').add(time);
++    const localTime = attribute<'float'>('time').add(time);
+ 
+     const effector1 = uniform(light1.position).toVar();
+     const effector2 = uniform(light2.position).toVar();
 @@ -125,7 +129,7 @@ function createMaterial() {
      return material;
  }
@@ -15704,7 +15800,7 @@ index db2de8891..0a91b1a14 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index c30e0bb55..25c53f3ac 100644
+index c30e0bb55..5c950c94b 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15726,8 +15822,8 @@ index c30e0bb55..25c53f3ac 100644
 +    lights: THREE.Group,
 +    lightDummy: THREE.InstancedMesh,
 +    controls: OrbitControls,
-+    compose: THREE.Node,
-+    tileInfluence: THREE.UniformNode<number>,
++    compose: THREE.Node<'vec4'>,
++    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
 +    postProcessing: THREE.PostProcessing;
@@ -16072,7 +16168,7 @@ index f32ae7822..33f9d163d 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 4dde35617..6777cd37f 100644
+index 4dde35617..03e6d92ad 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -61,9 +61,9 @@ const localSamples = [
@@ -16088,14 +16184,14 @@ index 4dde35617..6777cd37f 100644
  
  init();
  
-@@ -90,27 +90,29 @@ function init() {
+@@ -90,29 +90,33 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = Fn(([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
 -        const coord = positionWorld.xz.div(gridSize);
 -        const grid = fract(coord);
-+    const gridXZ = Fn<[THREE.Node, THREE.Node, THREE.Node]>(
++    const gridXZ = Fn<[THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
 +        ([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
 +            const coord = positionWorld.xz.div(gridSize);
 +            const grid = fract(coord);
@@ -16130,11 +16226,17 @@ index 4dde35617..6777cd37f 100644
 +    );
  
 -    const radialGradient = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
-+    const radialGradient = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
-         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
-     });
+-        return smoothstep(radius, radius.sub(falloff), length(positionWorld));
+-    });
++    const radialGradient = Fn<[THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
++        ([radius = float(10.0), falloff = float(1.0)]) => {
++            return smoothstep(radius, radius.sub(falloff), length(positionWorld));
++        },
++    );
  
-@@ -177,7 +179,7 @@ function updateModelsAlign() {
+     // Create grid pattern
+     const gridPattern = gridXZ(1.0, 0.03, 0.005);
+@@ -177,7 +181,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -16143,7 +16245,7 @@ index 4dde35617..6777cd37f 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -191,12 +193,12 @@ async function addSample(sample, path) {
+@@ -191,12 +195,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
          .setPath(path)
          .loadAsync(sample)
@@ -16159,7 +16261,7 @@ index 4dde35617..6777cd37f 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -206,7 +208,7 @@ async function addSample(sample, path) {
+@@ -206,7 +210,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -16168,7 +16270,7 @@ index 4dde35617..6777cd37f 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -226,9 +228,9 @@ function addGUI() {
+@@ -226,9 +230,9 @@ function addGUI() {
          });
  }
  
@@ -16625,7 +16727,7 @@ index 0a841ae27..847b3df3e 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_materials_sss.ts b/examples-testing/examples/webgpu_materials_sss.ts
-index c76df99dc..9c9fb02d2 100644
+index c76df99dc..b94767b77 100644
 --- a/examples-testing/examples/webgpu_materials_sss.ts
 +++ b/examples-testing/examples/webgpu_materials_sss.ts
 @@ -6,9 +6,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16659,7 +16761,7 @@ index c76df99dc..9c9fb02d2 100644
          model.position.set(0, 0, 10);
          model.scale.setScalar(1);
          model.material = material;
-@@ -103,16 +103,24 @@ function initMaterial() {
+@@ -103,37 +103,45 @@ function initMaterial() {
      initGUI(material);
  }
  
@@ -16684,15 +16786,41 @@ index c76df99dc..9c9fb02d2 100644
 +        scale: number;
 +
 +        constructor() {
-+            this.distortion = material.thicknessDistortionNode.value;
-+            this.ambient = material.thicknessAmbientNode.value;
-+            this.attenuation = material.thicknessAttenuationNode.value;
-+            this.power = material.thicknessPowerNode.value;
-+            this.scale = material.thicknessScaleNode.value;
++            this.distortion = (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value;
++            this.ambient = (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value;
++            this.attenuation = (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value;
++            this.power = (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value;
++            this.scale = (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value;
 +        }
 +    }
  
      const thicknessControls = new ThicknessControls();
+ 
+     gui.add(thicknessControls, 'distortion', 0.01, 1, 0.01).onChange(function () {
+-        material.thicknessDistortionNode.value = thicknessControls.distortion;
++        (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value = thicknessControls.distortion;
+     });
+ 
+     gui.add(thicknessControls, 'ambient', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAmbientNode.value = thicknessControls.ambient;
++        (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value = thicknessControls.ambient;
+     });
+ 
+     gui.add(thicknessControls, 'attenuation', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAttenuationNode.value = thicknessControls.attenuation;
++        (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value = thicknessControls.attenuation;
+     });
+ 
+     gui.add(thicknessControls, 'power', 0.01, 16.0, 0.1).onChange(function () {
+-        material.thicknessPowerNode.value = thicknessControls.power;
++        (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value = thicknessControls.power;
+     });
+ 
+     gui.add(thicknessControls, 'scale', 0.01, 50.0, 0.1).onChange(function () {
+-        material.thicknessScaleNode.value = thicknessControls.scale;
++        (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value = thicknessControls.scale;
+     });
+ }
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
 index 090372729..2456b2959 100644
@@ -17449,7 +17577,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..148171a6f 100644
+index e49f98ce7..e7061f5d2 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17459,9 +17587,10 @@ index e49f98ce7..148171a6f 100644
 -let camera, scene, renderer, controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
  
- class OcclusionNode extends THREE.Node {
+-class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
-+    uniformNode: THREE.UniformNode<THREE.Color>;
++class OcclusionNode extends THREE.Node<'vec3'> {
++    uniformNode: THREE.UniformNode<'color', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
 +    normalColor: THREE.Color;
@@ -17793,7 +17922,7 @@ index 3e1ea3ef9..e0e11ef81 100644
              });
          });
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
-index 3dc3ceb4f..aad91a01c 100644
+index 3dc3ceb4f..52882cad2 100644
 --- a/examples-testing/examples/webgpu_portal.ts
 +++ b/examples-testing/examples/webgpu_portal.ts
 @@ -17,10 +17,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17815,7 +17944,7 @@ index 3dc3ceb4f..aad91a01c 100644
      const loader = new GLTFLoader();
      loader.load('models/gltf/Xbot.glb', function (gltf) {
 -        const createModel = (colorNode = null) => {
-+        const createModel = (colorNode: THREE.Node | null = null) => {
++        const createModel = (colorNode: THREE.Node<'vec3'> | null = null) => {
              let object;
  
              if (mixers.length === 0) {
@@ -17857,7 +17986,7 @@ index 9bbbceb12..aed754f55 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index f23b09c18..166d3b929 100644
+index f23b09c18..0bae944cf 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 @@ -18,21 +18,31 @@ import {
@@ -17969,8 +18098,12 @@ index f23b09c18..166d3b929 100644
      gui.add(params, 'intensity', 0, 1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -219,7 +240,7 @@ async function animate() {
-     lutPass.intensityNode.value = params.intensity;
+@@ -216,10 +237,10 @@ function onWindowResize() {
+ async function animate() {
+     controls.update();
+ 
+-    lutPass.intensityNode.value = params.intensity;
++    (lutPass.intensityNode as THREE.UniformNode<'float', number>).value = params.intensity;
  
      if (lutMap[params.lut]) {
 -        const lut = lutMap[params.lut];
@@ -17979,7 +18112,7 @@ index f23b09c18..166d3b929 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 88a0c635d..286b58cf6 100644
+index 88a0c635d..fe398d4a1 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -13,12 +13,12 @@ import {
@@ -17998,6 +18131,22 @@ index 88a0c635d..286b58cf6 100644
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
+@@ -72,13 +72,13 @@ function init() {
+ 
+     const material = new THREE.SpriteNodeMaterial({ blending: THREE.AdditiveBlending, depthWrite: false });
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.1));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.1));
+     const modTime = mod(localTime, 1.0);
+     const accTime = modTime.mul(modTime);
+ 
+     const angle = accTime.mul(40.0);
+     const pulse = vec2(sin(angle).mul(20.0), cos(angle).mul(20.0));
+-    const pos = instancedBufferAttribute(positionAttribute);
++    const pos = instancedBufferAttribute<'vec3'>(positionAttribute);
+ 
+     const animated = vec3(
+         pos.x.mul(accTime).add(pulse.x),
 @@ -107,8 +107,8 @@ function init() {
  
      //
@@ -18005,7 +18154,7 @@ index 88a0c635d..286b58cf6 100644
 -    const gui = renderer.inspector.createParameters('Settings');
 -    gui.add(afterImagePass.damp, 'value', 0.25, 1);
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-+    gui.add(afterImagePass.damp as THREE.UniformNode<number>, 'value', 0.25, 1);
++    gui.add(afterImagePass.damp as THREE.UniformNode<'float', number>, 'value', 0.25, 1);
      gui.add(params, 'enabled').onChange(updatePassChain);
  
      window.addEventListener('resize', onWindowResize);
@@ -18151,7 +18300,7 @@ index 20d0a36eb..3e6d4e06d 100644
      const bloomFolder = gui.addFolder('Bloom');
      bloomFolder.add(bloomPass.strength, 'value', 0.0, 5.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 48ea482e6..4ec44893d 100644
+index 48ea482e6..cd91c5d72 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 @@ -86,16 +86,17 @@ window.addEventListener('pointerdown', event => {
@@ -18163,7 +18312,7 @@ index 48ea482e6..4ec44893d 100644
 +            .material;
  
 -        const bloomIntensity = material.mrtNode.get('bloomIntensity');
-+        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<number>;
++        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<'float', number>;
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
@@ -18371,7 +18520,7 @@ index 5cee38e01..141adb21d 100644
      const bloomFolder = gui.addFolder('bloom');
      bloomFolder.add(bloomPass.strength, 'value', 0.0, 2.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index 160be467f..e21c6cd2f 100644
+index 160be467f..1898cd29b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -18390,7 +18539,7 @@ index 160be467f..e21c6cd2f 100644
      const sceneMask2 = pass(maskScene2, camera).a;
  
 -    let compose = base;
-+    let compose: THREE.Node = base;
++    let compose: THREE.Node<'vec4'> = base;
      compose = sceneMask1.mix(compose, texture(texture1));
      compose = sceneMask2.mix(compose, texture(texture2));
  
@@ -18484,7 +18633,7 @@ index e8b1fa489..2fa6c2639 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index 01d72fce9..3684c1807 100644
+index 01d72fce9..93cad6f71 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
 @@ -6,8 +6,18 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18500,9 +18649,9 @@ index 01d72fce9..3684c1807 100644
 +    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
 +    clock: THREE.Clock;
 +let effectController: {
-+    pixelSize: THREE.UniformNode<number>;
-+    normalEdgeStrength: THREE.UniformNode<number>;
-+    depthEdgeStrength: THREE.UniformNode<number>;
++    pixelSize: THREE.UniformNode<'float', number>;
++    normalEdgeStrength: THREE.UniformNode<'float', number>;
++    depthEdgeStrength: THREE.UniformNode<'float', number>;
 +    pixelAlignedPanning: boolean;
 +};
  
@@ -18833,7 +18982,7 @@ index eb138a8f3..91ffad479 100644
  
  init();
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
-index c4c88665c..fc7976ffb 100644
+index c4c88665c..ee47e6ddd 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_transition.ts
 @@ -3,16 +3,32 @@ import * as THREE from 'three/webgpu';
@@ -18861,12 +19010,12 @@ index c4c88665c..fc7976ffb 100644
 +    animateScene: boolean;
 +    animateTransition: boolean;
 +    transition: number;
-+    _transition: THREE.UniformNode<number>;
++    _transition: THREE.UniformNode<'float', number>;
 +    useTexture: boolean;
-+    _useTexture: THREE.UniformNode<number>;
++    _useTexture: THREE.UniformNode<'float', number>;
 +    texture: number;
 +    cycle: boolean;
-+    threshold: THREE.UniformNode<number>;
++    threshold: THREE.UniformNode<'float', number>;
 +}
 +
 +const effectController: EffectController = {
@@ -18998,7 +19147,7 @@ index 21fb4a3c2..d3a164bef 100644
      gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
      gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 76592b8cb..53dbdbba6 100644
+index 76592b8cb..ad9d5018a 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19053,12 +19202,27 @@ index 76592b8cb..53dbdbba6 100644
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
+@@ -288,10 +287,10 @@ function createTreeMesh() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(attributePosition);
+-    const instanceNormal = instancedBufferAttribute(attributeNormal);
+-    const instanceColor = instancedBufferAttribute(attributeColor);
+-    const instanceData = instancedBufferAttribute(attributeData);
++    const instancePosition = instancedBufferAttribute<'vec3'>(attributePosition);
++    const instanceNormal = instancedBufferAttribute<'vec3'>(attributeNormal);
++    const instanceColor = instancedBufferAttribute<'vec3'>(attributeColor);
++    const instanceData = instancedBufferAttribute<'vec3'>(attributeData);
+ 
+     material.positionNode = Fn(() => {
+         const instanceSize = instanceData.x;
 @@ -308,7 +307,7 @@ function createTreeMesh() {
  
          // accumulate different vertex animations
  
 -        let animated = positionLocal.add(instancePosition).toVar();
-+        let animated: THREE.Node = positionLocal.add(instancePosition).toVar();
++        let animated: THREE.Node<'vec3'> = positionLocal.add(instancePosition).toVar();
          const direction = positionGeometry.normalize().toConst();
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
@@ -19097,7 +19261,7 @@ index d475ed2de..3d0c4e82b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-index 627fd6b18..ededdfd58 100644
+index 627fd6b18..9dc934c0f 100644
 --- a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 +++ b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 @@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
@@ -19146,6 +19310,24 @@ index 627fd6b18..ededdfd58 100644
  
          const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
          map3D.name = 'Data3DTexture';
+@@ -109,7 +120,7 @@ async function init() {
+         // 3D
+         const helper3D = new TextureHelper(map3D, 10, 10, depth);
+         helper3D.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[1].scene.add(helper3D);
+@@ -135,7 +146,7 @@ async function init() {
+ 
+         const helperArray = new TextureHelper(mapArray, 10, 10, depth);
+         helperArray.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.div(size.depth).mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.div(size.depth).mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[0].scene.add(helperArray);
 @@ -159,7 +170,7 @@ async function init() {
          const quadMesh = new THREE.QuadMesh(materialQuad);
  
@@ -19543,7 +19725,7 @@ index de9f219b8..68a7b73a8 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 1b4461d33..440b4ac3b 100644
+index 1b4461d33..0d3c1af80 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -19562,10 +19744,19 @@ index 1b4461d33..440b4ac3b 100644
      const type = ['float', 'vec2', 'vec3', 'vec4'];
  
 -    const arrayBufferNodes = [];
-+    const arrayBufferNodes: THREE.StorageBufferNode[] = [];
++    const arrayBufferNodes: THREE.StorageBufferNode<unknown>[] = [];
  
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
+@@ -34,7 +34,7 @@ async function init(forceWebGL = false) {
+ 
+         const arrayBuffer = new THREE.StorageInstancedBufferAttribute(new Float32Array(array), typeSize);
+ 
+-        arrayBufferNodes.push(storage(arrayBuffer, type[i], size).setPBO(true));
++        arrayBufferNodes.push(storage(arrayBuffer, type[i] as 'float', size).setPBO(true));
+     }
+ 
+     const computeInitOrder = Fn(() => {
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
 index 4e1e0a4e6..0a4a14d54 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
@@ -19580,7 +19771,7 @@ index 4e1e0a4e6..0a4a14d54 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index a1a354ff7..26d952ce3 100644
+index a1a354ff7..940a35c89 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
@@ -19609,7 +19800,7 @@ index a1a354ff7..26d952ce3 100644
          map.needsUpdate = true;
  
 -        let coord = uv();
-+        let coord: THREE.Node = uv();
++        let coord: THREE.Node<'vec2'> = uv();
          coord = coord.setY(coord.y.oneMinus()); // flip y
  
          let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
@@ -19756,7 +19947,7 @@ index 4140a49fd..e371e494c 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index f0711aba3..d7e61deac 100644
+index f0711aba3..31a703891 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -19768,16 +19959,24 @@ index f0711aba3..d7e61deac 100644
  
  init();
  
-@@ -45,7 +45,7 @@ function init() {
+@@ -45,10 +45,12 @@ function init() {
  
      // TSL functions
  
 -    const inAngle = Fn(([position, angleStart, angleArc]) => {
-+    const inAngle = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([position, angleStart, angleArc]) => {
-         const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
-         return angle.greaterThan(0).and(angle.lessThan(angleArc));
-     });
-@@ -112,9 +112,9 @@ function init() {
+-        const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
+-        return angle.greaterThan(0).and(angle.lessThan(angleArc));
+-    });
++    const inAngle = Fn<[THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'bool'>>(
++        ([position, angleStart, angleArc]) => {
++            const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
++            return angle.greaterThan(0).and(angle.lessThan(angleArc));
++        },
++    );
+ 
+     // materials
+ 
+@@ -112,9 +114,9 @@ function init() {
          const model = gltf.scene;
  
          model.traverse(child => {
@@ -19790,7 +19989,7 @@ index f0711aba3..d7e61deac 100644
  
                  child.castShadow = true;
                  child.receiveShadow = true;
-@@ -160,7 +160,7 @@ function init() {
+@@ -160,7 +162,7 @@ function init() {
  
      // debug
  
@@ -19800,7 +19999,7 @@ index f0711aba3..d7e61deac 100644
      gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
      gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c148902..6d022baa3 100644
+index 14c148902..07a99252d 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19816,15 +20015,6 @@ index 14c148902..6d022baa3 100644
 +    clock: THREE.Clock;
  
  init();
- 
-@@ -106,7 +111,7 @@ function init() {
-     // atmosphere
- 
-     const atmosphereMaterial = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide, transparent: true });
--    let alpha = fresnel.remap(0.73, 1, 1, 0).pow(3);
-+    let alpha: THREE.Node = fresnel.remap(0.73, 1, 1, 0).pow(3);
-     alpha = alpha.mul(sunOrientation.smoothstep(-0.5, 1));
-     atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 @@ -136,7 +141,7 @@ function init() {
  
@@ -19858,7 +20048,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f1..dc289242a 100644
+index 143d577f1..ea49a87ee 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19880,14 +20070,14 @@ index 143d577f1..dc289242a 100644
 +}
 +
 +interface Uniforms {
-+    count: THREE.UniformNode<number>;
-+    color: THREE.UniformNode<THREE.Color>;
-+    direction: THREE.UniformNode<THREE.Vector3>;
-+    start: THREE.UniformNode<number>;
-+    end: THREE.UniformNode<number>;
-+    mixLow: THREE.UniformNode<number>;
-+    mixHigh: THREE.UniformNode<number>;
-+    radius: THREE.UniformNode<number>;
++    count: THREE.UniformNode<'float', number>;
++    color: THREE.UniformNode<'color', THREE.Color>;
++    direction: THREE.UniformNode<'vec3', THREE.Vector3>;
++    start: THREE.UniformNode<'float', number>;
++    end: THREE.UniformNode<'float', number>;
++    mixLow: THREE.UniformNode<'float', number>;
++    mixHigh: THREE.UniformNode<'float', number>;
++    radius: THREE.UniformNode<'float', number>;
 +}
 +
 +let camera: THREE.PerspectiveCamera,
@@ -19917,23 +20107,33 @@ index 143d577f1..dc289242a 100644
  
          uniforms.count = uniform(settings.count);
          uniforms.color = uniform(color(settings.color));
-@@ -112,7 +141,9 @@ function init() {
+@@ -112,7 +141,19 @@ function init() {
  
      // halftone functions
  
 -    const halftone = Fn(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
 +    const halftone = Fn<
-+        [THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]
++        [
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'vec3', THREE.Node<'vec3'>>,
++            THREE.UniformNode<'vec3', THREE.Vector3>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++        ],
++        THREE.Node<'vec4'>
 +    >(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
          // grid pattern
  
          let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
-@@ -133,19 +164,19 @@ function init() {
+@@ -133,19 +174,19 @@ function init() {
          return vec4(color, mask);
      });
  
 -    const halftones = Fn(([input]) => {
-+    const halftones = Fn<[THREE.Node]>(([input]) => {
++    const halftones = Fn<[THREE.PropertyNode<'vec4'>], THREE.PropertyNode<'vec4'>>(([input]) => {
          const halftonesOutput = input;
  
          for (const settings of halftoneSettings) {
@@ -19957,7 +20157,7 @@ index 143d577f1..dc289242a 100644
              );
              halftonesOutput.rgb.assign(mix(halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a));
          }
-@@ -177,7 +208,9 @@ function init() {
+@@ -177,7 +218,9 @@ function init() {
          model.position.y = -2;
          model.scale.setScalar(2.5);
          model.traverse(child => {
@@ -19968,7 +20168,7 @@ index 143d577f1..dc289242a 100644
          });
  
          scene.add(model);
-@@ -204,8 +237,8 @@ async function animate() {
+@@ -204,8 +247,8 @@ async function animate() {
      controls.update();
  
      const time = clock.getElapsedTime();
@@ -19980,7 +20180,7 @@ index 143d577f1..dc289242a 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_tsl_interoperability.ts b/examples-testing/examples/webgpu_tsl_interoperability.ts
-index e57c66eeb..31838ac12 100644
+index e57c66eeb..e414f5f0c 100644
 --- a/examples-testing/examples/webgpu_tsl_interoperability.ts
 +++ b/examples-testing/examples/webgpu_tsl_interoperability.ts
 @@ -23,13 +23,13 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -19999,23 +20199,23 @@ index e57c66eeb..31838ac12 100644
  
  function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -46,7 +46,7 @@ function init() {
+         throw new Error('No WebGPU support');
+     }
+ 
+-    const vUv = varyingProperty('vec2', 'vUv');
++    const vUv = varyingProperty<'vec2'>('vec2', 'vUv');
+ 
+     // In WGSL, access varying properties from the varying struct
+     const wgslVertexShader = wgslFn(
 @@ -195,7 +195,7 @@ function init() {
          samplePoint.x = samplePoint.x.add(fract(scaledTime.div(20)));
          samplePoint.y = samplePoint.y.sub(1.5);
  
 -        let color = texture(planetTexture, samplePoint);
-+        let color: THREE.Node = texture(planetTexture, samplePoint);
++        let color: THREE.Node<'vec4'> = texture(planetTexture, samplePoint);
  
          const ind = floor(subCoord.x).mod(3);
- 
-@@ -215,7 +215,7 @@ function init() {
-         color = color.mul(maskColor);
- 
-         const pixelDampen = pixel.y.div(pulseWidthUniform);
--        let pulse = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-+        let pulse: THREE.Node = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-         pulse = pulse.mul(pulseIntensityUniform);
-         color = color.mul(float(1.0).add(pulse));
  
 @@ -249,7 +249,7 @@ function init() {
  
@@ -20027,7 +20227,7 @@ index e57c66eeb..31838ac12 100644
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
-index ef87d67ba..2e495a085 100644
+index ef87d67ba..d2639cafc 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 +++ b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 @@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20063,7 +20263,7 @@ index ef87d67ba..2e495a085 100644
      const vPosition = varying(vec3());
  
 -    const terrainElevation = Fn(([position]) => {
-+    const terrainElevation = Fn<[THREE.Node]>(([position]) => {
++    const terrainElevation = Fn<[THREE.Node<'vec2'>], THREE.Node<'float'>>(([position]) => {
          const warpedPosition = position.add(offset).toVar();
          warpedPosition.addAssign(
              mx_noise_float(warpedPosition.mul(positionFrequency).mul(warpFrequency), 1, 0).mul(warpStrength),
@@ -20113,7 +20313,7 @@ index ef87d67ba..2e495a085 100644
              drag.worldCoords.copy(intersect.point);
          }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d075..9b867d08e 100644
+index cb513d075..b032e3c2e 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20130,7 +20330,7 @@ index cb513d075..9b867d08e 100644
      // TSL functions
  
 -    const wavesElevation = Fn(([position]) => {
-+    const wavesElevation = Fn<[THREE.Node]>(([position]) => {
++    const wavesElevation = Fn<[THREE.Node<'vec3'>], THREE.Node<'float'>>(([position]) => {
          // large waves
  
          const elevation = mul(
@@ -20179,7 +20379,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..6dcc8e26f 100644
+index 4c4ee68ee..736edf556 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20198,7 +20398,7 @@ index 4c4ee68ee..6dcc8e26f 100644
 -let updateParticles, spawnParticles; // TSL compute nodes
 -let getInstanceColor; // TSL function
 +let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
-+let getInstanceColor: THREE.TSL.ShaderNodeFn<[THREE.Node]>; // TSL function
++let getInstanceColor: THREE.TSL.FnNode<[THREE.Node<'uint'>], THREE.Node<'vec3'>>; // TSL function
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();
@@ -20207,7 +20407,7 @@ index 4c4ee68ee..6dcc8e26f 100644
      // TSL function
      // current color from index
 -    getInstanceColor = Fn(([i]) => {
-+    getInstanceColor = Fn<[THREE.Node]>(([i]) => {
++    getInstanceColor = Fn<[THREE.IndexNode], THREE.Node<'vec3'>>(([i]) => {
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
@@ -20230,7 +20430,7 @@ index 4c4ee68ee..6dcc8e26f 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..78c200d02 100644
+index 571b7ea0b..85552d4f8 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20246,54 +20446,36 @@ index 571b7ea0b..78c200d02 100644
  
  init();
  
-@@ -44,7 +48,7 @@ function init() {
+@@ -44,7 +48,10 @@ function init() {
  
      // TSL functions
  
 -    const toRadialUv = Fn(([uv, multiplier, rotation, offset]) => {
-+    const toRadialUv = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(([uv, multiplier, rotation, offset]) => {
++    const toRadialUv = Fn<
++        [THREE.Node<'vec2'>, THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'vec2'>
++    >(([uv, multiplier, rotation, offset]) => {
          const centeredUv = uv.sub(0.5).toVar();
          const distanceToCenter = centeredUv.length();
          const angle = atan(centeredUv.y, centeredUv.x);
-@@ -56,24 +60,26 @@ function init() {
+@@ -56,11 +63,14 @@ function init() {
          return radialUv;
      });
  
 -    const toSkewedUv = Fn(([uv, skew]) => {
-+    const toSkewedUv = Fn<[THREE.Node, THREE.Node]>(([uv, skew]) => {
++    const toSkewedUv = Fn<[THREE.Node<'vec2'>, THREE.Node<'vec2'>], THREE.Node<'vec2'>>(([uv, skew]) => {
          return vec2(uv.x.add(uv.y.mul(skew.x)), uv.y.add(uv.x.mul(skew.y)));
      });
  
 -    const twistedCylinder = Fn(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
--        const angle = atan(position.z, position.x).toVar();
--        const elevation = position.y;
-+    const twistedCylinder = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(
-+        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
-+            const angle = atan(position.z, position.x).toVar();
-+            const elevation = position.y;
++    const twistedCylinder = Fn<
++        [THREE.Node<'vec3'>, THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'vec3'>
++    >(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
+         const angle = atan(position.z, position.x).toVar();
+         const elevation = position.y;
  
--        // parabol
--        const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
-+            // parabol
-+            const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
- 
--        // turbulences
--        radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
-+            // turbulences
-+            radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
- 
--        const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
-+            const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
- 
--        return twistedPosition;
--    });
-+            return twistedPosition;
-+        },
-+    );
- 
-     // uniforms
- 
-@@ -260,7 +266,7 @@ function init() {
+@@ -260,7 +270,7 @@ function init() {
  
      // debug
  
@@ -20303,7 +20485,7 @@ index 571b7ea0b..78c200d02 100644
      gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => emissiveColor.value.set(value))
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
-index 5a4e06502..210883606 100644
+index 5a4e06502..d6ebdc5a4 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
 +++ b/examples-testing/examples/webgpu_tsl_wood.ts
 @@ -1,22 +1,30 @@
@@ -20341,14 +20523,14 @@ index 5a4e06502..210883606 100644
      return {
          x: 0,
          y: (finishIndex - Finishes.length / 2) * 1.0,
-@@ -28,29 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
+@@ -28,27 +36,32 @@ function getGridPosition(woodIndex, finishIndex) {
  function createGridPlane() {
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = TSL.Fn(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
 -        const coord = TSL.positionWorld.xz.div(gridSize);
 -        const grid = TSL.fract(coord);
-+    const gridXZ = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node]>(
++    const gridXZ = TSL.Fn<[THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
 +        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
 +            const coord = TSL.positionWorld.xz.div(gridSize);
 +            const grid = TSL.fract(coord);
@@ -20383,17 +20565,14 @@ index 5a4e06502..210883606 100644
 +    );
  
 -    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
--        return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
--    });
-+    const radialGradient = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node] | [THREE.Node, THREE.Node]>(
-+        ([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
-+            return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
-+        },
-+    );
++    const radialGradient = TSL.Fn<
++        [THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>] | [THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'float'>
++    >(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
+         return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+     });
  
-     // Create grid pattern
-     const gridPattern = gridXZ(1.0, 0.03, 0.005);
-@@ -69,7 +81,12 @@ function createGridPlane() {
+@@ -69,7 +82,12 @@ function createGridPlane() {
  }
  
  // Helper function to create and position labels
@@ -20407,7 +20586,7 @@ index 5a4e06502..210883606 100644
      const txt_geo = new TextGeometry(text, {
          font: font,
          size: 0.1,
-@@ -79,9 +96,9 @@ function createLabel(text, font, material, position) {
+@@ -79,9 +97,9 @@ function createLabel(text, font, material, position) {
      });
  
      txt_geo.computeBoundingBox();
@@ -20420,7 +20599,7 @@ index 5a4e06502..210883606 100644
      txt_geo.translate(offx, offy, offz);
  
      const label = new THREE.Group();
-@@ -91,7 +108,7 @@ function createLabel(text, font, material, position) {
+@@ -91,7 +109,7 @@ function createLabel(text, font, material, position) {
      // Apply default rotation for labels
      label.rotateY(-Math.PI / 2);
  
@@ -20429,7 +20608,7 @@ index 5a4e06502..210883606 100644
      label.position.copy(position);
      base.add(label);
  }
-@@ -115,7 +132,7 @@ async function init() {
+@@ -115,7 +133,7 @@ async function init() {
      controls = new OrbitControls(camera, renderer.domElement);
      controls.target.set(0, 0, 0.548);
  
@@ -20438,7 +20617,7 @@ index 5a4e06502..210883606 100644
  
      font = await new FontLoader().loadAsync('./fonts/helvetiker_regular.typeface.json');
  
-@@ -189,7 +206,7 @@ if (WebGPU.isAvailable()) {
+@@ -189,7 +207,7 @@ if (WebGPU.isAvailable()) {
      document.body.appendChild(WebGPU.getErrorMessage());
  }
  
@@ -20496,7 +20675,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index b11f4dd3d..c62579f1b 100644
+index 5250dc919..062c1f9cc 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20530,23 +20709,41 @@ index b11f4dd3d..c62579f1b 100644
      gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
      gui.addColor(duck.material, 'color').name('material color');
  
-@@ -224,12 +224,12 @@ async function init() {
+@@ -224,20 +224,22 @@ async function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node }>(({ positionRay }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node<'vec3'> }, THREE.Node<'float'>>(
++        ({ positionRay }) => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
+-        const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
++            const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(1);
+-        let density = sampleGrain(1);
+-        density = density.mul(sampleGrain(0.5, 1));
+-        density = density.mul(sampleGrain(0.2, 2));
++            let density = sampleGrain(1);
++            density = density.mul(sampleGrain(0.5, 1));
++            density = density.mul(sampleGrain(0.2, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     const volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 1.5), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 1d46c3543..0b4d85133 100644
+index 1d46c3543..3f7da644c 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -20569,20 +20766,23 @@ index 1d46c3543..0b4d85133 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -86,33 +86,37 @@ function init() {
+@@ -86,33 +86,40 @@ function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.TextureNode;
-+        range: THREE.UniformNode<number>;
-+        threshold: THREE.UniformNode<number>;
-+        opacity: THREE.UniformNode<number>;
-+        steps: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.TextureNode;
++            range: THREE.UniformNode<'float', number>;
++            threshold: THREE.UniformNode<'float', number>;
++            opacity: THREE.UniformNode<'float', number>;
++            steps: THREE.UniformNode<'float', number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -20625,7 +20825,7 @@ index 1d46c3543..0b4d85133 100644
  
      // Material
  
-@@ -142,7 +146,7 @@ function init() {
+@@ -142,7 +149,7 @@ function init() {
  
      //
  
@@ -20635,7 +20835,7 @@ index 1d46c3543..0b4d85133 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index 3edecb902..ef458d0a3 100644
+index 3edecb902..de39970e0 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -20651,22 +20851,40 @@ index 3edecb902..ef458d0a3 100644
  
  init();
  
-@@ -86,12 +86,12 @@ function init() {
+@@ -86,20 +86,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn(
++        ({ positionRay }: { positionRay: THREE.Node<'vec3'> }): THREE.Node<'float'> => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time, 0, time.mul(0.3));
+-        const timeScaled = vec3(time, 0, time.mul(0.3));
++            const timeScaled = vec3(time, 0, time.mul(0.3));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(0.1);
-@@ -199,7 +199,7 @@ function init() {
+-        let density = sampleGrain(0.1);
+-        density = density.mul(sampleGrain(0.05, 1));
+-        density = density.mul(sampleGrain(0.02, 2));
++            let density = sampleGrain(0.1);
++            density = density.mul(sampleGrain(0.05, 1));
++            density = density.mul(sampleGrain(0.02, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(20, 10, 20), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
+@@ -199,7 +201,7 @@ function init() {
          denoise: true,
      };
  
@@ -20676,7 +20894,7 @@ index 3edecb902..ef458d0a3 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 4089b3f72..da8ee7b54 100644
+index 4089b3f72..de4c74a53 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20696,22 +20914,40 @@ index 4089b3f72..da8ee7b54 100644
  
  init();
  
-@@ -88,12 +88,12 @@ function init() {
+@@ -88,20 +88,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn(
++        ({ positionRay }: { positionRay: THREE.Node<'vec3'> }): THREE.Node<'float'> => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time, 0, time.mul(0.3));
+-        const timeScaled = vec3(time, 0, time.mul(0.3));
++            const timeScaled = vec3(time, 0, time.mul(0.3));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(0.1);
-@@ -129,7 +129,7 @@ function init() {
+-        let density = sampleGrain(0.1);
+-        density = density.mul(sampleGrain(0.05, 1));
+-        density = density.mul(sampleGrain(0.02, 2));
++            let density = sampleGrain(0.1);
++            density = density.mul(sampleGrain(0.05, 1));
++            density = density.mul(sampleGrain(0.02, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(50, 40, 50), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
+@@ -129,7 +131,7 @@ function init() {
  
      //
  
@@ -20720,7 +20956,7 @@ index 4089b3f72..da8ee7b54 100644
          const geometry = new THREE.PlaneGeometry(4, 10);
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
-@@ -211,7 +211,7 @@ function init() {
+@@ -211,7 +213,7 @@ function init() {
          denoise: true,
      };
  
@@ -20730,7 +20966,7 @@ index 4089b3f72..da8ee7b54 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..5705090ed 100644
+index fb6f2bbd5..05639c677 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -20744,20 +20980,23 @@ index fb6f2bbd5..5705090ed 100644
  
  init();
  
-@@ -58,7 +58,11 @@ function init() {
+@@ -58,7 +58,14 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
-+    const opaqueRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        steps: THREE.Node;
-+        threshold: THREE.Node;
-+    }>(({ texture, steps, threshold }) => {
++    const opaqueRaymarchingTexture = Fn<
++        {
++            texture: THREE.Texture3DNode;
++            steps: THREE.Node<'float'>;
++            threshold: THREE.Node<'float'>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, steps, threshold }) => {
          const finalColor = vec4(0).toVar();
  
          RaymarchingBox(steps, ({ positionRay }) => {
-@@ -95,7 +99,7 @@ function init() {
+@@ -95,7 +102,7 @@ function init() {
  
      //
  

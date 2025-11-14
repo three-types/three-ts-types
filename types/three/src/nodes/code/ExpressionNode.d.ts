@@ -1,9 +1,7 @@
-import TempNode from "../core/TempNode.js";
+export default class ExpressionNode extends Node {
+    snippet: string;
 
-export default class ExpressionNode extends TempNode {
-    snipped: string;
-
-    constructor(snipped?: string, nodeType?: string);
+    constructor(snippet?: string, nodeType?: string);
 }
 
-export const expression: (snipped: string, nodeType?: string) => ExpressionNode;
+export const expression: (snippet: string, nodeType?: string) => ExpressionNode;
