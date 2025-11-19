@@ -284,20 +284,41 @@ index 68b17acc1..631782d2a 100644
  }
 -import { KeyframeTrack } from './KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
-index b474470e7..eb23f7ab3 100644
+index b474470e7..e2c6e6d0b 100644
 --- a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
-@@ -1,21 +1,30 @@
+@@ -1,24 +1,71 @@
 +import { EventDispatcher } from '../core/EventDispatcher.js';
 +import { AnimationClip } from './AnimationClip.js';
 +import { AnimationAction } from './AnimationAction.js';
 +import { AnimationBlendMode } from "../constants.js";
 +import { Object3D } from "../core/Object3D.js";
 +import { AnimationObjectGroup } from "./AnimationObjectGroup.js";
++import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
++import { PropertyMixer } from './PropertyMixer.js';
 +
 +export interface AnimationMixerEventMap {
 +    loop: { action: AnimationAction; loopDelta: number };
 +    finished: { action: AnimationAction; direction: number };
++}
++
++export interface MixerControlInterpolant extends LinearInterpolant {
++    __cacheIndex: number;
++}
++
++export interface AnimationMixerStats {
++    actions: {
++        readonly total: number;
++        readonly inUse: number;
++    };
++    bindings: {
++        readonly total: number;
++        readonly inUse: number;
++    };
++    controlInterpolants: {
++        readonly total: number;
++        readonly inUse: number;
++    };
 +}
 +
  /**
@@ -323,7 +344,27 @@ index b474470e7..eb23f7ab3 100644
       * @default 0
       */
      time: number;
-@@ -26,48 +35,9 @@ export class AnimationMixer extends EventDispatcher {
++    protected _root: Object3D | AnimationObjectGroup;
++    protected _actions: AnimationAction[];
++    protected _nActiveActions: number;
++    protected _bindings: PropertyMixer[];
++    protected _nActiveBindings: number;
++    protected _controlInterpolants: MixerControlInterpolant[];
++    protected _nActiveControlInterpolants: number;
++    protected _bindingsByRootAndName: {
++        [rootUuid: string]: { [trackName: string]: PropertyMixer };
++    };
++    protected _actionsByClip: {
++        [clipUuid: string]: {
++            knownActions: AnimationAction[];
++            actionByRoot: { [rootUuid: string]: AnimationAction };
++        };
++    };
++    protected _accuIndex: number;
+     /**
+      * A scaling factor for the global time.
+      *
+@@ -26,48 +73,13 @@ export class AnimationMixer extends EventDispatcher {
       * possibility to pause/unpause all actions that are controlled by this
       * mixer.
       *
@@ -369,10 +410,14 @@ index b474470e7..eb23f7ab3 100644
 -    _takeBackBinding(binding: any): void;
 -    _lendControlInterpolant(): any;
 -    _takeBackControlInterpolant(interpolant: any): void;
++    /**
++     * The AnimationMixer stats track the actions of the mixer.
++     */
++    stats: AnimationMixerStats;
      /**
       * Returns an instance of {@link AnimationAction} for the passed clip.
       *
-@@ -80,7 +50,8 @@ export class AnimationMixer extends EventDispatcher {
+@@ -80,7 +92,8 @@ export class AnimationMixer extends EventDispatcher {
       * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode] - The blend mode.
       * @return {?AnimationAction} The animation action.
       */
@@ -382,7 +427,7 @@ index b474470e7..eb23f7ab3 100644
      /**
       * Returns an existing animation action for the passed clip.
       *
-@@ -88,7 +59,7 @@ export class AnimationMixer extends EventDispatcher {
+@@ -88,7 +101,7 @@ export class AnimationMixer extends EventDispatcher {
       * @param {Object3D} [optionalRoot] - An alternative root object.
       * @return {?AnimationAction} The animation action. Returns `null` if no action was found.
       */
@@ -391,7 +436,7 @@ index b474470e7..eb23f7ab3 100644
      /**
       * Deactivates all previously scheduled actions on this mixer.
       *
-@@ -120,7 +91,7 @@ export class AnimationMixer extends EventDispatcher {
+@@ -120,7 +133,7 @@ export class AnimationMixer extends EventDispatcher {
       *
       * @return {Object3D} The mixer's root object.
       */
@@ -400,7 +445,7 @@ index b474470e7..eb23f7ab3 100644
      /**
       * Deallocates all memory resources for a clip. Before using this method make
       * sure to call {@link AnimationAction#stop} for all related actions.
-@@ -136,7 +107,7 @@ export class AnimationMixer extends EventDispatcher {
+@@ -136,7 +149,7 @@ export class AnimationMixer extends EventDispatcher {
       *
       * @param {Object3D} root - The root object to uncache.
       */
@@ -409,7 +454,7 @@ index b474470e7..eb23f7ab3 100644
      /**
       * Deallocates all memory resources for an action. The action is identified by the
       * given clip and an optional root object. Before using this method make
-@@ -145,8 +116,5 @@ export class AnimationMixer extends EventDispatcher {
+@@ -145,8 +158,5 @@ export class AnimationMixer extends EventDispatcher {
       * @param {AnimationClip|string} clip - An animation clip or alternatively the name of the animation clip.
       * @param {Object3D} [optionalRoot] - An alternative root object.
       */
