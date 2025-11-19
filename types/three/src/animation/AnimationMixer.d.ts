@@ -1,10 +1,10 @@
-import { AnimationAction } from "./AnimationAction.js";
 import { AnimationBlendMode } from "../constants.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
+import { Object3D } from "../core/Object3D.js";
+import { LinearInterpolant } from "../math/interpolants/LinearInterpolant.js";
+import { AnimationAction } from "./AnimationAction.js";
 import { AnimationClip } from "./AnimationClip.js";
 import { AnimationObjectGroup } from "./AnimationObjectGroup.js";
-import { EventDispatcher } from "../core/EventDispatcher.js";
-import { LinearInterpolant } from "../Three.Core.js";
-import { Object3D } from "../core/Object3D.js";
 import { PropertyMixer } from "./PropertyMixer.js";
 
 export interface AnimationMixerEventMap {
@@ -49,11 +49,7 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @default 0
      */
     time: number;
-    /*
-     * Add internal fields.
-     */
     protected _root: Object3D | AnimationObjectGroup;
-
     protected _actions: AnimationAction[];
     protected _nActiveActions: number;
     protected _bindings: PropertyMixer[];
@@ -71,10 +67,6 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
     };
     protected _accuIndex: number;
     /**
-     * The AnimationMixer stats track the actions of the mixer.
-     */
-    stats: AnimationMixerStats;
-    /**
      * A scaling factor for the global time.
      *
      * Note: Setting this member to `0` and later back to `1` is a
@@ -84,6 +76,10 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @default 1
      */
     timeScale: number;
+    /**
+     * The AnimationMixer stats track the actions of the mixer.
+     */
+    stats: AnimationMixerStats;
     /**
      * Returns an instance of {@link AnimationAction} for the passed clip.
      *
