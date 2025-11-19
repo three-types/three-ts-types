@@ -1,13 +1,34 @@
-import { AnimationBlendMode } from "../constants.js";
-import { EventDispatcher } from "../core/EventDispatcher.js";
-import { Object3D } from "../core/Object3D.js";
 import { AnimationAction } from "./AnimationAction.js";
+import { AnimationBlendMode } from "../constants.js";
 import { AnimationClip } from "./AnimationClip.js";
 import { AnimationObjectGroup } from "./AnimationObjectGroup.js";
+import { EventDispatcher } from "../core/EventDispatcher.js";
+import { LinearInterpolant } from "../Three.Core.js";
+import { Object3D } from "../core/Object3D.js";
+import { PropertyMixer } from "./PropertyMixer.js";
 
 export interface AnimationMixerEventMap {
     loop: { action: AnimationAction; loopDelta: number };
     finished: { action: AnimationAction; direction: number };
+}
+
+export interface MixerControlInterpolant extends LinearInterpolant {
+    __cacheIndex: number;
+}
+
+export interface AnimationMixerStats {
+    actions: {
+        readonly total: number;
+        readonly inUse: number;
+    };
+    bindings: {
+        readonly total: number;
+        readonly inUse: number;
+    };
+    controlInterpolants: {
+        readonly total: number;
+        readonly inUse: number;
+    };
 }
 
 /**
@@ -28,6 +49,31 @@ export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
      * @default 0
      */
     time: number;
+    /*
+     * Add internal fields.
+     */
+    protected _root: Object3D | AnimationObjectGroup;
+
+    protected _actions: AnimationAction[];
+    protected _nActiveActions: number;
+    protected _bindings: PropertyMixer[];
+    protected _nActiveBindings: number;
+    protected _controlInterpolants: MixerControlInterpolant[];
+    protected _nActiveControlInterpolants: number;
+    protected _bindingsByRootAndName: {
+        [rootUuid: string]: { [trackName: string]: PropertyMixer };
+    };
+    protected _actionsByClip: {
+        [clipUuid: string]: {
+            knownActions: AnimationAction[];
+            actionByRoot: { [rootUuid: string]: AnimationAction };
+        };
+    };
+    protected _accuIndex: number;
+    /**
+     * The AnimationMixer stats track the actions of the mixer.
+     */
+    stats: AnimationMixerStats;
     /**
      * A scaling factor for the global time.
      *
