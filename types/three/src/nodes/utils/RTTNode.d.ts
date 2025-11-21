@@ -2,13 +2,14 @@ import { TextureDataType } from "../../constants.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
-import { ShaderNodeObject } from "../tsl/TSLCore.js";
 
 export interface RTTNodeOptions {
     type: TextureDataType;
 }
 
 declare class RTTNode extends TextureNode {
+    readonly isRTTNode: true;
+
     node: Node;
     width: number | null;
     height: number | null;
@@ -36,10 +37,10 @@ export const rtt: (
     width?: number | null,
     height?: number | null,
     options?: RTTNodeOptions,
-) => ShaderNodeObject<RTTNode>;
+) => RTTNode;
 export const convertToTexture: (
     node: Node,
     width?: number | null,
     height?: number | null,
     options?: RTTNodeOptions,
-) => ShaderNodeObject<RTTNode>;
+) => RTTNode;
