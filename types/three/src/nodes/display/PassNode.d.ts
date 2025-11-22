@@ -10,6 +10,7 @@ import ContextNode from "../core/ContextNode.js";
 import MRTNode from "../core/MRTNode.js";
 import Node from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
+import { Material } from '../../materials/Material.js';
 
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
@@ -32,6 +33,10 @@ declare class PassNode extends TempNode {
     camera: Camera;
 
     renderTarget: RenderTarget;
+
+    overrideMaterial: Material | null;
+    transparent: boolean;
+    opaque: boolean;
 
     contextNode: ContextNode | null;
 
