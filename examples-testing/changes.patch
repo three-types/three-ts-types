@@ -21942,39 +21942,3 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
-diff --git a/types/three/src/nodes/core/ContextNode.d.ts b/types/three/src/nodes/core/ContextNode.d.ts
-index e671c94dc..f975f30cd 100644
---- a/types/three/src/nodes/core/ContextNode.d.ts
-+++ b/types/three/src/nodes/core/ContextNode.d.ts
-@@ -21,7 +21,7 @@ interface ContextFunction {
-     <TNodeType>(node: Node<TNodeType>, value?: NodeBuilderContext): ContextNode<TNodeType>;
- }
- 
--export const context: <TNodeType>(node: Node<TNodeType>, context?: NodeBuilderContext) => ContextNode<TNodeType>;
-+export const context: ContextFunction;
- 
- export const uniformFlow: <TNodeType>(node: Node<TNodeType>) => ContextNode<TNodeType>;
- 
-diff --git a/types/three/src/nodes/math/MathNode.d.ts b/types/three/src/nodes/math/MathNode.d.ts
-index d670df602..9d8a446d2 100644
---- a/types/three/src/nodes/math/MathNode.d.ts
-+++ b/types/three/src/nodes/math/MathNode.d.ts
-@@ -535,11 +535,16 @@ declare module "../core/Node.js" {
- }
- 
- export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
--export const cross: (x: FloatVector, y: FloatVector) => Node<"float">;
- declare module "../core/Node.js" {
-     interface FloatVectorExtensions<TVec extends FloatVectorType> {
-         dot: (y: FloatVector) => Node<"float">;
--        cross: (y: FloatVector) => Node<"float">;
-+    }
-+}
-+
-+export const cross: (x: Node<"vec3">, y: Node<"vec3">) => Node<"vec3">;
-+declare module "../core/Node.js" {
-+    interface Vec3Extensions {
-+        cross: (y: Node<"vec3">) => Node<"vec3">;
-     }
- }
- 
