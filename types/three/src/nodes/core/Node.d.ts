@@ -2,7 +2,7 @@ import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { NodeUpdateType } from "./constants.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
-interface NodeJSONMeta {
+export interface NodeJSONMeta {
     textures: {
         [key: string]: unknown;
     };
@@ -13,7 +13,7 @@ interface NodeJSONMeta {
         [key: string]: NodeJSONIntermediateOutputData;
     };
 }
-interface NodeJSONMetadata {
+export interface NodeJSONMetadata {
     version: number;
     type: "Node";
     generator: "Node.toJSON";
@@ -379,7 +379,7 @@ declare const Node: {
      *
      * @param {?string} nodeType - The node type.
      */
-    new<TNodeValue>(nodeType?: string | null): Node<TNodeValue>;
+    new<TNodeType>(nodeType?: string | null): Node<TNodeType>;
     new(nodeType?: string | null): Node;
     get type(): string;
 };

@@ -15,10 +15,18 @@ import UniformGroupNode from "./UniformGroupNode.js";
  *
  * @augments InputNode
  */
-interface UniformNodeInterface<TValue> {
+declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
+    static get type(): string;
     readonly isUniformNode: true;
     name: string;
     groupNode: UniformGroupNode;
+    /**
+     * Constructs a new uniform node.
+     *
+     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+     */
+    constructor(value: TValue, nodeType?: string | null);
     /**
      * Sets the {@link UniformNode#name} property.
      *
@@ -47,6 +55,13 @@ interface UniformNodeInterface<TValue> {
      * @return {UniformGroupNode} The uniform group.
      */
     getGroup(): UniformGroupNode;
+    /**
+     * By default, this method returns the result of {@link Node#getHash} but derived
+     * classes might overwrite this method with a different implementation.
+     *
+     * @param {NodeBuilder} builder - The current node builder.
+     * @return {string} The uniform hash.
+     */
     getUniformHash(builder: NodeBuilder): string;
     onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
     getInputType(builder: NodeBuilder): string | null;
@@ -62,7 +77,7 @@ declare const UniformNode: {
     new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
     get type(): string;
 };
-type UniformNode<TNodeValue, TValue> = UniformNodeInterface<TValue> & InputNode<TNodeValue, TValue>;
+type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
 interface Uniform {
     (value: number, type?: "float"): UniformNode<"float", number>;

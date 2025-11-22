@@ -5,11 +5,11 @@ import UniformNode from "./UniformNode.js";
  * by the builder. A dictionary of node uniforms is maintained in {@link NodeBuilder#uniforms}
  * for this purpose.
  */
-declare class NodeUniform<TNodeValue, TValue> {
+declare class NodeUniform<TNodeType, TValue> {
     readonly isNodeUniform: true;
     name: string;
     type: string | null;
-    node: UniformNode<TNodeValue, TValue>;
+    node: UniformNode<TNodeType, TValue>;
     needsUpdate: boolean | undefined;
     /**
      * Constructs a new node uniform.
@@ -18,7 +18,7 @@ declare class NodeUniform<TNodeValue, TValue> {
      * @param {string} type - The type of the uniform.
      * @param {UniformNode} node - An reference to the node.
      */
-    constructor(name: string, type: string | null, node: UniformNode<TNodeValue, TValue>);
+    constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>);
     /**
      * The value of the uniform node.
      *

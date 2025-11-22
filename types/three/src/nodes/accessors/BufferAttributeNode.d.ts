@@ -27,7 +27,8 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```
  * @augments InputNode
  */
-interface BufferAttributeNodeInterface {
+declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
+    static get type(): string;
     readonly isBufferNode: true;
     bufferType: string | null;
     bufferStride: number;
@@ -35,6 +36,20 @@ interface BufferAttributeNodeInterface {
     usage: Usage;
     instanced: boolean;
     attribute: BufferAttribute | InterleavedBufferAttribute | null;
+    /**
+     * Constructs a new buffer attribute node.
+     *
+     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
+     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
+     * @param {number} [bufferStride=0] - The buffer stride.
+     * @param {number} [bufferOffset=0] - The buffer offset.
+     */
+    constructor(
+        value: TypedArray | InterleavedBuffer | BufferAttribute,
+        bufferType?: string | null,
+        bufferStride?: number,
+        bufferOffset?: number,
+    );
     /**
      * This method is overwritten since the attribute data might be shared
      * and thus the hash should be shared as well.
@@ -97,17 +112,16 @@ declare const BufferAttributeNode: {
      * @param {number} [bufferStride=0] - The buffer stride.
      * @param {number} [bufferOffset=0] - The buffer offset.
      */
-    new<TNodeValue>(
+    new<TNodeType>(
         value: TypedArray | InterleavedBuffer | BufferAttribute,
         bufferType?: string | null,
         bufferStride?: number,
         bufferOffset?: number,
-    ): BufferAttributeNode<TNodeValue>;
-    get type(): string;
+    ): BufferAttributeNode<TNodeType>;
 };
-type BufferAttributeNode<TNodeValue> =
-    & InputNode<TNodeValue, TypedArray | InterleavedBuffer | BufferAttribute>
-    & BufferAttributeNodeInterface;
+type BufferAttributeNode<TNodeType> =
+    & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
+    & BufferAttributeNodeClass;
 export default BufferAttributeNode;
 /**
  * TSL function for creating a buffer attribute node.
@@ -120,12 +134,12 @@ export default BufferAttributeNode;
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const bufferAttribute: <TNodeValue>(
+export declare const bufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node<TNodeValue>;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
@@ -138,12 +152,12 @@ export declare const bufferAttribute: <TNodeValue>(
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const dynamicBufferAttribute: <TNodeValue>(
+export declare const dynamicBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node<TNodeValue>;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
@@ -155,12 +169,12 @@ export declare const dynamicBufferAttribute: <TNodeValue>(
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const instancedBufferAttribute: <TNodeValue>(
+export declare const instancedBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node<TNodeValue>;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
@@ -172,12 +186,12 @@ export declare const instancedBufferAttribute: <TNodeValue>(
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const instancedDynamicBufferAttribute: <TNodeValue>(
+export declare const instancedDynamicBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node<TNodeValue>;
+) => Node<TNodeType>;
 declare module "./BufferNode.js" {
     interface BufferNodeExtensions<TNodeType, TValue> {
         toAttribute: () => BufferAttributeNode<TNodeType>;
