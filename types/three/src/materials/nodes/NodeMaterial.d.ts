@@ -278,7 +278,7 @@ export interface NodeMaterialNodeProperties {
      *
      * @default null
      */
-    contextNode: ContextNode | null;
+    contextNode: ContextNode<unknown> | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
