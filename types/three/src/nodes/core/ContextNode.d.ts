@@ -4,15 +4,20 @@ import { NodeBuilderContext } from "./NodeBuilder.js";
 declare class ContextNode extends Node {
     readonly isContextNode: true;
 
-    node: Node;
+    node: Node | null;
     value: NodeBuilderContext;
 
-    constructor(node: Node, value?: NodeBuilderContext);
+    constructor(node?: Node | null, value?: NodeBuilderContext);
 }
 
 export default ContextNode;
 
-export const context: (node: Node, context?: NodeBuilderContext) => ContextNode;
+interface ContextFunction {
+    (value?: NodeBuilderContext): ContextNode;
+    (node: Node, value?: NodeBuilderContext): ContextNode;
+}
+
+export const context: ContextFunction;
 
 export const uniformFlow: (node: Node) => ContextNode;
 

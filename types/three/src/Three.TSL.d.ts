@@ -464,6 +464,7 @@ export const remapClamp: typeof TSL.remapClamp;
 export const renderGroup: typeof TSL.renderGroup;
 export const renderOutput: typeof TSL.renderOutput;
 export const rendererReference: typeof TSL.rendererReference;
+export const replaceDefaultUV: typeof TSL.replaceDefaultUV;
 export const rotate: typeof TSL.rotate;
 export const rotateUV: typeof TSL.rotateUV;
 export const roughness: typeof TSL.roughness;
