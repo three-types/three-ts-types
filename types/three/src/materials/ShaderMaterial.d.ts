@@ -26,7 +26,7 @@ export interface ShaderMaterialProperties extends MaterialProperties {
      * #define BAR true
      * ```
      */
-    defines: { [key: string]: any };
+    defines: Record<string, unknown>;
     /**
      * An object of the form:
      * ```js
