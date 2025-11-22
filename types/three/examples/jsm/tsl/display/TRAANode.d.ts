@@ -8,6 +8,9 @@ declare class TRAANode extends TempNode {
     velocityNode: TextureNode;
     camera: Camera;
 
+    depthThreshold: number;
+    edgeDepthDiff: number;
+
     constructor(beautyNode: TextureNode, depthNode: TextureNode, velocityNode: TextureNode, camera: Camera);
 }
 
