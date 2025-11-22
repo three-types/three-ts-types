@@ -6652,17 +6652,16 @@ index 3e3ee3041..0c098cd5b 100644
              object.rotation.y = 0.25 * time;
          }
 diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
-index ee5631a57..f4298618e 100644
+index 1587b2d82..5d95ccc6f 100644
 --- a/examples-testing/examples/webgl_lines_fat.ts
 +++ b/examples-testing/examples/webgl_lines_fat.ts
-@@ -9,15 +9,20 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
+@@ -7,14 +7,19 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
  import * as GeometryUtils from 'three/addons/utils/GeometryUtils.js';
  
 -let line, renderer, scene, camera, camera2, controls;
 -let line1;
 -let matLine, matLineBasic, matLineDashed;
--let stats;
 -let gui;
 +let line: Line2,
 +    renderer: THREE.WebGLRenderer,
@@ -6672,7 +6671,6 @@ index ee5631a57..f4298618e 100644
 +    controls: OrbitControls;
 +let line1: THREE.Line;
 +let matLine: LineMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
-+let stats: Stats;
 +let gui: GUI;
  
  // viewport
@@ -6684,30 +6682,28 @@ index ee5631a57..f4298618e 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-index 4b188680b..18a9e7e73 100644
+index 73dd71809..b2e1cf051 100644
 --- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-@@ -10,12 +10,13 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
+@@ -8,11 +8,12 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
  import { Line2 } from 'three/addons/lines/Line2.js';
  import { LineGeometry } from 'three/addons/lines/LineGeometry.js';
  
 -let line, thresholdLine, segments, thresholdSegments;
 -let renderer, scene, camera, controls;
 -let sphereInter, sphereOnLine;
--let stats;
 -let gui;
 -let clock;
 +let line: Line2, thresholdLine: Line2, segments: LineSegments2, thresholdSegments: LineSegments2;
 +let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
 +let sphereInter: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
 +    sphereOnLine: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
-+let stats: Stats;
 +let gui: GUI;
 +let clock: THREE.Clock;
  
  const color = new THREE.Color();
  
-@@ -23,8 +24,7 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
+@@ -20,8 +21,7 @@ const pointer = new THREE.Vector2(Infinity, Infinity);
  
  const raycaster = new THREE.Raycaster();
  
@@ -6717,7 +6713,7 @@ index 4b188680b..18a9e7e73 100644
  
  const matLine = new LineMaterial({
      color: 0xffffff,
-@@ -170,7 +170,7 @@ function onWindowResize() {
+@@ -163,7 +163,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -6726,7 +6722,7 @@ index 4b188680b..18a9e7e73 100644
      pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
      pointer.y = -(event.clientY / window.innerHeight) * 2 + 1;
  }
-@@ -199,9 +199,9 @@ function animate() {
+@@ -192,9 +192,9 @@ function animate() {
          sphereOnLine.visible = true;
  
          sphereInter.position.copy(intersects[0].point);
@@ -6738,7 +6734,7 @@ index 4b188680b..18a9e7e73 100644
          const colors = obj.geometry.getAttribute('instanceColorStart');
  
          color.fromBufferAttribute(colors, index);
-@@ -223,7 +223,7 @@ function animate() {
+@@ -214,7 +214,7 @@ function animate() {
  
  //
  
@@ -6747,7 +6743,7 @@ index 4b188680b..18a9e7e73 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -268,7 +268,7 @@ function initGui() {
+@@ -259,7 +259,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -6756,7 +6752,7 @@ index 4b188680b..18a9e7e73 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -276,8 +276,8 @@ function initGui() {
+@@ -267,8 +267,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
@@ -13530,7 +13526,7 @@ index 866eca16a..073011389 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgl_volume_cloud.ts b/examples-testing/examples/webgl_volume_cloud.ts
-index 77dd8de43..6414f1b49 100644
+index 9aa07b98f..dfe98826a 100644
 --- a/examples-testing/examples/webgl_volume_cloud.ts
 +++ b/examples-testing/examples/webgl_volume_cloud.ts
 @@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -13567,7 +13563,7 @@ index 77dd8de43..6414f1b49 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_volume_instancing.ts b/examples-testing/examples/webgl_volume_instancing.ts
-index 39bfc379b..ed8d58f59 100644
+index 086e6fcf7..34d0b3fe0 100644
 --- a/examples-testing/examples/webgl_volume_instancing.ts
 +++ b/examples-testing/examples/webgl_volume_instancing.ts
 @@ -2,7 +2,11 @@ import * as THREE from 'three';
@@ -13583,7 +13579,7 @@ index 39bfc379b..ed8d58f59 100644
  
  init();
  
-@@ -186,7 +190,7 @@ function init() {
+@@ -182,7 +186,7 @@ function init() {
  
              const mesh = new THREE.InstancedMesh(geometry, material, 50000);
              mesh.onBeforeRender = function () {
@@ -13593,7 +13589,7 @@ index 39bfc379b..ed8d58f59 100644
  
              const transform = new THREE.Object3D();
 diff --git a/examples-testing/examples/webgl_volume_perlin.ts b/examples-testing/examples/webgl_volume_perlin.ts
-index a98f9a682..5689cf914 100644
+index 0f299f66f..b02dd139c 100644
 --- a/examples-testing/examples/webgl_volume_perlin.ts
 +++ b/examples-testing/examples/webgl_volume_perlin.ts
 @@ -4,8 +4,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -13607,7 +13603,7 @@ index a98f9a682..5689cf914 100644
  
  init();
  
-@@ -202,7 +202,7 @@ function onWindowResize() {
+@@ -199,7 +199,7 @@ function onWindowResize() {
  }
  
  function animate() {

@@ -516,34 +516,28 @@ index 040c4af5c..21a787d59 100644
 -    unsubscribe_(path: any): void;
  }
 diff --git a/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts b/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
-index b8f10dfd0..dbec9086c 100644
+index 7355fe037..9745bd9f4 100644
 --- a/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/AnimationUtils.d.ts
-@@ -1,3 +1,6 @@
+@@ -1,3 +1,7 @@
 +import { AnimationClip } from "./AnimationClip.js";
-+import { TypedArray, TypedArrayConstructor} from '../core/BufferAttribute.js';
++import { TypedArray, TypedArrayConstructor } from '../core/BufferAttribute.js';
++import { isTypedArray } from '../utils.js';
 +
  /**
   * Converts an array to a specific type.
   *
-@@ -5,14 +8,14 @@
+@@ -5,8 +9,7 @@
   * @param {TypedArray.constructor} type - The constructor of a typed array that defines the new type.
   * @return {TypedArray} The converted array.
   */
 -export function convertArray(array: TypedArray | any[], type: TypedArray.constructor): TypedArray;
-+export function convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray | number[];
- /**
-  * Returns `true` if the given object is a typed array.
-  *
-  * @param {any} object - The object to check.
-  * @return {boolean} Whether the given object is a typed array.
-  */
--export function isTypedArray(object: any): boolean;
-+export function isTypedArray(object: unknown): boolean;
+-import { isTypedArray } from '../utils.js';
++export function convertArray(array: TypedArray | number[], type: TypedArrayConstructor): TypedArray;
  /**
   * Returns an array by which times and values can be sorted.
   *
-@@ -73,7 +76,7 @@ export class AnimationUtils {
+@@ -67,7 +70,7 @@ export class AnimationUtils {
       * @param {TypedArray.constructor} type - The constructor of a type array.
       * @return {TypedArray} The converted array
       */
@@ -552,7 +546,7 @@ index b8f10dfd0..dbec9086c 100644
      /**
       * Returns `true` if the given object is a typed array.
       *
-@@ -81,7 +84,7 @@ export class AnimationUtils {
+@@ -75,7 +78,7 @@ export class AnimationUtils {
       * @param {any} object - The object to check.
       * @return {boolean} Whether the given object is a typed array.
       */
