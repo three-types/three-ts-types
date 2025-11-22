@@ -101,7 +101,6 @@ export interface ShaderMaterialProperties extends MaterialProperties {
      * } );
      * ```
      *
-     * @type {boolean}
      * @default false
      */
     fog: boolean;
