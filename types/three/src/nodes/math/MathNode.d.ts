@@ -535,11 +535,16 @@ declare module "../core/Node.js" {
 }
 
 export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
-export const cross: (x: FloatVector, y: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatVectorExtensions<TVec extends FloatVectorType> {
         dot: (y: FloatVector) => Node<"float">;
-        cross: (y: FloatVector) => Node<"float">;
+    }
+}
+
+export const cross: (x: Node<"vec3">, y: Node<"vec3">) => Node<"vec3">;
+declare module "../core/Node.js" {
+    interface Vec3Extensions {
+        cross: (y: Node<"vec3">) => Node<"vec3">;
     }
 }
 

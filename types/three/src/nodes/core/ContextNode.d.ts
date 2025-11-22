@@ -21,7 +21,7 @@ interface ContextFunction {
     <TNodeType>(node: Node<TNodeType>, value?: NodeBuilderContext): ContextNode<TNodeType>;
 }
 
-export const context: <TNodeType>(node: Node<TNodeType>, context?: NodeBuilderContext) => ContextNode<TNodeType>;
+export const context: ContextFunction;
 
 export const uniformFlow: <TNodeType>(node: Node<TNodeType>) => ContextNode<TNodeType>;
 
