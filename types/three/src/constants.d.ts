@@ -693,6 +693,11 @@ export const LinearTransfer: "linear";
 export const SRGBTransfer: "srgb";
 export type ColorSpaceTransfer = typeof LinearTransfer | typeof SRGBTransfer;
 
+export const NoNormalPacking: "";
+export const NormalRGPacking: "rg";
+export const NormalGAPacking: "ga";
+export type NormalPacking = typeof NoNormalPacking | typeof NormalRGPacking | typeof NormalGAPacking;
+
 // Stencil Op types
 export const ZeroStencilOp: 0;
 export const KeepStencilOp: 7680;
