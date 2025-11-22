@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index 0d659a6a..2f01439b 100644
+index 9311024a..96372a10 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,14 @@
@@ -194,7 +194,7 @@ index 0d659a6a..2f01439b 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 5b4d8aa0..f7931662 100644
+index 5b4d8aa0..8123d6f9 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -234,7 +234,7 @@ index 5b4d8aa0..f7931662 100644
   * @augments InputNode
   */
 -class BufferAttributeNode extends InputNode {
-+class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
++class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
      static get type() {
          return 'BufferAttributeNode';
      }
@@ -361,7 +361,7 @@ index 5b4d8aa0..f7931662 100644
          }
  
          return this;
-@@ -280,7 +301,7 @@ class BufferAttributeNode extends InputNode {
+@@ -280,12 +301,31 @@ class BufferAttributeNode extends InputNode {
       * @param {boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -370,68 +370,92 @@ index 5b4d8aa0..f7931662 100644
          this.instanced = value;
  
          return this;
-@@ -301,7 +322,14 @@ export default BufferAttributeNode;
+     }
+ }
++declare const BufferAttributeNode: {
++    /**
++     * Constructs a new buffer attribute node.
++     *
++     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
++     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
++     * @param {number} [bufferStride=0] - The buffer stride.
++     * @param {number} [bufferOffset=0] - The buffer offset.
++     */
++    new <TNodeType>(
++        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        bufferType?: string | null,
++        bufferStride?: number,
++        bufferOffset?: number,
++    ): BufferAttributeNode<TNodeType>;
++};
++
++type BufferAttributeNode<TNodeType> = InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute> &
++    BufferAttributeNodeClass;
+ 
+ export default BufferAttributeNode;
+ 
+@@ -301,7 +341,14 @@ export default BufferAttributeNode;
   * @param {boolean} [instanced=false] - Whether the buffer is instanced.
   * @returns {BufferAttributeNode|Node} The buffer attribute node.
   */
 -function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage = StaticDrawUsage, instanced = false) {
-+function createBufferAttribute(
++function createBufferAttribute<TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
 +    usage: Usage = StaticDrawUsage,
 +    instanced = false,
-+): Node {
++): Node<TNodeType> {
      if (type === 'mat3' || (type === null && array.itemSize === 9)) {
          return mat3(
              new BufferAttributeNode(array, 'vec3', 9, 0).setUsage(usage).setInstanced(instanced),
-@@ -331,8 +359,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
+@@ -331,8 +378,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset);
-+export const bufferAttribute = (
++export const bufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset);
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage.
-@@ -346,8 +378,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+@@ -346,8 +397,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const dynamicBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset, DynamicDrawUsage);
-+export const dynamicBufferAttribute = (
++export const dynamicBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, DynamicDrawUsage);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, DynamicDrawUsage);
  
  /**
   * TSL function for creating a buffer attribute node but with enabled instancing
-@@ -360,8 +396,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+@@ -360,8 +415,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const instancedBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset, StaticDrawUsage, true);
-+export const instancedBufferAttribute = (
++export const instancedBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, StaticDrawUsage, true);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, StaticDrawUsage, true);
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -374,7 +414,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -374,7 +433,20 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -439,18 +463,20 @@ index 5b4d8aa0..f7931662 100644
 -    createBufferAttribute(array, type, stride, offset, DynamicDrawUsage, true);
 -
 -addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
-+export const instancedDynamicBufferAttribute = (
++export const instancedDynamicBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, DynamicDrawUsage, true);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, DynamicDrawUsage, true);
 +
-+addMethodChaining('toAttribute', <TValue>(bufferNode: BufferNode<TValue>) => bufferAttribute(bufferNode.value));
++addMethodChaining('toAttribute', <TNodeType, TValue>(bufferNode: BufferNode<TNodeType, TValue>) =>
++    bufferAttribute(bufferNode.value),
++);
 +
-+declare module '../Nodes.js' {
-+    interface BufferNode<TValue> {
-+        toAttribute: () => BufferAttributeNode;
++declare module './BufferNode.js' {
++    interface BufferNodeExtensions<TNodeType, TValue> {
++        toAttribute: () => BufferAttributeNode<TNodeType>;
 +        toAttributeAssign: () => this;
 +    }
 +}
@@ -739,7 +765,7 @@ index 0174f78c..34d4475c 100644
 +export const glslFn = (code: string, includes) => nativeFn(code, includes, 'glsl');
 +export const wgslFn = (code: string, includes) => nativeFn(code, includes, 'wgsl');
 diff --git a/src-testing/src/nodes/core/ContextNode.ts b/src-testing/src/nodes/core/ContextNode.ts
-index 289407ae..b252508a 100644
+index 276f280f..6d67a0e9 100644
 --- a/src-testing/src/nodes/core/ContextNode.ts
 +++ b/src-testing/src/nodes/core/ContextNode.ts
 @@ -1,6 +1,7 @@
@@ -822,7 +848,7 @@ index 289407ae..b252508a 100644
  
      return setName(node, name);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
-index ffb7734e..d71c6d24 100644
+index ffb7734e..2dc76d1c 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
 +++ b/src-testing/src/nodes/core/InputNode.ts
 @@ -1,24 +1,30 @@
@@ -837,7 +863,7 @@ index ffb7734e..d71c6d24 100644
   * @augments Node
   */
 -class InputNode extends Node {
-+class InputNode<TValue> extends Node {
++class InputNodeClass<TValue> extends Node {
      static get type() {
          return 'InputNode';
      }
@@ -885,7 +911,7 @@ index ffb7734e..d71c6d24 100644
          this.precision = precision;
  
          return this;
-@@ -107,10 +113,6 @@ class InputNode extends Node {
+@@ -107,10 +113,12 @@ class InputNode extends Node {
  
          if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
      }
@@ -895,9 +921,15 @@ index ffb7734e..d71c6d24 100644
 -    }
  }
  
++declare const InputNode: {
++    new <TNodeType, TValue>(value: TValue, nodeType?: string | null): InputNode<TNodeType, TValue>;
++};
++
++type InputNode<TNodeType, TValue> = Node<TNodeType> & InputNodeClass<TValue>;
++
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3..e2fa3c88 100644
+index 335f0bf3..33524b69 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -917,13 +949,13 @@ index 335f0bf3..e2fa3c88 100644
 +    type?: string;
 +}
 +
-+interface NodeJSONMeta {
++export interface NodeJSONMeta {
 +    textures: { [key: string]: unknown };
 +    images: { [key: string]: unknown };
 +    nodes: { [key: string]: NodeJSONIntermediateOutputData };
 +}
 +
-+interface NodeJSONMetadata {
++export interface NodeJSONMetadata {
 +    version: number;
 +    type: 'Node';
 +    generator: 'Node.toJSON';
@@ -1433,7 +1465,7 @@ index 335f0bf3..e2fa3c88 100644
 +     *
 +     * @param {?string} nodeType - The node type.
 +     */
-+    new <TNodeValue>(nodeType?: string | null): Node<TNodeValue>;
++    new <TNodeType>(nodeType?: string | null): Node<TNodeType>;
 +    new (nodeType?: string | null): Node;
 +    get type(): string;
 +};
@@ -5009,7 +5041,7 @@ index 7cf21cda..08eb89d0 100644
           * The name of the code.
           *
 diff --git a/src-testing/src/nodes/core/NodeFrame.ts b/src-testing/src/nodes/core/NodeFrame.ts
-index 892230c2..e5c121a8 100644
+index 43f9bde2..1be6c1e4 100644
 --- a/src-testing/src/nodes/core/NodeFrame.ts
 +++ b/src-testing/src/nodes/core/NodeFrame.ts
 @@ -1,4 +1,7 @@
@@ -5053,7 +5085,7 @@ index 892230c2..e5c121a8 100644
          const updateType = node.getUpdateBeforeType();
          const reference = node.updateReference(this);
  
-@@ -203,7 +223,7 @@ class NodeFrame {
+@@ -211,7 +231,7 @@ class NodeFrame {
       *
       * @param {Node} node - The node that should be updated.
       */
