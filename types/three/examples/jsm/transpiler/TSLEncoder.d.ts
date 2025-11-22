@@ -6,6 +6,7 @@ import {
     FunctionDeclaration,
     Program,
     Statement,
+    StructDefinition,
     Switch,
     Ternary,
     Uniform,
