@@ -963,7 +963,7 @@ index a8a603bb3..e88957c04 100644
      meshMoon = new THREE.Mesh(geometry, materialMoon);
      meshMoon.position.set(radius * 5, 0, 0);
 diff --git a/examples-testing/examples/misc_controls_map.ts b/examples-testing/examples/misc_controls_map.ts
-index 2f52190cf..3a96c5448 100644
+index fa36b55c9..560488d19 100644
 --- a/examples-testing/examples/misc_controls_map.ts
 +++ b/examples-testing/examples/misc_controls_map.ts
 @@ -4,7 +4,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -976,7 +976,7 @@ index 2f52190cf..3a96c5448 100644
  init();
  //render(); // remove when using animation loop
 diff --git a/examples-testing/examples/misc_controls_orbit.ts b/examples-testing/examples/misc_controls_orbit.ts
-index 186e216cb..0f8b9b117 100644
+index 81815d9db..6bb435481 100644
 --- a/examples-testing/examples/misc_controls_orbit.ts
 +++ b/examples-testing/examples/misc_controls_orbit.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -1059,7 +1059,7 @@ index 0b6fcc516..d97bb4c3b 100644
  
          const box = new THREE.Mesh(boxGeometry, boxMaterial);
 diff --git a/examples-testing/examples/misc_controls_trackball.ts b/examples-testing/examples/misc_controls_trackball.ts
-index b6479e9f6..2e8f3dadc 100644
+index c2512a352..c4719944f 100644
 --- a/examples-testing/examples/misc_controls_trackball.ts
 +++ b/examples-testing/examples/misc_controls_trackball.ts
 @@ -5,7 +5,12 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -1076,7 +1076,7 @@ index b6479e9f6..2e8f3dadc 100644
  
  const params = {
      orthographicCamera: false,
-@@ -92,7 +97,7 @@ function init() {
+@@ -96,7 +101,7 @@ function init() {
      createControls(perspectiveCamera);
  }
  
@@ -1774,22 +1774,22 @@ index 99b74c405..65aaf28dd 100644
  init();
  animate();
 diff --git a/examples-testing/examples/svg_sandbox.ts b/examples-testing/examples/svg_sandbox.ts
-index e6be8386c..faea9a7ae 100644
+index 88f651669..7a3381684 100644
 --- a/examples-testing/examples/svg_sandbox.ts
 +++ b/examples-testing/examples/svg_sandbox.ts
-@@ -6,9 +6,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
+@@ -7,9 +7,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
  
  THREE.ColorManagement.enabled = false;
  
--let camera, scene, renderer, stats;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer, stats: Stats;
+-let camera, scene, renderer, stats, controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: SVGRenderer, stats: Stats, controls: OrbitControls;
  
 -let group;
 +let group: THREE.Mesh;
  
  init();
  animate();
-@@ -33,9 +33,13 @@ function init() {
+@@ -34,9 +34,13 @@ function init() {
  
      const boxGeometry = new THREE.BoxGeometry(100, 100, 100);
  
@@ -1805,7 +1805,7 @@ index e6be8386c..faea9a7ae 100644
      );
      mesh.position.x = 500;
      mesh.rotation.x = Math.random();
-@@ -55,7 +59,10 @@ function init() {
+@@ -56,7 +60,10 @@ function init() {
  
      mesh = new THREE.Mesh(
          new THREE.PlaneGeometry(100, 100),
@@ -1817,7 +1817,7 @@ index e6be8386c..faea9a7ae 100644
      );
      mesh.position.y = -500;
      mesh.scale.x = mesh.scale.y = mesh.scale.z = 2;
-@@ -75,7 +82,10 @@ function init() {
+@@ -76,7 +83,10 @@ function init() {
      // POLYFIELD
  
      const geometry = new THREE.BufferGeometry();
@@ -1829,7 +1829,7 @@ index e6be8386c..faea9a7ae 100644
  
      const v = new THREE.Vector3();
      const v0 = new THREE.Vector3();
-@@ -122,7 +132,9 @@ function init() {
+@@ -123,7 +133,9 @@ function init() {
      // SPRITES
  
      for (let i = 0; i < 50; i++) {
@@ -1840,7 +1840,7 @@ index e6be8386c..faea9a7ae 100644
          const sprite = new THREE.Sprite(material);
          sprite.position.x = Math.random() * 1000 - 500;
          sprite.position.y = Math.random() * 1000 - 500;
-@@ -139,7 +151,7 @@ function init() {
+@@ -140,7 +152,7 @@ function init() {
      node.setAttribute('r', '40');
  
      for (let i = 0; i < 50; i++) {
@@ -1849,7 +1849,7 @@ index e6be8386c..faea9a7ae 100644
          object.position.x = Math.random() * 1000 - 500;
          object.position.y = Math.random() * 1000 - 500;
          object.position.z = Math.random() * 1000 - 500;
-@@ -152,7 +164,7 @@ function init() {
+@@ -153,7 +165,7 @@ function init() {
      fileLoader.load('models/svg/hexagon.svg', function (svg) {
          const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
          const parser = new DOMParser();
@@ -10558,7 +10558,7 @@ index 57a6a2dbd..f6d4c7167 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgl_postprocessing_fxaa.ts b/examples-testing/examples/webgl_postprocessing_fxaa.ts
-index 1b66621c8..2fb72eadc 100644
+index c5e632ad7..1774b0c84 100644
 --- a/examples-testing/examples/webgl_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgl_postprocessing_fxaa.ts
 @@ -6,14 +6,18 @@ import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
@@ -10584,7 +10584,7 @@ index 1b66621c8..2fb72eadc 100644
      camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 1, 2000);
      camera.position.z = 500;
 diff --git a/examples-testing/examples/webgl_postprocessing_glitch.ts b/examples-testing/examples/webgl_postprocessing_glitch.ts
-index f846c0ce6..5eaa953f7 100644
+index 02acda572..5c39961fa 100644
 --- a/examples-testing/examples/webgl_postprocessing_glitch.ts
 +++ b/examples-testing/examples/webgl_postprocessing_glitch.ts
 @@ -5,21 +5,21 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -10615,7 +10615,7 @@ index f846c0ce6..5eaa953f7 100644
      glitchPass.goWild = wildGlitch.checked;
  }
  
-@@ -75,7 +75,7 @@ function init() {
+@@ -86,7 +86,7 @@ function init() {
  
      window.addEventListener('resize', onWindowResize);
  
@@ -11126,7 +11126,7 @@ index ea00886d1..41f6c7823 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_sao.ts b/examples-testing/examples/webgl_postprocessing_sao.ts
-index bf40d026b..deb21b3f7 100644
+index 0c6298e6b..c7ab9a36e 100644
 --- a/examples-testing/examples/webgl_postprocessing_sao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_sao.ts
 @@ -8,10 +8,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -11188,7 +11188,7 @@ index 55d88dc02..1512ed8bd 100644
  const params = {
      enable: true,
 diff --git a/examples-testing/examples/webgl_postprocessing_ssaa.ts b/examples-testing/examples/webgl_postprocessing_ssaa.ts
-index 429e02dee..438d81e7b 100644
+index 45d8767b1..84be0a91f 100644
 --- a/examples-testing/examples/webgl_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgl_postprocessing_ssaa.ts
 @@ -7,10 +7,10 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -11215,7 +11215,7 @@ index 429e02dee..438d81e7b 100644
  
      const width = window.innerWidth || 1;
      const height = window.innerHeight || 1;
-@@ -198,7 +198,7 @@ function animate() {
+@@ -206,7 +206,7 @@ function animate() {
      ssaaRenderPassP.enabled = params.camera === 'perspective';
      ssaaRenderPassO.enabled = params.camera === 'orthographic';
  
@@ -11225,7 +11225,7 @@ index 429e02dee..438d81e7b 100644
      composer.render();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_ssao.ts b/examples-testing/examples/webgl_postprocessing_ssao.ts
-index e55ab0446..811417b6f 100644
+index fd3739af3..5d2865f06 100644
 --- a/examples-testing/examples/webgl_postprocessing_ssao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_ssao.ts
 @@ -8,10 +8,10 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -17609,10 +17609,10 @@ index 570a4dee9..6270f96d5 100644
          setStatic(model, options.static);
      });
 diff --git a/examples-testing/examples/webgpu_performance_renderbundle.ts b/examples-testing/examples/webgpu_performance_renderbundle.ts
-index 4b6647078..bf2bf8b5d 100644
+index 3b20847b8..bda539989 100644
 --- a/examples-testing/examples/webgpu_performance_renderbundle.ts
 +++ b/examples-testing/examples/webgpu_performance_renderbundle.ts
-@@ -1,15 +1,16 @@
+@@ -1,13 +1,14 @@
  import * as THREE from 'three/webgpu';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -17629,12 +17629,9 @@ index 4b6647078..bf2bf8b5d 100644
 +let gui: ParametersGroup;
 +let geometries: THREE.BufferGeometry[], group: THREE.Group;
  
--let renderTimeAverages = [];
-+let renderTimeAverages: number[] = [];
  //
  
- const position = new THREE.Vector3();
-@@ -33,7 +34,7 @@ init(!api.webgpu);
+@@ -30,7 +31,7 @@ init();
  
  //
  
@@ -17643,7 +17640,7 @@ index 4b6647078..bf2bf8b5d 100644
      position.x = Math.random() * 80 - 40;
      position.y = Math.random() * 80 - 40;
      position.z = Math.random() * 80 - 40;
-@@ -50,7 +51,7 @@ function randomizeMatrix(matrix) {
+@@ -46,7 +47,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -17652,24 +17649,12 @@ index 4b6647078..bf2bf8b5d 100644
      rotation.x = Math.random() * 0.05;
      rotation.y = Math.random() * 0.05;
      rotation.z = Math.random() * 0.05;
-@@ -79,20 +80,20 @@ function initGeometries() {
- 
- function cleanup() {
-     if (group) {
--        group.parent.remove(group);
-+        group.parent!.remove(group);
- 
--        if (group.dispose) {
--            group.dispose();
-+        if ((group as unknown as { dispose(): void }).dispose) {
-+            (group as unknown as { dispose(): void }).dispose();
-         }
-     }
+@@ -73,11 +74,11 @@ function initGeometries() {
+     ];
  }
  
 -function initMesh(count) {
 +function initMesh(count: number) {
-     cleanup();
      initRegularMesh(count);
  }
  
@@ -17678,16 +17663,25 @@ index 4b6647078..bf2bf8b5d 100644
      group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
  
      for (let i = 0; i < count; i++) {
-@@ -159,7 +160,7 @@ async function init(forceWebGL = false) {
+@@ -101,7 +102,7 @@ function init() {
+     const searchParams = new URLSearchParams(window.location.search);
+     api.webgpu = searchParams.get('backend') !== 'webgl';
+     api.renderBundle = searchParams.get('renderBundle') !== 'false';
+-    api.count = parseFloat(searchParams.get('count') || 4000);
++    api.count = parseFloat(searchParams.get('count') || (4000 as unknown as string));
+ 
+     const count = api.count;
+ 
+@@ -139,7 +140,7 @@ function init() {
  
      // gui
  
 -    gui = renderer.inspector.createParameters('Settings');
 +    gui = (renderer.inspector as Inspector).createParameters('Settings');
-     gui.add(api, 'renderBundle')
-         .name('render bundle')
-         .onChange(() => {
-@@ -186,7 +187,7 @@ async function init(forceWebGL = false) {
+     gui.add(api, 'renderBundle').name('render bundle').onChange(reload);
+ 
+     gui.add(api, 'webgpu').onChange(reload);
+@@ -160,7 +161,7 @@ function init() {
          camera.updateProjectionMatrix();
  
          renderer.setSize(width, height);
@@ -17695,16 +17689,7 @@ index 4b6647078..bf2bf8b5d 100644
 +        (group as THREE.BundleGroup).needsUpdate = true;
      }
  
-     async function animate() {
-@@ -203,7 +204,7 @@ async function init(forceWebGL = false) {
- 
-         const average = renderTimeAverages.reduce((a, b) => a + b, 0) / renderTimeAverages.length;
- 
--        document.getElementById('backend').innerText =
-+        document.getElementById('backend')!.innerText =
-             `Average Render Time ${api.renderBundle ? '(Bundle)' : ''}: ` + average.toFixed(2) + 'ms';
-     }
- 
+     function reload() {
 diff --git a/examples-testing/examples/webgpu_pmrem_cubemap.ts b/examples-testing/examples/webgpu_pmrem_cubemap.ts
 index bd751ba33..9f58dc8b0 100644
 --- a/examples-testing/examples/webgpu_pmrem_cubemap.ts
@@ -18319,7 +18304,7 @@ index 32a04c2a6..f6fdda04d 100644
  
      raycaster.setFromCamera(pointerCoords, camera);
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
-index 1a32558ab..d563f4c5a 100644
+index ceac24914..5b4a2d98d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 @@ -9,8 +9,12 @@ const params = {
@@ -18337,7 +18322,7 @@ index 1a32558ab..d563f4c5a 100644
  
  init();
  
-@@ -90,7 +94,7 @@ async function init() {
+@@ -93,7 +97,7 @@ async function init() {
  
      //
  
@@ -19567,10 +19552,10 @@ index 1b4461d33..440b4ac3b 100644
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
-index 4e1e0a4e6..0a4a14d54 100644
+index b0d1139db..e61beb33c 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
 +++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
-@@ -28,7 +28,7 @@ scene.background = new THREE.Color(0x00001f);
+@@ -45,7 +45,7 @@ scene.background = new THREE.Color(0x00001f);
  camera.position.set(1, 1, 1);
  const controls = new OrbitControls(camera, renderer.domElement);
  
