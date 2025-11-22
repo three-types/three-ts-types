@@ -265,12 +265,12 @@ declare class Renderer {
      * @return {Promise} A Promise that resolves when synchronization has been finished.
      */
     waitForGPU(): Promise<void>;
-    /**
-     * Sets the inspector instance. The inspector can be any class that extends from `InspectorBase`.
-     *
-     * @param {InspectorBase} value - The new inspector.
-     */
     set inspector(value: InspectorBase);
+    /**
+     * The inspector instance. The inspector can be any class that extends from `InspectorBase`.
+     *
+     * @type {InspectorBase}
+     */
     get inspector(): InspectorBase;
     /**
      * Enables or disables high precision for model-view and normal-view matrices.

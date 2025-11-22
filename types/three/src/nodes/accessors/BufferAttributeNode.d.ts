@@ -112,14 +112,14 @@ export default BufferAttributeNode;
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
  * @param {number} [stride=0] - The buffer stride.
  * @param {number} [offset=0] - The buffer offset.
- * @returns {BufferAttributeNode}
+ * @returns {BufferAttributeNode|Node}
  */
 export declare const bufferAttribute: (
-    array: TypedArray | InterleavedBuffer | BufferAttribute,
+    array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => BufferAttributeNode;
+) => any;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
@@ -130,14 +130,14 @@ export declare const bufferAttribute: (
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
  * @param {number} [stride=0] - The buffer stride.
  * @param {number} [offset=0] - The buffer offset.
- * @returns {BufferAttributeNode}
+ * @returns {BufferAttributeNode|Node}
  */
 export declare const dynamicBufferAttribute: (
-    array: TypedArray | InterleavedBuffer | BufferAttribute,
+    array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => BufferAttributeNode;
+) => any;
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
@@ -147,14 +147,14 @@ export declare const dynamicBufferAttribute: (
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
  * @param {number} [stride=0] - The buffer stride.
  * @param {number} [offset=0] - The buffer offset.
- * @returns {BufferAttributeNode}
+ * @returns {BufferAttributeNode|Node}
  */
 export declare const instancedBufferAttribute: (
-    array: TypedArray | InterleavedBuffer | BufferAttribute,
+    array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => BufferAttributeNode;
+) => any;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
@@ -164,14 +164,14 @@ export declare const instancedBufferAttribute: (
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
  * @param {number} [stride=0] - The buffer stride.
  * @param {number} [offset=0] - The buffer offset.
- * @returns {BufferAttributeNode}
+ * @returns {BufferAttributeNode|Node}
  */
 export declare const instancedDynamicBufferAttribute: (
-    array: TypedArray | InterleavedBuffer | BufferAttribute,
+    array: BufferAttribute | InterleavedBuffer | TypedArray,
     type?: string | null,
     stride?: number,
     offset?: number,
-) => BufferAttributeNode;
+) => any;
 declare module "../Nodes.js" {
     interface BufferNode<TValue> {
         toAttribute: () => BufferAttributeNode;
