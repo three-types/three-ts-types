@@ -26,7 +26,7 @@ export interface ShaderMaterialProperties extends MaterialProperties {
      * #define BAR true
      * ```
      */
-    defines: { [key: string]: any };
+    defines: Record<string, unknown>;
     /**
      * An object of the form:
      * ```js
@@ -248,4 +248,6 @@ export class ShaderMaterial extends Material {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ShaderMaterial extends ShaderMaterialProperties {}
+export interface ShaderMaterial extends ShaderMaterialProperties {
+    defines: Record<string, unknown>;
+}
