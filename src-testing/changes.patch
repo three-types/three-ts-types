@@ -194,10 +194,10 @@ index 47e15577..cdddcd46 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 5b4d8aa0..0cb31e6d 100644
+index 5b4d8aa0..f7931662 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-@@ -4,7 +4,11 @@ import { varying } from '../core/VaryingNode.js';
+@@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
  
  import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
  import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
@@ -207,10 +207,11 @@ index 5b4d8aa0..0cb31e6d 100644
 +import { InstancedBufferAttribute } from '../../core/InstancedBufferAttribute.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import BufferNode from './BufferNode.js';
++import Node from '../core/Node.js';
  
  /**
   * Internal buffer attribute library.
-@@ -12,7 +16,7 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
+@@ -12,7 +17,7 @@ import { StaticDrawUsage, DynamicDrawUsage } from '../../constants.js';
   * @private
   * @type {WeakMap<TypedArray, InterleavedBuffer>}
   */
@@ -219,7 +220,7 @@ index 5b4d8aa0..0cb31e6d 100644
  
  /**
   * Internal method for retrieving or creating interleaved buffers.
-@@ -22,7 +26,7 @@ const _bufferLib = new WeakMap();
+@@ -22,7 +27,7 @@ const _bufferLib = new WeakMap();
   * @param {number} itemSize - The attribute item size.
   * @returns {InterleavedBuffer} The interleaved buffer.
   */
@@ -228,7 +229,7 @@ index 5b4d8aa0..0cb31e6d 100644
      let buffer = _bufferLib.get(value);
  
      if (buffer === undefined) {
-@@ -56,11 +60,22 @@ function _getBufferAttribute(value, itemSize) {
+@@ -56,11 +61,22 @@ function _getBufferAttribute(value, itemSize) {
   * ```
   * @augments InputNode
   */
@@ -252,7 +253,7 @@ index 5b4d8aa0..0cb31e6d 100644
      /**
       * Constructs a new buffer attribute node.
       *
-@@ -69,7 +84,12 @@ class BufferAttributeNode extends InputNode {
+@@ -69,7 +85,12 @@ class BufferAttributeNode extends InputNode {
       * @param {number} [bufferStride=0] - The buffer stride.
       * @param {number} [bufferOffset=0] - The buffer offset.
       */
@@ -266,7 +267,7 @@ index 5b4d8aa0..0cb31e6d 100644
          super(value, bufferType);
  
          /**
-@@ -138,10 +158,10 @@ class BufferAttributeNode extends InputNode {
+@@ -138,10 +159,10 @@ class BufferAttributeNode extends InputNode {
           */
          this.global = true;
  
@@ -281,7 +282,7 @@ index 5b4d8aa0..0cb31e6d 100644
          }
      }
  
-@@ -152,7 +172,7 @@ class BufferAttributeNode extends InputNode {
+@@ -152,7 +173,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -290,7 +291,7 @@ index 5b4d8aa0..0cb31e6d 100644
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
-@@ -177,7 +197,7 @@ class BufferAttributeNode extends InputNode {
+@@ -177,7 +198,7 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The node type.
       */
@@ -299,7 +300,7 @@ index 5b4d8aa0..0cb31e6d 100644
          if (this.bufferType === null) {
              this.bufferType = builder.getTypeFromAttribute(this.attribute);
          }
-@@ -192,7 +212,7 @@ class BufferAttributeNode extends InputNode {
+@@ -192,7 +213,7 @@ class BufferAttributeNode extends InputNode {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -308,7 +309,7 @@ index 5b4d8aa0..0cb31e6d 100644
          if (this.attribute !== null) return;
  
          //
-@@ -203,14 +223,14 @@ class BufferAttributeNode extends InputNode {
+@@ -203,14 +224,14 @@ class BufferAttributeNode extends InputNode {
          const stride = this.bufferStride || itemSize;
          const offset = this.bufferOffset;
  
@@ -329,7 +330,7 @@ index 5b4d8aa0..0cb31e6d 100644
          }
  
          const bufferAttribute = new InterleavedBufferAttribute(buffer, itemSize, offset);
-@@ -227,13 +247,13 @@ class BufferAttributeNode extends InputNode {
+@@ -227,13 +248,13 @@ class BufferAttributeNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The generated code snippet.
       */
@@ -345,7 +346,7 @@ index 5b4d8aa0..0cb31e6d 100644
  
          if (builder.shaderStage === 'vertex' || builder.shaderStage === 'compute') {
              this.name = propertyName;
-@@ -264,11 +284,11 @@ class BufferAttributeNode extends InputNode {
+@@ -264,11 +285,11 @@ class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -360,7 +361,7 @@ index 5b4d8aa0..0cb31e6d 100644
          }
  
          return this;
-@@ -280,7 +300,7 @@ class BufferAttributeNode extends InputNode {
+@@ -280,7 +301,7 @@ class BufferAttributeNode extends InputNode {
       * @param {boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -369,7 +370,7 @@ index 5b4d8aa0..0cb31e6d 100644
          this.instanced = value;
  
          return this;
-@@ -301,7 +321,14 @@ export default BufferAttributeNode;
+@@ -301,7 +322,14 @@ export default BufferAttributeNode;
   * @param {boolean} [instanced=false] - Whether the buffer is instanced.
   * @returns {BufferAttributeNode|Node} The buffer attribute node.
   */
@@ -381,11 +382,11 @@ index 5b4d8aa0..0cb31e6d 100644
 +    offset: number = 0,
 +    usage: Usage = StaticDrawUsage,
 +    instanced = false,
-+) {
++): Node {
      if (type === 'mat3' || (type === null && array.itemSize === 9)) {
          return mat3(
              new BufferAttributeNode(array, 'vec3', 9, 0).setUsage(usage).setInstanced(instanced),
-@@ -331,8 +358,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
+@@ -331,8 +359,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -400,7 +401,7 @@ index 5b4d8aa0..0cb31e6d 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage.
-@@ -346,8 +377,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+@@ -346,8 +378,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -415,7 +416,7 @@ index 5b4d8aa0..0cb31e6d 100644
  
  /**
   * TSL function for creating a buffer attribute node but with enabled instancing
-@@ -360,8 +395,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+@@ -360,8 +396,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -430,7 +431,7 @@ index 5b4d8aa0..0cb31e6d 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -374,7 +413,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -374,7 +414,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
