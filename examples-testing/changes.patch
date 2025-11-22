@@ -19174,6 +19174,39 @@ index fa7577ea8..b4c7a8c39 100644
      mouse.x = e.offsetX / window.innerWidth;
      mouse.y = e.offsetY / window.innerHeight;
  }
+diff --git a/examples-testing/examples/webgpu_shadow_contact.ts b/examples-testing/examples/webgpu_shadow_contact.ts
+index ac3e4fbd8..642347107 100644
+--- a/examples-testing/examples/webgpu_shadow_contact.ts
++++ b/examples-testing/examples/webgpu_shadow_contact.ts
+@@ -4,13 +4,13 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer;
+-let shadowCamera, shadowGroup;
+-let renderTarget;
+-let plane, fillPlane, cameraHelper;
+-let depthMaterial, shadowPlaneMaterial, fillPlaneMaterial;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let shadowCamera: THREE.OrthographicCamera, shadowGroup: THREE.Group;
++let renderTarget: THREE.RenderTarget;
++let plane: THREE.Mesh<THREE.PlaneGeometry, THREE.NodeMaterial>, fillPlane, cameraHelper: THREE.CameraHelper;
++let depthMaterial: THREE.NodeMaterial, shadowPlaneMaterial: THREE.NodeMaterial, fillPlaneMaterial: THREE.NodeMaterial;
+ 
+-const meshes = [];
++const meshes: THREE.Mesh[] = [];
+ 
+ const PLANE_WIDTH = 2.5;
+ const PLANE_HEIGHT = 2.5;
+@@ -131,7 +131,7 @@ function init() {
+         showWireframe: state.showWireframe,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(params, 'shadowBlur', 0, 15, 0.1).onChange(() => {
+         state.shadow.blur = params.shadowBlur;
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
 index 2d91d5843..d24bb27c0 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
