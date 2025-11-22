@@ -18551,6 +18551,34 @@ index 01d72fce9..3684c1807 100644
      // 0. Get Pixel Grid Units
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
+diff --git a/examples-testing/examples/webgpu_postprocessing_radial_blur.ts b/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
+index 4725ad9cb..a2fdd93fb 100644
+--- a/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
++++ b/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
+@@ -9,8 +9,12 @@ const params = {
+     animated: true,
+ };
+ 
+-let camera, scene, renderer, timer, group;
+-let postProcessing;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    timer: THREE.Timer,
++    group: THREE.Group;
++let postProcessing: THREE.PostProcessing;
+ 
+ init();
+ 
+@@ -111,7 +115,7 @@ async function init() {
+ 
+     //
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(weightUniform, 'value', 0, 1).name('weight');
+     gui.add(decayUniform, 'value', 0, 1).name('decay');
+     gui.add(countUniform, 'value', 16, 64, 1).name('sample count');
 diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
 index acbb9ffb3..410b804fc 100644
 --- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
