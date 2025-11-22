@@ -1,4 +1,4 @@
-import { Node } from "three/tsl";
+import { Node } from "three/webgpu";
 
 export interface RadialBlurOptions {
     center?: Node | undefined;
