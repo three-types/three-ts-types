@@ -18033,12 +18033,13 @@ index 65ddd7375..58bbbc744 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 20c773049..fbd257ef0 100644
+index 8464a9ae0..e4b207d2e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
-@@ -1,7 +1,7 @@
- import * as THREE from 'three/webgpu';
- import { pass, mrt, output, normalView, velocity, vec3, vec4, directionToColor, colorSpaceToWorking } from 'three/tsl';
+@@ -13,8 +13,8 @@ import {
+     colorToDirection,
+     colorSpaceToWorking,
+ } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
 +import GTAONode, { ao } from 'three/addons/tsl/display/GTAONode.js';
@@ -18046,7 +18047,7 @@ index 20c773049..fbd257ef0 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -10,9 +10,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -23,9 +23,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -18057,21 +18058,21 @@ index 20c773049..fbd257ef0 100644
 +    postProcessing: THREE.PostProcessing,
 +    controls: OrbitControls;
  
--let aoPass, traaPass, blendPassAO, scenePassColor;
-+let aoPass: GTAONode, traaPass: TRAANode, blendPassAO: THREE.Node, scenePassColor: THREE.TextureNode;
+-let aoPass, traaPass;
++let aoPass: GTAONode, traaPass: TRAANode;
  
  const params = {
      samples: 16,
-@@ -116,14 +120,15 @@ async function init() {
-         // first place. Besides, normal estimation is computationally more expensive than just sampling a
-         // normal texture. So depending on your scene, consider to enable "depthWrite" for all transparent objects.
+@@ -115,7 +119,7 @@ async function init() {
+     aoPass.resolutionScale = 0.5; // running AO in half resolution is often sufficient
+     aoPass.useTemporalFiltering = true;
  
--        if (o.material) o.material.depthWrite = true;
-+        if ((o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
-+            (o as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.depthWrite = true;
-     });
+-    const aoPassOutput = aoPass.getTextureNode('output');
++    const aoPassOutput = aoPass.getTextureNode();
  
-     window.addEventListener('resize', onWindowResize);
+     // scene context
+ 
+@@ -162,7 +166,7 @@ async function init() {
  
      //
  
