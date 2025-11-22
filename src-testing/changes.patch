@@ -5943,7 +5943,7 @@ index 0ac531cc..2d2c669f 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index 67cb78af..00146508 100644
+index b62711a5..61915020 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
 @@ -2,8 +2,9 @@ import ChainMap from './ChainMap.js';
@@ -5968,16 +5968,16 @@ index 67cb78af..00146508 100644
      /**
       * Constructs a new render context management component.
       */
-@@ -34,7 +39,7 @@ class RenderContexts {
-      * @param {?RenderTarget} [renderTarget=null] - The active render target.
+@@ -35,7 +40,7 @@ class RenderContexts {
+      * @param {?MRT} [mrt=null] - The active multiple render target.
       * @return {RenderContext} The render context.
       */
--    get(scene, camera, renderTarget = null) {
-+    get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null) {
-         _chainKeys[0] = scene;
-         _chainKeys[1] = camera;
+-    get(scene, camera, renderTarget = null, mrt = null) {
++    get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null, mrt = null) {
+         let index = 0;
  
-@@ -72,7 +77,7 @@ class RenderContexts {
+         if (mrt !== null) {
+@@ -82,7 +87,7 @@ class RenderContexts {
       * @param {?RenderTarget} [renderTarget=null] - The active render target.
       * @return {RenderContext} The render context.
       */
@@ -5986,7 +5986,7 @@ index 67cb78af..00146508 100644
          return this.get(_defaultScene, _defaultCamera, renderTarget);
      }
  
-@@ -83,8 +88,11 @@ class RenderContexts {
+@@ -93,8 +98,11 @@ class RenderContexts {
       * @param {string} attachmentState - The attachment state.
       * @return {ChainMap} The chain map.
       */
@@ -6265,7 +6265,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 140ce475..0a8fa35d 100644
+index 7f8f0c75..4cc9866d 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6441,7 +6441,7 @@ index 140ce475..0a8fa35d 100644
  
          const attributesId = {};
  
-@@ -791,7 +855,7 @@ class RenderObject {
+@@ -793,7 +857,7 @@ class RenderObject {
          this.material.removeEventListener('dispose', this.onMaterialDispose);
          this.geometry.removeEventListener('dispose', this.onGeometryDispose);
  
@@ -6609,7 +6609,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 6066e44c..c5529d13 100644
+index ccb0d2b0..89cf0eda 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -6859,9 +6859,9 @@ index 6066e44c..c5529d13 100644
                  await this.compileAsync(scene, camera);
  
 -                const renderList = this._renderLists.get(scene, camera);
--                const renderContext = this._renderContexts.get(scene, camera, this._renderTarget);
+-                const renderContext = this._renderContexts.get(scene, camera, this._renderTarget, this._mrt);
 +                const renderList = this._renderLists!.get(scene, camera);
-+                const renderContext = this._renderContexts!.get(scene, camera, this._renderTarget);
++                const renderContext = this._renderContexts!.get(scene, camera, this._renderTarget, this._mrt);
  
 -                const material = scene.overrideMaterial || object.material;
 +                const material = scene.overrideMaterial || (object as Mesh<BufferGeometry, Material>).material;
@@ -6907,8 +6907,8 @@ index 6066e44c..c5529d13 100644
          if (targetScene === null) targetScene = scene;
  
          const renderTarget = this._renderTarget;
--        const renderContext = this._renderContexts.get(targetScene, camera, renderTarget);
-+        const renderContext = this._renderContexts!.get(targetScene, camera, renderTarget);
+-        const renderContext = this._renderContexts.get(targetScene, camera, renderTarget, this._mrt);
++        const renderContext = this._renderContexts!.get(targetScene, camera, renderTarget, this._mrt);
          const activeMipmapLevel = this._activeMipmapLevel;
  
 -        const compilationPromises = [];
@@ -7075,8 +7075,8 @@ index 6066e44c..c5529d13 100644
  
          //
  
--        const renderContext = this._renderContexts.get(scene, camera, renderTarget);
-+        const renderContext = this._renderContexts!.get(scene, camera, renderTarget);
+-        const renderContext = this._renderContexts.get(scene, camera, renderTarget, this._mrt);
++        const renderContext = this._renderContexts!.get(scene, camera, renderTarget, this._mrt);
  
          this._currentRenderContext = renderContext;
          this._currentRenderObjectFunction = this._renderObjectFunction || this.renderObject;
