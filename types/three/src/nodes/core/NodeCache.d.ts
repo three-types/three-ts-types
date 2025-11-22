@@ -22,7 +22,7 @@ export interface ShaderStageNodeData {
         | undefined;
     bufferAttribute?: NodeAttribute | undefined;
     structType?: StructType | undefined;
-    uniform?: NodeUniform<unknown> | undefined;
+    uniform?: NodeUniform<unknown, unknown> | undefined;
     variable?: NodeVar | undefined;
     varying?: NodeVarying | undefined;
     code?: NodeCode | undefined;
