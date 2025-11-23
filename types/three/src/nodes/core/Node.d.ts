@@ -2734,7 +2734,7 @@ export interface ColorExtensions {
 type Node<TValue = unknown> =
     & NodeClass
     & NodeElements
-    & NodeExtensions<TValue>
+    & (TValue extends string ? NodeExtensions<TValue> : {})
     & (TValue extends "float" ? NumberSwizzle<"float"> & FloatExtensions & NumberExtensions<"float">
         : TValue extends "int"
             ? NumberSwizzle<"int"> & IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int">
