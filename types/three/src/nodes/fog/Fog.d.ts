@@ -4,7 +4,7 @@ export const rangeFogFactor: (near: Node<"float"> | number, far: Node<"float"> |
 
 export const densityFogFactor: (density: Node) => Node;
 
-export const fog: (color: Node, factor: Node) => Node;
+export const fog: (color: Node, factor: Node) => Node<"vec4">;
 
 /**
  * @deprecated

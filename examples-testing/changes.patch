@@ -15248,7 +15248,7 @@ index a5bce3225..8b2fa4ad7 100644
      const localTime = instanceTime.add(time);
      const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..d2ce322f4 100644
+index 409129373..e8576b015 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15263,7 +15263,7 @@ index 409129373..d2ce322f4 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let material: THREE.PointsNodeMaterial;
 +let effectController: {
 +    pulseSpeed: THREE.UniformNode<'float', number>;
@@ -15854,7 +15854,7 @@ index c30e0bb55..5c950c94b 100644
          .getBlock()
          .toColor()
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
-index 96417888c..2ec8e8b1f 100644
+index 96417888c..a9b920a17 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
 +++ b/examples-testing/examples/webgpu_lines_fat.ts
 @@ -9,15 +9,23 @@ import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
@@ -15872,7 +15872,7 @@ index 96417888c..2ec8e8b1f 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let line1: THREE.Line;
 +let matLine: THREE.Line2NodeMaterial,
 +    matLineBasic: THREE.LineBasicNodeMaterial,
@@ -15998,7 +15998,7 @@ index 8ab71af1b..692aa233e 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgpu_lines_fat_wireframe.ts b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
-index 9ab5c44c0..dee04a5ae 100644
+index 9ab5c44c0..81a641a57 100644
 --- a/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 @@ -2,19 +2,26 @@ import * as THREE from 'three/webgpu';
@@ -16021,7 +16021,7 @@ index 9ab5c44c0..dee04a5ae 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let wireframe1: THREE.LineSegments;
 +let matLine: THREE.Line2NodeMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
 +let gui: ParametersGroup;
@@ -19768,7 +19768,7 @@ index de9f219b8..68a7b73a8 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 1b4461d33..0d3c1af80 100644
+index 1b4461d33..04308853d 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -19800,6 +19800,50 @@ index 1b4461d33..0d3c1af80 100644
      }
  
      const computeInitOrder = Fn(() => {
+@@ -45,7 +45,9 @@ async function init(forceWebGL = false) {
+ 
+     const computeInvertOrder = Fn(() => {
+         for (let i = 0; i < type.length; i++) {
+-            const invertIndex = arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)).toVar();
++            const invertIndex = (
++                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.StorageArrayElementNode<'float'>
++            ).toVar();
+             workgroupBarrier();
+             arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
+         }
+@@ -69,28 +71,28 @@ async function init(forceWebGL = false) {
+         const color = vec3(0, 0, 0).toVar();
+ 
+         If(uv().y.greaterThan(0.0), () => {
+-            const indexValue = arrayBufferNodes[0].element(index).toVar();
++            const indexValue = (arrayBufferNodes[0].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, 0, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.25), () => {
+-            const indexValue = arrayBufferNodes[1].element(index).toVar();
++            const indexValue = (arrayBufferNodes[1].element(index) as THREE.StorageArrayElementNode<'vec2'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, value, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.5), () => {
+-            const indexValue = arrayBufferNodes[2].element(index).toVar();
++            const indexValue = (arrayBufferNodes[2].element(index) as THREE.StorageArrayElementNode<'vec3'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, 0, value));
+         });
+ 
+         If(uv().y.greaterThan(0.75), () => {
+-            const indexValue = arrayBufferNodes[3].element(index).toVar();
++            const indexValue = (arrayBufferNodes[3].element(index) as THREE.StorageArrayElementNode<'vec4'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, value, value));
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
 index b0d1139db..0f951bf23 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
@@ -21942,3 +21986,33 @@ index 2cd50ba4c..b97f3eee2 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/fog/Fog.d.ts b/types/three/src/nodes/fog/Fog.d.ts
+index 2387be67e..39ff8ca23 100644
+--- a/types/three/src/nodes/fog/Fog.d.ts
++++ b/types/three/src/nodes/fog/Fog.d.ts
+@@ -4,7 +4,7 @@ export const rangeFogFactor: (near: Node<"float"> | number, far: Node<"float"> |
+ 
+ export const densityFogFactor: (density: Node) => Node;
+ 
+-export const fog: (color: Node, factor: Node) => Node;
++export const fog: (color: Node, factor: Node) => Node<"vec4">;
+ 
+ /**
+  * @deprecated
+diff --git a/types/three/src/renderers/common/nodes/Nodes.d.ts b/types/three/src/renderers/common/nodes/Nodes.d.ts
+index d2a1b20d6..e34da57a3 100644
+--- a/types/three/src/renderers/common/nodes/Nodes.d.ts
++++ b/types/three/src/renderers/common/nodes/Nodes.d.ts
+@@ -44,9 +44,9 @@ interface CacheKeyData {
+ }
+ declare module "../../../scenes/Scene.js" {
+     interface Scene {
+-        environmentNode?: Node | null | undefined;
+-        backgroundNode?: Node | null | undefined;
+-        fogNode?: Node | null | undefined;
++        environmentNode?: Node<"vec3"> | null | undefined;
++        backgroundNode?: Node<"vec3"> | Node<"vec4"> | Node<"color"> | null | undefined;
++        fogNode?: Node<"vec4"> | null | undefined;
+     }
+ }
+ /**
