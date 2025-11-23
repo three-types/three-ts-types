@@ -44,9 +44,9 @@ interface CacheKeyData {
 }
 declare module "../../../scenes/Scene.js" {
     interface Scene {
-        environmentNode?: Node | null | undefined;
-        backgroundNode?: Node | null | undefined;
-        fogNode?: Node | null | undefined;
+        environmentNode?: Node<"vec3"> | null | undefined;
+        backgroundNode?: Node<"vec3"> | Node<"vec4"> | Node<"color"> | null | undefined;
+        fogNode?: Node<"vec4"> | null | undefined;
     }
 }
 /**
