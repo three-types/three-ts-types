@@ -6236,10 +6236,10 @@ index 0545af43c..e2d866f57 100644
 +
 +export default MeshPhysicalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
-index ca33d8128..d0626a6cf 100644
+index ca33d8128..3fc2c7687 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/MeshSSSNodeMaterial.d.ts
-@@ -1,52 +1,89 @@
+@@ -1,52 +1,88 @@
 -export default MeshSSSNodeMaterial;
 +import MeshPhysicalNodeMaterial, { MeshPhysicalNodeMaterialNodeProperties } from './MeshPhysicalNodeMaterial.js';
 +import PhysicalLightingModel from '../../nodes/functions/PhysicalLightingModel.js';
@@ -6248,7 +6248,6 @@ index ca33d8128..d0626a6cf 100644
 +import { MapColorPropertiesToColorRepresentations } from '../Material.js';
 +import { MeshPhysicalMaterialParameters, MeshPhysicalMaterialProperties } from '../MeshPhysicalMaterial.js';
 +import Node from "../../nodes/core/Node.js";
-+import InputNode from "../../nodes/core/InputNode.js";
 +
  /**
 - * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
@@ -6303,35 +6302,35 @@ index ca33d8128..d0626a6cf 100644
 -     * @type {?Node<float>}
       */
 -    thicknessDistortionNode: Node<any> | null;
-+    thicknessDistortionNode: InputNode<number>;
++    thicknessDistortionNode: Node<'float'>;
      /**
       * Represents the thickness ambient factor.
 -     *
 -     * @type {?Node<float>}
       */
 -    thicknessAmbientNode: Node<any> | null;
-+    thicknessAmbientNode: InputNode<number>;
++    thicknessAmbientNode: Node<'float'>;
      /**
       * Represents the thickness attenuation.
 -     *
 -     * @type {?Node<float>}
       */
 -    thicknessAttenuationNode: Node<any> | null;
-+    thicknessAttenuationNode: InputNode<number>;
++    thicknessAttenuationNode: Node<'float'>;
      /**
       * Represents the thickness power.
 -     *
 -     * @type {?Node<float>}
       */
 -    thicknessPowerNode: Node<any> | null;
-+    thicknessPowerNode: InputNode<number>;
++    thicknessPowerNode: Node<'float'>;
      /**
       * Represents the thickness scale.
 -     *
 -     * @type {?Node<float>}
       */
 -    thicknessScaleNode: Node<any> | null;
-+    thicknessScaleNode: InputNode<number>;
++    thicknessScaleNode: Node<'float'>;
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
@@ -6353,7 +6352,7 @@ index ca33d8128..d0626a6cf 100644
       * @default true
       */
      get useSSS(): boolean;
-@@ -57,40 +94,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
+@@ -57,40 +93,8 @@ declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
       */
      setupLightingModel(): SSSLightingModel;
  }
@@ -6568,7 +6567,7 @@ index 1ffe1bd1b..94d4efb05 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
-index 03097be43..abd419b15 100644
+index 03097be43..8f8a0997f 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,23 @@
@@ -6668,7 +6667,7 @@ index 03097be43..abd419b15 100644
       * @default null
       */
 -    colorNode: Node<any> | null;
-+    colorNode: Node | null;
++    colorNode: Node<'float'> | Node<'vec2'> | Node<'vec3'> | Node<'vec4'> | Node<'color'> | null;
      /**
       * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
       * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
@@ -6853,7 +6852,8 @@ index 03097be43..abd419b15 100644
 -     * @type {?ContextNode}
       * @default null
       */
-     contextNode: ContextNode | null;
+-    contextNode: ContextNode | null;
++    contextNode: ContextNode<unknown> | null;
 +}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
