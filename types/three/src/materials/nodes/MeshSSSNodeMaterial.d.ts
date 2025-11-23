@@ -1,3 +1,4 @@
+import InputNode from "../../nodes/core/InputNode.js";
 import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
 import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
@@ -57,23 +58,23 @@ export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMater
     /**
      * Represents the distortion factor.
      */
-    thicknessDistortionNode: Node<"float">;
+    thicknessDistortionNode: InputNode<number>;
     /**
      * Represents the thickness ambient factor.
      */
-    thicknessAmbientNode: Node<"float">;
+    thicknessAmbientNode: InputNode<number>;
     /**
      * Represents the thickness attenuation.
      */
-    thicknessAttenuationNode: Node<"float">;
+    thicknessAttenuationNode: InputNode<number>;
     /**
      * Represents the thickness power.
      */
-    thicknessPowerNode: Node<"float">;
+    thicknessPowerNode: InputNode<number>;
     /**
      * Represents the thickness scale.
      */
-    thicknessScaleNode: Node<"float">;
+    thicknessScaleNode: InputNode<number>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

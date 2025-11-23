@@ -88,7 +88,7 @@ export interface NodeMaterialNodeProperties {
      *
      * @default null
      */
-    colorNode: Node<"float"> | Node<"vec2"> | Node<"vec3"> | Node<"vec4"> | Node<"color"> | null;
+    colorNode: Node | null;
     /**
      * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
      * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
@@ -278,7 +278,7 @@ export interface NodeMaterialNodeProperties {
      *
      * @default null
      */
-    contextNode: ContextNode<unknown> | null;
+    contextNode: ContextNode | null;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
