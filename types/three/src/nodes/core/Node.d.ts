@@ -2734,32 +2734,58 @@ export interface ColorExtensions {
 type Node<TValue = unknown> =
     & NodeClass
     & NodeElements
-    & (TValue extends string ? NodeExtensions<TValue> : {})
-    & (TValue extends "float" ? NumberSwizzle<"float"> & FloatExtensions & NumberExtensions<"float">
-        : TValue extends "int"
-            ? NumberSwizzle<"int"> & IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int">
-        : TValue extends "uint"
-            ? NumberSwizzle<"uint"> & UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint">
-        : TValue extends "bool" ? BoolExtensions
-        : TValue extends "vec2"
-            ? Vec2Swizzle<"float"> & Vec2Extensions & Vector2Extensions<"float"> & FloatVectorExtensions<"vec2">
-        : TValue extends "ivec2" ? Vec2Swizzle<"int"> & Ivec2Extensions & Vector2Extensions<"int">
-        : TValue extends "uvec2" ? Vec2Swizzle<"uint"> & Uvec2Extensions & Vector2Extensions<"uint">
-        : TValue extends "bvec2" ? BvecExtensions
-        : TValue extends "vec3"
-            ? Vec3Swizzle<"float"> & Vec3Extensions & Vector3Extensions<"float"> & FloatVectorExtensions<"vec3">
-        : TValue extends "ivec3" ? Vec3Swizzle<"int"> & Ivec3Extensions & Vector3Extensions<"int">
-        : TValue extends "uvec3" ? Vec3Swizzle<"uint"> & Uvec3Extensions & Vector3Extensions<"uint">
-        : TValue extends "bvec3" ? BvecExtensions
-        : TValue extends "vec4"
-            ? Vec4Swizzle<"float"> & Vec4Extensions & Vector4Extensions<"float"> & FloatVectorExtensions<"vec4">
-        : TValue extends "ivec4" ? Vec4Swizzle<"int"> & Ivec4Extensions & Vector4Extensions<"int">
-        : TValue extends "uvec4" ? Vec4Swizzle<"uint"> & Uvec4Extensions & Vector4Extensions<"uint">
-        : TValue extends "bvec4" ? BvecExtensions
-        : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<"mat2">
-        : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<"mat3">
-        : TValue extends "mat4" ? Matrix4Extensions & MatrixExtensions<"mat4">
-        : TValue extends "color" ? Vec3Swizzle<"float"> & ColorExtensions
+    & (TValue extends "float"
+        ? NumberSwizzle<"float"> & FloatExtensions & NumberExtensions<"float"> & NodeExtensions<"float">
+        : TValue extends "int" ?
+                & NumberSwizzle<"int">
+                & IntExtensions
+                & NumberExtensions<"int">
+                & IntegerExtensions<"int">
+                & NodeExtensions<"int">
+        : TValue extends "uint" ?
+                & NumberSwizzle<"uint">
+                & UintExtensions
+                & NumberExtensions<"uint">
+                & IntegerExtensions<"uint">
+                & NodeExtensions<"uint">
+        : TValue extends "bool" ? BoolExtensions & NodeExtensions<"bool">
+        : TValue extends "vec2" ?
+                & Vec2Swizzle<"float">
+                & Vec2Extensions
+                & Vector2Extensions<"float">
+                & FloatVectorExtensions<"vec2">
+                & NodeExtensions<"vec2">
+        : TValue extends "ivec2"
+            ? Vec2Swizzle<"int"> & Ivec2Extensions & Vector2Extensions<"int"> & NodeExtensions<"ivec2">
+        : TValue extends "uvec2"
+            ? Vec2Swizzle<"uint"> & Uvec2Extensions & Vector2Extensions<"uint"> & NodeExtensions<"uvec2">
+        : TValue extends "bvec2" ? BvecExtensions & NodeExtensions<"bvec2">
+        : TValue extends "vec3" ?
+                & Vec3Swizzle<"float">
+                & Vec3Extensions
+                & Vector3Extensions<"float">
+                & FloatVectorExtensions<"vec3">
+                & NodeExtensions<"vec3">
+        : TValue extends "ivec3"
+            ? Vec3Swizzle<"int"> & Ivec3Extensions & Vector3Extensions<"int"> & NodeExtensions<"ivec3">
+        : TValue extends "uvec3"
+            ? Vec3Swizzle<"uint"> & Uvec3Extensions & Vector3Extensions<"uint"> & NodeExtensions<"uvec3">
+        : TValue extends "bvec3" ? BvecExtensions & NodeExtensions<"bvec3">
+        : TValue extends "vec4" ?
+                & Vec4Swizzle<"float">
+                & Vec4Extensions
+                & Vector4Extensions<"float">
+                & FloatVectorExtensions<"vec4">
+                & NodeExtensions<"vec4">
+        : TValue extends "ivec4"
+            ? Vec4Swizzle<"int"> & Ivec4Extensions & Vector4Extensions<"int"> & NodeExtensions<"ivec4">
+        : TValue extends "uvec4"
+            ? Vec4Swizzle<"uint"> & Uvec4Extensions & Vector4Extensions<"uint"> & NodeExtensions<"uvec4">
+        : TValue extends "bvec4" ? BvecExtensions & NodeExtensions<"bvec4">
+        : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<"mat2"> & NodeExtensions<"mat2">
+        : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<"mat3"> & NodeExtensions<"mat3">
+        : TValue extends "mat4" ? Matrix4Extensions & MatrixExtensions<"mat4"> & NodeExtensions<"mat4">
+        : TValue extends "color" ? Vec3Swizzle<"float"> & ColorExtensions & NodeExtensions<"color">
         : {})
     & {
         __TypeScript_VALUE__: TValue;
