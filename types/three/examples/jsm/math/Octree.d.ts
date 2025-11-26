@@ -20,7 +20,7 @@ interface OctreeRayIntersection {
 }
 
 declare class Octree {
-    box: Box3;
+    box: Box3 | undefined;
     bounds: Box3;
 
     layers: Layers;
@@ -30,7 +30,7 @@ declare class Octree {
     subTrees: Octree[];
     triangles: Triangle[];
 
-    constructor(box: Box3);
+    constructor(box?: Box3);
 
     addTriangle(triangle: Triangle): this;
     calcBox(): this;
