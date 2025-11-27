@@ -100,6 +100,7 @@ export const bufferAttribute: typeof TSL.bufferAttribute;
 export const bumpMap: typeof TSL.bumpMap;
 export const burn: typeof TSL.burn;
 export const builtin: typeof TSL.builtin;
+export const builtinAOContext: typeof TSL.builtinAOContext;
 export const builtinShadowContext: typeof TSL.builtinShadowContext;
 export const bvec2: typeof TSL.bvec2;
 export const bvec3: typeof TSL.bvec3;
