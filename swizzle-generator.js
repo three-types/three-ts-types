@@ -73,14 +73,14 @@ for (let a = 0; a < 4; a++) {
     }
 }
 
-const assignType = [
+const accessType = [
     "Node<TNumOrBool>",
     "Node<NumOrBoolToVec2<TNumOrBool>>",
     "Node<NumOrBoolToVec3<TNumOrBool>>",
     "Node<NumOrBoolToVec4<TNumOrBool>>",
 ];
 
-const accessType = [
+const assignType = [
     "NumOrBool<TNumOrBool>",
     "Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>",
     "Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>",
@@ -96,9 +96,9 @@ for (let i = 0; i < 4; i++) {
         const arr = swizzleOptions[i][j];
         const arrNoRepetition = swizzleOptionsNoRepetition[i][j];
         for (const val of arr) {
-            console.log(`    get ${val}(): ${assignType[i]};`);
+            console.log(`    get ${val}(): ${accessType[i]};`);
             if (arrNoRepetition.includes(val)) {
-                console.log(`    set ${val}(value: ${accessType[i]});`);
+                console.log(`    set ${val}(value: ${assignType[i]});`);
             }
         }
         console.log("}");
