@@ -270,7 +270,7 @@ declare module "../core/Node.js" {
         div: (b: Number<"float">) => Node<"vec3">;
     }
 
-    interface Vector2Extensions<TNumber extends NumberType> {
+    interface NumberVec2Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
         mul: MulVec2Extensions<TNumber>;
@@ -282,7 +282,7 @@ declare module "../core/Node.js" {
         divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
     }
 
-    interface Vector3Extensions<TNumber extends NumberType> {
+    interface NumberVec3Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
         mul: MulVec3Extensions<TNumber>;
@@ -294,7 +294,7 @@ declare module "../core/Node.js" {
         divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
     }
 
-    interface Vector4Extensions<TNumber extends NumberType> {
+    interface NumberVec4Extensions<TNumber extends NumberType> {
         add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
         sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
         mul: MulVec4Extensions<TNumber>;
@@ -363,15 +363,15 @@ declare module "../core/Node.js" {
         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
     }
-    interface Vector2Extensions<TNumber extends NumberType> {
+    interface NumberVec2Extensions<TNumber extends NumberType> {
         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec2<TNumber>>;
         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
     }
-    interface Vector3Extensions<TNumber extends NumberType> {
+    interface NumberVec3Extensions<TNumber extends NumberType> {
         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
     }
-    interface Vector4Extensions<TNumber extends NumberType> {
+    interface NumberVec4Extensions<TNumber extends NumberType> {
         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
     }
