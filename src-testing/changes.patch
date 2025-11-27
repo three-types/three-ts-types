@@ -929,19 +929,20 @@ index ffb7734e..2dc76d1c 100644
 +
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3..b261317a 100644
+index 335f0bf3..636c9eb3 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
-@@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
+@@ -4,6 +4,9 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
  import { EventDispatcher } from '../../core/EventDispatcher.js';
  import { MathUtils } from '../../math/MathUtils.js';
  import { warn, error } from '../../utils.js';
 +import NodeFrame from './NodeFrame.js';
 +import NodeBuilder from './NodeBuilder.js';
++import { NumVec2Extensions } from './Node.js';
  
  const _parentBuildStage = {
      analyze: 'setup',
-@@ -12,22 +14,108 @@ const _parentBuildStage = {
+@@ -12,22 +15,108 @@ const _parentBuildStage = {
  
  let _nodeId = 0;
  
@@ -1052,7 +1053,7 @@ index 335f0bf3..b261317a 100644
          super();
  
          /**
-@@ -146,7 +234,7 @@ class Node extends EventDispatcher {
+@@ -146,7 +235,7 @@ class Node extends EventDispatcher {
       * @default false
       * @param {boolean} value
       */
@@ -1061,7 +1062,7 @@ index 335f0bf3..b261317a 100644
          if (value === true) {
              this.version++;
          }
-@@ -159,7 +247,7 @@ class Node extends EventDispatcher {
+@@ -159,7 +248,7 @@ class Node extends EventDispatcher {
       * @readonly
       */
      get type() {
@@ -1070,7 +1071,7 @@ index 335f0bf3..b261317a 100644
      }
  
      /**
-@@ -169,7 +257,7 @@ class Node extends EventDispatcher {
+@@ -169,7 +258,7 @@ class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -1079,7 +1080,7 @@ index 335f0bf3..b261317a 100644
          this.updateType = updateType;
          this.update = callback.bind(this);
  
-@@ -183,7 +271,7 @@ class Node extends EventDispatcher {
+@@ -183,7 +272,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1088,7 +1089,7 @@ index 335f0bf3..b261317a 100644
          return this.onUpdate(callback, NodeUpdateType.FRAME);
      }
  
-@@ -194,7 +282,7 @@ class Node extends EventDispatcher {
+@@ -194,7 +283,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1097,7 +1098,7 @@ index 335f0bf3..b261317a 100644
          return this.onUpdate(callback, NodeUpdateType.RENDER);
      }
  
-@@ -205,7 +293,7 @@ class Node extends EventDispatcher {
+@@ -205,7 +294,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1106,7 +1107,7 @@ index 335f0bf3..b261317a 100644
          return this.onUpdate(callback, NodeUpdateType.OBJECT);
      }
  
-@@ -215,7 +303,7 @@ class Node extends EventDispatcher {
+@@ -215,7 +304,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1115,7 +1116,7 @@ index 335f0bf3..b261317a 100644
          this.updateReference = callback.bind(this);
  
          return this;
-@@ -228,7 +316,7 @@ class Node extends EventDispatcher {
+@@ -228,7 +317,7 @@ class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -1124,7 +1125,7 @@ index 335f0bf3..b261317a 100644
          return this;
      }
  
-@@ -240,7 +328,7 @@ class Node extends EventDispatcher {
+@@ -240,7 +329,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -1133,7 +1134,7 @@ index 335f0bf3..b261317a 100644
          return this.global;
      }
  
-@@ -276,7 +364,7 @@ class Node extends EventDispatcher {
+@@ -276,7 +365,7 @@ class Node extends EventDispatcher {
       *
       * @param {traverseCallback} callback - A callback that is executed per node.
       */
@@ -1142,7 +1143,7 @@ index 335f0bf3..b261317a 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -291,7 +379,7 @@ class Node extends EventDispatcher {
+@@ -291,7 +380,7 @@ class Node extends EventDispatcher {
       * @param {Set<Node>} [ignores=new Set()] - A set of nodes to ignore during the search to avoid circular references.
       * @returns {Array<Object>} An array of objects describing the child nodes.
       */
@@ -1151,7 +1152,7 @@ index 335f0bf3..b261317a 100644
          const children = [];
  
          // avoid circular references
-@@ -339,7 +427,7 @@ class Node extends EventDispatcher {
+@@ -339,7 +428,7 @@ class Node extends EventDispatcher {
       * @param {Set<Node>} [ignores=null] - A set of nodes to ignore during the computation of the cache key.
       * @return {number} The cache key of the node.
       */
@@ -1160,7 +1161,7 @@ index 335f0bf3..b261317a 100644
          force = force || this.version !== this._cacheKeyVersion;
  
          if (force === true || this._cacheKey === null) {
-@@ -388,7 +476,7 @@ class Node extends EventDispatcher {
+@@ -388,7 +477,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -1169,7 +1170,7 @@ index 335f0bf3..b261317a 100644
          return this.uuid;
      }
  
-@@ -427,7 +515,7 @@ class Node extends EventDispatcher {
+@@ -427,7 +516,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1178,7 +1179,7 @@ index 335f0bf3..b261317a 100644
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-@@ -441,7 +529,7 @@ class Node extends EventDispatcher {
+@@ -441,7 +530,7 @@ class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -1187,7 +1188,7 @@ index 335f0bf3..b261317a 100644
          return 'void';
      }
  
-@@ -451,7 +539,7 @@ class Node extends EventDispatcher {
+@@ -451,7 +540,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1196,7 +1197,7 @@ index 335f0bf3..b261317a 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -470,7 +558,7 @@ class Node extends EventDispatcher {
+@@ -470,7 +559,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node} The shared node if possible. Otherwise `this` is returned.
       */
@@ -1205,7 +1206,7 @@ index 335f0bf3..b261317a 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -483,7 +571,7 @@ class Node extends EventDispatcher {
+@@ -483,7 +572,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -1214,7 +1215,7 @@ index 335f0bf3..b261317a 100644
          return null;
      }
  
-@@ -495,13 +583,13 @@ class Node extends EventDispatcher {
+@@ -495,13 +584,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -1230,7 +1231,7 @@ index 335f0bf3..b261317a 100644
          }
  
          // return a outputNode if exists or null
-@@ -516,7 +604,7 @@ class Node extends EventDispatcher {
+@@ -516,7 +605,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @param {?Node} output - The target output node.
       */
@@ -1239,7 +1240,7 @@ index 335f0bf3..b261317a 100644
          const usageCount = builder.increaseUsage(this);
  
          if (this.parents === true) {
-@@ -532,8 +620,8 @@ class Node extends EventDispatcher {
+@@ -532,8 +621,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -1250,7 +1251,7 @@ index 335f0bf3..b261317a 100644
                  }
              }
          }
-@@ -547,7 +635,7 @@ class Node extends EventDispatcher {
+@@ -547,7 +636,7 @@ class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -1259,7 +1260,7 @@ index 335f0bf3..b261317a 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -563,7 +651,7 @@ class Node extends EventDispatcher {
+@@ -563,7 +652,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1268,7 +1269,7 @@ index 335f0bf3..b261317a 100644
          warn('Abstract function.');
      }
  
-@@ -575,7 +663,7 @@ class Node extends EventDispatcher {
+@@ -575,7 +664,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1277,7 +1278,7 @@ index 335f0bf3..b261317a 100644
          warn('Abstract function.');
      }
  
-@@ -587,11 +675,11 @@ class Node extends EventDispatcher {
+@@ -587,11 +676,11 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1291,7 +1292,7 @@ index 335f0bf3..b261317a 100644
          if (this._beforeNodes === null) this._beforeNodes = [];
  
          this._beforeNodes.push(node);
-@@ -609,7 +697,7 @@ class Node extends EventDispatcher {
+@@ -609,7 +698,7 @@ class Node extends EventDispatcher {
       * @param {?(string|Node)} [output=null] - Can be used to define the output type.
       * @return {?(Node|string)} The result of the build process, depending on the build stage.
       */
@@ -1300,7 +1301,7 @@ index 335f0bf3..b261317a 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -683,14 +771,14 @@ class Node extends EventDispatcher {
+@@ -683,14 +772,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
@@ -1319,7 +1320,7 @@ index 335f0bf3..b261317a 100644
                      }
                  }
              }
-@@ -762,10 +850,10 @@ class Node extends EventDispatcher {
+@@ -762,10 +851,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1332,7 +1333,7 @@ index 335f0bf3..b261317a 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -773,7 +861,9 @@ class Node extends EventDispatcher {
+@@ -773,7 +862,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1343,7 +1344,7 @@ index 335f0bf3..b261317a 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -789,33 +879,33 @@ class Node extends EventDispatcher {
+@@ -789,33 +880,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1387,7 +1388,7 @@ index 335f0bf3..b261317a 100644
                  }
              }
          }
-@@ -827,7 +917,7 @@ class Node extends EventDispatcher {
+@@ -827,7 +918,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1396,7 +1397,7 @@ index 335f0bf3..b261317a 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -836,18 +926,18 @@ class Node extends EventDispatcher {
+@@ -836,18 +927,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1418,7 +1419,7 @@ index 335f0bf3..b261317a 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -855,7 +945,7 @@ class Node extends EventDispatcher {
+@@ -855,7 +946,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1427,7 +1428,7 @@ index 335f0bf3..b261317a 100644
  
              this.serialize(data);
  
-@@ -864,12 +954,12 @@ class Node extends EventDispatcher {
+@@ -864,12 +955,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1442,7 +1443,7 @@ index 335f0bf3..b261317a 100644
                  values.push(data);
              }
  
-@@ -877,9 +967,9 @@ class Node extends EventDispatcher {
+@@ -877,9 +968,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1455,7 +1456,7 @@ index 335f0bf3..b261317a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,99 @@ class Node extends EventDispatcher {
+@@ -890,4 +981,136 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1474,6 +1475,7 @@ index 335f0bf3..b261317a 100644
 +
 +export type NumberType = 'float' | 'int' | 'uint';
 +export type IntegerType = 'int' | 'uint';
++export type NumOrBoolType = NumberType | 'bool';
 +export type FloatVectorType = 'vec2' | 'vec3' | 'vec4';
 +export type MatrixType = 'mat2' | 'mat3' | 'mat4';
 +export interface NodeExtensions<TValue> {}
@@ -1482,19 +1484,23 @@ index 335f0bf3..b261317a 100644
 +export interface UintExtensions {}
 +export interface NumberExtensions<TNumber extends NumberType> {}
 +export interface IntegerExtensions<TInteger extends IntegerType> {}
++export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {}
 +export interface BoolExtensions {}
 +export interface Vec2Extensions {}
 +export interface Ivec2Extensions {}
 +export interface Uvec2Extensions {}
-+export interface Vector2Extensions<TNumber extends NumberType> {}
++export interface NumberVec2Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {}
 +export interface Vec3Extensions {}
 +export interface Ivec3Extensions {}
 +export interface Uvec3Extensions {}
-+export interface Vector3Extensions<TNumber extends NumberType> {}
++export interface NumberVec3Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {}
 +export interface Vec4Extensions {}
 +export interface Ivec4Extensions {}
 +export interface Uvec4Extensions {}
-+export interface Vector4Extensions<TNumber extends NumberType> {}
++export interface NumberVec4Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {}
 +export interface FloatVectorExtensions<TVec extends FloatVectorType> {}
 +export interface BvecExtensions {}
 +export interface Matrix2Extensions {}
@@ -1505,43 +1511,75 @@ index 335f0bf3..b261317a 100644
 +type Node<TValue = unknown> = NodeClass &
 +    NodeElements &
 +    (TValue extends 'float'
-+        ? FloatExtensions & NumberExtensions<'float'> & NodeExtensions<'float'>
++        ? FloatExtensions & NumberExtensions<'float'> & NumOrBoolExtensions<'float'> & NodeExtensions<'float'>
 +        : TValue extends 'int'
-+          ? IntExtensions & NumberExtensions<'int'> & IntegerExtensions<'int'> & NodeExtensions<'int'>
++          ? IntExtensions &
++                NumberExtensions<'int'> &
++                IntegerExtensions<'int'> &
++                NumOrBoolExtensions<'int'> &
++                NodeExtensions<'int'>
 +          : TValue extends 'uint'
-+            ? UintExtensions & NumberExtensions<'uint'> & IntegerExtensions<'uint'> & NodeExtensions<'uint'>
++            ? UintExtensions &
++                  NumberExtensions<'uint'> &
++                  IntegerExtensions<'uint'> &
++                  NumOrBoolExtensions<'uint'> &
++                  NodeExtensions<'uint'>
 +            : TValue extends 'bool'
-+              ? BoolExtensions & NodeExtensions<'bool'>
++              ? BoolExtensions & NumOrBoolExtensions<'bool'> & NodeExtensions<'bool'>
 +              : TValue extends 'vec2'
-+                ? Vec2Extensions & Vector2Extensions<'float'> & FloatVectorExtensions<'vec2'> & NodeExtensions<'vec2'>
++                ? Vec2Extensions &
++                      NumVec2Extensions<'float'> &
++                      NumOrBoolVec2Extensions<'float'> &
++                      FloatVectorExtensions<'vec2'> &
++                      NodeExtensions<'vec2'>
 +                : TValue extends 'ivec2'
-+                  ? Ivec2Extensions & Vector2Extensions<'int'> & NodeExtensions<'ivec2'>
++                  ? Ivec2Extensions &
++                        NumVec2Extensions<'int'> &
++                        NumOrBoolVec2Extensions<'int'> &
++                        NodeExtensions<'ivec2'>
 +                  : TValue extends 'uvec2'
-+                    ? Uvec2Extensions & Vector2Extensions<'uint'> & NodeExtensions<'uvec2'>
++                    ? Uvec2Extensions &
++                          NumVec2Extensions<'uint'> &
++                          NumOrBoolVec2Extensions<'uint'> &
++                          NodeExtensions<'uvec2'>
 +                    : TValue extends 'bvec2'
-+                      ? BvecExtensions & NodeExtensions<'bvec2'>
++                      ? BvecExtensions & NumOrBoolVec2Extensions<'bool'> & NodeExtensions<'bvec2'>
 +                      : TValue extends 'vec3'
 +                        ? Vec3Extensions &
-+                              Vector3Extensions<'float'> &
++                              NumVec3Extensions<'float'> &
++                              NumOrBoolVec3Extensions<'float'> &
 +                              FloatVectorExtensions<'vec3'> &
 +                              NodeExtensions<'vec3'>
 +                        : TValue extends 'ivec3'
-+                          ? Ivec3Extensions & Vector3Extensions<'int'> & NodeExtensions<'ivec3'>
++                          ? Ivec3Extensions &
++                                NumVec3Extensions<'int'> &
++                                NumOrBoolVec3Extensions<'int'> &
++                                NodeExtensions<'ivec3'>
 +                          : TValue extends 'uvec3'
-+                            ? Uvec3Extensions & Vector3Extensions<'uint'> & NodeExtensions<'uvec3'>
++                            ? Uvec3Extensions &
++                                  NumVec3Extensions<'uint'> &
++                                  NumOrBoolVec3Extensions<'uint'> &
++                                  NodeExtensions<'uvec3'>
 +                            : TValue extends 'bvec3'
-+                              ? BvecExtensions & NodeExtensions<'bvec3'>
++                              ? BvecExtensions & NumOrBoolVec3Extensions<'bool'> & NodeExtensions<'bvec3'>
 +                              : TValue extends 'vec4'
 +                                ? Vec4Extensions &
-+                                      Vector4Extensions<'float'> &
++                                      NumVec4Extensions<'float'> &
++                                      NumOrBoolVec4Extensions<'float'> &
 +                                      FloatVectorExtensions<'vec4'> &
 +                                      NodeExtensions<'vec4'>
 +                                : TValue extends 'ivec4'
-+                                  ? Ivec4Extensions & Vector4Extensions<'int'> & NodeExtensions<'ivec4'>
++                                  ? Ivec4Extensions &
++                                        NumVec4Extensions<'int'> &
++                                        NumOrBoolVec4Extensions<'int'> &
++                                        NodeExtensions<'ivec4'>
 +                                  : TValue extends 'uvec4'
-+                                    ? Uvec4Extensions & Vector4Extensions<'uint'> & NodeExtensions<'uvec4'>
++                                    ? Uvec4Extensions &
++                                          NumVec4Extensions<'uint'> &
++                                          NumOrBoolVec4Extensions<'uint'> &
++                                          NodeExtensions<'uvec4'>
 +                                    : TValue extends 'bvec4'
-+                                      ? BvecExtensions & NodeExtensions<'bvec4'>
++                                      ? BvecExtensions & NumOrBoolVec4Extensions<'bool'> & NodeExtensions<'bvec4'>
 +                                      : TValue extends 'mat2'
 +                                        ? Matrix2Extensions & MatrixExtensions<'mat2'> & NodeExtensions<'mat2'>
 +                                        : TValue extends 'mat3'
@@ -3567,6 +3605,56 @@ index ee5cf92a..7240bb88 100644
          this.value = this._value || (this._value = this.getContext());
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
+diff --git a/src-testing/src/nodes/math/OperatorNode.d.ts b/src-testing/src/nodes/math/OperatorNode.d.ts
+index b4b16bf6..91711e70 100644
+--- a/src-testing/src/nodes/math/OperatorNode.d.ts
++++ b/src-testing/src/nodes/math/OperatorNode.d.ts
+@@ -270,7 +270,7 @@ declare module "../core/Node.js" {
+         div: (b: Number<"float">) => Node<"vec3">;
+     }
+ 
+-    interface Vector2Extensions<TNumber extends NumberType> {
++    interface NumVec2Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+         mul: MulVec2Extensions<TNumber>;
+@@ -282,7 +282,7 @@ declare module "../core/Node.js" {
+         divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+     }
+ 
+-    interface Vector3Extensions<TNumber extends NumberType> {
++    interface NumVec3Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+         mul: MulVec3Extensions<TNumber>;
+@@ -294,7 +294,7 @@ declare module "../core/Node.js" {
+         divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+     }
+ 
+-    interface Vector4Extensions<TNumber extends NumberType> {
++    interface NumVec4Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+         mul: MulVec4Extensions<TNumber>;
+@@ -363,15 +363,15 @@ declare module "../core/Node.js" {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface Vector2Extensions<TNumber extends NumberType> {
++    interface NumVec2Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec2<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface Vector3Extensions<TNumber extends NumberType> {
++    interface NumVec3Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface Vector4Extensions<TNumber extends NumberType> {
++    interface NumVec4Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
 index 614df3fa..9c8bd09c 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
