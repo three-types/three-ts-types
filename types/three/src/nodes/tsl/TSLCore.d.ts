@@ -2275,7 +2275,7 @@ type Vec4SwizzleMethods<TNumber extends NumberType> =
     };
 
 declare module "../core/Node.js" {
-    interface NumberExtension<TNumber extends NumberType>
+    interface NumberExtensions<TNumber extends NumberType>
         extends
             Swizzle1In1Out<TNumber>,
             Swizzle1In2Out<TNumber>,
