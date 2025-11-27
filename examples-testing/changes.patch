@@ -7128,11 +7128,11 @@ index 6fd3e149..79c64232 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_loader_gltf.ts b/examples-testing/examples/webgl_loader_gltf.ts
-index a504df60..f4160518 100644
+index bd7669ac..7a8c7440 100644
 --- a/examples-testing/examples/webgl_loader_gltf.ts
 +++ b/examples-testing/examples/webgl_loader_gltf.ts
 @@ -5,8 +5,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let camera, scene, renderer, controls;
@@ -7209,12 +7209,12 @@ index e54ef8f7..bce14b60 100644
  const stats = new Stats();
  container.appendChild(stats.dom);
 diff --git a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts b/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
-index ca6cfd39..de8cde82 100644
+index f0dd05cf..3ce7cc23 100644
 --- a/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_anisotropy.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
 -let renderer, scene, camera, controls;
 +let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
@@ -7261,12 +7261,12 @@ index 100badca..bd16bf3b 100644
  init().then(render);
  
 diff --git a/examples-testing/examples/webgl_loader_gltf_instancing.ts b/examples-testing/examples/webgl_loader_gltf_instancing.ts
-index 2966fbcb..2f05edf1 100644
+index 6acb140e..205f4816 100644
 --- a/examples-testing/examples/webgl_loader_gltf_instancing.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_instancing.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
@@ -7327,10 +7327,10 @@ index bd258d5c..de946286 100644
          const gui = new GUI();
  
 diff --git a/examples-testing/examples/webgl_loader_gltf_transmission.ts b/examples-testing/examples/webgl_loader_gltf_transmission.ts
-index 2c770e77..04d2acf5 100644
+index 646e71d4..b2a4ef99 100644
 --- a/examples-testing/examples/webgl_loader_gltf_transmission.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_transmission.ts
-@@ -6,7 +6,12 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -6,7 +6,12 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
@@ -8947,7 +8947,7 @@ index 408fd992..dc782ea9 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_materials_physical_transmission.ts b/examples-testing/examples/webgl_materials_physical_transmission.ts
-index 070775cc..c7a39d57 100644
+index 08ee08ca..3fca6cce 100644
 --- a/examples-testing/examples/webgl_materials_physical_transmission.ts
 +++ b/examples-testing/examples/webgl_materials_physical_transmission.ts
 @@ -20,7 +20,7 @@ const params = {
@@ -8959,7 +8959,7 @@ index 070775cc..c7a39d57 100644
  
  let mesh;
  
-@@ -178,7 +178,7 @@ function generateTexture() {
+@@ -180,7 +180,7 @@ function generateTexture() {
      canvas.width = 2;
      canvas.height = 2;
  
@@ -8969,10 +8969,10 @@ index 070775cc..c7a39d57 100644
      context.fillRect(0, 1, 2, 1);
  
 diff --git a/examples-testing/examples/webgl_materials_physical_transmission_alpha.ts b/examples-testing/examples/webgl_materials_physical_transmission_alpha.ts
-index f4af7eeb..a02f075b 100644
+index 6318d784..254e1b23 100644
 --- a/examples-testing/examples/webgl_materials_physical_transmission_alpha.ts
 +++ b/examples-testing/examples/webgl_materials_physical_transmission_alpha.ts
-@@ -22,17 +22,20 @@ const params = {
+@@ -22,9 +22,9 @@ const params = {
      exposure: 1,
  };
  
@@ -8982,22 +8982,24 @@ index f4af7eeb..a02f075b 100644
 -let mesh, material;
 +let mesh: THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>, material: THREE.MeshPhysicalMaterial;
  
- const hdrEquirect = new HDRLoader().setPath('textures/equirectangular/').load('royal_esplanade_1k.hdr', function () {
-     hdrEquirect.mapping = THREE.EquirectangularReflectionMapping;
+ const hdrEquirect = new UltraHDRLoader()
+     .setPath('textures/equirectangular/')
+@@ -33,8 +33,12 @@ const hdrEquirect = new UltraHDRLoader()
  
-     new GLTFLoader().setPath('models/gltf/').load('DragonAttenuation.glb', function (gltf) {
-         gltf.scene.traverse(function (child) {
--            if (child.isMesh && child.material.isMeshPhysicalMaterial) {
--                mesh = child;
-+            if (
-+                (child as THREE.Mesh).isMesh &&
-+                (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.isMeshPhysicalMaterial
-+            ) {
-+                mesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>;
-                 material = mesh.material;
+         new GLTFLoader().setPath('models/gltf/').load('DragonAttenuation.glb', function (gltf) {
+             gltf.scene.traverse(function (child) {
+-                if (child.isMesh && child.material.isMeshPhysicalMaterial) {
+-                    mesh = child;
++                if (
++                    (child as THREE.Mesh).isMesh &&
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material
++                        .isMeshPhysicalMaterial
++                ) {
++                    mesh = child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>;
+                     material = mesh.material;
  
-                 const color = new THREE.Color();
-@@ -74,7 +77,7 @@ function init() {
+                     const color = new THREE.Color();
+@@ -76,7 +80,7 @@ function init() {
  
      // accommodate CSS table
      renderer.domElement.style.position = 'absolute';
@@ -10241,12 +10243,12 @@ index 35949ee6..6d631dee 100644
  
      camera.fov = THREE.MathUtils.clamp(fov, 10, 75);
 diff --git a/examples-testing/examples/webgl_performance.ts b/examples-testing/examples/webgl_performance.ts
-index d6d2bdfc..7c412fa1 100644
+index 697ea36f..22368981 100644
 --- a/examples-testing/examples/webgl_performance.ts
 +++ b/examples-testing/examples/webgl_performance.ts
 @@ -6,7 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
 -let camera, scene, renderer, stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, stats: Stats;
@@ -10267,10 +10269,10 @@ index fb5bdafc..c432f8d3 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_pmrem_equirectangular.ts b/examples-testing/examples/webgl_pmrem_equirectangular.ts
-index 7f04d970..67cef663 100644
+index e7b8e76d..409d5e8e 100644
 --- a/examples-testing/examples/webgl_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgl_pmrem_equirectangular.ts
-@@ -4,7 +4,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -4,7 +4,7 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -10929,7 +10931,7 @@ index a4d09866..238c37da 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_postprocessing_material_ao.ts b/examples-testing/examples/webgl_postprocessing_material_ao.ts
-index 5bd817ef..2321ad81 100644
+index da8ba184..2b918a2f 100644
 --- a/examples-testing/examples/webgl_postprocessing_material_ao.ts
 +++ b/examples-testing/examples/webgl_postprocessing_material_ao.ts
 @@ -10,7 +10,12 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
@@ -14518,11 +14520,11 @@ index c602920e..266f691e 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 6f4c3b61..ba6b3132 100644
+index b5f7c5df..a95c1efd 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
 -let renderer, scene, camera, controls;
@@ -15051,10 +15053,10 @@ index fcae79b9..0ce427a3 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
-index a5ff8413..b729718f 100644
+index c9ca4023..9fdb9a4b 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_background.ts
-@@ -6,8 +6,8 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -6,8 +6,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -16009,7 +16011,7 @@ index 9ab5c44c..dee04a5a 100644
      const param = {
          'line type': 0,
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 8982da08..0c5a9389 100644
+index f55719fa..9d9a65ee 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -7,8 +7,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -16075,12 +16077,12 @@ index 8982da08..0c5a9389 100644
      box.setFromObject(selection);
  
 diff --git a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
-index dfb0e964..0308a517 100644
+index a3aa95e1..144199f2 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_anisotropy.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
 -let renderer, scene, camera, controls;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera, controls: OrbitControls;
@@ -16127,10 +16129,10 @@ index 8007d5e6..dc83ae61 100644
  init().catch(function (err) {
      console.error(err);
 diff --git a/examples-testing/examples/webgpu_loader_gltf_sheen.ts b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
-index 444a3b4f..6f440d8a 100644
+index 442edc7f..46d19c02 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_sheen.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_sheen.ts
-@@ -6,7 +6,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -6,7 +6,7 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -16155,10 +16157,10 @@ index 444a3b4f..6f440d8a 100644
          gui.add(object.material, 'sheen', 0, 1);
      });
 diff --git a/examples-testing/examples/webgpu_loader_gltf_transmission.ts b/examples-testing/examples/webgpu_loader_gltf_transmission.ts
-index f32ae782..33f9d163 100644
+index 385638ee..97fd8fc7 100644
 --- a/examples-testing/examples/webgpu_loader_gltf_transmission.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf_transmission.ts
-@@ -6,7 +6,12 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -6,7 +6,12 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
@@ -16882,7 +16884,7 @@ index 56ef372c..f634dff9 100644
              font: font,
  
 diff --git a/examples-testing/examples/webgpu_materials_transmission.ts b/examples-testing/examples/webgpu_materials_transmission.ts
-index 9e8eca5c..5788d096 100644
+index 310d979d..eeb24a3e 100644
 --- a/examples-testing/examples/webgpu_materials_transmission.ts
 +++ b/examples-testing/examples/webgpu_materials_transmission.ts
 @@ -20,7 +20,7 @@ const params = {
@@ -16894,7 +16896,7 @@ index 9e8eca5c..5788d096 100644
  
  let mesh;
  
-@@ -89,7 +89,7 @@ function init() {
+@@ -91,7 +91,7 @@ function init() {
  
      //
  
@@ -16903,7 +16905,7 @@ index 9e8eca5c..5788d096 100644
  
      gui.addColor(params, 'color').onChange(function () {
          material.color.set(params.color);
-@@ -159,7 +159,7 @@ function generateTexture() {
+@@ -161,7 +161,7 @@ function generateTexture() {
      canvas.width = 2;
      canvas.height = 2;
  
@@ -17290,10 +17292,10 @@ index 5c76ca01..9f265ffa 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index 6cfb990a..52a80e7f 100644
+index 6fb44f9a..11a74a82 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
-@@ -20,8 +20,8 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -20,8 +20,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -17674,12 +17676,12 @@ index 9e81f076..da9ee875 100644
      gui.add(speed, 'value', 0, 1, 0.01).name('speed');
  }
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
-index 570a4dee..6270f96d 100644
+index fb4ed155..8f0c113a 100644
 --- a/examples-testing/examples/webgpu_performance.ts
 +++ b/examples-testing/examples/webgpu_performance.ts
 @@ -8,17 +8,17 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
 -let camera, scene, renderer;
 -let model;
@@ -17805,10 +17807,10 @@ index bd751ba3..9f58dc8b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_pmrem_equirectangular.ts b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-index 564b7a8d..a34e2505 100644
+index 76f8326d..cc85ba86 100644
 --- a/examples-testing/examples/webgpu_pmrem_equirectangular.ts
 +++ b/examples-testing/examples/webgpu_pmrem_equirectangular.ts
-@@ -5,7 +5,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -5,7 +5,7 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
@@ -18358,7 +18360,7 @@ index 1ab1e7cb..31b407f9 100644
      gui.add(effectController.focalLength, 'value', 50, 750).name('focal length');
      gui.add(effectController.bokehScale, 'value', 1, 20).name('bokeh scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-index 32a04c2a..f6fdda04 100644
+index 1f6070a0..0a5e9a08 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 @@ -11,7 +11,15 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -18378,7 +18380,7 @@ index 32a04c2a..f6fdda04 100644
  
  const pointerCoords = new THREE.Vector2();
  const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
-@@ -100,7 +108,7 @@ async function init() {
+@@ -99,7 +107,7 @@ async function init() {
  
      // GUI
  
@@ -18387,7 +18389,7 @@ index 32a04c2a..f6fdda04 100644
      gui.add(minDistance, 'value', 0, 3).name('min distance');
      gui.add(maxDistance, 'value', 0, 5).name('max distance');
      gui.add(blurSize, 'value', 1, 3, 1).name('blur size');
-@@ -115,7 +123,7 @@ async function init() {
+@@ -114,7 +122,7 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -19169,7 +19171,7 @@ index 76592b8c..53dbdbba 100644
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
 diff --git a/examples-testing/examples/webgpu_reflection_roughness.ts b/examples-testing/examples/webgpu_reflection_roughness.ts
-index 84310f7c..fbe0e1d2 100644
+index 2b6b4a78..edabe7a8 100644
 --- a/examples-testing/examples/webgpu_reflection_roughness.ts
 +++ b/examples-testing/examples/webgpu_reflection_roughness.ts
 @@ -6,8 +6,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -19943,11 +19945,11 @@ index 4140a49f..e371e494 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index f0711aba..d7e61dea 100644
+index 646c5893..bab3f6f2 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer, controls;
@@ -20954,7 +20956,7 @@ index fb6f2bbd..5705090e 100644
      gui.add(steps, 'value', 0, 300, 1).name('steps');
  
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 0f9db99e..9d7abec1 100644
+index 948e3d4f..d78ed913 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
 @@ -9,11 +9,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20976,7 +20978,7 @@ index 0f9db99e..9d7abec1 100644
  
  const params = {
      color: '#99e0ff',
-@@ -157,8 +162,8 @@ async function init() {
+@@ -156,8 +161,8 @@ async function init() {
  
      // gui
  
@@ -21453,10 +21455,10 @@ index 009b4b97..ffb71130 100644
                  reticle.visible = false;
              }
 diff --git a/examples-testing/examples/webxr_ar_lighting.ts b/examples-testing/examples/webxr_ar_lighting.ts
-index dda8ce5d..f97b431b 100644
+index 10f49f0b..00e35fbe 100644
 --- a/examples-testing/examples/webxr_ar_lighting.ts
 +++ b/examples-testing/examples/webxr_ar_lighting.ts
-@@ -3,9 +3,9 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
+@@ -3,9 +3,9 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
  import { ARButton } from 'three/addons/webxr/ARButton.js';
  import { XREstimatedLight } from 'three/addons/webxr/XREstimatedLight.js';
  
