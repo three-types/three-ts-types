@@ -445,38 +445,23 @@ type Node<TValue = unknown> =
     & NodeClass
     & NodeElements
     & (TValue extends "float" ? FloatExtensions & NumberExtensions<"float"> & NodeExtensions<"float">
-        : TValue extends "int" ?
-                & IntExtensions
-                & NumberExtensions<"int">
-                & IntegerExtensions<"int">
-                & NodeExtensions<"int">
-        : TValue extends "uint" ?
-                & UintExtensions
-                & NumberExtensions<"uint">
-                & IntegerExtensions<"uint">
-                & NodeExtensions<"uint">
+        : TValue extends "int"
+            ? IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int"> & NodeExtensions<"int">
+        : TValue extends "uint"
+            ? UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint"> & NodeExtensions<"uint">
         : TValue extends "bool" ? BoolExtensions & NodeExtensions<"bool">
-        : TValue extends "vec2" ?
-                & Vec2Extensions
-                & Vector2Extensions<"float">
-                & FloatVectorExtensions<"vec2">
-                & NodeExtensions<"vec2">
+        : TValue extends "vec2"
+            ? Vec2Extensions & Vector2Extensions<"float"> & FloatVectorExtensions<"vec2"> & NodeExtensions<"vec2">
         : TValue extends "ivec2" ? Ivec2Extensions & Vector2Extensions<"int"> & NodeExtensions<"ivec2">
         : TValue extends "uvec2" ? Uvec2Extensions & Vector2Extensions<"uint"> & NodeExtensions<"uvec2">
         : TValue extends "bvec2" ? BvecExtensions & NodeExtensions<"bvec2">
-        : TValue extends "vec3" ?
-                & Vec3Extensions
-                & Vector3Extensions<"float">
-                & FloatVectorExtensions<"vec3">
-                & NodeExtensions<"vec3">
+        : TValue extends "vec3"
+            ? Vec3Extensions & Vector3Extensions<"float"> & FloatVectorExtensions<"vec3"> & NodeExtensions<"vec3">
         : TValue extends "ivec3" ? Ivec3Extensions & Vector3Extensions<"int"> & NodeExtensions<"ivec3">
         : TValue extends "uvec3" ? Uvec3Extensions & Vector3Extensions<"uint"> & NodeExtensions<"uvec3">
         : TValue extends "bvec3" ? BvecExtensions & NodeExtensions<"bvec3">
-        : TValue extends "vec4" ?
-                & Vec4Extensions
-                & Vector4Extensions<"float">
-                & FloatVectorExtensions<"vec4">
-                & NodeExtensions<"vec4">
+        : TValue extends "vec4"
+            ? Vec4Extensions & Vector4Extensions<"float"> & FloatVectorExtensions<"vec4"> & NodeExtensions<"vec4">
         : TValue extends "ivec4" ? Ivec4Extensions & Vector4Extensions<"int"> & NodeExtensions<"ivec4">
         : TValue extends "uvec4" ? Uvec4Extensions & Vector4Extensions<"uint"> & NodeExtensions<"uvec4">
         : TValue extends "bvec4" ? BvecExtensions & NodeExtensions<"bvec4">
