@@ -202,6 +202,7 @@ export const getDistanceAttenuation: typeof TSL.getDistanceAttenuation;
 export const getGeometryRoughness: typeof TSL.getGeometryRoughness;
 export const getNormalFromDepth: typeof TSL.getNormalFromDepth;
 export const interleavedGradientNoise: typeof TSL.interleavedGradientNoise;
+export const vogelDiskSample: typeof TSL.vogelDiskSample;
 export const getParallaxCorrectNormal: typeof TSL.getParallaxCorrectNormal;
 export const getRoughness: typeof TSL.getRoughness;
 export const getScreenPosition: typeof TSL.getScreenPosition;
