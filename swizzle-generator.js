@@ -10,6 +10,14 @@ for (let i = 0; i < 4; i++) {
     }
 }
 
+let swizzleOptionsNoRepetition = [];
+for (let i = 0; i < 4; i++) {
+    swizzleOptionsNoRepetition[i] = [];
+    for (let j = 0; j < 4; j++) {
+        swizzleOptionsNoRepetition[i][j] = [];
+    }
+}
+
 function setProtoSwizzle(a, b, c, d) {
     let prop = swizzleA[a];
     let altA = swizzleB[a];
@@ -40,6 +48,16 @@ function setProtoSwizzle(a, b, c, d) {
     swizzleOptions[numChars - 1][maxCharNum].push(prop);
     swizzleOptions[numChars - 1][maxCharNum].push(altA);
     swizzleOptions[numChars - 1][maxCharNum].push(altB);
+
+    if (b == null || b !== a) {
+        if (c == null || c !== a && c !== b) {
+            if (d == null || d !== c && d !== b && d !== a) {
+                swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(prop);
+                swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altA);
+                swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altB);
+            }
+        }
+    }
 }
 
 for (let a = 0; a < 4; a++) {
@@ -55,14 +73,29 @@ for (let a = 0; a < 4; a++) {
     }
 }
 
-const getType = [
+const assignType = [
     "Node<TNumOrBool>",
     "Node<NumOrBoolToVec2<TNumOrBool>>",
     "Node<NumOrBoolToVec3<TNumOrBool>>",
     "Node<NumOrBoolToVec4<TNumOrBool>>",
 ];
 
-const setType = [
+for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+        let interfaceLine = `interface SwizzleAccess${i + 1}From${j + 1}<TNumOrBool extends NumOrBoolType>`;
+        if (j > 0) interfaceLine += ` extends SwizzleAccess${i + 1}From${j}<TNumOrBool>`;
+        interfaceLine += " {";
+        console.log(interfaceLine);
+        const arr = swizzleOptions[i][j];
+        for (const val of arr) {
+            console.log(`    get ${val}(): ${assignType[i]};`);
+        }
+        console.log("}");
+        console.log();
+    }
+}
+
+const accessType = [
     "NumOrBool<TNumOrBool>",
     "Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>",
     "Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>",
@@ -71,14 +104,19 @@ const setType = [
 
 for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
-        let interfaceLine = `interface Swizzle${j + 1}In${i + 1}Out<TNumOrBool extends NumOrBoolType>`;
-        if (j > 0) interfaceLine += ` extends Swizzle${j}In${i + 1}Out<TNumOrBool>`;
+        const arr = swizzleOptionsNoRepetition[i][j];
+
+        if (i > j) {
+            if (arr.length > 0) throw new Error(`Expected no options for i ${i} and j ${j}`);
+            continue;
+        }
+
+        let interfaceLine = `interface SwizzleAssign${i + 1}From${j + 1}<TNumOrBool extends NumOrBoolType>`;
+        if (j > i) interfaceLine += ` extends SwizzleAssign${i + 1}From${j}<TNumOrBool>`;
         interfaceLine += " {";
         console.log(interfaceLine);
-        const arr = swizzleOptions[i][j];
         for (const val of arr) {
-            console.log(`    get ${val}(): ${getType[i]};`);
-            console.log(`    set ${val}(value: ${setType[i]});`);
+            console.log(`    set ${val}(value: ${accessType[i]});`);
         }
         console.log("}");
         console.log();
