@@ -163,6 +163,8 @@ export class BufferGeometry<
 
     indirect: IndirectStorageBufferAttribute | null;
 
+    indirectOffset: number;
+
     /**
      * This hashmap has as id the name of the attribute to be set and as value the {@link THREE.BufferAttribute | buffer} to set it to. Rather than accessing this property directly,
      * use {@link setAttribute | .setAttribute} and {@link getAttribute | .getAttribute} to access attributes of this geometry.
