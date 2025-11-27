@@ -62,6 +62,13 @@ const getType = [
     "Node<NumOrBoolToVec4<TNumOrBool>>",
 ];
 
+const setType = [
+    "NumOrBool<TNumOrBool>",
+    "Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>",
+    "Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>",
+    "Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>",
+];
+
 for (let i = 0; i < 4; i++) {
     for (let j = 0; j < 4; j++) {
         let interfaceLine = `interface Swizzle${j + 1}In${i + 1}Out<TNumOrBool extends NumOrBoolType>`;
@@ -71,9 +78,7 @@ for (let i = 0; i < 4; i++) {
         const arr = swizzleOptions[i][j];
         for (const val of arr) {
             console.log(`    get ${val}(): ${getType[i]};`);
-            if (i === 0) {
-                console.log(`    set ${val}(value: NumOrBool<TNumOrBool>);`);
-            }
+            console.log(`    set ${val}(value: ${setType[i]});`);
         }
         console.log("}");
         console.log();
