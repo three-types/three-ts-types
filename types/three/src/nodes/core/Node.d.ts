@@ -1,5 +1,6 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { NodeUpdateType } from "./constants.js";
+import { NumVec2Extensions } from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 export interface NodeJSONMeta {
@@ -387,6 +388,7 @@ export interface NodeElements {
 }
 export type NumberType = "float" | "int" | "uint";
 export type IntegerType = "int" | "uint";
+export type NumOrBoolType = NumberType | "bool";
 export type FloatVectorType = "vec2" | "vec3" | "vec4";
 export type MatrixType = "mat2" | "mat3" | "mat4";
 export interface NodeExtensions<TValue> {
@@ -401,6 +403,8 @@ export interface NumberExtensions<TNumber extends NumberType> {
 }
 export interface IntegerExtensions<TInteger extends IntegerType> {
 }
+export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
+}
 export interface BoolExtensions {
 }
 export interface Vec2Extensions {
@@ -409,7 +413,9 @@ export interface Ivec2Extensions {
 }
 export interface Uvec2Extensions {
 }
-export interface Vector2Extensions<TNumber extends NumberType> {
+export interface NumberVec2Extensions<TNumber extends NumberType> {
+}
+export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {
 }
 export interface Vec3Extensions {
 }
@@ -417,7 +423,9 @@ export interface Ivec3Extensions {
 }
 export interface Uvec3Extensions {
 }
-export interface Vector3Extensions<TNumber extends NumberType> {
+export interface NumberVec3Extensions<TNumber extends NumberType> {
+}
+export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
 }
 export interface Vec4Extensions {
 }
@@ -425,7 +433,9 @@ export interface Ivec4Extensions {
 }
 export interface Uvec4Extensions {
 }
-export interface Vector4Extensions<TNumber extends NumberType> {
+export interface NumberVec4Extensions<TNumber extends NumberType> {
+}
+export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
 }
 export interface FloatVectorExtensions<TVec extends FloatVectorType> {
 }
@@ -444,27 +454,54 @@ export interface ColorExtensions {
 type Node<TValue = unknown> =
     & NodeClass
     & NodeElements
-    & (TValue extends "float" ? FloatExtensions & NumberExtensions<"float"> & NodeExtensions<"float">
-        : TValue extends "int"
-            ? IntExtensions & NumberExtensions<"int"> & IntegerExtensions<"int"> & NodeExtensions<"int">
-        : TValue extends "uint"
-            ? UintExtensions & NumberExtensions<"uint"> & IntegerExtensions<"uint"> & NodeExtensions<"uint">
-        : TValue extends "bool" ? BoolExtensions & NodeExtensions<"bool">
-        : TValue extends "vec2"
-            ? Vec2Extensions & Vector2Extensions<"float"> & FloatVectorExtensions<"vec2"> & NodeExtensions<"vec2">
-        : TValue extends "ivec2" ? Ivec2Extensions & Vector2Extensions<"int"> & NodeExtensions<"ivec2">
-        : TValue extends "uvec2" ? Uvec2Extensions & Vector2Extensions<"uint"> & NodeExtensions<"uvec2">
-        : TValue extends "bvec2" ? BvecExtensions & NodeExtensions<"bvec2">
-        : TValue extends "vec3"
-            ? Vec3Extensions & Vector3Extensions<"float"> & FloatVectorExtensions<"vec3"> & NodeExtensions<"vec3">
-        : TValue extends "ivec3" ? Ivec3Extensions & Vector3Extensions<"int"> & NodeExtensions<"ivec3">
-        : TValue extends "uvec3" ? Uvec3Extensions & Vector3Extensions<"uint"> & NodeExtensions<"uvec3">
-        : TValue extends "bvec3" ? BvecExtensions & NodeExtensions<"bvec3">
-        : TValue extends "vec4"
-            ? Vec4Extensions & Vector4Extensions<"float"> & FloatVectorExtensions<"vec4"> & NodeExtensions<"vec4">
-        : TValue extends "ivec4" ? Ivec4Extensions & Vector4Extensions<"int"> & NodeExtensions<"ivec4">
-        : TValue extends "uvec4" ? Uvec4Extensions & Vector4Extensions<"uint"> & NodeExtensions<"uvec4">
-        : TValue extends "bvec4" ? BvecExtensions & NodeExtensions<"bvec4">
+    & (TValue extends "float"
+        ? FloatExtensions & NumberExtensions<"float"> & NumOrBoolExtensions<"float"> & NodeExtensions<"float">
+        : TValue extends "int" ?
+                & IntExtensions
+                & NumberExtensions<"int">
+                & IntegerExtensions<"int">
+                & NumOrBoolExtensions<"int">
+                & NodeExtensions<"int">
+        : TValue extends "uint" ?
+                & UintExtensions
+                & NumberExtensions<"uint">
+                & IntegerExtensions<"uint">
+                & NumOrBoolExtensions<"uint">
+                & NodeExtensions<"uint">
+        : TValue extends "bool" ? BoolExtensions & NumOrBoolExtensions<"bool"> & NodeExtensions<"bool">
+        : TValue extends "vec2" ?
+                & Vec2Extensions
+                & NumVec2Extensions<"float">
+                & NumOrBoolVec2Extensions<"float">
+                & FloatVectorExtensions<"vec2">
+                & NodeExtensions<"vec2">
+        : TValue extends "ivec2"
+            ? Ivec2Extensions & NumVec2Extensions<"int"> & NumOrBoolVec2Extensions<"int"> & NodeExtensions<"ivec2">
+        : TValue extends "uvec2"
+            ? Uvec2Extensions & NumVec2Extensions<"uint"> & NumOrBoolVec2Extensions<"uint"> & NodeExtensions<"uvec2">
+        : TValue extends "bvec2" ? BvecExtensions & NumOrBoolVec2Extensions<"bool"> & NodeExtensions<"bvec2">
+        : TValue extends "vec3" ?
+                & Vec3Extensions
+                & NumVec3Extensions<"float">
+                & NumOrBoolVec3Extensions<"float">
+                & FloatVectorExtensions<"vec3">
+                & NodeExtensions<"vec3">
+        : TValue extends "ivec3"
+            ? Ivec3Extensions & NumVec3Extensions<"int"> & NumOrBoolVec3Extensions<"int"> & NodeExtensions<"ivec3">
+        : TValue extends "uvec3"
+            ? Uvec3Extensions & NumVec3Extensions<"uint"> & NumOrBoolVec3Extensions<"uint"> & NodeExtensions<"uvec3">
+        : TValue extends "bvec3" ? BvecExtensions & NumOrBoolVec3Extensions<"bool"> & NodeExtensions<"bvec3">
+        : TValue extends "vec4" ?
+                & Vec4Extensions
+                & NumVec4Extensions<"float">
+                & NumOrBoolVec4Extensions<"float">
+                & FloatVectorExtensions<"vec4">
+                & NodeExtensions<"vec4">
+        : TValue extends "ivec4"
+            ? Ivec4Extensions & NumVec4Extensions<"int"> & NumOrBoolVec4Extensions<"int"> & NodeExtensions<"ivec4">
+        : TValue extends "uvec4"
+            ? Uvec4Extensions & NumVec4Extensions<"uint"> & NumOrBoolVec4Extensions<"uint"> & NodeExtensions<"uvec4">
+        : TValue extends "bvec4" ? BvecExtensions & NumOrBoolVec4Extensions<"bool"> & NodeExtensions<"bvec4">
         : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<"mat2"> & NodeExtensions<"mat2">
         : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<"mat3"> & NodeExtensions<"mat3">
         : TValue extends "mat4" ? Matrix4Extensions & MatrixExtensions<"mat4"> & NodeExtensions<"mat4">
