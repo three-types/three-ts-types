@@ -10,6 +10,8 @@ declare class TRAANode extends TempNode<"vec4"> {
 
     depthThreshold: number;
     edgeDepthDiff: number;
+    maxVelocityLength: number;
+    useSubpixelCorrection: boolean;
 
     constructor(beautyNode: TextureNode, depthNode: TextureNode, velocityNode: TextureNode, camera: Camera);
 }

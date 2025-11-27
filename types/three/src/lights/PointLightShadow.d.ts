@@ -17,6 +17,7 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
     /**
      * Update the matrices for the camera and shadow, used internally by the renderer.
      * @param light The light for which the shadow is being rendered.
+     * @param [faceIndex=0] - The cube face index (0-5).
      */
-    override updateMatrices(light: Light, viewportIndex?: number): void;
+    override updateMatrices(light: Light, faceIndex?: number): void;
 }
