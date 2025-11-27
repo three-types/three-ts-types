@@ -18289,12 +18289,12 @@ index 65ddd737..58bbbc74 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 3e400f91..944c07e9 100644
+index 52b84d41..398c8889 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
-     colorToDirection,
      colorSpaceToWorking,
+     builtinAOContext,
  } from 'three/tsl';
 -import { ao } from 'three/addons/tsl/display/GTAONode.js';
 -import { traa } from 'three/addons/tsl/display/TRAANode.js';
@@ -18303,7 +18303,7 @@ index 3e400f91..944c07e9 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -23,9 +23,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -23,9 +23,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -18314,12 +18314,14 @@ index 3e400f91..944c07e9 100644
 +    postProcessing: THREE.PostProcessing,
 +    controls: OrbitControls;
  
--let aoPass, traaPass;
-+let aoPass: GTAONode, traaPass: TRAANode;
+-let aoPass, traaPass, transparentMesh;
++let aoPass: GTAONode,
++    traaPass: TRAANode,
++    transparentMesh: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardNodeMaterial>;
  
  const params = {
      samples: 16,
-@@ -163,7 +167,7 @@ async function init() {
+@@ -161,7 +167,7 @@ async function init() {
  
      //
  
