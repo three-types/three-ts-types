@@ -28,7 +28,7 @@ export const uniformFlow: <TNodeType>(node: Node<TNodeType>) => ContextNode<TNod
 
 export const setName: (node: Node, label: string) => Node;
 
-export function builtinShadowContext(shadowNode: Node, light: Light, node?: Node | null): ContextNode;
+export function builtinShadowContext<TNodeType>(shadowNode: Node, light: Light, node?: Node | null): ContextNode<TNodeType>;
 
 /**
  * @deprecated "label()" has been deprecated. Use "setName()" instead.
@@ -57,7 +57,7 @@ declare module "./Node.js" {
         setName: (label: string) => Node<TValue>;
         setNameAssign: (label: string) => this;
 
-        builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode;
+        builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode<TValue>;
         builtinShadowContextAssign: (shadowNode: Node, light: Light) => this;
     }
 }
