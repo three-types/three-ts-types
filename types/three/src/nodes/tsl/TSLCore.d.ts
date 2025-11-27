@@ -43,97 +43,145 @@ type NumOrBoolVec4OrLess<TNumOrBool extends NumOrBoolType> =
     | NumOrBoolVec3OrLess<TNumOrBool>
     | Node<NumOrBoolToVec4<TNumOrBool>>;
 
-interface SwizzleAccess1From1<TNumOrBool extends NumOrBoolType> {
+interface Swizzle1From1<TNumOrBool extends NumOrBoolType> {
     get x(): Node<TNumOrBool>;
+    set x(value: NumOrBool<TNumOrBool>);
     get r(): Node<TNumOrBool>;
+    set r(value: NumOrBool<TNumOrBool>);
     get s(): Node<TNumOrBool>;
+    set s(value: NumOrBool<TNumOrBool>);
 }
 
-interface SwizzleAccess1From2<TNumOrBool extends NumOrBoolType> extends SwizzleAccess1From1<TNumOrBool> {
+interface Swizzle1From2<TNumOrBool extends NumOrBoolType> extends Swizzle1From1<TNumOrBool> {
     get y(): Node<TNumOrBool>;
+    set y(value: NumOrBool<TNumOrBool>);
     get g(): Node<TNumOrBool>;
+    set g(value: NumOrBool<TNumOrBool>);
     get t(): Node<TNumOrBool>;
+    set t(value: NumOrBool<TNumOrBool>);
 }
 
-interface SwizzleAccess1From3<TNumOrBool extends NumOrBoolType> extends SwizzleAccess1From2<TNumOrBool> {
+interface Swizzle1From3<TNumOrBool extends NumOrBoolType> extends Swizzle1From2<TNumOrBool> {
     get z(): Node<TNumOrBool>;
+    set z(value: NumOrBool<TNumOrBool>);
     get b(): Node<TNumOrBool>;
+    set b(value: NumOrBool<TNumOrBool>);
     get p(): Node<TNumOrBool>;
+    set p(value: NumOrBool<TNumOrBool>);
 }
 
-interface SwizzleAccess1From4<TNumOrBool extends NumOrBoolType> extends SwizzleAccess1From3<TNumOrBool> {
+interface Swizzle1From4<TNumOrBool extends NumOrBoolType> extends Swizzle1From3<TNumOrBool> {
     get w(): Node<TNumOrBool>;
+    set w(value: NumOrBool<TNumOrBool>);
     get a(): Node<TNumOrBool>;
+    set a(value: NumOrBool<TNumOrBool>);
     get q(): Node<TNumOrBool>;
+    set q(value: NumOrBool<TNumOrBool>);
 }
 
-interface SwizzleAccess2From1<TNumOrBool extends NumOrBoolType> {
+interface Swizzle2From1<TNumOrBool extends NumOrBoolType> {
     get xx(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get rr(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get ss(): Node<NumOrBoolToVec2<TNumOrBool>>;
 }
 
-interface SwizzleAccess2From2<TNumOrBool extends NumOrBoolType> extends SwizzleAccess2From1<TNumOrBool> {
+interface Swizzle2From2<TNumOrBool extends NumOrBoolType> extends Swizzle2From1<TNumOrBool> {
     get xy(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set xy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rg(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set rg(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get st(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set st(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yx(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set yx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gr(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set gr(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ts(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ts(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yy(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get gg(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get tt(): Node<NumOrBoolToVec2<TNumOrBool>>;
 }
 
-interface SwizzleAccess2From3<TNumOrBool extends NumOrBoolType> extends SwizzleAccess2From2<TNumOrBool> {
+interface Swizzle2From3<TNumOrBool extends NumOrBoolType> extends Swizzle2From2<TNumOrBool> {
     get xz(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set xz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rb(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set rb(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sp(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set sp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yz(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set yz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gb(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set gb(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tp(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set tp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zx(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set zx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get br(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set br(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ps(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ps(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zy(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set zy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bg(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set bg(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pt(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set pt(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zz(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get bb(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get pp(): Node<NumOrBoolToVec2<TNumOrBool>>;
 }
 
-interface SwizzleAccess2From4<TNumOrBool extends NumOrBoolType> extends SwizzleAccess2From3<TNumOrBool> {
+interface Swizzle2From4<TNumOrBool extends NumOrBoolType> extends Swizzle2From3<TNumOrBool> {
     get xw(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set xw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ra(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ra(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sq(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set sq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yw(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set yw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ga(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ga(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tq(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set tq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zw(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set zw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ba(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ba(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pq(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set pq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wx(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set wx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ar(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ar(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qs(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set qs(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wy(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set wy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ag(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ag(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qt(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set qt(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wz(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set wz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ab(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set ab(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qp(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    set qp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ww(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get aa(): Node<NumOrBoolToVec2<TNumOrBool>>;
     get qq(): Node<NumOrBoolToVec2<TNumOrBool>>;
 }
 
-interface SwizzleAccess3From1<TNumOrBool extends NumOrBoolType> {
+interface Swizzle3From1<TNumOrBool extends NumOrBoolType> {
     get xxx(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rrr(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get sss(): Node<NumOrBoolToVec3<TNumOrBool>>;
 }
 
-interface SwizzleAccess3From2<TNumOrBool extends NumOrBoolType> extends SwizzleAccess3From1<TNumOrBool> {
+interface Swizzle3From2<TNumOrBool extends NumOrBoolType> extends Swizzle3From1<TNumOrBool> {
     get xxy(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rrg(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get sst(): Node<NumOrBoolToVec3<TNumOrBool>>;
@@ -157,31 +205,43 @@ interface SwizzleAccess3From2<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get ttt(): Node<NumOrBoolToVec3<TNumOrBool>>;
 }
 
-interface SwizzleAccess3From3<TNumOrBool extends NumOrBoolType> extends SwizzleAccess3From2<TNumOrBool> {
+interface Swizzle3From3<TNumOrBool extends NumOrBoolType> extends Swizzle3From2<TNumOrBool> {
     get xxz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rrb(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ssp(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get xyz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xyz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rgb(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rgb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get stp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set stp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xzx(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rbr(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get sps(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get xzy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xzy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rbg(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rbg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get spt(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set spt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xzz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rbb(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get spp(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get yxz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set yxz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get grb(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set grb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tsp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tsp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yyz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ggb(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ttp(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get yzx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set yzx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gbr(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set gbr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tps(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tps(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yzy(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get gbg(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get tpt(): Node<NumOrBoolToVec3<TNumOrBool>>;
@@ -192,14 +252,20 @@ interface SwizzleAccess3From3<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get brr(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get pss(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get zxy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zxy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get brg(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set brg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pst(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set pst(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zxz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get brb(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get psp(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get zyx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zyx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bgr(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set bgr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pts(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set pts(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zyy(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get bgg(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ptt(): Node<NumOrBoolToVec3<TNumOrBool>>;
@@ -217,64 +283,100 @@ interface SwizzleAccess3From3<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get ppp(): Node<NumOrBoolToVec3<TNumOrBool>>;
 }
 
-interface SwizzleAccess3From4<TNumOrBool extends NumOrBoolType> extends SwizzleAccess3From3<TNumOrBool> {
+interface Swizzle3From4<TNumOrBool extends NumOrBoolType> extends Swizzle3From3<TNumOrBool> {
     get xxw(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rra(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ssq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get xyw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xyw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rga(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rga(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get stq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set stq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xzw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xzw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rba(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rba(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get spq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set spq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xwx(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get rar(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get sqs(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get xwy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xwy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rag(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rag(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sqt(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set sqt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xwz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set xwz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rab(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set rab(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sqp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set sqp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xww(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get raa(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get sqq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get yxw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set yxw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gra(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set gra(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tsq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tsq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yyw(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get gga(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ttq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get yzw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set yzw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gba(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set gba(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tpq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tpq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ywx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set ywx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gar(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set gar(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tqs(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tqs(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ywy(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get gag(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get tqt(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ywz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set ywz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gab(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set gab(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tqp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set tqp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yww(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get gaa(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get tqq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get zxw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zxw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bra(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set bra(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get psq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set psq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zyw(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zyw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bga(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set bga(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ptq(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set ptq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zzw(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get bba(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ppq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get zwx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zwx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bar(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set bar(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pqs(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set pqs(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zwy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set zwy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bag(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set bag(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pqt(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set pqt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zwz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get bab(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get pqp(): Node<NumOrBoolToVec3<TNumOrBool>>;
@@ -285,32 +387,50 @@ interface SwizzleAccess3From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get arr(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get qss(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get wxy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wxy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get arg(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set arg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qst(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qst(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wxz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wxz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get arb(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set arb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qsp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qsp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wxw(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get ara(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get qsq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get wyx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wyx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get agr(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set agr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qts(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qts(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wyy(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get agg(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get qtt(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get wyz(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wyz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get agb(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set agb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qtp(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qtp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wyw(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get aga(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get qtq(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get wzx(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wzx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get abr(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set abr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qps(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qps(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wzy(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set wzy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get abg(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set abg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qpt(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    set qpt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wzz(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get abb(): Node<NumOrBoolToVec3<TNumOrBool>>;
     get qpp(): Node<NumOrBoolToVec3<TNumOrBool>>;
@@ -331,13 +451,13 @@ interface SwizzleAccess3From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get qqq(): Node<NumOrBoolToVec3<TNumOrBool>>;
 }
 
-interface SwizzleAccess4From1<TNumOrBool extends NumOrBoolType> {
+interface Swizzle4From1<TNumOrBool extends NumOrBoolType> {
     get xxxx(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rrrr(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ssss(): Node<NumOrBoolToVec4<TNumOrBool>>;
 }
 
-interface SwizzleAccess4From2<TNumOrBool extends NumOrBoolType> extends SwizzleAccess4From1<TNumOrBool> {
+interface Swizzle4From2<TNumOrBool extends NumOrBoolType> extends Swizzle4From1<TNumOrBool> {
     get xxxy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rrrg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ssst(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -385,7 +505,7 @@ interface SwizzleAccess4From2<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get tttt(): Node<NumOrBoolToVec4<TNumOrBool>>;
 }
 
-interface SwizzleAccess4From3<TNumOrBool extends NumOrBoolType> extends SwizzleAccess4From2<TNumOrBool> {
+interface Swizzle4From3<TNumOrBool extends NumOrBoolType> extends Swizzle4From2<TNumOrBool> {
     get xxxz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rrrb(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sssp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -583,7 +703,7 @@ interface SwizzleAccess4From3<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get pppp(): Node<NumOrBoolToVec4<TNumOrBool>>;
 }
 
-interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleAccess4From3<TNumOrBool> {
+interface Swizzle4From4<TNumOrBool extends NumOrBoolType> extends Swizzle4From3<TNumOrBool> {
     get xxxw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rrra(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sssq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -612,8 +732,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get rgga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sttq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xyzw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xyzw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rgba(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set rgba(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get stpq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set stpq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xywx(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rgar(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get stqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -621,8 +744,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get rgag(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get stqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xywz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xywz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rgab(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set rgab(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get stqp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set stqp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xyww(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rgaa(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get stqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -630,8 +756,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get rbra(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get spsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xzyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xzyw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rbga(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set rbga(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sptq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set sptq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xzzw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rbba(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sppq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -639,8 +768,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get rbar(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get spqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xzwy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xzwy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rbag(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set rbag(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get spqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set spqt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xzwz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rbab(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get spqp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -666,8 +798,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get ragg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sqtt(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xwyz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xwyz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ragb(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set ragb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sqtp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set sqtp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xwyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get raga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sqtq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -675,8 +810,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get rabr(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sqps(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get xwzy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set xwzy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get rabg(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set rabg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get sqpt(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set sqpt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get xwzz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get rabb(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get sqpp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -702,8 +840,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get grga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tstq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get yxzw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set yxzw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get grba(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set grba(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tspq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tspq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yxwx(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get grar(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tsqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -711,8 +852,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get grag(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tsqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get yxwz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set yxwz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get grab(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set grab(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tsqp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tsqp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yxww(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get graa(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tsqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -738,8 +882,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get ggaa(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ttqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get yzxw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set yzxw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gbra(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set gbra(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tpsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tpsq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yzyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get gbga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tptq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -747,8 +894,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get gbba(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tppq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get yzwx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set yzwx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gbar(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set gbar(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tpqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tpqs(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get yzwy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get gbag(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tpqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -765,8 +915,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get garg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tqst(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ywxz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set ywxz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get garb(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set garb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tqsp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tqsp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ywxw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get gara(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tqsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -783,8 +936,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get gaga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tqtq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ywzx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set ywzx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get gabr(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set gabr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get tqps(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set tqps(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ywzy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get gabg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get tqpt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -810,8 +966,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get brra(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pssq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zxyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zxyw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get brga(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set brga(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pstq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set pstq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zxzw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get brba(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pspq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -819,8 +978,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get brar(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get psqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zxwy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zxwy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get brag(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set brag(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get psqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set psqt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zxwz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get brab(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get psqp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -828,8 +990,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get braa(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get psqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zyxw(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zyxw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bgra(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set bgra(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ptsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set ptsq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zyyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get bgga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pttq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -837,8 +1002,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get bgba(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ptpq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zywx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zywx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bgar(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set bgar(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get ptqs(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set ptqs(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zywy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get bgag(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get ptqt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -873,8 +1041,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get barr(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pqss(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zwxy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zwxy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get barg(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set barg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pqst(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set pqst(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zwxz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get barb(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pqsp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -882,8 +1053,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get bara(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pqsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get zwyx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set zwyx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get bagr(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set bagr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get pqts(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set pqts(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get zwyy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get bagg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get pqtt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -936,8 +1110,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get argg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qstt(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wxyz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wxyz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get argb(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set argb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qstp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qstp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wxyw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get arga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qstq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -945,8 +1122,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get arbr(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qsps(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wxzy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wxzy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get arbg(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set arbg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qspt(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qspt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wxzz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get arbb(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qspp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -972,8 +1152,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get agrg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qtst(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wyxz(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wyxz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get agrb(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set agrb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qtsp(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qtsp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wyxw(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get agra(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qtsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -990,8 +1173,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get agga(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qttq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wyzx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wyzx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get agbr(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set agbr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qtps(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qtps(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wyzy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get agbg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qtpt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -1017,8 +1203,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get abrr(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qpss(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wzxy(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wzxy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get abrg(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set abrg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qpst(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qpst(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wzxz(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get abrb(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qpsp(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -1026,8 +1215,11 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get abra(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qpsq(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get wzyx(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set wzyx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get abgr(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set abgr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get qpts(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    set qpts(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
     get wzyy(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get abgg(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qptt(): Node<NumOrBoolToVec4<TNumOrBool>>;
@@ -1109,228 +1301,6 @@ interface SwizzleAccess4From4<TNumOrBool extends NumOrBoolType> extends SwizzleA
     get wwww(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get aaaa(): Node<NumOrBoolToVec4<TNumOrBool>>;
     get qqqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
-}
-
-interface SwizzleAssign1From1<TNumOrBool extends NumOrBoolType> {
-    set x(value: NumOrBool<TNumOrBool>);
-    set r(value: NumOrBool<TNumOrBool>);
-    set s(value: NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign1From2<TNumOrBool extends NumOrBoolType> extends SwizzleAssign1From1<TNumOrBool> {
-    set y(value: NumOrBool<TNumOrBool>);
-    set g(value: NumOrBool<TNumOrBool>);
-    set t(value: NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign1From3<TNumOrBool extends NumOrBoolType> extends SwizzleAssign1From2<TNumOrBool> {
-    set z(value: NumOrBool<TNumOrBool>);
-    set b(value: NumOrBool<TNumOrBool>);
-    set p(value: NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign1From4<TNumOrBool extends NumOrBoolType> extends SwizzleAssign1From3<TNumOrBool> {
-    set w(value: NumOrBool<TNumOrBool>);
-    set a(value: NumOrBool<TNumOrBool>);
-    set q(value: NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign2From2<TNumOrBool extends NumOrBoolType> {
-    set xy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rg(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set st(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gr(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ts(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign2From3<TNumOrBool extends NumOrBoolType> extends SwizzleAssign2From2<TNumOrBool> {
-    set xz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rb(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gb(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set br(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ps(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bg(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pt(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign2From4<TNumOrBool extends NumOrBoolType> extends SwizzleAssign2From3<TNumOrBool> {
-    set xw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ra(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ga(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zw(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ba(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pq(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wx(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ar(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qs(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wy(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ag(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qt(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wz(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ab(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qp(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign3From3<TNumOrBool extends NumOrBoolType> {
-    set xyz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rgb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set stp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xzy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rbg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set spt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yxz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set grb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tsp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yzx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gbr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tps(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zxy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set brg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pst(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zyx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bgr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pts(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign3From4<TNumOrBool extends NumOrBoolType> extends SwizzleAssign3From3<TNumOrBool> {
-    set xyw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rga(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set stq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xzw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rba(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set spq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xwy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rag(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sqt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xwz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rab(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sqp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yxw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gra(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tsq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yzw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gba(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tpq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ywx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gar(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tqs(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ywz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gab(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tqp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zxw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bra(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set psq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zyw(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bga(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ptq(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zwx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bar(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pqs(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zwy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bag(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pqt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wxy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set arg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qst(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wxz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set arb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qsp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wyx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set agr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qts(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wyz(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set agb(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qtp(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wzx(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set abr(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qps(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wzy(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set abg(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qpt(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>);
-}
-
-interface SwizzleAssign4From4<TNumOrBool extends NumOrBoolType> {
-    set xyzw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rgba(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set stpq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xywz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rgab(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set stqp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xzyw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rbga(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sptq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xzwy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rbag(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set spqt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xwyz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ragb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sqtp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set xwzy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set rabg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set sqpt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yxzw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set grba(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tspq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yxwz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set grab(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tsqp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yzxw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gbra(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tpsq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set yzwx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gbar(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tpqs(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ywxz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set garb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tqsp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ywzx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set gabr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set tqps(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zxyw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set brga(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pstq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zxwy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set brag(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set psqt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zyxw(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bgra(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ptsq(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zywx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bgar(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set ptqs(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zwxy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set barg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pqst(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set zwyx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set bagr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set pqts(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wxyz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set argb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qstp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wxzy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set arbg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qspt(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wyxz(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set agrb(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qtsp(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wyzx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set agbr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qtps(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wzxy(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set abrg(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qpst(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set wzyx(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set abgr(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
-    set qpts(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>);
 }
 
 type X = "x";
@@ -1507,63 +1477,50 @@ type Vec4SwizzleMethods<TNumOrBool extends NumOrBoolType> =
 declare module "../core/Node.js" {
     interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType>
         extends
-            SwizzleAccess1From1<TNumOrBool>,
-            SwizzleAccess2From1<TNumOrBool>,
-            SwizzleAccess3From1<TNumOrBool>,
-            SwizzleAccess4From1<TNumOrBool>,
-            SwizzleAssign1From1<TNumOrBool>,
+            Swizzle1From1<TNumOrBool>,
+            Swizzle2From1<TNumOrBool>,
+            Swizzle3From1<TNumOrBool>,
+            Swizzle4From1<TNumOrBool>,
             NumOrBoolSwizzleMethods<TNumOrBool>
     {
     }
 
     interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType>
         extends
-            SwizzleAccess1From2<TNumOrBool>,
-            SwizzleAccess2From2<TNumOrBool>,
-            SwizzleAccess3From2<TNumOrBool>,
-            SwizzleAccess4From2<TNumOrBool>,
-            SwizzleAssign1From2<TNumOrBool>,
-            SwizzleAssign2From2<TNumOrBool>,
+            Swizzle1From2<TNumOrBool>,
+            Swizzle2From2<TNumOrBool>,
+            Swizzle3From2<TNumOrBool>,
+            Swizzle4From2<TNumOrBool>,
             Vec2SwizzleMethods<TNumOrBool>
     {
     }
 
     interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType>
         extends
-            SwizzleAccess1From3<TNumOrBool>,
-            SwizzleAccess2From3<TNumOrBool>,
-            SwizzleAccess3From3<TNumOrBool>,
-            SwizzleAccess4From3<TNumOrBool>,
-            SwizzleAssign1From3<TNumOrBool>,
-            SwizzleAssign2From3<TNumOrBool>,
-            SwizzleAssign3From3<TNumOrBool>,
+            Swizzle1From3<TNumOrBool>,
+            Swizzle2From3<TNumOrBool>,
+            Swizzle3From3<TNumOrBool>,
+            Swizzle4From3<TNumOrBool>,
             Vec3SwizzleMethods<TNumOrBool>
     {
     }
 
     interface ColorExtensions
         extends
-            SwizzleAccess1From3<"float">,
-            SwizzleAccess2From3<"float">,
-            SwizzleAccess3From3<"float">,
-            SwizzleAccess4From3<"float">,
-            SwizzleAssign1From3<"float">,
-            SwizzleAssign2From3<"float">,
-            SwizzleAssign3From3<"float">,
+            Swizzle1From3<"float">,
+            Swizzle2From3<"float">,
+            Swizzle3From3<"float">,
+            Swizzle4From3<"float">,
             Vec3SwizzleMethods<"float">
     {
     }
 
     interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType>
         extends
-            SwizzleAccess1From4<TNumOrBool>,
-            SwizzleAccess2From4<TNumOrBool>,
-            SwizzleAccess3From4<TNumOrBool>,
-            SwizzleAccess4From4<TNumOrBool>,
-            SwizzleAssign1From4<TNumOrBool>,
-            SwizzleAssign2From4<TNumOrBool>,
-            SwizzleAssign3From4<TNumOrBool>,
-            SwizzleAssign4From4<TNumOrBool>,
+            Swizzle1From4<TNumOrBool>,
+            Swizzle2From4<TNumOrBool>,
+            Swizzle3From4<TNumOrBool>,
+            Swizzle4From4<TNumOrBool>,
             Vec4SwizzleMethods<TNumOrBool>
     {
     }
