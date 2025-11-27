@@ -18138,7 +18138,7 @@ index 65ddd737..58bbbc74 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 172e6dde..944c07e9 100644
+index 3e400f91..944c07e9 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
@@ -18168,15 +18168,6 @@ index 172e6dde..944c07e9 100644
  
  const params = {
      samples: 16,
-@@ -115,7 +119,7 @@ async function init() {
-     aoPass.resolutionScale = 0.5; // running AO in half resolution is often sufficient
-     aoPass.useTemporalFiltering = true;
- 
--    const aoPassOutput = aoPass.getTextureNode('output');
-+    const aoPassOutput = aoPass.getTextureNode();
- 
-     // scene context
- 
 @@ -163,7 +167,7 @@ async function init() {
  
      //
@@ -18893,7 +18884,7 @@ index 3b96c10c..ca3e5186 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_sss.ts b/examples-testing/examples/webgpu_postprocessing_sss.ts
-index 6c3f32a6..ee1536cb 100644
+index cf5bcad9..71497f0a 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sss.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sss.ts
 @@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18922,16 +18913,7 @@ index 6c3f32a6..ee1536cb 100644
              }
          });
      });
-@@ -121,7 +125,7 @@ async function init() {
-     const sssSample = sssPass.getTextureNode().sample(screenUV).r;
- 
-     const sssContext = context({
--        getShadow: light => {
-+        getShadow: (light: THREE.Light) => {
-             if (light === dirLight) return sssSample;
- 
-             return null;
-@@ -152,7 +156,7 @@ async function init() {
+@@ -145,7 +149,7 @@ async function init() {
  
      const types = { 'Scene with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
  
