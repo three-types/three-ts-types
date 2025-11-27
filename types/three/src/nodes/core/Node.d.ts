@@ -1,6 +1,5 @@
 import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { NodeUpdateType } from "./constants.js";
-import { NumVec2Extensions } from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 export interface NodeJSONMeta {
@@ -471,36 +470,36 @@ type Node<TValue = unknown> =
         : TValue extends "bool" ? BoolExtensions & NumOrBoolExtensions<"bool"> & NodeExtensions<"bool">
         : TValue extends "vec2" ?
                 & Vec2Extensions
-                & NumVec2Extensions<"float">
+                & NumberVec2Extensions<"float">
                 & NumOrBoolVec2Extensions<"float">
                 & FloatVectorExtensions<"vec2">
                 & NodeExtensions<"vec2">
         : TValue extends "ivec2"
-            ? Ivec2Extensions & NumVec2Extensions<"int"> & NumOrBoolVec2Extensions<"int"> & NodeExtensions<"ivec2">
+            ? Ivec2Extensions & NumberVec2Extensions<"int"> & NumOrBoolVec2Extensions<"int"> & NodeExtensions<"ivec2">
         : TValue extends "uvec2"
-            ? Uvec2Extensions & NumVec2Extensions<"uint"> & NumOrBoolVec2Extensions<"uint"> & NodeExtensions<"uvec2">
+            ? Uvec2Extensions & NumberVec2Extensions<"uint"> & NumOrBoolVec2Extensions<"uint"> & NodeExtensions<"uvec2">
         : TValue extends "bvec2" ? BvecExtensions & NumOrBoolVec2Extensions<"bool"> & NodeExtensions<"bvec2">
         : TValue extends "vec3" ?
                 & Vec3Extensions
-                & NumVec3Extensions<"float">
+                & NumberVec3Extensions<"float">
                 & NumOrBoolVec3Extensions<"float">
                 & FloatVectorExtensions<"vec3">
                 & NodeExtensions<"vec3">
         : TValue extends "ivec3"
-            ? Ivec3Extensions & NumVec3Extensions<"int"> & NumOrBoolVec3Extensions<"int"> & NodeExtensions<"ivec3">
+            ? Ivec3Extensions & NumberVec3Extensions<"int"> & NumOrBoolVec3Extensions<"int"> & NodeExtensions<"ivec3">
         : TValue extends "uvec3"
-            ? Uvec3Extensions & NumVec3Extensions<"uint"> & NumOrBoolVec3Extensions<"uint"> & NodeExtensions<"uvec3">
+            ? Uvec3Extensions & NumberVec3Extensions<"uint"> & NumOrBoolVec3Extensions<"uint"> & NodeExtensions<"uvec3">
         : TValue extends "bvec3" ? BvecExtensions & NumOrBoolVec3Extensions<"bool"> & NodeExtensions<"bvec3">
         : TValue extends "vec4" ?
                 & Vec4Extensions
-                & NumVec4Extensions<"float">
+                & NumberVec4Extensions<"float">
                 & NumOrBoolVec4Extensions<"float">
                 & FloatVectorExtensions<"vec4">
                 & NodeExtensions<"vec4">
         : TValue extends "ivec4"
-            ? Ivec4Extensions & NumVec4Extensions<"int"> & NumOrBoolVec4Extensions<"int"> & NodeExtensions<"ivec4">
+            ? Ivec4Extensions & NumberVec4Extensions<"int"> & NumOrBoolVec4Extensions<"int"> & NodeExtensions<"ivec4">
         : TValue extends "uvec4"
-            ? Uvec4Extensions & NumVec4Extensions<"uint"> & NumOrBoolVec4Extensions<"uint"> & NodeExtensions<"uvec4">
+            ? Uvec4Extensions & NumberVec4Extensions<"uint"> & NumOrBoolVec4Extensions<"uint"> & NodeExtensions<"uvec4">
         : TValue extends "bvec4" ? BvecExtensions & NumOrBoolVec4Extensions<"bool"> & NodeExtensions<"bvec4">
         : TValue extends "mat2" ? Matrix2Extensions & MatrixExtensions<"mat2"> & NodeExtensions<"mat2">
         : TValue extends "mat3" ? Matrix3Extensions & MatrixExtensions<"mat3"> & NodeExtensions<"mat3">
