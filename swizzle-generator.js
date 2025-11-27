@@ -71,7 +71,9 @@ for (let i = 0; i < 4; i++) {
         const arr = swizzleOptions[i][j];
         for (const val of arr) {
             console.log(`    get ${val}(): ${getType[i]};`);
-            console.log(`    set ${val}(value: NumOrBoolVec4OrLess<TNumOrBool>);`);
+            if (i === 0) {
+                console.log(`    set ${val}(value: NumOrBool<TNumOrBool>);`);
+            }
         }
         console.log("}");
         console.log();
