@@ -168,7 +168,7 @@ declare class RenderObject {
      *
      * @return {number} The byte offset into the indirect attribute buffer.
      */
-    getIndirectOffset(): any;
+    getIndirectOffset(): number;
     /**
      * Returns an array that acts as a key for identifying the render object in a chain map.
      *
