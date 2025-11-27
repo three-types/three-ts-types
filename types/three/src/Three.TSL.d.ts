@@ -143,7 +143,6 @@ export const cos: typeof TSL.cos;
 export const cross: typeof TSL.cross;
 export const cubeTexture: typeof TSL.cubeTexture;
 export const cubeTextureBase: typeof TSL.cubeTextureBase;
-export const cubeToUV: typeof TSL.cubeToUV;
 export const dFdx: typeof TSL.dFdx;
 export const dFdy: typeof TSL.dFdy;
 export const dashSize: typeof TSL.dashSize;
