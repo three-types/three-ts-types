@@ -534,3 +534,5 @@ declare module "../core/Node.js" {
         modIntAssign: (b: Number<TNumber>) => this;
     }
 }
+
+export {};

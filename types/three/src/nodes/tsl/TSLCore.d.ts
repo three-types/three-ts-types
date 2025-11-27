@@ -2805,3 +2805,5 @@ declare module "../core/Node.js" {
         appendAssign: () => this;
     }
 }
+
+export {};
