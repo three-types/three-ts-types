@@ -1,3 +1,4 @@
+import { Light } from "../../lights/Light.js";
 import Node from "./Node.js";
 import { NodeBuilderContext } from "./NodeBuilder.js";
 
@@ -23,6 +24,8 @@ export const uniformFlow: (node: Node) => ContextNode;
 
 export const setName: (node: Node, label: string) => Node;
 
+export function builtinShadowContext(shadowNode: Node, light: Light, node?: Node | null): ContextNode;
+
 /**
  * @deprecated "label()" has been deprecated. Use "setName()" instead.
  */
@@ -47,5 +50,8 @@ declare module "../Nodes.js" {
 
         setName: (label: string) => Node;
         setNameAssign: (label: string) => this;
+
+        builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode;
+        builtinShadowContextAssign: (shadowNode: Node, light: Light) => this;
     }
 }
