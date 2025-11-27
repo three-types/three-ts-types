@@ -164,6 +164,12 @@ declare class RenderObject {
      */
     getIndirect(): import("./IndirectStorageBufferAttribute.js").default | null;
     /**
+     * Returns the byte offset into the indirect attribute buffer.
+     *
+     * @return {number} The byte offset into the indirect attribute buffer.
+     */
+    getIndirectOffset(): any;
+    /**
      * Returns an array that acts as a key for identifying the render object in a chain map.
      *
      * @return {Array<Object>} An array with object references.
