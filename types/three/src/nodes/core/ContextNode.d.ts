@@ -34,7 +34,7 @@ export function builtinShadowContext<TNodeType>(
     node?: Node | null,
 ): ContextNode<TNodeType>;
 
-export function builtinAOContext(aoNode: Node, node?: Node | null): ContextNode;
+export function builtinAOContext<TNodeType>(aoNode: Node, node?: Node | null): ContextNode<TNodeType>;
 
 /**
  * @deprecated "label()" has been deprecated. Use "setName()" instead.
@@ -66,7 +66,7 @@ declare module "./Node.js" {
         builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode<TValue>;
         builtinShadowContextAssign: (shadowNode: Node, light: Light) => this;
 
-        builtinAOContext: (aoValue: Node) => ContextNode;
+        builtinAOContext: (aoValue: Node) => ContextNode<TValue>;
         builtinAOContextAssign: (aoValue: Node) => this;
     }
 }
