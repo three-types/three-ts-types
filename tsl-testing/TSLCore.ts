@@ -40,6 +40,9 @@ testVec3.setXY(testVec2);
 testVec3.setXZ(3);
 
 // @ts-expect-error
+testVec2.setXZ(testVec2);
+
+// @ts-expect-error
 testVec3.setXY(testVec3);
 
 // @ts-expect-error
@@ -51,6 +54,9 @@ testVec3.setXX(5);
 
 testVec3.flipX();
 testVec3.flipXZ();
+
+// @ts-expect-error
+testVec2.flipXZ();
 
 // @ts-expect-error
 testVec3.flipZX();
