@@ -7,7 +7,7 @@ export const BasicShadowFilter: typeof TSL.BasicShadowFilter;
 export const Break: typeof TSL.Break;
 export const Const: typeof TSL.Const;
 export const Continue: typeof TSL.Continue;
-export const DFGApprox: typeof TSL.DFGApprox;
+export const DFGLUT: typeof TSL.DFGLUT;
 export const D_GGX: typeof TSL.D_GGX;
 export const Discard: typeof TSL.Discard;
 export const EPSILON: typeof TSL.EPSILON;
