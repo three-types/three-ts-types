@@ -1,5 +1,5 @@
-import * as THREE from "three/webgpu";
 import { vec2, vec3 } from "three/tsl";
+import * as THREE from "three/webgpu";
 
 /**
  * Setup
