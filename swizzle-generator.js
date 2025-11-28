@@ -18,6 +18,14 @@ for (let i = 0; i < 4; i++) {
     }
 }
 
+let swizzleOptionsNoRepetitionOrdered = [];
+for (let i = 0; i < 4; i++) {
+    swizzleOptionsNoRepetitionOrdered[i] = [];
+    for (let j = 0; j < 4; j++) {
+        swizzleOptionsNoRepetitionOrdered[i][j] = [];
+    }
+}
+
 function setProtoSwizzle(a, b, c, d) {
     let prop = swizzleA[a];
     let altA = swizzleB[a];
@@ -55,6 +63,16 @@ function setProtoSwizzle(a, b, c, d) {
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(prop);
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altA);
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altB);
+            }
+        }
+    }
+
+    if (b == null || a < b) {
+        if (c == null || a < c && b < c) {
+            if (d == null || c < d && b < d && a < d) {
+                swizzleOptionsNoRepetitionOrdered[numChars - 1][maxCharNum].push(prop);
+                swizzleOptionsNoRepetitionOrdered[numChars - 1][maxCharNum].push(altA);
+                swizzleOptionsNoRepetitionOrdered[numChars - 1][maxCharNum].push(altB);
             }
         }
     }
@@ -104,4 +122,32 @@ for (let i = 0; i < 4; i++) {
         console.log("}");
         console.log();
     }
+}
+
+for (let i = 0; i < 4; i++) {
+    console.log(`interface SetSwizzle${i + 1}<TNumOrBool extends NumOrBoolType> {`);
+    for (let j = 0; j <= i; j++) {
+        for (let k = 0; k <= i; k++) {
+            const arr = swizzleOptionsNoRepetition[j][k];
+            for (const val of arr) {
+                console.log(`    set${val.toUpperCase()}(value: ${assignType[j]}): ${accessType[i]};`);
+            }
+        }
+    }
+    console.log("}");
+    console.log();
+}
+
+for (let i = 0; i < 4; i++) {
+    console.log(`interface FlipSwizzle${i + 1}<TNumOrBool extends NumOrBoolType> {`);
+    for (let j = 0; j <= i; j++) {
+        for (let k = 0; k <= i; k++) {
+            const arr = swizzleOptionsNoRepetitionOrdered[j][k];
+            for (const val of arr) {
+                console.log(`    flip${val.toUpperCase()}(): ${accessType[i]};`);
+            }
+        }
+    }
+    console.log("}");
+    console.log();
 }

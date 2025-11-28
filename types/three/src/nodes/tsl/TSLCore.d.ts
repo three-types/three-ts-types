@@ -19,29 +19,23 @@ declare module "../core/Node.js" {
     }
 }
 
-type NumOrBoolToVec = {
-    float: "vec";
-    int: "ivec";
-    uint: "uvec";
-    bool: "bvec";
-};
 type NumOrBoolToJsType = {
     float: number;
     int: number;
     uint: number;
     bool: boolean;
 };
+type NumOrBool<TNumOrBool extends NumOrBoolType> = Node<TNumOrBool> | NumOrBoolToJsType[TNumOrBool];
+
+type NumOrBoolToVec = {
+    float: "vec";
+    int: "ivec";
+    uint: "uvec";
+    bool: "bvec";
+};
 type NumOrBoolToVec2<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}2`;
 type NumOrBoolToVec3<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}3`;
 type NumOrBoolToVec4<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}4`;
-type NumOrBool<TNumOrBool extends NumOrBoolType> = Node<TNumOrBool> | NumOrBoolToJsType[TNumOrBool];
-type NumOrBoolVec2OrLess<TNumOrBool extends NumOrBoolType> = NumOrBool<TNumOrBool> | Node<NumOrBoolToVec2<TNumOrBool>>;
-type NumOrBoolVec3OrLess<TNumOrBool extends NumOrBoolType> =
-    | NumOrBoolVec2OrLess<TNumOrBool>
-    | Node<NumOrBoolToVec3<TNumOrBool>>;
-type NumOrBoolVec4OrLess<TNumOrBool extends NumOrBoolType> =
-    | NumOrBoolVec3OrLess<TNumOrBool>
-    | Node<NumOrBoolToVec4<TNumOrBool>>;
 
 interface Swizzle1From1<TNumOrBool extends NumOrBoolType> {
     get x(): Node<TNumOrBool>;
@@ -1303,176 +1297,359 @@ interface Swizzle4From4<TNumOrBool extends NumOrBoolType> extends Swizzle4From3<
     get qqqq(): Node<NumOrBoolToVec4<TNumOrBool>>;
 }
 
-type X = "x";
-type R = "r";
-type S = "s";
-type NumOrBoolSwizzleMethods<TNumOrBool extends NumOrBoolType> =
-    & {
-        [Key in X | R | S as `set${Uppercase<Key>}`]: (value: NumOrBoolVec4OrLess<TNumOrBool>) => Node<TNumOrBool>;
-    }
-    & {
-        [Key in X | R | S as `flip${Uppercase<Key>}`]: () => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}` | `${R}${R}` | `${S}${S}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}` | `${R}${R}` | `${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}${X}` | `${R}${R}${R}` | `${S}${S}${S}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}${X}` | `${R}${R}${R}` | `${S}${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}${X}${X}` | `${R}${R}${R}${R}` | `${S}${S}${S}${S}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<TNumOrBool>;
-    }
-    & {
-        [Key in `${X}${X}${X}${X}` | `${R}${R}${R}${R}` | `${S}${S}${S}${S}` as `flip${Uppercase<Key>}`]: () => Node<
-            TNumOrBool
-        >;
-    };
-type XY = "x" | "y";
-type RG = "r" | "g";
-type ST = "s" | "t";
-type Vec2SwizzleMethods<TNumOrBool extends NumOrBoolType> =
-    & {
-        [Key in XY | RG | ST as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec2<TNumOrBool>>;
-    }
-    & {
-        [Key in XY | RG | ST as `flip${Uppercase<Key>}`]: () => Node<NumOrBoolToVec2<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec2<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XY}${XY}` | `${RG}${RG}` | `${ST}${ST}` as `flip${Uppercase<Key>}`]: () => Node<
-            NumOrBoolToVec2<TNumOrBool>
-        >;
-    }
-    & {
-        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec2<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XY}${XY}${XY}` | `${RG}${RG}${RG}` | `${ST}${ST}${ST}` as `flip${Uppercase<Key>}`]: () => Node<
-            NumOrBoolToVec2<TNumOrBool>
-        >;
-    }
-    & {
-        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec2<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XY}${XY}${XY}${XY}` | `${RG}${RG}${RG}${RG}` | `${ST}${ST}${ST}${ST}` as `flip${Uppercase<Key>}`]:
-            () => Node<NumOrBoolToVec2<TNumOrBool>>;
-    };
-type XYZ = "x" | "y" | "z";
-type RGB = "r" | "g" | "b";
-type STP = "s" | "t" | "p";
-type Vec3SwizzleMethods<TNumOrBool extends NumOrBoolType> =
-    & {
-        [Key in XYZ | RGB | STP as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [Key in XYZ | RGB | STP as `flip${Uppercase<Key>}`]: () => Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZ}${XYZ}` | `${RGB}${RGB}` | `${STP}${STP}` as `flip${Uppercase<Key>}`]: () => Node<
-            NumOrBoolToVec3<TNumOrBool>
-        >;
-    }
-    & {
-        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZ}${XYZ}${XYZ}` | `${RGB}${RGB}${RGB}` | `${STP}${STP}${STP}` as `flip${Uppercase<Key>}`]: () =>
-            Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [
-            Key in
-                | `${XYZ}${XYZ}${XYZ}${XYZ}`
-                | `${RGB}${RGB}${RGB}${RGB}`
-                | `${STP}${STP}${STP}${STP}` as `set${Uppercase<Key>}`
-        ]: (value: NumOrBoolVec4OrLess<TNumOrBool>) => Node<NumOrBoolToVec3<TNumOrBool>>;
-    }
-    & {
-        [
-            Key in
-                | `${XYZ}${XYZ}${XYZ}${XYZ}`
-                | `${RGB}${RGB}${RGB}${RGB}`
-                | `${STP}${STP}${STP}${STP}` as `flip${Uppercase<Key>}`
-        ]: () => Node<NumOrBoolToVec3<TNumOrBool>>;
-    };
-type XYZW = "x" | "y" | "z" | "w";
-type RGBA = "r" | "g" | "b" | "a";
-type STPQ = "s" | "t" | "p" | "q";
-type Vec4SwizzleMethods<TNumOrBool extends NumOrBoolType> =
-    & {
-        [Key in XYZW | RGBA | STPQ as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [Key in XYZW | RGBA | STPQ as `flip${Uppercase<Key>}`]: () => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}` as `set${Uppercase<Key>}`]: (
-            value: NumOrBoolVec4OrLess<TNumOrBool>,
-        ) => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZW}${XYZW}` | `${RGBA}${RGBA}` | `${STPQ}${STPQ}` as `flip${Uppercase<Key>}`]: () => Node<
-            NumOrBoolToVec4<TNumOrBool>
-        >;
-    }
-    & {
-        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`]:
-            (value: NumOrBoolVec4OrLess<TNumOrBool>) => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [Key in `${XYZW}${XYZW}${XYZW}` | `${RGBA}${RGBA}${RGBA}` | `${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`]:
-            () => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [
-            Key in
-                | `${XYZW}${XYZW}${XYZW}${XYZW}`
-                | `${RGBA}${RGBA}${RGBA}${RGBA}`
-                | `${STPQ}${STPQ}${STPQ}${STPQ}` as `set${Uppercase<Key>}`
-        ]: (value: NumOrBoolVec4OrLess<TNumOrBool>) => Node<NumOrBoolToVec4<TNumOrBool>>;
-    }
-    & {
-        [
-            Key in
-                | `${XYZW}${XYZW}${XYZW}${XYZW}`
-                | `${RGBA}${RGBA}${RGBA}${RGBA}`
-                | `${STPQ}${STPQ}${STPQ}${STPQ}` as `flip${Uppercase<Key>}`
-        ]: () => Node<NumOrBoolToVec4<TNumOrBool>>;
-    };
+interface SetSwizzle1<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool>): Node<TNumOrBool>;
+    setR(value: NumOrBool<TNumOrBool>): Node<TNumOrBool>;
+    setS(value: NumOrBool<TNumOrBool>): Node<TNumOrBool>;
+}
+
+interface SetSwizzle2<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setYX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setGR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setTS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec2<TNumOrBool>>;
+}
+
+interface SetSwizzle3<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZ(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setB(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setP(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setYX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setGR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setTS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setSP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setYZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setGB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setTP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setBR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setPS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setBG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setPT(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXYZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRGB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setSTP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXZY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRBG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setSPT(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setYXZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setGRB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setTSP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setYZX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setGBR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setTPS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZXY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setBRG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setPST(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZYX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setBGR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setPTS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec3<TNumOrBool>>;
+}
+
+interface SetSwizzle4<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZ(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setB(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setP(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setW(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setA(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQ(value: NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPT(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWX(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAR(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQS(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQT(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRBG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSPT(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYXZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGRB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTSP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGBR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTPS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZXY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBRG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPST(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZYX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBGR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPTS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRBA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSPQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXWY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRAG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQT(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXWZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRAB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYXW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGRA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTSQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGBA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTPQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYWX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGAR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYWZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGAB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZXW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBRA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPSQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZYW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBGA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPTQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZWX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBAR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZWY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBAG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQT(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWXY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setARG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQST(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWXZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setARB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQSP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWYX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAGR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQTS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWYZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAGB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQTP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWZX(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setABR(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQPS(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWZY(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setABG(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQPT(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYZW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGBA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTPQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYWZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGAB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTQP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZYW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRBGA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSPTQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZWY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRBAG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSPQT(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXWYZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRAGB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQTP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXWZY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRABG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQPT(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYXZW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGRBA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTSPQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYXWZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGRAB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTSQP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZXW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGBRA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTPSQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZWX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGBAR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTPQS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYWXZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGARB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQSP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYWZX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGABR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQPS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZXYW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBRGA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPSTQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZXWY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBRAG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPSQT(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZYXW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBGRA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPTSQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZYWX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBGAR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPTQS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZWXY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBARG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQST(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZWYX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBAGR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQTS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWXYZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setARGB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQSTP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWXZY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setARBG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQSPT(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWYXZ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAGRB(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQTSP(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWYZX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setAGBR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQTPS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWZXY(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setABRG(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQPST(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setWZYX(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setABGR(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQPTS(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool>): Node<NumOrBoolToVec4<TNumOrBool>>;
+}
+
+interface FlipSwizzle1<TNumOrBool extends NumOrBoolType> {
+    flipX(): Node<TNumOrBool>;
+    flipR(): Node<TNumOrBool>;
+    flipS(): Node<TNumOrBool>;
+}
+
+interface FlipSwizzle2<TNumOrBool extends NumOrBoolType> {
+    flipX(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipR(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipS(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipY(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipG(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipT(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipXY(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipRG(): Node<NumOrBoolToVec2<TNumOrBool>>;
+    flipST(): Node<NumOrBoolToVec2<TNumOrBool>>;
+}
+
+interface FlipSwizzle3<TNumOrBool extends NumOrBoolType> {
+    flipX(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipR(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipS(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipY(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipG(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipT(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipZ(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipB(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipP(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipXY(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipRG(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipST(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipXZ(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipRB(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipSP(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipYZ(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipGB(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipTP(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipXYZ(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipRGB(): Node<NumOrBoolToVec3<TNumOrBool>>;
+    flipSTP(): Node<NumOrBoolToVec3<TNumOrBool>>;
+}
+
+interface FlipSwizzle4<TNumOrBool extends NumOrBoolType> {
+    flipX(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipR(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipS(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipY(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipG(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipT(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipZ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipB(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipP(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXY(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRG(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipST(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXZ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRB(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSP(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipYZ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipGB(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipTP(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipYW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipGA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipTQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipZW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipBA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipPQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXYZ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRGB(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSTP(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXYW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRGA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSTQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXZW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRBA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSPQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipYZW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipGBA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipTPQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipXYZW(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipRGBA(): Node<NumOrBoolToVec4<TNumOrBool>>;
+    flipSTPQ(): Node<NumOrBoolToVec4<TNumOrBool>>;
+}
 
 declare module "../core/Node.js" {
     interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType>
@@ -1481,7 +1658,8 @@ declare module "../core/Node.js" {
             Swizzle2From1<TNumOrBool>,
             Swizzle3From1<TNumOrBool>,
             Swizzle4From1<TNumOrBool>,
-            NumOrBoolSwizzleMethods<TNumOrBool>
+            SetSwizzle1<TNumOrBool>,
+            FlipSwizzle1<TNumOrBool>
     {
     }
 
@@ -1491,7 +1669,8 @@ declare module "../core/Node.js" {
             Swizzle2From2<TNumOrBool>,
             Swizzle3From2<TNumOrBool>,
             Swizzle4From2<TNumOrBool>,
-            Vec2SwizzleMethods<TNumOrBool>
+            SetSwizzle2<TNumOrBool>,
+            FlipSwizzle2<TNumOrBool>
     {
     }
 
@@ -1501,7 +1680,8 @@ declare module "../core/Node.js" {
             Swizzle2From3<TNumOrBool>,
             Swizzle3From3<TNumOrBool>,
             Swizzle4From3<TNumOrBool>,
-            Vec3SwizzleMethods<TNumOrBool>
+            SetSwizzle3<TNumOrBool>,
+            FlipSwizzle3<TNumOrBool>
     {
     }
 
@@ -1511,7 +1691,8 @@ declare module "../core/Node.js" {
             Swizzle2From3<"float">,
             Swizzle3From3<"float">,
             Swizzle4From3<"float">,
-            Vec3SwizzleMethods<"float">
+            SetSwizzle3<"float">,
+            FlipSwizzle3<"float">
     {
     }
 
@@ -1521,7 +1702,8 @@ declare module "../core/Node.js" {
             Swizzle2From4<TNumOrBool>,
             Swizzle3From4<TNumOrBool>,
             Swizzle4From4<TNumOrBool>,
-            Vec4SwizzleMethods<TNumOrBool>
+            SetSwizzle4<TNumOrBool>,
+            FlipSwizzle4<TNumOrBool>
     {
     }
 }
