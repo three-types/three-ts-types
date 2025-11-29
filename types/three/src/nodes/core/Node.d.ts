@@ -168,7 +168,7 @@ declare class NodeClass extends EventDispatcher<{
      * @generator
      * @yields {Node} A child node.
      */
-    getChildren(): Generator<Node<TNodeType>, void, unknown>;
+    getChildren(): Generator<Node<unknown>, void, unknown>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
@@ -249,7 +249,7 @@ declare class NodeClass extends EventDispatcher<{
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The type of the node.
      */
-    getElementType(builder: NodeBuilder): "bool" | "int" | "float" | "vec2" | "vec3" | "vec4" | "uint" | null;
+    getElementType(builder: NodeBuilder): "float" | "int" | "uint" | "bool" | "vec2" | "vec3" | "vec4" | null;
     /**
      * Returns the node member type for the given name.
      *
@@ -274,7 +274,7 @@ declare class NodeClass extends EventDispatcher<{
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node} The shared node if possible. Otherwise `this` is returned.
      */
-    getShared(builder: NodeBuilder): Node<TNodeType>;
+    getShared(builder: NodeBuilder): Node;
     /**
      * Returns the number of elements in the node array.
      *
@@ -379,6 +379,35 @@ declare const Node: {
 };
 interface NodeElements {
 }
-type Node<TNodeType = unknown> = NodeClass & NodeElements;
+export type NumType = "float" | "int" | "uint";
+export type NumOrBoolType = NumType | "bool";
+export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
+}
+export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {
+}
+export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
+}
+export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
+}
+type Node<TNodeType = unknown> =
+    & NodeClass
+    & NodeElements
+    & (TNodeType extends "float" ? NumOrBoolExtensions<"float">
+        : TNodeType extends "int" ? NumOrBoolExtensions<"int">
+        : TNodeType extends "uint" ? NumOrBoolExtensions<"uint">
+        : TNodeType extends "bool" ? NumOrBoolExtensions<"bool">
+        : TNodeType extends "vec2" ? NumOrBoolVec2Extensions<"float">
+        : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int">
+        : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint">
+        : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
+        : TNodeType extends "vec3" ? NumOrBoolVec3Extensions<"float">
+        : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int">
+        : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint">
+        : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
+        : TNodeType extends "vec4" ? NumOrBoolVec4Extensions<"float">
+        : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int">
+        : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint">
+        : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
+        : {});
 export default Node;
 export {};

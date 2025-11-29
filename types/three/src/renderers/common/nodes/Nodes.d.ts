@@ -144,7 +144,7 @@ declare class Nodes extends DataMap<{
      * @param {Scene} scene - The scene.
      * @return {Node} A node representing the current scene environment.
      */
-    getEnvironmentNode(scene: Scene): Node<TNodeType> | null;
+    getEnvironmentNode(scene: Scene): Node | null;
     /**
      * Returns a background node for the current configured
      * scene background.
@@ -152,14 +152,14 @@ declare class Nodes extends DataMap<{
      * @param {Scene} scene - The scene.
      * @return {Node} A node representing the current scene background.
      */
-    getBackgroundNode(scene: Scene): Node<TNodeType> | null;
+    getBackgroundNode(scene: Scene): Node | null;
     /**
      * Returns a fog node for the current configured scene fog.
      *
      * @param {Scene} scene - The scene.
      * @return {Node} A node representing the current scene fog.
      */
-    getFogNode(scene: Scene): Node<TNodeType> | null;
+    getFogNode(scene: Scene): Node | null;
     /**
      * Returns a cache key for the given scene and lights node.
      * This key is used by `RenderObject` as a part of the dynamic
@@ -200,7 +200,7 @@ declare class Nodes extends DataMap<{
         object: object,
         callback: () => Node | undefined,
         forceUpdate?: boolean,
-    ): Node<TNodeType> | undefined;
+    ): Node | undefined;
     /**
      * If a scene fog is configured, this method makes sure to
      * represent the fog with a corresponding node-based implementation.
@@ -244,7 +244,7 @@ declare class Nodes extends DataMap<{
      * @param {Texture} outputTarget - The output target.
      * @return {Node} The output node.
      */
-    getOutputNode(outputTarget: Texture): Node<TNodeType>;
+    getOutputNode(outputTarget: Texture): Node;
     /**
      * Triggers the call of `updateBefore()` methods
      * for all nodes of the given render object.
