@@ -5,16 +5,6 @@ import { LightShadow, LightShadowJSON } from "./LightShadow.js";
 export interface LightJSON extends Object3DJSON {
     color: number;
     intensity: number;
-
-    groundColor?: number;
-
-    distance?: number;
-    angle?: number;
-    decay?: number;
-    penumbra?: number;
-
-    shadow?: LightShadowJSON;
-    target?: string;
 }
 
 /**
