@@ -13,8 +13,8 @@ import JoinNode from "../utils/JoinNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         assign: (sourceNode: Node | number) => this;
         get: (value: string) => Node;
     }
@@ -89,8 +89,8 @@ export type Swizzable =
         [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
     };
 
-declare module "../Nodes.js" {
-    interface Node extends Swizzable {
+declare module "../core/Node.js" {
+    interface NodeElements extends Swizzable {
     }
 }
 
@@ -293,10 +293,9 @@ export const Switch: (expression: Node) => StackNode;
 
 export function Stack(node: Node): Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         toStack: () => Node;
-        toStackAssign: () => this;
     }
 }
 
@@ -463,67 +462,28 @@ export const mat4: Matrix4Function;
 export const string: (value?: string) => ConstNode<string>;
 export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         toColor: () => Node;
-        toColorAssign: () => this;
-
         toFloat: () => Node;
-        toFloatAssign: () => this;
-
         toInt: () => Node;
-        toIntAssign: () => this;
-
         toUint: () => Node;
-        toUintAssign: () => this;
-
         toBool: () => Node;
-        toBoolAssign: () => this;
-
         toVec2: () => Node;
-        toVec2Assign: () => this;
-
         toIVec2: () => Node;
-        toIVec2Assign: () => this;
-
         toUVec2: () => Node;
-        toUVec2Assign: () => this;
-
         toBVec2: () => Node;
-        toBVec2Assign: () => this;
-
         toVec3: () => Node;
-        toVec3Assign: () => this;
-
         toIVec3: () => Node;
-        toIVec3Assign: () => this;
-
         toUVec3: () => Node;
-        toUVec3Assign: () => this;
-
         toBVec3: () => Node;
-        toBVec3Assign: () => this;
-
         toVec4: () => Node;
-        toVec4Assign: () => this;
-
         toIVec4: () => Node;
-        toIVec4Assign: () => this;
-
         toUVec4: () => Node;
-        toUVec4Assign: () => this;
-
         toBVec4: () => Node;
-        toBVec4Assign: () => this;
-
         toMat2: () => Node;
-        toMat2Assign: () => this;
-
         toMat3: () => Node;
-        toMat3Assign: () => this;
-
         toMat4: () => Node;
-        toMat4Assign: () => this;
     }
 }
 
@@ -531,13 +491,10 @@ export const element: (node: Node, indexNode: Node) => Node;
 export const convert: (node: Node, types: string) => Node;
 export const split: (node: Node, channels?: string) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         element: (indexNode: Node) => Node;
-        elementAssign: (indexNode: Node) => this;
-
         convert: (types: string) => Node;
-        convertAssign: (types: string) => this;
     }
 }
 
@@ -546,15 +503,11 @@ declare module "../Nodes.js" {
  */
 export const append: (node: Node) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         /**
          * @deprecated append() has been renamed to Stack().
          */
         append: () => Node;
-        /**
-         * @deprecated append() has been renamed to Stack().
-         */
-        appendAssign: () => this;
     }
 }

@@ -21,21 +21,15 @@ export const varying: (node: Node, name?: string) => VaryingNode;
 
 export const vertexStage: (node: Node) => VaryingNode;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "./Node.js" {
+    interface NodeElements {
         toVarying: (name?: string) => VaryingNode;
-        toVaryingAssign: (name?: string) => this;
 
         toVertexStage: () => VaryingNode;
-        toVertexStageAssign: () => this;
 
         /**
          * @deprecated .vertexStage() has been renamed to .toVertexStage().
          */
         vertexStage: () => VaryingNode;
-        /**
-         * @deprecated .vertexStage() has been renamed to .toVertexStage().
-         */
-        vertexStageAssign: () => this;
     }
 }

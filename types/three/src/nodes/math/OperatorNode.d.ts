@@ -85,8 +85,8 @@ export const decrementBefore: (a: OperatorNodeParameter) => Node;
 export const increment: (a: OperatorNodeParameter) => Node;
 export const decrement: (a: OperatorNodeParameter) => Node;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         add: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
@@ -261,8 +261,8 @@ declare module "../Nodes.js" {
  */
 export const modInt: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
 
-declare module "../Nodes.js" {
-    interface Nodes {
+declare module "../core/Node.js" {
+    interface NodeElements {
         /**
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */
