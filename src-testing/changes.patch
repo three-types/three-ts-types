@@ -897,7 +897,7 @@ index ffb7734e..d71c6d24 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3..6ec8d35a 100644
+index 335f0bf3..21b93d1c 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -980,7 +980,7 @@ index 335f0bf3..6ec8d35a 100644
   * @augments EventDispatcher
   */
 -class Node extends EventDispatcher {
-+class Node extends EventDispatcher<{ dispose: {} }> {
++class NodeClass extends EventDispatcher<{ dispose: {} }> {
      static get type() {
          return 'Node';
      }
@@ -1423,6 +1423,22 @@ index 335f0bf3..6ec8d35a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
+@@ -890,4 +980,15 @@ class Node extends EventDispatcher {
+     }
+ }
+ 
++declare const Node: {
++    new <TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
++    new (nodeType?: string | null): Node;
++};
++
++interface NodeElements {}
++
++type Node<TNodeType = unknown> = NodeClass & NodeElements;
++
+ export default Node;
++
++export {};
 diff --git a/src-testing/src/nodes/core/NodeAttribute.ts b/src-testing/src/nodes/core/NodeAttribute.ts
 index 393325c3..5daf1095 100644
 --- a/src-testing/src/nodes/core/NodeAttribute.ts
@@ -6275,7 +6291,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index b76afd62..fd427e42 100644
+index cbe4e919..2264205f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -10543,10 +10559,10 @@ index df211906..e7db9d47 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 6462ea5e..4984e3a3 100644
+index b56a69e4..f88e3333 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1672,7 +1672,14 @@ class WebGPUBackend extends Backend {
+@@ -1678,7 +1678,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
