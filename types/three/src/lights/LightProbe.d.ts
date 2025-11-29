@@ -1,5 +1,10 @@
 import { SphericalHarmonics3 } from "../math/SphericalHarmonics3.js";
-import { Light } from "./Light.js";
+import {Light, LightJSON} from "./Light.js";
+import {JSONMeta} from "../core/Object3D.js";
+
+interface LightProbeJSON extends LightJSON {
+    sh: number[];
+}
 
 /**
  * Light probes are an alternative way of adding light to a 3D scene.
@@ -42,6 +47,5 @@ export class LightProbe extends Light {
      */
     sh: SphericalHarmonics3;
 
-    /** @internal */
-    fromJSON(json: {}): LightProbe;
+    toJSON(meta?: JSONMeta): LightProbeJSON;
 }
