@@ -47,10 +47,6 @@ declare module "./Node.js" {
          * @deprecated "label()" has been deprecated. Use "setName()" instead.
          */
         label: (label: string) => Node;
-        /**
-         * @deprecated "label()" has been deprecated. Use "setName()" instead.
-         */
-        labelAssign: (label: string) => this;
     }
 
     interface NodeExtensions<TValue> {

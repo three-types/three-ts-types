@@ -25,9 +25,5 @@ declare module "../core/Node.js" {
             toneMapping?: ToneMapping | null,
             outputColorSpace?: string | null,
         ) => RenderOutputNode;
-        renderOutputAssign: (
-            toneMapping?: ToneMapping | null,
-            outputColorSpace?: string | null,
-        ) => this;
     }
 }

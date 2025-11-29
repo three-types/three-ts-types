@@ -25,6 +25,5 @@ export const array: ArrayFunction;
 declare module "./Node.js" {
     interface NodeElements {
         toArray: <TNodeValue>(count: number) => ArrayNode<TNodeValue>;
-        toArrayAssign: (count: number) => this;
     }
 }

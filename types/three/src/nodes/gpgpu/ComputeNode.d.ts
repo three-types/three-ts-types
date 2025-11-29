@@ -40,12 +40,7 @@ declare module "../core/Node.js" {
             count: number,
             workgroupSize?: number[],
         ) => ComputeNode;
-        computeAssign: (
-            count: number,
-            workgroupSize?: number[],
-        ) => this;
 
         computeKernel: (workgroupSize?: number[]) => ComputeNode;
-        computeKernelAssign: (workgroupSize?: number[]) => this;
     }
 }

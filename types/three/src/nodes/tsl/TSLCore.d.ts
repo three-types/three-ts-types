@@ -1913,7 +1913,6 @@ export function Stack(node: Node): Node;
 declare module "../core/Node.js" {
     interface NodeElements {
         toStack: () => Node;
-        toStackAssign: () => this;
     }
 }
 
@@ -2095,64 +2094,44 @@ export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 declare module "../core/Node.js" {
     interface NodeElements {
         toColor: () => Node<"color">;
-        toColorAssign: () => this;
 
         toFloat: () => Node<"float">;
-        toFloatAssign: () => this;
 
         toInt: () => Node<"int">;
-        toIntAssign: () => this;
 
         toUint: () => Node<"uint">;
-        toUintAssign: () => this;
 
         toBool: () => Node<"bool">;
-        toBoolAssign: () => this;
 
         toVec2: () => Node<"vec2">;
-        toVec2Assign: () => this;
 
         toIVec2: () => Node<"ivec2">;
-        toIVec2Assign: () => this;
 
         toUVec2: () => Node<"uvec2">;
-        toUVec2Assign: () => this;
 
         toBVec2: () => Node<"bvec2">;
-        toBVec2Assign: () => this;
 
         toVec3: () => Node<"vec3">;
-        toVec3Assign: () => this;
 
         toIVec3: () => Node<"ivec3">;
-        toIVec3Assign: () => this;
 
         toUVec3: () => Node<"uvec3">;
-        toUVec3Assign: () => this;
 
         toBVec3: () => Node<"bvec3">;
-        toBVec3Assign: () => this;
 
         toVec4: () => Node<"vec4">;
-        toVec4Assign: () => this;
 
         toIVec4: () => Node<"ivec4">;
-        toIVec4Assign: () => this;
 
         toUVec4: () => Node<"uvec4">;
-        toUVec4Assign: () => this;
 
         toBVec4: () => Node<"bvec4">;
-        toBVec4Assign: () => this;
 
         toMat2: () => Node<"mat2">;
-        toMat2Assign: () => this;
 
         toMat3: () => Node<"mat3">;
-        toMat3Assign: () => this;
 
         toMat4: () => Node<"mat4">;
-        toMat4Assign: () => this;
     }
 }
 
@@ -2163,10 +2142,8 @@ export const split: (node: Node, channels?: string) => Node;
 declare module "../core/Node.js" {
     interface NodeElements {
         element: (indexNode: Node) => Node;
-        elementAssign: (indexNode: Node) => this;
 
         convert: (types: string) => Node;
-        convertAssign: (types: string) => this;
     }
 }
 
@@ -2181,10 +2158,6 @@ declare module "../core/Node.js" {
          * @deprecated append() has been renamed to Stack().
          */
         append: () => Node;
-        /**
-         * @deprecated append() has been renamed to Stack().
-         */
-        appendAssign: () => this;
     }
 }
 

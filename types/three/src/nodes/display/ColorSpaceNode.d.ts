@@ -46,15 +46,9 @@ declare module "../core/Node.js" {
         workingToColorSpace: (
             targetColorSpace: string,
         ) => ColorSpaceNode;
-        workingToColorSpaceAssign: (
-            targetColorSpace: string,
-        ) => this;
 
         colorSpaceToWorking: (
             sourceColorSpace: string,
         ) => ColorSpaceNode;
-        colorSpaceToWorkingAssign: (
-            sourceColorSpace: string,
-        ) => this;
     }
 }
