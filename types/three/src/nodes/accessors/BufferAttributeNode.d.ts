@@ -120,7 +120,7 @@ export declare const bufferAttribute: (
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
@@ -138,7 +138,7 @@ export declare const dynamicBufferAttribute: (
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
@@ -155,7 +155,7 @@ export declare const instancedBufferAttribute: (
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
@@ -172,7 +172,7 @@ export declare const instancedDynamicBufferAttribute: (
     type?: string | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 declare module "../Nodes.js" {
     interface BufferNode<TValue> {
         toAttribute: () => BufferAttributeNode;

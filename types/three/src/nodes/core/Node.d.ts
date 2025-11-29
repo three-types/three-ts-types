@@ -67,7 +67,7 @@ export interface NodeChild {
  *
  * @augments EventDispatcher
  */
-declare class Node extends EventDispatcher<{
+declare class NodeClass extends EventDispatcher<{
     dispose: {};
 }> {
     static get type(): string;
@@ -168,7 +168,7 @@ declare class Node extends EventDispatcher<{
      * @generator
      * @yields {Node} A child node.
      */
-    getChildren(): Generator<Node, void, unknown>;
+    getChildren(): Generator<Node<TNodeType>, void, unknown>;
     /**
      * Calling this method dispatches the `dispose` event. This event can be used
      * to register event listeners for clean up tasks.
@@ -274,7 +274,7 @@ declare class Node extends EventDispatcher<{
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node} The shared node if possible. Otherwise `this` is returned.
      */
-    getShared(builder: NodeBuilder): Node;
+    getShared(builder: NodeBuilder): Node<TNodeType>;
     /**
      * Returns the number of elements in the node array.
      *
@@ -373,4 +373,12 @@ declare class Node extends EventDispatcher<{
      */
     toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
 }
+declare const Node: {
+    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
+    new(nodeType?: string | null): Node;
+};
+interface NodeElements {
+}
+type Node<TNodeType = unknown> = NodeClass & NodeElements;
 export default Node;
+export {};
