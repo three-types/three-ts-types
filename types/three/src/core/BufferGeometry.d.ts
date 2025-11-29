@@ -163,7 +163,7 @@ export class BufferGeometry<
 
     indirect: IndirectStorageBufferAttribute | null;
 
-    indirectOffset: number;
+    indirectOffset: number | number[];
 
     /**
      * This hashmap has as id the name of the attribute to be set and as value the {@link THREE.BufferAttribute | buffer} to set it to. Rather than accessing this property directly,
@@ -245,7 +245,7 @@ export class BufferGeometry<
      */
     setIndex(index: BufferAttribute | number[] | null): this;
 
-    setIndirect(indirect: IndirectStorageBufferAttribute | null): this;
+    setIndirect(indirect: IndirectStorageBufferAttribute | null, indirectOffset?: number | number[]): this;
 
     getIndirect(): IndirectStorageBufferAttribute | null;
 
