@@ -1,6 +1,4 @@
-import { Vector2 } from "../../math/Vector2.js";
 import Node from "../core/Node.js";
-import UniformNode from "../core/UniformNode.js";
 
 export type MaterialNodeScope =
     | typeof MaterialNode.ALPHA_TEST
@@ -86,43 +84,43 @@ export default class MaterialNode extends Node {
     constructor(scope?: MaterialNodeScope);
 }
 
-export const materialAlphaTest: MaterialNode;
-export const materialColor: MaterialNode;
-export const materialShininess: MaterialNode;
-export const materialEmissive: MaterialNode;
-export const materialOpacity: MaterialNode;
-export const materialSpecular: MaterialNode;
+export const materialAlphaTest: Node<"float">;
+export const materialColor: Node<"vec3">;
+export const materialShininess: Node<"float">;
+export const materialEmissive: Node<"vec3">;
+export const materialOpacity: Node<"float">;
+export const materialSpecular: Node<"vec3">;
 
-export const materialSpecularIntensity: MaterialNode;
-export const materialSpecularColor: MaterialNode;
+export const materialSpecularIntensity: Node<"float">;
+export const materialSpecularColor: Node<"vec3">;
 
-export const materialSpecularStrength: MaterialNode;
-export const materialReflectivity: MaterialNode;
-export const materialRoughness: MaterialNode;
-export const materialMetalness: MaterialNode;
-export const materialNormal: Node;
-export const materialClearcoat: MaterialNode;
-export const materialClearcoatRoughness: MaterialNode;
-export const materialClearcoatNormal: Node;
-export const materialRotation: MaterialNode;
-export const materialSheen: MaterialNode;
-export const materialSheenRoughness: MaterialNode;
-export const materialAnisotropy: MaterialNode;
-export const materialIridescence: MaterialNode;
-export const materialIridescenceIOR: MaterialNode;
-export const materialIridescenceThickness: MaterialNode;
-export const materialTransmission: MaterialNode;
-export const materialThickness: MaterialNode;
-export const materialIOR: MaterialNode;
-export const materialAttenuationDistance: MaterialNode;
-export const materialAttenuationColor: MaterialNode;
-export const materialLineScale: MaterialNode;
-export const materialLineDashSize: MaterialNode;
-export const materialLineGapSize: MaterialNode;
-export const materialLineWidth: MaterialNode;
-export const materialLineDashOffset: MaterialNode;
-export const materialPointSize: MaterialNode;
-export const materialDispersion: MaterialNode;
-export const materialLightMap: MaterialNode;
-export const materialAO: MaterialNode;
-export const materialAnisotropyVector: UniformNode<Vector2>;
+export const materialSpecularStrength: Node<"float">;
+export const materialReflectivity: Node<"float">;
+export const materialRoughness: Node<"float">;
+export const materialMetalness: Node<"float">;
+export const materialNormal: Node<"vec3">;
+export const materialClearcoat: Node<"float">;
+export const materialClearcoatRoughness: Node<"float">;
+export const materialClearcoatNormal: Node<"vec3">;
+export const materialRotation: Node<"float">;
+export const materialSheen: Node<"vec3">;
+export const materialSheenRoughness: Node<"float">;
+export const materialAnisotropy: Node<"vec2">;
+export const materialIridescence: Node<"float">;
+export const materialIridescenceIOR: Node<"float">;
+export const materialIridescenceThickness: Node<"float">;
+export const materialTransmission: Node<"float">;
+export const materialThickness: Node<"float">;
+export const materialIOR: Node<"float">;
+export const materialAttenuationDistance: Node<"float">;
+export const materialAttenuationColor: Node<"vec3">;
+export const materialLineScale: Node<"float">;
+export const materialLineDashSize: Node<"float">;
+export const materialLineGapSize: Node<"float">;
+export const materialLineWidth: Node<"float">;
+export const materialLineDashOffset: Node<"float">;
+export const materialPointSize: Node<"float">;
+export const materialDispersion: Node<"float">;
+export const materialLightMap: Node<"vec3">;
+export const materialAO: Node<"float">;
+export const materialAnisotropyVector: Node<"vec2">;

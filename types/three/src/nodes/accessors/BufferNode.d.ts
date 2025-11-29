@@ -1,17 +1,29 @@
 import UniformNode from "../core/UniformNode.js";
 import { NodeOrType } from "../tsl/TSLCore.js";
 
-export default class BufferNode<TValue> extends UniformNode<TValue> {
+interface BufferNodeInterface {
     isBufferNode: true;
 
     bufferType: string;
     bufferCount: number;
-
-    constructor(value: TValue, bufferType: string, bufferCount?: number);
 }
 
-export const buffer: <TValue>(
-    value: unknown,
+declare const BufferNode: {
+    new<TNodeValue, TValue>(value: TValue, bufferType: string, bufferCount?: number): BufferNode<TNodeValue, TValue>;
+};
+
+export interface BufferNodeExtensions<TNodeType, TValue> {
+}
+
+type BufferNode<TNodeValue, TValue> =
+    & UniformNode<TNodeValue, TValue>
+    & BufferNodeInterface
+    & BufferNodeExtensions<TNodeValue, TValue>;
+
+export default BufferNode;
+
+export const buffer: <TNodeValue, TValue>(
+    value: TValue,
     nodeOrType: NodeOrType,
     count: number,
-) => BufferNode<TValue>;
+) => BufferNode<TNodeValue, TValue>;

@@ -194,7 +194,7 @@ index 4c5e4c7d..4f710ccc 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 5b4d8aa0..f7931662 100644
+index 5b4d8aa0..de10cc60 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -234,7 +234,7 @@ index 5b4d8aa0..f7931662 100644
   * @augments InputNode
   */
 -class BufferAttributeNode extends InputNode {
-+class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
++class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
      static get type() {
          return 'BufferAttributeNode';
      }
@@ -287,7 +287,7 @@ index 5b4d8aa0..f7931662 100644
       * @return {string} The hash.
       */
 -    getHash(builder) {
-+    getHash(builder: NodeBuilder) {
++    getHash(builder: NodeBuilder): string {
          if (this.bufferStride === 0 && this.bufferOffset === 0) {
              let bufferData = builder.globalCache.getData(this.value);
  
@@ -361,7 +361,7 @@ index 5b4d8aa0..f7931662 100644
          }
  
          return this;
-@@ -280,7 +301,7 @@ class BufferAttributeNode extends InputNode {
+@@ -280,12 +301,31 @@ class BufferAttributeNode extends InputNode {
       * @param {boolean} value - The value to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
@@ -370,68 +370,92 @@ index 5b4d8aa0..f7931662 100644
          this.instanced = value;
  
          return this;
-@@ -301,7 +322,14 @@ export default BufferAttributeNode;
+     }
+ }
++declare const BufferAttributeNode: {
++    /**
++     * Constructs a new buffer attribute node.
++     *
++     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
++     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
++     * @param {number} [bufferStride=0] - The buffer stride.
++     * @param {number} [bufferOffset=0] - The buffer offset.
++     */
++    new <TNodeType>(
++        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        bufferType?: string | null,
++        bufferStride?: number,
++        bufferOffset?: number,
++    ): BufferAttributeNode<TNodeType>;
++};
++
++type BufferAttributeNode<TNodeType> = InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute> &
++    BufferAttributeNodeClass;
+ 
+ export default BufferAttributeNode;
+ 
+@@ -301,7 +341,14 @@ export default BufferAttributeNode;
   * @param {boolean} [instanced=false] - Whether the buffer is instanced.
   * @returns {BufferAttributeNode|Node} The buffer attribute node.
   */
 -function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage = StaticDrawUsage, instanced = false) {
-+function createBufferAttribute(
++function createBufferAttribute<TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
 +    usage: Usage = StaticDrawUsage,
 +    instanced = false,
-+): Node {
++): Node<TNodeType> {
      if (type === 'mat3' || (type === null && array.itemSize === 9)) {
          return mat3(
              new BufferAttributeNode(array, 'vec3', 9, 0).setUsage(usage).setInstanced(instanced),
-@@ -331,8 +359,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
+@@ -331,8 +378,12 @@ function createBufferAttribute(array, type = null, stride = 0, offset = 0, usage
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset);
-+export const bufferAttribute = (
++export const bufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset);
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage.
-@@ -346,8 +378,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
+@@ -346,8 +397,12 @@ export const bufferAttribute = (array, type = null, stride = 0, offset = 0) =>
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const dynamicBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset, DynamicDrawUsage);
-+export const dynamicBufferAttribute = (
++export const dynamicBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, DynamicDrawUsage);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, DynamicDrawUsage);
  
  /**
   * TSL function for creating a buffer attribute node but with enabled instancing
-@@ -360,8 +396,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
+@@ -360,8 +415,12 @@ export const dynamicBufferAttribute = (array, type = null, stride = 0, offset =
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
 -export const instancedBufferAttribute = (array, type = null, stride = 0, offset = 0) =>
 -    createBufferAttribute(array, type, stride, offset, StaticDrawUsage, true);
-+export const instancedBufferAttribute = (
++export const instancedBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, StaticDrawUsage, true);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, StaticDrawUsage, true);
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -374,7 +414,18 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -374,7 +433,19 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -439,19 +463,20 @@ index 5b4d8aa0..f7931662 100644
 -    createBufferAttribute(array, type, stride, offset, DynamicDrawUsage, true);
 -
 -addMethodChaining('toAttribute', bufferNode => bufferAttribute(bufferNode.value));
-+export const instancedDynamicBufferAttribute = (
++export const instancedDynamicBufferAttribute = <TNodeType>(
 +    array: BufferAttribute | InterleavedBuffer | TypedArray,
 +    type: string | null = null,
 +    stride: number = 0,
 +    offset: number = 0,
-+) => createBufferAttribute(array, type, stride, offset, DynamicDrawUsage, true);
++): Node<TNodeType> => createBufferAttribute<TNodeType>(array, type, stride, offset, DynamicDrawUsage, true);
 +
-+addMethodChaining('toAttribute', <TValue>(bufferNode: BufferNode<TValue>) => bufferAttribute(bufferNode.value));
++addMethodChaining('toAttribute', <TNodeType, TValue>(bufferNode: BufferNode<TNodeType, TValue>) =>
++    bufferAttribute(bufferNode.value),
++);
 +
-+declare module '../Nodes.js' {
-+    interface BufferNode<TValue> {
-+        toAttribute: () => BufferAttributeNode;
-+        toAttributeAssign: () => this;
++declare module './BufferNode.js' {
++    interface BufferNodeExtensions<TNodeType, TValue> {
++        toAttribute: () => BufferAttributeNode<TNodeType>;
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
@@ -822,7 +847,7 @@ index f2cedcd3..ea2c2c89 100644
  
      return setName(node, name);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
-index ffb7734e..d71c6d24 100644
+index ffb7734e..2dc76d1c 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
 +++ b/src-testing/src/nodes/core/InputNode.ts
 @@ -1,24 +1,30 @@
@@ -837,7 +862,7 @@ index ffb7734e..d71c6d24 100644
   * @augments Node
   */
 -class InputNode extends Node {
-+class InputNode<TValue> extends Node {
++class InputNodeClass<TValue> extends Node {
      static get type() {
          return 'InputNode';
      }
@@ -885,7 +910,7 @@ index ffb7734e..d71c6d24 100644
          this.precision = precision;
  
          return this;
-@@ -107,10 +113,6 @@ class InputNode extends Node {
+@@ -107,10 +113,12 @@ class InputNode extends Node {
  
          if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
      }
@@ -895,9 +920,15 @@ index ffb7734e..d71c6d24 100644
 -    }
  }
  
++declare const InputNode: {
++    new <TNodeType, TValue>(value: TValue, nodeType?: string | null): InputNode<TNodeType, TValue>;
++};
++
++type InputNode<TNodeType, TValue> = Node<TNodeType> & InputNodeClass<TValue>;
++
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3..6ec8d35a 100644
+index 335f0bf3..ddb745db 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -917,13 +948,13 @@ index 335f0bf3..6ec8d35a 100644
 +    type?: string;
 +}
 +
-+interface NodeJSONMeta {
++export interface NodeJSONMeta {
 +    textures: { [key: string]: unknown };
 +    images: { [key: string]: unknown };
 +    nodes: { [key: string]: NodeJSONIntermediateOutputData };
 +}
 +
-+interface NodeJSONMetadata {
++export interface NodeJSONMetadata {
 +    version: number;
 +    type: 'Node';
 +    generator: 'Node.toJSON';
@@ -980,7 +1011,7 @@ index 335f0bf3..6ec8d35a 100644
   * @augments EventDispatcher
   */
 -class Node extends EventDispatcher {
-+class Node extends EventDispatcher<{ dispose: {} }> {
++class NodeClass extends EventDispatcher<{ dispose: {} }> {
      static get type() {
          return 'Node';
      }
@@ -1423,6 +1454,143 @@ index 335f0bf3..6ec8d35a 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
+@@ -890,4 +980,136 @@ class Node extends EventDispatcher {
+     }
+ }
+ 
++declare const Node: {
++    /**
++     * Constructs a new node.
++     *
++     * @param {?string} nodeType - The node type.
++     */
++    new <TNodeType>(nodeType?: string | null): Node<TNodeType>;
++    new (nodeType?: string | null): Node;
++    get type(): string;
++};
++
++export interface NodeElements {}
++
++export type NumberType = 'float' | 'int' | 'uint';
++export type IntegerType = 'int' | 'uint';
++export type NumOrBoolType = NumberType | 'bool';
++export type FloatVectorType = 'vec2' | 'vec3' | 'vec4';
++export type MatrixType = 'mat2' | 'mat3' | 'mat4';
++export interface NodeExtensions<TValue> {}
++export interface FloatExtensions {}
++export interface IntExtensions {}
++export interface UintExtensions {}
++export interface NumberExtensions<TNumber extends NumberType> {}
++export interface IntegerExtensions<TInteger extends IntegerType> {}
++export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {}
++export interface BoolExtensions {}
++export interface Vec2Extensions {}
++export interface Ivec2Extensions {}
++export interface Uvec2Extensions {}
++export interface NumberVec2Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {}
++export interface Vec3Extensions {}
++export interface Ivec3Extensions {}
++export interface Uvec3Extensions {}
++export interface NumberVec3Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {}
++export interface Vec4Extensions {}
++export interface Ivec4Extensions {}
++export interface Uvec4Extensions {}
++export interface NumberVec4Extensions<TNumber extends NumberType> {}
++export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {}
++export interface FloatVectorExtensions<TVec extends FloatVectorType> {}
++export interface BvecExtensions {}
++export interface Matrix2Extensions {}
++export interface Matrix3Extensions {}
++export interface Matrix4Extensions {}
++export interface MatrixExtensions<TMat extends MatrixType> {}
++export interface ColorExtensions {}
++type Node<TValue = unknown> = NodeClass &
++    NodeElements &
++    (TValue extends 'float'
++        ? FloatExtensions & NumberExtensions<'float'> & NumOrBoolExtensions<'float'> & NodeExtensions<'float'>
++        : TValue extends 'int'
++          ? IntExtensions &
++                NumberExtensions<'int'> &
++                IntegerExtensions<'int'> &
++                NumOrBoolExtensions<'int'> &
++                NodeExtensions<'int'>
++          : TValue extends 'uint'
++            ? UintExtensions &
++                  NumberExtensions<'uint'> &
++                  IntegerExtensions<'uint'> &
++                  NumOrBoolExtensions<'uint'> &
++                  NodeExtensions<'uint'>
++            : TValue extends 'bool'
++              ? BoolExtensions & NumOrBoolExtensions<'bool'> & NodeExtensions<'bool'>
++              : TValue extends 'vec2'
++                ? Vec2Extensions &
++                      NumberVec2Extensions<'float'> &
++                      NumOrBoolVec2Extensions<'float'> &
++                      FloatVectorExtensions<'vec2'> &
++                      NodeExtensions<'vec2'>
++                : TValue extends 'ivec2'
++                  ? Ivec2Extensions &
++                        NumberVec2Extensions<'int'> &
++                        NumOrBoolVec2Extensions<'int'> &
++                        NodeExtensions<'ivec2'>
++                  : TValue extends 'uvec2'
++                    ? Uvec2Extensions &
++                          NumberVec2Extensions<'uint'> &
++                          NumOrBoolVec2Extensions<'uint'> &
++                          NodeExtensions<'uvec2'>
++                    : TValue extends 'bvec2'
++                      ? BvecExtensions & NumOrBoolVec2Extensions<'bool'> & NodeExtensions<'bvec2'>
++                      : TValue extends 'vec3'
++                        ? Vec3Extensions &
++                              NumberVec3Extensions<'float'> &
++                              NumOrBoolVec3Extensions<'float'> &
++                              FloatVectorExtensions<'vec3'> &
++                              NodeExtensions<'vec3'>
++                        : TValue extends 'ivec3'
++                          ? Ivec3Extensions &
++                                NumberVec3Extensions<'int'> &
++                                NumOrBoolVec3Extensions<'int'> &
++                                NodeExtensions<'ivec3'>
++                          : TValue extends 'uvec3'
++                            ? Uvec3Extensions &
++                                  NumberVec3Extensions<'uint'> &
++                                  NumOrBoolVec3Extensions<'uint'> &
++                                  NodeExtensions<'uvec3'>
++                            : TValue extends 'bvec3'
++                              ? BvecExtensions & NumOrBoolVec3Extensions<'bool'> & NodeExtensions<'bvec3'>
++                              : TValue extends 'vec4'
++                                ? Vec4Extensions &
++                                      NumberVec4Extensions<'float'> &
++                                      NumOrBoolVec4Extensions<'float'> &
++                                      FloatVectorExtensions<'vec4'> &
++                                      NodeExtensions<'vec4'>
++                                : TValue extends 'ivec4'
++                                  ? Ivec4Extensions &
++                                        NumberVec4Extensions<'int'> &
++                                        NumOrBoolVec4Extensions<'int'> &
++                                        NodeExtensions<'ivec4'>
++                                  : TValue extends 'uvec4'
++                                    ? Uvec4Extensions &
++                                          NumberVec4Extensions<'uint'> &
++                                          NumOrBoolVec4Extensions<'uint'> &
++                                          NodeExtensions<'uvec4'>
++                                    : TValue extends 'bvec4'
++                                      ? BvecExtensions & NumOrBoolVec4Extensions<'bool'> & NodeExtensions<'bvec4'>
++                                      : TValue extends 'mat2'
++                                        ? Matrix2Extensions & MatrixExtensions<'mat2'> & NodeExtensions<'mat2'>
++                                        : TValue extends 'mat3'
++                                          ? Matrix3Extensions & MatrixExtensions<'mat3'> & NodeExtensions<'mat3'>
++                                          : TValue extends 'mat4'
++                                            ? Matrix4Extensions & MatrixExtensions<'mat4'> & NodeExtensions<'mat4'>
++                                            : TValue extends 'color'
++                                              ? ColorExtensions & NodeExtensions<'color'>
++                                              : {}) & {
++        __TypeScript_VALUE__: TValue;
++    };
++
+ export default Node;
 diff --git a/src-testing/src/nodes/core/NodeAttribute.ts b/src-testing/src/nodes/core/NodeAttribute.ts
 index 393325c3..5daf1095 100644
 --- a/src-testing/src/nodes/core/NodeAttribute.ts
@@ -2511,7 +2679,7 @@ index 15a27827..4bee878c 100644
          toType = this.getVectorType(toType);
  
 diff --git a/src-testing/src/nodes/core/NodeCache.ts b/src-testing/src/nodes/core/NodeCache.ts
-index 60ca0039..180c7e3b 100644
+index 60ca0039..cbbfb7c8 100644
 --- a/src-testing/src/nodes/core/NodeCache.ts
 +++ b/src-testing/src/nodes/core/NodeCache.ts
 @@ -1,16 +1,64 @@
@@ -2539,7 +2707,7 @@ index 60ca0039..180c7e3b 100644
 +        | undefined;
 +    bufferAttribute?: NodeAttribute | undefined;
 +    structType?: StructType | undefined;
-+    uniform?: NodeUniform<unknown> | undefined;
++    uniform?: NodeUniform<unknown, unknown> | undefined;
 +    variable?: NodeVar | undefined;
 +    varying?: NodeVarying | undefined;
 +    code?: NodeCode | undefined;
@@ -2557,7 +2725,7 @@ index 60ca0039..180c7e3b 100644
 +}
 +
 +interface BufferAttributeData {
-+    node: BufferAttributeNode;
++    node: BufferAttributeNode<unknown>;
 +}
 +
  /**
@@ -2714,7 +2882,7 @@ index ae664a23..65e57edd 100644
  
  export default NodeParser;
 diff --git a/src-testing/src/nodes/core/NodeUniform.ts b/src-testing/src/nodes/core/NodeUniform.ts
-index 09ff8b51..9a5b8384 100644
+index 09ff8b51..f862f04f 100644
 --- a/src-testing/src/nodes/core/NodeUniform.ts
 +++ b/src-testing/src/nodes/core/NodeUniform.ts
 @@ -1,10 +1,19 @@
@@ -2727,12 +2895,12 @@ index 09ff8b51..9a5b8384 100644
   * for this purpose.
   */
 -class NodeUniform {
-+class NodeUniform<TValue> {
++class NodeUniform<TNodeType, TValue> {
 +    readonly isNodeUniform: true;
 +
 +    name: string;
 +    type: string | null;
-+    node: UniformNode<TValue>;
++    node: UniformNode<TNodeType, TValue>;
 +    needsUpdate: boolean | undefined;
 +
      /**
@@ -2743,7 +2911,7 @@ index 09ff8b51..9a5b8384 100644
       * @param {UniformNode} node - An reference to the node.
       */
 -    constructor(name, type, node) {
-+    constructor(name: string, type: string | null, node: UniformNode<TValue>) {
++    constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>) {
          /**
           * This flag can be used for type testing.
           *
@@ -3102,10 +3270,10 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 19e6487a..b674b9df 100644
+index 19e6487a..9feba57c 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
-@@ -1,26 +1,36 @@
+@@ -1,26 +1,43 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
@@ -3117,6 +3285,13 @@ index 19e6487a..b674b9df 100644
 +import NodeFrame from './NodeFrame.js';
 +import { NodeUpdateType } from './constants.js';
 +import ConstNode from './ConstNode.js';
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Matrix2 } from '../../math/Matrix2.js';
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Matrix4 } from '../../math/Matrix4.js';
++import { Color } from '../../math/Color.js';
  
  /**
   * Class for representing a uniform.
@@ -3124,7 +3299,7 @@ index 19e6487a..b674b9df 100644
   * @augments InputNode
   */
 -class UniformNode extends InputNode {
-+class UniformNode<TValue> extends InputNode<TValue> {
++class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      static get type() {
          return 'UniformNode';
      }
@@ -3145,7 +3320,7 @@ index 19e6487a..b674b9df 100644
          super(value, nodeType);
  
          /**
-@@ -56,11 +66,11 @@ class UniformNode extends InputNode {
+@@ -56,11 +73,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3159,7 +3334,7 @@ index 19e6487a..b674b9df 100644
  
      /**
       * Sets the {@link UniformNode#name} property.
-@@ -69,11 +79,11 @@ class UniformNode extends InputNode {
+@@ -69,11 +86,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3173,7 +3348,7 @@ index 19e6487a..b674b9df 100644
  
      /**
       * Sets the {@link UniformNode#groupNode} property.
-@@ -81,7 +91,7 @@ class UniformNode extends InputNode {
+@@ -81,7 +98,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
       */
@@ -3182,7 +3357,7 @@ index 19e6487a..b674b9df 100644
          this.groupNode = group;
  
          return this;
-@@ -103,11 +113,11 @@ class UniformNode extends InputNode {
+@@ -103,11 +120,11 @@ class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The uniform hash.
       */
@@ -3196,7 +3371,7 @@ index 19e6487a..b674b9df 100644
          callback = callback.bind(this);
  
          return super.onUpdate(frame => {
-@@ -119,7 +129,7 @@ class UniformNode extends InputNode {
+@@ -119,7 +136,7 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -3205,7 +3380,7 @@ index 19e6487a..b674b9df 100644
          let type = super.getInputType(builder);
  
          if (type === 'bool') {
-@@ -129,12 +139,12 @@ class UniformNode extends InputNode {
+@@ -129,12 +146,12 @@ class UniformNode extends InputNode {
          return type;
      }
  
@@ -3220,7 +3395,7 @@ index 19e6487a..b674b9df 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -147,7 +157,7 @@ class UniformNode extends InputNode {
+@@ -147,7 +164,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3229,16 +3404,53 @@ index 19e6487a..b674b9df 100644
              this.name || builder.context.nodeName,
          );
          const uniformName = builder.getPropertyName(nodeUniform);
-@@ -194,7 +204,7 @@ export default UniformNode;
+@@ -183,8 +200,33 @@ class UniformNode extends InputNode {
+     }
+ }
+ 
++declare const UniformNode: {
++    /**
++     * Constructs a new uniform node.
++     *
++     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++     */
++    new <TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
++    get type(): string;
++};
++type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
++
+ export default UniformNode;
+ 
++interface Uniform {
++    (value: number, type?: 'float'): UniformNode<'float', number>;
++    (value: boolean): UniformNode<'bool', boolean>;
++    (value: Vector2): UniformNode<'vec2', Vector2>;
++    (value: Vector3): UniformNode<'vec3', Vector3>;
++    (value: Vector4): UniformNode<'vec4', Vector4>;
++    (value: Matrix2): UniformNode<'mat2', Matrix2>;
++    (value: Matrix3): UniformNode<'mat3', Matrix3>;
++    (value: Matrix4): UniformNode<'mat4', Matrix4>;
++    (value: Color): UniformNode<'color', Color>;
++    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
++}
++
+ /**
+  * TSL function for creating a uniform node.
+  *
+@@ -194,7 +236,10 @@ export default UniformNode;
   * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
 -export const uniform = (value, type) => {
-+export const uniform = <TValue>(value: InputNode<TValue> | TValue, type?: Node | string): UniformNode<TValue> => {
++export const uniform: Uniform = <TValue>(
++    value: InputNode<TValue> | TValue,
++    type?: Node | string,
++): UniformNode<TValue> => {
      const nodeType = getConstNodeType(type || value);
  
      if (nodeType === value) {
-@@ -203,17 +213,17 @@ export const uniform = (value, type) => {
+@@ -203,17 +248,17 @@ export const uniform = (value, type) => {
          value = getValueFromType(nodeType);
      }
  
@@ -3391,6 +3603,56 @@ index ee5cf92a..7240bb88 100644
          this.value = this._value || (this._value = this.getContext());
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
+diff --git a/src-testing/src/nodes/math/OperatorNode.d.ts b/src-testing/src/nodes/math/OperatorNode.d.ts
+index eece6633..91711e70 100644
+--- a/src-testing/src/nodes/math/OperatorNode.d.ts
++++ b/src-testing/src/nodes/math/OperatorNode.d.ts
+@@ -270,7 +270,7 @@ declare module "../core/Node.js" {
+         div: (b: Number<"float">) => Node<"vec3">;
+     }
+ 
+-    interface NumberVec2Extensions<TNumber extends NumberType> {
++    interface NumVec2Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+         mul: MulVec2Extensions<TNumber>;
+@@ -282,7 +282,7 @@ declare module "../core/Node.js" {
+         divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+     }
+ 
+-    interface NumberVec3Extensions<TNumber extends NumberType> {
++    interface NumVec3Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+         mul: MulVec3Extensions<TNumber>;
+@@ -294,7 +294,7 @@ declare module "../core/Node.js" {
+         divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+     }
+ 
+-    interface NumberVec4Extensions<TNumber extends NumberType> {
++    interface NumVec4Extensions<TNumber extends NumberType> {
+         add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+         sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+         mul: MulVec4Extensions<TNumber>;
+@@ -363,15 +363,15 @@ declare module "../core/Node.js" {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface NumberVec2Extensions<TNumber extends NumberType> {
++    interface NumVec2Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec2<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface NumberVec3Extensions<TNumber extends NumberType> {
++    interface NumVec3Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
+-    interface NumberVec4Extensions<TNumber extends NumberType> {
++    interface NumVec4Extensions<TNumber extends NumberType> {
+         mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
+         modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+     }
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
 index 614df3fa..9c8bd09c 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
@@ -6275,7 +6537,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index b76afd62..fd427e42 100644
+index cbe4e919..2264205f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -8442,7 +8704,7 @@ index 93c9419f..aa5b6b4b 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index e5354d6c..4871cd0b 100644
+index e5354d6c..b3842486 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,6 +1,16 @@
@@ -8509,7 +8771,7 @@ index e5354d6c..4871cd0b 100644
          let buffer = this._buffer;
  
          if (buffer === null) {
-@@ -170,14 +186,14 @@ class UniformsGroup extends UniformBuffer {
+@@ -170,14 +186,21 @@ class UniformsGroup extends UniformBuffer {
       * @param {Uniform} uniform - The uniform to update.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8522,80 +8784,87 @@ index e5354d6c..4871cd0b 100644
 -        if (uniform.isMatrix3Uniform) return this.updateMatrix3(uniform);
 -        if (uniform.isMatrix4Uniform) return this.updateMatrix4(uniform);
 +    updateByType(uniform: NodeUniformGPU) {
-+        if ((uniform as NumberNodeUniform).isNumberUniform) return this.updateNumber(uniform as NumberNodeUniform);
-+        if ((uniform as Vector2NodeUniform).isVector2Uniform) return this.updateVector2(uniform as Vector2NodeUniform);
-+        if ((uniform as Vector3NodeUniform).isVector3Uniform) return this.updateVector3(uniform as Vector3NodeUniform);
-+        if ((uniform as Vector4NodeUniform).isVector4Uniform) return this.updateVector4(uniform as Vector4NodeUniform);
-+        if ((uniform as ColorNodeUniform).isColorUniform) return this.updateColor(uniform as ColorNodeUniform);
-+        if ((uniform as Matrix3NodeUniform).isMatrix3Uniform) return this.updateMatrix3(uniform as Matrix3NodeUniform);
-+        if ((uniform as Matrix4NodeUniform).isMatrix4Uniform) return this.updateMatrix4(uniform as Matrix4NodeUniform);
++        if ((uniform as NumberNodeUniform<unknown>).isNumberUniform)
++            return this.updateNumber(uniform as NumberNodeUniform<unknown>);
++        if ((uniform as Vector2NodeUniform<unknown>).isVector2Uniform)
++            return this.updateVector2(uniform as Vector2NodeUniform<unknown>);
++        if ((uniform as Vector3NodeUniform<unknown>).isVector3Uniform)
++            return this.updateVector3(uniform as Vector3NodeUniform<unknown>);
++        if ((uniform as Vector4NodeUniform<unknown>).isVector4Uniform)
++            return this.updateVector4(uniform as Vector4NodeUniform<unknown>);
++        if ((uniform as ColorNodeUniform<unknown>).isColorUniform)
++            return this.updateColor(uniform as ColorNodeUniform<unknown>);
++        if ((uniform as Matrix3NodeUniform<unknown>).isMatrix3Uniform)
++            return this.updateMatrix3(uniform as Matrix3NodeUniform<unknown>);
++        if ((uniform as Matrix4NodeUniform<unknown>).isMatrix4Uniform)
++            return this.updateMatrix4(uniform as Matrix4NodeUniform<unknown>);
  
          error('WebGPUUniformsGroup: Unsupported uniform type.', uniform);
      }
-@@ -188,7 +204,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -188,7 +211,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {NumberUniform} uniform - The Number uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateNumber(uniform) {
-+    updateNumber(uniform: NumberNodeUniform) {
++    updateNumber(uniform: NumberNodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -212,7 +228,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -212,7 +235,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector2Uniform} uniform - The Vector2 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector2(uniform) {
-+    updateVector2(uniform: Vector2NodeUniform) {
++    updateVector2(uniform: Vector2NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -238,7 +254,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -238,7 +261,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector3Uniform} uniform - The Vector3 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector3(uniform) {
-+    updateVector3(uniform: Vector3NodeUniform) {
++    updateVector3(uniform: Vector3NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -265,7 +281,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -265,7 +288,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector4Uniform} uniform - The Vector4 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector4(uniform) {
-+    updateVector4(uniform: Vector4NodeUniform) {
++    updateVector4(uniform: Vector4NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -293,7 +309,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -293,7 +316,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {ColorUniform} uniform - The Color uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateColor(uniform) {
-+    updateColor(uniform: ColorNodeUniform) {
++    updateColor(uniform: ColorNodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -319,7 +335,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -319,7 +342,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateMatrix3(uniform) {
-+    updateMatrix3(uniform: Matrix3NodeUniform) {
++    updateMatrix3(uniform: Matrix3NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -361,7 +377,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -361,7 +384,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateMatrix4(uniform) {
-+    updateMatrix4(uniform: Matrix4NodeUniform) {
++    updateMatrix4(uniform: Matrix4NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
-@@ -385,7 +401,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -385,7 +408,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {string} type - The data type.
       * @return {TypedArray} The typed array.
       */
@@ -8604,7 +8873,7 @@ index e5354d6c..4871cd0b 100644
          if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
              return new Int32Array(this.buffer.buffer);
          if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
-@@ -402,7 +418,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -402,7 +425,7 @@ class UniformsGroup extends UniformBuffer {
   * @param {TypedArray} b - The second array.
   * @param {number} offset - An index offset for the first array.
   */
@@ -8613,7 +8882,7 @@ index e5354d6c..4871cd0b 100644
      for (let i = 0, l = b.length; i < l; i++) {
          a[offset + i] = b[i];
      }
-@@ -417,7 +433,7 @@ function setArray(a, b, offset) {
+@@ -417,7 +440,7 @@ function setArray(a, b, offset) {
   * @param {number} offset - An index offset for the first array.
   * @return {boolean} Whether the given arrays are equal or not.
   */
@@ -9451,7 +9720,7 @@ index 7c61c35c..04e6eb0d 100644
              warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 81d9f2ce..f4c0431c 100644
+index 81d9f2ce..7a6a0b9c 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
 @@ -8,6 +8,14 @@ import {
@@ -9469,11 +9738,13 @@ index 81d9f2ce..f4c0431c 100644
  
  /**
   * A special form of Number uniform binding type.
-@@ -17,12 +25,14 @@ import {
+@@ -16,13 +24,15 @@ import {
+  * @private
   * @augments NumberUniform
   */
- class NumberNodeUniform extends NumberUniform {
-+    nodeUniform: NodeUniform<number>;
+-class NumberNodeUniform extends NumberUniform {
++class NumberNodeUniform<TNodeType> extends NumberUniform {
++    nodeUniform: NodeUniform<TNodeType, number>;
 +
      /**
       * Constructs a new node-based Number uniform.
@@ -9481,15 +9752,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<number>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, number>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -60,12 +70,14 @@ class NumberNodeUniform extends NumberUniform {
+@@ -59,13 +69,15 @@ class NumberNodeUniform extends NumberUniform {
+  * @private
   * @augments Vector2Uniform
   */
- class Vector2NodeUniform extends Vector2Uniform {
-+    nodeUniform: NodeUniform<Vector2>;
+-class Vector2NodeUniform extends Vector2Uniform {
++class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector2>;
 +
      /**
       * Constructs a new node-based Vector2 uniform.
@@ -9497,15 +9770,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -103,12 +115,14 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -102,13 +114,15 @@ class Vector2NodeUniform extends Vector2Uniform {
+  * @private
   * @augments Vector3Uniform
   */
- class Vector3NodeUniform extends Vector3Uniform {
-+    nodeUniform: NodeUniform<Vector3>;
+-class Vector3NodeUniform extends Vector3Uniform {
++class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector3>;
 +
      /**
       * Constructs a new node-based Vector3 uniform.
@@ -9513,15 +9788,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -146,12 +160,14 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -145,13 +159,15 @@ class Vector3NodeUniform extends Vector3Uniform {
+  * @private
   * @augments Vector4Uniform
   */
- class Vector4NodeUniform extends Vector4Uniform {
-+    nodeUniform: NodeUniform<Vector4>;
+-class Vector4NodeUniform extends Vector4Uniform {
++class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector4>;
 +
      /**
       * Constructs a new node-based Vector4 uniform.
@@ -9529,15 +9806,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -189,12 +205,14 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -188,13 +204,15 @@ class Vector4NodeUniform extends Vector4Uniform {
+  * @private
   * @augments ColorUniform
   */
- class ColorNodeUniform extends ColorUniform {
-+    nodeUniform: NodeUniform<Color>;
+-class ColorNodeUniform extends ColorUniform {
++class ColorNodeUniform<TNodeType> extends ColorUniform {
++    nodeUniform: NodeUniform<TNodeType, Color>;
 +
      /**
       * Constructs a new node-based Color uniform.
@@ -9545,15 +9824,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Color>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Color>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -232,12 +250,14 @@ class ColorNodeUniform extends ColorUniform {
+@@ -231,13 +249,15 @@ class ColorNodeUniform extends ColorUniform {
+  * @private
   * @augments Matrix2Uniform
   */
- class Matrix2NodeUniform extends Matrix2Uniform {
-+    nodeUniform: NodeUniform<Matrix2>;
+-class Matrix2NodeUniform extends Matrix2Uniform {
++class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix2>;
 +
      /**
       * Constructs a new node-based Matrix2 uniform.
@@ -9561,15 +9842,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -275,12 +295,14 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+@@ -274,13 +294,15 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+  * @private
   * @augments Matrix3Uniform
   */
- class Matrix3NodeUniform extends Matrix3Uniform {
-+    nodeUniform: NodeUniform<Matrix3>;
+-class Matrix3NodeUniform extends Matrix3Uniform {
++class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix3>;
 +
      /**
       * Constructs a new node-based Matrix3 uniform.
@@ -9577,15 +9860,17 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -318,12 +340,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -317,13 +339,15 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+  * @private
   * @augments Matrix4Uniform
   */
- class Matrix4NodeUniform extends Matrix4Uniform {
-+    nodeUniform: NodeUniform<Matrix4>;
+-class Matrix4NodeUniform extends Matrix4Uniform {
++class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix4>;
 +
      /**
       * Constructs a new node-based Matrix4 uniform.
@@ -9593,7 +9878,7 @@ index 81d9f2ce..f4c0431c 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
@@ -9602,13 +9887,13 @@ index 81d9f2ce..f4c0431c 100644
      Matrix4NodeUniform,
  };
 +export type NodeUniformGPU =
-+    | NumberNodeUniform
-+    | Vector2NodeUniform
-+    | Vector3NodeUniform
-+    | Vector4NodeUniform
-+    | ColorNodeUniform
-+    | Matrix3NodeUniform
-+    | Matrix4NodeUniform;
++    | NumberNodeUniform<unknown>
++    | Vector2NodeUniform<unknown>
++    | Vector3NodeUniform<unknown>
++    | Vector4NodeUniform<unknown>
++    | ColorNodeUniform<unknown>
++    | Matrix3NodeUniform<unknown>
++    | Matrix4NodeUniform<unknown>;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts b/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
 index 19a8dd2a..26f39bf2 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
@@ -9640,7 +9925,7 @@ index 19a8dd2a..26f39bf2 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/nodes/Nodes.ts b/src-testing/src/renderers/common/nodes/Nodes.ts
-index 34f4121f..0c7b983e 100644
+index 34f4121f..8c444be0 100644
 --- a/src-testing/src/renderers/common/nodes/Nodes.ts
 +++ b/src-testing/src/renderers/common/nodes/Nodes.ts
 @@ -28,10 +28,63 @@ import {
@@ -9695,9 +9980,9 @@ index 34f4121f..0c7b983e 100644
 +
 +declare module '../../../scenes/Scene.js' {
 +    interface Scene {
-+        environmentNode?: Node | null | undefined;
-+        backgroundNode?: Node | null | undefined;
-+        fogNode?: Node | null | undefined;
++        environmentNode?: Node<'vec3'> | null | undefined;
++        backgroundNode?: Node<'vec3'> | Node<'vec4'> | Node<'color'> | null | undefined;
++        fogNode?: Node<'vec4'> | null | undefined;
 +    }
 +}
  
@@ -10543,10 +10828,10 @@ index df211906..e7db9d47 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 6462ea5e..4984e3a3 100644
+index b56a69e4..f88e3333 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1672,7 +1672,14 @@ class WebGPUBackend extends Backend {
+@@ -1678,7 +1678,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */

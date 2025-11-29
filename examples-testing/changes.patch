@@ -13789,7 +13789,7 @@ index 91bc961d..374525a2 100644
  const clock = new THREE.Clock();
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
-+export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node]>(([suv_immutable]) => {
++export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node], THREE.Node<'vec3'>>(([suv_immutable]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
@@ -13975,11 +13975,11 @@ index 1b780ce9..5d7ada58 100644
      const waterPosY = positionWorld.y.sub(water.position.y);
  
 -    let transition = waterPosY.add(0.1).saturate().oneMinus();
-+    let transition: THREE.Node = waterPosY.add(0.1).saturate().oneMinus();
++    let transition: THREE.Node<'float'> = waterPosY.add(0.1).saturate().oneMinus();
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
++    const colorNode = transition.mix(material.colorNode as THREE.Node<'vec4'>, material.colorNode!.add(waterLayer0));
  
      //material.colorNode = colorNode;
      floor.material.colorNode = colorNode;
@@ -14421,7 +14421,7 @@ index 229033d7..b7bd1fde 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let computeNode: THREE.ComputeNode;
 +let waveBuffer: Float32Array<ArrayBuffer>, sampleRate: number;
-+let waveArray: THREE.StorageBufferNode;
++let waveArray: THREE.StorageBufferNode<'float'>;
 +let currentAudio: AudioBufferSourceNode, currentAnalyser: AnalyserNode;
  const analyserBuffer = new Uint8Array(1024);
 -let analyserTexture;
@@ -14446,7 +14446,7 @@ index 229033d7..b7bd1fde 100644
          const time = index.mul(pitch);
  
 -        let wave = originalWave.element(time);
-+        let wave: THREE.Node = originalWave.element(time);
++        let wave: THREE.Node<'float'> = originalWave.element(time);
  
          // delay
  
@@ -14480,14 +14480,14 @@ index c602920e..266f691e 100644
 +let computeVelocity: THREE.ComputeNode,
 +    computePosition: THREE.ComputeNode,
 +    effectController: {
-+        separation: THREE.UniformNode<number>;
-+        alignment: THREE.UniformNode<number>;
-+        cohesion: THREE.UniformNode<number>;
-+        freedom: THREE.UniformNode<number>;
-+        now: THREE.UniformNode<number>;
-+        deltaTime: THREE.UniformNode<number>;
-+        rayOrigin: THREE.UniformNode<THREE.Vector3>;
-+        rayDirection: THREE.UniformNode<THREE.Vector3>;
++        separation: THREE.UniformNode<'float', number>;
++        alignment: THREE.UniformNode<'float', number>;
++        cohesion: THREE.UniformNode<'float', number>;
++        freedom: THREE.UniformNode<'float', number>;
++        now: THREE.UniformNode<'float', number>;
++        deltaTime: THREE.UniformNode<'float', number>;
++        rayOrigin: THREE.UniformNode<'vec3', THREE.Vector3>;
++        rayDirection: THREE.UniformNode<'vec3', THREE.Vector3>;
 +    };
  
  const BIRDS = 16384;
@@ -14543,19 +14543,19 @@ index b5f7c5df..a95c1efd 100644
 -let dampeningUniform, spherePositionUniform, stiffnessUniform, sphereUniform, windUniform;
 -let vertexWireframeObject, springWireframeObject;
 -let clothMesh, clothMaterial, sphere;
-+let vertexPositionBuffer: THREE.StorageBufferNode,
-+    vertexForceBuffer: THREE.StorageBufferNode,
-+    vertexParamsBuffer: THREE.StorageBufferNode;
-+let springVertexIdBuffer: THREE.StorageBufferNode,
-+    springRestLengthBuffer: THREE.StorageBufferNode,
-+    springForceBuffer: THREE.StorageBufferNode;
-+let springListBuffer: THREE.StorageBufferNode;
++let vertexPositionBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexForceBuffer: THREE.StorageBufferNode<'vec3'>,
++    vertexParamsBuffer: THREE.StorageBufferNode<'uvec3'>;
++let springVertexIdBuffer: THREE.StorageBufferNode<'uvec2'>,
++    springRestLengthBuffer: THREE.StorageBufferNode<'float'>,
++    springForceBuffer: THREE.StorageBufferNode<'vec3'>;
++let springListBuffer: THREE.StorageBufferNode<'uint'>;
 +let computeSpringForces: THREE.ComputeNode, computeVertexForces: THREE.ComputeNode;
-+let dampeningUniform: THREE.UniformNode<number>,
-+    spherePositionUniform: THREE.UniformNode<THREE.Vector3>,
-+    stiffnessUniform: THREE.UniformNode<number>,
-+    sphereUniform: THREE.UniformNode<number>,
-+    windUniform: THREE.UniformNode<number>;
++let dampeningUniform: THREE.UniformNode<'float', number>,
++    spherePositionUniform: THREE.UniformNode<'vec3', THREE.Vector3>,
++    stiffnessUniform: THREE.UniformNode<'float', number>,
++    sphereUniform: THREE.UniformNode<'float', number>,
++    windUniform: THREE.UniformNode<'float', number>;
 +let vertexWireframeObject: THREE.Mesh, springWireframeObject: THREE.Line;
 +let clothMesh: THREE.Mesh, clothMaterial: THREE.MeshPhysicalNodeMaterial, sphere: THREE.Mesh;
  let timeSinceLastStep = 0;
@@ -14611,6 +14611,15 @@ index b5f7c5df..a95c1efd 100644
          const id = verletSprings.length;
          const spring = {
              id,
+@@ -349,7 +372,7 @@ function setupWireframe() {
+     const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
+     springWireframeMaterial.positionNode = Fn(() => {
+         const vertexIds = springVertexIdBuffer.element(instanceIndex);
+-        const vertexId = select(attribute('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
++        const vertexId = select(attribute<'uint'>('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
+         return vertexPositionBuffer.element(vertexId);
+     })();
+ 
 @@ -382,7 +405,7 @@ function setupClothMesh() {
      const verletVertexIdArray = new Uint32Array(vertexCount * 4);
      const indices = [];
@@ -14620,6 +14629,15 @@ index b5f7c5df..a95c1efd 100644
          return y * clothNumSegmentsX + x;
      };
  
+@@ -419,7 +442,7 @@ function setupClothMesh() {
+ 
+     clothMaterial.positionNode = Fn(({ material }) => {
+         // gather the position of the 4 verlet vertices and calculate the center position and normal from that
+-        const vertexIds = attribute('vertexIds');
++        const vertexIds = attribute<'uvec4'>('vertexIds');
+         const v0 = vertexPositionBuffer.element(vertexIds.x).toVar();
+         const v1 = vertexPositionBuffer.element(vertexIds.y).toVar();
+         const v2 = vertexPositionBuffer.element(vertexIds.z).toVar();
 @@ -436,7 +459,7 @@ function setupClothMesh() {
          const normal = cross(tangent, bitangent);
  
@@ -14658,7 +14676,7 @@ index 1f76c981..f12346d8 100644
  
      const computeUpdate = Fn(() => {
 -        const getCoord = pos => pos.add(50).div(100);
-+        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
@@ -14676,7 +14694,7 @@ index 1f76c981..f12346d8 100644
      // compose
  
 -    let totalPass = scenePass.toInspector('Scene');
-+    let totalPass: THREE.Node = scenePass.toInspector('Scene');
++    let totalPass: THREE.Node<'vec4'> = scenePass.toInspector('Scene');
      totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
@@ -14733,7 +14751,7 @@ index 9a37a9ec..b277be89 100644
  // Display utilities
  
 -const getElementIndex = Fn(
-+const getElementIndex = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
++const getElementIndex = Fn<readonly [THREE.Node<'vec2'>, THREE.Node<'uint'>, THREE.Node<'uint'>], THREE.Node<'uint'>>(
      ([uvNode, gridWidth, gridHeight]) => {
          const newUV = uvNode.mul(vec2(gridWidth, gridHeight));
          const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
@@ -14742,7 +14760,7 @@ index 9a37a9ec..b277be89 100644
  );
  
 -const getColor = Fn(
-+const getColor = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
++const getColor = Fn<readonly [THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'vec3'>>(
      ([colorChanger, gridWidth, gridHeight]) => {
          const subtracter = colorChanger.div(gridWidth.mul(gridHeight));
          return vec3(subtracter.oneMinus()).toVar();
@@ -14779,23 +14797,26 @@ index 9a37a9ec..b277be89 100644
  
 -const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStorage = null) => {
 +const createDisplayMesh = (
-+    elementsStorage: THREE.StorageBufferNode,
-+    algoStorage: THREE.StorageBufferNode | null = null,
-+    blockHeightStorage: THREE.StorageBufferNode | null = null,
++    elementsStorage: THREE.StorageBufferNode<'uint'>,
++    algoStorage: THREE.StorageBufferNode<'uint'> | null = null,
++    blockHeightStorage: THREE.StorageBufferNode<'uint'> | null = null,
 +) => {
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -151,7 +155,7 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
+@@ -151,7 +155,10 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
      return plane;
  };
  
 -const createDisplayMesh2 = (elementsStorage, infoStorage) => {
-+const createDisplayMesh2 = (elementsStorage: THREE.StorageBufferNode, infoStorage: THREE.StorageBufferNode) => {
++const createDisplayMesh2 = (
++    elementsStorage: THREE.StorageBufferNode<'uint'>,
++    infoStorage: THREE.StorageBufferNode<'uint'>,
++) => {
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -175,7 +179,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
+@@ -175,7 +182,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
      return plane;
  };
  
@@ -14804,7 +14825,7 @@ index 9a37a9ec..b277be89 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -319,7 +323,7 @@ async function initGlobalSwapOnly() {
+@@ -319,7 +326,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
      // Swap the elements in local storage
@@ -14831,7 +14852,7 @@ index 43d162ab..99033e0e 100644
      // create function
  
 -    const computeTexture = Fn(({ storageTexture }) => {
-+    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
++    const computeTexture = Fn<{ storageTexture: THREE.Texture }, void>(({ storageTexture }) => {
          const posX = instanceIndex.mod(width);
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
@@ -14866,24 +14887,27 @@ index ccdfba0b..eb764390 100644
      const size = 200;
  
 -    const computeCloud = Fn(({ storageTexture }) => {
-+    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }>(({ storageTexture }) => {
++    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }, void>(({ storageTexture }) => {
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -110,33 +110,37 @@ async function init() {
+@@ -110,33 +110,40 @@ async function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        range?: THREE.UniformNode<number>;
-+        threshold?: THREE.UniformNode<number>;
-+        opacity?: THREE.UniformNode<number>;
-+        steps?: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.Texture3DNode;
++            range?: THREE.UniformNode<'float', number>;
++            threshold?: THREE.UniformNode<'float', number>;
++            opacity?: THREE.UniformNode<'float', number>;
++            steps?: THREE.UniformNode<'float', number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -14926,7 +14950,7 @@ index ccdfba0b..eb764390 100644
  
      // Material
  
-@@ -171,7 +175,7 @@ async function init() {
+@@ -171,7 +178,7 @@ async function init() {
  
      renderer.compute(computeNode);
  
@@ -14967,12 +14991,26 @@ index 429d2ff4..e6ffdb5b 100644
  
  init();
  
-@@ -68,7 +68,7 @@ async function init() {
+@@ -59,16 +59,16 @@ async function init() {
+         saturation: 1,
+     };
+ 
+-    const mixNode = reference('mix', 'float', adjustments);
+-    const proceduralNode = reference('procedural', 'float', adjustments);
+-    const intensityNode = reference('intensity', 'float', adjustments);
+-    const hueNode = reference('hue', 'float', adjustments);
+-    const saturationNode = reference('saturation', 'float', adjustments);
++    const mixNode = reference<'float', typeof adjustments>('mix', 'float', adjustments);
++    const proceduralNode = reference<'float', typeof adjustments>('procedural', 'float', adjustments);
++    const intensityNode = reference<'float', typeof adjustments>('intensity', 'float', adjustments);
++    const hueNode = reference<'float', typeof adjustments>('hue', 'float', adjustments);
++    const saturationNode = reference<'float', typeof adjustments>('saturation', 'float', adjustments);
+ 
      const rotateY1Matrix = new THREE.Matrix4();
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
-+    const getEnvironmentNode = (reflectNode: THREE.Node, positionNode: THREE.Node) => {
++    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
@@ -15248,6 +15286,21 @@ index a5bce322..d542dc64 100644
  
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
+@@ -92,10 +92,10 @@ async function init() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceColor = instancedBufferAttribute(colorAttribute);
+-    const instanceSeed = instancedBufferAttribute(seedAttribute);
+-    const instanceTime = instancedBufferAttribute(timeAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceColor = instancedBufferAttribute<'vec3'>(colorAttribute);
++    const instanceSeed = instancedBufferAttribute<'float'>(seedAttribute);
++    const instanceTime = instancedBufferAttribute<'float'>(timeAttribute);
+ 
+     const localTime = instanceTime.add(time);
+     const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
 index 40912937..e43bcee2 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
@@ -15264,12 +15317,12 @@ index 40912937..e43bcee2 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let material: THREE.PointsNodeMaterial;
 +let effectController: {
-+    pulseSpeed: THREE.UniformNode<number>;
-+    minWidth: THREE.UniformNode<number>;
-+    maxWidth: THREE.UniformNode<number>;
++    pulseSpeed: THREE.UniformNode<'float', number>;
++    minWidth: THREE.UniformNode<'float', number>;
++    maxWidth: THREE.UniformNode<'float', number>;
 +};
  
  // viewport
@@ -15283,6 +15336,19 @@ index 40912937..e43bcee2 100644
 +let computeSize: THREE.ComputeNode;
  
  init();
+ 
+@@ -94,10 +103,10 @@ async function init() {
+ 
+     // Material / Sprites
+ 
+-    const attributeRange = instancedBufferAttribute(instanceSizeBufferAttribute);
++    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
+     const pointColors = mix(
+         vec3(0.0),
+-        instancedBufferAttribute(colorsAttribute),
++        instancedBufferAttribute<'vec3'>(colorsAttribute),
+         attributeRange.div(float(effectController.maxWidth)),
+     );
  
 @@ -136,7 +145,7 @@ async function init() {
  
@@ -15360,6 +15426,22 @@ index c1db7d60..15b6851c 100644
      // instance data
  
      const positions = [];
+@@ -117,11 +117,11 @@ function getMaterial(count, color, sprite) {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceDirection = instancedBufferAttribute(directionAttribute);
+-    const instanceRotation = instancedBufferAttribute(rotationAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceDirection = instancedBufferAttribute<'vec3'>(directionAttribute);
++    const instanceRotation = instancedBufferAttribute<'vec3'>(rotationAttribute);
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.02));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.02));
+     const modTime = mod(localTime, 1.0);
+ 
+     const rotatedPosition = rotate(positionLocal, instanceRotation.mul(modTime.mul(20)));
 diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
 index cfd67fde..90af446b 100644
 --- a/examples-testing/examples/webgpu_lensflares.ts
@@ -15628,6 +15710,20 @@ index e00d75b2..ee12bb56 100644
          mesh.geometry = createGeometry(mesh.geometry);
          mesh.material = createMaterial();
  
+@@ -102,10 +106,10 @@ function animate() {
+ function createMaterial() {
+     const material = new THREE.MeshPhongNodeMaterial();
+ 
+-    const seedAttribute = attribute('seed');
+-    const displaceNormalAttribute = attribute('displaceNormal');
++    const seedAttribute = attribute<'float'>('seed');
++    const displaceNormalAttribute = attribute<'vec3'>('displaceNormal');
+ 
+-    const localTime = attribute('time').add(time);
++    const localTime = attribute<'float'>('time').add(time);
+ 
+     const effector1 = uniform(light1.position).toVar();
+     const effector2 = uniform(light2.position).toVar();
 @@ -125,7 +129,7 @@ function createMaterial() {
      return material;
  }
@@ -15776,8 +15872,8 @@ index c30e0bb5..25c53f3a 100644
 +    lights: THREE.Group,
 +    lightDummy: THREE.InstancedMesh,
 +    controls: OrbitControls,
-+    compose: THREE.Node,
-+    tileInfluence: THREE.UniformNode<number>,
++    compose: THREE.Node<'vec4'>,
++    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
 +    postProcessing: THREE.PostProcessing;
@@ -15830,7 +15926,7 @@ index 96417888..2ec8e8b1 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let line1: THREE.Line;
 +let matLine: THREE.Line2NodeMaterial,
 +    matLineBasic: THREE.LineBasicNodeMaterial,
@@ -15979,7 +16075,7 @@ index 9ab5c44c..dee04a5a 100644
 +    camera: THREE.PerspectiveCamera,
 +    camera2: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
-+    backgroundNode: THREE.Node;
++    backgroundNode: THREE.Node<'color'>;
 +let wireframe1: THREE.LineSegments;
 +let matLine: THREE.Line2NodeMaterial, matLineBasic: THREE.LineBasicMaterial, matLineDashed: THREE.LineDashedMaterial;
 +let gui: ParametersGroup;
@@ -16191,14 +16287,14 @@ index 4dde3561..6777cd37 100644
  
  init();
  
-@@ -90,27 +90,29 @@ function init() {
+@@ -90,29 +90,33 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = Fn(([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
 -        const coord = positionWorld.xz.div(gridSize);
 -        const grid = fract(coord);
-+    const gridXZ = Fn<[THREE.Node, THREE.Node, THREE.Node]>(
++    const gridXZ = Fn<[THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
 +        ([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
 +            const coord = positionWorld.xz.div(gridSize);
 +            const grid = fract(coord);
@@ -16233,11 +16329,17 @@ index 4dde3561..6777cd37 100644
 +    );
  
 -    const radialGradient = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
-+    const radialGradient = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
-         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
-     });
+-        return smoothstep(radius, radius.sub(falloff), length(positionWorld));
+-    });
++    const radialGradient = Fn<[THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
++        ([radius = float(10.0), falloff = float(1.0)]) => {
++            return smoothstep(radius, radius.sub(falloff), length(positionWorld));
++        },
++    );
  
-@@ -177,7 +179,7 @@ function updateModelsAlign() {
+     // Create grid pattern
+     const gridPattern = gridXZ(1.0, 0.03, 0.005);
+@@ -177,7 +181,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -16246,7 +16348,7 @@ index 4dde3561..6777cd37 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -191,12 +193,12 @@ async function addSample(sample, path) {
+@@ -191,12 +195,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
          .setPath(path)
          .loadAsync(sample)
@@ -16262,7 +16364,7 @@ index 4dde3561..6777cd37 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -206,7 +208,7 @@ async function addSample(sample, path) {
+@@ -206,7 +210,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -16271,7 +16373,7 @@ index 4dde3561..6777cd37 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -226,9 +228,9 @@ function addGUI() {
+@@ -226,9 +230,9 @@ function addGUI() {
          });
  }
  
@@ -16762,7 +16864,7 @@ index c76df99d..9c9fb02d 100644
          model.position.set(0, 0, 10);
          model.scale.setScalar(1);
          model.material = material;
-@@ -103,16 +103,24 @@ function initMaterial() {
+@@ -103,37 +103,45 @@ function initMaterial() {
      initGUI(material);
  }
  
@@ -16787,15 +16889,41 @@ index c76df99d..9c9fb02d 100644
 +        scale: number;
 +
 +        constructor() {
-+            this.distortion = material.thicknessDistortionNode.value;
-+            this.ambient = material.thicknessAmbientNode.value;
-+            this.attenuation = material.thicknessAttenuationNode.value;
-+            this.power = material.thicknessPowerNode.value;
-+            this.scale = material.thicknessScaleNode.value;
++            this.distortion = (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value;
++            this.ambient = (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value;
++            this.attenuation = (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value;
++            this.power = (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value;
++            this.scale = (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value;
 +        }
 +    }
  
      const thicknessControls = new ThicknessControls();
+ 
+     gui.add(thicknessControls, 'distortion', 0.01, 1, 0.01).onChange(function () {
+-        material.thicknessDistortionNode.value = thicknessControls.distortion;
++        (material.thicknessDistortionNode as THREE.UniformNode<'float', number>).value = thicknessControls.distortion;
+     });
+ 
+     gui.add(thicknessControls, 'ambient', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAmbientNode.value = thicknessControls.ambient;
++        (material.thicknessAmbientNode as THREE.UniformNode<'float', number>).value = thicknessControls.ambient;
+     });
+ 
+     gui.add(thicknessControls, 'attenuation', 0.01, 5.0, 0.05).onChange(function () {
+-        material.thicknessAttenuationNode.value = thicknessControls.attenuation;
++        (material.thicknessAttenuationNode as THREE.UniformNode<'float', number>).value = thicknessControls.attenuation;
+     });
+ 
+     gui.add(thicknessControls, 'power', 0.01, 16.0, 0.1).onChange(function () {
+-        material.thicknessPowerNode.value = thicknessControls.power;
++        (material.thicknessPowerNode as THREE.UniformNode<'float', number>).value = thicknessControls.power;
+     });
+ 
+     gui.add(thicknessControls, 'scale', 0.01, 50.0, 0.1).onChange(function () {
+-        material.thicknessScaleNode.value = thicknessControls.scale;
++        (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value = thicknessControls.scale;
+     });
+ }
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
 index 09037272..2456b295 100644
@@ -17562,9 +17690,10 @@ index e49f98ce..148171a6 100644
 -let camera, scene, renderer, controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
  
- class OcclusionNode extends THREE.Node {
+-class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
-+    uniformNode: THREE.UniformNode<THREE.Color>;
++class OcclusionNode extends THREE.Node<'vec3'> {
++    uniformNode: THREE.UniformNode<'color', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
 +    normalColor: THREE.Color;
@@ -17903,7 +18032,7 @@ index 3dc3ceb4..aad91a01 100644
      const loader = new GLTFLoader();
      loader.load('models/gltf/Xbot.glb', function (gltf) {
 -        const createModel = (colorNode = null) => {
-+        const createModel = (colorNode: THREE.Node | null = null) => {
++        const createModel = (colorNode: THREE.Node<'vec3'> | null = null) => {
              let object;
  
              if (mixers.length === 0) {
@@ -18057,8 +18186,12 @@ index f23b09c1..166d3b92 100644
      gui.add(params, 'intensity', 0, 1);
  
      window.addEventListener('resize', onWindowResize);
-@@ -219,7 +240,7 @@ async function animate() {
-     lutPass.intensityNode.value = params.intensity;
+@@ -216,10 +237,10 @@ function onWindowResize() {
+ async function animate() {
+     controls.update();
+ 
+-    lutPass.intensityNode.value = params.intensity;
++    (lutPass.intensityNode as THREE.UniformNode<'float', number>).value = params.intensity;
  
      if (lutMap[params.lut]) {
 -        const lut = lutMap[params.lut];
@@ -18086,6 +18219,22 @@ index 88a0c635..286b58cf 100644
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
+@@ -72,13 +72,13 @@ function init() {
+ 
+     const material = new THREE.SpriteNodeMaterial({ blending: THREE.AdditiveBlending, depthWrite: false });
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.1));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.1));
+     const modTime = mod(localTime, 1.0);
+     const accTime = modTime.mul(modTime);
+ 
+     const angle = accTime.mul(40.0);
+     const pulse = vec2(sin(angle).mul(20.0), cos(angle).mul(20.0));
+-    const pos = instancedBufferAttribute(positionAttribute);
++    const pos = instancedBufferAttribute<'vec3'>(positionAttribute);
+ 
+     const animated = vec3(
+         pos.x.mul(accTime).add(pulse.x),
 @@ -107,8 +107,8 @@ function init() {
  
      //
@@ -18093,7 +18242,7 @@ index 88a0c635..286b58cf 100644
 -    const gui = renderer.inspector.createParameters('Settings');
 -    gui.add(afterImagePass.damp, 'value', 0.25, 1);
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
-+    gui.add(afterImagePass.damp as THREE.UniformNode<number>, 'value', 0.25, 1);
++    gui.add(afterImagePass.damp as THREE.UniformNode<'float', number>, 'value', 0.25, 1);
      gui.add(params, 'enabled').onChange(updatePassChain);
  
      window.addEventListener('resize', onWindowResize);
@@ -18245,7 +18394,7 @@ index 48ea482e..4ec44893 100644
 +            .material;
  
 -        const bloomIntensity = material.mrtNode.get('bloomIntensity');
-+        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<number>;
++        const bloomIntensity = material.mrtNode!.get('bloomIntensity') as THREE.UniformNode<'float', number>;
          bloomIntensity.value = bloomIntensity.value === 0 ? 1 : 0;
      }
  });
@@ -18472,7 +18621,7 @@ index 160be467..e21c6cd2 100644
      const sceneMask2 = pass(maskScene2, camera).a;
  
 -    let compose = base;
-+    let compose: THREE.Node = base;
++    let compose: THREE.Node<'vec4'> = base;
      compose = sceneMask1.mix(compose, texture(texture1));
      compose = sceneMask2.mix(compose, texture(texture2));
  
@@ -18582,9 +18731,9 @@ index 01d72fce..3684c180 100644
 +    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
 +    clock: THREE.Clock;
 +let effectController: {
-+    pixelSize: THREE.UniformNode<number>;
-+    normalEdgeStrength: THREE.UniformNode<number>;
-+    depthEdgeStrength: THREE.UniformNode<number>;
++    pixelSize: THREE.UniformNode<'float', number>;
++    normalEdgeStrength: THREE.UniformNode<'float', number>;
++    depthEdgeStrength: THREE.UniformNode<'float', number>;
 +    pixelAlignedPanning: boolean;
 +};
  
@@ -18971,12 +19120,12 @@ index c4c88665..fc7976ff 100644
 +    animateScene: boolean;
 +    animateTransition: boolean;
 +    transition: number;
-+    _transition: THREE.UniformNode<number>;
++    _transition: THREE.UniformNode<'float', number>;
 +    useTexture: boolean;
-+    _useTexture: THREE.UniformNode<number>;
++    _useTexture: THREE.UniformNode<'float', number>;
 +    texture: number;
 +    cycle: boolean;
-+    threshold: THREE.UniformNode<number>;
++    threshold: THREE.UniformNode<'float', number>;
 +}
 +
 +const effectController: EffectController = {
@@ -19163,12 +19312,27 @@ index 76592b8c..53dbdbba 100644
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
+@@ -288,10 +287,10 @@ function createTreeMesh() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(attributePosition);
+-    const instanceNormal = instancedBufferAttribute(attributeNormal);
+-    const instanceColor = instancedBufferAttribute(attributeColor);
+-    const instanceData = instancedBufferAttribute(attributeData);
++    const instancePosition = instancedBufferAttribute<'vec3'>(attributePosition);
++    const instanceNormal = instancedBufferAttribute<'vec3'>(attributeNormal);
++    const instanceColor = instancedBufferAttribute<'vec3'>(attributeColor);
++    const instanceData = instancedBufferAttribute<'vec3'>(attributeData);
+ 
+     material.positionNode = Fn(() => {
+         const instanceSize = instanceData.x;
 @@ -308,7 +307,7 @@ function createTreeMesh() {
  
          // accumulate different vertex animations
  
 -        let animated = positionLocal.add(instancePosition).toVar();
-+        let animated: THREE.Node = positionLocal.add(instancePosition).toVar();
++        let animated: THREE.Node<'vec3'> = positionLocal.add(instancePosition).toVar();
          const direction = positionGeometry.normalize().toConst();
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
@@ -19256,6 +19420,24 @@ index 627fd6b1..ededdfd5 100644
  
          const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
          map3D.name = 'Data3DTexture';
+@@ -109,7 +120,7 @@ async function init() {
+         // 3D
+         const helper3D = new TextureHelper(map3D, 10, 10, depth);
+         helper3D.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[1].scene.add(helper3D);
+@@ -135,7 +146,7 @@ async function init() {
+ 
+         const helperArray = new TextureHelper(mapArray, 10, 10, depth);
+         helperArray.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.div(size.depth).mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.div(size.depth).mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[0].scene.add(helperArray);
 @@ -159,7 +170,7 @@ async function init() {
          const quadMesh = new THREE.QuadMesh(materialQuad);
  
@@ -19753,10 +19935,63 @@ index 1b4461d3..440b4ac3 100644
      const type = ['float', 'vec2', 'vec3', 'vec4'];
  
 -    const arrayBufferNodes = [];
-+    const arrayBufferNodes: THREE.StorageBufferNode[] = [];
++    const arrayBufferNodes: THREE.StorageBufferNode<unknown>[] = [];
  
      for (let i = 0; i < type.length; i++) {
          const typeSize = i + 1;
+@@ -34,7 +34,7 @@ async function init(forceWebGL = false) {
+ 
+         const arrayBuffer = new THREE.StorageInstancedBufferAttribute(new Float32Array(array), typeSize);
+ 
+-        arrayBufferNodes.push(storage(arrayBuffer, type[i], size).setPBO(true));
++        arrayBufferNodes.push(storage(arrayBuffer, type[i] as 'float', size).setPBO(true));
+     }
+ 
+     const computeInitOrder = Fn(() => {
+@@ -45,7 +45,9 @@ async function init(forceWebGL = false) {
+ 
+     const computeInvertOrder = Fn(() => {
+         for (let i = 0; i < type.length; i++) {
+-            const invertIndex = arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)).toVar();
++            const invertIndex = (
++                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.StorageArrayElementNode<'float'>
++            ).toVar();
+             workgroupBarrier();
+             arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
+         }
+@@ -69,28 +71,28 @@ async function init(forceWebGL = false) {
+         const color = vec3(0, 0, 0).toVar();
+ 
+         If(uv().y.greaterThan(0.0), () => {
+-            const indexValue = arrayBufferNodes[0].element(index).toVar();
++            const indexValue = (arrayBufferNodes[0].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, 0, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.25), () => {
+-            const indexValue = arrayBufferNodes[1].element(index).toVar();
++            const indexValue = (arrayBufferNodes[1].element(index) as THREE.StorageArrayElementNode<'vec2'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, value, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.5), () => {
+-            const indexValue = arrayBufferNodes[2].element(index).toVar();
++            const indexValue = (arrayBufferNodes[2].element(index) as THREE.StorageArrayElementNode<'vec3'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, 0, value));
+         });
+ 
+         If(uv().y.greaterThan(0.75), () => {
+-            const indexValue = arrayBufferNodes[3].element(index).toVar();
++            const indexValue = (arrayBufferNodes[3].element(index) as THREE.StorageArrayElementNode<'vec4'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, value, value));
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
 index b0d1139d..e61beb33 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
@@ -19769,6 +20004,29 @@ index b0d1139d..e61beb33 100644
 +let computeDrawBuffer: THREE.ComputeNode, computeInitDrawBuffer: THREE.ComputeNode;
  
  init();
+ 
+@@ -139,15 +139,15 @@ async function init() {
+         drawInfo.get('offset').assign(0);
+     })().compute(1);
+ 
+-    const vPosition = varyingProperty('vec3', 'vPosition');
+-    const vColor = varyingProperty('vec4', 'vColor');
++    const vPosition = varyingProperty<'vec3'>('vec3', 'vPosition');
++    const vColor = varyingProperty<'vec4'>('vec4', 'vColor');
+ 
+     const positionShaderParams = {
+-        position: attribute('position'),
+-        offset: attribute('offset'),
+-        color: attribute('color'),
+-        orientationStart: attribute('orientationStart'),
+-        orientationEnd: attribute('orientationEnd'),
++        position: attribute<'vec3'>('position'),
++        offset: attribute<'vec3'>('offset'),
++        color: attribute<'vec4'>('color'),
++        orientationStart: attribute<'vec4'>('orientationStart'),
++        orientationEnd: attribute<'vec4'>('orientationEnd'),
+         time: time,
+     };
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
 index a1a354ff..26d952ce 100644
@@ -19800,7 +20058,7 @@ index a1a354ff..26d952ce 100644
          map.needsUpdate = true;
  
 -        let coord = uv();
-+        let coord: THREE.Node = uv();
++        let coord: THREE.Node<'vec2'> = uv();
          coord = coord.setY(coord.y.oneMinus()); // flip y
  
          let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
@@ -19959,16 +20217,24 @@ index 646c5893..bab3f6f2 100644
  
  init();
  
-@@ -45,7 +45,7 @@ function init() {
+@@ -45,10 +45,12 @@ function init() {
  
      // TSL functions
  
 -    const inAngle = Fn(([position, angleStart, angleArc]) => {
-+    const inAngle = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([position, angleStart, angleArc]) => {
-         const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
-         return angle.greaterThan(0).and(angle.lessThan(angleArc));
-     });
-@@ -112,9 +112,9 @@ function init() {
+-        const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
+-        return angle.greaterThan(0).and(angle.lessThan(angleArc));
+-    });
++    const inAngle = Fn<[THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'bool'>>(
++        ([position, angleStart, angleArc]) => {
++            const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
++            return angle.greaterThan(0).and(angle.lessThan(angleArc));
++        },
++    );
+ 
+     // materials
+ 
+@@ -112,9 +114,9 @@ function init() {
          const model = gltf.scene;
  
          model.traverse(child => {
@@ -19981,7 +20247,7 @@ index 646c5893..bab3f6f2 100644
  
                  child.castShadow = true;
                  child.receiveShadow = true;
-@@ -160,7 +160,7 @@ function init() {
+@@ -160,7 +162,7 @@ function init() {
  
      // debug
  
@@ -20007,15 +20273,6 @@ index 14c14890..6d022baa 100644
 +    clock: THREE.Clock;
  
  init();
- 
-@@ -106,7 +111,7 @@ function init() {
-     // atmosphere
- 
-     const atmosphereMaterial = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide, transparent: true });
--    let alpha = fresnel.remap(0.73, 1, 1, 0).pow(3);
-+    let alpha: THREE.Node = fresnel.remap(0.73, 1, 1, 0).pow(3);
-     alpha = alpha.mul(sunOrientation.smoothstep(-0.5, 1));
-     atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
  
 @@ -136,7 +141,7 @@ function init() {
  
@@ -20071,14 +20328,14 @@ index 143d577f..dc289242 100644
 +}
 +
 +interface Uniforms {
-+    count: THREE.UniformNode<number>;
-+    color: THREE.UniformNode<THREE.Color>;
-+    direction: THREE.UniformNode<THREE.Vector3>;
-+    start: THREE.UniformNode<number>;
-+    end: THREE.UniformNode<number>;
-+    mixLow: THREE.UniformNode<number>;
-+    mixHigh: THREE.UniformNode<number>;
-+    radius: THREE.UniformNode<number>;
++    count: THREE.UniformNode<'float', number>;
++    color: THREE.UniformNode<'color', THREE.Color>;
++    direction: THREE.UniformNode<'vec3', THREE.Vector3>;
++    start: THREE.UniformNode<'float', number>;
++    end: THREE.UniformNode<'float', number>;
++    mixLow: THREE.UniformNode<'float', number>;
++    mixHigh: THREE.UniformNode<'float', number>;
++    radius: THREE.UniformNode<'float', number>;
 +}
 +
 +let camera: THREE.PerspectiveCamera,
@@ -20108,23 +20365,33 @@ index 143d577f..dc289242 100644
  
          uniforms.count = uniform(settings.count);
          uniforms.color = uniform(color(settings.color));
-@@ -112,7 +141,9 @@ function init() {
+@@ -112,7 +141,19 @@ function init() {
  
      // halftone functions
  
 -    const halftone = Fn(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
 +    const halftone = Fn<
-+        [THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]
++        [
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'vec3', THREE.Node<'vec3'>>,
++            THREE.UniformNode<'vec3', THREE.Vector3>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++            THREE.UniformNode<'float', number>,
++        ],
++        THREE.Node<'vec4'>
 +    >(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
          // grid pattern
  
          let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
-@@ -133,19 +164,19 @@ function init() {
+@@ -133,19 +174,19 @@ function init() {
          return vec4(color, mask);
      });
  
 -    const halftones = Fn(([input]) => {
-+    const halftones = Fn<[THREE.Node]>(([input]) => {
++    const halftones = Fn<[THREE.PropertyNode<'vec4'>], THREE.PropertyNode<'vec4'>>(([input]) => {
          const halftonesOutput = input;
  
          for (const settings of halftoneSettings) {
@@ -20148,7 +20415,7 @@ index 143d577f..dc289242 100644
              );
              halftonesOutput.rgb.assign(mix(halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a));
          }
-@@ -177,7 +208,9 @@ function init() {
+@@ -177,7 +218,9 @@ function init() {
          model.position.y = -2;
          model.scale.setScalar(2.5);
          model.traverse(child => {
@@ -20159,7 +20426,7 @@ index 143d577f..dc289242 100644
          });
  
          scene.add(model);
-@@ -204,8 +237,8 @@ async function animate() {
+@@ -204,8 +247,8 @@ async function animate() {
      controls.update();
  
      const time = clock.getElapsedTime();
@@ -20190,23 +20457,23 @@ index e57c66ee..31838ac1 100644
  
  function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
+@@ -46,7 +46,7 @@ function init() {
+         throw new Error('No WebGPU support');
+     }
+ 
+-    const vUv = varyingProperty('vec2', 'vUv');
++    const vUv = varyingProperty<'vec2'>('vec2', 'vUv');
+ 
+     // In WGSL, access varying properties from the varying struct
+     const wgslVertexShader = wgslFn(
 @@ -195,7 +195,7 @@ function init() {
          samplePoint.x = samplePoint.x.add(fract(scaledTime.div(20)));
          samplePoint.y = samplePoint.y.sub(1.5);
  
 -        let color = texture(planetTexture, samplePoint);
-+        let color: THREE.Node = texture(planetTexture, samplePoint);
++        let color: THREE.Node<'vec4'> = texture(planetTexture, samplePoint);
  
          const ind = floor(subCoord.x).mod(3);
- 
-@@ -215,7 +215,7 @@ function init() {
-         color = color.mul(maskColor);
- 
-         const pixelDampen = pixel.y.div(pulseWidthUniform);
--        let pulse = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-+        let pulse: THREE.Node = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-         pulse = pulse.mul(pulseIntensityUniform);
-         color = color.mul(float(1.0).add(pulse));
  
 @@ -249,7 +249,7 @@ function init() {
  
@@ -20254,7 +20521,7 @@ index ef87d67b..2e495a08 100644
      const vPosition = varying(vec3());
  
 -    const terrainElevation = Fn(([position]) => {
-+    const terrainElevation = Fn<[THREE.Node]>(([position]) => {
++    const terrainElevation = Fn<[THREE.Node<'vec2'>], THREE.Node<'float'>>(([position]) => {
          const warpedPosition = position.add(offset).toVar();
          warpedPosition.addAssign(
              mx_noise_float(warpedPosition.mul(positionFrequency).mul(warpFrequency), 1, 0).mul(warpStrength),
@@ -20321,7 +20588,7 @@ index cb513d07..9b867d08 100644
      // TSL functions
  
 -    const wavesElevation = Fn(([position]) => {
-+    const wavesElevation = Fn<[THREE.Node]>(([position]) => {
++    const wavesElevation = Fn<[THREE.Node<'vec3'>], THREE.Node<'float'>>(([position]) => {
          // large waves
  
          const elevation = mul(
@@ -20389,7 +20656,7 @@ index 4c4ee68e..6dcc8e26 100644
 -let updateParticles, spawnParticles; // TSL compute nodes
 -let getInstanceColor; // TSL function
 +let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
-+let getInstanceColor: THREE.TSL.ShaderNodeFn<[THREE.Node]>; // TSL function
++let getInstanceColor: THREE.TSL.FnNode<[THREE.Node<'uint'>], THREE.Node<'vec3'>>; // TSL function
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();
@@ -20398,7 +20665,7 @@ index 4c4ee68e..6dcc8e26 100644
      // TSL function
      // current color from index
 -    getInstanceColor = Fn(([i]) => {
-+    getInstanceColor = Fn<[THREE.Node]>(([i]) => {
++    getInstanceColor = Fn<[THREE.IndexNode], THREE.Node<'vec3'>>(([i]) => {
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
@@ -20437,54 +20704,36 @@ index 571b7ea0..78c200d0 100644
  
  init();
  
-@@ -44,7 +48,7 @@ function init() {
+@@ -44,7 +48,10 @@ function init() {
  
      // TSL functions
  
 -    const toRadialUv = Fn(([uv, multiplier, rotation, offset]) => {
-+    const toRadialUv = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(([uv, multiplier, rotation, offset]) => {
++    const toRadialUv = Fn<
++        [THREE.Node<'vec2'>, THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'vec2'>
++    >(([uv, multiplier, rotation, offset]) => {
          const centeredUv = uv.sub(0.5).toVar();
          const distanceToCenter = centeredUv.length();
          const angle = atan(centeredUv.y, centeredUv.x);
-@@ -56,24 +60,26 @@ function init() {
+@@ -56,11 +63,14 @@ function init() {
          return radialUv;
      });
  
 -    const toSkewedUv = Fn(([uv, skew]) => {
-+    const toSkewedUv = Fn<[THREE.Node, THREE.Node]>(([uv, skew]) => {
++    const toSkewedUv = Fn<[THREE.Node<'vec2'>, THREE.Node<'vec2'>], THREE.Node<'vec2'>>(([uv, skew]) => {
          return vec2(uv.x.add(uv.y.mul(skew.x)), uv.y.add(uv.x.mul(skew.y)));
      });
  
 -    const twistedCylinder = Fn(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
--        const angle = atan(position.z, position.x).toVar();
--        const elevation = position.y;
-+    const twistedCylinder = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(
-+        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
-+            const angle = atan(position.z, position.x).toVar();
-+            const elevation = position.y;
++    const twistedCylinder = Fn<
++        [THREE.Node<'vec3'>, THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'vec3'>
++    >(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
+         const angle = atan(position.z, position.x).toVar();
+         const elevation = position.y;
  
--        // parabol
--        const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
-+            // parabol
-+            const radius = parabolStrength.mul(position.y.sub(parabolOffset)).pow(2).add(parabolAmplitude).toVar();
- 
--        // turbulences
--        radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
-+            // turbulences
-+            radius.addAssign(sin(elevation.sub(time).mul(20).add(angle.mul(2))).mul(0.05));
- 
--        const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
-+            const twistedPosition = vec3(cos(angle).mul(radius), elevation, sin(angle).mul(radius));
- 
--        return twistedPosition;
--    });
-+            return twistedPosition;
-+        },
-+    );
- 
-     // uniforms
- 
-@@ -260,7 +266,7 @@ function init() {
+@@ -260,7 +270,7 @@ function init() {
  
      // debug
  
@@ -20532,14 +20781,14 @@ index 5a4e0650..21088360 100644
      return {
          x: 0,
          y: (finishIndex - Finishes.length / 2) * 1.0,
-@@ -28,29 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
+@@ -28,27 +36,32 @@ function getGridPosition(woodIndex, finishIndex) {
  function createGridPlane() {
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = TSL.Fn(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
 -        const coord = TSL.positionWorld.xz.div(gridSize);
 -        const grid = TSL.fract(coord);
-+    const gridXZ = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node]>(
++    const gridXZ = TSL.Fn<[THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>], THREE.Node<'float'>>(
 +        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
 +            const coord = TSL.positionWorld.xz.div(gridSize);
 +            const grid = TSL.fract(coord);
@@ -20574,17 +20823,14 @@ index 5a4e0650..21088360 100644
 +    );
  
 -    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
--        return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
--    });
-+    const radialGradient = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node] | [THREE.Node, THREE.Node]>(
-+        ([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
-+            return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
-+        },
-+    );
++    const radialGradient = TSL.Fn<
++        [THREE.Node<'float'>, THREE.Node<'float'>, THREE.Node<'float'>] | [THREE.Node<'float'>, THREE.Node<'float'>],
++        THREE.Node<'float'>
++    >(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
+         return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+     });
  
-     // Create grid pattern
-     const gridPattern = gridXZ(1.0, 0.03, 0.005);
-@@ -69,7 +81,12 @@ function createGridPlane() {
+@@ -69,7 +82,12 @@ function createGridPlane() {
  }
  
  // Helper function to create and position labels
@@ -20598,7 +20844,7 @@ index 5a4e0650..21088360 100644
      const txt_geo = new TextGeometry(text, {
          font: font,
          size: 0.1,
-@@ -79,9 +96,9 @@ function createLabel(text, font, material, position) {
+@@ -79,9 +97,9 @@ function createLabel(text, font, material, position) {
      });
  
      txt_geo.computeBoundingBox();
@@ -20611,7 +20857,7 @@ index 5a4e0650..21088360 100644
      txt_geo.translate(offx, offy, offz);
  
      const label = new THREE.Group();
-@@ -91,7 +108,7 @@ function createLabel(text, font, material, position) {
+@@ -91,7 +109,7 @@ function createLabel(text, font, material, position) {
      // Apply default rotation for labels
      label.rotateY(-Math.PI / 2);
  
@@ -20620,7 +20866,7 @@ index 5a4e0650..21088360 100644
      label.position.copy(position);
      base.add(label);
  }
-@@ -115,7 +132,7 @@ async function init() {
+@@ -115,7 +133,7 @@ async function init() {
      controls = new OrbitControls(camera, renderer.domElement);
      controls.target.set(0, 0, 0.548);
  
@@ -20629,7 +20875,7 @@ index 5a4e0650..21088360 100644
  
      font = await new FontLoader().loadAsync('./fonts/helvetiker_regular.typeface.json');
  
-@@ -189,7 +206,7 @@ if (WebGPU.isAvailable()) {
+@@ -189,7 +207,7 @@ if (WebGPU.isAvailable()) {
      document.body.appendChild(WebGPU.getErrorMessage());
  }
  
@@ -20721,21 +20967,39 @@ index 5250dc91..affe0602 100644
      gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
      gui.addColor(duck.material, 'color').name('material color');
  
-@@ -224,12 +224,12 @@ async function init() {
+@@ -224,20 +224,22 @@ async function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node }>(({ positionRay }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node<'vec3'> }, THREE.Node<'float'>>(
++        ({ positionRay }) => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
+-        const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
++            const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(1);
+-        let density = sampleGrain(1);
+-        density = density.mul(sampleGrain(0.5, 1));
+-        density = density.mul(sampleGrain(0.2, 2));
++            let density = sampleGrain(1);
++            density = density.mul(sampleGrain(0.5, 1));
++            density = density.mul(sampleGrain(0.2, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     const volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.5, 1.5), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
 index 1d46c354..0b4d8513 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
@@ -20760,20 +21024,23 @@ index 1d46c354..0b4d8513 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -86,33 +86,37 @@ function init() {
+@@ -86,33 +86,40 @@ function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.TextureNode;
-+        range: THREE.UniformNode<number>;
-+        threshold: THREE.UniformNode<number>;
-+        opacity: THREE.UniformNode<number>;
-+        steps: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.TextureNode;
++            range: THREE.UniformNode<'float', number>;
++            threshold: THREE.UniformNode<'float', number>;
++            opacity: THREE.UniformNode<'float', number>;
++            steps: THREE.UniformNode<'float', number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -20816,7 +21083,7 @@ index 1d46c354..0b4d8513 100644
  
      // Material
  
-@@ -142,7 +146,7 @@ function init() {
+@@ -142,7 +149,7 @@ function init() {
  
      //
  
@@ -20842,22 +21109,40 @@ index 3edecb90..ef458d0a 100644
  
  init();
  
-@@ -86,12 +86,12 @@ function init() {
+@@ -86,20 +86,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn(
++        ({ positionRay }: { positionRay: THREE.Node<'vec3'> }): THREE.Node<'float'> => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time, 0, time.mul(0.3));
+-        const timeScaled = vec3(time, 0, time.mul(0.3));
++            const timeScaled = vec3(time, 0, time.mul(0.3));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(0.1);
-@@ -199,7 +199,7 @@ function init() {
+-        let density = sampleGrain(0.1);
+-        density = density.mul(sampleGrain(0.05, 1));
+-        density = density.mul(sampleGrain(0.02, 2));
++            let density = sampleGrain(0.1);
++            density = density.mul(sampleGrain(0.05, 1));
++            density = density.mul(sampleGrain(0.02, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(20, 10, 20), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
+@@ -199,7 +201,7 @@ function init() {
          denoise: true,
      };
  
@@ -20887,22 +21172,40 @@ index 4089b3f7..da8ee7b5 100644
  
  init();
  
-@@ -88,12 +88,12 @@ function init() {
+@@ -88,20 +88,22 @@ function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
-         // Return the amount of fog based on the noise texture
+-        // Return the amount of fog based on the noise texture
++    volumetricMaterial.scatteringNode = Fn(
++        ({ positionRay }: { positionRay: THREE.Node<'vec3'> }): THREE.Node<'float'> => {
++            // Return the amount of fog based on the noise texture
  
-         const timeScaled = vec3(time, 0, time.mul(0.3));
+-        const timeScaled = vec3(time, 0, time.mul(0.3));
++            const timeScaled = vec3(time, 0, time.mul(0.3));
  
 -        const sampleGrain = (scale, timeScale = 1) =>
-+        const sampleGrain = (scale: number, timeScale = 1) =>
-             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+-            texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
++            const sampleGrain = (scale: number, timeScale = 1) =>
++                texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
  
-         let density = sampleGrain(0.1);
-@@ -129,7 +129,7 @@ function init() {
+-        let density = sampleGrain(0.1);
+-        density = density.mul(sampleGrain(0.05, 1));
+-        density = density.mul(sampleGrain(0.02, 2));
++            let density = sampleGrain(0.1);
++            density = density.mul(sampleGrain(0.05, 1));
++            density = density.mul(sampleGrain(0.02, 2));
+ 
+-        return smokeAmount.mix(1, density);
+-    });
++            return smokeAmount.mix(1, density);
++        },
++    );
+ 
+     volumetricMesh = new THREE.Mesh(new THREE.BoxGeometry(50, 40, 50), volumetricMaterial);
+     volumetricMesh.receiveShadow = true;
+@@ -129,7 +131,7 @@ function init() {
  
      //
  
@@ -20911,7 +21214,7 @@ index 4089b3f7..da8ee7b5 100644
          const geometry = new THREE.PlaneGeometry(4, 10);
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
-@@ -211,7 +211,7 @@ function init() {
+@@ -211,7 +213,7 @@ function init() {
          denoise: true,
      };
  
@@ -20935,20 +21238,23 @@ index fb6f2bbd..5705090e 100644
  
  init();
  
-@@ -58,7 +58,11 @@ function init() {
+@@ -58,7 +58,14 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
-+    const opaqueRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        steps: THREE.Node;
-+        threshold: THREE.Node;
-+    }>(({ texture, steps, threshold }) => {
++    const opaqueRaymarchingTexture = Fn<
++        {
++            texture: THREE.Texture3DNode;
++            steps: THREE.Node<'float'>;
++            threshold: THREE.Node<'float'>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, steps, threshold }) => {
          const finalColor = vec4(0).toVar();
  
          RaymarchingBox(steps, ({ positionRay }) => {
-@@ -95,7 +99,7 @@ function init() {
+@@ -95,7 +102,7 @@ function init() {
  
      //
  
@@ -21828,3 +22134,33 @@ index 2cd50ba4..b97f3eee 100644
  
              isDepthSupplied = false;
          });
+diff --git a/types/three/src/nodes/fog/Fog.d.ts b/types/three/src/nodes/fog/Fog.d.ts
+index 2387be67e..39ff8ca23 100644
+--- a/types/three/src/nodes/fog/Fog.d.ts
++++ b/types/three/src/nodes/fog/Fog.d.ts
+@@ -4,7 +4,7 @@ export const rangeFogFactor: (near: Node<"float"> | number, far: Node<"float"> |
+ 
+ export const densityFogFactor: (density: Node) => Node;
+ 
+-export const fog: (color: Node, factor: Node) => Node;
++export const fog: (color: Node, factor: Node) => Node<"vec4">;
+ 
+ /**
+  * @deprecated
+diff --git a/types/three/src/renderers/common/nodes/Nodes.d.ts b/types/three/src/renderers/common/nodes/Nodes.d.ts
+index d2a1b20d6..e34da57a3 100644
+--- a/types/three/src/renderers/common/nodes/Nodes.d.ts
++++ b/types/three/src/renderers/common/nodes/Nodes.d.ts
+@@ -44,9 +44,9 @@ interface CacheKeyData {
+ }
+ declare module "../../../scenes/Scene.js" {
+     interface Scene {
+-        environmentNode?: Node | null | undefined;
+-        backgroundNode?: Node | null | undefined;
+-        fogNode?: Node | null | undefined;
++        environmentNode?: Node<"vec3"> | null | undefined;
++        backgroundNode?: Node<"vec3"> | Node<"vec4"> | Node<"color"> | null | undefined;
++        fogNode?: Node<"vec4"> | null | undefined;
+     }
+ }
+ /**

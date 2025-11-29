@@ -630,4 +630,4 @@ export const workgroupId: typeof TSL.workgroupId;
 export const workingToColorSpace: typeof TSL.workingToColorSpace;
 export const xor: typeof TSL.xor;
 
-export type { ProxiedObject, Swizzable } from "./nodes/TSL.js";
+export type { ProxiedObject } from "./nodes/TSL.js";
