@@ -377,7 +377,7 @@ declare const Node: {
     new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
     new(nodeType?: string | null): Node;
 };
-interface NodeElements {
+export interface NodeElements {
 }
 export type NumType = "float" | "int" | "uint";
 export type NumOrBoolType = NumType | "bool";
