@@ -1,6 +1,6 @@
+import { JSONMeta } from "../core/Object3D.js";
 import { SphericalHarmonics3 } from "../math/SphericalHarmonics3.js";
-import {Light, LightJSON} from "./Light.js";
-import {JSONMeta} from "../core/Object3D.js";
+import { Light, LightJSON } from "./Light.js";
 
 interface LightProbeJSON extends LightJSON {
     sh: number[];
