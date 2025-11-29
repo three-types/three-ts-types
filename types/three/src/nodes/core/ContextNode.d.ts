@@ -51,18 +51,13 @@ declare module "./Node.js" {
 
     interface NodeExtensions<TValue> {
         context: (context?: NodeBuilderContext) => ContextNode<TValue>;
-        contextAssign: (context?: NodeBuilderContext) => this;
 
         uniformFlow: () => ContextNode<TValue>;
-        uniformFlowAssign: () => this;
 
         setName: (label: string) => Node<TValue>;
-        setNameAssign: (label: string) => this;
 
         builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode<TValue>;
-        builtinShadowContextAssign: (shadowNode: Node, light: Light) => this;
 
         builtinAOContext: (aoValue: Node) => ContextNode<TValue>;
-        builtinAOContextAssign: (aoValue: Node) => this;
     }
 }

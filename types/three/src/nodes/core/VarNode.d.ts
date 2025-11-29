@@ -31,12 +31,9 @@ export const VarIntent: <TNodeValue>(node: Node<TNodeValue>) => Node<TNodeValue>
 declare module "./Node.js" {
     interface NodeExtensions<TValue> {
         toVar: (name?: string | null) => VarNode<TValue>;
-        toVarAssign: (name?: string | null) => this;
 
         toConst: (name?: string | null) => VarNode<TValue>;
-        toConstAssign: (name?: string | null) => this;
 
         toVarIntent: () => VarNode<TValue>;
-        toVarIntentAssign: () => this;
     }
 }

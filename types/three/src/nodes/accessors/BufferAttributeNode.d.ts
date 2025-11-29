@@ -195,6 +195,5 @@ export declare const instancedDynamicBufferAttribute: <TNodeType>(
 declare module "./BufferNode.js" {
     interface BufferNodeExtensions<TNodeType, TValue> {
         toAttribute: () => BufferAttributeNode<TNodeType>;
-        toAttributeAssign: () => this;
     }
 }

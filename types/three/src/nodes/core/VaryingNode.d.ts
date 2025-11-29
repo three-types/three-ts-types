@@ -30,18 +30,12 @@ export const vertexStage: <TNodeType>(node: Node<TNodeType>) => VaryingNode<TNod
 declare module "./Node.js" {
     interface NodeExtensions<TValue> {
         toVarying: (name?: string) => VaryingNode<TValue>;
-        toVaryingAssign: (name?: string) => this;
 
         toVertexStage: () => VaryingNode<TValue>;
-        toVertexStageAssign: () => this;
 
         /**
          * @deprecated .vertexStage() has been renamed to .toVertexStage().
          */
         vertexStage: () => VaryingNode<TValue>;
-        /**
-         * @deprecated .vertexStage() has been renamed to .toVertexStage().
-         */
-        vertexStageAssign: () => this;
     }
 }
