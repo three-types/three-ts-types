@@ -408,6 +408,9 @@ type Node<TNodeType = unknown> =
         : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int">
         : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint">
         : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
-        : {});
+        : {})
+    & {
+        __TypeScript_NODE_TYPE__: TNodeType;
+    };
 export default Node;
 export {};
