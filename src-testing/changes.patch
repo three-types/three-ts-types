@@ -194,7 +194,7 @@ index 4c5e4c7d..4f710ccc 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 5b4d8aa0..3e316703 100644
+index 5b4d8aa0..de10cc60 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -455,7 +455,7 @@ index 5b4d8aa0..3e316703 100644
  
  /**
   * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
-@@ -374,7 +433,20 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
+@@ -374,7 +433,19 @@ export const instancedBufferAttribute = (array, type = null, stride = 0, offset
   * @param {number} [offset=0] - The buffer offset.
   * @returns {BufferAttributeNode|Node}
   */
@@ -477,7 +477,6 @@ index 5b4d8aa0..3e316703 100644
 +declare module './BufferNode.js' {
 +    interface BufferNodeExtensions<TNodeType, TValue> {
 +        toAttribute: () => BufferAttributeNode<TNodeType>;
-+        toAttributeAssign: () => this;
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
@@ -6538,7 +6537,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index b76afd62..fd427e42 100644
+index cbe4e919..2264205f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -10829,10 +10828,10 @@ index df211906..e7db9d47 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 6462ea5e..4984e3a3 100644
+index b56a69e4..f88e3333 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1672,7 +1672,14 @@ class WebGPUBackend extends Backend {
+@@ -1678,7 +1678,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
