@@ -495,9 +495,9 @@ declare class Renderer {
     /**
      * Defines the scissor rectangle.
      *
-     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the box in logical pixel unit.
      * Instead of passing four arguments, the method also works with a single four-dimensional vector.
-     * @param {number} y - The vertical coordinate for the lower left corner of the box in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the upper left corner of the box in logical pixel unit.
      * @param {number} width - The width of the scissor box in logical pixel unit.
      * @param {number} height - The height of the scissor box in logical pixel unit.
      */
@@ -525,8 +525,8 @@ declare class Renderer {
     /**
      * Defines the viewport.
      *
-     * @param {number | Vector4} x - The horizontal coordinate for the lower left corner of the viewport origin in logical pixel unit.
-     * @param {number} y - The vertical coordinate for the lower left corner of the viewport origin  in logical pixel unit.
+     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the upper left corner of the viewport origin  in logical pixel unit.
      * @param {number} width - The width of the viewport in logical pixel unit.
      * @param {number} height - The height of the viewport in logical pixel unit.
      * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
