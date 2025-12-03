@@ -3854,7 +3854,7 @@ index 59ca2d5a..46160831 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index 7170229e..21f43820 100644
+index 8e812a84..f83e055c 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,38 @@
@@ -4201,7 +4201,7 @@ index 6b5da502..3830ea5f 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index cd956d21..aedcca90 100644
+index b7c85d42..16a5e786 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -4307,7 +4307,7 @@ index cd956d21..aedcca90 100644
          const bindings = this.nodes.getForCompute(computeNode).bindings;
  
          for (const bindGroup of bindings) {
-@@ -152,7 +186,7 @@ class Bindings extends DataMap {
+@@ -153,7 +187,7 @@ class Bindings extends DataMap {
       *
       * @param {RenderObject} renderObject - The renderObject.
       */
@@ -4316,7 +4316,7 @@ index cd956d21..aedcca90 100644
          const bindings = renderObject.getBindings();
  
          for (const bindGroup of bindings) {
-@@ -165,7 +199,7 @@ class Bindings extends DataMap {
+@@ -167,7 +201,7 @@ class Bindings extends DataMap {
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -4325,7 +4325,7 @@ index cd956d21..aedcca90 100644
          for (const bindGroup of bindings) {
              this._update(bindGroup, bindings);
          }
-@@ -176,14 +210,14 @@ class Bindings extends DataMap {
+@@ -178,14 +212,14 @@ class Bindings extends DataMap {
       *
       * @param {BindGroup} bindGroup - The bind group to initialize.
       */
@@ -4347,7 +4347,7 @@ index cd956d21..aedcca90 100644
                  const attributeType = attribute.isIndirectStorageBufferAttribute
                      ? AttributeType.INDIRECT
                      : AttributeType.STORAGE;
-@@ -199,7 +233,7 @@ class Bindings extends DataMap {
+@@ -201,7 +235,7 @@ class Bindings extends DataMap {
       * @param {BindGroup} bindGroup - The bind group to update.
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -4356,7 +4356,7 @@ index cd956d21..aedcca90 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
-@@ -228,18 +262,18 @@ class Bindings extends DataMap {
+@@ -230,18 +264,18 @@ class Bindings extends DataMap {
                  this.attributes.update(attribute, attributeType);
              }
  
@@ -4381,7 +4381,7 @@ index cd956d21..aedcca90 100644
                  const texturesTextureData = this.textures.get(texture);
  
                  if (updated) {
-@@ -270,7 +304,7 @@ class Bindings extends DataMap {
+@@ -272,7 +306,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true && texture.mipmapsAutoUpdate === true) {
                      const textureData = this.get(texture);
  
@@ -6628,7 +6628,7 @@ index 7527627e..c0fcddf9 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index ff28205b..494ab59b 100644
+index f97b2d16..1dd63093 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7997,7 +7997,7 @@ index 4b7c259d..96cda7ef 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Textures.ts b/src-testing/src/renderers/common/Textures.ts
-index 345d32ba..130609c6 100644
+index 4f52f62c..3825d56d 100644
 --- a/src-testing/src/renderers/common/Textures.ts
 +++ b/src-testing/src/renderers/common/Textures.ts
 @@ -12,8 +12,46 @@ import {
@@ -8091,7 +8091,7 @@ index 345d32ba..130609c6 100644
          const textureData = this.get(texture);
          if (textureData.initialized === true && textureData.version === texture.version) return;
  
-@@ -304,7 +349,7 @@ class Textures extends DataMap {
+@@ -308,7 +353,7 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture to update the sampler for.
       * @return {string} The current sampler key.
       */
@@ -8100,7 +8100,7 @@ index 345d32ba..130609c6 100644
          return this.backend.updateSampler(texture);
      }
  
-@@ -320,7 +365,7 @@ class Textures extends DataMap {
+@@ -324,7 +369,7 @@ class Textures extends DataMap {
       * @param {Vector3} target - The target vector.
       * @return {Vector3} The target vector.
       */
@@ -8109,7 +8109,7 @@ index 345d32ba..130609c6 100644
          let image = texture.images ? texture.images[0] : texture.image;
  
          if (image) {
-@@ -337,13 +382,13 @@ class Textures extends DataMap {
+@@ -341,13 +386,13 @@ class Textures extends DataMap {
              } else {
                  target.width = image.width || 1;
                  target.height = image.height || 1;
@@ -8125,7 +8125,7 @@ index 345d32ba..130609c6 100644
      }
  
      /**
-@@ -354,13 +399,13 @@ class Textures extends DataMap {
+@@ -358,13 +403,13 @@ class Textures extends DataMap {
       * @param {number} height - The texture's height.
       * @return {number} The number of mipmap levels.
       */
@@ -8143,7 +8143,7 @@ index 345d32ba..130609c6 100644
                  // it is not possible to compute mipmaps for compressed textures. So
                  // when no mipmaps are defined in "texture.mipmaps", force a texture
                  // level of 1
-@@ -380,8 +425,8 @@ class Textures extends DataMap {
+@@ -384,8 +429,8 @@ class Textures extends DataMap {
       * @param {Texture} texture - The texture.
       * @return {boolean} Whether mipmaps are required or not.
       */
@@ -8154,7 +8154,7 @@ index 345d32ba..130609c6 100644
      }
  
      /**
-@@ -390,7 +435,7 @@ class Textures extends DataMap {
+@@ -394,7 +439,7 @@ class Textures extends DataMap {
       *
       * @param {RenderTarget} renderTarget - The render target to destroy.
       */
@@ -8163,7 +8163,7 @@ index 345d32ba..130609c6 100644
          if (this.has(renderTarget) === true) {
              const renderTargetData = this.get(renderTarget);
  
-@@ -422,7 +467,7 @@ class Textures extends DataMap {
+@@ -426,7 +471,7 @@ class Textures extends DataMap {
       *
       * @param {Texture} texture - The texture to destroy.
       */
@@ -10552,10 +10552,10 @@ index df211906..e7db9d47 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index b56a69e4..f88e3333 100644
+index 8bc07cd9..370392a1 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1678,7 +1678,14 @@ class WebGPUBackend extends Backend {
+@@ -1682,7 +1682,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
