@@ -45,4 +45,6 @@ export class WebGLCapabilities {
     vertexTextures: boolean;
 
     maxSamples: number;
+
+    samples: number;
 }
