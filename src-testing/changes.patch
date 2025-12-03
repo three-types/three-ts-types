@@ -2872,7 +2872,7 @@ index d434bea5..baaec68f 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 3a5e40b1..3bd76b5d 100644
+index 7099a21f..e18a6c45 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -2,6 +2,7 @@ import Node from './Node.js';
@@ -2900,7 +2900,7 @@ index 3a5e40b1..3bd76b5d 100644
      /**
       * Constructs a new stack node.
       *
-@@ -78,7 +89,7 @@ class StackNode extends Node {
+@@ -87,7 +98,7 @@ class StackNode extends Node {
          return this.hasOutput ? this.outputNode.getElementType(builder) : 'void';
      }
  
@@ -2909,16 +2909,25 @@ index 3a5e40b1..3bd76b5d 100644
          return this.hasOutput ? this.outputNode.getNodeType(builder) : 'void';
      }
  
-@@ -92,7 +103,7 @@ class StackNode extends Node {
-      * @param {Node} node - The node to add.
+@@ -102,7 +113,7 @@ class StackNode extends Node {
+      * @param {number} [index=this.nodes.length] - The index where the node should be added.
       * @return {StackNode} A reference to this stack node.
       */
--    addToStack(node) {
-+    addToStack(node: Node) {
+-    addToStack(node, index = this.nodes.length) {
++    addToStack(node: Node, index = this.nodes.length) {
          if (node.isNode !== true) {
              error('TSL: Invalid node added to stack.');
              return this;
-@@ -110,7 +121,7 @@ class StackNode extends Node {
+@@ -119,7 +130,7 @@ class StackNode extends Node {
+      * @param {Node} node - The node to add.
+      * @return {StackNode} A reference to this stack node.
+      */
+-    addToStackBefore(node) {
++    addToStackBefore(node: Node) {
+         const index = this._currentNode ? this.nodes.indexOf(this._currentNode) : 0;
+ 
+         return this.addToStack(node, index);
+@@ -132,7 +143,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2927,7 +2936,7 @@ index 3a5e40b1..3bd76b5d 100644
          const methodNode = new ShaderNode(method);
          this._currentCond = select(boolNode, methodNode);
  
-@@ -124,7 +135,7 @@ class StackNode extends Node {
+@@ -146,7 +157,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2936,7 +2945,7 @@ index 3a5e40b1..3bd76b5d 100644
          const methodNode = new ShaderNode(method);
          const ifNode = select(boolNode, methodNode);
  
-@@ -140,7 +151,7 @@ class StackNode extends Node {
+@@ -162,7 +173,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed in the `else` case.
       * @return {StackNode} A reference to this stack node.
       */
@@ -2945,7 +2954,7 @@ index 3a5e40b1..3bd76b5d 100644
          this._currentCond.elseNode = new ShaderNode(method);
  
          return this;
-@@ -244,7 +255,7 @@ class StackNode extends Node {
+@@ -266,7 +277,7 @@ class StackNode extends Node {
          return this.outputNode && this.outputNode.isNode;
      }
  
@@ -2953,7 +2962,7 @@ index 3a5e40b1..3bd76b5d 100644
 +    build(builder: NodeBuilder, ...params) {
          const previousStack = getCurrentStack();
  
-         setCurrentStack(this);
+         const buildStage = builder.buildStage;
 diff --git a/src-testing/src/nodes/core/StructType.ts b/src-testing/src/nodes/core/StructType.ts
 index b06830b4..27e70330 100644
 --- a/src-testing/src/nodes/core/StructType.ts
@@ -6275,7 +6284,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index b76afd62..fd427e42 100644
+index cbe4e919..2264205f 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -10543,10 +10552,10 @@ index df211906..e7db9d47 100644
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
 diff --git a/src-testing/src/renderers/webgpu/WebGPUBackend.ts b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-index 6462ea5e..4984e3a3 100644
+index b56a69e4..f88e3333 100644
 --- a/src-testing/src/renderers/webgpu/WebGPUBackend.ts
 +++ b/src-testing/src/renderers/webgpu/WebGPUBackend.ts
-@@ -1672,7 +1672,14 @@ class WebGPUBackend extends Backend {
+@@ -1678,7 +1678,14 @@ class WebGPUBackend extends Backend {
       * @param {number} faceIndex - The face index.
       * @return {Promise<TypedArray>} A Promise that resolves with a typed array when the copy operation has finished.
       */
