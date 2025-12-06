@@ -6479,29 +6479,31 @@ index 707ef200e..8e4cf0bbe 100644
      stats = new Stats();
      container.appendChild(stats.dom);
 diff --git a/examples-testing/examples/webgl_lights_rectarealight.ts b/examples-testing/examples/webgl_lights_rectarealight.ts
-index b841fa6b5..f3051618b 100644
+index 621d183d8..3f4b060ec 100644
 --- a/examples-testing/examples/webgl_lights_rectarealight.ts
 +++ b/examples-testing/examples/webgl_lights_rectarealight.ts
-@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -6,9 +6,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
  import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
  
 -let renderer, scene, camera;
--let stats, meshKnot;
+-let rectLight1, rectLight2, rectLight3;
+-let timer, stats;
 +let renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-+let stats: Stats, meshKnot: THREE.Mesh;
++let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
++let timer: THREE.Timer, stats: Stats;
  
  init();
  
-@@ -70,7 +70,7 @@ function onWindowResize() {
-     camera.updateProjectionMatrix();
- }
+@@ -73,7 +73,7 @@ function createCheckerTexture(repeat = 1) {
+     canvas.width = 2;
+     canvas.height = 2;
  
--function animation(time) {
-+function animation(time: DOMHighResTimeStamp) {
-     meshKnot.rotation.y = time / 1000;
- 
-     renderer.render(scene, camera);
+-    const ctx = canvas.getContext('2d');
++    const ctx = canvas.getContext('2d')!;
+     ctx.fillStyle = '#000';
+     ctx.fillRect(0, 0, 2, 2);
+     ctx.fillStyle = '#fff';
 diff --git a/examples-testing/examples/webgl_lights_spotlight.ts b/examples-testing/examples/webgl_lights_spotlight.ts
 index 78fec9d4e..c83421bb3 100644
 --- a/examples-testing/examples/webgl_lights_spotlight.ts
@@ -7964,12 +7966,12 @@ index 409c6b597..dbde51b00 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_vox.ts b/examples-testing/examples/webgl_loader_vox.ts
-index 061848012..1f9629e0b 100644
+index 87e0b2f81..5094b88cb 100644
 --- a/examples-testing/examples/webgl_loader_vox.ts
 +++ b/examples-testing/examples/webgl_loader_vox.ts
 @@ -3,7 +3,7 @@ import * as THREE from 'three';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { VOXLoader, VOXMesh } from 'three/addons/loaders/VOXLoader.js';
+ import { VOXLoader } from 'three/addons/loaders/VOXLoader.js';
  
 -let camera, controls, scene, renderer;
 +let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
@@ -13617,12 +13619,12 @@ index 9aa07b98f..dfe98826a 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_volume_instancing.ts b/examples-testing/examples/webgl_volume_instancing.ts
-index 086e6fcf7..34d0b3fe0 100644
+index e56c5d47b..d4cf5331c 100644
 --- a/examples-testing/examples/webgl_volume_instancing.ts
 +++ b/examples-testing/examples/webgl_volume_instancing.ts
 @@ -2,7 +2,11 @@ import * as THREE from 'three';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { VOXLoader, VOXData3DTexture } from 'three/addons/loaders/VOXLoader.js';
+ import { VOXLoader, buildData3DTexture } from 'three/addons/loaders/VOXLoader.js';
  
 -let renderer, scene, camera, controls, clock;
 +let renderer: THREE.WebGLRenderer,
@@ -13633,6 +13635,19 @@ index 086e6fcf7..34d0b3fe0 100644
  
  init();
  
+@@ -164,9 +168,9 @@ function init() {
+ 				`;
+ 
+     const loader = new VOXLoader();
+-    loader.load('models/vox/menger.vox', function (chunks) {
+-        for (let i = 0; i < chunks.length; i++) {
+-            const chunk = chunks[i];
++    loader.load('models/vox/menger.vox', function (result) {
++        for (let i = 0; i < result.chunks.length; i++) {
++            const chunk = result.chunks[i];
+ 
+             const geometry = new THREE.BoxGeometry(1, 1, 1);
+             const material = new THREE.RawShaderMaterial({
 @@ -182,7 +186,7 @@ function init() {
  
              const mesh = new THREE.InstancedMesh(geometry, material, 50000);
@@ -15638,29 +15653,22 @@ index e00d75b21..ee12bb569 100644
  
      const v0 = new THREE.Vector3();
 diff --git a/examples-testing/examples/webgpu_lights_rectarealight.ts b/examples-testing/examples/webgpu_lights_rectarealight.ts
-index ecb1ec0df..2268ab867 100644
+index 75e2cc442..66cbd8c58 100644
 --- a/examples-testing/examples/webgpu_lights_rectarealight.ts
 +++ b/examples-testing/examples/webgpu_lights_rectarealight.ts
-@@ -6,8 +6,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { RectAreaLightHelper } from 'three/addons/helpers/RectAreaLightHelper.js';
- import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTexturesLib.js';
+@@ -8,9 +8,9 @@ import { RectAreaLightTexturesLib } from 'three/addons/lights/RectAreaLightTextu
+ 
+ import { checker, uv } from 'three/tsl';
  
 -let renderer, scene, camera;
--let meshKnot;
+-let rectLight1, rectLight2, rectLight3;
+-let timer;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-+let meshKnot: THREE.Mesh;
++let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
++let timer: THREE.Timer;
  
  init();
  
-@@ -68,7 +68,7 @@ function onWindowResize() {
-     camera.updateProjectionMatrix();
- }
- 
--function animation(time) {
-+function animation(time: number) {
-     meshKnot.rotation.y = time / 1000;
- 
-     renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_selective.ts b/examples-testing/examples/webgpu_lights_selective.ts
 index d00048347..54f94948b 100644
 --- a/examples-testing/examples/webgpu_lights_selective.ts
@@ -20946,7 +20954,7 @@ index 3edecb902..ef458d0a3 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 4089b3f72..da8ee7b54 100644
+index c5e4be8cf..f13ed941c 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20954,14 +20962,14 @@ index 4089b3f72..da8ee7b54 100644
  import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  
 -let renderer, scene, camera;
--let volumetricMesh, meshKnot;
+-let volumetricMesh;
 -let rectLight1, rectLight2, rectLight3;
--let clock;
+-let timer;
 -let postProcessing;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
-+let volumetricMesh: THREE.Mesh, meshKnot: THREE.Mesh;
++let volumetricMesh: THREE.Mesh<THREE.BoxGeometry, THREE.VolumeNodeMaterial>;
 +let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
-+let clock: THREE.Clock;
++let timer: THREE.Timer;
 +let postProcessing: THREE.PostProcessing;
  
  init();
@@ -20990,7 +20998,7 @@ index 4089b3f72..da8ee7b54 100644
          const geometry = new THREE.PlaneGeometry(4, 10);
          const frontMaterial = new THREE.MeshBasicMaterial({ color: rectLight.color, side: THREE.BackSide });
          const backMaterial = new THREE.MeshStandardMaterial({ color: 0x111111 });
-@@ -211,7 +211,7 @@ function init() {
+@@ -212,7 +212,7 @@ function init() {
          denoise: true,
      };
  
