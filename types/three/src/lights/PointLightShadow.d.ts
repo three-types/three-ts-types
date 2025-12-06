@@ -12,12 +12,5 @@ export class PointLightShadow extends LightShadow<PerspectiveCamera> {
      * @remarks This is a _constant_ value
      * @defaultValue `true`
      */
-    readonly isPointLightShadow = true;
-
-    /**
-     * Update the matrices for the camera and shadow, used internally by the renderer.
-     * @param light The light for which the shadow is being rendered.
-     * @param [faceIndex=0] - The cube face index (0-5).
-     */
-    override updateMatrices(light: Light, faceIndex?: number): void;
+    readonly isPointLightShadow: true;
 }
