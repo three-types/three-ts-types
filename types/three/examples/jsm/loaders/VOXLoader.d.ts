@@ -1,4 +1,4 @@
-import { Data3DTexture, Loader, LoadingManager, Mesh } from "three";
+import { Data3DTexture, Loader, LoadingManager, Mesh, Object3D } from 'three';
 
 export interface Chunk {
     palette: number[];
@@ -6,10 +6,15 @@ export interface Chunk {
     data: Uint8Array;
 }
 
-export class VOXLoader extends Loader<Chunk[]> {
+export interface VOXLoaderResult {
+    chunks: Chunk[];
+    scene: Object3D;
+}
+
+export class VOXLoader extends Loader<VOXLoaderResult> {
     constructor(manager?: LoadingManager);
 
-    parse(data: ArrayBuffer): object[];
+    parse(data: ArrayBuffer): VOXLoaderResult;
 }
 
 export class VOXMesh extends Mesh {
