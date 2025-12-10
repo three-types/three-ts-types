@@ -105,6 +105,16 @@ export interface WebGLDebug {
         | null;
 }
 
+export interface Effect {
+    setSize(width: number, height: number): void;
+    render(
+        renderer: WebGLRenderer,
+        writeBuffer: WebGLRenderTarget,
+        readBuffer: WebGLRenderTarget,
+        deltaTime: number,
+    ): void;
+}
+
 /**
  * The WebGL renderer displays your beautifully crafted scenes using WebGL, if your device supports it.
  * This renderer has way better performance than CanvasRenderer.
@@ -233,15 +243,17 @@ export class WebGLRenderer {
     getPixelRatio(): number;
     setPixelRatio(value: number): void;
 
-    getDrawingBufferSize(target: Vector2): Vector2;
-    setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
-
     getSize(target: Vector2): Vector2;
 
     /**
      * Resizes the output canvas to (width, height), and also sets the viewport to fit that size, starting in (0, 0).
      */
     setSize(width: number, height: number, updateStyle?: boolean): void;
+
+    getDrawingBufferSize(target: Vector2): Vector2;
+    setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
+
+    setEffects(effects: Effect[]): void;
 
     getCurrentViewport(target: Vector4): Vector4;
 
