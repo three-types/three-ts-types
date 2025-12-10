@@ -64,7 +64,7 @@ export interface RendererParameters {
     antialias?: boolean | undefined;
     samples?: number | undefined;
     getFallback?: ((error: unknown) => Backend) | null | undefined;
-    colorBufferType?: TextureDataType | undefined;
+    outputBufferType?: TextureDataType | undefined;
     multiview?: boolean | undefined;
 }
 /**
