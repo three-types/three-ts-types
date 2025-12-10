@@ -4650,7 +4650,7 @@ index 8d9495cd..ae945fa8 100644
  
          viewport.minDepth = minDepth;
 diff --git a/src-testing/src/renderers/common/ChainMap.ts b/src-testing/src/renderers/common/ChainMap.ts
-index bed4d6c2..96c476a2 100644
+index c41a56bf..4d3a1652 100644
 --- a/src-testing/src/renderers/common/ChainMap.ts
 +++ b/src-testing/src/renderers/common/ChainMap.ts
 @@ -1,3 +1,5 @@
@@ -4665,27 +4665,34 @@ index bed4d6c2..96c476a2 100644
   */
 -class ChainMap {
 +class ChainMap<K extends readonly object[], V> {
-+    weakMap: RecursiveWeakMap<K, V>;
++    weakMaps: Record<number, RecursiveWeakMap<K, V>>;
      /**
       * Constructs a new Chain Map.
       */
-@@ -16,7 +19,7 @@ class ChainMap {
-          *
-          * @type {WeakMap<Object, WeakMap>}
-          */
--        this.weakMap = new WeakMap();
-+        this.weakMap = new WeakMap<K[number], V | RecursiveWeakMap<K, V>>();
-     }
+@@ -25,13 +28,13 @@ class ChainMap {
+      * @param {Array<Object>} keys - List of keys.
+      * @return {WeakMap} The weak map.
+      */
+-    _getWeakMap(keys) {
++    _getWeakMap(keys: K) {
+         const length = keys.length;
  
-     /**
-@@ -25,16 +28,16 @@ class ChainMap {
+         let weakMap = this.weakMaps[length];
+ 
+         if (weakMap === undefined) {
+-            weakMap = new WeakMap();
++            weakMap = new WeakMap<K[number], V | RecursiveWeakMap<K, V>>();
+             this.weakMaps[length] = weakMap;
+         }
+ 
+@@ -44,16 +47,16 @@ class ChainMap {
       * @param {Array<Object>} keys - List of keys.
       * @return {any} The value. Returns `undefined` if no value was found.
       */
 -    get(keys) {
--        let map = this.weakMap;
+-        let map = this._getWeakMap(keys);
 +    get(keys: K): V | undefined {
-+        let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
++        let map: RecursiveWeakMap<K, V> | undefined = this._getWeakMap(keys);
  
          for (let i = 0; i < keys.length - 1; i++) {
 -            map = map.get(keys[i]);
@@ -4699,14 +4706,14 @@ index bed4d6c2..96c476a2 100644
      }
  
      /**
-@@ -44,18 +47,18 @@ class ChainMap {
+@@ -63,18 +66,18 @@ class ChainMap {
       * @param {any} value - The value to set.
       * @return {ChainMap} A reference to this Chain Map.
       */
 -    set(keys, value) {
--        let map = this.weakMap;
+-        let map = this._getWeakMap(keys);
 +    set(keys: K, value: V) {
-+        let map: RecursiveWeakMap<K, V> = this.weakMap;
++        let map: RecursiveWeakMap<K, V> = this._getWeakMap(keys);
  
          for (let i = 0; i < keys.length - 1; i++) {
              const key = keys[i];
@@ -4723,14 +4730,14 @@ index bed4d6c2..96c476a2 100644
  
          return this;
      }
-@@ -66,11 +69,11 @@ class ChainMap {
+@@ -85,11 +88,11 @@ class ChainMap {
       * @param {Array<Object>} keys - The keys.
       * @return {boolean} Returns `true` if the value has been removed successfully and `false` if the value has not be found.
       */
 -    delete(keys) {
--        let map = this.weakMap;
+-        let map = this._getWeakMap(keys);
 +    delete(keys: K) {
-+        let map: RecursiveWeakMap<K, V> | undefined = this.weakMap;
++        let map: RecursiveWeakMap<K, V> | undefined = this._getWeakMap(keys);
  
          for (let i = 0; i < keys.length - 1; i++) {
 -            map = map.get(keys[i]);
@@ -5961,7 +5968,7 @@ index 0ac531cc..2d2c669f 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index b62711a5..4633e242 100644
+index d2e7d2eb..c57fc378 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
 @@ -2,8 +2,10 @@ import ChainMap from './ChainMap.js';
@@ -5972,7 +5979,7 @@ index b62711a5..4633e242 100644
 +import MRTNode from '../../nodes/core/MRTNode.js';
  
 -const _chainKeys = [];
-+const _chainKeys = [] as unknown as [Scene, Camera];
++const _chainKeys = [] as unknown as [Scene, Camera] | [Scene, Camera, MRTNode];
  const _defaultScene = /*@__PURE__*/ new Scene();
  const _defaultCamera = /*@__PURE__*/ new Camera();
  
@@ -5993,10 +6000,10 @@ index b62711a5..4633e242 100644
       */
 -    get(scene, camera, renderTarget = null, mrt = null) {
 +    get(scene: Scene, camera: Camera, renderTarget: RenderTarget | null = null, mrt: MRTNode | null = null) {
-         let index = 0;
+         _chainKeys[0] = scene;
+         _chainKeys[1] = camera;
  
-         if (mrt !== null) {
-@@ -82,7 +88,7 @@ class RenderContexts {
+@@ -77,7 +83,7 @@ class RenderContexts {
       * @param {?RenderTarget} [renderTarget=null] - The active render target.
       * @return {RenderContext} The render context.
       */
@@ -6005,7 +6012,7 @@ index b62711a5..4633e242 100644
          return this.get(_defaultScene, _defaultCamera, renderTarget);
      }
  
-@@ -93,8 +99,11 @@ class RenderContexts {
+@@ -88,8 +94,14 @@ class RenderContexts {
       * @param {string} attachmentState - The attachment state.
       * @return {ChainMap} The chain map.
       */
@@ -6014,7 +6021,10 @@ index b62711a5..4633e242 100644
 +    _getChainMap(attachmentState: string) {
 +        return (
 +            this.chainMaps[attachmentState] ||
-+            (this.chainMaps[attachmentState] = new ChainMap<readonly [Object3D, Camera], RenderContext>())
++            (this.chainMaps[attachmentState] = new ChainMap<
++                readonly [Scene, Camera] | readonly [Scene, Camera, MRTNode],
++                RenderContext
++            >())
 +        );
      }
  
