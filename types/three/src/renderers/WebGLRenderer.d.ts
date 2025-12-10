@@ -1,5 +1,5 @@
 import { Camera } from "../cameras/Camera.js";
-import { CullFace, ShadowMapType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
+import { CullFace, ShadowMapType, TextureDataType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
 import { TypedArray } from "../core/BufferAttribute.js";
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
@@ -76,6 +76,11 @@ export interface WebGLRendererParameters extends WebGLCapabilitiesParameters {
      * default is false.
      */
     failIfMajorPerformanceCaveat?: boolean | undefined;
+
+    /**
+     * @default UnsignedByteType
+     */
+    outputBufferType?: TextureDataType | undefined;
 }
 
 export interface WebGLDebug {
