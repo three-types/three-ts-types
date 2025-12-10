@@ -112,6 +112,7 @@ export interface Effect {
         writeBuffer: WebGLRenderTarget,
         readBuffer: WebGLRenderTarget,
         deltaTime: number,
+        maskActive: boolean,
     ): void;
 }
 
@@ -253,7 +254,7 @@ export class WebGLRenderer {
     getDrawingBufferSize(target: Vector2): Vector2;
     setDrawingBufferSize(width: number, height: number, pixelRatio: number): void;
 
-    setEffects(effects: Effect[]): void;
+    setEffects(effects: Effect[] | null): void;
 
     getCurrentViewport(target: Vector4): Vector4;
 
