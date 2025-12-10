@@ -675,17 +675,16 @@ index 382d5107..efe92e0c 100644
  
          for (const include of includes) {
 diff --git a/src-testing/src/nodes/code/FunctionNode.ts b/src-testing/src/nodes/code/FunctionNode.ts
-index 0174f78c..34d4475c 100644
+index 20a55d36..b8052338 100644
 --- a/src-testing/src/nodes/code/FunctionNode.ts
 +++ b/src-testing/src/nodes/code/FunctionNode.ts
-@@ -1,5 +1,6 @@
+@@ -1,4 +1,5 @@
  import CodeNode from './CodeNode.js';
- import { nodeObject } from '../tsl/TSLBase.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
  
  /**
   * This class represents a native shader function. It can be used to implement
-@@ -49,7 +50,7 @@ class FunctionNode extends CodeNode {
+@@ -48,7 +49,7 @@ class FunctionNode extends CodeNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type.
       */
@@ -694,7 +693,7 @@ index 0174f78c..34d4475c 100644
          return this.getNodeFunction(builder).type;
      }
  
-@@ -74,7 +75,7 @@ class FunctionNode extends CodeNode {
+@@ -73,7 +74,7 @@ class FunctionNode extends CodeNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Array<NodeFunctionInput>} The inputs.
       */
@@ -703,7 +702,7 @@ index 0174f78c..34d4475c 100644
          return this.getNodeFunction(builder).inputs;
      }
  
-@@ -84,7 +85,7 @@ class FunctionNode extends CodeNode {
+@@ -83,7 +84,7 @@ class FunctionNode extends CodeNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {NodeFunction} The node function.
       */
@@ -712,7 +711,7 @@ index 0174f78c..34d4475c 100644
          const nodeData = builder.getDataFromNode(this);
  
          let nodeFunction = nodeData.nodeFunction;
-@@ -98,7 +99,7 @@ class FunctionNode extends CodeNode {
+@@ -97,7 +98,7 @@ class FunctionNode extends CodeNode {
          return nodeFunction;
      }
  
@@ -721,7 +720,7 @@ index 0174f78c..34d4475c 100644
          super.generate(builder);
  
          const nodeFunction = this.getNodeFunction(builder);
-@@ -130,7 +131,7 @@ class FunctionNode extends CodeNode {
+@@ -129,7 +130,7 @@ class FunctionNode extends CodeNode {
  
  export default FunctionNode;
  
@@ -730,7 +729,7 @@ index 0174f78c..34d4475c 100644
      for (let i = 0; i < includes.length; i++) {
          const include = includes[i];
  
-@@ -149,5 +150,5 @@ const nativeFn = (code, includes = [], language = '') => {
+@@ -148,5 +149,5 @@ const nativeFn = (code, includes = [], language = '') => {
      return fn;
  };
  
@@ -3111,14 +3110,14 @@ index 94299fca..125e9ad4 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index 19e6487a..b674b9df 100644
+index f9fc07e2..599dc852 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,26 +1,36 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
- import { nodeObject, getConstNodeType } from '../tsl/TSLCore.js';
+ import { getConstNodeType } from '../tsl/TSLCore.js';
  import { getValueFromType } from './NodeUtils.js';
  import { warn } from '../../utils.js';
 +import Node from './Node.js';
@@ -3268,8 +3267,8 @@ index 19e6487a..b674b9df 100644
          value = v;
      }
  
--    return nodeObject(new UniformNode(value, nodeType));
-+    return nodeObject(new UniformNode(value as TValue, nodeType));
+-    return new UniformNode(value, nodeType);
++    return new UniformNode(value as TValue, nodeType);
  };
 diff --git a/src-testing/src/nodes/core/constants.ts b/src-testing/src/nodes/core/constants.ts
 index 1fe2dbbd..a431897f 100644
@@ -3401,7 +3400,7 @@ index ee5cf92a..7240bb88 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index 614df3fa..9c8bd09c 100644
+index ff0c9e66..3ba9da9f 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
 @@ -9,9 +9,38 @@ import ConstNode from '../core/ConstNode.js';
@@ -4075,7 +4074,7 @@ index 8e812a84..f83e055c 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 2a3192bf..77465a32 100644
+index 2f8e5ab9..15af1477 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -17,23 +17,38 @@ import { Mesh } from '../../objects/Mesh.js';
@@ -10664,7 +10663,7 @@ index 37784a05..7b08961a 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index b2ef5eac..127cf0b8 100644
+index 6fafd4f7..ae17b8cc 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {

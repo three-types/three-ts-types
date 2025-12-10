@@ -1774,7 +1774,7 @@ index 99b74c40..65aaf28d 100644
  init();
  animate();
 diff --git a/examples-testing/examples/svg_sandbox.ts b/examples-testing/examples/svg_sandbox.ts
-index 88f65166..7a338168 100644
+index fa66f10e..d9e680e8 100644
 --- a/examples-testing/examples/svg_sandbox.ts
 +++ b/examples-testing/examples/svg_sandbox.ts
 @@ -7,9 +7,9 @@ import { SVGRenderer, SVGObject } from 'three/addons/renderers/SVGRenderer.js';
@@ -5335,7 +5335,7 @@ index 30444ddb..e1c40aef 100644
  }
  
 diff --git a/examples-testing/examples/webgl_gpgpu_water.ts b/examples-testing/examples/webgl_gpgpu_water.ts
-index 9a724d17..6cf5c8bc 100644
+index 3210a298..183dac1e 100644
 --- a/examples-testing/examples/webgl_gpgpu_water.ts
 +++ b/examples-testing/examples/webgl_gpgpu_water.ts
 @@ -4,7 +4,7 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -5373,7 +5373,7 @@ index 9a724d17..6cf5c8bc 100644
 -let meshRay;
 -let gpuCompute;
 -let heightmapVariable;
--let smoothShader;
+-// let smoothShader;
 -let readWaterLevelShader;
 -let readWaterLevelRenderTarget;
 -let readWaterLevelImage;
@@ -5383,7 +5383,7 @@ index 9a724d17..6cf5c8bc 100644
 +let meshRay: THREE.Mesh;
 +let gpuCompute: GPUComputationRenderer;
 +let heightmapVariable: Variable;
-+let smoothShader: THREE.ShaderMaterial;
++// let smoothShader: THREE.ShaderMaterial;
 +let readWaterLevelShader: THREE.ShaderMaterial;
 +let readWaterLevelRenderTarget: THREE.WebGLRenderTarget;
 +let readWaterLevelImage: Uint8Array<ArrayBuffer>;
@@ -5404,14 +5404,12 @@ index 9a724d17..6cf5c8bc 100644
      duckModel.receiveShadow = true;
      duckModel.castShadow = true;
  
-@@ -211,13 +211,13 @@ function initWater() {
+@@ -211,11 +211,11 @@ function initWater() {
      if (error !== null) console.error(error);
  
      // Create compute shader to smooth the water surface and velocity
--    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader').textContent, {
-+    smoothShader = gpuCompute.createShaderMaterial(document.getElementById('smoothFragmentShader')!.textContent!, {
-         smoothTexture: { value: null },
-     });
+-    //smoothShader = gpuCompute.createShaderMaterial( document.getElementById( 'smoothFragmentShader' ).textContent, { smoothTexture: { value: null } } );
++    //smoothShader = gpuCompute.createShaderMaterial( document.getElementById( 'smoothFragmentShader' )!.textContent!, { smoothTexture: { value: null } } );
  
      // Create compute shader to read water level
      readWaterLevelShader = gpuCompute.createShaderMaterial(
@@ -5420,7 +5418,7 @@ index 9a724d17..6cf5c8bc 100644
          {
              point1: { value: new THREE.Vector2() },
              levelTexture: { value: null },
-@@ -240,10 +240,10 @@ function initWater() {
+@@ -238,10 +238,10 @@ function initWater() {
      });
  }
  
@@ -5433,7 +5431,7 @@ index 9a724d17..6cf5c8bc 100644
          let multR = waterMaxHeight;
          let mult = 0.025;
          let r = 0;
-@@ -256,7 +256,7 @@ function fillTexture(texture) {
+@@ -254,7 +254,7 @@ function fillTexture(texture) {
          return r;
      }
  
@@ -5442,7 +5440,7 @@ index 9a724d17..6cf5c8bc 100644
  
      let p = 0;
      for (let j = 0; j < WIDTH; j++) {
-@@ -274,7 +274,7 @@ function fillTexture(texture) {
+@@ -272,7 +272,7 @@ function fillTexture(texture) {
      }
  }
  
@@ -5451,7 +5449,7 @@ index 9a724d17..6cf5c8bc 100644
      renderer.shadowMap.enabled = v;
      sun.castShadow = v;
  
-@@ -313,9 +313,9 @@ function smoothWater() {
+@@ -315,9 +315,9 @@ function addShadow(v) {
  
  function createducks() {
      for (let i = 0; i < NUM_DUCK; i++) {
@@ -5463,7 +5461,7 @@ index 9a724d17..6cf5c8bc 100644
          }
  
          sphere.position.x = (Math.random() - 0.5) * BOUNDS * 0.7;
-@@ -414,7 +414,7 @@ function onPointerUp() {
+@@ -416,7 +416,7 @@ function onPointerUp() {
      controls.enabled = true;
  }
  
@@ -5472,7 +5470,7 @@ index 9a724d17..6cf5c8bc 100644
      const dom = renderer.domElement;
      mouseCoords.set((event.clientX / dom.clientWidth) * 2 - 1, -(event.clientY / dom.clientHeight) * 2 + 1);
  }
-@@ -469,7 +469,13 @@ function render() {
+@@ -471,7 +471,13 @@ function render() {
  //----------------------
  
  class WaterMaterial extends THREE.MeshStandardMaterial {
@@ -5487,7 +5485,7 @@ index 9a724d17..6cf5c8bc 100644
          super();
  
          this.defines = {
-@@ -486,7 +492,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -488,7 +494,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          this.setValues(parameters);
      }
  
@@ -5496,7 +5494,7 @@ index 9a724d17..6cf5c8bc 100644
          this.extra[name] = value;
          Object.defineProperty(this, name, {
              get: () => this.extra[name],
-@@ -497,7 +503,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
+@@ -499,7 +505,7 @@ class WaterMaterial extends THREE.MeshStandardMaterial {
          });
      }
  
@@ -10048,10 +10046,10 @@ index 41a5130d..66d539a9 100644
          slider.style.left = sliderPos - slider.offsetWidth / 2 + 'px';
      }
 diff --git a/examples-testing/examples/webgl_multiple_views.ts b/examples-testing/examples/webgl_multiple_views.ts
-index 640eac82..04d7749c 100644
+index 672846f9..5ba46471 100644
 --- a/examples-testing/examples/webgl_multiple_views.ts
 +++ b/examples-testing/examples/webgl_multiple_views.ts
-@@ -2,16 +2,27 @@ import * as THREE from 'three';
+@@ -2,15 +2,26 @@ import * as THREE from 'three';
  
  import Stats from 'three/addons/libs/stats.module.js';
  
@@ -10061,8 +10059,7 @@ index 640eac82..04d7749c 100644
 -let scene, renderer;
 +let scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
- let mouseX = 0,
-     mouseY = 0;
+ let mouseX = 0;
  
 -let windowWidth, windowHeight;
 -
@@ -10084,7 +10081,7 @@ index 640eac82..04d7749c 100644
      {
          left: 0,
          bottom: 0,
-@@ -62,7 +73,7 @@ const views = [
+@@ -61,7 +72,7 @@ const views = [
  init();
  
  function init() {
@@ -10093,7 +10090,7 @@ index 640eac82..04d7749c 100644
  
      for (let ii = 0; ii < views.length; ++ii) {
          const view = views[ii];
-@@ -84,7 +95,7 @@ function init() {
+@@ -83,7 +94,7 @@ function init() {
      canvas.width = 128;
      canvas.height = 128;
  
@@ -10102,16 +10099,16 @@ index 640eac82..04d7749c 100644
      const gradient = context.createRadialGradient(
          canvas.width / 2,
          canvas.height / 2,
-@@ -191,7 +202,7 @@ function init() {
+@@ -190,7 +201,7 @@ function init() {
      document.addEventListener('mousemove', onDocumentMouseMove);
  }
  
 -function onDocumentMouseMove(event) {
 +function onDocumentMouseMove(event: MouseEvent) {
      mouseX = event.clientX - windowWidth / 2;
-     mouseY = event.clientY - windowHeight / 2;
  }
-@@ -215,7 +226,7 @@ function render() {
+ 
+@@ -213,7 +224,7 @@ function render() {
  
      for (let ii = 0; ii < views.length; ++ii) {
          const view = views[ii];
@@ -13682,7 +13679,7 @@ index 0f299f66..b02dd139 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_watch.ts b/examples-testing/examples/webgl_watch.ts
-index b65f5309..0b83eab4 100644
+index ac28b522..152b424c 100644
 --- a/examples-testing/examples/webgl_watch.ts
 +++ b/examples-testing/examples/webgl_watch.ts
 @@ -1,5 +1,5 @@
@@ -13692,19 +13689,19 @@ index b65f5309..0b83eab4 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-@@ -13,12 +13,17 @@ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js'
- import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+@@ -11,12 +11,17 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
  import { TAARenderPass } from 'three/addons/postprocessing/TAARenderPass.js';
  
--let composer, camera, scene, renderer;
+-let camera, scene, renderer;
 -let gui, dirLight, pointLight, controls, bloomPass, taaPass;
-+let composer: EffectComposer | null, camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 +let gui: GUI,
 +    dirLight: THREE.DirectionalLight,
 +    pointLight: THREE.PointLight,
 +    controls: OrbitControls,
-+    bloomPass: UnrealBloomPass | null,
-+    taaPass: TAARenderPass | null;
++    bloomPass: UnrealBloomPass,
++    taaPass: TAARenderPass;
  let ready = false;
  
 -const meshes = {};
@@ -13714,7 +13711,7 @@ index b65f5309..0b83eab4 100644
  const torad = Math.PI / 180;
  
  const setting = {
-@@ -34,7 +39,7 @@ const setting = {
+@@ -32,7 +37,7 @@ const setting = {
  init();
  
  function init() {
@@ -13723,7 +13720,7 @@ index b65f5309..0b83eab4 100644
  
      camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 20);
      camera.position.set(0.8, 0.5, -1.5);
-@@ -67,23 +72,26 @@ function init() {
+@@ -73,23 +78,26 @@ function init() {
              gltf.scene.rotation.x = Math.PI * 0.25;
  
              gltf.scene.traverse(child => {
@@ -13756,16 +13753,16 @@ index b65f5309..0b83eab4 100644
                  color: 0x020205,
                  transparent: true,
                  opacity: setting.opacity,
-@@ -161,7 +169,7 @@ function moveCamera() {
+@@ -167,7 +175,7 @@ function moveCamera() {
          .start();
  }
  
 -function postProcess(b) {
 +function postProcess(b: boolean) {
      if (b) {
-         if (composer) return;
- 
-@@ -207,7 +215,7 @@ function createGUI() {
+         renderer.setEffects([taaPass, bloomPass]);
+     } else {
+@@ -192,7 +200,7 @@ function createGUI() {
  function upMaterial() {
      materials.Gold.metalness = materials.Silver.metalness = setting.metalness;
      materials.Gold.roughness = materials.Silver.roughness = setting.roughness;
@@ -14061,7 +14058,7 @@ index 4ae08d66..14334d41 100644
  
              subcamera.position.x = x / AMOUNT - 0.5;
 diff --git a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
-index 0a05626a..0d9d160d 100644
+index a0e748e1..81206987 100644
 --- a/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 +++ b/examples-testing/examples/webgpu_camera_logarithmicdepthbuffer.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three/webgpu';
@@ -14077,9 +14074,9 @@ index 0a05626a..0d9d160d 100644
      minzoomspeed = 0.015;
  let zoomspeed = minzoomspeed;
  
--let container, border;
+-let border;
 -const objects = {};
-+let container: HTMLElement, border: HTMLElement;
++let border: HTMLElement;
 +
 +interface ObjectView {
 +    container: HTMLElement;
@@ -14092,16 +14089,7 @@ index 0a05626a..0d9d160d 100644
  
  // Generate a number of text labels, from 1µm in size up to 100,000,000 light years
  // Try to use some descriptive real-world examples of objects at each scale
-@@ -44,7 +52,7 @@ const labeldata = [
- init().then(animate);
- 
- async function init() {
--    container = document.getElementById('container');
-+    container = document.getElementById('container')!;
- 
-     const loader = new FontLoader();
-     const font = await loader.loadAsync('fonts/helvetiker_regular.typeface.json');
-@@ -56,7 +64,7 @@ async function init() {
+@@ -54,7 +62,7 @@ async function init() {
      objects.logzbuf = await initView(scene, 'logzbuf', true);
  
      // Resize border allows the user to easily compare effects of logarithmic depth buffer over the whole scene
@@ -14110,7 +14098,7 @@ index 0a05626a..0d9d160d 100644
      border.addEventListener('pointerdown', onBorderPointerDown);
  
      window.addEventListener('mousemove', onMouseMove);
-@@ -64,8 +72,8 @@ async function init() {
+@@ -62,8 +70,8 @@ async function init() {
      window.addEventListener('wheel', onMouseWheel);
  }
  
@@ -14121,7 +14109,7 @@ index 0a05626a..0d9d160d 100644
  
      const camera = new THREE.PerspectiveCamera(50, (screensplit * SCREEN_WIDTH) / SCREEN_HEIGHT, NEAR, FAR);
      scene.add(camera);
-@@ -83,7 +91,7 @@ async function initView(scene, name, logDepthBuf) {
+@@ -81,7 +89,7 @@ async function initView(scene, name, logDepthBuf) {
      return { container: framecontainer, renderer: renderer, scene: scene, camera: camera };
  }
  
@@ -14130,7 +14118,7 @@ index 0a05626a..0d9d160d 100644
      const scene = new THREE.Scene();
  
      scene.add(new THREE.AmbientLight(0x777777));
-@@ -92,7 +100,7 @@ function initScene(font) {
+@@ -90,7 +98,7 @@ function initScene(font) {
      light.position.set(100, 100, 100);
      scene.add(light);
  
@@ -14139,7 +14127,7 @@ index 0a05626a..0d9d160d 100644
          color: 0xffffff,
          specular: 0x050505,
          shininess: 50,
-@@ -113,7 +121,7 @@ function initScene(font) {
+@@ -111,7 +119,7 @@ function initScene(font) {
          labelgeo.computeBoundingSphere();
  
          // center text
@@ -14148,7 +14136,7 @@ index 0a05626a..0d9d160d 100644
  
          materialargs.color = new THREE.Color().setHSL(Math.random(), 0.5, 0.5);
  
-@@ -146,16 +154,16 @@ function updateRendererSizes() {
+@@ -144,16 +152,16 @@ function updateRendererSizes() {
  
      screensplit_right = 1 - screensplit;
  
@@ -14174,7 +14162,7 @@ index 0a05626a..0d9d160d 100644
          SCREEN_WIDTH,
          SCREEN_HEIGHT,
          SCREEN_WIDTH * screensplit,
-@@ -163,7 +171,7 @@ function updateRendererSizes() {
+@@ -161,7 +169,7 @@ function updateRendererSizes() {
          SCREEN_WIDTH * screensplit_right,
          SCREEN_HEIGHT,
      );
@@ -14183,7 +14171,7 @@ index 0a05626a..0d9d160d 100644
  
      border.style.left = screensplit * 100 + '%';
  }
-@@ -188,22 +196,22 @@ function animate() {
+@@ -186,22 +194,22 @@ function animate() {
      zoompos += zoomspeed;
      zoomspeed *= damping;
  
@@ -14214,7 +14202,7 @@ index 0a05626a..0d9d160d 100644
  }
  
  function onWindowResize() {
-@@ -216,7 +224,7 @@ function onBorderPointerDown() {
+@@ -214,7 +222,7 @@ function onBorderPointerDown() {
      window.addEventListener('pointerup', onBorderPointerUp);
  }
  
@@ -14223,7 +14211,7 @@ index 0a05626a..0d9d160d 100644
      screensplit = Math.max(0, Math.min(1, ev.clientX / window.innerWidth));
  }
  
-@@ -225,12 +233,12 @@ function onBorderPointerUp() {
+@@ -223,12 +231,12 @@ function onBorderPointerUp() {
      window.removeEventListener('pointerup', onBorderPointerUp);
  }
  
@@ -17444,7 +17432,7 @@ index 18d48cbf..8fac5871 100644
  
      // render scene into target
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
-index 4eee79fb..520710ba 100644
+index 2232ab18..cbc9492b 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets_readback.ts
 @@ -5,8 +5,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -21768,19 +21756,20 @@ index 50a99041..b5925eb1 100644
  
      const texture = new THREE.VideoTexture(video);
 diff --git a/examples-testing/examples/webxr_xr_controls_transform.ts b/examples-testing/examples/webxr_xr_controls_transform.ts
-index 6e690141..ee8cabbd 100644
+index cd9b1290..3edf26cf 100644
 --- a/examples-testing/examples/webxr_xr_controls_transform.ts
 +++ b/examples-testing/examples/webxr_xr_controls_transform.ts
-@@ -3,14 +3,14 @@ import { TransformControls } from 'three/addons/controls/TransformControls.js';
- import { XRButton } from 'three/addons/webxr/XRButton.js';
+@@ -4,15 +4,15 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
  import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
  
 -let container;
 -let camera, scene, renderer;
--let controller1, controller2, line;
--let controllerGrip1, controllerGrip2;
 +let container: HTMLDivElement;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+ let bloomPass;
+-let controller1, controller2, line;
+-let controllerGrip1, controllerGrip2;
 +let controller1: THREE.XRTargetRaySpace, controller2: THREE.XRTargetRaySpace, line: THREE.Line;
 +let controllerGrip1: THREE.XRGripSpace, controllerGrip2: THREE.XRGripSpace;
  
@@ -21792,7 +21781,7 @@ index 6e690141..ee8cabbd 100644
  
  init();
  
-@@ -148,7 +148,7 @@ function init() {
+@@ -156,7 +156,7 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -21801,7 +21790,7 @@ index 6e690141..ee8cabbd 100644
      const controller = event.target;
  
      controller1.userData.active = false;
-@@ -173,7 +173,7 @@ function onSelect(event) {
+@@ -181,7 +181,7 @@ function onSelect(event) {
      }
  }
  
