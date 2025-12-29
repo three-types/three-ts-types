@@ -7977,7 +7977,7 @@ index 87e0b2f81..5094b88cb 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_vrml.ts b/examples-testing/examples/webgl_loader_vrml.ts
-index fecf4bb45..a6093ead7 100644
+index 1dda79f2b..02c9d9209 100644
 --- a/examples-testing/examples/webgl_loader_vrml.ts
 +++ b/examples-testing/examples/webgl_loader_vrml.ts
 @@ -6,7 +6,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7994,8 +7994,8 @@ index fecf4bb45..a6093ead7 100644
  
  const params = {
      asset: 'house',
-@@ -29,7 +34,7 @@ const assets = [
-     'points',
+@@ -30,7 +35,7 @@ const assets = [
+     'camera',
  ];
  
 -let vrmlScene;
@@ -8003,7 +8003,7 @@ index fecf4bb45..a6093ead7 100644
  
  init();
  
-@@ -82,9 +87,14 @@ function init() {
+@@ -83,9 +88,14 @@ function init() {
      gui.add(params, 'asset', assets).onChange(function (value) {
          if (vrmlScene) {
              vrmlScene.traverse(function (object) {
@@ -8021,7 +8021,7 @@ index fecf4bb45..a6093ead7 100644
              });
  
              scene.remove(vrmlScene);
-@@ -94,7 +104,7 @@ function init() {
+@@ -95,7 +105,7 @@ function init() {
      });
  }
  
@@ -10929,33 +10929,6 @@ index a4d09866d..238c37da7 100644
  
  init();
  
-diff --git a/examples-testing/examples/webgl_postprocessing_material_ao.ts b/examples-testing/examples/webgl_postprocessing_material_ao.ts
-index da8ba1840..2b918a2fc 100644
---- a/examples-testing/examples/webgl_postprocessing_material_ao.ts
-+++ b/examples-testing/examples/webgl_postprocessing_material_ao.ts
-@@ -10,7 +10,12 @@ import { GTAOPass } from 'three/addons/postprocessing/GTAOPass.js';
- import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
- import { MeshPostProcessingMaterial } from 'three/addons/materials/MeshPostProcessingMaterial.js';
- 
--let renderer, camera, scene, composer, controls, stats;
-+let renderer: THREE.WebGLRenderer,
-+    camera: THREE.PerspectiveCamera,
-+    scene: THREE.Scene,
-+    composer: EffectComposer,
-+    controls: OrbitControls,
-+    stats: Stats;
- const sceneParameters = {
-     output: 0,
-     envMapIntensity: 1.0,
-@@ -218,7 +223,7 @@ function init() {
-         .max(100)
-         .step(1)
-         .onChange(() => {
--            lightGroup.children.forEach(light => (light.intensity = sceneParameters.lightIntensity));
-+            lightGroup.children.forEach(light => ((light as THREE.Light).intensity = sceneParameters.lightIntensity));
-         });
-     gui.add(sceneParameters, 'shadow').onChange(value => {
-         renderer.shadowMap.enabled = value;
 diff --git a/examples-testing/examples/webgl_postprocessing_outline.ts b/examples-testing/examples/webgl_postprocessing_outline.ts
 index 31ef6b9b2..4b1fa11a3 100644
 --- a/examples-testing/examples/webgl_postprocessing_outline.ts
