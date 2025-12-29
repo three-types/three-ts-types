@@ -1,6 +1,6 @@
-import { WebGLExtensions } from './WebGLExtensions.js';
-import { WebGLInfo } from './WebGLInfo.js';
-import { WebGLAttribute } from './WebGLAttributes.js';
+import { WebGLAttribute } from "./WebGLAttributes.js";
+import { WebGLExtensions } from "./WebGLExtensions.js";
+import { WebGLInfo } from "./WebGLInfo.js";
 
 export class WebGLIndexedBufferRenderer {
     constructor(gl: WebGLRenderingContext, extensions: WebGLExtensions, info: WebGLInfo);

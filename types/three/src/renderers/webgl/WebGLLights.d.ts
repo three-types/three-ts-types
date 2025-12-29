@@ -1,6 +1,6 @@
+import { Camera } from "../../cameras/Camera.js";
+import { Light } from "../../lights/Light.js";
 import { WebGLExtensions } from "./WebGLExtensions.js";
-import { Light } from '../../lights/Light.js';
-import { Camera } from '../../cameras/Camera.js';
 
 export interface WebGLLightsState {
     version: number;

@@ -1,5 +1,5 @@
+import { Texture } from "../../textures/Texture.js";
 import { WebGLRenderer } from "../WebGLRenderer.js";
-import { Texture } from '../../textures/Texture.js';
 
 export class WebGLCubeMaps {
     constructor(renderer: WebGLRenderer);

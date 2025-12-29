@@ -1,7 +1,7 @@
 import { Camera } from "../cameras/Camera.js";
 import { TextureDataType, ToneMapping, WebGLCoordinateSystem } from "../constants.js";
 import { TypedArray } from "../core/BufferAttribute.js";
-import { BufferGeometry, GeometryGroup } from '../core/BufferGeometry.js';
+import { BufferGeometry, GeometryGroup } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { Material } from "../materials/Material.js";
 import { Box2 } from "../math/Box2.js";

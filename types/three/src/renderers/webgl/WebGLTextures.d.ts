@@ -1,11 +1,11 @@
+import { RenderTarget } from "../../core/RenderTarget.js";
+import { Texture } from "../../textures/Texture.js";
 import { WebGLCapabilities } from "./WebGLCapabilities.js";
 import { WebGLExtensions } from "./WebGLExtensions.js";
 import { WebGLInfo } from "./WebGLInfo.js";
 import { WebGLProperties } from "./WebGLProperties.js";
 import { WebGLState } from "./WebGLState.js";
 import { WebGLUtils } from "./WebGLUtils.js";
-import { Texture } from '../../textures/Texture.js';
-import { RenderTarget } from '../../core/RenderTarget.js';
 
 export class WebGLTextures {
     constructor(
