@@ -4209,7 +4209,7 @@ index 6b5da502c..3830ea5ff 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index b7c85d42a..16a5e7867 100644
+index aa5c5f4c0..8d5a0bd54 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
 @@ -1,5 +1,23 @@
@@ -8240,10 +8240,10 @@ index a2e65be3f..e32dd7931 100644
  
  export default TimestampQueryPool;
 diff --git a/src-testing/src/renderers/common/Uniform.ts b/src-testing/src/renderers/common/Uniform.ts
-index 85fe79e38..f1d0b8e80 100644
+index fa6d7a0ed..6baa992cb 100644
 --- a/src-testing/src/renderers/common/Uniform.ts
 +++ b/src-testing/src/renderers/common/Uniform.ts
-@@ -12,14 +12,22 @@ import { Vector4 } from '../../math/Vector4.js';
+@@ -12,14 +12,24 @@ import { Vector4 } from '../../math/Vector4.js';
   * @abstract
   * @private
   */
@@ -8257,6 +8257,8 @@ index 85fe79e38..f1d0b8e80 100644
 +
 +    offset: number;
 +
++    index: number;
++
      /**
       * Constructs a new uniform.
       *
@@ -8268,7 +8270,7 @@ index 85fe79e38..f1d0b8e80 100644
          /**
           * The uniform's name.
           *
-@@ -65,7 +73,7 @@ class Uniform {
+@@ -73,7 +83,7 @@ class Uniform {
       *
       * @param {any} value - The value to set.
       */
@@ -8277,7 +8279,7 @@ index 85fe79e38..f1d0b8e80 100644
          this.value = value;
      }
  
-@@ -85,14 +93,16 @@ class Uniform {
+@@ -93,14 +103,16 @@ class Uniform {
   * @private
   * @augments Uniform
   */
@@ -8296,7 +8298,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -115,14 +125,16 @@ class NumberUniform extends Uniform {
+@@ -123,14 +135,16 @@ class NumberUniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8315,7 +8317,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -145,14 +157,16 @@ class Vector2Uniform extends Uniform {
+@@ -153,14 +167,16 @@ class Vector2Uniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8334,7 +8336,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -175,14 +189,16 @@ class Vector3Uniform extends Uniform {
+@@ -183,14 +199,16 @@ class Vector3Uniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8353,7 +8355,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -205,14 +221,16 @@ class Vector4Uniform extends Uniform {
+@@ -213,14 +231,16 @@ class Vector4Uniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8372,7 +8374,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -235,14 +253,16 @@ class ColorUniform extends Uniform {
+@@ -243,14 +263,16 @@ class ColorUniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8391,7 +8393,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -265,14 +285,16 @@ class Matrix2Uniform extends Uniform {
+@@ -273,14 +295,16 @@ class Matrix2Uniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8410,7 +8412,7 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
-@@ -295,14 +317,16 @@ class Matrix3Uniform extends Uniform {
+@@ -303,14 +327,16 @@ class Matrix3Uniform extends Uniform {
   * @private
   * @augments Uniform
   */
@@ -8429,6 +8431,11 @@ index 85fe79e38..f1d0b8e80 100644
          super(name, value);
  
          /**
+@@ -337,3 +363,4 @@ export {
+     Matrix3Uniform,
+     Matrix4Uniform,
+ };
++export type { Uniform };
 diff --git a/src-testing/src/renderers/common/UniformBuffer.ts b/src-testing/src/renderers/common/UniformBuffer.ts
 index 93c9419f8..aa5b6b4b0 100644
 --- a/src-testing/src/renderers/common/UniformBuffer.ts
@@ -8451,10 +8458,10 @@ index 93c9419f8..aa5b6b4b0 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index e5354d6cf..4871cd0b7 100644
+index de688d551..3d99f9b92 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
-@@ -1,6 +1,16 @@
+@@ -1,6 +1,17 @@
  import UniformBuffer from './UniformBuffer.js';
  import { GPU_CHUNK_BYTES } from './Constants.js';
  import { error } from '../../utils.js';
@@ -8468,10 +8475,11 @@ index e5354d6cf..4871cd0b7 100644
 +    Vector3NodeUniform,
 +    Vector4NodeUniform,
 +} from './nodes/NodeUniform.js';
++import { Uniform } from './Uniform.js';
  
  /**
   * This class represents a uniform buffer binding but with
-@@ -10,12 +20,18 @@ import { error } from '../../utils.js';
+@@ -10,12 +21,20 @@ import { error } from '../../utils.js';
   * @augments UniformBuffer
   */
  class UniformsGroup extends UniformBuffer {
@@ -8480,6 +8488,8 @@ index e5354d6cf..4871cd0b7 100644
 +    _values: number[] | null;
 +
 +    uniforms: NodeUniformGPU[];
++
++    _updateRangeCache: Map<number, { start: number; count: number }>;
 +
      /**
       * Constructs a new uniforms group.
@@ -8491,7 +8501,16 @@ index e5354d6cf..4871cd0b7 100644
          super(name);
  
          /**
-@@ -52,7 +68,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -59,7 +78,7 @@ class UniformsGroup extends UniformBuffer {
+      *
+      * @param {Uniform} uniform - The uniform.
+      */
+-    addUniformUpdateRange(uniform) {
++    addUniformUpdateRange(uniform: Uniform<unknown>) {
+         const index = uniform.index;
+ 
+         if (this._updateRangeCache.has(index) !== true) {
+@@ -91,7 +110,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Uniform} uniform - The uniform to add.
       * @return {UniformsGroup} A reference to this group.
       */
@@ -8500,7 +8519,7 @@ index e5354d6cf..4871cd0b7 100644
          this.uniforms.push(uniform);
  
          return this;
-@@ -64,7 +80,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -103,7 +122,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Uniform} uniform - The uniform to remove.
       * @return {UniformsGroup} A reference to this group.
       */
@@ -8509,7 +8528,7 @@ index e5354d6cf..4871cd0b7 100644
          const index = this.uniforms.indexOf(uniform);
  
          if (index !== -1) {
-@@ -92,7 +108,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -131,7 +150,7 @@ class UniformsGroup extends UniformBuffer {
       *
       * @type {Float32Array}
       */
@@ -8518,7 +8537,7 @@ index e5354d6cf..4871cd0b7 100644
          let buffer = this._buffer;
  
          if (buffer === null) {
-@@ -170,14 +186,14 @@ class UniformsGroup extends UniformBuffer {
+@@ -210,14 +229,14 @@ class UniformsGroup extends UniformBuffer {
       * @param {Uniform} uniform - The uniform to update.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8541,7 +8560,7 @@ index e5354d6cf..4871cd0b7 100644
  
          error('WebGPUUniformsGroup: Unsupported uniform type.', uniform);
      }
-@@ -188,7 +204,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -228,7 +247,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {NumberUniform} uniform - The Number uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8550,7 +8569,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -212,7 +228,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -254,7 +273,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector2Uniform} uniform - The Vector2 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8559,7 +8578,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -238,7 +254,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -282,7 +301,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector3Uniform} uniform - The Vector3 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8568,7 +8587,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -265,7 +281,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -311,7 +330,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Vector4Uniform} uniform - The Vector4 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8577,7 +8596,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -293,7 +309,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -341,7 +360,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {ColorUniform} uniform - The Color uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8586,7 +8605,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -319,7 +335,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -369,7 +388,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8595,7 +8614,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -361,7 +377,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -413,7 +432,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
       * @return {boolean} Whether the uniform has been updated or not.
       */
@@ -8604,7 +8623,7 @@ index e5354d6cf..4871cd0b7 100644
          let updated = false;
  
          const a = this.values;
-@@ -385,7 +401,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -439,7 +458,7 @@ class UniformsGroup extends UniformBuffer {
       * @param {string} type - The data type.
       * @return {TypedArray} The typed array.
       */
@@ -8613,7 +8632,7 @@ index e5354d6cf..4871cd0b7 100644
          if (type === 'int' || type === 'ivec2' || type === 'ivec3' || type === 'ivec4')
              return new Int32Array(this.buffer.buffer);
          if (type === 'uint' || type === 'uvec2' || type === 'uvec3' || type === 'uvec4')
-@@ -402,7 +418,7 @@ class UniformsGroup extends UniformBuffer {
+@@ -456,7 +475,7 @@ class UniformsGroup extends UniformBuffer {
   * @param {TypedArray} b - The second array.
   * @param {number} offset - An index offset for the first array.
   */
@@ -8622,7 +8641,7 @@ index e5354d6cf..4871cd0b7 100644
      for (let i = 0, l = b.length; i < l; i++) {
          a[offset + i] = b[i];
      }
-@@ -417,7 +433,7 @@ function setArray(a, b, offset) {
+@@ -471,7 +490,7 @@ function setArray(a, b, offset) {
   * @param {number} offset - An index offset for the first array.
   * @return {boolean} Whether the given arrays are equal or not.
   */
