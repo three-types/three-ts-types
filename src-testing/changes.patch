@@ -1446,13 +1446,13 @@ index 393325c38..5daf10951 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 6ff631c60..f9a6301a7 100644
+index 7b85a6fda..c2e6cdc21 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
  import FunctionNode from '../code/FunctionNode.js';
  import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
- import { getTypeFromLength } from './NodeUtils.js';
+ import { getDataFromObject, getTypeFromLength } from './NodeUtils.js';
 -import { NodeUpdateType, defaultBuildStages, shaderStages } from './constants.js';
 +import { NodeUpdateType, defaultBuildStages, shaderStages, NodeShaderStage } from './constants.js';
  
@@ -6607,7 +6607,7 @@ index 7527627eb..c0fcddf9a 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 808cbdeea..fd7bb8833 100644
+index 819c529e2..ccda5e959 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -6654,7 +6654,7 @@ index 808cbdeea..fd7bb8833 100644
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +import { ArrayCamera } from '../../cameras/ArrayCamera.js';
  
- import { float, vec3, vec4 } from '../../nodes/tsl/TSLCore.js';
+ import { float, vec3, vec4, Fn } from '../../nodes/tsl/TSLCore.js';
  import { reference } from '../../nodes/accessors/ReferenceNode.js';
  import { highpModelNormalViewMatrix, highpModelViewMatrix } from '../../nodes/accessors/ModelNode.js';
  import { context } from '../../nodes/core/ContextNode.js';
@@ -7717,7 +7717,7 @@ index 808cbdeea..fd7bb8833 100644
          const version = material.version;
  
          let cache = this._cacheShadowNodes.get(material);
-@@ -2825,7 +3089,17 @@ class Renderer {
+@@ -2838,7 +3102,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -7736,7 +7736,7 @@ index 808cbdeea..fd7bb8833 100644
          let materialOverride = false;
          let materialColorNode;
          let materialDepthNode;
-@@ -2909,7 +3183,7 @@ class Renderer {
+@@ -2922,7 +3196,7 @@ class Renderer {
       * @param {string} name - The compatibility's name.
       * @return {boolean} Whether the compatibility is supported or not.
       */
@@ -7745,7 +7745,7 @@ index 808cbdeea..fd7bb8833 100644
          return this.backend.hasCompatibility(name);
      }
  
-@@ -2927,14 +3201,23 @@ class Renderer {
+@@ -2940,14 +3214,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7772,7 +7772,7 @@ index 808cbdeea..fd7bb8833 100644
              clippingContext,
              passId,
          );
-@@ -2943,18 +3226,18 @@ class Renderer {
+@@ -2956,18 +3239,18 @@ class Renderer {
  
          //
  
@@ -7797,7 +7797,7 @@ index 808cbdeea..fd7bb8833 100644
  
          //
  
-@@ -2968,7 +3251,7 @@ class Renderer {
+@@ -2981,7 +3264,7 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -7806,7 +7806,7 @@ index 808cbdeea..fd7bb8833 100644
      }
  
      /**
-@@ -2985,14 +3268,23 @@ class Renderer {
+@@ -2998,14 +3281,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -7833,7 +7833,7 @@ index 808cbdeea..fd7bb8833 100644
              clippingContext,
              passId,
          );
-@@ -3001,16 +3293,16 @@ class Renderer {
+@@ -3014,16 +3306,16 @@ class Renderer {
  
          //
  
