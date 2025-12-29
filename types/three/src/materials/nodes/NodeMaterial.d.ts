@@ -154,6 +154,12 @@ export interface NodeMaterialNodeProperties {
      */
     maskNode: Node | null;
     /**
+     * This node can be used to implement a shadow mask for the material.
+     *
+     * @default null
+     */
+    maskShadowNode: Node | null;
+    /**
      * The local vertex positions are computed based on multiple factors like the
      * attribute data, morphing or skinning. This node property allows to overwrite
      * the default and define local vertex positions with nodes instead.
