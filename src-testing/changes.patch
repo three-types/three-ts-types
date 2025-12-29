@@ -455,7 +455,7 @@ index 5b4d8aa0d..f7931662c 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index a5becc496..a869c0510 100644
+index a1d19b0ab..6c63e6053 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -12,6 +12,10 @@ import { Compatibility, IntType, LessCompare, NearestFilter, UnsignedIntType } f
@@ -610,16 +610,7 @@ index a5becc496..a869c0510 100644
          this.sampler = value;
  
          return this;
-@@ -586,7 +611,7 @@ class TextureNode extends UniformNode {
-      * @param {Node} uvNode - The uv node.
-      * @return {TextureNode} A texture node representing the texture sample.
-      */
--    uv(uvNode) {
-+    uv(uvNode: Node | null) {
-         // @deprecated, r172
- 
-         warn('TextureNode: .uv() has been renamed. Use .sample() instead.');
-@@ -624,7 +649,7 @@ class TextureNode extends UniformNode {
+@@ -609,7 +634,7 @@ class TextureNode extends UniformNode {
       * @param {Node<float>} amountNode - How blurred the texture should be.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -628,7 +619,7 @@ index a5becc496..a869c0510 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getBase();
-@@ -653,7 +678,7 @@ class TextureNode extends UniformNode {
+@@ -638,7 +663,7 @@ class TextureNode extends UniformNode {
       * @param {Node<int>} levelNode - The mip level to sample.
       * @return {TextureNode} A texture node representing the texture sample.
       */
