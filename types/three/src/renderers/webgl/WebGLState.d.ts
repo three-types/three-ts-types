@@ -124,30 +124,6 @@ declare class WebGLState {
         srcLengthOverride?: GLuint,
     ): void;
 
-    compressedTexSubImage2D(
-        target: GLenum,
-        level: GLint,
-        xoffset: GLint,
-        yoffset: GLint,
-        width: GLsizei,
-        height: GLsizei,
-        format: GLenum,
-        imageSize: GLsizei,
-        offset: GLintptr,
-    ): void;
-    compressedTexSubImage2D(
-        target: GLenum,
-        level: GLint,
-        xoffset: GLint,
-        yoffset: GLint,
-        width: GLsizei,
-        height: GLsizei,
-        format: GLenum,
-        srcData: ArrayBufferView,
-        srcOffset?: number,
-        srcLengthOverride?: GLuint,
-    ): void;
-
     texSubImage2D(
         target: GLenum,
         level: GLint,
