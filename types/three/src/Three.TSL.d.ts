@@ -125,6 +125,7 @@ export const clamp: typeof TSL.clamp;
 export const clearcoat: typeof TSL.clearcoat;
 export const clearcoatNormalView: typeof TSL.clearcoatNormalView;
 export const clearcoatRoughness: typeof TSL.clearcoatRoughness;
+export const clipSpace: typeof TSL.clipSpace;
 export const code: typeof TSL.code;
 export const color: typeof TSL.color;
 export const colorSpaceToWorking: typeof TSL.colorSpaceToWorking;
