@@ -22,8 +22,6 @@ export default class SkinningNode extends Node {
     getSkinnedNormal(boneMatrices?: Node, normal?: Node): Node;
 
     getPreviousSkinnedPosition(builder: NodeBuilder): Node;
-
-    needsPreviousBoneMatrices(builder: NodeBuilder): boolean;
 }
 
 export const skinning: (skinnedMesh: SkinnedMesh) => SkinningNode;
