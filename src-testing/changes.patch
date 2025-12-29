@@ -3853,7 +3853,7 @@ index 59ca2d5a8..46160831a 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index 41eb12825..ab836a5cc 100644
+index 41eb12825..a1e2855d7 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,38 @@
@@ -4041,6 +4041,15 @@ index 41eb12825..ab836a5cc 100644
 +        renderer!.getClearColor(_color4);
  
          _color4.getRGB(_color4);
+ 
+@@ -650,7 +706,7 @@ class Backend {
+      * @param {string} name - The compatibility.
+      * @return {boolean} Whether the backend has the given compatibility or not.
+      */
+-    hasCompatibility(/*name*/) {
++    hasCompatibility(name: string) {
+         return false;
+     }
  
 @@ -671,7 +727,11 @@ class Backend {
       * @param {Object} object - The object.
@@ -6637,7 +6646,7 @@ index 7527627eb..c0fcddf9a 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 4d18cf5d6..3d7be196b 100644
+index 4d18cf5d6..a40c18df5 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -7766,6 +7775,15 @@ index 4d18cf5d6..3d7be196b 100644
          let materialOverride = false;
          let materialColorNode;
          let materialDepthNode;
+@@ -2891,7 +3165,7 @@ class Renderer {
+      * @param {string} name - The compatibility's name.
+      * @return {boolean} Whether the compatibility is supported or not.
+      */
+-    hasCompatibility(name) {
++    hasCompatibility(name: string) {
+         return this.backend.hasCompatibility(name);
+     }
+ 
 @@ -2909,14 +3183,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
