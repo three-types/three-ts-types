@@ -164,6 +164,7 @@ declare class Renderer {
     opaque: boolean;
     shadowMap: {
         enabled: boolean;
+        transmitted: boolean;
         type: ShadowMapType | null;
     };
     xr: XRManager;
