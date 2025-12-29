@@ -6271,7 +6271,7 @@ index d12ad5833..ef6e14ec0 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index cbe4e919a..2264205f2 100644
+index 480e670d3..41776b544 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6457,12 +6457,14 @@ index cbe4e919a..2264205f2 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index ede42958c..b18adb087 100644
+index 985fee476..3dfb3fe6a 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
 @@ -1,7 +1,20 @@
  import ChainMap from './ChainMap.js';
  import RenderObject from './RenderObject.js';
+-
+-const _chainKeys = [];
 +import Renderer from './Renderer.js';
 +import Nodes from './nodes/Nodes.js';
 +import Geometries from './Geometries.js';
@@ -6476,8 +6478,7 @@ index ede42958c..b18adb087 100644
 +import { Scene } from '../../scenes/Scene.js';
 +import { Camera } from '../../cameras/Camera.js';
 +import ClippingContext from './ClippingContext.js';
- 
--const _chainKeys = [];
++
 +const _chainKeys = [] as unknown as [Object3D, Material, RenderContext, LightsNode];
  
  /**
@@ -6531,17 +6532,17 @@ index ede42958c..b18adb087 100644
 +    ): RenderObject {
          const chainMap = this.getChainMap(passId);
  
-         // reuse chainArray
-@@ -112,7 +150,7 @@ class RenderObjects {
+         // set chain keys
+@@ -121,7 +159,7 @@ class RenderObjects {
  
-             chainMap.set(_chainKeys, renderObject);
-         } else {
+             //
+ 
 -            renderObject.updateClipping(clippingContext);
 +            renderObject.updateClipping(clippingContext!);
  
              if (renderObject.needsGeometryUpdate) {
                  renderObject.setGeometry(object.geometry);
-@@ -150,7 +188,13 @@ class RenderObjects {
+@@ -166,7 +204,13 @@ class RenderObjects {
       * @return {ChainMap} The chain map.
       */
      getChainMap(passId = 'default') {
@@ -6556,7 +6557,7 @@ index ede42958c..b18adb087 100644
      }
  
      /**
-@@ -177,17 +221,17 @@ class RenderObjects {
+@@ -193,17 +237,17 @@ class RenderObjects {
       * @return {RenderObject} The render object.
       */
      createRenderObject(
@@ -10089,7 +10090,7 @@ index 0b3794d56..22febf769 100644
      }
  
 diff --git a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
-index df2119067..e7db9d47b 100644
+index c1cb58ed4..6c0b8a09f 100644
 --- a/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgl-fallback/nodes/GLSLNodeBuilder.ts
 @@ -1,4 +1,11 @@
@@ -10221,7 +10222,7 @@ index df2119067..e7db9d47b 100644
 -    getPropertyName(node, shaderStage = this.shaderStage) {
 +    getPropertyName(node: unknown, shaderStage = this.shaderStage) {
          if (node.isNodeUniform && node.node.isTextureNode !== true && node.node.isBufferNode !== true) {
-             return shaderStage.charAt(0) + '_' + node.name;
+             return node.name;
          }
 @@ -367,7 +413,7 @@ ${flowData.code}
       * @param {StorageArrayElementNode} storageArrayElementNode - The storage array element node.
@@ -10355,7 +10356,7 @@ index df2119067..e7db9d47b 100644
          const uniforms = this.uniforms[shaderStage];
  
          const bindingSnippets = [];
-@@ -729,7 +806,7 @@ ${flowData.code}
+@@ -747,7 +824,7 @@ ${flowData.code}
       * @param {BufferAttribute} attribute - The buffer attribute.
       * @return {string} The type.
       */
@@ -10364,7 +10365,7 @@ index df2119067..e7db9d47b 100644
          let nodeType = super.getTypeFromAttribute(attribute);
  
          if (/^[iu]/.test(nodeType) && attribute.gpuType !== IntType) {
-@@ -753,7 +830,7 @@ ${flowData.code}
+@@ -771,7 +848,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the shader attributes.
       */
@@ -10373,7 +10374,7 @@ index df2119067..e7db9d47b 100644
          let snippet = '';
  
          if (shaderStage === 'vertex' || shaderStage === 'compute') {
-@@ -775,8 +852,8 @@ ${flowData.code}
+@@ -793,8 +870,8 @@ ${flowData.code}
       * @param {StructTypeNode} struct - The struct type node.
       * @return {string} The GLSL snippet that defines the struct members.
       */
@@ -10384,7 +10385,7 @@ index df2119067..e7db9d47b 100644
  
          for (const member of struct.members) {
              snippets.push(`\t${member.type} ${member.name};`);
-@@ -791,7 +868,7 @@ ${flowData.code}
+@@ -809,7 +886,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the structs.
       */
@@ -10393,7 +10394,7 @@ index df2119067..e7db9d47b 100644
          const snippets = [];
          const structs = this.structs[shaderStage];
  
-@@ -824,7 +901,7 @@ ${flowData.code}
+@@ -842,7 +919,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the varyings.
       */
@@ -10402,7 +10403,7 @@ index df2119067..e7db9d47b 100644
          let snippet = '';
  
          const varyings = this.varyings;
-@@ -980,7 +1057,7 @@ ${flowData.code}
+@@ -998,7 +1075,7 @@ ${flowData.code}
       * @param {string} behavior - The extension behavior.
       * @param {string} [shaderStage=this.shaderStage] - The shader stage.
       */
@@ -10411,7 +10412,7 @@ index df2119067..e7db9d47b 100644
          const map = this.extensions[shaderStage] || (this.extensions[shaderStage] = new Map());
  
          if (map.has(name) === false) {
-@@ -997,7 +1074,7 @@ ${flowData.code}
+@@ -1015,7 +1092,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the enabled extensions.
       */
@@ -10420,7 +10421,7 @@ index df2119067..e7db9d47b 100644
          const snippets = [];
  
          if (shaderStage === 'vertex') {
-@@ -1035,7 +1112,7 @@ ${flowData.code}
+@@ -1053,7 +1130,7 @@ ${flowData.code}
       * @param {string} name - The requested feature.
       * @return {boolean} Whether the requested feature is supported or not.
       */
@@ -10429,7 +10430,7 @@ index df2119067..e7db9d47b 100644
          let result = supports[name];
  
          if (result === undefined) {
-@@ -1104,7 +1181,7 @@ ${flowData.code}
+@@ -1122,7 +1199,7 @@ ${flowData.code}
       * @param {string} varyingName - The varying name.
       * @param {AttributeNode} attributeNode - The attribute node.
       */
@@ -10438,7 +10439,7 @@ index df2119067..e7db9d47b 100644
          this.transforms.push({ varyingName, attributeNode });
      }
  
-@@ -1114,7 +1191,7 @@ ${flowData.code}
+@@ -1132,7 +1209,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The GLSL snippet that defines the transforms.
       */
@@ -10447,7 +10448,7 @@ index df2119067..e7db9d47b 100644
          const transforms = this.transforms;
  
          let snippet = '';
-@@ -1137,7 +1214,7 @@ ${flowData.code}
+@@ -1155,7 +1232,7 @@ ${flowData.code}
       * @param {string} vars - The struct variables.
       * @return {string} The GLSL snippet representing a struct.
       */
@@ -10456,7 +10457,7 @@ index df2119067..e7db9d47b 100644
          return `
  layout( std140 ) uniform ${name} {
  ${vars}
-@@ -1151,7 +1228,7 @@ ${vars}
+@@ -1169,7 +1246,7 @@ ${vars}
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10465,7 +10466,7 @@ index df2119067..e7db9d47b 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1198,7 +1275,7 @@ void main() {
+@@ -1216,7 +1293,7 @@ void main() {
       * @param {Object} shaderData - The shader data.
       * @return {string} The vertex shader.
       */
@@ -10474,7 +10475,7 @@ index df2119067..e7db9d47b 100644
          return `#version 300 es
  
  ${this.getSignature()}
-@@ -1237,19 +1314,20 @@ void main() {
+@@ -1255,19 +1332,20 @@ void main() {
       * Controls the code build of the shader stages.
       */
      buildCode() {
@@ -10499,7 +10500,7 @@ index df2119067..e7db9d47b 100644
                  const slotName = node.name;
  
                  if (slotName) {
-@@ -1275,24 +1353,24 @@ void main() {
+@@ -1293,24 +1371,24 @@ void main() {
                  }
              }
  
@@ -10536,7 +10537,7 @@ index df2119067..e7db9d47b 100644
          }
      }
  
-@@ -1309,7 +1387,12 @@ void main() {
+@@ -1327,7 +1405,12 @@ void main() {
       * @param {?string} [name=null] - An optional uniform name.
       * @return {NodeUniform} The node uniform object.
       */
@@ -10653,7 +10654,7 @@ index 37784a05b..7b08961ad 100644
 +
  export default StandardNodeLibrary;
 diff --git a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
-index 98b8d198b..99670da67 100644
+index 7bec5f384..3689a49fa 100644
 --- a/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 +++ b/src-testing/src/renderers/webgpu/nodes/WGSLNodeBuilder.ts
 @@ -10,7 +10,7 @@ import {
@@ -10813,7 +10814,7 @@ index 98b8d198b..99670da67 100644
          const uniformNode = super.getUniformFromNode(node, type, shaderStage, name);
          const nodeData = this.getDataFromNode(node, shaderStage, this.globalCache);
  
-@@ -1014,7 +1042,7 @@ class WGSLNodeBuilder extends NodeBuilder {
+@@ -1026,7 +1054,7 @@ class WGSLNodeBuilder extends NodeBuilder {
       * @param {ShaderNodeInternal} shaderNode - The shader node.
       * @return {string} The WGSL function code.
       */
@@ -10822,7 +10823,7 @@ index 98b8d198b..99670da67 100644
          const layout = shaderNode.layout;
          const flowData = this.flowShaderNode(shaderNode);
  
-@@ -1299,8 +1327,8 @@ ${flowData.code}
+@@ -1311,8 +1339,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the shader attributes.
       */
@@ -10833,7 +10834,7 @@ index 98b8d198b..99670da67 100644
  
          if (shaderStage === 'compute') {
              this.getBuiltin('global_invocation_id', 'globalId', 'vec3<u32>', 'attribute');
-@@ -1434,8 +1462,8 @@ ${flowData.code}
+@@ -1446,8 +1474,8 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the varyings.
       */
@@ -10844,7 +10845,7 @@ index 98b8d198b..99670da67 100644
  
          if (shaderStage === 'vertex') {
              this.getBuiltin('position', 'Vertex', 'vec4<f32>', 'vertex');
-@@ -1500,7 +1528,7 @@ ${flowData.code}
+@@ -1512,7 +1540,7 @@ ${flowData.code}
       * @param {string} shaderStage - The shader stage.
       * @return {string} The WGSL snippet that defines the uniforms.
       */
