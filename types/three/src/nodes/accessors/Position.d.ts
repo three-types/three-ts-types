@@ -1,5 +1,6 @@
 import Node from "../core/Node.js";
 
+export const clipSpace: Node;
 export const positionGeometry: Node;
 export const positionLocal: Node;
 export const positionPrevious: Node;
