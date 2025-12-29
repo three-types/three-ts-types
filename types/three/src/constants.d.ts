@@ -824,6 +824,11 @@ export type InterpolationSamplingMode =
     | typeof InterpolationSamplingMode.FIRST
     | typeof InterpolationSamplingMode.EITHER;
 
+export const Compatibility: {
+    TEXTURE_COMPARE: "depthTextureCompare";
+};
+export type Compatibility = typeof Compatibility.TEXTURE_COMPARE;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Texture - Internal Pixel Formats
 
