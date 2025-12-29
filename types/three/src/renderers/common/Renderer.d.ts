@@ -1027,7 +1027,7 @@ declare class Renderer {
      * @param {string} name - The compatibility's name.
      * @return {boolean} Whether the compatibility is supported or not.
      */
-    hasCompatibility(name: any): boolean;
+    hasCompatibility(name: string): boolean;
     /**
      * This method represents the default `_handleObjectFunction` implementation which creates
      * a render object from the given data and performs the draw command with the selected backend.
