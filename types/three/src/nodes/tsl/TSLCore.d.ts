@@ -364,6 +364,7 @@ interface Vector3Function {
 
     // The third branch will be triggered if there is a single parameter.
     (value: Vector3): ConstNode<Vector3>;
+    (value: [number, number, number]): ConstNode<Vector3>;
     (node: Node): Node;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
