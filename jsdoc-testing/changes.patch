@@ -147,7 +147,7 @@ index 7489bf508..7849540e6 100644
 +    _scheduleFading(duration: number, weightNow: number, weightThen: number): this;
  }
 diff --git a/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts b/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
-index 68b17acc1..631782d2a 100644
+index aa45b91f8..0ecc6e0f8 100644
 --- a/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
 @@ -1,3 +1,22 @@
@@ -210,10 +210,10 @@ index 68b17acc1..631782d2a 100644
       * Parses the `animation.hierarchy` format and returns a new animation clip.
       *
 @@ -67,7 +86,7 @@ export class AnimationClip {
-      * @param {Array<Bones>} bones - An array of bones.
+      * @param {Array<Bone>} bones - An array of bones.
       * @return {?AnimationClip} The new animation clip.
       */
--    static parseAnimation(animation: Object, bones: Array<Bones>): AnimationClip | null;
+-    static parseAnimation(animation: Object, bones: Array<Bone>): AnimationClip | null;
 +    static parseAnimation(animation: AnimationClipJSON, bones: Array<Bone>): AnimationClip | null;
      /**
       * Constructs a new animation clip.
@@ -556,7 +556,7 @@ index 7355fe037..9745bd9f4 100644
       * Returns an array by which times and values can be sorted.
       *
 diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
-index 589b3a6da..273f6ef54 100644
+index d375f0376..6458bc5ca 100644
 --- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 @@ -1,3 +1,17 @@
@@ -575,7 +575,7 @@ index 589b3a6da..273f6ef54 100644
 +}
 +
  /**
-  * Represents s a timed sequence of keyframes, which are composed of lists of
+  * Represents a timed sequence of keyframes, which are composed of lists of
   * times and related values, and which are used to animate a specific property
 @@ -11,7 +25,7 @@ export class KeyframeTrack {
       * @param {KeyframeTrack} track - The keyframe track to serialize.
@@ -632,9 +632,9 @@ index 589b3a6da..273f6ef54 100644
       *
 @@ -123,42 +130,35 @@ export class KeyframeTrack {
       *
-      * @return {AnimationClip} A reference to this animation clip.
+      * @return {KeyframeTrack} A reference to this keyframe track.
       */
--    optimize(): AnimationClip;
+-    optimize(): KeyframeTrack;
 +    optimize(): this;
      /**
       * Returns a new keyframe track with copied values from this instance.
