@@ -8,6 +8,7 @@ import {
     Vector3NodeUniform,
     Vector4NodeUniform,
 } from "./nodes/NodeUniform.js";
+import { Uniform } from "./Uniform.js";
 import UniformBuffer from "./UniformBuffer.js";
 /**
  * This class represents a uniform buffer binding but with
@@ -20,12 +21,26 @@ declare class UniformsGroup extends UniformBuffer {
     readonly isUniformsGroup: true;
     _values: number[] | null;
     uniforms: NodeUniformGPU[];
+    _updateRangeCache: Map<number, {
+        start: number;
+        count: number;
+    }>;
     /**
      * Constructs a new uniforms group.
      *
      * @param {string} name - The group's name.
      */
     constructor(name?: string);
+    /**
+     * Adds a uniform's update range to this buffer.
+     *
+     * @param {Uniform} uniform - The uniform.
+     */
+    addUniformUpdateRange(uniform: Uniform<unknown>): void;
+    /**
+     * Clears all update ranges of this buffer.
+     */
+    clearUpdateRanges(): void;
     /**
      * Adds a uniform to this group.
      *

@@ -17,6 +17,7 @@ declare class Uniform<TValue> {
     boundary: number;
     itemSize: number;
     offset: number;
+    index: number;
     /**
      * Constructs a new uniform.
      *
@@ -175,3 +176,4 @@ export {
     Vector3Uniform,
     Vector4Uniform,
 };
+export type { Uniform };
