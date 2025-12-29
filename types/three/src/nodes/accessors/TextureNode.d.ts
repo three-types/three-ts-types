@@ -30,11 +30,6 @@ export default class TextureNode extends UniformNode<Texture> {
 
     getSampler(): boolean;
 
-    /**
-     * @deprecated
-     */
-    uv(uvNode: Node): Node;
-
     sample(uvNode: Node): Node;
 
     load(uvNode: Node): Node;

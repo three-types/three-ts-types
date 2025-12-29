@@ -45,12 +45,3 @@ export const storage: (
     type?: string | Struct | null,
     count?: number,
 ) => StorageBufferNode;
-
-/**
- * @deprecated
- */
-export const storageObject: (
-    value: StorageBufferAttribute | StorageInstancedBufferAttribute,
-    type?: string | Struct | null,
-    count?: number,
-) => StorageBufferNode;
