@@ -28,14 +28,5 @@ declare module "../Nodes.js" {
 
         toVertexStage: () => VaryingNode;
         toVertexStageAssign: () => this;
-
-        /**
-         * @deprecated .vertexStage() has been renamed to .toVertexStage().
-         */
-        vertexStage: () => VaryingNode;
-        /**
-         * @deprecated .vertexStage() has been renamed to .toVertexStage().
-         */
-        vertexStageAssign: () => this;
     }
 }
