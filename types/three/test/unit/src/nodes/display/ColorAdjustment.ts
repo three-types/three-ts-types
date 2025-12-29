@@ -7,8 +7,6 @@ import { ColorManagement, LinearSRGBColorSpace, Node, Vector3 } from "three/webg
 /**
  * Computes a grayscale value for the given RGB color value.
  *
- * @tsl
- * @function
  * @param {Node<vec3>} color - The color value to compute the grayscale for.
  * @return {Node<vec3>} The grayscale color.
  */
@@ -19,8 +17,6 @@ export const grayscale = /*@__PURE__*/ Fn(([color]: [Node]) => {
 /**
  * Super-saturates or desaturates the given RGB color.
  *
- * @tsl
- * @function
  * @param {Node<vec3>} color - The input color.
  * @param {Node<float>} [adjustment=1] - Specifies the amount of the conversion. A value under `1` desaturates the color, a value over `1` super-saturates it.
  * @return {Node<vec3>} The saturated color.
@@ -34,8 +30,6 @@ export const saturation = /*@__PURE__*/ Fn(([color, adjustment = float(1)]: [Nod
  * in a more natural and visually appealing image with enhanced color depth
  * compared to {@link ColorAdjustment#saturation}.
  *
- * @tsl
- * @function
  * @param {Node<vec3>} color - The input color.
  * @param {Node<float>} [adjustment=1] - Controls the intensity of the vibrance effect.
  * @return {Node<vec3>} The updated color.
@@ -52,8 +46,6 @@ export const vibrance = /*@__PURE__*/ Fn(([color, adjustment = float(1)]: [Node]
 /**
  * Updates the hue component of the given RGB color while preserving its luminance and saturation.
  *
- * @tsl
- * @function
  * @param {Node<vec3>} color - The input color.
  * @param {Node<float>} [adjustment=1] - Defines the degree of hue rotation in radians. A positive value rotates the hue clockwise, while a negative value rotates it counterclockwise.
  * @return {Node<vec3>} The updated color.
@@ -73,8 +65,6 @@ export const hue = /*@__PURE__*/ Fn(([color, adjustment = float(1)]: [Node] | [N
 /**
  * Computes the luminance for the given RGB color value.
  *
- * @tsl
- * @function
  * @param {Node<vec3>} color - The color value to compute the luminance for.
  * @param {?Node<vec3>} luminanceCoefficients - The luminance coefficients. By default predefined values of the current working color space are used.
  * @return {Node<float>} The luminance.
@@ -91,8 +81,6 @@ export const luminance = (
  * saturation. The CDL should be typically be given input in a log space (such as LogC, ACEScc,
  * or AgX Log), and will return output in the same space. Output may require clamping >=0.
  *
- * @tsl
- * @function
  * @param {Node<vec4>} color Input (-Infinity < input < +Infinity)
  * @param {Node<vec3>} slope Slope (0 ≤ slope < +Infinity)
  * @param {Node<vec3>} offset Offset (-Infinity < offset < +Infinity; typically -1 < offset < 1)
