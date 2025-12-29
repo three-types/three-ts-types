@@ -13,23 +13,3 @@ export const blendColor: (base: Node, blend: Node) => Node;
 export const premultiplyAlpha: (color: Node) => Node;
 
 export const unpremultiplyAlpha: (color: Node) => Node;
-
-/**
- * @deprecated
- */
-export const burn: (base: Node, blend: Node) => Node;
-
-/**
- * @deprecated
- */
-export const dodge: (base: Node, blend: Node) => Node;
-
-/**
- * @deprecated
- */
-export const screen: (base: Node, blend: Node) => Node;
-
-/**
- * @deprecated
- */
-export const overlay: (base: Node, blend: Node) => Node;

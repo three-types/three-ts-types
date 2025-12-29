@@ -62,7 +62,6 @@ export default class MathNode extends TempNode {
 
     static ALL: "all";
     static ANY: "any";
-    static EQUALS: "equals";
 
     static RADIANS: "radians";
     static DEGREES: "degrees";
@@ -99,6 +98,7 @@ export default class MathNode extends TempNode {
 
     // 2 inputs
 
+    static EQUALS: "equals";
     static MIN: "min";
     static MAX: "max";
     static STEP: "step";
@@ -148,12 +148,6 @@ type Unary = (a: MathNodeParameter) => MathNode;
 
 export const all: Unary;
 export const any: Unary;
-
-/**
- * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
- */
-export const equals: Unary;
-
 export const radians: Unary;
 export const degrees: Unary;
 export const exp: Unary;
@@ -232,11 +226,6 @@ export const mixElement: Ternary;
 export const smoothstepElement: Ternary;
 export const stepElement: Binary;
 
-/**
- * @deprecated
- */
-export const atan2: Binary;
-
 // GLSL alias function
 
 export const faceforward: typeof faceForward;
@@ -251,15 +240,6 @@ declare module "../Nodes.js" {
 
         any: () => MathNode;
         anyAssign: () => this;
-
-        /**
-         * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
-         */
-        equals: () => MathNode;
-        /**
-         * @deprecated "equals" is deprecated. Use "equal" inside a vector instead, like: "bvec*( equal( ... ) )"
-         */
-        equalsAssign: () => this;
 
         radians: () => MathNode;
         radiansAssign: () => this;
@@ -350,15 +330,6 @@ declare module "../Nodes.js" {
 
         fwidth: () => MathNode;
         fwidthAssign: () => this;
-
-        /**
-         * @deprecated
-         */
-        atan2: (b: MathNodeParameter) => MathNode;
-        /**
-         * @deprecated
-         */
-        atan2Assign: (b: MathNodeParameter) => this;
 
         min: (
             y: MathNodeParameter,
