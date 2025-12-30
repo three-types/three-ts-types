@@ -14200,7 +14200,7 @@ index a0e748e1b..812069877 100644
      if (amount === 0) return;
      const dir = amount / Math.abs(amount);
 diff --git a/examples-testing/examples/webgpu_caustics.ts b/examples-testing/examples/webgpu_caustics.ts
-index 7c5f5a5d1..32543f3a1 100644
+index 40e43cf74..f6011d62d 100644
 --- a/examples-testing/examples/webgpu_caustics.ts
 +++ b/examples-testing/examples/webgpu_caustics.ts
 @@ -20,8 +20,8 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
@@ -14223,7 +14223,7 @@ index 7c5f5a5d1..32543f3a1 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
-@@ -162,7 +162,7 @@ async function init() {
+@@ -163,7 +163,7 @@ async function init() {
  
      // gui
  
@@ -15043,6 +15043,38 @@ index c9ca40234..9fdb9a4b3 100644
  
  init();
  
+diff --git a/examples-testing/examples/webgpu_custom_fog_scattering.ts b/examples-testing/examples/webgpu_custom_fog_scattering.ts
+index d5eff7f15..f9b2bc97f 100644
+--- a/examples-testing/examples/webgpu_custom_fog_scattering.ts
++++ b/examples-testing/examples/webgpu_custom_fog_scattering.ts
+@@ -5,7 +5,11 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer, postProcessing, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing,
++    controls: OrbitControls;
+ 
+ const params = {
+     scatteringEnabled: true,
+@@ -124,12 +128,12 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(density, 'value', 0.005, 0.03)
+         .step(0.0001)
+         .name('fog density')
+         .onChange(value => {
+-            scene.fog.density = value;
++            (scene.fog as THREE.FogExp2).density = value;
+         });
+     gui.add(scattering, 'value', 0, 5).name('scattering factor');
+     gui.add(params, 'scatteringEnabled')
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
 index 90204a3d0..58e2ccffc 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
@@ -15723,7 +15755,7 @@ index db2de8891..0a91b1a14 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index c30e0bb55..5b6fac7cf 100644
+index 58b6b0fa4..5b6fac7cf 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15775,7 +15807,7 @@ index c30e0bb55..5b6fac7cf 100644
      // tile indexes debug, needs to be updated every time the renderer size changes
  
 -    const debugBlockIndexes = lighting
--        .getNode(scene, camera)
+-        .getNode(scene)
 +    const debugBlockIndexes = (lighting.getNode(scene) as TiledLightsNode)
          .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio)
          .getBlock()
@@ -16144,7 +16176,7 @@ index 385638ee4..97fd8fc7d 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index 4dde35617..6777cd37f 100644
+index f540cd3eb..ed951bb1b 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -61,9 +61,9 @@ const localSamples = [
@@ -16160,53 +16192,25 @@ index 4dde35617..6777cd37f 100644
  
  init();
  
-@@ -90,27 +90,29 @@ function init() {
+@@ -90,7 +90,7 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
--    const gridXZ = Fn(([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
--        const coord = positionWorld.xz.div(gridSize);
--        const grid = fract(coord);
-+    const gridXZ = Fn<[THREE.Node, THREE.Node, THREE.Node]>(
-+        ([gridSize = float(1.0), dotWidth = float(0.1), lineWidth = float(0.02)]) => {
-+            const coord = positionWorld.xz.div(gridSize);
-+            const grid = fract(coord);
+-    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
++    const grid = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
+         // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
  
--        // Screen-space derivative for automatic antialiasing
--        const fw = fwidth(coord);
--        const smoothing = max(fw.x, fw.y).mul(0.5);
-+            // Screen-space derivative for automatic antialiasing
-+            const fw = fwidth(coord);
-+            const smoothing = max(fw.x, fw.y).mul(0.5);
+         const g = fract(coord);
+@@ -109,7 +109,7 @@ function init() {
+         return max(dots, lines);
+     });
  
--        // Create squares at cell centers
--        const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
--        const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
-+            // Create squares at cell centers
-+            const squareDist = max(abs(grid.x.sub(0.5)), abs(grid.y.sub(0.5)));
-+            const dots = smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
- 
--        // Create grid lines
--        const lineX = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.x.sub(0.5)));
--        const lineZ = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.y.sub(0.5)));
--        const lines = max(lineX, lineZ);
-+            // Create grid lines
-+            const lineX = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.x.sub(0.5)));
-+            const lineZ = smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), abs(grid.y.sub(0.5)));
-+            const lines = max(lineX, lineZ);
- 
--        return max(dots, lines);
--    });
-+            return max(dots, lines);
-+        },
-+    );
- 
--    const radialGradient = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
-+    const radialGradient = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
+-    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
++    const fade = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
          return smoothstep(radius, radius.sub(falloff), length(positionWorld));
      });
  
-@@ -177,7 +179,7 @@ function updateModelsAlign() {
+@@ -173,7 +173,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -16215,7 +16219,7 @@ index 4dde35617..6777cd37f 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -191,12 +193,12 @@ async function addSample(sample, path) {
+@@ -187,12 +187,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
          .setPath(path)
          .loadAsync(sample)
@@ -16231,7 +16235,7 @@ index 4dde35617..6777cd37f 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -206,7 +208,7 @@ async function addSample(sample, path) {
+@@ -202,7 +202,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -16240,7 +16244,7 @@ index 4dde35617..6777cd37f 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -226,9 +228,9 @@ function addGUI() {
+@@ -222,9 +222,9 @@ function addGUI() {
          });
  }
  
@@ -19306,7 +19310,7 @@ index ac3e4fbd8..642347107 100644
      gui.add(params, 'shadowBlur', 0, 15, 0.1).onChange(() => {
          state.shadow.blur = params.shadowBlur;
 diff --git a/examples-testing/examples/webgpu_shadowmap.ts b/examples-testing/examples/webgpu_shadowmap.ts
-index 2d91d5843..d24bb27c0 100644
+index 6ece7fdc2..5505fcdbf 100644
 --- a/examples-testing/examples/webgpu_shadowmap.ts
 +++ b/examples-testing/examples/webgpu_shadowmap.ts
 @@ -5,9 +5,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -19322,7 +19326,7 @@ index 2d91d5843..d24bb27c0 100644
  
  init();
  
-@@ -163,7 +163,7 @@ function resize() {
+@@ -151,7 +151,7 @@ function resize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -19995,7 +19999,7 @@ index 4140a49fd..e371e494c 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index 646c58938..bab3f6f2b 100644
+index d74e1bc0a..19dffb8a3 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20016,7 +20020,7 @@ index 646c58938..bab3f6f2b 100644
          const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
          return angle.greaterThan(0).and(angle.lessThan(angleArc));
      });
-@@ -112,9 +112,9 @@ function init() {
+@@ -105,9 +105,9 @@ function init() {
          const model = gltf.scene;
  
          model.traverse(child => {
@@ -20029,7 +20033,7 @@ index 646c58938..bab3f6f2b 100644
  
                  child.castShadow = true;
                  child.receiveShadow = true;
-@@ -160,7 +160,7 @@ function init() {
+@@ -153,7 +153,7 @@ function init() {
  
      // debug
  
@@ -20735,7 +20739,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index 5250dc919..affe06023 100644
+index 7ba140967..cde15a34c 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20760,7 +20764,7 @@ index 5250dc919..affe06023 100644
      duck.material = new THREE.MeshPhysicalNodeMaterial();
      duck.material.side = THREE.DoubleSide;
      duck.material.transparent = true;
-@@ -160,7 +160,7 @@ async function init() {
+@@ -161,7 +161,7 @@ async function init() {
  
      // GUI
  
@@ -20769,7 +20773,7 @@ index 5250dc919..affe06023 100644
      gui.add(causticOcclusion, 'value', 0, 20).name('caustic occlusion');
      gui.addColor(duck.material, 'color').name('material color');
  
-@@ -224,12 +224,12 @@ async function init() {
+@@ -225,12 +225,12 @@ async function init() {
      const volumetricMaterial = new THREE.VolumeNodeMaterial();
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding

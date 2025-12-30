@@ -194,7 +194,7 @@ index 4c5e4c7db..4f710ccca 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 5b4d8aa0d..f7931662c 100644
+index 6ed843b11..4d95e95f5 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -887,7 +887,7 @@ index ffb7734e8..d71c6d249 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 335f0bf3f..6ec8d35a0 100644
+index 74ebc61fc..2f8d6b5e0 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -8642,7 +8642,7 @@ index de688d551..3d99f9b92 100644
          if (a[offset + i] !== b[i]) return false;
      }
 diff --git a/src-testing/src/renderers/common/XRManager.ts b/src-testing/src/renderers/common/XRManager.ts
-index 7a93f5392..e7921a93f 100644
+index fb95b9612..1681b4238 100644
 --- a/src-testing/src/renderers/common/XRManager.ts
 +++ b/src-testing/src/renderers/common/XRManager.ts
 @@ -29,10 +29,61 @@ import { PlaneGeometry } from '../../geometries/PlaneGeometry.js';
@@ -9020,8 +9020,8 @@ index 7a93f5392..e7921a93f 100644
  
          if (session === null) return;
 @@ -1082,7 +1224,7 @@ class XRManager extends EventDispatcher {
-         cameraL.layers.mask = cameraXR.layers.mask & 0b011;
-         cameraR.layers.mask = cameraXR.layers.mask & 0b101;
+         cameraL.layers.mask = cameraXR.layers.mask & ~0b100;
+         cameraR.layers.mask = cameraXR.layers.mask & ~0b010;
  
 -        const parent = camera.parent;
 +        const parent = camera.parent!;
