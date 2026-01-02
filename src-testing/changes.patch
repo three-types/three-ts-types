@@ -5894,24 +5894,28 @@ index d6c726961..3ae4005b2 100644
  
          _chainKeys[0] = bundleGroup;
 diff --git a/src-testing/src/renderers/common/RenderContext.ts b/src-testing/src/renderers/common/RenderContext.ts
-index 6f2303bf3..07002304e 100644
+index 4bfd28c1b..d41fbbb53 100644
 --- a/src-testing/src/renderers/common/RenderContext.ts
 +++ b/src-testing/src/renderers/common/RenderContext.ts
-@@ -1,5 +1,9 @@
+@@ -1,5 +1,11 @@
  import { Vector4 } from '../../math/Vector4.js';
  import { hashArray } from '../../nodes/core/NodeUtils.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { DepthTexture } from '../../textures/DepthTexture.js';
 +import ClippingContext from './ClippingContext.js';
 +import { RenderTarget } from '../../core/RenderTarget.js';
++import MRTNode from '../../nodes/core/MRTNode.js';
++import { Camera } from '../../cameras/Camera.js';
  
  let _id = 0;
  
-@@ -12,6 +16,43 @@ let _id = 0;
+@@ -12,6 +18,46 @@ let _id = 0;
   * @private
   */
  class RenderContext {
 +    id: number;
++
++    mrt: MRTNode | null;
 +
 +    color: boolean;
 +    clearColor: boolean;
@@ -5940,6 +5944,7 @@ index 6f2303bf3..07002304e 100644
 +    height: number;
 +    occlusionQueryCount: number;
 +    clippingContext: ClippingContext | null;
++    camera: Camera | null;
 +
 +    readonly isRenderContext: true;
 +
@@ -5951,7 +5956,7 @@ index 6f2303bf3..07002304e 100644
      /**
       * Constructs a new render context.
       */
-@@ -248,12 +289,12 @@ class RenderContext {
+@@ -256,12 +302,12 @@ class RenderContext {
   * @param {RenderContext} renderContext - The render context.
   * @return {number} The cache key.
   */
@@ -5967,7 +5972,7 @@ index 6f2303bf3..07002304e 100644
      }
  
 diff --git a/src-testing/src/renderers/common/RenderContexts.ts b/src-testing/src/renderers/common/RenderContexts.ts
-index 8ee29fbf6..61146b7f1 100644
+index 1efdf8b1a..5323918ac 100644
 --- a/src-testing/src/renderers/common/RenderContexts.ts
 +++ b/src-testing/src/renderers/common/RenderContexts.ts
 @@ -1,4 +1,6 @@
@@ -10072,7 +10077,7 @@ index 34f4121f3..0c7b983ea 100644
          const monitor = renderObject.getMonitor();
  
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 0b3794d56..22febf769 100644
+index 796e7b954..c08b91b0d 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
