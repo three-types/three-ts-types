@@ -610,6 +610,7 @@ export const viewportCoordinate: typeof TSL.viewportCoordinate;
 export const viewportDepthTexture: typeof TSL.viewportDepthTexture;
 export const viewportLinearDepth: typeof TSL.viewportLinearDepth;
 export const viewportMipTexture: typeof TSL.viewportMipTexture;
+export const viewportOpaqueMipTexture: typeof TSL.viewportOpaqueMipTexture;
 export const viewportResolution: typeof TSL.viewportResolution;
 export const viewportSafeUV: typeof TSL.viewportSafeUV;
 export const viewportSharedTexture: typeof TSL.viewportSharedTexture;
