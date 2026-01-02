@@ -1,5 +1,7 @@
+import { Camera } from "../../cameras/Camera.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import { Vector4 } from "../../math/Vector4.js";
+import MRTNode from "../../nodes/core/MRTNode.js";
 import { DepthTexture } from "../../textures/DepthTexture.js";
 import { Texture } from "../../textures/Texture.js";
 import ClippingContext from "./ClippingContext.js";
@@ -13,6 +15,7 @@ import ClippingContext from "./ClippingContext.js";
  */
 declare class RenderContext {
     id: number;
+    mrt: MRTNode | null;
     color: boolean;
     clearColor: boolean;
     clearColorValue: {
@@ -40,6 +43,7 @@ declare class RenderContext {
     height: number;
     occlusionQueryCount: number;
     clippingContext: ClippingContext | null;
+    camera: Camera | null;
     readonly isRenderContext: true;
     depthClearValue?: number | undefined;
     stencilClearValue?: number | undefined;

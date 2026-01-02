@@ -50,13 +50,15 @@ export const AdditiveBlending: 2;
 export const SubtractiveBlending: 3;
 export const MultiplyBlending: 4;
 export const CustomBlending: 5;
+export const MaterialBlending: 6;
 export type Blending =
     | typeof NoBlending
     | typeof NormalBlending
     | typeof AdditiveBlending
     | typeof SubtractiveBlending
     | typeof MultiplyBlending
-    | typeof CustomBlending;
+    | typeof CustomBlending
+    | typeof MaterialBlending;
 
 // custom blending equations
 // (numbers start from 100 not to clash with other
