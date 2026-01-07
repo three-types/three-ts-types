@@ -177,6 +177,7 @@ export const equal: typeof TSL.equal;
 export const equirectUV: typeof TSL.equirectUV;
 export const exp: typeof TSL.exp;
 export const exp2: typeof TSL.exp2;
+export const exponentialHeightFogFactor: typeof TSL.exponentialHeightFogFactor;
 export const expression: typeof TSL.expression;
 export const faceDirection: typeof TSL.faceDirection;
 export const faceForward: typeof TSL.faceForward;
