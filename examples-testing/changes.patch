@@ -7235,7 +7235,7 @@ index 37d63859e..68dff97f2 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_loader_gltf_compressed.ts b/examples-testing/examples/webgl_loader_gltf_compressed.ts
-index 3bdcea8ec..c381c46df 100644
+index 235d9b3d0..06e6d5072 100644
 --- a/examples-testing/examples/webgl_loader_gltf_compressed.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_compressed.ts
 @@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -7248,7 +7248,7 @@ index 3bdcea8ec..c381c46df 100644
  init();
  render();
 diff --git a/examples-testing/examples/webgl_loader_gltf_dispersion.ts b/examples-testing/examples/webgl_loader_gltf_dispersion.ts
-index 100badcab..bd16bf3b3 100644
+index 0f1d7e57a..c4a5d7f1b 100644
 --- a/examples-testing/examples/webgl_loader_gltf_dispersion.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_dispersion.ts
 @@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -7302,7 +7302,7 @@ index c09051e7d..f5b8e275b 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_gltf_sheen.ts b/examples-testing/examples/webgl_loader_gltf_sheen.ts
-index bd258d5c1..de9462865 100644
+index b058f1e27..3f75e10cc 100644
 --- a/examples-testing/examples/webgl_loader_gltf_sheen.ts
 +++ b/examples-testing/examples/webgl_loader_gltf_sheen.ts
 @@ -6,7 +6,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -8204,7 +8204,7 @@ index d11df56a4..ea05a705b 100644
  
      // fill the field with some metaballs
 diff --git a/examples-testing/examples/webgl_materials_alphahash.ts b/examples-testing/examples/webgl_materials_alphahash.ts
-index 1ecf95f26..2373eb7e2 100644
+index 790e31be4..335db1806 100644
 --- a/examples-testing/examples/webgl_materials_alphahash.ts
 +++ b/examples-testing/examples/webgl_materials_alphahash.ts
 @@ -10,9 +10,15 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -9818,7 +9818,7 @@ index d8a4bbe8d..92ef3836a 100644
  }
  
 diff --git a/examples-testing/examples/webgl_morphtargets_face.ts b/examples-testing/examples/webgl_morphtargets_face.ts
-index 76179d902..c5b71065f 100644
+index 45a0bdd73..1b09b82bd 100644
 --- a/examples-testing/examples/webgl_morphtargets_face.ts
 +++ b/examples-testing/examples/webgl_morphtargets_face.ts
 @@ -12,7 +12,13 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -15167,6 +15167,30 @@ index 9e159e465..128e18b7b 100644
  
      gui.add(scene, 'backgroundIntensity', 0, 1).name('background intensity');
  
+diff --git a/examples-testing/examples/webgpu_fog_height.ts b/examples-testing/examples/webgpu_fog_height.ts
+index 65bda9cd8..5d3957e54 100644
+--- a/examples-testing/examples/webgpu_fog_height.ts
++++ b/examples-testing/examples/webgpu_fog_height.ts
+@@ -4,8 +4,8 @@ import { exponentialHeightFogFactor, uniform, fog, color } from 'three/tsl';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -69,7 +69,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Fog Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Fog Settings');
+ 
+     gui.add(density, 'value', 0.001, 0.1).step(0.0001).name('Density');
+     gui.add(height, 'value', -5, 5).name('Height');
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
 index bb1dd4a15..44814fa58 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
@@ -16311,7 +16335,7 @@ index 1daf0f032..ee2cb370b 100644
  
      for (let i = 0; i < uv.count; i++) {
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
-index 12c014ac0..5052d8825 100644
+index 927f49948..5f4bc9101 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
 +++ b/examples-testing/examples/webgpu_materials_alphahash.ts
 @@ -7,7 +7,13 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
@@ -17235,7 +17259,7 @@ index cde3ae83b..c6e68d052 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_morphtargets_face.ts b/examples-testing/examples/webgpu_morphtargets_face.ts
-index 5c76ca010..9f265ffa4 100644
+index 224e1d5f3..2028bec17 100644
 --- a/examples-testing/examples/webgpu_morphtargets_face.ts
 +++ b/examples-testing/examples/webgpu_morphtargets_face.ts
 @@ -12,7 +12,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18113,7 +18137,7 @@ index 65ddd7375..58bbbc744 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 52b84d414..398c88891 100644
+index 7009b877c..74dc69e46 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
@@ -18182,7 +18206,7 @@ index f0ebcefa4..d0dbc81d4 100644
      const bloomFolder = gui.addFolder('bloom');
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index 20d0a36eb..3e6d4e06d 100644
+index 4663508b8..e816a3f0b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18196,7 +18220,7 @@ index 20d0a36eb..3e6d4e06d 100644
  
  init();
  
-@@ -79,7 +79,7 @@ function init() {
+@@ -91,7 +91,7 @@ function init() {
  
      //
  
@@ -18679,7 +18703,7 @@ index acbb9ffb3..410b804fc 100644
      const smaaFolder = gui.addFolder('SMAA');
      smaaFolder.add(params, 'enabled').onChange(value => {
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-index 21beb67a8..6a95616ec 100644
+index 080d9429c..06247bb49 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 @@ -7,8 +7,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18794,7 +18818,7 @@ index 087a8444e..241471a92 100644
              postProcessing.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 3b96c10c7..ca3e5186e 100644
+index 3073bbe08..0b4f8c580 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -15,7 +15,7 @@ import {
