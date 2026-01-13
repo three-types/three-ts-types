@@ -65,7 +65,6 @@ export { default as RotateNode } from "./utils/RotateNode.js";
 export { default as RTTNode, RTTNodeOptions } from "./utils/RTTNode.js";
 export { default as SetNode } from "./utils/SetNode.js";
 export { default as SplitNode } from "./utils/SplitNode.js";
-export { default as SpriteSheetUVNode } from "./utils/SpriteSheetUVNode.js";
 export { default as StorageArrayElementNode } from "./utils/StorageArrayElementNode.js";
 
 // math
