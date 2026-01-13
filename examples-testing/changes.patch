@@ -2112,10 +2112,10 @@ index a3f58cb36..0bad866f6 100644
  
      const geometry = new THREE.PlaneGeometry(1, 1);
 diff --git a/examples-testing/examples/webgl_animation_keyframes.ts b/examples-testing/examples/webgl_animation_keyframes.ts
-index 88048f24c..ffe75d3ee 100644
+index 0506f0cd7..3ac361ade 100644
 --- a/examples-testing/examples/webgl_animation_keyframes.ts
 +++ b/examples-testing/examples/webgl_animation_keyframes.ts
-@@ -8,10 +8,10 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+@@ -8,10 +8,10 @@ import { Sky } from 'three/addons/objects/Sky.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  
@@ -2128,6 +2128,15 @@ index 88048f24c..ffe75d3ee 100644
  
  const stats = new Stats();
  container.appendChild(stats.dom);
+@@ -36,7 +36,7 @@ uniforms['cloudElevation'].value = 1;
+ uniforms['sunPosition'].value.set(-0.8, 0.19, 0.56); // elevation: 11, azimuth: -55
+ 
+ const pmremGenerator = new THREE.PMREMGenerator(renderer);
+-const environment = pmremGenerator.fromScene(sky).texture;
++const environment = pmremGenerator.fromScene(sky as unknown as THREE.Scene).texture;
+ scene.background = environment;
+ scene.environment = environment;
+ 
 diff --git a/examples-testing/examples/webgl_animation_multiple.ts b/examples-testing/examples/webgl_animation_multiple.ts
 index 152c65067..ce3887496 100644
 --- a/examples-testing/examples/webgl_animation_multiple.ts
@@ -7115,18 +7124,47 @@ index f2e45bcb5..c15264d71 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_gcode.ts b/examples-testing/examples/webgl_loader_gcode.ts
-index 6fd3e149d..79c642322 100644
+index 16dfb92e2..14f1b4850 100644
 --- a/examples-testing/examples/webgl_loader_gcode.ts
 +++ b/examples-testing/examples/webgl_loader_gcode.ts
-@@ -3,7 +3,7 @@ import * as THREE from 'three';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -4,9 +4,13 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GCodeLoader } from 'three/addons/loaders/GCodeLoader.js';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+-let camera, scene, renderer, controls, loader;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    controls: OrbitControls,
++    loader: GCodeLoader;
  
- init();
- render();
+-let model;
++let model: THREE.Group;
+ 
+ const params = {
+     asset: 'benchy',
+@@ -45,8 +49,10 @@ function init() {
+     gui.add(params, 'asset', assets).onChange(function (value) {
+         if (model) {
+             model.traverse(function (object) {
+-                if (object.material) object.material.dispose();
+-                if (object.geometry) object.geometry.dispose();
++                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material)
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
++                if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry)
++                    (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
+             });
+ 
+             scene.remove(model);
+@@ -58,7 +64,7 @@ function init() {
+     gui.open();
+ }
+ 
+-function loadAsset(asset) {
++function loadAsset(asset: string) {
+     loader.load('models/gcode/' + asset + '.gcode', function (object) {
+         model = object;
+         model.position.copy(positions[assets.indexOf(asset)]);
 diff --git a/examples-testing/examples/webgl_loader_gltf.ts b/examples-testing/examples/webgl_loader_gltf.ts
 index e0cb68546..68c615001 100644
 --- a/examples-testing/examples/webgl_loader_gltf.ts
