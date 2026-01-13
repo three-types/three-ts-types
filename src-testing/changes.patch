@@ -2862,7 +2862,7 @@ index d434bea5f..baaec68f8 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 7099a21f4..e18a6c45b 100644
+index 6d0ca271b..6137aa6f8 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
 @@ -2,6 +2,7 @@ import Node from './Node.js';
@@ -2891,12 +2891,12 @@ index 7099a21f4..e18a6c45b 100644
       * Constructs a new stack node.
       *
 @@ -87,7 +98,7 @@ class StackNode extends Node {
-         return this.hasOutput ? this.outputNode.getElementType(builder) : 'void';
+         return this.hasOutput(builder) ? this.outputNode.getElementType(builder) : 'void';
      }
  
 -    getNodeType(builder) {
 +    getNodeType(builder: NodeBuilder) {
-         return this.hasOutput ? this.outputNode.getNodeType(builder) : 'void';
+         return this.hasOutput(builder) ? this.outputNode.getNodeType(builder) : 'void';
      }
  
 @@ -102,7 +113,7 @@ class StackNode extends Node {
@@ -2945,7 +2945,7 @@ index 7099a21f4..e18a6c45b 100644
  
          return this;
 @@ -266,7 +277,7 @@ class StackNode extends Node {
-         return this.outputNode && this.outputNode.isNode;
+         return this.outputNode && this.outputNode.isNode && this.outputNode.getNodeType(builder) !== 'void';
      }
  
 -    build(builder, ...params) {
@@ -4475,7 +4475,7 @@ index 80f441efa..244f30b2f 100644
  
      return vectorLength + ((strideLength - (vectorLength % strideLength)) % strideLength);
 diff --git a/src-testing/src/renderers/common/BundleGroup.ts b/src-testing/src/renderers/common/BundleGroup.ts
-index c684ced9a..52f90d474 100644
+index aeceeefe5..06c8c6976 100644
 --- a/src-testing/src/renderers/common/BundleGroup.ts
 +++ b/src-testing/src/renderers/common/BundleGroup.ts
 @@ -13,6 +13,13 @@ import { Group } from '../../objects/Group.js';

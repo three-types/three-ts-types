@@ -12087,19 +12087,19 @@ index 973a580eb..a5d1f1afb 100644
  
      mesh = new THREE.Mesh(new THREE.TorusGeometry(size, 0.3, 30, 30), material);
 diff --git a/examples-testing/examples/webgl_shaders_ocean.ts b/examples-testing/examples/webgl_shaders_ocean.ts
-index 8b0f9a738..afbdb1dae 100644
+index 1216c7171..17d587ead 100644
 --- a/examples-testing/examples/webgl_shaders_ocean.ts
 +++ b/examples-testing/examples/webgl_shaders_ocean.ts
-@@ -7,14 +7,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Water } from 'three/addons/objects/Water.js';
+@@ -8,14 +8,14 @@ import { Water } from 'three/addons/objects/Water.js';
  import { Sky } from 'three/addons/objects/Sky.js';
+ import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
  
 -let container, stats;
 -let camera, scene, renderer;
--let controls, water, sun, mesh;
+-let controls, water, sun, mesh, bloomPass;
 +let container: HTMLElement, stats: Stats;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let controls: OrbitControls, water: Water, sun: THREE.Vector3, mesh: THREE.Mesh;
++let controls: OrbitControls, water: Water, sun: THREE.Vector3, mesh: THREE.Mesh, bloomPass: UnrealBloomPass;
  
  init();
  
@@ -12109,7 +12109,16 @@ index 8b0f9a738..afbdb1dae 100644
  
      //
  
-@@ -79,7 +79,7 @@ function init() {
+@@ -27,7 +27,7 @@ function init() {
+     renderer.toneMappingExposure = 0.1;
+     container.appendChild(renderer.domElement);
+ 
+-    bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight));
++    bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+     bloomPass.threshold = 0;
+     bloomPass.strength = 0.1;
+     bloomPass.radius = 0;
+@@ -87,7 +87,7 @@ function init() {
      const pmremGenerator = new THREE.PMREMGenerator(renderer);
      const sceneEnv = new THREE.Scene();
  
@@ -17583,19 +17592,30 @@ index e49f98ce7..148171a6f 100644
          this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
      }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
-index 0b8ae7661..2cf5a936f 100644
+index 81fa5f353..fbde2452b 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
 +++ b/examples-testing/examples/webgpu_ocean.ts
-@@ -6,14 +6,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -1,6 +1,6 @@
+ import * as THREE from 'three/webgpu';
+ import { pass } from 'three/tsl';
+-import { bloom } from 'three/addons/tsl/display/BloomNode.js';
++import BloomNode, { bloom } from 'three/addons/tsl/display/BloomNode.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+@@ -8,14 +8,17 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { WaterMesh } from 'three/addons/objects/WaterMesh.js';
  import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
 -let container;
--let camera, scene, renderer;
--let controls, water, sun, mesh;
+-let camera, scene, renderer, postProcessing;
+-let controls, water, sun, mesh, bloomPass;
 +let container: HTMLElement;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    postProcessing: THREE.PostProcessing;
++let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, mesh: THREE.Mesh, bloomPass: BloomNode;
  
  init();
  
@@ -17605,7 +17625,7 @@ index 0b8ae7661..2cf5a936f 100644
  
      //
  
-@@ -75,7 +75,7 @@ function init() {
+@@ -92,7 +95,7 @@ function init() {
      const pmremGenerator = new THREE.PMREMGenerator(renderer);
      const sceneEnv = new THREE.Scene();
  
@@ -17614,7 +17634,7 @@ index 0b8ae7661..2cf5a936f 100644
  
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
-@@ -116,7 +116,7 @@ function init() {
+@@ -133,7 +136,7 @@ function init() {
  
      // GUI
  
