@@ -9,7 +9,7 @@ declare class SkyMesh extends Mesh<BoxGeometry, NodeMaterial> {
     upUniform: UniformNode<Vector3>;
     cloudScale: UniformNode<number>;
     cloudSpeed: UniformNode<number>;
-    cloudCoverage: UniformNode<number>
+    cloudCoverage: UniformNode<number>;
     cloudDensity: UniformNode<number>;
     cloudElevation: UniformNode<number>;
 
