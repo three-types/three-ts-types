@@ -12087,7 +12087,7 @@ index 973a580eb..a5d1f1afb 100644
  
      mesh = new THREE.Mesh(new THREE.TorusGeometry(size, 0.3, 30, 30), material);
 diff --git a/examples-testing/examples/webgl_shaders_ocean.ts b/examples-testing/examples/webgl_shaders_ocean.ts
-index 1216c7171..0ef3f3925 100644
+index 1216c7171..17d587ead 100644
 --- a/examples-testing/examples/webgl_shaders_ocean.ts
 +++ b/examples-testing/examples/webgl_shaders_ocean.ts
 @@ -8,14 +8,14 @@ import { Water } from 'three/addons/objects/Water.js';
@@ -12109,6 +12109,15 @@ index 1216c7171..0ef3f3925 100644
  
      //
  
+@@ -27,7 +27,7 @@ function init() {
+     renderer.toneMappingExposure = 0.1;
+     container.appendChild(renderer.domElement);
+ 
+-    bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight));
++    bloomPass = new UnrealBloomPass(new THREE.Vector2(window.innerWidth, window.innerHeight), 1.5, 0.4, 0.85);
+     bloomPass.threshold = 0;
+     bloomPass.strength = 0.1;
+     bloomPass.radius = 0;
 @@ -87,7 +87,7 @@ function init() {
      const pmremGenerator = new THREE.PMREMGenerator(renderer);
      const sceneEnv = new THREE.Scene();
