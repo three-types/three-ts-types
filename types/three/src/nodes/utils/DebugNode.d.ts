@@ -18,8 +18,5 @@ declare module "../Nodes.js" {
         debug: (
             callback?: ((node: NodeBuilder, code: string) => void) | null,
         ) => DebugNode;
-        debugAssign: (
-            callback?: ((node: NodeBuilder, code: string) => void) | null,
-        ) => this;
     }
 }

@@ -6,6 +6,5 @@ export const Return: () => Node;
 declare module "../Nodes.js" {
     interface Node {
         discard: () => Node;
-        discardAssign: () => this;
     }
 }

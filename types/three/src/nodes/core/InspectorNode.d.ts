@@ -11,6 +11,5 @@ export function inspector<T extends Node>(node: T, name?: string, callback?: (no
 declare module "../Nodes.js" {
     interface Node {
         toInspector: (name?: string, callback?: (node: this) => Node) => this;
-        toInspectorAssign: (name?: string, callback?: (node: this) => Node) => this;
     }
 }

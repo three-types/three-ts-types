@@ -22,9 +22,5 @@ declare module "../Nodes.js" {
             ifNode: Node | number,
             elseNode?: Node | number | null,
         ) => Node;
-        selectAssign: (
-            ifNode: Node | number,
-            elseNode?: Node | number | null,
-        ) => this;
     }
 }

@@ -133,126 +133,74 @@ declare module "../Nodes.js" {
         equal: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        equalAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         notEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        notEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         lessThan: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        lessThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         greaterThan: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        greaterThanAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         lessThanEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        lessThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         greaterThanEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        greaterThanEqualAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         and: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
-        andAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
 
         or: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
-        orAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
 
         not: () => OperatorNode;
-        notAssign: () => this;
 
         xor: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        xorAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         bitAnd: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        bitAndAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         bitNot: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        bitNotAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         bitOr: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        bitOrAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         bitXor: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        bitXorAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         shiftLeft: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        shiftLeftAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         shiftRight: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        shiftRightAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         incrementBefore: () => OperatorNode;
-        incrementBeforeAssign: () => this;
 
         decrementBefore: () => OperatorNode;
-        decrementBeforeAssign: () => this;
 
         increment: () => OperatorNode;
-        incrementAssign: () => this;
 
         decrement: () => OperatorNode;
-        decrementAssign: () => this;
     }
 }
 
@@ -267,9 +215,5 @@ declare module "../Nodes.js" {
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */
         modInt: (b: OperatorNodeParameter) => OperatorNode;
-        /**
-         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
-         */
-        modIntAssign: (b: OperatorNodeParameter) => this;
     }
 }

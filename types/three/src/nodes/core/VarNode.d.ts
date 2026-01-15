@@ -27,12 +27,9 @@ export const VarIntent: (node: Node) => Node;
 declare module "../Nodes.js" {
     interface Node {
         toVar: (name?: string | null) => VarNode;
-        toVarAssign: (name?: string | null) => this;
 
         toConst: (name?: string | null) => VarNode;
-        toConstAssign: (name?: string | null) => this;
 
         toVarIntent: () => Node;
-        toVarIntentAssign: () => this;
     }
 }

@@ -35,12 +35,6 @@ declare module "../Nodes.js" {
             outLowNode?: Node | number,
             outHighNode?: Node | number,
         ) => RemapNode;
-        remapAssign: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
-        ) => this;
 
         remapClamp: (
             inLowNode: Node | number,
@@ -48,11 +42,5 @@ declare module "../Nodes.js" {
             outLowNode?: Node | number,
             outHighNode?: Node | number,
         ) => RemapNode;
-        remapClampAssign: (
-            inLowNode: Node | number,
-            inHighNode: Node | number,
-            outLowNode?: Node | number,
-            outHighNode?: Node | number,
-        ) => this;
     }
 }

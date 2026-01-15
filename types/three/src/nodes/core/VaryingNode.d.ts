@@ -24,9 +24,7 @@ export const vertexStage: (node: Node) => VaryingNode;
 declare module "../Nodes.js" {
     interface Node {
         toVarying: (name?: string) => VaryingNode;
-        toVaryingAssign: (name?: string) => this;
 
         toVertexStage: () => VaryingNode;
-        toVertexStageAssign: () => this;
     }
 }

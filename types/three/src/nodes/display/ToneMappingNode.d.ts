@@ -25,9 +25,5 @@ declare module "../Nodes.js" {
             mapping?: ToneMapping,
             exposure?: Node | number,
         ) => ToneMappingNode;
-        toneMappingAssign: (
-            mapping?: ToneMapping,
-            exposure?: Node | number,
-        ) => this;
     }
 }

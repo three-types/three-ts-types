@@ -296,7 +296,6 @@ export function Stack(node: Node): Node;
 declare module "../Nodes.js" {
     interface Node {
         toStack: () => Node;
-        toStackAssign: () => this;
     }
 }
 
@@ -467,64 +466,44 @@ export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
 declare module "../Nodes.js" {
     interface Node {
         toColor: () => Node;
-        toColorAssign: () => this;
 
         toFloat: () => Node;
-        toFloatAssign: () => this;
 
         toInt: () => Node;
-        toIntAssign: () => this;
 
         toUint: () => Node;
-        toUintAssign: () => this;
 
         toBool: () => Node;
-        toBoolAssign: () => this;
 
         toVec2: () => Node;
-        toVec2Assign: () => this;
 
         toIVec2: () => Node;
-        toIVec2Assign: () => this;
 
         toUVec2: () => Node;
-        toUVec2Assign: () => this;
 
         toBVec2: () => Node;
-        toBVec2Assign: () => this;
 
         toVec3: () => Node;
-        toVec3Assign: () => this;
 
         toIVec3: () => Node;
-        toIVec3Assign: () => this;
 
         toUVec3: () => Node;
-        toUVec3Assign: () => this;
 
         toBVec3: () => Node;
-        toBVec3Assign: () => this;
 
         toVec4: () => Node;
-        toVec4Assign: () => this;
 
         toIVec4: () => Node;
-        toIVec4Assign: () => this;
 
         toUVec4: () => Node;
-        toUVec4Assign: () => this;
 
         toBVec4: () => Node;
-        toBVec4Assign: () => this;
 
         toMat2: () => Node;
-        toMat2Assign: () => this;
 
         toMat3: () => Node;
-        toMat3Assign: () => this;
 
         toMat4: () => Node;
-        toMat4Assign: () => this;
     }
 }
 
@@ -535,10 +514,8 @@ export const split: (node: Node, channels?: string) => Node;
 declare module "../Nodes.js" {
     interface Node {
         element: (indexNode: Node) => Node;
-        elementAssign: (indexNode: Node) => this;
 
         convert: (types: string) => Node;
-        convertAssign: (types: string) => this;
     }
 }
 
@@ -553,9 +530,5 @@ declare module "../Nodes.js" {
          * @deprecated append() has been renamed to Stack().
          */
         append: () => Node;
-        /**
-         * @deprecated append() has been renamed to Stack().
-         */
-        appendAssign: () => this;
     }
 }

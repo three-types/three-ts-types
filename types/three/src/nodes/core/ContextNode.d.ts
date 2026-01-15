@@ -36,27 +36,18 @@ export function label(node: Node, label: string): Node;
 declare module "../Nodes.js" {
     interface Node {
         context: (context?: NodeBuilderContext) => ContextNode;
-        contextAssign: (context?: NodeBuilderContext) => this;
 
         /**
          * @deprecated "label()" has been deprecated. Use "setName()" instead.
          */
         label: (label: string) => Node;
-        /**
-         * @deprecated "label()" has been deprecated. Use "setName()" instead.
-         */
-        labelAssign: (label: string) => this;
 
         uniformFlow: () => ContextNode;
-        uniformFlowAssign: () => this;
 
         setName: (label: string) => Node;
-        setNameAssign: (label: string) => this;
 
         builtinShadowContext: (shadowNode: Node, light: Light) => ContextNode;
-        builtinShadowContextAssign: (shadowNode: Node, light: Light) => this;
 
         builtinAOContext: (aoValue: Node) => ContextNode;
-        builtinAOContextAssign: (aoValue: Node) => this;
     }
 }
