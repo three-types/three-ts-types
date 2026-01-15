@@ -236,183 +236,121 @@ export const inversesqrt: typeof inverseSqrt;
 declare module "../Nodes.js" {
     interface Node {
         all: () => MathNode;
-        allAssign: () => this;
 
         any: () => MathNode;
-        anyAssign: () => this;
 
         radians: () => MathNode;
-        radiansAssign: () => this;
 
         degrees: () => MathNode;
-        degreesAssign: () => this;
 
         exp: () => MathNode;
-        expAssign: () => this;
 
         exp2: () => MathNode;
-        exp2Assign: () => this;
 
         log: () => MathNode;
-        logAssign: () => this;
 
         log2: () => MathNode;
-        log2Assign: () => this;
 
         sqrt: () => MathNode;
-        sqrtAssign: () => this;
 
         inverseSqrt: () => MathNode;
-        inverseSqrtAssign: () => this;
 
         floor: () => MathNode;
-        floorAssign: () => this;
 
         ceil: () => MathNode;
-        ceilAssign: () => this;
 
         normalize: () => MathNode;
-        normalizeAssign: () => this;
 
         fract: () => MathNode;
-        fractAssign: () => this;
 
         sin: () => MathNode;
-        sinAssign: () => this;
 
         cos: () => MathNode;
-        cosAssign: () => this;
 
         tan: () => MathNode;
-        tanAssign: () => this;
 
         asin: () => MathNode;
-        asinAssign: () => this;
 
         acos: () => MathNode;
-        acosAssign: () => this;
 
         atan: (b?: MathNodeParameter) => MathNode;
-        atanAssign: (b?: MathNodeParameter) => this;
 
         abs: () => MathNode;
-        absAssign: () => this;
 
         sign: () => MathNode;
-        signAssign: () => this;
 
         length: () => MathNode;
-        lengthAssign: () => this;
 
         lengthSq: () => MathNode;
-        lengthSqAssign: () => this;
 
         negate: () => MathNode;
-        negateAssign: () => this;
 
         oneMinus: () => MathNode;
-        oneMinusAssign: () => this;
 
         dFdx: () => MathNode;
-        dFdxAssign: () => this;
 
         dFdy: () => MathNode;
-        dFdyAssign: () => this;
 
         round: () => MathNode;
-        roundAssign: () => this;
 
         reciprocal: () => MathNode;
-        reciprocalAssign: () => this;
 
         trunc: () => MathNode;
-        truncAssign: () => this;
 
         fwidth: () => MathNode;
-        fwidthAssign: () => this;
 
         min: (
             y: MathNodeParameter,
             ...values: MathNodeParameter[]
         ) => MathNode;
-        minAssign: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => this;
 
         max: (
             y: MathNodeParameter,
             ...values: MathNodeParameter[]
         ) => MathNode;
-        maxAssign: (
-            y: MathNodeParameter,
-            ...values: MathNodeParameter[]
-        ) => this;
 
         step: (b: MathNodeParameter) => MathNode;
-        stepAssign: (b: MathNodeParameter) => this;
 
         reflect: (b: MathNodeParameter) => MathNode;
-        reflectAssign: (b: MathNodeParameter) => this;
 
         distance: (b: MathNodeParameter) => MathNode;
-        distanceAssign: (b: MathNodeParameter) => this;
 
         dot: (b: MathNodeParameter) => MathNode;
-        dotAssign: (b: MathNodeParameter) => this;
 
         cross: (y: Node) => MathNode;
-        crossAssign: (y: Node) => this;
 
         pow: (b: MathNodeParameter) => MathNode;
-        powAssign: (b: MathNodeParameter) => this;
 
         pow2: () => MathNode;
-        pow2Assign: () => this;
 
         pow3: () => MathNode;
-        pow3Assign: () => this;
 
         pow4: () => MathNode;
-        pow4Assign: () => this;
 
         transformDirection: (b: MathNodeParameter) => MathNode;
-        transformDirectionAssign: (b: MathNodeParameter) => this;
 
         mix: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        mixAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         clamp: (b?: MathNodeParameter, c?: MathNodeParameter) => MathNode;
-        clampAssign: (b?: MathNodeParameter, c?: MathNodeParameter) => this;
 
         refract: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        refractAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         smoothstep: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        smoothstepAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         faceForward: (b: MathNodeParameter, c: MathNodeParameter) => MathNode;
-        faceForwardAssign: (b: MathNodeParameter, c: MathNodeParameter) => this;
 
         difference: (b: MathNodeParameter) => MathNode;
-        differenceAssign: (b: MathNodeParameter) => this;
 
         saturate: () => MathNode;
-        saturateAssign: () => this;
 
         cbrt: () => MathNode;
-        cbrtAssign: () => this;
 
         transpose: () => MathNode;
-        transposeAssign: () => this;
 
         determinant: () => MathNode;
-        determinantAssign: () => this;
 
         inverse: () => MathNode;
-        inverseAssign: () => this;
 
         rand: () => OperatorNode;
-        randAssign: () => this;
     }
 }

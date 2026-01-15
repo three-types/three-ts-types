@@ -25,12 +25,7 @@ declare module "../Nodes.js" {
          * @deprecated "cache()" has been deprecated. Use "isolate()" instead.
          */
         cache: (cache?: NodeCache) => IsolateNode;
-        /**
-         * @deprecated "cache()" has been deprecated. Use "isolate()" instead.
-         */
-        cacheAssign: (cache?: NodeCache) => this;
 
         isolate: () => IsolateNode;
-        isolateAssign: () => this;
     }
 }

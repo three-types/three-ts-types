@@ -13,6 +13,5 @@ export const bypass: (returnNode: Node, callNode: Node) => BypassNode;
 declare module "../Nodes.js" {
     interface Node {
         bypass: (callNode: Node) => BypassNode;
-        bypassAssign: (callNode: Node) => this;
     }
 }

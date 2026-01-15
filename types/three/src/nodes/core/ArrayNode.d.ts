@@ -21,6 +21,5 @@ export const array: ArrayFunction;
 declare module "../Nodes.js" {
     interface Node {
         toArray: (count: number) => ArrayNode;
-        toArrayAssign: (count: number) => this;
     }
 }
