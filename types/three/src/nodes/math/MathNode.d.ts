@@ -233,8 +233,8 @@ export const inversesqrt: typeof inverseSqrt;
 
 // Method chaining
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         all: () => MathNode;
 
         any: () => MathNode;

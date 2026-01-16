@@ -41,8 +41,8 @@ export const convertColorSpace: (
     targetColorSpace: string,
 ) => ColorSpaceNode;
 
-declare module "../Nodes.js" {
-    interface Node {
+declare module "../core/Node.js" {
+    interface NodeElements {
         workingToColorSpace: (
             targetColorSpace: string,
         ) => ColorSpaceNode;
