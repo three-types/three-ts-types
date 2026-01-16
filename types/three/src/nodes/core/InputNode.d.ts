@@ -3,7 +3,7 @@ import NodeBuilder from "./NodeBuilder.js";
 
 export type Precision = "low" | "medium" | "high";
 
-export default abstract class InputNode<Value> extends Node {
+declare abstract class InputNode<Value> extends Node {
     isInputNode: true;
     value: Value;
     precision: Precision | null;
@@ -13,3 +13,7 @@ export default abstract class InputNode<Value> extends Node {
     getInputType(builder: NodeBuilder): string | null;
     setPrecision(precision: Precision): this;
 }
+
+export default InputNode;
+
+export type { InputNode };
