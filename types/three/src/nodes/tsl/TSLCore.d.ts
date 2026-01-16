@@ -91,6 +91,110 @@ declare module "../core/Node.js" {
     }
 }
 
+interface FlipSwizzle1 {
+    flipX(): Node<"float">;
+    flipR(): Node<"float">;
+    flipS(): Node<"float">;
+}
+
+interface FlipSwizzle2 {
+    flipX(): Node<"vec2">;
+    flipR(): Node<"vec2">;
+    flipS(): Node<"vec2">;
+    flipY(): Node<"vec2">;
+    flipG(): Node<"vec2">;
+    flipT(): Node<"vec2">;
+    flipXY(): Node<"vec2">;
+    flipRG(): Node<"vec2">;
+    flipST(): Node<"vec2">;
+}
+
+interface FlipSwizzle3 {
+    flipX(): Node<"vec3">;
+    flipR(): Node<"vec3">;
+    flipS(): Node<"vec3">;
+    flipY(): Node<"vec3">;
+    flipG(): Node<"vec3">;
+    flipT(): Node<"vec3">;
+    flipZ(): Node<"vec3">;
+    flipB(): Node<"vec3">;
+    flipP(): Node<"vec3">;
+    flipXY(): Node<"vec3">;
+    flipRG(): Node<"vec3">;
+    flipST(): Node<"vec3">;
+    flipXZ(): Node<"vec3">;
+    flipRB(): Node<"vec3">;
+    flipSP(): Node<"vec3">;
+    flipYZ(): Node<"vec3">;
+    flipGB(): Node<"vec3">;
+    flipTP(): Node<"vec3">;
+    flipXYZ(): Node<"vec3">;
+    flipRGB(): Node<"vec3">;
+    flipSTP(): Node<"vec3">;
+}
+
+interface FlipSwizzle4 {
+    flipX(): Node<"vec4">;
+    flipR(): Node<"vec4">;
+    flipS(): Node<"vec4">;
+    flipY(): Node<"vec4">;
+    flipG(): Node<"vec4">;
+    flipT(): Node<"vec4">;
+    flipZ(): Node<"vec4">;
+    flipB(): Node<"vec4">;
+    flipP(): Node<"vec4">;
+    flipW(): Node<"vec4">;
+    flipA(): Node<"vec4">;
+    flipQ(): Node<"vec4">;
+    flipXY(): Node<"vec4">;
+    flipRG(): Node<"vec4">;
+    flipST(): Node<"vec4">;
+    flipXZ(): Node<"vec4">;
+    flipRB(): Node<"vec4">;
+    flipSP(): Node<"vec4">;
+    flipYZ(): Node<"vec4">;
+    flipGB(): Node<"vec4">;
+    flipTP(): Node<"vec4">;
+    flipXW(): Node<"vec4">;
+    flipRA(): Node<"vec4">;
+    flipSQ(): Node<"vec4">;
+    flipYW(): Node<"vec4">;
+    flipGA(): Node<"vec4">;
+    flipTQ(): Node<"vec4">;
+    flipZW(): Node<"vec4">;
+    flipBA(): Node<"vec4">;
+    flipPQ(): Node<"vec4">;
+    flipXYZ(): Node<"vec4">;
+    flipRGB(): Node<"vec4">;
+    flipSTP(): Node<"vec4">;
+    flipXYW(): Node<"vec4">;
+    flipRGA(): Node<"vec4">;
+    flipSTQ(): Node<"vec4">;
+    flipXZW(): Node<"vec4">;
+    flipRBA(): Node<"vec4">;
+    flipSPQ(): Node<"vec4">;
+    flipYZW(): Node<"vec4">;
+    flipGBA(): Node<"vec4">;
+    flipTPQ(): Node<"vec4">;
+    flipXYZW(): Node<"vec4">;
+    flipRGBA(): Node<"vec4">;
+    flipSTPQ(): Node<"vec4">;
+}
+
+declare module "../core/Node.js" {
+    interface FloatExtensions extends FlipSwizzle1 {
+    }
+
+    interface Vec2Extensions extends FlipSwizzle2 {
+    }
+
+    interface Vec3Extensions extends FlipSwizzle3 {
+    }
+
+    interface Vec4Extensions extends FlipSwizzle4 {
+    }
+}
+
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
 
