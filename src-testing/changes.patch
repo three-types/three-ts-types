@@ -886,7 +886,7 @@ index ffb7734e8..d71c6d249 100644
  
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..5fc15fe4c 100644
+index 74ebc61fc..32f75328d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1412,7 +1412,7 @@ index 74ebc61fc..5fc15fe4c 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,62 @@ class Node extends EventDispatcher {
+@@ -890,4 +980,65 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1422,6 +1422,8 @@ index 74ebc61fc..5fc15fe4c 100644
 +};
 +
 +export interface NodeElements {}
++
++export interface NodeExtensions<TNodeType> {}
 +
 +export type NumType = 'float' | 'int' | 'uint';
 +export type NumOrBoolType = NumType | 'bool';
@@ -1438,6 +1440,7 @@ index 74ebc61fc..5fc15fe4c 100644
 +
 +type Node<TNodeType = unknown> = NodeClass &
 +    NodeElements &
++    NodeExtensions<TNodeType> &
 +    (TNodeType extends 'float'
 +        ? NumOrBoolExtensions<'float'> & FloatExtensions
 +        : TNodeType extends 'int'
