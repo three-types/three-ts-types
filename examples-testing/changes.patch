@@ -13792,7 +13792,7 @@ index ac28b522d..152b424c3 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 91bc961d7..374525a21 100644
+index 91bc961d7..7bd8c5f3b 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -21,17 +21,17 @@ import {
@@ -13821,7 +13821,7 @@ index 91bc961d7..374525a21 100644
  const clock = new THREE.Clock();
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
-+export const lightSpeed = /*#__PURE__*/ Fn<[THREE.Node]>(([suv_immutable]) => {
++export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]: [THREE.Node]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
@@ -14737,7 +14737,7 @@ index b51bafeab..34d18d6ef 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..b277be895 100644
+index 9a37a9ece..f11e2267d 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14751,24 +14751,24 @@ index 9a37a9ece..b277be895 100644
  };
  
  const localColors = ['rgb(203, 64, 203)', 'rgb(0, 215, 215)'];
-@@ -63,7 +63,7 @@ if (WebGPU.isAvailable() === false) {
- 
+@@ -64,7 +64,7 @@ if (WebGPU.isAvailable() === false) {
  // Display utilities
  
--const getElementIndex = Fn(
-+const getElementIndex = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
-     ([uvNode, gridWidth, gridHeight]) => {
+ const getElementIndex = Fn(
+-    ([uvNode, gridWidth, gridHeight]) => {
++    ([uvNode, gridWidth, gridHeight]: readonly [THREE.Node, THREE.Node, THREE.Node]) => {
          const newUV = uvNode.mul(vec2(gridWidth, gridHeight));
          const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
-@@ -79,7 +79,7 @@ const getElementIndex = Fn(
-     },
+         const elementIndex = uint(gridWidth).mul(pixel.y).add(pixel.x);
+@@ -80,7 +80,7 @@ const getElementIndex = Fn(
  );
  
--const getColor = Fn(
-+const getColor = Fn<readonly [THREE.Node, THREE.Node, THREE.Node]>(
-     ([colorChanger, gridWidth, gridHeight]) => {
+ const getColor = Fn(
+-    ([colorChanger, gridWidth, gridHeight]) => {
++    ([colorChanger, gridWidth, gridHeight]: readonly [THREE.Node, THREE.Node, THREE.Node]) => {
          const subtracter = colorChanger.div(gridWidth.mul(gridHeight));
          return vec3(subtracter.oneMinus()).toVar();
+     },
 @@ -92,7 +92,7 @@ const getColor = Fn(
      },
  );
@@ -14837,7 +14837,7 @@ index 9a37a9ece..b277be895 100644
          If(currentElementsStorage.element(idxAfter).lessThan(currentElementsStorage.element(idxBefore)), () => {
              // Apply the swapped values to temporary storage.
 diff --git a/examples-testing/examples/webgpu_compute_texture.ts b/examples-testing/examples/webgpu_compute_texture.ts
-index 43d162ab5..99033e0e7 100644
+index 43d162ab5..259faad4c 100644
 --- a/examples-testing/examples/webgpu_compute_texture.ts
 +++ b/examples-testing/examples/webgpu_compute_texture.ts
 @@ -3,7 +3,7 @@ import { texture, textureStore, Fn, instanceIndex, float, uvec2, vec4 } from 'th
@@ -14854,12 +14854,12 @@ index 43d162ab5..99033e0e7 100644
      // create function
  
 -    const computeTexture = Fn(({ storageTexture }) => {
-+    const computeTexture = Fn<{ storageTexture: THREE.Texture }>(({ storageTexture }) => {
++    const computeTexture = Fn(({ storageTexture }: { storageTexture: THREE.Texture }) => {
          const posX = instanceIndex.mod(width);
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index ccdfba0be..ddc2f591f 100644
+index ccdfba0be..c6324d6b1 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14889,70 +14889,32 @@ index ccdfba0be..ddc2f591f 100644
      const size = 200;
  
 -    const computeCloud = Fn(({ storageTexture }) => {
-+    const computeCloud = Fn<{ storageTexture: THREE.Storage3DTexture }>(({ storageTexture }) => {
++    const computeCloud = Fn(({ storageTexture }: { storageTexture: THREE.Storage3DTexture }) => {
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -110,33 +110,40 @@ async function init() {
- 
+@@ -111,7 +111,19 @@ async function init() {
      // Shader
  
--    const transparentRaymarchingTexture = Fn(
+     const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
--            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<
-+        {
++        ({
++            texture,
++            range = float(0.14),
++            threshold = float(0.08),
++            opacity = float(0.18),
++            steps = float(100),
++        }: {
 +            texture: THREE.Texture3DNode;
-+            range?: THREE.UniformNode<number>;
-+            threshold?: THREE.UniformNode<number>;
-+            opacity?: THREE.UniformNode<number>;
-+            steps?: THREE.UniformNode<number>;
-+        },
-+        THREE.Node<'vec4'>
-+    >(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
-+        const finalColor = vec4(0).toVar();
++            range?: THREE.InputNode<number>;
++            threshold?: THREE.InputNode<number>;
++            opacity?: THREE.InputNode<number>;
++            steps?: THREE.InputNode<number>;
++        }) => {
+             const finalColor = vec4(0).toVar();
  
--            RaymarchingBox(steps, ({ positionRay }) => {
--                const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
-+        RaymarchingBox(steps, ({ positionRay }) => {
-+            const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
- 
--                mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
-+            mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
- 
--                const shading = texture
--                    .sample(positionRay.add(vec3(-0.01)))
--                    .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
-+            const shading = texture
-+                .sample(positionRay.add(vec3(-0.01)))
-+                .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
- 
--                const col = shading.mul(4.0).add(positionRay.x.add(positionRay.y).mul(0.5)).add(0.3);
-+            const col = shading.mul(4.0).add(positionRay.x.add(positionRay.y).mul(0.5)).add(0.3);
- 
--                finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
-+            finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
- 
--                finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
-+            finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
- 
--                If(finalColor.a.greaterThanEqual(0.95), () => {
--                    Break();
--                });
-+            If(finalColor.a.greaterThanEqual(0.95), () => {
-+                Break();
-             });
-+        });
- 
--            return finalColor;
--        },
--    );
-+        return finalColor;
-+    });
- 
-     // Material
- 
-@@ -171,7 +178,7 @@ async function init() {
+             RaymarchingBox(steps, ({ positionRay }) => {
+@@ -171,7 +183,7 @@ async function init() {
  
      renderer.compute(computeNode);
  
@@ -16250,7 +16212,7 @@ index 385638ee4..97fd8fc7d 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index f540cd3eb..ed951bb1b 100644
+index f540cd3eb..3f70b0735 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -61,9 +61,9 @@ const localSamples = [
@@ -16271,7 +16233,7 @@ index f540cd3eb..ed951bb1b 100644
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
-+    const grid = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
++    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [THREE.Node, THREE.Node, THREE.Node]) => {
          // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
  
          const g = fract(coord);
@@ -16280,7 +16242,7 @@ index f540cd3eb..ed951bb1b 100644
      });
  
 -    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
-+    const fade = Fn<[THREE.Node, THREE.Node]>(([radius = float(10.0), falloff = float(1.0)]) => {
++    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node, THREE.Node]) => {
          return smoothstep(radius, radius.sub(falloff), length(positionWorld));
      });
  
@@ -20084,7 +20046,7 @@ index 4140a49fd..e371e494c 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index d74e1bc0a..19dffb8a3 100644
+index d74e1bc0a..5c9fd5677 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20101,7 +20063,7 @@ index d74e1bc0a..19dffb8a3 100644
      // TSL functions
  
 -    const inAngle = Fn(([position, angleStart, angleArc]) => {
-+    const inAngle = Fn<[THREE.Node, THREE.Node, THREE.Node]>(([position, angleStart, angleArc]) => {
++    const inAngle = Fn(([position, angleStart, angleArc]: [THREE.Node, THREE.Node, THREE.Node]) => {
          const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
          return angle.greaterThan(0).and(angle.lessThan(angleArc));
      });
@@ -20186,7 +20148,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f1..dc289242a 100644
+index 143d577f1..7449d2873 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20245,23 +20207,58 @@ index 143d577f1..dc289242a 100644
  
          uniforms.count = uniform(settings.count);
          uniforms.color = uniform(color(settings.color));
-@@ -112,7 +141,9 @@ function init() {
+@@ -112,40 +141,51 @@ function init() {
  
      // halftone functions
  
 -    const halftone = Fn(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
-+    const halftone = Fn<
-+        [THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]
-+    >(([count, color, direction, start, end, radius, mixLow, mixHigh]) => {
-         // grid pattern
+-        // grid pattern
++    const halftone = Fn(
++        ([count, color, direction, start, end, radius, mixLow, mixHigh]: [
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++        ]) => {
++            // grid pattern
  
-         let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
-@@ -133,19 +164,19 @@ function init() {
-         return vec4(color, mask);
-     });
+-        let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
+-        gridUv = rotate(gridUv, Math.PI * 0.25).mod(1);
++            let gridUv = screenCoordinate.xy.div(screenSize.yy).mul(count);
++            gridUv = rotate(gridUv, Math.PI * 0.25).mod(1);
+ 
+-        // orientation strength
++            // orientation strength
+ 
+-        const orientationStrength = normalWorld.dot(direction.normalize()).remapClamp(end, start, 0, 1);
++            const orientationStrength = normalWorld.dot(direction.normalize()).remapClamp(end, start, 0, 1);
+ 
+-        // mask
++            // mask
+ 
+-        const mask = orientationStrength
+-            .mul(radius)
+-            .mul(0.5)
+-            .step(gridUv.sub(0.5).length())
+-            .mul(mix(mixLow, mixHigh, orientationStrength));
++            const mask = orientationStrength
++                .mul(radius)
++                .mul(0.5)
++                .step(gridUv.sub(0.5).length())
++                .mul(mix(mixLow, mixHigh, orientationStrength));
+ 
+-        return vec4(color, mask);
+-    });
++            return vec4(color, mask);
++        },
++    );
  
 -    const halftones = Fn(([input]) => {
-+    const halftones = Fn<[THREE.Node]>(([input]) => {
++    const halftones = Fn(([input]: [THREE.Node]) => {
          const halftonesOutput = input;
  
          for (const settings of halftoneSettings) {
@@ -20285,7 +20282,7 @@ index 143d577f1..dc289242a 100644
              );
              halftonesOutput.rgb.assign(mix(halftonesOutput.rgb, halfToneOutput.rgb, halfToneOutput.a));
          }
-@@ -177,7 +208,9 @@ function init() {
+@@ -177,7 +217,9 @@ function init() {
          model.position.y = -2;
          model.scale.setScalar(2.5);
          model.traverse(child => {
@@ -20296,7 +20293,7 @@ index 143d577f1..dc289242a 100644
          });
  
          scene.add(model);
-@@ -204,8 +237,8 @@ async function animate() {
+@@ -204,8 +246,8 @@ async function animate() {
      controls.update();
  
      const time = clock.getElapsedTime();
@@ -20355,7 +20352,7 @@ index e57c66eeb..31838ac12 100644
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
-index 5630137b8..b69031e61 100644
+index 5630137b8..1690bcf6f 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 +++ b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 @@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20391,7 +20388,7 @@ index 5630137b8..b69031e61 100644
      const vPosition = varying(vec3());
  
 -    const terrainElevation = Fn(([position]) => {
-+    const terrainElevation = Fn<[THREE.Node]>(([position]) => {
++    const terrainElevation = Fn(([position]: [THREE.Node]) => {
          const warpedPosition = position.add(offset).toVar();
          warpedPosition.addAssign(
              mx_noise_float(warpedPosition.mul(positionFrequency).mul(warpFrequency), 1, 0).mul(warpStrength),
@@ -20441,7 +20438,7 @@ index 5630137b8..b69031e61 100644
              drag.worldCoords.copy(intersect.point);
          }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d075..9b867d08e 100644
+index cb513d075..08c0009ff 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20458,7 +20455,7 @@ index cb513d075..9b867d08e 100644
      // TSL functions
  
 -    const wavesElevation = Fn(([position]) => {
-+    const wavesElevation = Fn<[THREE.Node]>(([position]) => {
++    const wavesElevation = Fn(([position]: [THREE.Node]) => {
          // large waves
  
          const elevation = mul(
@@ -20507,7 +20504,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..6dcc8e26f 100644
+index 4c4ee68ee..e4e1f3c80 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20526,7 +20523,7 @@ index 4c4ee68ee..6dcc8e26f 100644
 -let updateParticles, spawnParticles; // TSL compute nodes
 -let getInstanceColor; // TSL function
 +let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
-+let getInstanceColor: THREE.TSL.ShaderNodeFn<[THREE.Node]>; // TSL function
++let getInstanceColor: THREE.TSL.FnNode<[THREE.Node], THREE.Node>; // TSL function
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();
@@ -20535,7 +20532,7 @@ index 4c4ee68ee..6dcc8e26f 100644
      // TSL function
      // current color from index
 -    getInstanceColor = Fn(([i]) => {
-+    getInstanceColor = Fn<[THREE.Node]>(([i]) => {
++    getInstanceColor = Fn(([i]: [THREE.Node]) => {
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
@@ -20558,7 +20555,7 @@ index 4c4ee68ee..6dcc8e26f 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..78c200d02 100644
+index 571b7ea0b..054123e12 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20579,24 +20576,30 @@ index 571b7ea0b..78c200d02 100644
      // TSL functions
  
 -    const toRadialUv = Fn(([uv, multiplier, rotation, offset]) => {
-+    const toRadialUv = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(([uv, multiplier, rotation, offset]) => {
++    const toRadialUv = Fn(([uv, multiplier, rotation, offset]: [THREE.Node, THREE.Node, THREE.Node, THREE.Node]) => {
          const centeredUv = uv.sub(0.5).toVar();
          const distanceToCenter = centeredUv.length();
          const angle = atan(centeredUv.y, centeredUv.x);
-@@ -56,24 +60,26 @@ function init() {
+@@ -56,24 +60,32 @@ function init() {
          return radialUv;
      });
  
 -    const toSkewedUv = Fn(([uv, skew]) => {
-+    const toSkewedUv = Fn<[THREE.Node, THREE.Node]>(([uv, skew]) => {
++    const toSkewedUv = Fn(([uv, skew]: [THREE.Node, THREE.Node]) => {
          return vec2(uv.x.add(uv.y.mul(skew.x)), uv.y.add(uv.x.mul(skew.y)));
      });
  
 -    const twistedCylinder = Fn(([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
 -        const angle = atan(position.z, position.x).toVar();
 -        const elevation = position.y;
-+    const twistedCylinder = Fn<[THREE.Node, THREE.Node, THREE.Node, THREE.Node, THREE.Node]>(
-+        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]) => {
++    const twistedCylinder = Fn(
++        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]: [
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++        ]) => {
 +            const angle = atan(position.z, position.x).toVar();
 +            const elevation = position.y;
  
@@ -20621,7 +20624,7 @@ index 571b7ea0b..78c200d02 100644
  
      // uniforms
  
-@@ -260,7 +266,7 @@ function init() {
+@@ -260,7 +272,7 @@ function init() {
  
      // debug
  
@@ -20631,7 +20634,7 @@ index 571b7ea0b..78c200d02 100644
      gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => emissiveColor.value.set(value))
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
-index 5a4e06502..210883606 100644
+index 5a4e06502..d7fb15f24 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
 +++ b/examples-testing/examples/webgpu_tsl_wood.ts
 @@ -1,22 +1,30 @@
@@ -20669,59 +20672,61 @@ index 5a4e06502..210883606 100644
      return {
          x: 0,
          y: (finishIndex - Finishes.length / 2) * 1.0,
-@@ -28,29 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
+@@ -28,27 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
  function createGridPlane() {
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const gridXZ = TSL.Fn(([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
 -        const coord = TSL.positionWorld.xz.div(gridSize);
 -        const grid = TSL.fract(coord);
-+    const gridXZ = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node]>(
-+        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]) => {
-+            const coord = TSL.positionWorld.xz.div(gridSize);
-+            const grid = TSL.fract(coord);
- 
+-
 -        // Screen-space derivative for automatic antialiasing
 -        const fw = TSL.fwidth(coord);
 -        const smoothing = TSL.max(fw.x, fw.y).mul(0.5);
-+            // Screen-space derivative for automatic antialiasing
-+            const fw = TSL.fwidth(coord);
-+            const smoothing = TSL.max(fw.x, fw.y).mul(0.5);
- 
+-
 -        // Create squares at cell centers
 -        const squareDist = TSL.max(TSL.abs(grid.x.sub(0.5)), TSL.abs(grid.y.sub(0.5)));
 -        const dots = TSL.smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
-+            // Create squares at cell centers
-+            const squareDist = TSL.max(TSL.abs(grid.x.sub(0.5)), TSL.abs(grid.y.sub(0.5)));
-+            const dots = TSL.smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
- 
+-
 -        // Create grid lines
 -        const lineX = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.x.sub(0.5)));
 -        const lineZ = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.y.sub(0.5)));
 -        const lines = TSL.max(lineX, lineZ);
+-
+-        return TSL.max(dots, lines);
+-    });
++    const gridXZ = TSL.Fn(
++        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]: [
++            THREE.Node,
++            THREE.Node,
++            THREE.Node,
++        ]) => {
++            const coord = TSL.positionWorld.xz.div(gridSize);
++            const grid = TSL.fract(coord);
++
++            // Screen-space derivative for automatic antialiasing
++            const fw = TSL.fwidth(coord);
++            const smoothing = TSL.max(fw.x, fw.y).mul(0.5);
++
++            // Create squares at cell centers
++            const squareDist = TSL.max(TSL.abs(grid.x.sub(0.5)), TSL.abs(grid.y.sub(0.5)));
++            const dots = TSL.smoothstep(dotWidth.add(smoothing), dotWidth.sub(smoothing), squareDist);
++
 +            // Create grid lines
 +            const lineX = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.x.sub(0.5)));
 +            const lineZ = TSL.smoothstep(lineWidth.add(smoothing), lineWidth.sub(smoothing), TSL.abs(grid.y.sub(0.5)));
 +            const lines = TSL.max(lineX, lineZ);
- 
--        return TSL.max(dots, lines);
--    });
++
 +            return TSL.max(dots, lines);
 +        },
 +    );
  
 -    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
--        return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
--    });
-+    const radialGradient = TSL.Fn<[THREE.Node, THREE.Node, THREE.Node] | [THREE.Node, THREE.Node]>(
-+        ([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
-+            return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
-+        },
-+    );
++    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]: [THREE.Node, THREE.Node]) => {
+         return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+     });
  
-     // Create grid pattern
-     const gridPattern = gridXZ(1.0, 0.03, 0.005);
-@@ -69,7 +81,12 @@ function createGridPlane() {
+@@ -69,7 +83,12 @@ function createGridPlane() {
  }
  
  // Helper function to create and position labels
@@ -20735,7 +20740,7 @@ index 5a4e06502..210883606 100644
      const txt_geo = new TextGeometry(text, {
          font: font,
          size: 0.1,
-@@ -79,9 +96,9 @@ function createLabel(text, font, material, position) {
+@@ -79,9 +98,9 @@ function createLabel(text, font, material, position) {
      });
  
      txt_geo.computeBoundingBox();
@@ -20748,7 +20753,7 @@ index 5a4e06502..210883606 100644
      txt_geo.translate(offx, offy, offz);
  
      const label = new THREE.Group();
-@@ -91,7 +108,7 @@ function createLabel(text, font, material, position) {
+@@ -91,7 +110,7 @@ function createLabel(text, font, material, position) {
      // Apply default rotation for labels
      label.rotateY(-Math.PI / 2);
  
@@ -20757,7 +20762,7 @@ index 5a4e06502..210883606 100644
      label.position.copy(position);
      base.add(label);
  }
-@@ -115,7 +132,7 @@ async function init() {
+@@ -115,7 +134,7 @@ async function init() {
      controls = new OrbitControls(camera, renderer.domElement);
      controls.target.set(0, 0, 0.548);
  
@@ -20766,7 +20771,7 @@ index 5a4e06502..210883606 100644
  
      font = await new FontLoader().loadAsync('./fonts/helvetiker_regular.typeface.json');
  
-@@ -189,7 +206,7 @@ if (WebGPU.isAvailable()) {
+@@ -189,7 +208,7 @@ if (WebGPU.isAvailable()) {
      document.body.appendChild(WebGPU.getErrorMessage());
  }
  
@@ -20824,7 +20829,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index 44b5081fd..3dc6e0fa4 100644
+index 44b5081fd..ca96807cf 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20863,7 +20868,7 @@ index 44b5081fd..3dc6e0fa4 100644
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn<{ positionRay: THREE.Node }>(({ positionRay }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
          // Return the amount of fog based on the noise texture
  
          const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
@@ -20874,7 +20879,7 @@ index 44b5081fd..3dc6e0fa4 100644
  
          let density = sampleGrain(1);
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 1d46c3543..202ffdd2b 100644
+index 1d46c3543..106629ec6 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -20897,66 +20902,28 @@ index 1d46c3543..202ffdd2b 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -86,33 +86,40 @@ function init() {
- 
+@@ -87,7 +87,19 @@ function init() {
      // Shader
  
--    const transparentRaymarchingTexture = Fn(
+     const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
--            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<
-+        {
++        ({
++            texture,
++            range = float(0.1),
++            threshold = float(0.25),
++            opacity = float(0.25),
++            steps = float(100),
++        }: {
 +            texture: THREE.TextureNode;
-+            range: THREE.UniformNode<number>;
-+            threshold: THREE.UniformNode<number>;
-+            opacity: THREE.UniformNode<number>;
-+            steps: THREE.UniformNode<number>;
-+        },
-+        THREE.Node<'vec4'>
-+    >(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
-+        const finalColor = vec4(0).toVar();
++            range: THREE.InputNode<number>;
++            threshold: THREE.InputNode<number>;
++            opacity: THREE.InputNode<number>;
++            steps: THREE.InputNode<number>;
++        }) => {
+             const finalColor = vec4(0).toVar();
  
--            RaymarchingBox(steps, ({ positionRay }) => {
--                const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
-+        RaymarchingBox(steps, ({ positionRay }) => {
-+            const mapValue = float(texture.sample(positionRay.add(0.5)).r).toVar();
- 
--                mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
-+            mapValue.assign(smoothstep(threshold.sub(range), threshold.add(range), mapValue).mul(opacity));
- 
--                const shading = texture
--                    .sample(positionRay.add(vec3(-0.01)))
--                    .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
-+            const shading = texture
-+                .sample(positionRay.add(vec3(-0.01)))
-+                .r.sub(texture.sample(positionRay.add(vec3(0.01))).r);
- 
--                const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
-+            const col = shading.mul(3.0).add(positionRay.x.add(positionRay.y).mul(0.25)).add(0.2);
- 
--                finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
-+            finalColor.rgb.addAssign(finalColor.a.oneMinus().mul(mapValue).mul(col));
- 
--                finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
-+            finalColor.a.addAssign(finalColor.a.oneMinus().mul(mapValue));
- 
--                If(finalColor.a.greaterThanEqual(0.95), () => {
--                    Break();
--                });
-+            If(finalColor.a.greaterThanEqual(0.95), () => {
-+                Break();
-             });
-+        });
- 
--            return finalColor;
--        },
--    );
-+        return finalColor;
-+    });
- 
-     // Material
- 
-@@ -142,7 +149,7 @@ function init() {
+             RaymarchingBox(steps, ({ positionRay }) => {
+@@ -142,7 +154,7 @@ function init() {
  
      //
  
@@ -21061,7 +21028,7 @@ index c5e4be8cf..f13ed941c 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..5705090ed 100644
+index fb6f2bbd5..2ae54bfe6 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -21075,20 +21042,45 @@ index fb6f2bbd5..5705090ed 100644
  
  init();
  
-@@ -58,7 +58,11 @@ function init() {
+@@ -58,23 +58,25 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
-+    const opaqueRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        steps: THREE.Node;
-+        threshold: THREE.Node;
-+    }>(({ texture, steps, threshold }) => {
-         const finalColor = vec4(0).toVar();
+-        const finalColor = vec4(0).toVar();
++    const opaqueRaymarchingTexture = Fn(
++        ({ texture, steps, threshold }: { texture: THREE.Texture3DNode; steps: THREE.Node; threshold: THREE.Node }) => {
++            const finalColor = vec4(0).toVar();
  
-         RaymarchingBox(steps, ({ positionRay }) => {
-@@ -95,7 +99,7 @@ function init() {
+-        RaymarchingBox(steps, ({ positionRay }) => {
+-            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
++            RaymarchingBox(steps, ({ positionRay }) => {
++                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
+ 
+-            If(mapValue.greaterThan(threshold), () => {
+-                const p = vec3(positionRay).add(0.5);
++                If(mapValue.greaterThan(threshold), () => {
++                    const p = vec3(positionRay).add(0.5);
+ 
+-                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
+-                finalColor.a.assign(1);
+-                Break();
++                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
++                    finalColor.a.assign(1);
++                    Break();
++                });
+             });
+-        });
+ 
+-        return finalColor;
+-    });
++            return finalColor;
++        },
++    );
+ 
+     //
+ 
+@@ -95,7 +97,7 @@ function init() {
  
      //
  
