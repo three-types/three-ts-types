@@ -84,9 +84,6 @@ export type Swizzable =
     }
     & {
         [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => Node;
-    }
-    & {
-        [Key in SwizzleOption as `flip${Uppercase<Key>}`]: () => Node;
     };
 
 declare module "../core/Node.js" {
