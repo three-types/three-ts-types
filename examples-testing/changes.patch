@@ -14859,7 +14859,7 @@ index 43d162ab5..99033e0e7 100644
          const posY = instanceIndex.div(width);
          const indexUV = uvec2(posX, posY);
 diff --git a/examples-testing/examples/webgpu_compute_texture_3d.ts b/examples-testing/examples/webgpu_compute_texture_3d.ts
-index ccdfba0be..eb7643907 100644
+index ccdfba0be..ddc2f591f 100644
 --- a/examples-testing/examples/webgpu_compute_texture_3d.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_3d.ts
 @@ -23,9 +23,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14893,20 +14893,23 @@ index ccdfba0be..eb7643907 100644
          const scale = float(0.05);
          const id = instanceIndex;
  
-@@ -110,33 +110,37 @@ async function init() {
+@@ -110,33 +110,40 @@ async function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.Texture3DNode;
-+        range?: THREE.UniformNode<number>;
-+        threshold?: THREE.UniformNode<number>;
-+        opacity?: THREE.UniformNode<number>;
-+        steps?: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.Texture3DNode;
++            range?: THREE.UniformNode<number>;
++            threshold?: THREE.UniformNode<number>;
++            opacity?: THREE.UniformNode<number>;
++            steps?: THREE.UniformNode<number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.14), threshold = float(0.08), opacity = float(0.18), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -14949,7 +14952,7 @@ index ccdfba0be..eb7643907 100644
  
      // Material
  
-@@ -171,7 +175,7 @@ async function init() {
+@@ -171,7 +178,7 @@ async function init() {
  
      renderer.compute(computeNode);
  
@@ -19905,7 +19908,7 @@ index 905006a87..8e82686d2 100644
          }
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index a1a354ff7..26d952ce3 100644
+index a1a354ff7..940a35c89 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
@@ -19934,7 +19937,7 @@ index a1a354ff7..26d952ce3 100644
          map.needsUpdate = true;
  
 -        let coord = uv();
-+        let coord: THREE.Node = uv();
++        let coord: THREE.Node<'vec2'> = uv();
          coord = coord.setY(coord.y.oneMinus()); // flip y
  
          let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
@@ -20871,7 +20874,7 @@ index 44b5081fd..3dc6e0fa4 100644
  
          let density = sampleGrain(1);
 diff --git a/examples-testing/examples/webgpu_volume_cloud.ts b/examples-testing/examples/webgpu_volume_cloud.ts
-index 1d46c3543..0b4d85133 100644
+index 1d46c3543..202ffdd2b 100644
 --- a/examples-testing/examples/webgpu_volume_cloud.ts
 +++ b/examples-testing/examples/webgpu_volume_cloud.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -20894,20 +20897,23 @@ index 1d46c3543..0b4d85133 100644
      const gradient = context.createLinearGradient(0, 0, 0, 32);
      gradient.addColorStop(0.0, '#014a84');
      gradient.addColorStop(0.5, '#0561a0');
-@@ -86,33 +86,37 @@ function init() {
+@@ -86,33 +86,40 @@ function init() {
  
      // Shader
  
 -    const transparentRaymarchingTexture = Fn(
 -        ({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 -            const finalColor = vec4(0).toVar();
-+    const transparentRaymarchingTexture = Fn<{
-+        texture: THREE.TextureNode;
-+        range: THREE.UniformNode<number>;
-+        threshold: THREE.UniformNode<number>;
-+        opacity: THREE.UniformNode<number>;
-+        steps: THREE.UniformNode<number>;
-+    }>(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
++    const transparentRaymarchingTexture = Fn<
++        {
++            texture: THREE.TextureNode;
++            range: THREE.UniformNode<number>;
++            threshold: THREE.UniformNode<number>;
++            opacity: THREE.UniformNode<number>;
++            steps: THREE.UniformNode<number>;
++        },
++        THREE.Node<'vec4'>
++    >(({ texture, range = float(0.1), threshold = float(0.25), opacity = float(0.25), steps = float(100) }) => {
 +        const finalColor = vec4(0).toVar();
  
 -            RaymarchingBox(steps, ({ positionRay }) => {
@@ -20950,7 +20956,7 @@ index 1d46c3543..0b4d85133 100644
  
      // Material
  
-@@ -142,7 +146,7 @@ function init() {
+@@ -142,7 +149,7 @@ function init() {
  
      //
  
