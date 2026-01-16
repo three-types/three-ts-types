@@ -389,22 +389,30 @@ export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
 }
 export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
 }
+export interface FloatExtensions {
+}
+export interface Vec2Extensions {
+}
+export interface Vec3Extensions {
+}
+export interface Vec4Extensions {
+}
 type Node<TNodeType = unknown> =
     & NodeClass
     & NodeElements
-    & (TNodeType extends "float" ? NumOrBoolExtensions<"float">
+    & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions
         : TNodeType extends "int" ? NumOrBoolExtensions<"int">
         : TNodeType extends "uint" ? NumOrBoolExtensions<"uint">
         : TNodeType extends "bool" ? NumOrBoolExtensions<"bool">
-        : TNodeType extends "vec2" ? NumOrBoolVec2Extensions<"float">
+        : TNodeType extends "vec2" ? NumOrBoolVec2Extensions<"float"> & Vec2Extensions
         : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int">
         : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint">
         : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
-        : TNodeType extends "vec3" ? NumOrBoolVec3Extensions<"float">
+        : TNodeType extends "vec3" ? NumOrBoolVec3Extensions<"float"> & Vec3Extensions
         : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int">
         : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint">
         : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
-        : TNodeType extends "vec4" ? NumOrBoolVec4Extensions<"float">
+        : TNodeType extends "vec4" ? NumOrBoolVec4Extensions<"float"> & Vec4Extensions
         : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int">
         : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint">
         : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
