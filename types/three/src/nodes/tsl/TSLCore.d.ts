@@ -78,13 +78,9 @@ export type ArrayElementIndex =
     | 30
     | 31;
 
-export type Swizzable =
-    & {
-        [Key in SwizzleOption | ArrayElementIndex]: Node;
-    }
-    & {
-        [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => Node;
-    };
+export type Swizzable = {
+    [Key in SwizzleOption | ArrayElementIndex]: Node;
+};
 
 declare module "../core/Node.js" {
     interface NodeElements extends Swizzable {
