@@ -318,7 +318,8 @@ export type NodeObjectOption = Node | number | string;
 
 // same logic as in ShaderNodeObject: number,boolean,node->node, otherwise do nothing
 export type NodeObject<T> = T extends Node ? T
-    : T extends number | boolean ? ConstNode<number | boolean>
+    : T extends number ? Node<"float">
+    : T extends boolean ? Node<"bool">
     : T;
 
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
@@ -523,14 +524,14 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): ConstNode<Color>;
-    (r: number, g: number, b: number): ConstNode<Color>;
+    (color?: string | number): ConstNode<"color", Color>;
+    (r: number, g: number, b: number): ConstNode<"color", Color>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): ConstNode<Color>;
-    (node: Node): Node;
+    (color: Color): ConstNode<"color", Color>;
+    (node: Node): Node<"color">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
@@ -538,95 +539,107 @@ interface ColorFunction {
 
 export const color: ColorFunction;
 
-interface NumberFunction {
-    (value?: number): ConstNode<number>;
-    (node: Node): Node;
+interface FloatFunction {
+    (value?: number): ConstNode<"float", number>;
+    (node: Node): Node<"float">;
 }
 
-export const float: NumberFunction;
-export const int: NumberFunction;
-export const uint: NumberFunction;
+export const float: FloatFunction;
 
-interface BooleanFunction {
-    (value?: boolean): ConstNode<boolean>;
-    (node: Node): Node;
+interface IntFunction {
+    (value?: number): ConstNode<"int", number>;
+    (node: Node): Node<"int">;
 }
 
-export const bool: BooleanFunction;
+export const int: IntFunction;
 
-interface Vector2Function {
+interface UintFunction {
+    (value?: number): ConstNode<"uint", number>;
+    (node: Node): Node<"uint">;
+}
+
+export const uint: UintFunction;
+
+interface BoolFunction {
+    (value?: boolean): ConstNode<"bool", boolean>;
+    (node: Node): Node<"bool">;
+}
+
+export const bool: BoolFunction;
+
+interface Vec2Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number): ConstNode<Vector2>;
+    (x?: number, y?: number): ConstNode<"vec2", Vector2>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector2): ConstNode<Vector2>;
-    (node: Node): Node;
+    (value: Vector2): ConstNode<"vec2", Vector2>;
+    (node: Node): Node<"vec2">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number): JoinNode;
+    (x: Node | number, y: Node | number): Node<"vec2">;
 }
 
-export const vec2: Vector2Function;
-export const ivec2: Vector2Function;
-export const uvec2: Vector2Function;
-export const bvec2: (node: Node) => Node;
+export const vec2: Vec2Function;
+export const ivec2: (node: Node) => Node<"ivec2">;
+export const uvec2: (node: Node) => Node<"uvec2">;
+export const bvec2: (node: Node) => Node<"bvec2">;
 
-interface Vector3Function {
+interface Vec3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number): ConstNode<Vector3>;
+    (x?: number, y?: number, z?: number): ConstNode<"vec3", Vector3>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector3): ConstNode<Vector3>;
-    (value: [number, number, number]): ConstNode<Vector3>;
-    (node: Node): Node;
+    (value: Vector3): ConstNode<"vec3", Vector3>;
+    (value: [number, number, number]): ConstNode<"vec3", Vector3>;
+    (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number): Node<"vec3">;
 }
 
-export const vec3: Vector3Function;
-export const ivec3: Vector3Function;
-export const uvec3: Vector3Function;
-export const bvec3: (node: Node) => Node;
+export const vec3: Vec3Function;
+export const ivec3: (node: Node) => Node<"ivec3">;
+export const uvec3: (node: Node) => Node<"uvec3">;
+export const bvec3: (node: Node) => Node<"bvec3">;
 
-interface Vector4Function {
+interface Vec4Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number, w?: number): ConstNode<Vector4>;
+    (x?: number, y?: number, z?: number, w?: number): ConstNode<"vec4", Vector4>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector4): ConstNode<Vector4>;
-    (node: Node): Node;
+    (value: Vector4): ConstNode<"vec4", Vector4>;
+    (node: Node): Node<"vec4">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): Node<"vec4">;
 }
 
-export const vec4: Vector4Function;
-export const ivec4: Vector4Function;
-export const uvec4: Vector4Function;
-export const bvec4: (node: Node) => Node;
+export const vec4: Vec4Function;
+export const ivec4: (node: Node) => Node<"ivec4">;
+export const uvec4: (node: Node) => Node<"uvec4">;
+export const bvec4: (node: Node) => Node<"bvec4">;
 
-interface Matrix2Function {
-    (value: Matrix2): ConstNode<Matrix2>;
-    (node: Node): Node;
+interface Mat2Function {
+    (value: Matrix2): ConstNode<"mat2", Matrix2>;
+    (node: Node): Node<"mat2">;
 }
 
-export const mat2: Matrix2Function;
+export const mat2: Mat2Function;
 
-interface Matrix3Function {
-    (value: Matrix3): ConstNode<Matrix3>;
+interface Mat3Function {
+    (value: Matrix3): ConstNode<"mat3", Matrix3>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -637,20 +650,20 @@ interface Matrix3Function {
         n31: number | Node,
         n32: number | Node,
         n33: number | Node,
-    ): Node;
-    (): ConstNode<Matrix3>;
+    ): Node<"mat3">;
+    (): ConstNode<"mat3", Matrix3>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat3">;
+    (node: Node): Node<"mat3">;
 }
 
-export const mat3: Matrix3Function;
+export const mat3: Mat3Function;
 
-interface Matrix4Function {
-    (value: Matrix4): ConstNode<Matrix4>;
+interface Mat4Function {
+    (value: Matrix4): ConstNode<"mat4", Matrix4>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -668,63 +681,44 @@ interface Matrix4Function {
         n42: number | Node,
         n43: number | Node,
         n44: number | Node,
-    ): Node;
-    (): ConstNode<Matrix4>;
+    ): Node<"mat4">;
+    (): ConstNode<"mat4", Matrix4>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
         p4: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat4">;
+    (node: Node): Node<"mat4">;
 }
 
-export const mat4: Matrix4Function;
+export const mat4: Mat4Function;
 
-export const string: (value?: string) => ConstNode<string>;
-export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
+export const string: (value?: string) => Node<"string">;
+export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        toColor: () => Node;
-
-        toFloat: () => Node;
-
-        toInt: () => Node;
-
-        toUint: () => Node;
-
-        toBool: () => Node;
-
-        toVec2: () => Node;
-
-        toIVec2: () => Node;
-
-        toUVec2: () => Node;
-
-        toBVec2: () => Node;
-
-        toVec3: () => Node;
-
-        toIVec3: () => Node;
-
-        toUVec3: () => Node;
-
-        toBVec3: () => Node;
-
-        toVec4: () => Node;
-
-        toIVec4: () => Node;
-
-        toUVec4: () => Node;
-
-        toBVec4: () => Node;
-
-        toMat2: () => Node;
-
-        toMat3: () => Node;
-
-        toMat4: () => Node;
+        toColor: () => Node<"color">;
+        toFloat: () => Node<"float">;
+        toInt: () => Node<"int">;
+        toUint: () => Node<"uint">;
+        toBool: () => Node<"bool">;
+        toVec2: () => Node<"vec2">;
+        toIVec2: () => Node<"ivec2">;
+        toUVec2: () => Node<"uvec2">;
+        toBVec2: () => Node<"bvec2">;
+        toVec3: () => Node<"vec3">;
+        toIVec3: () => Node<"ivec3">;
+        toUVec3: () => Node<"uvec3">;
+        toBVec3: () => Node<"bvec3">;
+        toVec4: () => Node<"vec4">;
+        toIVec4: () => Node<"ivec4">;
+        toUVec4: () => Node<"uvec4">;
+        toBVec4: () => Node<"bvec4">;
+        toMat2: () => Node<"mat2">;
+        toMat3: () => Node<"mat3">;
+        toMat4: () => Node<"mat4">;
     }
 }
 
