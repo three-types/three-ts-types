@@ -9,8 +9,8 @@ interface LoopNodeObjectParameter<TNodeType extends LoopNodeType> {
     type?: TNodeType;
     // TODO The variable name should affect the type of the loop function
     // name?: string;
-    start: Node<TNodeType> | number;
-    end: Node<TNodeType> | number;
+    start: Node | number;
+    end: Node | number;
     condition?: string;
     update?: VarNode | number | string;
 }
