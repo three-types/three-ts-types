@@ -1,4 +1,4 @@
-import Node, { IntegerType, NumType } from '../core/Node.js';
+import Node, { IntegerType, NumType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type OperatorNodeOp =
@@ -99,7 +99,7 @@ declare module "../core/Node.js" {
         and: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
-        ) => OperatorNode
+        ) => OperatorNode;
         or: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
