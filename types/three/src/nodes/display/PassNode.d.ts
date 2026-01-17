@@ -27,7 +27,7 @@ declare class PassMultipleTextureNode extends PassTextureNode {
     updateTexture(): void;
 }
 
-declare class PassNode extends TempNode {
+declare class PassNode extends TempNode<"vec4"> {
     scope: PassNodeScope;
     scene: Object3D;
     camera: Camera;
