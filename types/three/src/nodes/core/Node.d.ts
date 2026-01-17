@@ -385,7 +385,7 @@ export type NumType = "float" | "int" | "uint";
 export type IntegerType = "int" | "uint";
 export type NumOrBoolType = NumType | "bool";
 export type FloatVecType = "vec2" | "vec3" | "vec4";
-export type MatType = "mat3" | "mat4";
+export type MatType = "mat2" | "mat3" | "mat4";
 export interface FloatExtensions {
 }
 export interface IntExtensions {
