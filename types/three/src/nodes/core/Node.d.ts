@@ -384,6 +384,8 @@ export interface NodeExtensions<TNodeType> {
 export type NumType = "float" | "int" | "uint";
 export type IntegerType = "int" | "uint";
 export type NumOrBoolType = NumType | "bool";
+export type FloatVecType = "vec2" | "vec3" | "vec4";
+export type MatType = "mat2" | "mat3" | "mat4";
 export interface FloatExtensions {
 }
 export interface IntExtensions {
@@ -418,11 +420,15 @@ export interface Vec4Extensions {
 }
 export interface ColorExtensions {
 }
+export interface FloatVecExtensions<TVec extends FloatVecType> {
+}
 export interface Mat2Extensions {
 }
 export interface Mat3Extensions {
 }
 export interface Mat4Extensions {
+}
+export interface MatExtensions<TMat extends MatType> {
 }
 type Node<TNodeType = unknown> =
     & NodeClass
@@ -434,22 +440,34 @@ type Node<TNodeType = unknown> =
         : TNodeType extends "uint"
             ? NumOrBoolExtensions<"uint"> & UintExtensions & NumExtensions<"uint"> & IntegerExtensions<"uint">
         : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions
-        : TNodeType extends "vec2" ? NumOrBoolVec2Extensions<"float"> & Vec2Extensions & NumVec2Extensions<"float">
+        : TNodeType extends "vec2" ?
+                & NumOrBoolVec2Extensions<"float">
+                & Vec2Extensions
+                & NumVec2Extensions<"float">
+                & FloatVecExtensions<"vec2">
         : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int">
         : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint">
         : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
-        : TNodeType extends "vec3" ? NumOrBoolVec3Extensions<"float"> & Vec3Extensions & NumVec3Extensions<"float">
+        : TNodeType extends "vec3" ?
+                & NumOrBoolVec3Extensions<"float">
+                & Vec3Extensions
+                & NumVec3Extensions<"float">
+                & FloatVecExtensions<"vec3">
         : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int">
         : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint">
         : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
-        : TNodeType extends "vec4" ? NumOrBoolVec4Extensions<"float"> & Vec4Extensions & NumVec4Extensions<"float">
+        : TNodeType extends "vec4" ?
+                & NumOrBoolVec4Extensions<"float">
+                & Vec4Extensions
+                & NumVec4Extensions<"float">
+                & FloatVecExtensions<"vec4">
         : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int">
         : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint">
         : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
         : TNodeType extends "color" ? ColorExtensions
-        : TNodeType extends "mat2" ? Mat2Extensions
-        : TNodeType extends "mat3" ? Mat3Extensions
-        : TNodeType extends "mat4" ? Mat4Extensions
+        : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
+        : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
+        : TNodeType extends "mat4" ? Mat4Extensions & MatExtensions<"mat4">
         : {});
 export default Node;
 export {};

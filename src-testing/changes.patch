@@ -892,7 +892,7 @@ index ffb7734e8..2dc76d1c9 100644
 +
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..8644fae16 100644
+index 74ebc61fc..926577ffe 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1418,7 +1418,7 @@ index 74ebc61fc..8644fae16 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,91 @@ class Node extends EventDispatcher {
+@@ -890,4 +980,105 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1434,6 +1434,8 @@ index 74ebc61fc..8644fae16 100644
 +export type NumType = 'float' | 'int' | 'uint';
 +export type IntegerType = 'int' | 'uint';
 +export type NumOrBoolType = NumType | 'bool';
++export type FloatVecType = 'vec2' | 'vec3' | 'vec4';
++export type MatType = 'mat2' | 'mat3' | 'mat4';
 +
 +export interface FloatExtensions {}
 +export interface IntExtensions {}
@@ -1458,9 +1460,12 @@ index 74ebc61fc..8644fae16 100644
 +
 +export interface ColorExtensions {}
 +
++export interface FloatVecExtensions<TVec extends FloatVecType> {}
++
 +export interface Mat2Extensions {}
 +export interface Mat3Extensions {}
 +export interface Mat4Extensions {}
++export interface MatExtensions<TMat extends MatType> {}
 +
 +type Node<TNodeType = unknown> = NodeClass &
 +    NodeElements &
@@ -1474,7 +1479,10 @@ index 74ebc61fc..8644fae16 100644
 +            : TNodeType extends 'bool'
 +              ? NumOrBoolExtensions<'bool'> & BoolExtensions
 +              : TNodeType extends 'vec2'
-+                ? NumOrBoolVec2Extensions<'float'> & Vec2Extensions & NumVec2Extensions<'float'>
++                ? NumOrBoolVec2Extensions<'float'> &
++                      Vec2Extensions &
++                      NumVec2Extensions<'float'> &
++                      FloatVecExtensions<'vec2'>
 +                : TNodeType extends 'ivec2'
 +                  ? NumOrBoolVec2Extensions<'int'> & NumVec2Extensions<'int'>
 +                  : TNodeType extends 'uvec2'
@@ -1482,7 +1490,10 @@ index 74ebc61fc..8644fae16 100644
 +                    : TNodeType extends 'bvec2'
 +                      ? NumOrBoolVec2Extensions<'bool'>
 +                      : TNodeType extends 'vec3'
-+                        ? NumOrBoolVec3Extensions<'float'> & Vec3Extensions & NumVec3Extensions<'float'>
++                        ? NumOrBoolVec3Extensions<'float'> &
++                              Vec3Extensions &
++                              NumVec3Extensions<'float'> &
++                              FloatVecExtensions<'vec3'>
 +                        : TNodeType extends 'ivec3'
 +                          ? NumOrBoolVec3Extensions<'int'> & NumVec3Extensions<'int'>
 +                          : TNodeType extends 'uvec3'
@@ -1490,7 +1501,10 @@ index 74ebc61fc..8644fae16 100644
 +                            : TNodeType extends 'bvec3'
 +                              ? NumOrBoolVec3Extensions<'bool'>
 +                              : TNodeType extends 'vec4'
-+                                ? NumOrBoolVec4Extensions<'float'> & Vec4Extensions & NumVec4Extensions<'float'>
++                                ? NumOrBoolVec4Extensions<'float'> &
++                                      Vec4Extensions &
++                                      NumVec4Extensions<'float'> &
++                                      FloatVecExtensions<'vec4'>
 +                                : TNodeType extends 'ivec4'
 +                                  ? NumOrBoolVec4Extensions<'int'> & NumVec4Extensions<'int'>
 +                                  : TNodeType extends 'uvec4'
@@ -1500,11 +1514,11 @@ index 74ebc61fc..8644fae16 100644
 +                                      : TNodeType extends 'color'
 +                                        ? ColorExtensions
 +                                        : TNodeType extends 'mat2'
-+                                          ? Mat2Extensions
++                                          ? Mat2Extensions & MatExtensions<'mat2'>
 +                                          : TNodeType extends 'mat3'
-+                                            ? Mat3Extensions
++                                            ? Mat3Extensions & MatExtensions<'mat3'>
 +                                            : TNodeType extends 'mat4'
-+                                              ? Mat4Extensions
++                                              ? Mat4Extensions & MatExtensions<'mat4'>
 +                                              : {});
 +
  export default Node;
