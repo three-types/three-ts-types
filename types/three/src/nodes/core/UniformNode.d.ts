@@ -1,6 +1,12 @@
+import { Color } from "../../math/Color.js";
+import { Matrix2 } from "../../math/Matrix2.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import { NodeUpdateType } from "./constants.js";
 import InputNode from "./InputNode.js";
-import Node from "./Node.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 import UniformGroupNode from "./UniformGroupNode.js";
@@ -9,7 +15,7 @@ import UniformGroupNode from "./UniformGroupNode.js";
  *
  * @augments InputNode
  */
-declare class UniformNode<TValue> extends InputNode<unknown, TValue> {
+declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
     static get type(): string;
     readonly isUniformNode: true;
     name: string;
@@ -61,7 +67,29 @@ declare class UniformNode<TValue> extends InputNode<unknown, TValue> {
     getInputType(builder: NodeBuilder): string | null;
     generate(builder: NodeBuilder, output: string | null): string;
 }
+declare const UniformNode: {
+    /**
+     * Constructs a new uniform node.
+     *
+     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
+     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+     */
+    new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
+};
+type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
 export default UniformNode;
+interface Uniform {
+    (value: number, type?: "float"): UniformNode<"float", number>;
+    (value: boolean): UniformNode<"bool", boolean>;
+    (value: Vector2): UniformNode<"vec2", Vector2>;
+    (value: Vector3): UniformNode<"vec3", Vector3>;
+    (value: Vector4): UniformNode<"vec4", Vector4>;
+    (value: Matrix2): UniformNode<"mat2", Matrix2>;
+    (value: Matrix3): UniformNode<"mat3", Matrix3>;
+    (value: Matrix4): UniformNode<"mat4", Matrix4>;
+    (value: Color): UniformNode<"color", Color>;
+    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
+}
 /**
  * TSL function for creating a uniform node.
  *
@@ -71,4 +99,4 @@ export default UniformNode;
  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
  * @returns {UniformNode}
  */
-export declare const uniform: <TValue>(value: InputNode<unknown, TValue> | TValue, type?: Node | string) => UniformNode<TValue>;
+export declare const uniform: Uniform;

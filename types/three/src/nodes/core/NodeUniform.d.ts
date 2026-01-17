@@ -24,19 +24,19 @@ declare class NodeUniform<TValue> {
      *
      * @type {any}
      */
-    get value(): TValue;
-    set value(val: TValue);
+    get value(): any;
+    set value(val: any);
     /**
      * The id of the uniform node.
      *
      * @type {number}
      */
-    get id(): number;
+    get id(): any;
     /**
      * The uniform node's group.
      *
      * @type {UniformGroupNode}
      */
-    get groupNode(): import("./UniformGroupNode.js").default;
+    get groupNode(): any;
 }
 export default NodeUniform;

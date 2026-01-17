@@ -36,7 +36,7 @@ declare class NumberNodeUniform extends NumberUniform {
      *
      * @return {number} The value.
      */
-    getValue(): number;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -64,7 +64,7 @@ declare class Vector2NodeUniform extends Vector2Uniform {
      *
      * @return {Vector2} The value.
      */
-    getValue(): Vector2;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -92,7 +92,7 @@ declare class Vector3NodeUniform extends Vector3Uniform {
      *
      * @return {Vector3} The value.
      */
-    getValue(): Vector3;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -120,7 +120,7 @@ declare class Vector4NodeUniform extends Vector4Uniform {
      *
      * @return {Vector4} The value.
      */
-    getValue(): Vector4;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -148,7 +148,7 @@ declare class ColorNodeUniform extends ColorUniform {
      *
      * @return {Color} The value.
      */
-    getValue(): Color;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -176,7 +176,7 @@ declare class Matrix2NodeUniform extends Matrix2Uniform {
      *
      * @return {Matrix2} The value.
      */
-    getValue(): Matrix2;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -204,7 +204,7 @@ declare class Matrix3NodeUniform extends Matrix3Uniform {
      *
      * @return {Matrix3} The value.
      */
-    getValue(): Matrix3;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
@@ -232,7 +232,7 @@ declare class Matrix4NodeUniform extends Matrix4Uniform {
      *
      * @return {Matrix4} The value.
      */
-    getValue(): Matrix4;
+    getValue(): any;
     /**
      * Returns the node uniform data type.
      *
