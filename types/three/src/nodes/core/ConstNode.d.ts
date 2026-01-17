@@ -1,7 +1,7 @@
 import InputNode from "./InputNode.js";
 import NodeBuilder from "./NodeBuilder.js";
 
-export default class ConstNode<Value> extends InputNode<Value> {
+export default class ConstNode<Value> extends InputNode<unknown, Value> {
     isConstNode: true;
     constructor(value: Value, nodeType?: string | null);
 

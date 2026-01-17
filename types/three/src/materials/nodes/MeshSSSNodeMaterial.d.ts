@@ -58,23 +58,23 @@ export interface MeshSSSNodeMaterialNodeProperties extends MeshPhysicalNodeMater
     /**
      * Represents the distortion factor.
      */
-    thicknessDistortionNode: InputNode<number>;
+    thicknessDistortionNode: Node<"float">;
     /**
      * Represents the thickness ambient factor.
      */
-    thicknessAmbientNode: InputNode<number>;
+    thicknessAmbientNode: Node<"float">;
     /**
      * Represents the thickness attenuation.
      */
-    thicknessAttenuationNode: InputNode<number>;
+    thicknessAttenuationNode: Node<"float">;
     /**
      * Represents the thickness power.
      */
-    thicknessPowerNode: InputNode<number>;
+    thicknessPowerNode: Node<"float">;
     /**
      * Represents the thickness scale.
      */
-    thicknessScaleNode: InputNode<number>;
+    thicknessScaleNode: Node<"float">;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

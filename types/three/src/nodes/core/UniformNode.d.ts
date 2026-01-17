@@ -9,7 +9,7 @@ import UniformGroupNode from "./UniformGroupNode.js";
  *
  * @augments InputNode
  */
-declare class UniformNode<TValue> extends InputNode<TValue> {
+declare class UniformNode<TValue> extends InputNode<unknown, TValue> {
     static get type(): string;
     readonly isUniformNode: true;
     name: string;
@@ -71,4 +71,4 @@ export default UniformNode;
  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
  * @returns {UniformNode}
  */
-export declare const uniform: <TValue>(value: InputNode<TValue> | TValue, type?: Node | string) => UniformNode<TValue>;
+export declare const uniform: <TValue>(value: InputNode<unknown, TValue> | TValue, type?: Node | string) => UniformNode<TValue>;

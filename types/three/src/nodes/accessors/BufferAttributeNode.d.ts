@@ -27,7 +27,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```
  * @augments InputNode
  */
-declare class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
+declare class BufferAttributeNode extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
     static get type(): string;
     readonly isBufferNode: true;
     bufferType: string | null;
