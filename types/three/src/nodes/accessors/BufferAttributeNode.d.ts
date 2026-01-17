@@ -27,7 +27,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```
  * @augments InputNode
  */
-declare class BufferAttributeNode extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
+declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
     static get type(): string;
     readonly isBufferNode: true;
     bufferType: string | null;
@@ -57,7 +57,7 @@ declare class BufferAttributeNode extends InputNode<unknown, TypedArray | Interl
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The hash.
      */
-    getHash(builder: NodeBuilder): string;
+    getHash(builder: NodeBuilder): any;
     /**
      * This method is overwritten since the node type is inferred from
      * the buffer attribute.
@@ -103,6 +103,25 @@ declare class BufferAttributeNode extends InputNode<unknown, TypedArray | Interl
      */
     setInstanced(value: boolean): this;
 }
+declare const BufferAttributeNode: {
+    /**
+     * Constructs a new buffer attribute node.
+     *
+     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
+     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
+     * @param {number} [bufferStride=0] - The buffer stride.
+     * @param {number} [bufferOffset=0] - The buffer offset.
+     */
+    new<TNodeType>(
+        value: TypedArray | InterleavedBuffer | BufferAttribute,
+        bufferType?: string | null,
+        bufferStride?: number,
+        bufferOffset?: number,
+    ): BufferAttributeNode<TNodeType>;
+};
+type BufferAttributeNode<TNodeType> =
+    & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
+    & BufferAttributeNodeClass;
 export default BufferAttributeNode;
 /**
  * TSL function for creating a buffer attribute node.
@@ -115,12 +134,12 @@ export default BufferAttributeNode;
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const bufferAttribute: (
+export declare const bufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
-    type?: string | null,
+    type?: TNodeType | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
@@ -133,12 +152,12 @@ export declare const bufferAttribute: (
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const dynamicBufferAttribute: (
+export declare const dynamicBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
-    type?: string | null,
+    type?: TNodeType | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
@@ -150,12 +169,12 @@ export declare const dynamicBufferAttribute: (
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const instancedBufferAttribute: (
+export declare const instancedBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
-    type?: string | null,
+    type?: TNodeType | null,
     stride?: number,
     offset?: number,
-) => Node;
+) => Node<TNodeType>;
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
@@ -167,13 +186,13 @@ export declare const instancedBufferAttribute: (
  * @param {number} [offset=0] - The buffer offset.
  * @returns {BufferAttributeNode|Node}
  */
-export declare const instancedDynamicBufferAttribute: (
+export declare const instancedDynamicBufferAttribute: <TNodeType>(
     array: BufferAttribute | InterleavedBuffer | TypedArray,
-    type?: string | null,
+    type?: TNodeType | null,
     stride?: number,
     offset?: number,
-) => Node;
-declare module "../Nodes.js" {
+) => Node<TNodeType>;
+declare module "./BufferNode.js" {
     interface BufferNodeExtensions<TNodeType, TValue> {
         toAttribute: () => BufferAttributeNode<TNodeType>;
     }
