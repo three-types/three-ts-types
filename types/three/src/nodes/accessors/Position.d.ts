@@ -1,5 +1,5 @@
+import AttributeNode from "../core/AttributeNode.js";
 import Node from "../core/Node.js";
-import AttributeNode from '../core/AttributeNode.js';
 
 export const clipSpace: Node<"vec4">;
 export const positionGeometry: AttributeNode<"vec3">;
