@@ -1326,11 +1326,7 @@ declare module "../core/Node.js" {
     }
 
     interface ColorExtensions
-        extends
-            Swizzle1From3<"float">,
-            Swizzle2From3<"float">,
-            Swizzle3From3<"float">,
-            Swizzle4From3<"float">
+        extends Swizzle1From3<"float">, Swizzle2From3<"float">, Swizzle3From3<"float">, Swizzle4From3<"float">
     {
     }
 
