@@ -1,4 +1,3 @@
-import InputNode from "../../nodes/core/InputNode.js";
 import { LightingModelDirectInput } from "../../nodes/core/LightingModel.js";
 import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
