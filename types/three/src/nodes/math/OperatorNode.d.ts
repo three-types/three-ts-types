@@ -1,4 +1,4 @@
-import Node from "../core/Node.js";
+import Node, { IntegerType, NumType } from '../core/Node.js';
 import TempNode from "../core/TempNode.js";
 
 export type OperatorNodeOp =
@@ -32,6 +32,53 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
+type OperatorNodeParameter = Node | number;
+
+declare module "../core/Node.js" {
+    interface NodeElements {
+        add: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode;
+        sub: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode;
+        mul: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode;
+        div: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode;
+
+        mod: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+
+        equal: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+        notEqual: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+
+        lessThan: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+        greaterThan: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+        lessThanEqual: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+        greaterThanEqual: (
+            b: OperatorNodeParameter,
+        ) => OperatorNode;
+    }
+}
+
 type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
@@ -42,14 +89,14 @@ type NumberToVec = {
     uint: "uvec";
 };
 
-type NumberToVec2<TNumber extends NumberType> = `${NumberToVec[TNumber]}2`;
-type NumberToVec3<TNumber extends NumberType> = `${NumberToVec[TNumber]}3`;
-type NumberToVec4<TNumber extends NumberType> = `${NumberToVec[TNumber]}4`;
+type NumberToVec2<TNum extends NumType> = `${NumberToVec[TNum]}2`;
+type NumberToVec3<TNum extends NumType> = `${NumberToVec[TNum]}3`;
+type NumberToVec4<TNum extends NumType> = `${NumberToVec[TNum]}4`;
 
-type Number<TNumber extends NumberType> = Node<TNumber> | number;
-type Vec2OrLessOrNumber<TNumber extends NumberType> = Number<TNumber> | Node<NumberToVec2<TNumber>>;
-type Vec3OrLessOrNumber<TNumber extends NumberType> = Vec2OrLessOrNumber<TNumber> | Node<NumberToVec3<TNumber>>;
-type Vec4OrLessOrNumber<TNumber extends NumberType> = Vec3OrLessOrNumber<TNumber> | Node<NumberToVec4<TNumber>>;
+type Number<TNum extends NumType> = Node<TNum> | number;
+type Vec2OrLessOrNumber<TNum extends NumType> = Number<TNum> | Node<NumberToVec2<TNum>>;
+type Vec3OrLessOrNumber<TNum extends NumType> = Vec2OrLessOrNumber<TNum> | Node<NumberToVec3<TNum>>;
+type Vec4OrLessOrNumber<TNum extends NumType> = Vec3OrLessOrNumber<TNum> | Node<NumberToVec4<TNum>>;
 
 type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
 
@@ -60,30 +107,30 @@ type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
 // If the parameters are the same length, it gets converted to the first type
 // FIXME We handle the case of converting number types, but not converting between vectors of different number types
 
-interface AddSubMulDivNumberVec<TNumber extends NumberType> {
-    (a: Number<TNumber>, b: AnyNumber, ...params: AnyNumber[]): Node<TNumber>;
+interface AddSubMulDivNumberVec<TNum extends NumType> {
+    (a: Number<TNum>, b: AnyNumber, ...params: AnyNumber[]): Node<TNum>;
     (
-        a: Vec2OrLessOrNumber<TNumber>,
-        b: Vec2OrLessOrNumber<TNumber>,
-        ...params: Vec2OrLessOrNumber<TNumber>[]
-    ): Node<NumberToVec2<TNumber>>;
+        a: Vec2OrLessOrNumber<TNum>,
+        b: Vec2OrLessOrNumber<TNum>,
+        ...params: Vec2OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec2<TNum>>;
     (
-        a: Vec3OrLessOrNumber<TNumber>,
-        b: Vec3OrLessOrNumber<TNumber>,
-        ...params: Vec3OrLessOrNumber<TNumber>[]
-    ): Node<NumberToVec3<TNumber>>;
+        a: Vec3OrLessOrNumber<TNum>,
+        b: Vec3OrLessOrNumber<TNum>,
+        ...params: Vec3OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec3<TNum>>;
     (
-        a: Vec4OrLessOrNumber<TNumber>,
-        b: Vec4OrLessOrNumber<TNumber>,
-        ...params: Vec4OrLessOrNumber<TNumber>[]
-    ): Node<NumberToVec4<TNumber>>;
+        a: Vec4OrLessOrNumber<TNum>,
+        b: Vec4OrLessOrNumber<TNum>,
+        ...params: Vec4OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
 }
 
-interface AddSubMulDivNumberVecNumberExtensions<TNumber extends NumberType> {
-    (b: AnyNumber, ...params: AnyNumber[]): Node<TNumber>;
-    (b: Vec2OrLessOrNumber<TNumber>, ...params: Vec2OrLessOrNumber<TNumber>[]): Node<NumberToVec2<TNumber>>;
-    (b: Vec3OrLessOrNumber<TNumber>, ...params: Vec3OrLessOrNumber<TNumber>[]): Node<NumberToVec3<TNumber>>;
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): Node<NumberToVec4<TNumber>>;
+interface AddSubMulDivNumberVecNumberExtensions<TNum extends NumType> {
+    (b: AnyNumber, ...params: AnyNumber[]): Node<TNum>;
+    (b: Vec2OrLessOrNumber<TNum>, ...params: Vec2OrLessOrNumber<TNum>[]): Node<NumberToVec2<TNum>>;
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
 }
 
 interface AddSubMulDivNumberVecNumberAssignExtensions {
@@ -93,31 +140,31 @@ interface AddSubMulDivNumberVecNumberAssignExtensions {
     ): this;
 }
 
-interface AddSubMulDivNumberVecVec2Extensions<TNumber extends NumberType> {
-    (b: Vec2OrLessOrNumber<TNumber>, ...params: Vec2OrLessOrNumber<TNumber>[]): Node<NumberToVec2<TNumber>>;
-    (b: Vec3OrLessOrNumber<TNumber>, ...params: Vec3OrLessOrNumber<TNumber>[]): Node<NumberToVec3<TNumber>>;
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): Node<NumberToVec4<TNumber>>;
+interface AddSubMulDivNumberVecVec2Extensions<TNum extends NumType> {
+    (b: Vec2OrLessOrNumber<TNum>, ...params: Vec2OrLessOrNumber<TNum>[]): Node<NumberToVec2<TNum>>;
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
 }
 
-interface AddSubMulDivNumberVecVec2AssignExtensions<TNumber extends NumberType> {
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): this;
+interface AddSubMulDivNumberVecVec2AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
 }
 
-interface AddSubMulDivNumberVecVec3Extensions<TNumber extends NumberType> {
-    (b: Vec3OrLessOrNumber<TNumber>, ...params: Vec3OrLessOrNumber<TNumber>[]): Node<NumberToVec3<TNumber>>;
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): Node<NumberToVec4<TNumber>>;
+interface AddSubMulDivNumberVecVec3Extensions<TNum extends NumType> {
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
 }
 
-interface AddSubMulDivNumberVecVec3AssignExtensions<TNumber extends NumberType> {
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): this;
+interface AddSubMulDivNumberVecVec3AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
 }
 
-interface AddSubMulDivNumberVecVec4Extensions<TNumber extends NumberType> {
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): Node<NumberToVec4<TNumber>>;
+interface AddSubMulDivNumberVecVec4Extensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
 }
 
-interface AddSubMulDivNumberVecVec4AssignExtensions<TNumber extends NumberType> {
-    (b: Vec4OrLessOrNumber<TNumber>, ...params: Vec4OrLessOrNumber<TNumber>[]): this;
+interface AddSubMulDivNumberVecVec4AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
 }
 
 // add/sub/mul mats
@@ -201,20 +248,21 @@ interface Mul
 {
 }
 
-interface MulVec2Extensions<TNumber extends NumberType>
-    extends AddSubMulDivNumberVecVec2Extensions<TNumber>, MulVecMatVecExtensions
-{
-}
-
-interface MulVec3Extensions<TNumber extends NumberType>
-    extends AddSubMulDivNumberVecVec3Extensions<TNumber>, MulVecMatVecExtensions
-{
-}
-
-interface MulVec4Extensions<TNumber extends NumberType>
-    extends AddSubMulDivNumberVecVec4Extensions<TNumber>, MulVecMatVecExtensions
-{
-}
+// TODO Restore once swizzle fallbacks are removed
+// interface MulVec2Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec2Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
+//
+// interface MulVec3Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec3Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
+//
+// interface MulVec4Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec4Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
 
 interface MulMat2Extensions extends AddSubMulMat2Extensions, MulVecMatMat2Extensions {
 }
@@ -236,11 +284,11 @@ declare module "../core/Node.js" {
         mul: (b: Node<"color">) => Node<"vec3">;
     }
 
-    interface NumberExtensions<TNumber extends NumberType> {
-        add: AddSubMulDivNumberVecNumberExtensions<TNumber>;
-        sub: AddSubMulDivNumberVecNumberExtensions<TNumber>;
-        mul: AddSubMulDivNumberVecNumberExtensions<TNumber>;
-        div: AddSubMulDivNumberVecNumberExtensions<TNumber>;
+    interface NumberExtensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        sub: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        mul: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        div: AddSubMulDivNumberVecNumberExtensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecNumberAssignExtensions;
         subAssign: AddSubMulDivNumberVecNumberAssignExtensions;
@@ -270,40 +318,40 @@ declare module "../core/Node.js" {
         div: (b: Number<"float">) => Node<"vec3">;
     }
 
-    interface NumberVec2Extensions<TNumber extends NumberType> {
-        add: AddSubMulDivNumberVecVec2Extensions<TNumber>;
-        sub: AddSubMulDivNumberVecVec2Extensions<TNumber>;
-        mul: MulVec2Extensions<TNumber>;
-        div: AddSubMulDivNumberVecVec2Extensions<TNumber>;
+    interface NumberVec2Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec2Extensions<TNum>;
 
-        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
-        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
-        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
-        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNumber>;
+        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
     }
 
-    interface NumberVec3Extensions<TNumber extends NumberType> {
-        add: AddSubMulDivNumberVecVec3Extensions<TNumber>;
-        sub: AddSubMulDivNumberVecVec3Extensions<TNumber>;
-        mul: MulVec3Extensions<TNumber>;
-        div: AddSubMulDivNumberVecVec3Extensions<TNumber>;
+    interface NumberVec3Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec3Extensions<TNum>;
 
-        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
-        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
-        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
-        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNumber>;
+        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
     }
 
-    interface NumberVec4Extensions<TNumber extends NumberType> {
-        add: AddSubMulDivNumberVecVec4Extensions<TNumber>;
-        sub: AddSubMulDivNumberVecVec4Extensions<TNumber>;
-        mul: MulVec4Extensions<TNumber>;
-        div: AddSubMulDivNumberVecVec4Extensions<TNumber>;
+    interface NumberVec4Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec4Extensions<TNum>;
 
-        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
-        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
-        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
-        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNumber>;
+        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
     }
 
     interface Matrix2Extensions {
@@ -359,21 +407,21 @@ interface Mod {
 export const mod: Mod;
 
 declare module "../core/Node.js" {
-    interface NumberExtensions<TNumber extends NumberType> {
-        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<TNumber>;
-        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    interface NumberExtensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<TNum>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
     }
-    interface NumberVec2Extensions<TNumber extends NumberType> {
-        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec2<TNumber>>;
-        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    interface NumberVec2Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec2<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
     }
-    interface NumberVec3Extensions<TNumber extends NumberType> {
-        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec3<TNumber>>;
-        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    interface NumberVec3Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec3<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
     }
-    interface NumberVec4Extensions<TNumber extends NumberType> {
-        mod: (b: Vec4OrLessOrNumber<TNumber>) => Node<NumberToVec4<TNumber>>;
-        modAssign: (b: Vec4OrLessOrNumber<TNumber>) => this;
+    interface NumberVec4Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec4<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
     }
 }
 
@@ -390,8 +438,8 @@ export const greaterThan: ComparisonOperator;
 export const lessThanEqual: ComparisonOperator;
 export const greaterThanEqual: ComparisonOperator;
 
-interface ComparisonOperatorNumberExtensions<TNumber extends NumberType> {
-    (b: Number<TNumber>): Node<"bool">;
+interface ComparisonOperatorNumberExtensions<TNum extends NumType> {
+    (b: Number<TNum>): Node<"bool">;
 }
 
 declare module "../core/Node.js" {
@@ -523,15 +571,15 @@ declare module "../core/Node.js" {
 export const modInt: Mod;
 
 declare module "../core/Node.js" {
-    interface NumberExtensions<TNumber extends NumberType> {
+    interface NumberExtensions<TNum extends NumType> {
         /**
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */
-        modInt: (b: Number<TNumber>) => Node<TNumber>;
+        modInt: (b: Number<TNum>) => Node<TNum>;
         /**
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */
-        modIntAssign: (b: Number<TNumber>) => this;
+        modIntAssign: (b: Number<TNum>) => this;
     }
 }
 
