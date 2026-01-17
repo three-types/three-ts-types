@@ -585,7 +585,7 @@ interface Vec2Function {
 
 export const vec2: Vec2Function;
 export const ivec2: (node: Node) => Node<"ivec2">;
-export const uvec2: (node: Node) => Node<"uvec2">;
+export const uvec2: (x: Node, y: Node) => Node<"uvec2">;
 export const bvec2: (node: Node) => Node<"bvec2">;
 
 interface Vec3Function {
