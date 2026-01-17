@@ -40,18 +40,37 @@ declare module "../core/Node.js" {
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
+        addAssign: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => this;
+
         sub: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
+        subAssign: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => this;
+
         mul: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
+        mulAssign: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => this;
+
         div: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
+        divAssign: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => this;
 
         mod: (
             b: OperatorNodeParameter,
@@ -76,6 +95,17 @@ declare module "../core/Node.js" {
         greaterThanEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
+
+        and: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode
+        or: (
+            b: OperatorNodeParameter,
+            ...params: OperatorNodeParameter[]
+        ) => OperatorNode;
+
+        not: () => OperatorNode;
     }
 }
 
