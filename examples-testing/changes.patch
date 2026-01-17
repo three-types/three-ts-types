@@ -20664,7 +20664,7 @@ index 571b7ea0b..054123e12 100644
      gui.addColor({ color: emissiveColor.value.getHexString(THREE.SRGBColorSpace) }, 'color')
          .onChange(value => emissiveColor.value.set(value))
 diff --git a/examples-testing/examples/webgpu_tsl_wood.ts b/examples-testing/examples/webgpu_tsl_wood.ts
-index 5a4e06502..d7fb15f24 100644
+index 5a4e06502..f42fd5a76 100644
 --- a/examples-testing/examples/webgpu_tsl_wood.ts
 +++ b/examples-testing/examples/webgpu_tsl_wood.ts
 @@ -1,22 +1,30 @@
@@ -20702,7 +20702,7 @@ index 5a4e06502..d7fb15f24 100644
      return {
          x: 0,
          y: (finishIndex - Finishes.length / 2) * 1.0,
-@@ -28,27 +36,33 @@ function getGridPosition(woodIndex, finishIndex) {
+@@ -28,29 +36,37 @@ function getGridPosition(woodIndex, finishIndex) {
  function createGridPlane() {
      const material = new THREE.MeshBasicNodeMaterial();
  
@@ -20727,9 +20727,9 @@ index 5a4e06502..d7fb15f24 100644
 -    });
 +    const gridXZ = TSL.Fn(
 +        ([gridSize = TSL.float(1.0), dotWidth = TSL.float(0.1), lineWidth = TSL.float(0.02)]: [
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
 +        ]) => {
 +            const coord = TSL.positionWorld.xz.div(gridSize);
 +            const grid = TSL.fract(coord);
@@ -20752,11 +20752,17 @@ index 5a4e06502..d7fb15f24 100644
 +    );
  
 -    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]) => {
-+    const radialGradient = TSL.Fn(([radius = TSL.float(10.0), falloff = TSL.float(1.0)]: [THREE.Node, THREE.Node]) => {
-         return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
-     });
+-        return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
+-    });
++    const radialGradient = TSL.Fn(
++        ([radius = TSL.float(10.0), falloff = TSL.float(1.0)]: [THREE.Node<'float'>, THREE.Node<'float'>]) => {
++            return TSL.smoothstep(radius, radius.sub(falloff), TSL.length(TSL.positionWorld));
++        },
++    );
  
-@@ -69,7 +83,12 @@ function createGridPlane() {
+     // Create grid pattern
+     const gridPattern = gridXZ(1.0, 0.03, 0.005);
+@@ -69,7 +85,12 @@ function createGridPlane() {
  }
  
  // Helper function to create and position labels
@@ -20770,7 +20776,7 @@ index 5a4e06502..d7fb15f24 100644
      const txt_geo = new TextGeometry(text, {
          font: font,
          size: 0.1,
-@@ -79,9 +98,9 @@ function createLabel(text, font, material, position) {
+@@ -79,9 +100,9 @@ function createLabel(text, font, material, position) {
      });
  
      txt_geo.computeBoundingBox();
@@ -20783,7 +20789,7 @@ index 5a4e06502..d7fb15f24 100644
      txt_geo.translate(offx, offy, offz);
  
      const label = new THREE.Group();
-@@ -91,7 +110,7 @@ function createLabel(text, font, material, position) {
+@@ -91,7 +112,7 @@ function createLabel(text, font, material, position) {
      // Apply default rotation for labels
      label.rotateY(-Math.PI / 2);
  
@@ -20792,7 +20798,7 @@ index 5a4e06502..d7fb15f24 100644
      label.position.copy(position);
      base.add(label);
  }
-@@ -115,7 +134,7 @@ async function init() {
+@@ -115,7 +136,7 @@ async function init() {
      controls = new OrbitControls(camera, renderer.domElement);
      controls.target.set(0, 0, 0.548);
  
@@ -20801,7 +20807,7 @@ index 5a4e06502..d7fb15f24 100644
  
      font = await new FontLoader().loadAsync('./fonts/helvetiker_regular.typeface.json');
  
-@@ -189,7 +208,7 @@ if (WebGPU.isAvailable()) {
+@@ -189,7 +210,7 @@ if (WebGPU.isAvailable()) {
      document.body.appendChild(WebGPU.getErrorMessage());
  }
  
