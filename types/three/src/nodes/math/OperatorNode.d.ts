@@ -123,12 +123,12 @@ type NumberToVec2<TNum extends NumType> = `${NumberToVec[TNum]}2`;
 type NumberToVec3<TNum extends NumType> = `${NumberToVec[TNum]}3`;
 type NumberToVec4<TNum extends NumType> = `${NumberToVec[TNum]}4`;
 
-type Number<TNum extends NumType> = Node<TNum> | number;
+type Number<TNum extends NumType> = Node<TNum> | Node | number;
 type Vec2OrLessOrNumber<TNum extends NumType> = Number<TNum> | Node<NumberToVec2<TNum>>;
 type Vec3OrLessOrNumber<TNum extends NumType> = Vec2OrLessOrNumber<TNum> | Node<NumberToVec3<TNum>>;
 type Vec4OrLessOrNumber<TNum extends NumType> = Vec3OrLessOrNumber<TNum> | Node<NumberToVec4<TNum>>;
 
-type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
+type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | Node | number;
 
 // add/sub/mul/div
 
@@ -432,6 +432,8 @@ interface Mod {
     (a: Node<"uvec2">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec2">;
     (a: Node<"uvec3">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec3">;
     (a: Node<"uvec4">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec4">;
+
+    (a: Node, b: Vec4OrLessOrNumber<"float">): Node;
 }
 
 export const mod: Mod;
@@ -513,7 +515,7 @@ interface AndOrBoolExtensions {
     (b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
 }
 
-export const not: (a: Node<"bool">) => Node<"bool">;
+export const not: (a: Node<"bool"> | Node) => Node<"bool">;
 export const xor: (a: Node<"bool">, b: Node<"bool">) => Node<"bool">;
 
 declare module "../core/Node.js" {
