@@ -202,7 +202,7 @@ declare module "../core/Node.js" {
         floor: () => Node<"float">;
         ceil: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         floor: () => Node<TVec>;
         ceil: () => Node<TVec>;
     }
@@ -215,7 +215,7 @@ interface Normalize {
 }
 export const normalize: Normalize;
 declare module "../core/Node.js" {
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         normalize: () => Node<TVec>;
     }
 }
@@ -231,7 +231,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         fract: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         fract: () => Node<TVec>;
     }
 }
@@ -268,7 +268,7 @@ declare module "../core/Node.js" {
     interface IntExtensions {
         abs: () => Node<"int">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         abs: () => Node<TVec>;
     }
 }
@@ -284,14 +284,14 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         sign: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         sign: () => Node<TVec>;
     }
 }
 
 export const length: (x: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         length: () => Node<"float">;
     }
 }
@@ -307,7 +307,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         negate: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         negate: () => Node<TVec>;
     }
 }
@@ -323,7 +323,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         oneMinus: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         oneMinus: () => Node<TVec>;
     }
 }
@@ -336,7 +336,7 @@ interface Derivative {
 export const dFdx: Derivative;
 export const dFdy: Derivative;
 declare module "../core/Node.js" {
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         dFdx: () => Node<TVec>;
         dFdy: () => Node<TVec>;
     }
@@ -364,7 +364,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         fwidth: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         fwidth: () => Node<TVec>;
     }
 }
@@ -376,14 +376,14 @@ interface Transpose {
 }
 export const transpose: Transpose;
 declare module "../core/Node.js" {
-    interface MatrixExtensions<TMat extends MatrixType> {
+    interface MatExtensions<TMat extends MatType> {
         transpose: () => Node<TMat>;
     }
 }
 
 export const determinant: (x: Matrix) => Node<"float">;
 declare module "../core/Node.js" {
-    interface MatrixExtensions<TMat extends MatrixType> {
+    interface MatExtensions<TMat extends MatType> {
         determinant: () => Node<"float">;
     }
 }
@@ -395,7 +395,7 @@ interface Inverse {
 }
 export const inverse: Inverse;
 declare module "../core/Node.js" {
-    interface MatrixExtensions<TMat extends MatrixType> {
+    interface MatExtensions<TMat extends MatType> {
         inverse: () => Node<TMat>;
     }
 }
@@ -405,6 +405,7 @@ interface MinMax {
     (x: Vec2OrLessOrFloat, y: Vec2OrLessOrFloat, ...params: Vec2OrLessOrFloat[]): Node<"vec2">;
     (x: Vec3OrLessOrFloat, y: Vec3OrLessOrFloat, ...params: Vec3OrLessOrFloat[]): Node<"vec3">;
     (x: Vec4OrLessOrFloat, y: Vec4OrLessOrFloat, ...params: Vec4OrLessOrFloat[]): Node<"vec4">;
+    (x: Node | number, y: Node | number, ...params: (Node | number)[]): Node;
 }
 export const min: MinMax;
 export const max: MinMax;
@@ -482,7 +483,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         distance: (y: FloatVectorOrNumber) => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         distance: (y: FloatVectorOrNumber) => Node<"float">;
     }
 }
@@ -529,7 +530,7 @@ declare module "../core/Node.js" {
 
 export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         dot: (y: FloatVector) => Node<"float">;
     }
 }
@@ -552,8 +553,11 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         pow: (y: FloatOrNumber) => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         pow: (y: Node<TVec>) => Node<TVec>;
+    }
+    interface NodeElements {
+        pow: (y: Node | number) => Node;
     }
 }
 
@@ -572,7 +576,7 @@ declare module "../core/Node.js" {
         pow3: () => Node<"float">;
         pow4: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         pow2: () => Node<TVec>;
         pow3: () => Node<TVec>;
         pow4: () => Node<TVec>;
@@ -595,7 +599,7 @@ declare module "../core/Node.js" {
 
 export const lengthSq: (a: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         lengthSq: () => Node<"float">;
     }
 }
@@ -605,6 +609,7 @@ interface Mix {
     (a: Vec2OrLessOrFloat, b: Vec2OrLessOrFloat, t: FloatOrNumber): Node<"vec2">;
     (a: Vec3OrLessOrFloat | Node<"color">, b: Vec3OrLessOrFloat | Node<"color">, t: FloatOrNumber): Node<"vec3">;
     (a: Vec4OrLessOrFloat, b: Vec4OrLessOrFloat, t: FloatOrNumber): Node<"vec4">;
+    (a: Node | number, b: Node | number, t: Node | number): Node;
 }
 export const mix: Mix;
 
@@ -659,7 +664,7 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         saturate: () => Node<"float">;
     }
-    interface FloatVectorExtensions<TVec extends FloatVectorType> {
+    interface FloatVecExtensions<TVec extends FloatVecType> {
         saturate: () => Node<TVec>;
     }
 }
