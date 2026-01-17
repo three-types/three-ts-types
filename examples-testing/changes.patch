@@ -20585,7 +20585,7 @@ index 4c4ee68ee..e4e1f3c80 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..054123e12 100644
+index 571b7ea0b..f35691a90 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20601,21 +20601,42 @@ index 571b7ea0b..054123e12 100644
  
  init();
  
-@@ -44,7 +48,7 @@ function init() {
+@@ -44,36 +48,51 @@ function init() {
  
      // TSL functions
  
 -    const toRadialUv = Fn(([uv, multiplier, rotation, offset]) => {
-+    const toRadialUv = Fn(([uv, multiplier, rotation, offset]: [THREE.Node, THREE.Node, THREE.Node, THREE.Node]) => {
-         const centeredUv = uv.sub(0.5).toVar();
-         const distanceToCenter = centeredUv.length();
-         const angle = atan(centeredUv.y, centeredUv.x);
-@@ -56,24 +60,32 @@ function init() {
-         return radialUv;
-     });
+-        const centeredUv = uv.sub(0.5).toVar();
+-        const distanceToCenter = centeredUv.length();
+-        const angle = atan(centeredUv.y, centeredUv.x);
+-        const radialUv = vec2(angle.add(PI).div(TWO_PI), distanceToCenter).toVar();
+-        radialUv.mulAssign(multiplier);
+-        radialUv.x.addAssign(rotation);
+-        radialUv.y.addAssign(offset);
+-
+-        return radialUv;
+-    });
++    const toRadialUv = Fn(
++        ([uv, multiplier, rotation, offset]: [
++            THREE.Node<'vec2'>,
++            THREE.Node<'vec2'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++        ]) => {
++            const centeredUv = uv.sub(0.5).toVar();
++            const distanceToCenter = centeredUv.length();
++            const angle = atan(centeredUv.y, centeredUv.x);
++            const radialUv = vec2(angle.add(PI).div(TWO_PI), distanceToCenter).toVar();
++            radialUv.mulAssign(multiplier);
++            radialUv.x.addAssign(rotation);
++            radialUv.y.addAssign(offset);
++
++            return radialUv;
++        },
++    );
  
 -    const toSkewedUv = Fn(([uv, skew]) => {
-+    const toSkewedUv = Fn(([uv, skew]: [THREE.Node, THREE.Node]) => {
++    const toSkewedUv = Fn(([uv, skew]: [THREE.Node<'vec2'>, THREE.Node<'vec2'>]) => {
          return vec2(uv.x.add(uv.y.mul(skew.x)), uv.y.add(uv.x.mul(skew.y)));
      });
  
@@ -20624,11 +20645,11 @@ index 571b7ea0b..054123e12 100644
 -        const elevation = position.y;
 +    const twistedCylinder = Fn(
 +        ([position, parabolStrength, parabolOffset, parabolAmplitude, time]: [
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
++            THREE.Node<'vec3'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
 +        ]) => {
 +            const angle = atan(position.z, position.x).toVar();
 +            const elevation = position.y;
@@ -20654,7 +20675,7 @@ index 571b7ea0b..054123e12 100644
  
      // uniforms
  
-@@ -260,7 +272,7 @@ function init() {
+@@ -260,7 +279,7 @@ function init() {
  
      // debug
  
