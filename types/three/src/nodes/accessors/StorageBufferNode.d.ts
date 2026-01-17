@@ -19,7 +19,8 @@ interface StorageBufferNodeInterface<TNodeType> {
 
     bufferObject: boolean;
 
-    element: (indexNode: Node | number) => StorageArrayElementNode<TNodeType>;
+    // TODO StorageArrayElementNode<TNodeType>
+    element: (indexNode: Node | number) => StorageArrayElementNode<unknown>;
 
     setPBO(value: boolean): this;
 
