@@ -20859,7 +20859,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index 44b5081fd..ca96807cf 100644
+index 44b5081fd..133aa90a8 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20898,7 +20898,7 @@ index 44b5081fd..ca96807cf 100644
      volumetricMaterial.steps = 20;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate.add(frameId)); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
          // Return the amount of fog based on the noise texture
  
          const timeScaled = vec3(time.mul(0.01), 0, time.mul(0.03));
@@ -20963,7 +20963,7 @@ index 1d46c3543..e4d6147fe 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index d833d7a9a..e12730a12 100644
+index d833d7a9a..66d93ed22 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -20984,7 +20984,7 @@ index d833d7a9a..e12730a12 100644
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
          // Return the amount of fog based on the noise texture
  
          const timeScaled = vec3(time, 0, time.mul(0.3));
@@ -21004,7 +21004,7 @@ index d833d7a9a..e12730a12 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index c5e4be8cf..f13ed941c 100644
+index c5e4be8cf..26b8a5196 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21029,7 +21029,7 @@ index c5e4be8cf..f13ed941c 100644
      volumetricMaterial.steps = 12;
      volumetricMaterial.offsetNode = bayer16(screenCoordinate); // Add dithering to reduce banding
 -    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
-+    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
          // Return the amount of fog based on the noise texture
  
          const timeScaled = vec3(time, 0, time.mul(0.3));
