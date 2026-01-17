@@ -399,6 +399,8 @@ export interface Vec3Extensions {
 }
 export interface Vec4Extensions {
 }
+export interface ColorExtensions {
+}
 type Node<TNodeType = unknown> =
     & NodeClass
     & NodeElements
@@ -419,6 +421,7 @@ type Node<TNodeType = unknown> =
         : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int">
         : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint">
         : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
+        : TNodeType extends "color" ? ColorExtensions
         : {})
     & {
         __TypeScript_NODE_TYPE__: TNodeType;
