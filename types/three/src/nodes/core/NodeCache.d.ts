@@ -38,7 +38,7 @@ interface NodeData {
     any?: ShaderStageNodeData | undefined;
 }
 interface BufferAttributeData {
-    node: BufferAttributeNode;
+    node: BufferAttributeNode<unknown>;
 }
 /**
  * This utility class is used in {@link NodeBuilder} as an internal

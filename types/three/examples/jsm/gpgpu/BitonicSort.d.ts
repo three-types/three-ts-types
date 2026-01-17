@@ -8,13 +8,13 @@ export interface BitonicSortOptions {
     workgroupSize?: number | undefined;
 }
 
-export class BitonicSort {
-    infoStorage: StorageBufferNode;
+export class BitonicSort<TNodeType> {
+    infoStorage: StorageBufferNode<TNodeType>;
 
     swapOpCount: number;
     stepCount: number;
 
-    constructor(renderer: Renderer, dataBuffer: StorageBufferNode, options?: BitonicSortOptions);
+    constructor(renderer: Renderer, dataBuffer: StorageBufferNode<TNodeType>, options?: BitonicSortOptions);
 
     computeStep(renderer: Renderer): Promise<void>;
     compute(renderer: Renderer): Promise<void>;
