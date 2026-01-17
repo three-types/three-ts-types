@@ -1,7 +1,7 @@
 import UniformNode from "../core/UniformNode.js";
 import { NodeOrType } from "../tsl/TSLCore.js";
 
-export default class BufferNode<TValue> extends UniformNode<TValue> {
+export default class BufferNode<TValue> extends UniformNode<unknown, TValue> {
     isBufferNode: true;
 
     bufferType: string;

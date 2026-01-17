@@ -2,7 +2,7 @@ import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
-export default class TextureNode extends UniformNode<Texture> {
+export default class TextureNode extends UniformNode<unknown, Texture> {
     readonly isTextureNode: true;
 
     uvNode: Node | null;
