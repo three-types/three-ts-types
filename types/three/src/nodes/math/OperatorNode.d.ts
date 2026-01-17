@@ -1,4 +1,4 @@
-import Node from "../core/Node.js";
+import Node, { IntegerType, NumType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
 export type OperatorNodeOp =
@@ -33,57 +33,6 @@ export default class OperatorNode extends TempNode {
 }
 
 type OperatorNodeParameter = Node | number;
-
-export const add: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const sub: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const mul: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const div: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const mod: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const equal: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const notEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const lessThan: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const greaterThan: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const lessThanEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const greaterThanEqual: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const and: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const or: (
-    a: OperatorNodeParameter,
-    b: OperatorNodeParameter,
-    ...params: OperatorNodeParameter[]
-) => OperatorNode;
-export const not: (value: OperatorNodeParameter) => OperatorNode;
-export const xor: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitAnd: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitNot: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitOr: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const bitXor: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const shiftLeft: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-export const shiftRight: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
-
-export const incrementBefore: (a: OperatorNodeParameter) => Node;
-export const decrementBefore: (a: OperatorNodeParameter) => Node;
-export const increment: (a: OperatorNodeParameter) => Node;
-export const decrement: (a: OperatorNodeParameter) => Node;
 
 declare module "../core/Node.js" {
     interface NodeElements {
@@ -126,14 +75,10 @@ declare module "../core/Node.js" {
         mod: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-        modAssign: (
-            b: OperatorNodeParameter,
-        ) => this;
 
         equal: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-
         notEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
@@ -141,15 +86,12 @@ declare module "../core/Node.js" {
         lessThan: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-
         greaterThan: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-
         lessThanEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
-
         greaterThanEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
@@ -158,62 +100,519 @@ declare module "../core/Node.js" {
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
-
         or: (
             b: OperatorNodeParameter,
             ...params: OperatorNodeParameter[]
         ) => OperatorNode;
 
         not: () => OperatorNode;
+    }
+}
 
-        xor: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+type Vec2OrLess = Node<"vec2">;
+type Vec3OrLess = Vec2OrLess | Node<"vec3">;
+type Vec4OrLess = Vec3OrLess | Node<"vec4">;
 
-        bitAnd: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+type NumberToVec = {
+    float: "vec";
+    int: "ivec";
+    uint: "uvec";
+};
 
-        bitNot: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+type NumberToVec2<TNum extends NumType> = `${NumberToVec[TNum]}2`;
+type NumberToVec3<TNum extends NumType> = `${NumberToVec[TNum]}3`;
+type NumberToVec4<TNum extends NumType> = `${NumberToVec[TNum]}4`;
 
-        bitOr: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+type Number<TNum extends NumType> = Node<TNum> | Node | number;
+type Vec2OrLessOrNumber<TNum extends NumType> = Number<TNum> | Node<NumberToVec2<TNum>>;
+type Vec3OrLessOrNumber<TNum extends NumType> = Vec2OrLessOrNumber<TNum> | Node<NumberToVec3<TNum>>;
+type Vec4OrLessOrNumber<TNum extends NumType> = Vec3OrLessOrNumber<TNum> | Node<NumberToVec4<TNum>>;
 
-        bitXor: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | Node | number;
 
-        shiftLeft: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+// add/sub/mul/div
 
-        shiftRight: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
+// add/sub/mul/div numbers and/or vecs
+// Every parameter gets converted to the longest type
+// If the parameters are the same length, it gets converted to the first type
+// FIXME We handle the case of converting number types, but not converting between vectors of different number types
 
-        incrementBefore: () => OperatorNode;
+interface AddSubMulDivNumberVec<TNum extends NumType> {
+    (a: Number<TNum>, b: AnyNumber, ...params: AnyNumber[]): Node<TNum>;
+    (
+        a: Vec2OrLessOrNumber<TNum>,
+        b: Vec2OrLessOrNumber<TNum>,
+        ...params: Vec2OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec2<TNum>>;
+    (
+        a: Vec3OrLessOrNumber<TNum>,
+        b: Vec3OrLessOrNumber<TNum>,
+        ...params: Vec3OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec3<TNum>>;
+    (
+        a: Vec4OrLessOrNumber<TNum>,
+        b: Vec4OrLessOrNumber<TNum>,
+        ...params: Vec4OrLessOrNumber<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
+}
 
-        decrementBefore: () => OperatorNode;
+interface AddSubMulDivNumberVecNumberExtensions<TNum extends NumType> {
+    (b: AnyNumber, ...params: AnyNumber[]): Node<TNum>;
+    (b: Vec2OrLessOrNumber<TNum>, ...params: Vec2OrLessOrNumber<TNum>[]): Node<NumberToVec2<TNum>>;
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
+}
 
-        increment: () => OperatorNode;
+interface AddSubMulDivNumberVecNumberAssignExtensions {
+    (
+        b: Vec4OrLessOrNumber<"float"> | Vec4OrLessOrNumber<"int"> | Vec4OrLessOrNumber<"uint">,
+        ...params: (Vec4OrLessOrNumber<"float"> | Vec4OrLessOrNumber<"int"> | Vec4OrLessOrNumber<"uint">)[]
+    ): this;
+}
 
-        decrement: () => OperatorNode;
+interface AddSubMulDivNumberVecVec2Extensions<TNum extends NumType> {
+    (b: Vec2OrLessOrNumber<TNum>, ...params: Vec2OrLessOrNumber<TNum>[]): Node<NumberToVec2<TNum>>;
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
+}
+
+interface AddSubMulDivNumberVecVec2AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
+}
+
+interface AddSubMulDivNumberVecVec3Extensions<TNum extends NumType> {
+    (b: Vec3OrLessOrNumber<TNum>, ...params: Vec3OrLessOrNumber<TNum>[]): Node<NumberToVec3<TNum>>;
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
+}
+
+interface AddSubMulDivNumberVecVec3AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
+}
+
+interface AddSubMulDivNumberVecVec4Extensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): Node<NumberToVec4<TNum>>;
+}
+
+interface AddSubMulDivNumberVecVec4AssignExtensions<TNum extends NumType> {
+    (b: Vec4OrLessOrNumber<TNum>, ...params: Vec4OrLessOrNumber<TNum>[]): this;
+}
+
+// add/sub/mul mats
+
+interface AddSubMulMat {
+    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
+    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
+    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
+}
+
+interface AddSubMulMat2Extensions {
+    (b: Node<"mat2">): Node<"mat2">;
+}
+
+interface AddSubMulMat2AssignExtensions {
+    (b: Node<"mat2">): this;
+}
+
+interface AddSubMulMat3Extensions {
+    (b: Node<"mat3">): Node<"mat3">;
+}
+
+interface AddSubMulMat3AssignExtensions {
+    (b: Node<"mat3">): this;
+}
+
+interface AddSubMulMat4Extensions {
+    (b: Node<"mat4">): Node<"mat4">;
+}
+
+interface AddSubMulMat4AssignExtensions {
+    (b: Node<"mat3">): this;
+}
+
+// mut mats and vecs
+// The vec parameter gets converted to matrix length
+
+interface MulMatVec {
+    (a: Node<"mat2">, b: Vec4OrLess): Node<"vec2">;
+    (a: Node<"mat3">, b: Vec4OrLess): Node<"vec3">;
+    (a: Node<"mat4">, b: Vec4OrLess): Node<"vec4">;
+    (a: Vec4OrLess, b: Node<"mat2">): Node<"vec2">;
+    (a: Vec4OrLess, b: Node<"mat3">): Node<"vec3">;
+    (a: Vec4OrLess, b: Node<"mat4">): Node<"vec4">;
+}
+
+interface MulVecMatMat2Extensions {
+    (b: Vec4OrLess): Node<"vec2">;
+}
+
+interface MulVecMatMat3Extensions {
+    (b: Vec4OrLess): Node<"vec3">;
+}
+
+interface MulVecMatMat4Extensions {
+    (b: Vec4OrLess): Node<"vec4">;
+}
+
+interface MulVecMatVecExtensions {
+    (b: Node<"mat2">): Node<"vec2">;
+    (b: Node<"mat3">): Node<"vec3">;
+    (b: Node<"mat4">): Node<"vec4">;
+}
+
+// Exports
+
+interface AddSub
+    extends AddSubMulDivNumberVec<"float">, AddSubMulDivNumberVec<"int">, AddSubMulDivNumberVec<"uint">, AddSubMulMat
+{}
+
+export const add: AddSub;
+export const sub: AddSub;
+
+interface Mul
+    extends
+        AddSubMulDivNumberVec<"float">,
+        AddSubMulDivNumberVec<"int">,
+        AddSubMulDivNumberVec<"uint">,
+        AddSubMulMat,
+        MulMatVec
+{
+}
+
+// TODO Restore once swizzle fallbacks are removed
+// interface MulVec2Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec2Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
+//
+// interface MulVec3Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec3Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
+//
+// interface MulVec4Extensions<TNum extends NumType>
+//     extends AddSubMulDivNumberVecVec4Extensions<TNum>, MulVecMatVecExtensions
+// {
+// }
+
+interface MulMat2Extensions extends AddSubMulMat2Extensions, MulVecMatMat2Extensions {
+}
+
+interface MulMat3Extensions extends AddSubMulMat3Extensions, MulVecMatMat3Extensions {
+}
+
+interface MulMat4Extensions extends AddSubMulMat4Extensions, MulVecMatMat4Extensions {
+}
+
+export const mul: Mul;
+
+interface Div extends AddSubMulDivNumberVec<"float">, AddSubMulDivNumberVec<"int">, AddSubMulDivNumberVec<"uint"> {
+}
+export const div: Div;
+
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
+    interface NumberExtensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        sub: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        mul: AddSubMulDivNumberVecNumberExtensions<TNum>;
+        div: AddSubMulDivNumberVecNumberExtensions<TNum>;
+
+        addAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        subAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        mulAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+        divAssign: AddSubMulDivNumberVecNumberAssignExtensions;
+    }
+
+    interface Vec2Extensions {
+        add: (b: Node<"color">) => Node<"vec3">;
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
+    interface Vec3Extensions {
+        add: (b: Node<"color">) => Node<"vec3">;
+        mul: (b: Node<"color">) => Node<"vec3">;
+    }
+
+    interface Vec4Extensions {
+        add: (b: Node<"color">) => Node<"vec4">;
+        mul: (b: Node<"color">) => Node<"vec4">;
+    }
+
+    interface ColorExtensions {
+        add: (b: Number<"float">) => Node<"vec3">;
+        sub: (b: Number<"float">) => Node<"vec3">;
+        mul: (b: Number<"float">) => Node<"vec3">;
+        div: (b: Number<"float">) => Node<"vec3">;
+    }
+
+    interface NumberVec2Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec2Extensions<TNum>;
+
+        addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
+    }
+
+    interface NumberVec3Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec3Extensions<TNum>;
+
+        addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
+    }
+
+    interface NumberVec4Extensions<TNum extends NumType> {
+        add: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        sub: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        mul: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        div: AddSubMulDivNumberVecVec4Extensions<TNum>;
+
+        addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        subAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        mulAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+        divAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
+    }
+
+    interface Matrix2Extensions {
+        add: AddSubMulMat2Extensions;
+        sub: AddSubMulMat2Extensions;
+        mul: MulMat2Extensions;
+
+        addAssign: AddSubMulMat2AssignExtensions;
+        subAssign: AddSubMulMat2AssignExtensions;
+        mulAssign: AddSubMulMat2AssignExtensions;
+    }
+
+    interface Matrix3Extensions {
+        add: AddSubMulMat3Extensions;
+        sub: AddSubMulMat3Extensions;
+        mul: MulMat3Extensions;
+
+        addAssign: AddSubMulMat3AssignExtensions;
+        subAssign: AddSubMulMat3AssignExtensions;
+        mulAssign: AddSubMulMat3AssignExtensions;
+    }
+
+    interface Matrix4Extensions {
+        add: AddSubMulMat4Extensions;
+        sub: AddSubMulMat4Extensions;
+        mul: MulMat4Extensions;
+
+        addAssign: AddSubMulMat4AssignExtensions;
+        subAssign: AddSubMulMat4AssignExtensions;
+        mulAssign: AddSubMulMat4AssignExtensions;
+    }
+}
+
+// mod
+
+interface Mod {
+    (a: Number<"float">, b: Vec4OrLessOrNumber<"float">): Node<"float">;
+    (a: Node<"vec2">, b: Vec4OrLessOrNumber<"float">): Node<"vec2">;
+    (a: Node<"vec3">, b: Vec4OrLessOrNumber<"float">): Node<"vec3">;
+    (a: Node<"vec4">, b: Vec4OrLessOrNumber<"float">): Node<"vec4">;
+
+    (a: Number<"int">, b: Vec4OrLessOrNumber<"int">): Node<"int">;
+    (a: Node<"ivec2">, b: Vec4OrLessOrNumber<"int">): Node<"ivec2">;
+    (a: Node<"ivec3">, b: Vec4OrLessOrNumber<"int">): Node<"ivec3">;
+    (a: Node<"ivec4">, b: Vec4OrLessOrNumber<"int">): Node<"ivec4">;
+
+    (a: Number<"uint">, b: Vec4OrLessOrNumber<"uint">): Node<"uint">;
+    (a: Node<"uvec2">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec2">;
+    (a: Node<"uvec3">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec3">;
+    (a: Node<"uvec4">, b: Vec4OrLessOrNumber<"uint">): Node<"uvec4">;
+
+    (a: Node, b: Vec4OrLessOrNumber<"float">): Node;
+}
+
+export const mod: Mod;
+
+declare module "../core/Node.js" {
+    interface NumberExtensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<TNum>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
+    }
+    interface NumberVec2Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec2<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
+    }
+    interface NumberVec3Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec3<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
+    }
+    interface NumberVec4Extensions<TNum extends NumType> {
+        mod: (b: Vec4OrLessOrNumber<TNum>) => Node<NumberToVec4<TNum>>;
+        modAssign: (b: Vec4OrLessOrNumber<TNum>) => this;
+    }
+}
+
+// Comparison operators
+
+interface ComparisonOperator {
+    (a: Number<"float">, b: Number<"float">): Node<"bool">;
+    (a: Number<"int"> | Number<"uint">, b: Number<"int"> | Number<"uint">): Node<"bool">;
+}
+export const equal: ComparisonOperator;
+export const notEqual: ComparisonOperator;
+export const lessThan: ComparisonOperator;
+export const greaterThan: ComparisonOperator;
+export const lessThanEqual: ComparisonOperator;
+export const greaterThanEqual: ComparisonOperator;
+
+interface ComparisonOperatorNumberExtensions<TNum extends NumType> {
+    (b: Number<TNum>): Node<"bool">;
+}
+
+declare module "../core/Node.js" {
+    interface FloatExtensions {
+        equal: ComparisonOperatorNumberExtensions<"float">;
+        notEqual: ComparisonOperatorNumberExtensions<"float">;
+        lessThan: ComparisonOperatorNumberExtensions<"float">;
+        greaterThan: ComparisonOperatorNumberExtensions<"float">;
+        lessThanEqual: ComparisonOperatorNumberExtensions<"float">;
+        greaterThanEqual: ComparisonOperatorNumberExtensions<"float">;
+    }
+
+    interface IntExtensions {
+        equal: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        notEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+    }
+
+    interface UintExtensions {
+        equal: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        notEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        lessThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+        greaterThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+    }
+}
+
+// and/or/not/xor
+
+interface AndOr {
+    (a: Node<"bool">, b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+}
+export const and: AndOr;
+export const or: AndOr;
+
+interface AndOrBoolExtensions {
+    (b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+}
+
+export const not: (a: Node<"bool"> | Node) => Node<"bool">;
+export const xor: (a: Node<"bool">, b: Node<"bool">) => Node<"bool">;
+
+declare module "../core/Node.js" {
+    interface BoolExtensions {
+        and: AndOrBoolExtensions;
+        or: AndOrBoolExtensions;
+        not: () => Node<"bool">;
+        xor: (b: Node<"bool">) => Node<"bool">;
+    }
+}
+
+// bit operators
+
+interface UnaryBitOperator {
+    (a: Number<"int">): Node<"int">;
+    (a: Number<"uint">): Node<"uint">;
+}
+
+interface BinaryBitOperator {
+    (a: Number<"int">, b: Number<"int">): Node<"int">;
+    (a: Number<"uint">, b: Number<"uint">): Node<"uint">;
+}
+
+export const bitAnd: BinaryBitOperator;
+export const bitNot: UnaryBitOperator;
+export const bitOr: BinaryBitOperator;
+export const bitXor: BinaryBitOperator;
+export const shiftLeft: BinaryBitOperator;
+export const shiftRight: BinaryBitOperator;
+
+interface BinaryBitOperatorIntegerExtensions<TInteger extends IntegerType> {
+    (b: Number<TInteger>): Node<TInteger>;
+}
+
+interface BinaryBitOperatorIntegerAssignExtensions<TInteger extends IntegerType> {
+    (b: Number<TInteger>): this;
+}
+
+declare module "../core/Node.js" {
+    interface IntegerExtensions<TInteger extends IntegerType> {
+        bitAnd: BinaryBitOperatorIntegerExtensions<TInteger>;
+        bitNot: () => Node<TInteger>;
+        bitOr: BinaryBitOperatorIntegerExtensions<TInteger>;
+        bitXor: BinaryBitOperatorIntegerExtensions<TInteger>;
+        shiftLeft: BinaryBitOperatorIntegerExtensions<TInteger>;
+        shiftRight: BinaryBitOperatorIntegerExtensions<TInteger>;
+
+        bitAndAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        bitNotAssign: () => this;
+        bitOrAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        bitXorAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        shiftLeftAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+        shiftRightAssign: BinaryBitOperatorIntegerAssignExtensions<TInteger>;
+    }
+}
+
+// increment/decrement
+
+interface IncrementDecrement {
+    (a: Number<"int">): Node<"int">;
+    (a: Number<"uint">): Node<"uint">;
+}
+
+export const incrementBefore: IncrementDecrement;
+export const decrementBefore: IncrementDecrement;
+export const increment: IncrementDecrement;
+export const decrement: IncrementDecrement;
+
+interface IncrementDecrementIntegerExtensions<TInteger extends IntegerType> {
+    (): Node<TInteger>;
+}
+
+declare module "../core/Node.js" {
+    interface IntegerExtensions<TInteger extends IntegerType> {
+        incrementBefore: IncrementDecrementIntegerExtensions<TInteger>;
+        decrementBefore: IncrementDecrementIntegerExtensions<TInteger>;
+        increment: IncrementDecrementIntegerExtensions<TInteger>;
+        decrement: IncrementDecrementIntegerExtensions<TInteger>;
     }
 }
 
 /**
  * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
  */
-export const modInt: (a: OperatorNodeParameter, b: OperatorNodeParameter) => OperatorNode;
+export const modInt: Mod;
 
 declare module "../core/Node.js" {
-    interface NodeElements {
+    interface NumberExtensions<TNum extends NumType> {
         /**
          * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
          */
-        modInt: (b: OperatorNodeParameter) => OperatorNode;
+        modInt: (b: Number<TNum>) => Node<TNum>;
+        /**
+         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
+         */
+        modIntAssign: (b: Number<TNum>) => this;
     }
 }
+
+export {};

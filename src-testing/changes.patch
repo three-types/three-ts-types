@@ -892,7 +892,7 @@ index ffb7734e8..2dc76d1c9 100644
 +
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..baf27cf32 100644
+index 74ebc61fc..8644fae16 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1418,7 +1418,7 @@ index 74ebc61fc..baf27cf32 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,69 @@ class Node extends EventDispatcher {
+@@ -890,4 +980,91 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1432,58 +1432,80 @@ index 74ebc61fc..baf27cf32 100644
 +export interface NodeExtensions<TNodeType> {}
 +
 +export type NumType = 'float' | 'int' | 'uint';
++export type IntegerType = 'int' | 'uint';
 +export type NumOrBoolType = NumType | 'bool';
 +
++export interface FloatExtensions {}
++export interface IntExtensions {}
++export interface UintExtensions {}
++export interface BoolExtensions {}
++
++export interface NumExtensions<TNum extends NumType> {}
++export interface IntegerExtensions<TInteger extends IntegerType> {}
 +export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {}
++
++export interface NumVec2Extensions<TNum extends NumType> {}
++export interface NumVec3Extensions<TNum extends NumType> {}
++export interface NumVec4Extensions<TNum extends NumType> {}
++
 +export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {}
 +export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {}
 +export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {}
 +
-+export interface FloatExtensions {}
 +export interface Vec2Extensions {}
 +export interface Vec3Extensions {}
 +export interface Vec4Extensions {}
 +
 +export interface ColorExtensions {}
 +
++export interface Mat2Extensions {}
++export interface Mat3Extensions {}
++export interface Mat4Extensions {}
++
 +type Node<TNodeType = unknown> = NodeClass &
 +    NodeElements &
 +    NodeExtensions<TNodeType> &
 +    (TNodeType extends 'float'
-+        ? NumOrBoolExtensions<'float'> & FloatExtensions
++        ? NumOrBoolExtensions<'float'> & FloatExtensions & NumExtensions<'float'>
 +        : TNodeType extends 'int'
-+          ? NumOrBoolExtensions<'int'>
++          ? NumOrBoolExtensions<'int'> & IntExtensions & NumExtensions<'int'> & IntegerExtensions<'int'>
 +          : TNodeType extends 'uint'
-+            ? NumOrBoolExtensions<'uint'>
++            ? NumOrBoolExtensions<'uint'> & UintExtensions & NumExtensions<'uint'> & IntegerExtensions<'uint'>
 +            : TNodeType extends 'bool'
-+              ? NumOrBoolExtensions<'bool'>
++              ? NumOrBoolExtensions<'bool'> & BoolExtensions
 +              : TNodeType extends 'vec2'
-+                ? NumOrBoolVec2Extensions<'float'> & Vec2Extensions
++                ? NumOrBoolVec2Extensions<'float'> & Vec2Extensions & NumVec2Extensions<'float'>
 +                : TNodeType extends 'ivec2'
-+                  ? NumOrBoolVec2Extensions<'int'>
++                  ? NumOrBoolVec2Extensions<'int'> & NumVec2Extensions<'int'>
 +                  : TNodeType extends 'uvec2'
-+                    ? NumOrBoolVec2Extensions<'uint'>
++                    ? NumOrBoolVec2Extensions<'uint'> & NumVec2Extensions<'uint'>
 +                    : TNodeType extends 'bvec2'
 +                      ? NumOrBoolVec2Extensions<'bool'>
 +                      : TNodeType extends 'vec3'
-+                        ? NumOrBoolVec3Extensions<'float'> & Vec3Extensions
++                        ? NumOrBoolVec3Extensions<'float'> & Vec3Extensions & NumVec3Extensions<'float'>
 +                        : TNodeType extends 'ivec3'
-+                          ? NumOrBoolVec3Extensions<'int'>
++                          ? NumOrBoolVec3Extensions<'int'> & NumVec3Extensions<'int'>
 +                          : TNodeType extends 'uvec3'
-+                            ? NumOrBoolVec3Extensions<'uint'>
++                            ? NumOrBoolVec3Extensions<'uint'> & NumVec3Extensions<'uint'>
 +                            : TNodeType extends 'bvec3'
 +                              ? NumOrBoolVec3Extensions<'bool'>
 +                              : TNodeType extends 'vec4'
-+                                ? NumOrBoolVec4Extensions<'float'> & Vec4Extensions
++                                ? NumOrBoolVec4Extensions<'float'> & Vec4Extensions & NumVec4Extensions<'float'>
 +                                : TNodeType extends 'ivec4'
-+                                  ? NumOrBoolVec4Extensions<'int'>
++                                  ? NumOrBoolVec4Extensions<'int'> & NumVec4Extensions<'int'>
 +                                  : TNodeType extends 'uvec4'
-+                                    ? NumOrBoolVec4Extensions<'uint'>
++                                    ? NumOrBoolVec4Extensions<'uint'> & NumVec4Extensions<'uint'>
 +                                    : TNodeType extends 'bvec4'
 +                                      ? NumOrBoolVec4Extensions<'bool'>
 +                                      : TNodeType extends 'color'
 +                                        ? ColorExtensions
-+                                        : {}) & { __TypeScript_NODE_TYPE__: TNodeType };
++                                        : TNodeType extends 'mat2'
++                                          ? Mat2Extensions
++                                          : TNodeType extends 'mat3'
++                                            ? Mat3Extensions
++                                            : TNodeType extends 'mat4'
++                                              ? Mat4Extensions
++                                              : {});
 +
  export default Node;
 +
