@@ -1,6 +1,6 @@
 import Node from "../core/Node.js";
 
-type FloatOrNumber = Node<"float"> | number;
+type FloatOrNumber = Node<"float"> | Node | number;
 
 export const parabola: (x: FloatOrNumber, k: FloatOrNumber) => Node<"float">;
 export const gain: (x: FloatOrNumber, k: FloatOrNumber) => Node<"float">;
