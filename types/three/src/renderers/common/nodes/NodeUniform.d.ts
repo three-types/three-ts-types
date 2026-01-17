@@ -23,14 +23,14 @@ import {
  * @private
  * @augments NumberUniform
  */
-declare class NumberNodeUniform extends NumberUniform {
-    nodeUniform: NodeUniform<number>;
+declare class NumberNodeUniform<TNodeType> extends NumberUniform {
+    nodeUniform: NodeUniform<TNodeType, number>;
     /**
      * Constructs a new node-based Number uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<number>);
+    constructor(nodeUniform: NodeUniform<TNodeType, number>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -51,14 +51,14 @@ declare class NumberNodeUniform extends NumberUniform {
  * @private
  * @augments Vector2Uniform
  */
-declare class Vector2NodeUniform extends Vector2Uniform {
-    nodeUniform: NodeUniform<Vector2>;
+declare class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
+    nodeUniform: NodeUniform<TNodeType, Vector2>;
     /**
      * Constructs a new node-based Vector2 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Vector2>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -79,14 +79,14 @@ declare class Vector2NodeUniform extends Vector2Uniform {
  * @private
  * @augments Vector3Uniform
  */
-declare class Vector3NodeUniform extends Vector3Uniform {
-    nodeUniform: NodeUniform<Vector3>;
+declare class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
+    nodeUniform: NodeUniform<TNodeType, Vector3>;
     /**
      * Constructs a new node-based Vector3 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Vector3>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -107,14 +107,14 @@ declare class Vector3NodeUniform extends Vector3Uniform {
  * @private
  * @augments Vector4Uniform
  */
-declare class Vector4NodeUniform extends Vector4Uniform {
-    nodeUniform: NodeUniform<Vector4>;
+declare class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
+    nodeUniform: NodeUniform<TNodeType, Vector4>;
     /**
      * Constructs a new node-based Vector4 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Vector4>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -135,14 +135,14 @@ declare class Vector4NodeUniform extends Vector4Uniform {
  * @private
  * @augments ColorUniform
  */
-declare class ColorNodeUniform extends ColorUniform {
-    nodeUniform: NodeUniform<Color>;
+declare class ColorNodeUniform<TNodeType> extends ColorUniform {
+    nodeUniform: NodeUniform<TNodeType, Color>;
     /**
      * Constructs a new node-based Color uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Color>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Color>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -163,14 +163,14 @@ declare class ColorNodeUniform extends ColorUniform {
  * @private
  * @augments Matrix2Uniform
  */
-declare class Matrix2NodeUniform extends Matrix2Uniform {
-    nodeUniform: NodeUniform<Matrix2>;
+declare class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
+    nodeUniform: NodeUniform<TNodeType, Matrix2>;
     /**
      * Constructs a new node-based Matrix2 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Matrix2>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -191,14 +191,14 @@ declare class Matrix2NodeUniform extends Matrix2Uniform {
  * @private
  * @augments Matrix3Uniform
  */
-declare class Matrix3NodeUniform extends Matrix3Uniform {
-    nodeUniform: NodeUniform<Matrix3>;
+declare class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
+    nodeUniform: NodeUniform<TNodeType, Matrix3>;
     /**
      * Constructs a new node-based Matrix3 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Matrix3>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -219,14 +219,14 @@ declare class Matrix3NodeUniform extends Matrix3Uniform {
  * @private
  * @augments Matrix4Uniform
  */
-declare class Matrix4NodeUniform extends Matrix4Uniform {
-    nodeUniform: NodeUniform<Matrix4>;
+declare class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
+    nodeUniform: NodeUniform<TNodeType, Matrix4>;
     /**
      * Constructs a new node-based Matrix4 uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
-    constructor(nodeUniform: NodeUniform<Matrix4>);
+    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>);
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -251,10 +251,10 @@ export {
     Vector4NodeUniform,
 };
 export type NodeUniformGPU =
-    | NumberNodeUniform
-    | Vector2NodeUniform
-    | Vector3NodeUniform
-    | Vector4NodeUniform
-    | ColorNodeUniform
-    | Matrix3NodeUniform
-    | Matrix4NodeUniform;
+    | NumberNodeUniform<unknown>
+    | Vector2NodeUniform<unknown>
+    | Vector3NodeUniform<unknown>
+    | Vector4NodeUniform<unknown>
+    | ColorNodeUniform<unknown>
+    | Matrix3NodeUniform<unknown>
+    | Matrix4NodeUniform<unknown>;

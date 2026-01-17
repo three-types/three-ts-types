@@ -6,7 +6,7 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
 import ConstNode from "../core/ConstNode.js";
-import Node from "../core/Node.js";
+import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import JoinNode from "../utils/JoinNode.js";
@@ -78,16 +78,134 @@ export type ArrayElementIndex =
     | 30
     | 31;
 
-export type Swizzable =
-    & {
-        [Key in SwizzleOption | ArrayElementIndex]: Node;
-    }
-    & {
-        [Key in SwizzleOption as `set${Uppercase<Key>}`]: (value: Node) => Node;
-    };
+export type Swizzable = {
+    [Key in SwizzleOption | ArrayElementIndex]: Node;
+};
 
 declare module "../core/Node.js" {
     interface NodeElements extends Swizzable {
+    }
+}
+
+type NumOrBoolToJsType = {
+    float: number;
+    int: number;
+    uint: number;
+    bool: boolean;
+};
+type NumOrBool<TNumOrBool extends NumOrBoolType> = Node<TNumOrBool> | NumOrBoolToJsType[TNumOrBool];
+
+type NumOrBoolToVec = {
+    float: "vec";
+    int: "ivec";
+    uint: "uvec";
+    bool: "bvec";
+};
+type NumOrBoolToVec2<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}2`;
+type NumOrBoolToVec3<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}3`;
+type NumOrBoolToVec4<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}4`;
+
+interface SetSwizzle1<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool> | Node): Node<TNumOrBool>;
+    setR(value: NumOrBool<TNumOrBool> | Node): Node<TNumOrBool>;
+    setS(value: NumOrBool<TNumOrBool> | Node): Node<TNumOrBool>;
+}
+
+interface SetSwizzle2<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec2<TNumOrBool>>;
+}
+
+interface SetSwizzle3<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setZ(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setB(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setP(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setSP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setYZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setGB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setTP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setXYZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setRGB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+    setSTP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec3<TNumOrBool>>;
+}
+
+interface SetSwizzle4<TNumOrBool extends NumOrBoolType> {
+    setX(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setR(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setS(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setY(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setG(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setT(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZ(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setB(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setP(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setW(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setA(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setQ(value: NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXY(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRG(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setST(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGB(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTP(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setZW(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setBA(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setPQ(value: Node<NumOrBoolToVec2<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYZ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGB(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTP(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXZW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRBA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSPQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setYZW(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setGBA(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setTPQ(value: Node<NumOrBoolToVec3<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setXYZW(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setRGBA(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+    setSTPQ(value: Node<NumOrBoolToVec4<TNumOrBool>> | NumOrBool<TNumOrBool> | Node): Node<NumOrBoolToVec4<TNumOrBool>>;
+}
+
+declare module "../core/Node.js" {
+    interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle1<TNumOrBool> {
+    }
+
+    interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle2<TNumOrBool> {
+    }
+
+    interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle3<TNumOrBool> {
+    }
+
+    interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle4<TNumOrBool> {
     }
 }
 
@@ -200,7 +318,8 @@ export type NodeObjectOption = Node | number | string;
 
 // same logic as in ShaderNodeObject: number,boolean,node->node, otherwise do nothing
 export type NodeObject<T> = T extends Node ? T
-    : T extends number | boolean ? ConstNode<number | boolean>
+    : T extends number ? Node<"float">
+    : T extends boolean ? Node<"bool">
     : T;
 
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
@@ -293,17 +412,16 @@ type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends 
 
 export type NodeOrType = Node | string;
 
-declare class ShaderCallNodeInternal extends Node {
-}
+type ShaderCallNodeInternal<TNodeType> = Node<TNodeType>;
 
-declare class ShaderNodeInternal extends Node {}
+type ShaderNodeInternal<TNodeType> = Node<TNodeType>;
 
 export const defined: (v: unknown) => unknown;
 
 export const getConstNodeType: (value: NodeOrType) => string | null;
 
 export class ShaderNode<T = {}, R extends Node = Node> {
-    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => Node);
+    constructor(jsFunc: (inputs: NodeObjects<T>, builder: NodeBuilder) => R);
     call: (
         inputs: { [key in keyof T]: T[key] extends Node ? Node : T[key] },
         builder?: NodeBuilder,
@@ -361,10 +479,10 @@ interface Layout {
     }[];
 }
 
-export interface ShaderNodeFn<Args extends readonly unknown[]> {
-    (...args: Args): ShaderCallNodeInternal;
+export interface FnNode<Args extends readonly unknown[], TReturn> {
+    (...args: Args): TReturn extends void ? ShaderCallNodeInternal<void> : TReturn;
 
-    shaderNode: ShaderNodeInternal;
+    shaderNode: ShaderNodeInternal<TReturn>;
     id: number;
 
     getNodeType: (builder: NodeBuilder) => string | null;
@@ -375,15 +493,18 @@ export interface ShaderNodeFn<Args extends readonly unknown[]> {
     once: (subBuilds?: string[] | null) => this;
 }
 
-export function Fn(jsFunc: (builder: NodeBuilder) => void, layout?: string | Record<string, string>): ShaderNodeFn<[]>;
-export function Fn<T extends readonly unknown[]>(
-    jsFunc: (args: T, builder: NodeBuilder) => void,
+export function Fn<TReturn>(
+    jsFunc: (builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
-): ShaderNodeFn<ProxiedTuple<T>>;
-export function Fn<T extends { readonly [key: string]: unknown }>(
-    jsFunc: (args: T, builder: NodeBuilder) => void,
+): FnNode<[], TReturn>;
+export function Fn<TArgs extends readonly unknown[], TReturn>(
+    jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
-): ShaderNodeFn<[ProxiedObject<T>]>;
+): FnNode<ProxiedTuple<TArgs>, TReturn>;
+export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
+    jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
+    layout?: string | Record<string, string>,
+): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
 
@@ -403,14 +524,14 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): ConstNode<Color>;
-    (r: number, g: number, b: number): ConstNode<Color>;
+    (color?: string | number): ConstNode<"color", Color>;
+    (r: number, g: number, b: number): ConstNode<"color", Color>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): ConstNode<Color>;
-    (node: Node): Node;
+    (color: Color): ConstNode<"color", Color>;
+    (node: Node): Node<"color">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
@@ -418,95 +539,107 @@ interface ColorFunction {
 
 export const color: ColorFunction;
 
-interface NumberFunction {
-    (value?: number): ConstNode<number>;
-    (node: Node): Node;
+interface FloatFunction {
+    (value?: number): ConstNode<"float", number>;
+    (node: Node): Node<"float">;
 }
 
-export const float: NumberFunction;
-export const int: NumberFunction;
-export const uint: NumberFunction;
+export const float: FloatFunction;
 
-interface BooleanFunction {
-    (value?: boolean): ConstNode<boolean>;
-    (node: Node): Node;
+interface IntFunction {
+    (value?: number): ConstNode<"int", number>;
+    (node: Node): Node<"int">;
 }
 
-export const bool: BooleanFunction;
+export const int: IntFunction;
 
-interface Vector2Function {
+interface UintFunction {
+    (value?: number): ConstNode<"uint", number>;
+    (node: Node): Node<"uint">;
+}
+
+export const uint: UintFunction;
+
+interface BoolFunction {
+    (value?: boolean): ConstNode<"bool", boolean>;
+    (node: Node): Node<"bool">;
+}
+
+export const bool: BoolFunction;
+
+interface Vec2Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number): ConstNode<Vector2>;
+    (x?: number, y?: number): ConstNode<"vec2", Vector2>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector2): ConstNode<Vector2>;
-    (node: Node): Node;
+    (value: Vector2): ConstNode<"vec2", Vector2>;
+    (node: Node): Node<"vec2">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number): JoinNode;
+    (x: Node | number, y: Node | number): Node<"vec2">;
 }
 
-export const vec2: Vector2Function;
-export const ivec2: Vector2Function;
-export const uvec2: Vector2Function;
-export const bvec2: (node: Node) => Node;
+export const vec2: Vec2Function;
+export const ivec2: (node: Node) => Node<"ivec2">;
+export const uvec2: (x: Node, y: Node) => Node<"uvec2">;
+export const bvec2: (node: Node) => Node<"bvec2">;
 
-interface Vector3Function {
+interface Vec3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number): ConstNode<Vector3>;
+    (x?: number, y?: number, z?: number): ConstNode<"vec3", Vector3>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector3): ConstNode<Vector3>;
-    (value: [number, number, number]): ConstNode<Vector3>;
-    (node: Node): Node;
+    (value: Vector3): ConstNode<"vec3", Vector3>;
+    (value: [number, number, number]): ConstNode<"vec3", Vector3>;
+    (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number): Node<"vec3">;
 }
 
-export const vec3: Vector3Function;
-export const ivec3: Vector3Function;
-export const uvec3: Vector3Function;
-export const bvec3: (node: Node) => Node;
+export const vec3: Vec3Function;
+export const ivec3: (node: Node) => Node<"ivec3">;
+export const uvec3: (node: Node) => Node<"uvec3">;
+export const bvec3: (node: Node) => Node<"bvec3">;
 
-interface Vector4Function {
+interface Vec4Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number, w?: number): ConstNode<Vector4>;
+    (x?: number, y?: number, z?: number, w?: number): ConstNode<"vec4", Vector4>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector4): ConstNode<Vector4>;
-    (node: Node): Node;
+    (value: Vector4): ConstNode<"vec4", Vector4>;
+    (node: Node): Node<"vec4">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object.
-    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): JoinNode;
+    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): Node<"vec4">;
 }
 
-export const vec4: Vector4Function;
-export const ivec4: Vector4Function;
-export const uvec4: Vector4Function;
-export const bvec4: (node: Node) => Node;
+export const vec4: Vec4Function;
+export const ivec4: (node: Node) => Node<"ivec4">;
+export const uvec4: (node: Node) => Node<"uvec4">;
+export const bvec4: (node: Node) => Node<"bvec4">;
 
-interface Matrix2Function {
-    (value: Matrix2): ConstNode<Matrix2>;
-    (node: Node): Node;
+interface Mat2Function {
+    (value: Matrix2): ConstNode<"mat2", Matrix2>;
+    (node: Node): Node<"mat2">;
 }
 
-export const mat2: Matrix2Function;
+export const mat2: Mat2Function;
 
-interface Matrix3Function {
-    (value: Matrix3): ConstNode<Matrix3>;
+interface Mat3Function {
+    (value: Matrix3): ConstNode<"mat3", Matrix3>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -517,20 +650,20 @@ interface Matrix3Function {
         n31: number | Node,
         n32: number | Node,
         n33: number | Node,
-    ): Node;
-    (): ConstNode<Matrix3>;
+    ): Node<"mat3">;
+    (): ConstNode<"mat3", Matrix3>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat3">;
+    (node: Node): Node<"mat3">;
 }
 
-export const mat3: Matrix3Function;
+export const mat3: Mat3Function;
 
-interface Matrix4Function {
-    (value: Matrix4): ConstNode<Matrix4>;
+interface Mat4Function {
+    (value: Matrix4): ConstNode<"mat4", Matrix4>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -548,63 +681,44 @@ interface Matrix4Function {
         n42: number | Node,
         n43: number | Node,
         n44: number | Node,
-    ): Node;
-    (): ConstNode<Matrix4>;
+    ): Node<"mat4">;
+    (): ConstNode<"mat4", Matrix4>;
     (
         p1: Node,
         p2: Node,
         p3: Node,
         p4: Node,
-    ): Node;
-    (node: Node): Node;
+    ): Node<"mat4">;
+    (node: Node): Node<"mat4">;
 }
 
-export const mat4: Matrix4Function;
+export const mat4: Mat4Function;
 
-export const string: (value?: string) => ConstNode<string>;
-export const arrayBuffer: (value: ArrayBuffer) => ConstNode<ArrayBuffer>;
+export const string: (value?: string) => Node<"string">;
+export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        toColor: () => Node;
-
-        toFloat: () => Node;
-
-        toInt: () => Node;
-
-        toUint: () => Node;
-
-        toBool: () => Node;
-
-        toVec2: () => Node;
-
-        toIVec2: () => Node;
-
-        toUVec2: () => Node;
-
-        toBVec2: () => Node;
-
-        toVec3: () => Node;
-
-        toIVec3: () => Node;
-
-        toUVec3: () => Node;
-
-        toBVec3: () => Node;
-
-        toVec4: () => Node;
-
-        toIVec4: () => Node;
-
-        toUVec4: () => Node;
-
-        toBVec4: () => Node;
-
-        toMat2: () => Node;
-
-        toMat3: () => Node;
-
-        toMat4: () => Node;
+        toColor: () => Node<"color">;
+        toFloat: () => Node<"float">;
+        toInt: () => Node<"int">;
+        toUint: () => Node<"uint">;
+        toBool: () => Node<"bool">;
+        toVec2: () => Node<"vec2">;
+        toIVec2: () => Node<"ivec2">;
+        toUVec2: () => Node<"uvec2">;
+        toBVec2: () => Node<"bvec2">;
+        toVec3: () => Node<"vec3">;
+        toIVec3: () => Node<"ivec3">;
+        toUVec3: () => Node<"uvec3">;
+        toBVec3: () => Node<"bvec3">;
+        toVec4: () => Node<"vec4">;
+        toIVec4: () => Node<"ivec4">;
+        toUVec4: () => Node<"uvec4">;
+        toBVec4: () => Node<"bvec4">;
+        toMat2: () => Node<"mat2">;
+        toMat3: () => Node<"mat3">;
+        toMat4: () => Node<"mat4">;
     }
 }
 

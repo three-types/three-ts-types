@@ -97,49 +97,49 @@ declare class UniformsGroup extends UniformBuffer {
      * @param {NumberUniform} uniform - The Number uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateNumber(uniform: NumberNodeUniform): boolean;
+    updateNumber(uniform: NumberNodeUniform<unknown>): boolean;
     /**
      * Updates a given Vector2 uniform.
      *
      * @param {Vector2Uniform} uniform - The Vector2 uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateVector2(uniform: Vector2NodeUniform): boolean;
+    updateVector2(uniform: Vector2NodeUniform<unknown>): boolean;
     /**
      * Updates a given Vector3 uniform.
      *
      * @param {Vector3Uniform} uniform - The Vector3 uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateVector3(uniform: Vector3NodeUniform): boolean;
+    updateVector3(uniform: Vector3NodeUniform<unknown>): boolean;
     /**
      * Updates a given Vector4 uniform.
      *
      * @param {Vector4Uniform} uniform - The Vector4 uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateVector4(uniform: Vector4NodeUniform): boolean;
+    updateVector4(uniform: Vector4NodeUniform<unknown>): boolean;
     /**
      * Updates a given Color uniform.
      *
      * @param {ColorUniform} uniform - The Color uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateColor(uniform: ColorNodeUniform): boolean;
+    updateColor(uniform: ColorNodeUniform<unknown>): boolean;
     /**
      * Updates a given Matrix3 uniform.
      *
      * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateMatrix3(uniform: Matrix3NodeUniform): boolean;
+    updateMatrix3(uniform: Matrix3NodeUniform<unknown>): boolean;
     /**
      * Updates a given Matrix4 uniform.
      *
      * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateMatrix4(uniform: Matrix4NodeUniform): boolean;
+    updateMatrix4(uniform: Matrix4NodeUniform<unknown>): boolean;
     /**
      * Returns a typed array that matches the given data type.
      *

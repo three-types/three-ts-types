@@ -379,6 +379,8 @@ declare const Node: {
 };
 export interface NodeElements {
 }
+export interface NodeExtensions<TNodeType> {
+}
 export type NumType = "float" | "int" | "uint";
 export type NumOrBoolType = NumType | "bool";
 export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
@@ -400,6 +402,7 @@ export interface Vec4Extensions {
 type Node<TNodeType = unknown> =
     & NodeClass
     & NodeElements
+    & NodeExtensions<TNodeType>
     & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions
         : TNodeType extends "int" ? NumOrBoolExtensions<"int">
         : TNodeType extends "uint" ? NumOrBoolExtensions<"uint">

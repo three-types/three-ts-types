@@ -194,7 +194,7 @@ index 4c5e4c7db..4f710ccca 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 6ed843b11..5f40d28c2 100644
+index 6ed843b11..5b3227d69 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -234,7 +234,7 @@ index 6ed843b11..5f40d28c2 100644
   * @augments InputNode
   */
 -class BufferAttributeNode extends InputNode {
-+class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
++class BufferAttributeNode extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
      static get type() {
          return 'BufferAttributeNode';
      }
@@ -811,7 +811,7 @@ index f2cedcd34..ea2c2c89c 100644
  
      return setName(node, name);
 diff --git a/src-testing/src/nodes/core/InputNode.ts b/src-testing/src/nodes/core/InputNode.ts
-index ffb7734e8..d71c6d249 100644
+index ffb7734e8..2dc76d1c9 100644
 --- a/src-testing/src/nodes/core/InputNode.ts
 +++ b/src-testing/src/nodes/core/InputNode.ts
 @@ -1,24 +1,30 @@
@@ -826,7 +826,7 @@ index ffb7734e8..d71c6d249 100644
   * @augments Node
   */
 -class InputNode extends Node {
-+class InputNode<TValue> extends Node {
++class InputNodeClass<TValue> extends Node {
      static get type() {
          return 'InputNode';
      }
@@ -874,7 +874,7 @@ index ffb7734e8..d71c6d249 100644
          this.precision = precision;
  
          return this;
-@@ -107,10 +113,6 @@ class InputNode extends Node {
+@@ -107,10 +113,12 @@ class InputNode extends Node {
  
          if (this.value && this.value.fromArray) this.value = this.value.fromArray(data.value);
      }
@@ -884,9 +884,15 @@ index ffb7734e8..d71c6d249 100644
 -    }
  }
  
++declare const InputNode: {
++    new <TNodeType, TValue>(value: TValue, nodeType?: string | null): InputNode<TNodeType, TValue>;
++};
++
++type InputNode<TNodeType, TValue> = Node<TNodeType> & InputNodeClass<TValue>;
++
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..5fc15fe4c 100644
+index 74ebc61fc..32f75328d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1412,7 +1418,7 @@ index 74ebc61fc..5fc15fe4c 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +980,62 @@ class Node extends EventDispatcher {
+@@ -890,4 +980,65 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1422,6 +1428,8 @@ index 74ebc61fc..5fc15fe4c 100644
 +};
 +
 +export interface NodeElements {}
++
++export interface NodeExtensions<TNodeType> {}
 +
 +export type NumType = 'float' | 'int' | 'uint';
 +export type NumOrBoolType = NumType | 'bool';
@@ -1438,6 +1446,7 @@ index 74ebc61fc..5fc15fe4c 100644
 +
 +type Node<TNodeType = unknown> = NodeClass &
 +    NodeElements &
++    NodeExtensions<TNodeType> &
 +    (TNodeType extends 'float'
 +        ? NumOrBoolExtensions<'float'> & FloatExtensions
 +        : TNodeType extends 'int'
@@ -2563,7 +2572,7 @@ index 61fc3f406..fbc4540f6 100644
          toType = this.getVectorType(toType);
  
 diff --git a/src-testing/src/nodes/core/NodeCache.ts b/src-testing/src/nodes/core/NodeCache.ts
-index 60ca00391..180c7e3bf 100644
+index 60ca00391..bccd20834 100644
 --- a/src-testing/src/nodes/core/NodeCache.ts
 +++ b/src-testing/src/nodes/core/NodeCache.ts
 @@ -1,16 +1,64 @@
@@ -2591,7 +2600,7 @@ index 60ca00391..180c7e3bf 100644
 +        | undefined;
 +    bufferAttribute?: NodeAttribute | undefined;
 +    structType?: StructType | undefined;
-+    uniform?: NodeUniform<unknown> | undefined;
++    uniform?: NodeUniform<unknown, unknown> | undefined;
 +    variable?: NodeVar | undefined;
 +    varying?: NodeVarying | undefined;
 +    code?: NodeCode | undefined;
@@ -2766,7 +2775,7 @@ index ae664a236..65e57edd1 100644
  
  export default NodeParser;
 diff --git a/src-testing/src/nodes/core/NodeUniform.ts b/src-testing/src/nodes/core/NodeUniform.ts
-index 09ff8b517..9a5b83849 100644
+index 09ff8b517..f862f04f1 100644
 --- a/src-testing/src/nodes/core/NodeUniform.ts
 +++ b/src-testing/src/nodes/core/NodeUniform.ts
 @@ -1,10 +1,19 @@
@@ -2779,12 +2788,12 @@ index 09ff8b517..9a5b83849 100644
   * for this purpose.
   */
 -class NodeUniform {
-+class NodeUniform<TValue> {
++class NodeUniform<TNodeType, TValue> {
 +    readonly isNodeUniform: true;
 +
 +    name: string;
 +    type: string | null;
-+    node: UniformNode<TValue>;
++    node: UniformNode<TNodeType, TValue>;
 +    needsUpdate: boolean | undefined;
 +
      /**
@@ -2795,7 +2804,7 @@ index 09ff8b517..9a5b83849 100644
       * @param {UniformNode} node - An reference to the node.
       */
 -    constructor(name, type, node) {
-+    constructor(name: string, type: string | null, node: UniformNode<TValue>) {
++    constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>) {
          /**
           * This flag can be used for type testing.
           *
@@ -3163,10 +3172,10 @@ index 94299fca9..125e9ad42 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index f9fc07e20..599dc8527 100644
+index f9fc07e20..0a1df27d6 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
-@@ -1,26 +1,36 @@
+@@ -1,26 +1,43 @@
  import InputNode from './InputNode.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
@@ -3178,6 +3187,13 @@ index f9fc07e20..599dc8527 100644
 +import NodeFrame from './NodeFrame.js';
 +import { NodeUpdateType } from './constants.js';
 +import ConstNode from './ConstNode.js';
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Matrix2 } from '../../math/Matrix2.js';
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Matrix4 } from '../../math/Matrix4.js';
++import { Color } from '../../math/Color.js';
  
  /**
   * Class for representing a uniform.
@@ -3185,7 +3201,7 @@ index f9fc07e20..599dc8527 100644
   * @augments InputNode
   */
 -class UniformNode extends InputNode {
-+class UniformNode<TValue> extends InputNode<TValue> {
++class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      static get type() {
          return 'UniformNode';
      }
@@ -3206,7 +3222,7 @@ index f9fc07e20..599dc8527 100644
          super(value, nodeType);
  
          /**
-@@ -56,11 +66,11 @@ class UniformNode extends InputNode {
+@@ -56,11 +73,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3220,7 +3236,7 @@ index f9fc07e20..599dc8527 100644
  
      /**
       * Sets the {@link UniformNode#name} property.
-@@ -69,11 +79,11 @@ class UniformNode extends InputNode {
+@@ -69,11 +86,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3234,7 +3250,7 @@ index f9fc07e20..599dc8527 100644
  
      /**
       * Sets the {@link UniformNode#groupNode} property.
-@@ -81,7 +91,7 @@ class UniformNode extends InputNode {
+@@ -81,7 +98,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
       */
@@ -3243,7 +3259,7 @@ index f9fc07e20..599dc8527 100644
          this.groupNode = group;
  
          return this;
-@@ -103,11 +113,11 @@ class UniformNode extends InputNode {
+@@ -103,11 +120,11 @@ class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The uniform hash.
       */
@@ -3257,7 +3273,7 @@ index f9fc07e20..599dc8527 100644
          callback = callback.bind(this);
  
          return super.onUpdate(frame => {
-@@ -119,7 +129,7 @@ class UniformNode extends InputNode {
+@@ -119,7 +136,7 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -3266,7 +3282,7 @@ index f9fc07e20..599dc8527 100644
          let type = super.getInputType(builder);
  
          if (type === 'bool') {
-@@ -129,12 +139,12 @@ class UniformNode extends InputNode {
+@@ -129,12 +146,12 @@ class UniformNode extends InputNode {
          return type;
      }
  
@@ -3281,7 +3297,7 @@ index f9fc07e20..599dc8527 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -147,7 +157,7 @@ class UniformNode extends InputNode {
+@@ -147,7 +164,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3290,16 +3306,52 @@ index f9fc07e20..599dc8527 100644
              this.name || builder.context.nodeName,
          );
          const uniformName = builder.getPropertyName(nodeUniform);
-@@ -194,7 +204,7 @@ export default UniformNode;
+@@ -183,8 +200,32 @@ class UniformNode extends InputNode {
+     }
+ }
+ 
++declare const UniformNode: {
++    /**
++     * Constructs a new uniform node.
++     *
++     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++     */
++    new <TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
++};
++type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
++
+ export default UniformNode;
+ 
++interface Uniform {
++    (value: number, type?: 'float'): UniformNode<'float', number>;
++    (value: boolean): UniformNode<'bool', boolean>;
++    (value: Vector2): UniformNode<'vec2', Vector2>;
++    (value: Vector3): UniformNode<'vec3', Vector3>;
++    (value: Vector4): UniformNode<'vec4', Vector4>;
++    (value: Matrix2): UniformNode<'mat2', Matrix2>;
++    (value: Matrix3): UniformNode<'mat3', Matrix3>;
++    (value: Matrix4): UniformNode<'mat4', Matrix4>;
++    (value: Color): UniformNode<'color', Color>;
++    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
++}
++
+ /**
+  * TSL function for creating a uniform node.
+  *
+@@ -194,7 +235,10 @@ export default UniformNode;
   * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
   * @returns {UniformNode}
   */
 -export const uniform = (value, type) => {
-+export const uniform = <TValue>(value: InputNode<TValue> | TValue, type?: Node | string): UniformNode<TValue> => {
++export const uniform: Uniform = <TValue>(
++    value: InputNode<TValue> | TValue,
++    type?: Node | string,
++): UniformNode<TValue> => {
      const nodeType = getConstNodeType(type || value);
  
      if (nodeType === value) {
-@@ -203,17 +213,17 @@ export const uniform = (value, type) => {
+@@ -203,17 +247,17 @@ export const uniform = (value, type) => {
          value = getValueFromType(nodeType);
      }
  
@@ -8516,7 +8568,7 @@ index 93c9419f8..aa5b6b4b0 100644
  
          /**
 diff --git a/src-testing/src/renderers/common/UniformsGroup.ts b/src-testing/src/renderers/common/UniformsGroup.ts
-index de688d551..3d99f9b92 100644
+index de688d551..a7576c30e 100644
 --- a/src-testing/src/renderers/common/UniformsGroup.ts
 +++ b/src-testing/src/renderers/common/UniformsGroup.ts
 @@ -1,6 +1,17 @@
@@ -8623,7 +8675,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateNumber(uniform) {
-+    updateNumber(uniform: NumberNodeUniform) {
++    updateNumber(uniform: NumberNodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8632,7 +8684,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector2(uniform) {
-+    updateVector2(uniform: Vector2NodeUniform) {
++    updateVector2(uniform: Vector2NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8641,7 +8693,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector3(uniform) {
-+    updateVector3(uniform: Vector3NodeUniform) {
++    updateVector3(uniform: Vector3NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8650,7 +8702,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateVector4(uniform) {
-+    updateVector4(uniform: Vector4NodeUniform) {
++    updateVector4(uniform: Vector4NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8659,7 +8711,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateColor(uniform) {
-+    updateColor(uniform: ColorNodeUniform) {
++    updateColor(uniform: ColorNodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8668,7 +8720,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateMatrix3(uniform) {
-+    updateMatrix3(uniform: Matrix3NodeUniform) {
++    updateMatrix3(uniform: Matrix3NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -8677,7 +8729,7 @@ index de688d551..3d99f9b92 100644
       * @return {boolean} Whether the uniform has been updated or not.
       */
 -    updateMatrix4(uniform) {
-+    updateMatrix4(uniform: Matrix4NodeUniform) {
++    updateMatrix4(uniform: Matrix4NodeUniform<unknown>) {
          let updated = false;
  
          const a = this.values;
@@ -9537,7 +9589,7 @@ index 7c61c35c5..04e6eb0de 100644
              warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 81d9f2ce3..f4c0431c2 100644
+index 81d9f2ce3..7a6a0b9c8 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
 @@ -8,6 +8,14 @@ import {
@@ -9555,11 +9607,13 @@ index 81d9f2ce3..f4c0431c2 100644
  
  /**
   * A special form of Number uniform binding type.
-@@ -17,12 +25,14 @@ import {
+@@ -16,13 +24,15 @@ import {
+  * @private
   * @augments NumberUniform
   */
- class NumberNodeUniform extends NumberUniform {
-+    nodeUniform: NodeUniform<number>;
+-class NumberNodeUniform extends NumberUniform {
++class NumberNodeUniform<TNodeType> extends NumberUniform {
++    nodeUniform: NodeUniform<TNodeType, number>;
 +
      /**
       * Constructs a new node-based Number uniform.
@@ -9567,15 +9621,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<number>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, number>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -60,12 +70,14 @@ class NumberNodeUniform extends NumberUniform {
+@@ -59,13 +69,15 @@ class NumberNodeUniform extends NumberUniform {
+  * @private
   * @augments Vector2Uniform
   */
- class Vector2NodeUniform extends Vector2Uniform {
-+    nodeUniform: NodeUniform<Vector2>;
+-class Vector2NodeUniform extends Vector2Uniform {
++class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector2>;
 +
      /**
       * Constructs a new node-based Vector2 uniform.
@@ -9583,15 +9639,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -103,12 +115,14 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -102,13 +114,15 @@ class Vector2NodeUniform extends Vector2Uniform {
+  * @private
   * @augments Vector3Uniform
   */
- class Vector3NodeUniform extends Vector3Uniform {
-+    nodeUniform: NodeUniform<Vector3>;
+-class Vector3NodeUniform extends Vector3Uniform {
++class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector3>;
 +
      /**
       * Constructs a new node-based Vector3 uniform.
@@ -9599,15 +9657,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -146,12 +160,14 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -145,13 +159,15 @@ class Vector3NodeUniform extends Vector3Uniform {
+  * @private
   * @augments Vector4Uniform
   */
- class Vector4NodeUniform extends Vector4Uniform {
-+    nodeUniform: NodeUniform<Vector4>;
+-class Vector4NodeUniform extends Vector4Uniform {
++class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector4>;
 +
      /**
       * Constructs a new node-based Vector4 uniform.
@@ -9615,15 +9675,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -189,12 +205,14 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -188,13 +204,15 @@ class Vector4NodeUniform extends Vector4Uniform {
+  * @private
   * @augments ColorUniform
   */
- class ColorNodeUniform extends ColorUniform {
-+    nodeUniform: NodeUniform<Color>;
+-class ColorNodeUniform extends ColorUniform {
++class ColorNodeUniform<TNodeType> extends ColorUniform {
++    nodeUniform: NodeUniform<TNodeType, Color>;
 +
      /**
       * Constructs a new node-based Color uniform.
@@ -9631,15 +9693,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Color>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Color>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -232,12 +250,14 @@ class ColorNodeUniform extends ColorUniform {
+@@ -231,13 +249,15 @@ class ColorNodeUniform extends ColorUniform {
+  * @private
   * @augments Matrix2Uniform
   */
- class Matrix2NodeUniform extends Matrix2Uniform {
-+    nodeUniform: NodeUniform<Matrix2>;
+-class Matrix2NodeUniform extends Matrix2Uniform {
++class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix2>;
 +
      /**
       * Constructs a new node-based Matrix2 uniform.
@@ -9647,15 +9711,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -275,12 +295,14 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+@@ -274,13 +294,15 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+  * @private
   * @augments Matrix3Uniform
   */
- class Matrix3NodeUniform extends Matrix3Uniform {
-+    nodeUniform: NodeUniform<Matrix3>;
+-class Matrix3NodeUniform extends Matrix3Uniform {
++class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix3>;
 +
      /**
       * Constructs a new node-based Matrix3 uniform.
@@ -9663,15 +9729,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -318,12 +340,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -317,13 +339,15 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+  * @private
   * @augments Matrix4Uniform
   */
- class Matrix4NodeUniform extends Matrix4Uniform {
-+    nodeUniform: NodeUniform<Matrix4>;
+-class Matrix4NodeUniform extends Matrix4Uniform {
++class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix4>;
 +
      /**
       * Constructs a new node-based Matrix4 uniform.
@@ -9679,7 +9747,7 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
@@ -9688,13 +9756,13 @@ index 81d9f2ce3..f4c0431c2 100644
      Matrix4NodeUniform,
  };
 +export type NodeUniformGPU =
-+    | NumberNodeUniform
-+    | Vector2NodeUniform
-+    | Vector3NodeUniform
-+    | Vector4NodeUniform
-+    | ColorNodeUniform
-+    | Matrix3NodeUniform
-+    | Matrix4NodeUniform;
++    | NumberNodeUniform<unknown>
++    | Vector2NodeUniform<unknown>
++    | Vector3NodeUniform<unknown>
++    | Vector4NodeUniform<unknown>
++    | ColorNodeUniform<unknown>
++    | Matrix3NodeUniform<unknown>
++    | Matrix4NodeUniform<unknown>;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts b/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
 index 19a8dd2ae..26f39bf21 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
