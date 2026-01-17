@@ -194,7 +194,7 @@ index 4c5e4c7db..4f710ccca 100644
              this.hasNode ||
              this.hasAnimation ||
 diff --git a/src-testing/src/nodes/accessors/BufferAttributeNode.ts b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
-index 6ed843b11..5f40d28c2 100644
+index 6ed843b11..5b3227d69 100644
 --- a/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 +++ b/src-testing/src/nodes/accessors/BufferAttributeNode.ts
 @@ -4,7 +4,12 @@ import { varying } from '../core/VaryingNode.js';
@@ -234,7 +234,7 @@ index 6ed843b11..5f40d28c2 100644
   * @augments InputNode
   */
 -class BufferAttributeNode extends InputNode {
-+class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
++class BufferAttributeNode extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
      static get type() {
          return 'BufferAttributeNode';
      }
@@ -2775,7 +2775,7 @@ index ae664a236..65e57edd1 100644
  
  export default NodeParser;
 diff --git a/src-testing/src/nodes/core/NodeUniform.ts b/src-testing/src/nodes/core/NodeUniform.ts
-index 09ff8b517..9a5b83849 100644
+index 09ff8b517..f862f04f1 100644
 --- a/src-testing/src/nodes/core/NodeUniform.ts
 +++ b/src-testing/src/nodes/core/NodeUniform.ts
 @@ -1,10 +1,19 @@
@@ -2788,12 +2788,12 @@ index 09ff8b517..9a5b83849 100644
   * for this purpose.
   */
 -class NodeUniform {
-+class NodeUniform<TValue> {
++class NodeUniform<TNodeType, TValue> {
 +    readonly isNodeUniform: true;
 +
 +    name: string;
 +    type: string | null;
-+    node: UniformNode<TValue>;
++    node: UniformNode<TNodeType, TValue>;
 +    needsUpdate: boolean | undefined;
 +
      /**
@@ -2804,7 +2804,7 @@ index 09ff8b517..9a5b83849 100644
       * @param {UniformNode} node - An reference to the node.
       */
 -    constructor(name, type, node) {
-+    constructor(name: string, type: string | null, node: UniformNode<TValue>) {
++    constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>) {
          /**
           * This flag can be used for type testing.
           *
@@ -9589,7 +9589,7 @@ index 7c61c35c5..04e6eb0de 100644
              warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniform.ts b/src-testing/src/renderers/common/nodes/NodeUniform.ts
-index 81d9f2ce3..f4c0431c2 100644
+index 81d9f2ce3..7a6a0b9c8 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniform.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeUniform.ts
 @@ -8,6 +8,14 @@ import {
@@ -9607,11 +9607,13 @@ index 81d9f2ce3..f4c0431c2 100644
  
  /**
   * A special form of Number uniform binding type.
-@@ -17,12 +25,14 @@ import {
+@@ -16,13 +24,15 @@ import {
+  * @private
   * @augments NumberUniform
   */
- class NumberNodeUniform extends NumberUniform {
-+    nodeUniform: NodeUniform<number>;
+-class NumberNodeUniform extends NumberUniform {
++class NumberNodeUniform<TNodeType> extends NumberUniform {
++    nodeUniform: NodeUniform<TNodeType, number>;
 +
      /**
       * Constructs a new node-based Number uniform.
@@ -9619,15 +9621,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<number>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, number>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -60,12 +70,14 @@ class NumberNodeUniform extends NumberUniform {
+@@ -59,13 +69,15 @@ class NumberNodeUniform extends NumberUniform {
+  * @private
   * @augments Vector2Uniform
   */
- class Vector2NodeUniform extends Vector2Uniform {
-+    nodeUniform: NodeUniform<Vector2>;
+-class Vector2NodeUniform extends Vector2Uniform {
++class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector2>;
 +
      /**
       * Constructs a new node-based Vector2 uniform.
@@ -9635,15 +9639,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -103,12 +115,14 @@ class Vector2NodeUniform extends Vector2Uniform {
+@@ -102,13 +114,15 @@ class Vector2NodeUniform extends Vector2Uniform {
+  * @private
   * @augments Vector3Uniform
   */
- class Vector3NodeUniform extends Vector3Uniform {
-+    nodeUniform: NodeUniform<Vector3>;
+-class Vector3NodeUniform extends Vector3Uniform {
++class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector3>;
 +
      /**
       * Constructs a new node-based Vector3 uniform.
@@ -9651,15 +9657,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -146,12 +160,14 @@ class Vector3NodeUniform extends Vector3Uniform {
+@@ -145,13 +159,15 @@ class Vector3NodeUniform extends Vector3Uniform {
+  * @private
   * @augments Vector4Uniform
   */
- class Vector4NodeUniform extends Vector4Uniform {
-+    nodeUniform: NodeUniform<Vector4>;
+-class Vector4NodeUniform extends Vector4Uniform {
++class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Vector4>;
 +
      /**
       * Constructs a new node-based Vector4 uniform.
@@ -9667,15 +9675,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Vector4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -189,12 +205,14 @@ class Vector4NodeUniform extends Vector4Uniform {
+@@ -188,13 +204,15 @@ class Vector4NodeUniform extends Vector4Uniform {
+  * @private
   * @augments ColorUniform
   */
- class ColorNodeUniform extends ColorUniform {
-+    nodeUniform: NodeUniform<Color>;
+-class ColorNodeUniform extends ColorUniform {
++class ColorNodeUniform<TNodeType> extends ColorUniform {
++    nodeUniform: NodeUniform<TNodeType, Color>;
 +
      /**
       * Constructs a new node-based Color uniform.
@@ -9683,15 +9693,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Color>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Color>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -232,12 +250,14 @@ class ColorNodeUniform extends ColorUniform {
+@@ -231,13 +249,15 @@ class ColorNodeUniform extends ColorUniform {
+  * @private
   * @augments Matrix2Uniform
   */
- class Matrix2NodeUniform extends Matrix2Uniform {
-+    nodeUniform: NodeUniform<Matrix2>;
+-class Matrix2NodeUniform extends Matrix2Uniform {
++class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix2>;
 +
      /**
       * Constructs a new node-based Matrix2 uniform.
@@ -9699,15 +9711,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix2>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -275,12 +295,14 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+@@ -274,13 +294,15 @@ class Matrix2NodeUniform extends Matrix2Uniform {
+  * @private
   * @augments Matrix3Uniform
   */
- class Matrix3NodeUniform extends Matrix3Uniform {
-+    nodeUniform: NodeUniform<Matrix3>;
+-class Matrix3NodeUniform extends Matrix3Uniform {
++class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix3>;
 +
      /**
       * Constructs a new node-based Matrix3 uniform.
@@ -9715,15 +9729,17 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix3>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
-@@ -318,12 +340,14 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -317,13 +339,15 @@ class Matrix3NodeUniform extends Matrix3Uniform {
+  * @private
   * @augments Matrix4Uniform
   */
- class Matrix4NodeUniform extends Matrix4Uniform {
-+    nodeUniform: NodeUniform<Matrix4>;
+-class Matrix4NodeUniform extends Matrix4Uniform {
++class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
++    nodeUniform: NodeUniform<TNodeType, Matrix4>;
 +
      /**
       * Constructs a new node-based Matrix4 uniform.
@@ -9731,7 +9747,7 @@ index 81d9f2ce3..f4c0431c2 100644
       * @param {NodeUniform} nodeUniform - The node uniform.
       */
 -    constructor(nodeUniform) {
-+    constructor(nodeUniform: NodeUniform<Matrix4>) {
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>) {
          super(nodeUniform.name, nodeUniform.value);
  
          /**
@@ -9740,13 +9756,13 @@ index 81d9f2ce3..f4c0431c2 100644
      Matrix4NodeUniform,
  };
 +export type NodeUniformGPU =
-+    | NumberNodeUniform
-+    | Vector2NodeUniform
-+    | Vector3NodeUniform
-+    | Vector4NodeUniform
-+    | ColorNodeUniform
-+    | Matrix3NodeUniform
-+    | Matrix4NodeUniform;
++    | NumberNodeUniform<unknown>
++    | Vector2NodeUniform<unknown>
++    | Vector3NodeUniform<unknown>
++    | Vector4NodeUniform<unknown>
++    | ColorNodeUniform<unknown>
++    | Matrix3NodeUniform<unknown>
++    | Matrix4NodeUniform<unknown>;
 diff --git a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts b/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
 index 19a8dd2ae..26f39bf21 100644
 --- a/src-testing/src/renderers/common/nodes/NodeUniformsGroup.ts
