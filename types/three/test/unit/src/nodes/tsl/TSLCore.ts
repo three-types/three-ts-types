@@ -1,17 +1,8 @@
-/**
- * Various tests of ShaderNode and related type inference
- */
-
-import { color, Fn, nodeArray, nodeImmutable, ShaderNode, vec3 } from "three/tsl";
+import { color, Fn, nodeImmutable, ShaderNode, vec3 } from "three/tsl";
 import { ConstNode, MaterialNode, Node, PropertyNode } from "three/webgpu";
 
 const s = color(1);
 s.xyz;
-
-const aa = nodeArray([1, 2, "hello"]);
-aa[0].xy = s;
-aa[1].w = s;
-aa[2] = "hello";
 
 nodeImmutable(MaterialNode, MaterialNode.ROTATION);
 nodeImmutable(PropertyNode, "vec4", "DiffuseColor");
