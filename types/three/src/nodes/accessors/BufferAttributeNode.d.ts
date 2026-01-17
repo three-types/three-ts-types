@@ -27,7 +27,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```
  * @augments InputNode
  */
-declare class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuffer | BufferAttribute> {
+declare class BufferAttributeNode extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
     static get type(): string;
     readonly isBufferNode: true;
     bufferType: string | null;
@@ -57,7 +57,7 @@ declare class BufferAttributeNode extends InputNode<TypedArray | InterleavedBuff
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The hash.
      */
-    getHash(builder: NodeBuilder): any;
+    getHash(builder: NodeBuilder): string;
     /**
      * This method is overwritten since the node type is inferred from
      * the buffer attribute.
