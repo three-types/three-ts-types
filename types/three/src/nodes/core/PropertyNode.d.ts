@@ -19,8 +19,8 @@ type PropertyNode<TNodeType> = Node<TNodeType> & PropertyNodeInterface;
 
 export default PropertyNode;
 
-export const property: <TNodeType>(type: TNodeType, name?: string | null) => PropertyNode<TNodeType>;
-export const varyingProperty: <TNodeType>(type: TNodeType, name?: string | null) => PropertyNode<TNodeType>;
+export const property: <const TNodeType>(type: TNodeType, name?: string | null) => PropertyNode<TNodeType>;
+export const varyingProperty: <const TNodeType>(type: TNodeType, name?: string | null) => PropertyNode<TNodeType>;
 
 export const diffuseColor: PropertyNode<"vec4">;
 export const diffuseContribution: PropertyNode<"vec3">;
