@@ -1,0 +1,22 @@
+export function arrayMin(array: any): any;
+export function arrayMax(array: any): any;
+export function arrayNeedsUint32(array: any): boolean;
+export function getTypedArray(type: any, buffer: any): any;
+export function createElementNS(name: any): HTMLElement;
+export function createCanvasElement(): HTMLElement;
+export function setConsoleFunction(fn: any): void;
+export function getConsoleFunction(): any;
+export function log(...params: any[]): void;
+export function warn(...params: any[]): void;
+export function error(...params: any[]): void;
+export function warnOnce(...params: any[]): void;
+export function probeAsync(gl: any, sync: any, interval: any): Promise<any>;
+export function toNormalizedProjectionMatrix(projectionMatrix: any): void;
+export function toReversedProjectionMatrix(projectionMatrix: any): void;
+/**
+ * Returns `true` if the given object is a typed array.
+ *
+ * @param {any} array - The object to check.
+ * @return {boolean} Whether the given object is a typed array.
+ */
+export function isTypedArray(array: any): boolean;
