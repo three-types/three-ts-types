@@ -2,7 +2,7 @@ import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
-interface TextureNodeInterface {
+interface TextureNodeInterface<TNodeType> {
     readonly isTextureNode: true;
 
     uvNode: Node | null;
@@ -23,7 +23,7 @@ interface TextureNodeInterface {
 
     getSampler(): boolean;
 
-    sample(uvNode: Node): Node;
+    sample(uvNode: Node): Node<TNodeType>;
 
     load(uvNode: Node): Node;
 
@@ -55,7 +55,7 @@ declare const TextureNode: {
     ): TextureNode;
 };
 
-type TextureNode<TNodeValue = "vec4"> = TextureNodeInterface & UniformNode<TNodeValue, Texture>;
+type TextureNode<TNodeType = "vec4"> = TextureNodeInterface<TNodeType> & UniformNode<TNodeType, Texture>;
 
 export default TextureNode;
 
