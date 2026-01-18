@@ -384,7 +384,7 @@ declare module "../core/Node.js" {
         divAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
     }
 
-    interface Matrix2Extensions {
+    interface Mat2Extensions {
         add: AddSubMulMat2Extensions;
         sub: AddSubMulMat2Extensions;
         mul: MulMat2Extensions;
@@ -394,7 +394,7 @@ declare module "../core/Node.js" {
         mulAssign: AddSubMulMat2AssignExtensions;
     }
 
-    interface Matrix3Extensions {
+    interface Mat3Extensions {
         add: AddSubMulMat3Extensions;
         sub: AddSubMulMat3Extensions;
         mul: MulMat3Extensions;
@@ -404,7 +404,7 @@ declare module "../core/Node.js" {
         mulAssign: AddSubMulMat3AssignExtensions;
     }
 
-    interface Matrix4Extensions {
+    interface Mat4Extensions {
         add: AddSubMulMat4Extensions;
         sub: AddSubMulMat4Extensions;
         mul: MulMat4Extensions;
