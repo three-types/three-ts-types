@@ -258,21 +258,20 @@ interface Mul
 {
 }
 
-// TODO Restore once swizzle fallbacks are removed
-// interface MulVec2Extensions<TNum extends NumType>
-//     extends AddSubMulDivNumberVecVec2Extensions<TNum>, MulVecMatVecExtensions
-// {
-// }
-//
-// interface MulVec3Extensions<TNum extends NumType>
-//     extends AddSubMulDivNumberVecVec3Extensions<TNum>, MulVecMatVecExtensions
-// {
-// }
-//
-// interface MulVec4Extensions<TNum extends NumType>
-//     extends AddSubMulDivNumberVecVec4Extensions<TNum>, MulVecMatVecExtensions
-// {
-// }
+interface MulVec2Extensions<TNum extends NumType>
+    extends AddSubMulDivNumberVecVec2Extensions<TNum>, MulVecMatVecExtensions
+{
+}
+
+interface MulVec3Extensions<TNum extends NumType>
+    extends AddSubMulDivNumberVecVec3Extensions<TNum>, MulVecMatVecExtensions
+{
+}
+
+interface MulVec4Extensions<TNum extends NumType>
+    extends AddSubMulDivNumberVecVec4Extensions<TNum>, MulVecMatVecExtensions
+{
+}
 
 interface MulMat2Extensions extends AddSubMulMat2Extensions, MulVecMatMat2Extensions {
 }
@@ -331,7 +330,7 @@ declare module "../core/Node.js" {
     interface NumVec2Extensions<TNum extends NumType> {
         add: AddSubMulDivNumberVecVec2Extensions<TNum>;
         sub: AddSubMulDivNumberVecVec2Extensions<TNum>;
-        mul: AddSubMulDivNumberVecVec2Extensions<TNum>;
+        mul: MulVec2Extensions<TNum>;
         div: AddSubMulDivNumberVecVec2Extensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecVec2AssignExtensions<TNum>;
@@ -343,7 +342,7 @@ declare module "../core/Node.js" {
     interface NumVec3Extensions<TNum extends NumType> {
         add: AddSubMulDivNumberVecVec3Extensions<TNum>;
         sub: AddSubMulDivNumberVecVec3Extensions<TNum>;
-        mul: AddSubMulDivNumberVecVec3Extensions<TNum>;
+        mul: MulVec3Extensions<TNum>;
         div: AddSubMulDivNumberVecVec3Extensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecVec3AssignExtensions<TNum>;
@@ -355,7 +354,7 @@ declare module "../core/Node.js" {
     interface NumVec4Extensions<TNum extends NumType> {
         add: AddSubMulDivNumberVecVec4Extensions<TNum>;
         sub: AddSubMulDivNumberVecVec4Extensions<TNum>;
-        mul: AddSubMulDivNumberVecVec4Extensions<TNum>;
+        mul: MulVec4Extensions<TNum>;
         div: AddSubMulDivNumberVecVec4Extensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecVec4AssignExtensions<TNum>;
