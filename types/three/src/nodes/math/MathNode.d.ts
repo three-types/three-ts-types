@@ -309,9 +309,6 @@ declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
         sign: () => Node<TVec>;
     }
-    interface NodeElements {
-        sign: () => Node;
-    }
 }
 
 export const length: (x: FloatVector | Node) => Node<"float">;
