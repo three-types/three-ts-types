@@ -18,7 +18,7 @@ declare const VarNode: {
     new<TNodeType>(node: Node<TNodeType>, name?: string | null, readOnly?: boolean): VarNode<TNodeType>;
 };
 
-type VarNode<TNodeValue = unknown> = Node<TNodeValue> & VarNodeInterface;
+type VarNode<TNodeType = unknown> = Node<TNodeType> & VarNodeInterface;
 
 export default VarNode;
 

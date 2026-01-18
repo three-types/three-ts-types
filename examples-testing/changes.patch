@@ -19912,7 +19912,7 @@ index 905006a87..8e82686d2 100644
          }
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index a1a354ff7..940a35c89 100644
+index a1a354ff7..e887a1805 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
@@ -19927,7 +19927,7 @@ index a1a354ff7..940a35c89 100644
  
  const planeWidth = 50;
  const planeHeight = 50;
-@@ -24,14 +27,14 @@ function init() {
+@@ -24,17 +27,17 @@ function init() {
      // width 256, height 256, depth 109, 8-bit, zip archived raw data
  
      new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
@@ -19944,7 +19944,11 @@ index a1a354ff7..940a35c89 100644
 +        let coord: THREE.Node<'vec2'> = uv();
          coord = coord.setY(coord.y.oneMinus()); // flip y
  
-         let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
+-        let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
++        let oscLayers: THREE.Node = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
+         oscLayers = oscLayers.add(1).mul(0.5); // convert osc range of [ -1, 1 ] to [ 0, 1 ]
+         oscLayers = oscLayers.mul(map.image.depth); // scale osc range to texture depth
+ 
 diff --git a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
 index cb8ea8f3d..d17d8b487 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts

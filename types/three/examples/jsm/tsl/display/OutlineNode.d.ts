@@ -17,9 +17,9 @@ declare class OutlineNode extends TempNode {
 
     constructor(scene: Scene, camera: Camera, params?: OutlineNodeParams);
 
-    get visibleEdge(): Node;
+    get visibleEdge(): Node<"float">;
 
-    get hiddenEdge(): Node;
+    get hiddenEdge(): Node<"float">;
 
     getTextureNode(): TextureNode;
 
