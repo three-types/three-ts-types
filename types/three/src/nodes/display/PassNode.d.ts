@@ -38,7 +38,7 @@ declare class PassNode extends TempNode<"vec4"> {
     transparent: boolean;
     opaque: boolean;
 
-    contextNode: ContextNode | null;
+    contextNode: ContextNode<unknown> | null;
 
     readonly isPassNode: true;
 
