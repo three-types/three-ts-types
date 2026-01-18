@@ -14653,7 +14653,7 @@ index b5f7c5df9..622dd93b0 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 3e7e4878f..3df52dd57 100644
+index 3e7e4878f..4b4bd4634 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14681,7 +14681,7 @@ index 3e7e4878f..3df52dd57 100644
  
      const computeUpdate = Fn(() => {
 -        const getCoord = pos => pos.add(50).div(100);
-+        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
@@ -14950,7 +14950,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..d4e4a5558 100644
+index 429d2ff40..b6a64b50f 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14967,7 +14967,7 @@ index 429d2ff40..d4e4a5558 100644
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
-+    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
++    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node) => {
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
@@ -15798,7 +15798,7 @@ index 85e320800..4b07c276f 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 58b6b0fa4..6120aa5b2 100644
+index 58b6b0fa4..b22f272fd 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15820,7 +15820,7 @@ index 58b6b0fa4..6120aa5b2 100644
 +    lights: THREE.Group,
 +    lightDummy: THREE.InstancedMesh,
 +    controls: OrbitControls,
-+    compose: THREE.Node<'vec4'>,
++    compose: THREE.Node,
 +    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
