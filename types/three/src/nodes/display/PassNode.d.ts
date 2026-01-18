@@ -76,7 +76,7 @@ declare class PassNode extends TempNode<"vec4"> {
 
     getPreviousTextureNode(name?: string): Node;
 
-    getViewZNode(name?: string): Node;
+    getViewZNode(name?: string): Node<"float">;
 
     getLinearDepthNode(name?: string): Node<"float">;
 
