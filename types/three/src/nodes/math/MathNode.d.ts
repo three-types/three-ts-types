@@ -217,10 +217,6 @@ declare module "../core/Node.js" {
         floor: () => Node<TVec>;
         ceil: () => Node<TVec>;
     }
-    interface NodeElements {
-        floor: () => Node;
-        ceil: () => Node;
-    }
 }
 
 interface Normalize {
@@ -233,9 +229,6 @@ export const normalize: Normalize;
 declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
         normalize: () => Node<TVec>;
-    }
-    interface NodeElements {
-        normalize: () => Node;
     }
 }
 
@@ -299,9 +292,6 @@ declare module "../core/Node.js" {
     }
     interface FloatVecExtensions<TVec extends FloatVecType> {
         abs: () => Node<TVec>;
-    }
-    interface NodeElements {
-        abs: () => Node;
     }
 }
 
@@ -367,9 +357,6 @@ declare module "../core/Node.js" {
     }
     interface FloatVecExtensions<TVec extends FloatVecType> {
         oneMinus: () => Node<TVec>;
-    }
-    interface NodeElements {
-        oneMinus: () => Node;
     }
 }
 
@@ -490,10 +477,6 @@ declare module "../core/Node.js" {
         min: MinMaxVec4Extension;
         max: MinMaxVec4Extension;
     }
-    interface NodeElements {
-        min: (y: Node | number, ...params: (Node | number)[]) => Node;
-        max: (y: Node | number, ...params: (Node | number)[]) => Node;
-    }
 }
 
 export const step: (x: FloatOrNumber | Node, y: FloatOrNumber | Node) => Node<"float">;
@@ -596,9 +579,6 @@ declare module "../core/Node.js" {
     interface Vec3Extensions {
         cross: (y: Node<"vec3">) => Node<"vec3">;
     }
-    interface NodeElements {
-        cross: (y: Node) => Node;
-    }
 }
 
 interface Pow {
@@ -614,9 +594,6 @@ declare module "../core/Node.js" {
     }
     interface FloatVecExtensions<TVec extends FloatVecType> {
         pow: (y: Node<TVec>) => Node<TVec>;
-    }
-    interface NodeElements {
-        pow: (y: Node | number) => Node;
     }
 }
 
@@ -639,11 +616,6 @@ declare module "../core/Node.js" {
         pow2: () => Node<TVec>;
         pow3: () => Node<TVec>;
         pow4: () => Node<TVec>;
-    }
-    interface NodeElements {
-        pow2: () => Node;
-        pow3: () => Node;
-        pow4: () => Node;
     }
 }
 
@@ -719,9 +691,6 @@ declare module "../core/Node.js" {
     interface Vec4Extensions {
         clamp: ClampVec4Extension;
     }
-    interface NodeElements {
-        clamp: (low?: Node | number, high?: Node | number) => Node;
-    }
 }
 
 interface Saturate {
@@ -738,9 +707,6 @@ declare module "../core/Node.js" {
     }
     interface FloatVecExtensions<TVec extends FloatVecType> {
         saturate: () => Node<TVec>;
-    }
-    interface NodeElements {
-        saturate: () => Node;
     }
 }
 
@@ -833,9 +799,6 @@ interface MixExtension {
 declare module "../core/Node.js" {
     interface FloatExtensions {
         mix: MixExtension;
-    }
-    interface NodeElements {
-        mix: (e1: Node | number, e2: Node | number) => Node;
     }
 }
 

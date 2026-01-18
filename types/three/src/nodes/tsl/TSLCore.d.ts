@@ -19,36 +19,6 @@ declare module "../core/Node.js" {
     }
 }
 
-type XYZWCharacter = "x" | "y" | "z" | "w";
-type RGBACharacter = "r" | "g" | "b" | "a";
-type STPQCharacter = "s" | "t" | "p" | "q";
-
-type XYZWSwizzle =
-    | `${XYZWCharacter}`
-    | `${XYZWCharacter}${XYZWCharacter}`
-    | `${XYZWCharacter}${XYZWCharacter}${XYZWCharacter}`;
-
-type RGBASwizzle =
-    | `${RGBACharacter}`
-    | `${RGBACharacter}${RGBACharacter}`
-    | `${RGBACharacter}${RGBACharacter}${RGBACharacter}`;
-
-type STPQSwizzle =
-    | `${STPQCharacter}`
-    | `${STPQCharacter}${STPQCharacter}`
-    | `${STPQCharacter}${STPQCharacter}${STPQCharacter}`;
-
-export type SwizzleOption = XYZWSwizzle | RGBASwizzle | STPQSwizzle;
-
-export type Swizzable = {
-    [Key in SwizzleOption]: Node;
-};
-
-declare module "../core/Node.js" {
-    interface NodeElements extends Swizzable {
-    }
-}
-
 type NumOrBoolToJsType = {
     float: number;
     int: number;
