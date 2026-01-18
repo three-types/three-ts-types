@@ -41,7 +41,7 @@ interface TextureNodeInterface<TNodeType> {
 
     grad(gradeNodeX: Node, gradeNodeY: Node): Node;
 
-    depth(depthNode: Node): Node;
+    depth(depthNode: Node): TextureNode;
 
     clone(): this;
 }
