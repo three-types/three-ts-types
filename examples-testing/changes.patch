@@ -14653,7 +14653,7 @@ index b5f7c5df9..622dd93b0 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 3e7e4878f..4b4bd4634 100644
+index 3e7e4878f..3df52dd57 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14681,7 +14681,7 @@ index 3e7e4878f..4b4bd4634 100644
  
      const computeUpdate = Fn(() => {
 -        const getCoord = pos => pos.add(50).div(100);
-+        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
@@ -14737,7 +14737,7 @@ index b51bafeab..34d18d6ef 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..1b281d637 100644
+index 9a37a9ece..a7cb6a1af 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14756,20 +14756,24 @@ index 9a37a9ece..1b281d637 100644
  
  const getElementIndex = Fn(
 -    ([uvNode, gridWidth, gridHeight]) => {
-+    ([uvNode, gridWidth, gridHeight]: readonly [THREE.Node, THREE.Node, THREE.Node]) => {
++    ([uvNode, gridWidth, gridHeight]: readonly [THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>]) => {
          const newUV = uvNode.mul(vec2(gridWidth, gridHeight));
          const pixel = uvec2(uint(floor(newUV.x)), uint(floor(newUV.y)));
          const elementIndex = uint(gridWidth).mul(pixel.y).add(pixel.x);
-@@ -80,7 +80,7 @@ const getElementIndex = Fn(
+@@ -80,7 +80,11 @@ const getElementIndex = Fn(
  );
  
  const getColor = Fn(
 -    ([colorChanger, gridWidth, gridHeight]) => {
-+    ([colorChanger, gridWidth, gridHeight]: readonly [THREE.Node, THREE.Node, THREE.Node]) => {
++    ([colorChanger, gridWidth, gridHeight]: readonly [
++        THREE.Node<'uint'>,
++        THREE.Node<'float'>,
++        THREE.Node<'float'>,
++    ]) => {
          const subtracter = colorChanger.div(gridWidth.mul(gridHeight));
          return vec3(subtracter.oneMinus()).toVar();
      },
-@@ -92,7 +92,7 @@ const getColor = Fn(
+@@ -92,7 +96,7 @@ const getColor = Fn(
      },
  );
  
@@ -14778,7 +14782,7 @@ index 9a37a9ece..1b281d637 100644
      let currentIndex = array.length;
      while (currentIndex !== 0) {
          const randomIndex = Math.floor(Math.random() * currentIndex);
-@@ -101,7 +101,7 @@ const randomizeDataArray = array => {
+@@ -101,7 +105,7 @@ const randomizeDataArray = array => {
      }
  };
  
@@ -14787,7 +14791,7 @@ index 9a37a9ece..1b281d637 100644
      renderer.setSize(window.innerWidth / 2, window.innerHeight);
      const aspect = window.innerWidth / 2 / window.innerHeight;
      const frustumHeight = camera.top - camera.bottom;
-@@ -111,7 +111,7 @@ const windowResizeCallback = (renderer, scene, camera) => {
+@@ -111,7 +115,7 @@ const windowResizeCallback = (renderer, scene, camera) => {
      renderer.render(scene, camera);
  };
  
@@ -14796,7 +14800,7 @@ index 9a37a9ece..1b281d637 100644
      return `
  
  				Compute ${isGlobal ? 'Global' : 'Local'}:
-@@ -123,7 +123,11 @@ const constructInnerHTML = (isGlobal, colorsArr) => {
+@@ -123,7 +127,11 @@ const constructInnerHTML = (isGlobal, colorsArr) => {
  				</div>`;
  };
  
@@ -14809,7 +14813,7 @@ index 9a37a9ece..1b281d637 100644
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -151,7 +155,10 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
+@@ -151,7 +159,10 @@ const createDisplayMesh = (elementsStorage, algoStorage = null, blockHeightStora
      return plane;
  };
  
@@ -14821,7 +14825,7 @@ index 9a37a9ece..1b281d637 100644
      const material = new THREE.MeshBasicNodeMaterial({ color: 0x00ff00 });
  
      const display = Fn(() => {
-@@ -175,7 +182,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
+@@ -175,7 +186,7 @@ const createDisplayMesh2 = (elementsStorage, infoStorage) => {
      return plane;
  };
  
@@ -14830,7 +14834,7 @@ index 9a37a9ece..1b281d637 100644
      document.body.appendChild(renderer.domElement);
      renderer.domElement.style.position = 'absolute';
      renderer.domElement.style.top = '0';
-@@ -319,7 +326,7 @@ async function initGlobalSwapOnly() {
+@@ -319,7 +330,7 @@ async function initGlobalSwapOnly() {
          .setName('RandomizedElements');
  
      // Swap the elements in local storage
@@ -14946,7 +14950,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..e6ffdb5b3 100644
+index 429d2ff40..d4e4a5558 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14963,7 +14967,7 @@ index 429d2ff40..e6ffdb5b3 100644
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
-+    const getEnvironmentNode = (reflectNode: THREE.Node, positionNode: THREE.Node) => {
++    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
@@ -15794,7 +15798,7 @@ index 85e320800..4b07c276f 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 58b6b0fa4..b22f272fd 100644
+index 58b6b0fa4..6120aa5b2 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15816,7 +15820,7 @@ index 58b6b0fa4..b22f272fd 100644
 +    lights: THREE.Group,
 +    lightDummy: THREE.InstancedMesh,
 +    controls: OrbitControls,
-+    compose: THREE.Node,
++    compose: THREE.Node<'vec4'>,
 +    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
@@ -16215,7 +16219,7 @@ index 385638ee4..97fd8fc7d 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index f540cd3eb..3f70b0735 100644
+index f540cd3eb..09f908aea 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
 @@ -61,9 +61,9 @@ const localSamples = [
@@ -16231,25 +16235,55 @@ index f540cd3eb..3f70b0735 100644
  
  init();
  
-@@ -90,7 +90,7 @@ function init() {
+@@ -90,26 +90,32 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
-+    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [THREE.Node, THREE.Node, THREE.Node]) => {
-         // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
+-        // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
++    const grid = Fn(
++        ([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [
++            THREE.Node<'vec2'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++        ]) => {
++            // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
  
-         const g = fract(coord);
-@@ -109,7 +109,7 @@ function init() {
-         return max(dots, lines);
-     });
+-        const g = fract(coord);
+-        const fw = fwidth(coord);
+-        const gx = abs(g.x.sub(0.5));
+-        const gy = abs(g.y.sub(0.5));
++            const g = fract(coord);
++            const fw = fwidth(coord);
++            const gx = abs(g.x.sub(0.5));
++            const gy = abs(g.y.sub(0.5));
+ 
+-        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
+-        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
+-        const lines = max(lineX, lineY);
++            const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
++            const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
++            const lines = max(lineX, lineY);
+ 
+-        const squareDist = max(gx, gy);
+-        const aa = max(fw.x, fw.y);
+-        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
++            const squareDist = max(gx, gy);
++            const aa = max(fw.x, fw.y);
++            const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
+ 
+-        return max(dots, lines);
+-    });
++            return max(dots, lines);
++        },
++    );
  
 -    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
-+    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node, THREE.Node]) => {
++    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node<'float'>, THREE.Node<'float'>]) => {
          return smoothstep(radius, radius.sub(falloff), length(positionWorld));
      });
  
-@@ -173,7 +173,7 @@ function updateModelsAlign() {
+@@ -173,7 +179,7 @@ function updateModelsAlign() {
      }
  }
  
@@ -16258,7 +16292,7 @@ index f540cd3eb..3f70b0735 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -187,12 +187,12 @@ async function addSample(sample, path) {
+@@ -187,12 +193,12 @@ async function addSample(sample, path) {
      const material = await new MaterialXLoader()
          .setPath(path)
          .loadAsync(sample)
@@ -16274,7 +16308,7 @@ index f540cd3eb..3f70b0735 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -202,7 +202,7 @@ async function addSample(sample, path) {
+@@ -202,7 +208,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -16283,7 +16317,7 @@ index f540cd3eb..3f70b0735 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -222,9 +222,9 @@ function addGUI() {
+@@ -222,9 +228,9 @@ function addGUI() {
          });
  }
  
