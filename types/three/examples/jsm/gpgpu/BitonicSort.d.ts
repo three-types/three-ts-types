@@ -1,8 +1,8 @@
 import { Node, Renderer, StorageBufferNode } from "three/webgpu";
 
-export const getBitonicFlipIndices: (index: Node, blockHeight: Node) => Node;
+export const getBitonicFlipIndices: (index: Node, blockHeight: Node) => Node<"uvec2">;
 
-export const getBitonicDisperseIndices: (index: Node, swapSpan: Node) => Node;
+export const getBitonicDisperseIndices: (index: Node, swapSpan: Node) => Node<"uvec2">;
 
 export interface BitonicSortOptions {
     workgroupSize?: number | undefined;
