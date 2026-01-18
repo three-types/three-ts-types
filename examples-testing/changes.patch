@@ -20092,7 +20092,7 @@ index 4140a49fd..e371e494c 100644
          .name('type')
          .onChange(function () {
 diff --git a/examples-testing/examples/webgpu_tsl_angular_slicing.ts b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
-index d74e1bc0a..5c9fd5677 100644
+index d74e1bc0a..8149db0a4 100644
 --- a/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 +++ b/examples-testing/examples/webgpu_tsl_angular_slicing.ts
 @@ -8,7 +8,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20104,16 +20104,24 @@ index d74e1bc0a..5c9fd5677 100644
  
  init();
  
-@@ -45,7 +45,7 @@ function init() {
+@@ -45,10 +45,12 @@ function init() {
  
      // TSL functions
  
 -    const inAngle = Fn(([position, angleStart, angleArc]) => {
-+    const inAngle = Fn(([position, angleStart, angleArc]: [THREE.Node, THREE.Node, THREE.Node]) => {
-         const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
-         return angle.greaterThan(0).and(angle.lessThan(angleArc));
-     });
-@@ -105,9 +105,9 @@ function init() {
+-        const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
+-        return angle.greaterThan(0).and(angle.lessThan(angleArc));
+-    });
++    const inAngle = Fn(
++        ([position, angleStart, angleArc]: [THREE.Node<'vec2'>, THREE.Node<'float'>, THREE.Node<'float'>]) => {
++            const angle = atan(position.y, position.x).sub(angleStart).mod(TWO_PI).toVar();
++            return angle.greaterThan(0).and(angle.lessThan(angleArc));
++        },
++    );
+ 
+     // materials
+ 
+@@ -105,9 +107,9 @@ function init() {
          const model = gltf.scene;
  
          model.traverse(child => {
@@ -20126,7 +20134,7 @@ index d74e1bc0a..5c9fd5677 100644
  
                  child.castShadow = true;
                  child.receiveShadow = true;
-@@ -153,7 +153,7 @@ function init() {
+@@ -153,7 +155,7 @@ function init() {
  
      // debug
  
@@ -20203,7 +20211,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
-index 143d577f1..76ad2e7cc 100644
+index 143d577f1..95b53f729 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
 +++ b/examples-testing/examples/webgpu_tsl_halftone.ts
 @@ -6,7 +6,36 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20270,14 +20278,14 @@ index 143d577f1..76ad2e7cc 100644
 -        // grid pattern
 +    const halftone = Fn(
 +        ([count, color, direction, start, end, radius, mixLow, mixHigh]: [
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
-+            THREE.Node,
++            THREE.Node<'float'>,
++            THREE.Node<'color'>,
++            THREE.Node<'vec3'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
 +        ]) => {
 +            // grid pattern
  
@@ -20313,7 +20321,7 @@ index 143d577f1..76ad2e7cc 100644
 +    );
  
 -    const halftones = Fn(([input]) => {
-+    const halftones = Fn(([input]: [THREE.Node]) => {
++    const halftones = Fn(([input]: [THREE.Node<'vec4'>]) => {
          const halftonesOutput = input;
  
          for (const settings of halftoneSettings) {
@@ -20407,7 +20415,7 @@ index e57c66eeb..31838ac12 100644
      gui.add(cellSizeUniform, 'value', 6, 50, 1).name('Cell Size');
      gui.add(cellOffsetUniform, 'value', 0, 1, 0.1).name('Cell Offset');
 diff --git a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
-index 5630137b8..1690bcf6f 100644
+index 5630137b8..ebffc04e0 100644
 --- a/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 +++ b/examples-testing/examples/webgpu_tsl_procedural_terrain.ts
 @@ -22,7 +22,26 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20443,7 +20451,7 @@ index 5630137b8..1690bcf6f 100644
      const vPosition = varying(vec3());
  
 -    const terrainElevation = Fn(([position]) => {
-+    const terrainElevation = Fn(([position]: [THREE.Node]) => {
++    const terrainElevation = Fn(([position]: [THREE.Node<'vec2'>]) => {
          const warpedPosition = position.add(offset).toVar();
          warpedPosition.addAssign(
              mx_noise_float(warpedPosition.mul(positionFrequency).mul(warpFrequency), 1, 0).mul(warpStrength),
@@ -20493,7 +20501,7 @@ index 5630137b8..1690bcf6f 100644
              drag.worldCoords.copy(intersect.point);
          }
 diff --git a/examples-testing/examples/webgpu_tsl_raging_sea.ts b/examples-testing/examples/webgpu_tsl_raging_sea.ts
-index cb513d075..08c0009ff 100644
+index cb513d075..b403ba076 100644
 --- a/examples-testing/examples/webgpu_tsl_raging_sea.ts
 +++ b/examples-testing/examples/webgpu_tsl_raging_sea.ts
 @@ -19,7 +19,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20510,7 +20518,7 @@ index cb513d075..08c0009ff 100644
      // TSL functions
  
 -    const wavesElevation = Fn(([position]) => {
-+    const wavesElevation = Fn(([position]: [THREE.Node]) => {
++    const wavesElevation = Fn(([position]: [THREE.Node<'vec3'>]) => {
          // large waves
  
          const elevation = mul(
