@@ -74,9 +74,9 @@ declare const UniformNode: {
      * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
      * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
      */
-    new<TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
+    new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
 };
-type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
+type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
 export default UniformNode;
 interface Uniform {
     (value: number, type?: "float"): UniformNode<"float", number>;
@@ -88,7 +88,7 @@ interface Uniform {
     (value: Matrix3): UniformNode<"mat3", Matrix3>;
     (value: Matrix4): UniformNode<"mat4", Matrix4>;
     (value: Color): UniformNode<"color", Color>;
-    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
+    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
 }
 /**
  * TSL function for creating a uniform node.

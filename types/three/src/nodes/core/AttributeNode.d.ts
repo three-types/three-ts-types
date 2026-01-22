@@ -8,14 +8,14 @@ interface AttributeNodeInterface {
 }
 
 declare const AttributeNode: {
-    new(attributeName: string, nodeType?: string | null): AttributeNode;
+    new<TNodeType>(attributeName: string, TNodeType?: string | null): AttributeNode<TNodeType>;
 };
 
 type AttributeNode<TNodeType = unknown> = Node<TNodeType> & AttributeNodeInterface;
 
 export default AttributeNode;
 
-export const attribute: (
+export const attribute: <TNodeType>(
     name: string,
-    nodeType?: string | null,
-) => AttributeNode;
+    nodeType?: TNodeType | null,
+) => AttributeNode<TNodeType>;

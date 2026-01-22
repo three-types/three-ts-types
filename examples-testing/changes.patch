@@ -14543,7 +14543,7 @@ index c602920ee..802afddb6 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index b5f7c5df9..622dd93b0 100644
+index b5f7c5df9..92f801ed5 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14634,6 +14634,15 @@ index b5f7c5df9..622dd93b0 100644
          const id = verletSprings.length;
          const spring = {
              id,
+@@ -349,7 +372,7 @@ function setupWireframe() {
+     const springWireframeMaterial = new THREE.LineBasicNodeMaterial();
+     springWireframeMaterial.positionNode = Fn(() => {
+         const vertexIds = springVertexIdBuffer.element(instanceIndex);
+-        const vertexId = select(attribute('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
++        const vertexId = select(attribute<'uint'>('vertexIndex').equal(0), vertexIds.x, vertexIds.y);
+         return vertexPositionBuffer.element(vertexId);
+     })();
+ 
 @@ -382,7 +405,7 @@ function setupClothMesh() {
      const verletVertexIdArray = new Uint32Array(vertexCount * 4);
      const indices = [];
@@ -14643,6 +14652,15 @@ index b5f7c5df9..622dd93b0 100644
          return y * clothNumSegmentsX + x;
      };
  
+@@ -419,7 +442,7 @@ function setupClothMesh() {
+ 
+     clothMaterial.positionNode = Fn(({ material }) => {
+         // gather the position of the 4 verlet vertices and calculate the center position and normal from that
+-        const vertexIds = attribute('vertexIds');
++        const vertexIds = attribute<'vec4'>('vertexIds');
+         const v0 = vertexPositionBuffer.element(vertexIds.x).toVar();
+         const v1 = vertexPositionBuffer.element(vertexIds.y).toVar();
+         const v2 = vertexPositionBuffer.element(vertexIds.z).toVar();
 @@ -436,7 +459,7 @@ function setupClothMesh() {
          const normal = cross(tangent, bitangent);
  
@@ -15267,7 +15285,7 @@ index 0abd2f26c..30705fb0c 100644
      });
  
 diff --git a/examples-testing/examples/webgpu_instance_path.ts b/examples-testing/examples/webgpu_instance_path.ts
-index a5bce3225..d542dc648 100644
+index a5bce3225..8b2fa4ad7 100644
 --- a/examples-testing/examples/webgpu_instance_path.ts
 +++ b/examples-testing/examples/webgpu_instance_path.ts
 @@ -19,7 +19,7 @@ import {
@@ -15299,8 +15317,23 @@ index a5bce3225..d542dc648 100644
  
          v.x += 0.5 - Math.random();
          v.y += 0.5 - Math.random();
+@@ -92,10 +92,10 @@ async function init() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceColor = instancedBufferAttribute(colorAttribute);
+-    const instanceSeed = instancedBufferAttribute(seedAttribute);
+-    const instanceTime = instancedBufferAttribute(timeAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceColor = instancedBufferAttribute<'vec3'>(colorAttribute);
++    const instanceSeed = instancedBufferAttribute<'float'>(seedAttribute);
++    const instanceTime = instancedBufferAttribute<'float'>(timeAttribute);
+ 
+     const localTime = instanceTime.add(time);
+     const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..45fa03d05 100644
+index 409129373..96cc4381c 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15335,6 +15368,15 @@ index 409129373..45fa03d05 100644
  
  init();
  
+@@ -94,7 +103,7 @@ async function init() {
+ 
+     // Material / Sprites
+ 
+-    const attributeRange = instancedBufferAttribute(instanceSizeBufferAttribute);
++    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
+     const pointColors = mix(
+         vec3(0.0),
+         instancedBufferAttribute(colorsAttribute),
 @@ -136,7 +145,7 @@ async function init() {
  
      // GUI
@@ -15381,7 +15423,7 @@ index 1063a2bff..7d4604820 100644
  
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_layers.ts b/examples-testing/examples/webgpu_layers.ts
-index c1db7d60c..15b6851cd 100644
+index c1db7d60c..319d54e83 100644
 --- a/examples-testing/examples/webgpu_layers.ts
 +++ b/examples-testing/examples/webgpu_layers.ts
 @@ -4,7 +4,7 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15411,6 +15453,22 @@ index c1db7d60c..15b6851cd 100644
      // instance data
  
      const positions = [];
+@@ -117,11 +117,11 @@ function getMaterial(count, color, sprite) {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(positionAttribute);
+-    const instanceDirection = instancedBufferAttribute(directionAttribute);
+-    const instanceRotation = instancedBufferAttribute(rotationAttribute);
++    const instancePosition = instancedBufferAttribute<'vec3'>(positionAttribute);
++    const instanceDirection = instancedBufferAttribute<'vec3'>(directionAttribute);
++    const instanceRotation = instancedBufferAttribute<'vec3'>(rotationAttribute);
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.02));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.02));
+     const modTime = mod(localTime, 1.0);
+ 
+     const rotatedPosition = rotate(positionLocal, instanceRotation.mul(modTime.mul(20)));
 diff --git a/examples-testing/examples/webgpu_lensflares.ts b/examples-testing/examples/webgpu_lensflares.ts
 index cfd67fdee..90af446b8 100644
 --- a/examples-testing/examples/webgpu_lensflares.ts
@@ -15651,7 +15709,7 @@ index 43d7ce723..616ed8e6b 100644
      gui.add(params, 'shadows');
  }
 diff --git a/examples-testing/examples/webgpu_lights_pointlights.ts b/examples-testing/examples/webgpu_lights_pointlights.ts
-index e00d75b21..ee12bb569 100644
+index e00d75b21..c0d16ef13 100644
 --- a/examples-testing/examples/webgpu_lights_pointlights.ts
 +++ b/examples-testing/examples/webgpu_lights_pointlights.ts
 @@ -16,9 +16,13 @@ import {
@@ -15679,6 +15737,20 @@ index e00d75b21..ee12bb569 100644
          mesh.geometry = createGeometry(mesh.geometry);
          mesh.material = createMaterial();
  
+@@ -102,10 +106,10 @@ function animate() {
+ function createMaterial() {
+     const material = new THREE.MeshPhongNodeMaterial();
+ 
+-    const seedAttribute = attribute('seed');
+-    const displaceNormalAttribute = attribute('displaceNormal');
++    const seedAttribute = attribute<'float'>('seed');
++    const displaceNormalAttribute = attribute<'vec3'>('displaceNormal');
+ 
+-    const localTime = attribute('time').add(time);
++    const localTime = attribute<'float'>('time').add(time);
+ 
+     const effector1 = uniform(light1.position).toVar();
+     const effector2 = uniform(light2.position).toVar();
 @@ -125,7 +129,7 @@ function createMaterial() {
      return material;
  }
@@ -18154,7 +18226,7 @@ index f23b09c18..0bae944cf 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 88a0c635d..6dc5a6a9e 100644
+index 88a0c635d..98c3b0fea 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -13,12 +13,12 @@ import {
@@ -18173,6 +18245,31 @@ index 88a0c635d..6dc5a6a9e 100644
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
+@@ -72,13 +72,13 @@ function init() {
+ 
+     const material = new THREE.SpriteNodeMaterial({ blending: THREE.AdditiveBlending, depthWrite: false });
+ 
+-    const localTime = instancedBufferAttribute(timeAttribute).add(time.mul(0.1));
++    const localTime = instancedBufferAttribute<'float'>(timeAttribute).add(time.mul(0.1));
+     const modTime = mod(localTime, 1.0);
+     const accTime = modTime.mul(modTime);
+ 
+     const angle = accTime.mul(40.0);
+     const pulse = vec2(sin(angle).mul(20.0), cos(angle).mul(20.0));
+-    const pos = instancedBufferAttribute(positionAttribute);
++    const pos = instancedBufferAttribute<'vec3'>(positionAttribute);
+ 
+     const animated = vec3(
+         pos.x.mul(accTime).add(pulse.x),
+@@ -87,7 +87,7 @@ function init() {
+     );
+     const fAlpha = modTime.oneMinus().mul(2.0);
+ 
+-    material.colorNode = texture(sprite).mul(vec4(instancedBufferAttribute(colorAttribute), fAlpha));
++    material.colorNode = texture(sprite).mul(vec4(instancedBufferAttribute<'vec3'>(colorAttribute), fAlpha));
+     material.positionNode = animated;
+     material.scaleNode = float(2);
+ 
 @@ -107,8 +107,8 @@ function init() {
  
      //
@@ -19195,7 +19292,7 @@ index 21fb4a3c2..d3a164bef 100644
      gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
      gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 080715fb9..793cb05d3 100644
+index 080715fb9..f71e94d46 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19250,6 +19347,21 @@ index 080715fb9..793cb05d3 100644
          if (count < maxSteps) {
              const newLength = length * lengthMult;
              const newX = x + Math.cos(angle) * length;
+@@ -288,10 +287,10 @@ function createTreeMesh() {
+ 
+     // TSL
+ 
+-    const instancePosition = instancedBufferAttribute(attributePosition);
+-    const instanceNormal = instancedBufferAttribute(attributeNormal);
+-    const instanceColor = instancedBufferAttribute(attributeColor);
+-    const instanceData = instancedBufferAttribute(attributeData);
++    const instancePosition = instancedBufferAttribute<'vec3'>(attributePosition);
++    const instanceNormal = instancedBufferAttribute<'vec3'>(attributeNormal);
++    const instanceColor = instancedBufferAttribute<'vec3'>(attributeColor);
++    const instanceData = instancedBufferAttribute<'vec3'>(attributeData);
+ 
+     material.positionNode = Fn(() => {
+         const instanceSize = instanceData.x;
 @@ -308,7 +307,7 @@ function createTreeMesh() {
  
          // accumulate different vertex animations
@@ -19294,7 +19406,7 @@ index d475ed2de..3d0c4e82b 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
-index 627fd6b18..ededdfd58 100644
+index 627fd6b18..9dc934c0f 100644
 --- a/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 +++ b/examples-testing/examples/webgpu_rendertarget_2d-array_3d.ts
 @@ -5,11 +5,22 @@ import { TextureHelper } from 'three/addons/helpers/TextureHelperGPU.js';
@@ -19343,6 +19455,24 @@ index 627fd6b18..ededdfd58 100644
  
          const map3D = new THREE.Data3DTexture(array, size.width, size.height, size.depth);
          map3D.name = 'Data3DTexture';
+@@ -109,7 +120,7 @@ async function init() {
+         // 3D
+         const helper3D = new TextureHelper(map3D, 10, 10, depth);
+         helper3D.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[1].scene.add(helper3D);
+@@ -135,7 +146,7 @@ async function init() {
+ 
+         const helperArray = new TextureHelper(mapArray, 10, 10, depth);
+         helperArray.material.outputNode = vec4(
+-            vec3(diffuseColor.r.mul(attribute('uvw').z.div(size.depth).mul(diffuseColor.r))),
++            vec3(diffuseColor.r.mul(attribute<'vec3'>('uvw').z.div(size.depth).mul(diffuseColor.r))),
+             diffuseColor.r.mul(diffuseColor.a),
+         );
+         views[0].scene.add(helperArray);
 @@ -159,7 +170,7 @@ async function init() {
          const quadMesh = new THREE.QuadMesh(materialQuad);
  
@@ -19821,7 +19951,7 @@ index de9f219b8..68a7b73a8 100644
  let imageWidth = 1,
      imageHeight = 1;
 diff --git a/examples-testing/examples/webgpu_storage_buffer.ts b/examples-testing/examples/webgpu_storage_buffer.ts
-index 1b4461d33..0d3c1af80 100644
+index 1b4461d33..5c2d49027 100644
 --- a/examples-testing/examples/webgpu_storage_buffer.ts
 +++ b/examples-testing/examples/webgpu_storage_buffer.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -19853,8 +19983,52 @@ index 1b4461d33..0d3c1af80 100644
      }
  
      const computeInitOrder = Fn(() => {
+@@ -45,7 +45,9 @@ async function init(forceWebGL = false) {
+ 
+     const computeInvertOrder = Fn(() => {
+         for (let i = 0; i < type.length; i++) {
+-            const invertIndex = arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)).toVar();
++            const invertIndex = (
++                arrayBufferNodes[i].element(uint(size - 1).sub(instanceIndex)) as THREE.StorageArrayElementNode<'float'>
++            ).toVar();
+             workgroupBarrier();
+             arrayBufferNodes[i].element(instanceIndex).assign(invertIndex);
+         }
+@@ -69,28 +71,28 @@ async function init(forceWebGL = false) {
+         const color = vec3(0, 0, 0).toVar();
+ 
+         If(uv().y.greaterThan(0.0), () => {
+-            const indexValue = arrayBufferNodes[0].element(index).toVar();
++            const indexValue = (arrayBufferNodes[0].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, 0, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.25), () => {
+-            const indexValue = arrayBufferNodes[1].element(index).toVar();
++            const indexValue = (arrayBufferNodes[1].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, value, 0));
+         });
+ 
+         If(uv().y.greaterThan(0.5), () => {
+-            const indexValue = arrayBufferNodes[2].element(index).toVar();
++            const indexValue = (arrayBufferNodes[2].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(0, 0, value));
+         });
+ 
+         If(uv().y.greaterThan(0.75), () => {
+-            const indexValue = arrayBufferNodes[3].element(index).toVar();
++            const indexValue = (arrayBufferNodes[3].element(index) as THREE.StorageArrayElementNode<'float'>).toVar();
+             const value = float(indexValue).div(float(size)).mul(barCount).floor().div(barCount);
+ 
+             color.assign(vec3(value, value, value));
 diff --git a/examples-testing/examples/webgpu_struct_drawindirect.ts b/examples-testing/examples/webgpu_struct_drawindirect.ts
-index b0d1139db..e61beb33c 100644
+index b0d1139db..ad5736962 100644
 --- a/examples-testing/examples/webgpu_struct_drawindirect.ts
 +++ b/examples-testing/examples/webgpu_struct_drawindirect.ts
 @@ -45,7 +45,7 @@ scene.background = new THREE.Color(0x00001f);
@@ -19865,6 +20039,23 @@ index b0d1139db..e61beb33c 100644
 +let computeDrawBuffer: THREE.ComputeNode, computeInitDrawBuffer: THREE.ComputeNode;
  
  init();
+ 
+@@ -143,11 +143,11 @@ async function init() {
+     const vColor = varyingProperty('vec4', 'vColor');
+ 
+     const positionShaderParams = {
+-        position: attribute('position'),
+-        offset: attribute('offset'),
+-        color: attribute('color'),
+-        orientationStart: attribute('orientationStart'),
+-        orientationEnd: attribute('orientationEnd'),
++        position: attribute<'vec3'>('position'),
++        offset: attribute<'vec3'>('offset'),
++        color: attribute<'vec4'>('color'),
++        orientationStart: attribute<'vec4'>('orientationStart'),
++        orientationEnd: attribute<'vec4'>('orientationEnd'),
+         time: time,
+     };
  
 diff --git a/examples-testing/examples/webgpu_test_memory.ts b/examples-testing/examples/webgpu_test_memory.ts
 index 905006a87..8e82686d2 100644
