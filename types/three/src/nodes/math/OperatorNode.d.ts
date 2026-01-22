@@ -32,57 +32,6 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-type OperatorNodeParameter = Node | number;
-
-declare module "../core/Node.js" {
-    interface NodeElements {
-        addAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
-
-        subAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
-
-        mulAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
-
-        divAssign: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => this;
-
-        notEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-
-        lessThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        lessThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThanEqual: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-
-        and: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-        or: (
-            b: OperatorNodeParameter,
-            ...params: OperatorNodeParameter[]
-        ) => OperatorNode;
-
-        not: () => OperatorNode;
-    }
-}
-
 type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
