@@ -13980,7 +13980,7 @@ index 3ec30a762..5a3faadc2 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 711b6e236..09aefb374 100644
+index 711b6e236..b5a539009 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14002,12 +14002,8 @@ index 711b6e236..09aefb374 100644
  
  init();
  
-@@ -153,10 +155,10 @@ function init() {
- 
-     const waterPosY = positionWorld.y.sub(water.position.y);
- 
--    let transition = waterPosY.add(0.1).saturate().oneMinus();
-+    let transition: THREE.Node = waterPosY.add(0.1).saturate().oneMinus();
+@@ -156,7 +158,7 @@ function init() {
+     let transition = waterPosY.add(0.1).saturate().oneMinus();
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
@@ -14429,7 +14425,7 @@ index b7e94da98..b7c85c2ee 100644
  
      object.position.y = 0.8;
 diff --git a/examples-testing/examples/webgpu_compute_audio.ts b/examples-testing/examples/webgpu_compute_audio.ts
-index 229033d79..1e08d1cc1 100644
+index 229033d79..da8f94d50 100644
 --- a/examples-testing/examples/webgpu_compute_audio.ts
 +++ b/examples-testing/examples/webgpu_compute_audio.ts
 @@ -3,15 +3,15 @@ import { Fn, uniform, instanceIndex, instancedArray, float, texture, screenUV, c
@@ -14469,7 +14465,7 @@ index 229033d79..1e08d1cc1 100644
          const time = index.mul(pitch);
  
 -        let wave = originalWave.element(time);
-+        let wave: THREE.Node = originalWave.element(time);
++        let wave: THREE.Node<'float'> = originalWave.element(time);
  
          // delay
  
@@ -14671,7 +14667,7 @@ index b5f7c5df9..92f801ed5 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 3e7e4878f..4b4bd4634 100644
+index 3e7e4878f..338041458 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14699,7 +14695,7 @@ index 3e7e4878f..4b4bd4634 100644
  
      const computeUpdate = Fn(() => {
 -        const getCoord = pos => pos.add(50).div(100);
-+        const getCoord = (pos: THREE.Node) => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
@@ -14717,7 +14713,7 @@ index 3e7e4878f..4b4bd4634 100644
      // compose
  
 -    let totalPass = scenePass.toInspector('Scene');
-+    let totalPass: THREE.Node = scenePass.toInspector('Scene');
++    let totalPass: THREE.Node<'vec4'> = scenePass.toInspector('Scene');
      totalPass = totalPass.add(scenePassColorBlurred.mul(0.1));
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
@@ -14755,7 +14751,7 @@ index b51bafeab..34d18d6ef 100644
      const y = event.clientY;
  
 diff --git a/examples-testing/examples/webgpu_compute_sort_bitonic.ts b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
-index 9a37a9ece..a7cb6a1af 100644
+index 9a37a9ece..2726efaa7 100644
 --- a/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 +++ b/examples-testing/examples/webgpu_compute_sort_bitonic.ts
 @@ -18,8 +18,8 @@ const StepType = {
@@ -14784,7 +14780,7 @@ index 9a37a9ece..a7cb6a1af 100644
  const getColor = Fn(
 -    ([colorChanger, gridWidth, gridHeight]) => {
 +    ([colorChanger, gridWidth, gridHeight]: readonly [
-+        THREE.Node<'uint'>,
++        THREE.Node<'float'>,
 +        THREE.Node<'float'>,
 +        THREE.Node<'float'>,
 +    ]) => {
@@ -14968,7 +14964,7 @@ index 6aee0c755..a49ca05b9 100644
  let lastUpdate = -1;
  
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..b6a64b50f 100644
+index 429d2ff40..d4e4a5558 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14985,7 +14981,7 @@ index 429d2ff40..b6a64b50f 100644
      const rotateY2Matrix = new THREE.Matrix4();
  
 -    const getEnvironmentNode = (reflectNode, positionNode) => {
-+    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node) => {
++    const getEnvironmentNode = (reflectNode: THREE.Node<'vec3'>, positionNode: THREE.Node<'vec3'>) => {
          const custom1UV = reflectNode.xyz.mul(uniform(rotateY1Matrix));
          const custom2UV = reflectNode.xyz.mul(uniform(rotateY2Matrix));
          const mixCubeMaps = mix(
@@ -15333,7 +15329,7 @@ index a5bce3225..8b2fa4ad7 100644
      const localTime = instanceTime.add(time);
      const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..96cc4381c 100644
+index 409129373..d2ce322f4 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15368,7 +15364,7 @@ index 409129373..96cc4381c 100644
  
  init();
  
-@@ -94,7 +103,7 @@ async function init() {
+@@ -94,10 +103,10 @@ async function init() {
  
      // Material / Sprites
  
@@ -15376,7 +15372,11 @@ index 409129373..96cc4381c 100644
 +    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
      const pointColors = mix(
          vec3(0.0),
-         instancedBufferAttribute(colorsAttribute),
+-        instancedBufferAttribute(colorsAttribute),
++        instancedBufferAttribute<'vec3'>(colorsAttribute),
+         attributeRange.div(float(effectController.maxWidth)),
+     );
+ 
 @@ -136,7 +145,7 @@ async function init() {
  
      // GUI
@@ -15870,7 +15870,7 @@ index 85e320800..4b07c276f 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 58b6b0fa4..b22f272fd 100644
+index 58b6b0fa4..6120aa5b2 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15892,7 +15892,7 @@ index 58b6b0fa4..b22f272fd 100644
 +    lights: THREE.Group,
 +    lightDummy: THREE.InstancedMesh,
 +    controls: OrbitControls,
-+    compose: THREE.Node,
++    compose: THREE.Node<'vec4'>,
 +    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
@@ -17696,7 +17696,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..774c51a7e 100644
+index e49f98ce7..e7061f5d2 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17706,8 +17706,9 @@ index e49f98ce7..774c51a7e 100644
 -let camera, scene, renderer, controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
  
- class OcclusionNode extends THREE.Node {
+-class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
++class OcclusionNode extends THREE.Node<'vec3'> {
 +    uniformNode: THREE.UniformNode<'color', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
@@ -18036,7 +18037,7 @@ index 3e1ea3ef9..e0e11ef81 100644
              });
          });
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
-index 3dc3ceb4f..aad91a01c 100644
+index 3dc3ceb4f..52882cad2 100644
 --- a/examples-testing/examples/webgpu_portal.ts
 +++ b/examples-testing/examples/webgpu_portal.ts
 @@ -17,10 +17,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18058,7 +18059,7 @@ index 3dc3ceb4f..aad91a01c 100644
      const loader = new GLTFLoader();
      loader.load('models/gltf/Xbot.glb', function (gltf) {
 -        const createModel = (colorNode = null) => {
-+        const createModel = (colorNode: THREE.Node | null = null) => {
++        const createModel = (colorNode: THREE.Node<'vec3'> | null = null) => {
              let object;
  
              if (mixers.length === 0) {
@@ -18637,7 +18638,7 @@ index 5cee38e01..141adb21d 100644
      const bloomFolder = gui.addFolder('bloom');
      bloomFolder.add(bloomPass.strength, 'value', 0.0, 2.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index 160be467f..e21c6cd2f 100644
+index 160be467f..1898cd29b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
@@ -18656,7 +18657,7 @@ index 160be467f..e21c6cd2f 100644
      const sceneMask2 = pass(maskScene2, camera).a;
  
 -    let compose = base;
-+    let compose: THREE.Node = base;
++    let compose: THREE.Node<'vec4'> = base;
      compose = sceneMask1.mix(compose, texture(texture1));
      compose = sceneMask2.mix(compose, texture(texture2));
  
@@ -19292,7 +19293,7 @@ index 21fb4a3c2..d3a164bef 100644
      gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
      gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 080715fb9..f71e94d46 100644
+index 080715fb9..89b89b8b9 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19367,7 +19368,7 @@ index 080715fb9..f71e94d46 100644
          // accumulate different vertex animations
  
 -        let animated = positionLocal.add(instancePosition).toVar();
-+        let animated: THREE.Node = positionLocal.add(instancePosition).toVar();
++        let animated: THREE.Node<'vec3'> = positionLocal.add(instancePosition).toVar();
          const direction = positionGeometry.normalize().toConst();
  
          animated = animated.add(direction.mul(effect.add(instanceSize)));
@@ -20058,7 +20059,7 @@ index b0d1139db..ad5736962 100644
      };
  
 diff --git a/examples-testing/examples/webgpu_test_memory.ts b/examples-testing/examples/webgpu_test_memory.ts
-index 905006a87..8e82686d2 100644
+index 905006a87..e024113b8 100644
 --- a/examples-testing/examples/webgpu_test_memory.ts
 +++ b/examples-testing/examples/webgpu_test_memory.ts
 @@ -1,16 +1,22 @@
@@ -20105,7 +20106,7 @@ index 905006a87..8e82686d2 100644
  
          scenePass = pass(scene, camera);
 -        let colorNode = scenePass;
-+        let colorNode: THREE.Node = scenePass;
++        let colorNode: THREE.Node<'vec4'> = scenePass;
  
          if (params.enableAO) {
              prePass = pass(scene, camera);
@@ -20137,7 +20138,7 @@ index 905006a87..8e82686d2 100644
          }
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
-index a1a354ff7..e887a1805 100644
+index a1a354ff7..940a35c89 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array.ts
 +++ b/examples-testing/examples/webgpu_textures_2d-array.ts
 @@ -5,7 +5,10 @@ import { unzipSync } from 'three/addons/libs/fflate.module.js';
@@ -20152,7 +20153,7 @@ index a1a354ff7..e887a1805 100644
  
  const planeWidth = 50;
  const planeHeight = 50;
-@@ -24,17 +27,17 @@ function init() {
+@@ -24,14 +27,14 @@ function init() {
      // width 256, height 256, depth 109, 8-bit, zip archived raw data
  
      new THREE.FileLoader().setResponseType('arraybuffer').load('textures/3d/head256x256x109.zip', function (data) {
@@ -20169,11 +20170,7 @@ index a1a354ff7..e887a1805 100644
 +        let coord: THREE.Node<'vec2'> = uv();
          coord = coord.setY(coord.y.oneMinus()); // flip y
  
--        let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
-+        let oscLayers: THREE.Node = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
-         oscLayers = oscLayers.add(1).mul(0.5); // convert osc range of [ -1, 1 ] to [ 0, 1 ]
-         oscLayers = oscLayers.mul(map.image.depth); // scale osc range to texture depth
- 
+         let oscLayers = oscTriangle(time.mul(0.5)); // [ /\/ ] triangle osc animation
 diff --git a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts b/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
 index cb8ea8f3d..d17d8b487 100644
 --- a/examples-testing/examples/webgpu_textures_2d-array_compressed.ts
@@ -20369,7 +20366,7 @@ index d74e1bc0a..8149db0a4 100644
      gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
      gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c148902..a13245fc6 100644
+index 14c148902..b9ef26fa4 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20395,15 +20392,6 @@ index 14c148902..a13245fc6 100644
      finalOutput = mix(finalOutput, atmosphereColor, atmosphereMix);
  
      globeMaterial.outputNode = vec4(finalOutput, output.a);
-@@ -106,7 +111,7 @@ function init() {
-     // atmosphere
- 
-     const atmosphereMaterial = new THREE.MeshBasicNodeMaterial({ side: THREE.BackSide, transparent: true });
--    let alpha = fresnel.remap(0.73, 1, 1, 0).pow(3);
-+    let alpha: THREE.Node = fresnel.remap(0.73, 1, 1, 0).pow(3);
-     alpha = alpha.mul(sunOrientation.smoothstep(-0.5, 1));
-     atmosphereMaterial.outputNode = vec4(atmosphereColor, alpha);
- 
 @@ -136,7 +141,7 @@ function init() {
  
      // debug
@@ -20593,7 +20581,7 @@ index 143d577f1..95b53f729 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_tsl_interoperability.ts b/examples-testing/examples/webgpu_tsl_interoperability.ts
-index e57c66eeb..31838ac12 100644
+index e57c66eeb..4ca0fc90d 100644
 --- a/examples-testing/examples/webgpu_tsl_interoperability.ts
 +++ b/examples-testing/examples/webgpu_tsl_interoperability.ts
 @@ -23,13 +23,13 @@ import WebGPU from 'three/addons/capabilities/WebGPU.js';
@@ -20617,18 +20605,9 @@ index e57c66eeb..31838ac12 100644
          samplePoint.y = samplePoint.y.sub(1.5);
  
 -        let color = texture(planetTexture, samplePoint);
-+        let color: THREE.Node = texture(planetTexture, samplePoint);
++        let color: THREE.Node<'vec4'> = texture(planetTexture, samplePoint);
  
          const ind = floor(subCoord.x).mod(3);
- 
-@@ -215,7 +215,7 @@ function init() {
-         color = color.mul(maskColor);
- 
-         const pixelDampen = pixel.y.div(pulseWidthUniform);
--        let pulse = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-+        let pulse: THREE.Node = sin(pixelDampen.add(time.mul(pulseRateUniform)));
-         pulse = pulse.mul(pulseIntensityUniform);
-         color = color.mul(float(1.0).add(pulse));
  
 @@ -249,7 +249,7 @@ function init() {
  
@@ -20792,7 +20771,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..e4e1f3c80 100644
+index 4c4ee68ee..4065e1b6a 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -20811,7 +20790,7 @@ index 4c4ee68ee..e4e1f3c80 100644
 -let updateParticles, spawnParticles; // TSL compute nodes
 -let getInstanceColor; // TSL function
 +let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
-+let getInstanceColor: THREE.TSL.FnNode<[THREE.Node], THREE.Node>; // TSL function
++let getInstanceColor: THREE.TSL.FnNode<[THREE.Node], THREE.Node<'vec3'>>; // TSL function
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();

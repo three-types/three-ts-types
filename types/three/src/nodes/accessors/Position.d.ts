@@ -3,7 +3,7 @@ import Node from "../core/Node.js";
 
 export const clipSpace: Node<"vec4">;
 export const positionGeometry: AttributeNode<"vec3">;
-export const positionLocal: Node;
+export const positionLocal: AttributeNode<"vec3">;
 export const positionPrevious: AttributeNode<"vec3">;
 export const positionWorld: Node<"vec3">;
 export const positionWorldDirection: Node<"vec3">;

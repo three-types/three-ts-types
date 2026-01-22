@@ -433,7 +433,7 @@ export interface MatExtensions<TMat extends MatType> {
 type Node<TNodeType = unknown> =
     & NodeClass
     & NodeElements
-    & NodeExtensions<TNodeType>
+    & (unknown extends TNodeType ? {} : NodeExtensions<TNodeType>)
     & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions & NumExtensions<"float">
         : TNodeType extends "int"
             ? NumOrBoolExtensions<"int"> & IntExtensions & NumExtensions<"int"> & IntegerExtensions<"int">
@@ -468,6 +468,9 @@ type Node<TNodeType = unknown> =
         : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
         : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
         : TNodeType extends "mat4" ? Mat4Extensions & MatExtensions<"mat4">
-        : {});
+        : {})
+    & {
+        __TypeScript_NODE_TYPE__: TNodeType;
+    };
 export default Node;
 export {};
