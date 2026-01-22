@@ -21313,7 +21313,7 @@ index c5e4be8cf..26b8a5196 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..2ae54bfe6 100644
+index fb6f2bbd5..50d3e0361 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -21327,29 +21327,40 @@ index fb6f2bbd5..2ae54bfe6 100644
  
  init();
  
-@@ -58,23 +58,25 @@ function init() {
+@@ -58,23 +58,33 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
 -        const finalColor = vec4(0).toVar();
-+    const opaqueRaymarchingTexture = Fn(
-+        ({ texture, steps, threshold }: { texture: THREE.Texture3DNode; steps: THREE.Node; threshold: THREE.Node }) => {
-+            const finalColor = vec4(0).toVar();
- 
+-
 -        RaymarchingBox(steps, ({ positionRay }) => {
 -            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
-+            RaymarchingBox(steps, ({ positionRay }) => {
-+                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
- 
+-
 -            If(mapValue.greaterThan(threshold), () => {
 -                const p = vec3(positionRay).add(0.5);
-+                If(mapValue.greaterThan(threshold), () => {
-+                    const p = vec3(positionRay).add(0.5);
- 
+-
 -                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
 -                finalColor.a.assign(1);
 -                Break();
++    const opaqueRaymarchingTexture = Fn(
++        ({
++            texture,
++            steps,
++            threshold,
++        }: {
++            texture: THREE.Texture3DNode;
++            steps: THREE.Node<'float'>;
++            threshold: THREE.Node<'float'>;
++        }) => {
++            const finalColor = vec4(0).toVar();
++
++            RaymarchingBox(steps, ({ positionRay }) => {
++                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
++
++                If(mapValue.greaterThan(threshold), () => {
++                    const p = vec3(positionRay).add(0.5);
++
 +                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
 +                    finalColor.a.assign(1);
 +                    Break();
@@ -21365,7 +21376,7 @@ index fb6f2bbd5..2ae54bfe6 100644
  
      //
  
-@@ -95,7 +97,7 @@ function init() {
+@@ -95,7 +105,7 @@ function init() {
  
      //
  
