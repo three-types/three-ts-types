@@ -15329,7 +15329,7 @@ index a5bce3225..8b2fa4ad7 100644
      const localTime = instanceTime.add(time);
      const modTime = mod(time.mul(0.4), 1);
 diff --git a/examples-testing/examples/webgpu_instance_points.ts b/examples-testing/examples/webgpu_instance_points.ts
-index 409129373..96cc4381c 100644
+index 409129373..d2ce322f4 100644
 --- a/examples-testing/examples/webgpu_instance_points.ts
 +++ b/examples-testing/examples/webgpu_instance_points.ts
 @@ -19,16 +19,25 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15364,7 +15364,7 @@ index 409129373..96cc4381c 100644
  
  init();
  
-@@ -94,7 +103,7 @@ async function init() {
+@@ -94,10 +103,10 @@ async function init() {
  
      // Material / Sprites
  
@@ -15372,7 +15372,11 @@ index 409129373..96cc4381c 100644
 +    const attributeRange = instancedBufferAttribute<'float'>(instanceSizeBufferAttribute);
      const pointColors = mix(
          vec3(0.0),
-         instancedBufferAttribute(colorsAttribute),
+-        instancedBufferAttribute(colorsAttribute),
++        instancedBufferAttribute<'vec3'>(colorsAttribute),
+         attributeRange.div(float(effectController.maxWidth)),
+     );
+ 
 @@ -136,7 +145,7 @@ async function init() {
  
      // GUI
@@ -17692,7 +17696,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..774c51a7e 100644
+index e49f98ce7..e7061f5d2 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17702,8 +17706,9 @@ index e49f98ce7..774c51a7e 100644
 -let camera, scene, renderer, controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
  
- class OcclusionNode extends THREE.Node {
+-class OcclusionNode extends THREE.Node {
 -    constructor(testObject, normalColor, occludedColor) {
++class OcclusionNode extends THREE.Node<'vec3'> {
 +    uniformNode: THREE.UniformNode<'color', THREE.Color>;
 +
 +    testObject: THREE.Mesh;
@@ -18032,7 +18037,7 @@ index 3e1ea3ef9..e0e11ef81 100644
              });
          });
 diff --git a/examples-testing/examples/webgpu_portal.ts b/examples-testing/examples/webgpu_portal.ts
-index 3dc3ceb4f..aad91a01c 100644
+index 3dc3ceb4f..52882cad2 100644
 --- a/examples-testing/examples/webgpu_portal.ts
 +++ b/examples-testing/examples/webgpu_portal.ts
 @@ -17,10 +17,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18054,7 +18059,7 @@ index 3dc3ceb4f..aad91a01c 100644
      const loader = new GLTFLoader();
      loader.load('models/gltf/Xbot.glb', function (gltf) {
 -        const createModel = (colorNode = null) => {
-+        const createModel = (colorNode: THREE.Node | null = null) => {
++        const createModel = (colorNode: THREE.Node<'vec3'> | null = null) => {
              let object;
  
              if (mixers.length === 0) {
