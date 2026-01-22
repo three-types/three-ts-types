@@ -20366,7 +20366,7 @@ index d74e1bc0a..8149db0a4 100644
      gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
      gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c148902..b9ef26fa4 100644
+index 14c148902..07a99252d 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20383,15 +20383,6 @@ index 14c148902..b9ef26fa4 100644
  
  init();
  
-@@ -91,7 +96,7 @@ function init() {
-     const atmosphereDayStrength = sunOrientation.smoothstep(-0.5, 1);
-     const atmosphereMix = atmosphereDayStrength.mul(fresnel.pow(2)).clamp(0, 1);
- 
--    let finalOutput = mix(night.rgb, output.rgb, dayStrength);
-+    let finalOutput: THREE.Node = mix(night.rgb, output.rgb, dayStrength);
-     finalOutput = mix(finalOutput, atmosphereColor, atmosphereMix);
- 
-     globeMaterial.outputNode = vec4(finalOutput, output.a);
 @@ -136,7 +141,7 @@ function init() {
  
      // debug
