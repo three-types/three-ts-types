@@ -3238,7 +3238,7 @@ index 94299fca9..125e9ad42 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index f9fc07e20..0a1df27d6 100644
+index f9fc07e20..517c5fc2f 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
 @@ -1,26 +1,43 @@
@@ -3383,9 +3383,9 @@ index f9fc07e20..0a1df27d6 100644
 +     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
 +     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
 +     */
-+    new <TNodeValue, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeValue, TValue>;
++    new <TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
 +};
-+type UniformNode<TNodeValue, TValue> = UniformNodeClass<TValue> & InputNode<TNodeValue, TValue>;
++type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
 +
  export default UniformNode;
  
@@ -3399,7 +3399,7 @@ index f9fc07e20..0a1df27d6 100644
 +    (value: Matrix3): UniformNode<'mat3', Matrix3>;
 +    (value: Matrix4): UniformNode<'mat4', Matrix4>;
 +    (value: Color): UniformNode<'color', Color>;
-+    <TNodeValue, TValue>(value: InputNode<TNodeValue, TValue>): UniformNode<TNodeValue, TValue>;
++    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
 +}
 +
  /**
@@ -3410,10 +3410,10 @@ index f9fc07e20..0a1df27d6 100644
   * @returns {UniformNode}
   */
 -export const uniform = (value, type) => {
-+export const uniform: Uniform = <TValue>(
-+    value: InputNode<TValue> | TValue,
-+    type?: Node | string,
-+): UniformNode<TValue> => {
++export const uniform: Uniform = <TNodeType, TValue>(
++    value: InputNode<TNodeType, TValue> | TValue,
++    type?: TNodeType | string,
++): UniformNode<TNodeType, TValue> => {
      const nodeType = getConstNodeType(type || value);
  
      if (nodeType === value) {
