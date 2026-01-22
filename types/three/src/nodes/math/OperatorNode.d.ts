@@ -56,17 +56,11 @@ declare module "../core/Node.js" {
             ...params: OperatorNodeParameter[]
         ) => this;
 
-        equal: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
         notEqual: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
 
         lessThan: (
-            b: OperatorNodeParameter,
-        ) => OperatorNode;
-        greaterThan: (
             b: OperatorNodeParameter,
         ) => OperatorNode;
         lessThanEqual: (
@@ -108,7 +102,7 @@ type Vec2OrLessOrNumber<TNum extends NumType> = Number<TNum> | Node<NumberToVec2
 type Vec3OrLessOrNumber<TNum extends NumType> = Vec2OrLessOrNumber<TNum> | Node<NumberToVec3<TNum>>;
 type Vec4OrLessOrNumber<TNum extends NumType> = Vec3OrLessOrNumber<TNum> | Node<NumberToVec4<TNum>>;
 
-type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | Node | number;
+type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
 
 // add/sub/mul/div
 
