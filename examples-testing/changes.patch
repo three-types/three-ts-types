@@ -20366,7 +20366,7 @@ index d74e1bc0a..8149db0a4 100644
      gui.add(sliceArc, 'value', 0, Math.PI * 2, 0.001).name('sliceArc');
      gui.addColor({ color: sliceColor.value.getHexString(THREE.SRGBColorSpace) }, 'color').onChange(value =>
 diff --git a/examples-testing/examples/webgpu_tsl_earth.ts b/examples-testing/examples/webgpu_tsl_earth.ts
-index 14c148902..b9ef26fa4 100644
+index 14c148902..07a99252d 100644
 --- a/examples-testing/examples/webgpu_tsl_earth.ts
 +++ b/examples-testing/examples/webgpu_tsl_earth.ts
 @@ -21,7 +21,12 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20383,15 +20383,6 @@ index 14c148902..b9ef26fa4 100644
  
  init();
  
-@@ -91,7 +96,7 @@ function init() {
-     const atmosphereDayStrength = sunOrientation.smoothstep(-0.5, 1);
-     const atmosphereMix = atmosphereDayStrength.mul(fresnel.pow(2)).clamp(0, 1);
- 
--    let finalOutput = mix(night.rgb, output.rgb, dayStrength);
-+    let finalOutput: THREE.Node = mix(night.rgb, output.rgb, dayStrength);
-     finalOutput = mix(finalOutput, atmosphereColor, atmosphereMix);
- 
-     globeMaterial.outputNode = vec4(finalOutput, output.a);
 @@ -136,7 +141,7 @@ function init() {
  
      // debug
@@ -21322,7 +21313,7 @@ index c5e4be8cf..26b8a5196 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..2ae54bfe6 100644
+index fb6f2bbd5..50d3e0361 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
 @@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
@@ -21336,29 +21327,40 @@ index fb6f2bbd5..2ae54bfe6 100644
  
  init();
  
-@@ -58,23 +58,25 @@ function init() {
+@@ -58,23 +58,33 @@ function init() {
  
      // Shader
  
 -    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
 -        const finalColor = vec4(0).toVar();
-+    const opaqueRaymarchingTexture = Fn(
-+        ({ texture, steps, threshold }: { texture: THREE.Texture3DNode; steps: THREE.Node; threshold: THREE.Node }) => {
-+            const finalColor = vec4(0).toVar();
- 
+-
 -        RaymarchingBox(steps, ({ positionRay }) => {
 -            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
-+            RaymarchingBox(steps, ({ positionRay }) => {
-+                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
- 
+-
 -            If(mapValue.greaterThan(threshold), () => {
 -                const p = vec3(positionRay).add(0.5);
-+                If(mapValue.greaterThan(threshold), () => {
-+                    const p = vec3(positionRay).add(0.5);
- 
+-
 -                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
 -                finalColor.a.assign(1);
 -                Break();
++    const opaqueRaymarchingTexture = Fn(
++        ({
++            texture,
++            steps,
++            threshold,
++        }: {
++            texture: THREE.Texture3DNode;
++            steps: THREE.Node<'float'>;
++            threshold: THREE.Node<'float'>;
++        }) => {
++            const finalColor = vec4(0).toVar();
++
++            RaymarchingBox(steps, ({ positionRay }) => {
++                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
++
++                If(mapValue.greaterThan(threshold), () => {
++                    const p = vec3(positionRay).add(0.5);
++
 +                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
 +                    finalColor.a.assign(1);
 +                    Break();
@@ -21374,7 +21376,7 @@ index fb6f2bbd5..2ae54bfe6 100644
  
      //
  
-@@ -95,7 +97,7 @@ function init() {
+@@ -95,7 +105,7 @@ function init() {
  
      //
  
