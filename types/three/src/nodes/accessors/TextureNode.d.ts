@@ -5,7 +5,7 @@ import UniformNode from "../core/UniformNode.js";
 interface TextureNodeInterface<TNodeType> {
     readonly isTextureNode: true;
 
-    uvNode: Node<"vec2"> | Node<"vec3"> | null;
+    uvNode: Node | null;
     levelNode: Node | null;
     biasNode: Node | null;
     compareNode: Node | null;
