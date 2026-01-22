@@ -470,7 +470,7 @@ type Node<TNodeType = unknown> =
         : TNodeType extends "mat4" ? Mat4Extensions & MatExtensions<"mat4">
         : {})
     & {
-    __TypeScript_NODE_TYPE__: TNodeType;
-};
+        __TypeScript_NODE_TYPE__: TNodeType;
+    };
 export default Node;
 export {};
