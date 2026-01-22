@@ -46,7 +46,7 @@ type NumberToVec2<TNum extends NumType> = `${NumberToVec[TNum]}2`;
 type NumberToVec3<TNum extends NumType> = `${NumberToVec[TNum]}3`;
 type NumberToVec4<TNum extends NumType> = `${NumberToVec[TNum]}4`;
 
-type Number<TNum extends NumType> = Node<TNum> | number;
+type Number<TNum extends NumType> = AnyNumber; // FIXME Number<TNum> | number
 type Vec2OrLessOrNumber<TNum extends NumType> = Number<TNum> | Node<NumberToVec2<TNum>>;
 type Vec3OrLessOrNumber<TNum extends NumType> = Vec2OrLessOrNumber<TNum> | Node<NumberToVec3<TNum>>;
 type Vec4OrLessOrNumber<TNum extends NumType> = Vec3OrLessOrNumber<TNum> | Node<NumberToVec4<TNum>>;
