@@ -187,16 +187,6 @@ declare module "../core/Node.js" {
         sqrt: () => Node<"float">;
         inverseSqrt: () => Node<"float">;
     }
-    interface NodeElements {
-        radians: () => Node<"float">;
-        degrees: () => Node<"float">;
-        exp: () => Node<"float">;
-        exp2: () => Node<"float">;
-        log: () => Node<"float">;
-        log2: () => Node<"float">;
-        sqrt: () => Node<"float">;
-        inverseSqrt: () => Node<"float">;
-    }
 }
 
 interface FloorCeil {
@@ -264,14 +254,6 @@ declare module "../core/Node.js" {
         acos: () => Node<"float">;
         atan: (x?: FloatOrNumber) => Node<"float">;
     }
-    interface NodeElements {
-        sin: () => Node<"float">;
-        cos: () => Node<"float">;
-        tan: () => Node<"float">;
-        asin: () => Node<"float">;
-        acos: () => Node<"float">;
-        atan: (x?: FloatOrNumber | Node) => Node<"float">;
-    }
 }
 
 interface Abs {
@@ -316,9 +298,6 @@ declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
         length: () => Node<"float">;
     }
-    interface NodeElements {
-        length: () => Node<"float">;
-    }
 }
 
 interface Negate {
@@ -335,9 +314,6 @@ declare module "../core/Node.js" {
     }
     interface FloatVecExtensions<TVec extends FloatVecType> {
         negate: () => Node<TVec>;
-    }
-    interface NodeElements {
-        negate: () => Node<"float">;
     }
 }
 
@@ -516,9 +492,6 @@ declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
         distance: (y: FloatVectorOrNumber) => Node<"float">;
     }
-    interface NodeElements {
-        distance: (y: FloatVectorOrNumber | Node) => Node<"float">;
-    }
 }
 
 interface Difference {
@@ -565,9 +538,6 @@ export const dot: (x: FloatVector | Node, y: FloatVector | Node) => Node<"float"
 declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
         dot: (y: FloatVector) => Node<"float">;
-    }
-    interface NodeElements {
-        dot: (y: FloatVector | Node) => Node<"float">;
     }
 }
 
@@ -633,9 +603,6 @@ declare module "../core/Node.js" {
 export const lengthSq: (a: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
-        lengthSq: () => Node<"float">;
-    }
-    interface NodeElements {
         lengthSq: () => Node<"float">;
     }
 }
@@ -810,17 +777,11 @@ declare module "../core/Node.js" {
     interface FloatExtensions {
         smoothstep: SmoothstepExtension;
     }
-    interface NodeElements {
-        smoothstep: SmoothstepExtension;
-    }
 }
 
 export const stepElement: (x: FloatOrNumber, edge: FloatOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatExtensions {
-        step: (edge: FloatOrNumber) => Node<"float">;
-    }
-    interface NodeElements {
         step: (edge: FloatOrNumber) => Node<"float">;
     }
 }
