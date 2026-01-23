@@ -20,6 +20,7 @@ export class PropertyMixer {
      * The keyframe track value size.
      */
     valueSize: number;
+    buffer: Float64Array | unknown[];
     /**
      * TODO
      *
