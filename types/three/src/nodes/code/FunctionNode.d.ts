@@ -14,7 +14,9 @@ export default class FunctionNode<P extends Array<Node | number> | { [name: stri
     getNodeFunction(builder: NodeBuilder): NodeFunction;
 }
 
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type FnParameters<P extends FunctionNodeArguments> = P extends readonly [...unknown[]] ? ProxiedTuple<P>
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     : readonly [ProxiedObject<P>];
 
 // eslint-disable-next-line @definitelytyped/no-unnecessary-generics
