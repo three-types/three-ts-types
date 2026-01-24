@@ -16,8 +16,6 @@ export interface MeshToonNodeMaterialParameters
 
 /**
  * Node material version of {@link MeshToonMaterial}.
- *
- * @augments NodeMaterial
  */
 declare class MeshToonNodeMaterial extends NodeMaterial {
     /**

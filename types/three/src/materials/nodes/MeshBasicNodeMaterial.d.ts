@@ -5,6 +5,7 @@ import { MapColorPropertiesToColorRepresentations } from "../Material.js";
 import { MeshBasicMaterialParameters, MeshBasicMaterialProperties } from "../MeshBasicMaterial.js";
 import NodeMaterial, { NodeMaterialNodeProperties } from "./NodeMaterial.js";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MeshBasicNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
 }
 
