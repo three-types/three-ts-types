@@ -34,7 +34,7 @@ export class AudioAnalyser {
      * @param {Audio} audio - The audio to analyze.
      * @param {number} [fftSize=2048] - The window size in samples that is used when performing a Fast Fourier Transform (FFT) to get frequency domain data.
      */
-    constructor(audio: Audio, fftSize?: number);
+    constructor(audio: Audio<AudioNode>, fftSize?: number);
     /**
      * The global audio listener.
      */
