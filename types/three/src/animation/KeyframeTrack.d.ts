@@ -177,7 +177,6 @@ export class KeyframeTrack {
     /**
      * The default interpolation type of this keyframe track.
      *
-     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)}
      * @default InterpolateLinear
      */
     DefaultInterpolation: InterpolationModes;
