@@ -169,8 +169,6 @@ declare class Nodes extends DataMap<{
     /**
      * A boolean that indicates whether tone mapping should be enabled
      * or not.
-     *
-     * @type {boolean}
      */
     get isToneMappingState(): boolean;
     /**
