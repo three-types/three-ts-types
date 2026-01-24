@@ -25,7 +25,6 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```js
  * material.positionNode = positionBuffer.toAttribute();
  * ```
- * @augments InputNode
  */
 declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
     static get type(): string;
@@ -144,7 +143,6 @@ export declare const bufferAttribute: <TNodeType>(
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
  *
- * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
@@ -161,7 +159,6 @@ export declare const dynamicBufferAttribute: <TNodeType>(
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
- * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
@@ -178,7 +175,6 @@ export declare const instancedBufferAttribute: <TNodeType>(
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
- * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).

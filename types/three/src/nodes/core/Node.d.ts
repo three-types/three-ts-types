@@ -64,8 +64,6 @@ export interface NodeChild {
 }
 /**
  * Base class for all nodes.
- *
- * @augments EventDispatcher
  */
 declare class NodeClass extends EventDispatcher<{
     dispose: {};
@@ -94,16 +92,12 @@ declare class NodeClass extends EventDispatcher<{
     /**
      * Set this property to `true` when the node should be regenerated.
      *
-     * @type {boolean}
      * @default false
      * @param {boolean} value
      */
     set needsUpdate(value: boolean);
     /**
      * The type of the class. The value is usually the constructor name.
-     *
-     * @type {string}
-     * @readonly
      */
     get type(): string | undefined;
     /**
@@ -175,25 +169,18 @@ declare class NodeClass extends EventDispatcher<{
      */
     dispose(): void;
     /**
-     * Callback for {@link Node#traverse}.
-     *
-     * @callback traverseCallback
-     * @param {Node} node - The current node.
-     */
-    /**
      * Can be used to traverse through the node's hierarchy.
      *
-     * @param {traverseCallback} callback - A callback that is executed per node.
+     * @param {callback} callback - A callback that is executed per node.
      */
     traverse(callback: (node: Node) => void): void;
     /**
      * Returns the child nodes of this node.
      *
-     * @private
      * @param {Set<Node>} [ignores=new Set()] - A set of nodes to ignore during the search to avoid circular references.
      * @returns {Array<Object>} An array of objects describing the child nodes.
      */
-    _getChildren(ignores?: Set<Node>): NodeChild[];
+    private _getChildren;
     /**
      * Returns the cache key for this node.
      *
