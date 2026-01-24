@@ -1048,16 +1048,17 @@ index 856db2d58..a7c734c26 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/audio/Audio.d.ts b/jsdoc-testing/jsdoc/audio/Audio.d.ts
-index 755622769..333c02216 100644
+index 755622769..af76c17f4 100644
 --- a/jsdoc-testing/jsdoc/audio/Audio.d.ts
 +++ b/jsdoc-testing/jsdoc/audio/Audio.d.ts
-@@ -1,3 +1,5 @@
+@@ -1,3 +1,6 @@
++import { AudioListener } from './AudioListener.js';
 +import { Object3D } from '../core/Object3D.js';
 +
  /**
   * Represents a non-positional ( global ) audio object.
   *
-@@ -20,43 +22,28 @@
+@@ -20,43 +23,28 @@
   * 	sound.play();
   * });
   * ```
@@ -1102,7 +1103,7 @@ index 755622769..333c02216 100644
       */
      autoplay: boolean;
      /**
-@@ -64,9 +51,7 @@ export class Audio extends Object3D {
+@@ -64,9 +52,7 @@ export class Audio extends Object3D {
       *
       * Defined via {@link Audio#setBuffer}.
       *
@@ -1112,7 +1113,7 @@ index 755622769..333c02216 100644
       */
      readonly buffer: AudioBuffer | null;
      /**
-@@ -75,9 +60,7 @@ export class Audio extends Object3D {
+@@ -75,9 +61,7 @@ export class Audio extends Object3D {
       *
       * Defined via {@link Audio#setDetune}.
       *
@@ -1122,7 +1123,7 @@ index 755622769..333c02216 100644
       */
      readonly detune: number;
      /**
-@@ -85,16 +68,13 @@ export class Audio extends Object3D {
+@@ -85,16 +69,13 @@ export class Audio extends Object3D {
       *
       * Defined via {@link Audio#setLoop}.
       *
@@ -1139,7 +1140,7 @@ index 755622769..333c02216 100644
       * @default 0
       */
      loopStart: number;
-@@ -102,7 +82,6 @@ export class Audio extends Object3D {
+@@ -102,7 +83,6 @@ export class Audio extends Object3D {
       * Defines where in the audio buffer the replay should
       * stop, in seconds.
       *
@@ -1147,7 +1148,7 @@ index 755622769..333c02216 100644
       * @default 0
       */
      loopEnd: number;
-@@ -110,24 +89,20 @@ export class Audio extends Object3D {
+@@ -110,24 +90,20 @@ export class Audio extends Object3D {
       * An offset to the time within the audio buffer the playback
       * should begin, in seconds.
       *
@@ -1173,7 +1174,7 @@ index 755622769..333c02216 100644
       * @default 1
       */
      readonly playbackRate: number;
-@@ -137,8 +112,6 @@ export class Audio extends Object3D {
+@@ -137,8 +113,6 @@ export class Audio extends Object3D {
       * This flag will be automatically set when using {@link Audio#play},
       * {@link Audio#pause}, {@link Audio#stop}.
       *
@@ -1182,7 +1183,7 @@ index 755622769..333c02216 100644
       * @default false
       */
      readonly isPlaying: boolean;
-@@ -149,8 +122,6 @@ export class Audio extends Object3D {
+@@ -149,8 +123,6 @@ export class Audio extends Object3D {
       * This flag will be automatically set when audio sources are
       * defined.
       *
@@ -1191,7 +1192,7 @@ index 755622769..333c02216 100644
       * @default true
       */
      readonly hasPlaybackControl: boolean;
-@@ -159,8 +130,6 @@ export class Audio extends Object3D {
+@@ -159,8 +131,6 @@ export class Audio extends Object3D {
       *
       * The property is automatically by one of the `set*()` methods.
       *
@@ -1200,7 +1201,7 @@ index 755622769..333c02216 100644
       * @default null
       */
      readonly source: AudioNode | null;
-@@ -169,30 +138,22 @@ export class Audio extends Object3D {
+@@ -169,30 +139,22 @@ export class Audio extends Object3D {
       *
       * The property is automatically set by one of the `set*()` methods.
       *
@@ -1233,7 +1234,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the given audio node as the source of this instance.
       *
-@@ -201,7 +162,7 @@ export class Audio extends Object3D {
+@@ -201,7 +163,7 @@ export class Audio extends Object3D {
       * @param {AudioNode} audioNode - The audio node like an instance of `OscillatorNode`.
       * @return {Audio} A reference to this instance.
       */
@@ -1242,7 +1243,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the given media element as the source of this instance.
       *
-@@ -210,7 +171,7 @@ export class Audio extends Object3D {
+@@ -210,7 +172,7 @@ export class Audio extends Object3D {
       * @param {HTMLMediaElement} mediaElement - The media element.
       * @return {Audio} A reference to this instance.
       */
@@ -1251,7 +1252,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the given media stream as the source of this instance.
       *
-@@ -219,7 +180,7 @@ export class Audio extends Object3D {
+@@ -219,7 +181,7 @@ export class Audio extends Object3D {
       * @param {MediaStream} mediaStream - The media stream.
       * @return {Audio} A reference to this instance.
       */
@@ -1260,7 +1261,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the given audio buffer as the source of this instance.
       *
-@@ -228,7 +189,7 @@ export class Audio extends Object3D {
+@@ -228,7 +190,7 @@ export class Audio extends Object3D {
       * @param {AudioBuffer} audioBuffer - The audio buffer.
       * @return {Audio} A reference to this instance.
       */
@@ -1269,7 +1270,7 @@ index 755622769..333c02216 100644
      /**
       * Starts the playback of the audio.
       *
-@@ -237,7 +198,7 @@ export class Audio extends Object3D {
+@@ -237,7 +199,7 @@ export class Audio extends Object3D {
       * @param {number} [delay=0] - The delay, in seconds, at which the audio should start playing.
       * @return {Audio|undefined} A reference to this instance.
       */
@@ -1278,7 +1279,7 @@ index 755622769..333c02216 100644
      /**
       * Pauses the playback of the audio.
       *
-@@ -245,7 +206,7 @@ export class Audio extends Object3D {
+@@ -245,7 +207,7 @@ export class Audio extends Object3D {
       *
       * @return {Audio|undefined} A reference to this instance.
       */
@@ -1287,7 +1288,7 @@ index 755622769..333c02216 100644
      /**
       * Stops the playback of the audio.
       *
-@@ -254,41 +215,41 @@ export class Audio extends Object3D {
+@@ -254,41 +216,41 @@ export class Audio extends Object3D {
       * @param {number} [delay=0] - The delay, in seconds, at which the audio should stop playing.
       * @return {Audio|undefined} A reference to this instance.
       */
@@ -1335,7 +1336,7 @@ index 755622769..333c02216 100644
      /**
       * Returns the detuning of oscillation in cents.
       *
-@@ -307,7 +268,7 @@ export class Audio extends Object3D {
+@@ -307,7 +269,7 @@ export class Audio extends Object3D {
       * @param {AudioNode} [filter] - The filter to set.
       * @return {Audio} A reference to this instance.
       */
@@ -1344,7 +1345,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the playback rate.
       *
-@@ -316,7 +277,7 @@ export class Audio extends Object3D {
+@@ -316,7 +278,7 @@ export class Audio extends Object3D {
       * @param {number} [value] - The playback rate to set.
       * @return {Audio|undefined} A reference to this instance.
       */
@@ -1353,7 +1354,7 @@ index 755622769..333c02216 100644
      /**
       * Returns the current playback rate.
  
-@@ -343,7 +304,7 @@ export class Audio extends Object3D {
+@@ -343,7 +305,7 @@ export class Audio extends Object3D {
       * @param {boolean} value - Whether the audio should loop or not.
       * @return {Audio|undefined} A reference to this instance.
       */
@@ -1362,7 +1363,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the loop start value which defines where in the audio buffer the replay should
       * start, in seconds.
-@@ -351,7 +312,7 @@ export class Audio extends Object3D {
+@@ -351,7 +313,7 @@ export class Audio extends Object3D {
       * @param {number} value - The loop start value.
       * @return {Audio} A reference to this instance.
       */
@@ -1371,7 +1372,7 @@ index 755622769..333c02216 100644
      /**
       * Sets the loop end value which defines where in the audio buffer the replay should
       * stop, in seconds.
-@@ -359,7 +320,7 @@ export class Audio extends Object3D {
+@@ -359,7 +321,7 @@ export class Audio extends Object3D {
       * @param {number} value - The loop end value.
       * @return {Audio} A reference to this instance.
       */
@@ -1380,7 +1381,7 @@ index 755622769..333c02216 100644
      /**
       * Returns the volume.
       *
-@@ -372,8 +333,7 @@ export class Audio extends Object3D {
+@@ -372,8 +334,7 @@ export class Audio extends Object3D {
       * @param {number} value - The volume to set.
       * @return {Audio} A reference to this instance.
       */
