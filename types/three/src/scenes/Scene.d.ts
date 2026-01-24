@@ -1,7 +1,10 @@
 import { JSONMeta, Object3D, Object3DJSON, Object3DJSONObject } from "../core/Object3D.js";
+import { Material } from "../materials/Material.js";
+import { Color } from "../math/Color.js";
 import { Euler, EulerTuple } from "../math/Euler.js";
-import { FogJSON } from "./Fog.js";
-import { FogExp2JSON } from "./FogExp2.js";
+import { Texture } from "../textures/Texture.js";
+import { Fog, FogJSON } from "./Fog.js";
+import { FogExp2, FogExp2JSON } from "./FogExp2.js";
 
 export interface SceneJSONObject extends Object3DJSONObject {
     fog?: FogJSON | FogExp2JSON;
