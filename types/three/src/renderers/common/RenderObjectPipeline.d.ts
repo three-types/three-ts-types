@@ -6,11 +6,11 @@ import ProgrammableStage from "./ProgrammableStage.js";
  * @private
  * @augments Pipeline
  */
-declare class RenderPipeline extends Pipeline {
+declare class RenderObjectPipeline extends Pipeline {
     vertexProgram: ProgrammableStage;
     fragmentProgram: ProgrammableStage;
     /**
-     * Constructs a new render pipeline.
+     * Constructs a new render object pipeline.
      *
      * @param {string} cacheKey - The pipeline's cache key.
      * @param {ProgrammableStage} vertexProgram - The pipeline's vertex shader.
@@ -18,4 +18,4 @@ declare class RenderPipeline extends Pipeline {
      */
     constructor(cacheKey: string, vertexProgram: ProgrammableStage, fragmentProgram: ProgrammableStage);
 }
-export default RenderPipeline;
+export default RenderObjectPipeline;

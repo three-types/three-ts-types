@@ -5651,11 +5651,11 @@ index ea931b7e..4bfaa3c1 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index b7120598..db33338b 100644
+index 756a4098..b79b8c4a 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
 @@ -2,6 +2,22 @@ import DataMap from './DataMap.js';
- import RenderPipeline from './RenderPipeline.js';
+ import RenderObjectPipeline from './RenderObjectPipeline.js';
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
 +import Backend from './Backend.js';
@@ -5672,7 +5672,7 @@ index b7120598..db33338b 100644
 +}
 +
 +interface RenderObjectData {
-+    pipeline: RenderPipeline;
++    pipeline: RenderObjectPipeline;
 +}
  
  /**
@@ -5775,7 +5775,7 @@ index b7120598..db33338b 100644
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
 @@ -142,7 +173,7 @@ class Pipelines extends DataMap {
       * @param {?Array<Promise>} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
-      * @return {RenderPipeline} The render pipeline.
+      * @return {RenderObjectPipeline} The render pipeline.
       */
 -    getForRender(renderObject, promises = null) {
 +    getForRender(renderObject: RenderObject, promises: Promise<void>[] | null = null) {
@@ -5820,7 +5820,7 @@ index b7120598..db33338b 100644
              const cacheKey = this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
  
 -            let pipeline = this.caches.get(cacheKey);
-+            let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
++            let pipeline = this.caches.get(cacheKey) as RenderObjectPipeline | undefined;
  
              if (pipeline === undefined) {
                  if (previousPipeline && previousPipeline.usedTimes === 0) this._releasePipeline(previousPipeline);
@@ -5848,15 +5848,15 @@ index b7120598..db33338b 100644
              } else {
 -                pipeline.fragmentProgram.usedTimes--;
 -                pipeline.vertexProgram.usedTimes--;
-+                (pipeline as RenderPipeline).fragmentProgram.usedTimes--;
-+                (pipeline as RenderPipeline).vertexProgram.usedTimes--;
++                (pipeline as RenderObjectPipeline).fragmentProgram.usedTimes--;
++                (pipeline as RenderObjectPipeline).vertexProgram.usedTimes--;
  
 -                if (pipeline.vertexProgram.usedTimes === 0) this._releaseProgram(pipeline.vertexProgram);
 -                if (pipeline.fragmentProgram.usedTimes === 0) this._releaseProgram(pipeline.fragmentProgram);
-+                if ((pipeline as RenderPipeline).vertexProgram.usedTimes === 0)
-+                    this._releaseProgram((pipeline as RenderPipeline).vertexProgram);
-+                if ((pipeline as RenderPipeline).fragmentProgram.usedTimes === 0)
-+                    this._releaseProgram((pipeline as RenderPipeline).fragmentProgram);
++                if ((pipeline as RenderObjectPipeline).vertexProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderObjectPipeline).vertexProgram);
++                if ((pipeline as RenderObjectPipeline).fragmentProgram.usedTimes === 0)
++                    this._releaseProgram((pipeline as RenderObjectPipeline).fragmentProgram);
              }
          }
  
@@ -5896,7 +5896,7 @@ index b7120598..db33338b 100644
              pipeline = new ComputePipeline(cacheKey, stageCompute);
 @@ -312,12 +351,18 @@ class Pipelines extends DataMap {
       * @param {?Array<Promise>} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
-      * @return {RenderPipeline} The render pipeline.
+      * @return {RenderObjectPipeline} The render pipeline.
       */
 -    _getRenderPipeline(renderObject, stageVertex, stageFragment, cacheKey, promises) {
 +    _getRenderPipeline(
@@ -5911,10 +5911,10 @@ index b7120598..db33338b 100644
          cacheKey = cacheKey || this._getRenderCacheKey(renderObject, stageVertex, stageFragment);
  
 -        let pipeline = this.caches.get(cacheKey);
-+        let pipeline = this.caches.get(cacheKey) as RenderPipeline | undefined;
++        let pipeline = this.caches.get(cacheKey) as RenderObjectPipeline | undefined;
  
          if (pipeline === undefined) {
-             pipeline = new RenderPipeline(cacheKey, stageVertex, stageFragment);
+             pipeline = new RenderObjectPipeline(cacheKey, stageVertex, stageFragment);
 @@ -344,7 +389,7 @@ class Pipelines extends DataMap {
       * @param {ProgrammableStage} stageCompute - The programmable stage representing the compute shader.
       * @return {string} The cache key.
@@ -6448,7 +6448,7 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 32b74ce2..8a511697 100644
+index 32b74ce2..a46e08b1 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
@@ -6466,7 +6466,7 @@ index 32b74ce2..8a511697 100644
 +import { BufferGeometry } from '../../core/BufferGeometry.js';
 +import { BufferAttribute } from '../../core/BufferAttribute.js';
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
-+import RenderPipeline from './RenderPipeline.js';
++import RenderObjectPipeline from './RenderObjectPipeline.js';
 +import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 +import NodeBuilderState from './nodes/NodeBuilderState.js';
 +import BindGroup from './BindGroup.js';
@@ -6504,7 +6504,7 @@ index 32b74ce2..8a511697 100644
 +
 +    attributes: Array<BufferAttribute | InterleavedBufferAttribute> | null;
 +    attributesId: { [attributeName: string]: number } | null;
-+    pipeline: RenderPipeline | null;
++    pipeline: RenderObjectPipeline | null;
 +    group: { start: number; count: number } | null;
 +    vertexBuffers: Array<BufferAttribute | InterleavedBuffer> | null;
 +    drawParams: { vertexCount: number; firstVertex: number; instanceCount: number; firstInstance: number } | null;
@@ -6633,6 +6633,35 @@ index 32b74ce2..8a511697 100644
      }
  }
  
+diff --git a/src-testing/src/renderers/common/RenderObjectPipeline.ts b/src-testing/src/renderers/common/RenderObjectPipeline.ts
+index b4b8edc0..d9c5caf0 100644
+--- a/src-testing/src/renderers/common/RenderObjectPipeline.ts
++++ b/src-testing/src/renderers/common/RenderObjectPipeline.ts
+@@ -1,4 +1,5 @@
+ import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
+ 
+ /**
+  * Class for representing render pipelines.
+@@ -7,6 +8,9 @@ import Pipeline from './Pipeline.js';
+  * @augments Pipeline
+  */
+ class RenderObjectPipeline extends Pipeline {
++    vertexProgram: ProgrammableStage;
++    fragmentProgram: ProgrammableStage;
++
+     /**
+      * Constructs a new render object pipeline.
+      *
+@@ -14,7 +18,7 @@ class RenderObjectPipeline extends Pipeline {
+      * @param {ProgrammableStage} vertexProgram - The pipeline's vertex shader.
+      * @param {ProgrammableStage} fragmentProgram - The pipeline's fragment shader.
+      */
+-    constructor(cacheKey, vertexProgram, fragmentProgram) {
++    constructor(cacheKey: string, vertexProgram: ProgrammableStage, fragmentProgram: ProgrammableStage) {
+         super(cacheKey);
+ 
+         /**
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
 index 985fee47..648a8060 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
@@ -6763,35 +6792,6 @@ index 985fee47..648a8060 100644
      ) {
          const chainMap = this.getChainMap(passId);
  
-diff --git a/src-testing/src/renderers/common/RenderPipeline.ts b/src-testing/src/renderers/common/RenderPipeline.ts
-index 7527627e..c0fcddf9 100644
---- a/src-testing/src/renderers/common/RenderPipeline.ts
-+++ b/src-testing/src/renderers/common/RenderPipeline.ts
-@@ -1,4 +1,5 @@
- import Pipeline from './Pipeline.js';
-+import ProgrammableStage from './ProgrammableStage.js';
- 
- /**
-  * Class for representing render pipelines.
-@@ -7,6 +8,9 @@ import Pipeline from './Pipeline.js';
-  * @augments Pipeline
-  */
- class RenderPipeline extends Pipeline {
-+    vertexProgram: ProgrammableStage;
-+    fragmentProgram: ProgrammableStage;
-+
-     /**
-      * Constructs a new render pipeline.
-      *
-@@ -14,7 +18,7 @@ class RenderPipeline extends Pipeline {
-      * @param {ProgrammableStage} vertexProgram - The pipeline's vertex shader.
-      * @param {ProgrammableStage} fragmentProgram - The pipeline's fragment shader.
-      */
--    constructor(cacheKey, vertexProgram, fragmentProgram) {
-+    constructor(cacheKey: string, vertexProgram: ProgrammableStage, fragmentProgram: ProgrammableStage) {
-         super(cacheKey);
- 
-         /**
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
 index e260c451..c80eba2f 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
