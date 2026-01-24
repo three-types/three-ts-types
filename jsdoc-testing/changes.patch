@@ -1047,6 +1047,543 @@ index 856db2d58..a7c734c26 100644
 +    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number>, interpolation?: InterpolationModes);
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
+diff --git a/jsdoc-testing/jsdoc/audio/Audio.d.ts b/jsdoc-testing/jsdoc/audio/Audio.d.ts
+index 755622769..333c02216 100644
+--- a/jsdoc-testing/jsdoc/audio/Audio.d.ts
++++ b/jsdoc-testing/jsdoc/audio/Audio.d.ts
+@@ -1,3 +1,5 @@
++import { Object3D } from '../core/Object3D.js';
++
+ /**
+  * Represents a non-positional ( global ) audio object.
+  *
+@@ -20,43 +22,28 @@
+  * 	sound.play();
+  * });
+  * ```
+- *
+- * @augments Object3D
+  */
+-export class Audio extends Object3D {
++export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
+     /**
+      * Constructs a new audio.
+      *
+      * @param {AudioListener} listener - The global audio listener.
+      */
+     constructor(listener: AudioListener);
+-    type: string;
+     /**
+      * The global audio listener.
+-     *
+-     * @type {AudioListener}
+-     * @readonly
+      */
+     readonly listener: AudioListener;
+     /**
+      * The audio context.
+-     *
+-     * @type {AudioContext}
+-     * @readonly
+      */
+     readonly context: AudioContext;
+     /**
+      * The gain node used for volume control.
+-     *
+-     * @type {GainNode}
+-     * @readonly
+      */
+     readonly gain: GainNode;
+     /**
+      * Whether to start playback automatically or not.
+-     *
+-     * @type {boolean}
+-     * @default false
+      */
+     autoplay: boolean;
+     /**
+@@ -64,9 +51,7 @@ export class Audio extends Object3D {
+      *
+      * Defined via {@link Audio#setBuffer}.
+      *
+-     * @type {?AudioBuffer}
+      * @default null
+-     * @readonly
+      */
+     readonly buffer: AudioBuffer | null;
+     /**
+@@ -75,9 +60,7 @@ export class Audio extends Object3D {
+      *
+      * Defined via {@link Audio#setDetune}.
+      *
+-     * @type {number}
+      * @default 0
+-     * @readonly
+      */
+     readonly detune: number;
+     /**
+@@ -85,16 +68,13 @@ export class Audio extends Object3D {
+      *
+      * Defined via {@link Audio#setLoop}.
+      *
+-     * @type {boolean}
+      * @default false
+-     * @readonly
+      */
+     readonly loop: boolean;
+     /**
+      * Defines where in the audio buffer the replay should
+      * start, in seconds.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     loopStart: number;
+@@ -102,7 +82,6 @@ export class Audio extends Object3D {
+      * Defines where in the audio buffer the replay should
+      * stop, in seconds.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     loopEnd: number;
+@@ -110,24 +89,20 @@ export class Audio extends Object3D {
+      * An offset to the time within the audio buffer the playback
+      * should begin, in seconds.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     offset: number;
+     /**
+      * Overrides the default duration of the audio.
+      *
+-     * @type {undefined|number}
+      * @default undefined
+      */
+-    duration: undefined | number;
++    duration: number | undefined;
+     /**
+      * The playback speed.
+      *
+      * Defined via {@link Audio#setPlaybackRate}.
+      *
+-     * @type {number}
+-     * @readonly
+      * @default 1
+      */
+     readonly playbackRate: number;
+@@ -137,8 +112,6 @@ export class Audio extends Object3D {
+      * This flag will be automatically set when using {@link Audio#play},
+      * {@link Audio#pause}, {@link Audio#stop}.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default false
+      */
+     readonly isPlaying: boolean;
+@@ -149,8 +122,6 @@ export class Audio extends Object3D {
+      * This flag will be automatically set when audio sources are
+      * defined.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly hasPlaybackControl: boolean;
+@@ -159,8 +130,6 @@ export class Audio extends Object3D {
+      *
+      * The property is automatically by one of the `set*()` methods.
+      *
+-     * @type {?AudioNode}
+-     * @readonly
+      * @default null
+      */
+     readonly source: AudioNode | null;
+@@ -169,30 +138,22 @@ export class Audio extends Object3D {
+      *
+      * The property is automatically set by one of the `set*()` methods.
+      *
+-     * @type {('empty'|'audioNode'|'mediaNode'|'mediaStreamNode'|'buffer')}
+-     * @readonly
+      * @default 'empty'
+      */
+     readonly sourceType: ("empty" | "audioNode" | "mediaNode" | "mediaStreamNode" | "buffer");
+-    _startedAt: number;
+-    _progress: number;
+-    _connected: boolean;
+     /**
+      * Can be used to apply a variety of low-order filters to create
+      * more complex sound effects e.g. via `BiquadFilterNode`.
+      *
+      * The property is automatically set by {@link Audio#setFilters}.
+-     *
+-     * @type {Array<AudioNode>}
+-     * @readonly
+      */
+-    readonly filters: Array<AudioNode>;
++    readonly filters: AudioNode[];
+     /**
+      * Returns the output audio node.
+      *
+      * @return {GainNode} The output node.
+      */
+-    getOutput(): GainNode;
++    getOutput(): TNode;
+     /**
+      * Sets the given audio node as the source of this instance.
+      *
+@@ -201,7 +162,7 @@ export class Audio extends Object3D {
+      * @param {AudioNode} audioNode - The audio node like an instance of `OscillatorNode`.
+      * @return {Audio} A reference to this instance.
+      */
+-    setNodeSource(audioNode: AudioNode): Audio;
++    setNodeSource(audioNode: AudioNode): this;
+     /**
+      * Sets the given media element as the source of this instance.
+      *
+@@ -210,7 +171,7 @@ export class Audio extends Object3D {
+      * @param {HTMLMediaElement} mediaElement - The media element.
+      * @return {Audio} A reference to this instance.
+      */
+-    setMediaElementSource(mediaElement: HTMLMediaElement): Audio;
++    setMediaElementSource(mediaElement: HTMLMediaElement): this;
+     /**
+      * Sets the given media stream as the source of this instance.
+      *
+@@ -219,7 +180,7 @@ export class Audio extends Object3D {
+      * @param {MediaStream} mediaStream - The media stream.
+      * @return {Audio} A reference to this instance.
+      */
+-    setMediaStreamSource(mediaStream: MediaStream): Audio;
++    setMediaStreamSource(mediaStream: MediaStream): this;
+     /**
+      * Sets the given audio buffer as the source of this instance.
+      *
+@@ -228,7 +189,7 @@ export class Audio extends Object3D {
+      * @param {AudioBuffer} audioBuffer - The audio buffer.
+      * @return {Audio} A reference to this instance.
+      */
+-    setBuffer(audioBuffer: AudioBuffer): Audio;
++    setBuffer(audioBuffer: AudioBuffer): this;
+     /**
+      * Starts the playback of the audio.
+      *
+@@ -237,7 +198,7 @@ export class Audio extends Object3D {
+      * @param {number} [delay=0] - The delay, in seconds, at which the audio should start playing.
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    play(delay?: number): Audio | undefined;
++    play(delay?: number): this | void;
+     /**
+      * Pauses the playback of the audio.
+      *
+@@ -245,7 +206,7 @@ export class Audio extends Object3D {
+      *
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    pause(): Audio | undefined;
++    pause(): this | void;
+     /**
+      * Stops the playback of the audio.
+      *
+@@ -254,41 +215,41 @@ export class Audio extends Object3D {
+      * @param {number} [delay=0] - The delay, in seconds, at which the audio should stop playing.
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    stop(delay?: number): Audio | undefined;
++    stop(delay?: number): this | void;
+     /**
+      * Connects to the audio source. This is used internally on
+      * initialisation and when setting / removing filters.
+      *
+      * @return {Audio} A reference to this instance.
+      */
+-    connect(): Audio;
++    connect(): this;
+     /**
+      * Disconnects to the audio source. This is used internally on
+      * initialisation and when setting / removing filters.
+      *
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    disconnect(): Audio | undefined;
++    disconnect(): this | void;
+     /**
+      * Returns the current set filters.
+      *
+      * @return {Array<AudioNode>} The list of filters.
+      */
+-    getFilters(): Array<AudioNode>;
++    getFilters(): AudioNode[];
+     /**
+      * Sets an array of filters and connects them with the audio source.
+      *
+      * @param {Array<AudioNode>} [value] - A list of filters.
+      * @return {Audio} A reference to this instance.
+      */
+-    setFilters(value?: Array<AudioNode>): Audio;
++    setFilters(value?: AudioNode[]): this;
+     /**
+      * Defines the detuning of oscillation in cents.
+      *
+      * @param {number} value - The detuning of oscillation in cents.
+      * @return {Audio} A reference to this instance.
+      */
+-    setDetune(value: number): Audio;
++    setDetune(value: number): this;
+     /**
+      * Returns the detuning of oscillation in cents.
+      *
+@@ -307,7 +268,7 @@ export class Audio extends Object3D {
+      * @param {AudioNode} [filter] - The filter to set.
+      * @return {Audio} A reference to this instance.
+      */
+-    setFilter(filter?: AudioNode): Audio;
++    setFilter(filter?: AudioNode): this;
+     /**
+      * Sets the playback rate.
+      *
+@@ -316,7 +277,7 @@ export class Audio extends Object3D {
+      * @param {number} [value] - The playback rate to set.
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    setPlaybackRate(value?: number): Audio | undefined;
++    setPlaybackRate(value?: number): this | void;
+     /**
+      * Returns the current playback rate.
+ 
+@@ -343,7 +304,7 @@ export class Audio extends Object3D {
+      * @param {boolean} value - Whether the audio should loop or not.
+      * @return {Audio|undefined} A reference to this instance.
+      */
+-    setLoop(value: boolean): Audio | undefined;
++    setLoop(value: boolean): this | void;
+     /**
+      * Sets the loop start value which defines where in the audio buffer the replay should
+      * start, in seconds.
+@@ -351,7 +312,7 @@ export class Audio extends Object3D {
+      * @param {number} value - The loop start value.
+      * @return {Audio} A reference to this instance.
+      */
+-    setLoopStart(value: number): Audio;
++    setLoopStart(value: number): this;
+     /**
+      * Sets the loop end value which defines where in the audio buffer the replay should
+      * stop, in seconds.
+@@ -359,7 +320,7 @@ export class Audio extends Object3D {
+      * @param {number} value - The loop end value.
+      * @return {Audio} A reference to this instance.
+      */
+-    setLoopEnd(value: number): Audio;
++    setLoopEnd(value: number): this;
+     /**
+      * Returns the volume.
+      *
+@@ -372,8 +333,7 @@ export class Audio extends Object3D {
+      * @param {number} value - The volume to set.
+      * @return {Audio} A reference to this instance.
+      */
+-    setVolume(value: number): Audio;
+-    copy(source: any, recursive: any): this;
+-    clone(recursive: any): any;
++    setVolume(value: number): this;
++    copy(source: Audio, recursive?: boolean): this;
++    clone(recursive?: boolean): this;
+ }
+-import { Object3D } from '../core/Object3D.js';
+diff --git a/jsdoc-testing/jsdoc/audio/AudioAnalyser.d.ts b/jsdoc-testing/jsdoc/audio/AudioAnalyser.d.ts
+index 241498397..e7d6c5654 100644
+--- a/jsdoc-testing/jsdoc/audio/AudioAnalyser.d.ts
++++ b/jsdoc-testing/jsdoc/audio/AudioAnalyser.d.ts
+@@ -1,3 +1,5 @@
++import { Audio } from './Audio.js';
++
+ /**
+  * This class can be used to analyse audio data.
+  *
+@@ -32,17 +34,13 @@ export class AudioAnalyser {
+      * @param {Audio} audio - The audio to analyze.
+      * @param {number} [fftSize=2048] - The window size in samples that is used when performing a Fast Fourier Transform (FFT) to get frequency domain data.
+      */
+-    constructor(audio: new (src?: string) => HTMLAudioElement, fftSize?: number);
++    constructor(audio: Audio, fftSize?: number);
+     /**
+      * The global audio listener.
+-     *
+-     * @type {AnalyserNode}
+      */
+     analyser: AnalyserNode;
+     /**
+      * Holds the analyzed data.
+-     *
+-     * @type {Uint8Array}
+      */
+     data: Uint8Array;
+     /**
+diff --git a/jsdoc-testing/jsdoc/audio/AudioListener.d.ts b/jsdoc-testing/jsdoc/audio/AudioListener.d.ts
+index 242397f85..be69dcb8f 100644
+--- a/jsdoc-testing/jsdoc/audio/AudioListener.d.ts
++++ b/jsdoc-testing/jsdoc/audio/AudioListener.d.ts
+@@ -1,3 +1,6 @@
++import { Object3D } from '../core/Object3D.js';
++import { AudioContext } from './AudioContext.js';
++
+ /**
+  * The class represents a virtual listener of the all positional and non-positional audio effects
+  * in the scene. A three.js application usually creates a single listener. It is a mandatory
+@@ -5,23 +8,14 @@
+  *
+  * In most cases, the listener object is a child of the camera. So the 3D transformation of the
+  * camera represents the 3D transformation of the listener.
+- *
+- * @augments Object3D
+  */
+ export class AudioListener extends Object3D {
+-    type: string;
+     /**
+      * The native audio context.
+-     *
+-     * @type {AudioContext}
+-     * @readonly
+      */
+     readonly context: AudioContext;
+     /**
+      * The gain node used for volume control.
+-     *
+-     * @type {GainNode}
+-     * @readonly
+      */
+     readonly gain: GainNode;
+     /**
+@@ -29,20 +23,15 @@ export class AudioListener extends Object3D {
+      *
+      * Defined via {@link AudioListener#setFilter}.
+      *
+-     * @type {?AudioNode}
+      * @default null
+-     * @readonly
+      */
+     readonly filter: AudioNode | null;
+     /**
+      * Time delta values required for `linearRampToValueAtTime()` usage.
+      *
+-     * @type {number}
+      * @default 0
+-     * @readonly
+      */
+     readonly timeDelta: number;
+-    _clock: Clock;
+     /**
+      * Returns the listener's input node.
+      *
+@@ -56,7 +45,7 @@ export class AudioListener extends Object3D {
+      *
+      * @return {AudioListener} A reference to this listener.
+      */
+-    removeFilter(): AudioListener;
++    removeFilter(): this;
+     /**
+      * Returns the current set filter.
+      *
+@@ -69,7 +58,7 @@ export class AudioListener extends Object3D {
+      * @param {AudioNode} value - The filter to set.
+      * @return {AudioListener} A reference to this listener.
+      */
+-    setFilter(value: AudioNode): AudioListener;
++    setFilter(value: AudioNode): this;
+     /**
+      * Returns the applications master volume.
+      *
+@@ -83,9 +72,5 @@ export class AudioListener extends Object3D {
+      * @param {number} value - The master volume to set.
+      * @return {AudioListener} A reference to this listener.
+      */
+-    setMasterVolume(value: number): AudioListener;
+-    updateMatrixWorld(force: any): void;
++    setMasterVolume(value: number): this;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { AudioContext } from './AudioContext.js';
+-import { Clock } from '../core/Clock.js';
+diff --git a/jsdoc-testing/jsdoc/audio/PositionalAudio.d.ts b/jsdoc-testing/jsdoc/audio/PositionalAudio.d.ts
+index 03307384c..16d00404d 100644
+--- a/jsdoc-testing/jsdoc/audio/PositionalAudio.d.ts
++++ b/jsdoc-testing/jsdoc/audio/PositionalAudio.d.ts
+@@ -1,3 +1,5 @@
++import { Audio } from './Audio.js';
++
+ /**
+  * Represents a positional audio object.
+  *
+@@ -25,21 +27,14 @@
+  *
+  * // finally add the sound to the mesh
+  * mesh.add( sound );
+- *
+- * @augments Audio
+  */
+-export class PositionalAudio extends Audio {
++export class PositionalAudio extends Audio<PannerNode> {
+     /**
+      * The panner node represents the location, direction, and behavior of an audio
+      * source in 3D space.
+-     *
+-     * @type {PannerNode}
+-     * @readonly
+      */
+     readonly panner: PannerNode;
+-    connect(): this;
+     disconnect(): this;
+-    getOutput(): PannerNode;
+     /**
+      * Returns the current reference distance.
+      *
+@@ -54,7 +49,7 @@ export class PositionalAudio extends Audio {
+      * @param {number} value - The reference distance to set.
+      * @return {PositionalAudio} A reference to this instance.
+      */
+-    setRefDistance(value: number): PositionalAudio;
++    setRefDistance(value: number): this;
+     /**
+      * Returns the current rolloff factor.
+      *
+@@ -67,7 +62,7 @@ export class PositionalAudio extends Audio {
+      * @param {number} value - The rolloff factor.
+      * @return {PositionalAudio} A reference to this instance.
+      */
+-    setRolloffFactor(value: number): PositionalAudio;
++    setRolloffFactor(value: number): this;
+     /**
+      * Returns the current distance model.
+      *
+@@ -84,7 +79,7 @@ export class PositionalAudio extends Audio {
+      * @param {('linear'|'inverse'|'exponential')} value - The distance model to set.
+      * @return {PositionalAudio} A reference to this instance.
+      */
+-    setDistanceModel(value: ("linear" | "inverse" | "exponential")): PositionalAudio;
++    setDistanceModel(value: ("linear" | "inverse" | "exponential")): this;
+     /**
+      * Returns the current max distance.
+      *
+@@ -100,7 +95,7 @@ export class PositionalAudio extends Audio {
+      * @param {number} value - The max distance.
+      * @return {PositionalAudio} A reference to this instance.
+      */
+-    setMaxDistance(value: number): PositionalAudio;
++    setMaxDistance(value: number): this;
+     /**
+      * Sets the directional cone in which the audio can be listened.
+      *
+@@ -109,7 +104,5 @@ export class PositionalAudio extends Audio {
+      * @param {number} coneOuterGain - The amount of volume reduction outside the cone defined by the `coneOuterAngle`. When set to `0`, no sound can be heard.
+      * @return {PositionalAudio} A reference to this instance.
+      */
+-    setDirectionalCone(coneInnerAngle: number, coneOuterAngle: number, coneOuterGain: number): PositionalAudio;
+-    updateMatrixWorld(force: any): void;
++    setDirectionalCone(coneInnerAngle: number, coneOuterAngle: number, coneOuterGain: number): this;
+ }
+-import { Audio } from './Audio.js';
 diff --git a/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts b/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts
 index 64e5c7024..699b4951f 100644
 --- a/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts
