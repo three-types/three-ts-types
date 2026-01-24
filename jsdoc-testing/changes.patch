@@ -7933,3 +7933,251 @@ index 8b5885c3c..961cefb6a 100644
 +interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
 +
 +export default VolumeNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
+index 3c17089bd..f043a61b4 100644
+--- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts
++++ b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
+@@ -1,3 +1,13 @@
++import { Color, ColorRepresentation } from '../math/Color.js';
++
++export interface FogJSON {
++    type: string;
++    name: string;
++    color: number;
++    near: number;
++    far: number;
++}
++
+ /**
+  * This class can be used to define a linear fog that grows linearly denser
+  * with the distance.
+@@ -15,32 +25,25 @@ export class Fog {
+      * @param {number} [near=1] - The minimum distance to start applying fog.
+      * @param {number} [far=1000] - The maximum distance at which fog stops being calculated and applied.
+      */
+-    constructor(color: number | Color, near?: number, far?: number);
++    constructor(color: ColorRepresentation, near?: number, far?: number);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isFog: boolean;
+     /**
+      * The name of the fog.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The fog's color.
+-     *
+-     * @type {Color}
+      */
+     color: Color;
+     /**
+      * The minimum distance to start applying fog. Objects that are less than
+      * `near` units from the active camera won't be affected by fog.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     near: number;
+@@ -49,7 +52,6 @@ export class Fog {
+      * Objects that are more than `far` units away from the active camera won't
+      * be affected by fog.
+      *
+-     * @type {number}
+      * @default 1000
+      */
+     far: number;
+@@ -65,6 +67,5 @@ export class Fog {
+      * @param {?(Object|string)} meta - An optional value holding meta information about the serialization.
+      * @return {Object} A JSON object representing the serialized fog
+      */
+-    toJSON(): Object;
++    toJSON(): FogJSON;
+ }
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/scenes/FogExp2.d.ts b/jsdoc-testing/jsdoc/scenes/FogExp2.d.ts
+index e11462391..90d41e90c 100644
+--- a/jsdoc-testing/jsdoc/scenes/FogExp2.d.ts
++++ b/jsdoc-testing/jsdoc/scenes/FogExp2.d.ts
+@@ -1,3 +1,12 @@
++import { Color, ColorRepresentation } from '../math/Color.js';
++
++export interface FogExp2JSON {
++    type: string;
++    name: string;
++    color: number;
++    density: number;
++}
++
+ /**
+  * This class can be used to define an exponential squared fog,
+  * which gives a clear view near the camera and a faster than exponentially
+@@ -15,31 +24,24 @@ export class FogExp2 {
+      * @param {number|Color} color - The fog's color.
+      * @param {number} [density=0.00025] - Defines how fast the fog will grow dense.
+      */
+-    constructor(color: number | Color, density?: number);
++    constructor(color: ColorRepresentation, density?: number);
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isFogExp2: boolean;
+     /**
+      * The name of the fog.
+-     *
+-     * @type {string}
+      */
+     name: string;
+     /**
+      * The fog's color.
+-     *
+-     * @type {Color}
+      */
+     color: Color;
+     /**
+      *  Defines how fast the fog will grow dense.
+      *
+-     * @type {number}
+      * @default 0.00025
+      */
+     density: number;
+@@ -55,6 +57,5 @@ export class FogExp2 {
+      * @param {?(Object|string)} meta - An optional value holding meta information about the serialization.
+      * @return {Object} A JSON object representing the serialized fog
+      */
+-    toJSON(): Object;
++    toJSON(): FogExp2JSON;
+ }
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/scenes/Scene.d.ts b/jsdoc-testing/jsdoc/scenes/Scene.d.ts
+index 91ed09ab6..65c07b1dd 100644
+--- a/jsdoc-testing/jsdoc/scenes/Scene.d.ts
++++ b/jsdoc-testing/jsdoc/scenes/Scene.d.ts
+@@ -1,3 +1,26 @@
++import { JSONMeta, Object3D, Object3DJSON,Object3DJSONObject } from '../core/Object3D.js';
++import { Euler, EulerTuple } from '../math/Euler.js';
++import { Fog, FogJSON } from "./Fog.js";
++import { FogExp2, FogExp2JSON } from "./FogExp2.js";
++import { Color } from "../math/Color.js";
++import { Texture } from "../textures/Texture.js";
++import { Material } from "../materials/Material.js";
++
++export interface SceneJSONObject extends Object3DJSONObject {
++    fog?: FogJSON | FogExp2JSON;
++
++    backgroundBlurriness?: number;
++    backgroundIntensity?: number;
++    backgroundRotation: EulerTuple;
++
++    environmentIntensity?: number;
++    environmentRotation: EulerTuple;
++}
++
++export interface SceneJSON extends Object3DJSON {
++    object: SceneJSONObject;
++}
++
+ /**
+  * Scenes allow you to set up what is to be rendered and where by three.js.
+  * This is where you place 3D objects like meshes, lines or lights.
+@@ -8,12 +31,9 @@ export class Scene extends Object3D {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isScene: boolean;
+-    type: string;
+     /**
+      * Defines the background of the scene. Valid inputs are:
+      *
+@@ -21,7 +41,6 @@ export class Scene extends Object3D {
+      * - A texture for defining a (flat) textured background.
+      * - Cube textures or equirectangular textures for defining a skybox.
+      *
+-     * @type {?(Color|Texture)}
+      * @default null
+      */
+     background: (Color | Texture) | null;
+@@ -30,7 +49,6 @@ export class Scene extends Object3D {
+      * it's not possible to overwrite an existing texture assigned to the `envMap`
+      * material property.
+      *
+-     * @type {?Texture}
+      * @default null
+      */
+     environment: Texture | null;
+@@ -38,7 +56,6 @@ export class Scene extends Object3D {
+      * A fog instance defining the type of fog that affects everything
+      * rendered in the scene.
+      *
+-     * @type {?(Fog|FogExp2)}
+      * @default null
+      */
+     fog: (Fog | FogExp2) | null;
+@@ -47,14 +64,12 @@ export class Scene extends Object3D {
+      * assigned to {@link Scene#background}. Valid input is a float between `0`
+      * and `1`.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     backgroundBlurriness: number;
+     /**
+      * Attenuates the color of the background. Only applies to background textures.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     backgroundIntensity: number;
+@@ -62,7 +77,6 @@ export class Scene extends Object3D {
+      * The rotation of the background in radians. Only influences environment maps
+      * assigned to {@link Scene#background}.
+      *
+-     * @type {Euler}
+      * @default (0,0,0)
+      */
+     backgroundRotation: Euler;
+@@ -70,7 +84,6 @@ export class Scene extends Object3D {
+      * Attenuates the color of the environment. Only influences environment maps
+      * assigned to {@link Scene#environment}.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     environmentIntensity: number;
+@@ -78,7 +91,6 @@ export class Scene extends Object3D {
+      * The rotation of the environment map in radians. Only influences physical materials
+      * in the scene when {@link Scene#environment} is used.
+      *
+-     * @type {Euler}
+      * @default (0,0,0)
+      */
+     environmentRotation: Euler;
+@@ -86,12 +98,9 @@ export class Scene extends Object3D {
+      * Forces everything in the scene to be rendered with the defined material. It is possible
+      * to exclude materials from override by setting {@link Material#allowOverride} to `false`.
+      *
+-     * @type {?Material}
+      * @default null
+      */
+     overrideMaterial: Material | null;
+-    copy(source: any, recursive: any): this;
+-    toJSON(meta: any): Object;
++    copy(source: Scene, recursive?: boolean): this;
++    toJSON(meta?: JSONMeta): SceneJSON;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { Euler } from '../math/Euler.js';

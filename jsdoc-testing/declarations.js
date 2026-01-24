@@ -59,6 +59,9 @@ const files = [
     'materials/ShaderMaterial',
     'materials/ShadowMaterial',
     'materials/SpriteMaterial',
+    'scenes/Fog',
+    'scenes/FogExp2',
+    'scenes/Scene',
 ];
 
 const inDir = './jsdoc';
