@@ -50,7 +50,7 @@ const exceptionList = [
     'webgpu_compute_particles_fluid',
     'webgpu_compute_reduce',
     'webgpu_compute_water',
-    // 'webgpu_depth_texture',
+    'webgpu_depth_texture',
     // 'webgpu_instance_sprites',
     // 'webgpu_instance_uniform',
     // 'webgpu_lights_custom',
