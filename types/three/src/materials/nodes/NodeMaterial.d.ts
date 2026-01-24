@@ -187,7 +187,7 @@ export interface NodeMaterialNodeProperties {
      *
      * @default null
      */
-    geometryNode: (() => Node) | null;
+    geometryNode: Node | null;
     /**
      * Allows to overwrite depth values in the fragment shader.
      *

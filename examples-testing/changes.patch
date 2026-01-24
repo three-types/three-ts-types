@@ -14467,6 +14467,152 @@ index 59cb8a519..d2cc6ac7d 100644
  
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
+diff --git a/examples-testing/examples/webgpu_compute_geometry.ts b/examples-testing/examples/webgpu_compute_geometry.ts
+index 9299e215b..509cf6845 100644
+--- a/examples-testing/examples/webgpu_compute_geometry.ts
++++ b/examples-testing/examples/webgpu_compute_geometry.ts
+@@ -18,8 +18,8 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer;
+-let raycaster, pointer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let raycaster: THREE.Raycaster, pointer: THREE.Vector2;
+ 
+ let mesh;
+ 
+@@ -36,7 +36,7 @@ const jelly = Fn(({ renderer, geometry, object }) => {
+ 
+     // Create storage buffer attribute for modified position.
+ 
+-    const positionBaseAttribute = geometry.attributes.position;
++    const positionBaseAttribute = geometry.attributes.position as THREE.BufferAttribute;
+     const positionStorageBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
+     const speedBufferAttribute = new THREE.StorageBufferAttribute(count, 3);
+ 
+@@ -132,7 +132,7 @@ function init() {
+ 
+         // apply the material to the mesh
+ 
+-        mesh = gltf.scene.children[0];
++        mesh = gltf.scene.children[0] as THREE.Mesh;
+         mesh.scale.setScalar(0.1);
+         mesh.material = material;
+         scene.add(mesh);
+@@ -151,7 +151,7 @@ function init() {
+     controls.minDistance = 0.7;
+     controls.maxDistance = 2;
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(elasticity, 'value', 0, 0.5).name('elasticity');
+     gui.add(damping, 'value', 0.9, 0.98).name('damping');
+     gui.add(brushSize, 'value', 0.1, 0.5).name('brush size');
+@@ -161,7 +161,7 @@ function init() {
+     window.addEventListener('pointermove', onPointerMove);
+ }
+ 
+-function onPointerMove(event) {
++function onPointerMove(event: PointerEvent) {
+     pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+ 
+     raycaster.setFromCamera(pointer, camera);
+@@ -171,7 +171,7 @@ function onPointerMove(event) {
+     if (intersects.length > 0) {
+         const intersect = intersects[0];
+ 
+-        pointerPosition.value.copy(intersect.point);
++        pointerPosition.value.copy(intersect.point as unknown as THREE.Vector4Like);
+         pointerPosition.value.w = 1; // enable
+     } else {
+         pointerPosition.value.w = 0; // disable
+diff --git a/examples-testing/examples/webgpu_compute_particles.ts b/examples-testing/examples/webgpu_compute_particles.ts
+index 71fbd6622..c2fc51fe1 100644
+--- a/examples-testing/examples/webgpu_compute_particles.ts
++++ b/examples-testing/examples/webgpu_compute_particles.ts
+@@ -14,11 +14,11 @@ const size = uniform(0.12);
+ 
+ const clickPosition = uniform(new THREE.Vector3());
+ 
+-let camera, scene, renderer;
+-let controls;
+-let computeParticles;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let computeParticles: THREE.ComputeNode;
+ 
+-let isOrbitControlsActive;
++let isOrbitControlsActive: boolean;
+ 
+ init();
+ 
+@@ -148,7 +148,7 @@ async function init() {
+ 
+     //
+ 
+-    function onMove(event) {
++    function onMove(event: PointerEvent) {
+         if (isOrbitControlsActive) return;
+ 
+         pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+@@ -200,7 +200,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
+     gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
+diff --git a/examples-testing/examples/webgpu_compute_particles_rain.ts b/examples-testing/examples/webgpu_compute_particles_rain.ts
+index eaa4e957e..43cca9ddd 100644
+--- a/examples-testing/examples/webgpu_compute_particles_rain.ts
++++ b/examples-testing/examples/webgpu_compute_particles_rain.ts
+@@ -25,14 +25,17 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+ const maxParticleCount = 50000;
+ const instanceCount = maxParticleCount / 2;
+ 
+-let camera, scene, renderer;
+-let controls;
+-let computeParticles;
+-let monkey;
+-let timer;
+-
+-let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
+-let collisionBoxPos, collisionBoxPosUI;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let computeParticles: THREE.ComputeNode;
++let monkey: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
++let timer: THREE.Timer;
++
++let collisionBox: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>,
++    collisionCamera: THREE.OrthographicCamera,
++    collisionPosRT: THREE.RenderTarget,
++    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
++let collisionBoxPos: THREE.Vector3, collisionBoxPosUI: THREE.Vector3;
+ 
+ init();
+ 
+@@ -100,7 +103,7 @@ async function init() {
+     //
+ 
+     const computeUpdate = Fn(() => {
+-        const getCoord = pos => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
+ 
+         const position = positionBuffer.element(instanceIndex);
+         const velocity = velocityBuffer.element(instanceIndex);
+@@ -274,7 +277,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     // use lerp to smooth the movement
+     collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
 index e00fe068f..476468a0a 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
