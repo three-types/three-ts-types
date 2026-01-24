@@ -6,7 +6,7 @@ import { Matrix4 } from "../math/Matrix4.js";
  * Abstract base class for cameras. This class should always be inherited
  * when you build a new camera.
  */
-export abstract class Camera extends Object3D {
+export class Camera extends Object3D {
     /**
      * This flag can be used for type testing.
      *
@@ -29,6 +29,7 @@ export abstract class Camera extends Object3D {
      * The coordinate system in which the camera is used.
      */
     coordinateSystem: CoordinateSystem;
+    viewport?: Vector4;
     /**
      * The flag that indicates whether the camera uses a reversed depth buffer.
      *
