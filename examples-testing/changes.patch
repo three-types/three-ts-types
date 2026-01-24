@@ -14527,6 +14527,44 @@ index 9299e215b..509cf6845 100644
          pointerPosition.value.w = 1; // enable
      } else {
          pointerPosition.value.w = 0; // disable
+diff --git a/examples-testing/examples/webgpu_compute_particles.ts b/examples-testing/examples/webgpu_compute_particles.ts
+index 71fbd6622..c2fc51fe1 100644
+--- a/examples-testing/examples/webgpu_compute_particles.ts
++++ b/examples-testing/examples/webgpu_compute_particles.ts
+@@ -14,11 +14,11 @@ const size = uniform(0.12);
+ 
+ const clickPosition = uniform(new THREE.Vector3());
+ 
+-let camera, scene, renderer;
+-let controls;
+-let computeParticles;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let computeParticles: THREE.ComputeNode;
+ 
+-let isOrbitControlsActive;
++let isOrbitControlsActive: boolean;
+ 
+ init();
+ 
+@@ -148,7 +148,7 @@ async function init() {
+ 
+     //
+ 
+-    function onMove(event) {
++    function onMove(event: PointerEvent) {
+         if (isOrbitControlsActive) return;
+ 
+         pointer.set((event.clientX / window.innerWidth) * 2 - 1, -(event.clientY / window.innerHeight) * 2 + 1);
+@@ -200,7 +200,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
+     gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
 index e00fe068f..476468a0a 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
