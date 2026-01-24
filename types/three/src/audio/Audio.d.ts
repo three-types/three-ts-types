@@ -1,4 +1,5 @@
 import { Object3D } from "../core/Object3D.js";
+import { AudioListener } from "./AudioListener.js";
 
 /**
  * Represents a non-positional ( global ) audio object.
