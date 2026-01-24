@@ -1739,7 +1739,7 @@ interface Layout {
 }
 
 export interface FnNode<Args extends readonly unknown[], TReturn> {
-    (...args: Args): TReturn;
+    (...args: Args): TReturn extends void ? ShaderCallNodeInternal<void> : TReturn;
 
     shaderNode: ShaderNodeInternal<TReturn>;
     id: number;
