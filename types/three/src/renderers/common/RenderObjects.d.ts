@@ -102,7 +102,7 @@ declare class RenderObjects {
      * @return {RenderObject} The render object.
      */
     createRenderObject(
-        nodes: Nodes,
+        nodes: NodeManager,
         geometries: Geometries,
         renderer: Renderer,
         object: Object3D,
