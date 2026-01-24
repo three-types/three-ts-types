@@ -8,8 +8,6 @@ import BindGroup from "../BindGroup.js";
  * results of the build for further processing in the renderer.
  *
  * Render objects with identical cache keys share the same node builder state.
- *
- * @private
  */
 declare class NodeBuilderState {
     vertexShader: string | null;

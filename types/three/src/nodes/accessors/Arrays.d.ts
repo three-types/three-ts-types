@@ -18,3 +18,5 @@ interface ArrayFunction {
 export const attributeArray: ArrayFunction;
 
 export const instancedArray: ArrayFunction;
+
+export {};

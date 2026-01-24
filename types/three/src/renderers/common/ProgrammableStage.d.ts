@@ -3,8 +3,6 @@ import NodeAttribute from "../../nodes/core/NodeAttribute.js";
  * Class for representing programmable stages which are vertex,
  * fragment or compute shaders. Unlike fixed-function states (like blending),
  * they represent the programmable part of a pipeline.
- *
- * @private
  */
 declare class ProgrammableStage {
     id: number;

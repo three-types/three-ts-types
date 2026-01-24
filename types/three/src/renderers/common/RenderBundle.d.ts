@@ -3,8 +3,6 @@ import BundleGroup from "./BundleGroup.js";
 /**
  * This module is used to represent render bundles inside the renderer
  * for further processing.
- *
- * @private
  */
 declare class RenderBundle {
     bundleGroup: BundleGroup;

@@ -12,9 +12,6 @@ interface GeometryData {
 }
 /**
  * This renderer module manages geometries.
- *
- * @private
- * @augments DataMap
  */
 declare class Geometries extends DataMap<{
     geometry: {

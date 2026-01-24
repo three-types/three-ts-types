@@ -7,9 +7,6 @@ import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
 /**
  * Abstract base class for uniforms.
- *
- * @abstract
- * @private
  */
 declare class Uniform<TValue> {
     name: string;
@@ -40,9 +37,6 @@ declare class Uniform<TValue> {
 }
 /**
  * Represents a Number uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class NumberUniform extends Uniform<number> {
     readonly isNumberUniform: true;
@@ -56,9 +50,6 @@ declare class NumberUniform extends Uniform<number> {
 }
 /**
  * Represents a Vector2 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Vector2Uniform extends Uniform<Vector2> {
     readonly isVector2Uniform: true;
@@ -72,9 +63,6 @@ declare class Vector2Uniform extends Uniform<Vector2> {
 }
 /**
  * Represents a Vector3 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Vector3Uniform extends Uniform<Vector3> {
     readonly isVector3Uniform: true;
@@ -88,9 +76,6 @@ declare class Vector3Uniform extends Uniform<Vector3> {
 }
 /**
  * Represents a Vector4 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Vector4Uniform extends Uniform<Vector4> {
     readonly isVector4Uniform: true;
@@ -104,9 +89,6 @@ declare class Vector4Uniform extends Uniform<Vector4> {
 }
 /**
  * Represents a Color uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class ColorUniform extends Uniform<Color> {
     readonly isColorUniform: true;
@@ -120,9 +102,6 @@ declare class ColorUniform extends Uniform<Color> {
 }
 /**
  * Represents a Matrix2 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Matrix2Uniform extends Uniform<Matrix2> {
     readonly isMatrix2Uniform: true;
@@ -136,9 +115,6 @@ declare class Matrix2Uniform extends Uniform<Matrix2> {
 }
 /**
  * Represents a Matrix3 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Matrix3Uniform extends Uniform<Matrix3> {
     readonly isMatrix3Uniform: true;
@@ -152,9 +128,6 @@ declare class Matrix3Uniform extends Uniform<Matrix3> {
 }
 /**
  * Represents a Matrix4 uniform.
- *
- * @private
- * @augments Uniform
  */
 declare class Matrix4Uniform extends Uniform<Matrix4> {
     readonly isMatrix4Uniform: true;

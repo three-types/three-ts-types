@@ -11,6 +11,7 @@ import { ColorManagement, LinearSRGBColorSpace, Node, Vector3 } from "three/webg
  * @param {Node<vec3>} color - The color value to compute the grayscale for.
  * @return {Node<vec3>} The grayscale color.
  */
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export const grayscale = /*@__PURE__*/ Fn(([color]: [Node<"vec3">]) => {
     return luminance(color.rgb);
 });
@@ -23,6 +24,7 @@ export const grayscale = /*@__PURE__*/ Fn(([color]: [Node<"vec3">]) => {
  * @return {Node<vec3>} The saturated color.
  */
 export const saturation = /*@__PURE__*/ Fn(
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     ([color, adjustment = float(1)]: [Node<"vec3">, Node<"float">] | [Node<"vec3">]) => {
         return adjustment.mix(luminance(color.rgb), color.rgb);
     },
@@ -38,6 +40,7 @@ export const saturation = /*@__PURE__*/ Fn(
  * @return {Node<vec3>} The updated color.
  */
 export const vibrance = /*@__PURE__*/ Fn(
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     ([color, adjustment = float(1)]: [Node<"vec3">, Node<"float">] | [Node<"vec3">]) => {
         const average = add(color.r, color.g, color.b).div(3.0);
 
@@ -56,6 +59,7 @@ export const vibrance = /*@__PURE__*/ Fn(
  * @return {Node<vec3>} The updated color.
  */
 export const hue = /*@__PURE__*/ Fn(
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     ([color, adjustment = float(1)]: [Node<"vec3">, Node<"float">] | [Node<"vec3">]) => {
         const k = vec3(0.57735, 0.57735, 0.57735);
 
@@ -134,6 +138,7 @@ export const cdl = /*@__PURE__*/ Fn(([
 ] | [
     Node<"vec4">,
     Node<"vec3">,
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 ] | [
     Node<"vec4">,
 ]) => {

@@ -14,7 +14,6 @@ import { Vector4 } from "../../math/Vector4.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
-import { Group } from "../../objects/Group.js";
 import { Scene } from "../../scenes/Scene.js";
 import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import { Texture } from "../../textures/Texture.js";
@@ -39,7 +38,7 @@ import RenderBundle from "./RenderBundle.js";
 import RenderBundles from "./RenderBundles.js";
 import RenderContext from "./RenderContext.js";
 import RenderContexts from "./RenderContexts.js";
-import RenderList, { Bundle, RenderItem } from "./RenderList.js";
+import { RenderItem } from "./RenderList.js";
 import RenderLists from "./RenderLists.js";
 import RenderObjects from "./RenderObjects.js";
 import Textures from "./Textures.js";
@@ -185,22 +184,6 @@ declare class Renderer {
     };
     localClippingEnabled?: boolean | undefined;
     /**
-     * Renderer options.
-     *
-     * @typedef {Object} Renderer~Options
-     * @property {boolean} [logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not.
-     * @property {boolean} [alpha=true] - Whether the default framebuffer (which represents the final contents of the canvas) should be transparent or opaque.
-     * @property {boolean} [depth=true] - Whether the default framebuffer should have a depth buffer or not.
-     * @property {boolean} [stencil=false] - Whether the default framebuffer should have a stencil buffer or not.
-     * @property {boolean} [antialias=false] - Whether MSAA as the default anti-aliasing should be enabled or not.
-     * @property {number} [samples=0] - When `antialias` is `true`, `4` samples are used by default. This parameter can set to any other integer value than 0
-     * to overwrite the default.
-     * @property {?Function} [getFallback=null] - This callback function can be used to provide a fallback backend, if the primary backend can't be targeted.
-     * @property {number} [outputBufferType=HalfFloatType] - Defines the type of output buffers. The default `HalfFloatType` is recommend for best
-     * quality. To save memory and bandwidth, `UnsignedByteType` might be used. This will reduce rendering quality though.
-     * @property {boolean} [multiview=false] - If set to `true`, the renderer will use multiview during WebXR rendering if supported.
-     */
-    /**
      * Constructs a new renderer.
      *
      * @param {Backend} backend - The backend the renderer is targeting (e.g. WebGPU or WebGL 2).
@@ -218,17 +201,12 @@ declare class Renderer {
      * A reference to the canvas element the renderer is drawing to.
      * This value of this property will automatically be created by
      * the renderer.
-     *
-     * @type {HTMLCanvasElement|OffscreenCanvas}
      */
     get domElement(): HTMLCanvasElement;
     /**
      * The coordinate system of the renderer. The value of this property
      * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
      * `THREE.WebGPUCoordinateSystem`.
-     *
-     * @readonly
-     * @type {number}
      */
     get coordinateSystem(): import("../../constants.js").CoordinateSystem;
     /**
@@ -269,8 +247,6 @@ declare class Renderer {
     set inspector(value: InspectorBase);
     /**
      * The inspector instance. The inspector can be any class that extends from `InspectorBase`.
-     *
-     * @type {InspectorBase}
      */
     get inspector(): InspectorBase;
     /**
@@ -280,14 +256,12 @@ declare class Renderer {
      * NOTE: 64-bit precision is not compatible with `InstancedMesh` and `SkinnedMesh`.
      *
      * @param {boolean} value - Whether to enable or disable high precision.
-     * @type {boolean}
      */
     set highPrecision(value: boolean);
     /**
      * Returns whether high precision is enabled or not.
      *
      * @return {boolean} Whether high precision is enabled or not.
-     * @type {boolean}
      */
     get highPrecision(): boolean;
     /**
@@ -319,19 +293,17 @@ declare class Renderer {
     /**
      * Default implementation of the device lost callback.
      *
-     * @private
      * @param {Object} info - Information about the context lost.
      */
-    _onDeviceLost(info: DeviceLostInfo): void;
+    private _onDeviceLost;
     /**
      * Renders the given render bundle.
      *
-     * @private
      * @param {Object} bundle - Render bundle data.
      * @param {Scene} sceneRef - The scene the render bundle belongs to.
      * @param {LightsNode} lightsNode - The lights node.
      */
-    _renderBundle(bundle: Bundle, sceneRef: Scene, lightsNode: LightsNode): void;
+    private _renderBundle;
     /**
      * Renders the scene or 3D object with the given camera. This method can only be called
      * if the renderer has been initialized. When using `render()` inside an animation loop,
@@ -351,7 +323,6 @@ declare class Renderer {
     /**
      * Returns whether the renderer has been initialized or not.
      *
-     * @readonly
      * @return {boolean} Whether the renderer has been initialized or not.
      */
     get initialized(): boolean;
@@ -360,28 +331,25 @@ declare class Renderer {
      * and color space conversion. Unlike in `WebGLRenderer`, this is done in a separate render
      * pass and not inline to achieve more correct results.
      *
-     * @private
      * @return {?RenderTarget} The render target. The method returns `null` if no output conversion should be applied.
      */
-    _getFrameBufferTarget(): RenderTarget<Texture<unknown>> | null;
+    private _getFrameBufferTarget;
     /**
      * Renders the scene or 3D object with the given camera.
      *
-     * @private
      * @param {Object3D} scene - The scene or 3D object to render.
      * @param {Camera} camera - The camera to render the scene with.
      * @param {boolean} [useFrameBufferTarget=true] - Whether to use a framebuffer target or not.
      * @return {RenderContext} The current render context.
      */
-    _renderScene(scene: Object3D, camera: Camera, useFrameBufferTarget?: boolean): RenderContext | undefined;
+    private _renderScene;
     _setXRLayerSize(width: number, height: number): void;
     /**
      * The output pass performs tone mapping and color space conversion.
      *
-     * @private
      * @param {RenderTarget} renderTarget - The current render target.
      */
-    _renderOutput(renderTarget: RenderTarget): void;
+    private _renderOutput;
     /**
      * Returns the maximum available anisotropy for texture filtering.
      *
@@ -664,7 +632,6 @@ declare class Renderer {
     /**
      * The number of samples used for multi-sample anti-aliasing (MSAA).
      *
-     * @type {number}
      * @default 0
      */
     get samples(): number;
@@ -674,22 +641,16 @@ declare class Renderer {
      * When rendering to a custom render target, the number of samples of that render target is used.
      * If the renderer needs an internal framebuffer target for tone mapping or color space conversion,
      * the number of samples is set to 0.
-     *
-     * @type {number}
      */
     get currentSamples(): number;
     /**
      * The current tone mapping of the renderer. When not producing screen output,
      * the tone mapping is always `NoToneMapping`.
-     *
-     * @type {number}
      */
     get currentToneMapping(): ToneMapping;
     /**
      * The current color space of the renderer. When not producing screen output,
      * the color space is always the working color space.
-     *
-     * @type {string}
      */
     get currentColorSpace(): string;
     /**
@@ -746,24 +707,8 @@ declare class Renderer {
     getCanvasTarget(): CanvasTarget;
     /**
      * Resets the renderer to the initial state before WebXR started.
-     *
-     * @private
      */
-    _resetXRState(): void;
-    /**
-     * Callback for {@link Renderer#setRenderObjectFunction}.
-     *
-     * @callback renderObjectFunction
-     * @param {Object3D} object - The 3D object.
-     * @param {Scene} scene - The scene the 3D object belongs to.
-     * @param {Camera} camera - The camera the object should be rendered with.
-     * @param {BufferGeometry} geometry - The object's geometry.
-     * @param {Material} material - The object's material.
-     * @param {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
-     * @param {LightsNode} lightsNode - The current lights node.
-     * @param {ClippingContext} clippingContext - The clipping context.
-     * @param {?string} [passId=null] - An optional ID for identifying the pass.
-     */
+    private _resetXRState;
     /**
      * Sets the given render object function. Calling this method overwrites the default implementation
      * which is {@link Renderer#renderObject}. Defining a custom function can be useful
@@ -930,72 +875,49 @@ declare class Renderer {
      * Analyzes the given 3D object's hierarchy and builds render lists from the
      * processed hierarchy.
      *
-     * @private
      * @param {Object3D} object - The 3D object to process (usually a scene).
      * @param {Camera} camera - The camera the object is rendered with.
      * @param {number} groupOrder - The group order is derived from the `renderOrder` of groups and is used to group 3D objects within groups.
      * @param {RenderList} renderList - The current render list.
      * @param {ClippingContext} clippingContext - The current clipping context.
      */
-    _projectObject(
-        object: Object3D,
-        camera: Camera,
-        groupOrder: number,
-        renderList: RenderList,
-        clippingContext: ClippingContext | null,
-    ): void;
+    private _projectObject;
     /**
      * Renders the given render bundles.
      *
-     * @private
      * @param {Array<Object>} bundles - Array with render bundle data.
      * @param {Scene} sceneRef - The scene the render bundles belong to.
      * @param {LightsNode} lightsNode - The current lights node.
      */
-    _renderBundles(bundles: Bundle[], sceneRef: Scene, lightsNode: LightsNode): void;
+    private _renderBundles;
     /**
      * Renders the transparent objects from the given render lists.
      *
-     * @private
      * @param {Array<Object>} renderList - The transparent render list.
      * @param {Array<Object>} doublePassList - The list of transparent objects which require a double pass (e.g. because of transmission).
      * @param {Camera} camera - The camera the render list should be rendered with.
      * @param {Scene} scene - The scene the render list belongs to.
      * @param {LightsNode} lightsNode - The current lights node.
      */
-    _renderTransparents(
-        renderList: RenderItem[],
-        doublePassList: RenderItem[],
-        camera: Camera,
-        scene: Scene,
-        lightsNode: LightsNode,
-    ): void;
+    private _renderTransparents;
     /**
      * Renders the objects from the given render list.
      *
-     * @private
      * @param {Array<Object>} renderList - The render list.
      * @param {Camera} camera - The camera the render list should be rendered with.
      * @param {Scene} scene - The scene the render list belongs to.
      * @param {LightsNode} lightsNode - The current lights node.
      * @param {?string} [passId=null] - An optional ID for identifying the pass.
      */
-    _renderObjects(
-        renderList: RenderItem[],
-        camera: Camera,
-        scene: Scene,
-        lightsNode: LightsNode,
-        passId?: string | null,
-    ): void;
+    private _renderObjects;
     /**
      * Retrieves shadow nodes for the given material. This is used to setup shadow passes.
      * The result is cached per material and updated when the material's version changes.
      *
-     * @private
      * @param {Material} material
      * @returns {Object} - The shadow nodes for the material.
      */
-    _getShadowNodes(material: Material): any;
+    private _getShadowNodes;
     /**
      * This method represents the default render object function that manages the render lifecycle
      * of the object.
@@ -1033,7 +955,6 @@ declare class Renderer {
      * This method represents the default `_handleObjectFunction` implementation which creates
      * a render object from the given data and performs the draw command with the selected backend.
      *
-     * @private
      * @param {Object3D} object - The 3D object.
      * @param {Material} material - The object's material.
      * @param {Scene} scene - The scene the 3D object belongs to.
@@ -1043,21 +964,11 @@ declare class Renderer {
      * @param {ClippingContext} clippingContext - The clipping context.
      * @param {string} [passId] - An optional ID for identifying the pass.
      */
-    _renderObjectDirect(
-        object: Object3D,
-        material: Material,
-        scene: Scene,
-        camera: Camera,
-        lightsNode: LightsNode,
-        group: GeometryGroup,
-        clippingContext: ClippingContext | null,
-        passId?: string,
-    ): void;
+    private _renderObjectDirect;
     /**
      * A different implementation for `_handleObjectFunction` which only makes sure the object is ready for rendering.
      * Used in `compileAsync()`.
      *
-     * @private
      * @param {Object3D} object - The 3D object.
      * @param {Material} material - The object's material.
      * @param {Scene} scene - The scene the 3D object belongs to.
@@ -1067,22 +978,11 @@ declare class Renderer {
      * @param {ClippingContext} clippingContext - The clipping context.
      * @param {string} [passId] - An optional ID for identifying the pass.
      */
-    _createObjectPipeline(
-        object: Object3D,
-        material: Material,
-        scene: Scene,
-        camera: Camera,
-        lightsNode: LightsNode,
-        group: Group,
-        clippingContext: ClippingContext | null,
-        passId?: string,
-    ): void;
+    private _createObjectPipeline;
     /**
      * Callback when the canvas has been resized.
-     *
-     * @private
      */
-    _onCanvasTargetResize(): void;
+    private _onCanvasTargetResize;
     /**
      * Alias for `compileAsync()`.
      *
@@ -1094,11 +994,4 @@ declare class Renderer {
      */
     get compile(): (scene: Object3D, camera: Camera, targetScene?: Scene | null) => Promise<void>;
 }
-/**
- * Animation loop parameter of `renderer.setAnimationLoop()`.
- *
- * @callback onAnimationCallback
- * @param {DOMHighResTimeStamp} time - A timestamp indicating the end time of the previous frame's rendering.
- * @param {XRFrame} [frame] - A reference to the current XR frame. Only relevant when using XR rendering.
- */
 export default Renderer;

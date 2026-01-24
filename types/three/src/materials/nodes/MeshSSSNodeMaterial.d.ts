@@ -86,8 +86,6 @@ export interface MeshSSSNodeMaterialParameters
 /**
  * This node material is an experimental extension of {@link MeshPhysicalNodeMaterial}
  * that implements a Subsurface scattering (SSS) term.
- *
- * @augments MeshPhysicalNodeMaterial
  */
 declare class MeshSSSNodeMaterial extends MeshPhysicalNodeMaterial {
     constructor(parameters?: MeshSSSNodeMaterialParameters);

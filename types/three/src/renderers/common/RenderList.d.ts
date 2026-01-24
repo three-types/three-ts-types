@@ -30,9 +30,6 @@ export interface RenderItem {
  * objects are maintained in ordered lists for the actual rendering.
  *
  * Render lists are unique per scene and camera combination.
- *
- * @private
- * @augments Pipeline
  */
 declare class RenderList {
     renderItems: RenderItem[];

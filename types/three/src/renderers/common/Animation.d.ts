@@ -7,8 +7,6 @@ export interface AnimationContext {
 }
 /**
  * This module manages the internal animation loop of the renderer.
- *
- * @private
  */
 declare class Animation {
     renderer: Renderer;

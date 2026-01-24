@@ -1,8 +1,6 @@
 /**
  * Data structure for the renderer. It is intended to manage
  * data of objects in dictionaries.
- *
- * @private
  */
 declare class DataMap<
     M extends {

@@ -3,7 +3,6 @@ import { Object3D } from "../../../core/Object3D.js";
 import { Material } from "../../../materials/Material.js";
 import { Color } from "../../../math/Color.js";
 import Node from "../../../nodes/core/Node.js";
-import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import UniformGroupNode from "../../../nodes/core/UniformGroupNode.js";
 import ComputeNode from "../../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../../nodes/lighting/LightsNode.js";
@@ -52,9 +51,6 @@ declare module "../../../scenes/Scene.js" {
 /**
  * This renderer module manages node-related objects and is the
  * primary interface between the renderer and the node system.
- *
- * @private
- * @augments DataMap
  */
 declare class Nodes extends DataMap<{
     nodeUniformsGroup: {
@@ -132,11 +128,10 @@ declare class Nodes extends DataMap<{
     /**
      * Creates a node builder state for the given node builder.
      *
-     * @private
      * @param {NodeBuilder} nodeBuilder - The node builder.
      * @return {NodeBuilderState} The node builder state.
      */
-    _createNodeBuilderState(nodeBuilder: NodeBuilder): NodeBuilderState;
+    private _createNodeBuilderState;
     /**
      * Returns an environment node for the current configured
      * scene environment.
@@ -174,8 +169,6 @@ declare class Nodes extends DataMap<{
     /**
      * A boolean that indicates whether tone mapping should be enabled
      * or not.
-     *
-     * @type {boolean}
      */
     get isToneMappingState(): boolean;
     /**

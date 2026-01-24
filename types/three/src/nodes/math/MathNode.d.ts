@@ -779,3 +779,5 @@ declare module "../core/Node.js" {
 
 export const faceforward: typeof faceForward;
 export const inversesqrt: typeof inverseSqrt;
+
+export {};

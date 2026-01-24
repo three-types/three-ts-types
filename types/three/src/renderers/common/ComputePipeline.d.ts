@@ -2,9 +2,6 @@ import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
 /**
  * Class for representing compute pipelines.
- *
- * @private
- * @augments Pipeline
  */
 declare class ComputePipeline extends Pipeline {
     computeProgram: ProgrammableStage;

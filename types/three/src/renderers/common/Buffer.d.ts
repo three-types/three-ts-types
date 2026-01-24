@@ -2,9 +2,7 @@ import Binding from "./Binding.js";
 /**
  * Represents a buffer binding type.
  *
- * @private
  * @abstract
- * @augments Binding
  */
 declare class Buffer extends Binding {
     readonly isBuffer: true;
@@ -23,8 +21,6 @@ declare class Buffer extends Binding {
     constructor(name?: string, buffer?: Float32Array | null);
     /**
      * The array of update ranges.
-     *
-     * @type {Array<{start: number, count: number}>}
      */
     get updateRanges(): {
         start: number;
@@ -43,16 +39,10 @@ declare class Buffer extends Binding {
     clearUpdateRanges(): void;
     /**
      * The buffer's byte length.
-     *
-     * @type {number}
-     * @readonly
      */
     get byteLength(): number;
     /**
      * A reference to the internal buffer.
-     *
-     * @type {Float32Array}
-     * @readonly
      */
     get buffer(): Float32Array | null;
     /**

@@ -36,11 +36,11 @@ type Vec2OrLess = Node<"vec2">;
 type Vec3OrLess = Vec2OrLess | Node<"vec3">;
 type Vec4OrLess = Vec3OrLess | Node<"vec4">;
 
-type NumberToVec = {
+interface NumberToVec {
     float: "vec";
     int: "ivec";
     uint: "uvec";
-};
+}
 
 type NumberToVec2<TNum extends NumType> = `${NumberToVec[TNum]}2`;
 type NumberToVec3<TNum extends NumType> = `${NumberToVec[TNum]}3`;

@@ -16,8 +16,6 @@ export interface MemberLayout {
  * This class is used to define and manage the layout and types of struct members.
  * It extends the base Node class and provides methods to get the length of the struct,
  * retrieve member types, and generate the struct type for a builder.
- *
- * @augments Node
  */
 declare class StructTypeNode extends Node {
     static get type(): string;

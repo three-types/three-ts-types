@@ -8,8 +8,6 @@ import { Group } from "../../objects/Group.js";
  * This module is only fully supported by `WebGPURenderer` with a WebGPU backend.
  * With a WebGL backend, the group can technically be rendered but without
  * any performance improvements.
- *
- * @augments Group
  */
 declare class BundleGroup extends Group {
     readonly isBundleGroup: true;
@@ -23,7 +21,6 @@ declare class BundleGroup extends Group {
     /**
      * Set this property to `true` when the bundle group has changed.
      *
-     * @type {boolean}
      * @default false
      * @param {boolean} value
      */

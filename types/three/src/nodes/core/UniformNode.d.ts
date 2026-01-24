@@ -12,8 +12,6 @@ import NodeFrame from "./NodeFrame.js";
 import UniformGroupNode from "./UniformGroupNode.js";
 /**
  * Class for representing a uniform.
- *
- * @augments InputNode
  */
 declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
     static get type(): string;
@@ -93,7 +91,6 @@ interface Uniform {
 /**
  * TSL function for creating a uniform node.
  *
- * @tsl
  * @function
  * @param {any|string} value - The value of this uniform or your type. Usually a JS primitive or three.js object (vector, matrix, color, texture).
  * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.

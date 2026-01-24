@@ -2,9 +2,6 @@ import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 /**
  * A special type of render target that is used when rendering
  * with the WebXR Device API.
- *
- * @private
- * @augments RenderTarget
  */
 declare class XRRenderTarget extends RenderTarget {
     readonly isXRRenderTarget: true;

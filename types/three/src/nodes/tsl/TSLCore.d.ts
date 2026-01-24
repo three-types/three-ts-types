@@ -19,20 +19,20 @@ declare module "../core/Node.js" {
     }
 }
 
-type NumOrBoolToJsType = {
+interface NumOrBoolToJsType {
     float: number;
     int: number;
     uint: number;
     bool: boolean;
-};
+}
 type NumOrBool<TNumOrBool extends NumOrBoolType> = Node<TNumOrBool> | NumOrBoolToJsType[TNumOrBool];
 
-type NumOrBoolToVec = {
+interface NumOrBoolToVec {
     float: "vec";
     int: "ivec";
     uint: "uvec";
     bool: "bvec";
-};
+}
 type NumOrBoolToVec2<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}2`;
 type NumOrBoolToVec3<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}3`;
 type NumOrBoolToVec4<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}4`;
@@ -1431,18 +1431,23 @@ interface SetSwizzle4<TNumOrBool extends NumOrBoolType> {
 }
 
 declare module "../core/Node.js" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle1<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle2<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle3<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface ColorExtensions extends SetSwizzle3<"float"> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle4<TNumOrBool> {
     }
 }
@@ -1538,18 +1543,23 @@ interface FlipSwizzle4 {
 }
 
 declare module "../core/Node.js" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface FloatExtensions extends FlipSwizzle1 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec2Extensions extends FlipSwizzle2 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec3Extensions extends FlipSwizzle3 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface ColorExtensions extends FlipSwizzle3 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec4Extensions extends FlipSwizzle4 {
     }
 }
@@ -1566,9 +1576,12 @@ export type NodeObject<T> = T extends Node ? T
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
 type Proxied<T> = T extends Node | number ? Node | number : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type RemoveTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X] ? X : [];
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X, unknown] ? X : [];
 
 /**
@@ -1577,9 +1590,13 @@ type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, 
  * We use an object instead of tuple or union as it makes stuff easier, especially in Typescript 4.0.
  */
 interface Constructors<
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     A extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     B extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     C extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     D extends undefined | [...unknown[]],
 > {
     a: A;
@@ -1673,6 +1690,7 @@ export function nodeObject<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjectIntent<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export function nodeArray<T extends NodeObjectOption[]>(obj: readonly [...T]): NodeArray<T>;
 
 export function nodeProxy<T>(
@@ -1721,6 +1739,7 @@ interface Layout {
 }
 
 export interface FnNode<Args extends readonly unknown[], TReturn> {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     (...args: Args): TReturn extends void ? ShaderCallNodeInternal<void> : TReturn;
 
     shaderNode: ShaderNodeInternal<TReturn>;
@@ -1745,6 +1764,7 @@ export function Fn<TArgs extends readonly unknown[], TReturn>(
 export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 ): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
@@ -1988,3 +2008,5 @@ declare module "../core/Node.js" {
         append: () => Node;
     }
 }
+
+export {};

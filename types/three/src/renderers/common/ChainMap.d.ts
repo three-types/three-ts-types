@@ -4,8 +4,6 @@ type RecursiveWeakMap<K extends readonly object[], V> = WeakMap<K[number], V | R
  * with chained, hierarchical keys. Keys are meant to be
  * objects since the module internally works with Weak Maps
  * for performance reasons.
- *
- * @private
  */
 declare class ChainMap<K extends readonly object[], V> {
     weakMaps: Record<number, RecursiveWeakMap<K, V>>;

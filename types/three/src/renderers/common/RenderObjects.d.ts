@@ -15,8 +15,6 @@ import Renderer from "./Renderer.js";
 import RenderObject from "./RenderObject.js";
 /**
  * This module manages the render objects of the renderer.
- *
- * @private
  */
 declare class RenderObjects {
     renderer: Renderer;
@@ -67,7 +65,7 @@ declare class RenderObjects {
         lightsNode: LightsNode,
         renderContext: RenderContext,
         clippingContext: ClippingContext | null,
-        passId?: string | undefined,
+        passId?: string,
     ): RenderObject;
     /**
      * Returns a chain map for the given pass ID.

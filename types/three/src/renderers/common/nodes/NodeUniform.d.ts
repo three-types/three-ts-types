@@ -19,9 +19,6 @@ import {
 /**
  * A special form of Number uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments NumberUniform
  */
 declare class NumberNodeUniform<TNodeType> extends NumberUniform {
     nodeUniform: NodeUniform<TNodeType, number>;
@@ -47,9 +44,6 @@ declare class NumberNodeUniform<TNodeType> extends NumberUniform {
 /**
  * A special form of Vector2 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Vector2Uniform
  */
 declare class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
     nodeUniform: NodeUniform<TNodeType, Vector2>;
@@ -75,9 +69,6 @@ declare class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
 /**
  * A special form of Vector3 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Vector3Uniform
  */
 declare class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
     nodeUniform: NodeUniform<TNodeType, Vector3>;
@@ -103,9 +94,6 @@ declare class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
 /**
  * A special form of Vector4 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Vector4Uniform
  */
 declare class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
     nodeUniform: NodeUniform<TNodeType, Vector4>;
@@ -131,9 +119,6 @@ declare class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
 /**
  * A special form of Color uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments ColorUniform
  */
 declare class ColorNodeUniform<TNodeType> extends ColorUniform {
     nodeUniform: NodeUniform<TNodeType, Color>;
@@ -159,9 +144,6 @@ declare class ColorNodeUniform<TNodeType> extends ColorUniform {
 /**
  * A special form of Matrix2 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Matrix2Uniform
  */
 declare class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
     nodeUniform: NodeUniform<TNodeType, Matrix2>;
@@ -187,9 +169,6 @@ declare class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
 /**
  * A special form of Matrix3 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Matrix3Uniform
  */
 declare class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
     nodeUniform: NodeUniform<TNodeType, Matrix3>;
@@ -215,9 +194,6 @@ declare class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
 /**
  * A special form of Matrix4 uniform binding type.
  * It's value is managed by a node object.
- *
- * @private
- * @augments Matrix4Uniform
  */
 declare class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
     nodeUniform: NodeUniform<TNodeType, Matrix4>;

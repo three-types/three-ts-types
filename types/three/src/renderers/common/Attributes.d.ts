@@ -9,9 +9,6 @@ interface Data {
 }
 /**
  * This renderer module manages geometry attributes.
- *
- * @private
- * @augments DataMap
  */
 declare class Attributes extends DataMap<{
     attribute: {

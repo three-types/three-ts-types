@@ -3,8 +3,6 @@ import MRTNode from "../../nodes/core/MRTNode.js";
 import RenderContext from "./RenderContext.js";
 /**
  * This module manages the render contexts of the renderer.
- *
- * @private
  */
 declare class RenderContexts {
     _renderContexts: {
