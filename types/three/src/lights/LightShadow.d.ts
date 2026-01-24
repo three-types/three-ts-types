@@ -5,6 +5,7 @@ import { Frustum } from "../math/Frustum.js";
 import { Matrix4 } from "../math/Matrix4.js";
 import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 import { Vector4 } from "../math/Vector4.js";
+import Node from "../nodes/core/Node.js";
 import { WebGLRenderTarget } from "../renderers/WebGLRenderTarget.js";
 import { Light } from "./Light.js";
 
@@ -23,13 +24,7 @@ export interface LightShadowJSON {
  * @see {@link https://threejs.org/docs/index.html#api/en/lights/shadows/LightShadow | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/lights/LightShadow.js | Source}
  */
-export class LightShadow<TCamera extends Camera = Camera> {
-    /**
-     * Create a new instance of {@link LightShadow}
-     * @param camera The light's view of the world.
-     */
-    constructor(camera: TCamera);
-
+declare class LightShadow<TCamera extends Camera = Camera> {
     /**
      * The light's view of the world.
      * @remark This is used to generate a depth map of the scene; objects behind other objects from the light's perspective will be in shadow.
@@ -48,6 +43,15 @@ export class LightShadow<TCamera extends Camera = Camera> {
      * @defaultValue `0`
      */
     bias: number;
+
+    /**
+     * A node version of `bias`. Only supported with `WebGPURenderer`.
+     *
+     * If a bias node is defined, `bias` has no effect.
+     *
+     * @default null
+     */
+    biasNode: Node<"float"> | null;
 
     /**
      * Defines how much the position used to query the shadow map is offset along the object normal.
@@ -128,6 +132,12 @@ export class LightShadow<TCamera extends Camera = Camera> {
     needsUpdate: boolean;
 
     /**
+     * Create a new instance of {@link LightShadow}
+     * @param camera The light's view of the world.
+     */
+    constructor(camera: TCamera);
+
+    /**
      * Used internally by the renderer to get the number of viewports that need to be rendered for this shadow.
      */
     getViewportCount(): number;
@@ -175,3 +185,5 @@ export class LightShadow<TCamera extends Camera = Camera> {
      */
     dispose(): void;
 }
+
+export { LightShadow };
