@@ -4382,14 +4382,14 @@ index 6b5da502..3830ea5f 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Bindings.ts b/src-testing/src/renderers/common/Bindings.ts
-index aa5c5f4c..8d5a0bd5 100644
+index aa5c5f4c..a13d4560 100644
 --- a/src-testing/src/renderers/common/Bindings.ts
 +++ b/src-testing/src/renderers/common/Bindings.ts
-@@ -1,5 +1,23 @@
+@@ -1,5 +1,22 @@
  import DataMap from './DataMap.js';
  import { AttributeType } from './Constants.js';
 +import Backend from './Backend.js';
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import Textures from './Textures.js';
 +import Attributes from './Attributes.js';
 +import Pipelines from './Pipelines.js';
@@ -4398,7 +4398,6 @@ index aa5c5f4c..8d5a0bd5 100644
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
 +import { SampledTexture } from './SampledTexture.js';
 +import StorageBuffer from './StorageBuffer.js';
-+import NodeUniformsGroup from './nodes/NodeUniformsGroup.js';
 +import UniformBuffer from './UniformBuffer.js';
 +import Sampler from './Sampler.js';
 +import BindGroup from './BindGroup.js';
@@ -4409,7 +4408,7 @@ index aa5c5f4c..8d5a0bd5 100644
  
  /**
   * This renderer module manages the bindings of the renderer.
-@@ -7,7 +25,7 @@ import { AttributeType } from './Constants.js';
+@@ -7,7 +24,7 @@ import { AttributeType } from './Constants.js';
   * @private
   * @augments DataMap
   */
@@ -4418,7 +4417,7 @@ index aa5c5f4c..8d5a0bd5 100644
      /**
       * Constructs a new bindings management component.
       *
-@@ -18,7 +36,23 @@ class Bindings extends DataMap {
+@@ -18,7 +35,23 @@ class Bindings extends DataMap {
       * @param {Pipelines} pipelines - Renderer component for managing pipelines.
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
@@ -4429,12 +4428,12 @@ index aa5c5f4c..8d5a0bd5 100644
 +    textures: Textures;
 +    pipelines: Pipelines;
 +    attributes: Attributes;
-+    nodes: Nodes;
++    nodes: NodeManager;
 +    info: Info;
 +
 +    constructor(
 +        backend: Backend,
-+        nodes: Nodes,
++        nodes: NodeManager,
 +        textures: Textures,
 +        attributes: Attributes,
 +        pipelines: Pipelines,
@@ -4443,7 +4442,7 @@ index aa5c5f4c..8d5a0bd5 100644
          super();
  
          /**
-@@ -72,7 +106,7 @@ class Bindings extends DataMap {
+@@ -72,7 +105,7 @@ class Bindings extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Array<BindGroup>} The bind groups.
       */
@@ -4452,7 +4451,7 @@ index aa5c5f4c..8d5a0bd5 100644
          const bindings = renderObject.getBindings();
  
          for (const bindGroup of bindings) {
-@@ -98,7 +132,7 @@ class Bindings extends DataMap {
+@@ -98,7 +131,7 @@ class Bindings extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {Array<BindGroup>} The bind groups.
       */
@@ -4461,7 +4460,7 @@ index aa5c5f4c..8d5a0bd5 100644
          const bindings = this.nodes.getForCompute(computeNode).bindings;
  
          for (const bindGroup of bindings) {
-@@ -121,7 +155,7 @@ class Bindings extends DataMap {
+@@ -121,7 +154,7 @@ class Bindings extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -4470,7 +4469,7 @@ index aa5c5f4c..8d5a0bd5 100644
          this._updateBindings(this.getForCompute(computeNode));
      }
  
-@@ -130,7 +164,7 @@ class Bindings extends DataMap {
+@@ -130,7 +163,7 @@ class Bindings extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -4479,7 +4478,7 @@ index aa5c5f4c..8d5a0bd5 100644
          this._updateBindings(this.getForRender(renderObject));
      }
  
-@@ -139,7 +173,7 @@ class Bindings extends DataMap {
+@@ -139,7 +172,7 @@ class Bindings extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -4488,7 +4487,7 @@ index aa5c5f4c..8d5a0bd5 100644
          const bindings = this.nodes.getForCompute(computeNode).bindings;
  
          for (const bindGroup of bindings) {
-@@ -153,7 +187,7 @@ class Bindings extends DataMap {
+@@ -153,7 +186,7 @@ class Bindings extends DataMap {
       *
       * @param {RenderObject} renderObject - The renderObject.
       */
@@ -4497,7 +4496,7 @@ index aa5c5f4c..8d5a0bd5 100644
          const bindings = renderObject.getBindings();
  
          for (const bindGroup of bindings) {
-@@ -167,7 +201,7 @@ class Bindings extends DataMap {
+@@ -167,7 +200,7 @@ class Bindings extends DataMap {
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -4506,7 +4505,7 @@ index aa5c5f4c..8d5a0bd5 100644
          for (const bindGroup of bindings) {
              this._update(bindGroup, bindings);
          }
-@@ -178,14 +212,14 @@ class Bindings extends DataMap {
+@@ -178,14 +211,14 @@ class Bindings extends DataMap {
       *
       * @param {BindGroup} bindGroup - The bind group to initialize.
       */
@@ -4528,7 +4527,7 @@ index aa5c5f4c..8d5a0bd5 100644
                  const attributeType = attribute.isIndirectStorageBufferAttribute
                      ? AttributeType.INDIRECT
                      : AttributeType.STORAGE;
-@@ -201,7 +235,7 @@ class Bindings extends DataMap {
+@@ -201,7 +234,7 @@ class Bindings extends DataMap {
       * @param {BindGroup} bindGroup - The bind group to update.
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -4537,7 +4536,7 @@ index aa5c5f4c..8d5a0bd5 100644
          const { backend } = this;
  
          let needsBindingsUpdate = false;
-@@ -230,18 +264,18 @@ class Bindings extends DataMap {
+@@ -230,18 +263,18 @@ class Bindings extends DataMap {
                  this.attributes.update(attribute, attributeType);
              }
  
@@ -4562,7 +4561,7 @@ index aa5c5f4c..8d5a0bd5 100644
                  const texturesTextureData = this.textures.get(texture);
  
                  if (updated) {
-@@ -272,7 +306,7 @@ class Bindings extends DataMap {
+@@ -272,7 +305,7 @@ class Bindings extends DataMap {
                  if (texture.isStorageTexture === true && texture.mipmapsAutoUpdate === true) {
                      const textureData = this.get(texture);
  
@@ -6449,14 +6448,14 @@ index d12ad583..ef6e14ec 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObject.ts b/src-testing/src/renderers/common/RenderObject.ts
-index 32b74ce2..8adbfa60 100644
+index 32b74ce2..8a511697 100644
 --- a/src-testing/src/renderers/common/RenderObject.ts
 +++ b/src-testing/src/renderers/common/RenderObject.ts
 @@ -1,8 +1,27 @@
  import { hash, hashString } from '../../nodes/core/NodeUtils.js';
 +import ClippingContext from './ClippingContext.js';
 +import { Material } from '../../materials/Material.js';
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import Geometries from './Geometries.js';
 +import Renderer from './Renderer.js';
 +import { Object3D } from '../../core/Object3D.js';
@@ -6485,7 +6484,7 @@ index 32b74ce2..8adbfa60 100644
   * @private
   */
  class RenderObject {
-+    _nodes: Nodes;
++    _nodes: NodeManager;
 +    _geometries: Geometries;
 +
 +    id: number;
@@ -6547,7 +6546,7 @@ index 32b74ce2..8adbfa60 100644
 -        lightsNode,
 -        renderContext,
 -        clippingContext,
-+        nodes: Nodes,
++        nodes: NodeManager,
 +        geometries: Geometries,
 +        renderer: Renderer,
 +        object: Object3D,
