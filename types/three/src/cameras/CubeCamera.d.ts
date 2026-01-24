@@ -2,6 +2,7 @@ import { CoordinateSystem } from "../constants.js";
 import { Object3D } from "../core/Object3D.js";
 import { RenderTarget } from "../core/RenderTarget.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
+import { Scene } from "../scenes/Scene.js";
 import { Camera } from "./Camera.js";
 
 export interface CubeCameraRenderer {
