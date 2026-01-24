@@ -10222,7 +10222,7 @@ index 7c61c35c5..0f728fe49 100644
              warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeManager.ts b/src-testing/src/renderers/common/nodes/NodeManager.ts
-index 66dc57246..431d62307 100644
+index 66dc57246..b1c62803a 100644
 --- a/src-testing/src/renderers/common/nodes/NodeManager.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeManager.ts
 @@ -28,26 +28,89 @@ import {
@@ -10447,7 +10447,16 @@ index 66dc57246..431d62307 100644
  
              _cacheKeyValues.length = 0;
          }
-@@ -423,7 +482,7 @@ class NodeManager extends DataMap {
+@@ -410,8 +469,6 @@ class NodeManager extends DataMap {
+     /**
+      * A boolean that indicates whether tone mapping should be enabled
+      * or not.
+-     *
+-     * @type {boolean}
+      */
+     get isToneMappingState() {
+         return this.renderer.getRenderTarget() ? false : true;
+@@ -423,7 +480,7 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10456,7 +10465,7 @@ index 66dc57246..431d62307 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -438,7 +497,7 @@ class NodeManager extends DataMap {
+@@ -438,7 +495,7 @@ class NodeManager extends DataMap {
                      background,
                      () => {
                          if (
@@ -10465,7 +10474,7 @@ index 66dc57246..431d62307 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -448,18 +507,18 @@ class NodeManager extends DataMap {
+@@ -448,18 +505,18 @@ class NodeManager extends DataMap {
                              } else {
                                  let envMap;
  
@@ -10490,7 +10499,7 @@ index 66dc57246..431d62307 100644
                          }
                      },
                      forceUpdate,
-@@ -485,7 +544,7 @@ class NodeManager extends DataMap {
+@@ -485,7 +542,7 @@ class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -10499,7 +10508,7 @@ index 66dc57246..431d62307 100644
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -504,22 +563,22 @@ class NodeManager extends DataMap {
+@@ -504,22 +561,22 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10530,7 +10539,7 @@ index 66dc57246..431d62307 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -542,14 +601,14 @@ class NodeManager extends DataMap {
+@@ -542,14 +599,14 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10547,7 +10556,7 @@ index 66dc57246..431d62307 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -567,7 +626,13 @@ class NodeManager extends DataMap {
+@@ -567,7 +624,13 @@ class NodeManager extends DataMap {
          }
      }
  
@@ -10562,7 +10571,7 @@ index 66dc57246..431d62307 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -578,7 +643,7 @@ class NodeManager extends DataMap {
+@@ -578,7 +641,7 @@ class NodeManager extends DataMap {
          return nodeFrame;
      }
  
@@ -10571,7 +10580,7 @@ index 66dc57246..431d62307 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -606,7 +671,7 @@ class NodeManager extends DataMap {
+@@ -606,7 +669,7 @@ class NodeManager extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {boolean} Whether the output configuration has changed or not.
       */
@@ -10580,7 +10589,7 @@ index 66dc57246..431d62307 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -619,11 +684,11 @@ class NodeManager extends DataMap {
+@@ -619,11 +682,11 @@ class NodeManager extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -10594,7 +10603,7 @@ index 66dc57246..431d62307 100644
              ? texture3D(outputTarget, vec3(screenUV, builtin('gl_ViewID_OVR'))).renderOutput(
                    renderer.toneMapping,
                    renderer.currentColorSpace,
-@@ -641,7 +706,7 @@ class NodeManager extends DataMap {
+@@ -641,7 +704,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10603,7 +10612,7 @@ index 66dc57246..431d62307 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -657,7 +722,7 @@ class NodeManager extends DataMap {
+@@ -657,7 +720,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10612,7 +10621,7 @@ index 66dc57246..431d62307 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -673,7 +738,7 @@ class NodeManager extends DataMap {
+@@ -673,7 +736,7 @@ class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -10621,7 +10630,7 @@ index 66dc57246..431d62307 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -688,7 +753,7 @@ class NodeManager extends DataMap {
+@@ -688,7 +751,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10630,7 +10639,7 @@ index 66dc57246..431d62307 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -703,7 +768,7 @@ class NodeManager extends DataMap {
+@@ -703,7 +766,7 @@ class NodeManager extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
@@ -10639,7 +10648,7 @@ index 66dc57246..431d62307 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const monitor = renderObject.getMonitor();
  
-@@ -722,4 +787,4 @@ class NodeManager extends DataMap {
+@@ -722,4 +785,4 @@ class NodeManager extends DataMap {
      }
  }
  
