@@ -1,6 +1,7 @@
 import { CoordinateSystem } from "../constants.js";
 import { Object3D } from "../core/Object3D.js";
 import { Matrix4 } from "../math/Matrix4.js";
+import { Vector4 } from "../math/Vector4.js";
 
 /**
  * Abstract base class for cameras. This class should always be inherited
