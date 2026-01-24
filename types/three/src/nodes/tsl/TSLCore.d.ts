@@ -1576,9 +1576,12 @@ export type NodeObject<T> = T extends Node ? T
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
 type Proxied<T> = T extends Node | number ? Node | number : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
 export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type RemoveTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X] ? X : [];
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X, unknown] ? X : [];
 
 /**
@@ -1587,9 +1590,13 @@ type RemoveHeadAndTail<T extends readonly [...unknown[]]> = T extends [unknown, 
  * We use an object instead of tuple or union as it makes stuff easier, especially in Typescript 4.0.
  */
 interface Constructors<
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     A extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     B extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     C extends undefined | [...unknown[]],
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
     D extends undefined | [...unknown[]],
 > {
     a: A;
@@ -1683,6 +1690,7 @@ export function nodeObject<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjectIntent<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
+// eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export function nodeArray<T extends NodeObjectOption[]>(obj: readonly [...T]): NodeArray<T>;
 
 export function nodeProxy<T>(
@@ -1731,7 +1739,7 @@ interface Layout {
 }
 
 export interface FnNode<Args extends readonly unknown[], TReturn> {
-    (...args: Args): TReturn extends void ? ShaderCallNodeInternal<void> : TReturn;
+    (...args: Args): TReturn;
 
     shaderNode: ShaderNodeInternal<TReturn>;
     id: number;
@@ -1755,6 +1763,7 @@ export function Fn<TArgs extends readonly unknown[], TReturn>(
 export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
+    // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 ): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
