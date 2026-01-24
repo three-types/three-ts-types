@@ -3862,11 +3862,11 @@ index ff0c9e66..3ba9da9f 100644
  export const nodeImmutable = (NodeClass, ...params) => new ShaderNodeImmutable(NodeClass, ...params);
  export const nodeProxyIntent = (NodeClass, scope = null, factor = null, settings = {}) =>
 diff --git a/src-testing/src/renderers/common/Animation.ts b/src-testing/src/renderers/common/Animation.ts
-index 28092a92..099c5467 100644
+index 28092a92..13f7dfca 100644
 --- a/src-testing/src/renderers/common/Animation.ts
 +++ b/src-testing/src/renderers/common/Animation.ts
 @@ -1,9 +1,26 @@
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import Info from './Info.js';
 +import Renderer from './Renderer.js';
 +
@@ -3882,7 +3882,7 @@ index 28092a92..099c5467 100644
   */
  class Animation {
 +    renderer: Renderer;
-+    nodes: Nodes;
++    nodes: NodeManager;
 +    info: Info;
 +
 +    _context: AnimationContext | null;
@@ -3897,7 +3897,7 @@ index 28092a92..099c5467 100644
       * @param {Info} info - Renderer component for managing metrics and monitoring data.
       */
 -    constructor(renderer, nodes, info) {
-+    constructor(renderer: Renderer, nodes: Nodes, info: Info) {
++    constructor(renderer: Renderer, nodes: NodeManager, info: Info) {
          /**
           * A reference to the main renderer.
           *
@@ -4256,7 +4256,7 @@ index 41eb1282..a1e2855d 100644
      }
  
 diff --git a/src-testing/src/renderers/common/Background.ts b/src-testing/src/renderers/common/Background.ts
-index 3b277649..5c156c23 100644
+index 3b277649..9787561b 100644
 --- a/src-testing/src/renderers/common/Background.ts
 +++ b/src-testing/src/renderers/common/Background.ts
 @@ -17,23 +17,38 @@ import { Mesh } from '../../objects/Mesh.js';
@@ -4265,7 +4265,7 @@ index 3b277649..5c156c23 100644
  import { error } from '../../utils.js';
 +import { Scene } from '../../scenes/Scene.js';
 +import Renderer from './Renderer.js';
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import RenderList from './RenderList.js';
 +import RenderContext from './RenderContext.js';
  
@@ -4287,7 +4287,7 @@ index 3b277649..5c156c23 100644
 -class Background extends DataMap {
 +class Background extends DataMap<{ scene: { key: Scene; value: SceneData } }> {
 +    renderer: Renderer;
-+    nodes: Nodes;
++    nodes: NodeManager;
 +
      /**
       * Constructs a new background management component.
@@ -4296,7 +4296,7 @@ index 3b277649..5c156c23 100644
       * @param {Nodes} nodes - Renderer component for managing nodes related logic.
       */
 -    constructor(renderer, nodes) {
-+    constructor(renderer: Renderer, nodes: Nodes) {
++    constructor(renderer: Renderer, nodes: NodeManager) {
          super();
  
          /**
@@ -5651,7 +5651,7 @@ index ea931b7e..4bfaa3c1 100644
           * The pipeline's cache key.
           *
 diff --git a/src-testing/src/renderers/common/Pipelines.ts b/src-testing/src/renderers/common/Pipelines.ts
-index b7120598..5a102ae1 100644
+index b7120598..db33338b 100644
 --- a/src-testing/src/renderers/common/Pipelines.ts
 +++ b/src-testing/src/renderers/common/Pipelines.ts
 @@ -2,6 +2,22 @@ import DataMap from './DataMap.js';
@@ -5659,7 +5659,7 @@ index b7120598..5a102ae1 100644
  import ComputePipeline from './ComputePipeline.js';
  import ProgrammableStage from './ProgrammableStage.js';
 +import Backend from './Backend.js';
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import Bindings from './Bindings.js';
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
@@ -5687,7 +5687,7 @@ index b7120598..5a102ae1 100644
 +    renderObject: { key: RenderObject; value: RenderObjectData };
 +}> {
 +    backend: Backend;
-+    nodes: Nodes;
++    nodes: NodeManager;
 +
 +    bindings: Bindings | null;
 +
@@ -5705,7 +5705,7 @@ index b7120598..5a102ae1 100644
       * @param {Nodes} nodes - Renderer component for managing nodes related logic.
       */
 -    constructor(backend, nodes) {
-+    constructor(backend: Backend, nodes: Nodes) {
++    constructor(backend: Backend, nodes: NodeManager) {
          super();
  
          /**
@@ -6634,7 +6634,7 @@ index 32b74ce2..8a511697 100644
  }
  
 diff --git a/src-testing/src/renderers/common/RenderObjects.ts b/src-testing/src/renderers/common/RenderObjects.ts
-index 985fee47..3dfb3fe6 100644
+index 985fee47..38913442 100644
 --- a/src-testing/src/renderers/common/RenderObjects.ts
 +++ b/src-testing/src/renderers/common/RenderObjects.ts
 @@ -1,7 +1,20 @@
@@ -6643,7 +6643,7 @@ index 985fee47..3dfb3fe6 100644
 -
 -const _chainKeys = [];
 +import Renderer from './Renderer.js';
-+import Nodes from './nodes/Nodes.js';
++import NodeManager from './nodes/NodeManager.js';
 +import Geometries from './Geometries.js';
 +import Pipelines from './Pipelines.js';
 +import Bindings from './Bindings.js';
@@ -6665,7 +6665,7 @@ index 985fee47..3dfb3fe6 100644
   */
  class RenderObjects {
 +    renderer: Renderer;
-+    nodes: Nodes;
++    nodes: NodeManager;
 +    geometries: Geometries;
 +    pipelines: Pipelines;
 +    bindings: Bindings;
@@ -6683,7 +6683,7 @@ index 985fee47..3dfb3fe6 100644
 -    constructor(renderer, nodes, geometries, pipelines, bindings, info) {
 +    constructor(
 +        renderer: Renderer,
-+        nodes: Nodes,
++        nodes: NodeManager,
 +        geometries: Geometries,
 +        pipelines: Pipelines,
 +        bindings: Bindings,
