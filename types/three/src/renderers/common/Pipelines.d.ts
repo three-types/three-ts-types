@@ -8,13 +8,13 @@ import NodeManager from "./nodes/NodeManager.js";
 import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
 import RenderObject from "./RenderObject.js";
-import RenderPipeline from "./RenderPipeline.js";
+import RenderObjectPipeline from "./RenderObjectPipeline.js";
 interface ComputeNodeData {
     version: number;
     pipeline: ComputePipeline;
 }
 interface RenderObjectData {
-    pipeline: RenderPipeline;
+    pipeline: RenderObjectPipeline;
 }
 /**
  * This renderer module manages the pipelines of the renderer.
@@ -61,9 +61,9 @@ declare class Pipelines extends DataMap<{
      *
      * @param {RenderObject} renderObject - The render object.
      * @param {?Array<Promise>} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
-     * @return {RenderPipeline} The render pipeline.
+     * @return {RenderObjectPipeline} The render pipeline.
      */
-    getForRender(renderObject: RenderObject, promises?: Promise<void>[] | null): RenderPipeline;
+    getForRender(renderObject: RenderObject, promises?: Promise<void>[] | null): RenderObjectPipeline;
     /**
      * Deletes the pipeline for the given render object.
      *
@@ -106,7 +106,7 @@ declare class Pipelines extends DataMap<{
      * @param {ProgrammableStage} stageFragment - The programmable stage representing the fragment shader.
      * @param {string} cacheKey - The cache key.
      * @param {?Array<Promise>} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
-     * @return {RenderPipeline} The render pipeline.
+     * @return {RenderObjectPipeline} The render pipeline.
      */
     _getRenderPipeline(
         renderObject: RenderObject,
@@ -114,7 +114,7 @@ declare class Pipelines extends DataMap<{
         stageFragment: ProgrammableStage,
         cacheKey: string,
         promises: Promise<void>[] | null,
-    ): RenderPipeline;
+    ): RenderObjectPipeline;
     /**
      * Computes a cache key representing a compute pipeline.
      *
