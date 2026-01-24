@@ -9580,7 +9580,7 @@ index 1d66997c4..a596f014f 100644
  const spherical = new THREE.Spherical();
  const rotationMatrix = new THREE.Matrix4();
 diff --git a/examples-testing/examples/webgl_mesh_batch.ts b/examples-testing/examples/webgl_mesh_batch.ts
-index f93e5fb85..ee612f75e 100644
+index e238e50a3..618a58c03 100644
 --- a/examples-testing/examples/webgl_mesh_batch.ts
 +++ b/examples-testing/examples/webgl_mesh_batch.ts
 @@ -4,12 +4,12 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -9592,11 +9592,11 @@ index f93e5fb85..ee612f75e 100644
  
 -let stats, gui, guiStatsEl;
 -let camera, controls, scene, renderer;
--let geometries, mesh, material;
+-let geometries, mesh;
 -const ids = [];
 +let stats: Stats, gui: GUI, guiStatsEl: HTMLLIElement;
 +let camera: THREE.PerspectiveCamera, controls: OrbitControls, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
-+let geometries: THREE.BufferGeometry[], mesh: THREE.Group | THREE.BatchedMesh, material: THREE.MeshNormalMaterial;
++let geometries: THREE.BufferGeometry[], mesh: THREE.Group | THREE.BatchedMesh;
 +const ids: number[] = [];
  const matrix = new THREE.Matrix4();
  
@@ -9610,7 +9610,7 @@ index f93e5fb85..ee612f75e 100644
      position.x = Math.random() * 40 - 20;
      position.y = Math.random() * 40 - 20;
      position.z = Math.random() * 40 - 20;
-@@ -61,7 +61,7 @@ function randomizeMatrix(matrix) {
+@@ -61,14 +61,14 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -9619,10 +9619,18 @@ index f93e5fb85..ee612f75e 100644
      rotation.x = Math.random() * 0.01;
      rotation.y = Math.random() * 0.01;
      rotation.z = Math.random() * 0.01;
-@@ -86,10 +86,10 @@ function createMaterial() {
+     return rotation;
+ }
  
- function cleanup() {
-     if (mesh) {
+-function randomizeColor(color) {
++function randomizeColor(color: THREE.Color) {
+     return color.setHSL(Math.random() * 0.5, 0.6, 0.5);
+ }
+ 
+@@ -112,10 +112,10 @@ function cleanup() {
+             }
+         });
+ 
 -        mesh.parent.remove(mesh);
 +        mesh.parent!.remove(mesh);
  
@@ -9633,7 +9641,7 @@ index f93e5fb85..ee612f75e 100644
          }
      }
  }
-@@ -219,14 +219,18 @@ function init() {
+@@ -261,14 +261,18 @@ function init() {
  
  //
  
@@ -9655,7 +9663,7 @@ index f93e5fb85..ee612f75e 100644
      options.reversed = this.material.transparent;
  
      let minZ = Infinity;
-@@ -276,9 +280,9 @@ function animateMeshes() {
+@@ -318,9 +322,9 @@ function animateMeshes() {
              const rotationMatrix = mesh.userData.rotationSpeeds[i];
              const id = ids[i];
  
@@ -9667,7 +9675,7 @@ index f93e5fb85..ee612f75e 100644
          }
      } else {
          for (let i = 0; i < loopNum; i++) {
-@@ -295,10 +299,10 @@ function animateMeshes() {
+@@ -337,10 +341,10 @@ function animateMeshes() {
  }
  
  function render() {
