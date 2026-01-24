@@ -1739,6 +1739,7 @@ interface Layout {
 }
 
 export interface FnNode<Args extends readonly unknown[], TReturn> {
+    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
     (...args: Args): TReturn extends void ? ShaderCallNodeInternal<void> : TReturn;
 
     shaderNode: ShaderNodeInternal<TReturn>;
