@@ -936,7 +936,7 @@ index ffb7734e8..2dc76d1c9 100644
 +
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..8fc1717f0 100644
+index 74ebc61fc..e56b4524d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -1488,7 +1488,7 @@ index 74ebc61fc..8fc1717f0 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +966,131 @@ class Node extends EventDispatcher {
+@@ -890,4 +966,106 @@ class Node extends EventDispatcher {
      }
  }
  
@@ -1497,10 +1497,7 @@ index 74ebc61fc..8fc1717f0 100644
 +    new (nodeType?: string | null): Node;
 +};
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NodeElements {}
-+
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NodeExtensions<TNodeType> {}
 +
 +export type NumType = 'float' | 'int' | 'uint';
@@ -1509,56 +1506,34 @@ index 74ebc61fc..8fc1717f0 100644
 +export type FloatVecType = 'vec2' | 'vec3' | 'vec4';
 +export type MatType = 'mat2' | 'mat3' | 'mat4';
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface FloatExtensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface IntExtensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface UintExtensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface BoolExtensions {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumExtensions<TNum extends NumType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface IntegerExtensions<TInteger extends IntegerType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumVec2Extensions<TNum extends NumType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumVec3Extensions<TNum extends NumType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumVec4Extensions<TNum extends NumType> {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Vec2Extensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Vec3Extensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Vec4Extensions {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface ColorExtensions {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface FloatVecExtensions<TVec extends FloatVecType> {}
 +
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Mat2Extensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Mat3Extensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Mat4Extensions {}
-+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MatExtensions<TMat extends MatType> {}
 +
 +type Node<TNodeType = unknown> = NodeClass &
