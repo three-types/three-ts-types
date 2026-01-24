@@ -1988,3 +1988,5 @@ declare module "../core/Node.js" {
         append: () => Node;
     }
 }
+
+export {};

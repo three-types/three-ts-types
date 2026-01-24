@@ -35,7 +35,7 @@ export function builtinAOContext(aoNode: Node, node?: Node | null): ContextNode<
 /**
  * @deprecated "label()" has been deprecated. Use "setName()" instead.
  */
-export function label<TNodeType>(node: Node, label: string): Node<TNodeType>;
+export function label<TNodeType>(node: Node<TNodeType>, label: string): Node<TNodeType>;
 
 declare module "./Node.js" {
     interface NodeExtensions<TNodeType> {

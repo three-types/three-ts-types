@@ -1,5 +1,4 @@
 import UniformNode from "../core/UniformNode.js";
-import { NodeOrType } from "../tsl/TSLCore.js";
 
 export interface BufferNodeInterface {
     isBufferNode: true;
@@ -27,3 +26,5 @@ export const buffer: <TNodeType, TValue>(
     type: TNodeType,
     count: number,
 ) => BufferNode<TNodeType, TValue>;
+
+export {};

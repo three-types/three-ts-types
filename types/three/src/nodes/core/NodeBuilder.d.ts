@@ -26,7 +26,9 @@ export interface NodeData {
     compute: { [key: string]: unknown };
 }
 
-export type NodeBuilderContext = { [key: string]: unknown };
+export interface NodeBuilderContext {
+    [key: string]: unknown;
+}
 
 export default abstract class NodeBuilder {
     object: Object3D;
