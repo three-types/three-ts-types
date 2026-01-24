@@ -121,7 +121,7 @@ declare class Nodes extends DataMap<{
      */
     delete(
         object: NodeUniformsGroup | RenderObject | ComputeNode | Scene,
-    ): NodeUniformsGroupData | RenderObjectData | ComputeNodeData | SceneData;
+    ): RenderObjectData | NodeUniformsGroupData | ComputeNodeData | SceneData;
     /**
      * Returns a node builder state for the given compute node.
      *

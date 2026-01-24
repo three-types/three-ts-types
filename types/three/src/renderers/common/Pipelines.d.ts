@@ -4,7 +4,7 @@ import Binding from "./Binding.js";
 import Bindings from "./Bindings.js";
 import ComputePipeline from "./ComputePipeline.js";
 import DataMap from "./DataMap.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
 import RenderObject from "./RenderObject.js";
@@ -33,7 +33,7 @@ declare class Pipelines extends DataMap<{
     };
 }> {
     backend: Backend;
-    nodes: Nodes;
+    nodes: NodeManager;
     bindings: Bindings | null;
     caches: Map<string, Pipeline>;
     programs: {
@@ -47,7 +47,7 @@ declare class Pipelines extends DataMap<{
      * @param {Backend} backend - The renderer's backend.
      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
      */
-    constructor(backend: Backend, nodes: Nodes);
+    constructor(backend: Backend, nodes: NodeManager);
     /**
      * Returns a compute pipeline for the given compute node.
      *

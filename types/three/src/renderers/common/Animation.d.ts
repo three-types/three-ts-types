@@ -1,5 +1,5 @@
 import Info from "./Info.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Renderer from "./Renderer.js";
 export interface AnimationContext {
     requestAnimationFrame(callback: FrameRequestCallback, xrFrame?: XRFrame): number;
@@ -12,7 +12,7 @@ export interface AnimationContext {
  */
 declare class Animation {
     renderer: Renderer;
-    nodes: Nodes;
+    nodes: NodeManager;
     info: Info;
     _context: AnimationContext | null;
     _animationLoop: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
@@ -24,7 +24,7 @@ declare class Animation {
      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
      * @param {Info} info - Renderer component for managing metrics and monitoring data.
      */
-    constructor(renderer: Renderer, nodes: Nodes, info: Info);
+    constructor(renderer: Renderer, nodes: NodeManager, info: Info);
     /**
      * Starts the internal animation loop.
      */
