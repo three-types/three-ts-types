@@ -1704,15 +1704,16 @@ index b24b6e34a..c17b31a7e 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Matrix4 } from '../math/Matrix4.js';
 diff --git a/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts b/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
-index 28a2ba9c1..acb1f41e9 100644
+index 28a2ba9c1..308c25af1 100644
 --- a/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
-@@ -1,3 +1,25 @@
+@@ -1,3 +1,26 @@
 +import { Object3D } from '../core/Object3D.js';
 +import { CoordinateSystem } from "../constants.js";
 +import { RenderTarget } from "../core/RenderTarget.js";
 +import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 +import { Camera } from "./Camera.js";
++import { Scene } from "../scenes/Scene.js";
 +
 +export interface CubeCameraRenderer {
 +    coordinateSystem: CoordinateSystem;
@@ -1733,7 +1734,7 @@ index 28a2ba9c1..acb1f41e9 100644
  /**
   * A special type of camera that is positioned in 3D space to render its surroundings into a
   * cube render target. The render target can then be used as an environment map for rendering
-@@ -25,8 +47,6 @@
+@@ -25,8 +48,6 @@
   * car.visible = true;
   * renderer.render( scene, camera );
   * ```
@@ -1742,7 +1743,7 @@ index 28a2ba9c1..acb1f41e9 100644
   */
  export class CubeCamera extends Object3D {
      /**
-@@ -37,24 +57,19 @@ export class CubeCamera extends Object3D {
+@@ -37,24 +58,19 @@ export class CubeCamera extends Object3D {
       * @param {WebGLCubeRenderTarget} renderTarget - The cube render target.
       */
      constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget);
@@ -1768,7 +1769,7 @@ index 28a2ba9c1..acb1f41e9 100644
       * @default 0
       */
      activeMipmapLevel: number;
-@@ -69,6 +84,5 @@ export class CubeCamera extends Object3D {
+@@ -69,6 +85,5 @@ export class CubeCamera extends Object3D {
       * @param {(Renderer|WebGLRenderer)} renderer - The renderer.
       * @param {Scene} scene - The scene to render.
       */
@@ -8723,3 +8724,16 @@ index 91ed09ab6..65c07b1dd 100644
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Euler } from '../math/Euler.js';
+diff --git a/types/three/src/cameras/OrthographicCamera.d.ts b/types/three/src/cameras/OrthographicCamera.d.ts
+index 7517056f4..dc2aee6db 100644
+--- a/types/three/src/cameras/OrthographicCamera.d.ts
++++ b/types/three/src/cameras/OrthographicCamera.d.ts
+@@ -117,7 +117,7 @@ export class OrthographicCamera extends Camera {
+      * @default 2000
+      */
+     far: number;
+-    copy(source: OthographicCamera, recursive?: boolean): this;
++    copy(source: OrthographicCamera, recursive?: boolean): this;
+     /**
+      * Sets an offset in a larger frustum. This is useful for multi-window or
+      * multi-monitor/multi-machine setups.

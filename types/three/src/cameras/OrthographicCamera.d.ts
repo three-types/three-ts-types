@@ -117,7 +117,7 @@ export class OrthographicCamera extends Camera {
      * @default 2000
      */
     far: number;
-    copy(source: OthographicCamera, recursive?: boolean): this;
+    copy(source: OrthographicCamera, recursive?: boolean): this;
     /**
      * Sets an offset in a larger frustum. This is useful for multi-window or
      * multi-monitor/multi-machine setups.
