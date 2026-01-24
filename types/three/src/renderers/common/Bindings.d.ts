@@ -4,7 +4,7 @@ import Backend from "./Backend.js";
 import BindGroup from "./BindGroup.js";
 import DataMap from "./DataMap.js";
 import Info from "./Info.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Pipelines from "./Pipelines.js";
 import RenderObject from "./RenderObject.js";
 import Textures from "./Textures.js";
@@ -37,11 +37,11 @@ declare class Bindings extends DataMap<{
     textures: Textures;
     pipelines: Pipelines;
     attributes: Attributes;
-    nodes: Nodes;
+    nodes: NodeManager;
     info: Info;
     constructor(
         backend: Backend,
-        nodes: Nodes,
+        nodes: NodeManager,
         textures: Textures,
         attributes: Attributes,
         pipelines: Pipelines,
@@ -53,14 +53,14 @@ declare class Bindings extends DataMap<{
      * @param {RenderObject} renderObject - The render object.
      * @return {Array<BindGroup>} The bind groups.
      */
-    getForRender(renderObject: RenderObject): any;
+    getForRender(renderObject: RenderObject): BindGroup[];
     /**
      * Returns the bind groups for the given compute node.
      *
      * @param {Node} computeNode - The compute node.
      * @return {Array<BindGroup>} The bind groups.
      */
-    getForCompute(computeNode: ComputeNode): any;
+    getForCompute(computeNode: ComputeNode): BindGroup[];
     /**
      * Updates the bindings for the given compute node.
      *

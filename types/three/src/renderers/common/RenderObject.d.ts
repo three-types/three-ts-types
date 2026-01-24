@@ -13,7 +13,7 @@ import BundleGroup from "./BundleGroup.js";
 import ClippingContext from "./ClippingContext.js";
 import Geometries from "./Geometries.js";
 import NodeBuilderState from "./nodes/NodeBuilderState.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
 import RenderPipeline from "./RenderPipeline.js";
@@ -36,7 +36,7 @@ import RenderPipeline from "./RenderPipeline.js";
  * @private
  */
 declare class RenderObject {
-    _nodes: Nodes;
+    _nodes: NodeManager;
     _geometries: Geometries;
     id: number;
     renderer: Renderer;
@@ -95,7 +95,7 @@ declare class RenderObject {
      * @param {ClippingContext} clippingContext - The clipping context.
      */
     constructor(
-        nodes: Nodes,
+        nodes: NodeManager,
         geometries: Geometries,
         renderer: Renderer,
         object: Object3D,
@@ -131,26 +131,26 @@ declare class RenderObject {
      *
      * @return {NodeBuilderState} The node builder state.
      */
-    getNodeBuilderState(): any;
+    getNodeBuilderState(): NodeBuilderState;
     /**
      * Returns the node material observer of this render object.
      *
      * @return {NodeMaterialObserver} The node material observer.
      */
-    getMonitor(): any;
+    getMonitor(): NodeMaterialObserver;
     /**
      * Returns an array of bind groups of this render object.
      *
      * @return {Array<BindGroup>} The bindings.
      */
-    getBindings(): any;
+    getBindings(): BindGroup[];
     /**
      * Returns a binding group by group name of this render object.
      *
      * @param {string} name - The name of the binding group.
      * @return {?BindGroup} The bindings.
      */
-    getBindingGroup(name: string): any;
+    getBindingGroup(name: string): BindGroup | undefined;
     /**
      * Returns the index of the render object's geometry.
      *

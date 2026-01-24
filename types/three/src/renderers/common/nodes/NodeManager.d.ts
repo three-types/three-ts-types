@@ -279,7 +279,7 @@ declare class Nodes extends DataMap<{
      * @param {RenderObject} renderObject - The render object.
      * @return {boolean} Whether the given render object requires a refresh or not.
      */
-    needsRefresh(renderObject: RenderObject): any;
+    needsRefresh(renderObject: RenderObject): boolean;
     /**
      * Frees the internal resources.
      */
