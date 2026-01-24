@@ -1,5 +1,4 @@
 import { Object3D } from "../core/Object3D.js";
-import { AudioContext } from "./AudioContext.js";
 
 /**
  * The class represents a virtual listener of the all positional and non-positional audio effects
