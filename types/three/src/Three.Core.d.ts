@@ -105,6 +105,7 @@ export * from "./math/Euler.js";
 export * from "./math/Frustum.js";
 export * from "./math/FrustumArray.js";
 export * from "./math/Interpolant.js";
+export * from "./math/interpolants/BezierInterpolant.js";
 export * from "./math/interpolants/CubicInterpolant.js";
 export * from "./math/interpolants/DiscreteInterpolant.js";
 export * from "./math/interpolants/LinearInterpolant.js";
