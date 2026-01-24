@@ -5604,10 +5604,10 @@ index 89820e463..a96ee0a23 100644
 +
 +export default LineDashedNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
-index 97d6b1cb4..8cae60c3d 100644
+index 97d6b1cb4..3cf3c9eed 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/MeshBasicNodeMaterial.d.ts
-@@ -1,8 +1,18 @@
+@@ -1,8 +1,19 @@
 -export default MeshBasicNodeMaterial;
 +import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
 +import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
@@ -5616,6 +5616,7 @@ index 97d6b1cb4..8cae60c3d 100644
 +import { MeshBasicMaterialParameters, MeshBasicMaterialProperties } from '../MeshBasicMaterial.js';
 +import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 +
++// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshBasicNodeMaterialNodeProperties extends NodeMaterialNodeProperties {
 +}
 +
@@ -5629,7 +5630,7 @@ index 97d6b1cb4..8cae60c3d 100644
   */
  declare class MeshBasicNodeMaterial extends NodeMaterial {
      /**
-@@ -10,15 +20,14 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+@@ -10,15 +21,14 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
       *
       * @param {Object} [parameters] - The configuration parameter.
       */
@@ -5647,7 +5648,7 @@ index 97d6b1cb4..8cae60c3d 100644
      /**
       * Overwritten since this type of material uses {@link BasicEnvironmentNode}
       * to implement the default environment mapping.
-@@ -26,7 +35,7 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+@@ -26,7 +36,7 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?BasicEnvironmentNode<vec3>} The environment node.
       */
@@ -5656,7 +5657,7 @@ index 97d6b1cb4..8cae60c3d 100644
      /**
       * Setups the lighting model.
       *
-@@ -34,6 +43,8 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
+@@ -34,6 +44,8 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): BasicLightingModel;
  }
@@ -6531,10 +6532,10 @@ index 2128d9631..dd0366810 100644
 +
 +export default MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts b/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
-index 1ffe1bd1b..da4bb6fd3 100644
+index 1ffe1bd1b..85436d1fe 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/MeshToonNodeMaterial.d.ts
-@@ -1,4 +1,15 @@
+@@ -1,8 +1,17 @@
 -export default MeshToonNodeMaterial;
 +import NodeMaterial, { NodeMaterialNodeProperties } from './NodeMaterial.js';
 +import ToonLightingModel from '../../nodes/functions/ToonLightingModel.js';
@@ -6550,8 +6551,12 @@ index 1ffe1bd1b..da4bb6fd3 100644
 +
  /**
   * Node material version of {@link MeshToonMaterial}.
-  *
-@@ -10,15 +21,14 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+- *
+- * @augments NodeMaterial
+  */
+ declare class MeshToonNodeMaterial extends NodeMaterial {
+     /**
+@@ -10,15 +19,14 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
       *
       * @param {Object} [parameters] - The configuration parameter.
       */
@@ -6569,7 +6574,7 @@ index 1ffe1bd1b..da4bb6fd3 100644
      /**
       * Setups the lighting model.
       *
-@@ -26,5 +36,8 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
+@@ -26,5 +34,8 @@ declare class MeshToonNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): ToonLightingModel;
  }
