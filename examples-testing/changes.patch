@@ -912,7 +912,7 @@ index b12b0421e..c3b378aa7 100644
              }
  
 diff --git a/examples-testing/examples/misc_controls_fly.ts b/examples-testing/examples/misc_controls_fly.ts
-index 2c3260868..5a60bda1c 100644
+index 6493ebd8a..50e66d62e 100644
 --- a/examples-testing/examples/misc_controls_fly.ts
 +++ b/examples-testing/examples/misc_controls_fly.ts
 @@ -16,11 +16,15 @@ const MARGIN = 0;
@@ -930,8 +930,8 @@ index 2c3260868..5a60bda1c 100644
 +let geometry: THREE.SphereGeometry, meshPlanet: THREE.Mesh, meshClouds: THREE.Mesh, meshMoon: THREE.Mesh;
 +let dirLight: THREE.DirectionalLight;
  
--let postProcessing;
-+let postProcessing: THREE.PostProcessing;
+-let renderPipeline;
++let renderPipeline: THREE.RenderPipeline;
  
  const textureLoader = new THREE.TextureLoader();
  
@@ -14003,7 +14003,7 @@ index 384311dd4..8d39e8acc 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index 5efb90734..fc43232ba 100644
+index a8538cf94..53b975193 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14013,14 +14013,14 @@ index 5efb90734..fc43232ba 100644
 -let camera, scene, renderer;
 -let mixer, objects, timer;
 -let model, floor, floorPosition;
--let postProcessing;
+-let renderPipeline;
 -let controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let mixer: THREE.AnimationMixer, objects: THREE.Group, timer: THREE.Timer;
 +let model: THREE.Group,
 +    floor: THREE.Mesh<THREE.CylinderGeometry, THREE.MeshStandardNodeMaterial>,
 +    floorPosition: THREE.Vector3;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
 +let controls: OrbitControls;
  
  init();
@@ -14690,7 +14690,7 @@ index 59cb8a519..d2cc6ac7d 100644
          return v0.add(v1).add(v2).add(v3).mul(0.25);
      })();
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 3e7e4878f..338041458 100644
+index e00fe068f..476468a0a 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14700,11 +14700,11 @@ index 3e7e4878f..338041458 100644
 -let camera, scene, renderer;
 -let controls;
 -let computeParticles;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let controls: OrbitControls;
 +let computeParticles: THREE.ComputeNode;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
 -let collisionCamera, collisionPosRT, collisionPosMaterial;
 +let collisionCamera: THREE.OrthographicCamera,
@@ -15085,7 +15085,7 @@ index fcae79b96..0ce427a37 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
-index c9ca40234..9fdb9a4b3 100644
+index a9b619345..e482a1e2e 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_background.ts
 @@ -6,8 +6,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -15093,25 +15093,25 @@ index c9ca40234..9fdb9a4b3 100644
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_scattering.ts b/examples-testing/examples/webgpu_custom_fog_scattering.ts
-index d5eff7f15..f9b2bc97f 100644
+index 7f14133fd..7be64774d 100644
 --- a/examples-testing/examples/webgpu_custom_fog_scattering.ts
 +++ b/examples-testing/examples/webgpu_custom_fog_scattering.ts
 @@ -5,7 +5,11 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, renderPipeline, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
  const params = {
@@ -15132,7 +15132,7 @@ index d5eff7f15..f9b2bc97f 100644
      gui.add(scattering, 'value', 0, 5).name('scattering factor');
      gui.add(params, 'scatteringEnabled')
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index 90204a3d0..58e2ccffc 100644
+index a9bd4ef54..15d071f9a 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
 @@ -1,25 +1,28 @@
@@ -15147,11 +15147,11 @@ index 90204a3d0..58e2ccffc 100644
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing;
+-let camera, scene, renderer, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  
 -let stereo, anaglyph, parallaxBarrier;
 +let stereo: StereoPassNode, anaglyph: AnaglyphPassNode, parallaxBarrier: ParallaxBarrierPassNode;
@@ -15174,7 +15174,7 @@ index 90204a3d0..58e2ccffc 100644
  
 @@ -77,7 +80,7 @@ function init() {
  
-     postProcessing.outputNode = stereo;
+     renderPipeline.outputNode = stereo;
  
 -    const gui = renderer.inspector.createParameters('Stereo Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Stereo Settings');
@@ -15188,7 +15188,7 @@ index 90204a3d0..58e2ccffc 100644
 -function update(value) {
 +function update(value: 'stereo' | 'anaglyph' | 'parallaxBarrier') {
      if (value === 'stereo') {
-         postProcessing.outputNode = stereo;
+         renderPipeline.outputNode = stereo;
      } else if (value === 'anaglyph') {
 @@ -112,7 +115,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
@@ -15248,7 +15248,7 @@ index 65bda9cd8..5d3957e54 100644
      gui.add(density, 'value', 0.001, 0.1).step(0.0001).name('Density');
      gui.add(height, 'value', -5, 5).name('Height');
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
-index bb1dd4a15..44814fa58 100644
+index b96ba5f42..676326fed 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
 +++ b/examples-testing/examples/webgpu_hdr.ts
 @@ -17,7 +17,7 @@ const hdrMediaQuery = window.matchMedia('(dynamic-range: high)');
@@ -15893,7 +15893,7 @@ index 85e320800..4b07c276f 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index 58b6b0fa4..6120aa5b2 100644
+index e575ee344..6edf88b08 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15908,7 +15908,7 @@ index 58b6b0fa4..6120aa5b2 100644
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
--let camera, scene, renderer, lights, lightDummy, controls, compose, tileInfluence, lighting, count, postProcessing;
+-let camera, scene, renderer, lights, lightDummy, controls, compose, tileInfluence, lighting, count, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
@@ -15919,7 +15919,7 @@ index 58b6b0fa4..6120aa5b2 100644
 +    tileInfluence: THREE.UniformNode<'float', number>,
 +    lighting: TiledLighting,
 +    count: number,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -16479,21 +16479,21 @@ index 1daf0f032..ee2cb370b 100644
  
      for (let i = 0; i < uv.count; i++) {
 diff --git a/examples-testing/examples/webgpu_materials_alphahash.ts b/examples-testing/examples/webgpu_materials_alphahash.ts
-index 927f49948..5f4bc9101 100644
+index 047bbe582..5a01713a4 100644
 --- a/examples-testing/examples/webgpu_materials_alphahash.ts
 +++ b/examples-testing/examples/webgpu_materials_alphahash.ts
 @@ -7,7 +7,13 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
  
  import { ssaaPass } from 'three/addons/tsl/display/SSAAPassNode.js';
  
--let camera, scene, renderer, controls, mesh, material, postProcessing;
+-let camera, scene, renderer, controls, mesh, material, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    controls: OrbitControls,
 +    mesh: THREE.InstancedMesh,
 +    material: THREE.MeshStandardMaterial,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  
  const amount = parseInt(window.location.search.slice(1)) || 3;
  const count = Math.pow(amount, 3);
@@ -17011,7 +17011,7 @@ index 090372729..2456b2959 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgpu_materials_toon.ts b/examples-testing/examples/webgpu_materials_toon.ts
-index 56ef372ce..f634dff9e 100644
+index 78cb62ed6..210b1d6e9 100644
 --- a/examples-testing/examples/webgpu_materials_toon.ts
 +++ b/examples-testing/examples/webgpu_materials_toon.ts
 @@ -6,18 +6,22 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -17023,12 +17023,12 @@ index 56ef372ce..f634dff9e 100644
 -let container;
 +let container: HTMLDivElement;
  
--let camera, scene, renderer, postProcessing;
+-let camera, scene, renderer, renderPipeline;
 -let particleLight;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
 +let particleLight: THREE.Mesh;
  
  const loader = new FontLoader();
@@ -17459,7 +17459,7 @@ index 91120dfb5..53282897e 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index 6fb44f9ad..11a74a825 100644
+index 76c0cc3a3..42c19414c 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
 @@ -20,8 +20,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -17467,14 +17467,14 @@ index 6fb44f9ad..11a74a825 100644
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
 diff --git a/examples-testing/examples/webgpu_mrt_mask.ts b/examples-testing/examples/webgpu_mrt_mask.ts
-index 475da181f..11e1e1023 100644
+index 2bb80b84e..a7f4b8335 100644
 --- a/examples-testing/examples/webgpu_mrt_mask.ts
 +++ b/examples-testing/examples/webgpu_mrt_mask.ts
 @@ -6,11 +6,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -17482,10 +17482,10 @@ index 475da181f..11e1e1023 100644
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 -let spheres,
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
 +let spheres: THREE.Group,
      rotate = true;
 -let mixer, timer;
@@ -17579,7 +17579,7 @@ index 65bd3e75d..3d3f2fd92 100644
      for (let i = 0; i < 40; i++) {
          const scene = new THREE.Scene();
 diff --git a/examples-testing/examples/webgpu_multiple_rendertargets.ts b/examples-testing/examples/webgpu_multiple_rendertargets.ts
-index 18d48cbf0..8fac58713 100644
+index 2085d3c63..f4bc1ae6e 100644
 --- a/examples-testing/examples/webgpu_multiple_rendertargets.ts
 +++ b/examples-testing/examples/webgpu_multiple_rendertargets.ts
 @@ -3,8 +3,8 @@ import { mix, vec2, step, texture, uv, screenUV, normalWorld, output, mrt } from
@@ -17587,9 +17587,9 @@ index 18d48cbf0..8fac58713 100644
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
 -let camera, scene, renderer, torus;
--let postProcessing, renderTarget;
+-let renderPipeline, renderTarget;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, torus: THREE.Mesh;
-+let postProcessing: THREE.PostProcessing, renderTarget: THREE.RenderTarget;
++let renderPipeline: THREE.RenderPipeline, renderTarget: THREE.RenderTarget;
  
  init();
  
@@ -17754,7 +17754,7 @@ index e49f98ce7..e7061f5d2 100644
          this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);
      }
 diff --git a/examples-testing/examples/webgpu_ocean.ts b/examples-testing/examples/webgpu_ocean.ts
-index 37e9de759..8d5b101a9 100644
+index a7939461e..fe749d04c 100644
 --- a/examples-testing/examples/webgpu_ocean.ts
 +++ b/examples-testing/examples/webgpu_ocean.ts
 @@ -1,6 +1,6 @@
@@ -17770,13 +17770,13 @@ index 37e9de759..8d5b101a9 100644
  import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
  
 -let container;
--let camera, scene, renderer, postProcessing;
+-let camera, scene, renderer, renderPipeline;
 -let controls, water, sun, sky, mesh, bloomPass;
 +let container: HTMLElement;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
 +let controls: OrbitControls, water: WaterMesh, sun: THREE.Vector3, sky: SkyMesh, mesh: THREE.Mesh, bloomPass: BloomNode;
  
  init();
@@ -18109,22 +18109,22 @@ index df2e400f3..a9b881274 100644
  
                  applyFX(0);
 diff --git a/examples-testing/examples/webgpu_postprocessing.ts b/examples-testing/examples/webgpu_postprocessing.ts
-index 9bbbceb12..aed754f55 100644
+index d554a8835..1b45472b6 100644
 --- a/examples-testing/examples/webgpu_postprocessing.ts
 +++ b/examples-testing/examples/webgpu_postprocessing.ts
 @@ -4,8 +4,8 @@ import { dotScreen } from 'three/addons/tsl/display/DotScreenNode.js';
  import { rgbShift } from 'three/addons/tsl/display/RGBShiftNode.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, renderer, postProcessing;
+-let camera, renderer, renderPipeline;
 -let object;
-+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, renderPipeline: THREE.RenderPipeline;
 +let object: THREE.Object3D;
  
  init();
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_3dlut.ts b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
-index f23b09c18..0bae944cf 100644
+index 867cc62f7..cd14289f0 100644
 --- a/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_3dlut.ts
 @@ -18,21 +18,31 @@ import {
@@ -18169,11 +18169,11 @@ index f23b09c18..0bae944cf 100644
      NightLUT: null,
  };
  
--let camera, scene, renderer, postProcessing, controls, lutPass;
+-let camera, scene, renderer, renderPipeline, controls, lutPass;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls,
 +    lutPass: Lut3DNode;
  
@@ -18224,7 +18224,7 @@ index f23b09c18..0bae944cf 100644
 +    const lut = lutMap[params.lut] as LUTCubeResult | LUT3dlResult | LUTImageResult;
      lutPass = lut3D(outputPass, texture3D(lut.texture3D), lut.texture3D.image.width, uniform(1));
  
-     postProcessing.outputNode = lutPass;
+     renderPipeline.outputNode = lutPass;
 @@ -199,8 +220,8 @@ async function init() {
  
      // gui
@@ -18250,7 +18250,7 @@ index f23b09c18..0bae944cf 100644
          lutPass.size.value = lut.texture3D.image.width;
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_afterimage.ts b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
-index 88a0c635d..98c3b0fea 100644
+index 2df8212f5..8d35cb734 100644
 --- a/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_afterimage.ts
 @@ -13,12 +13,12 @@ import {
@@ -18263,9 +18263,9 @@ index 88a0c635d..98c3b0fea 100644
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, particles;
--let postProcessing, afterImagePass, scenePass;
+-let renderPipeline, afterImagePass, scenePass;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, particles: THREE.Sprite;
-+let postProcessing: THREE.PostProcessing, afterImagePass: AfterImageNode, scenePass: THREE.PassNode;
++let renderPipeline: THREE.RenderPipeline, afterImagePass: AfterImageNode, scenePass: THREE.PassNode;
  
  const params = {
      damp: uniform(0.8, 'float').setName('damp'),
@@ -18306,7 +18306,7 @@ index 88a0c635d..98c3b0fea 100644
  
      window.addEventListener('resize', onWindowResize);
 @@ -124,7 +124,7 @@ function updatePassChain() {
-     postProcessing.needsUpdate = true;
+     renderPipeline.needsUpdate = true;
  }
  
 -function getRandomPointOnSphere(r, v) {
@@ -18322,9 +18322,9 @@ index 88a0c635d..98c3b0fea 100644
 +function animate(time: number) {
      particles.rotation.z = time * 0.001;
  
-     postProcessing.render();
+     renderPipeline.render();
 diff --git a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
-index 65ddd7375..58bbbc744 100644
+index 1cdb6893c..8286bb59b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_anamorphic.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18332,9 +18332,9 @@ index 65ddd7375..58bbbc744 100644
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  const params = {
      resolutionScale: 0.2,
@@ -18348,7 +18348,7 @@ index 65ddd7375..58bbbc744 100644
      gui.add(threshold, 'value', 0.8, 3, 0.001).name('threshold');
      gui.add(scaleNode, 'value', 1, 10, 0.1).name('scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 7009b877c..74dc69e46 100644
+index 76046bee8..460c90fd6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
@@ -18366,11 +18366,11 @@ index 7009b877c..74dc69e46 100644
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, renderPipeline, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
 -let aoPass, traaPass, transparentMesh;
@@ -18390,7 +18390,7 @@ index 7009b877c..74dc69e46 100644
      gui.add(params, 'distanceExponent', 1, 2).onChange(updateParameters);
      gui.add(params, 'distanceFallOff', 0.01, 1).onChange(updateParameters);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index 5c02ed6f9..06b7978ae 100644
+index 3197d680d..d173ef87b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 @@ -7,8 +7,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18398,9 +18398,9 @@ index 5c02ed6f9..06b7978ae 100644
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera;
--let postProcessing, renderer, mixer, timer;
+-let renderPipeline, renderer, mixer, timer;
 +let camera: THREE.PerspectiveCamera;
-+let postProcessing: THREE.PostProcessing,
++let renderPipeline: THREE.RenderPipeline,
 +    renderer: THREE.WebGPURenderer,
 +    mixer: THREE.AnimationMixer,
 +    timer: THREE.Timer;
@@ -18417,7 +18417,7 @@ index 5c02ed6f9..06b7978ae 100644
      const bloomFolder = gui.addFolder('bloom');
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index 4663508b8..e816a3f0b 100644
+index faa5b67fb..efe984318 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 @@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18425,9 +18425,9 @@ index 4663508b8..e816a3f0b 100644
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18441,7 +18441,7 @@ index 4663508b8..e816a3f0b 100644
      const bloomFolder = gui.addFolder('Bloom');
      bloomFolder.add(bloomPass.strength, 'value', 0.0, 5.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 48ea482e6..cd91c5d72 100644
+index b8f2427d4..00b649aed 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 @@ -86,16 +86,17 @@ window.addEventListener('pointerdown', event => {
@@ -18466,7 +18466,7 @@ index 48ea482e6..cd91c5d72 100644
  const bloomFolder = gui.addFolder('Bloom');
  bloomFolder.add(bloomPass.threshold, 'value', 0.0, 1.0).name('threshold');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ca.ts b/examples-testing/examples/webgpu_postprocessing_ca.ts
-index abc00c257..7c81873e8 100644
+index 48b549050..4af52250f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ca.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ca.ts
 @@ -17,8 +17,12 @@ const params = {
@@ -18474,13 +18474,13 @@ index abc00c257..7c81873e8 100644
  };
  
 -let camera, scene, renderer, timer, mainGroup;
--let controls, postProcessing;
+-let controls, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    timer: THREE.Timer,
 +    mainGroup: THREE.Group;
-+let controls: OrbitControls, postProcessing: THREE.PostProcessing;
++let controls: OrbitControls, renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18492,7 +18492,7 @@ index abc00c257..7c81873e8 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
  
      gui.add(params, 'enabled').onChange(value => {
-         postProcessing.outputNode = value ? caPass : outputPass;
+         renderPipeline.outputNode = value ? caPass : outputPass;
 @@ -109,8 +113,8 @@ async function init() {
  }
  
@@ -18514,16 +18514,16 @@ index abc00c257..7c81873e8 100644
                          subChild.rotation.z = time * (1 - subIndex * 0.1);
                      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_difference.ts b/examples-testing/examples/webgpu_postprocessing_difference.ts
-index 9c5a47472..e5e98e026 100644
+index 91cc4cbf5..7dd420b37 100644
 --- a/examples-testing/examples/webgpu_postprocessing_difference.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_difference.ts
 @@ -9,8 +9,8 @@ const params = {
      speed: 0,
  };
  
--let camera, renderer, postProcessing;
+-let camera, renderer, renderPipeline;
 -let timer, mesh, controls;
-+let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
++let camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, renderPipeline: THREE.RenderPipeline;
 +let timer: THREE.Timer, mesh: THREE.Mesh, controls: OrbitControls;
  
  init();
@@ -18538,7 +18538,7 @@ index 9c5a47472..e5e98e026 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof.ts b/examples-testing/examples/webgpu_postprocessing_dof.ts
-index 1ab1e7cbb..31b407f98 100644
+index 862c2802b..72722971d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof.ts
 @@ -7,12 +7,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -18555,8 +18555,8 @@ index 1ab1e7cbb..31b407f98 100644
  let width = window.innerWidth;
  let height = window.innerHeight;
  
--let postProcessing;
-+let postProcessing: THREE.PostProcessing;
+-let renderPipeline;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18570,14 +18570,14 @@ index 1ab1e7cbb..31b407f98 100644
      gui.add(effectController.focalLength, 'value', 50, 750).name('focal length');
      gui.add(effectController.bokehScale, 'value', 1, 20).name('bokeh scale');
 diff --git a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
-index 1f6070a03..0a5e9a08c 100644
+index 7d51910ea..9dc7e177b 100644
 --- a/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_dof_basic.ts
 @@ -11,7 +11,15 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  import TWEEN from 'three/addons/libs/tween.module.js';
  
--let camera, controls, scene, timer, renderer, model, mixer, raycaster, postProcessing;
+-let camera, controls, scene, timer, renderer, model, mixer, raycaster, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    controls: OrbitControls,
 +    scene: THREE.Scene,
@@ -18586,7 +18586,7 @@ index 1f6070a03..0a5e9a08c 100644
 +    model: THREE.Group,
 +    mixer: THREE.AnimationMixer,
 +    raycaster: THREE.Raycaster,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  
  const pointerCoords = new THREE.Vector2();
  const focusPoint = new THREE.Vector3(1, 1.75, -0.4);
@@ -18609,7 +18609,7 @@ index 1f6070a03..0a5e9a08c 100644
  
      raycaster.setFromCamera(pointerCoords, camera);
 diff --git a/examples-testing/examples/webgpu_postprocessing_fxaa.ts b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
-index a0a1085a5..eba8948a7 100644
+index 24c01a950..b820da439 100644
 --- a/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_fxaa.ts
 @@ -9,8 +9,12 @@ const params = {
@@ -18617,13 +18617,13 @@ index a0a1085a5..eba8948a7 100644
  };
  
 -let camera, scene, renderer, timer, group;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    timer: THREE.Timer,
 +    group: THREE.Group;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18635,9 +18635,9 @@ index a0a1085a5..eba8948a7 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
      gui.add(params, 'enabled').onChange(value => {
          if (value === true) {
-             postProcessing.outputNode = fxaaPass;
+             renderPipeline.outputNode = fxaaPass;
 diff --git a/examples-testing/examples/webgpu_postprocessing_lensflare.ts b/examples-testing/examples/webgpu_postprocessing_lensflare.ts
-index 5cee38e01..141adb21d 100644
+index 39b1e5f6e..07904d37c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_lensflare.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_lensflare.ts
 @@ -11,8 +11,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18645,9 +18645,9 @@ index 5cee38e01..141adb21d 100644
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, controls;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18661,16 +18661,16 @@ index 5cee38e01..141adb21d 100644
      const bloomFolder = gui.addFolder('bloom');
      bloomFolder.add(bloomPass.strength, 'value', 0.0, 2.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_masking.ts b/examples-testing/examples/webgpu_postprocessing_masking.ts
-index 160be467f..1898cd29b 100644
+index b234abc66..2f52a98c9 100644
 --- a/examples-testing/examples/webgpu_postprocessing_masking.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_masking.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three/webgpu';
  import { pass, texture } from 'three/tsl';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, postProcessing, renderer;
+-let camera, renderPipeline, renderer;
 -let box, torus;
-+let camera: THREE.PerspectiveCamera, postProcessing: THREE.PostProcessing, renderer: THREE.WebGPURenderer;
++let camera: THREE.PerspectiveCamera, renderPipeline: THREE.RenderPipeline, renderer: THREE.WebGPURenderer;
 +let box: THREE.Mesh, torus: THREE.Mesh;
  
  init();
@@ -18685,7 +18685,7 @@ index 160be467f..1898cd29b 100644
      compose = sceneMask2.mix(compose, texture(texture2));
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
-index 1dcc2e4bd..e5e466aa0 100644
+index 5ae3d9661..64a4411fc 100644
 --- a/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_motion_blur.ts
 @@ -8,10 +8,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -18694,11 +18694,11 @@ index 1dcc2e4bd..e5e466aa0 100644
  
 -let camera, scene, renderer;
 -let boxLeft, boxRight, model, mixer, timer;
--let postProcessing;
+-let renderPipeline;
 -let controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let boxLeft: THREE.Mesh, boxRight: THREE.Mesh, model: THREE.Group, mixer: THREE.AnimationMixer, timer: THREE.Timer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
 +let controls: OrbitControls;
  
  const params = {
@@ -18722,7 +18722,7 @@ index 1dcc2e4bd..e5e466aa0 100644
      gui.add(blurAmount, 'value', 0, 3).name('blur amount');
      gui.add(params, 'speed', 0, 2);
 diff --git a/examples-testing/examples/webgpu_postprocessing_outline.ts b/examples-testing/examples/webgpu_postprocessing_outline.ts
-index b49ce1f99..c8d65b4ab 100644
+index f87415b74..beb843ed8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_outline.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_outline.ts
 @@ -1,16 +1,16 @@
@@ -18737,9 +18737,9 @@ index b49ce1f99..c8d65b4ab 100644
  import { OBJLoader } from 'three/addons/loaders/OBJLoader.js';
  
 -let camera, scene, renderer, controls;
--let postProcessing, outlinePass;
+-let renderPipeline, outlinePass;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
-+let postProcessing: THREE.PostProcessing, outlinePass: OutlineNode;
++let renderPipeline: THREE.RenderPipeline, outlinePass: OutlineNode;
  
 -let selectedObjects = [];
 +let selectedObjects: THREE.Object3D[] = [];
@@ -18774,19 +18774,19 @@ index b49ce1f99..c8d65b4ab 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgpu_postprocessing_pixel.ts b/examples-testing/examples/webgpu_postprocessing_pixel.ts
-index 3291c6dcc..19b8344d7 100644
+index a3d58f203..26c4a8ac8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_pixel.ts
 @@ -6,8 +6,18 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { uniform } from 'three/tsl';
  import { pixelationPass } from 'three/addons/tsl/display/PixelationPassNode.js';
  
--let camera, scene, renderer, postProcessing, crystalMesh, timer;
+-let camera, scene, renderer, renderPipeline, crystalMesh, timer;
 -let effectController;
 +let camera: THREE.OrthographicCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
 +    timer: THREE.Timer;
 +let effectController: {
@@ -18861,7 +18861,7 @@ index 3291c6dcc..19b8344d7 100644
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
 diff --git a/examples-testing/examples/webgpu_postprocessing_radial_blur.ts b/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
-index 4725ad9cb..a2fdd93fb 100644
+index f358421e3..95f4cba68 100644
 --- a/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_radial_blur.ts
 @@ -9,8 +9,12 @@ const params = {
@@ -18869,13 +18869,13 @@ index 4725ad9cb..a2fdd93fb 100644
  };
  
 -let camera, scene, renderer, timer, group;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    timer: THREE.Timer,
 +    group: THREE.Group;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -18889,18 +18889,18 @@ index 4725ad9cb..a2fdd93fb 100644
      gui.add(decayUniform, 'value', 0, 1).name('decay');
      gui.add(countUniform, 'value', 16, 64, 1).name('sample count');
 diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
-index acbb9ffb3..410b804fc 100644
+index f06374258..e23e37256 100644
 --- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_smaa.ts
 @@ -4,7 +4,10 @@ import { smaa } from 'three/addons/tsl/display/SMAANode.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing;
+-let camera, scene, renderer, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  
  const params = {
      enabled: true,
@@ -18914,7 +18914,7 @@ index acbb9ffb3..410b804fc 100644
      const smaaFolder = gui.addFolder('SMAA');
      smaaFolder.add(params, 'enabled').onChange(value => {
 diff --git a/examples-testing/examples/webgpu_postprocessing_sobel.ts b/examples-testing/examples/webgpu_postprocessing_sobel.ts
-index 080d9429c..06247bb49 100644
+index bdc37d2fd..0888593b0 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sobel.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sobel.ts
 @@ -7,8 +7,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -18922,9 +18922,9 @@ index 080d9429c..06247bb49 100644
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, controls;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  const params = {
      enabled: true,
@@ -18947,7 +18947,7 @@ index 080d9429c..06247bb49 100644
  
      //
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssaa.ts b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
-index 68a480683..b6d9684f6 100644
+index c38832c7a..8630c18d6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssaa.ts
 @@ -1,11 +1,11 @@
@@ -18957,10 +18957,10 @@ index 68a480683..b6d9684f6 100644
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let scene, mesh, renderer, postProcessing;
+-let scene, mesh, renderer, renderPipeline;
 -let camera, ssaaRenderPass;
 -let timer;
-+let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, postProcessing: THREE.PostProcessing;
++let scene: THREE.Scene, mesh: THREE.InstancedMesh, renderer: THREE.WebGPURenderer, renderPipeline: THREE.RenderPipeline;
 +let camera: THREE.PerspectiveCamera, ssaaRenderPass: SSAAPassNode;
 +let timer: THREE.Timer;
  
@@ -18991,21 +18991,21 @@ index 68a480683..b6d9684f6 100644
 -    camera.view.offsetX = params.viewOffsetX;
 +    camera.view!.offsetX = params.viewOffsetX;
  
-     postProcessing.render();
+     renderPipeline.render();
  }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index 4eadd279f..d345c7d29 100644
+index 8c8e4a91c..12595f85c 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, renderPipeline, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
  init();
@@ -19026,10 +19026,10 @@ index 4eadd279f..d345c7d29 100644
 -    function updatePostprocessing(value) {
 +    function updatePostprocessing(value: number | boolean) {
          if (value === 1) {
-             postProcessing.outputNode = vec4(vec3(ao), 1);
+             renderPipeline.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr.ts b/examples-testing/examples/webgpu_postprocessing_ssr.ts
-index 3073bbe08..0b4f8c580 100644
+index 1f838d348..99feb4e2f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr.ts
 @@ -15,7 +15,7 @@ import {
@@ -19045,13 +19045,13 @@ index 3073bbe08..0b4f8c580 100644
      enabled: true,
  };
  
--let camera, scene, model, renderer, postProcessing, ssrPass;
+-let camera, scene, model, renderer, renderPipeline, ssrPass;
 -let controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    model: THREE.Group,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    ssrPass: SSRNode;
 +let controls: OrbitControls;
  
@@ -19096,18 +19096,18 @@ index 3073bbe08..0b4f8c580 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_sss.ts b/examples-testing/examples/webgpu_postprocessing_sss.ts
-index b6e3c9772..18ae47a1a 100644
+index 42cc26f39..01ca5fa02 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sss.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sss.ts
 @@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, renderPipeline, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
  init();
@@ -19135,23 +19135,23 @@ index b6e3c9772..18ae47a1a 100644
      gui.add(sssPass.shadowIntensity, 'value', 0, 1).name('shadow intensity');
      gui.add(sssPass.maxDistance, 'value', 0.01, 1).name('max ray distance');
 diff --git a/examples-testing/examples/webgpu_postprocessing_traa.ts b/examples-testing/examples/webgpu_postprocessing_traa.ts
-index eb138a8f3..91ffad479 100644
+index 01d17ca17..9c7b6cb64 100644
 --- a/examples-testing/examples/webgpu_postprocessing_traa.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_traa.ts
 @@ -4,7 +4,10 @@ import { traa } from 'three/addons/tsl/display/TRAANode.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing;
+-let camera, scene, renderer, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing;
++    renderPipeline: THREE.RenderPipeline;
  let index = 0;
  
  init();
 diff --git a/examples-testing/examples/webgpu_postprocessing_transition.ts b/examples-testing/examples/webgpu_postprocessing_transition.ts
-index 48c51c80f..b6eceebe2 100644
+index 1a5a88fc1..74dc8f8ec 100644
 --- a/examples-testing/examples/webgpu_postprocessing_transition.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_transition.ts
 @@ -3,17 +3,33 @@ import * as THREE from 'three/webgpu';
@@ -19164,9 +19164,9 @@ index 48c51c80f..b6eceebe2 100644
 -import { transition } from 'three/addons/tsl/display/TransitionNode.js';
 +import TransitionNode, { transition } from 'three/addons/tsl/display/TransitionNode.js';
  
--let renderer, postProcessing, transitionController, transitionPass;
+-let renderer, renderPipeline, transitionController, transitionPass;
 +let renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    transitionController: ValueSlider<EffectController, 'transition'>,
 +    transitionPass: TransitionNode;
  
@@ -19287,7 +19287,7 @@ index 48c51c80f..b6eceebe2 100644
  const fxSceneA = new FXScene(new THREE.BoxGeometry(2, 2, 2), new THREE.Vector3(0, -0.4, 0), 0xffffff);
 @@ -132,7 +160,7 @@ function init() {
  
-     postProcessing.outputNode = transitionPass;
+     renderPipeline.outputNode = transitionPass;
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
@@ -19317,7 +19317,7 @@ index 21fb4a3c2..d3a164bef 100644
      gui.add(blurAmount, 'value', 0, 2).name('blur amount ( after rtt )');
      gui.add(proceduralToTexture, 'autoUpdate').name('auto update');
 diff --git a/examples-testing/examples/webgpu_reflection.ts b/examples-testing/examples/webgpu_reflection.ts
-index 080715fb9..89b89b8b9 100644
+index d5dd23318..a5a22f6a1 100644
 --- a/examples-testing/examples/webgpu_reflection.ts
 +++ b/examples-testing/examples/webgpu_reflection.ts
 @@ -32,9 +32,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -19325,10 +19325,10 @@ index 080715fb9..89b89b8b9 100644
  import TWEEN from 'three/addons/libs/tween.module.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 -let controls;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
 +let controls: OrbitControls;
  
  // below uniforms will be animated via TWEEN.js
@@ -19864,7 +19864,7 @@ index 36669a5d4..ba34cfcfd 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_skinning_instancing.ts b/examples-testing/examples/webgpu_skinning_instancing.ts
-index ee0143836..b11dc33b4 100644
+index 877ee46cb..1b8d0b2dc 100644
 --- a/examples-testing/examples/webgpu_skinning_instancing.ts
 +++ b/examples-testing/examples/webgpu_skinning_instancing.ts
 @@ -4,10 +4,10 @@ import { gaussianBlur } from 'three/addons/tsl/display/GaussianBlurNode.js';
@@ -19872,9 +19872,9 @@ index ee0143836..b11dc33b4 100644
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
 -let camera, scene, renderer;
--let postProcessing;
+-let renderPipeline;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
 -let mixer, timer;
 +let mixer: THREE.AnimationMixer, timer: THREE.Timer;
@@ -20083,7 +20083,7 @@ index b0d1139db..ad5736962 100644
      };
  
 diff --git a/examples-testing/examples/webgpu_test_memory.ts b/examples-testing/examples/webgpu_test_memory.ts
-index 905006a87..e024113b8 100644
+index aadde4dc6..c4babf4ae 100644
 --- a/examples-testing/examples/webgpu_test_memory.ts
 +++ b/examples-testing/examples/webgpu_test_memory.ts
 @@ -1,16 +1,22 @@
@@ -20103,11 +20103,11 @@ index 905006a87..e024113b8 100644
 +    light: THREE.DirectionalLight | null;
  let generateMeshes = true;
 -let mesh;
--let postProcessing;
+-let renderPipeline;
 -let aoNode, outlineNode, scenePass, prePass;
 -const selectedObjects = [];
 +let mesh: THREE.Mesh<THREE.SphereGeometry, THREE.MeshLambertMaterial>;
-+let postProcessing: THREE.PostProcessing | null;
++let renderPipeline: THREE.RenderPipeline | null;
 +let aoNode: GTAONode | null,
 +    outlineNode: OutlineNode | null,
 +    scenePass: THREE.PassNode | null,
@@ -20126,7 +20126,7 @@ index 905006a87..e024113b8 100644
      gui.add(params, 'castShadow')
          .name('Cast Shadow')
 @@ -125,7 +131,7 @@ function updatePostProcessing() {
-         postProcessing = new THREE.PostProcessing(renderer);
+         renderPipeline = new THREE.RenderPipeline(renderer);
  
          scenePass = pass(scene, camera);
 -        let colorNode = scenePass;
@@ -20786,18 +20786,18 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index 4c4ee68ee..4065e1b6a 100644
+index e220c164b..d2b115817 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
--let camera, scene, renderer, postProcessing, controls, timer, light;
+-let camera, scene, renderer, renderPipeline, controls, timer, light;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls,
 +    timer: THREE.Timer,
 +    light: THREE.PointLight;
@@ -20837,18 +20837,18 @@ index 4c4ee68ee..4065e1b6a 100644
      screenPointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
  }
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
-index 571b7ea0b..f35691a90 100644
+index 625a9d209..0509e361d 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_tornado.ts
 @@ -25,7 +25,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
--let camera, scene, renderer, postProcessing, controls;
+-let camera, scene, renderer, renderPipeline, controls;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
  init();
@@ -21138,7 +21138,7 @@ index f52b15ffe..78885bec4 100644
          lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
          lat = (onPointerDownPointerY - event.clientY) * 0.1 + onPointerDownLat;
 diff --git a/examples-testing/examples/webgpu_volume_caustics.ts b/examples-testing/examples/webgpu_volume_caustics.ts
-index 44b5081fd..133aa90a8 100644
+index 0c85390dd..23cd2ae09 100644
 --- a/examples-testing/examples/webgpu_volume_caustics.ts
 +++ b/examples-testing/examples/webgpu_volume_caustics.ts
 @@ -31,9 +31,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21146,10 +21146,10 @@ index 44b5081fd..133aa90a8 100644
  import { bloom } from 'three/addons/tsl/display/BloomNode.js';
  
 -let camera, scene, renderer, controls;
--let postProcessing;
+-let renderPipeline;
 -let gltf;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
 +let gltf: THREE.Group;
  
  init();
@@ -21242,7 +21242,7 @@ index 1d46c3543..e4d6147fe 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index d833d7a9a..66d93ed22 100644
+index 7cd34ccbc..11e763320 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -21251,10 +21251,10 @@ index d833d7a9a..66d93ed22 100644
  
 -let renderer, scene, camera;
 -let volumetricMesh, teapot, pointLight, spotLight;
--let postProcessing;
+-let renderPipeline;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 +let volumetricMesh: THREE.Mesh, teapot: THREE.Mesh, pointLight: THREE.PointLight, spotLight: THREE.SpotLight;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -21283,7 +21283,7 @@ index d833d7a9a..66d93ed22 100644
      const rayMarching = gui.addFolder('Ray Marching');
      rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index c5e4be8cf..26b8a5196 100644
+index 9585f1121..9e89e2d43 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21294,12 +21294,12 @@ index c5e4be8cf..26b8a5196 100644
 -let volumetricMesh;
 -let rectLight1, rectLight2, rectLight3;
 -let timer;
--let postProcessing;
+-let renderPipeline;
 +let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
 +let volumetricMesh: THREE.Mesh<THREE.BoxGeometry, THREE.VolumeNodeMaterial>;
 +let rectLight1: THREE.RectAreaLight, rectLight2: THREE.RectAreaLight, rectLight3: THREE.RectAreaLight;
 +let timer: THREE.Timer;
-+let postProcessing: THREE.PostProcessing;
++let renderPipeline: THREE.RenderPipeline;
  
  init();
  
@@ -21410,7 +21410,7 @@ index fb6f2bbd5..50d3e0361 100644
      gui.add(steps, 'value', 0, 300, 1).name('steps');
  
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
-index 948e3d4fe..d78ed913f 100644
+index 88a9e5f60..7d8c8b731 100644
 --- a/examples-testing/examples/webgpu_water.ts
 +++ b/examples-testing/examples/webgpu_water.ts
 @@ -9,11 +9,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21422,12 +21422,12 @@ index 948e3d4fe..d78ed913f 100644
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
--let scene, camera, renderer, water, postProcessing, controls;
+-let scene, camera, renderer, water, renderPipeline, controls;
 +let scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
 +    renderer: THREE.WebGPURenderer,
 +    water: WaterMesh,
-+    postProcessing: THREE.PostProcessing,
++    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
  
  const params = {
