@@ -48,7 +48,7 @@ const exceptionList = [
     'webgl_texture2darray',
     'webgl_worker_offscreencanvas',
     'webgpu_compute_particles_fluid',
-    // 'webgpu_compute_reduce',
+    'webgpu_compute_reduce',
     // 'webgpu_compute_water',
     // 'webgpu_depth_texture',
     // 'webgpu_instance_sprites',
