@@ -7036,7 +7036,7 @@ index bbbd0ac3e..206bd4c76 100644
  
          mixer = new THREE.AnimationMixer(avatar);
 diff --git a/examples-testing/examples/webgl_loader_draco.ts b/examples-testing/examples/webgl_loader_draco.ts
-index c9947c693..69bf22b48 100644
+index c1df7100d..6a8c48446 100644
 --- a/examples-testing/examples/webgl_loader_draco.ts
 +++ b/examples-testing/examples/webgl_loader_draco.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -14746,10 +14746,10 @@ index ccdfba0be..e738cd82a 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_compute_texture_pingpong.ts b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
-index 6aee0c755..a49ca05b9 100644
+index 5c411fa69..9bc80d895 100644
 --- a/examples-testing/examples/webgpu_compute_texture_pingpong.ts
 +++ b/examples-testing/examples/webgpu_compute_texture_pingpong.ts
-@@ -3,10 +3,10 @@ import { storageTexture, wgslFn, code, instanceIndex, uniform, NodeAccess } from
+@@ -16,10 +16,10 @@ import {
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
@@ -14764,6 +14764,33 @@ index 6aee0c755..a49ca05b9 100644
  let phase = true;
  let lastUpdate = -1;
  
+@@ -55,7 +55,7 @@ async function init() {
+         pongTexture.type = THREE.HalfFloatType;
+     }
+ 
+-    const rand2 = Fn(([n]) => {
++    const rand2 = Fn(([n]: [THREE.Node<'vec2'>]) => {
+         return n.dot(vec2(12.9898, 4.1414)).sin().mul(43758.5453).fract();
+     });
+ 
+@@ -81,7 +81,7 @@ async function init() {
+     computeInitNode = computeInit().compute(width * height);
+ 
+     // compute ping-pong: blur function using .load() for textureLoad
+-    const blur = Fn(([readTex, uv]) => {
++    const blur = Fn(([readTex, uv]: [THREE.StorageTextureNode, THREE.Node<'ivec2'>]) => {
+         const c0 = readTex.load(uv.add(ivec2(-1, 1)));
+         const c1 = readTex.load(uv.add(ivec2(-1, -1)));
+         const c2 = readTex.load(uv.add(ivec2(0, 0)));
+@@ -92,7 +92,7 @@ async function init() {
+     });
+ 
+     // compute loop: read from one texture, blur, write to another
+-    const computePingPong = Fn(([readTex, writeTex]) => {
++    const computePingPong = Fn(([readTex, writeTex]: [THREE.StorageTextureNode, THREE.StorageTextureNode]) => {
+         const posX = instanceIndex.mod(width);
+         const posY = instanceIndex.div(width);
+         const indexUV = ivec2(int(posX), int(posY));
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 index 429d2ff40..d4e4a5558 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
@@ -15928,7 +15955,7 @@ index 9ab5c44c0..dee04a5ae 100644
      const param = {
          'line type': 0,
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 19b4f6936..a8909f0dd 100644
+index 161bcbbba..8e9a4dab9 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -7,8 +7,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
