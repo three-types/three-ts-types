@@ -199,7 +199,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [delay=0] - The delay, in seconds, at which the audio should start playing.
      * @return {Audio|undefined} A reference to this instance.
      */
-    play(delay?: number): this | void;
+    play(delay?: number): this | undefined;
     /**
      * Pauses the playback of the audio.
      *
@@ -207,7 +207,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * @return {Audio|undefined} A reference to this instance.
      */
-    pause(): this | void;
+    pause(): this | undefined;
     /**
      * Stops the playback of the audio.
      *
@@ -216,7 +216,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [delay=0] - The delay, in seconds, at which the audio should stop playing.
      * @return {Audio|undefined} A reference to this instance.
      */
-    stop(delay?: number): this | void;
+    stop(delay?: number): this | undefined;
     /**
      * Connects to the audio source. This is used internally on
      * initialisation and when setting / removing filters.
@@ -230,7 +230,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      *
      * @return {Audio|undefined} A reference to this instance.
      */
-    disconnect(): this | void;
+    disconnect(): this | undefined;
     /**
      * Returns the current set filters.
      *
@@ -278,7 +278,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {number} [value] - The playback rate to set.
      * @return {Audio|undefined} A reference to this instance.
      */
-    setPlaybackRate(value?: number): this | void;
+    setPlaybackRate(value?: number): this | undefined;
     /**
      * Returns the current playback rate.
 
@@ -305,7 +305,7 @@ export class Audio<TNode extends AudioNode = GainNode> extends Object3D {
      * @param {boolean} value - Whether the audio should loop or not.
      * @return {Audio|undefined} A reference to this instance.
      */
-    setLoop(value: boolean): this | void;
+    setLoop(value: boolean): this | undefined;
     /**
      * Sets the loop start value which defines where in the audio buffer the replay should
      * start, in seconds.
