@@ -1847,7 +1847,7 @@ interface Vec2Function {
 export const vec2: Vec2Function;
 
 interface Ivec2Function {
-    (x: number, y: number): Const<"ivec2", Vector2>;
+    (x: number, y: number): ConstNode<"ivec2", Vector2>;
     (x: Node, y: Node): Node<"ivec2">;
 }
 
