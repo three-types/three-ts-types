@@ -653,7 +653,12 @@ export type AnimationActionLoopStyles = typeof LoopOnce | typeof LoopRepeat | ty
 export const InterpolateDiscrete: 2300;
 export const InterpolateLinear: 2301;
 export const InterpolateSmooth: 2302;
-export type InterpolationModes = typeof InterpolateDiscrete | typeof InterpolateLinear | typeof InterpolateSmooth;
+export const InterpolateBezier: 2303;
+export type InterpolationModes =
+    | typeof InterpolateDiscrete
+    | typeof InterpolateLinear
+    | typeof InterpolateSmooth
+    | typeof InterpolateBezier;
 
 // Interpolant ending modes
 export const ZeroCurvatureEnding: 2400;
