@@ -28,8 +28,6 @@ declare class MeshBasicNodeMaterial extends NodeMaterial {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isMeshBasicNodeMaterial: boolean;
