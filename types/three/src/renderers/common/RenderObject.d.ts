@@ -131,26 +131,26 @@ declare class RenderObject {
      *
      * @return {NodeBuilderState} The node builder state.
      */
-    getNodeBuilderState(): NodeBuilderState;
+    getNodeBuilderState(): any;
     /**
      * Returns the node material observer of this render object.
      *
      * @return {NodeMaterialObserver} The node material observer.
      */
-    getMonitor(): NodeMaterialObserver;
+    getMonitor(): any;
     /**
      * Returns an array of bind groups of this render object.
      *
      * @return {Array<BindGroup>} The bindings.
      */
-    getBindings(): BindGroup[];
+    getBindings(): any;
     /**
      * Returns a binding group by group name of this render object.
      *
      * @param {string} name - The name of the binding group.
      * @return {?BindGroup} The bindings.
      */
-    getBindingGroup(name: string): BindGroup | undefined;
+    getBindingGroup(name: string): any;
     /**
      * Returns the index of the render object's geometry.
      *

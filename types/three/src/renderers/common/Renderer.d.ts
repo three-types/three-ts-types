@@ -32,7 +32,7 @@ import Info from "./Info.js";
 import InspectorBase from "./InspectorBase.js";
 import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Pipelines from "./Pipelines.js";
 import QuadMesh from "./QuadMesh.js";
 import RenderBundle from "./RenderBundle.js";
@@ -94,7 +94,7 @@ declare class Renderer {
     _getFallback: ((error: unknown) => Backend) | null;
     _attributes: Attributes | null;
     _geometries: Geometries | null;
-    _nodes: Nodes | null;
+    _nodes: NodeManager | null;
     _animation: Animation | null;
     _bindings: Bindings | null;
     _objects: RenderObjects | null;

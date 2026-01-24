@@ -57,12 +57,6 @@ declare module "../../../scenes/Scene.js" {
  * @augments DataMap
  */
 declare class Nodes extends DataMap<{
-    /**
-     * Constructs a new nodes management component.
-     *
-     * @param {Renderer} renderer - The renderer.
-     * @param {Backend} backend - The renderer's backend.
-     */
     nodeUniformsGroup: {
         key: NodeUniformsGroup;
         value: NodeUniformsGroupData;
@@ -91,6 +85,12 @@ declare class Nodes extends DataMap<{
     cacheLib: {
         [type: string]: WeakMap<object, Node | undefined>;
     };
+    /**
+     * Constructs a new nodes management component.
+     *
+     * @param {Renderer} renderer - The renderer.
+     * @param {Backend} backend - The renderer's backend.
+     */
     constructor(renderer: Renderer, backend: Backend);
     /**
      * Returns `true` if the given node uniforms group must be updated or not.
@@ -121,7 +121,7 @@ declare class Nodes extends DataMap<{
      */
     delete(
         object: NodeUniformsGroup | RenderObject | ComputeNode | Scene,
-    ): RenderObjectData | NodeUniformsGroupData | ComputeNodeData | SceneData;
+    ): NodeUniformsGroupData | RenderObjectData | ComputeNodeData | SceneData;
     /**
      * Returns a node builder state for the given compute node.
      *
@@ -279,7 +279,7 @@ declare class Nodes extends DataMap<{
      * @param {RenderObject} renderObject - The render object.
      * @return {boolean} Whether the given render object requires a refresh or not.
      */
-    needsRefresh(renderObject: RenderObject): boolean;
+    needsRefresh(renderObject: RenderObject): any;
     /**
      * Frees the internal resources.
      */

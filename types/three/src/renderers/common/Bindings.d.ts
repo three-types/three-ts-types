@@ -53,14 +53,14 @@ declare class Bindings extends DataMap<{
      * @param {RenderObject} renderObject - The render object.
      * @return {Array<BindGroup>} The bind groups.
      */
-    getForRender(renderObject: RenderObject): BindGroup[];
+    getForRender(renderObject: RenderObject): any;
     /**
      * Returns the bind groups for the given compute node.
      *
      * @param {Node} computeNode - The compute node.
      * @return {Array<BindGroup>} The bind groups.
      */
-    getForCompute(computeNode: ComputeNode): BindGroup[];
+    getForCompute(computeNode: ComputeNode): any;
     /**
      * Updates the bindings for the given compute node.
      *
