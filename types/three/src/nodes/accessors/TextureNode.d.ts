@@ -25,7 +25,7 @@ interface TextureNodeInterface<TNodeType> {
 
     sample(uvNode: Node): Node<TNodeType>;
 
-    load(uvNode: Node): Node;
+    load(uvNode: Node): Node<TNodeType>;
 
     blur(amountNode: Node): Node;
 

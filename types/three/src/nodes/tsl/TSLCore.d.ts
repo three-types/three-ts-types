@@ -1845,7 +1845,14 @@ interface Vec2Function {
 }
 
 export const vec2: Vec2Function;
-export const ivec2: (node: Node) => Node<"ivec2">;
+
+interface Ivec2Function {
+    (x: number, y: number): Const<"ivec2", Vector2>;
+    (x: Node, y: Node): Node<"ivec2">;
+}
+
+export const ivec2: Ivec2Function;
+
 export const uvec2: (x: Node, y: Node) => Node<"uvec2">;
 export const bvec2: (node: Node) => Node<"bvec2">;
 
