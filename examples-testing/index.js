@@ -47,7 +47,6 @@ const exceptionList = [
     'webgl_rendertarget_texture2darray',
     'webgl_texture2darray',
     'webgl_worker_offscreencanvas',
-    // 'webgpu_compute_particles',
     // 'webgpu_compute_particles_fluid',
     // 'webgpu_compute_particles_rain',
     // 'webgpu_compute_reduce',
