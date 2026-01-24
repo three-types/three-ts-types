@@ -77,7 +77,7 @@ export * from "./accessors/Position.js";
 export * from "./accessors/ReferenceNode.js";
 export * from "./accessors/ReflectVector.js";
 export * from "./accessors/RendererReferenceNode.js";
-export * from "./accessors/SceneNode.js";
+export * from "./accessors/SceneProperties.js";
 export * from "./accessors/SkinningNode.js";
 export * from "./accessors/StorageBufferNode.js";
 export * from "./accessors/StorageTextureNode.js";
