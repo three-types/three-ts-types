@@ -16,7 +16,7 @@ import NodeBuilderState from "./nodes/NodeBuilderState.js";
 import NodeManager from "./nodes/NodeManager.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
-import RenderPipeline from "./RenderPipeline.js";
+import RenderObjectPipeline from "./RenderObjectPipeline.js";
 /**
  * A render object is the renderer's representation of single entity that gets drawn
  * with a draw command. There is no unique mapping of render objects to 3D objects in the
@@ -56,7 +56,7 @@ declare class RenderObject {
     attributesId: {
         [attributeName: string]: number;
     } | null;
-    pipeline: RenderPipeline | null;
+    pipeline: RenderObjectPipeline | null;
     group: {
         start: number;
         count: number;
