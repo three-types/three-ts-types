@@ -556,13 +556,14 @@ index 7355fe037..9745bd9f4 100644
       * Returns an array by which times and values can be sorted.
       *
 diff --git a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
-index d375f0376..6458bc5ca 100644
+index 72239e7a2..44555e3eb 100644
 --- a/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/KeyframeTrack.d.ts
-@@ -1,3 +1,17 @@
+@@ -1,3 +1,18 @@
 +import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 +import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 +import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
++import { BezierInterpolant } from '../math/interpolants/BezierInterpolant.js';
 +import { InterpolationModes } from "../constants.js";
 +import { TypedArray, TypedArrayConstructor } from '../core/BufferAttribute.js';
 +
@@ -577,7 +578,7 @@ index d375f0376..6458bc5ca 100644
  /**
   * Represents a timed sequence of keyframes, which are composed of lists of
   * times and related values, and which are used to animate a specific property
-@@ -11,7 +25,7 @@ export class KeyframeTrack {
+@@ -11,7 +26,7 @@ export class KeyframeTrack {
       * @param {KeyframeTrack} track - The keyframe track to serialize.
       * @return {Object} The serialized keyframe track as JSON.
       */
@@ -586,11 +587,11 @@ index d375f0376..6458bc5ca 100644
      /**
       * Constructs a new keyframe track.
       *
-@@ -20,25 +34,19 @@ export class KeyframeTrack {
+@@ -20,25 +35,19 @@ export class KeyframeTrack {
       * @param {Array<number|string|boolean>} values - A list of keyframe values.
-      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} [interpolation] - The interpolation type.
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} [interpolation] - The interpolation type.
       */
--    constructor(name: string, times: Array<number>, values: Array<number | string | boolean>, interpolation?: (number | number | number));
+-    constructor(name: string, times: Array<number>, values: Array<number | string | boolean>, interpolation?: (number | number | number | number));
 +    constructor(name: string, times: ArrayLike<number>, values: ArrayLike<number | string | boolean>, interpolation?: InterpolationModes);
      /**
       * The track's name can refer to morph targets or bones or
@@ -613,24 +614,24 @@ index d375f0376..6458bc5ca 100644
       */
      values: Float32Array;
      /**
-@@ -71,14 +79,13 @@ export class KeyframeTrack {
-      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} interpolation - The interpolation type.
+@@ -84,14 +93,13 @@ export class KeyframeTrack {
+      * @param {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} interpolation - The interpolation type.
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
--    setInterpolation(interpolation: (number | number | number)): KeyframeTrack;
+-    setInterpolation(interpolation: (number | number | number | number)): KeyframeTrack;
 -    createInterpolant: ((result?: TypedArray) => LinearInterpolant) | ((result?: TypedArray) => CubicInterpolant) | undefined;
 +    setInterpolation(interpolation: InterpolationModes): KeyframeTrack;
      /**
       * Returns the current interpolation type.
       *
-      * @return {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)} The interpolation type.
+      * @return {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)} The interpolation type.
       */
--    getInterpolation(): (number | number | number);
+-    getInterpolation(): (number | number | number | number);
 +    getInterpolation(): InterpolationModes;
      /**
       * Returns the value size.
       *
-@@ -123,42 +130,35 @@ export class KeyframeTrack {
+@@ -136,43 +144,36 @@ export class KeyframeTrack {
       *
       * @return {KeyframeTrack} A reference to this keyframe track.
       */
@@ -669,15 +670,16 @@ index d375f0376..6458bc5ca 100644
      /**
       * The default interpolation type of this keyframe track.
       *
--     * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth)}
+      * @type {(InterpolateLinear|InterpolateDiscrete|InterpolateSmooth|InterpolateBezier)}
       * @default InterpolateLinear
       */
--    DefaultInterpolation: (number | number | number);
+-    DefaultInterpolation: (number | number | number | number);
 +    DefaultInterpolation: InterpolationModes;
  }
 -import { DiscreteInterpolant } from '../math/interpolants/DiscreteInterpolant.js';
 -import { LinearInterpolant } from '../math/interpolants/LinearInterpolant.js';
 -import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
+-import { BezierInterpolant } from '../math/interpolants/BezierInterpolant.js';
 diff --git a/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts b/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts
 index af4e99d9d..bb6c8ec88 100644
 --- a/jsdoc-testing/jsdoc/animation/PropertyBinding.d.ts
