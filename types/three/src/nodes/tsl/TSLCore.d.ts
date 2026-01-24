@@ -19,20 +19,20 @@ declare module "../core/Node.js" {
     }
 }
 
-type NumOrBoolToJsType = {
+interface NumOrBoolToJsType {
     float: number;
     int: number;
     uint: number;
     bool: boolean;
-};
+}
 type NumOrBool<TNumOrBool extends NumOrBoolType> = Node<TNumOrBool> | NumOrBoolToJsType[TNumOrBool];
 
-type NumOrBoolToVec = {
+interface NumOrBoolToVec {
     float: "vec";
     int: "ivec";
     uint: "uvec";
     bool: "bvec";
-};
+}
 type NumOrBoolToVec2<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}2`;
 type NumOrBoolToVec3<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}3`;
 type NumOrBoolToVec4<TNumOrBool extends NumOrBoolType> = `${NumOrBoolToVec[TNumOrBool]}4`;
@@ -1431,18 +1431,23 @@ interface SetSwizzle4<TNumOrBool extends NumOrBoolType> {
 }
 
 declare module "../core/Node.js" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle1<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle2<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle3<TNumOrBool> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface ColorExtensions extends SetSwizzle3<"float"> {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> extends SetSwizzle4<TNumOrBool> {
     }
 }
@@ -1538,18 +1543,23 @@ interface FlipSwizzle4 {
 }
 
 declare module "../core/Node.js" {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface FloatExtensions extends FlipSwizzle1 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec2Extensions extends FlipSwizzle2 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec3Extensions extends FlipSwizzle3 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface ColorExtensions extends FlipSwizzle3 {
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface Vec4Extensions extends FlipSwizzle4 {
     }
 }
