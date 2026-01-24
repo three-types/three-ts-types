@@ -6976,7 +6976,7 @@ index 70cec7e6a..ba36382e8 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_loader_collada.ts b/examples-testing/examples/webgl_loader_collada.ts
-index 3106369c8..ec335b920 100644
+index 3106369c8..d9705f46e 100644
 --- a/examples-testing/examples/webgl_loader_collada.ts
 +++ b/examples-testing/examples/webgl_loader_collada.ts
 @@ -4,13 +4,13 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -6996,8 +6996,17 @@ index 3106369c8..ec335b920 100644
  
      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 2000);
      camera.position.set(8, 10, 8);
+@@ -31,7 +31,7 @@ function init() {
+ 
+     const loader = new ColladaLoader(loadingManager);
+     loader.load('./models/collada/elf/elf.dae', function (collada) {
+-        elf = collada.scene;
++        elf = collada!.scene;
+     });
+ 
+     //
 diff --git a/examples-testing/examples/webgl_loader_collada_skinning.ts b/examples-testing/examples/webgl_loader_collada_skinning.ts
-index bbbd0ac3e..c74203dc6 100644
+index bbbd0ac3e..206bd4c76 100644
 --- a/examples-testing/examples/webgl_loader_collada_skinning.ts
 +++ b/examples-testing/examples/webgl_loader_collada_skinning.ts
 @@ -5,13 +5,13 @@ import Stats from 'three/addons/libs/stats.module.js';
@@ -7017,6 +7026,15 @@ index bbbd0ac3e..c74203dc6 100644
  
      camera = new THREE.PerspectiveCamera(25, window.innerWidth / window.innerHeight, 1, 1000);
      camera.position.set(15, 10, -15);
+@@ -25,7 +25,7 @@ function init() {
+ 
+     const loader = new ColladaLoader();
+     loader.load('./models/collada/stormtrooper/stormtrooper.dae', function (collada) {
+-        const avatar = collada.scene;
++        const avatar = collada!.scene;
+         const animations = avatar.animations;
+ 
+         mixer = new THREE.AnimationMixer(avatar);
 diff --git a/examples-testing/examples/webgl_loader_draco.ts b/examples-testing/examples/webgl_loader_draco.ts
 index c9947c693..69bf22b48 100644
 --- a/examples-testing/examples/webgl_loader_draco.ts
@@ -22033,7 +22051,7 @@ index b8c35a9e3..ee5f02daf 100644
  //
  
 diff --git a/examples-testing/examples/webxr_vr_sandbox.ts b/examples-testing/examples/webxr_vr_sandbox.ts
-index d348d5421..9f063c1a6 100644
+index 19108d589..794121e2b 100644
 --- a/examples-testing/examples/webxr_vr_sandbox.ts
 +++ b/examples-testing/examples/webxr_vr_sandbox.ts
 @@ -11,9 +11,9 @@ import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFa
