@@ -8,7 +8,7 @@ import ChainMap from "./ChainMap.js";
 import ClippingContext from "./ClippingContext.js";
 import Geometries from "./Geometries.js";
 import Info from "./Info.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Pipelines from "./Pipelines.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
@@ -20,7 +20,7 @@ import RenderObject from "./RenderObject.js";
  */
 declare class RenderObjects {
     renderer: Renderer;
-    nodes: Nodes;
+    nodes: NodeManager;
     geometries: Geometries;
     pipelines: Pipelines;
     bindings: Bindings;
@@ -40,7 +40,7 @@ declare class RenderObjects {
      */
     constructor(
         renderer: Renderer,
-        nodes: Nodes,
+        nodes: NodeManager,
         geometries: Geometries,
         pipelines: Pipelines,
         bindings: Bindings,
@@ -102,7 +102,7 @@ declare class RenderObjects {
      * @return {RenderObject} The render object.
      */
     createRenderObject(
-        nodes: Nodes,
+        nodes: NodeManager,
         geometries: Geometries,
         renderer: Renderer,
         object: Object3D,

@@ -13,7 +13,7 @@ import BundleGroup from "./BundleGroup.js";
 import ClippingContext from "./ClippingContext.js";
 import Geometries from "./Geometries.js";
 import NodeBuilderState from "./nodes/NodeBuilderState.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
 import RenderPipeline from "./RenderPipeline.js";
@@ -36,7 +36,7 @@ import RenderPipeline from "./RenderPipeline.js";
  * @private
  */
 declare class RenderObject {
-    _nodes: Nodes;
+    _nodes: NodeManager;
     _geometries: Geometries;
     id: number;
     renderer: Renderer;
@@ -95,7 +95,7 @@ declare class RenderObject {
      * @param {ClippingContext} clippingContext - The clipping context.
      */
     constructor(
-        nodes: Nodes,
+        nodes: NodeManager,
         geometries: Geometries,
         renderer: Renderer,
         object: Object3D,

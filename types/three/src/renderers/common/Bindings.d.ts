@@ -4,7 +4,7 @@ import Backend from "./Backend.js";
 import BindGroup from "./BindGroup.js";
 import DataMap from "./DataMap.js";
 import Info from "./Info.js";
-import Nodes from "./nodes/Nodes.js";
+import NodeManager from "./nodes/NodeManager.js";
 import Pipelines from "./Pipelines.js";
 import RenderObject from "./RenderObject.js";
 import Textures from "./Textures.js";
@@ -37,11 +37,11 @@ declare class Bindings extends DataMap<{
     textures: Textures;
     pipelines: Pipelines;
     attributes: Attributes;
-    nodes: Nodes;
+    nodes: NodeManager;
     info: Info;
     constructor(
         backend: Backend,
-        nodes: Nodes,
+        nodes: NodeManager,
         textures: Textures,
         attributes: Attributes,
         pipelines: Pipelines,
