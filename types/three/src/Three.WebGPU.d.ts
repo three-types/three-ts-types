@@ -7,6 +7,7 @@ export { default as Lighting } from "./renderers/common/Lighting.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
 export type { default as Renderer } from "./renderers/common/Renderer.js";
+export { default as RenderPipeline } from "./renderers/common/RenderPipeline.js";
 export { default as WebGPURenderer } from "./renderers/webgpu/WebGPURenderer.js";
 import * as RendererUtils from "./renderers/common/RendererUtils.js";
 export { RendererUtils };
