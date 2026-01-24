@@ -14565,6 +14565,54 @@ index 71fbd6622..c2fc51fe1 100644
  
      gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
      gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
+diff --git a/examples-testing/examples/webgpu_compute_particles_rain.ts b/examples-testing/examples/webgpu_compute_particles_rain.ts
+index eaa4e957e..43cca9ddd 100644
+--- a/examples-testing/examples/webgpu_compute_particles_rain.ts
++++ b/examples-testing/examples/webgpu_compute_particles_rain.ts
+@@ -25,14 +25,17 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+ const maxParticleCount = 50000;
+ const instanceCount = maxParticleCount / 2;
+ 
+-let camera, scene, renderer;
+-let controls;
+-let computeParticles;
+-let monkey;
+-let timer;
+-
+-let collisionBox, collisionCamera, collisionPosRT, collisionPosMaterial;
+-let collisionBoxPos, collisionBoxPosUI;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let computeParticles: THREE.ComputeNode;
++let monkey: THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
++let timer: THREE.Timer;
++
++let collisionBox: THREE.Mesh<THREE.BoxGeometry, THREE.MeshStandardMaterial>,
++    collisionCamera: THREE.OrthographicCamera,
++    collisionPosRT: THREE.RenderTarget,
++    collisionPosMaterial: THREE.MeshBasicNodeMaterial;
++let collisionBoxPos: THREE.Vector3, collisionBoxPosUI: THREE.Vector3;
+ 
+ init();
+ 
+@@ -100,7 +103,7 @@ async function init() {
+     //
+ 
+     const computeUpdate = Fn(() => {
+-        const getCoord = pos => pos.add(50).div(100);
++        const getCoord = (pos: THREE.Node<'vec2'>) => pos.add(50).div(100);
+ 
+         const position = positionBuffer.element(instanceIndex);
+         const velocity = velocityBuffer.element(instanceIndex);
+@@ -274,7 +277,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     // use lerp to smooth the movement
+     collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
 index e00fe068f..476468a0a 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
