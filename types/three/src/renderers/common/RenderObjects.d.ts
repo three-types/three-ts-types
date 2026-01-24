@@ -65,7 +65,7 @@ declare class RenderObjects {
         lightsNode: LightsNode,
         renderContext: RenderContext,
         clippingContext: ClippingContext | null,
-        passId?: string | undefined,
+        passId?: string,
     ): RenderObject;
     /**
      * Returns a chain map for the given pass ID.
