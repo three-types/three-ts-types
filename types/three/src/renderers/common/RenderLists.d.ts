@@ -6,8 +6,6 @@ import RenderList from "./RenderList.js";
 /**
  * This renderer module manages the render lists which are unique
  * per scene and camera combination.
- *
- * @private
  */
 declare class RenderLists {
     lighting: Lighting;

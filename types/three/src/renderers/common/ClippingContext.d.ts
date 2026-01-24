@@ -10,8 +10,6 @@ import { Scene } from "../../scenes/Scene.js";
  * There is a default clipping context for each render context. When the
  * scene holds instances of `ClippingGroup`, there will be a context for each
  * group.
- *
- * @private
  */
 declare class ClippingContext {
     version: number;
@@ -62,9 +60,6 @@ declare class ClippingContext {
     getGroupContext(clippingGroup: ClippingGroup): ClippingContext;
     /**
      * The count of union clipping planes.
-     *
-     * @type {number}
-     * @readonly
      */
     get unionClippingCount(): number;
 }

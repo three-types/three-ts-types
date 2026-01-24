@@ -10,8 +10,6 @@ import ClippingContext from "./ClippingContext.js";
  * the state of the renderer and its backend. Typical examples for such context
  * data are the current clear values or data from the active framebuffer. This
  * module is used to represent these contexts as objects.
- *
- * @private
  */
 declare class RenderContext {
     id: number;

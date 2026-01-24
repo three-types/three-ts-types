@@ -125,7 +125,6 @@ export default BufferAttributeNode;
 /**
  * TSL function for creating a buffer attribute node.
  *
- * @tsl
  * @function
  * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
  * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).

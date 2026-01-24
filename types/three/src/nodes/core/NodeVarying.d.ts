@@ -5,8 +5,6 @@ import NodeVar from "./NodeVar.js";
  * of nodes. They represent the final shader varyings that are going to be generated
  * by the builder. An array of node varyings is maintained in {@link NodeBuilder#varyings} for
  * this purpose.
- *
- * @augments NodeVar
  */
 declare class NodeVarying extends NodeVar {
     needsInterpolation: boolean;

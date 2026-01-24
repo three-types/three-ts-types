@@ -11,9 +11,6 @@ interface SceneData {
 }
 /**
  * This renderer module manages the background.
- *
- * @private
- * @augments DataMap
  */
 declare class Background extends DataMap<{
     scene: {

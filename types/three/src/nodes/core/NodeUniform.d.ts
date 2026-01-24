@@ -21,21 +21,15 @@ declare class NodeUniform<TNodeType, TValue> {
     constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>);
     /**
      * The value of the uniform node.
-     *
-     * @type {any}
      */
     get value(): TValue;
     set value(val: TValue);
     /**
      * The id of the uniform node.
-     *
-     * @type {number}
      */
     get id(): number;
     /**
      * The uniform node's group.
-     *
-     * @type {UniformGroupNode}
      */
     get groupNode(): import("./UniformGroupNode.js").default;
 }

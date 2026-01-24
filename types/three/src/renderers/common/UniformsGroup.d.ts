@@ -13,9 +13,6 @@ import UniformBuffer from "./UniformBuffer.js";
 /**
  * This class represents a uniform buffer binding but with
  * an API that allows to maintain individual uniform objects.
- *
- * @private
- * @augments UniformBuffer
  */
 declare class UniformsGroup extends UniformBuffer {
     readonly isUniformsGroup: true;
@@ -57,20 +54,14 @@ declare class UniformsGroup extends UniformBuffer {
     removeUniform(uniform: NodeUniformGPU): this;
     /**
      * An array with the raw uniform values.
-     *
-     * @type {Array<number>}
      */
     get values(): number[];
     /**
      * A Float32 array buffer with the uniform values.
-     *
-     * @type {Float32Array}
      */
     get buffer(): Float32Array;
     /**
      * The byte length of the buffer with correct buffer alignment.
-     *
-     * @type {number}
      */
     get byteLength(): number;
     /**
@@ -143,10 +134,9 @@ declare class UniformsGroup extends UniformBuffer {
     /**
      * Returns a typed array that matches the given data type.
      *
-     * @private
      * @param {string} type - The data type.
      * @return {TypedArray} The typed array.
      */
-    _getBufferForType(type: string | null): Int32Array | Uint32Array | Float32Array;
+    private _getBufferForType;
 }
 export default UniformsGroup;

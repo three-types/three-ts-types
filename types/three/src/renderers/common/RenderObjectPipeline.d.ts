@@ -2,9 +2,6 @@ import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
 /**
  * Class for representing render pipelines.
- *
- * @private
- * @augments Pipeline
  */
 declare class RenderObjectPipeline extends Pipeline {
     vertexProgram: ProgrammableStage;

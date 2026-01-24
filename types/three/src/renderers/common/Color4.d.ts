@@ -3,9 +3,6 @@ import { Color, ColorRepresentation } from "../../math/Color.js";
  * A four-component version of {@link Color} which is internally
  * used by the renderer to represents clear color with alpha as
  * one object.
- *
- * @private
- * @augments Color
  */
 declare class Color4 extends Color {
     a: number;

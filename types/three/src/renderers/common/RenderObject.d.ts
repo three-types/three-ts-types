@@ -32,8 +32,6 @@ import RenderObjectPipeline from "./RenderObjectPipeline.js";
  * The module provides an interface to get data required for the draw command like the actual
  * draw parameters or vertex buffers. It also holds a series of caching related methods since
  * creating render objects should only be done when necessary.
- *
- * @private
  */
 declare class RenderObject {
     _nodes: NodeManager;
@@ -114,16 +112,10 @@ declare class RenderObject {
     updateClipping(context: ClippingContext): void;
     /**
      * Whether the clipping requires an update or not.
-     *
-     * @type {boolean}
-     * @readonly
      */
     get clippingNeedsUpdate(): boolean;
     /**
      * The number of clipping planes defined in context of hardware clipping.
-     *
-     * @type {number}
-     * @readonly
      */
     get hardwareClippingPlanes(): number;
     /**
@@ -229,9 +221,6 @@ declare class RenderObject {
     getMaterialCacheKey(): number;
     /**
      * Whether the geometry requires an update or not.
-     *
-     * @type {boolean}
-     * @readonly
      */
     get needsGeometryUpdate(): boolean;
     /**
@@ -247,9 +236,6 @@ declare class RenderObject {
      *
      * TODO: Investigate if it's possible to merge both steps so there is only a single place
      * that performs the 'needsUpdate' check.
-     *
-     * @type {boolean}
-     * @readonly
      */
     get needsUpdate(): boolean;
     /**

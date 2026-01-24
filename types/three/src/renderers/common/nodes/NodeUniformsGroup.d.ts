@@ -3,9 +3,6 @@ import UniformsGroup from "../UniformsGroup.js";
 /**
  * A special form of uniforms group that represents
  * the individual uniforms as node-based uniforms.
- *
- * @private
- * @augments UniformsGroup
  */
 declare class NodeUniformsGroup extends UniformsGroup {
     id: number;

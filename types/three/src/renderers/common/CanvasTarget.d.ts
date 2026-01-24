@@ -9,8 +9,6 @@ export interface CanvasTargetEventMap {
 }
 /**
  * CanvasTarget is a class that represents the final output destination of the renderer.
- *
- * @augments EventDispatcher
  */
 declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
     domElement: HTMLCanvasElement;
@@ -127,10 +125,8 @@ declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
     setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
     /**
      * Dispatches the resize event.
-     *
-     * @private
      */
-    _dispatchResize(): void;
+    private _dispatchResize;
     /**
      * Frees the GPU-related resources allocated by this instance. Call this
      * method whenever this instance is no longer used in your app.

@@ -1,7 +1,6 @@
 /**
  * Abstract class for representing pipelines.
  *
- * @private
  * @abstract
  */
 declare class Pipeline {

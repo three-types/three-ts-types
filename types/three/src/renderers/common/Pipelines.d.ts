@@ -18,9 +18,6 @@ interface RenderObjectData {
 }
 /**
  * This renderer module manages the pipelines of the renderer.
- *
- * @private
- * @augments DataMap
  */
 declare class Pipelines extends DataMap<{
     computeNode: {
@@ -84,23 +81,16 @@ declare class Pipelines extends DataMap<{
     /**
      * Returns a compute pipeline for the given parameters.
      *
-     * @private
      * @param {Node} computeNode - The compute node.
      * @param {ProgrammableStage} stageCompute - The programmable stage representing the compute shader.
      * @param {string} cacheKey - The cache key.
      * @param {Array<BindGroup>} bindings - The bindings.
      * @return {ComputePipeline} The compute pipeline.
      */
-    _getComputePipeline(
-        computeNode: ComputeNode,
-        stageCompute: ProgrammableStage,
-        cacheKey: string,
-        bindings: Binding[],
-    ): ComputePipeline;
+    private _getComputePipeline;
     /**
      * Returns a render pipeline for the given parameters.
      *
-     * @private
      * @param {RenderObject} renderObject - The render object.
      * @param {ProgrammableStage} stageVertex - The programmable stage representing the vertex shader.
      * @param {ProgrammableStage} stageFragment - The programmable stage representing the fragment shader.
@@ -108,65 +98,49 @@ declare class Pipelines extends DataMap<{
      * @param {?Array<Promise>} promises - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
      * @return {RenderObjectPipeline} The render pipeline.
      */
-    _getRenderPipeline(
-        renderObject: RenderObject,
-        stageVertex: ProgrammableStage,
-        stageFragment: ProgrammableStage,
-        cacheKey: string,
-        promises: Promise<void>[] | null,
-    ): RenderObjectPipeline;
+    private _getRenderPipeline;
     /**
      * Computes a cache key representing a compute pipeline.
      *
-     * @private
      * @param {Node} computeNode - The compute node.
      * @param {ProgrammableStage} stageCompute - The programmable stage representing the compute shader.
      * @return {string} The cache key.
      */
-    _getComputeCacheKey(computeNode: ComputeNode, stageCompute: ProgrammableStage): string;
+    private _getComputeCacheKey;
     /**
      * Computes a cache key representing a render pipeline.
      *
-     * @private
      * @param {RenderObject} renderObject - The render object.
      * @param {ProgrammableStage} stageVertex - The programmable stage representing the vertex shader.
      * @param {ProgrammableStage} stageFragment - The programmable stage representing the fragment shader.
      * @return {string} The cache key.
      */
-    _getRenderCacheKey(
-        renderObject: RenderObject,
-        stageVertex: ProgrammableStage,
-        stageFragment: ProgrammableStage,
-    ): string;
+    private _getRenderCacheKey;
     /**
      * Releases the given pipeline.
      *
-     * @private
      * @param {Pipeline} pipeline - The pipeline to release.
      */
-    _releasePipeline(pipeline: Pipeline): void;
+    private _releasePipeline;
     /**
      * Releases the shader program.
      *
-     * @private
      * @param {Object} program - The shader program to release.
      */
-    _releaseProgram(program: ProgrammableStage): void;
+    private _releaseProgram;
     /**
      * Returns `true` if the compute pipeline for the given compute node requires an update.
      *
-     * @private
      * @param {Node} computeNode - The compute node.
      * @return {boolean} Whether the compute pipeline for the given compute node requires an update or not.
      */
-    _needsComputeUpdate(computeNode: ComputeNode): boolean;
+    private _needsComputeUpdate;
     /**
      * Returns `true` if the render pipeline for the given render object requires an update.
      *
-     * @private
      * @param {RenderObject} renderObject - The render object.
      * @return {boolean} Whether the render object for the given render object requires an update or not.
      */
-    _needsRenderUpdate(renderObject: RenderObject): true | void;
+    private _needsRenderUpdate;
 }
 export default Pipelines;

@@ -1,9 +1,6 @@
 import Buffer from "./Buffer.js";
 /**
  * Represents a uniform buffer binding type.
- *
- * @private
- * @augments Buffer
  */
 declare class UniformBuffer extends Buffer {
     readonly isUniformBuffer: true;

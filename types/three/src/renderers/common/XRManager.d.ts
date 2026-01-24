@@ -60,8 +60,6 @@ export interface LayerAttributes {
  * manage XR sessions with `WebGPURenderer`.
  *
  * XR is currently only supported with a WebGL 2 backend.
- *
- * @augments EventDispatcher
  */
 declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     enabled: boolean;
@@ -316,10 +314,9 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
     /**
      * Returns a WebXR controller for the given controller index.
      *
-     * @private
      * @param {number} index - The controller index.
      * @return {WebXRController} The XR controller.
      */
-    _getController(index: number): WebXRController;
+    private _getController;
 }
 export default XRManager;

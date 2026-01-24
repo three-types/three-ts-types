@@ -15,8 +15,6 @@ import Renderer from "./Renderer.js";
 import RenderObject from "./RenderObject.js";
 /**
  * This module manages the render objects of the renderer.
- *
- * @private
  */
 declare class RenderObjects {
     renderer: Renderer;

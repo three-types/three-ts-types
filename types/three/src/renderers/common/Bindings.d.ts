@@ -13,9 +13,6 @@ interface BindGroupData {
 }
 /**
  * This renderer module manages the bindings of the renderer.
- *
- * @private
- * @augments DataMap
  */
 declare class Bindings extends DataMap<{
     /**

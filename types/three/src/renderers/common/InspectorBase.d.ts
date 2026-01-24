@@ -6,8 +6,6 @@ import { Texture } from "../../textures/Texture.js";
 import Renderer from "./Renderer.js";
 /**
  * InspectorBase is the base class for all inspectors.
- *
- * @class InspectorBase
  */
 declare class InspectorBase {
     _renderer: Renderer | null;
