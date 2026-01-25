@@ -2127,6 +2127,648 @@ index 929bf5258..c4d22b7da 100644
      update(camera: PerspectiveCamera): void;
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/ArrowHelper.d.ts b/jsdoc-testing/jsdoc/helpers/ArrowHelper.d.ts
+index 302ccad5a..16f49b398 100644
+--- a/jsdoc-testing/jsdoc/helpers/ArrowHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/ArrowHelper.d.ts
+@@ -1,3 +1,9 @@
++import { Object3D } from '../core/Object3D.js';
++import { Line } from '../objects/Line.js';
++import { Mesh } from '../objects/Mesh.js';
++import { Vector3 } from '../math/Vector3.js';
++import { ColorRepresentation } from '../math/Color.js';
++
+ /**
+  * An 3D arrow object for visualizing directions.
+  *
+@@ -14,8 +20,6 @@
+  * const arrowHelper = new THREE.ArrowHelper( dir, origin, length, hex );
+  * scene.add( arrowHelper );
+  * ```
+- *
+- * @augments Object3D
+  */
+ export class ArrowHelper extends Object3D {
+     /**
+@@ -25,21 +29,16 @@ export class ArrowHelper extends Object3D {
+      * @param {Vector3} [origin=(0, 0, 0)] - Point at which the arrow starts.
+      * @param {number} [length=1] - Length of the arrow in world units.
+      * @param {(number|Color|string)} [color=0xffff00] - Color of the arrow.
+-     * @param {number} [headLength=length*0.2] - The length of the head of the arrow.
+-     * @param {number} [headWidth=headLength*0.2] - The width of the head of the arrow.
++     * @param {number} [headLength=length times 0.2] - The length of the head of the arrow.
++     * @param {number} [headWidth=headLength times 0.2] - The width of the head of the arrow.
+      */
+-    constructor(dir?: Vector3, origin?: Vector3, length?: number, color?: (number | Color | string), headLength?: number, headWidth?: number);
+-    type: string;
++    constructor(dir?: Vector3, origin?: Vector3, length?: number, color?: ColorRepresentation, headLength?: number, headWidth?: number);
+     /**
+      * The line part of the arrow helper.
+-     *
+-     * @type {Line}
+      */
+     line: Line;
+     /**
+      * The cone part of the arrow helper.
+-     *
+-     * @type {Mesh}
+      */
+     cone: Mesh;
+     /**
+@@ -52,8 +51,8 @@ export class ArrowHelper extends Object3D {
+      * Sets the length of the helper.
+      *
+      * @param {number} length - Length of the arrow in world units.
+-     * @param {number} [headLength=length*0.2] - The length of the head of the arrow.
+-     * @param {number} [headWidth=headLength*0.2] - The width of the head of the arrow.
++     * @param {number} [headLength=length times 0.2] - The length of the head of the arrow.
++     * @param {number} [headWidth=headLength times 0.2] - The width of the head of the arrow.
+      */
+     setLength(length: number, headLength?: number, headWidth?: number): void;
+     /**
+@@ -61,15 +60,11 @@ export class ArrowHelper extends Object3D {
+      *
+      * @param {number|Color|string} color - The color to set.
+      */
+-    setColor(color: number | Color | string): void;
+-    copy(source: any): this;
++    setColor(color: ColorRepresentation): void;
++    copy(source: ArrowHelper): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { Line } from '../objects/Line.js';
+-import { Mesh } from '../objects/Mesh.js';
+-import { Vector3 } from '../math/Vector3.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/AxesHelper.d.ts b/jsdoc-testing/jsdoc/helpers/AxesHelper.d.ts
+index cc7858bfe..887dc91a9 100644
+--- a/jsdoc-testing/jsdoc/helpers/AxesHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/AxesHelper.d.ts
+@@ -1,3 +1,6 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { ColorRepresentation } from '../math/Color.js';
++
+ /**
+  * An axis object to visualize the 3 axes in a simple way.
+  * The X axis is red. The Y axis is green. The Z axis is blue.
+@@ -6,8 +9,6 @@
+  * const axesHelper = new THREE.AxesHelper( 5 );
+  * scene.add( axesHelper );
+  * ```
+- *
+- * @augments LineSegments
+  */
+ export class AxesHelper extends LineSegments {
+     /**
+@@ -24,12 +25,10 @@ export class AxesHelper extends LineSegments {
+      * @param {number|Color|string} zAxisColor - The color for the z axis.
+      * @return {AxesHelper} A reference to this axes helper.
+      */
+-    setColors(xAxisColor: number | Color | string, yAxisColor: number | Color | string, zAxisColor: number | Color | string): AxesHelper;
++    setColors(xAxisColor: ColorRepresentation, yAxisColor: ColorRepresentation, zAxisColor: ColorRepresentation): AxesHelper;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/Box3Helper.d.ts b/jsdoc-testing/jsdoc/helpers/Box3Helper.d.ts
+index 982072dbb..a2d253878 100644
+--- a/jsdoc-testing/jsdoc/helpers/Box3Helper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/Box3Helper.d.ts
+@@ -1,3 +1,7 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { ColorRepresentation } from '../math/Color.js';
++import { Box3 } from "../math/Box3.js";
++
+ /**
+  * A helper object to visualize an instance of {@link Box3}.
+  *
+@@ -8,8 +12,6 @@
+  * const helper = new THREE.Box3Helper( box, 0xffff00 );
+  * scene.add( helper )
+  * ```
+- *
+- * @augments LineSegments
+  */
+ export class Box3Helper extends LineSegments {
+     /**
+@@ -18,18 +20,14 @@ export class Box3Helper extends LineSegments {
+      * @param {Box3} box - The box to visualize.
+      * @param {number|Color|string} [color=0xffff00] - The box's color.
+      */
+-    constructor(box: Box3, color?: number | Color | string);
++    constructor(box: Box3, color?: ColorRepresentation);
+     /**
+      * The box being visualized.
+-     *
+-     * @type {Box3}
+      */
+     box: Box3;
+-    updateMatrixWorld(force: any): void;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/BoxHelper.d.ts b/jsdoc-testing/jsdoc/helpers/BoxHelper.d.ts
+index 0b864050e..bb8a012e2 100644
+--- a/jsdoc-testing/jsdoc/helpers/BoxHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/BoxHelper.d.ts
+@@ -1,3 +1,10 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { Object3D } from "../core/Object3D.js";
++import { BufferGeometry } from "../core/BufferGeometry.js";
++import { LineBasicMaterial } from "../materials/LineBasicMaterial.js";
++import { Box3 } from '../math/Box3.js';
++import { ColorRepresentation } from '../math/Color.js';
++
+ /**
+  * Helper object to graphically show the world-axis-aligned bounding box
+  * around an object. The actual bounding box is handled with {@link Box3},
+@@ -12,14 +19,17 @@
+  * const box = new THREE.BoxHelper( object, 0xffff00 );
+  * scene.add( box );
+  * ```
+- *
+- * @augments LineSegments
+  */
+-export class BoxHelper extends LineSegments {
++export class BoxHelper extends LineSegments<BufferGeometry, LineBasicMaterial> {
+     /**
+-     * The 3D object being visualized.
++     * Constructs a new box helper.
+      *
+-     * @type {Object3D}
++     * @param {Object3D} [object] - The 3D object to show the world-axis-aligned bounding box.
++     * @param {number|Color|string} [color=0xffff00] - The box's color.
++     */
++    constructor(object: Object3D, color?: ColorRepresentation);
++    /**
++     * The 3D object being visualized.
+      */
+     object: Object3D;
+     /**
+@@ -34,11 +44,10 @@ export class BoxHelper extends LineSegments {
+      * @return {BoxHelper} A reference to this instance.
+      */
+     setFromObject(object: Object3D): BoxHelper;
+-    copy(source: any, recursive: any): this;
++    copy(source: BoxHelper, recursive?: boolean): this;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/CameraHelper.d.ts b/jsdoc-testing/jsdoc/helpers/CameraHelper.d.ts
+index 69f517585..8e2884a49 100644
+--- a/jsdoc-testing/jsdoc/helpers/CameraHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/CameraHelper.d.ts
+@@ -1,3 +1,7 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { Camera } from '../cameras/Camera.js';
++import { Color } from '../math/Color.js';
++
+ /**
+  * This helps with visualizing what a camera contains in its frustum. It
+  * visualizes the frustum of a camera using a line segments.
+@@ -14,8 +18,6 @@
+  * const helper = new THREE.CameraHelper( camera );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments LineSegments
+  */
+ export class CameraHelper extends LineSegments {
+     /**
+@@ -26,14 +28,10 @@ export class CameraHelper extends LineSegments {
+     constructor(camera: Camera);
+     /**
+      * The camera being visualized.
+-     *
+-     * @type {Camera}
+      */
+     camera: Camera;
+     /**
+      * This contains the points used to visualize the camera.
+-     *
+-     * @type {Object<string,Array<number>>}
+      */
+     pointMap: {
+         [x: string]: number[];
+@@ -59,6 +57,3 @@ export class CameraHelper extends LineSegments {
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+-import { Camera } from '../cameras/Camera.js';
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/DirectionalLightHelper.d.ts b/jsdoc-testing/jsdoc/helpers/DirectionalLightHelper.d.ts
+index edd4fa7ff..61a7acf0f 100644
+--- a/jsdoc-testing/jsdoc/helpers/DirectionalLightHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/DirectionalLightHelper.d.ts
+@@ -1,3 +1,9 @@
++import { Object3D } from '../core/Object3D.js';
++import { Line } from '../objects/Line.js';
++import { DirectionalLight } from "../lights/DirectionalLight.js";
++import { ColorRepresentation } from "../math/Color.js";
++import { Matrix4 } from "../math/Matrix4.js";
++
+ /**
+  * Helper object to assist with visualizing a {@link DirectionalLight}'s
+  * effect on the scene. This consists of a plane and a line representing the
+@@ -13,8 +19,6 @@
+  * const helper = new THREE.DirectionalLightHelper( light, 5 );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments Object3D
+  */
+ export class DirectionalLightHelper extends Object3D {
+     /**
+@@ -25,32 +29,22 @@ export class DirectionalLightHelper extends Object3D {
+      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
+      * the color of the light.
+      */
+-    constructor(light: DirectionalLight, size?: number, color?: number | Color | string);
++    constructor(light: DirectionalLight, size?: number, color?: ColorRepresentation);
+     /**
+      * The light being visualized.
+-     *
+-     * @type {DirectionalLight}
+      */
+     light: DirectionalLight;
+-    matrix: any;
+     /**
+      * The color parameter passed in the constructor.
+      * If not set, the helper will take the color of the light.
+-     *
+-     * @type {number|Color|string}
+      */
+-    color: number | Color | string;
+-    type: string;
++    color: ColorRepresentation | undefined;
+     /**
+      * Contains the line showing the location of the directional light.
+-     *
+-     * @type {Line}
+      */
+     lightPlane: Line;
+     /**
+      * Represents the target line of the directional light.
+-     *
+-     * @type {Line}
+      */
+     targetLine: Line;
+     /**
+@@ -64,5 +58,3 @@ export class DirectionalLightHelper extends Object3D {
+      */
+     update(): void;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { Line } from '../objects/Line.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/GridHelper.d.ts b/jsdoc-testing/jsdoc/helpers/GridHelper.d.ts
+index c0df154aa..4e8a76a88 100644
+--- a/jsdoc-testing/jsdoc/helpers/GridHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/GridHelper.d.ts
+@@ -1,3 +1,8 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { ColorRepresentation } from '../math/Color.js';
++import { BufferGeometry } from '../core/BufferGeometry.js';
++import { LineBasicMaterial } from '../materials/LineBasicMaterial.js';
++
+ /**
+  * The helper is an object to define grids. Grids are two-dimensional
+  * arrays of lines.
+@@ -9,10 +14,8 @@
+  * const gridHelper = new THREE.GridHelper( size, divisions );
+  * scene.add( gridHelper );
+  * ```
+- *
+- * @augments LineSegments
+  */
+-export class GridHelper extends LineSegments {
++export class GridHelper extends LineSegments<BufferGeometry, LineBasicMaterial> {
+     /**
+      * Constructs a new grid helper.
+      *
+@@ -21,12 +24,10 @@ export class GridHelper extends LineSegments {
+      * @param {number|Color|string} [color1=0x444444] - The color of the center line.
+      * @param {number|Color|string} [color2=0x888888] - The color of the lines of the grid.
+      */
+-    constructor(size?: number, divisions?: number, color1?: number | Color | string, color2?: number | Color | string);
++    constructor(size?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/HemisphereLightHelper.d.ts b/jsdoc-testing/jsdoc/helpers/HemisphereLightHelper.d.ts
+index 5920f3014..8595d3987 100644
+--- a/jsdoc-testing/jsdoc/helpers/HemisphereLightHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/HemisphereLightHelper.d.ts
+@@ -1,3 +1,8 @@
++import { Object3D } from '../core/Object3D.js';
++import { ColorRepresentation } from '../math/Color.js';
++import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
++import { HemisphereLight } from "../lights/HemisphereLight.js";
++
+ /**
+  * Creates a visual aid consisting of a spherical mesh for a
+  * given {@link HemisphereLight}.
+@@ -10,8 +15,6 @@
+  * const helper = new THREE.HemisphereLightHelper( light, 5 );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments Object3D
+  */
+ export class HemisphereLightHelper extends Object3D {
+     /**
+@@ -22,22 +25,16 @@ export class HemisphereLightHelper extends Object3D {
+      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
+      * the color of the light.
+      */
+-    constructor(light: HemisphereLight, size?: number, color?: number | Color | string);
++    constructor(light: HemisphereLight, size?: number, color?: ColorRepresentation);
+     /**
+      * The light being visualized.
+-     *
+-     * @type {HemisphereLight}
+      */
+     light: HemisphereLight;
+-    matrix: any;
+     /**
+      * The color parameter passed in the constructor.
+      * If not set, the helper will take the color of the light.
+-     *
+-     * @type {number|Color|string}
+      */
+-    color: number | Color | string;
+-    type: string;
++    color: ColorRepresentation | undefined;
+     material: MeshBasicMaterial;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+@@ -50,6 +47,3 @@ export class HemisphereLightHelper extends Object3D {
+      */
+     update(): void;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { Color } from '../math/Color.js';
+-import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/PlaneHelper.d.ts b/jsdoc-testing/jsdoc/helpers/PlaneHelper.d.ts
+index be6163223..99b526a42 100644
+--- a/jsdoc-testing/jsdoc/helpers/PlaneHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/PlaneHelper.d.ts
+@@ -1,3 +1,7 @@
++import { Line } from '../objects/Line.js';
++import { Plane } from "../math/Plane.js";
++import { ColorRepresentation } from '../math/Color.js';
++
+ /**
+  * A helper object to visualize an instance of {@link Plane}.
+  *
+@@ -6,8 +10,6 @@
+  * const helper = new THREE.PlaneHelper( plane, 1, 0xffff00 );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments Line
+  */
+ export class PlaneHelper extends Line {
+     /**
+@@ -17,25 +19,20 @@ export class PlaneHelper extends Line {
+      * @param {number} [size=1] - The side length of plane helper.
+      * @param {number|Color|string} [hex=0xffff00] - The helper's color.
+      */
+-    constructor(plane: Plane, size?: number, hex?: number | Color | string);
++    constructor(plane: Plane, size?: number, hex?: ColorRepresentation);
+     /**
+      * The plane being visualized.
+-     *
+-     * @type {Plane}
+      */
+     plane: Plane;
+     /**
+      * The side length of plane helper.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     size: number;
+-    updateMatrixWorld(force: any): void;
+     /**
+      * Updates the helper to match the position and direction of the
+      * light being visualized.
+      */
+     dispose(): void;
+ }
+-import { Line } from '../objects/Line.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/PointLightHelper.d.ts b/jsdoc-testing/jsdoc/helpers/PointLightHelper.d.ts
+index f2f51e312..abe0a2b16 100644
+--- a/jsdoc-testing/jsdoc/helpers/PointLightHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/PointLightHelper.d.ts
+@@ -1,3 +1,7 @@
++import { Mesh } from '../objects/Mesh.js';
++import { PointLight } from "../lights/PointLight.js";
++import { ColorRepresentation } from "../math/Color.js";
++
+ /**
+  * This displays a helper object consisting of a spherical mesh for
+  * visualizing an instance of {@link PointLight}.
+@@ -11,8 +15,6 @@
+  * const pointLightHelper = new THREE.PointLightHelper( pointLight, sphereSize );
+  * scene.add( pointLightHelper );
+  * ```
+- *
+- * @augments Mesh
+  */
+ export class PointLightHelper extends Mesh {
+     /**
+@@ -23,21 +25,16 @@ export class PointLightHelper extends Mesh {
+      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
+      * the color of the light.
+      */
+-    constructor(light: PointLight, sphereSize?: number, color?: number | Color | string);
++    constructor(light: PointLight, sphereSize?: number, color?: ColorRepresentation);
+     /**
+      * The light being visualized.
+-     *
+-     * @type {PointLight}
+      */
+     light: PointLight;
+     /**
+      * The color parameter passed in the constructor.
+      * If not set, the helper will take the color of the light.
+-     *
+-     * @type {number|Color|string}
+      */
+-    color: number | Color | string;
+-    matrix: any;
++    color: ColorRepresentation | undefined;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+@@ -49,4 +46,3 @@ export class PointLightHelper extends Mesh {
+      */
+     update(): void;
+ }
+-import { Mesh } from '../objects/Mesh.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/PolarGridHelper.d.ts b/jsdoc-testing/jsdoc/helpers/PolarGridHelper.d.ts
+index 9d4caa9c7..7701b0f04 100644
+--- a/jsdoc-testing/jsdoc/helpers/PolarGridHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/PolarGridHelper.d.ts
+@@ -1,3 +1,6 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { ColorRepresentation } from '../math/Color.js';
++
+ /**
+  * This helper is an object to define polar grids. Grids are
+  * two-dimensional arrays of lines.
+@@ -11,8 +14,6 @@
+  * const helper = new THREE.PolarGridHelper( radius, sectors, rings, divisions );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments LineSegments
+  */
+ export class PolarGridHelper extends LineSegments {
+     /**
+@@ -25,12 +26,10 @@ export class PolarGridHelper extends LineSegments {
+      * @param {number|Color|string} [color1=0x444444] - The first color used for grid elements.
+      * @param {number|Color|string} [color2=0x888888] -  The second color used for grid elements.
+      */
+-    constructor(radius?: number, sectors?: number, rings?: number, divisions?: number, color1?: number | Color | string, color2?: number | Color | string);
++    constructor(radius?: number, sectors?: number, rings?: number, divisions?: number, color1?: ColorRepresentation, color2?: ColorRepresentation);
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+      * method whenever this instance is no longer used in your app.
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/SkeletonHelper.d.ts b/jsdoc-testing/jsdoc/helpers/SkeletonHelper.d.ts
+index a129e99ab..b682bef58 100644
+--- a/jsdoc-testing/jsdoc/helpers/SkeletonHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/SkeletonHelper.d.ts
+@@ -1,3 +1,8 @@
++import { LineSegments } from '../objects/LineSegments.js';
++import { Color } from '../math/Color.js';
++import { Object3D } from "../core/Object3D.js";
++import { Bone } from "../objects/Bone.js";
++
+ /**
+  * A helper object to assist with visualizing a {@link Skeleton}.
+  *
+@@ -5,8 +10,6 @@
+  * const helper = new THREE.SkeletonHelper( skinnedMesh );
+  * scene.add( helper );
+  * ```
+- *
+- * @augments LineSegments
+  */
+ export class SkeletonHelper extends LineSegments {
+     /**
+@@ -19,25 +22,17 @@ export class SkeletonHelper extends LineSegments {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSkeletonHelper: boolean;
+     /**
+      * The object being visualized.
+-     *
+-     * @type {Object3D}
+      */
+     root: Object3D;
+     /**
+      * The list of bones that the helper visualizes.
+-     *
+-     * @type {Array<Bone>}
+      */
+-    bones: Array<Bone>;
+-    matrix: any;
+-    updateMatrixWorld(force: any): void;
++    bones: Bone[];
+     /**
+      * Defines the colors of the helper.
+      *
+@@ -52,5 +47,3 @@ export class SkeletonHelper extends LineSegments {
+      */
+     dispose(): void;
+ }
+-import { LineSegments } from '../objects/LineSegments.js';
+-import { Color } from '../math/Color.js';
+diff --git a/jsdoc-testing/jsdoc/helpers/SpotLightHelper.d.ts b/jsdoc-testing/jsdoc/helpers/SpotLightHelper.d.ts
+index 7e73edcef..d74e50583 100644
+--- a/jsdoc-testing/jsdoc/helpers/SpotLightHelper.d.ts
++++ b/jsdoc-testing/jsdoc/helpers/SpotLightHelper.d.ts
+@@ -1,3 +1,8 @@
++import { Object3D } from '../core/Object3D.js';
++import { LineSegments } from '../objects/LineSegments.js';
++import { SpotLight } from '../lights/SpotLight.js';
++import { ColorRepresentation } from "../math/Color.js";
++
+ /**
+  * This displays a cone shaped helper object for a {@link SpotLight}.
+  *
+@@ -12,8 +17,6 @@
+  * const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+  * scene.add( spotLightHelper );
+  * ```
+- *
+- * @augments Object3D
+  */
+ export class SpotLightHelper extends Object3D {
+     /**
+@@ -23,21 +26,16 @@ export class SpotLightHelper extends Object3D {
+      * @param {number|Color|string} [color] - The helper's color. If not set, the helper will take
+      * the color of the light.
+      */
+-    constructor(light: HemisphereLight, color?: number | Color | string);
++    constructor(light: SpotLight, color?: ColorRepresentation);
+     /**
+      * The light being visualized.
+-     *
+-     * @type {SpotLight}
+      */
+     light: SpotLight;
+     /**
+      * The color parameter passed in the constructor.
+      * If not set, the helper will take the color of the light.
+-     *
+-     * @type {number|Color|string}
+      */
+-    color: number | Color | string;
+-    type: string;
++    color: ColorRepresentation | undefined;
+     cone: LineSegments;
+     /**
+      * Frees the GPU-related resources allocated by this instance. Call this
+@@ -50,5 +48,3 @@ export class SpotLightHelper extends Object3D {
+      */
+     update(): void;
+ }
+-import { Object3D } from '../core/Object3D.js';
+-import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts b/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts
 index 64e5c7024..699b4951f 100644
 --- a/jsdoc-testing/jsdoc/materials/LineBasicMaterial.d.ts
