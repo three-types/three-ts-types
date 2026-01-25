@@ -37,7 +37,6 @@ const exceptionList = [
     'webgl_morphtargets_webcam',
     'webgl_multiple_elements_text',
     'webgl_points_dynamic',
-    'webgl_postprocessing_godrays',
     'webgl_raycaster_bvh',
     'webgl_renderer_pathtracer',
     'webgl_reversed_depth_buffer',
