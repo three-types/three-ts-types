@@ -1,6 +1,8 @@
 import { BufferGeometry } from "../core/BufferGeometry.js";
 import { Object3D } from "../core/Object3D.js";
 import { LineBasicMaterial } from "../materials/LineBasicMaterial.js";
+import { Box3 } from "../math/Box3.js";
+import { ColorRepresentation } from "../math/Color.js";
 import { LineSegments } from "../objects/LineSegments.js";
 
 /**
@@ -19,6 +21,13 @@ import { LineSegments } from "../objects/LineSegments.js";
  * ```
  */
 export class BoxHelper extends LineSegments<BufferGeometry, LineBasicMaterial> {
+    /**
+     * Constructs a new box helper.
+     *
+     * @param {Object3D} [object] - The 3D object to show the world-axis-aligned bounding box.
+     * @param {number|Color|string} [color=0xffff00] - The box's color.
+     */
+    constructor(object: Object3D, color?: ColorRepresentation);
     /**
      * The 3D object being visualized.
      */
