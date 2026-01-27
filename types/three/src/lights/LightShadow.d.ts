@@ -25,7 +25,7 @@ export interface LightShadowJSON {
  *
  * @abstract
  */
-export abstract class LightShadow {
+export abstract class LightShadow<TCamera extends Camera = Camera> {
     /**
      * Constructs a new light shadow.
      *

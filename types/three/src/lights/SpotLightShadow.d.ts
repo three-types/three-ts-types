@@ -1,3 +1,4 @@
+import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 import { LightShadow } from "./LightShadow.js";
 
 /**
@@ -5,7 +6,7 @@ import { LightShadow } from "./LightShadow.js";
  *
  * @augments LightShadow
  */
-export class SpotLightShadow extends LightShadow {
+export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
     /**
      * Constructs a new spot light shadow.
      */

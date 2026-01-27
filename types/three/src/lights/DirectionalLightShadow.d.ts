@@ -1,3 +1,4 @@
+import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
 import { LightShadow } from "./LightShadow.js";
 
 /**
@@ -5,7 +6,7 @@ import { LightShadow } from "./LightShadow.js";
  *
  * @augments LightShadow
  */
-export class DirectionalLightShadow extends LightShadow {
+export class DirectionalLightShadow extends LightShadow<OrthographicCamera> {
     /**
      * Constructs a new directional light shadow.
      */
