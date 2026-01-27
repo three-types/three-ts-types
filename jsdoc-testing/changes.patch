@@ -2834,16 +2834,24 @@ index 75331742..4fd1fd8c 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { DirectionalLightShadow } from './DirectionalLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
-index 69d809ea..19b84872 100644
+index 69d809ea..903128a7 100644
 --- a/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
-@@ -1,3 +1,5 @@
+@@ -1,9 +1,12 @@
 +import { LightShadow } from './LightShadow.js';
++import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
 +
  /**
   * Represents the shadow configuration of directional lights.
   *
-@@ -17,4 +19,3 @@ export class DirectionalLightShadow extends LightShadow {
+  * @augments LightShadow
+  */
+-export class DirectionalLightShadow extends LightShadow {
++export class DirectionalLightShadow extends LightShadow<OrthographicCamera> {
+     /**
+      * Constructs a new directional light shadow.
+      */
+@@ -17,4 +20,3 @@ export class DirectionalLightShadow extends LightShadow {
       */
      readonly isDirectionalLightShadow: boolean;
  }
@@ -2966,7 +2974,7 @@ index 8a03aa8c..1c93453f 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
-index 24ffaf5b..e0c4cfcd 100644
+index 24ffaf5b..72a8e4e5 100644
 --- a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
 @@ -1,10 +1,31 @@
@@ -2998,7 +3006,7 @@ index 24ffaf5b..e0c4cfcd 100644
   * @abstract
   */
 -export class LightShadow {
-+export abstract class LightShadow {
++export abstract class LightShadow<TCamera extends Camera = Camera> {
      /**
       * Constructs a new light shadow.
       *
@@ -3098,16 +3106,24 @@ index f42ec0f7..4a6c52aa 100644
 -import { Light } from './Light.js';
 -import { PointLightShadow } from './PointLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
-index 9157a63b..9b3d1ed6 100644
+index 9157a63b..65f38144 100644
 --- a/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
-@@ -1,3 +1,5 @@
+@@ -1,9 +1,12 @@
 +import { LightShadow } from './LightShadow.js';
++import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 +
  /**
   * Represents the shadow configuration of point lights.
   *
-@@ -17,4 +19,3 @@ export class PointLightShadow extends LightShadow {
+  * @augments LightShadow
+  */
+-export class PointLightShadow extends LightShadow {
++export class PointLightShadow extends LightShadow<PerspectiveCamera> {
+     /**
+      * Constructs a new point light shadow.
+      */
+@@ -17,4 +20,3 @@ export class PointLightShadow extends LightShadow {
       */
      readonly isPointLightShadow: boolean;
  }
@@ -3188,16 +3204,24 @@ index 1197fdf2..4cb0626a 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { SpotLightShadow } from './SpotLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
-index 0de4c95b..14aec052 100644
+index 0de4c95b..6724de0f 100644
 --- a/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
-@@ -1,3 +1,5 @@
+@@ -1,9 +1,12 @@
 +import { LightShadow } from './LightShadow.js';
++import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 +
  /**
   * Represents the shadow configuration of directional lights.
   *
-@@ -31,7 +33,5 @@ export class SpotLightShadow extends LightShadow {
+  * @augments LightShadow
+  */
+-export class SpotLightShadow extends LightShadow {
++export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
+     /**
+      * Constructs a new spot light shadow.
+      */
+@@ -31,7 +34,5 @@ export class SpotLightShadow extends LightShadow {
       * @default 1
       */
      aspect: number;
