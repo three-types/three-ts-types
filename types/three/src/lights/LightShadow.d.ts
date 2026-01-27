@@ -31,13 +31,13 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      *
      * @param {Camera} camera - The light's view of the world.
      */
-    constructor(camera: Camera);
+    constructor(camera: TCamera);
     /**
      * The light's view of the world.
      *
      * @type {Camera}
      */
-    camera: Camera;
+    camera: TCamera;
     /**
      * The intensity of the shadow. The default is `1`.
      * Valid values are in the range `[0, 1]`.
