@@ -1,15 +1,21 @@
-import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 import { LightShadow } from "./LightShadow.js";
 
 /**
- * Shadow for {@link THREE.PointLight | PointLight}
- * @see {@link https://github.com/mrdoob/three.js/blob/master/src/lights/PointLightShadow.js | Source}
+ * Represents the shadow configuration of point lights.
+ *
+ * @augments LightShadow
  */
-export class PointLightShadow extends LightShadow<PerspectiveCamera> {
+export class PointLightShadow extends LightShadow {
     /**
-     * Read-only flag to check if a given object is of type {@link PointLightShadow}.
-     * @remarks This is a _constant_ value
-     * @defaultValue `true`
+     * Constructs a new point light shadow.
      */
-    readonly isPointLightShadow: true;
+    constructor();
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isPointLightShadow: boolean;
 }
