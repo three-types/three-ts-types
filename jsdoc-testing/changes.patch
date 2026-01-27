@@ -2974,10 +2974,10 @@ index 8a03aa8c..1c93453f 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
-index 24ffaf5b..72a8e4e5 100644
+index 24ffaf5b..33a49243 100644
 --- a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
-@@ -1,10 +1,31 @@
+@@ -1,22 +1,43 @@
 +import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 +import { Matrix4 } from '../math/Matrix4.js';
 +import { Frustum } from '../math/Frustum.js';
@@ -3010,6 +3010,20 @@ index 24ffaf5b..72a8e4e5 100644
      /**
       * Constructs a new light shadow.
       *
+      * @param {Camera} camera - The light's view of the world.
+      */
+-    constructor(camera: Camera);
++    constructor(camera: TCamera);
+     /**
+      * The light's view of the world.
+      *
+      * @type {Camera}
+      */
+-    camera: Camera;
++    camera: TCamera;
+     /**
+      * The intensity of the shadow. The default is `1`.
+      * Valid values are in the range `[0, 1]`.
 @@ -44,7 +65,7 @@ export class LightShadow {
       * @type {?Node<float>}
       * @default null
