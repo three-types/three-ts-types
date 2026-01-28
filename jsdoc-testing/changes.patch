@@ -2770,7 +2770,7 @@ index 7e73edce..d74e5058 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/lights/AmbientLight.d.ts b/jsdoc-testing/jsdoc/lights/AmbientLight.d.ts
-index 78c3196f..c879682f 100644
+index 78c3196f..bc1d01a9 100644
 --- a/jsdoc-testing/jsdoc/lights/AmbientLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/AmbientLight.d.ts
 @@ -1,3 +1,6 @@
@@ -2780,7 +2780,16 @@ index 78c3196f..c879682f 100644
  /**
   * This light globally illuminates all objects in the scene equally.
   *
-@@ -17,7 +20,7 @@ export class AmbientLight extends Light {
+@@ -7,8 +10,6 @@
+  * const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+  * scene.add( light );
+  * ```
+- *
+- * @augments Light
+  */
+ export class AmbientLight extends Light {
+     /**
+@@ -17,14 +18,11 @@ export class AmbientLight extends Light {
       * @param {(number|Color|string)} [color=0xffffff] - The light's color.
       * @param {number} [intensity=1] - The light's strength/intensity.
       */
@@ -2789,13 +2798,15 @@ index 78c3196f..c879682f 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -27,4 +30,3 @@ export class AmbientLight extends Light {
+-     * @type {boolean}
+-     * @readonly
+      * @default true
       */
      readonly isAmbientLight: boolean;
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/lights/DirectionalLight.d.ts b/jsdoc-testing/jsdoc/lights/DirectionalLight.d.ts
-index 75331742..4fd1fd8c 100644
+index 75331742..1062b06a 100644
 --- a/jsdoc-testing/jsdoc/lights/DirectionalLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/DirectionalLight.d.ts
 @@ -1,3 +1,14 @@
@@ -2813,7 +2824,16 @@ index 75331742..4fd1fd8c 100644
  /**
   * A light that gets emitted in a specific direction. This light will behave
   * as though it is infinitely far away and the rays produced from it are all
-@@ -32,7 +43,7 @@ export class DirectionalLight extends Light {
+@@ -22,8 +33,6 @@
+  * const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+  * scene.add( directionalLight );
+  * ```
+- *
+- * @augments Light
+  */
+ export class DirectionalLight extends Light {
+     /**
+@@ -32,12 +41,10 @@ export class DirectionalLight extends Light {
       * @param {(number|Color|string)} [color=0xffffff] - The light's color.
       * @param {number} [intensity=1] - The light's strength/intensity.
       */
@@ -2822,8 +2842,23 @@ index 75331742..4fd1fd8c 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -60,8 +71,6 @@ export class DirectionalLight extends Light {
-      * @type {DirectionalLightShadow}
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isDirectionalLight: boolean;
+@@ -50,18 +57,12 @@ export class DirectionalLight extends Light {
+      *
+      * It is also possible to set the target to be another 3D object
+      * in the scene. The light will now track the target object.
+-     *
+-     * @type {Object3D}
+      */
+     target: Object3D;
+     /**
+      * This property holds the light's shadow configuration.
+-     *
+-     * @type {DirectionalLightShadow}
       */
      shadow: DirectionalLightShadow;
 -    copy(source: any): this;
@@ -2834,30 +2869,36 @@ index 75331742..4fd1fd8c 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { DirectionalLightShadow } from './DirectionalLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
-index 69d809ea..903128a7 100644
+index 69d809ea..7ebe47de 100644
 --- a/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/DirectionalLightShadow.d.ts
-@@ -1,9 +1,12 @@
+@@ -1,9 +1,10 @@
 +import { LightShadow } from './LightShadow.js';
 +import { OrthographicCamera } from "../cameras/OrthographicCamera.js";
 +
  /**
   * Represents the shadow configuration of directional lights.
-  *
-  * @augments LightShadow
+- *
+- * @augments LightShadow
   */
 -export class DirectionalLightShadow extends LightShadow {
 +export class DirectionalLightShadow extends LightShadow<OrthographicCamera> {
      /**
       * Constructs a new directional light shadow.
       */
-@@ -17,4 +20,3 @@ export class DirectionalLightShadow extends LightShadow {
+@@ -11,10 +12,7 @@ export class DirectionalLightShadow extends LightShadow {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
       */
      readonly isDirectionalLightShadow: boolean;
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/HemisphereLight.d.ts b/jsdoc-testing/jsdoc/lights/HemisphereLight.d.ts
-index 9bffa0d0..629e3b09 100644
+index 9bffa0d0..29ee9a37 100644
 --- a/jsdoc-testing/jsdoc/lights/HemisphereLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/HemisphereLight.d.ts
 @@ -1,3 +1,11 @@
@@ -2872,7 +2913,16 @@ index 9bffa0d0..629e3b09 100644
  /**
   * A light source positioned directly above the scene, with color fading from
   * the sky color to the ground color.
-@@ -19,7 +27,7 @@ export class HemisphereLight extends Light {
+@@ -8,8 +16,6 @@
+  * const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
+  * scene.add( light );
+  * ```
+- *
+- * @augments Light
+  */
+ export class HemisphereLight extends Light {
+     /**
+@@ -19,22 +25,17 @@ export class HemisphereLight extends Light {
       * @param {(number|Color|string)} [groundColor=0xffffff] - The light's ground color.
       * @param {number} [intensity=1] - The light's strength/intensity.
       */
@@ -2881,8 +2931,15 @@ index 9bffa0d0..629e3b09 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -34,7 +42,6 @@ export class HemisphereLight extends Light {
-      * @type {Color}
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isHemisphereLight: boolean;
+     /**
+      * The light's ground color.
+-     *
+-     * @type {Color}
       */
      groundColor: Color;
 -    copy(source: any, recursive: any): this;
@@ -2892,10 +2949,10 @@ index 9bffa0d0..629e3b09 100644
 -import { Light } from './Light.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/lights/Light.d.ts b/jsdoc-testing/jsdoc/lights/Light.d.ts
-index 15a77b36..2a71436d 100644
+index 15a77b36..05027d9a 100644
 --- a/jsdoc-testing/jsdoc/lights/Light.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/Light.d.ts
-@@ -1,3 +1,15 @@
+@@ -1,37 +1,40 @@
 +import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON } from "../core/Object3D.js";
 +import { Color, ColorRepresentation } from '../math/Color.js';
 +
@@ -2911,9 +2968,9 @@ index 15a77b36..2a71436d 100644
  /**
   * Abstract base class for lights - all other light types inherit the
   * properties and methods described here.
-@@ -5,14 +17,14 @@
-  * @abstract
-  * @augments Object3D
+- *
+- * @abstract
+- * @augments Object3D
   */
 -export class Light extends Object3D {
 +export abstract class Light extends Object3D<LightEventMap> {
@@ -2928,15 +2985,26 @@ index 15a77b36..2a71436d 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -21,7 +33,6 @@ export class Light extends Object3D {
+-     * @type {boolean}
+-     * @readonly
       * @default true
       */
      readonly isLight: boolean;
 -    type: string;
      /**
       * The light's color.
+-     *
+-     * @type {Color}
+      */
+     color: Color;
+     /**
+      * The light's intensity.
       *
-@@ -40,8 +51,6 @@ export class Light extends Object3D {
+-     * @type {number}
+      * @default 1
+      */
+     intensity: number;
+@@ -40,8 +43,6 @@ export class Light extends Object3D {
       * method whenever this instance is no longer used in your app.
       */
      dispose(): void;
@@ -2948,7 +3016,7 @@ index 15a77b36..2a71436d 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/lights/LightProbe.d.ts b/jsdoc-testing/jsdoc/lights/LightProbe.d.ts
-index 8a03aa8c..1c93453f 100644
+index 8a03aa8c..23439094 100644
 --- a/jsdoc-testing/jsdoc/lights/LightProbe.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/LightProbe.d.ts
 @@ -1,3 +1,11 @@
@@ -2963,8 +3031,28 @@ index 8a03aa8c..1c93453f 100644
  /**
   * Light probes are an alternative way of adding light to a 3D scene. Unlike
   * classical light sources (e.g. directional, point or spot lights), light
-@@ -39,7 +47,6 @@ export class LightProbe extends Light {
-      * @type {SphericalHarmonics3}
+@@ -14,8 +22,6 @@
+  * The current probe implementation in three.js supports so-called diffuse
+  * light probes. This type of light probe is functionally equivalent to an
+  * irradiance environment map.
+- *
+- * @augments Light
+  */
+ export class LightProbe extends Light {
+     /**
+@@ -28,18 +34,13 @@ export class LightProbe extends Light {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isLightProbe: boolean;
+     /**
+      * A light probe uses spherical harmonics to encode lighting information.
+-     *
+-     * @type {SphericalHarmonics3}
       */
      sh: SphericalHarmonics3;
 -    copy(source: any): this;
@@ -2974,10 +3062,10 @@ index 8a03aa8c..1c93453f 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
-index 24ffaf5b..33a49243 100644
+index 24ffaf5b..3c663eca 100644
 --- a/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/LightShadow.d.ts
-@@ -1,22 +1,43 @@
+@@ -1,27 +1,43 @@
 +import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 +import { Matrix4 } from '../math/Matrix4.js';
 +import { Frustum } from '../math/Frustum.js';
@@ -3002,8 +3090,8 @@ index 24ffaf5b..33a49243 100644
  /**
   * Abstract base class for light shadow classes. These classes
   * represent the shadow configuration for different light types.
-  *
-  * @abstract
+- *
+- * @abstract
   */
 -export class LightShadow {
 +export abstract class LightShadow<TCamera extends Camera = Camera> {
@@ -3016,16 +3104,32 @@ index 24ffaf5b..33a49243 100644
 +    constructor(camera: TCamera);
      /**
       * The light's view of the world.
-      *
-      * @type {Camera}
+-     *
+-     * @type {Camera}
       */
 -    camera: Camera;
 +    camera: TCamera;
      /**
       * The intensity of the shadow. The default is `1`.
       * Valid values are in the range `[0, 1]`.
-@@ -44,7 +65,7 @@ export class LightShadow {
-      * @type {?Node<float>}
+      *
+-     * @type {number}
+      * @default 1
+      */
+     intensity: number;
+@@ -32,7 +48,6 @@ export class LightShadow {
+      * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
+      * may help reduce artifacts in shadows.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     bias: number;
+@@ -41,17 +56,15 @@ export class LightShadow {
+      *
+      * If a bias node is defined, `bias` has no effect.
+      *
+-     * @type {?Node<float>}
       * @default null
       */
 -    biasNode: Node<float> | null;
@@ -3033,8 +3137,40 @@ index 24ffaf5b..33a49243 100644
      /**
       * Defines how much the position used to query the shadow map is offset along
       * the object normal. The default is `0`. Increasing this value can be used to
-@@ -88,7 +109,7 @@ export class LightShadow {
-      * @type {number}
+      * reduce shadow acne especially in large scenes where light shines onto
+      * geometry at a shallow angle. The cost is that shadows may appear distorted.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     normalBias: number;
+@@ -63,14 +76,12 @@ export class LightShadow {
+      *
+      * The property has no effect when the shadow map type is `BasicShadowMap`.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     radius: number;
+     /**
+      * The amount of samples to use when blurring a VSM shadow map.
+      *
+-     * @type {number}
+      * @default 8
+      */
+     blurSamples: number;
+@@ -78,22 +89,19 @@ export class LightShadow {
+      * Defines the width and height of the shadow map. Higher values give better quality
+      * shadows at the cost of computation time. Values must be powers of two.
+      *
+-     * @type {Vector2}
+      * @default (512,512)
+      */
+     mapSize: Vector2;
+     /**
+      * The type of shadow texture. The default is `UnsignedByteType`.
+      *
+-     * @type {number}
       * @default UnsignedByteType
       */
 -    mapType: number;
@@ -3042,7 +3178,39 @@ index 24ffaf5b..33a49243 100644
      /**
       * The depth map generated using the internal camera; a location beyond a
       * pixel's depth is in shadow. Computed internally during rendering.
-@@ -130,10 +151,6 @@ export class LightShadow {
+      *
+-     * @type {?RenderTarget}
+      * @default null
+      */
+     map: RenderTarget | null;
+@@ -102,22 +110,18 @@ export class LightShadow {
+      * calculated based on the distribution of depths. Computed internally during
+      * rendering.
+      *
+-     * @type {?RenderTarget}
+      * @default null
+      */
+     mapPass: RenderTarget | null;
+     /**
+      * Model to shadow camera space, to compute location and depth in shadow map.
+      * This is computed internally during rendering.
+-     *
+-     * @type {Matrix4}
+      */
+     matrix: Matrix4;
+     /**
+      * Enables automatic updates of the light's shadow. If you do not require dynamic
+      * lighting / shadows, you may set this to `false`.
+      *
+-     * @type {boolean}
+      * @default true
+      */
+     autoUpdate: boolean;
+@@ -126,14 +130,9 @@ export class LightShadow {
+      * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
+      * set this property to `true` and then make a render call to update the light's shadow.
+      *
+-     * @type {boolean}
       * @default false
       */
      needsUpdate: boolean;
@@ -3053,7 +3221,7 @@ index 24ffaf5b..33a49243 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -177,22 +194,18 @@ export class LightShadow {
+@@ -177,22 +176,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
@@ -3080,7 +3248,7 @@ index 24ffaf5b..33a49243 100644
 -import { Frustum } from '../math/Frustum.js';
 -import { Vector4 } from '../math/Vector4.js';
 diff --git a/jsdoc-testing/jsdoc/lights/PointLight.d.ts b/jsdoc-testing/jsdoc/lights/PointLight.d.ts
-index f42ec0f7..4a6c52aa 100644
+index f42ec0f7..e6d11c1e 100644
 --- a/jsdoc-testing/jsdoc/lights/PointLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/PointLight.d.ts
 @@ -1,3 +1,16 @@
@@ -3100,7 +3268,16 @@ index f42ec0f7..4a6c52aa 100644
  /**
   * A light that gets emitted from a single point in all directions. A common
   * use case for this is to replicate the light emitted from a bare
-@@ -22,7 +35,7 @@ export class PointLight extends Light {
+@@ -10,8 +23,6 @@
+  * light.position.set( 50, 50, 50 );
+  * scene.add( light );
+  * ```
+- *
+- * @augments Light
+  */
+ export class PointLight extends Light {
+     /**
+@@ -22,12 +33,10 @@ export class PointLight extends Light {
       * @param {number} [distance=0] - Maximum range of the light. `0` means no limit.
       * @param {number} [decay=2] - The amount the light dims along the distance of the light.
       */
@@ -3109,8 +3286,39 @@ index f42ec0f7..4a6c52aa 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -64,7 +77,6 @@ export class PointLight extends Light {
-      * @type {number}
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isPointLight: boolean;
+@@ -38,7 +47,6 @@ export class PointLight extends Light {
+      * will then attenuate quickly and smoothly to 0. Inherently, cutoffs are not
+      * physically correct.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     distance: number;
+@@ -46,25 +54,19 @@ export class PointLight extends Light {
+      * The amount the light dims along the distance of the light. In context of
+      * physically-correct rendering the default value should not be changed.
+      *
+-     * @type {number}
+      * @default 2
+      */
+     decay: number;
+     /**
+      * This property holds the light's shadow configuration.
+-     *
+-     * @type {PointLightShadow}
+      */
+     shadow: PointLightShadow;
+     set power(power: number);
+     /**
+      * The light's power. Power is the luminous power of the light measured in lumens (lm).
+      * Changing the power will also change the light's intensity.
+-     *
+-     * @type {number}
       */
      get power(): number;
 -    copy(source: any, recursive: any): this;
@@ -3120,30 +3328,36 @@ index f42ec0f7..4a6c52aa 100644
 -import { Light } from './Light.js';
 -import { PointLightShadow } from './PointLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
-index 9157a63b..65f38144 100644
+index 9157a63b..8d29ffab 100644
 --- a/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/PointLightShadow.d.ts
-@@ -1,9 +1,12 @@
+@@ -1,9 +1,10 @@
 +import { LightShadow } from './LightShadow.js';
 +import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 +
  /**
   * Represents the shadow configuration of point lights.
-  *
-  * @augments LightShadow
+- *
+- * @augments LightShadow
   */
 -export class PointLightShadow extends LightShadow {
 +export class PointLightShadow extends LightShadow<PerspectiveCamera> {
      /**
       * Constructs a new point light shadow.
       */
-@@ -17,4 +20,3 @@ export class PointLightShadow extends LightShadow {
+@@ -11,10 +12,7 @@ export class PointLightShadow extends LightShadow {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
       */
      readonly isPointLightShadow: boolean;
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/RectAreaLight.d.ts b/jsdoc-testing/jsdoc/lights/RectAreaLight.d.ts
-index 6d4b7b65..e040102e 100644
+index 6d4b7b65..edd5db77 100644
 --- a/jsdoc-testing/jsdoc/lights/RectAreaLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/RectAreaLight.d.ts
 @@ -1,3 +1,6 @@
@@ -3153,7 +3367,16 @@ index 6d4b7b65..e040102e 100644
  /**
   * This class emits light uniformly across the face a rectangular plane.
   * This light type can be used to simulate light sources such as bright
-@@ -32,7 +35,7 @@ export class RectAreaLight extends Light {
+@@ -20,8 +23,6 @@
+  * rectLight.lookAt( 0, 0, 0 );
+  * scene.add( rectLight )
+  * ```
+- *
+- * @augments Light
+  */
+ export class RectAreaLight extends Light {
+     /**
+@@ -32,26 +33,22 @@ export class RectAreaLight extends Light {
       * @param {number} [width=10] - The width of the light.
       * @param {number} [height=10] - The height of the light.
       */
@@ -3162,8 +3385,31 @@ index 6d4b7b65..e040102e 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -63,6 +66,5 @@ export class RectAreaLight extends Light {
-      * @type {number}
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isRectAreaLight: boolean;
+     /**
+      * The width of the light.
+      *
+-     * @type {number}
+      * @default 10
+      */
+     width: number;
+     /**
+      * The height of the light.
+      *
+-     * @type {number}
+      * @default 10
+      */
+     height: number;
+@@ -59,10 +56,7 @@ export class RectAreaLight extends Light {
+     /**
+      * The light's power. Power is the luminous power of the light measured in lumens (lm).
+      * Changing the power will also change the light's intensity.
+-     *
+-     * @type {number}
       */
      get power(): number;
 -    copy(source: any): this;
@@ -3171,7 +3417,7 @@ index 6d4b7b65..e040102e 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/lights/SpotLight.d.ts b/jsdoc-testing/jsdoc/lights/SpotLight.d.ts
-index 1197fdf2..4cb0626a 100644
+index 1197fdf2..6df1d134 100644
 --- a/jsdoc-testing/jsdoc/lights/SpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/SpotLight.d.ts
 @@ -1,3 +1,22 @@
@@ -3197,7 +3443,16 @@ index 1197fdf2..4cb0626a 100644
  /**
   * This light gets emitted from a single point in one direction, along a cone
   * that increases in size the further from the light it gets.
-@@ -31,7 +50,7 @@ export class SpotLight extends Light {
+@@ -17,8 +36,6 @@
+  * spotLight.shadow.camera.far = 4000;
+  * spotLight.shadow.camera.fov = 30;s
+  * ```
+- *
+- * @augments Light
+  */
+ export class SpotLight extends Light {
+     /**
+@@ -31,12 +48,10 @@ export class SpotLight extends Light {
       * @param {number} [penumbra=0] - Percent of the spotlight cone that is attenuated due to penumbra. Value range is `[0,1]`.
       * @param {number} [decay=2] - The amount the light dims along the distance of the light.
       */
@@ -3206,8 +3461,69 @@ index 1197fdf2..4cb0626a 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -109,8 +128,6 @@ export class SpotLight extends Light {
-      * @type {number}
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSpotLight: boolean;
+@@ -49,21 +64,17 @@ export class SpotLight extends Light {
+      *
+      * It is also possible to set the target to be another 3D object
+      * in the scene. The light will now track the target object.
+-     *
+-     * @type {Object3D}
+      */
+     target: Object3D;
+     /**
+      * Maximum range of the light. `0` means no limit.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     distance: number;
+     /**
+      * Maximum angle of light dispersion from its direction whose upper bound is `Math.PI/2`.
+      *
+-     * @type {number}
+      * @default Math.PI/3
+      */
+     angle: number;
+@@ -71,7 +82,6 @@ export class SpotLight extends Light {
+      * Percent of the spotlight cone that is attenuated due to penumbra.
+      * Value range is `[0,1]`.
+      *
+-     * @type {number}
+      * @default 0
+      */
+     penumbra: number;
+@@ -79,7 +89,6 @@ export class SpotLight extends Light {
+      * The amount the light dims along the distance of the light. In context of
+      * physically-correct rendering the default value should not be changed.
+      *
+-     * @type {number}
+      * @default 2
+      */
+     decay: number;
+@@ -91,26 +100,19 @@ export class SpotLight extends Light {
+      *
+      * *Warning*: This property is disabled if {@link Object3D#castShadow} is set to `false`.
+      *
+-     * @type {?Texture}
+      * @default null
+      */
+     map: Texture | null;
+     /**
+      * This property holds the light's shadow configuration.
+-     *
+-     * @type {SpotLightShadow}
+      */
+     shadow: SpotLightShadow;
+     set power(power: number);
+     /**
+      * The light's power. Power is the luminous power of the light measured in lumens (lm).
+      *  Changing the power will also change the light's intensity.
+-     *
+-     * @type {number}
       */
      get power(): number;
 -    copy(source: any, recursive: any): this;
@@ -3218,24 +3534,44 @@ index 1197fdf2..4cb0626a 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { SpotLightShadow } from './SpotLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts b/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
-index 0de4c95b..6724de0f 100644
+index 0de4c95b..6147e2c3 100644
 --- a/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/SpotLightShadow.d.ts
-@@ -1,9 +1,12 @@
+@@ -1,9 +1,10 @@
 +import { LightShadow } from './LightShadow.js';
 +import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
 +
  /**
   * Represents the shadow configuration of directional lights.
-  *
-  * @augments LightShadow
+- *
+- * @augments LightShadow
   */
 -export class SpotLightShadow extends LightShadow {
 +export class SpotLightShadow extends LightShadow<PerspectiveCamera> {
      /**
       * Constructs a new spot light shadow.
       */
-@@ -31,7 +34,5 @@ export class SpotLightShadow extends LightShadow {
+@@ -11,8 +12,6 @@ export class SpotLightShadow extends LightShadow {
+     /**
+      * This flag can be used for type testing.
+      *
+-     * @type {boolean}
+-     * @readonly
+      * @default true
+      */
+     readonly isSpotLightShadow: boolean;
+@@ -20,18 +19,14 @@ export class SpotLightShadow extends LightShadow {
+      * Used to focus the shadow camera. The camera's field of view is set as a
+      * percentage of the spotlight's field-of-view. Range is `[0, 1]`.
+      *
+-     * @type {number}
+      * @default 1
+      */
+     focus: number;
+     /**
+      * Texture aspect ratio.
+      *
+-     * @type {number}
       * @default 1
       */
      aspect: number;
@@ -3245,18 +3581,24 @@ index 0de4c95b..6724de0f 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/lights/webgpu/IESSpotLight.d.ts b/jsdoc-testing/jsdoc/lights/webgpu/IESSpotLight.d.ts
-index 9dd91537..d2fb0117 100644
+index 9dd91537..7cd03a9f 100644
 --- a/jsdoc-testing/jsdoc/lights/webgpu/IESSpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/webgpu/IESSpotLight.d.ts
-@@ -1,4 +1,6 @@
+@@ -1,17 +1,17 @@
 -export default IESSpotLight;
 +import { SpotLight } from '../SpotLight.js';
 +import { Texture } from "../../textures/Texture.js";
 +
  /**
   * A IES version of {@link SpotLight}. Can only be used with {@link WebGPURenderer}.
-  *
-@@ -12,6 +14,7 @@ declare class IESSpotLight extends SpotLight {
+- *
+- * @augments SpotLight
+  */
+ declare class IESSpotLight extends SpotLight {
+     /**
+      * TODO
+      *
+-     * @type {?Texture}
       * @default null
       */
      iesMap: Texture | null;
@@ -3267,17 +3609,23 @@ index 9dd91537..d2fb0117 100644
 +
 +export default IESSpotLight;
 diff --git a/jsdoc-testing/jsdoc/lights/webgpu/ProjectorLight.d.ts b/jsdoc-testing/jsdoc/lights/webgpu/ProjectorLight.d.ts
-index f561855f..f896ac7f 100644
+index f561855f..0d5ada0a 100644
 --- a/jsdoc-testing/jsdoc/lights/webgpu/ProjectorLight.d.ts
 +++ b/jsdoc-testing/jsdoc/lights/webgpu/ProjectorLight.d.ts
-@@ -1,4 +1,5 @@
+@@ -1,17 +1,16 @@
 -export default ProjectorLight;
 +import { SpotLight } from '../SpotLight.js';
 +
  /**
   * A projector light version of {@link SpotLight}. Can only be used with {@link WebGPURenderer}.
-  *
-@@ -12,6 +13,7 @@ declare class ProjectorLight extends SpotLight {
+- *
+- * @augments SpotLight
+  */
+ declare class ProjectorLight extends SpotLight {
+     /**
+      * Aspect ratio of the light. Set to `null` to use the texture aspect ratio.
+      *
+-     * @type {?number}
       * @default null
       */
      aspect: number | null;
