@@ -10,8 +10,6 @@ import { Light } from "./Light.js";
  * const light = new THREE.AmbientLight( 0x404040 ); // soft white light
  * scene.add( light );
  * ```
- *
- * @augments Light
  */
 export class AmbientLight extends Light {
     /**
@@ -24,8 +22,6 @@ export class AmbientLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isAmbientLight: boolean;

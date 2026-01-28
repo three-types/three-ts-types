@@ -23,8 +23,6 @@ import { Light } from "./Light.js";
  * rectLight.lookAt( 0, 0, 0 );
  * scene.add( rectLight )
  * ```
- *
- * @augments Light
  */
 export class RectAreaLight extends Light {
     /**
@@ -39,22 +37,18 @@ export class RectAreaLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isRectAreaLight: boolean;
     /**
      * The width of the light.
      *
-     * @type {number}
      * @default 10
      */
     width: number;
     /**
      * The height of the light.
      *
-     * @type {number}
      * @default 10
      */
     height: number;
@@ -62,8 +56,6 @@ export class RectAreaLight extends Light {
     /**
      * The light's power. Power is the luminous power of the light measured in lumens (lm).
      * Changing the power will also change the light's intensity.
-     *
-     * @type {number}
      */
     get power(): number;
     copy(source: RectAreaLight): this;

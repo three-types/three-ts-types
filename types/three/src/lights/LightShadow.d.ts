@@ -22,8 +22,6 @@ export interface LightShadowJSON {
 /**
  * Abstract base class for light shadow classes. These classes
  * represent the shadow configuration for different light types.
- *
- * @abstract
  */
 export abstract class LightShadow<TCamera extends Camera = Camera> {
     /**
@@ -34,15 +32,12 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
     constructor(camera: TCamera);
     /**
      * The light's view of the world.
-     *
-     * @type {Camera}
      */
     camera: TCamera;
     /**
      * The intensity of the shadow. The default is `1`.
      * Valid values are in the range `[0, 1]`.
      *
-     * @type {number}
      * @default 1
      */
     intensity: number;
@@ -53,7 +48,6 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
      * may help reduce artifacts in shadows.
      *
-     * @type {number}
      * @default 0
      */
     bias: number;
@@ -62,7 +56,6 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      *
      * If a bias node is defined, `bias` has no effect.
      *
-     * @type {?Node<float>}
      * @default null
      */
     biasNode: Node<"float"> | null;
@@ -72,7 +65,6 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * reduce shadow acne especially in large scenes where light shines onto
      * geometry at a shallow angle. The cost is that shadows may appear distorted.
      *
-     * @type {number}
      * @default 0
      */
     normalBias: number;
@@ -84,14 +76,12 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      *
      * The property has no effect when the shadow map type is `BasicShadowMap`.
      *
-     * @type {number}
      * @default 1
      */
     radius: number;
     /**
      * The amount of samples to use when blurring a VSM shadow map.
      *
-     * @type {number}
      * @default 8
      */
     blurSamples: number;
@@ -99,14 +89,12 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * Defines the width and height of the shadow map. Higher values give better quality
      * shadows at the cost of computation time. Values must be powers of two.
      *
-     * @type {Vector2}
      * @default (512,512)
      */
     mapSize: Vector2;
     /**
      * The type of shadow texture. The default is `UnsignedByteType`.
      *
-     * @type {number}
      * @default UnsignedByteType
      */
     mapType: TextureDataType;
@@ -114,7 +102,6 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * The depth map generated using the internal camera; a location beyond a
      * pixel's depth is in shadow. Computed internally during rendering.
      *
-     * @type {?RenderTarget}
      * @default null
      */
     map: RenderTarget | null;
@@ -123,22 +110,18 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * calculated based on the distribution of depths. Computed internally during
      * rendering.
      *
-     * @type {?RenderTarget}
      * @default null
      */
     mapPass: RenderTarget | null;
     /**
      * Model to shadow camera space, to compute location and depth in shadow map.
      * This is computed internally during rendering.
-     *
-     * @type {Matrix4}
      */
     matrix: Matrix4;
     /**
      * Enables automatic updates of the light's shadow. If you do not require dynamic
      * lighting / shadows, you may set this to `false`.
      *
-     * @type {boolean}
      * @default true
      */
     autoUpdate: boolean;
@@ -147,7 +130,6 @@ export abstract class LightShadow<TCamera extends Camera = Camera> {
      * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
      * set this property to `true` and then make a render call to update the light's shadow.
      *
-     * @type {boolean}
      * @default false
      */
     needsUpdate: boolean;

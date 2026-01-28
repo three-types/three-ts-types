@@ -23,8 +23,6 @@ export interface PointLightJSON extends LightJSON {
  * light.position.set( 50, 50, 50 );
  * scene.add( light );
  * ```
- *
- * @augments Light
  */
 export class PointLight extends Light {
     /**
@@ -39,8 +37,6 @@ export class PointLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isPointLight: boolean;
@@ -51,7 +47,6 @@ export class PointLight extends Light {
      * will then attenuate quickly and smoothly to 0. Inherently, cutoffs are not
      * physically correct.
      *
-     * @type {number}
      * @default 0
      */
     distance: number;
@@ -59,22 +54,17 @@ export class PointLight extends Light {
      * The amount the light dims along the distance of the light. In context of
      * physically-correct rendering the default value should not be changed.
      *
-     * @type {number}
      * @default 2
      */
     decay: number;
     /**
      * This property holds the light's shadow configuration.
-     *
-     * @type {PointLightShadow}
      */
     shadow: PointLightShadow;
     set power(power: number);
     /**
      * The light's power. Power is the luminous power of the light measured in lumens (lm).
      * Changing the power will also change the light's intensity.
-     *
-     * @type {number}
      */
     get power(): number;
     copy(source: PointLight, recursive?: boolean): this;

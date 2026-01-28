@@ -16,8 +16,6 @@ export interface HemisphereLightJSON extends LightJSON {
  * const light = new THREE.HemisphereLight( 0xffffbb, 0x080820, 1 );
  * scene.add( light );
  * ```
- *
- * @augments Light
  */
 export class HemisphereLight extends Light {
     /**
@@ -31,15 +29,11 @@ export class HemisphereLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isHemisphereLight: boolean;
     /**
      * The light's ground color.
-     *
-     * @type {Color}
      */
     groundColor: Color;
     copy(source: HemisphereLight, recursive?: boolean): this;

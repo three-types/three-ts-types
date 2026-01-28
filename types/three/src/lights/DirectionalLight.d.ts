@@ -33,8 +33,6 @@ export interface DirectionalLightJSON extends LightJSON {
  * const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
  * scene.add( directionalLight );
  * ```
- *
- * @augments Light
  */
 export class DirectionalLight extends Light {
     /**
@@ -47,8 +45,6 @@ export class DirectionalLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isDirectionalLight: boolean;
@@ -61,14 +57,10 @@ export class DirectionalLight extends Light {
      *
      * It is also possible to set the target to be another 3D object
      * in the scene. The light will now track the target object.
-     *
-     * @type {Object3D}
      */
     target: Object3D;
     /**
      * This property holds the light's shadow configuration.
-     *
-     * @type {DirectionalLightShadow}
      */
     shadow: DirectionalLightShadow;
     copy(source: DirectionalLight): this;

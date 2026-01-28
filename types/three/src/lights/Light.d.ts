@@ -13,9 +13,6 @@ export interface LightEventMap extends Object3DEventMap {
 /**
  * Abstract base class for lights - all other light types inherit the
  * properties and methods described here.
- *
- * @abstract
- * @augments Object3D
  */
 export abstract class Light extends Object3D<LightEventMap> {
     /**
@@ -28,21 +25,16 @@ export abstract class Light extends Object3D<LightEventMap> {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isLight: boolean;
     /**
      * The light's color.
-     *
-     * @type {Color}
      */
     color: Color;
     /**
      * The light's intensity.
      *
-     * @type {number}
      * @default 1
      */
     intensity: number;

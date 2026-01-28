@@ -22,8 +22,6 @@ export interface LightProbeJSON extends LightJSON {
  * The current probe implementation in three.js supports so-called diffuse
  * light probes. This type of light probe is functionally equivalent to an
  * irradiance environment map.
- *
- * @augments Light
  */
 export class LightProbe extends Light {
     /**
@@ -36,15 +34,11 @@ export class LightProbe extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isLightProbe: boolean;
     /**
      * A light probe uses spherical harmonics to encode lighting information.
-     *
-     * @type {SphericalHarmonics3}
      */
     sh: SphericalHarmonics3;
     copy(source: LightProbe): this;

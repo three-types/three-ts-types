@@ -36,8 +36,6 @@ export interface SpotLightJSON extends LightJSON {
  * spotLight.shadow.camera.far = 4000;
  * spotLight.shadow.camera.fov = 30;s
  * ```
- *
- * @augments Light
  */
 export class SpotLight extends Light {
     /**
@@ -61,8 +59,6 @@ export class SpotLight extends Light {
     /**
      * This flag can be used for type testing.
      *
-     * @type {boolean}
-     * @readonly
      * @default true
      */
     readonly isSpotLight: boolean;
@@ -75,21 +71,17 @@ export class SpotLight extends Light {
      *
      * It is also possible to set the target to be another 3D object
      * in the scene. The light will now track the target object.
-     *
-     * @type {Object3D}
      */
     target: Object3D;
     /**
      * Maximum range of the light. `0` means no limit.
      *
-     * @type {number}
      * @default 0
      */
     distance: number;
     /**
      * Maximum angle of light dispersion from its direction whose upper bound is `Math.PI/2`.
      *
-     * @type {number}
      * @default Math.PI/3
      */
     angle: number;
@@ -97,7 +89,6 @@ export class SpotLight extends Light {
      * Percent of the spotlight cone that is attenuated due to penumbra.
      * Value range is `[0,1]`.
      *
-     * @type {number}
      * @default 0
      */
     penumbra: number;
@@ -105,7 +96,6 @@ export class SpotLight extends Light {
      * The amount the light dims along the distance of the light. In context of
      * physically-correct rendering the default value should not be changed.
      *
-     * @type {number}
      * @default 2
      */
     decay: number;
@@ -117,22 +107,17 @@ export class SpotLight extends Light {
      *
      * *Warning*: This property is disabled if {@link Object3D#castShadow} is set to `false`.
      *
-     * @type {?Texture}
      * @default null
      */
     map: Texture | null;
     /**
      * This property holds the light's shadow configuration.
-     *
-     * @type {SpotLightShadow}
      */
     shadow: SpotLightShadow;
     set power(power: number);
     /**
      * The light's power. Power is the luminous power of the light measured in lumens (lm).
      *  Changing the power will also change the light's intensity.
-     *
-     * @type {number}
      */
     get power(): number;
     copy(source: SpotLight, recursive?: boolean): this;
