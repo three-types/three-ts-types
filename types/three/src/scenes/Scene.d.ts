@@ -24,8 +24,6 @@ export interface SceneJSON extends Object3DJSON {
 /**
  * Scenes allow you to set up what is to be rendered and where by three.js.
  * This is where you place 3D objects like meshes, lines or lights.
- *
- * @augments Object3D
  */
 export class Scene extends Object3D {
     /**
