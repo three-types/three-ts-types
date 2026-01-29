@@ -236,7 +236,7 @@ declare class NodeClass extends EventDispatcher<{
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The type of the node.
      */
-    getElementType(builder: NodeBuilder): "float" | "int" | "uint" | "bool" | "vec2" | "vec3" | "vec4" | null;
+    getElementType(builder: NodeBuilder): "bool" | "int" | "float" | "vec2" | "vec3" | "vec4" | "uint" | null;
     /**
      * Returns the node member type for the given name.
      *
