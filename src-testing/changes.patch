@@ -5334,21 +5334,28 @@ index c2dfad4c..02330947 100644
  // size of a chunk in bytes (STD140 layout)
  
 diff --git a/src-testing/src/renderers/common/CubeRenderTarget.ts b/src-testing/src/renderers/common/CubeRenderTarget.ts
-index e6afffd7..5302c174 100644
+index e6afffd7..c20ba148 100644
 --- a/src-testing/src/renderers/common/CubeRenderTarget.ts
 +++ b/src-testing/src/renderers/common/CubeRenderTarget.ts
-@@ -10,6 +10,10 @@ import { BoxGeometry } from '../../geometries/BoxGeometry.js';
+@@ -3,13 +3,16 @@ import { texture as TSL_Texture } from '../../nodes/accessors/TextureNode.js';
+ import { positionWorldDirection } from '../../nodes/accessors/Position.js';
+ import NodeMaterial from '../../materials/nodes/NodeMaterial.js';
+ 
+-import { RenderTarget } from '../../core/RenderTarget.js';
++import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
+ import { Scene } from '../../scenes/Scene.js';
+ import { CubeCamera } from '../../cameras/CubeCamera.js';
+ import { BoxGeometry } from '../../geometries/BoxGeometry.js';
  import { Mesh } from '../../objects/Mesh.js';
  import { CubeTexture } from '../../textures/CubeTexture.js';
  import { BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '../../constants.js';
-+import { RenderTargetOptions } from '../../core/RenderTarget.js';
 +import { WebGLRenderer } from '../WebGLRenderer.js';
 +import { Texture } from '../../textures/Texture.js';
 +import Renderer from './Renderer.js';
  
  /**
   * This class represents a cube render target. It is a special version
-@@ -18,13 +22,14 @@ import { BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '..
+@@ -18,13 +21,14 @@ import { BackSide, NoBlending, LinearFilter, LinearMipmapLinearFilter } from '..
   * @augments RenderTarget
   */
  class CubeRenderTarget extends RenderTarget {
@@ -5364,7 +5371,7 @@ index e6afffd7..5302c174 100644
          super(size, size, options);
  
          /**
-@@ -65,7 +70,7 @@ class CubeRenderTarget extends RenderTarget {
+@@ -65,7 +69,7 @@ class CubeRenderTarget extends RenderTarget {
       * @param {Texture} texture - The equirectangular texture.
       * @return {CubeRenderTarget} A reference to this cube render target.
       */
@@ -5373,7 +5380,7 @@ index e6afffd7..5302c174 100644
          const currentMinFilter = texture.minFilter;
          const currentGenerateMipmaps = texture.generateMipmaps;
  
-@@ -121,7 +126,7 @@ class CubeRenderTarget extends RenderTarget {
+@@ -121,7 +125,7 @@ class CubeRenderTarget extends RenderTarget {
       * @param {boolean} [depth=true] - Whether the depth buffer should be cleared or not.
       * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
       */
