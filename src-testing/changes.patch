@@ -4117,7 +4117,7 @@ index 59ca2d5a..12607c7e 100644
  }
  
 diff --git a/src-testing/src/renderers/common/Backend.ts b/src-testing/src/renderers/common/Backend.ts
-index 41eb1282..a1e2855d 100644
+index e267466d..68be265d 100644
 --- a/src-testing/src/renderers/common/Backend.ts
 +++ b/src-testing/src/renderers/common/Backend.ts
 @@ -1,10 +1,38 @@
@@ -4315,7 +4315,7 @@ index 41eb1282..a1e2855d 100644
          return false;
      }
  
-@@ -671,7 +727,11 @@ class Backend {
+@@ -679,7 +735,11 @@ class Backend {
       * @param {Object} object - The object.
       * @return {Object} The object's dictionary.
       */
@@ -4328,7 +4328,7 @@ index 41eb1282..a1e2855d 100644
          let map = this.data.get(object);
  
          if (map === undefined) {
-@@ -689,7 +749,7 @@ class Backend {
+@@ -697,7 +757,7 @@ class Backend {
       * @param {Object} object - The object.
       * @return {boolean} Whether a dictionary for the given object as been defined or not.
       */
@@ -4337,7 +4337,7 @@ index 41eb1282..a1e2855d 100644
          return this.data.has(object);
      }
  
-@@ -698,7 +758,7 @@ class Backend {
+@@ -706,7 +766,7 @@ class Backend {
       *
       * @param {Object} object - The object to delete.
       */
@@ -7051,7 +7051,7 @@ index 5e6575e8..96ef8177 100644
  declare class RenderPipeline {
      renderer: Renderer;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index e260c451..4abc3aea 100644
+index 728d00fd..946023a5 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -8116,7 +8116,7 @@ index e260c451..4abc3aea 100644
      }
  
      /**
-@@ -2481,7 +2648,7 @@ class Renderer {
+@@ -2510,7 +2677,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?(Vector2|Vector4)} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
       */
@@ -8125,7 +8125,7 @@ index e260c451..4abc3aea 100644
          if (rectangle !== null) {
              if (rectangle.isVector2) {
                  rectangle = _vector4
-@@ -2534,7 +2701,14 @@ class Renderer {
+@@ -2563,7 +2730,14 @@ class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -8141,7 +8141,7 @@ index e260c451..4abc3aea 100644
          this._textures.updateTexture(srcTexture);
          this._textures.updateTexture(dstTexture);
  
-@@ -2556,7 +2730,15 @@ class Renderer {
+@@ -2585,7 +2759,15 @@ class Renderer {
       * @param {number} [faceIndex=0] - The active cube face index.
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
@@ -8158,7 +8158,7 @@ index e260c451..4abc3aea 100644
          return this.backend.copyTextureToBuffer(renderTarget.textures[textureIndex], x, y, width, height, faceIndex);
      }
  
-@@ -2564,56 +2746,69 @@ class Renderer {
+@@ -2593,56 +2775,69 @@ class Renderer {
       * Analyzes the given 3D object's hierarchy and builds render lists from the
       * processed hierarchy.
       *
@@ -8246,7 +8246,7 @@ index e260c451..4abc3aea 100644
                              .applyMatrix4(object.matrixWorld)
                              .applyMatrix4(_projScreenMatrix);
                      }
-@@ -2623,7 +2818,7 @@ class Renderer {
+@@ -2652,7 +2847,7 @@ class Renderer {
  
                          for (let i = 0, l = groups.length; i < l; i++) {
                              const group = groups[i];
@@ -8255,7 +8255,7 @@ index e260c451..4abc3aea 100644
  
                              if (groupMaterial && groupMaterial.visible) {
                                  renderList.push(
-@@ -2648,7 +2843,7 @@ class Renderer {
+@@ -2677,7 +2872,7 @@ class Renderer {
              const baseRenderList = renderList;
  
              // replace render list
@@ -8264,7 +8264,7 @@ index e260c451..4abc3aea 100644
  
              renderList.begin();
  
-@@ -2671,12 +2866,11 @@ class Renderer {
+@@ -2700,12 +2895,11 @@ class Renderer {
      /**
       * Renders the given render bundles.
       *
@@ -8278,7 +8278,7 @@ index e260c451..4abc3aea 100644
          for (const bundle of bundles) {
              this._renderBundle(bundle, sceneRef, lightsNode);
          }
-@@ -2685,14 +2879,19 @@ class Renderer {
+@@ -2714,14 +2908,19 @@ class Renderer {
      /**
       * Renders the transparent objects from the given render lists.
       *
@@ -8300,7 +8300,7 @@ index e260c451..4abc3aea 100644
          if (doublePassList.length > 0) {
              // render back side
  
-@@ -2723,24 +2922,29 @@ class Renderer {
+@@ -2752,24 +2951,29 @@ class Renderer {
      /**
       * Renders the objects from the given render list.
       *
@@ -8337,7 +8337,7 @@ index e260c451..4abc3aea 100644
                  lightsNode,
                  clippingContext,
                  passId,
-@@ -2752,11 +2956,10 @@ class Renderer {
+@@ -2781,11 +2985,10 @@ class Renderer {
       * Retrieves shadow nodes for the given material. This is used to setup shadow passes.
       * The result is cached per material and updated when the material's version changes.
       *
@@ -8350,7 +8350,7 @@ index e260c451..4abc3aea 100644
          const version = material.version;
  
          let cache = this._cacheShadowNodes.get(material);
-@@ -2849,7 +3052,17 @@ class Renderer {
+@@ -2878,7 +3081,17 @@ class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -8369,7 +8369,7 @@ index e260c451..4abc3aea 100644
          let materialOverride = false;
          let materialColorNode;
          let materialDepthNode;
-@@ -2938,7 +3151,7 @@ class Renderer {
+@@ -2967,7 +3180,7 @@ class Renderer {
       * @param {string} name - The compatibility's name.
       * @return {boolean} Whether the compatibility is supported or not.
       */
@@ -8378,7 +8378,7 @@ index e260c451..4abc3aea 100644
          return this.backend.hasCompatibility(name);
      }
  
-@@ -2946,7 +3159,6 @@ class Renderer {
+@@ -2975,7 +3188,6 @@ class Renderer {
       * This method represents the default `_handleObjectFunction` implementation which creates
       * a render object from the given data and performs the draw command with the selected backend.
       *
@@ -8386,7 +8386,7 @@ index e260c451..4abc3aea 100644
       * @param {Object3D} object - The 3D object.
       * @param {Material} material - The object's material.
       * @param {Scene} scene - The scene the 3D object belongs to.
-@@ -2956,14 +3168,23 @@ class Renderer {
+@@ -2985,14 +3197,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -8413,7 +8413,7 @@ index e260c451..4abc3aea 100644
              clippingContext,
              passId,
          );
-@@ -2972,18 +3193,18 @@ class Renderer {
+@@ -3001,18 +3222,18 @@ class Renderer {
  
          //
  
@@ -8438,7 +8438,7 @@ index e260c451..4abc3aea 100644
  
          //
  
-@@ -2997,14 +3218,13 @@ class Renderer {
+@@ -3026,14 +3247,13 @@ class Renderer {
  
          this.backend.draw(renderObject, this.info);
  
@@ -8454,7 +8454,7 @@ index e260c451..4abc3aea 100644
       * @param {Object3D} object - The 3D object.
       * @param {Material} material - The object's material.
       * @param {Scene} scene - The scene the 3D object belongs to.
-@@ -3014,14 +3234,23 @@ class Renderer {
+@@ -3043,14 +3263,23 @@ class Renderer {
       * @param {ClippingContext} clippingContext - The clipping context.
       * @param {string} [passId] - An optional ID for identifying the pass.
       */
@@ -8481,7 +8481,7 @@ index e260c451..4abc3aea 100644
              clippingContext,
              passId,
          );
-@@ -3030,24 +3259,22 @@ class Renderer {
+@@ -3059,24 +3288,22 @@ class Renderer {
  
          //
  
@@ -8513,7 +8513,7 @@ index e260c451..4abc3aea 100644
          if (this._initialized) this.backend.updateSize();
      }
  
-@@ -3065,12 +3292,4 @@ class Renderer {
+@@ -3094,12 +3321,4 @@ class Renderer {
      }
  }
  
@@ -10893,7 +10893,7 @@ index 19a8dd2a..eac230ab 100644
  
          /**
 diff --git a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
-index 796e7b95..c08b91b0 100644
+index bcaf081a..97acc96d 100644
 --- a/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 +++ b/src-testing/src/renderers/webgl-fallback/WebGLBackend.ts
 @@ -14,6 +14,7 @@ import { WebGLBufferRenderer } from './WebGLBufferRenderer.js';
