@@ -825,6 +825,12 @@ declare class Renderer {
      */
     initTexture(texture: Texture): void;
     /**
+     * Initializes the given render target.
+     *
+     * @param {RenderTarget} renderTarget - The render target to intialize.
+     */
+    initRenderTarget(renderTarget: RenderTarget): void;
+    /**
      * Copies the current bound framebuffer into the given texture.
      *
      * @param {FramebufferTexture} framebufferTexture - The texture.
