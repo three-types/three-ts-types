@@ -140,7 +140,6 @@ export * from "./objects/SkinnedMesh.js";
 export * from "./objects/Sprite.js";
 export * from "./renderers/WebGL3DRenderTarget.js";
 export * from "./renderers/WebGLArrayRenderTarget.js";
-export * from "./renderers/WebGLCubeRenderTarget.js";
 export * from "./renderers/WebGLRenderTarget.js";
 export * from "./renderers/webxr/WebXRController.js";
 export * from "./scenes/Fog.js";
