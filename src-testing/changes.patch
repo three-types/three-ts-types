@@ -7051,7 +7051,7 @@ index 5e6575e8..96ef8177 100644
  declare class RenderPipeline {
      renderer: Renderer;
 diff --git a/src-testing/src/renderers/common/Renderer.ts b/src-testing/src/renderers/common/Renderer.ts
-index 728d00fd..946023a5 100644
+index 728d00fd..57f2d7ec 100644
 --- a/src-testing/src/renderers/common/Renderer.ts
 +++ b/src-testing/src/renderers/common/Renderer.ts
 @@ -28,6 +28,7 @@ import { Frustum } from '../../math/Frustum.js';
@@ -8116,6 +8116,15 @@ index 728d00fd..946023a5 100644
      }
  
      /**
+@@ -2480,7 +2647,7 @@ class Renderer {
+      *
+      * @param {RenderTarget} renderTarget - The render target to intialize.
+      */
+-    initRenderTarget(renderTarget) {
++    initRenderTarget(renderTarget: RenderTarget) {
+         if (this._initialized === false) {
+             throw new Error(
+                 'Renderer: .initRenderTarget() called before the backend is initialized. Use "await renderer.init();" before before using this method.',
 @@ -2510,7 +2677,7 @@ class Renderer {
       * @param {FramebufferTexture} framebufferTexture - The texture.
       * @param {?(Vector2|Vector4)} [rectangle=null] - A two or four dimensional vector that defines the rectangular portion of the framebuffer that should be copied.
