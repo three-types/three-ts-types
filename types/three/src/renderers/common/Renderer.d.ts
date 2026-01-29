@@ -829,7 +829,7 @@ declare class Renderer {
      *
      * @param {RenderTarget} renderTarget - The render target to intialize.
      */
-    initRenderTarget(renderTarget: any): void;
+    initRenderTarget(renderTarget: RenderTarget): void;
     /**
      * Copies the current bound framebuffer into the given texture.
      *
