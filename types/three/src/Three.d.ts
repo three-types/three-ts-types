@@ -36,6 +36,7 @@ export type {
 export type { WebGLTextures } from "./renderers/webgl/WebGLTextures.js";
 export type { WebGLUniforms } from "./renderers/webgl/WebGLUniforms.js";
 export * from "./renderers/webgl/WebGLUtils.js";
+export * from "./renderers/WebGLCubeRenderTarget.js";
 export * from "./renderers/WebGLRenderer.js";
 export type {
     WebXRController,

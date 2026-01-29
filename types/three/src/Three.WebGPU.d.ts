@@ -19,6 +19,7 @@ export { default as NodeObjectLoader } from "./loaders/nodes/NodeObjectLoader.js
 export * from "./nodes/Nodes.js";
 export { default as BlendMode } from "./renderers/common/BlendMode.js";
 export { default as CanvasTarget } from "./renderers/common/CanvasTarget.js";
+export { default as CubeRenderTarget } from "./renderers/common/CubeRenderTarget.js";
 export { default as InspectorBase } from "./renderers/common/InspectorBase.js";
 import * as TSL from "./nodes/TSL.js";
 export { TSL };

@@ -1705,15 +1705,16 @@ index b24b6e34..d4b662b4 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Matrix4 } from '../math/Matrix4.js';
 diff --git a/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts b/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
-index 28a2ba9c..6779b98c 100644
+index 28a2ba9c..80273443 100644
 --- a/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/cameras/CubeCamera.d.ts
-@@ -1,3 +1,25 @@
+@@ -1,3 +1,26 @@
 +import { Object3D } from '../core/Object3D.js';
 +import { CoordinateSystem } from "../constants.js";
 +import { RenderTarget } from "../core/RenderTarget.js";
 +import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 +import { Camera } from "./Camera.js";
++import CubeRenderTarget from "../renderers/common/CubeRenderTarget.js";
 +
 +export interface CubeCameraRenderer {
 +    coordinateSystem: CoordinateSystem;
@@ -1734,7 +1735,7 @@ index 28a2ba9c..6779b98c 100644
  /**
   * A special type of camera that is positioned in 3D space to render its surroundings into a
   * cube render target. The render target can then be used as an environment map for rendering
-@@ -25,8 +47,6 @@
+@@ -25,8 +48,6 @@
   * car.visible = true;
   * renderer.render( scene, camera );
   * ```
@@ -1743,11 +1744,13 @@ index 28a2ba9c..6779b98c 100644
   */
  export class CubeCamera extends Object3D {
      /**
-@@ -37,24 +57,19 @@ export class CubeCamera extends Object3D {
+@@ -36,25 +57,20 @@ export class CubeCamera extends Object3D {
+      * @param {number} far - The camera's far plane.
       * @param {WebGLCubeRenderTarget} renderTarget - The cube render target.
       */
-     constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget);
+-    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget);
 -    type: string;
++    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget | CubeRenderTarget);
      /**
       * A reference to the cube render target.
 -     *
@@ -1769,7 +1772,7 @@ index 28a2ba9c..6779b98c 100644
       * @default 0
       */
      activeMipmapLevel: number;
-@@ -69,6 +84,5 @@ export class CubeCamera extends Object3D {
+@@ -69,6 +85,5 @@ export class CubeCamera extends Object3D {
       * @param {(Renderer|WebGLRenderer)} renderer - The renderer.
       * @param {Scene} scene - The scene to render.
       */
