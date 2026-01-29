@@ -1,6 +1,7 @@
 import { CoordinateSystem } from "../constants.js";
 import { Object3D } from "../core/Object3D.js";
 import { RenderTarget } from "../core/RenderTarget.js";
+import CubeRenderTarget from "../renderers/common/CubeRenderTarget.js";
 import { WebGLCubeRenderTarget } from "../renderers/WebGLCubeRenderTarget.js";
 import { Camera } from "./Camera.js";
 
@@ -56,7 +57,7 @@ export class CubeCamera extends Object3D {
      * @param {number} far - The camera's far plane.
      * @param {WebGLCubeRenderTarget} renderTarget - The cube render target.
      */
-    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget);
+    constructor(near: number, far: number, renderTarget: WebGLCubeRenderTarget | CubeRenderTarget);
     /**
      * A reference to the cube render target.
      */
