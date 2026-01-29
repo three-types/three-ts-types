@@ -1,5 +1,4 @@
-import { RenderTarget } from "../../core/RenderTarget.js";
-import { RenderTargetOptions } from "../../core/RenderTarget.js";
+import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Texture } from "../../textures/Texture.js";
 import { WebGLRenderer } from "../WebGLRenderer.js";
 import Renderer from "./Renderer.js";
