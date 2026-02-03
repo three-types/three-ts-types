@@ -6,7 +6,8 @@ import { SpotLight } from "../SpotLight.js";
  */
 declare class IESSpotLight extends SpotLight {
     /**
-     * TODO
+     * The IES map. It's a lookup table that stores normalized attenuation factors
+     * (0.0 to 1.0) that represent the light's intensity at a specific angle.
      *
      * @default null
      */
