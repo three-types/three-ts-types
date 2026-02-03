@@ -14325,7 +14325,7 @@ index 229033d79..da8f94d50 100644
      gui.add(pitch, 'value', 0.5, 2, 0.01).name('pitch');
      gui.add(delayVolume, 'value', 0, 1, 0.01).name('delayVolume');
 diff --git a/examples-testing/examples/webgpu_compute_birds.ts b/examples-testing/examples/webgpu_compute_birds.ts
-index c602920ee..802afddb6 100644
+index 06c3b4a61..72c593d33 100644
 --- a/examples-testing/examples/webgpu_compute_birds.ts
 +++ b/examples-testing/examples/webgpu_compute_birds.ts
 @@ -35,13 +35,24 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14366,7 +14366,7 @@ index c602920ee..802afddb6 100644
              for (let i = 0; i < arguments.length; i++) {
                  vertices.array[v++] = arguments[i];
              }
-@@ -374,7 +385,7 @@ function init() {
+@@ -378,7 +389,7 @@ function init() {
  
      window.addEventListener('resize', onWindowResize);
  
@@ -14375,7 +14375,7 @@ index c602920ee..802afddb6 100644
      gui.add(effectController.separation, 'value', 0.0, 100.0, 1.0).name('Separation');
      gui.add(effectController.alignment, 'value', 0.0, 100, 0.001).name('Alignment ');
      gui.add(effectController.cohesion, 'value', 0.0, 100, 0.025).name('Cohesion');
-@@ -387,7 +398,7 @@ function onWindowResize() {
+@@ -391,7 +402,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -14385,7 +14385,7 @@ index c602920ee..802afddb6 100644
  
      pointer.x = (event.clientX / window.innerWidth) * 2.0 - 1.0;
 diff --git a/examples-testing/examples/webgpu_compute_cloth.ts b/examples-testing/examples/webgpu_compute_cloth.ts
-index 59cb8a519..d2cc6ac7d 100644
+index f4dd08644..b5950ad0a 100644
 --- a/examples-testing/examples/webgpu_compute_cloth.ts
 +++ b/examples-testing/examples/webgpu_compute_cloth.ts
 @@ -24,7 +24,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -14710,7 +14710,7 @@ index e00fe068f..476468a0a 100644
      totalPass = totalPass.mul(vignette);
      totalPass = totalPass.add(teapotTreePass.mul(10).add(teapotTreePassBlurred).toInspector('Teapot Blur'));
 diff --git a/examples-testing/examples/webgpu_compute_points.ts b/examples-testing/examples/webgpu_compute_points.ts
-index b51bafeab..34d18d6ef 100644
+index eab1d9f61..65a487a75 100644
 --- a/examples-testing/examples/webgpu_compute_points.ts
 +++ b/examples-testing/examples/webgpu_compute_points.ts
 @@ -4,8 +4,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -15128,20 +15128,25 @@ index 7f14133fd..7be64774d 100644
      gui.add(scattering, 'value', 0, 5).name('scattering factor');
      gui.add(params, 'scatteringEnabled')
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index a9bd4ef54..15d071f9a 100644
+index cc4ce7688..c2dd7ffba 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,25 +1,28 @@
+@@ -1,29 +1,42 @@
  import * as THREE from 'three/webgpu';
  
 -import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
--import { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
+-import { anaglyphPass, AnaglyphAlgorithm, AnaglyphColorMode } from 'three/addons/tsl/display/AnaglyphPassNode.js';
 -import { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
 +import StereoPassNode, { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
-+import AnaglyphPassNode, { anaglyphPass } from 'three/addons/tsl/display/AnaglyphPassNode.js';
++import AnaglyphPassNode, {
++    anaglyphPass,
++    AnaglyphAlgorithm,
++    AnaglyphColorMode,
++} from 'three/addons/tsl/display/AnaglyphPassNode.js';
 +import ParallaxBarrierPassNode, { parallaxBarrierPass } from 'three/addons/tsl/display/ParallaxBarrierPassNode.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { Inspector } from 'three/addons/inspector/Inspector.js';
++import { ParametersGroup } from 'three/addons/inspector/tabs/Parameters.js';
  
 -let camera, scene, renderer, renderPipeline;
 +let camera: THREE.PerspectiveCamera,
@@ -15155,20 +15160,30 @@ index a9bd4ef54..15d071f9a 100644
 -let mesh, dummy, timer;
 +let mesh: THREE.InstancedMesh, dummy: THREE.Mesh, timer: THREE.Timer;
  
+-let anaglyphFolder;
++let anaglyphFolder: ParametersGroup;
+ 
  const position = new THREE.Vector3();
  
 -const params = {
-+const params: { effect: 'stereo' | 'anaglyph' | 'parallaxBarrier'; eyeSep: number } = {
++const params: {
++    effect: 'stereo' | 'anaglyph' | 'parallaxBarrier';
++    eyeSep: number;
++    anaglyphAlgorithm: AnaglyphAlgorithm;
++    anaglyphColorMode: AnaglyphColorMode;
++} = {
      effect: 'stereo',
      eyeSep: 0.064,
+     anaglyphAlgorithm: 'dubois',
+     anaglyphColorMode: 'redCyan',
  };
  
 -const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' };
 +const effects = { Stereo: 'stereo', Anaglyph: 'anaglyph', ParallaxBarrier: 'parallaxBarrier' } as const;
  
- init();
- 
-@@ -77,7 +80,7 @@ function init() {
+ const anaglyphAlgorithms = {
+     True: AnaglyphAlgorithm.TRUE,
+@@ -97,7 +110,7 @@ function init() {
  
      renderPipeline.outputNode = stereo;
  
@@ -15177,7 +15192,7 @@ index a9bd4ef54..15d071f9a 100644
      gui.add(params, 'effect', effects).onChange(update);
      gui.add(params, 'eyeSep', 0.001, 0.15, 0.001).onChange(function (value) {
          stereo.stereo.eyeSep = value;
-@@ -93,7 +96,7 @@ function init() {
+@@ -129,7 +142,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -15185,8 +15200,8 @@ index a9bd4ef54..15d071f9a 100644
 +function update(value: 'stereo' | 'anaglyph' | 'parallaxBarrier') {
      if (value === 'stereo') {
          renderPipeline.outputNode = stereo;
-     } else if (value === 'anaglyph') {
-@@ -112,7 +115,7 @@ function onWindowResize() {
+         anaglyphFolder.paramList.domElement.style.display = 'none';
+@@ -151,7 +164,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -17455,7 +17470,7 @@ index 91120dfb5..53282897e 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_mrt.ts b/examples-testing/examples/webgpu_mrt.ts
-index 76c0cc3a3..42c19414c 100644
+index 2b41adc9c..78ef5384d 100644
 --- a/examples-testing/examples/webgpu_mrt.ts
 +++ b/examples-testing/examples/webgpu_mrt.ts
 @@ -20,8 +20,8 @@ import { UltraHDRLoader } from 'three/addons/loaders/UltraHDRLoader.js';
@@ -18633,7 +18648,7 @@ index 24c01a950..b820da439 100644
          if (value === true) {
              renderPipeline.outputNode = fxaaPass;
 diff --git a/examples-testing/examples/webgpu_postprocessing_godrays.ts b/examples-testing/examples/webgpu_postprocessing_godrays.ts
-index a5df58b4e..15849f227 100644
+index 32e619a47..fe3c281c6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_godrays.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_godrays.ts
 @@ -9,7 +9,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
