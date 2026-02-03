@@ -14,13 +14,14 @@ declare class BilateralBlurNode extends TempNode<"vec4"> {
     );
 
     setSize(width: number, height: number): void;
+    getTextureNode(): TextureNode;
 }
 
 export default BilateralBlurNode;
 
 export const bilateralBlur: (
     node: Node<"vec4">,
-    directionNode: Node<"vec2"> | Node<"float">,
-    sigma: number,
-    sigmaColor: number,
+    directionNode?: Node<"vec2"> | Node<"float">,
+    sigma?: number,
+    sigmaColor?: number,
 ) => BilateralBlurNode;

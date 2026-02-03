@@ -2,8 +2,8 @@ import { Camera, Color, Node } from "three/webgpu";
 
 export interface DepthAwareBlendOptions {
     blendColor?: Node | Color;
-    edgeRadius?: number;
-    edgeStrength?: number;
+    edgeRadius?: Node<"int"> | number;
+    edgeStrength?: Node<"float"> | number;
 }
 
 export const depthAwareBlend: (
