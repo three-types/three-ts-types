@@ -126,7 +126,7 @@ declare class NodeMaterialObserver {
      * @param {RenderObject} renderObject - The render object.
      * @return {Object} The monitoring data.
      */
-    getRenderObjectData(renderObject: RenderObject): RenderObjectData;
+    getRenderObjectData(renderObject: RenderObject): RenderObjectData | undefined;
     /**
      * Returns an attribute data structure holding the attributes versions for
      * monitoring.
