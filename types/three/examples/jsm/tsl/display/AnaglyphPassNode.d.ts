@@ -22,6 +22,10 @@ type AnaglyphColorMode = (typeof AnaglyphColorMode)[keyof typeof AnaglyphColorMo
 declare class AnaglyphPassNode extends StereoCompositePassNode {
     readonly isAnaglyphPassNode: true;
 
+    eyeSep: number;
+
+    planeDistance: number;
+
     constructor(scene: Scene, camera: Camera);
 
     get algorithm(): AnaglyphAlgorithm;
