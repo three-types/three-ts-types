@@ -73,6 +73,7 @@ interface AttributesData {
     };
 }
 interface RenderObjectData {
+    renderId: number;
     material: MaterialData;
     geometry: {
         id: number;
@@ -126,7 +127,7 @@ declare class NodeMaterialObserver {
      * @param {RenderObject} renderObject - The render object.
      * @return {Object} The monitoring data.
      */
-    getRenderObjectData(renderObject: RenderObject): RenderObjectData | undefined;
+    getRenderObjectData(renderObject: RenderObject): RenderObjectData;
     /**
      * Returns an attribute data structure holding the attributes versions for
      * monitoring.
