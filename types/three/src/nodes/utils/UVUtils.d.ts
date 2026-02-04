@@ -1,7 +1,10 @@
 import ContextNode from "../core/ContextNode.js";
 import Node from "../core/Node.js";
 
-export function replaceDefaultUV(callback: (node: Node) => Node, node?: Node | null): ContextNode<unknown>;
+export function replaceDefaultUV<TNodeType>(
+    callback: ((node: Node) => Node<"vec2">) | Node<"vec2">,
+    node?: Node<TNodeType> | null,
+): ContextNode<TNodeType>;
 
 export const rotateUV: (
     uv: Node,

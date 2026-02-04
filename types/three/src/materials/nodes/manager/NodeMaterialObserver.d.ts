@@ -73,6 +73,7 @@ interface AttributesData {
     };
 }
 interface RenderObjectData {
+    renderId: number;
     material: MaterialData;
     geometry: {
         id: number;

@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index 4c5e4c7db..4f710ccca 100644
+index 044d26fe4..b0a13b9c2 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,14 @@
@@ -17,7 +17,7 @@ index 4c5e4c7db..4f710ccca 100644
  const refreshUniforms = [
      'alphaMap',
      'alphaTest',
-@@ -53,7 +64,38 @@ const refreshUniforms = [
+@@ -53,7 +64,39 @@ const refreshUniforms = [
      'thickness',
      'transmission',
      'transmissionMap',
@@ -35,6 +35,7 @@ index 4c5e4c7db..4f710ccca 100644
 +}
 +
 +interface RenderObjectData {
++    renderId: number;
 +    material: MaterialData;
 +    geometry: {
 +        id: number;
@@ -57,7 +58,7 @@ index 4c5e4c7db..4f710ccca 100644
  
  /**
   * A WeakMap to cache lights data for node materials.
-@@ -62,7 +104,7 @@ const refreshUniforms = [
+@@ -62,7 +105,7 @@ const refreshUniforms = [
   * @private
   * @type {WeakMap<LightsNode,Object>}
   */
@@ -66,7 +67,7 @@ index 4c5e4c7db..4f710ccca 100644
  
  /**
   * This class is used by {@link WebGPURenderer} as management component.
-@@ -70,12 +112,18 @@ const _lightsCache = new WeakMap();
+@@ -70,12 +113,18 @@ const _lightsCache = new WeakMap();
   * refresh right before they are going to be rendered or not.
   */
  class NodeMaterialObserver {
@@ -86,7 +87,7 @@ index 4c5e4c7db..4f710ccca 100644
          /**
           * A node material can be used by more than one render object so the
           * monitor must maintain a list of render objects.
-@@ -120,7 +168,7 @@ class NodeMaterialObserver {
+@@ -112,7 +161,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object is verified for the first time of this observer.
       */
@@ -95,7 +96,7 @@ index 4c5e4c7db..4f710ccca 100644
          const hasInitialized = this.renderObjects.has(renderObject);
  
          if (hasInitialized === false) {
-@@ -138,7 +186,7 @@ class NodeMaterialObserver {
+@@ -130,7 +179,7 @@ class NodeMaterialObserver {
       * @param {Renderer} renderer - The renderer.
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
@@ -104,7 +105,7 @@ index 4c5e4c7db..4f710ccca 100644
          const mrt = renderer.getMRT();
  
          return mrt !== null && mrt.has('velocity');
-@@ -150,7 +198,7 @@ class NodeMaterialObserver {
+@@ -142,7 +191,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {Object} The monitoring data.
       */
@@ -113,7 +114,7 @@ index 4c5e4c7db..4f710ccca 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -201,8 +249,8 @@ class NodeMaterialObserver {
+@@ -194,8 +243,8 @@ class NodeMaterialObserver {
       * @param {Object} attributes - The geometry attributes.
       * @return {Object} An object for monitoring the versions of attributes.
       */
@@ -124,7 +125,7 @@ index 4c5e4c7db..4f710ccca 100644
  
          for (const name in attributes) {
              const attribute = attributes[name];
-@@ -222,7 +270,7 @@ class NodeMaterialObserver {
+@@ -215,7 +264,7 @@ class NodeMaterialObserver {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether the node builder's material uses node properties or not.
       */
@@ -133,7 +134,7 @@ index 4c5e4c7db..4f710ccca 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -247,8 +295,8 @@ class NodeMaterialObserver {
+@@ -240,8 +289,8 @@ class NodeMaterialObserver {
       * @param {Material} material - The material.
       * @return {Object} An object for monitoring material properties.
       */
@@ -144,7 +145,7 @@ index 4c5e4c7db..4f710ccca 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -276,7 +324,7 @@ class NodeMaterialObserver {
+@@ -269,7 +318,7 @@ class NodeMaterialObserver {
       * @param {Array<Light>} lightsData - The current material lights.
       * @return {boolean} Whether the given render object has changed its state or not.
       */
@@ -153,7 +154,7 @@ index 4c5e4c7db..4f710ccca 100644
          const { object, material, geometry } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -437,14 +485,14 @@ class NodeMaterialObserver {
+@@ -430,14 +479,14 @@ class NodeMaterialObserver {
       * @param {Array<Light>} materialLights - The material lights.
       * @return {Array<Object>} The lights data for the given material lights.
       */
@@ -172,7 +173,7 @@ index 4c5e4c7db..4f710ccca 100644
              }
          }
  
-@@ -458,9 +506,9 @@ class NodeMaterialObserver {
+@@ -451,9 +500,9 @@ class NodeMaterialObserver {
       * @param {number} renderId - The render ID.
       * @return {Array<Object>} The lights for the given lights node and render ID.
       */
@@ -184,7 +185,7 @@ index 4c5e4c7db..4f710ccca 100644
  
              if (cached.renderId === renderId) {
                  return cached.lightsData;
-@@ -481,7 +529,7 @@ class NodeMaterialObserver {
+@@ -474,7 +523,7 @@ class NodeMaterialObserver {
       * @param {NodeFrame} nodeFrame - The current node frame.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
@@ -506,7 +507,7 @@ index 6ed843b11..62cfb6646 100644
 +    }
 +}
 diff --git a/src-testing/src/nodes/accessors/TextureNode.ts b/src-testing/src/nodes/accessors/TextureNode.ts
-index a1d19b0ab..6c63e6053 100644
+index d2a82b4e2..eafa089ff 100644
 --- a/src-testing/src/nodes/accessors/TextureNode.ts
 +++ b/src-testing/src/nodes/accessors/TextureNode.ts
 @@ -12,6 +12,10 @@ import { Compatibility, IntType, LessCompare, NearestFilter, UnsignedIntType } f
@@ -518,9 +519,9 @@ index a1d19b0ab..6c63e6053 100644
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Matrix3 } from '../../math/Matrix3.js';
  
- const EmptyTexture = /*@__PURE__*/ new Texture();
+ import NodeError from '../core/NodeError.js';
  
-@@ -20,11 +24,28 @@ const EmptyTexture = /*@__PURE__*/ new Texture();
+@@ -22,11 +26,28 @@ const EmptyTexture = /*@__PURE__*/ new Texture();
   *
   * @augments UniformNode
   */
@@ -550,7 +551,7 @@ index a1d19b0ab..6c63e6053 100644
      /**
       * Constructs a new texture node.
       *
-@@ -33,7 +54,12 @@ class TextureNode extends UniformNode {
+@@ -35,7 +56,12 @@ class TextureNode extends UniformNode {
       * @param {?Node<int>} [levelNode=null] - The level node.
       * @param {?Node<float>} [biasNode=null] - The bias node.
       */
@@ -564,7 +565,7 @@ index a1d19b0ab..6c63e6053 100644
          super(value);
  
          /**
-@@ -167,7 +193,7 @@ class TextureNode extends UniformNode {
+@@ -169,7 +195,7 @@ class TextureNode extends UniformNode {
          this.setUpdateMatrix(uvNode === null);
      }
  
@@ -573,7 +574,7 @@ index a1d19b0ab..6c63e6053 100644
          if (this.referenceNode) {
              this.referenceNode.value = value;
          } else {
-@@ -201,7 +227,7 @@ class TextureNode extends UniformNode {
+@@ -203,7 +229,7 @@ class TextureNode extends UniformNode {
       * @return {string} The node type.
       */
      getNodeType(/*builder*/) {
@@ -582,7 +583,7 @@ index a1d19b0ab..6c63e6053 100644
  
          if (this.value.type === UnsignedIntType) {
              return 'uvec4';
-@@ -259,7 +285,7 @@ class TextureNode extends UniformNode {
+@@ -261,7 +287,7 @@ class TextureNode extends UniformNode {
       * @param {boolean} value - The update toggle.
       * @return {TextureNode} A reference to this node.
       */
@@ -591,7 +592,7 @@ index a1d19b0ab..6c63e6053 100644
          this.updateMatrix = value;
  
          return this;
-@@ -273,7 +299,7 @@ class TextureNode extends UniformNode {
+@@ -275,7 +301,7 @@ class TextureNode extends UniformNode {
       * @param {Node} uvNode - The uv node to setup.
       * @return {Node} The updated uv node.
       */
@@ -600,7 +601,7 @@ index a1d19b0ab..6c63e6053 100644
          if (builder.isFlipY()) {
              if (this._flipYUniform === null) this._flipYUniform = uniform(false);
  
-@@ -297,7 +323,7 @@ class TextureNode extends UniformNode {
+@@ -299,7 +325,7 @@ class TextureNode extends UniformNode {
       *
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -609,7 +610,7 @@ index a1d19b0ab..6c63e6053 100644
          const properties = builder.getNodeProperties(this);
          properties.referenceNode = this.referenceNode;
  
-@@ -380,7 +406,7 @@ class TextureNode extends UniformNode {
+@@ -385,7 +411,7 @@ class TextureNode extends UniformNode {
       * @param {Node} uvNode - The uv node to generate code for.
       * @return {string} The generated code snippet.
       */
@@ -618,7 +619,7 @@ index a1d19b0ab..6c63e6053 100644
          return uvNode.build(builder, this.sampler === true ? 'vec2' : 'ivec2');
      }
  
-@@ -410,14 +436,14 @@ class TextureNode extends UniformNode {
+@@ -415,14 +441,14 @@ class TextureNode extends UniformNode {
       * @return {string} The generated code snippet.
       */
      generateSnippet(
@@ -641,7 +642,7 @@ index a1d19b0ab..6c63e6053 100644
          offsetSnippet,
      ) {
          const texture = this.value;
-@@ -483,9 +509,8 @@ class TextureNode extends UniformNode {
+@@ -488,9 +514,8 @@ class TextureNode extends UniformNode {
       * @param {string} output - The current output.
       * @return {string} The generated code snippet.
       */
@@ -652,7 +653,7 @@ index a1d19b0ab..6c63e6053 100644
          const properties = builder.getNodeProperties(this);
          const textureProperty = super.generate(builder, 'property');
  
-@@ -562,7 +587,7 @@ class TextureNode extends UniformNode {
+@@ -567,7 +592,7 @@ class TextureNode extends UniformNode {
       * @param {boolean} value - The sampler value to set.
       * @return {TextureNode} A reference to this texture node.
       */
@@ -661,7 +662,7 @@ index a1d19b0ab..6c63e6053 100644
          this.sampler = value;
  
          return this;
-@@ -609,7 +634,7 @@ class TextureNode extends UniformNode {
+@@ -614,7 +639,7 @@ class TextureNode extends UniformNode {
       * @param {Node<float>} amountNode - How blurred the texture should be.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -670,7 +671,7 @@ index a1d19b0ab..6c63e6053 100644
          const textureNode = this.clone();
          textureNode.biasNode = nodeObject(amountNode).mul(maxMipLevel(textureNode));
          textureNode.referenceNode = this.getBase();
-@@ -638,7 +663,7 @@ class TextureNode extends UniformNode {
+@@ -643,7 +668,7 @@ class TextureNode extends UniformNode {
       * @param {Node<int>} levelNode - The mip level to sample.
       * @return {TextureNode} A texture node representing the texture sample.
       */
@@ -944,7 +945,7 @@ index ffb7734e8..2dc76d1c9 100644
 +
  export default InputNode;
 diff --git a/src-testing/src/nodes/core/Node.ts b/src-testing/src/nodes/core/Node.ts
-index 74ebc61fc..e56b4524d 100644
+index e13316e55..678b5820d 100644
 --- a/src-testing/src/nodes/core/Node.ts
 +++ b/src-testing/src/nodes/core/Node.ts
 @@ -4,6 +4,8 @@ import { hash, hashArray, hashString } from './NodeUtils.js';
@@ -954,9 +955,9 @@ index 74ebc61fc..e56b4524d 100644
 +import NodeFrame from './NodeFrame.js';
 +import NodeBuilder from './NodeBuilder.js';
  
- const _parentBuildStage = {
-     analyze: 'setup',
-@@ -12,22 +14,106 @@ const _parentBuildStage = {
+ import StackTrace from './StackTrace.js';
+ 
+@@ -14,22 +16,106 @@ const _parentBuildStage = {
  
  let _nodeId = 0;
  
@@ -1067,7 +1068,7 @@ index 74ebc61fc..e56b4524d 100644
          super();
  
          /**
-@@ -142,11 +228,10 @@ class Node extends EventDispatcher {
+@@ -156,11 +242,10 @@ class Node extends EventDispatcher {
      /**
       * Set this property to `true` when the node should be regenerated.
       *
@@ -1080,7 +1081,7 @@ index 74ebc61fc..e56b4524d 100644
          if (value === true) {
              this.version++;
          }
-@@ -154,12 +239,9 @@ class Node extends EventDispatcher {
+@@ -168,12 +253,9 @@ class Node extends EventDispatcher {
  
      /**
       * The type of the class. The value is usually the constructor name.
@@ -1094,7 +1095,7 @@ index 74ebc61fc..e56b4524d 100644
      }
  
      /**
-@@ -169,7 +251,7 @@ class Node extends EventDispatcher {
+@@ -183,7 +265,7 @@ class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -1103,7 +1104,7 @@ index 74ebc61fc..e56b4524d 100644
          this.updateType = updateType;
          this.update = callback.bind(this);
  
-@@ -183,7 +265,7 @@ class Node extends EventDispatcher {
+@@ -197,7 +279,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1112,7 +1113,7 @@ index 74ebc61fc..e56b4524d 100644
          return this.onUpdate(callback, NodeUpdateType.FRAME);
      }
  
-@@ -194,7 +276,7 @@ class Node extends EventDispatcher {
+@@ -208,7 +290,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1121,7 +1122,7 @@ index 74ebc61fc..e56b4524d 100644
          return this.onUpdate(callback, NodeUpdateType.RENDER);
      }
  
-@@ -205,7 +287,7 @@ class Node extends EventDispatcher {
+@@ -219,7 +301,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1130,7 +1131,7 @@ index 74ebc61fc..e56b4524d 100644
          return this.onUpdate(callback, NodeUpdateType.OBJECT);
      }
  
-@@ -215,7 +297,7 @@ class Node extends EventDispatcher {
+@@ -229,7 +311,7 @@ class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -1139,7 +1140,7 @@ index 74ebc61fc..e56b4524d 100644
          this.updateReference = callback.bind(this);
  
          return this;
-@@ -228,7 +310,7 @@ class Node extends EventDispatcher {
+@@ -242,7 +324,7 @@ class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -1148,7 +1149,7 @@ index 74ebc61fc..e56b4524d 100644
          return this;
      }
  
-@@ -240,7 +322,7 @@ class Node extends EventDispatcher {
+@@ -254,7 +336,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -1157,7 +1158,7 @@ index 74ebc61fc..e56b4524d 100644
          return this.global;
      }
  
-@@ -264,19 +346,12 @@ class Node extends EventDispatcher {
+@@ -278,19 +360,12 @@ class Node extends EventDispatcher {
          this.dispatchEvent({ type: 'dispose' });
      }
  
@@ -1179,7 +1180,7 @@ index 74ebc61fc..e56b4524d 100644
          callback(this);
  
          for (const childNode of this.getChildren()) {
-@@ -287,11 +362,10 @@ class Node extends EventDispatcher {
+@@ -301,11 +376,10 @@ class Node extends EventDispatcher {
      /**
       * Returns the child nodes of this node.
       *
@@ -1192,7 +1193,7 @@ index 74ebc61fc..e56b4524d 100644
          const children = [];
  
          // avoid circular references
-@@ -339,7 +413,7 @@ class Node extends EventDispatcher {
+@@ -353,7 +427,7 @@ class Node extends EventDispatcher {
       * @param {Set<Node>} [ignores=null] - A set of nodes to ignore during the computation of the cache key.
       * @return {number} The cache key of the node.
       */
@@ -1201,7 +1202,7 @@ index 74ebc61fc..e56b4524d 100644
          force = force || this.version !== this._cacheKeyVersion;
  
          if (force === true || this._cacheKey === null) {
-@@ -388,7 +462,7 @@ class Node extends EventDispatcher {
+@@ -402,7 +476,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -1210,7 +1211,7 @@ index 74ebc61fc..e56b4524d 100644
          return this.uuid;
      }
  
-@@ -427,7 +501,7 @@ class Node extends EventDispatcher {
+@@ -441,7 +515,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1219,7 +1220,7 @@ index 74ebc61fc..e56b4524d 100644
          const type = this.getNodeType(builder);
          const elementType = builder.getElementType(type);
  
-@@ -441,7 +515,7 @@ class Node extends EventDispatcher {
+@@ -455,7 +529,7 @@ class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -1228,7 +1229,7 @@ index 74ebc61fc..e56b4524d 100644
          return 'void';
      }
  
-@@ -451,7 +525,7 @@ class Node extends EventDispatcher {
+@@ -465,7 +539,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The type of the node.
       */
@@ -1237,7 +1238,7 @@ index 74ebc61fc..e56b4524d 100644
          const nodeProperties = builder.getNodeProperties(this);
  
          if (nodeProperties.outputNode) {
-@@ -470,7 +544,7 @@ class Node extends EventDispatcher {
+@@ -484,7 +558,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node} The shared node if possible. Otherwise `this` is returned.
       */
@@ -1246,7 +1247,7 @@ index 74ebc61fc..e56b4524d 100644
          const hash = this.getHash(builder);
          const nodeFromHash = builder.getNodeFromHash(hash);
  
-@@ -483,7 +557,7 @@ class Node extends EventDispatcher {
+@@ -497,7 +571,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -1255,7 +1256,7 @@ index 74ebc61fc..e56b4524d 100644
          return null;
      }
  
-@@ -495,13 +569,13 @@ class Node extends EventDispatcher {
+@@ -509,13 +583,13 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -1271,7 +1272,7 @@ index 74ebc61fc..e56b4524d 100644
          }
  
          // return a outputNode if exists or null
-@@ -516,7 +590,7 @@ class Node extends EventDispatcher {
+@@ -530,7 +604,7 @@ class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @param {?Node} output - The target output node.
       */
@@ -1280,7 +1281,7 @@ index 74ebc61fc..e56b4524d 100644
          const usageCount = builder.increaseUsage(this);
  
          if (this.parents === true) {
-@@ -532,8 +606,8 @@ class Node extends EventDispatcher {
+@@ -546,8 +620,8 @@ class Node extends EventDispatcher {
              const nodeProperties = builder.getNodeProperties(this);
  
              for (const childNode of Object.values(nodeProperties)) {
@@ -1291,7 +1292,7 @@ index 74ebc61fc..e56b4524d 100644
                  }
              }
          }
-@@ -547,7 +621,7 @@ class Node extends EventDispatcher {
+@@ -561,7 +635,7 @@ class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -1300,7 +1301,7 @@ index 74ebc61fc..e56b4524d 100644
          const { outputNode } = builder.getNodeProperties(this);
  
          if (outputNode && outputNode.isNode === true) {
-@@ -563,7 +637,7 @@ class Node extends EventDispatcher {
+@@ -577,7 +651,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1309,7 +1310,7 @@ index 74ebc61fc..e56b4524d 100644
          warn('Abstract function.');
      }
  
-@@ -575,7 +649,7 @@ class Node extends EventDispatcher {
+@@ -589,7 +663,7 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1318,7 +1319,7 @@ index 74ebc61fc..e56b4524d 100644
          warn('Abstract function.');
      }
  
-@@ -587,11 +661,11 @@ class Node extends EventDispatcher {
+@@ -601,11 +675,11 @@ class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -1332,7 +1333,7 @@ index 74ebc61fc..e56b4524d 100644
          if (this._beforeNodes === null) this._beforeNodes = [];
  
          this._beforeNodes.push(node);
-@@ -609,7 +683,7 @@ class Node extends EventDispatcher {
+@@ -623,7 +697,7 @@ class Node extends EventDispatcher {
       * @param {?(string|Node)} [output=null] - Can be used to define the output type.
       * @return {?(Node|string)} The result of the build process, depending on the build stage.
       */
@@ -1341,7 +1342,7 @@ index 74ebc61fc..e56b4524d 100644
          const refNode = this.getShared(builder);
  
          if (this !== refNode) {
-@@ -683,14 +757,14 @@ class Node extends EventDispatcher {
+@@ -697,14 +771,14 @@ class Node extends EventDispatcher {
  				}*/
  
                  for (const childNode of Object.values(properties)) {
@@ -1360,7 +1361,7 @@ index 74ebc61fc..e56b4524d 100644
                      }
                  }
              }
-@@ -762,10 +836,10 @@ class Node extends EventDispatcher {
+@@ -776,10 +850,10 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The output JSON object.
       */
@@ -1373,7 +1374,7 @@ index 74ebc61fc..e56b4524d 100644
  
          for (const { property, index, childNode } of nodeChildren) {
              if (index !== undefined) {
-@@ -773,7 +847,9 @@ class Node extends EventDispatcher {
+@@ -787,7 +861,9 @@ class Node extends EventDispatcher {
                      inputNodes[property] = Number.isInteger(index) ? [] : {};
                  }
  
@@ -1384,7 +1385,7 @@ index 74ebc61fc..e56b4524d 100644
              } else {
                  inputNodes[property] = childNode.toJSON(json.meta).uuid;
              }
-@@ -789,33 +865,33 @@ class Node extends EventDispatcher {
+@@ -803,33 +879,33 @@ class Node extends EventDispatcher {
       *
       * @param {Object} json - The JSON object.
       */
@@ -1428,7 +1429,7 @@ index 74ebc61fc..e56b4524d 100644
                  }
              }
          }
-@@ -827,7 +903,7 @@ class Node extends EventDispatcher {
+@@ -841,7 +917,7 @@ class Node extends EventDispatcher {
       * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
       * @return {Object} The serialized node.
       */
@@ -1437,7 +1438,7 @@ index 74ebc61fc..e56b4524d 100644
          const { uuid, type } = this;
          const isRoot = meta === undefined || typeof meta === 'string';
  
-@@ -836,18 +912,18 @@ class Node extends EventDispatcher {
+@@ -850,18 +926,18 @@ class Node extends EventDispatcher {
                  textures: {},
                  images: {},
                  nodes: {},
@@ -1459,7 +1460,7 @@ index 74ebc61fc..e56b4524d 100644
                  metadata: {
                      version: 4.7,
                      type: 'Node',
-@@ -855,7 +931,7 @@ class Node extends EventDispatcher {
+@@ -869,7 +945,7 @@ class Node extends EventDispatcher {
                  },
              };
  
@@ -1468,7 +1469,7 @@ index 74ebc61fc..e56b4524d 100644
  
              this.serialize(data);
  
-@@ -864,12 +940,12 @@ class Node extends EventDispatcher {
+@@ -878,12 +954,12 @@ class Node extends EventDispatcher {
  
          // TODO: Copied from Object3D.toJSON
  
@@ -1483,7 +1484,7 @@ index 74ebc61fc..e56b4524d 100644
                  values.push(data);
              }
  
-@@ -877,9 +953,9 @@ class Node extends EventDispatcher {
+@@ -891,9 +967,9 @@ class Node extends EventDispatcher {
          }
  
          if (isRoot) {
@@ -1496,13 +1497,29 @@ index 74ebc61fc..e56b4524d 100644
  
              if (textures.length > 0) data.textures = textures;
              if (images.length > 0) data.images = images;
-@@ -890,4 +966,106 @@ class Node extends EventDispatcher {
+@@ -904,12 +980,116 @@ class Node extends EventDispatcher {
      }
  }
+ 
+-/**
+- * Enables or disables the automatic capturing of stack traces for nodes.
+- *
+- * @type {boolean}
+- * @default false
+- */
+ Node.captureStackTrace = false;
  
 +declare const Node: {
 +    new <TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
 +    new (nodeType?: string | null): Node;
++
++    /**
++     * Enables or disables the automatic capturing of stack traces for nodes.
++     *
++     * @type {boolean}
++     * @default false
++     */
++    captureStackTrace: boolean;
 +};
 +
 +export interface NodeElements {}
@@ -1636,7 +1653,7 @@ index 393325c38..5daf10951 100644
           * This flag can be used for type testing.
           *
 diff --git a/src-testing/src/nodes/core/NodeBuilder.ts b/src-testing/src/nodes/core/NodeBuilder.ts
-index 4a5e22d5d..6fd1c4965 100644
+index 7b3f98703..b1343d9f8 100644
 --- a/src-testing/src/nodes/core/NodeBuilder.ts
 +++ b/src-testing/src/nodes/core/NodeBuilder.ts
 @@ -9,7 +9,7 @@ import StructType from './StructType.js';
@@ -2950,17 +2967,10 @@ index 09ff8b517..2c2d65ded 100644
      get groupNode() {
          return this.node.groupNode;
 diff --git a/src-testing/src/nodes/core/NodeUtils.ts b/src-testing/src/nodes/core/NodeUtils.ts
-index 626b5c11a..ab3e2435b 100644
+index 77daa3445..5eb1cff8b 100644
 --- a/src-testing/src/nodes/core/NodeUtils.ts
 +++ b/src-testing/src/nodes/core/NodeUtils.ts
-@@ -6,13 +6,14 @@ import { Vector2 } from '../../math/Vector2.js';
- import { Vector3 } from '../../math/Vector3.js';
- import { Vector4 } from '../../math/Vector4.js';
- import { error } from '../../utils.js';
-+import Node from './Node.js';
- 
- // cyrb53 (c) 2018 bryc (github.com/bryc). License: Public domain. Attribution appreciated.
- // A fast and simple 64-bit (or 53-bit) string hash function with decent collision resistance.
+@@ -14,7 +14,7 @@ import StackTrace from '../core/StackTrace.js';
  // Largely inspired by MurmurHash2/3, but with a focus on speed/simplicity.
  // See https://stackoverflow.com/questions/7616461/generate-a-hash-from-string-in-javascript/52171480#52171480
  // https://github.com/bryc/code/blob/master/jshash/experimental/cyrb53.js
@@ -2969,7 +2979,7 @@ index 626b5c11a..ab3e2435b 100644
      let h1 = 0xdeadbeef ^ seed,
          h2 = 0x41c6ce57 ^ seed;
  
-@@ -46,7 +47,7 @@ function cyrb53(value, seed = 0) {
+@@ -48,7 +48,7 @@ function cyrb53(value, seed = 0) {
   * @param {string} str - The string to be hashed.
   * @return {number} The hash.
   */
@@ -2978,7 +2988,7 @@ index 626b5c11a..ab3e2435b 100644
  
  /**
   * Computes a hash for the given array.
-@@ -56,7 +57,7 @@ export const hashString = str => cyrb53(str);
+@@ -58,7 +58,7 @@ export const hashString = str => cyrb53(str);
   * @param {Array<number>} array - The array to be hashed.
   * @return {number} The hash.
   */
@@ -2987,7 +2997,7 @@ index 626b5c11a..ab3e2435b 100644
  
  /**
   * Computes a hash for the given list of parameters.
-@@ -66,7 +67,7 @@ export const hashArray = array => cyrb53(array);
+@@ -68,7 +68,7 @@ export const hashArray = array => cyrb53(array);
   * @param {...number} params - A list of parameters.
   * @return {number} The hash.
   */
@@ -2996,7 +3006,7 @@ index 626b5c11a..ab3e2435b 100644
  
  const typeFromLength = /*@__PURE__*/ new Map([
      [1, 'float'],
-@@ -189,7 +190,7 @@ export function getAlignmentFromType(type) {
+@@ -191,7 +191,7 @@ export function getAlignmentFromType(type) {
   * @param {any} value - The value.
   * @return {?string} The data type.
   */
@@ -3077,10 +3087,10 @@ index d434bea5f..10b0462ee 100644
  
          /**
 diff --git a/src-testing/src/nodes/core/StackNode.ts b/src-testing/src/nodes/core/StackNode.ts
-index 6d0ca271b..6137aa6f8 100644
+index f96d9923f..a1b5c9d51 100644
 --- a/src-testing/src/nodes/core/StackNode.ts
 +++ b/src-testing/src/nodes/core/StackNode.ts
-@@ -2,6 +2,7 @@ import Node from './Node.js';
+@@ -3,6 +3,7 @@ import StackTrace from '../core/StackTrace.js';
  import { select } from '../math/ConditionalNode.js';
  import { ShaderNode, nodeProxy, getCurrentStack, setCurrentStack, nodeObject } from '../tsl/TSLBase.js';
  import { error } from '../../utils.js';
@@ -3088,7 +3098,7 @@ index 6d0ca271b..6137aa6f8 100644
  
  /**
   * Stack is a helper for Nodes that need to produce stack-based code instead of continuous flow.
-@@ -14,6 +15,16 @@ class StackNode extends Node {
+@@ -15,6 +16,16 @@ class StackNode extends Node {
          return 'StackNode';
      }
  
@@ -3105,7 +3115,7 @@ index 6d0ca271b..6137aa6f8 100644
      /**
       * Constructs a new stack node.
       *
-@@ -87,7 +98,7 @@ class StackNode extends Node {
+@@ -88,7 +99,7 @@ class StackNode extends Node {
          return this.hasOutput(builder) ? this.outputNode.getElementType(builder) : 'void';
      }
  
@@ -3114,16 +3124,16 @@ index 6d0ca271b..6137aa6f8 100644
          return this.hasOutput(builder) ? this.outputNode.getNodeType(builder) : 'void';
      }
  
-@@ -102,7 +113,7 @@ class StackNode extends Node {
+@@ -103,7 +114,7 @@ class StackNode extends Node {
       * @param {number} [index=this.nodes.length] - The index where the node should be added.
       * @return {StackNode} A reference to this stack node.
       */
 -    addToStack(node, index = this.nodes.length) {
 +    addToStack(node: Node, index = this.nodes.length) {
          if (node.isNode !== true) {
-             error('TSL: Invalid node added to stack.');
+             error('TSL: Invalid node added to stack.', new StackTrace());
              return this;
-@@ -119,7 +130,7 @@ class StackNode extends Node {
+@@ -120,7 +131,7 @@ class StackNode extends Node {
       * @param {Node} node - The node to add.
       * @return {StackNode} A reference to this stack node.
       */
@@ -3132,7 +3142,7 @@ index 6d0ca271b..6137aa6f8 100644
          const index = this._currentNode ? this.nodes.indexOf(this._currentNode) : 0;
  
          return this.addToStack(node, index);
-@@ -132,7 +143,7 @@ class StackNode extends Node {
+@@ -133,7 +144,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -3141,7 +3151,7 @@ index 6d0ca271b..6137aa6f8 100644
          const methodNode = new ShaderNode(method);
          this._currentCond = select(boolNode, methodNode);
  
-@@ -146,7 +157,7 @@ class StackNode extends Node {
+@@ -147,7 +158,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed if the condition evaluates to `true`.
       * @return {StackNode} A reference to this stack node.
       */
@@ -3150,7 +3160,7 @@ index 6d0ca271b..6137aa6f8 100644
          const methodNode = new ShaderNode(method);
          const ifNode = select(boolNode, methodNode);
  
-@@ -162,7 +173,7 @@ class StackNode extends Node {
+@@ -163,7 +174,7 @@ class StackNode extends Node {
       * @param {Function} method - TSL code which is executed in the `else` case.
       * @return {StackNode} A reference to this stack node.
       */
@@ -3159,7 +3169,7 @@ index 6d0ca271b..6137aa6f8 100644
          this._currentCond.elseNode = new ShaderNode(method);
  
          return this;
-@@ -266,7 +277,7 @@ class StackNode extends Node {
+@@ -267,7 +278,7 @@ class StackNode extends Node {
          return this.outputNode && this.outputNode.isNode && this.outputNode.getNodeType(builder) !== 'void';
      }
  
@@ -3324,11 +3334,12 @@ index 94299fca9..125e9ad42 100644
  
          this.name = data.name;
 diff --git a/src-testing/src/nodes/core/UniformNode.ts b/src-testing/src/nodes/core/UniformNode.ts
-index f9fc07e20..9fe38be3b 100644
+index 54832c619..c1fc99120 100644
 --- a/src-testing/src/nodes/core/UniformNode.ts
 +++ b/src-testing/src/nodes/core/UniformNode.ts
-@@ -1,26 +1,41 @@
+@@ -1,27 +1,42 @@
  import InputNode from './InputNode.js';
+ import StackTrace from '../core/StackTrace.js';
 -import { objectGroup } from './UniformGroupNode.js';
 +import UniformGroupNode, { objectGroup } from './UniformGroupNode.js';
  import { getConstNodeType } from '../tsl/TSLCore.js';
@@ -3374,7 +3385,7 @@ index f9fc07e20..9fe38be3b 100644
          super(value, nodeType);
  
          /**
-@@ -56,11 +71,11 @@ class UniformNode extends InputNode {
+@@ -57,11 +72,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -3388,13 +3399,13 @@ index f9fc07e20..9fe38be3b 100644
  
      /**
       * Sets the {@link UniformNode#name} property.
-@@ -69,11 +84,11 @@ class UniformNode extends InputNode {
+@@ -70,11 +85,11 @@ class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
 -    label(name) {
 +    label = (name: string) => {
-         warn('TSL: "label()" has been deprecated. Use "setName()" instead.'); // @deprecated r179
+         warn('TSL: "label()" has been deprecated. Use "setName()" instead.', new StackTrace()); // @deprecated r179
  
          return this.setName(name);
 -    }
@@ -3402,7 +3413,7 @@ index f9fc07e20..9fe38be3b 100644
  
      /**
       * Sets the {@link UniformNode#groupNode} property.
-@@ -81,7 +96,7 @@ class UniformNode extends InputNode {
+@@ -82,7 +97,7 @@ class UniformNode extends InputNode {
       * @param {UniformGroupNode} group - The uniform group.
       * @return {UniformNode} A reference to this node.
       */
@@ -3411,7 +3422,7 @@ index f9fc07e20..9fe38be3b 100644
          this.groupNode = group;
  
          return this;
-@@ -103,11 +118,11 @@ class UniformNode extends InputNode {
+@@ -104,11 +119,11 @@ class UniformNode extends InputNode {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The uniform hash.
       */
@@ -3425,7 +3436,7 @@ index f9fc07e20..9fe38be3b 100644
          callback = callback.bind(this);
  
          return super.onUpdate(frame => {
-@@ -119,7 +134,7 @@ class UniformNode extends InputNode {
+@@ -120,7 +135,7 @@ class UniformNode extends InputNode {
          }, updateType);
      }
  
@@ -3434,7 +3445,7 @@ index f9fc07e20..9fe38be3b 100644
          let type = super.getInputType(builder);
  
          if (type === 'bool') {
-@@ -129,12 +144,12 @@ class UniformNode extends InputNode {
+@@ -130,12 +145,12 @@ class UniformNode extends InputNode {
          return type;
      }
  
@@ -3449,7 +3460,7 @@ index f9fc07e20..9fe38be3b 100644
  
          if (sharedNode === undefined) {
              builder.setHashNode(this, hash);
-@@ -147,7 +162,7 @@ class UniformNode extends InputNode {
+@@ -148,7 +163,7 @@ class UniformNode extends InputNode {
          const nodeUniform = builder.getUniformFromNode(
              sharedNode,
              sharedNodeType,
@@ -3458,7 +3469,7 @@ index f9fc07e20..9fe38be3b 100644
              this.name || builder.context.nodeName,
          );
          const uniformName = builder.getPropertyName(nodeUniform);
-@@ -183,18 +198,44 @@ class UniformNode extends InputNode {
+@@ -184,18 +199,44 @@ class UniformNode extends InputNode {
      }
  }
  
@@ -3505,7 +3516,7 @@ index f9fc07e20..9fe38be3b 100644
      const nodeType = getConstNodeType(type || value);
  
      if (nodeType === value) {
-@@ -203,17 +244,17 @@ export const uniform = (value, type) => {
+@@ -204,17 +245,17 @@ export const uniform = (value, type) => {
          value = getValueFromType(nodeType);
      }
  
@@ -3659,11 +3670,11 @@ index ee5cf92a6..7240bb88d 100644
          this.value.lightingModel = this.lightingModel || builder.context.lightingModel;
  
 diff --git a/src-testing/src/nodes/tsl/TSLCore.ts b/src-testing/src/nodes/tsl/TSLCore.ts
-index ff0c9e668..3ba9da9f5 100644
+index de66273cf..708fa1078 100644
 --- a/src-testing/src/nodes/tsl/TSLCore.ts
 +++ b/src-testing/src/nodes/tsl/TSLCore.ts
-@@ -9,9 +9,38 @@ import ConstNode from '../core/ConstNode.js';
- import MemberNode from '../utils/MemberNode.js';
+@@ -10,9 +10,38 @@ import MemberNode from '../utils/MemberNode.js';
+ import StackTrace from '../core/StackTrace.js';
  import { getValueFromType, getValueType } from '../core/NodeUtils.js';
  import { warn, error } from '../../utils.js';
 +import NodeBuilder from '../core/NodeBuilder.js';
@@ -3701,7 +3712,7 @@ index ff0c9e668..3ba9da9f5 100644
  const NodeElements = new Map();
  
  // Extend Node Class for TSL using prototype
-@@ -45,6 +74,144 @@ export function addMethodChaining(name, nodeElement) {
+@@ -48,6 +77,144 @@ export function addMethodChaining(name, nodeElement) {
      }
  }
  
@@ -3846,7 +3857,7 @@ index ff0c9e668..3ba9da9f5 100644
  const parseSwizzle = props => props.replace(/r|s/g, 'x').replace(/g|t/g, 'y').replace(/b|p/g, 'z').replace(/a|q/g, 'w');
  const parseSwizzleAndSort = props => parseSwizzle(props).split('').sort().join('');
  
-@@ -245,7 +412,7 @@ Object.defineProperties(Node.prototype, proto);
+@@ -251,7 +418,7 @@ Object.defineProperties(Node.prototype, proto);
  
  const nodeBuilderFunctionsCacheMap = new WeakMap();
  
@@ -3855,7 +3866,7 @@ index ff0c9e668..3ba9da9f5 100644
      const type = getValueType(obj);
  
      if (type === 'node') {
-@@ -356,7 +523,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
+@@ -362,7 +529,9 @@ const ShaderNodeImmutable = function (NodeClass, ...params) {
  };
  
  class ShaderCallNodeInternal extends Node {
@@ -3866,7 +3877,7 @@ index ff0c9e668..3ba9da9f5 100644
          super();
  
          this.shaderNode = shaderNode;
-@@ -365,7 +534,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -371,7 +540,7 @@ class ShaderCallNodeInternal extends Node {
          this.isShaderCallNodeInternal = true;
      }
  
@@ -3875,7 +3886,7 @@ index ff0c9e668..3ba9da9f5 100644
          return this.shaderNode.nodeType || this.getOutputNode(builder).getNodeType(builder);
      }
  
-@@ -377,7 +546,7 @@ class ShaderCallNodeInternal extends Node {
+@@ -383,7 +552,7 @@ class ShaderCallNodeInternal extends Node {
          return this.getOutputNode(builder).getMemberType(builder, name);
      }
  
@@ -3884,7 +3895,7 @@ index ff0c9e668..3ba9da9f5 100644
          const { shaderNode, rawInputs } = this;
  
          const properties = builder.getNodeProperties(shaderNode);
-@@ -599,7 +768,15 @@ function getProxyParameters(params) {
+@@ -605,7 +774,15 @@ function getProxyParameters(params) {
      });
  }
  
@@ -3900,7 +3911,7 @@ index ff0c9e668..3ba9da9f5 100644
      constructor(jsFunc, nodeType) {
          super(nodeType);
  
-@@ -611,7 +788,7 @@ class ShaderNodeInternal extends Node {
+@@ -617,7 +794,7 @@ class ShaderNodeInternal extends Node {
          this.once = false;
      }
  
@@ -3909,7 +3920,7 @@ index ff0c9e668..3ba9da9f5 100644
          this.layout = layout;
  
          return this;
-@@ -630,6 +807,8 @@ class ShaderNodeInternal extends Node {
+@@ -636,6 +813,8 @@ class ShaderNodeInternal extends Node {
      }
  }
  
@@ -3918,7 +3929,7 @@ index ff0c9e668..3ba9da9f5 100644
  const bools = [false, true];
  const uints = [0, 1, 2, 3];
  const ints = [-1, -2];
-@@ -728,11 +907,26 @@ export function ShaderNode(jsFunc, nodeType) {
+@@ -734,11 +913,26 @@ export function ShaderNode(jsFunc, nodeType) {
      return new ShaderNodeInternal(jsFunc, nodeType);
  }
  
@@ -8845,7 +8856,7 @@ index 4f52f62c9..9d2541b45 100644
              const textureData = this.get(texture);
  
 diff --git a/src-testing/src/renderers/common/TimestampQueryPool.ts b/src-testing/src/renderers/common/TimestampQueryPool.ts
-index a2e65be3f..e32dd7931 100644
+index 70724f9fc..69af7dd99 100644
 --- a/src-testing/src/renderers/common/TimestampQueryPool.ts
 +++ b/src-testing/src/renderers/common/TimestampQueryPool.ts
 @@ -5,7 +5,17 @@ import { warn } from '../../utils.js';
@@ -8867,7 +8878,7 @@ index a2e65be3f..e32dd7931 100644
      /**
       * Creates a new timestamp query pool.
       *
-@@ -97,7 +107,7 @@ class TimestampQueryPool {
+@@ -99,7 +109,7 @@ class TimestampQueryPool {
       * @param {string} uid - A unique identifier for the render context.
       * @return {?number} The timestamp, or undefined if not available.
       */
@@ -8876,7 +8887,7 @@ index a2e65be3f..e32dd7931 100644
          let timestamp = this.timestamps.get(uid);
  
          if (timestamp === undefined) {
-@@ -115,7 +125,7 @@ class TimestampQueryPool {
+@@ -117,7 +127,7 @@ class TimestampQueryPool {
       * @param {string} uid - A unique identifier for the render context.
       * @return {boolean} True if a timestamp is available, false otherwise.
       */
@@ -8885,7 +8896,7 @@ index a2e65be3f..e32dd7931 100644
          return this.timestamps.has(uid);
      }
  
-@@ -127,7 +137,7 @@ class TimestampQueryPool {
+@@ -129,7 +139,7 @@ class TimestampQueryPool {
       * @param {number} frameId - The current frame identifier.
       * @returns {?number}
       */
@@ -8894,7 +8905,7 @@ index a2e65be3f..e32dd7931 100644
  
      /**
       * Resolve all timestamps and return data (or process them).
-@@ -136,14 +146,14 @@ class TimestampQueryPool {
+@@ -138,14 +148,14 @@ class TimestampQueryPool {
       * @async
       * @returns {Promise<number>|number} The resolved timestamp value.
       */
@@ -10232,7 +10243,7 @@ index 7c61c35c5..0f728fe49 100644
              warn(`Redefinition of node ${baseClass.name}`);
              return;
 diff --git a/src-testing/src/renderers/common/nodes/NodeManager.ts b/src-testing/src/renderers/common/nodes/NodeManager.ts
-index 713d8133a..c9830b766 100644
+index 665c5c5ef..ed4bdb378 100644
 --- a/src-testing/src/renderers/common/nodes/NodeManager.ts
 +++ b/src-testing/src/renderers/common/nodes/NodeManager.ts
 @@ -28,26 +28,89 @@ import {
@@ -10359,7 +10370,7 @@ index 713d8133a..c9830b766 100644
          const renderObjectData = this.get(renderObject);
  
          let nodeBuilderState = renderObjectData.nodeBuilderState;
-@@ -243,13 +306,13 @@ class NodeManager extends DataMap {
+@@ -251,13 +314,13 @@ class NodeManager extends DataMap {
       * @param {any} object - The object to delete.
       * @return {?Object} The deleted dictionary.
       */
@@ -10377,7 +10388,7 @@ index 713d8133a..c9830b766 100644
              }
          }
  
-@@ -262,7 +325,7 @@ class NodeManager extends DataMap {
+@@ -270,7 +333,7 @@ class NodeManager extends DataMap {
       * @param {Node} computeNode - The compute node.
       * @return {NodeBuilderState} The node builder state.
       */
@@ -10386,7 +10397,7 @@ index 713d8133a..c9830b766 100644
          const computeData = this.get(computeNode);
  
          let nodeBuilderState = computeData.nodeBuilderState;
-@@ -282,11 +345,10 @@ class NodeManager extends DataMap {
+@@ -290,11 +353,10 @@ class NodeManager extends DataMap {
      /**
       * Creates a node builder state for the given node builder.
       *
@@ -10399,7 +10410,7 @@ index 713d8133a..c9830b766 100644
          return new NodeBuilderState(
              nodeBuilder.vertexShader,
              nodeBuilder.fragmentShader,
-@@ -308,9 +370,8 @@ class NodeManager extends DataMap {
+@@ -316,9 +378,8 @@ class NodeManager extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene environment.
       */
@@ -10410,7 +10421,7 @@ index 713d8133a..c9830b766 100644
          let environmentNode = null;
  
          if (scene.environmentNode && scene.environmentNode.isNode) {
-@@ -333,9 +394,8 @@ class NodeManager extends DataMap {
+@@ -341,9 +402,8 @@ class NodeManager extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene background.
       */
@@ -10421,7 +10432,7 @@ index 713d8133a..c9830b766 100644
          let backgroundNode = null;
  
          if (scene.backgroundNode && scene.backgroundNode.isNode) {
-@@ -357,9 +417,8 @@ class NodeManager extends DataMap {
+@@ -365,9 +425,8 @@ class NodeManager extends DataMap {
       * @param {Scene} scene - The scene.
       * @return {Node} A node representing the current scene fog.
       */
@@ -10432,7 +10443,7 @@ index 713d8133a..c9830b766 100644
          return scene.fogNode || this.get(scene).fogNode || null;
      }
  
-@@ -373,13 +432,13 @@ class NodeManager extends DataMap {
+@@ -381,13 +440,13 @@ class NodeManager extends DataMap {
       * @param {LightsNode} lightsNode - The lights node.
       * @return {number} The cache key.
       */
@@ -10448,7 +10459,7 @@ index 713d8133a..c9830b766 100644
  
          if (cacheKeyData.callId !== callId) {
              const environmentNode = this.getEnvironmentNode(scene);
-@@ -398,7 +457,7 @@ class NodeManager extends DataMap {
+@@ -406,7 +465,7 @@ class NodeManager extends DataMap {
              cacheKeyData.callId = callId;
              cacheKeyData.cacheKey = hashArray(_cacheKeyValues);
  
@@ -10457,7 +10468,7 @@ index 713d8133a..c9830b766 100644
  
              _cacheKeyValues.length = 0;
          }
-@@ -412,8 +471,6 @@ class NodeManager extends DataMap {
+@@ -420,8 +479,6 @@ class NodeManager extends DataMap {
      /**
       * A boolean that indicates whether tone mapping should be enabled
       * or not.
@@ -10466,7 +10477,7 @@ index 713d8133a..c9830b766 100644
       */
      get isToneMappingState() {
          return this.renderer.getRenderTarget() ? false : true;
-@@ -425,7 +482,7 @@ class NodeManager extends DataMap {
+@@ -433,7 +490,7 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10475,7 +10486,7 @@ index 713d8133a..c9830b766 100644
          const sceneData = this.get(scene);
          const background = scene.background;
  
-@@ -440,7 +497,7 @@ class NodeManager extends DataMap {
+@@ -448,7 +505,7 @@ class NodeManager extends DataMap {
                      background,
                      () => {
                          if (
@@ -10484,7 +10495,7 @@ index 713d8133a..c9830b766 100644
                              background.mapping === EquirectangularReflectionMapping ||
                              background.mapping === EquirectangularRefractionMapping ||
                              background.mapping === CubeUVReflectionMapping
-@@ -450,18 +507,18 @@ class NodeManager extends DataMap {
+@@ -458,18 +515,18 @@ class NodeManager extends DataMap {
                              } else {
                                  let envMap;
  
@@ -10509,7 +10520,7 @@ index 713d8133a..c9830b766 100644
                          }
                      },
                      forceUpdate,
-@@ -487,7 +544,7 @@ class NodeManager extends DataMap {
+@@ -495,7 +552,7 @@ class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -10518,7 +10529,7 @@ index 713d8133a..c9830b766 100644
          const nodeCache = this.cacheLib[type] || (this.cacheLib[type] = new WeakMap());
  
          let node = nodeCache.get(object);
-@@ -506,22 +563,22 @@ class NodeManager extends DataMap {
+@@ -514,22 +571,22 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10549,7 +10560,7 @@ index 713d8133a..c9830b766 100644
  
                          return fog(color, rangeFogFactor(near, far));
                      } else {
-@@ -544,14 +601,14 @@ class NodeManager extends DataMap {
+@@ -552,14 +609,14 @@ class NodeManager extends DataMap {
       *
       * @param {Scene} scene - The scene.
       */
@@ -10566,7 +10577,7 @@ index 713d8133a..c9830b766 100644
                          return cubeTexture(environment);
                      } else if (environment.isTexture === true) {
                          return texture(environment);
-@@ -569,7 +626,13 @@ class NodeManager extends DataMap {
+@@ -577,7 +634,13 @@ class NodeManager extends DataMap {
          }
      }
  
@@ -10581,7 +10592,7 @@ index 713d8133a..c9830b766 100644
          const nodeFrame = this.nodeFrame;
          nodeFrame.renderer = renderer;
          nodeFrame.scene = scene;
-@@ -580,7 +643,7 @@ class NodeManager extends DataMap {
+@@ -588,7 +651,7 @@ class NodeManager extends DataMap {
          return nodeFrame;
      }
  
@@ -10590,7 +10601,7 @@ index 713d8133a..c9830b766 100644
          return this.getNodeFrame(
              renderObject.renderer,
              renderObject.scene,
-@@ -608,7 +671,7 @@ class NodeManager extends DataMap {
+@@ -616,7 +679,7 @@ class NodeManager extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {boolean} Whether the output configuration has changed or not.
       */
@@ -10599,7 +10610,7 @@ index 713d8133a..c9830b766 100644
          const cacheKey = _outputNodeMap.get(outputTarget);
  
          return cacheKey !== this.getOutputCacheKey();
-@@ -621,11 +684,11 @@ class NodeManager extends DataMap {
+@@ -629,11 +692,11 @@ class NodeManager extends DataMap {
       * @param {Texture} outputTarget - The output target.
       * @return {Node} The output node.
       */
@@ -10613,7 +10624,7 @@ index 713d8133a..c9830b766 100644
              ? texture3D(outputTarget, vec3(screenUV, builtin('gl_ViewID_OVR'))).renderOutput(
                    renderer.toneMapping,
                    renderer.currentColorSpace,
-@@ -643,7 +706,7 @@ class NodeManager extends DataMap {
+@@ -651,7 +714,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10622,7 +10633,7 @@ index 713d8133a..c9830b766 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateBeforeNodes) {
-@@ -659,7 +722,7 @@ class NodeManager extends DataMap {
+@@ -667,7 +730,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10631,7 +10642,7 @@ index 713d8133a..c9830b766 100644
          const nodeBuilder = renderObject.getNodeBuilderState();
  
          for (const node of nodeBuilder.updateAfterNodes) {
-@@ -675,7 +738,7 @@ class NodeManager extends DataMap {
+@@ -683,7 +746,7 @@ class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -10640,7 +10651,7 @@ index 713d8133a..c9830b766 100644
          const nodeFrame = this.getNodeFrame();
          const nodeBuilder = this.getForCompute(computeNode);
  
-@@ -690,7 +753,7 @@ class NodeManager extends DataMap {
+@@ -698,7 +761,7 @@ class NodeManager extends DataMap {
       *
       * @param {RenderObject} renderObject - The render object.
       */
@@ -10649,7 +10660,7 @@ index 713d8133a..c9830b766 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const nodeBuilder = renderObject.getNodeBuilderState();
  
-@@ -705,7 +768,7 @@ class NodeManager extends DataMap {
+@@ -713,7 +776,7 @@ class NodeManager extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
@@ -10658,7 +10669,7 @@ index 713d8133a..c9830b766 100644
          const nodeFrame = this.getNodeFrameForRender(renderObject);
          const monitor = renderObject.getMonitor();
  
-@@ -724,4 +787,4 @@ class NodeManager extends DataMap {
+@@ -732,4 +795,4 @@ class NodeManager extends DataMap {
      }
  }
  

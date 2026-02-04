@@ -363,6 +363,13 @@ declare class NodeClass extends EventDispatcher<{
 declare const Node: {
     new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
     new(nodeType?: string | null): Node;
+    /**
+     * Enables or disables the automatic capturing of stack traces for nodes.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    captureStackTrace: boolean;
 };
 export interface NodeElements {
 }
