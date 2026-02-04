@@ -50,3 +50,5 @@ export const cdl: (
     saturation?: Node,
     luminanceCoefficients?: Node,
 ) => Node<"vec4">;
+
+export const posterize: (sourceNode: Node, stepsNode: Node) => Node;
