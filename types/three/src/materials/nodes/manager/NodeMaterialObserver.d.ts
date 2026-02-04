@@ -69,15 +69,16 @@ type MaterialData = {
 };
 interface AttributesData {
     [name: string]: {
+        id: number;
         version: number;
     };
 }
 interface RenderObjectData {
-    renderId: number;
     material: MaterialData;
     geometry: {
         id: number;
         attributes: AttributesData;
+        indexId: number | null;
         indexVersion: number | null;
         drawRange: {
             start: number;
