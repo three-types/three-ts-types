@@ -51,4 +51,4 @@ export const cdl: (
     luminanceCoefficients?: Node,
 ) => Node<"vec4">;
 
-export const posterize: <TNodeType>(sourceNode: Node<TNodeType>, stepsNode: Node) => Node<TNodeType>;
+export const posterize: <TNodeType>(sourceNode: Node<TNodeType>, stepsNode: Node | number) => Node<TNodeType>;
