@@ -30,9 +30,9 @@ export const mx_worley_noise_float_call = wgslFn<[Node, Node, Node]>(
 );
 export const ab_call = wgslFn<{ a: Node; b: Node }>("float mx_cell_noise_float( vec3 p )", includes);
 
-mx_cell_noise_float_call.call(uv());
-mx_worley_noise_float_call.call(uv(), 1, 1);
-ab_call.call({ a: 1, b: uv() });
+mx_cell_noise_float_call(uv());
+mx_worley_noise_float_call(uv(), 1, 1);
+ab_call({ a: 1, b: uv() });
 
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export const mx_cell_noise_float = glslFn<[Node]>("float mx_cell_noise_float( vec3 p )", includes);
