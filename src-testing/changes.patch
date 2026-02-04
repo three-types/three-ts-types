@@ -1,5 +1,5 @@
 diff --git a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
-index 044d26fe4..b0a13b9c2 100644
+index 1578fc53e..c77cac378 100644
 --- a/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 +++ b/src-testing/src/materials/nodes/manager/NodeMaterialObserver.ts
 @@ -1,3 +1,14 @@
@@ -31,15 +31,15 @@ index 044d26fe4..b0a13b9c2 100644
 +};
 +
 +interface AttributesData {
-+    [name: string]: { version: number };
++    [name: string]: { id: number; version: number };
 +}
 +
 +interface RenderObjectData {
-+    renderId: number;
 +    material: MaterialData;
 +    geometry: {
 +        id: number;
 +        attributes: AttributesData;
++        indexId: number | null;
 +        indexVersion: number | null;
 +        drawRange: { start: number; count: number };
 +    };
@@ -87,7 +87,7 @@ index 044d26fe4..b0a13b9c2 100644
          /**
           * A node material can be used by more than one render object so the
           * monitor must maintain a list of render objects.
-@@ -112,7 +161,7 @@ class NodeMaterialObserver {
+@@ -120,7 +169,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {boolean} Whether the given render object is verified for the first time of this observer.
       */
@@ -96,7 +96,7 @@ index 044d26fe4..b0a13b9c2 100644
          const hasInitialized = this.renderObjects.has(renderObject);
  
          if (hasInitialized === false) {
-@@ -130,7 +179,7 @@ class NodeMaterialObserver {
+@@ -138,7 +187,7 @@ class NodeMaterialObserver {
       * @param {Renderer} renderer - The renderer.
       * @return {boolean} Whether the current rendering produces motion vectors or not.
       */
@@ -105,7 +105,7 @@ index 044d26fe4..b0a13b9c2 100644
          const mrt = renderer.getMRT();
  
          return mrt !== null && mrt.has('velocity');
-@@ -142,7 +191,7 @@ class NodeMaterialObserver {
+@@ -150,7 +199,7 @@ class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {Object} The monitoring data.
       */
@@ -114,7 +114,7 @@ index 044d26fe4..b0a13b9c2 100644
          let data = this.renderObjects.get(renderObject);
  
          if (data === undefined) {
-@@ -194,8 +243,8 @@ class NodeMaterialObserver {
+@@ -202,8 +251,8 @@ class NodeMaterialObserver {
       * @param {Object} attributes - The geometry attributes.
       * @return {Object} An object for monitoring the versions of attributes.
       */
@@ -125,7 +125,7 @@ index 044d26fe4..b0a13b9c2 100644
  
          for (const name in attributes) {
              const attribute = attributes[name];
-@@ -215,7 +264,7 @@ class NodeMaterialObserver {
+@@ -224,7 +273,7 @@ class NodeMaterialObserver {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether the node builder's material uses node properties or not.
       */
@@ -134,7 +134,7 @@ index 044d26fe4..b0a13b9c2 100644
          const material = builder.material;
  
          for (const property in material) {
-@@ -240,8 +289,8 @@ class NodeMaterialObserver {
+@@ -249,8 +298,8 @@ class NodeMaterialObserver {
       * @param {Material} material - The material.
       * @return {Object} An object for monitoring material properties.
       */
@@ -145,7 +145,7 @@ index 044d26fe4..b0a13b9c2 100644
  
          for (const property of this.refreshUniforms) {
              const value = material[property];
-@@ -269,7 +318,7 @@ class NodeMaterialObserver {
+@@ -278,7 +327,7 @@ class NodeMaterialObserver {
       * @param {Array<Light>} lightsData - The current material lights.
       * @return {boolean} Whether the given render object has changed its state or not.
       */
@@ -154,7 +154,7 @@ index 044d26fe4..b0a13b9c2 100644
          const { object, material, geometry } = renderObject;
  
          const renderObjectData = this.getRenderObjectData(renderObject);
-@@ -430,14 +479,14 @@ class NodeMaterialObserver {
+@@ -443,14 +492,14 @@ class NodeMaterialObserver {
       * @param {Array<Light>} materialLights - The material lights.
       * @return {Array<Object>} The lights data for the given material lights.
       */
@@ -173,7 +173,7 @@ index 044d26fe4..b0a13b9c2 100644
              }
          }
  
-@@ -451,9 +500,9 @@ class NodeMaterialObserver {
+@@ -464,9 +513,9 @@ class NodeMaterialObserver {
       * @param {number} renderId - The render ID.
       * @return {Array<Object>} The lights for the given lights node and render ID.
       */
@@ -185,7 +185,7 @@ index 044d26fe4..b0a13b9c2 100644
  
              if (cached.renderId === renderId) {
                  return cached.lightsData;
-@@ -474,7 +523,7 @@ class NodeMaterialObserver {
+@@ -487,7 +536,7 @@ class NodeMaterialObserver {
       * @param {NodeFrame} nodeFrame - The current node frame.
       * @return {boolean} Whether the given render object requires a refresh or not.
       */
