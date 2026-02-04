@@ -18952,6 +18952,52 @@ index f358421e3..95f4cba68 100644
      gui.add(weightUniform, 'value', 0, 1).name('weight');
      gui.add(decayUniform, 'value', 0, 1).name('decay');
      gui.add(countUniform, 'value', 16, 64, 1).name('sample count');
+diff --git a/examples-testing/examples/webgpu_postprocessing_retro.ts b/examples-testing/examples/webgpu_postprocessing_retro.ts
+index 40628aca4..a61c5b005 100644
+--- a/examples-testing/examples/webgpu_postprocessing_retro.ts
++++ b/examples-testing/examples/webgpu_postprocessing_retro.ts
+@@ -38,7 +38,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer, renderPipeline, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    renderPipeline: THREE.RenderPipeline,
++    controls: OrbitControls;
+ 
+ init();
+ 
+@@ -132,7 +136,9 @@ async function init() {
+     // baked model
+ 
+     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
+-        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
++        (
++            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
++        ).material.map!.anisotropy = 8;
+         scene.add(gltf.scene);
+     });
+ 
+@@ -240,7 +246,7 @@ async function init() {
+     const distortedUV = barrelUV(curvature);
+     const distortedDelta = circle(curvature.add(0.1).mul(10), 1).mul(curvature).mul(0.05);
+ 
+-    let retroPipeline = retroPass(scene, camera, { affineDistortion });
++    let retroPipeline: THREE.Node<'vec4'> | THREE.Node<'vec3'> = retroPass(scene, camera, { affineDistortion });
+     retroPipeline = replaceDefaultUV(distortedUV, retroPipeline);
+     retroPipeline = colorBleeding(retroPipeline, bleeding.add(distortedDelta));
+     retroPipeline = bayerDither(retroPipeline, colorDepthSteps);
+@@ -264,7 +270,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     gui.add({ enabled: true }, 'enabled')
+         .onChange(v => {
 diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
 index f06374258..e23e37256 100644
 --- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
