@@ -17,6 +17,6 @@ export const scanlines: (
 export const vignette: (
     color: Node<"vec3">,
     intensity?: Node<"float">,
-    smoothness?: Node<"float">,
+    smoothness?: Node<"float"> | number,
     coord?: Node<"vec2">,
 ) => Node<"vec3">;
