@@ -3933,7 +3933,7 @@ index 8f77c30fc..acc5b2193 100644
              specular: 0x111111,
              map: map,
 diff --git a/examples-testing/examples/webgl_effects_anaglyph.ts b/examples-testing/examples/webgl_effects_anaglyph.ts
-index 8415973df..d6a7d4c54 100644
+index 7e67c9173..e3d0719bf 100644
 --- a/examples-testing/examples/webgl_effects_anaglyph.ts
 +++ b/examples-testing/examples/webgl_effects_anaglyph.ts
 @@ -2,9 +2,13 @@ import * as THREE from 'three';
@@ -3952,7 +3952,7 @@ index 8415973df..d6a7d4c54 100644
  
  let mouseX = 0;
  let mouseY = 0;
-@@ -84,7 +88,7 @@ function onWindowResize() {
+@@ -90,7 +94,7 @@ function onWindowResize() {
      effect.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -11021,7 +11021,7 @@ index 869824270..4533b72bd 100644
      postMaterial = noiseRandom3DMaterial;
      const postPlane = new THREE.PlaneGeometry(2, 2);
 diff --git a/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts b/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
-index 2189ad29a..01f31f057 100644
+index 5a40f9793..c16309448 100644
 --- a/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
 +++ b/examples-testing/examples/webgl_postprocessing_rgb_halftone.ts
 @@ -8,11 +8,11 @@ import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
@@ -15128,10 +15128,10 @@ index 7f14133fd..7be64774d 100644
      gui.add(scattering, 'value', 0, 5).name('scattering factor');
      gui.add(params, 'scatteringEnabled')
 diff --git a/examples-testing/examples/webgpu_display_stereo.ts b/examples-testing/examples/webgpu_display_stereo.ts
-index cc4ce7688..c2dd7ffba 100644
+index 7f1ade726..c948dd939 100644
 --- a/examples-testing/examples/webgpu_display_stereo.ts
 +++ b/examples-testing/examples/webgpu_display_stereo.ts
-@@ -1,29 +1,42 @@
+@@ -1,22 +1,36 @@
  import * as THREE from 'three/webgpu';
  
 -import { stereoPass } from 'three/addons/tsl/display/StereoPassNode.js';
@@ -15169,12 +15169,14 @@ index cc4ce7688..c2dd7ffba 100644
 +const params: {
 +    effect: 'stereo' | 'anaglyph' | 'parallaxBarrier';
 +    eyeSep: number;
++    planeDistance: number;
 +    anaglyphAlgorithm: AnaglyphAlgorithm;
 +    anaglyphColorMode: AnaglyphColorMode;
 +} = {
      effect: 'stereo',
      eyeSep: 0.064,
-     anaglyphAlgorithm: 'dubois',
+     planeDistance: 3,
+@@ -24,7 +38,7 @@ const params = {
      anaglyphColorMode: 'redCyan',
  };
  
@@ -15183,7 +15185,7 @@ index cc4ce7688..c2dd7ffba 100644
  
  const anaglyphAlgorithms = {
      True: AnaglyphAlgorithm.TRUE,
-@@ -97,7 +110,7 @@ function init() {
+@@ -102,7 +116,7 @@ function init() {
  
      renderPipeline.outputNode = stereo;
  
@@ -15192,7 +15194,7 @@ index cc4ce7688..c2dd7ffba 100644
      gui.add(params, 'effect', effects).onChange(update);
      gui.add(params, 'eyeSep', 0.001, 0.15, 0.001).onChange(function (value) {
          stereo.stereo.eyeSep = value;
-@@ -129,7 +142,7 @@ function init() {
+@@ -139,7 +153,7 @@ function init() {
      controls.maxDistance = 25;
  }
  
@@ -15201,7 +15203,7 @@ index cc4ce7688..c2dd7ffba 100644
      if (value === 'stereo') {
          renderPipeline.outputNode = stereo;
          anaglyphFolder.paramList.domElement.style.display = 'none';
-@@ -151,7 +164,7 @@ function onWindowResize() {
+@@ -161,7 +175,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
