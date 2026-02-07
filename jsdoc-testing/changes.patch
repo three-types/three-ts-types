@@ -10084,7 +10084,7 @@ index 790999ee9..d84f24ac4 100644
 +
 +export default NodeMaterialObserver;
 diff --git a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
-index 1f855a535..13b212d28 100644
+index 1f855a535..b0e732fa0 100644
 --- a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
 @@ -1,8 +1,11 @@
@@ -10131,6 +10131,15 @@ index 1f855a535..13b212d28 100644
      /**
       * This method is overwritten since the attribute data might be shared
       * and thus the hash should be shared as well.
+@@ -109,7 +112,7 @@ declare class BufferAttributeNode extends InputNode {
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      */
+-    setup(builder: NodeBuilder): void;
++    setup(builder: NodeBuilder): undefined;
+     /**
+      * Generates the code snippet of the buffer attribute node.
+      *
 @@ -130,14 +133,110 @@ declare class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
@@ -10833,7 +10842,7 @@ index f15875899..7a476515e 100644
 +
 +export default NodeParser;
 diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
-index 3f872f033..3e3dca8f0 100644
+index 3f872f033..bee694640 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
 @@ -1,11 +1,13 @@
@@ -10851,6 +10860,15 @@ index 3f872f033..3e3dca8f0 100644
 +declare class NodeUniform<TNodeType, TValue> {
      /**
       * Constructs a new node uniform.
+      *
+@@ -13,7 +15,7 @@ declare class NodeUniform {
+      * @param {string} type - The type of the uniform.
+      * @param {UniformNode} node - An reference to the node.
+      */
+-    constructor(name: string, type: string, node: UniformNode);
++    constructor(name: string, type: string, node: UniformNode<TNodeType, TValue>);
+     /**
+      * This flag can be used for type testing.
       *
 @@ -39,14 +41,14 @@ declare class NodeUniform {
       *
