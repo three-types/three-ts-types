@@ -10,28 +10,36 @@ import InputNode from "./InputNode.js";
 import NodeBuilder from "./NodeBuilder.js";
 import NodeFrame from "./NodeFrame.js";
 import UniformGroupNode from "./UniformGroupNode.js";
+
 /**
  * Class for representing a uniform.
+ *
+ * @augments InputNode
  */
 declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
-    static get type(): string;
-    readonly isUniformNode: true;
-    name: string;
-    groupNode: UniformGroupNode;
     /**
-     * Constructs a new uniform node.
+     * This flag can be used for type testing.
      *
-     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
-     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
-    constructor(value: TValue, nodeType?: string | null);
+    readonly isUniformNode: boolean;
+    /**
+     * The uniform group of this uniform. By default, uniforms are
+     * managed per object but they might belong to a shared group
+     * which is updated per frame or render call.
+     *
+     * @type {UniformGroupNode}
+     */
+    groupNode: UniformGroupNode;
     /**
      * Sets the {@link UniformNode#name} property.
      *
      * @param {string} name - The name of the uniform.
      * @return {UniformNode} A reference to this node.
      */
-    setName: (name: string) => this;
+    setName(name: string): this;
     /**
      * Sets the {@link UniformNode#name} property.
      *
@@ -39,7 +47,7 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * @param {string} name - The name of the uniform.
      * @return {UniformNode} A reference to this node.
      */
-    label: (name: string) => this;
+    label(name: string): this;
     /**
      * Sets the {@link UniformNode#groupNode} property.
      *
@@ -62,9 +70,10 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      */
     getUniformHash(builder: NodeBuilder): string;
     onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
-    getInputType(builder: NodeBuilder): string | null;
+    getInputType(builder: NodeBuilder): string;
     generate(builder: NodeBuilder, output: string | null): string;
 }
+
 declare const UniformNode: {
     /**
      * Constructs a new uniform node.
@@ -74,8 +83,11 @@ declare const UniformNode: {
      */
     new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
 };
+
 type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
+
 export default UniformNode;
+
 interface Uniform {
     (value: number, type?: "float"): UniformNode<"float", number>;
     (value: boolean): UniformNode<"bool", boolean>;
@@ -88,6 +100,7 @@ interface Uniform {
     (value: Color): UniformNode<"color", Color>;
     <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
 }
+
 /**
  * TSL function for creating a uniform node.
  *
