@@ -7,6 +7,7 @@ import LightsNode from "../../../nodes/lighting/LightsNode.js";
 import Renderer from "../../../renderers/common/Renderer.js";
 import RenderObject from "../../../renderers/common/RenderObject.js";
 import { Material } from "../../Material.js";
+
 declare const refreshUniforms: readonly [
     "alphaMap",
     "alphaTest",
@@ -63,16 +64,20 @@ declare const refreshUniforms: readonly [
     "transmission",
     "transmissionMap",
 ];
+
 type RefreshUniform = (typeof refreshUniforms)[number];
+
 type MaterialData = {
     [K in RefreshUniform]?: unknown;
 };
+
 interface AttributesData {
     [name: string]: {
         id: number;
         version: number;
     };
 }
+
 interface RenderObjectData {
     material: MaterialData;
     geometry: {
@@ -88,26 +93,55 @@ interface RenderObjectData {
     worldMatrix: Matrix4;
     version?: number;
 }
+
 interface LightData {
     map: number;
 }
+
 /**
  * This class is used by {@link WebGPURenderer} as management component.
  * It's primary purpose is to determine whether render objects require a
  * refresh right before they are going to be rendered or not.
  */
 declare class NodeMaterialObserver {
-    renderObjects: WeakMap<RenderObject, RenderObjectData>;
-    hasNode: boolean;
-    hasAnimation: boolean;
-    refreshUniforms: readonly RefreshUniform[];
-    renderId: number;
     /**
      * Constructs a new node material observer.
      *
      * @param {NodeBuilder} builder - The node builder.
      */
     constructor(builder: NodeBuilder);
+    /**
+     * A node material can be used by more than one render object so the
+     * monitor must maintain a list of render objects.
+     *
+     * @type {WeakMap<RenderObject,Object>}
+     */
+    renderObjects: WeakMap<RenderObject, RenderObjectData>;
+    /**
+     * Whether the material uses node objects or not.
+     *
+     * @type {boolean}
+     */
+    hasNode: boolean;
+    /**
+     * Whether the node builder's 3D object is animated or not.
+     *
+     * @type {boolean}
+     */
+    hasAnimation: boolean;
+    /**
+     * A list of all possible material uniforms
+     *
+     * @type {Array<string>}
+     */
+    refreshUniforms: readonly RefreshUniform[];
+    /**
+     * Holds the current render ID from the node frame.
+     *
+     * @type {number}
+     * @default 0
+     */
+    renderId: number;
     /**
      * Returns `true` if the given render object is verified for the first time of this observer.
      *
@@ -185,4 +219,5 @@ declare class NodeMaterialObserver {
      */
     needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
 }
+
 export default NodeMaterialObserver;
