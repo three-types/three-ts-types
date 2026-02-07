@@ -211,7 +211,7 @@ declare class NodeClass extends EventDispatcher<{ dispose: {} }> {
      * @param {NodeFrame} frame - A reference to the current node frame.
      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
      */
-    update(): boolean | undefined;
+    update(frame: NodeFrame): boolean | undefined;
     /**
      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
      * this method automatically sets the update type to `FRAME`.
