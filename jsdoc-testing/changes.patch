@@ -11240,6 +11240,593 @@ index 5d342ff3a..7ac71b49b 100644
 +export declare const defaultBuildStages: string[];
 +export declare const shaderStages: NodeShaderStage[];
 +export declare const vectorComponents: string[];
+diff --git a/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts b/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
+index 5b407575a..fb9571fa0 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
+@@ -1,4 +1,3 @@
+-export default DataMap;
+ /**
+  * Data structure for the renderer. It is intended to manage
+  * data of objects in dictionaries.
+@@ -12,30 +11,32 @@ declare class DataMap {
+      *
+      * @type {WeakMap<Object, Object>}
+      */
+-    data: WeakMap<Object, Object>;
++    data: WeakMap<object, unknown>;
+     /**
+      * Returns the dictionary for the given object.
+      *
+      * @param {Object} object - The object.
+      * @return {Object} The dictionary.
+      */
+-    get(object: Object): Object;
++    get(object: object): unknown;
+     /**
+      * Deletes the dictionary for the given object.
+      *
+      * @param {Object} object - The object.
+      * @return {?Object} The deleted dictionary.
+      */
+-    delete(object: Object): Object | null;
++    delete(object: object): unknown | null;
+     /**
+      * Returns `true` if the given object has a dictionary defined.
+      *
+      * @param {Object} object - The object to test.
+      * @return {boolean} Whether a dictionary is defined or not.
+      */
+-    has(object: Object): boolean;
++    has(object: object): boolean;
+     /**
+      * Frees internal resources.
+      */
+     dispose(): void;
+ }
++
++export default DataMap;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
+index 876698dc2..723da14c9 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
+@@ -1,4 +1,8 @@
+-export default NodeBuilderState;
++import BindGroup from '../BindGroup.js';
++import NodeAttribute from '../../../nodes/core/NodeAttribute.js';
++import NodeMaterialObserver from '../../../materials/nodes/manager/NodeMaterialObserver.js';
++import Node from '../../../nodes/core/Node.js';
++
+ /**
+  * This module represents the state of a node builder after it was
+  * used to build the nodes for a render object. The state holds the
+@@ -23,7 +27,7 @@ declare class NodeBuilderState {
+      * @param {NodeMaterialObserver} observer - A node material observer.
+      * @param {Array<Object>} transforms - An array with transform attribute objects. Only relevant when using compute shaders with WebGL 2.
+      */
+-    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: Array<NodeAttribute>, bindings: Array<BindGroup>, updateNodes: Array<Node>, updateBeforeNodes: Array<Node>, updateAfterNodes: Array<Node>, observer: NodeMaterialObserver, transforms?: Array<Object>);
++    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: NodeAttribute[], bindings: BindGroup[], updateNodes: Node[], updateBeforeNodes: Node[], updateAfterNodes: Node[], observer: NodeMaterialObserver, transforms?: unknown[]);
+     /**
+      * The native vertex shader code.
+      *
+@@ -48,39 +52,39 @@ declare class NodeBuilderState {
+      *
+      * @type {Array<Object>}
+      */
+-    transforms: Array<Object>;
++    transforms: unknown[];
+     /**
+      * An array of node attributes representing
+      * the attributes of the shaders.
+      *
+      * @type {Array<NodeAttribute>}
+      */
+-    nodeAttributes: Array<NodeAttribute>;
++    nodeAttributes: NodeAttribute[];
+     /**
+      * An array of bind groups representing the uniform or storage
+      * buffers, texture or samplers of the shader.
+      *
+      * @type {Array<BindGroup>}
+      */
+-    bindings: Array<BindGroup>;
++    bindings: BindGroup[];
+     /**
+      * An array of nodes that implement their `update()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateNodes: Array<Node>;
++    updateNodes: Node[];
+     /**
+      * An array of nodes that implement their `updateBefore()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateBeforeNodes: Array<Node>;
++    updateBeforeNodes: Node[];
+     /**
+      * An array of nodes that implement their `updateAfter()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateAfterNodes: Array<Node>;
++    updateAfterNodes: Node[];
+     /**
+      * A node material observer.
+      *
+@@ -100,6 +104,7 @@ declare class NodeBuilderState {
+      *
+      * @return {Array<BindGroup>} A array of bind groups.
+      */
+-    createBindings(): Array<BindGroup>;
++    createBindings(): BindGroup[];
+ }
+-import BindGroup from '../BindGroup.js';
++
++export default NodeBuilderState;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
+index 0121dd34b..f5741f970 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
+@@ -1,4 +1,10 @@
+-export default NodeLibrary;
++import { ToneMapping } from "../../../constants.js";
++import { Light } from "../../../lights/Light.js";
++import { Material } from "../../../materials/Material.js";
++import NodeMaterial from "../../../materials/nodes/NodeMaterial.js";
++import Node from "../../../nodes/core/Node.js";
++import AnalyticLightNode from "../../../nodes/lighting/AnalyticLightNode.js";
++
+ /**
+  * The purpose of a node library is to assign node implementations
+  * to existing library features. In `WebGPURenderer` lights, materials
+@@ -13,20 +19,26 @@ declare class NodeLibrary {
+      *
+      * @type {WeakMap<Light.constructor,AnalyticLightNode.constructor>}
+      */
+-    lightNodes: WeakMap<Light.constructor, AnalyticLightNode.constructor>;
++    lightNodes: WeakMap<{
++        new(): Light;
++    }, {
++        new(light: Light): AnalyticLightNode<Light>;
++    }>;
+     /**
+      * A map that maps materials to node materials.
+      *
+      * @type {Map<string,NodeMaterial.constructor>}
+      */
+-    materialNodes: Map<string, NodeMaterial.constructor>;
++    materialNodes: Map<string, {
++        new(): NodeMaterial;
++    }>;
+     /**
+      * A map that maps tone mapping techniques (constants)
+      * to tone mapping node functions.
+      *
+      * @type {Map<number,Function>}
+      */
+-    toneMappingNodes: Map<number, Function>;
++    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => Node>;
+     /**
+      * Returns a matching node material instance for the given material object.
+      *
+@@ -44,42 +56,52 @@ declare class NodeLibrary {
+      * @param {Function} toneMappingNode - The tone mapping node function.
+      * @param {number} toneMapping - The tone mapping.
+      */
+-    addToneMapping(toneMappingNode: Function, toneMapping: number): void;
++    addToneMapping(toneMappingNode: (color: Node, exposure: Node) => Node, toneMapping: ToneMapping): void;
+     /**
+      * Returns a tone mapping node function for a tone mapping technique (constant).
+      *
+      * @param {number} toneMapping - The tone mapping.
+      * @return {?Function} The tone mapping node function. Returns `null` if no node function is found.
+      */
+-    getToneMappingFunction(toneMapping: number): Function | null;
++    getToneMappingFunction(toneMapping: ToneMapping): ((color: Node, exposure: Node) => Node) | null;
+     /**
+      * Returns a node material class definition for a material type.
+      *
+      * @param {string} materialType - The material type.
+      * @return {?NodeMaterial.constructor} The node material class definition. Returns `null` if no node material is found.
+      */
+-    getMaterialNodeClass(materialType: string): NodeMaterial.constructor | null;
++    getMaterialNodeClass(materialType: string): (new() => NodeMaterial) | null;
+     /**
+      * Adds a node material class definition for a given material type.
+      *
+      * @param {NodeMaterial.constructor} materialNodeClass - The node material class definition.
+      * @param {string} materialClassType - The material type.
+      */
+-    addMaterial(materialNodeClass: NodeMaterial.constructor, materialClassType: string): void;
++    addMaterial(materialNodeClass: {
++        new(): NodeMaterial;
++    }, materialClassType: string): void;
+     /**
+      * Returns a light node class definition for a light class definition.
+      *
+      * @param {Light.constructor} light - The light class definition.
+      * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
+      */
+-    getLightNodeClass(light: Light.constructor): AnalyticLightNode.constructor | null;
++    getLightNodeClass(light: {
++        new(): Light;
++    }): ({
++        new(light: Light): AnalyticLightNode<Light>;
++    }) | null;
+     /**
+      * Adds a light node class definition for a given light class definition.
+      *
+      * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
+      * @param {Light.constructor} lightClass - The light class definition.
+      */
+-    addLight(lightNodeClass: AnalyticLightNode.constructor, lightClass: Light.constructor): void;
++    addLight<TLight extends Light>(lightNodeClass: {
++        new(light: TLight): AnalyticLightNode<TLight>;
++    }, lightClass: {
++        new(): TLight;
++    }): void;
+     /**
+      * Adds a node class definition for the given type to the provided type library.
+      *
+@@ -87,7 +109,7 @@ declare class NodeLibrary {
+      * @param {number|string} type - The object type.
+      * @param {Map<number|string,Node.constructor>} library - The type library.
+      */
+-    addType(nodeClass: Node.constructor, type: number | string, library: Map<number | string, Node.constructor>): void;
++    addType<TNodeClass, TType>(nodeClass: TNodeClass, type: TType, library: Map<TType, TNodeClass>): void;
+     /**
+      * Adds a node class definition for the given class definition to the provided type library.
+      *
+@@ -95,5 +117,7 @@ declare class NodeLibrary {
+      * @param {Node.constructor} baseClass - The class definition.
+      * @param {WeakMap<Node.constructor, Node.constructor>} library - The type library.
+      */
+-    addClass(nodeClass: Node.constructor, baseClass: Node.constructor, library: WeakMap<Node.constructor, Node.constructor>): void;
++    addClass<TNodeClass, TBaseClass extends object>(nodeClass: TNodeClass, baseClass: TBaseClass, library: WeakMap<TBaseClass, TNodeClass>): void;
+ }
++
++export default NodeLibrary;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
+index 254922eab..6c3f62839 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
+@@ -1,4 +1,20 @@
+-export default NodeManager;
++import DataMap from '../DataMap.js';
++import NodeBuilderState from './NodeBuilderState.js';
++import ChainMap from '../ChainMap.js';
++import Renderer from '../Renderer.js';
++import Backend from '../Backend.js';
++import NodeUniformsGroup from './NodeUniformsGroup.js';
++import RenderObject from '../RenderObject.js';
++import { Scene } from '../../../scenes/Scene.js';
++import LightsNode from '../../../nodes/lighting/LightsNode.js';
++import { Texture } from '../../../textures/Texture.js';
++import Node from '../../../nodes/core/Node.js';
++import NodeFrame from '../../../nodes/core/NodeFrame.js';
++import ComputeNode from '../../../nodes/gpgpu/ComputeNode.js';
++import { Object3D } from '../../../core/Object3D.js';
++import { Camera } from '../../../cameras/Camera.js';
++import { Material } from '../../../materials/Material.js';
++
+ /**
+  * This renderer module manages node-related objects and is the
+  * primary interface between the renderer and the node system.
+@@ -31,7 +47,7 @@ declare class NodeManager extends DataMap {
+      *
+      * @type {Renderer}
+      */
+-    nodeFrame: Renderer;
++    nodeFrame: NodeFrame;
+     /**
+      * A cache for managing node builder states.
+      *
+@@ -57,7 +73,7 @@ declare class NodeManager extends DataMap {
+      * @type {Object<string,WeakMap>}
+      */
+     cacheLib: {
+-        [x: string]: WeakMap<any, any>;
++        [x: string]: WeakMap<object, Node | undefined>;
+     };
+     /**
+      * Returns `true` if the given node uniforms group must be updated or not.
+@@ -86,14 +102,14 @@ declare class NodeManager extends DataMap {
+      * @param {any} object - The object to delete.
+      * @return {?Object} The deleted dictionary.
+      */
+-    delete(object: any): Object | null;
++    delete(object: unknown): unknown | null;
+     /**
+      * Returns a node builder state for the given compute node.
+      *
+      * @param {Node} computeNode - The compute node.
+      * @return {NodeBuilderState} The node builder state.
+      */
+-    getForCompute(computeNode: Node): NodeBuilderState;
++    getForCompute(computeNode: ComputeNode): NodeBuilderState;
+     /**
+      * Creates a node builder state for the given node builder.
+      *
+@@ -160,7 +176,7 @@ declare class NodeManager extends DataMap {
+      * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
+      * @return {Node} The node representation.
+      */
+-    getCacheNode(type: string, object: Object, callback: Function, forceUpdate?: boolean): Node;
++    getCacheNode(type: string, object: object, callback: () => Node | undefined, forceUpdate?: boolean): Node;
+     /**
+      * If a scene fog is configured, this method makes sure to
+      * represent the fog with a corresponding node-based implementation.
+@@ -175,8 +191,8 @@ declare class NodeManager extends DataMap {
+      * @param {Scene} scene - The scene.
+      */
+     updateEnvironment(scene: Scene): void;
+-    getNodeFrame(renderer?: Renderer, scene?: null, object?: null, camera?: null, material?: null): Renderer;
+-    getNodeFrameForRender(renderObject: any): Renderer;
++    getNodeFrame(renderer?: Renderer, scene?: Scene | null, object?: Object3D | null, camera?: Camera | null, material?: Material | null): NodeFrame;
++    getNodeFrameForRender(renderObject: RenderObject): NodeFrame;
+     /**
+      * Returns the current output cache key.
+      *
+@@ -219,7 +235,7 @@ declare class NodeManager extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    updateForCompute(computeNode: Node): void;
++    updateForCompute(computeNode: ComputeNode): void;
+     /**
+      * Triggers the call of `update()` methods
+      * for all nodes of the given compute node.
+@@ -235,6 +251,5 @@ declare class NodeManager extends DataMap {
+      */
+     needsRefresh(renderObject: RenderObject): boolean;
+ }
+-import DataMap from '../DataMap.js';
+-import NodeBuilderState from './NodeBuilderState.js';
+-import ChainMap from '../ChainMap.js';
++
++export default NodeManager;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
+index 47673f68d..c4843b98d 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
+@@ -1,3 +1,20 @@
++import { NumberUniform } from '../Uniform.js';
++import { Vector2Uniform } from '../Uniform.js';
++import { Vector3Uniform } from '../Uniform.js';
++import { Vector4Uniform } from '../Uniform.js';
++import { ColorUniform } from '../Uniform.js';
++import { Matrix2Uniform } from '../Uniform.js';
++import { Matrix3Uniform } from '../Uniform.js';
++import { Matrix4Uniform } from '../Uniform.js';
++import NodeUniform from '../../../nodes/core/NodeUniform.js';
++import { Vector2 } from '../../../math/Vector2.js';
++import { Vector3 } from '../../../math/Vector3.js';
++import { Vector4 } from '../../../math/Vector4.js';
++import { Color } from '../../../math/Color.js';
++import { Matrix2 } from '../../../math/Matrix2.js';
++import { Matrix3 } from '../../../math/Matrix3.js';
++import { Matrix4 } from '../../../math/Matrix4.js';
++
+ /**
+  * A special form of Number uniform binding type.
+  * It's value is managed by a node object.
+@@ -5,19 +22,19 @@
+  * @private
+  * @augments NumberUniform
+  */
+-export class NumberNodeUniform extends NumberUniform {
++export class NumberNodeUniform<TNodeType> extends NumberUniform {
+     /**
+      * Constructs a new node-based Number uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, number>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, number>;
+     /**
+      * Overwritten to return the value of the node uniform.
+      *
+@@ -38,19 +55,19 @@ export class NumberNodeUniform extends NumberUniform {
+  * @private
+  * @augments Vector2Uniform
+  */
+-export class Vector2NodeUniform extends Vector2Uniform {
++export class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
+     /**
+      * Constructs a new node-based Vector2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector2>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -65,19 +82,19 @@ export class Vector2NodeUniform extends Vector2Uniform {
+  * @private
+  * @augments Vector3Uniform
+  */
+-export class Vector3NodeUniform extends Vector3Uniform {
++export class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
+     /**
+      * Constructs a new node-based Vector3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector3>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -92,19 +109,19 @@ export class Vector3NodeUniform extends Vector3Uniform {
+  * @private
+  * @augments Vector4Uniform
+  */
+-export class Vector4NodeUniform extends Vector4Uniform {
++export class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
+     /**
+      * Constructs a new node-based Vector4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector4>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -119,19 +136,19 @@ export class Vector4NodeUniform extends Vector4Uniform {
+  * @private
+  * @augments ColorUniform
+  */
+-export class ColorNodeUniform extends ColorUniform {
++export class ColorNodeUniform<TNodeType> extends ColorUniform {
+     /**
+      * Constructs a new node-based Color uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Color>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Color>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -146,19 +163,19 @@ export class ColorNodeUniform extends ColorUniform {
+  * @private
+  * @augments Matrix2Uniform
+  */
+-export class Matrix2NodeUniform extends Matrix2Uniform {
++export class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
+     /**
+      * Constructs a new node-based Matrix2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix2>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -173,19 +190,19 @@ export class Matrix2NodeUniform extends Matrix2Uniform {
+  * @private
+  * @augments Matrix3Uniform
+  */
+-export class Matrix3NodeUniform extends Matrix3Uniform {
++export class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
+     /**
+      * Constructs a new node-based Matrix3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix3>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -200,19 +217,19 @@ export class Matrix3NodeUniform extends Matrix3Uniform {
+  * @private
+  * @augments Matrix4Uniform
+  */
+-export class Matrix4NodeUniform extends Matrix4Uniform {
++export class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
+     /**
+      * Constructs a new node-based Matrix4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix4>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -220,11 +237,3 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
+      */
+     getType(): string;
+ }
+-import { NumberUniform } from '../Uniform.js';
+-import { Vector2Uniform } from '../Uniform.js';
+-import { Vector3Uniform } from '../Uniform.js';
+-import { Vector4Uniform } from '../Uniform.js';
+-import { ColorUniform } from '../Uniform.js';
+-import { Matrix2Uniform } from '../Uniform.js';
+-import { Matrix3Uniform } from '../Uniform.js';
+-import { Matrix4Uniform } from '../Uniform.js';
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
+index c196bbe56..8baf96582 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
+@@ -1,4 +1,6 @@
+-export default NodeUniformsGroup;
++import UniformsGroup from '../UniformsGroup.js';
++import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
++
+ /**
+  * A special form of uniforms group that represents
+  * the individual uniforms as node-based uniforms.
+@@ -35,4 +37,5 @@ declare class NodeUniformsGroup extends UniformsGroup {
+      */
+     readonly isNodeUniformsGroup: boolean;
+ }
+-import UniformsGroup from '../UniformsGroup.js';
++
++export default NodeUniformsGroup;
 diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
 index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts
