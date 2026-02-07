@@ -6,28 +6,35 @@ import { Vector2 } from "../../../math/Vector2.js";
 import { Vector3 } from "../../../math/Vector3.js";
 import { Vector4 } from "../../../math/Vector4.js";
 import NodeUniform from "../../../nodes/core/NodeUniform.js";
-import {
-    ColorUniform,
-    Matrix2Uniform,
-    Matrix3Uniform,
-    Matrix4Uniform,
-    NumberUniform,
-    Vector2Uniform,
-    Vector3Uniform,
-    Vector4Uniform,
-} from "../Uniform.js";
+import { NumberUniform } from "../Uniform.js";
+import { Vector2Uniform } from "../Uniform.js";
+import { Vector3Uniform } from "../Uniform.js";
+import { Vector4Uniform } from "../Uniform.js";
+import { ColorUniform } from "../Uniform.js";
+import { Matrix2Uniform } from "../Uniform.js";
+import { Matrix3Uniform } from "../Uniform.js";
+import { Matrix4Uniform } from "../Uniform.js";
+
 /**
  * A special form of Number uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments NumberUniform
  */
-declare class NumberNodeUniform<TNodeType> extends NumberUniform {
-    nodeUniform: NodeUniform<TNodeType, number>;
+export class NumberNodeUniform<TNodeType> extends NumberUniform {
     /**
      * Constructs a new node-based Number uniform.
      *
      * @param {NodeUniform} nodeUniform - The node uniform.
      */
     constructor(nodeUniform: NodeUniform<TNodeType, number>);
+    /**
+     * The node uniform.
+     *
+     * @type {NodeUniform}
+     */
+    nodeUniform: NodeUniform<TNodeType, number>;
     /**
      * Overwritten to return the value of the node uniform.
      *
@@ -39,14 +46,16 @@ declare class NumberNodeUniform<TNodeType> extends NumberUniform {
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Vector2 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Vector2Uniform
  */
-declare class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
-    nodeUniform: NodeUniform<TNodeType, Vector2>;
+export class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
     /**
      * Constructs a new node-based Vector2 uniform.
      *
@@ -54,24 +63,26 @@ declare class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Vector2>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Vector2} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Vector2;
+    nodeUniform: NodeUniform<TNodeType, Vector2>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Vector3 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Vector3Uniform
  */
-declare class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
-    nodeUniform: NodeUniform<TNodeType, Vector3>;
+export class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
     /**
      * Constructs a new node-based Vector3 uniform.
      *
@@ -79,24 +90,26 @@ declare class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Vector3>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Vector3} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Vector3;
+    nodeUniform: NodeUniform<TNodeType, Vector3>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Vector4 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Vector4Uniform
  */
-declare class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
-    nodeUniform: NodeUniform<TNodeType, Vector4>;
+export class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
     /**
      * Constructs a new node-based Vector4 uniform.
      *
@@ -104,24 +117,26 @@ declare class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Vector4>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Vector4} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Vector4;
+    nodeUniform: NodeUniform<TNodeType, Vector4>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Color uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments ColorUniform
  */
-declare class ColorNodeUniform<TNodeType> extends ColorUniform {
-    nodeUniform: NodeUniform<TNodeType, Color>;
+export class ColorNodeUniform<TNodeType> extends ColorUniform {
     /**
      * Constructs a new node-based Color uniform.
      *
@@ -129,24 +144,26 @@ declare class ColorNodeUniform<TNodeType> extends ColorUniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Color>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Color} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Color;
+    nodeUniform: NodeUniform<TNodeType, Color>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Matrix2 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Matrix2Uniform
  */
-declare class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
-    nodeUniform: NodeUniform<TNodeType, Matrix2>;
+export class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
     /**
      * Constructs a new node-based Matrix2 uniform.
      *
@@ -154,24 +171,26 @@ declare class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Matrix2} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Matrix2;
+    nodeUniform: NodeUniform<TNodeType, Matrix2>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Matrix3 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Matrix3Uniform
  */
-declare class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
-    nodeUniform: NodeUniform<TNodeType, Matrix3>;
+export class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
     /**
      * Constructs a new node-based Matrix3 uniform.
      *
@@ -179,24 +198,26 @@ declare class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Matrix3} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Matrix3;
+    nodeUniform: NodeUniform<TNodeType, Matrix3>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
 /**
  * A special form of Matrix4 uniform binding type.
  * It's value is managed by a node object.
+ *
+ * @private
+ * @augments Matrix4Uniform
  */
-declare class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
-    nodeUniform: NodeUniform<TNodeType, Matrix4>;
+export class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
     /**
      * Constructs a new node-based Matrix4 uniform.
      *
@@ -204,33 +225,15 @@ declare class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
      */
     constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>);
     /**
-     * Overwritten to return the value of the node uniform.
+     * The node uniform.
      *
-     * @return {Matrix4} The value.
+     * @type {NodeUniform}
      */
-    getValue(): Matrix4;
+    nodeUniform: NodeUniform<TNodeType, Matrix4>;
     /**
      * Returns the node uniform data type.
      *
      * @return {string} The data type.
      */
-    getType(): string | null;
+    getType(): string;
 }
-export {
-    ColorNodeUniform,
-    Matrix2NodeUniform,
-    Matrix3NodeUniform,
-    Matrix4NodeUniform,
-    NumberNodeUniform,
-    Vector2NodeUniform,
-    Vector3NodeUniform,
-    Vector4NodeUniform,
-};
-export type NodeUniformGPU =
-    | NumberNodeUniform<unknown>
-    | Vector2NodeUniform<unknown>
-    | Vector3NodeUniform<unknown>
-    | Vector4NodeUniform<unknown>
-    | ColorNodeUniform<unknown>
-    | Matrix3NodeUniform<unknown>
-    | Matrix4NodeUniform<unknown>;
