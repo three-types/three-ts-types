@@ -6665,7 +6665,7 @@ index 3e3ee3041..0c098cd5b 100644
              object.rotation.y = 0.25 * time;
          }
 diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
-index 1587b2d82..5d95ccc6f 100644
+index b5b66bbb1..b4bfb555c 100644
 --- a/examples-testing/examples/webgl_lines_fat.ts
 +++ b/examples-testing/examples/webgl_lines_fat.ts
 @@ -7,14 +7,19 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
@@ -6695,7 +6695,7 @@ index 1587b2d82..5d95ccc6f 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_lines_fat_raycasting.ts b/examples-testing/examples/webgl_lines_fat_raycasting.ts
-index 5a7c00509..f7565eb27 100644
+index ac9400da3..7041465f3 100644
 --- a/examples-testing/examples/webgl_lines_fat_raycasting.ts
 +++ b/examples-testing/examples/webgl_lines_fat_raycasting.ts
 @@ -8,11 +8,12 @@ import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js
@@ -6756,7 +6756,7 @@ index 5a7c00509..f7565eb27 100644
      switch (val) {
          case 0:
              line.visible = true;
-@@ -262,7 +262,7 @@ function initGui() {
+@@ -259,7 +259,7 @@ function initGui() {
  
      gui.add(params, 'width', 1, 10).onChange(function (val) {
          matLine.linewidth = val;
@@ -6765,7 +6765,7 @@ index 5a7c00509..f7565eb27 100644
      });
  
      gui.add(params, 'alphaToCoverage').onChange(function (val) {
-@@ -270,8 +270,8 @@ function initGui() {
+@@ -267,8 +267,8 @@ function initGui() {
      });
  
      gui.add(params, 'threshold', 0, 10).onChange(function (val) {
@@ -18955,51 +18955,72 @@ index f358421e3..95f4cba68 100644
      gui.add(decayUniform, 'value', 0, 1).name('decay');
      gui.add(countUniform, 'value', 16, 64, 1).name('sample count');
 diff --git a/examples-testing/examples/webgpu_postprocessing_retro.ts b/examples-testing/examples/webgpu_postprocessing_retro.ts
-index 40628aca4..a61c5b005 100644
+index b9958352f..541a349ac 100644
 --- a/examples-testing/examples/webgpu_postprocessing_retro.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_retro.ts
-@@ -38,7 +38,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -40,9 +40,13 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer, renderPipeline, controls;
+-let environment;
+-let currentModel;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    renderPipeline: THREE.RenderPipeline,
 +    controls: OrbitControls;
++let environment: THREE.DataTexture | undefined;
++let currentModel: THREE.Group | undefined;
  
  init();
  
-@@ -132,7 +136,9 @@ async function init() {
-     // baked model
+@@ -135,12 +139,12 @@ async function init() {
  
-     gltfLoader.load('./models/gltf/coffeeMug.glb', gltf => {
--        gltf.scene.getObjectByName('baked').material.map.anisotropy = 8;
-+        (
-+            gltf.scene.getObjectByName('baked') as THREE.Mesh<THREE.BufferGeometry, THREE.MeshBasicMaterial>
-+        ).material.map!.anisotropy = 8;
-         scene.add(gltf.scene);
-     });
+     // Model
  
-@@ -240,7 +246,7 @@ async function init() {
-     const distortedUV = barrelUV(curvature);
-     const distortedDelta = circle(curvature.add(0.1).mul(10), 1).mul(curvature).mul(0.05);
+-    const models = {
++    const models: Record<string, string> = {
+         'Coffee Mug': 'models/gltf/coffeeMug.glb',
+         'Damaged Helmet': 'models/gltf/DamagedHelmet/glTF/DamagedHelmet.gltf',
+     };
  
--    let retroPipeline = retroPass(scene, camera, { affineDistortion });
-+    let retroPipeline: THREE.Node<'vec4'> | THREE.Node<'vec3'> = retroPass(scene, camera, { affineDistortion });
+-    function loadModel(name) {
++    function loadModel(name: string) {
+         function loadEnvironment() {
+             if (environment) return;
+ 
+@@ -157,9 +161,9 @@ async function init() {
+         if (currentModel) {
+             scene.remove(currentModel);
+             currentModel.traverse(child => {
+-                if (child.isMesh) {
+-                    child.geometry.dispose();
+-                    child.material.dispose();
++                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh) {
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
+                 }
+             });
+         }
+@@ -304,7 +308,7 @@ async function init() {
+ 
+     const retro = retroPass(scene, camera, { affineDistortion });
+ 
+-    let retroPipeline = retro;
++    let retroPipeline: THREE.Node<'vec4'> | THREE.Node<'vec3'> = retro;
      retroPipeline = replaceDefaultUV(distortedUV, retroPipeline);
      retroPipeline = colorBleeding(retroPipeline, bleeding.add(distortedDelta));
      retroPipeline = bayerDither(retroPipeline, colorDepthSteps);
-@@ -264,7 +270,7 @@ async function init() {
+@@ -328,7 +332,7 @@ async function init() {
  
      // gui
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
  
-     gui.add({ enabled: true }, 'enabled')
-         .onChange(v => {
+     gui.add({ model: 'Coffee Mug' }, 'model', Object.keys(models)).name('Model').onChange(loadModel);
+ 
 diff --git a/examples-testing/examples/webgpu_postprocessing_smaa.ts b/examples-testing/examples/webgpu_postprocessing_smaa.ts
 index f06374258..e23e37256 100644
 --- a/examples-testing/examples/webgpu_postprocessing_smaa.ts
@@ -21354,7 +21375,7 @@ index 1d46c3543..e4d6147fe 100644
      gui.add(opacity, 'value', 0, 1, 0.01).name('opacity');
      gui.add(range, 'value', 0, 1, 0.01).name('range');
 diff --git a/examples-testing/examples/webgpu_volume_lighting.ts b/examples-testing/examples/webgpu_volume_lighting.ts
-index 7cd34ccbc..11e763320 100644
+index 38099c6a5..c9e0380fc 100644
 --- a/examples-testing/examples/webgpu_volume_lighting.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting.ts
 @@ -10,9 +10,9 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
@@ -21393,9 +21414,9 @@ index 7cd34ccbc..11e763320 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
  
      const rayMarching = gui.addFolder('Ray Marching');
-     rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
+     rayMarching.add(params, 'resolution', 0.1, 1).onChange(resolution => {
 diff --git a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
-index 9585f1121..9e89e2d43 100644
+index 47c82841c..73084cc4c 100644
 --- a/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 +++ b/examples-testing/examples/webgpu_volume_lighting_rectarea.ts
 @@ -10,11 +10,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21447,7 +21468,64 @@ index 9585f1121..9e89e2d43 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
  
      const rayMarching = gui.addFolder('Ray Marching');
-     rayMarching.add(params, 'resolution', 0.1, 0.5).onChange(resolution => {
+     rayMarching.add(params, 'resolution', 0.1, 1).onChange(resolution => {
+diff --git a/examples-testing/examples/webgpu_volume_lighting_traa.ts b/examples-testing/examples/webgpu_volume_lighting_traa.ts
+index c5cc55e71..7ae7f3702 100644
+--- a/examples-testing/examples/webgpu_volume_lighting_traa.ts
++++ b/examples-testing/examples/webgpu_volume_lighting_traa.ts
+@@ -26,7 +26,7 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
+ 
+ // Halton sequence for temporal offset - matches TRAA's 32-sample Halton jitter
+ // This creates optimal low-discrepancy distribution that accumulates well with TRAA
+-function halton(index, base) {
++function halton(index: number, base: number) {
+     let result = 0;
+     let f = 1;
+ 
+@@ -42,11 +42,16 @@ function halton(index, base) {
+ // Generate 32 Halton offsets (base 2, 3) - same length as TRAA
+ const _haltonOffsets = Array.from({ length: 32 }, (_, i) => [halton(i + 1, 2), halton(i + 1, 3)]);
+ 
+-let renderer, scene, camera;
+-let volumetricMesh, teapot, pointLight, spotLight;
+-let renderPipeline;
+-let temporalOffset, temporalRotation, shaderTime;
+-let params;
++let renderer: THREE.WebGPURenderer, scene: THREE.Scene, camera: THREE.PerspectiveCamera;
++let volumetricMesh: THREE.Mesh<THREE.BoxGeometry, THREE.VolumeNodeMaterial>,
++    teapot: THREE.Mesh<TeapotGeometry, THREE.MeshStandardMaterial>,
++    pointLight: THREE.PointLight,
++    spotLight: THREE.SpotLight;
++let renderPipeline: THREE.RenderPipeline;
++let temporalOffset: THREE.UniformNode<'float', number>,
++    temporalRotation: THREE.UniformNode<'float', number>,
++    shaderTime: THREE.UniformNode<'float', number>;
++let params: { traa: boolean; animated: boolean };
+ 
+ init();
+ 
+@@ -129,10 +134,10 @@ function init() {
+     volumetricMaterial.offsetNode = fract(
+         interleavedGradientNoise(screenCoordinate.add(temporalJitter2D.mul(100))).add(temporalOffset),
+     );
+-    volumetricMaterial.scatteringNode = Fn(({ positionRay }) => {
++    volumetricMaterial.scatteringNode = Fn(({ positionRay }: { positionRay: THREE.Node<'vec3'> }) => {
+         const timeScaled = vec3(shaderTime, 0, shaderTime.mul(0.3));
+ 
+-        const sampleGrain = (scale, timeScale = 1) =>
++        const sampleGrain = (scale: number, timeScale = 1) =>
+             texture3D(noiseTexture3D, positionRay.add(timeScaled.mul(timeScale)).mul(scale).mod(1), 0).r.add(0.5);
+ 
+         let density = sampleGrain(0.1);
+@@ -233,7 +238,7 @@ function init() {
+         animated: true,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Volumetric Lighting');
++    const gui = (renderer.inspector as Inspector).createParameters('Volumetric Lighting');
+ 
+     gui.add(params, 'animated');
+     gui.add(params, 'traa').name('TRAA').onChange(updatePostProcessing);
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
 index fb6f2bbd5..50d3e0361 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
