@@ -15,7 +15,7 @@ declare class NodeUniform<TNodeType, TValue> {
      * @param {string} type - The type of the uniform.
      * @param {UniformNode} node - An reference to the node.
      */
-    constructor(name: string, type: string, node: UniformNode);
+    constructor(name: string, type: string, node: UniformNode<TNodeType, TValue>);
     /**
      * This flag can be used for type testing.
      *

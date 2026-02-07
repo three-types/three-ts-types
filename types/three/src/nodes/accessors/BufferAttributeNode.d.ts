@@ -117,7 +117,7 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      *
      * @param {NodeBuilder} builder - The current node builder.
      */
-    setup(builder: NodeBuilder): void;
+    setup(builder: NodeBuilder): undefined;
     /**
      * Generates the code snippet of the buffer attribute node.
      *
