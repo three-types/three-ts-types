@@ -10084,10 +10084,10 @@ index 790999ee9..d84f24ac4 100644
 +
 +export default NodeMaterialObserver;
 diff --git a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
-index 1f855a535..4f75283f8 100644
+index 1f855a535..13b212d28 100644
 --- a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
-@@ -1,8 +1,10 @@
+@@ -1,8 +1,11 @@
 -export default BufferAttributeNode;
 -export function bufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
 -export function dynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
@@ -10099,11 +10099,12 @@ index 1f855a535..4f75283f8 100644
 +import NodeBuilder from '../core/NodeBuilder.js';
 +import { Usage } from "../../constants.js";
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++import Node from '../core/Node.js';
 +
  /**
   * In earlier `three.js` versions it was only possible to define attribute data
   * on geometry level. With `BufferAttributeNode`, it is also possible to do this
-@@ -25,7 +27,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
+@@ -25,7 +28,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
   * ```
   * @augments InputNode
   */
@@ -10112,7 +10113,7 @@ index 1f855a535..4f75283f8 100644
      /**
       * Constructs a new buffer attribute node.
       *
-@@ -71,7 +73,7 @@ declare class BufferAttributeNode extends InputNode {
+@@ -71,7 +74,7 @@ declare class BufferAttributeNode extends InputNode {
       * @type {number}
       * @default StaticDrawUsage
       */
@@ -10121,7 +10122,7 @@ index 1f855a535..4f75283f8 100644
      /**
       * Whether the attribute is instanced or not.
       *
-@@ -85,7 +87,7 @@ declare class BufferAttributeNode extends InputNode {
+@@ -85,7 +88,7 @@ declare class BufferAttributeNode extends InputNode {
       * @type {?BufferAttribute}
       * @default null
       */
@@ -10130,7 +10131,7 @@ index 1f855a535..4f75283f8 100644
      /**
       * This method is overwritten since the attribute data might be shared
       * and thus the hash should be shared as well.
-@@ -130,14 +132,110 @@ declare class BufferAttributeNode extends InputNode {
+@@ -130,14 +133,110 @@ declare class BufferAttributeNode extends InputNode {
       * @param {number} value - The usage to set.
       * @return {BufferAttributeNode} A reference to this node.
       */
