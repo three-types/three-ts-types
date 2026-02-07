@@ -9989,10 +9989,10 @@ index 8b5885c3c..961cefb6a 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 790999ee9..6222732ab 100644
+index 790999ee9..d84f24ac4 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
-@@ -1,4 +1,103 @@
+@@ -1,4 +1,12 @@
 -export default NodeMaterialObserver;
 +import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
 +import RenderObject from '../../../renderers/common/RenderObject.js';
@@ -10002,147 +10002,56 @@ index 790999ee9..6222732ab 100644
 +import LightsNode from '../../../nodes/lighting/LightsNode.js';
 +import NodeFrame from '../../../nodes/core/NodeFrame.js';
 +import { BufferAttribute } from '../../../core/BufferAttribute.js';
-+import { Matrix4 } from '../../../math/Matrix4.js';
-+
-+declare const refreshUniforms: readonly [
-+    "alphaMap",
-+    "alphaTest",
-+    "anisotropy",
-+    "anisotropyMap",
-+    "anisotropyRotation",
-+    "aoMap",
-+    "aoMapIntensity",
-+    "attenuationColor",
-+    "attenuationDistance",
-+    "bumpMap",
-+    "clearcoat",
-+    "clearcoatMap",
-+    "clearcoatNormalMap",
-+    "clearcoatNormalScale",
-+    "clearcoatRoughness",
-+    "color",
-+    "dispersion",
-+    "displacementMap",
-+    "emissive",
-+    "emissiveIntensity",
-+    "emissiveMap",
-+    "envMap",
-+    "envMapIntensity",
-+    "gradientMap",
-+    "ior",
-+    "iridescence",
-+    "iridescenceIOR",
-+    "iridescenceMap",
-+    "iridescenceThicknessMap",
-+    "lightMap",
-+    "lightMapIntensity",
-+    "map",
-+    "matcap",
-+    "metalness",
-+    "metalnessMap",
-+    "normalMap",
-+    "normalScale",
-+    "opacity",
-+    "roughness",
-+    "roughnessMap",
-+    "sheen",
-+    "sheenColor",
-+    "sheenColorMap",
-+    "sheenRoughnessMap",
-+    "shininess",
-+    "specular",
-+    "specularColor",
-+    "specularColorMap",
-+    "specularIntensity",
-+    "specularIntensityMap",
-+    "specularMap",
-+    "thickness",
-+    "transmission",
-+    "transmissionMap",
-+];
-+
-+type RefreshUniform = (typeof refreshUniforms)[number];
-+
-+type MaterialData = {
-+    [K in RefreshUniform]?: unknown;
-+};
-+
-+interface AttributesData {
-+    [name: string]: {
-+        id: number;
-+        version: number;
-+    };
-+}
-+
-+interface RenderObjectData {
-+    material: MaterialData;
-+    geometry: {
-+        id: number;
-+        attributes: AttributesData;
-+        indexId: number | null;
-+        indexVersion: number | null;
-+        drawRange: {
-+            start: number;
-+            count: number;
-+        };
-+    };
-+    worldMatrix: Matrix4;
-+    version?: number;
-+}
-+
-+interface LightData {
-+    map: number;
-+}
 +
  /**
   * This class is used by {@link WebGPURenderer} as management component.
   * It's primary purpose is to determine whether render objects require a
-@@ -17,7 +116,7 @@ declare class NodeMaterialObserver {
+@@ -17,7 +25,7 @@ declare class NodeMaterialObserver {
       *
       * @type {WeakMap<RenderObject,Object>}
       */
 -    renderObjects: WeakMap<RenderObject, Object>;
-+    renderObjects: WeakMap<RenderObject, RenderObjectData>;
++    renderObjects: WeakMap<RenderObject, unknown>;
      /**
       * Whether the material uses node objects or not.
       *
-@@ -35,7 +134,7 @@ declare class NodeMaterialObserver {
+@@ -35,7 +43,7 @@ declare class NodeMaterialObserver {
       *
       * @type {Array<string>}
       */
 -    refreshUniforms: Array<string>;
-+    refreshUniforms: readonly RefreshUniform[];
++    refreshUniforms: string[];
      /**
       * Holds the current render ID from the node frame.
       *
-@@ -63,7 +162,7 @@ declare class NodeMaterialObserver {
+@@ -63,7 +71,7 @@ declare class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {Object} The monitoring data.
       */
 -    getRenderObjectData(renderObject: RenderObject): Object;
-+    getRenderObjectData(renderObject: RenderObject): RenderObjectData;
++    getRenderObjectData(renderObject: RenderObject): unknown;
      /**
       * Returns an attribute data structure holding the attributes versions for
       * monitoring.
-@@ -71,7 +170,7 @@ declare class NodeMaterialObserver {
+@@ -71,7 +79,7 @@ declare class NodeMaterialObserver {
       * @param {Object} attributes - The geometry attributes.
       * @return {Object} An object for monitoring the versions of attributes.
       */
 -    getAttributesData(attributes: Object): Object;
-+    getAttributesData(attributes: Record<string, BufferAttribute>): AttributesData;
++    getAttributesData(attributes: Record<string, BufferAttribute>): unknown;
      /**
       * Returns `true` if the node builder's material uses
       * node properties.
-@@ -87,7 +186,7 @@ declare class NodeMaterialObserver {
+@@ -87,7 +95,7 @@ declare class NodeMaterialObserver {
       * @param {Material} material - The material.
       * @return {Object} An object for monitoring material properties.
       */
 -    getMaterialData(material: Material): Object;
-+    getMaterialData(material: Material): MaterialData;
++    getMaterialData(material: Material): unknown;
      /**
       * Returns `true` if the given render object has not changed its state.
       *
-@@ -95,14 +194,14 @@ declare class NodeMaterialObserver {
+@@ -95,14 +103,14 @@ declare class NodeMaterialObserver {
       * @param {Array<Light>} lightsData - The current material lights.
       * @return {boolean} Whether the given render object has changed its state or not.
       */
@@ -10155,25 +10064,1163 @@ index 790999ee9..6222732ab 100644
       * @return {Array<Object>} The lights data for the given material lights.
       */
 -    getLightsData(materialLights: Array<Light>): Array<Object>;
-+    getLightsData(materialLights: Light[]): LightData[];
++    getLightsData(materialLights: Light[]): unknown[];
      /**
       * Returns the lights for the given lights node and render ID.
       *
-@@ -110,7 +209,7 @@ declare class NodeMaterialObserver {
+@@ -110,7 +118,7 @@ declare class NodeMaterialObserver {
       * @param {number} renderId - The render ID.
       * @return {Array<Object>} The lights for the given lights node and render ID.
       */
 -    getLights(lightsNode: LightsNode, renderId: number): Array<Object>;
-+    getLights(lightsNode: LightsNode, renderId: number): LightData[];
++    getLights(lightsNode: LightsNode, renderId: number): unknown[];
      /**
       * Checks if the given render object requires a refresh.
       *
-@@ -120,3 +219,5 @@ declare class NodeMaterialObserver {
+@@ -120,3 +128,5 @@ declare class NodeMaterialObserver {
       */
      needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
  }
 +
 +export default NodeMaterialObserver;
+diff --git a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
+index 1f855a535..4f75283f8 100644
+--- a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
+@@ -1,8 +1,10 @@
+-export default BufferAttributeNode;
+-export function bufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function dynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function instancedBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function instancedDynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import InputNode from '../core/InputNode.js';
++import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
++import NodeBuilder from '../core/NodeBuilder.js';
++import { Usage } from "../../constants.js";
++import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++
+ /**
+  * In earlier `three.js` versions it was only possible to define attribute data
+  * on geometry level. With `BufferAttributeNode`, it is also possible to do this
+@@ -25,7 +27,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
+  * ```
+  * @augments InputNode
+  */
+-declare class BufferAttributeNode extends InputNode {
++declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
+     /**
+      * Constructs a new buffer attribute node.
+      *
+@@ -71,7 +73,7 @@ declare class BufferAttributeNode extends InputNode {
+      * @type {number}
+      * @default StaticDrawUsage
+      */
+-    usage: number;
++    usage: Usage;
+     /**
+      * Whether the attribute is instanced or not.
+      *
+@@ -85,7 +87,7 @@ declare class BufferAttributeNode extends InputNode {
+      * @type {?BufferAttribute}
+      * @default null
+      */
+-    attribute: BufferAttribute | null;
++    attribute: BufferAttribute | InterleavedBufferAttribute | null;
+     /**
+      * This method is overwritten since the attribute data might be shared
+      * and thus the hash should be shared as well.
+@@ -130,14 +132,110 @@ declare class BufferAttributeNode extends InputNode {
+      * @param {number} value - The usage to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
+-    setUsage(value: number): BufferAttributeNode;
++    setUsage(value: Usage): this;
+     /**
+      * Sets the `instanced` property to the given value.
+      *
+      * @param {boolean} value - The value to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
+-    setInstanced(value: boolean): BufferAttributeNode;
++    setInstanced(value: boolean): this;
++}
++
++declare const BufferAttributeNode: {
++    /**
++     * Constructs a new buffer attribute node.
++     *
++     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
++     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
++     * @param {number} [bufferStride=0] - The buffer stride.
++     * @param {number} [bufferOffset=0] - The buffer offset.
++     */
++    new<TNodeType>(
++        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        bufferType?: string | null,
++        bufferStride?: number,
++        bufferOffset?: number,
++    ): BufferAttributeNode<TNodeType>;
++};
++
++type BufferAttributeNode<TNodeType> =
++    & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
++    & BufferAttributeNodeClass;
++
++export default BufferAttributeNode;
++
++/**
++ * TSL function for creating a buffer attribute node.
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const bufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with dynamic draw usage.
++ * Use this function if attribute data are updated per frame.
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const dynamicBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with enabled instancing
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const instancedBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const instancedDynamicBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++declare module "./BufferNode.js" {
++    interface BufferNodeExtensions<TNodeType, TValue> {
++        toAttribute: () => BufferAttributeNode<TNodeType>;
++    }
+ }
+-import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
+-import InputNode from '../core/InputNode.js';
+diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
+index bf1d89430..2112b6f84 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
+@@ -1,10 +1,81 @@
+-export default Node;
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++import { NodeUpdateType } from './constants.js';
++import NodeFrame from './NodeFrame.js';
++import NodeBuilder from './NodeBuilder.js';
++
++interface NodeJSONMeta {
++    textures: {
++        [key: string]: unknown;
++    };
++    images: {
++        [key: string]: unknown;
++    };
++    nodes: {
++        [key: string]: NodeJSONIntermediateOutputData;
++    };
++}
++
++interface NodeJSONMetadata {
++    version: number;
++    type: "Node";
++    generator: "Node.toJSON";
++}
++
++interface NodeJSONInputNodes {
++    [property: string]:
++        | string[]
++        | {
++        [index: string]: string | undefined;
++    }
++        | string
++        | undefined;
++}
++
++export interface NodeJSONInputData {
++    inputNodes?: NodeJSONInputNodes | undefined;
++    meta: {
++        textures: {
++            [key: string]: unknown;
++        };
++        nodes: {
++            [key: string]: Node;
++        };
++    };
++}
++
++export interface NodeJSONIntermediateOutputData {
++    uuid: string;
++    type: string | undefined;
++    meta?: NodeJSONMeta | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONIntermediateOutputData[];
++}
++
++interface NodeJSONOutputData {
++    uuid: string;
++    type: string | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONOutputData[];
++}
++
++export interface NodeChild {
++    property: string;
++    index?: number | string;
++    childNode: Node;
++}
++
+ /**
+  * Base class for all nodes.
+  *
+  * @augments EventDispatcher
+  */
+-declare class Node extends EventDispatcher {
++declare class NodeClass extends EventDispatcher<{ dispose: {}; }> {
+     static get type(): string;
+     /**
+      * Constructs a new node.
+@@ -25,21 +96,21 @@ declare class Node extends EventDispatcher {
+      * @type {string}
+      * @default 'none'
+      */
+-    updateType: string;
++    updateType: NodeUpdateType;
+     /**
+      * The update type of the node's {@link Node#updateBefore} method. Possible values are listed in {@link NodeUpdateType}.
+      *
+      * @type {string}
+      * @default 'none'
+      */
+-    updateBeforeType: string;
++    updateBeforeType: NodeUpdateType;
+     /**
+      * The update type of the node's {@link Node#updateAfter} method. Possible values are listed in {@link NodeUpdateType}.
+      *
+      * @type {string}
+      * @default 'none'
+      */
+-    updateAfterType: string;
++    updateAfterType: NodeUpdateType;
+     /**
+      * The UUID of the node.
+      *
+@@ -86,7 +157,6 @@ declare class Node extends EventDispatcher {
+      * @default true
+      */
+     readonly isNode: boolean;
+-    _beforeNodes: any;
+     /**
+      * The cache key of this node.
+      *
+@@ -124,7 +194,7 @@ declare class Node extends EventDispatcher {
+      * @type {string}
+      * @readonly
+      */
+-    readonly get type(): string;
++    get type(): string;
+     /**
+      * Convenient method for defining {@link Node#update}.
+      *
+@@ -132,7 +202,7 @@ declare class Node extends EventDispatcher {
+      * @param {string} updateType - The update type.
+      * @return {Node} A reference to this node.
+      */
+-    onUpdate(callback: Function, updateType: string): Node;
++    onUpdate(callback: (this: this, frame: NodeFrame) => unknown, updateType: NodeUpdateType): this;
+     /**
+      * The method can be implemented to update the node's internal state when it is used to render an object.
+      * The {@link Node#updateType} property defines how often the update is executed.
+@@ -141,7 +211,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    update(): boolean | null;
++    update(): boolean | undefined;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `FRAME`.
+@@ -149,7 +219,7 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onFrameUpdate(callback: Function): Node;
++    onFrameUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `RENDER`.
+@@ -157,7 +227,7 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onRenderUpdate(callback: Function): Node;
++    onRenderUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `OBJECT`.
+@@ -165,14 +235,14 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onObjectUpdate(callback: Function): Node;
++    onObjectUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#updateReference}.
+      *
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onReference(callback: Function): Node;
++    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown): this;
+     /**
+      * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
+      * to such objects based on a given state (e.g. the current node frame or builder).
+@@ -180,7 +250,7 @@ declare class Node extends EventDispatcher {
+      * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
+      * @return {any} The updated reference.
+      */
+-    updateReference(): any;
++    updateReference(state: NodeBuilder | NodeFrame): unknown;
+     /**
+      * By default this method returns the value of the {@link Node#global} flag. This method
+      * can be overwritten in derived classes if an analytical way is required to determine the
+@@ -189,31 +259,25 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {boolean} Whether this node is global or not.
+      */
+-    isGlobal(): boolean;
++    isGlobal(builder: NodeBuilder): boolean;
+     /**
+      * Generator function that can be used to iterate over the child nodes.
+      *
+      * @generator
+      * @yields {Node} A child node.
+      */
+-    getChildren(): Generator<any, void, unknown>;
++    getChildren(): Generator<Node<unknown>, void, unknown>;
+     /**
+      * Calling this method dispatches the `dispose` event. This event can be used
+      * to register event listeners for clean up tasks.
+      */
+     dispose(): void;
+-    /**
+-     * Callback for {@link Node#traverse}.
+-     *
+-     * @callback traverseCallback
+-     * @param {Node} node - The current node.
+-     */
+     /**
+      * Can be used to traverse through the node's hierarchy.
+      *
+      * @param {traverseCallback} callback - A callback that is executed per node.
+      */
+-    traverse(callback: (node: Node) => any): void;
++    traverse(callback: (node: Node) => void): void;
+     /**
+      * Returns the child nodes of this node.
+      *
+@@ -241,7 +305,7 @@ declare class Node extends EventDispatcher {
+      *
+      * @return {Node} A reference to this node.
+      */
+-    getScope(): Node;
++    getScope(): this;
+     /**
+      * Returns the hash of the node which is used to identify the node. By default it's
+      * the {@link Node#uuid} however derived node classes might have to overwrite this method
+@@ -250,40 +314,25 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {string} The hash.
+      */
+-    getHash(): string;
++    getHash(builder: NodeBuilder): string;
+     /**
+      * Returns the update type of {@link Node#update}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateType(): NodeUpdateType;
+     /**
+      * Returns the update type of {@link Node#updateBefore}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateBeforeType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateBeforeType(): NodeUpdateType;
+     /**
+      * Returns the update type of {@link Node#updateAfter}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateAfterType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateAfterType(): NodeUpdateType;
+     /**
+      * Certain types are composed of multiple elements. For example a `vec3`
+      * is composed of three `float` values. This method returns the type of
+@@ -300,7 +349,7 @@ declare class Node extends EventDispatcher {
+      * @param {string} name - The name of the member.
+      * @return {string} The type of the node.
+      */
+-    getMemberType(): string;
++    getMemberType(builder: NodeBuilder, name: string): string;
+     /**
+      * Returns the node's type.
+      *
+@@ -324,7 +373,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?number} The number of elements in the node array.
+      */
+-    getArrayCount(): number | null;
++    getArrayCount(builder: NodeBuilder): number | null;
+     /**
+      * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
+      * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
+@@ -333,7 +382,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?Node} The output node.
+      */
+-    setup(builder: NodeBuilder): Node | null;
++    setup(builder: NodeBuilder): Node | null | undefined;
+     /**
+      * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
+      * This stage analyzes the node hierarchy and ensures descendent nodes are built.
+@@ -350,7 +399,7 @@ declare class Node extends EventDispatcher {
+      * @param {?string} [output] - Can be used to define the output type.
+      * @return {?string} The generated shader string.
+      */
+-    generate(builder: NodeBuilder, output?: string | null): string | null;
++    generate(builder: NodeBuilder, output?: string | null): string | null | undefined;
+     /**
+      * The method can be implemented to update the node's internal state before it is used to render an object.
+      * The {@link Node#updateBeforeType} property defines how often the update is executed.
+@@ -359,7 +408,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    updateBefore(): boolean | null;
++    updateBefore(frame: NodeFrame): boolean | undefined;
+     /**
+      * The method can be implemented to update the node's internal state after it was used to render an object.
+      * The {@link Node#updateAfterType} property defines how often the update is executed.
+@@ -368,8 +417,8 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    updateAfter(): boolean | null;
+-    before(node: any): this;
++    updateAfter(frame: NodeFrame): boolean | undefined;
++    before(node: Node): this;
+     /**
+      * This method performs the build of a node. The behavior and return value depend on the current build stage:
+      * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
+@@ -386,28 +435,161 @@ declare class Node extends EventDispatcher {
+      *
+      * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
+      */
+-    getSerializeChildren(): Generator<Object>;
++    getSerializeChildren(): NodeChild[];
+     /**
+      * Serializes the node to JSON.
+      *
+      * @param {Object} json - The output JSON object.
+      */
+-    serialize(json: Object): void;
++    serialize(json: NodeJSONIntermediateOutputData): void;
+     /**
+      * Deserializes the node from the given JSON.
+      *
+      * @param {Object} json - The JSON object.
+      */
+-    deserialize(json: Object): void;
++    deserialize(json: NodeJSONInputData): void;
+     /**
+      * Serializes the node into the three.js JSON Object/Scene format.
+      *
+      * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
+      * @return {Object} The serialized node.
+      */
+-    toJSON(meta: Object | null): Object;
++    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
+ }
+-declare namespace Node {
+-    let captureStackTrace: boolean;
++
++declare const Node: {
++    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
++    new(nodeType?: string | null): Node;
++    /**
++     * Enables or disables the automatic capturing of stack traces for nodes.
++     *
++     * @type {boolean}
++     * @default false
++     */
++    captureStackTrace: boolean;
++};
++
++export interface NodeElements {
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
++
++export interface NodeExtensions<TNodeType> {
++}
++
++export type NumType = "float" | "int" | "uint";
++export type IntegerType = "int" | "uint";
++export type NumOrBoolType = NumType | "bool";
++export type FloatVecType = "vec2" | "vec3" | "vec4";
++export type MatType = "mat2" | "mat3" | "mat4";
++
++export interface FloatExtensions {
++}
++
++export interface IntExtensions {
++}
++
++export interface UintExtensions {
++}
++
++export interface BoolExtensions {
++}
++
++export interface NumExtensions<TNum extends NumType> {
++}
++
++export interface IntegerExtensions<TInteger extends IntegerType> {
++}
++
++export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumVec2Extensions<TNum extends NumType> {
++}
++
++export interface NumVec3Extensions<TNum extends NumType> {
++}
++
++export interface NumVec4Extensions<TNum extends NumType> {
++}
++
++export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface Vec2Extensions {
++}
++
++export interface Vec3Extensions {
++}
++
++export interface Vec4Extensions {
++}
++
++export interface ColorExtensions {
++}
++
++export interface FloatVecExtensions<TVec extends FloatVecType> {
++}
++
++export interface Mat2Extensions {
++}
++
++export interface Mat3Extensions {
++}
++
++export interface Mat4Extensions {
++}
++
++export interface MatExtensions<TMat extends MatType> {
++}
++
++type Node<TNodeType = unknown> =
++    & NodeClass
++    & NodeElements
++    & (unknown extends TNodeType ? {} : NodeExtensions<TNodeType>)
++    & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions & NumExtensions<"float">
++    : TNodeType extends "int"
++        ? NumOrBoolExtensions<"int"> & IntExtensions & NumExtensions<"int"> & IntegerExtensions<"int">
++        : TNodeType extends "uint"
++            ? NumOrBoolExtensions<"uint"> & UintExtensions & NumExtensions<"uint"> & IntegerExtensions<"uint">
++            : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions
++                : TNodeType extends "vec2" ?
++                    & NumOrBoolVec2Extensions<"float">
++                    & Vec2Extensions
++                    & NumVec2Extensions<"float">
++                    & FloatVecExtensions<"vec2">
++                    : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int">
++                        : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint">
++                            : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
++                                : TNodeType extends "vec3" ?
++                                    & NumOrBoolVec3Extensions<"float">
++                                    & Vec3Extensions
++                                    & NumVec3Extensions<"float">
++                                    & FloatVecExtensions<"vec3">
++                                    : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int">
++                                        : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint">
++                                            : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
++                                                : TNodeType extends "vec4" ?
++                                                    & NumOrBoolVec4Extensions<"float">
++                                                    & Vec4Extensions
++                                                    & NumVec4Extensions<"float">
++                                                    & FloatVecExtensions<"vec4">
++                                                    : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int">
++                                                        : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint">
++                                                            : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
++                                                                : TNodeType extends "color" ? ColorExtensions
++                                                                    : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
++                                                                        : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
++                                                                            : TNodeType extends "mat4" ? Mat4Extensions & MatExtensions<"mat4">
++                                                                                : {})
++    & {
++    __TypeScript_NODE_TYPE__: TNodeType;
++};
++
++export default Node;
++
++export {};
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
+index d6414185f..71ad2eab7 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
+@@ -1,4 +1,5 @@
+-export default NodeAttribute;
++import Node from "./Node.js";
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader attributes that are going to be generated
+@@ -42,3 +43,5 @@ declare class NodeAttribute {
+      */
+     node: Node | null;
+ }
++
++export default NodeAttribute;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
+index 0c192004d..645e3a8c3 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
+@@ -1,4 +1,5 @@
+-export default NodeCache;
++import Node from "./Node.js";
++
+ /**
+  * This utility class is used in {@link NodeBuilder} as an internal
+  * cache data structure for node data.
+@@ -22,7 +23,7 @@ declare class NodeCache {
+      *
+      * @type {WeakMap<Node, Object>}
+      */
+-    nodesData: WeakMap<Node, Object>;
++    nodesData: WeakMap<Node, unknown>;
+     /**
+      * Reference to a parent node cache.
+      *
+@@ -36,12 +37,14 @@ declare class NodeCache {
+      * @param {Node} node - The node.
+      * @return {?Object} The data for the node.
+      */
+-    getData(node: Node): Object | null;
++    getData(node: Node): unknown;
+     /**
+      * Sets the data for a given node.
+      *
+      * @param {Node} node - The node.
+      * @param {Object} data - The data that should be cached.
+      */
+-    setData(node: Node, data: Object): void;
++    setData(node: Node, data: unknown): void;
+ }
++
++export default NodeCache;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
+index f15875899..7a476515e 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
+@@ -1,9 +1,10 @@
+-export default NodeParser;
++import NodeFunction from "./NodeFunction.js";
++
+ /**
+  * Base class for node parsers. A derived parser must be implemented
+  * for each supported native shader language.
+  */
+-declare class NodeParser {
++declare abstract class NodeParser {
+     /**
+      * The method parses the given native code an returns a node function.
+      *
+@@ -11,5 +12,7 @@ declare class NodeParser {
+      * @param {string} source - The native shader code.
+      * @return {NodeFunction} A node function.
+      */
+-    parseFunction(): NodeFunction;
++    abstract parseFunction(source: string): NodeFunction;
+ }
++
++export default NodeParser;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
+index 3f872f033..3e3dca8f0 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
+@@ -1,11 +1,13 @@
+-export default NodeUniform;
++import UniformNode from "./UniformNode.js";
++import UniformGroupNode from './UniformGroupNode.js';
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader uniforms that are going to be generated
+  * by the builder. A dictionary of node uniforms is maintained in {@link NodeBuilder#uniforms}
+  * for this purpose.
+  */
+-declare class NodeUniform {
++declare class NodeUniform<TNodeType, TValue> {
+     /**
+      * Constructs a new node uniform.
+      *
+@@ -39,14 +41,14 @@ declare class NodeUniform {
+      *
+      * @type {UniformNode}
+      */
+-    node: UniformNode;
+-    set value(val: any);
++    node: UniformNode<TNodeType, TValue>;
++    set value(val: TValue);
+     /**
+      * The value of the uniform node.
+      *
+      * @type {any}
+      */
+-    get value(): any;
++    get value(): TValue;
+     /**
+      * The id of the uniform node.
+      *
+@@ -60,3 +62,5 @@ declare class NodeUniform {
+      */
+     get groupNode(): UniformGroupNode;
+ }
++
++export default NodeUniform;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
+index 43e82262f..6d1d88861 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
+@@ -1,4 +1,3 @@
+-export default NodeVar;
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader variables that are going to be generated
+@@ -48,3 +47,5 @@ declare class NodeVar {
+      */
+     count: number | null;
+ }
++
++export default NodeVar;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
+index 587fb0896..2333f0550 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
+@@ -1,4 +1,6 @@
+-export default NodeVarying;
++import NodeVar from './NodeVar.js';
++import { InterpolationSamplingMode, InterpolationSamplingType } from "../../constants.js";
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader varyings that are going to be generated
+@@ -16,7 +18,7 @@ declare class NodeVarying extends NodeVar {
+      * @param {?string} interpolationType - The interpolation type of the varying.
+      * @param {?string} interpolationSampling - The interpolation sampling type of the varying.
+      */
+-    constructor(name: string, type: string, interpolationType?: string | null, interpolationSampling?: string | null);
++    constructor(name: string, type: string, interpolationType?: InterpolationSamplingType | null, interpolationSampling?: InterpolationSamplingMode | null);
+     /**
+      * Whether this varying requires interpolation or not. This property can be used
+      * to check if the varying can be optimized for a variable.
+@@ -39,13 +41,14 @@ declare class NodeVarying extends NodeVar {
+      * @type {?string}
+      * @default null
+      */
+-    interpolationType: string | null;
++    interpolationType: InterpolationSamplingType | null;
+     /**
+      * The interpolation sampling type of varying data.
+      *
+      * @type {?string}
+      * @default null
+      */
+-    interpolationSampling: string | null;
++    interpolationSampling: InterpolationSamplingMode | null;
+ }
+-import NodeVar from './NodeVar.js';
++
++export default NodeVarying;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts b/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
+index af08042f6..0190410e1 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
+@@ -1,7 +1,10 @@
+-export default StructType;
++import { MemberLayout } from "./StructTypeNode.js";
++
+ declare class StructType {
+-    constructor(name: any, members: any);
+-    name: any;
+-    members: any;
++    constructor(name: string, members: MemberLayout[]);
++    name: string;
++    members: MemberLayout[];
+     output: boolean;
+ }
++
++export default StructType;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
+index b5f1a2917..49b3c2132 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
+@@ -1,4 +1,19 @@
+-export default StructTypeNode;
++import Node from './Node.js';
++import NodeBuilder from './NodeBuilder.js';
++
++export interface MembersLayout {
++    [name: string]: string | {
++        type: string;
++        atomic?: boolean;
++    };
++}
++
++export interface MemberLayout {
++    name: string;
++    type: string;
++    atomic: boolean;
++}
++
+ /**
+  * Represents a struct type node in the node-based system.
+  * This class is used to define and manage the layout and types of struct members.
+@@ -14,17 +29,13 @@ declare class StructTypeNode extends Node {
+      * @param {Object} membersLayout - The layout of the members for the struct.
+      * @param {?string} [name=null] - The optional name of the struct.
+      */
+-    constructor(membersLayout: Object, name?: string | null);
++    constructor(membersLayout: MembersLayout, name?: string | null);
+     /**
+      * The layout of the members for the struct
+      *
+      * @type {Array.<{name: string, type: string, atomic: boolean}>}
+      */
+-    membersLayout: Array<{
+-        name: string;
+-        type: string;
+-        atomic: boolean;
+-    }>;
++    membersLayout: Array<MemberLayout>;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -40,9 +51,10 @@ declare class StructTypeNode extends Node {
+      * @returns {number} The length of the struct.
+      */
+     getLength(): number;
+-    getMemberType(builder: any, name: any): string;
+-    getNodeType(builder: any): any;
+-    setup(builder: any): void;
+-    generate(builder: any): any;
++    getMemberType(builder: NodeBuilder, name: string): string;
++    getNodeType(builder: NodeBuilder): string;
++    setup(builder: NodeBuilder): undefined;
++    generate(builder: NodeBuilder): string;
+ }
+-import Node from './Node.js';
++
++export default StructTypeNode;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
+index f4cb493fb..9778fefac 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
+@@ -1,11 +1,22 @@
+-export default UniformNode;
+-export function uniform(value: any | string, type?: string): UniformNode;
++import InputNode from './InputNode.js';
++import UniformGroupNode from './UniformGroupNode.js';
++import NodeBuilder from './NodeBuilder.js';
++import { NodeUpdateType } from './constants.js';
++import NodeFrame from './NodeFrame.js';
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Matrix2 } from '../../math/Matrix2.js';
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Matrix4 } from '../../math/Matrix4.js';
++import { Color } from '../../math/Color.js';
++
+ /**
+  * Class for representing a uniform.
+  *
+  * @augments InputNode
+  */
+-declare class UniformNode extends InputNode {
++declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,7 +39,7 @@ declare class UniformNode extends InputNode {
+      * @param {string} name - The name of the uniform.
+      * @return {UniformNode} A reference to this node.
+      */
+-    setName(name: string): UniformNode;
++    setName(name: string): this;
+     /**
+      * Sets the {@link UniformNode#name} property.
+      *
+@@ -36,14 +47,14 @@ declare class UniformNode extends InputNode {
+      * @param {string} name - The name of the uniform.
+      * @return {UniformNode} A reference to this node.
+      */
+-    label(name: string): UniformNode;
++    label(name: string): this;
+     /**
+      * Sets the {@link UniformNode#groupNode} property.
+      *
+      * @param {UniformGroupNode} group - The uniform group.
+      * @return {UniformNode} A reference to this node.
+      */
+-    setGroup(group: UniformGroupNode): UniformNode;
++    setGroup(group: UniformGroupNode): this;
+     /**
+      * Returns the {@link UniformNode#groupNode}.
+      *
+@@ -58,8 +69,44 @@ declare class UniformNode extends InputNode {
+      * @return {string} The uniform hash.
+      */
+     getUniformHash(builder: NodeBuilder): string;
+-    onUpdate(callback: any, updateType: any): import("./Node.js").default;
+-    getInputType(builder: any): string;
+-    generate(builder: any, output: any): any;
++    onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
++    getInputType(builder: NodeBuilder): string;
++    generate(builder: NodeBuilder, output: string | null): string;
+ }
+-import InputNode from './InputNode.js';
++
++declare const UniformNode: {
++    /**
++     * Constructs a new uniform node.
++     *
++     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++     */
++    new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
++};
++
++type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
++
++export default UniformNode;
++
++interface Uniform {
++    (value: number, type?: "float"): UniformNode<"float", number>;
++    (value: boolean): UniformNode<"bool", boolean>;
++    (value: Vector2): UniformNode<"vec2", Vector2>;
++    (value: Vector3): UniformNode<"vec3", Vector3>;
++    (value: Vector4): UniformNode<"vec4", Vector4>;
++    (value: Matrix2): UniformNode<"mat2", Matrix2>;
++    (value: Matrix3): UniformNode<"mat3", Matrix3>;
++    (value: Matrix4): UniformNode<"mat4", Matrix4>;
++    (value: Color): UniformNode<"color", Color>;
++    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
++}
++
++/**
++ * TSL function for creating a uniform node.
++ *
++ * @function
++ * @param {any|string} value - The value of this uniform or your type. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++ * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++ * @returns {UniformNode}
++ */
++export declare const uniform: Uniform;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts b/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
+index 5d342ff3a..7ac71b49b 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
+@@ -1,30 +1,72 @@
+-export namespace NodeShaderStage {
+-    let VERTEX: string;
+-    let FRAGMENT: string;
+-}
+-export namespace NodeUpdateType {
+-    let NONE: string;
+-    let FRAME: string;
+-    let RENDER: string;
+-    let OBJECT: string;
+-}
+-export namespace NodeType {
+-    let BOOLEAN: string;
+-    let INTEGER: string;
+-    let FLOAT: string;
+-    let VECTOR2: string;
+-    let VECTOR3: string;
+-    let VECTOR4: string;
+-    let MATRIX2: string;
+-    let MATRIX3: string;
+-    let MATRIX4: string;
+-}
+-export namespace NodeAccess {
+-    let READ_ONLY: string;
+-    let WRITE_ONLY: string;
+-    let READ_WRITE: string;
+-}
+-export const defaultShaderStages: string[];
+-export const defaultBuildStages: string[];
+-export const shaderStages: string[];
+-export const vectorComponents: string[];
++/**
++ * Possible shader stages.
++ *
++ * @property {string} VERTEX The vertex shader stage.
++ * @property {string} FRAGMENT The fragment shader stage.
++ */
++export const NodeShaderStage: {
++    readonly VERTEX: "vertex";
++    readonly FRAGMENT: "fragment";
++};
++
++/**
++ * Update types of a node.
++ *
++ * @property {string} NONE The update method is not executed.
++ * @property {string} FRAME The update method is executed per frame.
++ * @property {string} RENDER The update method is executed per render. A frame might be produced by multiple render calls so this value allows more detailed updates than FRAME.
++ * @property {string} OBJECT The update method is executed per {@link Object3D} that uses the node for rendering.
++ */
++export const NodeUpdateType: {
++    readonly NONE: "none";
++    readonly FRAME: "frame";
++    readonly RENDER: "render";
++    readonly OBJECT: "object";
++};
++
++/**
++ * Data types of a node.
++ *
++ * @property {string} BOOLEAN Boolean type.
++ * @property {string} INTEGER Integer type.
++ * @property {string} FLOAT Float type.
++ * @property {string} VECTOR2 Two-dimensional vector type.
++ * @property {string} VECTOR3 Three-dimensional vector type.
++ * @property {string} VECTOR4 Four-dimensional vector type.
++ * @property {string} MATRIX2 2x2 matrix type.
++ * @property {string} MATRIX3 3x3 matrix type.
++ * @property {string} MATRIX4 4x4 matrix type.
++ */
++export const NodeType: {
++    readonly BOOLEAN: "bool";
++    readonly INTEGER: "int";
++    readonly FLOAT: "float";
++    readonly VECTOR2: "vec2";
++    readonly VECTOR3: "vec3";
++    readonly VECTOR4: "vec4";
++    readonly MATRIX2: "mat2";
++    readonly MATRIX3: "mat3";
++    readonly MATRIX4: "mat4";
++};
++
++/**
++ * Access types of a node. These are relevant for compute and storage usage.
++ *
++ * @property {string} READ_ONLY Read-only access
++ * @property {string} WRITE_ONLY Write-only access.
++ * @property {string} READ_WRITE Read and write access.
++ */
++export const NodeAccess: {
++    readonly READ_ONLY: "readOnly";
++    readonly WRITE_ONLY: "writeOnly";
++    readonly READ_WRITE: "readWrite";
++};
++
++export type NodeShaderStage = "vertex" | "fragment" | "compute";
++export type NodeUpdateType = "none" | "frame" | "render" | "object";
++export type NodeAccess = "readOnly" | "writeOnly" | "readWrite";
++
++export declare const defaultShaderStages: NodeShaderStage[];
++export declare const defaultBuildStages: string[];
++export declare const shaderStages: NodeShaderStage[];
++export declare const vectorComponents: string[];
 diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
 index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts
