@@ -11588,7 +11588,7 @@ index 254922eab..6c3f62839 100644
 +
 +export default NodeManager;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
-index 47673f68d..c4843b98d 100644
+index 47673f68d..c1dcef219 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
 @@ -1,3 +1,20 @@
@@ -11796,7 +11796,7 @@ index 47673f68d..c4843b98d 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -220,11 +237,3 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
+@@ -220,11 +237,12 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
       */
      getType(): string;
  }
@@ -11808,6 +11808,15 @@ index 47673f68d..c4843b98d 100644
 -import { Matrix2Uniform } from '../Uniform.js';
 -import { Matrix3Uniform } from '../Uniform.js';
 -import { Matrix4Uniform } from '../Uniform.js';
++
++export type NodeUniformGPU =
++    | NumberNodeUniform<unknown>
++    | Vector2NodeUniform<unknown>
++    | Vector3NodeUniform<unknown>
++    | Vector4NodeUniform<unknown>
++    | ColorNodeUniform<unknown>
++    | Matrix3NodeUniform<unknown>
++    | Matrix4NodeUniform<unknown>;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
 index c196bbe56..8baf96582 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
