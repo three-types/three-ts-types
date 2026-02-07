@@ -28,7 +28,7 @@ export {
     NodeBuilderContext,
     NodeData,
 } from "./core/NodeBuilder.js";
-export { default as NodeCache, ShaderStageNodeData } from "./core/NodeCache.js";
+export { default as NodeCache } from "./core/NodeCache.js";
 export { default as NodeCode } from "./core/NodeCode.js";
 export { default as NodeError } from "./core/NodeError.js";
 export { default as NodeFrame } from "./core/NodeFrame.js";
