@@ -3,6 +3,7 @@ import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
 import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import InputNode from "../core/InputNode.js";
+import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 
 /**
