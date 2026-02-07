@@ -1,4 +1,6 @@
+import UniformGroupNode from "./UniformGroupNode.js";
 import UniformNode from "./UniformNode.js";
+
 /**
  * {@link NodeBuilder} is going to create instances of this class during the build process
  * of nodes. They represent the final shader uniforms that are going to be generated
@@ -6,11 +8,6 @@ import UniformNode from "./UniformNode.js";
  * for this purpose.
  */
 declare class NodeUniform<TNodeType, TValue> {
-    readonly isNodeUniform: true;
-    name: string;
-    type: string | null;
-    node: UniformNode<TNodeType, TValue>;
-    needsUpdate: boolean | undefined;
     /**
      * Constructs a new node uniform.
      *
@@ -18,19 +15,52 @@ declare class NodeUniform<TNodeType, TValue> {
      * @param {string} type - The type of the uniform.
      * @param {UniformNode} node - An reference to the node.
      */
-    constructor(name: string, type: string | null, node: UniformNode<TNodeType, TValue>);
+    constructor(name: string, type: string, node: UniformNode<TNodeType, TValue>);
     /**
-     * The value of the uniform node.
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
-    get value(): TValue;
+    readonly isNodeUniform: boolean;
+    /**
+     * The name of the uniform.
+     *
+     * @type {string}
+     */
+    name: string;
+    /**
+     * The type of the uniform.
+     *
+     * @type {string}
+     */
+    type: string;
+    /**
+     * An reference to the node.
+     *
+     * @type {UniformNode}
+     */
+    node: UniformNode<TNodeType, TValue>;
     set value(val: TValue);
     /**
+     * The value of the uniform node.
+     *
+     * @type {any}
+     */
+    get value(): TValue;
+    /**
      * The id of the uniform node.
+     *
+     * @type {number}
      */
     get id(): number;
     /**
      * The uniform node's group.
+     *
+     * @type {UniformGroupNode}
      */
-    get groupNode(): import("./UniformGroupNode.js").default;
+    get groupNode(): UniformGroupNode;
 }
+
 export default NodeUniform;
