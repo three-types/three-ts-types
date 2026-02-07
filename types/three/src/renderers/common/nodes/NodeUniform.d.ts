@@ -237,3 +237,12 @@ export class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
      */
     getType(): string;
 }
+
+export type NodeUniformGPU =
+    | NumberNodeUniform<unknown>
+    | Vector2NodeUniform<unknown>
+    | Vector3NodeUniform<unknown>
+    | Vector4NodeUniform<unknown>
+    | ColorNodeUniform<unknown>
+    | Matrix3NodeUniform<unknown>
+    | Matrix4NodeUniform<unknown>;
