@@ -9988,6 +9988,192 @@ index 8b5885c3c..961cefb6a 100644
 +interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
 +
 +export default VolumeNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
+index 790999ee9..6222732ab 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
+@@ -1,4 +1,103 @@
+-export default NodeMaterialObserver;
++import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
++import RenderObject from '../../../renderers/common/RenderObject.js';
++import Renderer from '../../../renderers/common/Renderer.js';
++import { Material } from '../../Material.js';
++import { Light } from '../../../lights/Light.js';
++import LightsNode from '../../../nodes/lighting/LightsNode.js';
++import NodeFrame from '../../../nodes/core/NodeFrame.js';
++import { BufferAttribute } from '../../../core/BufferAttribute.js';
++import { Matrix4 } from '../../../math/Matrix4.js';
++
++declare const refreshUniforms: readonly [
++    "alphaMap",
++    "alphaTest",
++    "anisotropy",
++    "anisotropyMap",
++    "anisotropyRotation",
++    "aoMap",
++    "aoMapIntensity",
++    "attenuationColor",
++    "attenuationDistance",
++    "bumpMap",
++    "clearcoat",
++    "clearcoatMap",
++    "clearcoatNormalMap",
++    "clearcoatNormalScale",
++    "clearcoatRoughness",
++    "color",
++    "dispersion",
++    "displacementMap",
++    "emissive",
++    "emissiveIntensity",
++    "emissiveMap",
++    "envMap",
++    "envMapIntensity",
++    "gradientMap",
++    "ior",
++    "iridescence",
++    "iridescenceIOR",
++    "iridescenceMap",
++    "iridescenceThicknessMap",
++    "lightMap",
++    "lightMapIntensity",
++    "map",
++    "matcap",
++    "metalness",
++    "metalnessMap",
++    "normalMap",
++    "normalScale",
++    "opacity",
++    "roughness",
++    "roughnessMap",
++    "sheen",
++    "sheenColor",
++    "sheenColorMap",
++    "sheenRoughnessMap",
++    "shininess",
++    "specular",
++    "specularColor",
++    "specularColorMap",
++    "specularIntensity",
++    "specularIntensityMap",
++    "specularMap",
++    "thickness",
++    "transmission",
++    "transmissionMap",
++];
++
++type RefreshUniform = (typeof refreshUniforms)[number];
++
++type MaterialData = {
++    [K in RefreshUniform]?: unknown;
++};
++
++interface AttributesData {
++    [name: string]: {
++        id: number;
++        version: number;
++    };
++}
++
++interface RenderObjectData {
++    material: MaterialData;
++    geometry: {
++        id: number;
++        attributes: AttributesData;
++        indexId: number | null;
++        indexVersion: number | null;
++        drawRange: {
++            start: number;
++            count: number;
++        };
++    };
++    worldMatrix: Matrix4;
++    version?: number;
++}
++
++interface LightData {
++    map: number;
++}
++
+ /**
+  * This class is used by {@link WebGPURenderer} as management component.
+  * It's primary purpose is to determine whether render objects require a
+@@ -17,7 +116,7 @@ declare class NodeMaterialObserver {
+      *
+      * @type {WeakMap<RenderObject,Object>}
+      */
+-    renderObjects: WeakMap<RenderObject, Object>;
++    renderObjects: WeakMap<RenderObject, RenderObjectData>;
+     /**
+      * Whether the material uses node objects or not.
+      *
+@@ -35,7 +134,7 @@ declare class NodeMaterialObserver {
+      *
+      * @type {Array<string>}
+      */
+-    refreshUniforms: Array<string>;
++    refreshUniforms: readonly RefreshUniform[];
+     /**
+      * Holds the current render ID from the node frame.
+      *
+@@ -63,7 +162,7 @@ declare class NodeMaterialObserver {
+      * @param {RenderObject} renderObject - The render object.
+      * @return {Object} The monitoring data.
+      */
+-    getRenderObjectData(renderObject: RenderObject): Object;
++    getRenderObjectData(renderObject: RenderObject): RenderObjectData;
+     /**
+      * Returns an attribute data structure holding the attributes versions for
+      * monitoring.
+@@ -71,7 +170,7 @@ declare class NodeMaterialObserver {
+      * @param {Object} attributes - The geometry attributes.
+      * @return {Object} An object for monitoring the versions of attributes.
+      */
+-    getAttributesData(attributes: Object): Object;
++    getAttributesData(attributes: Record<string, BufferAttribute>): AttributesData;
+     /**
+      * Returns `true` if the node builder's material uses
+      * node properties.
+@@ -87,7 +186,7 @@ declare class NodeMaterialObserver {
+      * @param {Material} material - The material.
+      * @return {Object} An object for monitoring material properties.
+      */
+-    getMaterialData(material: Material): Object;
++    getMaterialData(material: Material): MaterialData;
+     /**
+      * Returns `true` if the given render object has not changed its state.
+      *
+@@ -95,14 +194,14 @@ declare class NodeMaterialObserver {
+      * @param {Array<Light>} lightsData - The current material lights.
+      * @return {boolean} Whether the given render object has changed its state or not.
+      */
+-    equals(renderObject: RenderObject, lightsData: Array<Light>): boolean;
++    equals(renderObject: RenderObject, lightsData: Light[]): boolean;
+     /**
+      * Returns the lights data for the given material lights.
+      *
+      * @param {Array<Light>} materialLights - The material lights.
+      * @return {Array<Object>} The lights data for the given material lights.
+      */
+-    getLightsData(materialLights: Array<Light>): Array<Object>;
++    getLightsData(materialLights: Light[]): LightData[];
+     /**
+      * Returns the lights for the given lights node and render ID.
+      *
+@@ -110,7 +209,7 @@ declare class NodeMaterialObserver {
+      * @param {number} renderId - The render ID.
+      * @return {Array<Object>} The lights for the given lights node and render ID.
+      */
+-    getLights(lightsNode: LightsNode, renderId: number): Array<Object>;
++    getLights(lightsNode: LightsNode, renderId: number): LightData[];
+     /**
+      * Checks if the given render object requires a refresh.
+      *
+@@ -120,3 +219,5 @@ declare class NodeMaterialObserver {
+      */
+     needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
+ }
++
++export default NodeMaterialObserver;
 diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
 index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts
