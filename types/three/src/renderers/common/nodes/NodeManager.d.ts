@@ -15,6 +15,14 @@ import RenderObject from "../RenderObject.js";
 import NodeBuilderState from "./NodeBuilderState.js";
 import NodeUniformsGroup from "./NodeUniformsGroup.js";
 
+declare module "../../../scenes/Scene.js" {
+    interface Scene {
+        environmentNode?: Node<"vec3"> | null | undefined;
+        backgroundNode?: Node | null | undefined;
+        fogNode?: Node | null | undefined;
+    }
+}
+
 /**
  * This renderer module manages node-related objects and is the
  * primary interface between the renderer and the node system.
