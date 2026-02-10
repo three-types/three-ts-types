@@ -1,6 +1,6 @@
 import { Camera } from "../../cameras/Camera.js";
 import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
-import { TypedArray } from "../../core/BufferAttribute.d.ts";
+import { TypedArray } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
@@ -199,7 +199,7 @@ declare class Renderer {
      * @type {ContextNode}
      * @property {Object} value - The context value object.
      */
-    contextNode: ContextNode;
+    contextNode: ContextNode<unknown>;
     /**
      * The node library defines how certain library objects like materials, lights
      * or tone mapping functions are mapped to node types. This is required since
