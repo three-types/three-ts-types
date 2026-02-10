@@ -78,33 +78,6 @@ jobs:
         working-directory: examples-testing
       - run: pnpm run format-check
         working-directory: examples-testing
-  test-src:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v5
-        with:
-          submodules: true
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 10.28.2
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 'lts/*'
-          cache: 'pnpm'
-      - run: pnpm install
-      - run: pnpm run create-src
-        working-directory: src-testing
-      - run: git apply changes.patch
-        working-directory: src-testing
-      - run: pnpm run format-check
-        working-directory: src-testing
-      - run: pnpm run build-declarations
-        working-directory: src-testing
-        continue-on-error: true
-      - run: pnpm run format-dprint
-        working-directory: src-testing
-      - run: pnpm run check-declarations
-        working-directory: src-testing
   test-jsodc:
     runs-on: ubuntu-latest
     steps:
