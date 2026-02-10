@@ -1,6 +1,6 @@
 import { Camera } from "../../cameras/Camera.js";
 import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
-import { TypedArray } from "../../core/BufferAttribute.js";
+import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
@@ -729,7 +729,7 @@ declare class Renderer {
      * @param {MRTNode} mrt - The MRT node to set.
      * @return {Renderer} A reference to this renderer.
      */
-    setMRT(mrt: MRTNode): Renderer;
+    setMRT(mrt: MRTNode | null): Renderer;
     /**
      * Returns the MRT configuration.
      *
@@ -857,7 +857,7 @@ declare class Renderer {
      * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
      * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
      */
-    getArrayBufferAsync(attribute: StorageBufferAttribute): Promise<ArrayBuffer>;
+    getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
     /**
      * Returns the rendering context.
      *
@@ -1345,8 +1345,8 @@ declare class Renderer {
     copyTextureToTexture(
         srcTexture: Texture,
         dstTexture: Texture,
-        srcRegion?: Box2 | Box3,
-        dstPosition?: Vector2 | Vector3,
+        srcRegion?: Box2 | Box3 | null,
+        dstPosition?: Vector2 | Vector3 | null,
         srcLevel?: number,
         dstLevel?: number,
     ): void;
