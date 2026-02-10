@@ -17732,7 +17732,7 @@ index 05098c8d4..9164cb14b 100644
      mouse.y = e.offsetY / window.innerHeight;
  }
 diff --git a/examples-testing/examples/webgpu_occlusion.ts b/examples-testing/examples/webgpu_occlusion.ts
-index e49f98ce7..e7061f5d2 100644
+index e49f98ce7..117bba8ca 100644
 --- a/examples-testing/examples/webgpu_occlusion.ts
 +++ b/examples-testing/examples/webgpu_occlusion.ts
 @@ -3,10 +3,16 @@ import { nodeObject, uniform } from 'three/tsl';
@@ -17761,7 +17761,7 @@ index e49f98ce7..e7061f5d2 100644
  
 -    async update(frame) {
 -        const isOccluded = frame.renderer.isOccluded(this.testObject);
-+    async update(frame: THREE.NodeFrame) {
++    update(frame: THREE.NodeFrame): undefined {
 +        const isOccluded = frame.renderer!.isOccluded(this.testObject);
  
          this.uniformNode.value.copy(isOccluded ? this.occludedColor : this.normalColor);

@@ -5,16 +5,28 @@
  * This module is an abstract base class for all concrete bindings types.
  *
  * @abstract
+ * @private
  */
 declare class Binding {
-    name: string;
-    visibility: number;
     /**
      * Constructs a new binding.
      *
      * @param {string} [name=''] - The binding's name.
      */
     constructor(name?: string);
+    /**
+     * The binding's name.
+     *
+     * @type {string}
+     */
+    name: string;
+    /**
+     * A bitmask that defines in what shader stages the
+     * binding's resource is accessible.
+     *
+     * @type {number}
+     */
+    visibility: number;
     /**
      * Makes sure binding's resource is visible for the given shader stage.
      *
@@ -32,6 +44,7 @@ declare class Binding {
      *
      * @return {Binding} The cloned binding.
      */
-    clone(): Binding & this;
+    clone(): Binding;
 }
+
 export default Binding;

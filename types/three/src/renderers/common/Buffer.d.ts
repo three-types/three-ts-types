@@ -1,31 +1,58 @@
+import { TypedArray } from "../../core/BufferAttribute.js";
 import Binding from "./Binding.js";
+
 /**
  * Represents a buffer binding type.
  *
+ * @private
  * @abstract
+ * @augments Binding
  */
 declare class Buffer extends Binding {
-    readonly isBuffer: true;
-    bytesPerElement: number;
-    _buffer: Float32Array | null;
-    _updateRanges: {
-        start: number;
-        count: number;
-    }[];
     /**
      * Constructs a new buffer.
      *
      * @param {string} name - The buffer's name.
      * @param {TypedArray} [buffer=null] - The buffer.
      */
-    constructor(name?: string, buffer?: Float32Array | null);
+    constructor(name: string, buffer?: TypedArray);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isBuffer: boolean;
+    /**
+     * The bytes per element.
+     *
+     * @type {number}
+     */
+    bytesPerElement: number;
+    /**
+     * A reference to the internal buffer.
+     *
+     * @private
+     * @type {TypedArray}
+     */
+    private _buffer;
+    /**
+     * An array of update ranges.
+     *
+     * @private
+     * @type {Array<{start: number, count: number}>}
+     */
+    private _updateRanges;
     /**
      * The array of update ranges.
+     *
+     * @type {Array<{start: number, count: number}>}
      */
-    get updateRanges(): {
+    get updateRanges(): Array<{
         start: number;
         count: number;
-    }[];
+    }>;
     /**
      * Adds an update range.
      *
@@ -39,12 +66,18 @@ declare class Buffer extends Binding {
     clearUpdateRanges(): void;
     /**
      * The buffer's byte length.
+     *
+     * @type {number}
+     * @readonly
      */
     get byteLength(): number;
     /**
      * A reference to the internal buffer.
+     *
+     * @type {Float32Array}
+     * @readonly
      */
-    get buffer(): Float32Array | null;
+    get buffer(): TypedArray;
     /**
      * Updates the binding.
      *
@@ -53,4 +86,5 @@ declare class Buffer extends Binding {
      */
     update(): boolean;
 }
+
 export default Buffer;

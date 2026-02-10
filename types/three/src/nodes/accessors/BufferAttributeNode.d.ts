@@ -5,6 +5,7 @@ import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribut
 import InputNode from "../core/InputNode.js";
 import Node from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
+
 /**
  * In earlier `three.js` versions it was only possible to define attribute data
  * on geometry level. With `BufferAttributeNode`, it is also possible to do this
@@ -25,16 +26,9 @@ import NodeBuilder from "../core/NodeBuilder.js";
  * ```js
  * material.positionNode = positionBuffer.toAttribute();
  * ```
+ * @augments InputNode
  */
 declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
-    static get type(): string;
-    readonly isBufferNode: true;
-    bufferType: string | null;
-    bufferStride: number;
-    bufferOffset: number;
-    usage: Usage;
-    instanced: boolean;
-    attribute: BufferAttribute | InterleavedBufferAttribute | null;
     /**
      * Constructs a new buffer attribute node.
      *
@@ -44,11 +38,62 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      * @param {number} [bufferOffset=0] - The buffer offset.
      */
     constructor(
-        value: TypedArray | InterleavedBuffer | BufferAttribute,
+        value: BufferAttribute | InterleavedBuffer | TypedArray,
         bufferType?: string | null,
         bufferStride?: number,
         bufferOffset?: number,
     );
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isBufferNode: boolean;
+    /**
+     * The buffer type (e.g. `'vec3'`).
+     *
+     * @type {?string}
+     * @default null
+     */
+    bufferType: string | null;
+    /**
+     * The buffer stride.
+     *
+     * @type {number}
+     * @default 0
+     */
+    bufferStride: number;
+    /**
+     * The buffer offset.
+     *
+     * @type {number}
+     * @default 0
+     */
+    bufferOffset: number;
+    /**
+     * The usage property. Set this to `THREE.DynamicDrawUsage` via `.setUsage()`,
+     * if you are planning to update the attribute data per frame.
+     *
+     * @type {number}
+     * @default StaticDrawUsage
+     */
+    usage: Usage;
+    /**
+     * Whether the attribute is instanced or not.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    instanced: boolean;
+    /**
+     * A reference to the buffer attribute.
+     *
+     * @type {?BufferAttribute}
+     * @default null
+     */
+    attribute: BufferAttribute | InterleavedBufferAttribute | null;
     /**
      * This method is overwritten since the attribute data might be shared
      * and thus the hash should be shared as well.
@@ -56,7 +101,7 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The hash.
      */
-    getHash(builder: NodeBuilder): any;
+    getHash(builder: NodeBuilder): string;
     /**
      * This method is overwritten since the node type is inferred from
      * the buffer attribute.
@@ -64,7 +109,7 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The node type.
      */
-    getNodeType(builder: NodeBuilder): string | null;
+    getNodeType(builder: NodeBuilder): string;
     /**
      * Depending on which value was passed to the node, `setup()` behaves
      * differently. If no instance of `BufferAttribute` was passed, the method
@@ -72,14 +117,14 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      *
      * @param {NodeBuilder} builder - The current node builder.
      */
-    setup(builder: NodeBuilder): void;
+    setup(builder: NodeBuilder): undefined;
     /**
      * Generates the code snippet of the buffer attribute node.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {string} The generated code snippet.
      */
-    generate(builder: NodeBuilder): string | null | undefined;
+    generate(builder: NodeBuilder): string;
     /**
      * Overwrites the default implementation to return a fixed value `'bufferAttribute'`.
      *
@@ -102,6 +147,7 @@ declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | I
      */
     setInstanced(value: boolean): this;
 }
+
 declare const BufferAttributeNode: {
     /**
      * Constructs a new buffer attribute node.
@@ -118,10 +164,13 @@ declare const BufferAttributeNode: {
         bufferOffset?: number,
     ): BufferAttributeNode<TNodeType>;
 };
+
 type BufferAttributeNode<TNodeType> =
     & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
     & BufferAttributeNodeClass;
+
 export default BufferAttributeNode;
+
 /**
  * TSL function for creating a buffer attribute node.
  *
@@ -138,6 +187,7 @@ export declare const bufferAttribute: <TNodeType>(
     stride?: number,
     offset?: number,
 ) => Node<TNodeType>;
+
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage.
  * Use this function if attribute data are updated per frame.
@@ -155,6 +205,7 @@ export declare const dynamicBufferAttribute: <TNodeType>(
     stride?: number,
     offset?: number,
 ) => Node<TNodeType>;
+
 /**
  * TSL function for creating a buffer attribute node but with enabled instancing
  *
@@ -171,6 +222,7 @@ export declare const instancedBufferAttribute: <TNodeType>(
     stride?: number,
     offset?: number,
 ) => Node<TNodeType>;
+
 /**
  * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
  *
@@ -187,6 +239,7 @@ export declare const instancedDynamicBufferAttribute: <TNodeType>(
     stride?: number,
     offset?: number,
 ) => Node<TNodeType>;
+
 declare module "./BufferNode.js" {
     interface BufferNodeExtensions<TNodeType, TValue> {
         toAttribute: () => BufferAttributeNode<TNodeType>;

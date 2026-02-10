@@ -1,15 +1,20 @@
 import Buffer from "./Buffer.js";
+
 /**
  * Represents a uniform buffer binding type.
+ *
+ * @private
+ * @augments Buffer
  */
 declare class UniformBuffer extends Buffer {
-    readonly isUniformBuffer: true;
     /**
-     * Constructs a new uniform buffer.
+     * This flag can be used for type testing.
      *
-     * @param {string} name - The buffer's name.
-     * @param {TypedArray} [buffer=null] - The buffer.
+     * @type {boolean}
+     * @readonly
+     * @default true
      */
-    constructor(name?: string, buffer?: null);
+    readonly isUniformBuffer: boolean;
 }
+
 export default UniformBuffer;

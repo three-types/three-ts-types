@@ -9988,6 +9988,4586 @@ index 8b5885c3c..961cefb6a 100644
 +interface VolumeNodeMaterial extends VolumeNodeMaterialNodeProperties, MaterialProperties {}
 +
 +export default VolumeNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
+index 790999ee9..d84f24ac4 100644
+--- a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
++++ b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
+@@ -1,4 +1,12 @@
+-export default NodeMaterialObserver;
++import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
++import RenderObject from '../../../renderers/common/RenderObject.js';
++import Renderer from '../../../renderers/common/Renderer.js';
++import { Material } from '../../Material.js';
++import { Light } from '../../../lights/Light.js';
++import LightsNode from '../../../nodes/lighting/LightsNode.js';
++import NodeFrame from '../../../nodes/core/NodeFrame.js';
++import { BufferAttribute } from '../../../core/BufferAttribute.js';
++
+ /**
+  * This class is used by {@link WebGPURenderer} as management component.
+  * It's primary purpose is to determine whether render objects require a
+@@ -17,7 +25,7 @@ declare class NodeMaterialObserver {
+      *
+      * @type {WeakMap<RenderObject,Object>}
+      */
+-    renderObjects: WeakMap<RenderObject, Object>;
++    renderObjects: WeakMap<RenderObject, unknown>;
+     /**
+      * Whether the material uses node objects or not.
+      *
+@@ -35,7 +43,7 @@ declare class NodeMaterialObserver {
+      *
+      * @type {Array<string>}
+      */
+-    refreshUniforms: Array<string>;
++    refreshUniforms: string[];
+     /**
+      * Holds the current render ID from the node frame.
+      *
+@@ -63,7 +71,7 @@ declare class NodeMaterialObserver {
+      * @param {RenderObject} renderObject - The render object.
+      * @return {Object} The monitoring data.
+      */
+-    getRenderObjectData(renderObject: RenderObject): Object;
++    getRenderObjectData(renderObject: RenderObject): unknown;
+     /**
+      * Returns an attribute data structure holding the attributes versions for
+      * monitoring.
+@@ -71,7 +79,7 @@ declare class NodeMaterialObserver {
+      * @param {Object} attributes - The geometry attributes.
+      * @return {Object} An object for monitoring the versions of attributes.
+      */
+-    getAttributesData(attributes: Object): Object;
++    getAttributesData(attributes: Record<string, BufferAttribute>): unknown;
+     /**
+      * Returns `true` if the node builder's material uses
+      * node properties.
+@@ -87,7 +95,7 @@ declare class NodeMaterialObserver {
+      * @param {Material} material - The material.
+      * @return {Object} An object for monitoring material properties.
+      */
+-    getMaterialData(material: Material): Object;
++    getMaterialData(material: Material): unknown;
+     /**
+      * Returns `true` if the given render object has not changed its state.
+      *
+@@ -95,14 +103,14 @@ declare class NodeMaterialObserver {
+      * @param {Array<Light>} lightsData - The current material lights.
+      * @return {boolean} Whether the given render object has changed its state or not.
+      */
+-    equals(renderObject: RenderObject, lightsData: Array<Light>): boolean;
++    equals(renderObject: RenderObject, lightsData: Light[]): boolean;
+     /**
+      * Returns the lights data for the given material lights.
+      *
+      * @param {Array<Light>} materialLights - The material lights.
+      * @return {Array<Object>} The lights data for the given material lights.
+      */
+-    getLightsData(materialLights: Array<Light>): Array<Object>;
++    getLightsData(materialLights: Light[]): unknown[];
+     /**
+      * Returns the lights for the given lights node and render ID.
+      *
+@@ -110,7 +118,7 @@ declare class NodeMaterialObserver {
+      * @param {number} renderId - The render ID.
+      * @return {Array<Object>} The lights for the given lights node and render ID.
+      */
+-    getLights(lightsNode: LightsNode, renderId: number): Array<Object>;
++    getLights(lightsNode: LightsNode, renderId: number): unknown[];
+     /**
+      * Checks if the given render object requires a refresh.
+      *
+@@ -120,3 +128,5 @@ declare class NodeMaterialObserver {
+      */
+     needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
+ }
++
++export default NodeMaterialObserver;
+diff --git a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
+index 1f855a535..b0e732fa0 100644
+--- a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
+@@ -1,8 +1,11 @@
+-export default BufferAttributeNode;
+-export function bufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function dynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function instancedBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
+-export function instancedDynamicBufferAttribute(array: BufferAttribute | InterleavedBuffer | TypedArray, type?: string | null, stride?: number, offset?: number): BufferAttributeNode | Node;
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import InputNode from '../core/InputNode.js';
++import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
++import NodeBuilder from '../core/NodeBuilder.js';
++import { Usage } from "../../constants.js";
++import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++import Node from '../core/Node.js';
++
+ /**
+  * In earlier `three.js` versions it was only possible to define attribute data
+  * on geometry level. With `BufferAttributeNode`, it is also possible to do this
+@@ -25,7 +28,7 @@ export function instancedDynamicBufferAttribute(array: BufferAttribute | Interle
+  * ```
+  * @augments InputNode
+  */
+-declare class BufferAttributeNode extends InputNode {
++declare class BufferAttributeNodeClass extends InputNode<unknown, TypedArray | InterleavedBuffer | BufferAttribute> {
+     /**
+      * Constructs a new buffer attribute node.
+      *
+@@ -71,7 +74,7 @@ declare class BufferAttributeNode extends InputNode {
+      * @type {number}
+      * @default StaticDrawUsage
+      */
+-    usage: number;
++    usage: Usage;
+     /**
+      * Whether the attribute is instanced or not.
+      *
+@@ -85,7 +88,7 @@ declare class BufferAttributeNode extends InputNode {
+      * @type {?BufferAttribute}
+      * @default null
+      */
+-    attribute: BufferAttribute | null;
++    attribute: BufferAttribute | InterleavedBufferAttribute | null;
+     /**
+      * This method is overwritten since the attribute data might be shared
+      * and thus the hash should be shared as well.
+@@ -109,7 +112,7 @@ declare class BufferAttributeNode extends InputNode {
+      *
+      * @param {NodeBuilder} builder - The current node builder.
+      */
+-    setup(builder: NodeBuilder): void;
++    setup(builder: NodeBuilder): undefined;
+     /**
+      * Generates the code snippet of the buffer attribute node.
+      *
+@@ -130,14 +133,110 @@ declare class BufferAttributeNode extends InputNode {
+      * @param {number} value - The usage to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
+-    setUsage(value: number): BufferAttributeNode;
++    setUsage(value: Usage): this;
+     /**
+      * Sets the `instanced` property to the given value.
+      *
+      * @param {boolean} value - The value to set.
+      * @return {BufferAttributeNode} A reference to this node.
+      */
+-    setInstanced(value: boolean): BufferAttributeNode;
++    setInstanced(value: boolean): this;
++}
++
++declare const BufferAttributeNode: {
++    /**
++     * Constructs a new buffer attribute node.
++     *
++     * @param {BufferAttribute|InterleavedBuffer|TypedArray} value - The attribute data.
++     * @param {?string} [bufferType=null] - The buffer type (e.g. `'vec3'`).
++     * @param {number} [bufferStride=0] - The buffer stride.
++     * @param {number} [bufferOffset=0] - The buffer offset.
++     */
++    new<TNodeType>(
++        value: TypedArray | InterleavedBuffer | BufferAttribute,
++        bufferType?: string | null,
++        bufferStride?: number,
++        bufferOffset?: number,
++    ): BufferAttributeNode<TNodeType>;
++};
++
++type BufferAttributeNode<TNodeType> =
++    & InputNode<TNodeType, TypedArray | InterleavedBuffer | BufferAttribute>
++    & BufferAttributeNodeClass;
++
++export default BufferAttributeNode;
++
++/**
++ * TSL function for creating a buffer attribute node.
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const bufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with dynamic draw usage.
++ * Use this function if attribute data are updated per frame.
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const dynamicBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with enabled instancing
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const instancedBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++/**
++ * TSL function for creating a buffer attribute node but with dynamic draw usage and enabled instancing
++ *
++ * @function
++ * @param {BufferAttribute|InterleavedBuffer|TypedArray} array - The attribute data.
++ * @param {?string} [type=null] - The buffer type (e.g. `'vec3'`).
++ * @param {number} [stride=0] - The buffer stride.
++ * @param {number} [offset=0] - The buffer offset.
++ * @returns {BufferAttributeNode|Node}
++ */
++export declare const instancedDynamicBufferAttribute: <TNodeType>(
++    array: BufferAttribute | InterleavedBuffer | TypedArray,
++    type?: TNodeType | null,
++    stride?: number,
++    offset?: number,
++) => Node<TNodeType>;
++
++declare module "./BufferNode.js" {
++    interface BufferNodeExtensions<TNodeType, TValue> {
++        toAttribute: () => BufferAttributeNode<TNodeType>;
++    }
+ }
+-import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
+-import InputNode from '../core/InputNode.js';
+diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
+index bf1d89430..85e2ae4ab 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
+@@ -1,10 +1,81 @@
+-export default Node;
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++import { NodeUpdateType } from './constants.js';
++import NodeFrame from './NodeFrame.js';
++import NodeBuilder from './NodeBuilder.js';
++
++interface NodeJSONMeta {
++    textures: {
++        [key: string]: unknown;
++    };
++    images: {
++        [key: string]: unknown;
++    };
++    nodes: {
++        [key: string]: NodeJSONIntermediateOutputData;
++    };
++}
++
++interface NodeJSONMetadata {
++    version: number;
++    type: "Node";
++    generator: "Node.toJSON";
++}
++
++interface NodeJSONInputNodes {
++    [property: string]:
++        | string[]
++        | {
++        [index: string]: string | undefined;
++    }
++        | string
++        | undefined;
++}
++
++export interface NodeJSONInputData {
++    inputNodes?: NodeJSONInputNodes | undefined;
++    meta: {
++        textures: {
++            [key: string]: unknown;
++        };
++        nodes: {
++            [key: string]: Node;
++        };
++    };
++}
++
++export interface NodeJSONIntermediateOutputData {
++    uuid: string;
++    type: string | undefined;
++    meta?: NodeJSONMeta | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONIntermediateOutputData[];
++}
++
++interface NodeJSONOutputData {
++    uuid: string;
++    type: string | undefined;
++    metadata?: NodeJSONMetadata;
++    inputNodes?: NodeJSONInputNodes | undefined;
++    textures?: unknown[];
++    images?: unknown[];
++    nodes?: NodeJSONOutputData[];
++}
++
++export interface NodeChild {
++    property: string;
++    index?: number | string;
++    childNode: Node;
++}
++
+ /**
+  * Base class for all nodes.
+  *
+  * @augments EventDispatcher
+  */
+-declare class Node extends EventDispatcher {
++declare class NodeClass extends EventDispatcher<{ dispose: {}; }> {
+     static get type(): string;
+     /**
+      * Constructs a new node.
+@@ -25,21 +96,21 @@ declare class Node extends EventDispatcher {
+      * @type {string}
+      * @default 'none'
+      */
+-    updateType: string;
++    updateType: NodeUpdateType;
+     /**
+      * The update type of the node's {@link Node#updateBefore} method. Possible values are listed in {@link NodeUpdateType}.
+      *
+      * @type {string}
+      * @default 'none'
+      */
+-    updateBeforeType: string;
++    updateBeforeType: NodeUpdateType;
+     /**
+      * The update type of the node's {@link Node#updateAfter} method. Possible values are listed in {@link NodeUpdateType}.
+      *
+      * @type {string}
+      * @default 'none'
+      */
+-    updateAfterType: string;
++    updateAfterType: NodeUpdateType;
+     /**
+      * The UUID of the node.
+      *
+@@ -86,7 +157,6 @@ declare class Node extends EventDispatcher {
+      * @default true
+      */
+     readonly isNode: boolean;
+-    _beforeNodes: any;
+     /**
+      * The cache key of this node.
+      *
+@@ -124,7 +194,7 @@ declare class Node extends EventDispatcher {
+      * @type {string}
+      * @readonly
+      */
+-    readonly get type(): string;
++    get type(): string;
+     /**
+      * Convenient method for defining {@link Node#update}.
+      *
+@@ -132,7 +202,7 @@ declare class Node extends EventDispatcher {
+      * @param {string} updateType - The update type.
+      * @return {Node} A reference to this node.
+      */
+-    onUpdate(callback: Function, updateType: string): Node;
++    onUpdate(callback: (this: this, frame: NodeFrame) => unknown, updateType: NodeUpdateType): this;
+     /**
+      * The method can be implemented to update the node's internal state when it is used to render an object.
+      * The {@link Node#updateType} property defines how often the update is executed.
+@@ -141,7 +211,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    update(): boolean | null;
++    update(frame: NodeFrame): boolean | undefined;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `FRAME`.
+@@ -149,7 +219,7 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onFrameUpdate(callback: Function): Node;
++    onFrameUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `RENDER`.
+@@ -157,7 +227,7 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onRenderUpdate(callback: Function): Node;
++    onRenderUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
+      * this method automatically sets the update type to `OBJECT`.
+@@ -165,14 +235,14 @@ declare class Node extends EventDispatcher {
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onObjectUpdate(callback: Function): Node;
++    onObjectUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+     /**
+      * Convenient method for defining {@link Node#updateReference}.
+      *
+      * @param {Function} callback - The update method.
+      * @return {Node} A reference to this node.
+      */
+-    onReference(callback: Function): Node;
++    onReference(callback: (this: this, frame: NodeBuilder | NodeFrame) => unknown): this;
+     /**
+      * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
+      * to such objects based on a given state (e.g. the current node frame or builder).
+@@ -180,7 +250,7 @@ declare class Node extends EventDispatcher {
+      * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
+      * @return {any} The updated reference.
+      */
+-    updateReference(): any;
++    updateReference(state: NodeBuilder | NodeFrame): unknown;
+     /**
+      * By default this method returns the value of the {@link Node#global} flag. This method
+      * can be overwritten in derived classes if an analytical way is required to determine the
+@@ -189,31 +259,25 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {boolean} Whether this node is global or not.
+      */
+-    isGlobal(): boolean;
++    isGlobal(builder: NodeBuilder): boolean;
+     /**
+      * Generator function that can be used to iterate over the child nodes.
+      *
+      * @generator
+      * @yields {Node} A child node.
+      */
+-    getChildren(): Generator<any, void, unknown>;
++    getChildren(): Generator<Node<unknown>, void, unknown>;
+     /**
+      * Calling this method dispatches the `dispose` event. This event can be used
+      * to register event listeners for clean up tasks.
+      */
+     dispose(): void;
+-    /**
+-     * Callback for {@link Node#traverse}.
+-     *
+-     * @callback traverseCallback
+-     * @param {Node} node - The current node.
+-     */
+     /**
+      * Can be used to traverse through the node's hierarchy.
+      *
+      * @param {traverseCallback} callback - A callback that is executed per node.
+      */
+-    traverse(callback: (node: Node) => any): void;
++    traverse(callback: (node: Node) => void): void;
+     /**
+      * Returns the child nodes of this node.
+      *
+@@ -241,7 +305,7 @@ declare class Node extends EventDispatcher {
+      *
+      * @return {Node} A reference to this node.
+      */
+-    getScope(): Node;
++    getScope(): this;
+     /**
+      * Returns the hash of the node which is used to identify the node. By default it's
+      * the {@link Node#uuid} however derived node classes might have to overwrite this method
+@@ -250,40 +314,25 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {string} The hash.
+      */
+-    getHash(): string;
++    getHash(builder: NodeBuilder): string;
+     /**
+      * Returns the update type of {@link Node#update}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateType(): NodeUpdateType;
+     /**
+      * Returns the update type of {@link Node#updateBefore}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateBeforeType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateBeforeType(): NodeUpdateType;
+     /**
+      * Returns the update type of {@link Node#updateAfter}.
+      *
+      * @return {NodeUpdateType} The update type.
+      */
+-    getUpdateAfterType(): {
+-        NONE: string;
+-        FRAME: string;
+-        RENDER: string;
+-        OBJECT: string;
+-    };
++    getUpdateAfterType(): NodeUpdateType;
+     /**
+      * Certain types are composed of multiple elements. For example a `vec3`
+      * is composed of three `float` values. This method returns the type of
+@@ -300,7 +349,7 @@ declare class Node extends EventDispatcher {
+      * @param {string} name - The name of the member.
+      * @return {string} The type of the node.
+      */
+-    getMemberType(): string;
++    getMemberType(builder: NodeBuilder, name: string): string;
+     /**
+      * Returns the node's type.
+      *
+@@ -324,7 +373,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?number} The number of elements in the node array.
+      */
+-    getArrayCount(): number | null;
++    getArrayCount(builder: NodeBuilder): number | null;
+     /**
+      * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
+      * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
+@@ -333,7 +382,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {?Node} The output node.
+      */
+-    setup(builder: NodeBuilder): Node | null;
++    setup(builder: NodeBuilder): Node | null | undefined;
+     /**
+      * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
+      * This stage analyzes the node hierarchy and ensures descendent nodes are built.
+@@ -350,7 +399,7 @@ declare class Node extends EventDispatcher {
+      * @param {?string} [output] - Can be used to define the output type.
+      * @return {?string} The generated shader string.
+      */
+-    generate(builder: NodeBuilder, output?: string | null): string | null;
++    generate(builder: NodeBuilder, output?: string | null): string | null | undefined;
+     /**
+      * The method can be implemented to update the node's internal state before it is used to render an object.
+      * The {@link Node#updateBeforeType} property defines how often the update is executed.
+@@ -359,7 +408,7 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    updateBefore(): boolean | null;
++    updateBefore(frame: NodeFrame): boolean | undefined;
+     /**
+      * The method can be implemented to update the node's internal state after it was used to render an object.
+      * The {@link Node#updateAfterType} property defines how often the update is executed.
+@@ -368,8 +417,8 @@ declare class Node extends EventDispatcher {
+      * @param {NodeFrame} frame - A reference to the current node frame.
+      * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
+      */
+-    updateAfter(): boolean | null;
+-    before(node: any): this;
++    updateAfter(frame: NodeFrame): boolean | undefined;
++    before(node: Node): this;
+     /**
+      * This method performs the build of a node. The behavior and return value depend on the current build stage:
+      * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
+@@ -386,28 +435,161 @@ declare class Node extends EventDispatcher {
+      *
+      * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
+      */
+-    getSerializeChildren(): Generator<Object>;
++    getSerializeChildren(): NodeChild[];
+     /**
+      * Serializes the node to JSON.
+      *
+      * @param {Object} json - The output JSON object.
+      */
+-    serialize(json: Object): void;
++    serialize(json: NodeJSONIntermediateOutputData): void;
+     /**
+      * Deserializes the node from the given JSON.
+      *
+      * @param {Object} json - The JSON object.
+      */
+-    deserialize(json: Object): void;
++    deserialize(json: NodeJSONInputData): void;
+     /**
+      * Serializes the node into the three.js JSON Object/Scene format.
+      *
+      * @param {?Object} meta - An optional JSON object that already holds serialized data from other scene objects.
+      * @return {Object} The serialized node.
+      */
+-    toJSON(meta: Object | null): Object;
++    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
+ }
+-declare namespace Node {
+-    let captureStackTrace: boolean;
++
++declare const Node: {
++    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
++    new(nodeType?: string | null): Node;
++    /**
++     * Enables or disables the automatic capturing of stack traces for nodes.
++     *
++     * @type {boolean}
++     * @default false
++     */
++    captureStackTrace: boolean;
++};
++
++export interface NodeElements {
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
++
++export interface NodeExtensions<TNodeType> {
++}
++
++export type NumType = "float" | "int" | "uint";
++export type IntegerType = "int" | "uint";
++export type NumOrBoolType = NumType | "bool";
++export type FloatVecType = "vec2" | "vec3" | "vec4";
++export type MatType = "mat2" | "mat3" | "mat4";
++
++export interface FloatExtensions {
++}
++
++export interface IntExtensions {
++}
++
++export interface UintExtensions {
++}
++
++export interface BoolExtensions {
++}
++
++export interface NumExtensions<TNum extends NumType> {
++}
++
++export interface IntegerExtensions<TInteger extends IntegerType> {
++}
++
++export interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumVec2Extensions<TNum extends NumType> {
++}
++
++export interface NumVec3Extensions<TNum extends NumType> {
++}
++
++export interface NumVec4Extensions<TNum extends NumType> {
++}
++
++export interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
++}
++
++export interface Vec2Extensions {
++}
++
++export interface Vec3Extensions {
++}
++
++export interface Vec4Extensions {
++}
++
++export interface ColorExtensions {
++}
++
++export interface FloatVecExtensions<TVec extends FloatVecType> {
++}
++
++export interface Mat2Extensions {
++}
++
++export interface Mat3Extensions {
++}
++
++export interface Mat4Extensions {
++}
++
++export interface MatExtensions<TMat extends MatType> {
++}
++
++type Node<TNodeType = unknown> =
++    & NodeClass
++    & NodeElements
++    & (unknown extends TNodeType ? {} : NodeExtensions<TNodeType>)
++    & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions & NumExtensions<"float">
++    : TNodeType extends "int"
++        ? NumOrBoolExtensions<"int"> & IntExtensions & NumExtensions<"int"> & IntegerExtensions<"int">
++        : TNodeType extends "uint"
++            ? NumOrBoolExtensions<"uint"> & UintExtensions & NumExtensions<"uint"> & IntegerExtensions<"uint">
++            : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions
++                : TNodeType extends "vec2" ?
++                    & NumOrBoolVec2Extensions<"float">
++                    & Vec2Extensions
++                    & NumVec2Extensions<"float">
++                    & FloatVecExtensions<"vec2">
++                    : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int">
++                        : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint">
++                            : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
++                                : TNodeType extends "vec3" ?
++                                    & NumOrBoolVec3Extensions<"float">
++                                    & Vec3Extensions
++                                    & NumVec3Extensions<"float">
++                                    & FloatVecExtensions<"vec3">
++                                    : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int">
++                                        : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint">
++                                            : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
++                                                : TNodeType extends "vec4" ?
++                                                    & NumOrBoolVec4Extensions<"float">
++                                                    & Vec4Extensions
++                                                    & NumVec4Extensions<"float">
++                                                    & FloatVecExtensions<"vec4">
++                                                    : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int">
++                                                        : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint">
++                                                            : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
++                                                                : TNodeType extends "color" ? ColorExtensions
++                                                                    : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
++                                                                        : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
++                                                                            : TNodeType extends "mat4" ? Mat4Extensions & MatExtensions<"mat4">
++                                                                                : {})
++    & {
++    __TypeScript_NODE_TYPE__: TNodeType;
++};
++
++export default Node;
++
++export {};
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
+index d6414185f..71ad2eab7 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeAttribute.d.ts
+@@ -1,4 +1,5 @@
+-export default NodeAttribute;
++import Node from "./Node.js";
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader attributes that are going to be generated
+@@ -42,3 +43,5 @@ declare class NodeAttribute {
+      */
+     node: Node | null;
+ }
++
++export default NodeAttribute;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
+index 0c192004d..645e3a8c3 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeCache.d.ts
+@@ -1,4 +1,5 @@
+-export default NodeCache;
++import Node from "./Node.js";
++
+ /**
+  * This utility class is used in {@link NodeBuilder} as an internal
+  * cache data structure for node data.
+@@ -22,7 +23,7 @@ declare class NodeCache {
+      *
+      * @type {WeakMap<Node, Object>}
+      */
+-    nodesData: WeakMap<Node, Object>;
++    nodesData: WeakMap<Node, unknown>;
+     /**
+      * Reference to a parent node cache.
+      *
+@@ -36,12 +37,14 @@ declare class NodeCache {
+      * @param {Node} node - The node.
+      * @return {?Object} The data for the node.
+      */
+-    getData(node: Node): Object | null;
++    getData(node: Node): unknown;
+     /**
+      * Sets the data for a given node.
+      *
+      * @param {Node} node - The node.
+      * @param {Object} data - The data that should be cached.
+      */
+-    setData(node: Node, data: Object): void;
++    setData(node: Node, data: unknown): void;
+ }
++
++export default NodeCache;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
+index f15875899..7a476515e 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeParser.d.ts
+@@ -1,9 +1,10 @@
+-export default NodeParser;
++import NodeFunction from "./NodeFunction.js";
++
+ /**
+  * Base class for node parsers. A derived parser must be implemented
+  * for each supported native shader language.
+  */
+-declare class NodeParser {
++declare abstract class NodeParser {
+     /**
+      * The method parses the given native code an returns a node function.
+      *
+@@ -11,5 +12,7 @@ declare class NodeParser {
+      * @param {string} source - The native shader code.
+      * @return {NodeFunction} A node function.
+      */
+-    parseFunction(): NodeFunction;
++    abstract parseFunction(source: string): NodeFunction;
+ }
++
++export default NodeParser;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
+index 3f872f033..bee694640 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeUniform.d.ts
+@@ -1,11 +1,13 @@
+-export default NodeUniform;
++import UniformNode from "./UniformNode.js";
++import UniformGroupNode from './UniformGroupNode.js';
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader uniforms that are going to be generated
+  * by the builder. A dictionary of node uniforms is maintained in {@link NodeBuilder#uniforms}
+  * for this purpose.
+  */
+-declare class NodeUniform {
++declare class NodeUniform<TNodeType, TValue> {
+     /**
+      * Constructs a new node uniform.
+      *
+@@ -13,7 +15,7 @@ declare class NodeUniform {
+      * @param {string} type - The type of the uniform.
+      * @param {UniformNode} node - An reference to the node.
+      */
+-    constructor(name: string, type: string, node: UniformNode);
++    constructor(name: string, type: string, node: UniformNode<TNodeType, TValue>);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -39,14 +41,14 @@ declare class NodeUniform {
+      *
+      * @type {UniformNode}
+      */
+-    node: UniformNode;
+-    set value(val: any);
++    node: UniformNode<TNodeType, TValue>;
++    set value(val: TValue);
+     /**
+      * The value of the uniform node.
+      *
+      * @type {any}
+      */
+-    get value(): any;
++    get value(): TValue;
+     /**
+      * The id of the uniform node.
+      *
+@@ -60,3 +62,5 @@ declare class NodeUniform {
+      */
+     get groupNode(): UniformGroupNode;
+ }
++
++export default NodeUniform;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
+index 43e82262f..6d1d88861 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeVar.d.ts
+@@ -1,4 +1,3 @@
+-export default NodeVar;
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader variables that are going to be generated
+@@ -48,3 +47,5 @@ declare class NodeVar {
+      */
+     count: number | null;
+ }
++
++export default NodeVar;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts b/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
+index 587fb0896..2333f0550 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/NodeVarying.d.ts
+@@ -1,4 +1,6 @@
+-export default NodeVarying;
++import NodeVar from './NodeVar.js';
++import { InterpolationSamplingMode, InterpolationSamplingType } from "../../constants.js";
++
+ /**
+  * {@link NodeBuilder} is going to create instances of this class during the build process
+  * of nodes. They represent the final shader varyings that are going to be generated
+@@ -16,7 +18,7 @@ declare class NodeVarying extends NodeVar {
+      * @param {?string} interpolationType - The interpolation type of the varying.
+      * @param {?string} interpolationSampling - The interpolation sampling type of the varying.
+      */
+-    constructor(name: string, type: string, interpolationType?: string | null, interpolationSampling?: string | null);
++    constructor(name: string, type: string, interpolationType?: InterpolationSamplingType | null, interpolationSampling?: InterpolationSamplingMode | null);
+     /**
+      * Whether this varying requires interpolation or not. This property can be used
+      * to check if the varying can be optimized for a variable.
+@@ -39,13 +41,14 @@ declare class NodeVarying extends NodeVar {
+      * @type {?string}
+      * @default null
+      */
+-    interpolationType: string | null;
++    interpolationType: InterpolationSamplingType | null;
+     /**
+      * The interpolation sampling type of varying data.
+      *
+      * @type {?string}
+      * @default null
+      */
+-    interpolationSampling: string | null;
++    interpolationSampling: InterpolationSamplingMode | null;
+ }
+-import NodeVar from './NodeVar.js';
++
++export default NodeVarying;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts b/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
+index af08042f6..0190410e1 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/StructType.d.ts
+@@ -1,7 +1,10 @@
+-export default StructType;
++import { MemberLayout } from "./StructTypeNode.js";
++
+ declare class StructType {
+-    constructor(name: any, members: any);
+-    name: any;
+-    members: any;
++    constructor(name: string, members: MemberLayout[]);
++    name: string;
++    members: MemberLayout[];
+     output: boolean;
+ }
++
++export default StructType;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
+index b5f1a2917..49b3c2132 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
+@@ -1,4 +1,19 @@
+-export default StructTypeNode;
++import Node from './Node.js';
++import NodeBuilder from './NodeBuilder.js';
++
++export interface MembersLayout {
++    [name: string]: string | {
++        type: string;
++        atomic?: boolean;
++    };
++}
++
++export interface MemberLayout {
++    name: string;
++    type: string;
++    atomic: boolean;
++}
++
+ /**
+  * Represents a struct type node in the node-based system.
+  * This class is used to define and manage the layout and types of struct members.
+@@ -14,17 +29,13 @@ declare class StructTypeNode extends Node {
+      * @param {Object} membersLayout - The layout of the members for the struct.
+      * @param {?string} [name=null] - The optional name of the struct.
+      */
+-    constructor(membersLayout: Object, name?: string | null);
++    constructor(membersLayout: MembersLayout, name?: string | null);
+     /**
+      * The layout of the members for the struct
+      *
+      * @type {Array.<{name: string, type: string, atomic: boolean}>}
+      */
+-    membersLayout: Array<{
+-        name: string;
+-        type: string;
+-        atomic: boolean;
+-    }>;
++    membersLayout: Array<MemberLayout>;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -40,9 +51,10 @@ declare class StructTypeNode extends Node {
+      * @returns {number} The length of the struct.
+      */
+     getLength(): number;
+-    getMemberType(builder: any, name: any): string;
+-    getNodeType(builder: any): any;
+-    setup(builder: any): void;
+-    generate(builder: any): any;
++    getMemberType(builder: NodeBuilder, name: string): string;
++    getNodeType(builder: NodeBuilder): string;
++    setup(builder: NodeBuilder): undefined;
++    generate(builder: NodeBuilder): string;
+ }
+-import Node from './Node.js';
++
++export default StructTypeNode;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
+index f4cb493fb..9778fefac 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
+@@ -1,11 +1,22 @@
+-export default UniformNode;
+-export function uniform(value: any | string, type?: string): UniformNode;
++import InputNode from './InputNode.js';
++import UniformGroupNode from './UniformGroupNode.js';
++import NodeBuilder from './NodeBuilder.js';
++import { NodeUpdateType } from './constants.js';
++import NodeFrame from './NodeFrame.js';
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Matrix2 } from '../../math/Matrix2.js';
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Matrix4 } from '../../math/Matrix4.js';
++import { Color } from '../../math/Color.js';
++
+ /**
+  * Class for representing a uniform.
+  *
+  * @augments InputNode
+  */
+-declare class UniformNode extends InputNode {
++declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,7 +39,7 @@ declare class UniformNode extends InputNode {
+      * @param {string} name - The name of the uniform.
+      * @return {UniformNode} A reference to this node.
+      */
+-    setName(name: string): UniformNode;
++    setName(name: string): this;
+     /**
+      * Sets the {@link UniformNode#name} property.
+      *
+@@ -36,14 +47,14 @@ declare class UniformNode extends InputNode {
+      * @param {string} name - The name of the uniform.
+      * @return {UniformNode} A reference to this node.
+      */
+-    label(name: string): UniformNode;
++    label(name: string): this;
+     /**
+      * Sets the {@link UniformNode#groupNode} property.
+      *
+      * @param {UniformGroupNode} group - The uniform group.
+      * @return {UniformNode} A reference to this node.
+      */
+-    setGroup(group: UniformGroupNode): UniformNode;
++    setGroup(group: UniformGroupNode): this;
+     /**
+      * Returns the {@link UniformNode#groupNode}.
+      *
+@@ -58,8 +69,44 @@ declare class UniformNode extends InputNode {
+      * @return {string} The uniform hash.
+      */
+     getUniformHash(builder: NodeBuilder): string;
+-    onUpdate(callback: any, updateType: any): import("./Node.js").default;
+-    getInputType(builder: any): string;
+-    generate(builder: any, output: any): any;
++    onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
++    getInputType(builder: NodeBuilder): string;
++    generate(builder: NodeBuilder, output: string | null): string;
+ }
+-import InputNode from './InputNode.js';
++
++declare const UniformNode: {
++    /**
++     * Constructs a new uniform node.
++     *
++     * @param {any} value - The value of this node. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++     * @param {?string} nodeType - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++     */
++    new<TNodeType, TValue>(value: TValue, nodeType?: string | null): UniformNode<TNodeType, TValue>;
++};
++
++type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNodeType, TValue>;
++
++export default UniformNode;
++
++interface Uniform {
++    (value: number, type?: "float"): UniformNode<"float", number>;
++    (value: boolean): UniformNode<"bool", boolean>;
++    (value: Vector2): UniformNode<"vec2", Vector2>;
++    (value: Vector3): UniformNode<"vec3", Vector3>;
++    (value: Vector4): UniformNode<"vec4", Vector4>;
++    (value: Matrix2): UniformNode<"mat2", Matrix2>;
++    (value: Matrix3): UniformNode<"mat3", Matrix3>;
++    (value: Matrix4): UniformNode<"mat4", Matrix4>;
++    (value: Color): UniformNode<"color", Color>;
++    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
++}
++
++/**
++ * TSL function for creating a uniform node.
++ *
++ * @function
++ * @param {any|string} value - The value of this uniform or your type. Usually a JS primitive or three.js object (vector, matrix, color, texture).
++ * @param {string} [type] - The node type. If no explicit type is defined, the node tries to derive the type from its value.
++ * @returns {UniformNode}
++ */
++export declare const uniform: Uniform;
+diff --git a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts b/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
+index 5d342ff3a..7ac71b49b 100644
+--- a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
++++ b/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
+@@ -1,30 +1,72 @@
+-export namespace NodeShaderStage {
+-    let VERTEX: string;
+-    let FRAGMENT: string;
+-}
+-export namespace NodeUpdateType {
+-    let NONE: string;
+-    let FRAME: string;
+-    let RENDER: string;
+-    let OBJECT: string;
+-}
+-export namespace NodeType {
+-    let BOOLEAN: string;
+-    let INTEGER: string;
+-    let FLOAT: string;
+-    let VECTOR2: string;
+-    let VECTOR3: string;
+-    let VECTOR4: string;
+-    let MATRIX2: string;
+-    let MATRIX3: string;
+-    let MATRIX4: string;
+-}
+-export namespace NodeAccess {
+-    let READ_ONLY: string;
+-    let WRITE_ONLY: string;
+-    let READ_WRITE: string;
+-}
+-export const defaultShaderStages: string[];
+-export const defaultBuildStages: string[];
+-export const shaderStages: string[];
+-export const vectorComponents: string[];
++/**
++ * Possible shader stages.
++ *
++ * @property {string} VERTEX The vertex shader stage.
++ * @property {string} FRAGMENT The fragment shader stage.
++ */
++export const NodeShaderStage: {
++    readonly VERTEX: "vertex";
++    readonly FRAGMENT: "fragment";
++};
++
++/**
++ * Update types of a node.
++ *
++ * @property {string} NONE The update method is not executed.
++ * @property {string} FRAME The update method is executed per frame.
++ * @property {string} RENDER The update method is executed per render. A frame might be produced by multiple render calls so this value allows more detailed updates than FRAME.
++ * @property {string} OBJECT The update method is executed per {@link Object3D} that uses the node for rendering.
++ */
++export const NodeUpdateType: {
++    readonly NONE: "none";
++    readonly FRAME: "frame";
++    readonly RENDER: "render";
++    readonly OBJECT: "object";
++};
++
++/**
++ * Data types of a node.
++ *
++ * @property {string} BOOLEAN Boolean type.
++ * @property {string} INTEGER Integer type.
++ * @property {string} FLOAT Float type.
++ * @property {string} VECTOR2 Two-dimensional vector type.
++ * @property {string} VECTOR3 Three-dimensional vector type.
++ * @property {string} VECTOR4 Four-dimensional vector type.
++ * @property {string} MATRIX2 2x2 matrix type.
++ * @property {string} MATRIX3 3x3 matrix type.
++ * @property {string} MATRIX4 4x4 matrix type.
++ */
++export const NodeType: {
++    readonly BOOLEAN: "bool";
++    readonly INTEGER: "int";
++    readonly FLOAT: "float";
++    readonly VECTOR2: "vec2";
++    readonly VECTOR3: "vec3";
++    readonly VECTOR4: "vec4";
++    readonly MATRIX2: "mat2";
++    readonly MATRIX3: "mat3";
++    readonly MATRIX4: "mat4";
++};
++
++/**
++ * Access types of a node. These are relevant for compute and storage usage.
++ *
++ * @property {string} READ_ONLY Read-only access
++ * @property {string} WRITE_ONLY Write-only access.
++ * @property {string} READ_WRITE Read and write access.
++ */
++export const NodeAccess: {
++    readonly READ_ONLY: "readOnly";
++    readonly WRITE_ONLY: "writeOnly";
++    readonly READ_WRITE: "readWrite";
++};
++
++export type NodeShaderStage = "vertex" | "fragment" | "compute";
++export type NodeUpdateType = "none" | "frame" | "render" | "object";
++export type NodeAccess = "readOnly" | "writeOnly" | "readWrite";
++
++export declare const defaultShaderStages: NodeShaderStage[];
++export declare const defaultBuildStages: string[];
++export declare const shaderStages: NodeShaderStage[];
++export declare const vectorComponents: string[];
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts b/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
+index 67619fa23..40bc9b702 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
+@@ -1,4 +1,12 @@
+-export default Animation;
++import Renderer from './Renderer.js';
++import NodeManager from "./nodes/NodeManager.js";
++import Info from './Info.js';
++
++export interface AnimationContext {
++    requestAnimationFrame(callback: FrameRequestCallback, xrFrame?: XRFrame): number;
++    cancelAnimationFrame(handle: number): void;
++}
++
+ /**
+  * This module manages the internal animation loop of the renderer.
+  *
+@@ -12,7 +20,7 @@ declare class Animation {
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(renderer: Renderer, nodes: Nodes, info: Info);
++    constructor(renderer: Renderer, nodes: NodeManager, info: Info);
+     /**
+      * A reference to the main renderer.
+      *
+@@ -24,7 +32,7 @@ declare class Animation {
+      *
+      * @type {Nodes}
+      */
+-    nodes: Nodes;
++    nodes: NodeManager;
+     /**
+      * Renderer component for managing metrics and monitoring data.
+      *
+@@ -37,14 +45,14 @@ declare class Animation {
+      *
+      * @type {?(Window|XRSession)}
+      */
+-    _context: (Window | XRSession) | null;
++    _context: AnimationContext | null;
+     /**
+      * The user-defined animation loop.
+      *
+      * @type {?Function}
+      * @default null
+      */
+-    _animationLoop: Function | null;
++    _animationLoop: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
+     /**
+      * The requestId which is returned from the `requestAnimationFrame()` call.
+      * Can be used to cancel the stop the animation loop.
+@@ -66,27 +74,29 @@ declare class Animation {
+      *
+      * @return {?Function} The animation loop.
+      */
+-    getAnimationLoop(): Function | null;
++    getAnimationLoop(): ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
+     /**
+      * Defines the user-level animation loop.
+      *
+      * @param {?Function} callback - The animation loop.
+      */
+-    setAnimationLoop(callback: Function | null): void;
++    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null): void;
+     /**
+      * Returns the animation context.
+      *
+      * @return {Window|XRSession} The animation context.
+      */
+-    getContext(): Window | XRSession;
++    getContext(): AnimationContext;
+     /**
+      * Defines the context in which `requestAnimationFrame()` is executed.
+      *
+      * @param {Window|XRSession} context - The context to set.
+      */
+-    setContext(context: Window | XRSession): void;
++    setContext(context: AnimationContext): void;
+     /**
+      * Frees all internal resources and stops the animation loop.
+      */
+     dispose(): void;
+ }
++
++export default Animation;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts b/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
+index 25100f87c..1c12eb7e2 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
+@@ -1,4 +1,9 @@
+-export default Attributes;
++import DataMap from './DataMap.js';
++import Backend from './Backend.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++
+ /**
+  * This renderer module manages geometry attributes.
+  *
+@@ -24,7 +29,7 @@ declare class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute.
+      * @return {?Object} The deleted attribute data.
+      */
+-    delete(attribute: BufferAttribute): Object | null;
++    delete(attribute: BufferAttribute | InterleavedBufferAttribute): unknown;
+     /**
+      * Updates the given attribute. This method creates attribute buffers
+      * for new attributes and updates data for existing ones.
+@@ -32,7 +37,7 @@ declare class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute to update.
+      * @param {number} type - The attribute type.
+      */
+-    update(attribute: BufferAttribute, type: number): void;
++    update(attribute: BufferAttribute | InterleavedBufferAttribute, type: number): void;
+     /**
+      * Utility method for handling interleaved buffer attributes correctly.
+      * To process them, their `InterleavedBuffer` is returned.
+@@ -40,6 +45,7 @@ declare class Attributes extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute.
+      * @return {BufferAttribute|InterleavedBuffer}
+      */
+-    _getBufferAttribute(attribute: BufferAttribute): BufferAttribute | InterleavedBuffer;
++    _getBufferAttribute(attribute: BufferAttribute | InterleavedBufferAttribute): BufferAttribute | InterleavedBuffer;
+ }
+-import DataMap from './DataMap.js';
++
++export default Attributes;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Background.d.ts b/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
+index 8ed793420..9bc5a1e71 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
+@@ -1,4 +1,10 @@
+-export default Background;
++import DataMap from './DataMap.js';
++import Renderer from './Renderer.js';
++import { Scene } from '../../scenes/Scene.js';
++import RenderList from './RenderList.js';
++import RenderContext from './RenderContext.js';
++import NodeManager from './nodes/NodeManager.js';
++
+ /**
+  * This renderer module manages the background.
+  *
+@@ -12,7 +18,7 @@ declare class Background extends DataMap {
+      * @param {Renderer} renderer - The renderer.
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
+      */
+-    constructor(renderer: Renderer, nodes: Nodes);
++    constructor(renderer: Renderer, nodes: NodeManager);
+     /**
+      * The renderer.
+      *
+@@ -24,7 +30,7 @@ declare class Background extends DataMap {
+      *
+      * @type {Nodes}
+      */
+-    nodes: Nodes;
++    nodes: NodeManager;
+     /**
+      * Updates the background for the given scene. Depending on how `Scene.background`
+      * or `Scene.backgroundNode` are configured, this method might configure a simple clear
+@@ -37,4 +43,5 @@ declare class Background extends DataMap {
+      */
+     update(scene: Scene, renderList: RenderList, renderContext: RenderContext): void;
+ }
+-import DataMap from './DataMap.js';
++
++export default Background;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/BindGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/BindGroup.d.ts
+index 652857de5..f83dd5eab 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/BindGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/BindGroup.d.ts
+@@ -1,4 +1,5 @@
+-export default BindGroup;
++import Binding from './Binding.js';
++
+ /**
+  * A bind group represents a collection of bindings and thus a collection
+  * or resources. Bind groups are assigned to pipelines to provide them
+@@ -14,7 +15,7 @@ declare class BindGroup {
+      * @param {Array<Binding>} bindings - An array of bindings.
+      * @param {number} index - The group index.
+      */
+-    constructor(name?: string, bindings?: Array<Binding>, index?: number);
++    constructor(name?: string, bindings?: Binding[], index?: number);
+     /**
+      * The bind group's name.
+      *
+@@ -26,7 +27,7 @@ declare class BindGroup {
+      *
+      * @type {Array<Binding>}
+      */
+-    bindings: Array<Binding>;
++    bindings: Binding[];
+     /**
+      * The group index.
+      *
+@@ -40,3 +41,5 @@ declare class BindGroup {
+      */
+     id: number;
+ }
++
++export default BindGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Binding.d.ts b/jsdoc-testing/jsdoc/renderers/common/Binding.d.ts
+index 46356fdc4..d876c3b7e 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Binding.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Binding.d.ts
+@@ -1,4 +1,3 @@
+-export default Binding;
+ /**
+  * A binding represents the connection between a resource (like a texture, sampler
+  * or uniform buffer) and the resource definition in a shader stage.
+@@ -47,3 +46,5 @@ declare class Binding {
+      */
+     clone(): Binding;
+ }
++
++export default Binding;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
+index 0d32505b8..ea2b84719 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
+@@ -1,4 +1,14 @@
+-export default Bindings;
++import DataMap from './DataMap.js';
++import Backend from './Backend.js';
++import NodeManager from './nodes/NodeManager.js';
++import Textures from './Textures.js';
++import Attributes from './Attributes.js';
++import Pipelines from './Pipelines.js';
++import Info from './Info.js';
++import RenderObject from './RenderObject.js';
++import BindGroup from './BindGroup.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++
+ /**
+  * This renderer module manages the bindings of the renderer.
+  *
+@@ -16,7 +26,7 @@ declare class Bindings extends DataMap {
+      * @param {Pipelines} pipelines - Renderer component for managing pipelines.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(backend: Backend, nodes: Nodes, textures: Textures, attributes: Attributes, pipelines: Pipelines, info: Info);
++    constructor(backend: Backend, nodes: NodeManager, textures: Textures, attributes: Attributes, pipelines: Pipelines, info: Info);
+     /**
+      * The renderer's backend.
+      *
+@@ -46,7 +56,7 @@ declare class Bindings extends DataMap {
+      *
+      * @type {Nodes}
+      */
+-    nodes: Nodes;
++    nodes: NodeManager;
+     /**
+      * Renderer component for managing metrics and monitoring data.
+      *
+@@ -59,20 +69,20 @@ declare class Bindings extends DataMap {
+      * @param {RenderObject} renderObject - The render object.
+      * @return {Array<BindGroup>} The bind groups.
+      */
+-    getForRender(renderObject: RenderObject): Array<BindGroup>;
++    getForRender(renderObject: RenderObject): BindGroup[];
+     /**
+      * Returns the bind groups for the given compute node.
+      *
+      * @param {Node} computeNode - The compute node.
+      * @return {Array<BindGroup>} The bind groups.
+      */
+-    getForCompute(computeNode: Node): Array<BindGroup>;
++    getForCompute(computeNode: ComputeNode): BindGroup[];
+     /**
+      * Updates the bindings for the given compute node.
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    updateForCompute(computeNode: Node): void;
++    updateForCompute(computeNode: ComputeNode): void;
+     /**
+      * Updates the bindings for the given render object.
+      *
+@@ -84,7 +94,7 @@ declare class Bindings extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    deleteForCompute(computeNode: Node): void;
++    deleteForCompute(computeNode: ComputeNode): void;
+     /**
+      * Deletes the bindings for the given renderObject node.
+      *
+@@ -96,7 +106,7 @@ declare class Bindings extends DataMap {
+      *
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
+-    _updateBindings(bindings: Array<BindGroup>): void;
++    _updateBindings(bindings: BindGroup[]): void;
+     /**
+      * Initializes the given bind group.
+      *
+@@ -109,6 +119,7 @@ declare class Bindings extends DataMap {
+      * @param {BindGroup} bindGroup - The bind group to update.
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
+-    _update(bindGroup: BindGroup, bindings: Array<BindGroup>): void;
++    _update(bindGroup: BindGroup, bindings: BindGroup[]): void;
+ }
+-import DataMap from './DataMap.js';
++
++export default Bindings;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Buffer.d.ts b/jsdoc-testing/jsdoc/renderers/common/Buffer.d.ts
+index 79c9ae48f..4a97d1019 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Buffer.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Buffer.d.ts
+@@ -1,4 +1,6 @@
+-export default Buffer;
++import Binding from './Binding.js';
++import { TypedArray } from '../../core/BufferAttribute.js';
++
+ /**
+  * Represents a buffer binding type.
+  *
+@@ -68,14 +70,14 @@ declare class Buffer extends Binding {
+      * @type {number}
+      * @readonly
+      */
+-    readonly get byteLength(): number;
++    get byteLength(): number;
+     /**
+      * A reference to the internal buffer.
+      *
+      * @type {Float32Array}
+      * @readonly
+      */
+-    readonly get buffer(): Float32Array;
++    get buffer(): TypedArray;
+     /**
+      * Updates the binding.
+      *
+@@ -84,4 +86,5 @@ declare class Buffer extends Binding {
+      */
+     update(): boolean;
+ }
+-import Binding from './Binding.js';
++
++export default Buffer;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/BundleGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/BundleGroup.d.ts
+index 90e98b1aa..0d4649a46 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/BundleGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/BundleGroup.d.ts
+@@ -1,4 +1,5 @@
+-export default BundleGroup;
++import { Group } from '../../objects/Group.js';
++
+ /**
+  * A specialized group which enables applications access to the
+  * Render Bundle API of WebGPU. The group with all its descendant nodes
+@@ -37,4 +38,5 @@ declare class BundleGroup extends Group {
+      */
+     set needsUpdate(value: boolean);
+ }
+-import { Group } from '../../objects/Group.js';
++
++export default BundleGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
+index 9932067a0..e2566e5ed 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
+@@ -1,10 +1,20 @@
+-export default CanvasTarget;
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++import { FramebufferTexture } from '../../textures/FramebufferTexture.js';
++import { DepthTexture } from '../../textures/DepthTexture.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Vector2 } from '../../math/Vector2.js';
++
++export interface CanvasTargetEventMap {
++    resize: {};
++    dispose: {};
++}
++
+ /**
+  * CanvasTarget is a class that represents the final output destination of the renderer.
+  *
+  * @augments EventDispatcher
+  */
+-declare class CanvasTarget extends EventDispatcher {
++declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
+     /**
+      * Constructs a new CanvasTarget.
+      *
+@@ -129,6 +139,10 @@ declare class CanvasTarget extends EventDispatcher {
+      * @return {Vector4} The scissor rectangle.
+      */
+     getScissor(target: Vector4): Vector4;
++    /**
++     * Defines the scissor rectangle.
++     */
++    setScissor(x: Vector4): void;
+     /**
+      * Defines the scissor rectangle.
+      *
+@@ -138,7 +152,7 @@ declare class CanvasTarget extends EventDispatcher {
+      * @param {number} width - The width of the scissor box in logical pixel unit.
+      * @param {number} height - The height of the scissor box in logical pixel unit.
+      */
+-    setScissor(x: number | Vector4, y: number, width: number, height: number): void;
++    setScissor(x: number, y: number, width: number, height: number): void;
+     /**
+      * Returns the scissor test value.
+      *
+@@ -158,6 +172,10 @@ declare class CanvasTarget extends EventDispatcher {
+      * @return {Vector4} The viewport definition.
+      */
+     getViewport(target: Vector4): Vector4;
++    /**
++     * Defines the viewport.
++     */
++    setViewport(x: Vector4): void;
+     /**
+      * Defines the viewport.
+      *
+@@ -168,7 +186,7 @@ declare class CanvasTarget extends EventDispatcher {
+      * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
+      * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
+      */
+-    setViewport(x: number | Vector4, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
++    setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
+     /**
+      * Dispatches the resize event.
+      *
+@@ -183,7 +201,5 @@ declare class CanvasTarget extends EventDispatcher {
+      */
+     dispose(): void;
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
+-import { FramebufferTexture } from '../../textures/FramebufferTexture.js';
+-import { DepthTexture } from '../../textures/DepthTexture.js';
+-import { Vector4 } from '../../math/Vector4.js';
++
++export default CanvasTarget;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/ChainMap.d.ts b/jsdoc-testing/jsdoc/renderers/common/ChainMap.d.ts
+index 97e504734..d467ebfc0 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/ChainMap.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/ChainMap.d.ts
+@@ -1,4 +1,3 @@
+-export default ChainMap;
+ /**
+  * Data structure for the renderer. It allows defining values
+  * with chained, hierarchical keys. Keys are meant to be
+@@ -14,7 +13,7 @@ declare class ChainMap {
+      * @type {Object<number, WeakMap>}
+      */
+     weakMaps: {
+-        [x: number]: WeakMap<any, any>;
++        [x: number]: WeakMap<object, unknown>;
+     };
+     /**
+      * Returns the Weak Map for the given keys.
+@@ -22,14 +21,14 @@ declare class ChainMap {
+      * @param {Array<Object>} keys - List of keys.
+      * @return {WeakMap} The weak map.
+      */
+-    _getWeakMap(keys: Array<Object>): WeakMap<any, any>;
++    _getWeakMap(keys: object[]): WeakMap<object, unknown>;
+     /**
+      * Returns the value for the given array of keys.
+      *
+      * @param {Array<Object>} keys - List of keys.
+      * @return {any} The value. Returns `undefined` if no value was found.
+      */
+-    get(keys: Array<Object>): any;
++    get(keys: object[]): unknown;
+     /**
+      * Sets the value for the given keys.
+      *
+@@ -37,12 +36,14 @@ declare class ChainMap {
+      * @param {any} value - The value to set.
+      * @return {ChainMap} A reference to this Chain Map.
+      */
+-    set(keys: Array<Object>, value: any): ChainMap;
++    set(keys: object[], value: unknown): ChainMap;
+     /**
+      * Deletes a value for the given keys.
+      *
+      * @param {Array<Object>} keys - The keys.
+      * @return {boolean} Returns `true` if the value has been removed successfully and `false` if the value has not be found.
+      */
+-    delete(keys: Array<Object>): boolean;
++    delete(keys: object[]): boolean;
+ }
++
++export default ChainMap;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/ClippingContext.d.ts b/jsdoc-testing/jsdoc/renderers/common/ClippingContext.d.ts
+index ab6124b41..afe768370 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/ClippingContext.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/ClippingContext.d.ts
+@@ -1,4 +1,11 @@
+-export default ClippingContext;
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Plane } from '../../math/Plane.js';
++import { ClippingGroup } from "../../objects/ClippingGroup.js";
++import { Matrix4 } from '../../math/Matrix4.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++
+ /**
+  * Represents the state that is used to perform clipping via clipping planes.
+  * There is a default clipping context for each render context. When the
+@@ -58,13 +65,13 @@ declare class ClippingContext {
+      *
+      * @type {Array<Vector4>}
+      */
+-    intersectionPlanes: Array<Vector4>;
++    intersectionPlanes: Vector4[];
+     /**
+      * The intersection planes.
+      *
+      * @type {Array<Vector4>}
+      */
+-    unionPlanes: Array<Vector4>;
++    unionPlanes: Vector4[];
+     /**
+      * The version of the clipping context's parent context.
+      *
+@@ -72,7 +79,7 @@ declare class ClippingContext {
+      * @readonly
+      */
+     readonly parentVersion: number | null;
+-    viewMatrix: any;
++    viewMatrix?: Matrix4;
+     /**
+      * Projects the given source clipping planes and writes the result into the
+      * destination array.
+@@ -81,7 +88,7 @@ declare class ClippingContext {
+      * @param {Array<Vector4>} destination - The destination.
+      * @param {number} offset - The offset.
+      */
+-    projectPlanes(source: Array<Plane>, destination: Array<Vector4>, offset: number): void;
++    projectPlanes(source: Plane[], destination: Vector4[], offset: number): void;
+     /**
+      * Updates the root clipping context of a scene.
+      *
+@@ -109,8 +116,7 @@ declare class ClippingContext {
+      * @type {number}
+      * @readonly
+      */
+-    readonly get unionClippingCount(): number;
++    get unionClippingCount(): number;
+ }
+-import { Matrix3 } from '../../math/Matrix3.js';
+-import { Vector4 } from '../../math/Vector4.js';
+-import { Plane } from '../../math/Plane.js';
++
++export default ClippingContext;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Color4.d.ts b/jsdoc-testing/jsdoc/renderers/common/Color4.d.ts
+index 6f01003df..8949748c3 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Color4.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Color4.d.ts
+@@ -1,4 +1,5 @@
+-export default Color4;
++import { Color, ColorRepresentation  } from '../../math/Color.js';
++
+ /**
+  * A four-component version of {@link Color} which is internally
+  * used by the renderer to represents clear color with alpha as
+@@ -10,15 +11,19 @@ export default Color4;
+ declare class Color4 extends Color {
+     /**
+      * Constructs a new four-component color.
+-     * You can also pass a single THREE.Color, hex or
++     * You can pass a single THREE.Color, hex or
+      * string argument to this constructor.
++     */
++    constructor(color?: ColorRepresentation);
++    /**
++     * Constructs a new four-component color.
+      *
+-     * @param {number|string} [r=1] - The red value.
++     * @param {number} [r=1] - The red value.
+      * @param {number} [g=1] - The green value.
+      * @param {number} [b=1] - The blue value.
+      * @param {number} [a=1] - The alpha value.
+      */
+-    constructor(r?: number | string, g?: number, b?: number, a?: number);
++    constructor(r: number, g: number, b: number, a?: number);
+     a: number;
+     /**
+      * Overwrites the default to honor alpha.
+@@ -31,19 +36,20 @@ declare class Color4 extends Color {
+      * @param {number} [a=1] - The alpha value.
+      * @return {Color4} A reference to this object.
+      */
+-    set(r: number | string | Color, g?: number, b?: number, a?: number): Color4;
++    set(...args: [color: ColorRepresentation] | [r: number, g: number, b: number, a?: number]): this;
+     /**
+      * Overwrites the default to honor alpha.
+      *
+      * @param {Color4} color - The color to copy.
+      * @return {Color4} A reference to this object.
+      */
+-    copy(color: Color4): Color4;
++    copy(color: Color4): this;
+     /**
+      * Overwrites the default to honor alpha.
+      *
+      * @return {Color4} The cloned color.
+      */
+-    clone(): Color4;
++    clone(): this;
+ }
+-import { Color } from '../../math/Color.js';
++
++export default Color4;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/ComputePipeline.d.ts b/jsdoc-testing/jsdoc/renderers/common/ComputePipeline.d.ts
+index 35b6aee42..6920b99a6 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/ComputePipeline.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/ComputePipeline.d.ts
+@@ -1,4 +1,6 @@
+-export default ComputePipeline;
++import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
++
+ /**
+  * Class for representing compute pipelines.
+  *
+@@ -28,4 +30,5 @@ declare class ComputePipeline extends Pipeline {
+      */
+     readonly isComputePipeline: boolean;
+ }
+-import Pipeline from './Pipeline.js';
++
++export default ComputePipeline;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Constants.d.ts b/jsdoc-testing/jsdoc/renderers/common/Constants.d.ts
+index cf3261af0..0ded1192b 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Constants.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Constants.d.ts
+@@ -1,9 +1,12 @@
+-export namespace AttributeType {
+-    let VERTEX: number;
+-    let INDEX: number;
+-    let STORAGE: number;
+-    let INDIRECT: number;
+-}
++export declare const AttributeType: {
++    readonly VERTEX: 1;
++    readonly INDEX: 2;
++    readonly STORAGE: 3;
++    readonly INDIRECT: 4;
++};
++export type AttributeType = (typeof AttributeType)[keyof typeof AttributeType];
++
+ export const GPU_CHUNK_BYTES: 16;
++
+ export const BlendColorFactor: 211;
+ export const OneMinusBlendColorFactor: 212;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/CubeRenderTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/CubeRenderTarget.d.ts
+index e6cad71cf..795ef5ac6 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/CubeRenderTarget.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/CubeRenderTarget.d.ts
+@@ -1,4 +1,7 @@
+-export default CubeRenderTarget;
++import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
++import Renderer from './Renderer.js';
++import { Texture } from '../../textures/Texture.js';
++
+ /**
+  * This class represents a cube render target. It is a special version
+  * of `WebGLCubeRenderTarget` which is compatible with `WebGPURenderer`.
+@@ -12,7 +15,7 @@ declare class CubeRenderTarget extends RenderTarget {
+      * @param {number} [size=1] - The size of the render target.
+      * @param {RenderTarget~Options} [options] - The configuration object.
+      */
+-    constructor(size?: number, options?: {});
++    constructor(size?: number, options?: RenderTargetOptions);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -28,7 +31,7 @@ declare class CubeRenderTarget extends RenderTarget {
+      * @param {Texture} texture - The equirectangular texture.
+      * @return {CubeRenderTarget} A reference to this cube render target.
+      */
+-    fromEquirectangularTexture(renderer: Renderer, texture: Texture): CubeRenderTarget;
++    fromEquirectangularTexture(renderer: Renderer, texture: Texture): this;
+     /**
+      * Clears this cube render target.
+      *
+@@ -39,4 +42,5 @@ declare class CubeRenderTarget extends RenderTarget {
+      */
+     clear(renderer: Renderer, color?: boolean, depth?: boolean, stencil?: boolean): void;
+ }
+-import { RenderTarget } from '../../core/RenderTarget.js';
++
++export default CubeRenderTarget;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts b/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
+index 5b407575a..fb9571fa0 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/DataMap.d.ts
+@@ -1,4 +1,3 @@
+-export default DataMap;
+ /**
+  * Data structure for the renderer. It is intended to manage
+  * data of objects in dictionaries.
+@@ -12,30 +11,32 @@ declare class DataMap {
+      *
+      * @type {WeakMap<Object, Object>}
+      */
+-    data: WeakMap<Object, Object>;
++    data: WeakMap<object, unknown>;
+     /**
+      * Returns the dictionary for the given object.
+      *
+      * @param {Object} object - The object.
+      * @return {Object} The dictionary.
+      */
+-    get(object: Object): Object;
++    get(object: object): unknown;
+     /**
+      * Deletes the dictionary for the given object.
+      *
+      * @param {Object} object - The object.
+      * @return {?Object} The deleted dictionary.
+      */
+-    delete(object: Object): Object | null;
++    delete(object: object): unknown | null;
+     /**
+      * Returns `true` if the given object has a dictionary defined.
+      *
+      * @param {Object} object - The object to test.
+      * @return {boolean} Whether a dictionary is defined or not.
+      */
+-    has(object: Object): boolean;
++    has(object: object): boolean;
+     /**
+      * Frees internal resources.
+      */
+     dispose(): void;
+ }
++
++export default DataMap;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Geometries.d.ts b/jsdoc-testing/jsdoc/renderers/common/Geometries.d.ts
+index a1cd970c9..704cfb9f6 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Geometries.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Geometries.d.ts
+@@ -1,4 +1,11 @@
+-export default Geometries;
++import DataMap from './DataMap.js';
++import Attributes from './Attributes.js';
++import Info from './Info.js';
++import { BufferGeometry } from '../../core/BufferGeometry.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
++import RenderObject from './RenderObject.js';
++import { AttributeType } from "./Constants.js";
++
+ /**
+  * This renderer module manages geometries.
+  *
+@@ -76,7 +83,7 @@ declare class Geometries extends DataMap {
+      * @param {BufferAttribute} attribute - The attribute to update.
+      * @param {number} type - The attribute type.
+      */
+-    updateAttribute(attribute: BufferAttribute, type: number): void;
++    updateAttribute(attribute: BufferAttribute, type: AttributeType): void;
+     /**
+      * Returns the indirect buffer attribute of the given render object.
+      *
+@@ -100,4 +107,5 @@ declare class Geometries extends DataMap {
+      */
+     getIndex(renderObject: RenderObject): BufferAttribute | null;
+ }
+-import DataMap from './DataMap.js';
++
++export default Geometries;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
+index 7f42badbc..fc59b9e52 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
+@@ -1,4 +1,5 @@
+-export default Info;
++import { Object3D } from '../../core/Object3D.js';
++
+ /**
+  * This renderer module provides a series of statistical information
+  * about the GPU memory and the rendering process. Useful for debugging
+@@ -46,7 +47,15 @@ declare class Info {
+      * @property {number} lines - The number of rendered line primitives of the current frame.
+      * @property {number} timestamp - The timestamp of the frame.
+      */
+-    readonly render: Object;
++    readonly render: {
++        calls: number;
++        frameCalls: number;
++        drawCalls: number;
++        triangles: number;
++        points: number;
++        lines: number;
++        timestamp: number;
++    };
+     /**
+      * Compute related metrics.
+      *
+@@ -56,7 +65,11 @@ declare class Info {
+      * @property {number} frameCalls - The number of compute calls of the current frame.
+      * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
+      */
+-    readonly compute: Object;
++    readonly compute: {
++        calls: number;
++        frameCalls: number;
++        timestamp: number;
++    };
+     /**
+      * Memory related metrics.
+      *
+@@ -65,7 +78,10 @@ declare class Info {
+      * @property {number} geometries - The number of active geometries.
+      * @property {number} frameCalls - The number of active textures.
+      */
+-    readonly memory: Object;
++    readonly memory: {
++        geometries: number;
++        textures: number;
++    };
+     /**
+      * This method should be executed per draw call and updates the corresponding metrics.
+      *
+@@ -83,3 +99,5 @@ declare class Info {
+      */
+     dispose(): void;
+ }
++
++export default Info;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
+index 4d6cb5ab3..da0155896 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
+@@ -1,4 +1,12 @@
+-export default InspectorBase;
++import NodeFrame from '../../nodes/core/NodeFrame.js';
++import Renderer from './Renderer.js';
++import Node from '../../nodes/core/Node.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import { Texture } from '../../textures/Texture.js';
++
+ /**
+  * InspectorBase is the base class for all inspectors.
+  *
+@@ -17,26 +25,26 @@ declare class InspectorBase {
+      *
+      * @type {Object}
+      */
+-    currentFrame: Object;
++    currentFrame: unknown;
+     /**
+      * Returns the node frame for the current renderer.
+      *
+      * @return {Object} The node frame.
+      */
+-    get nodeFrame(): Object;
++    get nodeFrame(): NodeFrame;
+     /**
+      * Sets the renderer for this inspector.
+      *
+      * @param {WebGLRenderer} renderer - The renderer to associate with this inspector.
+      * @return {InspectorBase} This inspector instance.
+      */
+-    setRenderer(renderer: WebGLRenderer): InspectorBase;
++    setRenderer(renderer: Renderer): InspectorBase;
+     /**
+      * Returns the renderer associated with this inspector.
+      *
+      * @return {WebGLRenderer} The associated renderer.
+      */
+-    getRenderer(): WebGLRenderer;
++    getRenderer(): Renderer;
+     /**
+      * Initializes the inspector.
+      */
+@@ -54,28 +62,28 @@ declare class InspectorBase {
+      *
+      * @param {Node} node - The node to inspect.
+      */
+-    inspect(): void;
++    inspect(node: Node): void;
+     /**
+      * When a compute operation is performed.
+      *
+      * @param {ComputeNode} computeNode - The compute node being executed.
+      * @param {number|Array<number>} dispatchSizeOrCount - The dispatch size or count.
+      */
+-    computeAsync(): void;
++    computeAsync(computeNode: ComputeNode, dispatchSizeOrCount: number | number[]): void;
+     /**
+      * Called when a compute operation begins.
+      *
+      * @param {string} uid - A unique identifier for the render context.
+      * @param {ComputeNode} computeNode - The compute node being executed.
+      */
+-    beginCompute(): void;
++    beginCompute(uid: string, computeNode: ComputeNode): void;
+     /**
+      * Called when a compute operation ends.
+      *
+      * @param {string} uid - A unique identifier for the render context.
+      * @param {ComputeNode} computeNode - The compute node being executed.
+      */
+-    finishCompute(): void;
++    finishCompute(uid: string): void;
+     /**
+      * Called when a render operation begins.
+      *
+@@ -84,24 +92,26 @@ declare class InspectorBase {
+      * @param {Camera} camera - The camera being used for rendering.
+      * @param {?WebGLRenderTarget} renderTarget - The render target, if any.
+      */
+-    beginRender(): void;
++    beginRender(uid: string, scene: Scene, camera: Camera, renderTarget: RenderTarget): void;
+     /**
+      * Called when an animation loop ends.
+      *
+      * @param {string} uid - A unique identifier for the render context.
+      */
+-    finishRender(): void;
++    finishRender(uid: string): void;
+     /**
+      * Called when a texture copy operation is performed.
+      *
+      * @param {Texture} srcTexture - The source texture.
+      * @param {Texture} dstTexture - The destination texture.
+      */
+-    copyTextureToTexture(): void;
++    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture): void;
+     /**
+      * Called when a framebuffer copy operation is performed.
+      *
+      * @param {Texture} framebufferTexture - The texture associated with the framebuffer.
+      */
+-    copyFramebufferToTexture(): void;
++    copyFramebufferToTexture(framebufferTexture: Texture): void;
+ }
++
++export default InspectorBase;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts b/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts
+index db30b30a6..16708fb94 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts
+@@ -1,4 +1,3 @@
+-export default Pipeline;
+ /**
+  * Abstract class for representing pipelines.
+  *
+@@ -26,3 +25,5 @@ declare class Pipeline {
+      */
+     usedTimes: number;
+ }
++
++export default Pipeline;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
+index 101a5a7f5..34f46c27f 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
+@@ -1,4 +1,15 @@
+-export default Pipelines;
++import DataMap from './DataMap.js';
++import ProgrammableStage from './ProgrammableStage.js';
++import ComputePipeline from './ComputePipeline.js';
++import RenderObjectPipeline from './RenderObjectPipeline.js';
++import Backend from './Backend.js';
++import NodeManager from './nodes/NodeManager.js';
++import Bindings from './Bindings.js';
++import Pipeline from './Pipeline.js';
++import BindGroup from './BindGroup.js';
++import RenderObject from './RenderObject.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++
+ /**
+  * This renderer module manages the pipelines of the renderer.
+  *
+@@ -12,7 +23,7 @@ declare class Pipelines extends DataMap {
+      * @param {Backend} backend - The renderer's backend.
+      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
+      */
+-    constructor(backend: Backend, nodes: Nodes);
++    constructor(backend: Backend, nodes: NodeManager);
+     /**
+      * The renderer's backend.
+      *
+@@ -24,7 +35,7 @@ declare class Pipelines extends DataMap {
+      *
+      * @type {Nodes}
+      */
+-    nodes: Nodes;
++    nodes: NodeManager;
+     /**
+      * A references to the bindings management component.
+      * This reference will be set inside the `Bindings`
+@@ -49,7 +60,9 @@ declare class Pipelines extends DataMap {
+      * @type {Object<string,Map<string, ProgrammableStage>>}
+      */
+     programs: {
+-        [x: string]: Map<string, ProgrammableStage>;
++        vertex: Map<string, ProgrammableStage>;
++        fragment: Map<string, ProgrammableStage>;
++        compute: Map<string, ProgrammableStage>;
+     };
+     /**
+      * Returns a compute pipeline for the given compute node.
+@@ -58,7 +71,7 @@ declare class Pipelines extends DataMap {
+      * @param {Array<BindGroup>} bindings - The bindings.
+      * @return {ComputePipeline} The compute pipeline.
+      */
+-    getForCompute(computeNode: Node, bindings: Array<BindGroup>): ComputePipeline;
++    getForCompute(computeNode: ComputeNode, bindings: BindGroup[]): ComputePipeline;
+     /**
+      * Returns a render pipeline for the given render object.
+      *
+@@ -66,14 +79,14 @@ declare class Pipelines extends DataMap {
+      * @param {?Array<Promise>} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
+      * @return {RenderObjectPipeline} The render pipeline.
+      */
+-    getForRender(renderObject: RenderObject, promises?: Array<Promise<any>> | null): RenderObjectPipeline;
++    getForRender(renderObject: RenderObject, promises?: Promise<void>[] | null): RenderObjectPipeline;
+     /**
+      * Deletes the pipeline for the given render object.
+      *
+      * @param {RenderObject} object - The render object.
+      * @return {?Object} The deleted dictionary.
+      */
+-    delete(object: RenderObject): Object | null;
++    delete(object: RenderObject): unknown;
+     /**
+      * Updates the pipeline for the given render object.
+      *
+@@ -153,7 +166,5 @@ declare class Pipelines extends DataMap {
+      */
+     private _needsRenderUpdate;
+ }
+-import DataMap from './DataMap.js';
+-import ProgrammableStage from './ProgrammableStage.js';
+-import ComputePipeline from './ComputePipeline.js';
+-import RenderObjectPipeline from './RenderObjectPipeline.js';
++
++export default Pipelines;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/ProgrammableStage.d.ts b/jsdoc-testing/jsdoc/renderers/common/ProgrammableStage.d.ts
+index 5fdbd4d68..ed7bc5700 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/ProgrammableStage.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/ProgrammableStage.d.ts
+@@ -1,4 +1,5 @@
+-export default ProgrammableStage;
++import NodeAttribute from '../../nodes/core/NodeAttribute.js';
++
+ /**
+  * Class for representing programmable stages which are vertex,
+  * fragment or compute shaders. Unlike fixed-function states (like blending),
+@@ -16,7 +17,7 @@ declare class ProgrammableStage {
+      * @param {?Array<Object>} [transforms=null] - The transforms (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
+      * @param {?Array<Object>} [attributes=null] - The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
+      */
+-    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: Array<Object> | null, attributes?: Array<Object> | null);
++    constructor(code: string, stage: ("vertex" | "fragment" | "compute"), name: string, transforms?: unknown[] | null, attributes?: NodeAttribute[] | null);
+     /**
+      * The id of the programmable stage.
+      *
+@@ -34,7 +35,7 @@ declare class ProgrammableStage {
+      *
+      * @type {string}
+      */
+-    stage: string;
++    stage: "vertex" | "fragment" | "compute";
+     /**
+      * The name of the stage.
+      * This is used for debugging purposes.
+@@ -47,13 +48,13 @@ declare class ProgrammableStage {
+      *
+      * @type {?Array<Object>}
+      */
+-    transforms: Array<Object> | null;
++    transforms: unknown[] | null;
+     /**
+      * The attributes (only relevant for compute stages with WebGL 2 which uses Transform Feedback).
+      *
+      * @type {?Array<Object>}
+      */
+-    attributes: Array<Object> | null;
++    attributes: NodeAttribute[] | null;
+     /**
+      * How often the programmable stage is currently in use.
+      *
+@@ -62,3 +63,5 @@ declare class ProgrammableStage {
+      */
+     usedTimes: number;
+ }
++
++export default ProgrammableStage;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderBundle.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderBundle.d.ts
+index 52308ff19..1e2eb0c1a 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderBundle.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderBundle.d.ts
+@@ -1,4 +1,6 @@
+-export default RenderBundle;
++import BundleGroup from './BundleGroup.js';
++import { Camera } from '../../cameras/Camera.js';
++
+ /**
+  * This module is used to represent render bundles inside the renderer
+  * for further processing.
+@@ -16,3 +18,5 @@ declare class RenderBundle {
+     bundleGroup: BundleGroup;
+     camera: Camera;
+ }
++
++export default RenderBundle;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderBundles.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderBundles.d.ts
+index 7919fc3ac..127a5440b 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderBundles.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderBundles.d.ts
+@@ -1,4 +1,8 @@
+-export default RenderBundles;
++import ChainMap from './ChainMap.js';
++import RenderBundle from './RenderBundle.js';
++import BundleGroup from './BundleGroup.js';
++import { Camera } from '../../cameras/Camera.js';
++
+ /**
+  * This renderer module manages render bundles.
+  *
+@@ -24,5 +28,5 @@ declare class RenderBundles {
+      */
+     dispose(): void;
+ }
+-import ChainMap from './ChainMap.js';
+-import RenderBundle from './RenderBundle.js';
++
++export default RenderBundles;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderContext.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderContext.d.ts
+index f0ef10337..7ea2fc7d0 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderContext.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderContext.d.ts
+@@ -1,13 +1,11 @@
+-/**
+- * Computes a cache key for the given render context. This key
+- * should identify the render target state so it is possible to
+- * configure the correct attachments in the respective backend.
+- *
+- * @param {RenderContext} renderContext - The render context.
+- * @return {number} The cache key.
+- */
+-export function getCacheKey(renderContext: RenderContext): number;
+-export default RenderContext;
++import { Vector4 } from '../../math/Vector4.js';
++import MRTNode from '../../nodes/core/MRTNode.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import { Texture } from '../../textures/Texture.js';
++import { DepthTexture } from '../../textures/DepthTexture.js';
++import ClippingContext from './ClippingContext.js';
++import { Camera } from '../../cameras/Camera.js';
++
+ /**
+  * Any render or compute command is executed in a specific context that defines
+  * the state of the renderer and its backend. Typical examples for such context
+@@ -50,7 +48,12 @@ declare class RenderContext {
+      * @type {Object}
+      * @default true
+      */
+-    clearColorValue: Object;
++    clearColorValue: {
++        r: number;
++        g: number;
++        b: number;
++        a: number;
++    };
+     /**
+      * Whether the current active framebuffer has a depth attachment.
+      *
+@@ -137,7 +140,7 @@ declare class RenderContext {
+      * @type {?Array<Texture>}
+      * @default null
+      */
+-    textures: Array<Texture> | null;
++    textures: Texture[] | null;
+     /**
+      * The depth texture of the active render target.
+      * `null` when no render target is set.
+@@ -218,4 +221,15 @@ declare class RenderContext {
+      */
+     getCacheKey(): number;
+ }
+-import { Vector4 } from '../../math/Vector4.js';
++
++/**
++ * Computes a cache key for the given render context. This key
++ * should identify the render target state so it is possible to
++ * configure the correct attachments in the respective backend.
++ *
++ * @param {RenderContext} renderContext - The render context.
++ * @return {number} The cache key.
++ */
++export function getCacheKey(renderContext: RenderContext): number;
++
++export default RenderContext;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderContexts.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderContexts.d.ts
+index 9ac3e17c6..bdd27170a 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderContexts.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderContexts.d.ts
+@@ -1,4 +1,7 @@
+-export default RenderContexts;
++import RenderContext from './RenderContext.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import MRTNode from '../../nodes/core/MRTNode.js';
++
+ /**
+  * This module manages the render contexts of the renderer.
+  *
+@@ -27,4 +30,5 @@ declare class RenderContexts {
+      */
+     dispose(): void;
+ }
+-import RenderContext from './RenderContext.js';
++
++export default RenderContexts;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderList.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderList.d.ts
+index bc360b020..fbc7950a9 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderList.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderList.d.ts
+@@ -1,4 +1,32 @@
+-export default RenderList;
++import Lighting from './Lighting.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++import { Object3D } from '../../core/Object3D.js';
++import { BufferGeometry, GeometryGroup } from '../../core/BufferGeometry.js';
++import { Material } from '../../materials/Material.js';
++import ClippingContext from './ClippingContext.js';
++import BundleGroup from './BundleGroup.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import { Light } from '../../lights/Light.js';
++
++export interface Bundle {
++    bundleGroup: BundleGroup;
++    camera: Camera;
++    renderList: RenderList;
++}
++
++export interface RenderItem {
++    id: number | null;
++    object: Object3D | null;
++    geometry: BufferGeometry | null;
++    material: Material | null;
++    groupOrder: number | null;
++    renderOrder: number | null;
++    z: number | null;
++    group: GeometryGroup | null;
++    clippingContext: ClippingContext | null;
++}
++
+ /**
+  * When the renderer analyzes the scene at the beginning of a render call,
+  * it stores 3D object for further processing in render lists. Depending on the
+@@ -24,7 +52,7 @@ declare class RenderList {
+      *
+      * @type {Array<Object>}
+      */
+-    renderItems: Array<Object>;
++    renderItems: RenderItem[];
+     /**
+      * The current render items index.
+      *
+@@ -37,26 +65,26 @@ declare class RenderList {
+      *
+      * @type {Array<Object>}
+      */
+-    opaque: Array<Object>;
++    opaque: RenderItem[];
+     /**
+      * A list with transparent render items which require
+      * double pass rendering (e.g. transmissive objects).
+      *
+      * @type {Array<Object>}
+      */
+-    transparentDoublePass: Array<Object>;
++    transparentDoublePass: RenderItem[];
+     /**
+      * A list with transparent render items.
+      *
+      * @type {Array<Object>}
+      */
+-    transparent: Array<Object>;
++    transparent: RenderItem[];
+     /**
+      * A list with transparent render bundle data.
+      *
+      * @type {Array<Object>}
+      */
+-    bundles: Array<Object>;
++    bundles: Bundle[];
+     /**
+      * The render list's lights node. This node is later
+      * relevant for the actual analytical light nodes which
+@@ -71,7 +99,7 @@ declare class RenderList {
+      *
+      * @type {Array<Light>}
+      */
+-    lightsArray: Array<Light>;
++    lightsArray: Light[];
+     /**
+      * The scene.
+      *
+@@ -98,7 +126,7 @@ declare class RenderList {
+      *
+      * @return {RenderList} A reference to this render list.
+      */
+-    begin(): RenderList;
++    begin(): this;
+     /**
+      * Returns a render item for the giving render item state. The state is defined
+      * by a series of object-related parameters.
+@@ -115,7 +143,7 @@ declare class RenderList {
+      * @param {ClippingContext} clippingContext - The current clipping context.
+      * @return {Object} The render item.
+      */
+-    getNextRenderItem(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: number | null, clippingContext: ClippingContext): Object;
++    getNextRenderItem(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: GeometryGroup | null, clippingContext: ClippingContext): RenderItem;
+     /**
+      * Pushes the given object as a render item to the internal render lists.
+      * The selected lists depend on the object properties.
+@@ -128,7 +156,7 @@ declare class RenderList {
+      * @param {?number} group - {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+      * @param {ClippingContext} clippingContext - The current clipping context.
+      */
+-    push(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: number | null, clippingContext: ClippingContext): void;
++    push(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: GeometryGroup | null, clippingContext: ClippingContext): void;
+     /**
+      * Inserts the given object as a render item at the start of the internal render lists.
+      * The selected lists depend on the object properties.
+@@ -141,13 +169,13 @@ declare class RenderList {
+      * @param {?number} group - {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+      * @param {ClippingContext} clippingContext - The current clipping context.
+      */
+-    unshift(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: number | null, clippingContext: ClippingContext): void;
++    unshift(object: Object3D, geometry: BufferGeometry, material: Material, groupOrder: number, z: number, group: GeometryGroup | null, clippingContext: ClippingContext): void;
+     /**
+      * Pushes render bundle group data into the render list.
+      *
+      * @param {Object} group - Bundle group data.
+      */
+-    pushBundle(group: Object): void;
++    pushBundle(group: Bundle): void;
+     /**
+      * Pushes a light into the render list.
+      *
+@@ -160,10 +188,13 @@ declare class RenderList {
+      * @param {?function(any, any): number} customOpaqueSort - A custom sort function for opaque objects.
+      * @param {?function(any, any): number} customTransparentSort -  A custom sort function for transparent objects.
+      */
+-    sort(customOpaqueSort: ((arg0: any, arg1: any) => number) | null, customTransparentSort: ((arg0: any, arg1: any) => number) | null): void;
++    sort(customOpaqueSort: ((a: RenderItem, b: RenderItem) => number) | null,
++         customTransparentSort: ((a: RenderItem, b: RenderItem) => number) | null): void;
+     /**
+      * This method performs finalizing tasks right after the render lists
+      * have been generated.
+      */
+     finish(): void;
+ }
++
++export default RenderList;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderLists.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderLists.d.ts
+index d8d26670c..ee0ad0b4e 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderLists.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderLists.d.ts
+@@ -1,4 +1,9 @@
+-export default RenderLists;
++import ChainMap from './ChainMap.js';
++import RenderList from './RenderList.js';
++import Lighting from './Lighting.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++
+ /**
+  * This renderer module manages the render lists which are unique
+  * per scene and camera combination.
+@@ -37,5 +42,5 @@ declare class RenderLists {
+      */
+     dispose(): void;
+ }
+-import ChainMap from './ChainMap.js';
+-import RenderList from './RenderList.js';
++
++export default RenderLists;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
+index 6ae36d465..a9d499e3c 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
+@@ -1,4 +1,22 @@
+-export default RenderObject;
++import NodeManager from './nodes/NodeManager.js';
++import Geometries from './Geometries.js';
++import Renderer from './Renderer.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Material } from '../../materials/Material.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import RenderContext from './RenderContext.js';
++import ClippingContext from './ClippingContext.js';
++import { BufferGeometry } from '../../core/BufferGeometry.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
++import RenderPipeline from './RenderPipeline.js';
++import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
++import BundleGroup from './BundleGroup.js';
++import NodeBuilderState from './nodes/NodeBuilderState.js';
++import NodeMaterialObserver from '../../materials/nodes/manager/NodeMaterialObserver.js';
++import BindGroup from './BindGroup.js';
++
+ /**
+  * A render object is the renderer's representation of single entity that gets drawn
+  * with a draw command. There is no unique mapping of render objects to 3D objects in the
+@@ -32,7 +50,7 @@ declare class RenderObject {
+      * @param {RenderContext} renderContext - The render context.
+      * @param {ClippingContext} clippingContext - The clipping context.
+      */
+-    constructor(nodes: Nodes, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext);
++    constructor(nodes: NodeManager, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext);
+     id: number;
+     /**
+      * Renderer component for managing nodes related logic.
+@@ -108,7 +126,10 @@ declare class RenderObject {
+      * @type {?Object}
+      * @default null
+      */
+-    drawRange: Object | null;
++    drawRange: {
++        start: number;
++        count: number;
++    } | null;
+     /**
+      * An array holding the buffer attributes
+      * of the render object. This entails attribute
+@@ -117,7 +138,7 @@ declare class RenderObject {
+      * @type {?Array<BufferAttribute>}
+      * @default null
+      */
+-    attributes: Array<BufferAttribute> | null;
++    attributes: BufferAttribute[] | null;
+     /**
+      * An object holding the version of the
+      * attributes. The keys are the attribute names
+@@ -163,7 +184,12 @@ declare class RenderObject {
+      * @type {?Object}
+      * @default null
+      */
+-    drawParams: Object | null;
++    drawParams: {
++        vertexCount: number;
++        firstVertex: number;
++        instanceCount: number;
++        firstInstance: number;
++    } | null;
+     /**
+      * If this render object is used inside a render bundle,
+      * this property points to the respective bundle group.
+@@ -226,7 +252,7 @@ declare class RenderObject {
+      *
+      * @method
+      */
+-    onDispose: any;
++    onDispose: (() => void) | null;
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -261,14 +287,14 @@ declare class RenderObject {
+      * @type {boolean}
+      * @readonly
+      */
+-    readonly get clippingNeedsUpdate(): boolean;
++    get clippingNeedsUpdate(): boolean;
+     /**
+      * The number of clipping planes defined in context of hardware clipping.
+      *
+      * @type {number}
+      * @readonly
+      */
+-    readonly get hardwareClippingPlanes(): number;
++    get hardwareClippingPlanes(): number;
+     /**
+      * Returns the node builder state of this render object.
+      *
+@@ -286,7 +312,7 @@ declare class RenderObject {
+      *
+      * @return {Array<BindGroup>} The bindings.
+      */
+-    getBindings(): Array<BindGroup>;
++    getBindings(): BindGroup[];
+     /**
+      * Returns a binding group by group name of this render object.
+      *
+@@ -311,13 +337,13 @@ declare class RenderObject {
+      *
+      * @return {number|Array<number>} The byte offset into the indirect attribute buffer.
+      */
+-    getIndirectOffset(): number | Array<number>;
++    getIndirectOffset(): number | number[];
+     /**
+      * Returns an array that acts as a key for identifying the render object in a chain map.
+      *
+      * @return {Array<Object>} An array with object references.
+      */
+-    getChainArray(): Array<Object>;
++    getChainArray(): unknown[];
+     /**
+      * This method is used when the geometry of a 3D object has been exchanged and the
+      * respective render object now requires an update.
+@@ -331,7 +357,7 @@ declare class RenderObject {
+      *
+      * @return {Array<BufferAttribute>} An array with buffer attributes.
+      */
+-    getAttributes(): Array<BufferAttribute>;
++    getAttributes(): BufferAttribute[];
+     /**
+      * Returns the vertex buffers of the render object.
+      *
+@@ -371,7 +397,7 @@ declare class RenderObject {
+      * @type {boolean}
+      * @readonly
+      */
+-    readonly get needsGeometryUpdate(): boolean;
++    get needsGeometryUpdate(): boolean;
+     /**
+      * Whether the render object requires an update or not.
+      *
+@@ -389,7 +415,7 @@ declare class RenderObject {
+      * @type {boolean}
+      * @readonly
+      */
+-    readonly get needsUpdate(): boolean;
++    get needsUpdate(): boolean;
+     /**
+      * Returns the dynamic cache key which represents a key that is computed per draw command.
+      *
+@@ -407,3 +433,5 @@ declare class RenderObject {
+      */
+     dispose(): void;
+ }
++
++export default RenderObject;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderObjectPipeline.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderObjectPipeline.d.ts
+index d9631c32e..5cb67b914 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderObjectPipeline.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderObjectPipeline.d.ts
+@@ -1,4 +1,6 @@
+-export default RenderObjectPipeline;
++import Pipeline from './Pipeline.js';
++import ProgrammableStage from './ProgrammableStage.js';
++
+ /**
+  * Class for representing render pipelines.
+  *
+@@ -27,4 +29,5 @@ declare class RenderObjectPipeline extends Pipeline {
+      */
+     fragmentProgram: ProgrammableStage;
+ }
+-import Pipeline from './Pipeline.js';
++
++export default RenderObjectPipeline;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
+index f51b0945e..7a3379486 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
+@@ -1,4 +1,19 @@
+-export default RenderObjects;
++import ChainMap from './ChainMap.js';
++import RenderObject from './RenderObject.js';
++import Renderer from './Renderer.js';
++import NodeManager from './nodes/NodeManager.js';
++import Geometries from './Geometries.js';
++import Pipelines from './Pipelines.js';
++import Bindings from './Bindings.js';
++import Info from './Info.js';
++import { Object3D } from '../../core/Object3D.js';
++import { Material } from '../../materials/Material.js';
++import { Scene } from '../../scenes/Scene.js';
++import { Camera } from '../../cameras/Camera.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import RenderContext from './RenderContext.js';
++import ClippingContext from './ClippingContext.js';
++
+ /**
+  * This module manages the render objects of the renderer.
+  *
+@@ -15,7 +30,7 @@ declare class RenderObjects {
+      * @param {Bindings} bindings - Renderer component for managing bindings.
+      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+      */
+-    constructor(renderer: Renderer, nodes: Nodes, geometries: Geometries, pipelines: Pipelines, bindings: Bindings, info: Info);
++    constructor(renderer: Renderer, nodes: NodeManager, geometries: Geometries, pipelines: Pipelines, bindings: Bindings, info: Info);
+     /**
+      * The renderer.
+      *
+@@ -27,7 +42,7 @@ declare class RenderObjects {
+      *
+      * @type {Nodes}
+      */
+-    nodes: Nodes;
++    nodes: NodeManager;
+     /**
+      * Renderer component for managing geometries.
+      *
+@@ -102,7 +117,7 @@ declare class RenderObjects {
+      * @param {string} [passId] - An optional ID for identifying the pass.
+      * @return {RenderObject} The render object.
+      */
+-    createRenderObject(nodes: Nodes, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext, passId?: string): RenderObject;
++    createRenderObject(nodes: NodeManager, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext, passId?: string): RenderObject;
+ }
+-import ChainMap from './ChainMap.js';
+-import RenderObject from './RenderObject.js';
++
++export default RenderObjects;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
+index dde8a06a8..8aa1a42c4 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
+@@ -1,8 +1,55 @@
+-export default Renderer;
+-/**
+- * Animation loop parameter of `renderer.setAnimationLoop()`.
+- */
+-export type onAnimationCallback = (time: DOMHighResTimeStamp, frame?: XRFrame) => any;
++import Info from './Info.js';
++import NodeLibrary from './nodes/NodeLibrary.js';
++import Lighting from './Lighting.js';
++import XRManager from './XRManager.js';
++import { Scene } from '../../scenes/Scene.js';
++import InspectorBase from './InspectorBase.js';
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import CanvasTarget from './CanvasTarget.js';
++import ClippingContext from './ClippingContext.js';
++import Backend from './Backend.js';
++import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
++import ContextNode from '../../nodes/core/ContextNode.js';
++import { Camera } from '../../cameras/Camera.js';
++import { Object3D } from '../../core/Object3D.js';
++import MRTNode from '../../nodes/core/MRTNode.js';
++import StorageBufferAttribute from './StorageBufferAttribute.js';
++import { RenderItem } from "./RenderList.js";
++import Color4 from './Color4.js';
++import { ColorRepresentation } from '../../math/Color.js';
++import { Texture } from '../../textures/Texture.js';
++import { BufferGeometry, GeometryGroup } from '../../core/BufferGeometry.js';
++import { Material } from '../../materials/Material.js';
++import LightsNode from '../../nodes/lighting/LightsNode.js';
++import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import IndirectStorageBufferAttribute from './IndirectStorageBufferAttribute.js';
++import { FramebufferTexture } from '../../textures/FramebufferTexture.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
++import { Box2 } from "../../math/Box2.js";
++import { Box3 } from "../../math/Box3.js";
++
++interface DeviceLostInfo {
++    api: "WebGL" | "WebGPU";
++    message: string;
++    reason: string | null;
++    originalEvent: unknown;
++}
++
++export interface RendererParameters {
++    logarithmicDepthBuffer?: boolean | undefined;
++    alpha?: boolean | undefined;
++    depth?: boolean | undefined;
++    stencil?: boolean | undefined;
++    antialias?: boolean | undefined;
++    samples?: number | undefined;
++    getFallback?: ((error: unknown) => Backend) | null | undefined;
++    outputBufferType?: TextureDataType | undefined;
++    multiview?: boolean | undefined;
++}
++
+ /**
+  * Base class for renderers.
+  */
+@@ -30,7 +77,7 @@ declare class Renderer {
+      * @param {Renderer~Options} [parameters] - The configuration parameter.
+ 
+      */
+-    constructor(backend: Backend, parameters?: {});
++    constructor(backend: Backend, parameters?: RendererParameters);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -105,7 +152,7 @@ declare class Renderer {
+      * @type {number}
+      * @default NoToneMapping
+      */
+-    toneMapping: number;
++    toneMapping: ToneMapping;
+     /**
+      * Defines the tone mapping exposure.
+      *
+@@ -153,7 +200,7 @@ declare class Renderer {
+      * @type {ContextNode}
+      * @property {Object} value - The context value object.
+      */
+-    contextNode: ContextNode;
++    contextNode: ContextNode<unknown>;
+     /**
+      * The node library defines how certain library objects like materials, lights
+      * or tone mapping functions are mapped to node types. This is required since
+@@ -456,7 +503,7 @@ declare class Renderer {
+      *
+      * @type {Function}
+      */
+-    onDeviceLost: Function;
++    onDeviceLost: (info: DeviceLostInfo) => void;
+     /**
+      * Defines the type of output buffers. The default `HalfFloatType` is recommend for
+      * best quality. To save memory and bandwidth, `UnsignedByteType` might be used.
+@@ -545,7 +592,7 @@ declare class Renderer {
+         /**
+          * - The shadow map type.
+          */
+-        type: number;
++        type: ShadowMapType;
+     };
+     /**
+      * XR configuration.
+@@ -578,11 +625,19 @@ declare class Renderer {
+         /**
+          * - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
+          */
+-        onShaderError: Function | null;
++        onShaderError: ((
++            gl: WebGL2RenderingContext,
++            programGPU: WebGLProgram,
++            glVertexShader: WebGLShader,
++            glFragmentShader: WebGLShader,
++        ) => void) | null;
+         /**
+          * - Allows the get the raw shader code for the given scene, camera and 3D object.
+          */
+-        getShaderAsync: Function;
++        getShaderAsync: (scene: Scene, camera: Camera, object: Object3D) => Promise<{
++            fragmentShader: string | null;
++            vertexShader: string | null;
++        }>;
+     };
+     /**
+      * Initializes the renderer so it is ready for usage.
+@@ -598,7 +653,7 @@ declare class Renderer {
+      *
+      * @type {HTMLCanvasElement|OffscreenCanvas}
+      */
+-    get domElement(): HTMLCanvasElement | OffscreenCanvas;
++    get domElement(): HTMLCanvasElement;
+     /**
+      * The coordinate system of the renderer. The value of this property
+      * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
+@@ -607,7 +662,7 @@ declare class Renderer {
+      * @readonly
+      * @type {number}
+      */
+-    readonly get coordinateSystem(): number;
++    get coordinateSystem(): CoordinateSystem;
+     /**
+      * Compiles all materials in the given scene. This can be useful to avoid a
+      * phenomenon which is called "shader compilation stutter", which occurs when
+@@ -623,7 +678,7 @@ declare class Renderer {
+      * @param {?Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
+      * @return {Promise} A Promise that resolves when the compile has been finished.
+      */
+-    compileAsync(scene: Object3D, camera: Camera, targetScene?: Scene | null): Promise<any>;
++    compileAsync(scene: Object3D, camera: Camera, targetScene?: Scene | null): Promise<void>;
+     /**
+      * Renders the scene in an async fashion.
+      *
+@@ -633,7 +688,7 @@ declare class Renderer {
+      * @param {Camera} camera - The camera.
+      * @return {Promise} A Promise that resolves when the render has been finished.
+      */
+-    renderAsync(scene: Object3D, camera: Camera): Promise<any>;
++    renderAsync(scene: Object3D, camera: Camera): Promise<void>;
+     /**
+      * Can be used to synchronize CPU operations with GPU tasks. So when this method is called,
+      * the CPU waits for the GPU to complete its operation (e.g. a compute task).
+@@ -642,7 +697,7 @@ declare class Renderer {
+      * @deprecated
+      * @return {Promise} A Promise that resolves when synchronization has been finished.
+      */
+-    waitForGPU(): Promise<any>;
++    waitForGPU(): Promise<void>;
+     set inspector(value: InspectorBase);
+     /**
+      * The inspector instance. The inspector can be any class that extends from `InspectorBase`.
+@@ -673,7 +728,7 @@ declare class Renderer {
+      * @param {MRTNode} mrt - The MRT node to set.
+      * @return {Renderer} A reference to this renderer.
+      */
+-    setMRT(mrt: MRTNode): Renderer;
++    setMRT(mrt: MRTNode | null): Renderer;
+     /**
+      * Returns the MRT configuration.
+      *
+@@ -685,14 +740,14 @@ declare class Renderer {
+      *
+      * @return {number} The output buffer type.
+      */
+-    getOutputBufferType(): number;
++    getOutputBufferType(): TextureDataType;
+     /**
+      * Returns the output buffer type.
+      *
+      * @deprecated since r182. Use `.getOutputBufferType()` instead.
+      * @return {number} The output buffer type.
+      */
+-    getColorBufferType(): number;
++    getColorBufferType(): TextureDataType;
+     /**
+      * Default implementation of the device lost callback.
+      *
+@@ -731,7 +786,7 @@ declare class Renderer {
+      * @readonly
+      * @return {boolean} Whether the renderer has been initialized or not.
+      */
+-    readonly get initialized(): boolean;
++    get initialized(): boolean;
+     /**
+      * Returns an internal render target which is used when computing the output tone mapping
+      * and color space conversion. Unlike in `WebGLRenderer`, this is done in a separate render
+@@ -751,7 +806,7 @@ declare class Renderer {
+      * @return {RenderContext} The current render context.
+      */
+     private _renderScene;
+-    _setXRLayerSize(width: any, height: any): void;
++    _setXRLayerSize(width: number, height: number): void;
+     /**
+      * The output pass performs tone mapping and color space conversion.
+      *
+@@ -786,13 +841,13 @@ declare class Renderer {
+      * @param {?onAnimationCallback} callback - The application's animation loop.
+      * @return {Promise} A Promise that resolves when the set has been executed.
+      */
+-    setAnimationLoop(callback: onAnimationCallback | null): Promise<any>;
++    setAnimationLoop(callback: ((time: DOMHighResTimeStamp, frame?: XRFrame) => void) | null): Promise<void>;
+     /**
+      * Returns the current animation loop callback.
+      *
+      * @return {?Function} The current animation loop callback.
+      */
+-    getAnimationLoop(): Function | null;
++    getAnimationLoop(): ((time: DOMHighResTimeStamp, xrFrame?: XRFrame) => void) | null;
+     /**
+      * Can be used to transfer buffer data from a storage buffer attribute
+      * from the GPU to the CPU in context of compute shaders.
+@@ -801,13 +856,13 @@ declare class Renderer {
+      * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
+      * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
+      */
+-    getArrayBufferAsync(attribute: StorageBufferAttribute): Promise<ArrayBuffer>;
++    getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
+     /**
+      * Returns the rendering context.
+      *
+      * @return {GPUCanvasContext|WebGL2RenderingContext} The rendering context.
+      */
+-    getContext(): GPUCanvasContext | WebGL2RenderingContext;
++    getContext(): unknown;
+     /**
+      * Returns the pixel ratio.
+      *
+@@ -862,14 +917,14 @@ declare class Renderer {
+      *
+      * @param {Function} method - The sort function.
+      */
+-    setOpaqueSort(method: Function): void;
++    setOpaqueSort(method: ((a: RenderItem, b: RenderItem) => number) | null): void;
+     /**
+      * Defines a manual sort function for the transparent render list.
+      * Pass `null` to use the default sort.
+      *
+      * @param {Function} method - The sort function.
+      */
+-    setTransparentSort(method: Function): void;
++    setTransparentSort(method: ((a: RenderItem, b: RenderItem) => number) | null): void;
+     /**
+      * Returns the scissor rectangle.
+      *
+@@ -877,16 +932,19 @@ declare class Renderer {
+      * @return {Vector4} The scissor rectangle.
+      */
+     getScissor(target: Vector4): Vector4;
++    /**
++     * Defines the scissor rectangle.
++     */
++    setScissor(x: Vector4): void;
+     /**
+      * Defines the scissor rectangle.
+      *
+-     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the box in logical pixel unit.
+-     * Instead of passing four arguments, the method also works with a single four-dimensional vector.
++     * @param {number} x - The horizontal coordinate for the upper left corner of the box in logical pixel unit.
+      * @param {number} y - The vertical coordinate for the upper left corner of the box in logical pixel unit.
+      * @param {number} width - The width of the scissor box in logical pixel unit.
+      * @param {number} height - The height of the scissor box in logical pixel unit.
+      */
+-    setScissor(x: number | Vector4, y: number, width: number, height: number): void;
++    setScissor(x: number, y: number, width: number, height: number): void;
+     /**
+      * Returns the scissor test value.
+      *
+@@ -906,31 +964,35 @@ declare class Renderer {
+      * @return {Vector4} The viewport definition.
+      */
+     getViewport(target: Vector4): Vector4;
++    /**
++     * Defines the viewport.
++     */
++    setViewport(x: Vector4): void;
+     /**
+      * Defines the viewport.
+      *
+-     * @param {number | Vector4} x - The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
++     * @param {number} x - The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
+      * @param {number} y - The vertical coordinate for the upper left corner of the viewport origin  in logical pixel unit.
+      * @param {number} width - The width of the viewport in logical pixel unit.
+      * @param {number} height - The height of the viewport in logical pixel unit.
+      * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
+      * @param {number} maxDepth - The maximum depth value of the viewport. WebGPU only.
+      */
+-    setViewport(x: number | Vector4, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
++    setViewport(x: number, y: number, width: number, height: number, minDepth?: number, maxDepth?: number): void;
+     /**
+      * Returns the clear color.
+      *
+      * @param {Color} target - The method writes the result in this target object.
+      * @return {Color} The clear color.
+      */
+-    getClearColor(target: Color): Color;
++    getClearColor(target: Color4): Color4;
+     /**
+      * Defines the clear color and optionally the clear alpha.
+      *
+      * @param {Color} color - The clear color.
+      * @param {number} [alpha=1] - The clear alpha.
+      */
+-    setClearColor(color: Color, alpha?: number): void;
++    setClearColor(color: ColorRepresentation, alpha?: number): void;
+     /**
+      * Returns the clear alpha.
+      *
+@@ -1006,7 +1068,7 @@ declare class Renderer {
+      * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
+      * @return {Promise} A Promise that resolves when the clear operation has been executed.
+      */
+-    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<any>;
++    clearAsync(color?: boolean, depth?: boolean, stencil?: boolean): Promise<void>;
+     /**
+      * Async version of {@link Renderer#clearColor}.
+      *
+@@ -1014,7 +1076,7 @@ declare class Renderer {
+      * @deprecated
+      * @return {Promise} A Promise that resolves when the clear operation has been executed.
+      */
+-    clearColorAsync(): Promise<any>;
++    clearColorAsync(): Promise<void>;
+     /**
+      * Async version of {@link Renderer#clearDepth}.
+      *
+@@ -1022,7 +1084,7 @@ declare class Renderer {
+      * @deprecated
+      * @return {Promise} A Promise that resolves when the clear operation has been executed.
+      */
+-    clearDepthAsync(): Promise<any>;
++    clearDepthAsync(): Promise<void>;
+     /**
+      * Async version of {@link Renderer#clearStencil}.
+      *
+@@ -1030,7 +1092,7 @@ declare class Renderer {
+      * @deprecated
+      * @return {Promise} A Promise that resolves when the clear operation has been executed.
+      */
+-    clearStencilAsync(): Promise<any>;
++    clearStencilAsync(): Promise<void>;
+     /**
+      * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
+      * If this is the case, the renderer allocates an internal render target for that purpose.
+@@ -1060,7 +1122,7 @@ declare class Renderer {
+      *
+      * @type {number}
+      */
+-    get currentToneMapping(): number;
++    get currentToneMapping(): ToneMapping;
+     /**
+      * The current color space of the renderer. When not producing screen output,
+      * the color space is always the working color space.
+@@ -1094,19 +1156,19 @@ declare class Renderer {
+      *
+      * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
+      */
+-    getRenderTarget(): RenderTarget | null;
++    getRenderTarget(): RenderTarget<Texture<unknown>> | null;
+     /**
+      * Sets the output render target for the renderer.
+      *
+      * @param {Object} renderTarget - The render target to set as the output target.
+      */
+-    setOutputRenderTarget(renderTarget: Object): void;
++    setOutputRenderTarget(renderTarget: RenderTarget): void;
+     /**
+      * Returns the current output target.
+      *
+      * @return {?RenderTarget} The current output render target. Returns `null` if no output target is set.
+      */
+-    getOutputRenderTarget(): RenderTarget | null;
++    getOutputRenderTarget(): RenderTarget<Texture<unknown>> | null;
+     /**
+      * Sets the canvas target. The canvas target manages the HTML canvas
+      * or the offscreen canvas the renderer draws into.
+@@ -1151,13 +1213,13 @@ declare class Renderer {
+      *
+      * @param {?renderObjectFunction} renderObjectFunction - The render object function.
+      */
+-    setRenderObjectFunction(renderObjectFunction: ((object: Object3D, scene: Scene, camera: Camera, geometry: BufferGeometry, material: Material, group: Object | null, lightsNode: LightsNode, clippingContext: ClippingContext, passId?: string | null | undefined) => any) | null): void;
++    setRenderObjectFunction(renderObjectFunction: ((object: Object3D, scene: Scene, camera: Camera, geometry: BufferGeometry, material: Material, group: GeometryGroup | null, lightsNode: LightsNode, clippingContext: ClippingContext, passId?: string | null | undefined) => void) | null): void;
+     /**
+      * Returns the current render object function.
+      *
+      * @return {?Function} The current render object function. Returns `null` if no function is set.
+      */
+-    getRenderObjectFunction(): Function | null;
++    getRenderObjectFunction(): ((object: Object3D, scene: Scene, camera: Camera, geometry: BufferGeometry, material: Material, group: GeometryGroup | null, lightsNode: LightsNode, clippingContext: ClippingContext, passId?: string | null | undefined) => void) | null;
+     /**
+      * Execute a single or an array of compute nodes. This method can only be called
+      * if the renderer has been initialized.
+@@ -1169,7 +1231,7 @@ declare class Renderer {
+      * - A IndirectStorageBufferAttribute for indirect dispatch size.
+      * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
+      */
+-    compute(computeNodes: Node | Array<Node>, dispatchSize?: number | Array<number> | IndirectStorageBufferAttribute): Promise<any> | undefined;
++    compute(computeNodes: ComputeNode | ComputeNode[], dispatchSize?: number | number[] | IndirectStorageBufferAttribute): Promise<void> | undefined;
+     /**
+      * Execute a single or an array of compute nodes.
+      *
+@@ -1181,7 +1243,7 @@ declare class Renderer {
+      * - A IndirectStorageBufferAttribute for indirect dispatch size.
+      * @return {Promise} A Promise that resolve when the compute has finished.
+      */
+-    computeAsync(computeNodes: Node | Array<Node>, dispatchSize?: number | Array<number> | IndirectStorageBufferAttribute): Promise<any>;
++    computeAsync(computeNodes: ComputeNode | ComputeNode[], dispatchSize?: number | number[] | IndirectStorageBufferAttribute): Promise<void>;
+     /**
+      * Checks if the given feature is supported by the selected backend.
+      *
+@@ -1191,7 +1253,7 @@ declare class Renderer {
+      * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
+      */
+     hasFeatureAsync(name: string): Promise<boolean>;
+-    resolveTimestampsAsync(type?: string): Promise<any>;
++    resolveTimestampsAsync(type?: TimestampQuery): Promise<number | undefined>;
+     /**
+      * Checks if the given feature is supported by the selected backend. If the
+      * renderer has not been initialized, this method always returns `false`.
+@@ -1215,7 +1277,7 @@ declare class Renderer {
+      * @param {Texture} texture - The texture.
+      * @return {Promise} A Promise that resolves when the texture has been initialized.
+      */
+-    initTextureAsync(texture: Texture): Promise<any>;
++    initTextureAsync(texture: Texture): Promise<void>;
+     /**
+      * Initializes the given texture. Useful for preloading a texture rather than waiting until first render
+      * (which can cause noticeable lags due to decode and GPU upload overhead).
+@@ -1248,7 +1310,7 @@ declare class Renderer {
+      * @param {number} [srcLevel=0] - The source mip level to copy from.
+      * @param {number} [dstLevel=0] - The destination mip level to copy to.
+      */
+-    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture, srcRegion?: Box2 | Box3, dstPosition?: Vector2 | Vector3, srcLevel?: number, dstLevel?: number): void;
++    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture, srcRegion?: Box2 | Box3 | null, dstPosition?: Vector2 | Vector3 | null, srcLevel?: number, dstLevel?: number): void;
+     /**
+      * Reads pixel data from the given render target.
+      *
+@@ -1329,7 +1391,7 @@ declare class Renderer {
+      * @param {?ClippingContext} clippingContext - The clipping context.
+      * @param {?string} [passId=null] - An optional ID for identifying the pass.
+      */
+-    renderObject(object: Object3D, scene: Scene, camera: Camera, geometry: BufferGeometry, material: Material, group: Object | null, lightsNode: LightsNode, clippingContext?: ClippingContext | null, passId?: string | null): void;
++    renderObject(object: Object3D, scene: Scene, camera: Camera, geometry: BufferGeometry, material: Material, group: GeometryGroup | null, lightsNode: LightsNode, clippingContext?: ClippingContext | null, passId?: string | null): void;
+     /**
+      * Checks if the given compatibility is supported by the selected backend. If the
+      * renderer has not been initialized, this method always returns `false`.
+@@ -1377,16 +1439,7 @@ declare class Renderer {
+      * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
+      * @return {function(Object3D, Camera, ?Scene): Promise|undefined} A Promise that resolves when the compile has been finished.
+      */
+-    get compile(): (arg0: Object3D, arg1: Camera, arg2: Scene | null) => Promise<any> | undefined;
++    get compile(): (scene: Object3D, camera: Camera, targetScene?: Scene | null) => Promise<void>;
+ }
+-import Info from './Info.js';
+-import NodeLibrary from './nodes/NodeLibrary.js';
+-import Lighting from './Lighting.js';
+-import XRManager from './XRManager.js';
+-import { Scene } from '../../scenes/Scene.js';
+-import InspectorBase from './InspectorBase.js';
+-import { Vector2 } from '../../math/Vector2.js';
+-import { Vector4 } from '../../math/Vector4.js';
+-import { RenderTarget } from '../../core/RenderTarget.js';
+-import CanvasTarget from './CanvasTarget.js';
+-import ClippingContext from './ClippingContext.js';
++
++export default Renderer;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Textures.d.ts b/jsdoc-testing/jsdoc/renderers/common/Textures.d.ts
+index 760132d9d..6d87d15ed 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Textures.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Textures.d.ts
+@@ -1,4 +1,19 @@
+-export default Textures;
++import DataMap from './DataMap.js';
++import { Vector3 } from '../../math/Vector3.js';
++import Renderer from './Renderer.js';
++import Backend from './Backend.js';
++import Info from './Info.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import { Texture } from '../../textures/Texture.js';
++
++interface TextureOptions {
++    width?: number;
++    height?: number;
++    depth?: number;
++    needsMipmaps?: boolean;
++    levels?: number;
++}
++
+ /**
+  * This module manages the textures of the renderer.
+  *
+@@ -48,7 +63,7 @@ declare class Textures extends DataMap {
+      * @param {Texture} texture - The texture to update.
+      * @param {Object} [options={}] - The options.
+      */
+-    updateTexture(texture: Texture, options?: Object): void;
++    updateTexture(texture: Texture, options?: TextureOptions): void;
+     /**
+      * Updates the sampler for the given texture. This method has no effect
+      * for the WebGL backend since it has no concept of samplers. Texture
+@@ -106,5 +121,5 @@ declare class Textures extends DataMap {
+      */
+     _destroyTexture(texture: Texture): void;
+ }
+-import DataMap from './DataMap.js';
+-import { Vector3 } from '../../math/Vector3.js';
++
++export default Textures;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/TimestampQueryPool.d.ts b/jsdoc-testing/jsdoc/renderers/common/TimestampQueryPool.d.ts
+index 82eedbdd9..f34d38405 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/TimestampQueryPool.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/TimestampQueryPool.d.ts
+@@ -1,10 +1,9 @@
+-export default TimestampQueryPool;
+ /**
+  * Abstract base class of a timestamp query pool.
+  *
+  * @abstract
+  */
+-declare class TimestampQueryPool {
++declare abstract class TimestampQueryPool {
+     /**
+      * Creates a new timestamp query pool.
+      *
+@@ -57,7 +56,7 @@ declare class TimestampQueryPool {
+      *
+      * @type {Array<number>}
+      */
+-    frames: Array<number>;
++    frames: number[];
+     /**
+      * This property is used to avoid multiple concurrent resolve operations.
+      * The WebGL backend uses it as a boolean flag. In context of WebGPU, it holds
+@@ -78,7 +77,7 @@ declare class TimestampQueryPool {
+      *
+      * @return {Array<number>} The timestamp frames.
+      */
+-    getTimestampFrames(): Array<number>;
++    getTimestampFrames(): number[];
+     /**
+      * Returns the timestamp for a given render context.
+      *
+@@ -101,7 +100,7 @@ declare class TimestampQueryPool {
+      * @param {number} frameId - The current frame identifier.
+      * @returns {?number}
+      */
+-    allocateQueriesForContext(): number | null;
++    abstract allocateQueriesForContext(uid: string, frameId: number): number | null;
+     /**
+      * Resolve all timestamps and return data (or process them).
+      *
+@@ -109,11 +108,13 @@ declare class TimestampQueryPool {
+      * @async
+      * @returns {Promise<number>|number} The resolved timestamp value.
+      */
+-    resolveQueriesAsync(): Promise<number> | number;
++    abstract resolveQueriesAsync(): Promise<number> | number;
+     /**
+      * Dispose of the query pool.
+      *
+      * @abstract
+      */
+-    dispose(): void;
++    abstract dispose(): void;
+ }
++
++export default TimestampQueryPool;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/Uniform.d.ts b/jsdoc-testing/jsdoc/renderers/common/Uniform.d.ts
+index d8d107299..5575482a4 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/Uniform.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/Uniform.d.ts
+@@ -1,10 +1,18 @@
++import { Vector2 } from '../../math/Vector2.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Vector4 } from '../../math/Vector4.js';
++import { Color } from '../../math/Color.js';
++import { Matrix2 } from '../../math/Matrix2.js';
++import { Matrix3 } from '../../math/Matrix3.js';
++import { Matrix4 } from '../../math/Matrix4.js';
++
+ /**
+  * Represents a Number uniform.
+  *
+  * @private
+  * @augments Uniform
+  */
+-export class NumberUniform extends Uniform {
++export class NumberUniform extends Uniform<number> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -27,7 +35,7 @@ export class NumberUniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Vector2Uniform extends Uniform {
++export class Vector2Uniform extends Uniform<Vector2> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -50,7 +58,7 @@ export class Vector2Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Vector3Uniform extends Uniform {
++export class Vector3Uniform extends Uniform<Vector3> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -73,7 +81,7 @@ export class Vector3Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Vector4Uniform extends Uniform {
++export class Vector4Uniform extends Uniform<Vector4> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -96,7 +104,7 @@ export class Vector4Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class ColorUniform extends Uniform {
++export class ColorUniform extends Uniform<Color> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -119,7 +127,7 @@ export class ColorUniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Matrix2Uniform extends Uniform {
++export class Matrix2Uniform extends Uniform<Matrix2> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -142,7 +150,7 @@ export class Matrix2Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Matrix3Uniform extends Uniform {
++export class Matrix3Uniform extends Uniform<Matrix3> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -165,7 +173,7 @@ export class Matrix3Uniform extends Uniform {
+  * @private
+  * @augments Uniform
+  */
+-export class Matrix4Uniform extends Uniform {
++export class Matrix4Uniform extends Uniform<Matrix4> {
+     /**
+      * Constructs a new Number uniform.
+      *
+@@ -188,14 +196,14 @@ export class Matrix4Uniform extends Uniform {
+  * @abstract
+  * @private
+  */
+-declare class Uniform {
++declare class Uniform<TValue> {
+     /**
+      * Constructs a new uniform.
+      *
+      * @param {string} name - The uniform's name.
+      * @param {any} value - The uniform's value.
+      */
+-    constructor(name: string, value: any);
++    constructor(name: string, value: TValue);
+     /**
+      * The uniform's name.
+      *
+@@ -207,7 +215,7 @@ declare class Uniform {
+      *
+      * @type {any}
+      */
+-    value: any;
++    value: TValue;
+     /**
+      * Used to build the uniform buffer according to the STD140 layout.
+      * Derived uniforms will set this property to a data type specific
+@@ -242,19 +250,13 @@ declare class Uniform {
+      *
+      * @param {any} value - The value to set.
+      */
+-    setValue(value: any): void;
++    setValue(value: TValue): void;
+     /**
+      * Returns the uniform's value.
+      *
+      * @return {any} The value.
+      */
+-    getValue(): any;
++    getValue(): TValue;
+ }
+-import { Vector2 } from '../../math/Vector2.js';
+-import { Vector3 } from '../../math/Vector3.js';
+-import { Vector4 } from '../../math/Vector4.js';
+-import { Color } from '../../math/Color.js';
+-import { Matrix2 } from '../../math/Matrix2.js';
+-import { Matrix3 } from '../../math/Matrix3.js';
+-import { Matrix4 } from '../../math/Matrix4.js';
+-export {};
++
++export type { Uniform };
+diff --git a/jsdoc-testing/jsdoc/renderers/common/UniformBuffer.d.ts b/jsdoc-testing/jsdoc/renderers/common/UniformBuffer.d.ts
+index 15af25d88..a6a12424e 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/UniformBuffer.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/UniformBuffer.d.ts
+@@ -1,4 +1,5 @@
+-export default UniformBuffer;
++import Buffer from './Buffer.js';
++
+ /**
+  * Represents a uniform buffer binding type.
+  *
+@@ -15,4 +16,5 @@ declare class UniformBuffer extends Buffer {
+      */
+     readonly isUniformBuffer: boolean;
+ }
+-import Buffer from './Buffer.js';
++
++export default UniformBuffer;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
+index 4cf3fe53c..9cd200044 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
+@@ -1,4 +1,16 @@
+-export default UniformsGroup;
++import UniformBuffer from './UniformBuffer.js';
++import { Uniform } from './Uniform.js';
++import {
++    ColorNodeUniform,
++    Matrix3NodeUniform,
++    Matrix4NodeUniform,
++    NodeUniformGPU,
++    NumberNodeUniform,
++    Vector2NodeUniform,
++    Vector3NodeUniform,
++    Vector4NodeUniform,
++} from "./nodes/NodeUniform.js";
++
+ /**
+  * This class represents a uniform buffer binding but with
+  * an API that allows to maintain individual uniform objects.
+@@ -36,7 +48,7 @@ declare class UniformsGroup extends UniformBuffer {
+      *
+      * @type {Array<Uniform>}
+      */
+-    uniforms: Array<Uniform>;
++    uniforms: NodeUniformGPU[];
+     /**
+      * A cache for the uniform update ranges.
+      *
+@@ -49,27 +61,27 @@ declare class UniformsGroup extends UniformBuffer {
+      *
+      * @param {Uniform} uniform - The uniform.
+      */
+-    addUniformUpdateRange(uniform: Uniform): void;
++    addUniformUpdateRange(uniform: Uniform<unknown>): void;
+     /**
+      * Adds a uniform to this group.
+      *
+      * @param {Uniform} uniform - The uniform to add.
+      * @return {UniformsGroup} A reference to this group.
+      */
+-    addUniform(uniform: Uniform): UniformsGroup;
++    addUniform(uniform: NodeUniformGPU): this;
+     /**
+      * Removes a uniform from this group.
+      *
+      * @param {Uniform} uniform - The uniform to remove.
+      * @return {UniformsGroup} A reference to this group.
+      */
+-    removeUniform(uniform: Uniform): UniformsGroup;
++    removeUniform(uniform: NodeUniformGPU): this;
+     /**
+      * An array with the raw uniform values.
+      *
+      * @type {Array<number>}
+      */
+-    get values(): Array<number>;
++    get values(): number[];
+     /**
+      * Updates a given uniform by calling an update method matching
+      * the uniforms type.
+@@ -77,56 +89,56 @@ declare class UniformsGroup extends UniformBuffer {
+      * @param {Uniform} uniform - The uniform to update.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateByType(uniform: Uniform): boolean;
++    updateByType(uniform: NodeUniformGPU): boolean;
+     /**
+      * Updates a given Number uniform.
+      *
+      * @param {NumberUniform} uniform - The Number uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateNumber(uniform: NumberUniform): boolean;
++    updateNumber(uniform: NumberNodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector2 uniform.
+      *
+      * @param {Vector2Uniform} uniform - The Vector2 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector2(uniform: Vector2Uniform): boolean;
++    updateVector2(uniform: Vector2NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector3 uniform.
+      *
+      * @param {Vector3Uniform} uniform - The Vector3 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector3(uniform: Vector3Uniform): boolean;
++    updateVector3(uniform: Vector3NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector4 uniform.
+      *
+      * @param {Vector4Uniform} uniform - The Vector4 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector4(uniform: Vector4Uniform): boolean;
++    updateVector4(uniform: Vector4NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Color uniform.
+      *
+      * @param {ColorUniform} uniform - The Color uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateColor(uniform: ColorUniform): boolean;
++    updateColor(uniform: ColorNodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Matrix3 uniform.
+      *
+      * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateMatrix3(uniform: Matrix3Uniform): boolean;
++    updateMatrix3(uniform: Matrix3NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Matrix4 uniform.
+      *
+      * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateMatrix4(uniform: Matrix4Uniform): boolean;
++    updateMatrix4(uniform: Matrix4NodeUniform<unknown>): boolean;
+     /**
+      * Returns a typed array that matches the given data type.
+      *
+@@ -136,4 +148,5 @@ declare class UniformsGroup extends UniformBuffer {
+      */
+     private _getBufferForType;
+ }
+-import UniformBuffer from './UniformBuffer.js';
++
++export default UniformsGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
+index 985ac289f..fb49cb45d 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
+@@ -1,4 +1,30 @@
+-export default XRManager;
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++import { ArrayCamera } from '../../cameras/ArrayCamera.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Quaternion } from '../../math/Quaternion.js';
++import { Mesh } from '../../objects/Mesh.js';
++import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
++import Renderer from './Renderer.js';
++import { XRRenderTarget } from './XRRenderTarget.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import QuadMesh from './QuadMesh.js';
++import { XRGripSpace, XRHandSpace, XRTargetRaySpace } from '../webxr/WebXRController.js';
++import { CylinderGeometry } from "../../geometries/CylinderGeometry.js";
++import { PlaneGeometry } from "../../geometries/PlaneGeometry.js";
++import { MeshBasicMaterial } from "../../materials/MeshBasicMaterial.js";
++
++export interface XRManagerEventMap {
++    sessionstart: {};
++    sessionend: {};
++    planesdetected: {
++        data: XRFrame;
++    };
++}
++
++export interface LayerAttributes {
++    stencil?: boolean | undefined;
++}
++
+ /**
+  * The XR manager is built on top of the WebXR Device API to
+  * manage XR sessions with `WebGPURenderer`.
+@@ -7,7 +33,7 @@ export default XRManager;
+  *
+  * @augments EventDispatcher
+  */
+-declare class XRManager extends EventDispatcher {
++declare class XRManager extends EventDispatcher<XRManagerEventMap> {
+     /**
+      * Constructs a new XR manager.
+      *
+@@ -136,7 +162,10 @@ declare class XRManager extends EventDispatcher {
+      * @readonly
+      */
+     private readonly _supportsGlBinding;
+-    _frameBufferTargets: WeakMap<object, any> | null;
++    _frameBufferTargets: WeakMap<XRRenderTarget, {
++        frameBufferTarget: RenderTarget | null;
++        quad: QuadMesh;
++    }> | null;
+     /**
+      * Helper function to create native WebXR Layer.
+      *
+@@ -331,7 +360,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getController(index: number): Group;
++    getController(index: number): XRTargetRaySpace;
+     /**
+      * Returns an instance of `THREE.Group` that represents the transformation
+      * of a XR controller in grip space. The requested controller is defined
+@@ -340,7 +369,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getControllerGrip(index: number): Group;
++    getControllerGrip(index: number): XRGripSpace;
+     /**
+      * Returns an instance of `THREE.Group` that represents the transformation
+      * of a XR controller in hand space. The requested controller is defined
+@@ -349,7 +378,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getHand(index: number): Group;
++    getHand(index: number): XRHandSpace;
+     /**
+      * Returns the foveation value.
+      *
+@@ -414,7 +443,7 @@ declare class XRManager extends EventDispatcher {
+      *
+      * @return {'opaque'|'additive'|'alpha-blend'|undefined} The environment blend mode. Returns `undefined` when used outside of a XR session.
+      */
+-    getEnvironmentBlendMode(): "opaque" | "additive" | "alpha-blend" | undefined;
++    getEnvironmentBlendMode(): XREnvironmentBlendMode | undefined;
+     /**
+      * Returns the current XR binding.
+      *
+@@ -451,7 +480,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+      * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
+      */
+-    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
++    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<PlaneGeometry, MeshBasicMaterial>;
+     /**
+      * This method can be used in XR applications to create a cylindrical layer that presents a separate
+      * rendered scene.
+@@ -468,7 +497,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+      * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
+      */
+-    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
++    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<CylinderGeometry, MeshBasicMaterial>;
+     /**
+      * Renders the XR layers that have been previously added to the scene.
+      *
+@@ -491,7 +520,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {XRSession} session - The XR session to set.
+      * @return {Promise} A Promise that resolves when the session has been set.
+      */
+-    setSession(session: XRSession): Promise<any>;
++    setSession(session: XRSession): Promise<void>;
+     /**
+      * This method is called by the renderer per frame and updates the XR camera
+      * and it sub cameras based on the given camera. The given camera is the "user"
+@@ -509,9 +538,5 @@ declare class XRManager extends EventDispatcher {
+      */
+     private _getController;
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
+-import { ArrayCamera } from '../../cameras/ArrayCamera.js';
+-import { Vector3 } from '../../math/Vector3.js';
+-import { Quaternion } from '../../math/Quaternion.js';
+-import { Mesh } from '../../objects/Mesh.js';
+-import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
++
++export default XRManager;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
+index e397d7c26..0cc34e4f4 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
+@@ -1,3 +1,5 @@
++import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
++
+ /**
+  * A special type of render target that is used when rendering
+  * with the WebXR Device API.
+@@ -13,7 +15,7 @@ export class XRRenderTarget extends RenderTarget {
+      * @param {number} [height=1] - The height of the render target.
+      * @param {Object} [options={}] - The configuration options.
+      */
+-    constructor(width?: number, height?: number, options?: Object);
++    constructor(width?: number, height?: number, options?: RenderTargetOptions);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -61,6 +63,5 @@ export class XRRenderTarget extends RenderTarget {
+      * @default false
+      * */
+     private _isOpaqueFramebuffer;
+-    copy(source: any): this;
++    copy(source: XRRenderTarget): this;
+ }
+-import { RenderTarget } from '../../core/RenderTarget.js';
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
+index 876698dc2..723da14c9 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
+@@ -1,4 +1,8 @@
+-export default NodeBuilderState;
++import BindGroup from '../BindGroup.js';
++import NodeAttribute from '../../../nodes/core/NodeAttribute.js';
++import NodeMaterialObserver from '../../../materials/nodes/manager/NodeMaterialObserver.js';
++import Node from '../../../nodes/core/Node.js';
++
+ /**
+  * This module represents the state of a node builder after it was
+  * used to build the nodes for a render object. The state holds the
+@@ -23,7 +27,7 @@ declare class NodeBuilderState {
+      * @param {NodeMaterialObserver} observer - A node material observer.
+      * @param {Array<Object>} transforms - An array with transform attribute objects. Only relevant when using compute shaders with WebGL 2.
+      */
+-    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: Array<NodeAttribute>, bindings: Array<BindGroup>, updateNodes: Array<Node>, updateBeforeNodes: Array<Node>, updateAfterNodes: Array<Node>, observer: NodeMaterialObserver, transforms?: Array<Object>);
++    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: NodeAttribute[], bindings: BindGroup[], updateNodes: Node[], updateBeforeNodes: Node[], updateAfterNodes: Node[], observer: NodeMaterialObserver, transforms?: unknown[]);
+     /**
+      * The native vertex shader code.
+      *
+@@ -48,39 +52,39 @@ declare class NodeBuilderState {
+      *
+      * @type {Array<Object>}
+      */
+-    transforms: Array<Object>;
++    transforms: unknown[];
+     /**
+      * An array of node attributes representing
+      * the attributes of the shaders.
+      *
+      * @type {Array<NodeAttribute>}
+      */
+-    nodeAttributes: Array<NodeAttribute>;
++    nodeAttributes: NodeAttribute[];
+     /**
+      * An array of bind groups representing the uniform or storage
+      * buffers, texture or samplers of the shader.
+      *
+      * @type {Array<BindGroup>}
+      */
+-    bindings: Array<BindGroup>;
++    bindings: BindGroup[];
+     /**
+      * An array of nodes that implement their `update()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateNodes: Array<Node>;
++    updateNodes: Node[];
+     /**
+      * An array of nodes that implement their `updateBefore()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateBeforeNodes: Array<Node>;
++    updateBeforeNodes: Node[];
+     /**
+      * An array of nodes that implement their `updateAfter()` method.
+      *
+      * @type {Array<Node>}
+      */
+-    updateAfterNodes: Array<Node>;
++    updateAfterNodes: Node[];
+     /**
+      * A node material observer.
+      *
+@@ -100,6 +104,7 @@ declare class NodeBuilderState {
+      *
+      * @return {Array<BindGroup>} A array of bind groups.
+      */
+-    createBindings(): Array<BindGroup>;
++    createBindings(): BindGroup[];
+ }
+-import BindGroup from '../BindGroup.js';
++
++export default NodeBuilderState;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
+index 0121dd34b..f5741f970 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeLibrary.d.ts
+@@ -1,4 +1,10 @@
+-export default NodeLibrary;
++import { ToneMapping } from "../../../constants.js";
++import { Light } from "../../../lights/Light.js";
++import { Material } from "../../../materials/Material.js";
++import NodeMaterial from "../../../materials/nodes/NodeMaterial.js";
++import Node from "../../../nodes/core/Node.js";
++import AnalyticLightNode from "../../../nodes/lighting/AnalyticLightNode.js";
++
+ /**
+  * The purpose of a node library is to assign node implementations
+  * to existing library features. In `WebGPURenderer` lights, materials
+@@ -13,20 +19,26 @@ declare class NodeLibrary {
+      *
+      * @type {WeakMap<Light.constructor,AnalyticLightNode.constructor>}
+      */
+-    lightNodes: WeakMap<Light.constructor, AnalyticLightNode.constructor>;
++    lightNodes: WeakMap<{
++        new(): Light;
++    }, {
++        new(light: Light): AnalyticLightNode<Light>;
++    }>;
+     /**
+      * A map that maps materials to node materials.
+      *
+      * @type {Map<string,NodeMaterial.constructor>}
+      */
+-    materialNodes: Map<string, NodeMaterial.constructor>;
++    materialNodes: Map<string, {
++        new(): NodeMaterial;
++    }>;
+     /**
+      * A map that maps tone mapping techniques (constants)
+      * to tone mapping node functions.
+      *
+      * @type {Map<number,Function>}
+      */
+-    toneMappingNodes: Map<number, Function>;
++    toneMappingNodes: Map<ToneMapping, (color: Node, exposure: Node) => Node>;
+     /**
+      * Returns a matching node material instance for the given material object.
+      *
+@@ -44,42 +56,52 @@ declare class NodeLibrary {
+      * @param {Function} toneMappingNode - The tone mapping node function.
+      * @param {number} toneMapping - The tone mapping.
+      */
+-    addToneMapping(toneMappingNode: Function, toneMapping: number): void;
++    addToneMapping(toneMappingNode: (color: Node, exposure: Node) => Node, toneMapping: ToneMapping): void;
+     /**
+      * Returns a tone mapping node function for a tone mapping technique (constant).
+      *
+      * @param {number} toneMapping - The tone mapping.
+      * @return {?Function} The tone mapping node function. Returns `null` if no node function is found.
+      */
+-    getToneMappingFunction(toneMapping: number): Function | null;
++    getToneMappingFunction(toneMapping: ToneMapping): ((color: Node, exposure: Node) => Node) | null;
+     /**
+      * Returns a node material class definition for a material type.
+      *
+      * @param {string} materialType - The material type.
+      * @return {?NodeMaterial.constructor} The node material class definition. Returns `null` if no node material is found.
+      */
+-    getMaterialNodeClass(materialType: string): NodeMaterial.constructor | null;
++    getMaterialNodeClass(materialType: string): (new() => NodeMaterial) | null;
+     /**
+      * Adds a node material class definition for a given material type.
+      *
+      * @param {NodeMaterial.constructor} materialNodeClass - The node material class definition.
+      * @param {string} materialClassType - The material type.
+      */
+-    addMaterial(materialNodeClass: NodeMaterial.constructor, materialClassType: string): void;
++    addMaterial(materialNodeClass: {
++        new(): NodeMaterial;
++    }, materialClassType: string): void;
+     /**
+      * Returns a light node class definition for a light class definition.
+      *
+      * @param {Light.constructor} light - The light class definition.
+      * @return {?AnalyticLightNode.constructor} The light node class definition. Returns `null` if no light node is found.
+      */
+-    getLightNodeClass(light: Light.constructor): AnalyticLightNode.constructor | null;
++    getLightNodeClass(light: {
++        new(): Light;
++    }): ({
++        new(light: Light): AnalyticLightNode<Light>;
++    }) | null;
+     /**
+      * Adds a light node class definition for a given light class definition.
+      *
+      * @param {AnalyticLightNode.constructor} lightNodeClass - The light node class definition.
+      * @param {Light.constructor} lightClass - The light class definition.
+      */
+-    addLight(lightNodeClass: AnalyticLightNode.constructor, lightClass: Light.constructor): void;
++    addLight<TLight extends Light>(lightNodeClass: {
++        new(light: TLight): AnalyticLightNode<TLight>;
++    }, lightClass: {
++        new(): TLight;
++    }): void;
+     /**
+      * Adds a node class definition for the given type to the provided type library.
+      *
+@@ -87,7 +109,7 @@ declare class NodeLibrary {
+      * @param {number|string} type - The object type.
+      * @param {Map<number|string,Node.constructor>} library - The type library.
+      */
+-    addType(nodeClass: Node.constructor, type: number | string, library: Map<number | string, Node.constructor>): void;
++    addType<TNodeClass, TType>(nodeClass: TNodeClass, type: TType, library: Map<TType, TNodeClass>): void;
+     /**
+      * Adds a node class definition for the given class definition to the provided type library.
+      *
+@@ -95,5 +117,7 @@ declare class NodeLibrary {
+      * @param {Node.constructor} baseClass - The class definition.
+      * @param {WeakMap<Node.constructor, Node.constructor>} library - The type library.
+      */
+-    addClass(nodeClass: Node.constructor, baseClass: Node.constructor, library: WeakMap<Node.constructor, Node.constructor>): void;
++    addClass<TNodeClass, TBaseClass extends object>(nodeClass: TNodeClass, baseClass: TBaseClass, library: WeakMap<TBaseClass, TNodeClass>): void;
+ }
++
++export default NodeLibrary;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
+index 254922eab..f35ff0782 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
+@@ -1,4 +1,28 @@
+-export default NodeManager;
++import DataMap from '../DataMap.js';
++import NodeBuilderState from './NodeBuilderState.js';
++import ChainMap from '../ChainMap.js';
++import Renderer from '../Renderer.js';
++import Backend from '../Backend.js';
++import NodeUniformsGroup from './NodeUniformsGroup.js';
++import RenderObject from '../RenderObject.js';
++import { Scene } from '../../../scenes/Scene.js';
++import LightsNode from '../../../nodes/lighting/LightsNode.js';
++import { Texture } from '../../../textures/Texture.js';
++import Node from '../../../nodes/core/Node.js';
++import NodeFrame from '../../../nodes/core/NodeFrame.js';
++import ComputeNode from '../../../nodes/gpgpu/ComputeNode.js';
++import { Object3D } from '../../../core/Object3D.js';
++import { Camera } from '../../../cameras/Camera.js';
++import { Material } from '../../../materials/Material.js';
++
++declare module "../../../scenes/Scene.js" {
++    interface Scene {
++        environmentNode?: Node<"vec3"> | null | undefined;
++        backgroundNode?: Node | null | undefined;
++        fogNode?: Node | null | undefined;
++    }
++}
++
+ /**
+  * This renderer module manages node-related objects and is the
+  * primary interface between the renderer and the node system.
+@@ -31,7 +55,7 @@ declare class NodeManager extends DataMap {
+      *
+      * @type {Renderer}
+      */
+-    nodeFrame: Renderer;
++    nodeFrame: NodeFrame;
+     /**
+      * A cache for managing node builder states.
+      *
+@@ -57,7 +81,7 @@ declare class NodeManager extends DataMap {
+      * @type {Object<string,WeakMap>}
+      */
+     cacheLib: {
+-        [x: string]: WeakMap<any, any>;
++        [x: string]: WeakMap<object, Node | undefined>;
+     };
+     /**
+      * Returns `true` if the given node uniforms group must be updated or not.
+@@ -86,14 +110,14 @@ declare class NodeManager extends DataMap {
+      * @param {any} object - The object to delete.
+      * @return {?Object} The deleted dictionary.
+      */
+-    delete(object: any): Object | null;
++    delete(object: unknown): unknown | null;
+     /**
+      * Returns a node builder state for the given compute node.
+      *
+      * @param {Node} computeNode - The compute node.
+      * @return {NodeBuilderState} The node builder state.
+      */
+-    getForCompute(computeNode: Node): NodeBuilderState;
++    getForCompute(computeNode: ComputeNode): NodeBuilderState;
+     /**
+      * Creates a node builder state for the given node builder.
+      *
+@@ -160,7 +184,7 @@ declare class NodeManager extends DataMap {
+      * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
+      * @return {Node} The node representation.
+      */
+-    getCacheNode(type: string, object: Object, callback: Function, forceUpdate?: boolean): Node;
++    getCacheNode(type: string, object: object, callback: () => Node | undefined, forceUpdate?: boolean): Node;
+     /**
+      * If a scene fog is configured, this method makes sure to
+      * represent the fog with a corresponding node-based implementation.
+@@ -175,8 +199,8 @@ declare class NodeManager extends DataMap {
+      * @param {Scene} scene - The scene.
+      */
+     updateEnvironment(scene: Scene): void;
+-    getNodeFrame(renderer?: Renderer, scene?: null, object?: null, camera?: null, material?: null): Renderer;
+-    getNodeFrameForRender(renderObject: any): Renderer;
++    getNodeFrame(renderer?: Renderer, scene?: Scene | null, object?: Object3D | null, camera?: Camera | null, material?: Material | null): NodeFrame;
++    getNodeFrameForRender(renderObject: RenderObject): NodeFrame;
+     /**
+      * Returns the current output cache key.
+      *
+@@ -219,7 +243,7 @@ declare class NodeManager extends DataMap {
+      *
+      * @param {Node} computeNode - The compute node.
+      */
+-    updateForCompute(computeNode: Node): void;
++    updateForCompute(computeNode: ComputeNode): void;
+     /**
+      * Triggers the call of `update()` methods
+      * for all nodes of the given compute node.
+@@ -235,6 +259,5 @@ declare class NodeManager extends DataMap {
+      */
+     needsRefresh(renderObject: RenderObject): boolean;
+ }
+-import DataMap from '../DataMap.js';
+-import NodeBuilderState from './NodeBuilderState.js';
+-import ChainMap from '../ChainMap.js';
++
++export default NodeManager;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
+index 47673f68d..f6e2d0965 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
+@@ -1,3 +1,13 @@
++import { NumberUniform, Vector2Uniform, Vector3Uniform, Vector4Uniform, ColorUniform, Matrix2Uniform, Matrix3Uniform, Matrix4Uniform } from '../Uniform.js';
++import NodeUniform from '../../../nodes/core/NodeUniform.js';
++import { Vector2 } from '../../../math/Vector2.js';
++import { Vector3 } from '../../../math/Vector3.js';
++import { Vector4 } from '../../../math/Vector4.js';
++import { Color } from '../../../math/Color.js';
++import { Matrix2 } from '../../../math/Matrix2.js';
++import { Matrix3 } from '../../../math/Matrix3.js';
++import { Matrix4 } from '../../../math/Matrix4.js';
++
+ /**
+  * A special form of Number uniform binding type.
+  * It's value is managed by a node object.
+@@ -5,19 +15,19 @@
+  * @private
+  * @augments NumberUniform
+  */
+-export class NumberNodeUniform extends NumberUniform {
++export class NumberNodeUniform<TNodeType> extends NumberUniform {
+     /**
+      * Constructs a new node-based Number uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, number>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, number>;
+     /**
+      * Overwritten to return the value of the node uniform.
+      *
+@@ -38,19 +48,19 @@ export class NumberNodeUniform extends NumberUniform {
+  * @private
+  * @augments Vector2Uniform
+  */
+-export class Vector2NodeUniform extends Vector2Uniform {
++export class Vector2NodeUniform<TNodeType> extends Vector2Uniform {
+     /**
+      * Constructs a new node-based Vector2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector2>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector2>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -65,19 +75,19 @@ export class Vector2NodeUniform extends Vector2Uniform {
+  * @private
+  * @augments Vector3Uniform
+  */
+-export class Vector3NodeUniform extends Vector3Uniform {
++export class Vector3NodeUniform<TNodeType> extends Vector3Uniform {
+     /**
+      * Constructs a new node-based Vector3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector3>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector3>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -92,19 +102,19 @@ export class Vector3NodeUniform extends Vector3Uniform {
+  * @private
+  * @augments Vector4Uniform
+  */
+-export class Vector4NodeUniform extends Vector4Uniform {
++export class Vector4NodeUniform<TNodeType> extends Vector4Uniform {
+     /**
+      * Constructs a new node-based Vector4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Vector4>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Vector4>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -119,19 +129,19 @@ export class Vector4NodeUniform extends Vector4Uniform {
+  * @private
+  * @augments ColorUniform
+  */
+-export class ColorNodeUniform extends ColorUniform {
++export class ColorNodeUniform<TNodeType> extends ColorUniform {
+     /**
+      * Constructs a new node-based Color uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Color>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Color>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -146,19 +156,19 @@ export class ColorNodeUniform extends ColorUniform {
+  * @private
+  * @augments Matrix2Uniform
+  */
+-export class Matrix2NodeUniform extends Matrix2Uniform {
++export class Matrix2NodeUniform<TNodeType> extends Matrix2Uniform {
+     /**
+      * Constructs a new node-based Matrix2 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix2>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix2>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -173,19 +183,19 @@ export class Matrix2NodeUniform extends Matrix2Uniform {
+  * @private
+  * @augments Matrix3Uniform
+  */
+-export class Matrix3NodeUniform extends Matrix3Uniform {
++export class Matrix3NodeUniform<TNodeType> extends Matrix3Uniform {
+     /**
+      * Constructs a new node-based Matrix3 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix3>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix3>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -200,19 +210,19 @@ export class Matrix3NodeUniform extends Matrix3Uniform {
+  * @private
+  * @augments Matrix4Uniform
+  */
+-export class Matrix4NodeUniform extends Matrix4Uniform {
++export class Matrix4NodeUniform<TNodeType> extends Matrix4Uniform {
+     /**
+      * Constructs a new node-based Matrix4 uniform.
+      *
+      * @param {NodeUniform} nodeUniform - The node uniform.
+      */
+-    constructor(nodeUniform: NodeUniform);
++    constructor(nodeUniform: NodeUniform<TNodeType, Matrix4>);
+     /**
+      * The node uniform.
+      *
+      * @type {NodeUniform}
+      */
+-    nodeUniform: NodeUniform;
++    nodeUniform: NodeUniform<TNodeType, Matrix4>;
+     /**
+      * Returns the node uniform data type.
+      *
+@@ -220,11 +230,12 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
+      */
+     getType(): string;
+ }
+-import { NumberUniform } from '../Uniform.js';
+-import { Vector2Uniform } from '../Uniform.js';
+-import { Vector3Uniform } from '../Uniform.js';
+-import { Vector4Uniform } from '../Uniform.js';
+-import { ColorUniform } from '../Uniform.js';
+-import { Matrix2Uniform } from '../Uniform.js';
+-import { Matrix3Uniform } from '../Uniform.js';
+-import { Matrix4Uniform } from '../Uniform.js';
++
++export type NodeUniformGPU =
++    | NumberNodeUniform<unknown>
++    | Vector2NodeUniform<unknown>
++    | Vector3NodeUniform<unknown>
++    | Vector4NodeUniform<unknown>
++    | ColorNodeUniform<unknown>
++    | Matrix3NodeUniform<unknown>
++    | Matrix4NodeUniform<unknown>;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
+index c196bbe56..8baf96582 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniformsGroup.d.ts
+@@ -1,4 +1,6 @@
+-export default NodeUniformsGroup;
++import UniformsGroup from '../UniformsGroup.js';
++import UniformGroupNode from '../../../nodes/core/UniformGroupNode.js';
++
+ /**
+  * A special form of uniforms group that represents
+  * the individual uniforms as node-based uniforms.
+@@ -35,4 +37,5 @@ declare class NodeUniformsGroup extends UniformsGroup {
+      */
+     readonly isNodeUniformsGroup: boolean;
+ }
+-import UniformsGroup from '../UniformsGroup.js';
++
++export default NodeUniformsGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
+index f6f699f14..42d915421 100644
+--- a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
+@@ -1,4 +1,5 @@
+-export default BasicNodeLibrary;
++import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
+ /**
+  * This version of a node library represents a basic version
+  * just focusing on lights and tone mapping techniques.
+@@ -8,4 +9,5 @@ export default BasicNodeLibrary;
+  */
+ declare class BasicNodeLibrary extends NodeLibrary {
+ }
+-import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
++export default BasicNodeLibrary;
+diff --git a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
+index 1d2893798..c0ac71455 100644
+--- a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
+@@ -1,4 +1,18 @@
+-export default StandardNodeLibrary;
++import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++import { LineBasicNodeMaterialNodeProperties } from "../../../materials/nodes/LineBasicNodeMaterial.js";
++import { LineDashedNodeMaterialNodeProperties } from "../../../materials/nodes/LineDashedNodeMaterial.js";
++import { MeshBasicNodeMaterialNodeProperties } from "../../../materials/nodes/MeshBasicNodeMaterial.js";
++import { MeshLambertNodeMaterialNodeProperties } from "../../../materials/nodes/MeshLambertNodeMaterial.js";
++import { MeshMatcapNodeMaterialNodeProperties } from "../../../materials/nodes/MeshMatcapNodeMaterial.js";
++import { MeshNormalNodeMaterialNodeProperties } from "../../../materials/nodes/MeshNormalNodeMaterial.js";
++import { MeshPhongNodeMaterialNodeProperties } from "../../../materials/nodes/MeshPhongNodeMaterial.js";
++import { MeshPhysicalNodeMaterialNodeProperties } from "../../../materials/nodes/MeshPhysicalNodeMaterial.js";
++import { MeshStandardNodeMaterialNodeProperties } from "../../../materials/nodes/MeshStandardNodeMaterial.js";
++import { MeshToonNodeMaterialNodeProperties } from "../../../materials/nodes/MeshToonNodeMaterial.js";
++import { PointsNodeMaterialNodeProperties } from "../../../materials/nodes/PointsNodeMaterial.js";
++import { ShadowNodeMaterialNodeProperties } from "../../../materials/nodes/ShadowNodeMaterial.js";
++import { SpriteNodeMaterialNodeProperties } from "../../../materials/nodes/SpriteNodeMaterial.js";
++
+ /**
+  * This version of a node library represents the standard version
+  * used in {@link WebGPURenderer}. It maps lights, tone mapping
+@@ -9,4 +23,70 @@ export default StandardNodeLibrary;
+  */
+ declare class StandardNodeLibrary extends NodeLibrary {
+ }
+-import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
++declare module "../../../materials/MeshPhongMaterial.js" {
++    interface MeshPhongMaterialProperties extends MeshPhongNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshStandardMaterial.js" {
++    interface MeshStandardMaterialProperties extends MeshStandardNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshPhysicalMaterial.js" {
++    interface MeshPhysicalMaterialProperties extends MeshPhysicalNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshToonMaterial.js" {
++    interface MeshToonMaterialProperties extends MeshToonNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshBasicMaterial.js" {
++    interface MeshBasicMaterialProperties extends MeshBasicNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshLambertMaterial.js" {
++    interface MeshLambertMaterialProperties extends MeshLambertNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshNormalMaterial.js" {
++    interface MeshNormalMaterialProperties extends MeshNormalNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshMatcapMaterial.js" {
++    interface MeshMatcapMaterialProperties extends MeshMatcapNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/LineBasicMaterial.js" {
++    interface LineBasicMaterialProperties extends LineBasicNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/LineDashedMaterial.js" {
++    interface LineDashedMaterialProperties extends LineDashedNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/PointsMaterial.js" {
++    interface PointsMaterialProperties extends PointsNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/SpriteMaterial.js" {
++    interface SpriteMaterialProperties extends SpriteNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/ShadowMaterial.js" {
++    interface ShadowMaterialProperties extends ShadowNodeMaterialNodeProperties {
++    }
++}
++
++export default StandardNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
 index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts

@@ -1,30 +1,34 @@
-type RecursiveWeakMap<K extends readonly object[], V> = WeakMap<K[number], V | RecursiveWeakMap<K, V>>;
 /**
  * Data structure for the renderer. It allows defining values
  * with chained, hierarchical keys. Keys are meant to be
  * objects since the module internally works with Weak Maps
  * for performance reasons.
+ *
+ * @private
  */
-declare class ChainMap<K extends readonly object[], V> {
-    weakMaps: Record<number, RecursiveWeakMap<K, V>>;
+declare class ChainMap {
     /**
-     * Constructs a new Chain Map.
+     * A map of Weak Maps by their key length.
+     *
+     * @type {Object<number, WeakMap>}
      */
-    constructor();
+    weakMaps: {
+        [x: number]: WeakMap<object, unknown>;
+    };
     /**
      * Returns the Weak Map for the given keys.
      *
      * @param {Array<Object>} keys - List of keys.
      * @return {WeakMap} The weak map.
      */
-    _getWeakMap(keys: K): RecursiveWeakMap<K, V>;
+    _getWeakMap(keys: object[]): WeakMap<object, unknown>;
     /**
      * Returns the value for the given array of keys.
      *
      * @param {Array<Object>} keys - List of keys.
      * @return {any} The value. Returns `undefined` if no value was found.
      */
-    get(keys: K): V | undefined;
+    get(keys: object[]): unknown;
     /**
      * Sets the value for the given keys.
      *
@@ -32,13 +36,14 @@ declare class ChainMap<K extends readonly object[], V> {
      * @param {any} value - The value to set.
      * @return {ChainMap} A reference to this Chain Map.
      */
-    set(keys: K, value: V): this;
+    set(keys: object[], value: unknown): ChainMap;
     /**
      * Deletes a value for the given keys.
      *
      * @param {Array<Object>} keys - The keys.
      * @return {boolean} Returns `true` if the value has been removed successfully and `false` if the value has not be found.
      */
-    delete(keys: K): boolean;
+    delete(keys: object[]): boolean;
 }
+
 export default ChainMap;

@@ -13,19 +13,13 @@ import Pipelines from "./Pipelines.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
 import RenderObject from "./RenderObject.js";
+
 /**
  * This module manages the render objects of the renderer.
+ *
+ * @private
  */
 declare class RenderObjects {
-    renderer: Renderer;
-    nodes: NodeManager;
-    geometries: Geometries;
-    pipelines: Pipelines;
-    bindings: Bindings;
-    info: Info;
-    chainMaps: {
-        [passId: string]: ChainMap<readonly [Object3D, Material, RenderContext, LightsNode], RenderObject>;
-    };
     /**
      * Constructs a new render object management component.
      *
@@ -44,6 +38,51 @@ declare class RenderObjects {
         bindings: Bindings,
         info: Info,
     );
+    /**
+     * The renderer.
+     *
+     * @type {Renderer}
+     */
+    renderer: Renderer;
+    /**
+     * Renderer component for managing nodes related logic.
+     *
+     * @type {Nodes}
+     */
+    nodes: NodeManager;
+    /**
+     * Renderer component for managing geometries.
+     *
+     * @type {Geometries}
+     */
+    geometries: Geometries;
+    /**
+     * Renderer component for managing pipelines.
+     *
+     * @type {Pipelines}
+     */
+    pipelines: Pipelines;
+    /**
+     * Renderer component for managing bindings.
+     *
+     * @type {Bindings}
+     */
+    bindings: Bindings;
+    /**
+     * Renderer component for managing metrics and monitoring data.
+     *
+     * @type {Info}
+     */
+    info: Info;
+    /**
+     * A dictionary that manages render contexts in chain maps
+     * for each pass ID.
+     *
+     * @type {Object<string,ChainMap>}
+     */
+    chainMaps: {
+        [x: string]: ChainMap;
+    };
     /**
      * Returns a render object for the given object and state data.
      *
@@ -64,7 +103,7 @@ declare class RenderObjects {
         camera: Camera,
         lightsNode: LightsNode,
         renderContext: RenderContext,
-        clippingContext: ClippingContext | null,
+        clippingContext: ClippingContext,
         passId?: string,
     ): RenderObject;
     /**
@@ -73,12 +112,7 @@ declare class RenderObjects {
      * @param {string} [passId='default'] - The pass ID.
      * @return {ChainMap} The chain map.
      */
-    getChainMap(
-        passId?: string,
-    ): ChainMap<
-        readonly [Object3D<import("../../core/Object3D.js").Object3DEventMap>, Material, RenderContext, LightsNode],
-        RenderObject
-    >;
+    getChainMap(passId?: string): ChainMap;
     /**
      * Frees internal resources.
      */
@@ -109,8 +143,9 @@ declare class RenderObjects {
         camera: Camera,
         lightsNode: LightsNode,
         renderContext: RenderContext,
-        clippingContext: ClippingContext | null,
-        passId: string | undefined,
+        clippingContext: ClippingContext,
+        passId?: string,
     ): RenderObject;
 }
+
 export default RenderObjects;

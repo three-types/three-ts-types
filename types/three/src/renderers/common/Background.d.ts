@@ -1,25 +1,17 @@
-import { Mesh } from "../../objects/Mesh.js";
 import { Scene } from "../../scenes/Scene.js";
 import DataMap from "./DataMap.js";
 import NodeManager from "./nodes/NodeManager.js";
 import RenderContext from "./RenderContext.js";
 import Renderer from "./Renderer.js";
 import RenderList from "./RenderList.js";
-interface SceneData {
-    backgroundMesh?: Mesh;
-    backgroundCacheKey: string;
-}
+
 /**
  * This renderer module manages the background.
+ *
+ * @private
+ * @augments DataMap
  */
-declare class Background extends DataMap<{
-    scene: {
-        key: Scene;
-        value: SceneData;
-    };
-}> {
-    renderer: Renderer;
-    nodes: NodeManager;
+declare class Background extends DataMap {
     /**
      * Constructs a new background management component.
      *
@@ -27,6 +19,18 @@ declare class Background extends DataMap<{
      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
      */
     constructor(renderer: Renderer, nodes: NodeManager);
+    /**
+     * The renderer.
+     *
+     * @type {Renderer}
+     */
+    renderer: Renderer;
+    /**
+     * Renderer component for managing nodes related logic.
+     *
+     * @type {Nodes}
+     */
+    nodes: NodeManager;
     /**
      * Updates the background for the given scene. Depending on how `Scene.background`
      * or `Scene.backgroundNode` are configured, this method might configure a simple clear
@@ -39,4 +43,5 @@ declare class Background extends DataMap<{
      */
     update(scene: Scene, renderList: RenderList, renderContext: RenderContext): void;
 }
+
 export default Background;

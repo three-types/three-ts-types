@@ -1,17 +1,21 @@
 import { RenderTarget } from "../../core/RenderTarget.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import RenderContext from "./RenderContext.js";
+
 /**
  * This module manages the render contexts of the renderer.
+ *
+ * @private
  */
 declare class RenderContexts {
-    _renderContexts: {
-        [renderStateKey: string]: RenderContext | undefined;
-    };
     /**
-     * Constructs a new render context management component.
+     * A dictionary that manages render contexts.
+     *
+     * @type {Object<string,RenderContext>}
      */
-    constructor();
+    _renderContexts: {
+        [x: string]: RenderContext;
+    };
     /**
      * Returns a render context for the given scene, camera and render target.
      *
@@ -20,10 +24,11 @@ declare class RenderContexts {
      * @param {?number} [callDepth=0] - The call depth of the renderer.
      * @return {RenderContext} The render context.
      */
-    get(renderTarget?: RenderTarget | null, mrt?: MRTNode | null, callDepth?: number): RenderContext;
+    get(renderTarget?: RenderTarget | null, mrt?: MRTNode | null, callDepth?: number | null): RenderContext;
     /**
      * Frees internal resources.
      */
     dispose(): void;
 }
+
 export default RenderContexts;
