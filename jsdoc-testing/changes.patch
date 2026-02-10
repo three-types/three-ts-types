@@ -12856,7 +12856,7 @@ index f51b0945e..7a3379486 100644
 +
 +export default RenderObjects;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
-index dde8a06a8..04ebfed63 100644
+index dde8a06a8..8aa1a42c4 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Renderer.d.ts
 @@ -1,8 +1,55 @@
@@ -12894,7 +12894,7 @@ index dde8a06a8..04ebfed63 100644
 +import IndirectStorageBufferAttribute from './IndirectStorageBufferAttribute.js';
 +import { FramebufferTexture } from '../../textures/FramebufferTexture.js';
 +import { Vector3 } from '../../math/Vector3.js';
-+import { TypedArray } from '../../core/BufferAttribute.js';
++import { BufferAttribute, TypedArray } from '../../core/BufferAttribute.js';
 +import { Box2 } from "../../math/Box2.js";
 +import { Box3 } from "../../math/Box3.js";
 +
@@ -13032,6 +13032,15 @@ index dde8a06a8..04ebfed63 100644
      set inspector(value: InspectorBase);
      /**
       * The inspector instance. The inspector can be any class that extends from `InspectorBase`.
+@@ -673,7 +728,7 @@ declare class Renderer {
+      * @param {MRTNode} mrt - The MRT node to set.
+      * @return {Renderer} A reference to this renderer.
+      */
+-    setMRT(mrt: MRTNode): Renderer;
++    setMRT(mrt: MRTNode | null): Renderer;
+     /**
+      * Returns the MRT configuration.
+      *
 @@ -685,14 +740,14 @@ declare class Renderer {
       *
       * @return {number} The output buffer type.
@@ -13083,7 +13092,14 @@ index dde8a06a8..04ebfed63 100644
      /**
       * Can be used to transfer buffer data from a storage buffer attribute
       * from the GPU to the CPU in context of compute shaders.
-@@ -807,7 +862,7 @@ declare class Renderer {
+@@ -801,13 +856,13 @@ declare class Renderer {
+      * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
+      * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
+      */
+-    getArrayBufferAsync(attribute: StorageBufferAttribute): Promise<ArrayBuffer>;
++    getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
+     /**
+      * Returns the rendering context.
       *
       * @return {GPUCanvasContext|WebGL2RenderingContext} The rendering context.
       */
@@ -13292,6 +13308,15 @@ index dde8a06a8..04ebfed63 100644
      /**
       * Initializes the given texture. Useful for preloading a texture rather than waiting until first render
       * (which can cause noticeable lags due to decode and GPU upload overhead).
+@@ -1248,7 +1310,7 @@ declare class Renderer {
+      * @param {number} [srcLevel=0] - The source mip level to copy from.
+      * @param {number} [dstLevel=0] - The destination mip level to copy to.
+      */
+-    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture, srcRegion?: Box2 | Box3, dstPosition?: Vector2 | Vector3, srcLevel?: number, dstLevel?: number): void;
++    copyTextureToTexture(srcTexture: Texture, dstTexture: Texture, srcRegion?: Box2 | Box3 | null, dstPosition?: Vector2 | Vector3 | null, srcLevel?: number, dstLevel?: number): void;
+     /**
+      * Reads pixel data from the given render target.
+      *
 @@ -1329,7 +1391,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
