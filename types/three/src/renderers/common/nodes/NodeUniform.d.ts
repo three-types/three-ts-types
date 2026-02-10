@@ -6,14 +6,16 @@ import { Vector2 } from "../../../math/Vector2.js";
 import { Vector3 } from "../../../math/Vector3.js";
 import { Vector4 } from "../../../math/Vector4.js";
 import NodeUniform from "../../../nodes/core/NodeUniform.js";
-import { NumberUniform } from "../Uniform.js";
-import { Vector2Uniform } from "../Uniform.js";
-import { Vector3Uniform } from "../Uniform.js";
-import { Vector4Uniform } from "../Uniform.js";
-import { ColorUniform } from "../Uniform.js";
-import { Matrix2Uniform } from "../Uniform.js";
-import { Matrix3Uniform } from "../Uniform.js";
-import { Matrix4Uniform } from "../Uniform.js";
+import {
+    ColorUniform,
+    Matrix2Uniform,
+    Matrix3Uniform,
+    Matrix4Uniform,
+    NumberUniform,
+    Vector2Uniform,
+    Vector3Uniform,
+    Vector4Uniform,
+} from "../Uniform.js";
 
 /**
  * A special form of Number uniform binding type.

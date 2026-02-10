@@ -1,4 +1,4 @@
-import { RenderTarget } from "../../core/RenderTarget.js";
+import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 
 /**
  * A special type of render target that is used when rendering
@@ -15,7 +15,7 @@ export class XRRenderTarget extends RenderTarget {
      * @param {number} [height=1] - The height of the render target.
      * @param {Object} [options={}] - The configuration options.
      */
-    constructor(width?: number, height?: number, options?: Object);
+    constructor(width?: number, height?: number, options?: RenderTargetOptions);
     /**
      * This flag can be used for type testing.
      *

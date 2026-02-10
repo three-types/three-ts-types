@@ -25,7 +25,7 @@ declare class InspectorBase {
      *
      * @type {Object}
      */
-    currentFrame: Object;
+    currentFrame: unknown;
     /**
      * Returns the node frame for the current renderer.
      *
