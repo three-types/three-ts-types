@@ -13780,10 +13780,10 @@ index 0121dd34b..f5741f970 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
-index 254922eab..6c3f62839 100644
+index 254922eab..f35ff0782 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeManager.d.ts
-@@ -1,4 +1,20 @@
+@@ -1,4 +1,28 @@
 -export default NodeManager;
 +import DataMap from '../DataMap.js';
 +import NodeBuilderState from './NodeBuilderState.js';
@@ -13802,10 +13802,18 @@ index 254922eab..6c3f62839 100644
 +import { Camera } from '../../../cameras/Camera.js';
 +import { Material } from '../../../materials/Material.js';
 +
++declare module "../../../scenes/Scene.js" {
++    interface Scene {
++        environmentNode?: Node<"vec3"> | null | undefined;
++        backgroundNode?: Node | null | undefined;
++        fogNode?: Node | null | undefined;
++    }
++}
++
  /**
   * This renderer module manages node-related objects and is the
   * primary interface between the renderer and the node system.
-@@ -31,7 +47,7 @@ declare class NodeManager extends DataMap {
+@@ -31,7 +55,7 @@ declare class NodeManager extends DataMap {
       *
       * @type {Renderer}
       */
@@ -13814,7 +13822,7 @@ index 254922eab..6c3f62839 100644
      /**
       * A cache for managing node builder states.
       *
-@@ -57,7 +73,7 @@ declare class NodeManager extends DataMap {
+@@ -57,7 +81,7 @@ declare class NodeManager extends DataMap {
       * @type {Object<string,WeakMap>}
       */
      cacheLib: {
@@ -13823,7 +13831,7 @@ index 254922eab..6c3f62839 100644
      };
      /**
       * Returns `true` if the given node uniforms group must be updated or not.
-@@ -86,14 +102,14 @@ declare class NodeManager extends DataMap {
+@@ -86,14 +110,14 @@ declare class NodeManager extends DataMap {
       * @param {any} object - The object to delete.
       * @return {?Object} The deleted dictionary.
       */
@@ -13840,7 +13848,7 @@ index 254922eab..6c3f62839 100644
      /**
       * Creates a node builder state for the given node builder.
       *
-@@ -160,7 +176,7 @@ declare class NodeManager extends DataMap {
+@@ -160,7 +184,7 @@ declare class NodeManager extends DataMap {
       * @param {boolean} [forceUpdate=false] - Whether an update should be enforced or not.
       * @return {Node} The node representation.
       */
@@ -13849,7 +13857,7 @@ index 254922eab..6c3f62839 100644
      /**
       * If a scene fog is configured, this method makes sure to
       * represent the fog with a corresponding node-based implementation.
-@@ -175,8 +191,8 @@ declare class NodeManager extends DataMap {
+@@ -175,8 +199,8 @@ declare class NodeManager extends DataMap {
       * @param {Scene} scene - The scene.
       */
      updateEnvironment(scene: Scene): void;
@@ -13860,7 +13868,7 @@ index 254922eab..6c3f62839 100644
      /**
       * Returns the current output cache key.
       *
-@@ -219,7 +235,7 @@ declare class NodeManager extends DataMap {
+@@ -219,7 +243,7 @@ declare class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -13869,7 +13877,7 @@ index 254922eab..6c3f62839 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given compute node.
-@@ -235,6 +251,5 @@ declare class NodeManager extends DataMap {
+@@ -235,6 +259,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): boolean;
  }
