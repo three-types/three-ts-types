@@ -12075,7 +12075,7 @@ index 7f42badbc..fc59b9e52 100644
 +
 +export default Info;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
-index 4d6cb5ab3..37e1fcb02 100644
+index 4d6cb5ab3..da0155896 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
 @@ -1,4 +1,12 @@
@@ -12092,7 +12092,14 @@ index 4d6cb5ab3..37e1fcb02 100644
  /**
   * InspectorBase is the base class for all inspectors.
   *
-@@ -23,20 +31,20 @@ declare class InspectorBase {
+@@ -17,26 +25,26 @@ declare class InspectorBase {
+      *
+      * @type {Object}
+      */
+-    currentFrame: Object;
++    currentFrame: unknown;
+     /**
+      * Returns the node frame for the current renderer.
       *
       * @return {Object} The node frame.
       */
@@ -13870,15 +13877,24 @@ index 985ac289f..fb49cb45d 100644
 +
 +export default XRManager;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
-index e397d7c26..6f757942f 100644
+index e397d7c26..0cc34e4f4 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
 @@ -1,3 +1,5 @@
-+import { RenderTarget } from '../../core/RenderTarget.js';
++import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
 +
  /**
   * A special type of render target that is used when rendering
   * with the WebXR Device API.
+@@ -13,7 +15,7 @@ export class XRRenderTarget extends RenderTarget {
+      * @param {number} [height=1] - The height of the render target.
+      * @param {Object} [options={}] - The configuration options.
+      */
+-    constructor(width?: number, height?: number, options?: Object);
++    constructor(width?: number, height?: number, options?: RenderTargetOptions);
+     /**
+      * This flag can be used for type testing.
+      *
 @@ -61,6 +63,5 @@ export class XRRenderTarget extends RenderTarget {
       * @default false
       * */
@@ -14197,18 +14213,11 @@ index 254922eab..f35ff0782 100644
 +
 +export default NodeManager;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
-index 47673f68d..c1dcef219 100644
+index 47673f68d..f6e2d0965 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeUniform.d.ts
-@@ -1,3 +1,20 @@
-+import { NumberUniform } from '../Uniform.js';
-+import { Vector2Uniform } from '../Uniform.js';
-+import { Vector3Uniform } from '../Uniform.js';
-+import { Vector4Uniform } from '../Uniform.js';
-+import { ColorUniform } from '../Uniform.js';
-+import { Matrix2Uniform } from '../Uniform.js';
-+import { Matrix3Uniform } from '../Uniform.js';
-+import { Matrix4Uniform } from '../Uniform.js';
+@@ -1,3 +1,13 @@
++import { NumberUniform, Vector2Uniform, Vector3Uniform, Vector4Uniform, ColorUniform, Matrix2Uniform, Matrix3Uniform, Matrix4Uniform } from '../Uniform.js';
 +import NodeUniform from '../../../nodes/core/NodeUniform.js';
 +import { Vector2 } from '../../../math/Vector2.js';
 +import { Vector3 } from '../../../math/Vector3.js';
@@ -14221,7 +14230,7 @@ index 47673f68d..c1dcef219 100644
  /**
   * A special form of Number uniform binding type.
   * It's value is managed by a node object.
-@@ -5,19 +22,19 @@
+@@ -5,19 +15,19 @@
   * @private
   * @augments NumberUniform
   */
@@ -14244,7 +14253,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Overwritten to return the value of the node uniform.
       *
-@@ -38,19 +55,19 @@ export class NumberNodeUniform extends NumberUniform {
+@@ -38,19 +48,19 @@ export class NumberNodeUniform extends NumberUniform {
   * @private
   * @augments Vector2Uniform
   */
@@ -14267,7 +14276,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -65,19 +82,19 @@ export class Vector2NodeUniform extends Vector2Uniform {
+@@ -65,19 +75,19 @@ export class Vector2NodeUniform extends Vector2Uniform {
   * @private
   * @augments Vector3Uniform
   */
@@ -14290,7 +14299,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -92,19 +109,19 @@ export class Vector3NodeUniform extends Vector3Uniform {
+@@ -92,19 +102,19 @@ export class Vector3NodeUniform extends Vector3Uniform {
   * @private
   * @augments Vector4Uniform
   */
@@ -14313,7 +14322,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -119,19 +136,19 @@ export class Vector4NodeUniform extends Vector4Uniform {
+@@ -119,19 +129,19 @@ export class Vector4NodeUniform extends Vector4Uniform {
   * @private
   * @augments ColorUniform
   */
@@ -14336,7 +14345,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -146,19 +163,19 @@ export class ColorNodeUniform extends ColorUniform {
+@@ -146,19 +156,19 @@ export class ColorNodeUniform extends ColorUniform {
   * @private
   * @augments Matrix2Uniform
   */
@@ -14359,7 +14368,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -173,19 +190,19 @@ export class Matrix2NodeUniform extends Matrix2Uniform {
+@@ -173,19 +183,19 @@ export class Matrix2NodeUniform extends Matrix2Uniform {
   * @private
   * @augments Matrix3Uniform
   */
@@ -14382,7 +14391,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -200,19 +217,19 @@ export class Matrix3NodeUniform extends Matrix3Uniform {
+@@ -200,19 +210,19 @@ export class Matrix3NodeUniform extends Matrix3Uniform {
   * @private
   * @augments Matrix4Uniform
   */
@@ -14405,7 +14414,7 @@ index 47673f68d..c1dcef219 100644
      /**
       * Returns the node uniform data type.
       *
-@@ -220,11 +237,12 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
+@@ -220,11 +230,12 @@ export class Matrix4NodeUniform extends Matrix4Uniform {
       */
      getType(): string;
  }
