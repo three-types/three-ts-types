@@ -10,34 +10,58 @@ import {
 } from "./nodes/NodeUniform.js";
 import { Uniform } from "./Uniform.js";
 import UniformBuffer from "./UniformBuffer.js";
+
 /**
  * This class represents a uniform buffer binding but with
  * an API that allows to maintain individual uniform objects.
+ *
+ * @private
+ * @augments UniformBuffer
  */
 declare class UniformsGroup extends UniformBuffer {
-    readonly isUniformsGroup: true;
-    _values: number[] | null;
-    uniforms: NodeUniformGPU[];
-    _updateRangeCache: Map<number, {
-        start: number;
-        count: number;
-    }>;
     /**
      * Constructs a new uniforms group.
      *
      * @param {string} name - The group's name.
      */
-    constructor(name?: string);
+    constructor(name: string);
+    /**
+     * This flag can be used for type testing.
+     *
+     * @type {boolean}
+     * @readonly
+     * @default true
+     */
+    readonly isUniformsGroup: boolean;
+    /**
+     * An array with the raw uniform values.
+     *
+     * @private
+     * @type {?Array<number>}
+     * @default null
+     */
+    private _values;
+    /**
+     * An array of uniform objects.
+     *
+     * The order of uniforms in this array must match the order of uniforms in the shader.
+     *
+     * @type {Array<Uniform>}
+     */
+    uniforms: NodeUniformGPU[];
+    /**
+     * A cache for the uniform update ranges.
+     *
+     * @private
+     * @type {Map<number, {start: number, count: number}>}
+     */
+    private _updateRangeCache;
     /**
      * Adds a uniform's update range to this buffer.
      *
      * @param {Uniform} uniform - The uniform.
      */
     addUniformUpdateRange(uniform: Uniform<unknown>): void;
-    /**
-     * Clears all update ranges of this buffer.
-     */
-    clearUpdateRanges(): void;
     /**
      * Adds a uniform to this group.
      *
@@ -54,26 +78,10 @@ declare class UniformsGroup extends UniformBuffer {
     removeUniform(uniform: NodeUniformGPU): this;
     /**
      * An array with the raw uniform values.
+     *
+     * @type {Array<number>}
      */
     get values(): number[];
-    /**
-     * A Float32 array buffer with the uniform values.
-     */
-    get buffer(): Float32Array;
-    /**
-     * The byte length of the buffer with correct buffer alignment.
-     */
-    get byteLength(): number;
-    /**
-     * Updates this group by updating each uniform object of
-     * the internal uniform list. The uniform objects check if their
-     * values has actually changed so this method only returns
-     * `true` if there is a real value change.
-     *
-     * @return {boolean} Whether the uniforms have been updated and
-     * must be uploaded to the GPU.
-     */
-    update(): boolean;
     /**
      * Updates a given uniform by calling an update method matching
      * the uniforms type.
@@ -81,7 +89,7 @@ declare class UniformsGroup extends UniformBuffer {
      * @param {Uniform} uniform - The uniform to update.
      * @return {boolean} Whether the uniform has been updated or not.
      */
-    updateByType(uniform: NodeUniformGPU): boolean | undefined;
+    updateByType(uniform: NodeUniformGPU): boolean;
     /**
      * Updates a given Number uniform.
      *
@@ -134,9 +142,11 @@ declare class UniformsGroup extends UniformBuffer {
     /**
      * Returns a typed array that matches the given data type.
      *
+     * @private
      * @param {string} type - The data type.
      * @return {TypedArray} The typed array.
      */
     private _getBufferForType;
 }
+
 export default UniformsGroup;
