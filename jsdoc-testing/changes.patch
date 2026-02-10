@@ -13602,6 +13602,291 @@ index 15af25d88..a6a12424e 100644
 -import Buffer from './Buffer.js';
 +
 +export default UniformBuffer;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts b/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
+index 4cf3fe53c..9cd200044 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/UniformsGroup.d.ts
+@@ -1,4 +1,16 @@
+-export default UniformsGroup;
++import UniformBuffer from './UniformBuffer.js';
++import { Uniform } from './Uniform.js';
++import {
++    ColorNodeUniform,
++    Matrix3NodeUniform,
++    Matrix4NodeUniform,
++    NodeUniformGPU,
++    NumberNodeUniform,
++    Vector2NodeUniform,
++    Vector3NodeUniform,
++    Vector4NodeUniform,
++} from "./nodes/NodeUniform.js";
++
+ /**
+  * This class represents a uniform buffer binding but with
+  * an API that allows to maintain individual uniform objects.
+@@ -36,7 +48,7 @@ declare class UniformsGroup extends UniformBuffer {
+      *
+      * @type {Array<Uniform>}
+      */
+-    uniforms: Array<Uniform>;
++    uniforms: NodeUniformGPU[];
+     /**
+      * A cache for the uniform update ranges.
+      *
+@@ -49,27 +61,27 @@ declare class UniformsGroup extends UniformBuffer {
+      *
+      * @param {Uniform} uniform - The uniform.
+      */
+-    addUniformUpdateRange(uniform: Uniform): void;
++    addUniformUpdateRange(uniform: Uniform<unknown>): void;
+     /**
+      * Adds a uniform to this group.
+      *
+      * @param {Uniform} uniform - The uniform to add.
+      * @return {UniformsGroup} A reference to this group.
+      */
+-    addUniform(uniform: Uniform): UniformsGroup;
++    addUniform(uniform: NodeUniformGPU): this;
+     /**
+      * Removes a uniform from this group.
+      *
+      * @param {Uniform} uniform - The uniform to remove.
+      * @return {UniformsGroup} A reference to this group.
+      */
+-    removeUniform(uniform: Uniform): UniformsGroup;
++    removeUniform(uniform: NodeUniformGPU): this;
+     /**
+      * An array with the raw uniform values.
+      *
+      * @type {Array<number>}
+      */
+-    get values(): Array<number>;
++    get values(): number[];
+     /**
+      * Updates a given uniform by calling an update method matching
+      * the uniforms type.
+@@ -77,56 +89,56 @@ declare class UniformsGroup extends UniformBuffer {
+      * @param {Uniform} uniform - The uniform to update.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateByType(uniform: Uniform): boolean;
++    updateByType(uniform: NodeUniformGPU): boolean;
+     /**
+      * Updates a given Number uniform.
+      *
+      * @param {NumberUniform} uniform - The Number uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateNumber(uniform: NumberUniform): boolean;
++    updateNumber(uniform: NumberNodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector2 uniform.
+      *
+      * @param {Vector2Uniform} uniform - The Vector2 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector2(uniform: Vector2Uniform): boolean;
++    updateVector2(uniform: Vector2NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector3 uniform.
+      *
+      * @param {Vector3Uniform} uniform - The Vector3 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector3(uniform: Vector3Uniform): boolean;
++    updateVector3(uniform: Vector3NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Vector4 uniform.
+      *
+      * @param {Vector4Uniform} uniform - The Vector4 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateVector4(uniform: Vector4Uniform): boolean;
++    updateVector4(uniform: Vector4NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Color uniform.
+      *
+      * @param {ColorUniform} uniform - The Color uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateColor(uniform: ColorUniform): boolean;
++    updateColor(uniform: ColorNodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Matrix3 uniform.
+      *
+      * @param {Matrix3Uniform} uniform - The Matrix3 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateMatrix3(uniform: Matrix3Uniform): boolean;
++    updateMatrix3(uniform: Matrix3NodeUniform<unknown>): boolean;
+     /**
+      * Updates a given Matrix4 uniform.
+      *
+      * @param {Matrix4Uniform} uniform - The Matrix4 uniform.
+      * @return {boolean} Whether the uniform has been updated or not.
+      */
+-    updateMatrix4(uniform: Matrix4Uniform): boolean;
++    updateMatrix4(uniform: Matrix4NodeUniform<unknown>): boolean;
+     /**
+      * Returns a typed array that matches the given data type.
+      *
+@@ -136,4 +148,5 @@ declare class UniformsGroup extends UniformBuffer {
+      */
+     private _getBufferForType;
+ }
+-import UniformBuffer from './UniformBuffer.js';
++
++export default UniformsGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
+index 985ac289f..fb49cb45d 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
+@@ -1,4 +1,30 @@
+-export default XRManager;
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++import { ArrayCamera } from '../../cameras/ArrayCamera.js';
++import { Vector3 } from '../../math/Vector3.js';
++import { Quaternion } from '../../math/Quaternion.js';
++import { Mesh } from '../../objects/Mesh.js';
++import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
++import Renderer from './Renderer.js';
++import { XRRenderTarget } from './XRRenderTarget.js';
++import { RenderTarget } from '../../core/RenderTarget.js';
++import QuadMesh from './QuadMesh.js';
++import { XRGripSpace, XRHandSpace, XRTargetRaySpace } from '../webxr/WebXRController.js';
++import { CylinderGeometry } from "../../geometries/CylinderGeometry.js";
++import { PlaneGeometry } from "../../geometries/PlaneGeometry.js";
++import { MeshBasicMaterial } from "../../materials/MeshBasicMaterial.js";
++
++export interface XRManagerEventMap {
++    sessionstart: {};
++    sessionend: {};
++    planesdetected: {
++        data: XRFrame;
++    };
++}
++
++export interface LayerAttributes {
++    stencil?: boolean | undefined;
++}
++
+ /**
+  * The XR manager is built on top of the WebXR Device API to
+  * manage XR sessions with `WebGPURenderer`.
+@@ -7,7 +33,7 @@ export default XRManager;
+  *
+  * @augments EventDispatcher
+  */
+-declare class XRManager extends EventDispatcher {
++declare class XRManager extends EventDispatcher<XRManagerEventMap> {
+     /**
+      * Constructs a new XR manager.
+      *
+@@ -136,7 +162,10 @@ declare class XRManager extends EventDispatcher {
+      * @readonly
+      */
+     private readonly _supportsGlBinding;
+-    _frameBufferTargets: WeakMap<object, any> | null;
++    _frameBufferTargets: WeakMap<XRRenderTarget, {
++        frameBufferTarget: RenderTarget | null;
++        quad: QuadMesh;
++    }> | null;
+     /**
+      * Helper function to create native WebXR Layer.
+      *
+@@ -331,7 +360,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getController(index: number): Group;
++    getController(index: number): XRTargetRaySpace;
+     /**
+      * Returns an instance of `THREE.Group` that represents the transformation
+      * of a XR controller in grip space. The requested controller is defined
+@@ -340,7 +369,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getControllerGrip(index: number): Group;
++    getControllerGrip(index: number): XRGripSpace;
+     /**
+      * Returns an instance of `THREE.Group` that represents the transformation
+      * of a XR controller in hand space. The requested controller is defined
+@@ -349,7 +378,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {number} index - The index of the XR controller.
+      * @return {Group} A group that represents the controller's transformation.
+      */
+-    getHand(index: number): Group;
++    getHand(index: number): XRHandSpace;
+     /**
+      * Returns the foveation value.
+      *
+@@ -414,7 +443,7 @@ declare class XRManager extends EventDispatcher {
+      *
+      * @return {'opaque'|'additive'|'alpha-blend'|undefined} The environment blend mode. Returns `undefined` when used outside of a XR session.
+      */
+-    getEnvironmentBlendMode(): "opaque" | "additive" | "alpha-blend" | undefined;
++    getEnvironmentBlendMode(): XREnvironmentBlendMode | undefined;
+     /**
+      * Returns the current XR binding.
+      *
+@@ -451,7 +480,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+      * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
+      */
+-    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
++    createQuadLayer(width: number, height: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<PlaneGeometry, MeshBasicMaterial>;
+     /**
+      * This method can be used in XR applications to create a cylindrical layer that presents a separate
+      * rendered scene.
+@@ -468,7 +497,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {Object} [attributes={}] - Allows to configure the layer's render target.
+      * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
+      */
+-    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: Function, attributes?: Object): Mesh;
++    createCylinderLayer(radius: number, centralAngle: number, aspectratio: number, translation: Vector3, quaternion: Quaternion, pixelwidth: number, pixelheight: number, rendercall: () => void, attributes?: LayerAttributes): Mesh<CylinderGeometry, MeshBasicMaterial>;
+     /**
+      * Renders the XR layers that have been previously added to the scene.
+      *
+@@ -491,7 +520,7 @@ declare class XRManager extends EventDispatcher {
+      * @param {XRSession} session - The XR session to set.
+      * @return {Promise} A Promise that resolves when the session has been set.
+      */
+-    setSession(session: XRSession): Promise<any>;
++    setSession(session: XRSession): Promise<void>;
+     /**
+      * This method is called by the renderer per frame and updates the XR camera
+      * and it sub cameras based on the given camera. The given camera is the "user"
+@@ -509,9 +538,5 @@ declare class XRManager extends EventDispatcher {
+      */
+     private _getController;
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
+-import { ArrayCamera } from '../../cameras/ArrayCamera.js';
+-import { Vector3 } from '../../math/Vector3.js';
+-import { Quaternion } from '../../math/Quaternion.js';
+-import { Mesh } from '../../objects/Mesh.js';
+-import { PerspectiveCamera } from '../../cameras/PerspectiveCamera.js';
++
++export default XRManager;
+diff --git a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
+index e397d7c26..6f757942f 100644
+--- a/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/common/XRRenderTarget.d.ts
+@@ -1,3 +1,5 @@
++import { RenderTarget } from '../../core/RenderTarget.js';
++
+ /**
+  * A special type of render target that is used when rendering
+  * with the WebXR Device API.
+@@ -61,6 +63,5 @@ export class XRRenderTarget extends RenderTarget {
+      * @default false
+      * */
+     private _isOpaqueFramebuffer;
+-    copy(source: any): this;
++    copy(source: XRRenderTarget): this;
+ }
+-import { RenderTarget } from '../../core/RenderTarget.js';
 diff --git a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
 index 876698dc2..723da14c9 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/nodes/NodeBuilderState.d.ts
@@ -14160,6 +14445,120 @@ index c196bbe56..8baf96582 100644
 -import UniformsGroup from '../UniformsGroup.js';
 +
 +export default NodeUniformsGroup;
+diff --git a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
+index f6f699f14..42d915421 100644
+--- a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
+@@ -1,4 +1,5 @@
+-export default BasicNodeLibrary;
++import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
+ /**
+  * This version of a node library represents a basic version
+  * just focusing on lights and tone mapping techniques.
+@@ -8,4 +9,5 @@ export default BasicNodeLibrary;
+  */
+ declare class BasicNodeLibrary extends NodeLibrary {
+ }
+-import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
++export default BasicNodeLibrary;
+diff --git a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
+index 1d2893798..c0ac71455 100644
+--- a/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
++++ b/jsdoc-testing/jsdoc/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
+@@ -1,4 +1,18 @@
+-export default StandardNodeLibrary;
++import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++import { LineBasicNodeMaterialNodeProperties } from "../../../materials/nodes/LineBasicNodeMaterial.js";
++import { LineDashedNodeMaterialNodeProperties } from "../../../materials/nodes/LineDashedNodeMaterial.js";
++import { MeshBasicNodeMaterialNodeProperties } from "../../../materials/nodes/MeshBasicNodeMaterial.js";
++import { MeshLambertNodeMaterialNodeProperties } from "../../../materials/nodes/MeshLambertNodeMaterial.js";
++import { MeshMatcapNodeMaterialNodeProperties } from "../../../materials/nodes/MeshMatcapNodeMaterial.js";
++import { MeshNormalNodeMaterialNodeProperties } from "../../../materials/nodes/MeshNormalNodeMaterial.js";
++import { MeshPhongNodeMaterialNodeProperties } from "../../../materials/nodes/MeshPhongNodeMaterial.js";
++import { MeshPhysicalNodeMaterialNodeProperties } from "../../../materials/nodes/MeshPhysicalNodeMaterial.js";
++import { MeshStandardNodeMaterialNodeProperties } from "../../../materials/nodes/MeshStandardNodeMaterial.js";
++import { MeshToonNodeMaterialNodeProperties } from "../../../materials/nodes/MeshToonNodeMaterial.js";
++import { PointsNodeMaterialNodeProperties } from "../../../materials/nodes/PointsNodeMaterial.js";
++import { ShadowNodeMaterialNodeProperties } from "../../../materials/nodes/ShadowNodeMaterial.js";
++import { SpriteNodeMaterialNodeProperties } from "../../../materials/nodes/SpriteNodeMaterial.js";
++
+ /**
+  * This version of a node library represents the standard version
+  * used in {@link WebGPURenderer}. It maps lights, tone mapping
+@@ -9,4 +23,70 @@ export default StandardNodeLibrary;
+  */
+ declare class StandardNodeLibrary extends NodeLibrary {
+ }
+-import NodeLibrary from '../../common/nodes/NodeLibrary.js';
++
++declare module "../../../materials/MeshPhongMaterial.js" {
++    interface MeshPhongMaterialProperties extends MeshPhongNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshStandardMaterial.js" {
++    interface MeshStandardMaterialProperties extends MeshStandardNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshPhysicalMaterial.js" {
++    interface MeshPhysicalMaterialProperties extends MeshPhysicalNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshToonMaterial.js" {
++    interface MeshToonMaterialProperties extends MeshToonNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshBasicMaterial.js" {
++    interface MeshBasicMaterialProperties extends MeshBasicNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshLambertMaterial.js" {
++    interface MeshLambertMaterialProperties extends MeshLambertNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshNormalMaterial.js" {
++    interface MeshNormalMaterialProperties extends MeshNormalNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/MeshMatcapMaterial.js" {
++    interface MeshMatcapMaterialProperties extends MeshMatcapNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/LineBasicMaterial.js" {
++    interface LineBasicMaterialProperties extends LineBasicNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/LineDashedMaterial.js" {
++    interface LineDashedMaterialProperties extends LineDashedNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/PointsMaterial.js" {
++    interface PointsMaterialProperties extends PointsNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/SpriteMaterial.js" {
++    interface SpriteMaterialProperties extends SpriteNodeMaterialNodeProperties {
++    }
++}
++
++declare module "../../../materials/ShadowMaterial.js" {
++    interface ShadowMaterialProperties extends ShadowNodeMaterialNodeProperties {
++    }
++}
++
++export default StandardNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/scenes/Fog.d.ts
 index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/scenes/Fog.d.ts
