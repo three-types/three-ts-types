@@ -40,6 +40,7 @@ interface DeviceLostInfo {
 
 export interface RendererParameters {
     logarithmicDepthBuffer?: boolean | undefined;
+    reversedDepthBuffer?: boolean | undefined;
     alpha?: boolean | undefined;
     depth?: boolean | undefined;
     stencil?: boolean | undefined;
@@ -59,6 +60,7 @@ declare class Renderer {
      *
      * @typedef {Object} Renderer~Options
      * @property {boolean} [logarithmicDepthBuffer=false] - Whether logarithmic depth buffer is enabled or not.
+     * @property {boolean} [reversedDepthBuffer=false] - Whether reversed depth buffer is enabled or not.
      * @property {boolean} [alpha=true] - Whether the default framebuffer (which represents the final contents of the canvas) should be transparent or opaque.
      * @property {boolean} [depth=true] - Whether the default framebuffer should have a depth buffer or not.
      * @property {boolean} [stencil=false] - Whether the default framebuffer should have a stencil buffer or not.
@@ -136,8 +138,17 @@ declare class Renderer {
      *
      * @type {boolean}
      * @default false
+     * @readonly
      */
-    logarithmicDepthBuffer: boolean;
+    readonly logarithmicDepthBuffer: boolean;
+    /**
+     * Whether reversed depth buffer is enabled or not.
+     *
+     * @type {boolean}
+     * @default false
+     * @readonly
+     */
+    readonly reversedDepthBuffer: boolean;
     /**
      * Defines the output color space of the renderer.
      *

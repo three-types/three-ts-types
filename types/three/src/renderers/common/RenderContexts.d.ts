@@ -9,6 +9,18 @@ import RenderContext from "./RenderContext.js";
  */
 declare class RenderContexts {
     /**
+     * Constructs a new render context management component.
+     *
+     * @param {Renderer} renderer - The renderer.
+     */
+    constructor(renderer: Renderer);
+    /**
+     * The renderer.
+     *
+     * @type {Renderer}
+     */
+    renderer: Renderer;
+    /**
      * A dictionary that manages render contexts.
      *
      * @type {Object<string,RenderContext>}
