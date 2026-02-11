@@ -1,6 +1,7 @@
 import { RenderTarget } from "../../core/RenderTarget.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import RenderContext from "./RenderContext.js";
+import Renderer from "./Renderer.js";
 
 /**
  * This module manages the render contexts of the renderer.
@@ -8,6 +9,18 @@ import RenderContext from "./RenderContext.js";
  * @private
  */
 declare class RenderContexts {
+    /**
+     * Constructs a new render context management component.
+     *
+     * @param {Renderer} renderer - The renderer.
+     */
+    constructor(renderer: Renderer);
+    /**
+     * The renderer.
+     *
+     * @type {Renderer}
+     */
+    renderer: Renderer;
     /**
      * A dictionary that manages render contexts.
      *
