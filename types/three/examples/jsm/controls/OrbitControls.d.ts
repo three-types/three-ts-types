@@ -208,6 +208,9 @@ declare class OrbitControls extends Controls<OrbitControlsEventMap> {
      */
     constructor(object: Camera, domElement?: HTMLElement | SVGElement | null);
 
+    set cursorStyle(type: "auto" | "grab");
+    get cursorStyle(): "auto" | "grab";
+
     /**
      * Get the current vertical rotation, in radians.
      */
