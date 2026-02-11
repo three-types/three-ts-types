@@ -1,6 +1,7 @@
 import { RenderTarget } from "../../core/RenderTarget.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import RenderContext from "./RenderContext.js";
+import Renderer from "./Renderer.js";
 
 /**
  * This module manages the render contexts of the renderer.
