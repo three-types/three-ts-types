@@ -26,7 +26,7 @@ export const orthographicDepthToViewZ: (depth: Node, near: Node, far: Node) => N
 
 export const viewZToPerspectiveDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
 
-export const viewZToReversedPerspectiveDepth: ( viewZ: Node, near: Node, far: Node ) => Node<"float">;
+export const viewZToReversedPerspectiveDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
 
 export const perspectiveDepthToViewZ: (depth: Node, near: Node, far: Node) => Node<"float">;
 
