@@ -14983,7 +14983,7 @@ index 5c411fa69..9bc80d895 100644
          const posY = instanceIndex.div(width);
          const indexUV = ivec2(int(posX), int(posY));
 diff --git a/examples-testing/examples/webgpu_cubemap_adjustments.ts b/examples-testing/examples/webgpu_cubemap_adjustments.ts
-index 429d2ff40..d4e4a5558 100644
+index 2e886d824..1161f02f6 100644
 --- a/examples-testing/examples/webgpu_cubemap_adjustments.ts
 +++ b/examples-testing/examples/webgpu_cubemap_adjustments.ts
 @@ -20,7 +20,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -15010,7 +15010,7 @@ index 429d2ff40..d4e4a5558 100644
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
- 
+     gui.add(adjustments, 'mix', -1, 2, 0.01);
      gui.add({ blurBackground: blurNode.value }, 'blurBackground', 0, 1, 0.01).onChange(value => {
          blurNode.value = value;
 diff --git a/examples-testing/examples/webgpu_cubemap_dynamic.ts b/examples-testing/examples/webgpu_cubemap_dynamic.ts
@@ -17819,12 +17819,12 @@ index a7939461e..fe749d04c 100644
      const folderSky = gui.addFolder('Sky');
      folderSky.add(parameters, 'elevation', 0, 90, 0.1).onChange(updateSun);
 diff --git a/examples-testing/examples/webgpu_parallax_uv.ts b/examples-testing/examples/webgpu_parallax_uv.ts
-index 658ae08db..adbea4866 100644
+index b6282d89f..43fa27447 100644
 --- a/examples-testing/examples/webgpu_parallax_uv.ts
 +++ b/examples-testing/examples/webgpu_parallax_uv.ts
-@@ -3,9 +3,9 @@ import { texture, parallaxUV, blendOverlay, uv } from 'three/tsl';
+@@ -6,9 +6,9 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
  
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
@@ -17834,6 +17834,15 @@ index 658ae08db..adbea4866 100644
  
  init();
  
+@@ -103,7 +103,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Scene');
++    const gui = (renderer.inspector as Inspector).createParameters('Scene');
+     gui.add(scene, 'backgroundBlurriness', 0, 1).name('Background Blurriness');
+     gui.add(parallaxScale, 'value', 0.2, 0.5).name('Parallax Scale');
+     gui.add(scaleUV, 'value', 1, 5).name('UV Scale');
 diff --git a/examples-testing/examples/webgpu_particles.ts b/examples-testing/examples/webgpu_particles.ts
 index 9e81f0761..da9ee8757 100644
 --- a/examples-testing/examples/webgpu_particles.ts
