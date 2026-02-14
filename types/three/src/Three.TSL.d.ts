@@ -603,6 +603,8 @@ export const vibrance: typeof TSL.vibrance;
 export const viewZToLogarithmicDepth: typeof TSL.viewZToLogarithmicDepth;
 export const viewZToOrthographicDepth: typeof TSL.viewZToOrthographicDepth;
 export const viewZToPerspectiveDepth: typeof TSL.viewZToPerspectiveDepth;
+export const viewZToReversedOrthographicDepth: typeof TSL.viewZToReversedOrthographicDepth;
+export const viewZToReversedPerspectiveDepth: typeof TSL.viewZToReversedPerspectiveDepth;
 export const viewport: typeof TSL.viewport;
 export const viewportCoordinate: typeof TSL.viewportCoordinate;
 export const viewportDepthTexture: typeof TSL.viewportDepthTexture;
