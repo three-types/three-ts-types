@@ -14,6 +14,8 @@ declare class GaussianBlurNode extends TempNode<"vec4"> {
 
     premultipliedAlpha: boolean;
 
+    readonly isGaussianBlurNode: boolean;
+
     constructor(
         textureNode: TextureNode,
         directionNode?: Node | null,
