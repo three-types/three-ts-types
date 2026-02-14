@@ -22,6 +22,8 @@ export default ViewportDepthNode;
 
 export const viewZToOrthographicDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
 
+export const viewZToReversedOrthographicDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
+
 export const orthographicDepthToViewZ: (depth: Node, near: Node, far: Node) => Node<"float">;
 
 export const viewZToPerspectiveDepth: (viewZ: Node, near: Node, far: Node) => Node<"float">;
