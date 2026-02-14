@@ -1,4 +1,4 @@
-import { Camera, Node, PassNode, Scene, UniformNode } from "three/webgpu";
+import { Camera, Node, PassNode, Scene } from "three/webgpu";
 
 declare class PixelationPassNode extends PassNode {
     pixelSize: Node<"float">;

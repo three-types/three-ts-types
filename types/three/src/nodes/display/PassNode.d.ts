@@ -15,12 +15,16 @@ import TempNode from "../core/TempNode.js";
 declare class PassTextureNode extends TextureNode {
     passNode: PassNode;
 
+    readonly isPassTextureNode: boolean;
+
     constructor(passNode: PassNode, texture: Texture);
 }
 
 declare class PassMultipleTextureNode extends PassTextureNode {
     textureName: string;
     previousTexture: boolean;
+
+    readonly isPassMultipleTextureNode: boolean;
 
     constructor(passNode: PassNode, textureName: string, previousTexture?: boolean);
 
