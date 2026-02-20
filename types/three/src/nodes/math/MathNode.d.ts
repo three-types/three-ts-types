@@ -236,12 +236,24 @@ declare module "../core/Node.js" {
     }
 }
 
-export const sin: (x: FloatOrNumber) => Node<"float">;
-export const cos: (x: FloatOrNumber) => Node<"float">;
-export const tan: (x: FloatOrNumber) => Node<"float">;
-export const asin: (x: FloatOrNumber) => Node<"float">;
-export const acos: (x: FloatOrNumber) => Node<"float">;
-export const atan: (y: FloatOrNumber, x?: FloatOrNumber) => Node<"float">;
+interface TrigonometricFunction {
+    (x: FloatOrNumber): Node<"float">;
+    (x: Node<"vec2">): Node<"vec2">;
+    (x: Node<"vec3">): Node<"vec3">;
+    (x: Node<"vec4">): Node<"vec4">;
+}
+interface ArcTanFunction {
+    (y: FloatOrNumber, x?: FloatOrNumber): Node<"float">;
+    (y: Node<"vec2">, x?: FloatOrNumber | Node<"vec2">): Node<"vec2">;
+    (y: Node<"vec3">, x?: FloatOrNumber | Node<"vec2"> | Node<"vec3">): Node<"vec3">;
+    (y: Node<"vec4">, x?: FloatVectorOrNumber): Node<"vec4">;
+}
+export const sin: TrigonometricFunction;
+export const cos: TrigonometricFunction;
+export const tan: TrigonometricFunction;
+export const asin: TrigonometricFunction;
+export const acos: TrigonometricFunction;
+export const atan: ArcTanFunction;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         sin: () => Node<"float">;
@@ -250,6 +262,22 @@ declare module "../core/Node.js" {
         asin: () => Node<"float">;
         acos: () => Node<"float">;
         atan: (x?: FloatOrNumber) => Node<"float">;
+    }
+    interface FloatVecExtensions<TVec extends FloatVecType> {
+        sin: () => Node<TVec>;
+        cos: () => Node<TVec>;
+        tan: () => Node<TVec>;
+        asin: () => Node<TVec>;
+        acos: () => Node<TVec>;
+    }
+    interface Vec2Extensions {
+        atan: (x?: FloatOrNumber | Node<"vec2">) => Node<"vec2">;
+    }
+    interface Vec3Extensions {
+        atan: (x?: FloatOrNumber | Node<"vec2"> | Node<"vec3">) => Node<"vec3">;
+    }
+    interface Vec4Extensions {
+        atan: (x?: FloatVectorOrNumber) => Node<"vec4">;
     }
 }
 
