@@ -6,8 +6,8 @@ declare class ComputeBuiltinNode extends Node {
 
 export default ComputeBuiltinNode;
 
-export const numWorkgroups: ComputeBuiltinNode;
-export const workgroupId: ComputeBuiltinNode;
-export const globalId: ComputeBuiltinNode;
-export const localId: ComputeBuiltinNode;
-export const subgroupSize: ComputeBuiltinNode;
+export const numWorkgroups: ComputeBuiltinNode & Node<"uvec3">;
+export const workgroupId: ComputeBuiltinNode & Node<"uvec3">;
+export const globalId: ComputeBuiltinNode & Node<"uvec3">;
+export const localId: ComputeBuiltinNode & Node<"uvec3">;
+export const subgroupSize: ComputeBuiltinNode & Node<"uint">;
