@@ -244,9 +244,9 @@ interface TrigonometricFunction {
 }
 interface ArcTanFunction {
     (y: FloatOrNumber, x?: FloatOrNumber): Node<"float">;
-    (y: Node<"vec2">, x?: FloatOrNumber | Node<"vec2">): Node<"vec2">;
-    (y: Node<"vec3">, x?: FloatOrNumber | Node<"vec2"> | Node<"vec3">): Node<"vec3">;
-    (y: Node<"vec4">, x?: FloatVectorOrNumber): Node<"vec4">;
+    (y: Node<"vec2">, x?: Vec2OrLessOrFloat): Node<"vec2">;
+    (y: Node<"vec3">, x?: Vec3OrLessOrFloat): Node<"vec3">;
+    (y: Node<"vec4">, x?: Vec4OrLessOrFloat): Node<"vec4">;
 }
 export const sin: TrigonometricFunction;
 export const cos: TrigonometricFunction;
@@ -271,13 +271,13 @@ declare module "../core/Node.js" {
         acos: () => Node<TVec>;
     }
     interface Vec2Extensions {
-        atan: (x?: FloatOrNumber | Node<"vec2">) => Node<"vec2">;
+        atan: (x?: Vec2OrLessOrFloat) => Node<"vec2">;
     }
     interface Vec3Extensions {
-        atan: (x?: FloatOrNumber | Node<"vec2"> | Node<"vec3">) => Node<"vec3">;
+        atan: (x?: Vec3OrLessOrFloat) => Node<"vec3">;
     }
     interface Vec4Extensions {
-        atan: (x?: FloatVectorOrNumber) => Node<"vec4">;
+        atan: (x?: Vec4OrLessOrFloat) => Node<"vec4">;
     }
 }
 
