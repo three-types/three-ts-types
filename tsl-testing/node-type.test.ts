@@ -112,6 +112,23 @@ test("vec3(1, 0, 2).xz = 6", async () => {
   renderer.render(scene, camera);
 });
 
+test("vec3(1, 0, 2).xz = vec2(2, 3)", async () => {
+  const fn = Fn(() => {
+    const testVec3 = vec3(1, 0, 2);
+    testVec3.xz = vec2(2, 3);
+    return testVec3;
+  });
+
+  const result: THREE.Node<"vec3"> = fn();
+
+  expect(result.getNodeType(nodeBuilder)).toBe("vec3");
+
+  scene.backgroundNode = result.debug();
+
+  await renderer.init();
+  renderer.render(scene, camera);
+});
+
 test("vec3(1, 0, 2).setXY(5)", async () => {
   const testVec3Set: THREE.Node<"vec3"> = vec3(1, 0, 2).setXY(5);
 
