@@ -1,0 +1,64 @@
+diff --git a/examples-testing/index.js b/examples-testing/index.js
+index a157d11da..224be1ae6 100644
+--- a/examples-testing/index.js
++++ b/examples-testing/index.js
+@@ -108,7 +108,7 @@ for (const section of Object.values(examplesFiles)) {
+             encoding: 'utf-8',
+         });
+         const results = re.exec(fileContents);
+-        const options = await prettier.resolveConfig(file);
++        const options = await prettier.resolveConfig('.');
+         const formattedFile = await prettier.format(results[1], { ...options, parser: 'babel' });
+         fs.writeFileSync(path.join(outDir, `${file}.ts`), formattedFile);
+     }
+diff --git a/tsl-testing/generate-tsl-test.js b/tsl-testing/generate-tsl-test.js
+index d608a445c..d7d2b0c23 100644
+--- a/tsl-testing/generate-tsl-test.js
++++ b/tsl-testing/generate-tsl-test.js
+@@ -3,15 +3,24 @@ import * as path from "node:path";
+ 
+ import prettier from "prettier";
+ 
+-const filePath = "../three.js/src/nodes/tsl/TSLCore.js";
+-const outFile = "./tsl-test/TSLCore.test.js";
++const files = ["nodes/tsl/TSLCore"];
+ 
+-const fileContents = fs.readFileSync(filePath, { encoding: "utf-8" });
+-const options = await prettier.resolveConfig(filePath);
+-const formattedFile = await prettier.format(fileContents, {
+-  ...options,
+-  parser: "babel",
+-});
++const inDir = "../three.js/src";
++const outDir = "./tsl-comments";
+ 
+-fs.mkdirSync(path.dirname(outFile), { recursive: true });
+-fs.writeFileSync(outFile, formattedFile);
++for (const file of files) {
++  console.log(file);
++
++  const fileContents = fs.readFileSync(path.join(inDir, `${file}.js`), {
++    encoding: "utf-8",
++  });
++  const options = await prettier.resolveConfig(".");
++  const formattedFile = await prettier.format(fileContents, {
++    ...options,
++    parser: "babel",
++  });
++
++  const outFile = path.join(outDir, `${file}.js`);
++  fs.mkdirSync(path.dirname(outFile), { recursive: true });
++  fs.writeFileSync(outFile, formattedFile);
++}
+diff --git a/tsl-testing/update-patch.sh b/tsl-testing/update-patch.sh
+index dee66b56b..06f05b9f6 100644
+--- a/tsl-testing/update-patch.sh
++++ b/tsl-testing/update-patch.sh
+@@ -1,6 +1,6 @@
+ pnpm run format
+ git diff > ../changes.patch
+ mv ../changes.patch .
+-rm -rf tsl-test
++rm -rf tsl-comments
+ git add -A
+ git commit -m "Update patch and delete TSL test file"

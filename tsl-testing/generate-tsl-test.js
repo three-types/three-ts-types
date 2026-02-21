@@ -3,15 +3,24 @@ import * as path from "node:path";
 
 import prettier from "prettier";
 
-const filePath = "../three.js/src/nodes/tsl/TSLCore.js";
-const outFile = "./tsl-test/TSLCore.test.js";
+const files = ["nodes/tsl/TSLCore"];
 
-const fileContents = fs.readFileSync(filePath, { encoding: "utf-8" });
-const options = await prettier.resolveConfig(filePath);
-const formattedFile = await prettier.format(fileContents, {
-  ...options,
-  parser: "babel",
-});
+const inDir = "../three.js/src";
+const outDir = "./tsl-comments";
 
-fs.mkdirSync(path.dirname(outFile), { recursive: true });
-fs.writeFileSync(outFile, formattedFile);
+for (const file of files) {
+  console.log(file);
+
+  const fileContents = fs.readFileSync(path.join(inDir, `${file}.js`), {
+    encoding: "utf-8",
+  });
+  const options = await prettier.resolveConfig(".");
+  const formattedFile = await prettier.format(fileContents, {
+    ...options,
+    parser: "babel",
+  });
+
+  const outFile = path.join(outDir, `${file}.js`);
+  fs.mkdirSync(path.dirname(outFile), { recursive: true });
+  fs.writeFileSync(outFile, formattedFile);
+}
