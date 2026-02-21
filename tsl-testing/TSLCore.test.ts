@@ -1,6 +1,6 @@
 import { expect, test } from 'vitest'
 
-import { color } from 'three/tsl';
+import { color, float } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 test('color', () => {
@@ -18,4 +18,12 @@ test('color', () => {
 
     varNodeColor = color(0, 100, 255);
     expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
+});
+
+test('float', () => {
+    let varNodeFloat: THREE.VarNode<'float'> = float();
+    expect(varNodeFloat).toBeInstanceOf(THREE.VarNode);
+
+    varNodeFloat = float(5);
+    expect(varNodeFloat).toBeInstanceOf(THREE.VarNode);
 });

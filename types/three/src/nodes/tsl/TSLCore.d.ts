@@ -1783,8 +1783,7 @@ interface ColorFunction {
 export const color: ColorFunction;
 
 interface FloatFunction {
-    (value?: number): ConstNode<"float", number>;
-    (node: Node): Node<"float">;
+    (value?: number): VarNode<"float">;
 }
 
 export const float: FloatFunction;
