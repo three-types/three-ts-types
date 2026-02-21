@@ -108,7 +108,7 @@ for (const section of Object.values(examplesFiles)) {
             encoding: 'utf-8',
         });
         const results = re.exec(fileContents);
-        const options = await prettier.resolveConfig('.');
+        const options = await prettier.resolveConfig(file);
         const formattedFile = await prettier.format(results[1], { ...options, parser: 'babel' });
         fs.writeFileSync(path.join(outDir, `${file}.ts`), formattedFile);
     }

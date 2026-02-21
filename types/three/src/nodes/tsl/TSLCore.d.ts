@@ -9,7 +9,7 @@ import ConstNode from "../core/ConstNode.js";
 import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
-import VarNode from '../core/VarNode.js';
+import VarNode from "../core/VarNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 

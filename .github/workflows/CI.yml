@@ -94,7 +94,7 @@ jobs:
       - run: pnpm install
       - run: pnpm run build-declarations
         working-directory: jsdoc-testing
-      - run: git apply changes.patch --allow-empty
+      - run: git apply changes.patch
         working-directory: jsdoc-testing
       - run: pnpm run format-dprint
         working-directory: jsdoc-testing
@@ -119,6 +119,8 @@ jobs:
       - run: pnpm run type-check
         working-directory: tsl-testing
       - run: pnpm generate-tsl-test
+        working-directory: tsl-testing
+      - run: git apply changes.patch --allow-empty
         working-directory: tsl-testing
       - run: pnpm run format-check
         working-directory: tsl-testing
