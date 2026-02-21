@@ -224,6 +224,7 @@ test("vec3(1, 0, 2).flipXZ()", async () => {
 });
 
 test("vec3(1, 0, 2).flipZX()", async () => {
+  // This is functions correctly, but we don't include it to cut down on the number of methods
   // @ts-expect-error
   const testVec3Set: THREE.Node<"vec3"> = vec3(1, 0, 2).flipZX();
 

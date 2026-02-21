@@ -92,7 +92,8 @@ testVec3.flipXZ();
 // @ts-expect-error
 testVec2.flipXZ();
 
-// Disallow out-of-order identifiers, since they are sorted internally
+// Disallow out-of-order identifiers. They are functionally identically to the sorted variant, and unnecessarily add to
+// the number of available methods
 // @ts-expect-error
 testVec3.flipZX();
 
