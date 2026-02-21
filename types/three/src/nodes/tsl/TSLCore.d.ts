@@ -1560,8 +1560,22 @@ export type NodeObject<T> = T extends Node ? T
     : T extends ArrayBuffer ? Node<"ArrayBuffer">
     : T;
 
-// opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
-type Proxied<T> = T extends Node | number ? Node | number : T;
+// The opposite of NodeObject<T>
+type Proxied<T> = T extends Node<infer TNodeType>
+    ? Node<TNodeType> extends T ? TNodeType extends "float" ? Node<"float"> | number
+        : TNodeType extends "bool" ? Node<"bool"> | boolean
+        : TNodeType extends "vec2" ? Node<"vec2"> | Vector2
+        : TNodeType extends "vec3" ? Node<"vec3"> | Vector3
+        : TNodeType extends "vec4" ? Node<"vec4"> | Vector4
+        : TNodeType extends "mat2" ? Node<"mat2"> | Matrix2
+        : TNodeType extends "mat3" ? Node<"mat3"> | Matrix3
+        : TNodeType extends "mat4" ? Node<"mat4"> | Matrix4
+        : TNodeType extends "color" ? Node<"color"> | Color
+        : TNodeType extends "ArrayBuffer" ? Node<"ArrayBuffer"> | ArrayBuffer
+        : T
+    : T
+    : T;
+
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [Index in keyof T]: Proxied<T[Index]> }];
