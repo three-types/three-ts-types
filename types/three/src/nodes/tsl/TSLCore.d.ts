@@ -9,6 +9,7 @@ import ConstNode from "../core/ConstNode.js";
 import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
+import VarNode from '../core/VarNode.js';
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
@@ -1767,14 +1768,13 @@ declare module "../core/Node.js" {
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (color?: string | number): ConstNode<"color", Color>;
-    (r: number, g: number, b: number): ConstNode<"color", Color>;
+    (color?: string | number): VarNode<"color">;
+    (r: number, g: number, b: number): VarNode<"color">;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (color: Color): ConstNode<"color", Color>;
-    (node: Node): Node<"color">;
+    (color: Color): VarNode<"color">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
     // object. Not sure which cases are worth considering here.
