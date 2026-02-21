@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Fn, normalWorldGeometry, vec2, vec3, vec4 } from "three/tsl";
+import { Fn, normalWorldGeometry, time, vec2, vec3, vec4 } from "three/tsl";
 import * as THREE from "three/webgpu";
 
 const renderer = new THREE.WebGPURenderer();
@@ -251,6 +251,25 @@ test("Fn inputs", async () => {
   expect(lightSpeedEffect.getNodeType(nodeBuilder)).toBe("vec3");
 
   scene.backgroundNode = lightSpeedEffect.debug();
+
+  await renderer.init();
+  renderer.render(scene, camera);
+});
+
+test("Fn test", async () => {
+  const oscSine = Fn(([t = time]: [THREE.Node<"float">] | []) => {
+    return t
+      .add(0.75)
+      .mul(Math.PI * 2)
+      .sin()
+      .mul(0.5)
+      .add(0.5);
+  });
+  const value: THREE.Node<"float"> = oscSine(5);
+
+  expect(value.getNodeType(nodeBuilder)).toBe("float");
+
+  scene.backgroundNode = value.debug();
 
   await renderer.init();
   renderer.render(scene, camera);

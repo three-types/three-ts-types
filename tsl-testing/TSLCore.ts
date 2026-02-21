@@ -1,4 +1,4 @@
-import { vec2, vec3 } from "three/tsl";
+import { Fn, time, vec2, vec3 } from "three/tsl";
 import * as THREE from "three/webgpu";
 
 /**
@@ -100,3 +100,61 @@ testVec3.flipZX();
 // Disallow duplicate identifiers when flipping a vec swizzle property
 // @ts-expect-error
 testVec3.flipXX();
+
+/**
+ * Fn
+ */
+
+// From three.js/docs/TSL.md
+const oscSine = Fn(([t = time]: [THREE.Node<"float">] | []) => {
+  return t
+    .add(0.75)
+    .mul(Math.PI * 2)
+    .sin()
+    .mul(0.5)
+    .add(0.5);
+});
+const result1: THREE.Node<"float"> = oscSine();
+const result2: THREE.Node<"float"> = oscSine(5);
+
+// From three.js/docs/TSL.md
+const oscSine2 = Fn(({ timer = time }: { timer?: THREE.Node<"float"> }) => {
+  return timer
+    .add(0.75)
+    .mul(Math.PI * 2)
+    .sin()
+    .mul(0.5)
+    .add(0.5);
+});
+const value1: THREE.Node<"float"> = oscSine({ timer: 5 });
+const value2: THREE.Node<"float"> = oscSine();
+
+const oscSine3 = Fn(({ timer }: { timer: THREE.Node<"float"> }) => {
+  return timer
+    .add(0.75)
+    .mul(Math.PI * 2)
+    .sin()
+    .mul(0.5)
+    .add(0.5);
+});
+// Parameter should be required
+// @ts-expect-error
+const value3: THREE.Node<"float"> = oscSine3();
+
+// From three.js/docs/TSL.md
+const col = Fn(
+  ({
+    r,
+    g,
+    b,
+  }: {
+    r: THREE.Node<"float">;
+    g: THREE.Node<"float">;
+    b: THREE.Node<"float">;
+  }) => {
+    return vec3(r, g, b);
+  },
+);
+// Any of the options below will return a green color.
+const output1: THREE.Node<"vec3"> = col(0, 1, 0); // option 1
+const output2: THREE.Node<"vec3"> = col({ r: 0, g: 1, b: 0 }); // option 2
