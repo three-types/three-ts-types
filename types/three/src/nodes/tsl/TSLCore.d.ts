@@ -1743,12 +1743,12 @@ export function Fn<TReturn>(
 export function Fn<TArgs extends readonly unknown[], TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
-): FnNode<TArgs, TReturn>;
+): FnNode<ProxiedTuple<TArgs>, TReturn>;
 export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
     layout?: string | Record<string, string>,
     // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-): FnNode<[TArgs], TReturn>;
+): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
 export const setCurrentStack: (stack: StackNode | null) => void;
 
