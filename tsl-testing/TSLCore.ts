@@ -1,4 +1,4 @@
-import { Fn, time, vec2, vec3 } from 'three/tsl';
+import { Fn, uniform, vec2, vec3 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 /**
@@ -100,3 +100,20 @@ testVec3.flipZX();
 // Disallow duplicate identifiers when flipping a vec swizzle property
 // @ts-expect-error
 testVec3.flipXX();
+
+/**
+ * Fn
+ */
+
+// If the Node type is more specific, we shouldn't be able to pass in a more general Node type
+const test = Fn(([param]: [THREE.ConstNode<"float", number>]) => {
+    return vec3(param);
+});
+
+declare const floatConstNode: THREE.ConstNode<"float", number>;
+
+test(floatConstNode);
+// @ts-expect-error
+test(5);
+// @ts-expect-error
+test(uniform(5));
