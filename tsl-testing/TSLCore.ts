@@ -1,5 +1,5 @@
-import { Fn, time, vec2, vec3 } from "three/tsl";
-import * as THREE from "three/webgpu";
+import { Fn, time, vec2, vec3 } from 'three/tsl';
+import * as THREE from 'three/webgpu';
 
 /**
  * Setup
@@ -12,7 +12,7 @@ const testVec3 = vec3(1, 0, 2);
  * Access swizzle properties
  */
 
-const testVec2Swizzle: THREE.Node<"vec2"> = testVec3.xy;
+const testVec2Swizzle: THREE.Node<'vec2'> = testVec3.xy;
 
 // vec2s don't have a z property
 // @ts-expect-error
