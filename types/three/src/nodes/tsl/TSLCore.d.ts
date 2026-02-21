@@ -1549,10 +1549,18 @@ declare module "../core/Node.js" {
 /** anything that can be passed to {@link nodeObject} */
 export type NodeObjectOption = Node | number | string;
 
-// same logic as in ShaderNodeObject: number,boolean,node->node, otherwise do nothing
 export type NodeObject<T> = T extends Node ? T
     : T extends number ? Node<"float">
     : T extends boolean ? Node<"bool">
+    : T extends (...args: never) => unknown ? unknown // FIXME This should return an FnNode
+    : T extends Vector2 ? Node<"vec2">
+    : T extends Vector3 ? Node<"vec3">
+    : T extends Vector4 ? Node<"vec4">
+    : T extends Matrix2 ? Node<"mat2">
+    : T extends Matrix3 ? Node<"mat3">
+    : T extends Matrix4 ? Node<"mat4">
+    : T extends Color ? Node<"color">
+    : T extends ArrayBuffer ? Node<"ArrayBuffer">
     : T;
 
 // opposite of NodeObject: node -> node|boolean|number, otherwise do nothing
@@ -1668,7 +1676,7 @@ export class ShaderNode<T = {}, R extends Node = Node> {
     ) => R;
 }
 
-export function nodeObject<T extends NodeObjectOption>(obj: T): NodeObject<T>;
+export function nodeObject<T>(obj: T): NodeObject<T>;
 export function nodeObjectIntent<T extends NodeObjectOption>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
