@@ -233,8 +233,8 @@ test('vec3(1, 0, 2).flipZX()', async () => {
     renderer.render(scene, camera);
 });
 
+// Inspired by webgpu_animation_retargeting
 test('Fn inputs', async () => {
-    // FIXME Fn types are widening to Fn<Node | number, Node<"vec3">>
     const lightSpeed = Fn(([suv_immutable]: [THREE.Node<'vec2'>]) => {
         return vec3(suv_immutable, 2);
     }).setLayout({
@@ -253,6 +253,7 @@ test('Fn inputs', async () => {
     renderer.render(scene, camera);
 });
 
+// From three.js/docs/TSL.md
 test('Fn test', async () => {
     const oscSine = Fn(([t = time]: [THREE.Node<'float'>] | []) => {
         return t
