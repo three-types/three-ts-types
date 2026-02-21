@@ -53,7 +53,8 @@ testVec3.setXY(5);
 // Allow passing a vec of the right size when setting a vec swizzle property
 testVec3.setXY(testVec2);
 
-// Allow elements that are not right next to each other
+// Disallow elements that are not right next to each other, they are not handled properly
+// @ts-expect-error
 testVec3.setXZ(3);
 
 // vec2s don't have a z property
@@ -63,6 +64,10 @@ testVec2.setXZ(testVec2);
 // Disallow passing a vec of the wrong size when setting a vec swizzle property
 // @ts-expect-error
 testVec3.setXY(testVec3);
+
+// Disallow elements that are not right next to each other, they are not handled properly
+// @ts-expect-error
+testVec3.setXZ(testVec2);
 
 // Disallow duplicate identifiers when setting a vec swizzle property
 // @ts-expect-error

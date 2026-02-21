@@ -124,7 +124,24 @@ test("vec3(1, 0, 2).setXY(5)", async () => {
 });
 
 test("vec3(1, 0, 2).setXZ(3)", async () => {
+  // This doesn't work as expected, the resulting output is:
+  // vec3<f32>( vec2<f32>( 3.0 ), vec3<f32>( 1.0, 0.0, 2.0 ).z )
+  // @ts-expect-error
   const testVec3Set: THREE.Node<"vec3"> = vec3(1, 0, 2).setXZ(3);
+
+  expect(testVec3Set.getNodeType(nodeBuilder)).toBe("vec3");
+
+  scene.backgroundNode = testVec3Set.debug();
+
+  await renderer.init();
+  renderer.render(scene, camera);
+});
+
+test("vec3(1, 0, 2).setXZ(vec2(5, 3))", async () => {
+  // This doesn't work as expected, the resulting output is:
+  // vec3<f32>( vec2<f32>( 5.0, 3.0 ), vec3<f32>( 1.0, 0.0, 2.0 ).z )
+  // @ts-expect-error
+  const testVec3Set: THREE.Node<"vec3"> = vec3(1, 0, 2).setXZ(vec2(5, 3));
 
   expect(testVec3Set.getNodeType(nodeBuilder)).toBe("vec3");
 

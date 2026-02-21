@@ -18,6 +18,14 @@ for (let i = 0; i < 4; i++) {
     }
 }
 
+let swizzleOptionsNoRepetitionContiguousOrdered = [];
+for (let i = 0; i < 4; i++) {
+    swizzleOptionsNoRepetitionContiguousOrdered[i] = [];
+    for (let j = 0; j < 4; j++) {
+        swizzleOptionsNoRepetitionContiguousOrdered[i][j] = [];
+    }
+}
+
 let swizzleOptionsNoRepetitionOrdered = [];
 for (let i = 0; i < 4; i++) {
     swizzleOptionsNoRepetitionOrdered[i] = [];
@@ -63,6 +71,16 @@ function setProtoSwizzle(a, b, c, d) {
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(prop);
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altA);
                 swizzleOptionsNoRepetition[numChars - 1][maxCharNum].push(altB);
+            }
+        }
+    }
+
+    if (b == null || a === b - 1) {
+        if (c == null || b === c - 1) {
+            if (d == null || c === d - 1) {
+                swizzleOptionsNoRepetitionContiguousOrdered[numChars - 1][maxCharNum].push(prop);
+                swizzleOptionsNoRepetitionContiguousOrdered[numChars - 1][maxCharNum].push(altA);
+                swizzleOptionsNoRepetitionContiguousOrdered[numChars - 1][maxCharNum].push(altB);
             }
         }
     }
@@ -128,7 +146,7 @@ for (let i = 0; i < 4; i++) {
     console.log(`interface SetSwizzle${i + 1}<TNumOrBool extends NumOrBoolType> {`);
     for (let j = 0; j <= i; j++) {
         for (let k = 0; k <= i; k++) {
-            const arr = swizzleOptionsNoRepetitionOrdered[j][k];
+            const arr = swizzleOptionsNoRepetitionContiguousOrdered[j][k];
             for (const val of arr) {
                 console.log(`    set${val.toUpperCase()}(value: ${assignType[j]}): ${accessType[i]};`);
             }
