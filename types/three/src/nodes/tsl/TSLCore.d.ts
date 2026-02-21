@@ -1546,9 +1546,6 @@ declare module "../core/Node.js" {
     }
 }
 
-/** anything that can be passed to {@link nodeObject} */
-export type NodeObjectOption = Node | number | string;
-
 export type NodeObject<T> = T extends Node ? T
     : T extends number ? Node<"float">
     : T extends boolean ? Node<"bool">
@@ -1567,8 +1564,8 @@ export type NodeObject<T> = T extends Node ? T
 type Proxied<T> = T extends Node | number ? Node | number : T;
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [index in keyof T]: Proxied<T[index]> }];
-export type ProxiedObject<T> = { [index in keyof T]: Proxied<T[index]> };
+export type ProxiedTuple<T extends readonly [...unknown[]]> = [...{ [Index in keyof T]: Proxied<T[Index]> }];
+export type ProxiedObject<T> = { [Index in keyof T]: Proxied<T[Index]> };
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 type RemoveTail<T extends readonly [...unknown[]]> = T extends [unknown, ...infer X] ? X : [];
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
@@ -1654,8 +1651,8 @@ type GetConstructorsByScope<T, S> = ConstructorUnion<FilterConstructorsByScope<O
 type GetConstructors<T> = ConstructorUnion<OverloadedConstructorsOf<T>>;
 type GetPossibleScopes<T> = ExtractScopes<OverloadedConstructorsOf<T>>;
 
-type NodeArray<T extends NodeObjectOption[]> = { [index in keyof T]: NodeObject<T[index]> };
-type NodeObjects<T> = { [key in keyof T]: T[key] extends NodeObjectOption ? NodeObject<T[key]> : T[key] };
+type NodeArray<T extends unknown[]> = { [Index in keyof T]: NodeObject<T[Index]> };
+type NodeObjects<T> = { [Key in keyof T]: NodeObject<T[Key]> };
 type ConstructedNode<T> = T extends new(...args: any[]) => infer R ? (R extends Node ? R : never) : never;
 
 export type NodeOrType = Node | string;
@@ -1677,11 +1674,11 @@ export class ShaderNode<T = {}, R extends Node = Node> {
 }
 
 export function nodeObject<T>(obj: T): NodeObject<T>;
-export function nodeObjectIntent<T extends NodeObjectOption>(obj: T): NodeObject<T>;
+export function nodeObjectIntent<T>(obj: T): NodeObject<T>;
 export function nodeObjects<T>(obj: T): NodeObjects<T>;
 
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
-export function nodeArray<T extends NodeObjectOption[]>(obj: readonly [...T]): NodeArray<T>;
+export function nodeArray<T extends unknown[]>(obj: readonly [...T]): NodeArray<T>;
 
 export function nodeProxy<T>(
     nodeClass: T,
@@ -1695,7 +1692,7 @@ export function nodeProxy<T, S extends GetPossibleScopes<T>>(
 export function nodeProxy<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
-    factor: NodeObjectOption,
+    factor: unknown,
 ): (...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 
 export function nodeImmutable<T>(
@@ -1715,7 +1712,7 @@ export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
 export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
     nodeClass: T,
     scope: S,
-    factor: NodeObjectOption,
+    factor: unknown,
 ): (...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 
 interface Layout {
