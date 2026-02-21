@@ -1,7 +1,7 @@
 import { CoordinateSystem } from "../../constants.js";
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import Renderer from "./Renderer.js";
-import NodeBuilder from '../../nodes/core/NodeBuilder.js';
-import RenderObject from './RenderObject.js';
+import RenderObject from "./RenderObject.js";
 
 declare module "../../core/Object3D.js" {
     interface Object3D {
