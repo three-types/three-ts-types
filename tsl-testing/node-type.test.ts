@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { Fn, normalWorldGeometry, vec2, vec3 } from "three/tsl";
+import { Fn, normalWorldGeometry, vec2, vec3, vec4 } from "three/tsl";
 import * as THREE from "three/webgpu";
 
 const renderer = new THREE.WebGPURenderer();
@@ -116,6 +116,17 @@ test("vec3(1, 0, 2).setXY(5)", async () => {
   const testVec3Set: THREE.Node<"vec3"> = vec3(1, 0, 2).setXY(5);
 
   expect(testVec3Set.getNodeType(nodeBuilder)).toBe("vec3");
+
+  scene.backgroundNode = testVec3Set.debug();
+
+  await renderer.init();
+  renderer.render(scene, camera);
+});
+
+test("vec4(1, 0, 2, 5).setYZ(vec2(5, 3))", async () => {
+  const testVec3Set: THREE.Node<"vec4"> = vec4(1, 0, 2, 5).setYZ(vec2(5, 3));
+
+  expect(testVec3Set.getNodeType(nodeBuilder)).toBe("vec4");
 
   scene.backgroundNode = testVec3Set.debug();
 
