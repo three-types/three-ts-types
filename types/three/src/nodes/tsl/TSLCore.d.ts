@@ -1560,7 +1560,6 @@ export type NodeObject<T> = T extends Node ? T
     : T extends ArrayBuffer ? Node<"ArrayBuffer">
     : T;
 
-// The opposite of NodeObject<T>
 type Proxied<T> = T extends Node<infer TNodeType>
     ? Node<TNodeType> extends T ? TNodeType extends "float" ? Node<"float"> | number
         : TNodeType extends "bool" ? Node<"bool"> | boolean
@@ -1575,6 +1574,19 @@ type Proxied<T> = T extends Node<infer TNodeType>
         : T
     : T
     : T;
+
+type CoercibleToNodeType<TNodeType> = TNodeType extends "float"
+    ? Node<"float"> | Node<"int"> | Node<"uint"> | number
+    : TNodeType extends "bool" ? Node<"bool"> | boolean
+    : TNodeType extends "vec2" ? Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Vector2
+    : TNodeType extends "vec3" ? Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Vector3
+    : TNodeType extends "vec4" ? Node<"vec4"> | Node<"ivec4"> | Node<"uvec4"> | Vector4
+    : TNodeType extends "mat2" ? Node<"mat2"> | Matrix2
+    : TNodeType extends "vec3" ? Node<"mat3"> | Matrix3
+    : TNodeType extends "vec4" ? Node<"mat4"> | Matrix4
+    : TNodeType extends "color" ? Node<"color"> | Color
+    : TNodeType extends "ArrayBuffer" ? Node<"ArrayBuffer"> | ArrayBuffer
+    : Node<TNodeType>;
 
 // https://github.com/microsoft/TypeScript/issues/42435#issuecomment-765557874
 // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
@@ -1765,13 +1777,13 @@ export function Fn<TReturn>(
     jsFunc: (builder: NodeBuilder) => TReturn,
     layout?: Layout | string,
 ): FnNode<[], TReturn>;
-export function Fn<TArgs extends readonly unknown[], TReturn>(
+export function Fn<TArgs extends readonly unknown[], TReturn, const TLayout extends Layout>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
-    layout?: Layout | string,
+    layout?: TLayout | string,
 ): FnNode<ProxiedTuple<TArgs>, TReturn>;
-export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
+export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn, const TLayout extends Layout>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
-    layout?: Layout | string,
+    layout?: TLayout | string,
     // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 ): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
