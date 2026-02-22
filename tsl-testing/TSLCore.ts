@@ -106,11 +106,11 @@ testVec3.flipXX();
  */
 
 // If the Node type is more specific, we shouldn't be able to pass in a more general Node type
-const test = Fn(([param]: [THREE.ConstNode<"float", number>]) => {
+const test = Fn(([param]: [THREE.ConstNode<'float', number>]) => {
     return vec3(param);
 });
 
-declare const floatConstNode: THREE.ConstNode<"float", number>;
+declare const floatConstNode: THREE.ConstNode<'float', number>;
 
 test(floatConstNode);
 // @ts-expect-error
