@@ -1729,7 +1729,7 @@ export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
     factor: unknown,
 ): (...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 
-interface Layout {
+interface FullLayout {
     name: string;
     type: string;
     inputs: {
@@ -1738,6 +1738,13 @@ interface Layout {
         qualifier?: "in" | "out" | "inout";
     }[];
 }
+
+interface AbbreviatedLayout {
+    [inputName: string]: string;
+    return: string;
+}
+
+type Layout = FullLayout | AbbreviatedLayout;
 
 export interface FnNode<Args extends readonly unknown[], TReturn> {
     // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
