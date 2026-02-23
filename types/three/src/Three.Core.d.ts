@@ -149,6 +149,7 @@ export * from "./textures/CanvasTexture.js";
 export * from "./textures/CompressedArrayTexture.js";
 export * from "./textures/CompressedCubeTexture.js";
 export * from "./textures/CompressedTexture.js";
+export * from "./textures/CubeDepthTexture.js";
 export * from "./textures/CubeTexture.js";
 export * from "./textures/Data3DTexture.js";
 export * from "./textures/DataArrayTexture.js";
