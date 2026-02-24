@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { color, float, nodeObject, vec3 } from 'three/tsl';
+import { bool, color, float, int, nodeObject, uint, vec3 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
@@ -85,31 +85,31 @@ test('nodeObject(object)', () => {
 
 test('color', () => {
     let varNodeColor: THREE.VarNode<"color", THREE.ConstNode<"color", THREE.Color>> = color();
-    expect(varNodeColor).toBeInstanceOf(THREE.Node);
+    expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
     expect(varNodeColor.getNodeType(nodeBuilder)).toBe('color');
     expect(varNodeColor.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeColor.node.getNodeType(nodeBuilder)).toBe('color');
 
     varNodeColor = color('red');
-    expect(varNodeColor).toBeInstanceOf(THREE.Node);
+    expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
     expect(varNodeColor.getNodeType(nodeBuilder)).toBe('color');
     expect(varNodeColor.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeColor.node.getNodeType(nodeBuilder)).toBe('color');
 
     varNodeColor = color(0xff0000);
-    expect(varNodeColor).toBeInstanceOf(THREE.Node);
+    expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
     expect(varNodeColor.getNodeType(nodeBuilder)).toBe('color');
     expect(varNodeColor.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeColor.node.getNodeType(nodeBuilder)).toBe('color');
 
     varNodeColor = color(new THREE.Color());
-    expect(varNodeColor).toBeInstanceOf(THREE.Node);
+    expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
     expect(varNodeColor.getNodeType(nodeBuilder)).toBe('color');
     expect(varNodeColor.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeColor.node.getNodeType(nodeBuilder)).toBe('color');
 
     varNodeColor = color(0, 100, 255);
-    expect(varNodeColor).toBeInstanceOf(THREE.Node);
+    expect(varNodeColor).toBeInstanceOf(THREE.VarNode);
     expect(varNodeColor.getNodeType(nodeBuilder)).toBe('color');
     expect(varNodeColor.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeColor.node.getNodeType(nodeBuilder)).toBe('color');
@@ -117,14 +117,56 @@ test('color', () => {
 
 test('float', () => {
     let varNodeFloat: THREE.VarNode<"float", THREE.ConstNode<"float", number>> = float();
-    expect(varNodeFloat).toBeInstanceOf(THREE.Node);
+    expect(varNodeFloat).toBeInstanceOf(THREE.VarNode);
     expect(varNodeFloat.getNodeType(nodeBuilder)).toBe('float');
     expect(varNodeFloat.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeFloat.node.getNodeType(nodeBuilder)).toBe('float');
 
     varNodeFloat = float(5);
-    expect(varNodeFloat).toBeInstanceOf(THREE.Node);
+    expect(varNodeFloat).toBeInstanceOf(THREE.VarNode);
     expect(varNodeFloat.getNodeType(nodeBuilder)).toBe('float');
     expect(varNodeFloat.node).toBeInstanceOf(THREE.ConstNode);
     expect(varNodeFloat.node.getNodeType(nodeBuilder)).toBe('float');
+});
+
+test('int', () => {
+    let varNodeInt: THREE.VarNode<"int", THREE.ConstNode<"int", number>> = int();
+    expect(varNodeInt).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeInt.getNodeType(nodeBuilder)).toBe('int');
+    expect(varNodeInt.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeInt.node.getNodeType(nodeBuilder)).toBe('int');
+
+    varNodeInt = int(5);
+    expect(varNodeInt).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeInt.getNodeType(nodeBuilder)).toBe('int');
+    expect(varNodeInt.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeInt.node.getNodeType(nodeBuilder)).toBe('int');
+});
+
+test('uint', () => {
+    let varNodeUint: THREE.VarNode<"uint", THREE.ConstNode<"uint", number>> = uint();
+    expect(varNodeUint).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeUint.getNodeType(nodeBuilder)).toBe('uint');
+    expect(varNodeUint.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeUint.node.getNodeType(nodeBuilder)).toBe('uint');
+
+    varNodeUint = uint(5);
+    expect(varNodeUint).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeUint.getNodeType(nodeBuilder)).toBe('uint');
+    expect(varNodeUint.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeUint.node.getNodeType(nodeBuilder)).toBe('uint');
+});
+
+test('bool', () => {
+    let varNodeBool: THREE.VarNode<"bool", THREE.ConstNode<"bool", boolean>> = bool();
+    expect(varNodeBool).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeBool.getNodeType(nodeBuilder)).toBe('bool');
+    expect(varNodeBool.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeBool.node.getNodeType(nodeBuilder)).toBe('bool');
+
+    varNodeBool = bool(true);
+    expect(varNodeBool).toBeInstanceOf(THREE.VarNode);
+    expect(varNodeBool.getNodeType(nodeBuilder)).toBe('bool');
+    expect(varNodeBool.node).toBeInstanceOf(THREE.ConstNode);
+    expect(varNodeBool.node.getNodeType(nodeBuilder)).toBe('bool');
 });

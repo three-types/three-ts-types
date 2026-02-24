@@ -1828,21 +1828,21 @@ interface FloatFunction {
 export const float: FloatFunction;
 
 interface IntFunction {
-    (value?: number): ConstNode<"int", number>;
+    (value?: number): VarNode<"int", ConstNode<"int", number>>;
     (node: Node): Node<"int">;
 }
 
 export const int: IntFunction;
 
 interface UintFunction {
-    (value?: number): ConstNode<"uint", number>;
+    (value?: number): VarNode<"uint", ConstNode<"uint", number>>;
     (node: Node): Node<"uint">;
 }
 
 export const uint: UintFunction;
 
 interface BoolFunction {
-    (value?: boolean): ConstNode<"bool", boolean>;
+    (value?: boolean): VarNode<"bool", ConstNode<"bool", boolean>>;
     (node: Node): Node<"bool">;
 }
 
