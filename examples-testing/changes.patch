@@ -15066,7 +15066,7 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index fcae79b96..0ce427a37 100644
+index fcae79b96..be07fc038 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
 @@ -4,8 +4,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
@@ -15079,6 +15079,29 @@ index fcae79b96..0ce427a37 100644
 +let controls: OrbitControls;
  
  init();
+ 
+@@ -17,8 +17,11 @@ function init() {
+ 
+     // custom fog
+ 
+-    const skyColor = color(0xf0f5f5);
+-    const groundColor = color(0xd0dee7);
++    const skyColorValue = 0xf0f5f5;
++    const groundColorValue = 0xd0dee7;
++
++    const skyColor = color(skyColorValue);
++    const groundColor = color(groundColorValue);
+ 
+     const fogNoiseDistance = positionView.z.negate().smoothstep(0, camera.far - 300);
+ 
+@@ -79,7 +82,7 @@ function init() {
+ 
+     // lights
+ 
+-    scene.add(new THREE.HemisphereLight(skyColor.value, groundColor.value, 0.5));
++    scene.add(new THREE.HemisphereLight(skyColorValue, groundColorValue, 0.5));
+ 
+     // geometry
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index a9b619345..e482a1e2e 100644
