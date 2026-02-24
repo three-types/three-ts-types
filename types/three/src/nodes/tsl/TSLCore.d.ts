@@ -1776,13 +1776,13 @@ export function Fn<TReturn>(
     jsFunc: (builder: NodeBuilder) => TReturn,
     layout?: Layout | string,
 ): FnNode<[], TReturn>;
-export function Fn<TArgs extends readonly unknown[], TReturn, const TLayout extends Layout>(
+export function Fn<TArgs extends readonly unknown[], TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
-    layout?: TLayout | string,
+    layout?: Layout | string,
 ): FnNode<ProxiedTuple<TArgs>, TReturn>;
-export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn, const TLayout extends Layout>(
+export function Fn<TArgs extends { readonly [key: string]: unknown }, TReturn>(
     jsFunc: (args: TArgs, builder: NodeBuilder) => TReturn,
-    layout?: TLayout | string,
+    layout?: Layout | string,
     // eslint-disable-next-line @definitelytyped/no-single-element-tuple-type
 ): FnNode<[ProxiedObject<TArgs>], TReturn>;
 
