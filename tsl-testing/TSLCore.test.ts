@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { nodeObject, vec3 } from 'three/tsl';
+import { color, float, nodeObject, vec3 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
@@ -81,4 +81,36 @@ test('nodeObject(object)', () => {
     const randomObject = { test: 5 };
     const result: typeof randomObject = nodeObject(randomObject);
     expect(result).toStrictEqual(randomObject);
+});
+
+test('color', () => {
+    let nodeColor: THREE.Node<"color"> = color();
+    expect(nodeColor).toBeInstanceOf(THREE.Node);
+    expect(nodeColor.getNodeType(nodeBuilder)).toBe('color');
+
+    nodeColor = color('red');
+    expect(nodeColor).toBeInstanceOf(THREE.Node);
+    expect(nodeColor.getNodeType(nodeBuilder)).toBe('color');
+
+    nodeColor = color(0xff0000);
+    expect(nodeColor).toBeInstanceOf(THREE.Node);
+    expect(nodeColor.getNodeType(nodeBuilder)).toBe('color');
+
+    nodeColor = color(new THREE.Color());
+    expect(nodeColor).toBeInstanceOf(THREE.Node);
+    expect(nodeColor.getNodeType(nodeBuilder)).toBe('color');
+
+    nodeColor = color(0, 100, 255);
+    expect(nodeColor).toBeInstanceOf(THREE.Node);
+    expect(nodeColor.getNodeType(nodeBuilder)).toBe('color');
+});
+
+test('float', () => {
+    let nodeFloat: THREE.Node<"float"> = float();
+    expect(nodeFloat).toBeInstanceOf(THREE.Node);
+    expect(nodeFloat.getNodeType(nodeBuilder)).toBe('float');
+
+    nodeFloat = float(5);
+    expect(nodeFloat).toBeInstanceOf(THREE.Node);
+    expect(nodeFloat.getNodeType(nodeBuilder)).toBe('float');
 });
