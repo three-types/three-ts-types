@@ -83,7 +83,11 @@ test('nodeObject(object)', () => {
     expect(result).toStrictEqual(randomObject);
 });
 
-function assertConstructorNode<TNodeType>(node: THREE.VarNode<TNodeType, THREE.ConstNode<TNodeType, unknown>>, nodeType: string, valueClass?: unknown) {
+function assertConstructorNode<TNodeType>(
+    node: THREE.VarNode<TNodeType, THREE.ConstNode<TNodeType, unknown>>,
+    nodeType: string,
+    valueClass?: unknown,
+) {
     expect(node).toBeInstanceOf(THREE.VarNode);
     expect(node.getNodeType(nodeBuilder)).toBe(nodeType);
     expect(node.node).toBeInstanceOf(THREE.ConstNode);
@@ -92,7 +96,7 @@ function assertConstructorNode<TNodeType>(node: THREE.VarNode<TNodeType, THREE.C
 }
 
 test('color', () => {
-    let node: THREE.VarNode<"color", THREE.ConstNode<"color", THREE.Color>> = color();
+    let node: THREE.VarNode<'color', THREE.ConstNode<'color', THREE.Color>> = color();
     assertConstructorNode(node, 'color', THREE.Color);
 
     node = color('red');
@@ -109,7 +113,7 @@ test('color', () => {
 });
 
 test('float', () => {
-    let node: THREE.VarNode<"float", THREE.ConstNode<"float", number>> = float();
+    let node: THREE.VarNode<'float', THREE.ConstNode<'float', number>> = float();
     assertConstructorNode(node, 'float');
     expect(node.node.value).toBeTypeOf('number');
 
@@ -119,7 +123,7 @@ test('float', () => {
 });
 
 test('int', () => {
-    let node: THREE.VarNode<"int", THREE.ConstNode<"int", number>> = int();
+    let node: THREE.VarNode<'int', THREE.ConstNode<'int', number>> = int();
     assertConstructorNode(node, 'int');
     expect(node.node.value).toBeTypeOf('number');
 
@@ -129,7 +133,7 @@ test('int', () => {
 });
 
 test('uint', () => {
-    let node: THREE.VarNode<"uint", THREE.ConstNode<"uint", number>> = uint();
+    let node: THREE.VarNode<'uint', THREE.ConstNode<'uint', number>> = uint();
     assertConstructorNode(node, 'uint');
     expect(node.node.value).toBeTypeOf('number');
 
@@ -139,7 +143,7 @@ test('uint', () => {
 });
 
 test('bool', () => {
-    let node: THREE.VarNode<"bool", THREE.ConstNode<"bool", boolean>> = bool();
+    let node: THREE.VarNode<'bool', THREE.ConstNode<'bool', boolean>> = bool();
     assertConstructorNode(node, 'bool');
     expect(node.node.value).toBeTypeOf('boolean');
 
@@ -149,7 +153,7 @@ test('bool', () => {
 });
 
 test('vec2', () => {
-    let node: THREE.VarNode<"vec2", THREE.ConstNode<"vec2", THREE.Vector2>> = vec2();
+    let node: THREE.VarNode<'vec2', THREE.ConstNode<'vec2', THREE.Vector2>> = vec2();
     assertConstructorNode(node, 'vec2', THREE.Vector2);
 
     node = vec2(1);
@@ -163,12 +167,12 @@ test('vec2', () => {
 });
 
 test('ivec2', () => {
-    let node: THREE.VarNode<"ivec2", THREE.ConstNode<"ivec2", THREE.Vector2>> = ivec2(1, 2);
+    let node: THREE.VarNode<'ivec2', THREE.ConstNode<'ivec2', THREE.Vector2>> = ivec2(1, 2);
     assertConstructorNode(node, 'ivec2', THREE.Vector2);
 });
 
 test('vec3', () => {
-    let node: THREE.VarNode<"vec3", THREE.ConstNode<"vec3", THREE.Vector3>> = vec3();
+    let node: THREE.VarNode<'vec3', THREE.ConstNode<'vec3', THREE.Vector3>> = vec3();
     assertConstructorNode(node, 'vec3', THREE.Vector3);
 
     node = vec3(1);
@@ -182,13 +186,10 @@ test('vec3', () => {
 
     node = vec3(new THREE.Vector3());
     assertConstructorNode(node, 'vec3', THREE.Vector3);
-
-    node = vec3([1, 2, 3]);
-    assertConstructorNode(node, 'vec3', THREE.Vector3);
 });
 
 test('vec4', () => {
-    let node: THREE.VarNode<"vec4", THREE.ConstNode<"vec4", THREE.Vector4>> = vec4();
+    let node: THREE.VarNode<'vec4', THREE.ConstNode<'vec4', THREE.Vector4>> = vec4();
     assertConstructorNode(node, 'vec4', THREE.Vector4);
 
     node = vec4(1);
@@ -208,12 +209,12 @@ test('vec4', () => {
 });
 
 test('mat2', () => {
-    let node: THREE.VarNode<"mat2", THREE.ConstNode<"mat2", THREE.Matrix2>> = mat2(new THREE.Matrix2());
+    let node: THREE.VarNode<'mat2', THREE.ConstNode<'mat2', THREE.Matrix2>> = mat2(new THREE.Matrix2());
     assertConstructorNode(node, 'mat2', THREE.Matrix2);
 });
 
 test('mat3', () => {
-    let node: THREE.VarNode<"mat3", THREE.ConstNode<"mat3", THREE.Matrix3>> = mat3(new THREE.Matrix3());
+    let node: THREE.VarNode<'mat3', THREE.ConstNode<'mat3', THREE.Matrix3>> = mat3(new THREE.Matrix3());
     assertConstructorNode(node, 'mat3', THREE.Matrix3);
 
     node = mat3();
@@ -221,7 +222,7 @@ test('mat3', () => {
 });
 
 test('mat4', () => {
-    let node: THREE.VarNode<"mat4", THREE.ConstNode<"mat4", THREE.Matrix4>> = mat4(new THREE.Matrix4());
+    let node: THREE.VarNode<'mat4', THREE.ConstNode<'mat4', THREE.Matrix4>> = mat4(new THREE.Matrix4());
     assertConstructorNode(node, 'mat4', THREE.Matrix4);
 
     node = mat4();

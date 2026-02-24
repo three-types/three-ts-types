@@ -1885,7 +1885,6 @@ interface Vec3Function {
 
     // The third branch will be triggered if there is a single parameter.
     (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
-    (value: [number, number, number]): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
     (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
