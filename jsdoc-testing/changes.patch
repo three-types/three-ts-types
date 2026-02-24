@@ -11029,10 +11029,10 @@ index b5f1a2917..49b3c2132 100644
 +
 +export default StructTypeNode;
 diff --git a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
-index f4cb493fb..8b312e70c 100644
+index f4cb493fb..f2cc57873 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
-@@ -1,11 +1,23 @@
+@@ -1,11 +1,24 @@
 -export default UniformNode;
 -export function uniform(value: any | string, type?: string): UniformNode;
 +import InputNode from './InputNode.js';
@@ -11048,6 +11048,7 @@ index f4cb493fb..8b312e70c 100644
 +import { Matrix4 } from '../../math/Matrix4.js';
 +import { Color } from '../../math/Color.js';
 +import VarNode from './VarNode.js';
++import ConstNode from './ConstNode.js';
 +
  /**
   * Class for representing a uniform.
@@ -11059,7 +11060,7 @@ index f4cb493fb..8b312e70c 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -28,7 +40,7 @@ declare class UniformNode extends InputNode {
+@@ -28,7 +41,7 @@ declare class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -11068,7 +11069,7 @@ index f4cb493fb..8b312e70c 100644
      /**
       * Sets the {@link UniformNode#name} property.
       *
-@@ -36,14 +48,14 @@ declare class UniformNode extends InputNode {
+@@ -36,14 +49,14 @@ declare class UniformNode extends InputNode {
       * @param {string} name - The name of the uniform.
       * @return {UniformNode} A reference to this node.
       */
@@ -11085,7 +11086,7 @@ index f4cb493fb..8b312e70c 100644
      /**
       * Returns the {@link UniformNode#groupNode}.
       *
-@@ -58,8 +70,45 @@ declare class UniformNode extends InputNode {
+@@ -58,8 +71,45 @@ declare class UniformNode extends InputNode {
       * @return {string} The uniform hash.
       */
      getUniformHash(builder: NodeBuilder): string;
@@ -11123,7 +11124,7 @@ index f4cb493fb..8b312e70c 100644
 +    (value: Matrix4): UniformNode<"mat4", Matrix4>;
 +    (value: Color): UniformNode<"color", Color>;
 +    <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
-+    <TNodeType, TValue>(value: VarNode<TNodeType, InputNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
++    <TNodeType, TValue>(value: VarNode<TNodeType, ConstNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
 +}
 +
 +/**
