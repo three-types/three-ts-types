@@ -10,6 +10,7 @@ import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
+import ConvertNode from '../utils/ConvertNode.js';
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
@@ -1810,40 +1811,60 @@ interface ColorFunction {
 
     // The second branch does not apply because `cacheMap` is `null`
 
-    // The third branch will be triggered if there is a single parameter.
+    // The third branch will be triggered if there is a single parameter
+
+    // ConstNode
     (color: Color): VarNode<"color", ConstNode<"color", Color>>;
+
+    // ConvertNode
+    // TODO
     (node: Node): Node<"color">;
 
-    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
-    // object. Not sure which cases are worth considering here.
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+
+    // JoinNode
+    // TODO
 }
 
 export const color: ColorFunction;
 
 interface FloatFunction {
+    // ConstNode
     (value?: number): VarNode<"float", ConstNode<"float", number>>;
-    (node: Node): Node<"float">;
+
+    // ConvertNode
+    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"float", ConvertNode<"float">>;
 }
 
 export const float: FloatFunction;
 
 interface IntFunction {
+    // ConstNode
     (value?: number): VarNode<"int", ConstNode<"int", number>>;
-    (node: Node): Node<"int">;
+
+    // ConvertNode
+    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"int", ConvertNode<"int">>;
 }
 
 export const int: IntFunction;
 
 interface UintFunction {
+    // ConstNode
     (value?: number): VarNode<"uint", ConstNode<"uint", number>>;
-    (node: Node): Node<"uint">;
+
+    // ConvertNode
+    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"uint", ConvertNode<"uint">>;
 }
 
 export const uint: UintFunction;
 
 interface BoolFunction {
+    // ConstNode
     (value?: boolean): VarNode<"bool", ConstNode<"bool", boolean>>;
-    (node: Node): Node<"bool">;
+
+    // ConvertNode
+    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"bool", ConvertNode<"bool">>;
 }
 
 export const bool: BoolFunction;
@@ -1855,12 +1876,12 @@ interface Vec2Function {
 
     // The second branch does not apply because `cacheMap` is `null`
 
-    // The third branch will be triggered if there is a single parameter.
+    // The third branch will be triggered if there is a single parameter
     (value: Vector2): VarNode<"vec2", ConstNode<"vec2", Vector2>>;
     (node: Node): Node<"vec2">;
 
-    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
-    // object.
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
     (x: Node | number, y: Node | number): Node<"vec2">;
 }
 
@@ -1883,12 +1904,12 @@ interface Vec3Function {
 
     // The second branch does not apply because `cacheMap` is `null`
 
-    // The third branch will be triggered if there is a single parameter.
+    // The third branch will be triggered if there is a single parameter
     (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
     (node: Node): Node<"vec3">;
 
-    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
-    // object.
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
     (x: Node | number, y: Node | number, z?: Node | number): Node<"vec3">;
 }
 
@@ -1904,12 +1925,12 @@ interface Vec4Function {
 
     // The second branch does not apply because `cacheMap` is `null`
 
-    // The third branch will be triggered if there is a single parameter.
+    // The third branch will be triggered if there is a single parameter
     (value: Vector4): VarNode<"vec4", ConstNode<"vec4", Vector4>>;
     (node: Node): Node<"vec4">;
 
-    // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
-    // object.
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
     (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): Node<"vec4">;
 }
 
@@ -1981,8 +2002,8 @@ interface Mat4Function {
 
 export const mat4: Mat4Function;
 
-export const string: (value?: string) => Node<"string">;
-export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
+export const string: (value?: string) => ConstNode<"string", string>;
+export const arrayBuffer: (value: ArrayBuffer) => ConstNode<"ArrayBuffer", ArrayBuffer>;
 
 declare module "../core/Node.js" {
     interface NodeElements {
