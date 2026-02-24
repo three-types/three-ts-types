@@ -1851,12 +1851,12 @@ export const bool: BoolFunction;
 interface Vec2Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number): ConstNode<"vec2", Vector2>;
+    (x?: number, y?: number): VarNode<"vec2", ConstNode<"vec2", Vector2>>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector2): ConstNode<"vec2", Vector2>;
+    (value: Vector2): VarNode<"vec2", ConstNode<"vec2", Vector2>>;
     (node: Node): Node<"vec2">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -1867,7 +1867,7 @@ interface Vec2Function {
 export const vec2: Vec2Function;
 
 interface Ivec2Function {
-    (x: number, y: number): ConstNode<"ivec2", Vector2>;
+    (x: number, y: number): VarNode<"ivec2", ConstNode<"ivec2", Vector2>>;
     (x: Node, y: Node): Node<"ivec2">;
 }
 
@@ -1879,13 +1879,13 @@ export const bvec2: (node: Node) => Node<"bvec2">;
 interface Vec3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number): ConstNode<"vec3", Vector3>;
+    (x?: number, y?: number, z?: number): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector3): ConstNode<"vec3", Vector3>;
-    (value: [number, number, number]): ConstNode<"vec3", Vector3>;
+    (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
+    (value: [number, number, number]): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
     (node: Node): Node<"vec3">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -1901,12 +1901,12 @@ export const bvec3: (node: Node) => Node<"bvec3">;
 interface Vec4Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector4` constructor if there are no
     //   parameters or all the parameters are non-objects
-    (x?: number, y?: number, z?: number, w?: number): ConstNode<"vec4", Vector4>;
+    (x?: number, y?: number, z?: number, w?: number): VarNode<"vec4", ConstNode<"vec4", Vector4>>;
 
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter.
-    (value: Vector4): ConstNode<"vec4", Vector4>;
+    (value: Vector4): VarNode<"vec4", ConstNode<"vec4", Vector4>>;
     (node: Node): Node<"vec4">;
 
     // The fall-through branch will be triggered if there is more than one parameter, or one of the parameters is an
@@ -1920,14 +1920,14 @@ export const uvec4: (node: Node) => Node<"uvec4">;
 export const bvec4: (node: Node) => Node<"bvec4">;
 
 interface Mat2Function {
-    (value: Matrix2): ConstNode<"mat2", Matrix2>;
+    (value: Matrix2): VarNode<"mat2", ConstNode<"mat2", Matrix2>>;
     (node: Node): Node<"mat2">;
 }
 
 export const mat2: Mat2Function;
 
 interface Mat3Function {
-    (value: Matrix3): ConstNode<"mat3", Matrix3>;
+    (value: Matrix3): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -1939,7 +1939,7 @@ interface Mat3Function {
         n32: number | Node,
         n33: number | Node,
     ): Node<"mat3">;
-    (): ConstNode<"mat3", Matrix3>;
+    (): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
     (
         p1: Node,
         p2: Node,
@@ -1951,7 +1951,7 @@ interface Mat3Function {
 export const mat3: Mat3Function;
 
 interface Mat4Function {
-    (value: Matrix4): ConstNode<"mat4", Matrix4>;
+    (value: Matrix4): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
     (
         n11: number | Node,
         n12: number | Node,
@@ -1970,7 +1970,7 @@ interface Mat4Function {
         n43: number | Node,
         n44: number | Node,
     ): Node<"mat4">;
-    (): ConstNode<"mat4", Matrix4>;
+    (): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
     (
         p1: Node,
         p2: Node,
