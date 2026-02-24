@@ -22,11 +22,17 @@ type VarNode<TNodeType, TNode> = Node<TNodeType> & VarNodeInterface<TNode>;
 
 export default VarNode;
 
-export const Var: <TNodeType, TNode>(node: TNode, name?: string | null) => VarNode<TNodeType, TNode>;
+export const Var: <TNodeType, TNode extends Node<TNodeType>>(
+    node: TNode,
+    name?: string | null,
+) => VarNode<TNodeType, TNode>;
 
-export const Const: <TNodeType, TNode>(node: TNode, name?: string | null) => VarNode<TNodeType, TNode>;
+export const Const: <TNodeType, TNode extends Node<TNodeType>>(
+    node: TNode,
+    name?: string | null,
+) => VarNode<TNodeType, TNode>;
 
-export const VarIntent: <TNodeType, TNode>(node: TNode) => VarNode<TNodeType, TNode>;
+export const VarIntent: <TNodeType, TNode extends Node<TNodeType>>(node: TNode) => VarNode<TNodeType, TNode>;
 
 declare module "./Node.js" {
     interface NodeExtensions<TNodeType> {
