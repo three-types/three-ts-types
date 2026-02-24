@@ -1561,7 +1561,7 @@ export type NodeObject<T> = T extends Node ? T
     : T;
 
 type Proxied<T> = T extends Node<infer TNodeType>
-    ? Node<TNodeType> extends T ? TNodeType extends "float" ? Node<"float"> | number
+    ? Node<TNodeType> extends T ? TNodeType extends "float" ? Node<"float"> | Node<"uint"> | number // FIXME remove Node<"uint">
         : TNodeType extends "bool" ? Node<"bool"> | boolean
         : TNodeType extends "vec2" ? Node<"vec2"> | Vector2
         : TNodeType extends "vec3" ? Node<"vec3"> | Vector3
@@ -1575,8 +1575,7 @@ type Proxied<T> = T extends Node<infer TNodeType>
     : T
     : T;
 
-type CoercibleToNodeType<TNodeType> = TNodeType extends "float"
-    ? Node<"float"> | Node<"int"> | Node<"uint"> | number
+type CoercibleToNodeType<TNodeType> = TNodeType extends "float" ? Node<"float"> | Node<"int"> | Node<"uint"> | number
     : TNodeType extends "bool" ? Node<"bool"> | boolean
     : TNodeType extends "vec2" ? Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Vector2
     : TNodeType extends "vec3" ? Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Vector3
