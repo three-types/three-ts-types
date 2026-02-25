@@ -13638,7 +13638,7 @@ index ac28b522d..152b424c3 100644
  
  function upBloom() {
 diff --git a/examples-testing/examples/webgpu_animation_retargeting.ts b/examples-testing/examples/webgpu_animation_retargeting.ts
-index 23ebb2af4..c28fbf81f 100644
+index 23ebb2af4..8f8292c9f 100644
 --- a/examples-testing/examples/webgpu_animation_retargeting.ts
 +++ b/examples-testing/examples/webgpu_animation_retargeting.ts
 @@ -21,17 +21,17 @@ import {
@@ -13667,10 +13667,19 @@ index 23ebb2af4..c28fbf81f 100644
  timer.connect(document);
  
 -export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]) => {
-+export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]: [THREE.Node]) => {
++export const lightSpeed = /*#__PURE__*/ Fn(([suv_immutable]: [THREE.Node<'vec2'>]) => {
      // forked from https://www.shadertoy.com/view/7ly3D1
  
      const suv = vec2(suv_immutable);
+@@ -88,7 +88,7 @@ const scene = new THREE.Scene();
+ const coloredVignette = screenUV
+     .distance(0.5)
+     .mix(hue(color(0x0175ad), time.mul(0.1)), hue(color(0x02274f), time.mul(0.5)));
+-const lightSpeedEffect = lightSpeed(normalWorldGeometry).clamp();
++const lightSpeedEffect = lightSpeed(normalWorldGeometry.xy).clamp();
+ const lightSpeedSky = normalWorldGeometry.y.remapClamp(-0.1, 1).mix(0, lightSpeedEffect);
+ const composedBackground = blendDodge(coloredVignette, lightSpeedSky);
+ 
 @@ -162,12 +162,18 @@ controls.maxDistance = 12;
  controls.target.set(0, 1, 0);
  controls.maxPolarAngle = Math.PI / 2;
