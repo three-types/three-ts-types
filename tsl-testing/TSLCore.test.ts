@@ -444,6 +444,12 @@ test('vec3', async () => {
     let joinNode: THREE.VarNode<'vec3', THREE.JoinNode<'vec3'>> = vec3(float(5), 3, 1);
     assertJoinNode(joinNode, 'vec3');
 
+    joinNode = vec3(uint(5), 1, 3);
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = vec3(bool(false), true, false);
+    assertJoinNode(joinNode, 'vec3');
+
     joinNode = vec3(new THREE.Vector2(), float(5));
     assertJoinNode(joinNode, 'vec3');
 
