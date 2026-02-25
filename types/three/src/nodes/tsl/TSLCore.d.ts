@@ -1960,12 +1960,17 @@ interface Vec3Function {
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter
+    // ConstNode
     (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
-    (node: Node): Node<"vec3">;
+    // ConvertNode
+    (node: Node<"float">): VarNode<"vec3", ConvertNode<"vec3">>;
+    (node: Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Node<"bvec3">): VarNode<"vec3", ConvertNode<"vec3">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (x: Node | number, y: Node | number, z?: Node | number): Node<"vec3">;
+    (x: Node<"float"> | number, y: Node<"float"> | number, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (xy: Node<"vec2"> | Vector2, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (x: Node<"float"> | number, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
 }
 
 export const vec3: Vec3Function;

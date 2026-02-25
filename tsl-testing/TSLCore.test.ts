@@ -2,16 +2,19 @@ import { expect, test } from 'vitest';
 import {
     bool,
     bvec2,
+    bvec3,
     color,
     float,
     int,
     ivec2,
+    ivec3,
     mat2,
     mat3,
     mat4,
     nodeObject,
     uint,
     uvec2,
+    uvec3,
     vec2,
     vec3,
     vec4,
@@ -422,6 +425,33 @@ test('vec3', async () => {
 
     node = vec3(new THREE.Vector3());
     assertConstNode(node, 'vec3', THREE.Vector3);
+
+    let convertNode: THREE.VarNode<'vec3', THREE.ConvertNode<'vec3'>> = vec3(float(5));
+    assertConvertNode(convertNode, 'vec3');
+
+    convertNode = vec3(vec3(1, 2, 3));
+    assertConvertNode(convertNode, 'vec3');
+
+    convertNode = vec3(ivec3(1, 2, 3));
+    assertConvertNode(convertNode, 'vec3');
+
+    convertNode = vec3(uvec3(1, 2, 3));
+    assertConvertNode(convertNode, 'vec3');
+
+    convertNode = vec3(bvec3(false, true, false));
+    assertConvertNode(convertNode, 'vec3');
+
+    let joinNode: THREE.VarNode<'vec3', THREE.JoinNode<'vec3'>> = vec3(float(5), 3, 1);
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = vec3(new THREE.Vector2(), float(5));
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = vec3(new THREE.Vector2(), 5);
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = vec3(5, vec2(1, 2));
+    assertJoinNode(joinNode, 'vec3');
 });
 
 test('vec4', async () => {
