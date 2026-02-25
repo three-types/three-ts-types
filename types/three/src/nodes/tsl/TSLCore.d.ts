@@ -11,7 +11,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
 import ConvertNode from "../utils/ConvertNode.js";
-import JoinNode from '../utils/JoinNode.js';
+import JoinNode from "../utils/JoinNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
