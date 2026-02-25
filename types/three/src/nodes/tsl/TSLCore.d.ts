@@ -11,6 +11,7 @@ import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
 import ConvertNode from "../utils/ConvertNode.js";
+import JoinNode from '../utils/JoinNode.js';
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 
@@ -1812,10 +1813,8 @@ interface ColorFunction {
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter
-
     // ConstNode
     (color: Color): VarNode<"color", ConstNode<"color", Color>>;
-
     // ConvertNode
     // TODO
     (node: Node): Node<"color">;
@@ -1877,25 +1876,81 @@ interface Vec2Function {
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter
+    // ConstNode
     (value: Vector2): VarNode<"vec2", ConstNode<"vec2", Vector2>>;
-    (node: Node): Node<"vec2">;
+    // ConvertNode
+    (node: Node<"float">): VarNode<"vec2", ConvertNode<"vec2">>;
+    (node: Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Node<"bvec2">): VarNode<"vec2", ConvertNode<"vec2">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (x: Node | number, y: Node | number): Node<"vec2">;
+    (x: Node<"float"> | number, y: Node<"float"> | number): VarNode<"vec2", JoinNode<"vec2">>;
 }
 
 export const vec2: Vec2Function;
 
 interface Ivec2Function {
-    (x: number, y: number): VarNode<"ivec2", ConstNode<"ivec2", Vector2>>;
-    (x: Node, y: Node): Node<"ivec2">;
+    // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (x?: number, y?: number): VarNode<"ivec2", ConstNode<"ivec2", Vector2>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
+    (value: Vector2): VarNode<"ivec2", ConstNode<"ivec2", Vector2>>;
+    // ConvertNode
+    (node: Node<"int">): VarNode<"ivec2", ConvertNode<"ivec2">>;
+    (node: Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Node<"bvec2">): VarNode<"ivec2", ConvertNode<"ivec2">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (x: Node<"int"> | number, y: Node<"int"> | number): VarNode<"ivec2", JoinNode<"ivec2">>;
 }
 
 export const ivec2: Ivec2Function;
 
-export const uvec2: (x: Node, y: Node) => Node<"uvec2">;
-export const bvec2: (node: Node) => Node<"bvec2">;
+interface Uvec2Function {
+    // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (x?: number, y?: number): VarNode<"uvec2", ConstNode<"uvec2", Vector2>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
+    (value: Vector2): VarNode<"uvec2", ConstNode<"uvec2", Vector2>>;
+    // ConvertNode
+    (node: Node<"uint">): VarNode<"uvec2", ConvertNode<"uvec2">>;
+    (node: Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Node<"bvec2">): VarNode<"uvec2", ConvertNode<"uvec2">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (x: Node<"uint"> | number, y: Node<"uint"> | number): VarNode<"uvec2", JoinNode<"uvec2">>;
+}
+
+export const uvec2: Uvec2Function;
+
+interface Bvec2Function {
+    // The first branch in `ConvertType` will forward the parameters to the `Vector2` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (x?: boolean, y?: boolean): VarNode<"bvec2", ConstNode<"bvec2", Vector2>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
+    (value: Vector2): VarNode<"bvec2", ConstNode<"bvec2", Vector2>>;
+    // ConvertNode
+    (node: Node<"bool">): VarNode<"bvec2", ConvertNode<"bvec2">>;
+    (node: Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Node<"bvec2">): VarNode<"bvec2", ConvertNode<"bvec2">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (x: Node<"bool"> | boolean, y: Node<"bool"> | boolean): VarNode<"bvec2", JoinNode<"bvec2">>;
+}
+
+export const bvec2: Bvec2Function;
 
 interface Vec3Function {
     // The first branch in `ConvertType` will forward the parameters to the `Vector3` constructor if there are no
