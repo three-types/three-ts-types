@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { Fn, normalWorldGeometry, time, vec2, vec3, vec4 } from 'three/tsl';
+import { Fn, vec2, vec3, vec4 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
