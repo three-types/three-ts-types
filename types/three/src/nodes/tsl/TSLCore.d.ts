@@ -10,7 +10,7 @@ import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
-import ConvertNode from '../utils/ConvertNode.js';
+import ConvertNode from "../utils/ConvertNode.js";
 
 export function addMethodChaining(name: string, nodeElement: unknown): void;
 

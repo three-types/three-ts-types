@@ -96,10 +96,7 @@ function assertConstNode<TNodeType>(
     else expect(node.node.value).toBeInstanceOf(expectedType);
 }
 
-function assertConvertNode<TNodeType>(
-    node: THREE.VarNode<TNodeType, THREE.ConvertNode<TNodeType>>,
-    nodeType: string,
-) {
+function assertConvertNode<TNodeType>(node: THREE.VarNode<TNodeType, THREE.ConvertNode<TNodeType>>, nodeType: string) {
     expect(node).toBeInstanceOf(THREE.VarNode);
     expect(node.getNodeType(nodeBuilder)).toBe(nodeType);
     expect(node.node).toBeInstanceOf(THREE.ConvertNode);
