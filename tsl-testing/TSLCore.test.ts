@@ -460,6 +460,144 @@ test('vec3', async () => {
     assertJoinNode(joinNode, 'vec3');
 });
 
+test('ivec3', async () => {
+    await renderer.init();
+
+    let node: THREE.VarNode<'ivec3', THREE.ConstNode<'ivec3', THREE.Vector3>> = ivec3();
+    assertConstNode(node, 'ivec3', THREE.Vector3);
+
+    node = ivec3(1);
+    assertConstNode(node, 'ivec3', THREE.Vector3);
+
+    node = ivec3(1, 2);
+    assertConstNode(node, 'ivec3', THREE.Vector3);
+
+    node = ivec3(1, 2, 3);
+    assertConstNode(node, 'ivec3', THREE.Vector3);
+
+    node = ivec3(new THREE.Vector3());
+    assertConstNode(node, 'ivec3', THREE.Vector3);
+
+    let convertNode: THREE.VarNode<'ivec3', THREE.ConvertNode<'ivec3'>> = ivec3(int(5));
+    assertConvertNode(convertNode, 'ivec3');
+
+    convertNode = ivec3(vec3(1, 2, 3));
+    assertConvertNode(convertNode, 'ivec3');
+
+    convertNode = ivec3(ivec3(1, 2, 3));
+    assertConvertNode(convertNode, 'ivec3');
+
+    convertNode = ivec3(uvec3(1, 2, 3));
+    assertConvertNode(convertNode, 'ivec3');
+
+    convertNode = ivec3(bvec3(false, true, false));
+    assertConvertNode(convertNode, 'ivec3');
+
+    let joinNode: THREE.VarNode<'ivec3', THREE.JoinNode<'ivec3'>> = ivec3(int(5), 3, 1);
+    assertJoinNode(joinNode, 'ivec3');
+
+    joinNode = ivec3(new THREE.Vector2(), int(5));
+    assertJoinNode(joinNode, 'ivec3');
+
+    joinNode = ivec3(new THREE.Vector2(), 5);
+    assertJoinNode(joinNode, 'ivec3');
+
+    joinNode = ivec3(5, ivec2(1, 2));
+    assertJoinNode(joinNode, 'ivec3');
+});
+
+test('uvec3', async () => {
+    await renderer.init();
+
+    let node: THREE.VarNode<'uvec3', THREE.ConstNode<'uvec3', THREE.Vector3>> = uvec3();
+    assertConstNode(node, 'uvec3', THREE.Vector3);
+
+    node = uvec3(1);
+    assertConstNode(node, 'uvec3', THREE.Vector3);
+
+    node = uvec3(1, 2);
+    assertConstNode(node, 'uvec3', THREE.Vector3);
+
+    node = uvec3(1, 2, 3);
+    assertConstNode(node, 'uvec3', THREE.Vector3);
+
+    node = uvec3(new THREE.Vector3());
+    assertConstNode(node, 'uvec3', THREE.Vector3);
+
+    let convertNode: THREE.VarNode<'uvec3', THREE.ConvertNode<'uvec3'>> = uvec3(uint(5));
+    assertConvertNode(convertNode, 'uvec3');
+
+    convertNode = uvec3(vec3(1, 2, 3));
+    assertConvertNode(convertNode, 'uvec3');
+
+    convertNode = uvec3(ivec3(1, 2, 3));
+    assertConvertNode(convertNode, 'uvec3');
+
+    convertNode = uvec3(uvec3(1, 2, 3));
+    assertConvertNode(convertNode, 'uvec3');
+
+    convertNode = uvec3(bvec3(false, true, false));
+    assertConvertNode(convertNode, 'uvec3');
+
+    let joinNode: THREE.VarNode<'uvec3', THREE.JoinNode<'uvec3'>> = uvec3(uint(5), 3, 1);
+    assertJoinNode(joinNode, 'uvec3');
+
+    joinNode = uvec3(new THREE.Vector2(), uint(5));
+    assertJoinNode(joinNode, 'uvec3');
+
+    joinNode = uvec3(new THREE.Vector2(), 5);
+    assertJoinNode(joinNode, 'uvec3');
+
+    joinNode = uvec3(5, uvec2(1, 2));
+    assertJoinNode(joinNode, 'uvec3');
+});
+
+test('bvec3', async () => {
+    await renderer.init();
+
+    let node: THREE.VarNode<'bvec3', THREE.ConstNode<'bvec3', THREE.Vector3>> = bvec3();
+    assertConstNode(node, 'bvec3', THREE.Vector3);
+
+    node = bvec3(false);
+    assertConstNode(node, 'bvec3', THREE.Vector3);
+
+    node = bvec3(false, true);
+    assertConstNode(node, 'bvec3', THREE.Vector3);
+
+    node = bvec3(false, true, false);
+    assertConstNode(node, 'bvec3', THREE.Vector3);
+
+    node = bvec3(new THREE.Vector3());
+    assertConstNode(node, 'bvec3', THREE.Vector3);
+
+    let convertNode: THREE.VarNode<'bvec3', THREE.ConvertNode<'bvec3'>> = bvec3(bool(true));
+    assertConvertNode(convertNode, 'bvec3');
+
+    convertNode = bvec3(vec3(1, 2, 3));
+    assertConvertNode(convertNode, 'bvec3');
+
+    convertNode = bvec3(ivec3(1, 2, 3));
+    assertConvertNode(convertNode, 'bvec3');
+
+    convertNode = bvec3(uvec3(1, 2, 3));
+    assertConvertNode(convertNode, 'bvec3');
+
+    convertNode = bvec3(bvec3(false, true, false));
+    assertConvertNode(convertNode, 'bvec3');
+
+    let joinNode: THREE.VarNode<'bvec3', THREE.JoinNode<'bvec3'>> = bvec3(bool(false), true, false);
+    assertJoinNode(joinNode, 'bvec3');
+
+    joinNode = bvec3(new THREE.Vector2(), bool(true));
+    assertJoinNode(joinNode, 'bvec3');
+
+    joinNode = bvec3(new THREE.Vector2(), true);
+    assertJoinNode(joinNode, 'bvec3');
+
+    joinNode = bvec3(false, bvec2(true, false));
+    assertJoinNode(joinNode, 'bvec3');
+});
+
 test('vec4', async () => {
     await renderer.init();
 
