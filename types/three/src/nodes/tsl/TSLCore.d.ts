@@ -1812,7 +1812,7 @@ type ScalarNode = Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">;
 /**
  * Can be implicitly converted to a float
  */
-type Scalar = Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool"> | number | boolean;
+type Scalar = ScalarNode | number | boolean;
 
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
