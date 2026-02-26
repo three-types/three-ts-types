@@ -1804,6 +1804,11 @@ declare module "../core/Node.js" {
     }
 }
 
+/**
+ * Can be implicitly converted to a float
+ */
+type ScalarNode = Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">;
+
 interface ColorFunction {
     // The first branch in `ConvertType` will forward the parameters to the `Color` constructor if there are no
     //   parameters or all the parameters are non-objects
@@ -1833,7 +1838,7 @@ interface FloatFunction {
     (value?: number): VarNode<"float", ConstNode<"float", number>>;
 
     // ConvertNode
-    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"float", ConvertNode<"float">>;
+    (node: ScalarNode): VarNode<"float", ConvertNode<"float">>;
 }
 
 export const float: FloatFunction;
@@ -1843,7 +1848,7 @@ interface IntFunction {
     (value?: number): VarNode<"int", ConstNode<"int", number>>;
 
     // ConvertNode
-    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"int", ConvertNode<"int">>;
+    (node: ScalarNode): VarNode<"int", ConvertNode<"int">>;
 }
 
 export const int: IntFunction;
@@ -1853,7 +1858,7 @@ interface UintFunction {
     (value?: number): VarNode<"uint", ConstNode<"uint", number>>;
 
     // ConvertNode
-    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"uint", ConvertNode<"uint">>;
+    (node: ScalarNode): VarNode<"uint", ConvertNode<"uint">>;
 }
 
 export const uint: UintFunction;
@@ -1863,7 +1868,7 @@ interface BoolFunction {
     (value?: boolean): VarNode<"bool", ConstNode<"bool", boolean>>;
 
     // ConvertNode
-    (node: Node<"float"> | Node<"int"> | Node<"uint"> | Node<"bool">): VarNode<"bool", ConvertNode<"bool">>;
+    (node: ScalarNode): VarNode<"bool", ConvertNode<"bool">>;
 }
 
 export const bool: BoolFunction;
@@ -1879,12 +1884,12 @@ interface Vec2Function {
     // ConstNode
     (value: Vector2): VarNode<"vec2", ConstNode<"vec2", Vector2>>;
     // ConvertNode
-    (node: Node<"float">): VarNode<"vec2", ConvertNode<"vec2">>;
+    (node: ScalarNode): VarNode<"vec2", ConvertNode<"vec2">>;
     (node: Node<"vec2"> | Node<"ivec2"> | Node<"uvec2"> | Node<"bvec2">): VarNode<"vec2", ConvertNode<"vec2">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (x: Node<"float"> | number, y: Node<"float"> | number): VarNode<"vec2", JoinNode<"vec2">>;
+    (x: ScalarNode | number, y: ScalarNode | number): VarNode<"vec2", JoinNode<"vec2">>;
 }
 
 export const vec2: Vec2Function;
@@ -1963,18 +1968,18 @@ interface Vec3Function {
     // ConstNode
     (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
     // ConvertNode
-    (node: Node<"float">): VarNode<"vec3", ConvertNode<"vec3">>;
+    (node: ScalarNode): VarNode<"vec3", ConvertNode<"vec3">>;
     (node: Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Node<"bvec3">): VarNode<"vec3", ConvertNode<"vec3">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
     (
-        x: Node<"float"> | number,
-        y: Node<"float"> | number,
-        z: Node<"float"> | number,
+        x: ScalarNode | number,
+        y: ScalarNode | number,
+        z: ScalarNode | number,
     ): VarNode<"vec3", JoinNode<"vec3">>;
-    (xy: Node<"vec2"> | Vector2, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
-    (x: Node<"float"> | number, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
+    (xy: Node<"vec2"> | Vector2, z: ScalarNode | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (x: ScalarNode | number, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
 }
 
 export const vec3: Vec3Function;
