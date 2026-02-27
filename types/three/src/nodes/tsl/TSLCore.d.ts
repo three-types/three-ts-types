@@ -2363,10 +2363,6 @@ declare module "../core/Node.js" {
         toColor: () => VarNode<"color", ConvertNode<"color">>;
     }
 
-    interface Vec3Extensions {
-        toColor: () => VarNode<"color", ConvertNode<"color">>;
-    }
-
     interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
         toFloat: () => VarNode<"float", ConvertNode<"float">>;
         toInt: () => VarNode<"int", ConvertNode<"int">>;
@@ -2382,6 +2378,7 @@ declare module "../core/Node.js" {
     }
 
     interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
+        toColor: () => VarNode<"color", ConvertNode<"color">>;
         toVec3: () => VarNode<"vec3", ConvertNode<"vec3">>;
         toIVec3: () => VarNode<"ivec3", ConvertNode<"ivec3">>;
         toUVec3: () => VarNode<"uvec3", ConvertNode<"uvec3">>;

@@ -944,54 +944,54 @@ test('mat4', async () => {
 test('conversions', async () => {
     await renderer.init();
 
-    let colorNode: THREE.VarNode<'color', THREE.ConvertNode<'color'>> = color(color());
+    let colorNode: THREE.VarNode<'color', THREE.ConvertNode<'color'>> = color().toColor();
     assertConvertNode(colorNode, 'color');
 
-    colorNode = color(vec3());
+    colorNode = vec3().toColor();
     assertConvertNode(colorNode, 'color');
 
-    const vec2Node: THREE.VarNode<'vec2', THREE.ConvertNode<'vec2'>> = vec2(ivec2());
+    const vec2Node: THREE.VarNode<'vec2', THREE.ConvertNode<'vec2'>> = ivec2().toVec2();
     assertConvertNode(vec2Node, 'vec2');
 
-    const ivec2Node: THREE.VarNode<'ivec2', THREE.ConvertNode<'ivec2'>> = ivec2(vec2());
+    const ivec2Node: THREE.VarNode<'ivec2', THREE.ConvertNode<'ivec2'>> = vec2().toIVec2();
     assertConvertNode(ivec2Node, 'ivec2');
 
-    const uvec2Node: THREE.VarNode<'uvec2', THREE.ConvertNode<'uvec2'>> = uvec2(vec2());
+    const uvec2Node: THREE.VarNode<'uvec2', THREE.ConvertNode<'uvec2'>> = vec2().toUVec2();
     assertConvertNode(uvec2Node, 'uvec2');
 
-    const bvec2Node: THREE.VarNode<'bvec2', THREE.ConvertNode<'bvec2'>> = bvec2(vec2());
+    const bvec2Node: THREE.VarNode<'bvec2', THREE.ConvertNode<'bvec2'>> = vec2().toBVec2();
     assertConvertNode(bvec2Node, 'bvec2');
 
-    const vec3Node: THREE.VarNode<'vec3', THREE.ConvertNode<'vec3'>> = vec3(ivec3());
+    const vec3Node: THREE.VarNode<'vec3', THREE.ConvertNode<'vec3'>> = ivec3().toVec3();
     assertConvertNode(vec3Node, 'vec3');
 
-    const ivec3Node: THREE.VarNode<'ivec3', THREE.ConvertNode<'ivec3'>> = ivec3(vec3());
+    const ivec3Node: THREE.VarNode<'ivec3', THREE.ConvertNode<'ivec3'>> = vec3().toIVec3();
     assertConvertNode(ivec3Node, 'ivec3');
 
-    const uvec3Node: THREE.VarNode<'uvec3', THREE.ConvertNode<'uvec3'>> = uvec3(vec3());
+    const uvec3Node: THREE.VarNode<'uvec3', THREE.ConvertNode<'uvec3'>> = vec3().toUVec3();
     assertConvertNode(uvec3Node, 'uvec3');
 
-    const bvec3Node: THREE.VarNode<'bvec3', THREE.ConvertNode<'bvec3'>> = bvec3(vec3());
+    const bvec3Node: THREE.VarNode<'bvec3', THREE.ConvertNode<'bvec3'>> = vec3().toBVec3();
     assertConvertNode(bvec3Node, 'bvec3');
 
-    const vec4Node: THREE.VarNode<'vec4', THREE.ConvertNode<'vec4'>> = vec4(ivec4());
+    const vec4Node: THREE.VarNode<'vec4', THREE.ConvertNode<'vec4'>> = ivec4().toVec4();
     assertConvertNode(vec4Node, 'vec4');
 
-    const uvec4Node: THREE.VarNode<'uvec4', THREE.ConvertNode<'uvec4'>> = uvec4(vec4());
+    const uvec4Node: THREE.VarNode<'uvec4', THREE.ConvertNode<'uvec4'>> = vec4().toUVec4();
     assertConvertNode(uvec4Node, 'uvec4');
 
-    const ivec4Node: THREE.VarNode<'ivec4', THREE.ConvertNode<'ivec4'>> = ivec4(vec4());
+    const ivec4Node: THREE.VarNode<'ivec4', THREE.ConvertNode<'ivec4'>> = vec4().toIVec4();
     assertConvertNode(ivec4Node, 'ivec4');
 
-    const bvec4Node: THREE.VarNode<'bvec4', THREE.ConvertNode<'bvec4'>> = bvec4(vec4());
+    const bvec4Node: THREE.VarNode<'bvec4', THREE.ConvertNode<'bvec4'>> = vec4().toBVec4();
     assertConvertNode(bvec4Node, 'bvec4');
 
-    const mat2Node: THREE.VarNode<'mat2', THREE.ConvertNode<'mat2'>> = mat2(mat2());
+    const mat2Node: THREE.VarNode<'mat2', THREE.ConvertNode<'mat2'>> = mat2().toMat2();
     assertConvertNode(mat2Node, 'mat2');
 
-    const mat3Node: THREE.VarNode<'mat3', THREE.ConvertNode<'mat3'>> = mat3(mat3());
+    const mat3Node: THREE.VarNode<'mat3', THREE.ConvertNode<'mat3'>> = mat3().toMat3();
     assertConvertNode(mat3Node, 'mat3');
 
-    const mat4Node: THREE.VarNode<'mat4', THREE.ConvertNode<'mat4'>> = mat4(mat4());
+    const mat4Node: THREE.VarNode<'mat4', THREE.ConvertNode<'mat4'>> = mat4().toMat4();
     assertConvertNode(mat4Node, 'mat4');
 });
