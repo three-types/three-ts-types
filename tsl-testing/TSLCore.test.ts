@@ -693,7 +693,7 @@ test('ivec4', async () => {
     assertConstNode(node, 'ivec4', THREE.Vector4);
 
     let convertNode: THREE.VarNode<'ivec4', THREE.ConvertNode<'ivec4'>> = ivec4(int(5));
-    assertConvertNode(convertNode, 'vec4');
+    assertConvertNode(convertNode, 'ivec4');
 
     convertNode = ivec4(vec4(1, 2, 3, 4));
     assertConvertNode(convertNode, 'ivec4');
