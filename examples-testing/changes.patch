@@ -21008,7 +21008,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index e220c164b..d2b115817 100644
+index e220c164b..f9b0a23f4 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21027,7 +21027,7 @@ index e220c164b..d2b115817 100644
 -let updateParticles, spawnParticles; // TSL compute nodes
 -let getInstanceColor; // TSL function
 +let updateParticles: THREE.ComputeNode, spawnParticles: THREE.ComputeNode; // TSL compute nodes
-+let getInstanceColor: THREE.TSL.FnNode<[THREE.Node], THREE.Node<'vec3'>>; // TSL function
++let getInstanceColor: THREE.TSL.FnNode<[THREE.Node<'uint'>], THREE.Node<'vec3'>>; // TSL function
  
  const screenPointer = new THREE.Vector2();
  const scenePointer = new THREE.Vector3();
@@ -21036,7 +21036,7 @@ index e220c164b..d2b115817 100644
      // TSL function
      // current color from index
 -    getInstanceColor = Fn(([i]) => {
-+    getInstanceColor = Fn(([i]: [THREE.Node]) => {
++    getInstanceColor = Fn(([i]: [THREE.Node<'uint'>]) => {
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
