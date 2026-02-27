@@ -2001,11 +2001,7 @@ interface Ivec3Function {
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (
-        x: Node<"int"> | number,
-        y: Node<"int"> | number,
-        z: Node<"int"> | number,
-    ): VarNode<"ivec3", JoinNode<"ivec3">>;
+    (x: Node<"int"> | number, y: Node<"int"> | number, z: Node<"int"> | number): VarNode<"ivec3", JoinNode<"ivec3">>;
     (xy: Node<"ivec2"> | Vector2, z: Node<"int"> | number): VarNode<"ivec3", JoinNode<"ivec3">>;
     (x: Node<"int"> | number, yz: Node<"ivec2"> | Vector2): VarNode<"ivec3", JoinNode<"ivec3">>;
 }
@@ -2028,11 +2024,7 @@ interface Uvec3Function {
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (
-        x: Node<"uint"> | number,
-        y: Node<"uint"> | number,
-        z: Node<"uint"> | number,
-    ): VarNode<"uvec3", JoinNode<"uvec3">>;
+    (x: Node<"uint"> | number, y: Node<"uint"> | number, z: Node<"uint"> | number): VarNode<"uvec3", JoinNode<"uvec3">>;
     (xy: Node<"uvec2"> | Vector2, z: Node<"uint"> | number): VarNode<"uvec3", JoinNode<"uvec3">>;
     (x: Node<"uint"> | number, yz: Node<"uvec2"> | Vector2): VarNode<"uvec3", JoinNode<"uvec3">>;
 }
