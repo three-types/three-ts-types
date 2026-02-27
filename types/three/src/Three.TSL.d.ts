@@ -217,7 +217,7 @@ export const greaterThan: typeof TSL.greaterThan;
 export const greaterThanEqual: typeof TSL.greaterThanEqual;
 export const hash: typeof TSL.hash;
 export const highpModelNormalViewMatrix: typeof TSL.highpModelNormalViewMatrix;
-export const highPrecisionModelViewMatrix: typeof TSL.highpModelViewMatrix;
+export const highpModelViewMatrix: typeof TSL.highpModelViewMatrix;
 export const hue: typeof TSL.hue;
 export const increment: typeof TSL.increment;
 export const incrementBefore: typeof TSL.incrementBefore;
