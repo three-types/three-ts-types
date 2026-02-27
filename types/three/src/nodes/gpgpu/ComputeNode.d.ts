@@ -23,7 +23,7 @@ export default class ComputeNode extends Node {
      */
     label: (name: string) => this;
 
-    onInit(callback: ((args: { renderer: Renderer }) => void) | null): void;
+    onInit(callback: ((args: { renderer: Renderer }) => void) | null): this;
 }
 
 export const computeKernel: (node: Node, workgroupSize?: number[]) => ComputeNode;
