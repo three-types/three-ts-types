@@ -6,7 +6,7 @@ import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
 import ConstNode from "../core/ConstNode.js";
-import Node, { NumOrBoolType } from "../core/Node.js";
+import Node, { MatType, NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
@@ -1827,7 +1827,7 @@ interface ColorFunction {
     (color: Color | Vector3): VarNode<"color", ConstNode<"color", Color>>;
     // ConvertNode
     (node: Node<"float">): VarNode<"color", ConvertNode<"color">>;
-    (node: Node<"vec3"> | Vector3): VarNode<"color", ConvertNode<"color">>;
+    (node: Node<"color"> | Node<"vec3">): VarNode<"color", ConvertNode<"color">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
@@ -2359,27 +2359,46 @@ export const string: unknown;
 export const arrayBuffer: unknown;
 
 declare module "../core/Node.js" {
-    interface NodeElements {
-        toColor: () => Node<"color">;
-        toFloat: () => Node<"float">;
-        toInt: () => Node<"int">;
-        toUint: () => Node<"uint">;
-        toBool: () => Node<"bool">;
-        toVec2: () => Node<"vec2">;
-        toIVec2: () => Node<"ivec2">;
-        toUVec2: () => Node<"uvec2">;
-        toBVec2: () => Node<"bvec2">;
-        toVec3: () => Node<"vec3">;
-        toIVec3: () => Node<"ivec3">;
-        toUVec3: () => Node<"uvec3">;
-        toBVec3: () => Node<"bvec3">;
-        toVec4: () => Node<"vec4">;
-        toIVec4: () => Node<"ivec4">;
-        toUVec4: () => Node<"uvec4">;
-        toBVec4: () => Node<"bvec4">;
-        toMat2: () => Node<"mat2">;
-        toMat3: () => Node<"mat3">;
-        toMat4: () => Node<"mat4">;
+    interface ColorExtensions {
+        toColor: () => VarNode<"color", ConvertNode<"color">>;
+    }
+
+    interface Vec3Extensions {
+        toColor: () => VarNode<"color", ConvertNode<"color">>;
+    }
+
+    interface NumOrBoolExtensions<TNumOrBool extends NumOrBoolType> {
+        toFloat: () => VarNode<"float", ConvertNode<"float">>;
+        toInt: () => VarNode<"int", ConvertNode<"int">>;
+        toUint: () => VarNode<"uint", ConvertNode<"uint">>;
+        toBool: () => VarNode<"bool", ConvertNode<"bool">>;
+    }
+
+    interface NumOrBoolVec2Extensions<TNumOrBool extends NumOrBoolType> {
+        toVec2: () => VarNode<"vec2", ConvertNode<"vec2">>;
+        toIVec2: () => VarNode<"ivec2", ConvertNode<"ivec2">>;
+        toUVec2: () => VarNode<"uvec2", ConvertNode<"uvec2">>;
+        toBVec2: () => VarNode<"bvec2", ConvertNode<"bvec2">>;
+    }
+
+    interface NumOrBoolVec3Extensions<TNumOrBool extends NumOrBoolType> {
+        toVec3: () => VarNode<"vec3", ConvertNode<"vec3">>;
+        toIVec3: () => VarNode<"ivec3", ConvertNode<"ivec3">>;
+        toUVec3: () => VarNode<"uvec3", ConvertNode<"uvec3">>;
+        toBVec3: () => VarNode<"bvec3", ConvertNode<"bvec3">>;
+    }
+
+    interface NumOrBoolVec4Extensions<TNumOrBool extends NumOrBoolType> {
+        toVec4: () => VarNode<"vec4", ConvertNode<"vec4">>;
+        toIVec4: () => VarNode<"ivec4", ConvertNode<"ivec4">>;
+        toUVec4: () => VarNode<"uvec4", ConvertNode<"uvec4">>;
+        toBVec4: () => VarNode<"bvec4", JoinNode<"bvec4">>;
+    }
+
+    interface MatExtensions<TMat extends MatType> {
+        toMat2: () => VarNode<"mat2", ConvertNode<"mat2">>;
+        toMat3: () => VarNode<"mat3", ConvertNode<"mat3">>;
+        toMat4: () => VarNode<"mat4", ConvertNode<"mat4">>;
     }
 }
 
