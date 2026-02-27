@@ -1978,11 +1978,7 @@ interface Vec3Function {
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (
-        x: Scalar,
-        y: Scalar,
-        z: Scalar,
-    ): VarNode<"vec3", JoinNode<"vec3">>;
+    (x: Scalar, y: Scalar, z: Scalar): VarNode<"vec3", JoinNode<"vec3">>;
     (xy: Node<"vec2"> | Vector2, z: Scalar): VarNode<"vec3", JoinNode<"vec3">>;
     (x: Scalar, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
 }
@@ -2078,12 +2074,21 @@ interface Vec4Function {
     // The second branch does not apply because `cacheMap` is `null`
 
     // The third branch will be triggered if there is a single parameter
+    // ConstNode
     (value: Vector4): VarNode<"vec4", ConstNode<"vec4", Vector4>>;
-    (node: Node): Node<"vec4">;
+    // ConvertNode
+    (node: ScalarNode): VarNode<"vec4", ConvertNode<"vec4">>;
+    (node: Node<"vec4"> | Node<"ivec4"> | Node<"uvec4"> | Node<"bvec4">): VarNode<"vec4", ConvertNode<"vec4">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (x: Node | number, y: Node | number, z?: Node | number, w?: Node | number): Node<"vec4">;
+    (x: Scalar, y: Scalar, z: Scalar, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
+    (x: Scalar, yz: Node<"vec2"> | Vector2, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
+    (x: Scalar, y: Scalar, zw: Node<"vec2"> | Vector2): VarNode<"vec4", JoinNode<"vec4">>;
+    (xy: Node<"vec2"> | Vector2, zw: Node<"vec2"> | Vector2): VarNode<"vec4", JoinNode<"vec4">>;
+    (xy: Node<"vec2"> | Vector2, z: Scalar, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
+    (xyz: Node<"vec3"> | Vector3, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
+    (x: Scalar, yzw: Node<"vec3"> | Vector3): VarNode<"vec4", JoinNode<"vec4">>;
 }
 
 export const vec4: Vec4Function;
