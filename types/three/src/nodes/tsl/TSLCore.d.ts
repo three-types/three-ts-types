@@ -1831,7 +1831,11 @@ interface ColorFunction {
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-    (x: Node<"float"> | number, y: Node<"float"> | number, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (
+        x: Node<"float"> | number,
+        y: Node<"float"> | number,
+        z: Node<"float"> | number,
+    ): VarNode<"vec3", JoinNode<"vec3">>;
     (xy: Node<"vec2"> | Vector2, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
     (x: Node<"float"> | number, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
 }
