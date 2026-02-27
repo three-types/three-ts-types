@@ -141,7 +141,17 @@ export * from "./objects/Sprite.js";
 export * from "./renderers/WebGL3DRenderTarget.js";
 export * from "./renderers/WebGLArrayRenderTarget.js";
 export * from "./renderers/WebGLRenderTarget.js";
-export * from "./renderers/webxr/WebXRController.js";
+export {
+    WebXRController,
+    type WebXRSpaceEventMap,
+    type XRControllerEventType,
+    type XRGripSpace,
+    type XRHandInputState,
+    type XRHandJoints,
+    type XRHandSpace,
+    type XRJointSpace,
+    type XRTargetRaySpace,
+} from "./renderers/webxr/WebXRController.js";
 export * from "./scenes/Fog.js";
 export * from "./scenes/FogExp2.js";
 export * from "./scenes/Scene.js";
