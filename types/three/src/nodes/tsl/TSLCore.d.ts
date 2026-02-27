@@ -2245,63 +2245,114 @@ interface Mat2Function {
 export const mat2: Mat2Function;
 
 interface Mat3Function {
-    (value: Matrix3): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
-    (
-        n11: number | Node,
-        n12: number | Node,
-        n13: number | Node,
-        n21: number | Node,
-        n22: number | Node,
-        n23: number | Node,
-        n31: number | Node,
-        n32: number | Node,
-        n33: number | Node,
-    ): Node<"mat3">;
+    // The first branch in `ConvertType` will forward the parameters to the `Matrix3` constructor if there are no
+    //   parameters or all the parameters are non-objects
     (): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
     (
-        p1: Node,
-        p2: Node,
-        p3: Node,
-    ): Node<"mat3">;
-    (node: Node): Node<"mat3">;
+        n11: number,
+        n12: number,
+        n13: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n31: number,
+        n32: number,
+        n33: number,
+    ): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
+    (value: Matrix3): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
+    // ConvertNode
+    (node: Node<"mat3">): VarNode<"mat3", ConvertNode<"mat3">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (
+        n1: Node<"vec3"> | Vector3,
+        n2: Node<"vec3"> | Vector3,
+        n3: Node<"vec3"> | Vector3,
+    ): VarNode<"mat3", JoinNode<"mat3">>;
+    (
+        n11: Node<"float"> | number,
+        n12: Node<"float"> | number,
+        n13: Node<"float"> | number,
+        n21: Node<"float"> | number,
+        n22: Node<"float"> | number,
+        n23: Node<"float"> | number,
+        n31: Node<"float"> | number,
+        n32: Node<"float"> | number,
+        n33: Node<"float"> | number,
+    ): VarNode<"mat3", JoinNode<"mat3">>;
 }
 
 export const mat3: Mat3Function;
 
 interface Mat4Function {
-    (value: Matrix4): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
-    (
-        n11: number | Node,
-        n12: number | Node,
-        n13: number | Node,
-        n14: number | Node,
-        n21: number | Node,
-        n22: number | Node,
-        n23: number | Node,
-        n24: number | Node,
-        n31: number | Node,
-        n32: number | Node,
-        n33: number | Node,
-        n34: number | Node,
-        n41: number | Node,
-        n42: number | Node,
-        n43: number | Node,
-        n44: number | Node,
-    ): Node<"mat4">;
+    // The first branch in `ConvertType` will forward the parameters to the `Matrix4` constructor if there are no
+    //   parameters or all the parameters are non-objects
     (): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
     (
-        p1: Node,
-        p2: Node,
-        p3: Node,
-        p4: Node,
-    ): Node<"mat4">;
-    (node: Node): Node<"mat4">;
+        n11: number,
+        n12: number,
+        n13: number,
+        n14: number,
+        n21: number,
+        n22: number,
+        n23: number,
+        n24: number,
+        n31: number,
+        n32: number,
+        n33: number,
+        n34: number,
+        n41: number,
+        n42: number,
+        n43: number,
+        n44: number,
+    ): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
+    (value: Matrix4): VarNode<"mat4", ConstNode<"mat4", Matrix4>>;
+    // ConvertNode
+    (node: Node<"mat4">): VarNode<"mat4", ConvertNode<"mat4">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (
+        n1: Node<"vec4"> | Vector4,
+        n2: Node<"vec4"> | Vector4,
+        n3: Node<"vec4"> | Vector4,
+        n4: Node<"vec4"> | Vector4,
+    ): VarNode<"mat4", JoinNode<"mat4">>;
+    (
+        n11: Node<"float"> | number,
+        n12: Node<"float"> | number,
+        n13: Node<"float"> | number,
+        n14: Node<"float"> | number,
+        n21: Node<"float"> | number,
+        n22: Node<"float"> | number,
+        n23: Node<"float"> | number,
+        n24: Node<"float"> | number,
+        n31: Node<"float"> | number,
+        n32: Node<"float"> | number,
+        n33: Node<"float"> | number,
+        n34: Node<"float"> | number,
+        n41: Node<"float"> | number,
+        n42: Node<"float"> | number,
+        n43: Node<"float"> | number,
+        n44: Node<"float"> | number,
+    ): VarNode<"mat4", JoinNode<"mat4">>;
 }
 
 export const mat4: Mat4Function;
 
-export const string: (value?: string) => ConstNode<"string", string>;
-export const arrayBuffer: (value: ArrayBuffer) => ConstNode<"ArrayBuffer", ArrayBuffer>;
+export const string: unknown;
+export const arrayBuffer: unknown;
 
 declare module "../core/Node.js" {
     interface NodeElements {

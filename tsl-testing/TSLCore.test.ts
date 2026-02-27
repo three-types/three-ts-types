@@ -1,5 +1,6 @@
 import { expect, test } from 'vitest';
 import {
+    arrayBuffer,
     bool,
     bvec2,
     bvec3,
@@ -14,6 +15,7 @@ import {
     mat3,
     mat4,
     nodeObject,
+    string,
     uint,
     uvec2,
     uvec3,
@@ -870,19 +872,52 @@ test('mat2', async () => {
 test('mat3', async () => {
     await renderer.init();
 
-    let node: THREE.VarNode<'mat3', THREE.ConstNode<'mat3', THREE.Matrix3>> = mat3(new THREE.Matrix3());
+    let node: THREE.VarNode<'mat3', THREE.ConstNode<'mat3', THREE.Matrix3>> = mat3();
     assertConstNode(node, 'mat3', THREE.Matrix3);
 
-    node = mat3();
+    node = mat3(1, 0, 0, 0, 1, 0, 0, 0, 1);
     assertConstNode(node, 'mat3', THREE.Matrix3);
+
+    node = mat3(new THREE.Matrix3());
+    assertConstNode(node, 'mat3', THREE.Matrix3);
+
+    let convertNode: THREE.VarNode<'mat3', THREE.ConvertNode<'mat3'>> = mat3(mat3());
+    assertConvertNode(convertNode, 'mat3');
+
+    let joinNode: THREE.VarNode<'mat3', THREE.JoinNode<'mat3'>> = mat3(
+        vec3(1, 0, 0),
+        new THREE.Vector3(),
+        new THREE.Vector3(),
+    );
+    assertJoinNode(joinNode, 'mat3');
+
+    joinNode = mat3(1, 0, 0, 0, 1, float(0), 0, 0, 1);
+    assertJoinNode(joinNode, 'mat3');
 });
 
 test('mat4', async () => {
     await renderer.init();
 
-    let node: THREE.VarNode<'mat4', THREE.ConstNode<'mat4', THREE.Matrix4>> = mat4(new THREE.Matrix4());
+    let node: THREE.VarNode<'mat4', THREE.ConstNode<'mat4', THREE.Matrix4>> = mat4();
     assertConstNode(node, 'mat4', THREE.Matrix4);
 
-    node = mat4();
+    node = mat4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
     assertConstNode(node, 'mat4', THREE.Matrix4);
+
+    node = mat4(new THREE.Matrix4());
+    assertConstNode(node, 'mat4', THREE.Matrix4);
+
+    let convertNode: THREE.VarNode<'mat4', THREE.ConvertNode<'mat4'>> = mat4(mat4());
+    assertConvertNode(convertNode, 'mat4');
+
+    let joinNode: THREE.VarNode<'mat4', THREE.JoinNode<'mat4'>> = mat4(
+        vec4(1, 0, 0, 0),
+        new THREE.Vector4(),
+        new THREE.Vector4(),
+        new THREE.Vector4(),
+    );
+    assertJoinNode(joinNode, 'mat4');
+
+    joinNode = mat4(1, 0, 0, 0, 0, 1, float(0), 0, 0, 0, 1, 0, 0, 0, 0, 1);
+    assertJoinNode(joinNode, 'mat4');
 });
