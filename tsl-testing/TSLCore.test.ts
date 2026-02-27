@@ -1,6 +1,5 @@
 import { expect, test } from 'vitest';
 import {
-    arrayBuffer,
     bool,
     bvec2,
     bvec3,
@@ -15,7 +14,6 @@ import {
     mat3,
     mat4,
     nodeObject,
-    string,
     uint,
     uvec2,
     uvec3,
@@ -161,8 +159,29 @@ test('color', async () => {
     node = color(new THREE.Color());
     assertConstNode(node, 'color', THREE.Color);
 
+    node = color(new THREE.Vector3(1, 0, 0.5));
+    assertConstNode(node, 'color', THREE.Vector3);
+
     node = color(0, 0.5, 1);
     assertConstNode(node, 'color', THREE.Color);
+
+    let convertNode: THREE.VarNode<'color', THREE.ConvertNode<'color'>> = color(float(0.5));
+    assertConvertNode(convertNode, 'color');
+
+    convertNode = color(vec3(1, 0, 0.5));
+    assertConvertNode(convertNode, 'color');
+
+    let joinNode: THREE.VarNode<'vec3', THREE.JoinNode<'vec3'>> = color(float(1), 0, 0.5);
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = color(new THREE.Vector2(), float(1));
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = color(new THREE.Vector2(), 0.5);
+    assertJoinNode(joinNode, 'vec3');
+
+    joinNode = color(1, vec2(0, 0.5));
+    assertJoinNode(joinNode, 'vec3');
 });
 
 test('float', async () => {

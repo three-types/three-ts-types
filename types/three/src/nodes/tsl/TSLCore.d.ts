@@ -1824,16 +1824,16 @@ interface ColorFunction {
 
     // The third branch will be triggered if there is a single parameter
     // ConstNode
-    (color: Color): VarNode<"color", ConstNode<"color", Color>>;
+    (color: Color | Vector3): VarNode<"color", ConstNode<"color", Color>>;
     // ConvertNode
-    // TODO
-    (node: Node): Node<"color">;
+    (node: Node<"float">): VarNode<"color", ConvertNode<"color">>;
+    (node: Node<"vec3"> | Vector3): VarNode<"color", ConvertNode<"color">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
-
-    // JoinNode
-    // TODO
+    (x: Node<"float"> | number, y: Node<"float"> | number, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (xy: Node<"vec2"> | Vector2, z: Node<"float"> | number): VarNode<"vec3", JoinNode<"vec3">>;
+    (x: Node<"float"> | number, yz: Node<"vec2"> | Vector2): VarNode<"vec3", JoinNode<"vec3">>;
 }
 
 export const color: ColorFunction;
