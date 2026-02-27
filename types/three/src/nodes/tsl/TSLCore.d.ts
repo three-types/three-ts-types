@@ -2389,7 +2389,7 @@ declare module "../core/Node.js" {
         toVec4: () => VarNode<"vec4", ConvertNode<"vec4">>;
         toIVec4: () => VarNode<"ivec4", ConvertNode<"ivec4">>;
         toUVec4: () => VarNode<"uvec4", ConvertNode<"uvec4">>;
-        toBVec4: () => VarNode<"bvec4", JoinNode<"bvec4">>;
+        toBVec4: () => VarNode<"bvec4", ConvertNode<"bvec4">>;
     }
 
     interface MatExtensions<TMat extends MatType> {
