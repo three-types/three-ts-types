@@ -663,6 +663,12 @@ test('vec4', async () => {
 
     joinNode = vec4(5, vec3(1, 2, 3));
     assertJoinNode(joinNode, 'vec4');
+
+    joinNode = vec4(1, color(1, 0.5, 0));
+    assertJoinNode(joinNode, 'vec4');
+
+    joinNode = vec4(new THREE.Color(1, 0.5, 0), 1);
+    assertJoinNode(joinNode, 'vec4');
 });
 
 test('mat2', async () => {
