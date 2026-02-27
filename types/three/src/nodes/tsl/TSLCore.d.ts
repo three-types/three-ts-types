@@ -2218,8 +2218,28 @@ interface Bvec4Function {
 export const bvec4: Bvec4Function;
 
 interface Mat2Function {
+    // The first branch in `ConvertType` will forward the parameters to the `Matrix2` constructor if there are no
+    //   parameters or all the parameters are non-objects
+    (): VarNode<"mat2", ConstNode<"mat2", Matrix2>>;
+    (n11: number, n12: number, n21: number, n22: number): VarNode<"mat2", ConstNode<"mat2", Matrix2>>;
+
+    // The second branch does not apply because `cacheMap` is `null`
+
+    // The third branch will be triggered if there is a single parameter
+    // ConstNode
     (value: Matrix2): VarNode<"mat2", ConstNode<"mat2", Matrix2>>;
-    (node: Node): Node<"mat2">;
+    // ConvertNode
+    (node: Node<"mat2">): VarNode<"mat2", ConvertNode<"mat2">>;
+
+    // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
+    //   object
+    (n1: Node<"vec2"> | Vector2, n2: Node<"vec2"> | Vector2): VarNode<"mat2", JoinNode<"mat2">>;
+    (
+        n11: Node<"float"> | number,
+        n12: Node<"float"> | number,
+        n21: Node<"float"> | number,
+        n22: Node<"float"> | number,
+    ): VarNode<"mat2", JoinNode<"mat2">>;
 }
 
 export const mat2: Mat2Function;

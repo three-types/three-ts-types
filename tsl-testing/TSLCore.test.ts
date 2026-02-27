@@ -848,8 +848,23 @@ test('bvec4', async () => {
 test('mat2', async () => {
     await renderer.init();
 
-    let node: THREE.VarNode<'mat2', THREE.ConstNode<'mat2', THREE.Matrix2>> = mat2(new THREE.Matrix2());
+    let node: THREE.VarNode<'mat2', THREE.ConstNode<'mat2', THREE.Matrix2>> = mat2();
     assertConstNode(node, 'mat2', THREE.Matrix2);
+
+    node = mat2(1, 0, 1, 0);
+    assertConstNode(node, 'mat2', THREE.Matrix2);
+
+    node = mat2(new THREE.Matrix2());
+    assertConstNode(node, 'mat2', THREE.Matrix2);
+
+    let convertNode: THREE.VarNode<'mat2', THREE.ConvertNode<'mat2'>> = mat2(mat2());
+    assertConvertNode(convertNode, 'mat2');
+
+    let joinNode: THREE.VarNode<'mat2', THREE.JoinNode<'mat2'>> = mat2(vec2(1, 0), new THREE.Vector2());
+    assertJoinNode(joinNode, 'mat2');
+
+    joinNode = mat2(1, 0, 1, float(0));
+    assertJoinNode(joinNode, 'mat2');
 });
 
 test('mat3', async () => {
