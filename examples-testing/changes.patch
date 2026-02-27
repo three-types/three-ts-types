@@ -15938,7 +15938,7 @@ index 85e320800..4b07c276f 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgpu_lights_tiled.ts b/examples-testing/examples/webgpu_lights_tiled.ts
-index e575ee344..6edf88b08 100644
+index e575ee344..d9cc9fb54 100644
 --- a/examples-testing/examples/webgpu_lights_tiled.ts
 +++ b/examples-testing/examples/webgpu_lights_tiled.ts
 @@ -3,6 +3,7 @@ import { texture, uv, pass, normalMap, uniform } from 'three/tsl';
@@ -15977,7 +15977,7 @@ index e575ee344..6edf88b08 100644
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(Math.random() * 300 - 150, 1, Math.random() * 300 - 150);
          light.power = power;
-@@ -134,15 +145,14 @@ function init() {
+@@ -134,18 +145,17 @@ function init() {
  
      // gui
  
@@ -15994,7 +15994,11 @@ index e575ee344..6edf88b08 100644
 +    const debugBlockIndexes = (lighting.getNode(scene) as TiledLightsNode)
          .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio)
          .getBlock()
-         .toColor()
+-        .toColor()
++        .xyz.toColor()
+         .div(count * 2);
+ 
+     renderPipeline.outputNode = compose.add(debugBlockIndexes.mul(tileInfluence));
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
 index 96417888c..2ec8e8b1f 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
