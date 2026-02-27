@@ -14700,11 +14700,11 @@ index e11462391..90d41e90c 100644
  }
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/scenes/Scene.d.ts b/jsdoc-testing/jsdoc/scenes/Scene.d.ts
-index 91ed09ab6..c42f21f1c 100644
+index 91ed09ab6..83c0f4b25 100644
 --- a/jsdoc-testing/jsdoc/scenes/Scene.d.ts
 +++ b/jsdoc-testing/jsdoc/scenes/Scene.d.ts
 @@ -1,19 +1,37 @@
-+import { JSONMeta, Object3D, Object3DJSON,Object3DJSONObject } from '../core/Object3D.js';
++import { JSONMeta, Object3D, Object3DEventMap, Object3DJSON,Object3DJSONObject } from '../core/Object3D.js';
 +import { Euler, EulerTuple } from '../math/Euler.js';
 +import { Fog, FogJSON } from "./Fog.js";
 +import { FogExp2, FogExp2JSON } from "./FogExp2.js";
@@ -14733,7 +14733,8 @@ index 91ed09ab6..c42f21f1c 100644
 - *
 - * @augments Object3D
   */
- export class Scene extends Object3D {
+-export class Scene extends Object3D {
++export class Scene<TEventMap extends Object3DEventMap = Object3DEventMap> extends Object3D<TEventMap> {
      /**
       * This flag can be used for type testing.
       *
