@@ -24,13 +24,13 @@ declare module "../core/Node.js" {
             outLowNode?: Node<"float"> | number,
             outHighNode?: Node<"float"> | number,
             doClamp?: Node<"bool"> | boolean,
-        ) => Node;
+        ) => Node<"float">;
 
         remapClamp: (
             inLowNode: Node<"float"> | number,
             inHighNode: Node<"float"> | number,
             outLowNode?: Node<"float"> | number,
             outHighNode?: Node<"float"> | number,
-        ) => Node;
+        ) => Node<"float">;
     }
 }
