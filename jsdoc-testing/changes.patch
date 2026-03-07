@@ -11965,17 +11965,19 @@ index a1cd970c..704cfb9f 100644
 +
 +export default Geometries;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-index caf76411..3613ed51 100644
+index caf76411..32db04c0 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-@@ -1,4 +1,5 @@
+@@ -1,4 +1,7 @@
 -export default Info;
 +import { Object3D } from '../../core/Object3D.js';
++import { Texture } from '../../textures/Texture.js';
++import { BufferAttribute } from '../../core/BufferAttribute.js';
 +
  /**
   * This renderer module provides a series of statistical information
   * about the GPU memory and the rendering process. Useful for debugging
-@@ -46,7 +47,15 @@ declare class Info {
+@@ -46,7 +49,15 @@ declare class Info {
       * @property {number} lines - The number of rendered line primitives of the current frame.
       * @property {number} timestamp - The timestamp of the frame.
       */
@@ -11992,7 +11994,7 @@ index caf76411..3613ed51 100644
      /**
       * Compute related metrics.
       *
-@@ -56,7 +65,11 @@ declare class Info {
+@@ -56,7 +67,11 @@ declare class Info {
       * @property {number} frameCalls - The number of compute calls of the current frame.
       * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
       */
@@ -12005,7 +12007,7 @@ index caf76411..3613ed51 100644
      /**
       * Memory related metrics.
       *
-@@ -77,7 +90,22 @@ declare class Info {
+@@ -77,7 +92,22 @@ declare class Info {
       * @property {number} storageAttributesSize - The memory size of active storage attributes in bytes.
       * @property {number} indirectStorageAttributesSize - The memory size of active indirect storage attributes in bytes.
       */
@@ -12029,7 +12031,7 @@ index caf76411..3613ed51 100644
      /**
       * Map for storing calculated byte sizes of tracked objects.
       *
-@@ -168,3 +196,5 @@ declare class Info {
+@@ -168,3 +198,5 @@ declare class Info {
       */
      private _getAttributeMemorySize;
  }
