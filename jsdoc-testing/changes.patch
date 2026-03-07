@@ -6833,7 +6833,7 @@ index 5b623bfb..acdb48ee 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshStandardMaterial extends MeshStandardMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/MeshToonMaterial.d.ts b/jsdoc-testing/jsdoc/materials/MeshToonMaterial.d.ts
-index 61f17845..8c9357ab 100644
+index 9d8db3ec..09ec6a48 100644
 --- a/jsdoc-testing/jsdoc/materials/MeshToonMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/MeshToonMaterial.d.ts
 @@ -1,36 +1,13 @@
@@ -6889,7 +6889,7 @@ index 61f17845..8c9357ab 100644
       */
      map: Texture | null;
 @@ -48,21 +24,18 @@ export class MeshToonMaterial extends Material {
-      * {@link Texture#minFilter} and {@link Texture#magFilter} to {@linkNearestFilter}
+      * {@link Texture#minFilter} and {@link Texture#magFilter} to {@link NearestFilter}
       * when using this type of texture.
       *
 -     * @type {?Texture}
@@ -10084,7 +10084,7 @@ index 790999ee..d84f24ac 100644
 +
 +export default NodeMaterialObserver;
 diff --git a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
-index 1f855a53..b0e732fa 100644
+index 60775a2a..2ed041bf 100644
 --- a/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/accessors/BufferAttributeNode.d.ts
 @@ -1,8 +1,11 @@
@@ -10256,7 +10256,7 @@ index 1f855a53..b0e732fa 100644
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
 diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
-index bf1d8943..85e2ae4a 100644
+index 8299d6c5..7aa9a6dc 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 @@ -1,10 +1,81 @@
@@ -10366,9 +10366,9 @@ index bf1d8943..85e2ae4a 100644
 -    updateAfterType: string;
 +    updateAfterType: NodeUpdateType;
      /**
-      * The UUID of the node.
+      * The version of the node. The version automatically is increased when {@link Node#needsUpdate} is set to `true`.
       *
-@@ -86,7 +157,6 @@ declare class Node extends EventDispatcher {
+@@ -79,7 +150,6 @@ declare class Node extends EventDispatcher {
       * @default true
       */
      readonly isNode: boolean;
@@ -10376,7 +10376,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * The cache key of this node.
       *
-@@ -124,7 +194,7 @@ declare class Node extends EventDispatcher {
+@@ -139,7 +209,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -10385,7 +10385,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -132,7 +202,7 @@ declare class Node extends EventDispatcher {
+@@ -147,7 +217,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -10394,7 +10394,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -141,7 +211,7 @@ declare class Node extends EventDispatcher {
+@@ -156,7 +226,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10403,7 +10403,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -149,7 +219,7 @@ declare class Node extends EventDispatcher {
+@@ -164,7 +234,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10412,7 +10412,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -157,7 +227,7 @@ declare class Node extends EventDispatcher {
+@@ -172,7 +242,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10421,7 +10421,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -165,14 +235,14 @@ declare class Node extends EventDispatcher {
+@@ -180,14 +250,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10438,7 +10438,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -180,7 +250,7 @@ declare class Node extends EventDispatcher {
+@@ -195,7 +265,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -10447,7 +10447,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -189,31 +259,25 @@ declare class Node extends EventDispatcher {
+@@ -204,31 +274,25 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -10482,7 +10482,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Returns the child nodes of this node.
       *
-@@ -241,7 +305,7 @@ declare class Node extends EventDispatcher {
+@@ -256,7 +320,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -10491,7 +10491,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -250,40 +314,25 @@ declare class Node extends EventDispatcher {
+@@ -265,40 +329,25 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -10536,7 +10536,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -300,7 +349,7 @@ declare class Node extends EventDispatcher {
+@@ -315,7 +364,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -10545,7 +10545,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Returns the node's type.
       *
-@@ -324,7 +373,7 @@ declare class Node extends EventDispatcher {
+@@ -348,7 +397,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -10554,7 +10554,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -333,7 +382,7 @@ declare class Node extends EventDispatcher {
+@@ -357,7 +406,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -10563,7 +10563,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -350,7 +399,7 @@ declare class Node extends EventDispatcher {
+@@ -374,7 +423,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -10572,7 +10572,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -359,7 +408,7 @@ declare class Node extends EventDispatcher {
+@@ -383,7 +432,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10581,7 +10581,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -368,8 +417,8 @@ declare class Node extends EventDispatcher {
+@@ -392,8 +441,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10592,7 +10592,7 @@ index bf1d8943..85e2ae4a 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -386,28 +435,161 @@ declare class Node extends EventDispatcher {
+@@ -410,28 +459,161 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -10968,7 +10968,7 @@ index af08042f..0190410e 100644
 +
 +export default StructType;
 diff --git a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
-index b5f1a291..49b3c213 100644
+index 5e54e038..8ca44caa 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/StructTypeNode.d.ts
 @@ -1,4 +1,19 @@
@@ -11012,18 +11012,14 @@ index b5f1a291..49b3c213 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -40,9 +51,10 @@ declare class StructTypeNode extends Node {
+@@ -40,9 +51,6 @@ declare class StructTypeNode extends Node {
       * @returns {number} The length of the struct.
       */
      getLength(): number;
 -    getMemberType(builder: any, name: any): string;
--    getNodeType(builder: any): any;
+-    generateNodeType(builder: any): any;
 -    setup(builder: any): void;
--    generate(builder: any): any;
-+    getMemberType(builder: NodeBuilder, name: string): string;
-+    getNodeType(builder: NodeBuilder): string;
-+    setup(builder: NodeBuilder): undefined;
-+    generate(builder: NodeBuilder): string;
+-    generate(builder: any): string;
  }
 -import Node from './Node.js';
 +
