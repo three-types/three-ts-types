@@ -16268,7 +16268,7 @@ index 9ab5c44c..dee04a5a 100644
      const param = {
          'line type': 0,
 diff --git a/examples-testing/examples/webgpu_loader_gltf.ts b/examples-testing/examples/webgpu_loader_gltf.ts
-index 161bcbbb..8e9a4dab 100644
+index 6380bd90..355b0534 100644
 --- a/examples-testing/examples/webgpu_loader_gltf.ts
 +++ b/examples-testing/examples/webgpu_loader_gltf.ts
 @@ -7,8 +7,16 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -16310,7 +16310,7 @@ index 161bcbbb..8e9a4dab 100644
                      loadModel(modelInfo);
                  });
  
-@@ -77,7 +85,7 @@ async function init() {
+@@ -77,20 +85,22 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -16319,7 +16319,29 @@ index 161bcbbb..8e9a4dab 100644
      const variants = modelInfo.variants;
      const variant = variants['glTF-Binary'] || variants['glTF'];
      const url = `https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/${modelInfo.name}/${variant.endsWith('.glb') ? 'glTF-Binary' : 'glTF'}/${variant}`;
-@@ -122,7 +130,12 @@ function loadModel(modelInfo) {
+ 
+     if (currentModel) {
+         currentModel.traverse(model => {
+-            if (model.isMesh) {
+-                model.geometry.dispose();
+-                model.material.dispose();
+-
+-                for (const value of Object.values(model.material)) {
+-                    if (value && value.isTexture) {
+-                        value.dispose();
++            if ((model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh) {
++                (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).geometry.dispose();
++                (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.dispose();
++
++                for (const value of Object.values(
++                    (model as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material,
++                )) {
++                    if (value && (value as THREE.Texture).isTexture) {
++                        (value as THREE.Texture).dispose();
+                     }
+                 }
+             }
+@@ -135,7 +145,12 @@ function loadModel(modelInfo) {
      });
  }
  

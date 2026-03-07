@@ -4,6 +4,7 @@ import BindGroup from "./BindGroup.js";
 import Bindings from "./Bindings.js";
 import ComputePipeline from "./ComputePipeline.js";
 import DataMap from "./DataMap.js";
+import Info from "./Info.js";
 import NodeManager from "./nodes/NodeManager.js";
 import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
@@ -22,8 +23,9 @@ declare class Pipelines extends DataMap {
      *
      * @param {Backend} backend - The renderer's backend.
      * @param {NodeManager} nodes - Renderer component for managing nodes related logic.
+     * @param {Info} info - Renderer component for managing metrics and monitoring data.
      */
-    constructor(backend: Backend, nodes: NodeManager);
+    constructor(backend: Backend, nodes: NodeManager, info: Info);
     /**
      * The renderer's backend.
      *
@@ -36,6 +38,12 @@ declare class Pipelines extends DataMap {
      * @type {NodeManager}
      */
     nodes: NodeManager;
+    /**
+     * Renderer component for managing metrics and monitoring data.
+     *
+     * @type {Info}
+     */
+    info: Info;
     /**
      * A references to the bindings management component.
      * This reference will be set inside the `Bindings`
