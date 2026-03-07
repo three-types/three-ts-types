@@ -93,6 +93,18 @@ declare class Info {
     readonly memory: {
         geometries: number;
         textures: number;
+        attributes: number;
+        indexAttributes: number;
+        storageAttributes: number;
+        indirectStorageAttributes: number;
+        programs: number;
+        renderTargets: number;
+        total: number;
+        texturesSize: number;
+        attributesSize: number;
+        indexAttributesSize: number;
+        storageAttributesSize: number;
+        indirectStorageAttributesSize: number;
     };
     /**
      * Map for storing calculated byte sizes of tracked objects.
