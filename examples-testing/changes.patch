@@ -589,7 +589,7 @@ index 62652f87..3dcc2f12 100644
  
      controls.addEventListener('start', function () {
 diff --git a/examples-testing/examples/games_fps.ts b/examples-testing/examples/games_fps.ts
-index 434bc0f5..ff267668 100644
+index ed08fb5f..7b533de6 100644
 --- a/examples-testing/examples/games_fps.ts
 +++ b/examples-testing/examples/games_fps.ts
 @@ -40,7 +40,7 @@ directionalLight.shadow.radius = 4;
@@ -638,7 +638,7 @@ index 434bc0f5..ff267668 100644
  
  const vector1 = new THREE.Vector3();
  const vector2 = new THREE.Vector3();
-@@ -168,7 +174,7 @@ function playerCollisions() {
+@@ -170,7 +176,7 @@ function playerCollisions() {
      }
  }
  
@@ -647,7 +647,7 @@ index 434bc0f5..ff267668 100644
      let damping = Math.exp(-4 * deltaTime) - 1;
  
      if (!playerOnFloor) {
-@@ -188,7 +194,7 @@ function updatePlayer(deltaTime) {
+@@ -190,7 +196,7 @@ function updatePlayer(deltaTime) {
      camera.position.copy(playerCollider.end);
  }
  
@@ -656,7 +656,7 @@ index 434bc0f5..ff267668 100644
      const center = vector1.addVectors(playerCollider.start, playerCollider.end).multiplyScalar(0.5);
  
      const sphere_center = sphere.collider.center;
-@@ -243,7 +249,7 @@ function spheresCollisions() {
+@@ -245,7 +251,7 @@ function spheresCollisions() {
      }
  }
  
@@ -665,7 +665,7 @@ index 434bc0f5..ff267668 100644
      spheres.forEach(sphere => {
          sphere.collider.center.addScaledVector(sphere.velocity, deltaTime);
  
-@@ -286,7 +292,7 @@ function getSideVector() {
+@@ -288,7 +294,7 @@ function getSideVector() {
      return playerDirection;
  }
  
@@ -674,7 +674,7 @@ index 434bc0f5..ff267668 100644
      // gives a bit of air control
      const speedDelta = deltaTime * (playerOnFloor ? 25 : 8);
  
-@@ -321,12 +327,12 @@ loader.load('collision-world.glb', gltf => {
+@@ -323,12 +329,12 @@ loader.load('collision-world.glb', gltf => {
      worldOctree.fromGraphNode(gltf.scene);
  
      gltf.scene.traverse(child => {
@@ -7783,7 +7783,7 @@ index ba9b18e9..d4161ff3 100644
      mesh.position.y = -2;
      scene.add(mesh);
 diff --git a/examples-testing/examples/webgl_loader_texture_ktx.ts b/examples-testing/examples/webgl_loader_texture_ktx.ts
-index 0e74bc45..1ff979a6 100644
+index a4e74930..9f0ad48f 100644
 --- a/examples-testing/examples/webgl_loader_texture_ktx.ts
 +++ b/examples-testing/examples/webgl_loader_texture_ktx.ts
 @@ -17,8 +17,8 @@ import { KTXLoader } from 'three/addons/loaders/KTXLoader.js';
@@ -15154,7 +15154,7 @@ index 6fbdb55a..fd5ec570 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index fcae79b9..be07fc03 100644
+index bcfcb0fd..be07fc03 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
 @@ -4,8 +4,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
@@ -15167,29 +15167,6 @@ index fcae79b9..be07fc03 100644
 +let controls: OrbitControls;
  
  init();
- 
-@@ -17,8 +17,11 @@ function init() {
- 
-     // custom fog
- 
--    const skyColor = color(0xf0f5f5);
--    const groundColor = color(0xd0dee7);
-+    const skyColorValue = 0xf0f5f5;
-+    const groundColorValue = 0xd0dee7;
-+
-+    const skyColor = color(skyColorValue);
-+    const groundColor = color(groundColorValue);
- 
-     const fogNoiseDistance = positionView.z.negate().smoothstep(0, camera.far - 300);
- 
-@@ -79,7 +82,7 @@ function init() {
- 
-     // lights
- 
--    scene.add(new THREE.HemisphereLight(skyColor.value, groundColor.value, 0.5));
-+    scene.add(new THREE.HemisphereLight(skyColorValue, groundColorValue, 0.5));
- 
-     // geometry
  
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index a9b61934..e482a1e2 100644

@@ -9,8 +9,8 @@ export { default as PostProcessing } from "./renderers/common/PostProcessing.js"
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
 export type { default as Renderer } from "./renderers/common/Renderer.js";
 export { default as RenderPipeline } from "./renderers/common/RenderPipeline.js";
-export type { default as WebGLBackend } from "./renderers/webgl-fallback/WebGLBackend.js";
-export type { default as WebGPUBackend } from "./renderers/webgpu/WebGPUBackend.js";
+export { default as WebGLBackend } from "./renderers/webgl-fallback/WebGLBackend.js";
+export { default as WebGPUBackend } from "./renderers/webgpu/WebGPUBackend.js";
 export { default as WebGPURenderer } from "./renderers/webgpu/WebGPURenderer.Nodes.js";
 import * as RendererUtils from "./renderers/common/RendererUtils.js";
 export { RendererUtils };

@@ -11244,7 +11244,7 @@ index 5d342ff3..7ac71b49 100644
 +export declare const shaderStages: NodeShaderStage[];
 +export declare const vectorComponents: string[];
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts b/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
-index 67619fa2..40bc9b70 100644
+index 276e5a64..38c092bd 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Animation.d.ts
 @@ -1,4 +1,12 @@
@@ -11261,24 +11261,6 @@ index 67619fa2..40bc9b70 100644
  /**
   * This module manages the internal animation loop of the renderer.
   *
-@@ -12,7 +20,7 @@ declare class Animation {
-      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
-      * @param {Info} info - Renderer component for managing metrics and monitoring data.
-      */
--    constructor(renderer: Renderer, nodes: Nodes, info: Info);
-+    constructor(renderer: Renderer, nodes: NodeManager, info: Info);
-     /**
-      * A reference to the main renderer.
-      *
-@@ -24,7 +32,7 @@ declare class Animation {
-      *
-      * @type {Nodes}
-      */
--    nodes: Nodes;
-+    nodes: NodeManager;
-     /**
-      * Renderer component for managing metrics and monitoring data.
-      *
 @@ -37,14 +45,14 @@ declare class Animation {
       *
       * @type {?(Window|XRSession)}
@@ -11374,7 +11356,7 @@ index 25100f87..1c12eb7e 100644
 +
 +export default Attributes;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Background.d.ts b/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
-index 8ed79342..9bc5a1e7 100644
+index f8262c34..eccffc6e 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Background.d.ts
 @@ -1,4 +1,10 @@
@@ -11389,24 +11371,6 @@ index 8ed79342..9bc5a1e7 100644
  /**
   * This renderer module manages the background.
   *
-@@ -12,7 +18,7 @@ declare class Background extends DataMap {
-      * @param {Renderer} renderer - The renderer.
-      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
-      */
--    constructor(renderer: Renderer, nodes: Nodes);
-+    constructor(renderer: Renderer, nodes: NodeManager);
-     /**
-      * The renderer.
-      *
-@@ -24,7 +30,7 @@ declare class Background extends DataMap {
-      *
-      * @type {Nodes}
-      */
--    nodes: Nodes;
-+    nodes: NodeManager;
-     /**
-      * Updates the background for the given scene. Depending on how `Scene.background`
-      * or `Scene.backgroundNode` are configured, this method might configure a simple clear
 @@ -37,4 +43,5 @@ declare class Background extends DataMap {
       */
      update(scene: Scene, renderList: RenderList, renderContext: RenderContext): void;
@@ -11465,7 +11429,7 @@ index 46356fdc..d876c3b7 100644
 +
 +export default Binding;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
-index 0d32505b..ea2b8471 100644
+index ed9d0eca..0151af3b 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 @@ -1,4 +1,14 @@
@@ -11484,24 +11448,6 @@ index 0d32505b..ea2b8471 100644
  /**
   * This renderer module manages the bindings of the renderer.
   *
-@@ -16,7 +26,7 @@ declare class Bindings extends DataMap {
-      * @param {Pipelines} pipelines - Renderer component for managing pipelines.
-      * @param {Info} info - Renderer component for managing metrics and monitoring data.
-      */
--    constructor(backend: Backend, nodes: Nodes, textures: Textures, attributes: Attributes, pipelines: Pipelines, info: Info);
-+    constructor(backend: Backend, nodes: NodeManager, textures: Textures, attributes: Attributes, pipelines: Pipelines, info: Info);
-     /**
-      * The renderer's backend.
-      *
-@@ -46,7 +56,7 @@ declare class Bindings extends DataMap {
-      *
-      * @type {Nodes}
-      */
--    nodes: Nodes;
-+    nodes: NodeManager;
-     /**
-      * Renderer component for managing metrics and monitoring data.
-      *
 @@ -59,20 +69,20 @@ declare class Bindings extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Array<BindGroup>} The bind groups.
@@ -12206,7 +12152,7 @@ index db30b30a..16708fb9 100644
 +
 +export default Pipeline;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
-index 659255fb..c4dc1e2f 100644
+index 7de68180..c8a68996 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
 @@ -1,4 +1,15 @@
@@ -12226,24 +12172,6 @@ index 659255fb..c4dc1e2f 100644
  /**
   * This renderer module manages the pipelines of the renderer.
   *
-@@ -12,7 +23,7 @@ declare class Pipelines extends DataMap {
-      * @param {Backend} backend - The renderer's backend.
-      * @param {Nodes} nodes - Renderer component for managing nodes related logic.
-      */
--    constructor(backend: Backend, nodes: Nodes);
-+    constructor(backend: Backend, nodes: NodeManager);
-     /**
-      * The renderer's backend.
-      *
-@@ -24,7 +35,7 @@ declare class Pipelines extends DataMap {
-      *
-      * @type {Nodes}
-      */
--    nodes: Nodes;
-+    nodes: NodeManager;
-     /**
-      * A references to the bindings management component.
-      * This reference will be set inside the `Bindings`
 @@ -49,7 +60,9 @@ declare class Pipelines extends DataMap {
       * @type {Object<string,Map<string, ProgrammableStage>>}
       */
@@ -12639,7 +12567,7 @@ index d8d26670..ee0ad0b4 100644
 +
 +export default RenderLists;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
-index 6ae36d46..a9d499e3 100644
+index 36c01311..a438ebae 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/RenderObject.d.ts
 @@ -1,4 +1,22 @@
@@ -12666,15 +12594,6 @@ index 6ae36d46..a9d499e3 100644
  /**
   * A render object is the renderer's representation of single entity that gets drawn
   * with a draw command. There is no unique mapping of render objects to 3D objects in the
-@@ -32,7 +50,7 @@ declare class RenderObject {
-      * @param {RenderContext} renderContext - The render context.
-      * @param {ClippingContext} clippingContext - The clipping context.
-      */
--    constructor(nodes: Nodes, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext);
-+    constructor(nodes: NodeManager, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext);
-     id: number;
-     /**
-      * Renderer component for managing nodes related logic.
 @@ -108,7 +126,10 @@ declare class RenderObject {
       * @type {?Object}
       * @default null
@@ -12814,7 +12733,7 @@ index d9631c32..5cb67b91 100644
 +
 +export default RenderObjectPipeline;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts b/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
-index f51b0945..7a337948 100644
+index fcb34a2e..5a821055 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/RenderObjects.d.ts
 @@ -1,4 +1,19 @@
@@ -12838,30 +12757,9 @@ index f51b0945..7a337948 100644
  /**
   * This module manages the render objects of the renderer.
   *
-@@ -15,7 +30,7 @@ declare class RenderObjects {
-      * @param {Bindings} bindings - Renderer component for managing bindings.
-      * @param {Info} info - Renderer component for managing metrics and monitoring data.
+@@ -104,5 +119,5 @@ declare class RenderObjects {
       */
--    constructor(renderer: Renderer, nodes: Nodes, geometries: Geometries, pipelines: Pipelines, bindings: Bindings, info: Info);
-+    constructor(renderer: Renderer, nodes: NodeManager, geometries: Geometries, pipelines: Pipelines, bindings: Bindings, info: Info);
-     /**
-      * The renderer.
-      *
-@@ -27,7 +42,7 @@ declare class RenderObjects {
-      *
-      * @type {Nodes}
-      */
--    nodes: Nodes;
-+    nodes: NodeManager;
-     /**
-      * Renderer component for managing geometries.
-      *
-@@ -102,7 +117,7 @@ declare class RenderObjects {
-      * @param {string} [passId] - An optional ID for identifying the pass.
-      * @return {RenderObject} The render object.
-      */
--    createRenderObject(nodes: Nodes, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext, passId?: string): RenderObject;
-+    createRenderObject(nodes: NodeManager, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext, passId?: string): RenderObject;
+     createRenderObject(nodes: NodeManager, geometries: Geometries, renderer: Renderer, object: Object3D, material: Material, scene: Scene, camera: Camera, lightsNode: LightsNode, renderContext: RenderContext, clippingContext: ClippingContext, passId?: string): RenderObject;
  }
 -import ChainMap from './ChainMap.js';
 -import RenderObject from './RenderObject.js';
