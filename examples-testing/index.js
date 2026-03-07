@@ -59,6 +59,7 @@ const exceptionList = [
     'webgpu_sandbox',
     'webgpu_shadertoy',
     'webgpu_skinning_points',
+    'webgpu_sky',
     'webgpu_tsl_compute_attractors_particles',
     'webgpu_tsl_editor',
     'webgpu_tsl_transpiler',
