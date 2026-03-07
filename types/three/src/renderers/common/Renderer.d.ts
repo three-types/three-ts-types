@@ -391,13 +391,12 @@ declare class Renderer {
      */
     private _transparentSort;
     /**
-     * The framebuffer target.
+     * Cache of framebuffer targets per canvas target.
      *
      * @private
-     * @type {?RenderTarget}
-     * @default null
+     * @type {Map<CanvasTarget, RenderTarget>}
      */
-    private _frameBufferTarget;
+    private _frameBufferTargets;
     /**
      * The clear color value.
      *
@@ -984,7 +983,7 @@ declare class Renderer {
      * Defines the viewport.
      *
      * @param {number} x - The horizontal coordinate for the upper left corner of the viewport origin in logical pixel unit.
-     * @param {number} y - The vertical coordinate for the upper left corner of the viewport origin  in logical pixel unit.
+     * @param {number} y - The vertical coordinate for the upper left corner of the viewport origin in logical pixel unit.
      * @param {number} width - The width of the viewport in logical pixel unit.
      * @param {number} height - The height of the viewport in logical pixel unit.
      * @param {number} minDepth - The minimum depth value of the viewport. WebGPU only.
