@@ -1461,8 +1461,7 @@ declare class Renderer {
         passId?: string | null,
     ): void;
     /**
-     * Checks if the given compatibility is supported by the selected backend. If the
-     * renderer has not been initialized, this method always returns `false`.
+     * Checks if the given compatibility is supported by the selected backend.
      *
      * @param {string} name - The compatibility's name.
      * @return {boolean} Whether the compatibility is supported or not.
