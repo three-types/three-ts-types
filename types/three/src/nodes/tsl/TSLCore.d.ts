@@ -1767,12 +1767,11 @@ export interface FnNode<TArgs extends readonly unknown[], TReturn> {
     shaderNode: ShaderNodeInternal<TReturn>;
     id: number;
 
-    getNodeType: (builder: NodeBuilder) => string | null;
-    getCacheKey: (force?: boolean) => number;
+    setLayout(layout: Layout): this;
 
-    setLayout: (layout: Layout) => this;
+    generateNodeType(builder: NodeBuilder): string;
 
-    once: (subBuilds?: string[] | null) => this;
+    once(subBuilds?: string[] | null): this;
 }
 
 export function Fn<TReturn>(
