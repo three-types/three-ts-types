@@ -24,7 +24,6 @@ export const UniformsLib: {
     envmap: {
         envMap: IUniform<unknown>;
         envMapRotation: IUniform<Matrix3>;
-        flipEnvMap: IUniform<number>;
         reflectivity: IUniform<number>;
         ior: IUniform<number>;
         refractRatio: IUniform<number>;
