@@ -2114,7 +2114,7 @@ index a3f58cb3..0bad866f 100644
  
      const geometry = new THREE.PlaneGeometry(1, 1);
 diff --git a/examples-testing/examples/webgl_animation_keyframes.ts b/examples-testing/examples/webgl_animation_keyframes.ts
-index a59512e7..114f57c0 100644
+index 20a44a9c..0b6f4895 100644
 --- a/examples-testing/examples/webgl_animation_keyframes.ts
 +++ b/examples-testing/examples/webgl_animation_keyframes.ts
 @@ -8,11 +8,11 @@ import { Sky } from 'three/addons/objects/Sky.js';
@@ -2131,15 +2131,15 @@ index a59512e7..114f57c0 100644
  
  const stats = new Stats();
  container.appendChild(stats.dom);
-@@ -37,7 +37,7 @@ uniforms['cloudElevation'].value = 1;
+@@ -39,7 +39,7 @@ uniforms['cloudElevation'].value = 1;
  uniforms['sunPosition'].value.set(-0.8, 0.19, 0.56); // elevation: 11, azimuth: -55
  
  const pmremGenerator = new THREE.PMREMGenerator(renderer);
 -const environment = pmremGenerator.fromScene(sky).texture;
 +const environment = pmremGenerator.fromScene(sky as unknown as THREE.Scene).texture;
- scene.background = environment;
  scene.environment = environment;
  
+ const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 100);
 diff --git a/examples-testing/examples/webgl_animation_multiple.ts b/examples-testing/examples/webgl_animation_multiple.ts
 index 87355e96..4f93de7c 100644
 --- a/examples-testing/examples/webgl_animation_multiple.ts
@@ -12011,7 +12011,7 @@ index e0e26ed3..6832f4e6 100644
      function updateSun() {
          const phi = THREE.MathUtils.degToRad(90 - parameters.elevation);
 diff --git a/examples-testing/examples/webgl_shaders_sky.ts b/examples-testing/examples/webgl_shaders_sky.ts
-index 2e0ac0ee..635ac1cf 100644
+index 01cdddec..0cd9aa7b 100644
 --- a/examples-testing/examples/webgl_shaders_sky.ts
 +++ b/examples-testing/examples/webgl_shaders_sky.ts
 @@ -4,9 +4,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -20275,31 +20275,6 @@ index 877ee46c..1b8d0b2d 100644
                  }
              }
          });
-diff --git a/examples-testing/examples/webgpu_sky.ts b/examples-testing/examples/webgpu_sky.ts
-index cb7a71ee..7d7a7975 100644
---- a/examples-testing/examples/webgpu_sky.ts
-+++ b/examples-testing/examples/webgpu_sky.ts
-@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
- 
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
- 
--let sky, sun;
-+let sky: SkyMesh, sun: THREE.Vector3;
- 
- init();
- 
-@@ -53,7 +53,7 @@ function initSky() {
-         renderer.toneMappingExposure = effectController.exposure;
-     }
- 
--    const gui = renderer.inspector.createParameters('Settings');
-+    const gui = (renderer.inspector as Inspector).createParameters('Settings');
- 
-     gui.add(effectController, 'turbidity', 0.0, 20.0, 0.1).onChange(guiChanged);
-     gui.add(effectController, 'rayleigh', 0.0, 4, 0.001).onChange(guiChanged);
 diff --git a/examples-testing/examples/webgpu_sprites.ts b/examples-testing/examples/webgpu_sprites.ts
 index de9f219b..68a7b73a 100644
 --- a/examples-testing/examples/webgpu_sprites.ts
