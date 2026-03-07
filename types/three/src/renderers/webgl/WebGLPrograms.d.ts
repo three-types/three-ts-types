@@ -53,6 +53,7 @@ export interface WebGLProgramParameters {
 
     normalMapObjectSpace: boolean;
     normalMapTangentSpace: boolean;
+    packedNormalMap: boolean;
 
     metalnessMap: boolean;
     roughnessMap: boolean;
