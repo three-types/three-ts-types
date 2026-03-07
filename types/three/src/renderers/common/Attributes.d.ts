@@ -15,14 +15,21 @@ declare class Attributes extends DataMap {
      * Constructs a new attribute management component.
      *
      * @param {Backend} backend - The renderer's backend.
+     * @param {Info} info - Renderer component for managing metrics and monitoring data.
      */
-    constructor(backend: Backend);
+    constructor(backend: Backend, info: Info);
     /**
      * The renderer's backend.
      *
      * @type {Backend}
      */
     backend: Backend;
+    /**
+     * Renderer component for managing metrics and monitoring data.
+     *
+     * @type {Info}
+     */
+    info: Info;
     /**
      * Deletes the data for the given attribute.
      *
