@@ -81,6 +81,14 @@ declare class Pipelines extends DataMap {
      */
     getForRender(renderObject: RenderObject, promises?: Promise<void>[] | null): RenderObjectPipeline;
     /**
+     * Checks if the render pipeline for the given render object is ready for drawing.
+     * Returns false if the GPU pipeline is still being compiled asynchronously.
+     *
+     * @param {RenderObject} renderObject - The render object.
+     * @return {boolean} True if the pipeline is ready for drawing.
+     */
+    isReady(renderObject: RenderObject): boolean;
+    /**
      * Deletes the pipeline for the given render object.
      *
      * @param {RenderObject} object - The render object.
