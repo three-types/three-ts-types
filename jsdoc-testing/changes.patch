@@ -11313,21 +11313,22 @@ index 276e5a64..38c092bd 100644
 +
 +export default Animation;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts b/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
-index 40b80e84..f1f6ae69 100644
+index 40b80e84..83d31970 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Attributes.d.ts
-@@ -1,4 +1,9 @@
+@@ -1,4 +1,10 @@
 -export default Attributes;
 +import DataMap from './DataMap.js';
 +import Backend from './Backend.js';
 +import { BufferAttribute } from '../../core/BufferAttribute.js';
 +import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 +import { InterleavedBufferAttribute } from '../../core/InterleavedBufferAttribute.js';
++import Info from './Info.js';
 +
  /**
   * This renderer module manages geometry attributes.
   *
-@@ -31,7 +36,7 @@ declare class Attributes extends DataMap {
+@@ -31,7 +37,7 @@ declare class Attributes extends DataMap {
       * @param {BufferAttribute} attribute - The attribute.
       * @return {?Object} The deleted attribute data.
       */
@@ -11336,7 +11337,7 @@ index 40b80e84..f1f6ae69 100644
      /**
       * Updates the given attribute. This method creates attribute buffers
       * for new attributes and updates data for existing ones.
-@@ -39,7 +44,7 @@ declare class Attributes extends DataMap {
+@@ -39,7 +45,7 @@ declare class Attributes extends DataMap {
       * @param {BufferAttribute} attribute - The attribute to update.
       * @param {number} type - The attribute type.
       */
@@ -11345,7 +11346,7 @@ index 40b80e84..f1f6ae69 100644
      /**
       * Utility method for handling interleaved buffer attributes correctly.
       * To process them, their `InterleavedBuffer` is returned.
-@@ -47,6 +52,7 @@ declare class Attributes extends DataMap {
+@@ -47,6 +53,7 @@ declare class Attributes extends DataMap {
       * @param {BufferAttribute} attribute - The attribute.
       * @return {BufferAttribute|InterleavedBuffer}
       */
@@ -12166,10 +12167,10 @@ index db30b30a..16708fb9 100644
 +
 +export default Pipeline;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
-index 182374e0..5a61c798 100644
+index 182374e0..e1066e03 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Pipelines.d.ts
-@@ -1,4 +1,15 @@
+@@ -1,4 +1,16 @@
 -export default Pipelines;
 +import DataMap from './DataMap.js';
 +import ProgrammableStage from './ProgrammableStage.js';
@@ -12182,11 +12183,12 @@ index 182374e0..5a61c798 100644
 +import BindGroup from './BindGroup.js';
 +import RenderObject from './RenderObject.js';
 +import ComputeNode from '../../nodes/gpgpu/ComputeNode.js';
++import Info from './Info.js';
 +
  /**
   * This renderer module manages the pipelines of the renderer.
   *
-@@ -56,7 +67,9 @@ declare class Pipelines extends DataMap {
+@@ -56,7 +68,9 @@ declare class Pipelines extends DataMap {
       * @type {Object<string,Map<string, ProgrammableStage>>}
       */
      programs: {
@@ -12197,7 +12199,7 @@ index 182374e0..5a61c798 100644
      };
      /**
       * Returns a compute pipeline for the given compute node.
-@@ -65,7 +78,7 @@ declare class Pipelines extends DataMap {
+@@ -65,7 +79,7 @@ declare class Pipelines extends DataMap {
       * @param {Array<BindGroup>} bindings - The bindings.
       * @return {ComputePipeline} The compute pipeline.
       */
@@ -12206,7 +12208,7 @@ index 182374e0..5a61c798 100644
      /**
       * Returns a render pipeline for the given render object.
       *
-@@ -73,7 +86,7 @@ declare class Pipelines extends DataMap {
+@@ -73,7 +87,7 @@ declare class Pipelines extends DataMap {
       * @param {?Array<Promise>} [promises=null] - An array of compilation promises which is only relevant in context of `Renderer.compileAsync()`.
       * @return {RenderObjectPipeline} The render pipeline.
       */
@@ -12215,7 +12217,7 @@ index 182374e0..5a61c798 100644
      /**
       * Checks if the render pipeline for the given render object is ready for drawing.
       * Returns false if the GPU pipeline is still being compiled asynchronously.
-@@ -88,7 +101,7 @@ declare class Pipelines extends DataMap {
+@@ -88,7 +102,7 @@ declare class Pipelines extends DataMap {
       * @param {RenderObject} object - The render object.
       * @return {?Object} The deleted dictionary.
       */
@@ -12224,7 +12226,7 @@ index 182374e0..5a61c798 100644
      /**
       * Updates the pipeline for the given render object.
       *
-@@ -168,7 +181,5 @@ declare class Pipelines extends DataMap {
+@@ -168,7 +182,5 @@ declare class Pipelines extends DataMap {
       */
      private _needsRenderUpdate;
  }
