@@ -1,4 +1,6 @@
+import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
+import { Texture } from "../../textures/Texture.js";
 
 /**
  * This renderer module provides a series of statistical information
