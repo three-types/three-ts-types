@@ -3,6 +3,7 @@ import { InterleavedBuffer } from "../../core/InterleavedBuffer.js";
 import { InterleavedBufferAttribute } from "../../core/InterleavedBufferAttribute.js";
 import Backend from "./Backend.js";
 import DataMap from "./DataMap.js";
+import Info from "./Info.js";
 
 /**
  * This renderer module manages geometry attributes.

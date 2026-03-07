@@ -4,6 +4,7 @@ import BindGroup from "./BindGroup.js";
 import Bindings from "./Bindings.js";
 import ComputePipeline from "./ComputePipeline.js";
 import DataMap from "./DataMap.js";
+import Info from "./Info.js";
 import NodeManager from "./nodes/NodeManager.js";
 import Pipeline from "./Pipeline.js";
 import ProgrammableStage from "./ProgrammableStage.js";
