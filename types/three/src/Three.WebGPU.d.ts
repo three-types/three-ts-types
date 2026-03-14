@@ -26,7 +26,7 @@ export { default as BlendMode } from "./renderers/common/BlendMode.js";
 export { default as CanvasTarget } from "./renderers/common/CanvasTarget.js";
 export { default as CubeRenderTarget } from "./renderers/common/CubeRenderTarget.js";
 export { default as IndirectStorageBufferAttribute } from "./renderers/common/IndirectStorageBufferAttribute.js";
-export { default as InspectorBase } from "./renderers/common/InspectorBase.js";
+export { default as InspectorBase, type InspectorBaseEventMap } from "./renderers/common/InspectorBase.js";
 export { default as Storage3DTexture } from "./renderers/common/Storage3DTexture.js";
 export { default as StorageArrayTexture } from "./renderers/common/StorageArrayTexture.js";
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";

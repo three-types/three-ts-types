@@ -8,12 +8,17 @@ import { Scene } from "../../scenes/Scene.js";
 import { Texture } from "../../textures/Texture.js";
 import Renderer from "./Renderer.js";
 
+export interface InspectorBaseEventMap {
+}
+
 /**
  * InspectorBase is the base class for all inspectors.
  *
  * @class InspectorBase
  */
-declare class InspectorBase extends EventDispatcher {
+declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorBaseEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * The renderer associated with this inspector.
      *

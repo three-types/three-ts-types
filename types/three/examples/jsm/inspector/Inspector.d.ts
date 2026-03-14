@@ -1,8 +1,12 @@
-import { RendererInspector } from "./RendererInspector.js";
+import { RendererInspector, RendererInspectorEventMap } from "./RendererInspector.js";
 import { ParametersGroup } from "./tabs/Parameters.js";
 import { Tab } from "./ui/Tab.js";
 
-declare class Inspector extends RendererInspector {
+export interface InspectorEventMap extends RendererInspectorEventMap {
+    resize: {};
+}
+
+declare class Inspector extends RendererInspector<InspectorEventMap> {
     createParameters(name: string): ParametersGroup;
 
     get domElement(): HTMLDivElement;

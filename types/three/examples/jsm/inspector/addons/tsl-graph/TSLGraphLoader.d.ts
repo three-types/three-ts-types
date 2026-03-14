@@ -1,9 +1,9 @@
-import { FileLoader, LoadingManager } from "three";
+import { FileLoader, LoadingManager, Scene } from "three";
 
 declare class TSLGraphLoaderApplier {
-    tslGraphFns: unknown;
+    constructor(tslGraphFns: never);
 
-    constructor(tslGraphFns: unknown);
+    apply(scene: Scene): void;
 }
 
 export class TSLGraphLoader extends FileLoader<TSLGraphLoaderApplier> {
