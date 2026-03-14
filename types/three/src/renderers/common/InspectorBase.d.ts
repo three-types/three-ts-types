@@ -1,4 +1,5 @@
 import { Camera } from "../../cameras/Camera.js";
+import { EventDispatcher } from "../../core/EventDispatcher.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
 import Node from "../../nodes/core/Node.js";
 import NodeFrame from "../../nodes/core/NodeFrame.js";
@@ -12,7 +13,7 @@ import Renderer from "./Renderer.js";
  *
  * @class InspectorBase
  */
-declare class InspectorBase {
+declare class InspectorBase extends EventDispatcher {
     /**
      * The renderer associated with this inspector.
      *
