@@ -117,7 +117,7 @@ export interface Effect {
     ): void;
 }
 
-export interface NodeHandler {
+export interface NodesHandler {
     setRenderer(renderer: WebGLRenderer): void;
     renderStart(scene: Object3D, camera: Camera): void;
     renderEnd(): void;
@@ -324,7 +324,7 @@ export class WebGLRenderer {
     clearDepth(): void;
     clearStencil(): void;
 
-    setNodesHandler(nodeHandler: NodeHandler): void;
+    setNodesHandler(nodesHandler: NodesHandler): void;
 
     dispose(): void;
 
