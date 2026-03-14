@@ -74,7 +74,21 @@ declare class ValueButton<
     T = Record<string, unknown>,
     K extends KeyToValueOfType<T, (this: T) => void> = KeyToValueOfType<T, (this: T) => void>,
 > extends Value<T, K> {
-    constructor(params: ValueColorParams);
+    constructor(params: ValueButtonParams);
 }
 
-export { Value, ValueButton, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider };
+export interface ValueStringParams {
+    value?: string;
+}
+
+declare class ValueString<
+    T = Record<string, unknown>,
+    K extends KeyToValueOfType<T, string> = KeyToValueOfType<T, string>,
+> extends Value<T, K> {
+    constructor(params: ValueStringParams);
+
+    setValue(val: string): this;
+    getValue(): string;
+}
+
+export { Value, ValueButton, ValueCheckbox, ValueColor, ValueNumber, ValueSelect, ValueSlider, ValueString };
