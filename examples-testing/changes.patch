@@ -21002,7 +21002,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_graph.ts b/examples-testing/examples/webgpu_tsl_graph.ts
-index a6e14348b..c60a2b84d 100644
+index a6e14348b..6f7ecf02a 100644
 --- a/examples-testing/examples/webgpu_tsl_graph.ts
 +++ b/examples-testing/examples/webgpu_tsl_graph.ts
 @@ -12,9 +12,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21018,7 +21018,18 @@ index a6e14348b..c60a2b84d 100644
  
  init();
  
-@@ -64,7 +64,7 @@ async function initTSLGraph() {
+@@ -23,8 +23,8 @@ async function initTSLGraph() {
+ 
+     const tslGraph = new TSLGraphEditor();
+ 
+-    renderer.inspector.addTab(tslGraph);
+-    renderer.inspector.setActiveTab(tslGraph);
++    (renderer.inspector as Inspector).addTab(tslGraph);
++    (renderer.inspector as Inspector).setActiveTab(tslGraph);
+ 
+     // Create Materials
+ 
+@@ -64,14 +64,14 @@ async function initTSLGraph() {
  
      // Picker a Material
  
@@ -21027,8 +21038,61 @@ index a6e14348b..c60a2b84d 100644
  
      const raycaster = new THREE.Raycaster();
      const pointer = new THREE.Vector2();
-@@ -195,7 +195,7 @@ async function init() {
-     renderer.inspector.addEventListener('resize', resize);
+ 
+     function removeBoundingBox() {
+-        scene.remove(boundingBox);
+-        boundingBox.dispose();
++        scene.remove(boundingBox!);
++        boundingBox!.dispose();
+     }
+ 
+     tslGraph.addEventListener('change', ({ material }) => {
+@@ -84,8 +84,12 @@ async function initTSLGraph() {
+ 
+     tslGraph.addEventListener('remove', ({ graphId }) => {
+         scene.traverse(object => {
+-            if (object.material && object.material.userData && object.material.userData.graphId === graphId) {
+-                tslGraph.restoreMaterial(object.material);
++            if (
++                (object as THREE.Mesh).material &&
++                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.userData &&
++                (object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material.userData.graphId === graphId
++            ) {
++                tslGraph.restoreMaterial((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).material);
+             }
+         });
+     });
+@@ -111,7 +115,7 @@ async function initTSLGraph() {
+ 
+         if (intersects.length > 0) {
+             for (const intersect of intersects) {
+-                const object = intersect.object;
++                const object = intersect.object as THREE.Mesh<THREE.BufferGeometry, THREE.Material> | THREE.Sprite;
+                 const material = object.material;
+ 
+                 if (material.userData && material.userData.graphId) {
+@@ -125,13 +129,13 @@ async function initTSLGraph() {
+                     graphMaterial = material;
+                 }
+ 
+-                if (object.isMesh || object.isSprite) {
++                if ((object as THREE.Mesh).isMesh || (object as THREE.Sprite).isSprite) {
+                     break;
+                 }
+             }
+         }
+ 
+-        tslGraph.setMaterial(graphMaterial);
++        tslGraph.setMaterial(graphMaterial!);
+     });
+ }
+ 
+@@ -192,10 +196,10 @@ async function init() {
+     resize();
+ 
+     window.addEventListener('resize', resize);
+-    renderer.inspector.addEventListener('resize', resize);
++    (renderer.inspector as Inspector).addEventListener('resize', resize);
  }
  
 -async function createShaderBall(material, position = new THREE.Vector3()) {
@@ -21036,7 +21100,7 @@ index a6e14348b..c60a2b84d 100644
      const model = prefab.clone();
      model.position.copy(position);
      scene.add(model);
-@@ -213,7 +213,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
+@@ -213,7 +217,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
  }
  
  function initGUI() {
@@ -21045,7 +21109,21 @@ index a6e14348b..c60a2b84d 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -254,7 +254,7 @@ function render() {
+@@ -232,11 +236,11 @@ function initGUI() {
+             setVisibility('Preview_Mesh', value);
+         });
+ 
+-    renderer.inspector.hide();
++    (renderer.inspector as Inspector).hide();
+ }
+ 
+ function resize() {
+-    const size = renderer.inspector.getSize();
++    const size = (renderer.inspector as Inspector).getSize();
+     const width = window.innerWidth - size.width;
+     const height = window.innerHeight - size.height;
+ 
+@@ -254,7 +258,7 @@ function render() {
  
  //
  
@@ -21054,7 +21132,7 @@ index a6e14348b..c60a2b84d 100644
      scene.traverse(function (node) {
          if (node.isMesh) {
              if (node.name == name) node.visible = visible;
-@@ -265,26 +265,32 @@ function setVisibility(name, visible) {
+@@ -265,26 +269,32 @@ function setVisibility(name, visible) {
  function createGroudMaterial() {
      const material = new THREE.MeshBasicNodeMaterial();
  
