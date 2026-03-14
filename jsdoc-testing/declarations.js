@@ -150,6 +150,7 @@ const files = [
     'renderers/common/UniformsGroup',
     'renderers/common/XRManager',
     'renderers/common/XRRenderTarget',
+    'renderers/webgl-fallback/utils/WebGLCapabilities',
     'renderers/webgpu/nodes/BasicNodeLibrary',
     'renderers/webgpu/nodes/StandardNodeLibrary',
     'scenes/Fog',
