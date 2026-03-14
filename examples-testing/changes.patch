@@ -21001,6 +21001,107 @@ index 739138504..46c0eead5 100644
  
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
+diff --git a/examples-testing/examples/webgpu_tsl_graph.ts b/examples-testing/examples/webgpu_tsl_graph.ts
+index a6e14348b..c60a2b84d 100644
+--- a/examples-testing/examples/webgpu_tsl_graph.ts
++++ b/examples-testing/examples/webgpu_tsl_graph.ts
+@@ -12,9 +12,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { TSLGraphLoader } from 'three/addons/inspector/addons/tsl-graph/TSLGraphLoader.js';
+ import { TSLGraphEditor } from 'three/addons/inspector/addons/tsl-graph/TSLGraphEditor.js';
+ 
+-let camera, scene, renderer;
+-let controls;
+-let prefab;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
++let prefab: THREE.Group;
+ 
+ init();
+ 
+@@ -64,7 +64,7 @@ async function initTSLGraph() {
+ 
+     // Picker a Material
+ 
+-    let boundingBox = null;
++    let boundingBox: THREE.BoxHelper | null = null;
+ 
+     const raycaster = new THREE.Raycaster();
+     const pointer = new THREE.Vector2();
+@@ -195,7 +195,7 @@ async function init() {
+     renderer.inspector.addEventListener('resize', resize);
+ }
+ 
+-async function createShaderBall(material, position = new THREE.Vector3()) {
++async function createShaderBall(material: THREE.Material, position = new THREE.Vector3()) {
+     const model = prefab.clone();
+     model.position.copy(position);
+     scene.add(model);
+@@ -213,7 +213,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
+ }
+ 
+ function initGUI() {
+-    const gui = renderer.inspector.createParameters('Shader Ball');
++    const gui = (renderer.inspector as Inspector).createParameters('Shader Ball');
+ 
+     const API = {
+         showCalibrationMesh: true,
+@@ -254,7 +254,7 @@ function render() {
+ 
+ //
+ 
+-function setVisibility(name, visible) {
++function setVisibility(name: string, visible: boolean) {
+     scene.traverse(function (node) {
+         if (node.isMesh) {
+             if (node.name == name) node.visible = visible;
+@@ -265,26 +265,32 @@ function setVisibility(name, visible) {
+ function createGroudMaterial() {
+     const material = new THREE.MeshBasicNodeMaterial();
+ 
+-    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
+-        // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
++    const grid = Fn(
++        ([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [
++            THREE.Node<'vec2'>,
++            THREE.Node<'float'>,
++            THREE.Node<'float'>,
++        ]) => {
++            // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
+ 
+-        const g = fract(coord);
+-        const fw = fwidth(coord);
+-        const gx = abs(g.x.sub(0.5));
+-        const gy = abs(g.y.sub(0.5));
++            const g = fract(coord);
++            const fw = fwidth(coord);
++            const gx = abs(g.x.sub(0.5));
++            const gy = abs(g.y.sub(0.5));
+ 
+-        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
+-        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
+-        const lines = max(lineX, lineY);
++            const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
++            const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
++            const lines = max(lineX, lineY);
+ 
+-        const squareDist = max(gx, gy);
+-        const aa = max(fw.x, fw.y);
+-        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
++            const squareDist = max(gx, gy);
++            const aa = max(fw.x, fw.y);
++            const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
+ 
+-        return max(dots, lines);
+-    });
++            return max(dots, lines);
++        },
++    );
+ 
+-    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]) => {
++    const fade = Fn(([radius = float(10.0), falloff = float(1.0)]: [THREE.Node<'float'>, THREE.Node<'float'>]) => {
+         return smoothstep(radius, radius.sub(falloff), length(positionWorld));
+     });
+ 
 diff --git a/examples-testing/examples/webgpu_tsl_halftone.ts b/examples-testing/examples/webgpu_tsl_halftone.ts
 index 682e1df64..6aef3f0dd 100644
 --- a/examples-testing/examples/webgpu_tsl_halftone.ts
