@@ -12035,10 +12035,10 @@ index caf764118..32db04c0c 100644
 +
 +export default Info;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
-index 4d6cb5ab3..da0155896 100644
+index 7deedcbb7..ff7a1d39e 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/InspectorBase.d.ts
-@@ -1,4 +1,12 @@
+@@ -1,11 +1,23 @@
 -export default InspectorBase;
 +import NodeFrame from '../../nodes/core/NodeFrame.js';
 +import Renderer from './Renderer.js';
@@ -12048,11 +12048,24 @@ index 4d6cb5ab3..da0155896 100644
 +import { Camera } from '../../cameras/Camera.js';
 +import { RenderTarget } from '../../core/RenderTarget.js';
 +import { Texture } from '../../textures/Texture.js';
++import { EventDispatcher } from '../../core/EventDispatcher.js';
++
++export interface InspectorBaseEventMap {
++}
 +
  /**
   * InspectorBase is the base class for all inspectors.
   *
-@@ -17,26 +25,26 @@ declare class InspectorBase {
+  * @class InspectorBase
+- * @augments EventDispatcher
+  */
+-declare class InspectorBase extends EventDispatcher {
++declare class InspectorBase<TEventMap extends InspectorBaseEventMap = InspectorBaseEventMap>
++    extends EventDispatcher<TEventMap> {
+     /**
+      * The renderer associated with this inspector.
+      *
+@@ -18,26 +30,26 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @type {Object}
       */
@@ -12083,7 +12096,7 @@ index 4d6cb5ab3..da0155896 100644
      /**
       * Initializes the inspector.
       */
-@@ -54,28 +62,28 @@ declare class InspectorBase {
+@@ -55,28 +67,28 @@ declare class InspectorBase extends EventDispatcher {
       *
       * @param {Node} node - The node to inspect.
       */
@@ -12116,7 +12129,7 @@ index 4d6cb5ab3..da0155896 100644
      /**
       * Called when a render operation begins.
       *
-@@ -84,24 +92,26 @@ declare class InspectorBase {
+@@ -85,25 +97,26 @@ declare class InspectorBase extends EventDispatcher {
       * @param {Camera} camera - The camera being used for rendering.
       * @param {?WebGLRenderTarget} renderTarget - The render target, if any.
       */
@@ -12145,6 +12158,7 @@ index 4d6cb5ab3..da0155896 100644
 -    copyFramebufferToTexture(): void;
 +    copyFramebufferToTexture(framebufferTexture: Texture): void;
  }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export default InspectorBase;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts b/jsdoc-testing/jsdoc/renderers/common/Pipeline.d.ts
