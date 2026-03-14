@@ -9,6 +9,7 @@ export { default as PostProcessing } from "./renderers/common/PostProcessing.js"
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
 export type { default as Renderer } from "./renderers/common/Renderer.js";
 export { default as RenderPipeline } from "./renderers/common/RenderPipeline.js";
+export { default as WebGLCapabilities } from "./renderers/webgl-fallback/utils/WebGLCapabilities.js";
 export { default as WebGLBackend } from "./renderers/webgl-fallback/WebGLBackend.js";
 export { default as WebGPUBackend } from "./renderers/webgpu/WebGPUBackend.js";
 export { default as WebGPURenderer } from "./renderers/webgpu/WebGPURenderer.js";
@@ -31,5 +32,7 @@ export { default as StorageArrayTexture } from "./renderers/common/StorageArrayT
 export { default as StorageBufferAttribute } from "./renderers/common/StorageBufferAttribute.js";
 export { default as StorageInstancedBufferAttribute } from "./renderers/common/StorageInstancedBufferAttribute.js";
 export { default as StorageTexture } from "./renderers/common/StorageTexture.js";
+export { default as GLSLNodeBuilder } from "./renderers/webgl-fallback/nodes/GLSLNodeBuilder.js";
+export { default as BasicNodeLibrary } from "./renderers/webgpu/nodes/BasicNodeLibrary.js";
 import * as TSL from "./nodes/TSL.js";
 export { TSL };

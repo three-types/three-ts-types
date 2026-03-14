@@ -13258,6 +13258,162 @@ index 2163e1b06..a7cb196ef 100644
      }
  }
  
+diff --git a/examples-testing/examples/webgl_tsl_clearcoat.ts b/examples-testing/examples/webgl_tsl_clearcoat.ts
+index 6a123032e..99fab8d99 100644
+--- a/examples-testing/examples/webgl_tsl_clearcoat.ts
++++ b/examples-testing/examples/webgl_tsl_clearcoat.ts
+@@ -7,10 +7,10 @@ import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.
+ 
+ import { FlakesTexture } from 'three/addons/textures/FlakesTexture.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGLRenderer;
+ 
+-let particleLight;
+-let group;
++let particleLight: THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
++let group: THREE.Group;
+ 
+ init();
+ 
+diff --git a/examples-testing/examples/webgl_tsl_instancing.ts b/examples-testing/examples/webgl_tsl_instancing.ts
+index c80bebf9b..3bdc2e645 100644
+--- a/examples-testing/examples/webgl_tsl_instancing.ts
++++ b/examples-testing/examples/webgl_tsl_instancing.ts
+@@ -9,8 +9,12 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
+ import { MeshPhongNodeMaterial } from 'three/webgpu';
+ import { sin, time, vec3, positionWorld } from 'three/tsl';
+ 
+-let container, stats, gui, guiStatsEl;
+-let camera, controls, scene, renderer, material;
++let container: HTMLElement, stats: Stats, gui: GUI, guiStatsEl: HTMLDivElement;
++let camera: THREE.PerspectiveCamera,
++    controls: OrbitControls,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    material: MeshPhongNodeMaterial;
+ 
+ // gui
+ 
+@@ -33,10 +37,11 @@ initMesh();
+ //
+ 
+ function clean() {
+-    const meshes = [];
++    const meshes: THREE.Mesh<THREE.BufferGeometry, THREE.Material>[] = [];
+ 
+     scene.traverse(function (object) {
+-        if (object.isMesh) meshes.push(object);
++        if ((object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>).isMesh)
++            meshes.push(object as THREE.Mesh<THREE.BufferGeometry, THREE.Material>);
+     });
+ 
+     for (let i = 0; i < meshes.length; i++) {
+@@ -53,7 +58,7 @@ const randomizeMatrix = (function () {
+     const quaternion = new THREE.Quaternion();
+     const scale = new THREE.Vector3();
+ 
+-    return function (matrix) {
++    return function (matrix: THREE.Matrix4) {
+         position.x = Math.random() * 40 - 20;
+         position.y = Math.random() * 40 - 20;
+         position.z = Math.random() * 40 - 20;
+@@ -106,7 +111,7 @@ function initMesh() {
+     });
+ }
+ 
+-function makeInstanced(geometry) {
++function makeInstanced(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
+     const matrix = new THREE.Matrix4();
+     const mesh = new THREE.InstancedMesh(geometry, material, api.count);
+ 
+@@ -127,7 +132,7 @@ function makeInstanced(geometry) {
+     ].join('<br/>');
+ }
+ 
+-function makeMerged(geometry) {
++function makeMerged(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
+     const geometries = [];
+     const matrix = new THREE.Matrix4();
+ 
+@@ -152,7 +157,7 @@ function makeMerged(geometry) {
+     ].join('<br/>');
+ }
+ 
+-function makeNaive(geometry) {
++function makeNaive(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
+     const matrix = new THREE.Matrix4();
+ 
+     for (let i = 0; i < api.count; i++) {
+@@ -191,7 +196,7 @@ function init() {
+     renderer.setPixelRatio(window.devicePixelRatio);
+     renderer.setSize(width, height);
+     renderer.setAnimationLoop(animate);
+-    container = document.getElementById('container');
++    container = document.getElementById('container')!;
+     container.appendChild(renderer.domElement);
+ 
+     // scene
+@@ -260,7 +265,7 @@ function animate() {
+ 
+ //
+ 
+-function getGeometryByteLength(geometry) {
++function getGeometryByteLength(geometry: THREE.BufferGeometry | THREE.InstancedBufferGeometry) {
+     let total = 0;
+ 
+     if (geometry.index) total += geometry.index.array.byteLength;
+@@ -273,7 +278,7 @@ function getGeometryByteLength(geometry) {
+ }
+ 
+ // Source: https://stackoverflow.com/a/18650828/1314762
+-function formatBytes(bytes, decimals) {
++function formatBytes(bytes: number, decimals: number) {
+     if (bytes === 0) return '0 bytes';
+ 
+     const k = 1024;
+diff --git a/examples-testing/examples/webgl_tsl_shadowmap.ts b/examples-testing/examples/webgl_tsl_shadowmap.ts
+index f006d7c1a..29913d9a4 100644
+--- a/examples-testing/examples/webgl_tsl_shadowmap.ts
++++ b/examples-testing/examples/webgl_tsl_shadowmap.ts
+@@ -5,9 +5,9 @@ import { mx_fractal_noise_float, mx_fractal_noise_vec3, positionLocal, positionW
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ 
+-let camera, scene, renderer, timer;
+-let dirLight, spotLight;
+-let torusKnot, dirGroup;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGLRenderer, timer: THREE.Timer;
++let dirLight: THREE.DirectionalLight, spotLight: THREE.SpotLight;
++let torusKnot: THREE.Mesh<THREE.TorusKnotGeometry, THREE.MeshPhongNodeMaterial>, dirGroup: THREE.Group;
+ 
+ init();
+ 
+@@ -144,7 +144,7 @@ function resize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     timer.update();
+ 
+     const delta = timer.getDelta();
+diff --git a/examples-testing/examples/webgl_tsl_skinning.ts b/examples-testing/examples/webgl_tsl_skinning.ts
+index 6164dbab6..27b9b71b6 100644
+--- a/examples-testing/examples/webgl_tsl_skinning.ts
++++ b/examples-testing/examples/webgl_tsl_skinning.ts
+@@ -4,9 +4,9 @@ import { WebGLRenderer } from 'three';
+ 
+ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+ 
+-let camera, scene, renderer;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: WebGLRenderer;
+ 
+-let mixer, timer;
++let mixer: THREE.AnimationMixer, timer: THREE.Timer;
+ 
+ init();
+ 
 diff --git a/examples-testing/examples/webgl_ubo.ts b/examples-testing/examples/webgl_ubo.ts
 index a34a5b2ff..75fc5e0d8 100644
 --- a/examples-testing/examples/webgl_ubo.ts
