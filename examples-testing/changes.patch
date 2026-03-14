@@ -21002,7 +21002,7 @@ index 739138504..46c0eead5 100644
      gui.add(size, 'value', 0, 1, 0.001).name('size');
  
 diff --git a/examples-testing/examples/webgpu_tsl_graph.ts b/examples-testing/examples/webgpu_tsl_graph.ts
-index a6e14348b..6f7ecf02a 100644
+index a6e14348b..ab7a56592 100644
 --- a/examples-testing/examples/webgpu_tsl_graph.ts
 +++ b/examples-testing/examples/webgpu_tsl_graph.ts
 @@ -12,9 +12,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21087,7 +21087,7 @@ index a6e14348b..6f7ecf02a 100644
      });
  }
  
-@@ -192,10 +196,10 @@ async function init() {
+@@ -192,20 +196,23 @@ async function init() {
      resize();
  
      window.addEventListener('resize', resize);
@@ -21096,11 +21096,26 @@ index a6e14348b..6f7ecf02a 100644
  }
  
 -async function createShaderBall(material, position = new THREE.Vector3()) {
-+async function createShaderBall(material: THREE.Material, position = new THREE.Vector3()) {
++async function createShaderBall(material: THREE.NodeMaterial, position = new THREE.Vector3()) {
      const model = prefab.clone();
      model.position.copy(position);
      scene.add(model);
-@@ -213,7 +217,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
+ 
+     //
+ 
+-    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
++    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh<
++        THREE.BufferGeometry,
++        THREE.NodeMaterial
++    >;
+     calibrationMesh.material = material;
+ 
+-    const previewMesh = model.getObjectByName('Preview_Mesh');
++    const previewMesh = model.getObjectByName('Preview_Mesh') as THREE.Mesh<THREE.BufferGeometry, THREE.NodeMaterial>;
+     previewMesh.material = material;
+ 
+     calibrationMesh.renderOrder = 1;
+@@ -213,7 +220,7 @@ async function createShaderBall(material, position = new THREE.Vector3()) {
  }
  
  function initGUI() {
@@ -21109,7 +21124,7 @@ index a6e14348b..6f7ecf02a 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -232,11 +236,11 @@ function initGUI() {
+@@ -232,11 +239,11 @@ function initGUI() {
              setVisibility('Preview_Mesh', value);
          });
  
@@ -21123,16 +21138,19 @@ index a6e14348b..6f7ecf02a 100644
      const width = window.innerWidth - size.width;
      const height = window.innerHeight - size.height;
  
-@@ -254,7 +258,7 @@ function render() {
+@@ -254,9 +261,9 @@ function render() {
  
  //
  
 -function setVisibility(name, visible) {
 +function setVisibility(name: string, visible: boolean) {
      scene.traverse(function (node) {
-         if (node.isMesh) {
+-        if (node.isMesh) {
++        if ((node as THREE.Mesh).isMesh) {
              if (node.name == name) node.visible = visible;
-@@ -265,26 +269,32 @@ function setVisibility(name, visible) {
+         }
+     });
+@@ -265,26 +272,32 @@ function setVisibility(name, visible) {
  function createGroudMaterial() {
      const material = new THREE.MeshBasicNodeMaterial();
  
