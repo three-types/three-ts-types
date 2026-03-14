@@ -162,12 +162,6 @@ declare class XRManager extends EventDispatcher<XRManagerEventMap> {
      * @readonly
      */
     private readonly _supportsGlBinding;
-    _frameBufferTargets:
-        | WeakMap<XRRenderTarget, {
-            frameBufferTarget: RenderTarget | null;
-            quad: QuadMesh;
-        }>
-        | null;
     /**
      * Helper function to create native WebXR Layer.
      *
