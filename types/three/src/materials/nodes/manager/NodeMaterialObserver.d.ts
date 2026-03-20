@@ -1,4 +1,5 @@
 import { BufferAttribute } from "../../../core/BufferAttribute.js";
+import { BufferGeometry } from "../../../core/BufferGeometry.js";
 import { Light } from "../../../lights/Light.js";
 import NodeBuilder from "../../../nodes/core/NodeBuilder.js";
 import NodeFrame from "../../../nodes/core/NodeFrame.js";
@@ -95,7 +96,7 @@ declare class NodeMaterialObserver {
      * @param {BufferGeometry} geometry - The geometry.
      * @return {Object} An object for monitoring geometry properties.
      */
-    getGeometryData(geometry: BufferGeometry): Object;
+    getGeometryData(geometry: BufferGeometry): unknown;
     /**
      * Returns a material data structure holding the material property values for
      * monitoring.
