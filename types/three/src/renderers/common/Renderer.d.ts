@@ -1170,9 +1170,9 @@ declare class Renderer {
     /**
      * Sets the output render target for the renderer.
      *
-     * @param {Object} renderTarget - The render target to set as the output target.
+     * @param {?RenderTarget} renderTarget - The render target to set as the output target.
      */
-    setOutputRenderTarget(renderTarget: RenderTarget): void;
+    setOutputRenderTarget(renderTarget: RenderTarget | null): void;
     /**
      * Returns the current output target.
      *
