@@ -1,4 +1,4 @@
-import { TSLGraphEditor } from "./extensions/tsl-graph/TSLGraphEditor";
+import { TSLGraphEditor } from "./extensions/tsl-graph/TSLGraphEditor.js";
 import { RendererInspector, RendererInspectorEventMap } from "./RendererInspector.js";
 import { ParametersGroup } from "./tabs/Parameters.js";
 import { Tab } from "./ui/Tab.js";
