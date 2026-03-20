@@ -1422,6 +1422,24 @@ index 24149839..ca40a937 100644
       */
      data: Uint8Array;
      /**
+diff --git a/jsdoc-testing/jsdoc/audio/AudioContext.d.ts b/jsdoc-testing/jsdoc/audio/AudioContext.d.ts
+index 3a463251..cc937757 100644
+--- a/jsdoc-testing/jsdoc/audio/AudioContext.d.ts
++++ b/jsdoc-testing/jsdoc/audio/AudioContext.d.ts
+@@ -9,11 +9,11 @@ export class AudioContext {
+      *
+      * @return {Window.AudioContext} The native audio context.
+      */
+-    static getContext(): Window.AudioContext;
++    static getContext(): AudioContext;
+     /**
+      * Allows to set the global native audio context from outside.
+      *
+      * @param {Window.AudioContext} value - The native context to set.
+      */
+-    static setContext(value: Window.AudioContext): void;
++    static setContext(value: AudioContext): void;
+ }
 diff --git a/jsdoc-testing/jsdoc/audio/AudioListener.d.ts b/jsdoc-testing/jsdoc/audio/AudioListener.d.ts
 index c668dd51..f009724a 100644
 --- a/jsdoc-testing/jsdoc/audio/AudioListener.d.ts
@@ -9989,10 +10007,10 @@ index 8b5885c3..6175b46a 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
-index cd485df5..90fab7a8 100644
+index cd485df5..0eabf44e 100644
 --- a/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/nodes/manager/NodeMaterialObserver.d.ts
-@@ -1,4 +1,12 @@
+@@ -1,4 +1,13 @@
 -export default NodeMaterialObserver;
 +import NodeBuilder from '../../../nodes/core/NodeBuilder.js';
 +import RenderObject from '../../../renderers/common/RenderObject.js';
@@ -10002,11 +10020,12 @@ index cd485df5..90fab7a8 100644
 +import LightsNode from '../../../nodes/lighting/LightsNode.js';
 +import NodeFrame from '../../../nodes/core/NodeFrame.js';
 +import { BufferAttribute } from '../../../core/BufferAttribute.js';
++import { BufferGeometry } from '../../../core/BufferGeometry.js';
 +
  /**
   * This class is used by {@link WebGPURenderer} as management component.
   * It's primary purpose is to determine whether render objects require a
-@@ -17,7 +25,7 @@ declare class NodeMaterialObserver {
+@@ -17,7 +26,7 @@ declare class NodeMaterialObserver {
       *
       * @type {WeakMap<RenderObject,Object>}
       */
@@ -10015,7 +10034,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Whether the material uses node objects or not.
       *
-@@ -35,7 +43,7 @@ declare class NodeMaterialObserver {
+@@ -35,7 +44,7 @@ declare class NodeMaterialObserver {
       *
       * @type {Array<string>}
       */
@@ -10024,7 +10043,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Holds the current render ID from the node frame.
       *
-@@ -63,7 +71,7 @@ declare class NodeMaterialObserver {
+@@ -63,7 +72,7 @@ declare class NodeMaterialObserver {
       * @param {RenderObject} renderObject - The render object.
       * @return {Object} The monitoring data.
       */
@@ -10033,7 +10052,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Returns an attribute data structure holding the attributes versions for
       * monitoring.
-@@ -71,7 +79,7 @@ declare class NodeMaterialObserver {
+@@ -71,7 +80,7 @@ declare class NodeMaterialObserver {
       * @param {Object} attributes - The geometry attributes.
       * @return {Object} An object for monitoring the versions of attributes.
       */
@@ -10042,7 +10061,16 @@ index cd485df5..90fab7a8 100644
      /**
       * Returns `true` if the node builder's material uses
       * node properties.
-@@ -95,7 +103,7 @@ declare class NodeMaterialObserver {
+@@ -87,7 +96,7 @@ declare class NodeMaterialObserver {
+      * @param {BufferGeometry} geometry - The geometry.
+      * @return {Object} An object for monitoring geometry properties.
+      */
+-    getGeometryData(geometry: BufferGeometry): Object;
++    getGeometryData(geometry: BufferGeometry): unknown;
+     /**
+      * Returns a material data structure holding the material property values for
+      * monitoring.
+@@ -95,7 +104,7 @@ declare class NodeMaterialObserver {
       * @param {Material} material - The material.
       * @return {Object} An object for monitoring material properties.
       */
@@ -10051,7 +10079,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Returns `true` if the given render object has not changed its state.
       *
-@@ -104,14 +112,14 @@ declare class NodeMaterialObserver {
+@@ -104,14 +113,14 @@ declare class NodeMaterialObserver {
       * @param {number} renderId - The current render ID.
       * @return {boolean} Whether the given render object has changed its state or not.
       */
@@ -10068,7 +10096,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Returns the lights for the given lights node and render ID.
       *
-@@ -119,7 +127,7 @@ declare class NodeMaterialObserver {
+@@ -119,7 +128,7 @@ declare class NodeMaterialObserver {
       * @param {number} renderId - The render ID.
       * @return {Array<Object>} The lights for the given lights node and render ID.
       */
@@ -10077,7 +10105,7 @@ index cd485df5..90fab7a8 100644
      /**
       * Checks if the given render object requires a refresh.
       *
-@@ -129,3 +137,5 @@ declare class NodeMaterialObserver {
+@@ -129,3 +138,5 @@ declare class NodeMaterialObserver {
       */
      needsRefresh(renderObject: RenderObject, nodeFrame: NodeFrame): boolean;
  }
