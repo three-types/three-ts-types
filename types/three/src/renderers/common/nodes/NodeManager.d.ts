@@ -300,7 +300,7 @@ declare class NodeManager extends DataMap {
     updateForCompute(computeNode: ComputeNode): void;
     /**
      * Triggers the call of `update()` methods
-     * for all nodes of the given compute node.
+     * for all nodes of the given render object.
      *
      * @param {RenderObject} renderObject - The render object.
      */
