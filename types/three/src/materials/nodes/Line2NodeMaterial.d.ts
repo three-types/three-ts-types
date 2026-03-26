@@ -82,6 +82,7 @@ declare class Line2NodeMaterial extends NodeMaterial {
      */
     readonly isLine2NodeMaterial: boolean;
     setValues(values?: Line2NodeMaterialParameters): void;
+    copy(source: Line2NodeMaterial): this;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
