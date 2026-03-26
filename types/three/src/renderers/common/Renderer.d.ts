@@ -359,13 +359,14 @@ declare class Renderer {
      */
     private _background;
     /**
+     * Cache for the fullscreen quad.
      * This fullscreen quad is used for internal render passes
      * like the tone mapping and color space output pass.
      *
      * @private
-     * @type {QuadMesh}
+     * @type {Map<Texture,QuadMesh>}
      */
-    private _quad;
+    private _quadCache;
     /**
      * A reference to the current render context.
      *
