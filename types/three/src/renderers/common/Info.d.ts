@@ -1,6 +1,7 @@
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
 import { Texture } from "../../textures/Texture.js";
+import ProgrammableStage from "./ProgrammableStage.js";
 
 /**
  * This renderer module provides a series of statistical information
@@ -91,6 +92,7 @@ declare class Info {
      * @property {number} indexAttributesSize - The memory size of active index attributes in bytes.
      * @property {number} storageAttributesSize - The memory size of active storage attributes in bytes.
      * @property {number} indirectStorageAttributesSize - The memory size of active indirect storage attributes in bytes.
+     * @property {number} programsSize - The memory size of active programs in bytes.
      */
     readonly memory: {
         geometries: number;
@@ -107,6 +109,7 @@ declare class Info {
         indexAttributesSize: number;
         storageAttributesSize: number;
         indirectStorageAttributesSize: number;
+        programsSize: number;
     };
     /**
      * Map for storing calculated byte sizes of tracked objects.
@@ -181,6 +184,18 @@ declare class Info {
      * @param {BufferAttribute} attribute
      */
     destroyAttribute(attribute: BufferAttribute): void;
+    /**
+     * Tracks program memory explicitly, updating counts and byte tracking.
+     *
+     * @param {ProgrammableStage} program - The program to track.
+     */
+    createProgram(program: ProgrammableStage): void;
+    /**
+     * Tracks program memory explicitly, updating counts and byte tracking.
+     *
+     * @param {Object} program - The program to track.
+     */
+    destroyProgram(program: ProgrammableStage): void;
     /**
      * Calculates the memory size of a texture in bytes.
      *

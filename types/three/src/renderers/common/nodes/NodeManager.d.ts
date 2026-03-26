@@ -262,14 +262,6 @@ declare class NodeManager extends DataMap {
      */
     getOutputCacheKey(): string;
     /**
-     * Checks if the output configuration (tone mapping and color space) for
-     * the given target has changed.
-     *
-     * @param {Texture} outputTarget - The output target.
-     * @return {boolean} Whether the output configuration has changed or not.
-     */
-    hasOutputChange(outputTarget: Texture): boolean;
-    /**
      * Returns a node that represents the output configuration (tone mapping and
      * color space) for the current target.
      *
