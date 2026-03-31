@@ -1,5 +1,3 @@
-/// <reference types="@webgpu/types" />
-
 import { CoordinateSystem, HalfFloatType, UnsignedByteType } from "../../constants.js";
 import Backend, { BackendParameters } from "../common/Backend.js";
 
