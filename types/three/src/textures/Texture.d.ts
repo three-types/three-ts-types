@@ -453,6 +453,15 @@ export class Texture<TImage = unknown> extends EventDispatcher<{ dispose: {} }> 
     pmremVersion: number;
 
     /**
+     * Whether the texture should use one of the 16 bit integer formats which are normalized
+     * to [0, 1] or [-1, 1] (depending on signed/unsigned) when sampled.
+     *
+     * @type {boolean}
+     * @default false
+     */
+    normalized: boolean;
+
+    /**
      * Set this to `true` to trigger an update next time the texture is used. Particularly important for setting the wrap mode.
      */
     set needsUpdate(value: boolean);
