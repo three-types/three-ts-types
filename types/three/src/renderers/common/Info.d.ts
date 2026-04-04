@@ -84,6 +84,7 @@ declare class Info {
      * @property {number} indexAttributes - The number of active index attributes.
      * @property {number} storageAttributes - The number of active storage attributes.
      * @property {number} indirectStorageAttributes - The number of active indirect storage attributes.
+     * @property {number} readbackBuffers - The number of active readback buffers.
      * @property {number} programs - The number of active programs.
      * @property {number} renderTargets - The number of active renderTargets.
      * @property {number} total - The total memory size in bytes.
@@ -92,6 +93,7 @@ declare class Info {
      * @property {number} indexAttributesSize - The memory size of active index attributes in bytes.
      * @property {number} storageAttributesSize - The memory size of active storage attributes in bytes.
      * @property {number} indirectStorageAttributesSize - The memory size of active indirect storage attributes in bytes.
+     * @property {number} readbackBuffersSize - The memory size of active readback buffers in bytes.
      * @property {number} programsSize - The memory size of active programs in bytes.
      */
     readonly memory: {
@@ -184,6 +186,18 @@ declare class Info {
      * @param {BufferAttribute} attribute
      */
     destroyAttribute(attribute: BufferAttribute): void;
+    /**
+     * Tracks a readback buffer memory explicitly.
+     *
+     * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
+     */
+    createReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
+    /**
+     * Tracks a readback buffer memory explicitly.
+     *
+     * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
+     */
+    destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
     /**
      * Tracks program memory explicitly, updating counts and byte tracking.
      *

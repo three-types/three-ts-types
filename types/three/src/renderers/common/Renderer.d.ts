@@ -865,10 +865,10 @@ declare class Renderer {
      * from the GPU to the CPU in context of compute shaders.
      *
      * @async
-     * @param {StorageBufferAttribute} attribute - The storage buffer attribute.
+     * @param {StorageBufferAttribute|ReadbackBuffer} buffer - The storage buffer attribute.
      * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
      */
-    getArrayBufferAsync(attribute: BufferAttribute): Promise<ArrayBuffer>;
+    getArrayBufferAsync(buffer: StorageBufferAttribute | ReadbackBuffer): Promise<ArrayBuffer>;
     /**
      * Returns the rendering context.
      *
