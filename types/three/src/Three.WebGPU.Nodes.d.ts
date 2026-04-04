@@ -7,6 +7,7 @@ export { default as PMREMGenerator } from "./renderers/common/extras/PMREMGenera
 export { default as Lighting } from "./renderers/common/Lighting.js";
 export { default as PostProcessing } from "./renderers/common/PostProcessing.js";
 export { default as QuadMesh } from "./renderers/common/QuadMesh.js";
+export { default as ReadbackBuffer } from "./renderers/common/ReadbackBuffer.js";
 export type { default as Renderer } from "./renderers/common/Renderer.js";
 export { default as RenderPipeline } from "./renderers/common/RenderPipeline.js";
 export { default as WebGLBackend } from "./renderers/webgl-fallback/WebGLBackend.js";

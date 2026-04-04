@@ -133,6 +133,7 @@ const files = [
     'renderers/common/Pipeline',
     'renderers/common/Pipelines',
     'renderers/common/ProgrammableStage',
+    'renderers/common/ReadbackBuffer',
     'renderers/common/RenderBundle',
     'renderers/common/RenderBundles',
     'renderers/common/RenderContext',
