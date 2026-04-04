@@ -103,6 +103,7 @@ declare class Info {
         indexAttributes: number;
         storageAttributes: number;
         indirectStorageAttributes: number;
+        readbackBuffers: number;
         programs: number;
         renderTargets: number;
         total: number;
@@ -111,6 +112,7 @@ declare class Info {
         indexAttributesSize: number;
         storageAttributesSize: number;
         indirectStorageAttributesSize: number;
+        readbackBuffersSize: number;
         programsSize: number;
     };
     /**

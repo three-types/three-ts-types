@@ -1,6 +1,6 @@
 import { Camera } from "../../cameras/Camera.js";
 import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
-import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
+import { TypedArray } from "../../core/BufferAttribute.js";
 import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
@@ -27,6 +27,7 @@ import Info from "./Info.js";
 import InspectorBase from "./InspectorBase.js";
 import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
+import ReadbackBuffer from "./ReadbackBuffer.js";
 import { RenderItem } from "./RenderList.js";
 import StorageBufferAttribute from "./StorageBufferAttribute.js";
 import XRManager from "./XRManager.js";
