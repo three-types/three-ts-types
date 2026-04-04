@@ -11998,20 +11998,21 @@ index a1cd970c9..704cfb9f6 100644
 +
 +export default Geometries;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-index f311b9898..1a2992d11 100644
+index f311b9898..6df57cbe5 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-@@ -1,4 +1,8 @@
+@@ -1,4 +1,9 @@
 -export default Info;
 +import { Object3D } from '../../core/Object3D.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { BufferAttribute } from '../../core/BufferAttribute.js';
 +import ProgrammableStage from './ProgrammableStage.js';
++import ReadbackBuffer from './ReadbackBuffer.js';
 +
  /**
   * This renderer module provides a series of statistical information
   * about the GPU memory and the rendering process. Useful for debugging
-@@ -46,7 +50,15 @@ declare class Info {
+@@ -46,7 +51,15 @@ declare class Info {
       * @property {number} lines - The number of rendered line primitives of the current frame.
       * @property {number} timestamp - The timestamp of the frame.
       */
@@ -12028,7 +12029,7 @@ index f311b9898..1a2992d11 100644
      /**
       * Compute related metrics.
       *
-@@ -56,7 +68,11 @@ declare class Info {
+@@ -56,7 +69,11 @@ declare class Info {
       * @property {number} frameCalls - The number of compute calls of the current frame.
       * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
       */
@@ -12041,7 +12042,7 @@ index f311b9898..1a2992d11 100644
      /**
       * Memory related metrics.
       *
-@@ -80,7 +96,25 @@ declare class Info {
+@@ -80,7 +97,25 @@ declare class Info {
       * @property {number} readbackBuffersSize - The memory size of active readback buffers in bytes.
       * @property {number} programsSize - The memory size of active programs in bytes.
       */
@@ -12068,7 +12069,7 @@ index f311b9898..1a2992d11 100644
      /**
       * Map for storing calculated byte sizes of tracked objects.
       *
-@@ -177,7 +211,7 @@ declare class Info {
+@@ -177,7 +212,7 @@ declare class Info {
       *
       * @param {Object} program - The program to track.
       */
@@ -12077,7 +12078,7 @@ index f311b9898..1a2992d11 100644
      /**
       * Calculates the memory size of a texture in bytes.
       *
-@@ -195,3 +229,5 @@ declare class Info {
+@@ -195,3 +230,5 @@ declare class Info {
       */
      private _getAttributeMemorySize;
  }
