@@ -2,6 +2,7 @@ import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
 import { Texture } from "../../textures/Texture.js";
 import ProgrammableStage from "./ProgrammableStage.js";
+import ReadbackBuffer from "./ReadbackBuffer.js";
 
 /**
  * This renderer module provides a series of statistical information
