@@ -20,9 +20,10 @@ declare class RenderBundles {
      *
      * @param {BundleGroup} bundleGroup - The bundle group.
      * @param {Camera} camera - The camera the bundle group is rendered with.
+     * @param {RenderContext} renderContext - The render context the bundle is rendered with.
      * @return {RenderBundle} The render bundle.
      */
-    get(bundleGroup: BundleGroup, camera: Camera): RenderBundle;
+    get(bundleGroup: BundleGroup, camera: Camera, renderContext: RenderContext): RenderBundle;
     /**
      * Frees all internal resources.
      */
