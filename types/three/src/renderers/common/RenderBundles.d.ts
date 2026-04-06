@@ -2,6 +2,7 @@ import { Camera } from "../../cameras/Camera.js";
 import BundleGroup from "./BundleGroup.js";
 import ChainMap from "./ChainMap.js";
 import RenderBundle from "./RenderBundle.js";
+import RenderContext from "./RenderContext.js";
 
 /**
  * This renderer module manages render bundles.

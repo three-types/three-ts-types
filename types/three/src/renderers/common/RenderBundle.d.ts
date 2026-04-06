@@ -1,5 +1,6 @@
 import { Camera } from "../../cameras/Camera.js";
 import BundleGroup from "./BundleGroup.js";
+import RenderContext from "./RenderContext.js";
 
 /**
  * This module is used to represent render bundles inside the renderer
