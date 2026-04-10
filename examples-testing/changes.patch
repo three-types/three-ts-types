@@ -9192,6 +9192,50 @@ index 77b254684..b2ccb7690 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = event.clientY - windowHalfY;
  }
+diff --git a/examples-testing/examples/webgl_materials_texture_html.ts b/examples-testing/examples/webgl_materials_texture_html.ts
+index 74f7c3d5e..7403e2e7d 100644
+--- a/examples-testing/examples/webgl_materials_texture_html.ts
++++ b/examples-testing/examples/webgl_materials_texture_html.ts
+@@ -3,14 +3,19 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+ 
+-let camera, scene, renderer, mesh, interactions;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    mesh: THREE.Mesh<RoundedBoxGeometry, THREE.MeshStandardMaterial>,
++    interactions: InteractionManager;
+ 
+ init();
+ 
+ function init() {
+     renderer = new THREE.WebGLRenderer({ antialias: true });
+ 
+-    if (renderer.getContext().texElementImage2D === undefined) {
++    if ((renderer.getContext() as unknown as { texElementImage2D: unknown }).texElementImage2D === undefined) {
++        // @ts-ignore
+         info.innerHTML +=
+             '<br>This browser does not support the <a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a>.';
+     }
+@@ -68,7 +73,7 @@ function init() {
+ 
+     // Button click handler
+ 
+-    element.querySelector('button').addEventListener('click', function () {
++    element.querySelector('button')!.addEventListener('click', function () {
+         this.textContent = 'Clicked!';
+     });
+ 
+@@ -82,7 +87,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     mesh.rotation.x = Math.sin(time * 0.0005) * 0.5;
+     mesh.rotation.y = Math.cos(time * 0.0008) * 0.5;
+ 
 diff --git a/examples-testing/examples/webgl_materials_texture_manualmipmap.ts b/examples-testing/examples/webgl_materials_texture_manualmipmap.ts
 index 24bd4eb9f..2dad75e8e 100644
 --- a/examples-testing/examples/webgl_materials_texture_manualmipmap.ts
@@ -17320,6 +17364,52 @@ index c76df99dc..b94767b77 100644
 +        (material.thicknessScaleNode as THREE.UniformNode<'float', number>).value = thicknessControls.scale;
      });
  }
+ 
+diff --git a/examples-testing/examples/webgpu_materials_texture_html.ts b/examples-testing/examples/webgpu_materials_texture_html.ts
+index 507c836b7..437b7919d 100644
+--- a/examples-testing/examples/webgpu_materials_texture_html.ts
++++ b/examples-testing/examples/webgpu_materials_texture_html.ts
+@@ -1,9 +1,13 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+ import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+ 
+-let camera, scene, renderer, mesh, interactions;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    mesh: THREE.Mesh<RoundedBoxGeometry, THREE.MeshStandardMaterial>,
++    interactions: InteractionManager;
+ 
+ init();
+ 
+@@ -12,6 +16,7 @@ async function init() {
+     await renderer.init();
+ 
+     if (!('requestPaint' in renderer.domElement)) {
++        // @ts-ignore
+         info.innerHTML +=
+             '<br>This browser does not support the <a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a>.';
+     }
+@@ -69,7 +74,7 @@ async function init() {
+ 
+     // Button click handler
+ 
+-    element.querySelector('button').addEventListener('click', function () {
++    element.querySelector('button')!.addEventListener('click', function () {
+         this.textContent = 'Clicked!';
+     });
+ 
+@@ -83,7 +88,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(time) {
++function animate(time: number) {
+     mesh.rotation.x = Math.sin(time * 0.0005) * 0.5;
+     mesh.rotation.y = Math.cos(time * 0.0008) * 0.5;
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts b/examples-testing/examples/webgpu_materials_texture_manualmipmap.ts
 index 090372729..2456b2959 100644
