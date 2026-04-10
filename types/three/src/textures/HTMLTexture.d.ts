@@ -5,7 +5,7 @@ import {
     PixelFormat,
     TextureDataType,
     Wrapping,
-} from "../constants";
+} from "../constants.js";
 import { Texture } from "./Texture.js";
 
 declare class HTMLTexture extends Texture<HTMLElement> {
