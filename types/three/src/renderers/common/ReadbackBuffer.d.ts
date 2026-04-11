@@ -1,4 +1,3 @@
-import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
 
 export interface ReadbackBufferEventMap {
@@ -16,15 +15,27 @@ declare class ReadbackBuffer extends EventDispatcher<ReadbackBufferEventMap> {
     /**
      * Constructs a new readback buffer.
      *
-     * @param {BufferAttribute} attribute - The buffer attribute.
+     * @param {number} maxByteLength - The maximum size of the buffer to be read back.
      */
-    constructor(attribute: BufferAttribute);
+    constructor(maxByteLength: number);
     /**
-     * The buffer attribute.
+     * Name used for debugging purposes.
      *
-     * @type {BufferAttribute}
+     * @type {string}
      */
-    attribute: BufferAttribute;
+    name: string;
+    /**
+     * The mapped, read back array buffer.
+     *
+     * @type {ArrayBuffer|null}
+     */
+    buffer: ArrayBuffer | null;
+    /**
+     * The maximum size of the buffer to be read back.
+     *
+     * @type {number}
+     */
+    maxByteLength: number;
     /**
      * This flag can be used for type testing.
      *
