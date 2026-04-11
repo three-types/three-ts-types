@@ -33,7 +33,7 @@ export interface LayerAttributes {
  *
  * @augments EventDispatcher
  */
-declare class XRManager extends EventDispatcher<XRManagerEventMap> {
+declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap> extends EventDispatcher<TEventMap> {
     /**
      * Constructs a new XR manager.
      *
