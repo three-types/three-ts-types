@@ -284,7 +284,7 @@ index aa45b91f8..0ecc6e0f8 100644
  }
 -import { KeyframeTrack } from './KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
-index b474470e7..e2c6e6d0b 100644
+index b474470e7..b0e635de9 100644
 --- a/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/AnimationMixer.d.ts
 @@ -1,24 +1,71 @@
@@ -327,7 +327,7 @@ index b474470e7..e2c6e6d0b 100644
   * one `AnimationMixer` may be used for each object.
   */
 -export class AnimationMixer extends EventDispatcher {
-+export class AnimationMixer extends EventDispatcher<AnimationMixerEventMap> {
++export class AnimationMixer<TEventMap extends AnimationMixerEventMap = AnimationMixerEventMap> extends EventDispatcher<TEventMap> {
      /**
       * Constructs a new animation mixer.
       *
@@ -3864,7 +3864,7 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/materials/Material.d.ts b/jsdoc-testing/jsdoc/materials/Material.d.ts
-index c05cd91f7..44750427d 100644
+index c05cd91f7..28f9b6c54 100644
 --- a/jsdoc-testing/jsdoc/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/materials/Material.d.ts
 @@ -1,41 +1,35 @@
@@ -4257,7 +4257,7 @@ index c05cd91f7..44750427d 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +335,218 @@ export class Material extends EventDispatcher {
+@@ -381,36 +335,222 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -4453,6 +4453,10 @@ index c05cd91f7..44750427d 100644
 +    images?: SourceJSON[];
 +}
 +
++export interface MaterialEventMap {
++    dispose: {};
++}
++
 +/**
 + * Abstract base class for materials.
 + *
@@ -4460,7 +4464,7 @@ index c05cd91f7..44750427d 100644
 + *
 + * @abstract
 + */
-+export class Material extends EventDispatcher<{ dispose: {} }> {
++export class Material<TEventMap extends MaterialEventMap = MaterialEventMap> extends EventDispatcher<TEventMap> {
      /**
 -     * Sets the alpha value to be used when running an alpha test. The material
 -     * will not be rendered if the opacity is lower than this value.
@@ -4491,7 +4495,7 @@ index c05cd91f7..44750427d 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +559,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +563,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -4507,7 +4511,7 @@ index c05cd91f7..44750427d 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +579,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +583,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -4516,7 +4520,7 @@ index c05cd91f7..44750427d 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +597,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +601,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -4525,7 +4529,7 @@ index c05cd91f7..44750427d 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,20 +605,20 @@ export class Material extends EventDispatcher {
+@@ -462,20 +609,20 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -4549,7 +4553,7 @@ index c05cd91f7..44750427d 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -487,11 +630,11 @@ export class Material extends EventDispatcher {
+@@ -487,11 +634,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
@@ -10292,10 +10296,10 @@ index 60775a2a1..2ed041bfc 100644
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
 diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
-index 8299d6c54..7aa9a6dc0 100644
+index 8299d6c54..a8332c98c 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
-@@ -1,10 +1,81 @@
+@@ -1,10 +1,85 @@
 -export default Node;
 +import { EventDispatcher } from '../../core/EventDispatcher.js';
 +import { NodeUpdateType } from './constants.js';
@@ -10369,17 +10373,21 @@ index 8299d6c54..7aa9a6dc0 100644
 +    childNode: Node;
 +}
 +
++export interface NodeClassEventMap {
++    dispose: {};
++}
++
  /**
   * Base class for all nodes.
   *
   * @augments EventDispatcher
   */
 -declare class Node extends EventDispatcher {
-+declare class NodeClass extends EventDispatcher<{ dispose: {}; }> {
++declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap> extends EventDispatcher<TEventMap> {
      static get type(): string;
      /**
       * Constructs a new node.
-@@ -25,21 +96,21 @@ declare class Node extends EventDispatcher {
+@@ -25,21 +100,21 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @default 'none'
       */
@@ -10404,7 +10412,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * The version of the node. The version automatically is increased when {@link Node#needsUpdate} is set to `true`.
       *
-@@ -79,7 +150,6 @@ declare class Node extends EventDispatcher {
+@@ -79,7 +154,6 @@ declare class Node extends EventDispatcher {
       * @default true
       */
      readonly isNode: boolean;
@@ -10412,7 +10420,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * The cache key of this node.
       *
-@@ -139,7 +209,7 @@ declare class Node extends EventDispatcher {
+@@ -139,7 +213,7 @@ declare class Node extends EventDispatcher {
       * @type {string}
       * @readonly
       */
@@ -10421,7 +10429,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Convenient method for defining {@link Node#update}.
       *
-@@ -147,7 +217,7 @@ declare class Node extends EventDispatcher {
+@@ -147,7 +221,7 @@ declare class Node extends EventDispatcher {
       * @param {string} updateType - The update type.
       * @return {Node} A reference to this node.
       */
@@ -10430,7 +10438,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * The method can be implemented to update the node's internal state when it is used to render an object.
       * The {@link Node#updateType} property defines how often the update is executed.
-@@ -156,7 +226,7 @@ declare class Node extends EventDispatcher {
+@@ -156,7 +230,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10439,7 +10447,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `FRAME`.
-@@ -164,7 +234,7 @@ declare class Node extends EventDispatcher {
+@@ -164,7 +238,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10448,7 +10456,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
-@@ -172,7 +242,7 @@ declare class Node extends EventDispatcher {
+@@ -172,7 +246,7 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10457,7 +10465,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
-@@ -180,14 +250,14 @@ declare class Node extends EventDispatcher {
+@@ -180,14 +254,14 @@ declare class Node extends EventDispatcher {
       * @param {Function} callback - The update method.
       * @return {Node} A reference to this node.
       */
@@ -10474,7 +10482,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Nodes might refer to other objects like materials. This method allows to dynamically update the reference
       * to such objects based on a given state (e.g. the current node frame or builder).
-@@ -195,7 +265,7 @@ declare class Node extends EventDispatcher {
+@@ -195,7 +269,7 @@ declare class Node extends EventDispatcher {
       * @param {any} state - This method can be invocated in different contexts so `state` can refer to any object type.
       * @return {any} The updated reference.
       */
@@ -10483,7 +10491,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * By default this method returns the value of the {@link Node#global} flag. This method
       * can be overwritten in derived classes if an analytical way is required to determine the
-@@ -204,31 +274,25 @@ declare class Node extends EventDispatcher {
+@@ -204,31 +278,25 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {boolean} Whether this node is global or not.
       */
@@ -10518,7 +10526,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Returns the child nodes of this node.
       *
-@@ -256,7 +320,7 @@ declare class Node extends EventDispatcher {
+@@ -256,7 +324,7 @@ declare class Node extends EventDispatcher {
       *
       * @return {Node} A reference to this node.
       */
@@ -10527,7 +10535,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Returns the hash of the node which is used to identify the node. By default it's
       * the {@link Node#uuid} however derived node classes might have to overwrite this method
-@@ -265,40 +329,25 @@ declare class Node extends EventDispatcher {
+@@ -265,40 +333,25 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {string} The hash.
       */
@@ -10572,7 +10580,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Certain types are composed of multiple elements. For example a `vec3`
       * is composed of three `float` values. This method returns the type of
-@@ -315,7 +364,7 @@ declare class Node extends EventDispatcher {
+@@ -315,7 +368,7 @@ declare class Node extends EventDispatcher {
       * @param {string} name - The name of the member.
       * @return {string} The type of the node.
       */
@@ -10581,7 +10589,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Returns the node's type.
       *
-@@ -348,7 +397,7 @@ declare class Node extends EventDispatcher {
+@@ -348,7 +401,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -10590,7 +10598,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -357,7 +406,7 @@ declare class Node extends EventDispatcher {
+@@ -357,7 +410,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -10599,7 +10607,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -374,7 +423,7 @@ declare class Node extends EventDispatcher {
+@@ -374,7 +427,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -10608,7 +10616,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -383,7 +432,7 @@ declare class Node extends EventDispatcher {
+@@ -383,7 +436,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10617,7 +10625,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -392,8 +441,8 @@ declare class Node extends EventDispatcher {
+@@ -392,8 +445,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -10628,7 +10636,7 @@ index 8299d6c54..7aa9a6dc0 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -410,28 +459,161 @@ declare class Node extends EventDispatcher {
+@@ -410,28 +463,161 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -10656,9 +10664,7 @@ index 8299d6c54..7aa9a6dc0 100644
       */
 -    toJSON(meta: Object | null): Object;
 +    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
- }
--declare namespace Node {
--    let captureStackTrace: boolean;
++}
 +
 +declare const Node: {
 +    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
@@ -10674,10 +10680,12 @@ index 8299d6c54..7aa9a6dc0 100644
 +
 +export interface NodeElements {
  }
--import { EventDispatcher } from '../../core/EventDispatcher.js';
+-declare namespace Node {
+-    let captureStackTrace: boolean;
 +
 +export interface NodeExtensions<TNodeType> {
-+}
+ }
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export type NumType = "float" | "int" | "uint";
 +export type IntegerType = "int" | "uint";
@@ -11588,7 +11596,7 @@ index 90e98b1aa..0d4649a46 100644
 +
 +export default BundleGroup;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts b/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
-index 9932067a0..e2566e5ed 100644
+index 9932067a0..03437cabd 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/CanvasTarget.d.ts
 @@ -1,10 +1,20 @@
@@ -11610,7 +11618,7 @@ index 9932067a0..e2566e5ed 100644
   * @augments EventDispatcher
   */
 -declare class CanvasTarget extends EventDispatcher {
-+declare class CanvasTarget extends EventDispatcher<CanvasTargetEventMap> {
++declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTargetEventMap> extends EventDispatcher<TEventMap> {
      /**
       * Constructs a new CanvasTarget.
       *
@@ -12348,7 +12356,7 @@ index 5fdbd4d68..ed7bc5700 100644
 +
 +export default ProgrammableStage;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/ReadbackBuffer.d.ts b/jsdoc-testing/jsdoc/renderers/common/ReadbackBuffer.d.ts
-index 70218d55a..47e2d3d30 100644
+index 70218d55a..21a89871b 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/ReadbackBuffer.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/ReadbackBuffer.d.ts
 @@ -1,11 +1,17 @@
@@ -12367,7 +12375,7 @@ index 70218d55a..47e2d3d30 100644
   * @augments EventDispatcher
   */
 -declare class ReadbackBuffer extends EventDispatcher {
-+declare class ReadbackBuffer extends EventDispatcher<ReadbackBufferEventMap> {
++declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = ReadbackBufferEventMap> extends EventDispatcher<TEventMap> {
      /**
       * Constructs a new readback buffer.
       *
@@ -13762,7 +13770,7 @@ index 4cf3fe53c..9cd200044 100644
 +
 +export default UniformsGroup;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
-index dafd87882..2cfd9bf35 100644
+index dafd87882..8b033e324 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/XRManager.d.ts
 @@ -1,4 +1,30 @@
@@ -13802,7 +13810,7 @@ index dafd87882..2cfd9bf35 100644
   * @augments EventDispatcher
   */
 -declare class XRManager extends EventDispatcher {
-+declare class XRManager extends EventDispatcher<XRManagerEventMap> {
++declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap> extends EventDispatcher<TEventMap> {
      /**
       * Constructs a new XR manager.
       *
