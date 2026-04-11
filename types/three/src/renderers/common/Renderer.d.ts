@@ -27,6 +27,7 @@ import Info from "./Info.js";
 import InspectorBase from "./InspectorBase.js";
 import Lighting from "./Lighting.js";
 import NodeLibrary from "./nodes/NodeLibrary.js";
+import ReadbackBuffer from "./ReadbackBuffer.js";
 import { RenderItem } from "./RenderList.js";
 import XRManager from "./XRManager.js";
 
@@ -864,10 +865,24 @@ declare class Renderer {
      * from the GPU to the CPU in context of compute shaders.
      *
      * @async
-     * @param {StorageBufferAttribute|ReadbackBuffer} buffer - The storage buffer attribute.
-     * @return {Promise<ArrayBuffer>} A promise that resolves with the buffer data when the data are ready.
+     * @param {BufferAttribute} attribute - The storage buffer attribute to read frm.
+     * @param {ReadbackBuffer|ArrayBuffer} target - The storage buffer attribute.
+     * @param {number} offset - The storage buffer attribute.
+     * @param {number} count - The offset from which to start reading the
+     * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
      */
-    getArrayBufferAsync(buffer: BufferAttribute): Promise<ArrayBuffer>;
+    getArrayBufferAsync(
+        attribute: BufferAttribute,
+        target?: null,
+        offset?: number,
+        count?: number,
+    ): Promise<ArrayBuffer>;
+    getArrayBufferAsync<TTarget extends ReadbackBuffer | ArrayBuffer>(
+        attribute: BufferAttribute,
+        target: TTarget,
+        offset?: number,
+        count?: number,
+    ): Promise<TTarget>;
     /**
      * Returns the rendering context.
      *
