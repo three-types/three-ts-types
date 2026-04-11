@@ -873,10 +873,16 @@ declare class Renderer {
      */
     getArrayBufferAsync(
         attribute: BufferAttribute,
-        target?: ReadbackBuffer | ArrayBuffer,
+        target?: null,
         offset?: number,
         count?: number,
-    ): Promise<ArrayBuffer | ReadbackBuffer>;
+    ): Promise<ArrayBuffer>;
+    getArrayBufferAsync<TTarget extends ReadbackBuffer | ArrayBuffer>(
+        attribute: BufferAttribute,
+        target: TTarget,
+        offset?: number,
+        count?: number,
+    ): Promise<TTarget>;
     /**
      * Returns the rendering context.
      *
