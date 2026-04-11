@@ -95,16 +95,15 @@ type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNode
 
 export default UniformNode;
 
-type UniformValue<T> =
-    T extends "float" | "int" | "uint" ? number
-    : T extends "bool" ? boolean
-    : T extends "vec2" | "ivec2" | "uvec2" ? Vector2
-    : T extends "vec3" | "ivec3" | "uvec3" ? Vector3
-    : T extends "vec4" | "ivec4" | "uvec4" ? Vector4
-    : T extends "mat2" ? Matrix2
-    : T extends "mat3" ? Matrix3
-    : T extends "mat4" ? Matrix4
-    : T extends "color" ? Color
+type UniformValue<TNodeType> = TNodeType extends "float" | "int" | "uint" ? number
+    : TNodeType extends "bool" ? boolean
+    : TNodeType extends "vec2" | "ivec2" | "uvec2" ? Vector2
+    : TNodeType extends "vec3" | "ivec3" | "uvec3" ? Vector3
+    : TNodeType extends "vec4" | "ivec4" | "uvec4" ? Vector4
+    : TNodeType extends "mat2" ? Matrix2
+    : TNodeType extends "mat3" ? Matrix3
+    : TNodeType extends "mat4" ? Matrix4
+    : TNodeType extends "color" ? Color
     : never;
 
 interface Uniform {
