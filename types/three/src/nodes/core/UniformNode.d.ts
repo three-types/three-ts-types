@@ -71,14 +71,17 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
      * @return {string} The uniform hash.
      */
     getUniformHash(builder: NodeBuilder): string;
-    onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
+    onUpdate(
+        callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined,
+        updateType: NodeUpdateType,
+    ): this;
     getInputType(builder: NodeBuilder): string;
     generate(builder: NodeBuilder, output: string | null): string;
 
     // In UniformNode, callbacks provided to onUpdate-related functions are called with `this` as the last parameter:
-    onFrameUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
-    onRenderUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
-    onObjectUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
+    onFrameUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
+    onRenderUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
+    onObjectUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
 }
 
 declare const UniformNode: {
