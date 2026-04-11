@@ -7046,7 +7046,7 @@ index c1df7100d..6a8c48446 100644
  // Configure and create Draco decoder.
  const dracoLoader = new DRACOLoader();
 diff --git a/examples-testing/examples/webgl_loader_fbx.ts b/examples-testing/examples/webgl_loader_fbx.ts
-index ecfaaaa14..d7309d748 100644
+index 65563556a..6378e04de 100644
 --- a/examples-testing/examples/webgl_loader_fbx.ts
 +++ b/examples-testing/examples/webgl_loader_fbx.ts
 @@ -8,8 +8,14 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
@@ -7066,7 +7066,7 @@ index ecfaaaa14..d7309d748 100644
  
  const timer = new THREE.Timer();
  timer.connect(document);
-@@ -109,23 +115,26 @@ function init() {
+@@ -110,23 +116,26 @@ function init() {
      guiMorphsFolder = gui.addFolder('Morphs').hide();
  }
  
@@ -7100,7 +7100,7 @@ index ecfaaaa14..d7309d748 100644
              });
  
              scene.remove(object);
-@@ -151,15 +160,21 @@ function loadAsset(asset) {
+@@ -152,15 +161,21 @@ function loadAsset(asset) {
          guiMorphsFolder.hide();
  
          object.traverse(function (child) {
@@ -21979,7 +21979,7 @@ index 5a4e06502..f42fd5a76 100644
      createLabel('custom', font, text_mat, getGridPosition(Math.round(WoodGenuses.length / 2 - 1), 5));
  
 diff --git a/examples-testing/examples/webgpu_upscaling_fsr1.ts b/examples-testing/examples/webgpu_upscaling_fsr1.ts
-index 22247c7eb..deae79756 100644
+index 48a700414..6a2d933a5 100644
 --- a/examples-testing/examples/webgpu_upscaling_fsr1.ts
 +++ b/examples-testing/examples/webgpu_upscaling_fsr1.ts
 @@ -13,7 +13,13 @@ const params = {
@@ -21997,7 +21997,7 @@ index 22247c7eb..deae79756 100644
  
  init();
  
-@@ -93,7 +99,7 @@ async function init() {
+@@ -91,7 +97,7 @@ async function init() {
  
      // gui
  
@@ -22006,6 +22006,42 @@ index 22247c7eb..deae79756 100644
      gui.add(params, 'upscaleMethod', ['Bilinear', 'FSR1']).onChange(updatePipeline);
      gui.add(params, 'resolutionScale', 0.25, 1.0, 0.25).onChange(value => {
          scenePass.setResolutionScale(value);
+diff --git a/examples-testing/examples/webgpu_upscaling_taau.ts b/examples-testing/examples/webgpu_upscaling_taau.ts
+index 8dfdcda87..7c24275a5 100644
+--- a/examples-testing/examples/webgpu_upscaling_taau.ts
++++ b/examples-testing/examples/webgpu_upscaling_taau.ts
+@@ -16,7 +16,13 @@ const params = {
+     sharpness: 0.2,
+ };
+ 
+-let camera, scene, renderer, renderPipeline, controls, mixer, timer;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    renderPipeline: THREE.RenderPipeline,
++    controls: OrbitControls,
++    mixer: THREE.AnimationMixer,
++    timer: THREE.Timer;
+ 
+ init();
+ 
+@@ -102,14 +108,14 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(params, 'upscaleMethod', ['Bilinear', 'TAAU']).onChange(updatePipeline);
+     gui.add(params, 'resolutionScale', 0.25, 1.0, 0.25).onChange(value => {
+         scenePass.setResolutionScale(value);
+     });
+     gui.add(params, 'sharpening').onChange(updatePipeline);
+     gui.add(params, 'sharpness', 0, 2, 0.05).onChange(value => {
+-        sharpenNode.sharpness.value = value;
++        (sharpenNode.sharpness as THREE.ConstNode<'float', number>).value = value;
+     });
+ 
+     updatePipeline();
 diff --git a/examples-testing/examples/webgpu_video_panorama.ts b/examples-testing/examples/webgpu_video_panorama.ts
 index f52b15ffe..78885bec4 100644
 --- a/examples-testing/examples/webgpu_video_panorama.ts
