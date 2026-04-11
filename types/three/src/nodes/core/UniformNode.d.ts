@@ -74,6 +74,11 @@ declare class UniformNodeClass<TValue> extends InputNode<unknown, TValue> {
     onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
     getInputType(builder: NodeBuilder): string;
     generate(builder: NodeBuilder, output: string | null): string;
+
+    // In UniformNode, callbacks provided to onUpdate-related functions are called with `this` as the last parameter:
+    onFrameUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
+    onRenderUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
+    onObjectUpdate(callback: (this: this, frame: NodeFrame, self: this) => void): this;
 }
 
 declare const UniformNode: {
@@ -90,7 +95,20 @@ type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNode
 
 export default UniformNode;
 
+type UniformValue<T> =
+    T extends "float" | "int" | "uint" ? number
+    : T extends "bool" ? boolean
+    : T extends "vec2" | "ivec2" | "uvec2" ? Vector2
+    : T extends "vec3" | "ivec3" | "uvec3" ? Vector3
+    : T extends "vec4" | "ivec4" | "uvec4" ? Vector4
+    : T extends "mat2" ? Matrix2
+    : T extends "mat3" ? Matrix3
+    : T extends "mat4" ? Matrix4
+    : T extends "color" ? Color
+    : never;
+
 interface Uniform {
+    <const T extends string>(type: T): UniformNode<T, UniformValue<T>>;
     (value: number, type?: "float"): UniformNode<"float", number>;
     (value: boolean): UniformNode<"bool", boolean>;
     (value: Vector2): UniformNode<"vec2", Vector2>;
