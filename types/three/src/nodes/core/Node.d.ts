@@ -70,12 +70,16 @@ export interface NodeChild {
     childNode: Node;
 }
 
+export interface NodeClassEventMap {
+    dispose: {};
+}
+
 /**
  * Base class for all nodes.
  *
  * @augments EventDispatcher
  */
-declare class NodeClass extends EventDispatcher<{ dispose: {} }> {
+declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap> extends EventDispatcher<TEventMap> {
     static get type(): string;
     /**
      * Constructs a new node.
