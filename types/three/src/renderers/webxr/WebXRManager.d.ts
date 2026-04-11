@@ -21,7 +21,9 @@ export interface WebXRManagerEventMap {
     planesdetected: { data: XRPlaneSet };
 }
 
-export class WebXRManager<TEventMap extends WebXRManagerEventMap = WebXRManagerEventMap> extends EventDispatcher<TEventMap> {
+export class WebXRManager<TEventMap extends WebXRManagerEventMap = WebXRManagerEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * @default true
      */

@@ -71,7 +71,7 @@ export interface NodeChild {
 }
 
 export interface NodeClassEventMap {
-    dispose: {}
+    dispose: {};
 }
 
 /**

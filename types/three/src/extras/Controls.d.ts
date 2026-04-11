@@ -6,7 +6,9 @@ export interface ControlsEventMap {}
 /**
  * Abstract base class for controls.
  */
-declare abstract class Controls<TEventMap extends ControlsEventMap = ControlsEventMap> extends EventDispatcher<TEventMap> {
+declare abstract class Controls<TEventMap extends ControlsEventMap = ControlsEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * The 3D object that is managed by the controls.
      */

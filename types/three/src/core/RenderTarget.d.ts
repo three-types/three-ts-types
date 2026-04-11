@@ -20,10 +20,13 @@ export interface RenderTargetOptions extends TextureParameters {
 }
 
 export interface RenderTargetEventMap {
-    dispose: {}
+    dispose: {};
 }
 
-export class RenderTarget<TTexture extends Texture | Texture[] = Texture, TEventMap extends RenderTargetEventMap = RenderTargetEventMap> extends EventDispatcher<TEventMap> {
+export class RenderTarget<
+    TTexture extends Texture | Texture[] = Texture,
+    TEventMap extends RenderTargetEventMap = RenderTargetEventMap,
+> extends EventDispatcher<TEventMap> {
     readonly isRenderTarget: true;
 
     width: number;

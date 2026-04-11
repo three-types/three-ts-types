@@ -53,7 +53,9 @@ export interface BufferAttributeEventMap {
  * @see {@link https://threejs.org/docs/index.html#api/en/core/BufferAttribute | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/core/BufferAttribute.js | Source}
  */
-export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferAttributeEventMap> extends EventDispatcher<TEventMap> {
+export class BufferAttribute<TEventMap extends BufferAttributeEventMap = BufferAttributeEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * This creates a new {@link THREE.GLBufferAttribute | GLBufferAttribute} object.
      * @param array Must be a `TypedArray`. Used to instantiate the buffer.

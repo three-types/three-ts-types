@@ -85,7 +85,7 @@ export interface TextureJSON {
 export interface OffscreenCanvas extends EventTarget {}
 
 export interface TextureEventMap {
-    dispose: {}
+    dispose: {};
 }
 
 /**
@@ -106,7 +106,9 @@ export interface TextureEventMap {
  * @see {@link https://threejs.org/docs/index.html#api/en/textures/Texture | Official Documentation}
  * @see {@link https://github.com/mrdoob/three.js/blob/master/src/Textures/Texture.js | Source}
  */
-export class Texture<TImage = unknown, TEventMap extends TextureEventMap = TextureEventMap> extends EventDispatcher<TEventMap> {
+export class Texture<TImage = unknown, TEventMap extends TextureEventMap = TextureEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * This creates a new {@link THREE.Texture | Texture} object.
      * @param image See {@link Texture.image | .image}. Default {@link THREE.Texture.DEFAULT_IMAGE}

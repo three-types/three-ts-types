@@ -520,7 +520,7 @@ export interface MaterialJSON {
 }
 
 export interface MaterialEventMap {
-    dispose: {}
+    dispose: {};
 }
 
 /**

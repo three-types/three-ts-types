@@ -12,7 +12,9 @@ export interface ReadbackBufferEventMap {
  *
  * @augments EventDispatcher
  */
-declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = ReadbackBufferEventMap> extends EventDispatcher<TEventMap> {
+declare class ReadbackBuffer<TEventMap extends ReadbackBufferEventMap = ReadbackBufferEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * Constructs a new readback buffer.
      *

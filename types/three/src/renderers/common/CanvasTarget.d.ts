@@ -14,7 +14,9 @@ export interface CanvasTargetEventMap {
  *
  * @augments EventDispatcher
  */
-declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTargetEventMap> extends EventDispatcher<TEventMap> {
+declare class CanvasTarget<TEventMap extends CanvasTargetEventMap = CanvasTargetEventMap>
+    extends EventDispatcher<TEventMap>
+{
     /**
      * Constructs a new CanvasTarget.
      *
