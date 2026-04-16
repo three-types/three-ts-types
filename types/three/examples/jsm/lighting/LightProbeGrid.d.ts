@@ -1,4 +1,4 @@
-import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGL3DRenderTarget, WebGLRenderer } from "three";
+import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from "three";
 
 export interface LightProbeGridBakeOptions {
     cubemapSize?: number | undefined;
@@ -7,7 +7,7 @@ export interface LightProbeGridBakeOptions {
 }
 
 declare class LightProbeGrid extends Object3D {
-    readonly isLightProbeGrid: true;
+    readonly isLightProbeGrid: boolean;
 
     width: number;
     height: number;

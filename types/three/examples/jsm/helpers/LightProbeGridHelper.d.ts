@@ -1,13 +1,12 @@
-import { InstancedMesh } from "three";
+import { InstancedMesh, ShaderMaterial, SphereGeometry } from "three";
 import { LightProbeGrid } from "../lighting/LightProbeGrid.js";
 
-declare class LightProbeGridHelper extends InstancedMesh {
+declare class LightProbeGridHelper extends InstancedMesh<SphereGeometry, ShaderMaterial> {
     probes: LightProbeGrid;
 
     constructor(probes: LightProbeGrid, sphereSize?: number);
 
     update(): void;
-    dispose(): void;
 }
 
 export { LightProbeGridHelper };

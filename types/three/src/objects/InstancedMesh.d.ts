@@ -181,7 +181,7 @@ export class InstancedMesh<
      * @remarks
      * Call this method whenever this instance is no longer used in your app.
      */
-    dispose(): this;
+    dispose(): void;
 
     toJSON(meta?: JSONMeta): InstancedMeshJSON;
 }
