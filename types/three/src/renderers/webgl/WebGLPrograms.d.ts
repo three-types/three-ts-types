@@ -131,6 +131,7 @@ export interface WebGLProgramParameters {
     //
 
     vertexTangents: boolean;
+    vertexNormals: boolean;
     vertexColors: boolean;
     vertexAlphas: boolean;
     vertexUv1s: boolean;
