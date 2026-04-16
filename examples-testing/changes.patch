@@ -6416,6 +6416,200 @@ index 65425d4e7..a9a0533ef 100644
          return [
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
+diff --git a/examples-testing/examples/webgl_lightprobes.ts b/examples-testing/examples/webgl_lightprobes.ts
+index a4a82637c..68a169fcc 100644
+--- a/examples-testing/examples/webgl_lightprobes.ts
++++ b/examples-testing/examples/webgl_lightprobes.ts
+@@ -5,8 +5,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ 
+-let camera, scene, renderer, controls;
+-let probes, probesHelper;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
+ 
+ init();
+ 
+@@ -126,7 +126,7 @@ async function init() {
+ 
+     // Bake light probe volume
+ 
+-    async function bakeWithResolution(resolution) {
++    async function bakeWithResolution(resolution: number) {
+         if (probes) {
+             scene.remove(probes);
+             probes.dispose();
+diff --git a/examples-testing/examples/webgl_lightprobes_complex.ts b/examples-testing/examples/webgl_lightprobes_complex.ts
+index 2b6cecff7..7d792e16b 100644
+--- a/examples-testing/examples/webgl_lightprobes_complex.ts
++++ b/examples-testing/examples/webgl_lightprobes_complex.ts
+@@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ 
+-let camera, scene, renderer, controls;
+-let probesLeft, probesRight;
+-let probesHelperLeft, probesHelperRight;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
++let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
++let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
+ 
+ init();
+ 
+@@ -215,7 +215,7 @@ async function init() {
+         resolution: 6,
+     };
+ 
+-    async function bakeWithResolution(resolution) {
++    async function bakeWithResolution(resolution: number) {
+         // Remove both volumes before baking to prevent feedback
+ 
+         if (probesLeft) {
+diff --git a/examples-testing/examples/webgl_lightprobes_sponza.ts b/examples-testing/examples/webgl_lightprobes_sponza.ts
+index c1f21a7a8..a2201f118 100644
+--- a/examples-testing/examples/webgl_lightprobes_sponza.ts
++++ b/examples-testing/examples/webgl_lightprobes_sponza.ts
+@@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
+     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
+ const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
+ 
+-let camera, scene, renderer, controls, timer;
+-let probes = null,
+-    probesHelper = null;
+-let modelSize = null;
+-let dirLight = null,
+-    sky = null,
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    controls: FirstPersonControls,
++    timer: THREE.Timer;
++let probes: LightProbeGrid | null = null,
++    probesHelper: LightProbeGridHelper | null = null;
++let modelSize: THREE.Vector3 | null = null;
++let dirLight: THREE.DirectionalLight | null = null,
++    sky: Sky | null = null,
+     sun = new THREE.Vector3();
+ 
+ const _box = new THREE.Box3();
+@@ -57,7 +61,7 @@ async function init() {
+     controls.movementSpeed = 2.0;
+     controls.lookSpeed = 0.16;
+ 
+-    const progressBar = document.getElementById('progressBar');
++    const progressBar = document.getElementById('progressBar') as HTMLProgressElement;
+ 
+     const manager = new THREE.LoadingManager();
+     manager.onProgress = function (url, loaded, total) {
+@@ -71,14 +75,14 @@ async function init() {
+     const modelURL = await getSponzaModelURL();
+     const gltf = await loader.loadAsync(modelURL);
+     const model = gltf.scene;
+-    const embeddedLights = [];
++    const embeddedLights: THREE.Light[] = [];
+ 
+     model.traverse(child => {
+-        if (child.isMesh) {
+-            child.castShadow = true;
+-            child.receiveShadow = true;
+-        } else if (child.isLight) {
+-            embeddedLights.push(child);
++        if ((child as THREE.Mesh).isMesh) {
++            (child as THREE.Mesh).castShadow = true;
++            (child as THREE.Mesh).receiveShadow = true;
++        } else if ((child as THREE.Light).isLight) {
++            embeddedLights.push(child as THREE.Light);
+         }
+     });
+ 
+@@ -94,7 +98,7 @@ async function init() {
+     const targetY = modelCenter.y + modelSize.y * 0.2;
+     const lightBaseDistance = Math.max(modelSize.x, modelSize.z);
+     const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
+-    let rebakeTimer = null;
++    let rebakeTimer: number | null = null;
+     let isBaking = false;
+     let bakeQueued = false;
+ 
+@@ -138,18 +142,18 @@ async function init() {
+         const horizontal = Math.cos(elevation) * radius;
+         const vertical = Math.sin(elevation) * radius;
+ 
+-        dirLight.position.set(
++        dirLight!.position.set(
+             modelCenter.x + Math.cos(azimuth) * horizontal,
+             targetY + vertical,
+             modelCenter.z + Math.sin(azimuth) * horizontal,
+         );
+-        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
+-        dirLight.target.updateMatrixWorld();
++        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
++        dirLight!.target.updateMatrixWorld();
+ 
+         const phi = THREE.MathUtils.degToRad(90 - params.lightElevation);
+         const theta = THREE.MathUtils.degToRad(params.lightAzimuth);
+         sun.setFromSphericalCoords(1, phi, theta);
+-        sky.material.uniforms['sunPosition'].value.copy(sun);
++        sky!.material.uniforms['sunPosition'].value.copy(sun);
+     }
+ 
+     function scheduleRebake() {
+@@ -231,7 +235,7 @@ async function init() {
+     gui.add(params, 'lightIntensity', 0, 50, 0.1)
+         .name('Light Intensity')
+         .onChange(value => {
+-            dirLight.intensity = value;
++            dirLight!.intensity = value;
+             scheduleRebake();
+         });
+     gui.add(params, 'shadows')
+@@ -252,7 +256,7 @@ async function init() {
+             if (probesHelper) {
+                 scene.remove(probesHelper);
+                 probesHelper.dispose();
+-                probesHelper = new LightProbeGridHelper(probes, value);
++                probesHelper = new LightProbeGridHelper(probes!, value);
+                 probesHelper.visible = params.showProbes;
+                 scene.add(probesHelper);
+             }
+@@ -284,9 +288,17 @@ async function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
++interface Model {
++    label: string;
++    name: string;
++    screenshot: string;
++    tags: string[];
++    variants: Record<string, string>;
++}
++
+ async function getSponzaModelURL() {
+     const response = await fetch(MODEL_INDEX_URL);
+-    const models = await response.json();
++    const models = (await response.json()) as Model[];
+     const sponzaInfo = models.find(model => model.name === 'Sponza');
+ 
+     if (!sponzaInfo) {
+@@ -305,7 +317,7 @@ async function getSponzaModelURL() {
+     return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
+ }
+ 
+-function setShadowsEnabled(enabled) {
++function setShadowsEnabled(enabled: boolean) {
+     if (!renderer || !dirLight) return;
+ 
+     renderer.shadowMap.enabled = enabled;
+@@ -319,7 +331,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(timestamp) {
++function animate(timestamp: number) {
+     timer.update(timestamp);
+     controls.update(timer.getDelta());
+     renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgl_lights_hemisphere.ts b/examples-testing/examples/webgl_lights_hemisphere.ts
 index 2910b15de..32daa5e5d 100644
 --- a/examples-testing/examples/webgl_lights_hemisphere.ts
