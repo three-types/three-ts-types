@@ -9177,12 +9177,12 @@ index 77b254684..b2ccb7690 100644
      mouseY = event.clientY - windowHalfY;
  }
 diff --git a/examples-testing/examples/webgl_materials_texture_html.ts b/examples-testing/examples/webgl_materials_texture_html.ts
-index 74f7c3d5e..7403e2e7d 100644
+index c6c264e0f..53bc6b3e4 100644
 --- a/examples-testing/examples/webgl_materials_texture_html.ts
 +++ b/examples-testing/examples/webgl_materials_texture_html.ts
-@@ -3,14 +3,19 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
- import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
- import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+@@ -10,7 +10,11 @@ if (!('requestPaint' in HTMLCanvasElement.prototype)) {
+         '<br><a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a> not available. Using <a href="https://github.com/repalash/three-html-render" target="_blank">polyfill</a>.';
+ }
  
 -let camera, scene, renderer, mesh, interactions;
 +let camera: THREE.PerspectiveCamera,
@@ -9193,16 +9193,7 @@ index 74f7c3d5e..7403e2e7d 100644
  
  init();
  
- function init() {
-     renderer = new THREE.WebGLRenderer({ antialias: true });
- 
--    if (renderer.getContext().texElementImage2D === undefined) {
-+    if ((renderer.getContext() as unknown as { texElementImage2D: unknown }).texElementImage2D === undefined) {
-+        // @ts-ignore
-         info.innerHTML +=
-             '<br>This browser does not support the <a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a>.';
-     }
-@@ -68,7 +73,7 @@ function init() {
+@@ -70,7 +74,7 @@ function init() {
  
      // Button click handler
  
@@ -9211,7 +9202,7 @@ index 74f7c3d5e..7403e2e7d 100644
          this.textContent = 'Clicked!';
      });
  
-@@ -82,7 +87,7 @@ function onWindowResize() {
+@@ -84,7 +88,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -9383,7 +9374,7 @@ index 46c6a7e93..e89fc8cf3 100644
              font: font,
  
 diff --git a/examples-testing/examples/webgl_materials_video.ts b/examples-testing/examples/webgl_materials_video.ts
-index 4f0d26a18..0bf378c5d 100644
+index ddf079183..58dfaaeaa 100644
 --- a/examples-testing/examples/webgl_materials_video.ts
 +++ b/examples-testing/examples/webgl_materials_video.ts
 @@ -5,13 +5,16 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
@@ -9407,7 +9398,7 @@ index 4f0d26a18..0bf378c5d 100644
  
  let mouseX = 0;
  let mouseY = 0;
-@@ -19,20 +22,20 @@ let mouseY = 0;
+@@ -19,10 +22,10 @@ let mouseY = 0;
  let windowHalfX = window.innerWidth / 2;
  let windowHalfY = window.innerHeight / 2;
  
@@ -9421,19 +9412,7 @@ index 4f0d26a18..0bf378c5d 100644
      xgrid = 20,
      ygrid = 10;
  
--const startButton = document.getElementById('startButton');
-+const startButton = document.getElementById('startButton')!;
- startButton.addEventListener('click', function () {
-     init();
- });
- 
- function init() {
--    const overlay = document.getElementById('overlay');
-+    const overlay = document.getElementById('overlay')!;
-     overlay.remove();
- 
-     container = document.createElement('div');
-@@ -53,7 +56,7 @@ function init() {
+@@ -47,7 +50,7 @@ function init() {
      renderer.setAnimationLoop(animate);
      container.appendChild(renderer.domElement);
  
@@ -9442,7 +9421,7 @@ index 4f0d26a18..0bf378c5d 100644
      video.play();
      video.addEventListener('play', function () {
          this.currentTime = 3;
-@@ -145,7 +148,7 @@ function onWindowResize() {
+@@ -139,7 +142,7 @@ function onWindowResize() {
      composer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -9451,7 +9430,7 @@ index 4f0d26a18..0bf378c5d 100644
      const uvs = geometry.attributes.uv.array;
  
      for (let i = 0; i < uvs.length; i += 2) {
-@@ -154,7 +157,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+@@ -148,7 +151,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
      }
  }
  
@@ -9460,7 +9439,7 @@ index 4f0d26a18..0bf378c5d 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = (event.clientY - windowHalfY) * 0.3;
  }
-@@ -175,20 +178,20 @@ function animate() {
+@@ -169,20 +172,20 @@ function animate() {
      for (let i = 0; i < cube_count; i++) {
          material = materials[i];
  
@@ -9488,7 +9467,7 @@ index 4f0d26a18..0bf378c5d 100644
          }
      }
  
-@@ -196,8 +199,8 @@ function animate() {
+@@ -190,8 +193,8 @@ function animate() {
          for (let i = 0; i < cube_count; i++) {
              mesh = meshes[i];
  
@@ -17350,15 +17329,18 @@ index c76df99dc..b94767b77 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_materials_texture_html.ts b/examples-testing/examples/webgpu_materials_texture_html.ts
-index 507c836b7..437b7919d 100644
+index 922c63a1d..ea294afc3 100644
 --- a/examples-testing/examples/webgpu_materials_texture_html.ts
 +++ b/examples-testing/examples/webgpu_materials_texture_html.ts
-@@ -1,9 +1,13 @@
+@@ -1,4 +1,4 @@
 -import * as THREE from 'three';
 +import * as THREE from 'three/webgpu';
+ import { installHtmlInCanvasPolyfill } from 'three-html-render/polyfill';
  import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
  import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
- import { InteractionManager } from 'three/addons/interaction/InteractionManager.js';
+@@ -10,7 +10,11 @@ if (!('requestPaint' in HTMLCanvasElement.prototype)) {
+         '<br><a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a> not available. Using <a href="https://github.com/repalash/three-html-render" target="_blank">polyfill</a>.';
+ }
  
 -let camera, scene, renderer, mesh, interactions;
 +let camera: THREE.PerspectiveCamera,
@@ -17369,15 +17351,7 @@ index 507c836b7..437b7919d 100644
  
  init();
  
-@@ -12,6 +16,7 @@ async function init() {
-     await renderer.init();
- 
-     if (!('requestPaint' in renderer.domElement)) {
-+        // @ts-ignore
-         info.innerHTML +=
-             '<br>This browser does not support the <a href="https://github.com/WICG/html-in-canvas" target="_blank">HTML-in-Canvas API</a>.';
-     }
-@@ -69,7 +74,7 @@ async function init() {
+@@ -71,7 +75,7 @@ async function init() {
  
      // Button click handler
  
@@ -17386,7 +17360,7 @@ index 507c836b7..437b7919d 100644
          this.textContent = 'Clicked!';
      });
  
-@@ -83,7 +88,7 @@ function onWindowResize() {
+@@ -85,7 +89,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -17513,7 +17487,7 @@ index 310d979d5..eeb24a3eb 100644
      context.fillRect(0, 1, 2, 1);
  
 diff --git a/examples-testing/examples/webgpu_materials_video.ts b/examples-testing/examples/webgpu_materials_video.ts
-index bc837653f..3148b5e16 100644
+index 084030e44..791aa2cba 100644
 --- a/examples-testing/examples/webgpu_materials_video.ts
 +++ b/examples-testing/examples/webgpu_materials_video.ts
 @@ -1,10 +1,13 @@
@@ -17533,7 +17507,7 @@ index bc837653f..3148b5e16 100644
  
  let mouseX = 0;
  let mouseY = 0;
-@@ -12,20 +15,20 @@ let mouseY = 0;
+@@ -12,10 +15,10 @@ let mouseY = 0;
  let windowHalfX = window.innerWidth / 2;
  let windowHalfY = window.innerHeight / 2;
  
@@ -17547,19 +17521,7 @@ index bc837653f..3148b5e16 100644
      xgrid = 20,
      ygrid = 10;
  
--const startButton = document.getElementById('startButton');
-+const startButton = document.getElementById('startButton')!;
- startButton.addEventListener('click', function () {
-     init();
- });
- 
- function init() {
--    const overlay = document.getElementById('overlay');
-+    const overlay = document.getElementById('overlay')!;
-     overlay.remove();
- 
-     container = document.createElement('div');
-@@ -46,7 +49,7 @@ function init() {
+@@ -40,7 +43,7 @@ function init() {
      renderer.setAnimationLoop(render);
      container.appendChild(renderer.domElement);
  
@@ -17568,7 +17530,7 @@ index bc837653f..3148b5e16 100644
      video.play();
      video.addEventListener('play', function () {
          this.currentTime = 3;
-@@ -123,7 +126,7 @@ function onWindowResize() {
+@@ -117,7 +120,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -17577,7 +17539,7 @@ index bc837653f..3148b5e16 100644
      const uvs = geometry.attributes.uv.array;
  
      for (let i = 0; i < uvs.length; i += 2) {
-@@ -132,7 +135,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
+@@ -126,7 +129,7 @@ function change_uvs(geometry, unitx, unity, offsetx, offsety) {
      }
  }
  
@@ -17586,7 +17548,7 @@ index bc837653f..3148b5e16 100644
      mouseX = event.clientX - windowHalfX;
      mouseY = (event.clientY - windowHalfY) * 0.3;
  }
-@@ -153,20 +156,20 @@ function render() {
+@@ -147,20 +150,20 @@ function render() {
      for (let i = 0; i < cube_count; i++) {
          material = materials[i];
  
@@ -17614,7 +17576,7 @@ index bc837653f..3148b5e16 100644
          }
      }
  
-@@ -174,8 +177,8 @@ function render() {
+@@ -168,8 +171,8 @@ function render() {
          for (let i = 0; i < cube_count; i++) {
              mesh = meshes[i];
  
@@ -22799,7 +22761,7 @@ index cd7f3fb2d..70371da60 100644
      //
      const delta = timer.getDelta() * 0.8;
 diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-index 6035d0687..39b9b8fce 100644
+index ac04ac431..6551f9dea 100644
 --- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
 +++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
 @@ -9,7 +9,7 @@ import {
@@ -23005,7 +22967,7 @@ index ea3d76199..a195db610 100644
      timer = new THREE.Timer();
      timer.connect(document);
 diff --git a/examples-testing/examples/webxr_vr_rollercoaster.ts b/examples-testing/examples/webxr_vr_rollercoaster.ts
-index b8c35a9e3..ee5f02daf 100644
+index 50baf50f8..007af10bb 100644
 --- a/examples-testing/examples/webxr_vr_rollercoaster.ts
 +++ b/examples-testing/examples/webxr_vr_rollercoaster.ts
 @@ -9,7 +9,7 @@ import {
