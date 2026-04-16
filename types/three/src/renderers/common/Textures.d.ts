@@ -48,6 +48,12 @@ declare class Textures extends DataMap {
      */
     info: Info;
     /**
+     * A set of HTMLTextures that need paint updates.
+     *
+     * @type {Set<HTMLTexture>}
+     */
+    _htmlTextures: Set<HTMLTexture>;
+    /**
      * Updates the given render target. Based on the given render target configuration,
      * it updates the texture states representing the attachments of the framebuffer.
      *
