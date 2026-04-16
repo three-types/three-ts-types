@@ -172,6 +172,8 @@ export interface WebGLProgramParameters {
 
     numLightProbes: number;
 
+    numLightProbeGrids: number;
+
     numClippingPlanes: number;
     numClipIntersection: number;
 
@@ -225,6 +227,7 @@ export class WebGLPrograms {
         shadows: Light[],
         scene: Scene,
         object: Object3D,
+        lightProbeGrids: unknown[],
     ): WebGLProgramParameters;
 
     getProgramCacheKey(parameters: WebGLProgramParameters): string;

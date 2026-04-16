@@ -1,6 +1,7 @@
 import { Color } from "../../math/Color.js";
 import { Matrix3 } from "../../math/Matrix3.js";
 import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface IUniform<TValue = any> {
@@ -161,6 +162,10 @@ export const UniformsLib: {
         };
         ltc_1: IUniform<unknown>;
         ltc_2: IUniform<unknown>;
+        probesSH: IUniform<unknown>;
+        probesMin: IUniform<Vector3>;
+        probesMax: IUniform<Vector3>;
+        probesResolution: IUniform<Vector3>;
     };
     points: {
         diffuse: IUniform<Color>;
