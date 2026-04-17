@@ -2354,8 +2354,8 @@ interface Mat4Function {
 
 export const mat4: Mat4Function;
 
-export const string: unknown;
-export const arrayBuffer: unknown;
+export const string: (value?: string) => Node<"string">;
+export const arrayBuffer: (value: ArrayBuffer) => Node<"ArrayBuffer">;
 
 declare module "../core/Node.js" {
     interface ColorExtensions {
