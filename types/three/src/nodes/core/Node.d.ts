@@ -238,7 +238,7 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @param {Function} callback - The update method.
      * @return {Node} A reference to this node.
      */
-    onFrameUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+    onFrameUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
     /**
      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
      * this method automatically sets the update type to `RENDER`.
@@ -246,7 +246,7 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @param {Function} callback - The update method.
      * @return {Node} A reference to this node.
      */
-    onRenderUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+    onRenderUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
     /**
      * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
      * this method automatically sets the update type to `OBJECT`.
@@ -254,7 +254,7 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @param {Function} callback - The update method.
      * @return {Node} A reference to this node.
      */
-    onObjectUpdate(callback: (this: this, frame: NodeFrame) => void): this;
+    onObjectUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
     /**
      * Convenient method for defining {@link Node#updateReference}.
      *

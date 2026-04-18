@@ -10296,7 +10296,7 @@ index 60775a2a1..2ed041bfc 100644
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
 diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
-index 8299d6c54..a8332c98c 100644
+index 8299d6c54..1764023d1 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -10452,7 +10452,7 @@ index 8299d6c54..a8332c98c 100644
       * @return {Node} A reference to this node.
       */
 -    onFrameUpdate(callback: Function): Node;
-+    onFrameUpdate(callback: (this: this, frame: NodeFrame) => void): this;
++    onFrameUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `RENDER`.
@@ -10461,7 +10461,7 @@ index 8299d6c54..a8332c98c 100644
       * @return {Node} A reference to this node.
       */
 -    onRenderUpdate(callback: Function): Node;
-+    onRenderUpdate(callback: (this: this, frame: NodeFrame) => void): this;
++    onRenderUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
      /**
       * Convenient method for defining {@link Node#update}. Similar to {@link Node#onUpdate}, but
       * this method automatically sets the update type to `OBJECT`.
@@ -10470,7 +10470,7 @@ index 8299d6c54..a8332c98c 100644
       * @return {Node} A reference to this node.
       */
 -    onObjectUpdate(callback: Function): Node;
-+    onObjectUpdate(callback: (this: this, frame: NodeFrame) => void): this;
++    onObjectUpdate(callback: (this: this, frame: NodeFrame) => unknown): this;
      /**
       * Convenient method for defining {@link Node#updateReference}.
       *
@@ -11069,7 +11069,7 @@ index 5e54e0387..8ca44caaa 100644
 +
 +export default StructTypeNode;
 diff --git a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
-index f4cb493fb..f2cc57873 100644
+index f4cb493fb..21d35eb42 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/UniformNode.d.ts
 @@ -1,11 +1,24 @@
@@ -11126,16 +11126,21 @@ index f4cb493fb..f2cc57873 100644
      /**
       * Returns the {@link UniformNode#groupNode}.
       *
-@@ -58,8 +71,45 @@ declare class UniformNode extends InputNode {
+@@ -58,8 +71,83 @@ declare class UniformNode extends InputNode {
       * @return {string} The uniform hash.
       */
      getUniformHash(builder: NodeBuilder): string;
 -    onUpdate(callback: any, updateType: any): import("./Node.js").default;
 -    getInputType(builder: any): string;
 -    generate(builder: any, output: any): any;
-+    onUpdate(callback: (frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
++    onUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined, updateType: NodeUpdateType): this;
 +    getInputType(builder: NodeBuilder): string;
 +    generate(builder: NodeBuilder, output: string | null): string;
++
++    // In UniformNode, callbacks provided to onUpdate-related functions are called with `this` as the last parameter:
++    onFrameUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
++    onRenderUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
++    onObjectUpdate(callback: (this: this, frame: NodeFrame, self: this) => TValue | undefined): this;
  }
 -import InputNode from './InputNode.js';
 +
@@ -11153,7 +11158,38 @@ index f4cb493fb..f2cc57873 100644
 +
 +export default UniformNode;
 +
++type UniformNodeType =
++    | "float"
++    | "int"
++    | "uint"
++    | "bool"
++    | "vec2"
++    | "ivec2"
++    | "uvec2"
++    | "vec3"
++    | "ivec3"
++    | "uvec3"
++    | "vec4"
++    | "ivec4"
++    | "uvec4"
++    | "mat2"
++    | "mat3"
++    | "mat4"
++    | "color";
++
++type UniformValue<TNodeType extends UniformNodeType> = TNodeType extends "float" | "int" | "uint" ? number
++    : TNodeType extends "bool" ? boolean
++        : TNodeType extends "vec2" | "ivec2" | "uvec2" ? Vector2
++            : TNodeType extends "vec3" | "ivec3" | "uvec3" ? Vector3
++                : TNodeType extends "vec4" | "ivec4" | "uvec4" ? Vector4
++                    : TNodeType extends "mat2" ? Matrix2
++                        : TNodeType extends "mat3" ? Matrix3
++                            : TNodeType extends "mat4" ? Matrix4
++                                : TNodeType extends "color" ? Color
++                                    : never;
++
 +interface Uniform {
++    <const TNodeType extends UniformNodeType>(type: TNodeType): UniformNode<TNodeType, UniformValue<TNodeType>>;
 +    (value: number, type?: "float"): UniformNode<"float", number>;
 +    (value: boolean): UniformNode<"bool", boolean>;
 +    (value: Vector2): UniformNode<"vec2", Vector2>;
@@ -11176,6 +11212,8 @@ index f4cb493fb..f2cc57873 100644
 + * @returns {UniformNode}
 + */
 +export declare const uniform: Uniform;
++
++export {};
 diff --git a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts b/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
 index 5d342ff3a..7ac71b49b 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/constants.d.ts
