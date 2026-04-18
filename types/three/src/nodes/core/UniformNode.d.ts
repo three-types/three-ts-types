@@ -98,7 +98,26 @@ type UniformNode<TNodeType, TValue> = UniformNodeClass<TValue> & InputNode<TNode
 
 export default UniformNode;
 
-type UniformValue<TNodeType> = TNodeType extends "float" | "int" | "uint" ? number
+type UniformNodeType =
+    | "float"
+    | "int"
+    | "uint"
+    | "bool"
+    | "vec2"
+    | "ivec2"
+    | "uvec2"
+    | "vec3"
+    | "ivec3"
+    | "uvec3"
+    | "vec4"
+    | "ivec4"
+    | "uvec4"
+    | "mat2"
+    | "mat3"
+    | "mat4"
+    | "color";
+
+type UniformValue<TNodeType extends UniformNodeType> = TNodeType extends "float" | "int" | "uint" ? number
     : TNodeType extends "bool" ? boolean
     : TNodeType extends "vec2" | "ivec2" | "uvec2" ? Vector2
     : TNodeType extends "vec3" | "ivec3" | "uvec3" ? Vector3
@@ -110,7 +129,7 @@ type UniformValue<TNodeType> = TNodeType extends "float" | "int" | "uint" ? numb
     : never;
 
 interface Uniform {
-    <const T extends string>(type: T): UniformNode<T, UniformValue<T>>;
+    <const T extends UniformNodeType>(type: T): UniformNode<T, UniformValue<T>>;
     (value: number, type?: "float"): UniformNode<"float", number>;
     (value: boolean): UniformNode<"bool", boolean>;
     (value: Vector2): UniformNode<"vec2", Vector2>;
@@ -133,3 +152,5 @@ interface Uniform {
  * @returns {UniformNode}
  */
 export declare const uniform: Uniform;
+
+export {};
