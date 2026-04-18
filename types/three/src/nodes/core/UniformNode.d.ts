@@ -129,7 +129,7 @@ type UniformValue<TNodeType extends UniformNodeType> = TNodeType extends "float"
     : never;
 
 interface Uniform {
-    <const T extends UniformNodeType>(type: T): UniformNode<T, UniformValue<T>>;
+    <const TNodeType extends UniformNodeType>(type: TNodeType): UniformNode<TNodeType, UniformValue<TNodeType>>;
     (value: number, type?: "float"): UniformNode<"float", number>;
     (value: boolean): UniformNode<"bool", boolean>;
     (value: Vector2): UniformNode<"vec2", Vector2>;
