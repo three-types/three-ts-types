@@ -63,21 +63,27 @@ interface Vec2NodeParameterForNumType {
     int: Node<"ivec2">;
     uint: Node<"uvec2">;
 }
-type Vec2OrLessOrNumberParameterForNumType<TNum extends NumType> = Vec2NodeParameterForNumType[TNum] | NumberParameterForNumType<TNum>;
+type Vec2OrLessOrNumberParameterForNumType<TNum extends NumType> =
+    | Vec2NodeParameterForNumType[TNum]
+    | NumberParameterForNumType<TNum>;
 
 interface Vec3NodeParameterForNumType {
     float: Node<"vec3"> | Node<"ivec3"> | Node<"uvec3">;
     int: Node<"ivec3">;
     uint: Node<"uvec3">;
 }
-type Vec3OrLessOrNumberParameterForNumType<TNum extends NumType> = Vec3NodeParameterForNumType[TNum] | Vec2OrLessOrNumberParameterForNumType<TNum>;
+type Vec3OrLessOrNumberParameterForNumType<TNum extends NumType> =
+    | Vec3NodeParameterForNumType[TNum]
+    | Vec2OrLessOrNumberParameterForNumType<TNum>;
 
 interface Vec4NodeParameterForNumType {
     float: Node<"vec4"> | Node<"ivec4"> | Node<"uvec4">;
     int: Node<"ivec4">;
     uint: Node<"uvec4">;
 }
-type Vec4OrLessOrNumberParameterForNumType<TNum extends NumType> = Vec4NodeParameterForNumType[TNum] | Vec3OrLessOrNumberParameterForNumType<TNum>;
+type Vec4OrLessOrNumberParameterForNumType<TNum extends NumType> =
+    | Vec4NodeParameterForNumType[TNum]
+    | Vec3OrLessOrNumberParameterForNumType<TNum>;
 
 // add/sub/mul/div
 
@@ -106,9 +112,18 @@ interface AddSubMulDivNumberVec<TNum extends NumType> {
 
 interface AddSubMulDivNumberVecNumExtensions<TNum extends NumType> {
     (b: NumberParameterForNumType<TNum>, ...params: NumberParameterForNumType<TNum>[]): Node<TNum>;
-    (b: Vec2OrLessOrNumberParameterForNumType<TNum>, ...params: Vec2OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec2<TNum>>;
-    (b: Vec3OrLessOrNumberParameterForNumType<TNum>, ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec3<TNum>>;
-    (b: Vec4OrLessOrNumberParameterForNumType<TNum>, ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec4<TNum>>;
+    (
+        b: Vec2OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec2OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec2<TNum>>;
+    (
+        b: Vec3OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec3<TNum>>;
+    (
+        b: Vec4OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
 }
 
 interface AddSubMulDivNumberVecNumberAssignExtensions<TNum extends NumType> {
@@ -119,9 +134,18 @@ interface AddSubMulDivNumberVecNumberAssignExtensions<TNum extends NumType> {
 }
 
 interface AddSubMulDivNumberVecVec2Extensions<TNum extends NumType> {
-    (b: Vec2OrLessOrNumberParameterForNumType<TNum>, ...params: Vec2OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec2<TNum>>;
-    (b: Vec3OrLessOrNumberParameterForNumType<TNum>, ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec3<TNum>>;
-    (b: Vec4OrLessOrNumberParameterForNumType<TNum>, ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec4<TNum>>;
+    (
+        b: Vec2OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec2OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec2<TNum>>;
+    (
+        b: Vec3OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec3<TNum>>;
+    (
+        b: Vec4OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
 }
 
 interface AddSubMulDivNumberVecVec2AssignExtensions<TNum extends NumType> {
@@ -129,8 +153,14 @@ interface AddSubMulDivNumberVecVec2AssignExtensions<TNum extends NumType> {
 }
 
 interface AddSubMulDivNumberVecVec3Extensions<TNum extends NumType> {
-    (b: Vec3OrLessOrNumberParameterForNumType<TNum>, ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec3<TNum>>;
-    (b: Vec4OrLessOrNumberParameterForNumType<TNum>, ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec4<TNum>>;
+    (
+        b: Vec3OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec3OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec3<TNum>>;
+    (
+        b: Vec4OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
 }
 
 interface AddSubMulDivNumberVecVec3AssignExtensions<TNum extends NumType> {
@@ -138,7 +168,10 @@ interface AddSubMulDivNumberVecVec3AssignExtensions<TNum extends NumType> {
 }
 
 interface AddSubMulDivNumberVecVec4Extensions<TNum extends NumType> {
-    (b: Vec4OrLessOrNumberParameterForNumType<TNum>, ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]): Node<NumberToVec4<TNum>>;
+    (
+        b: Vec4OrLessOrNumberParameterForNumType<TNum>,
+        ...params: Vec4OrLessOrNumberParameterForNumType<TNum>[]
+    ): Node<NumberToVec4<TNum>>;
 }
 
 interface AddSubMulDivNumberVecVec4AssignExtensions<TNum extends NumType> {
