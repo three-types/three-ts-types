@@ -15068,7 +15068,7 @@ index 71fbd6622..c2fc51fe1 100644
      gui.add(gravity, 'value', -0.0098, 0, 0.0001).name('gravity');
      gui.add(bounce, 'value', 0.1, 1, 0.01).name('bounce');
 diff --git a/examples-testing/examples/webgpu_compute_particles_rain.ts b/examples-testing/examples/webgpu_compute_particles_rain.ts
-index eaa4e957e..43cca9ddd 100644
+index eaa4e957e..7482f06dc 100644
 --- a/examples-testing/examples/webgpu_compute_particles_rain.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_rain.ts
 @@ -25,14 +25,17 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
@@ -15106,6 +15106,17 @@ index eaa4e957e..43cca9ddd 100644
  
          const position = positionBuffer.element(instanceIndex);
          const velocity = velocityBuffer.element(instanceIndex);
+@@ -135,8 +138,8 @@ async function init() {
+ 
+             // next drops will not fall in the same place
+ 
+-            position.x = hash(instanceIndex.add(time)).mul(100).add(-50);
+-            position.z = hash(instanceIndex.add(time.add(randUint())))
++            position.x = hash(instanceIndex.toFloat().add(time)).mul(100).add(-50);
++            position.z = hash(instanceIndex.toFloat().add(time.add(randUint())))
+                 .mul(100)
+                 .add(-50);
+         });
 @@ -274,7 +277,7 @@ async function init() {
  
      // gui
@@ -21825,7 +21836,7 @@ index f1e423444..34df22c9f 100644
      gradient.colors = ['#090033', '#5f1f93', '#e02e96', '#ffbd80', '#fff0db'];
  
 diff --git a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
-index e220c164b..f9b0a23f4 100644
+index e220c164b..0fe2693b1 100644
 --- a/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 +++ b/examples-testing/examples/webgpu_tsl_vfx_linkedparticles.ts
 @@ -37,10 +37,16 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -21857,6 +21868,15 @@ index e220c164b..f9b0a23f4 100644
          return hue(
              color(0x0000ff),
              colorOffset.add(mx_fractal_noise_float(i.toFloat().mul(0.1), 2, 2.0, 0.5, colorVariance)),
+@@ -284,7 +290,7 @@ async function init() {
+             const l1 = max(0.0, min(closestLife1, life)).pow(0.8); // pow is here to apply a slight curve to the opacity
+             const l2 = max(0.0, min(closestLife2, life)).pow(0.8);
+ 
+-            Loop(4, ({ i }) => {
++            Loop({ start: 0, end: 4, type: 'uint' }, ({ i }) => {
+                 linksColors.element(firstLinkIndex.add(i)).xyz.assign(linkColor);
+                 linksColors.element(firstLinkIndex.add(i)).w.assign(l1);
+                 linksColors.element(secondLinkIndex.add(i)).xyz.assign(linkColor);
 @@ -366,7 +372,7 @@ async function init() {
  
      // GUI
