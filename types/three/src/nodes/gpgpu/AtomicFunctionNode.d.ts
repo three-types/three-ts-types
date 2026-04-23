@@ -30,8 +30,7 @@ declare class AtomicFunctionNodeClass extends Node {
     static ATOMIC_XOR: "atomicXor";
 }
 
-export type AtomicFunctionNode<TNodeType = unknown> =
-    Node<TNodeType> & AtomicFunctionNodeClass;
+export type AtomicFunctionNode<TNodeType = unknown> = Node<TNodeType> & AtomicFunctionNodeClass;
 
 declare const AtomicFunctionNode: {
     new<TNodeType = unknown>(
