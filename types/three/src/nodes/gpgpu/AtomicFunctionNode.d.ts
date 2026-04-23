@@ -12,13 +12,6 @@ export type AtomicMethod =
     | typeof AtomicFunctionNode.ATOMIC_XOR;
 
 declare class AtomicFunctionNodeClass extends Node {
-    method: AtomicMethod;
-    pointerNode: Node;
-    valueNode: Node;
-    parents: boolean;
-
-    constructor(method: AtomicMethod, pointerNode: Node, valueNode: Node);
-
     static ATOMIC_LOAD: "atomicLoad";
     static ATOMIC_STORE: "atomicStore";
     static ATOMIC_ADD: "atomicAdd";
@@ -30,13 +23,20 @@ declare class AtomicFunctionNodeClass extends Node {
     static ATOMIC_XOR: "atomicXor";
 }
 
-export type AtomicFunctionNode<TNodeType = unknown> = Node<TNodeType> & AtomicFunctionNodeClass;
+interface AtomicFunctionNodeInterface {
+    method: AtomicMethod;
+    pointerNode: Node;
+    valueNode: Node | null;
+    parents: boolean;
+}
+
+export type AtomicFunctionNode<TNodeType = unknown> = Node<TNodeType> & AtomicFunctionNodeInterface;
 
 declare const AtomicFunctionNode: {
     new<TNodeType = unknown>(
         method: AtomicMethod,
         pointerNode: Node,
-        valueNode: Node,
+        valueNode: Node | null,
     ): AtomicFunctionNode<TNodeType>;
 } & typeof AtomicFunctionNodeClass;
 
@@ -45,7 +45,7 @@ export default AtomicFunctionNode;
 export const atomicFunc: <TNodeType = unknown>(
     method: AtomicMethod,
     pointerNode: Node<TNodeType>,
-    valueNode: Node,
+    valueNode: Node | null,
 ) => AtomicFunctionNode<TNodeType>;
 
 export const atomicLoad: <TNodeType = unknown>(
