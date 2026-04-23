@@ -32,52 +32,52 @@ declare class AtomicFunctionNode extends Node {
 
 export default AtomicFunctionNode;
 
-export const atomicFunc: (
+export const atomicFunc: <TNodeType extends string = string>(
     method: AtomicMethod,
-    pointerNode: Node,
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicLoad: (
-    pointerNode: Node,
-) => AtomicFunctionNode;
+export const atomicLoad: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
+) => Node<TNodeType>;
 
-export const atomicStore: (
-    pointerNode: Node,
+export const atomicStore: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node | number,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicAdd: (
-    pointerNode: Node,
+export const atomicAdd: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node | number,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicSub: (
-    pointerNode: Node,
+export const atomicSub: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node | number,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicMax: (
-    pointerNode: Node,
+export const atomicMax: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicMin: (
-    pointerNode: Node,
+export const atomicMin: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicAnd: (
-    pointerNode: Node,
+export const atomicAnd: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicOr: (
-    pointerNode: Node,
+export const atomicOr: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
 
-export const atomicXor: (
-    pointerNode: Node,
+export const atomicXor: <TNodeType extends string = string>(
+    pointerNode: Node<TNodeType>,
     valueNode: Node,
-) => AtomicFunctionNode;
+) => Node<TNodeType>;
