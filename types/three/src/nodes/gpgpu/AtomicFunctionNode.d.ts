@@ -19,7 +19,7 @@ interface AtomicFunctionNodeInterface {
 }
 
 declare const AtomicFunctionNode: {
-    new<TNodeType = unknown>(
+    new<TNodeType>(
         method: AtomicMethod,
         pointerNode: Node,
         valueNode: Node | null,
