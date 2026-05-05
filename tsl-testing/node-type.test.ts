@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { Fn, vec2, vec3, vec4 } from 'three/tsl';
+import { Fn, smoothstep, smoothstepElement, step, stepElement, vec2, vec3, vec4 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
@@ -228,6 +228,128 @@ test('vec3(1, 0, 2).flipZX()', async () => {
     expect(testVec3Set.getNodeType(nodeBuilder)).toBe('vec3');
 
     scene.backgroundNode = testVec3Set.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// smoothstep — chained method on vector nodes
+
+test('vec2(0.5, 0.5).smoothstep(0.1, 0.9)', async () => {
+    const result: THREE.Node<'vec2'> = vec2(0.5, 0.5).smoothstep(0.1, 0.9);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec2');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+test('vec3(0.5, 0.5, 0.5).smoothstep(float, float)', async () => {
+    const result: THREE.Node<'vec3'> = vec3(0.5, 0.5, 0.5).smoothstep(0.1, 0.9);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+test('vec4(0.5, 0.5, 0.5, 0.5).smoothstep(float, float)', async () => {
+    const result: THREE.Node<'vec4'> = vec4(0.5, 0.5, 0.5, 0.5).smoothstep(0.1, 0.9);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec4');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// smoothstep — standalone function with vector args
+
+test('smoothstep(float, float, vec3)', async () => {
+    const result: THREE.Node<'vec3'> = smoothstep(0.1, 0.9, vec3(0.5, 0.5, 0.5));
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// smoothstepElement — standalone function with vector args
+
+test('smoothstepElement(vec3, float, float)', async () => {
+    const result: THREE.Node<'vec3'> = smoothstepElement(vec3(0.5, 0.5, 0.5), 0.1, 0.9);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// step — chained method on vector nodes
+
+test('vec2(0.5, 0.5).step(0.3)', async () => {
+    const result: THREE.Node<'vec2'> = vec2(0.5, 0.5).step(0.3);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec2');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+test('vec3(0.5, 0.5, 0.5).step(float)', async () => {
+    const result: THREE.Node<'vec3'> = vec3(0.5, 0.5, 0.5).step(0.3);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+test('vec4(0.5, 0.5, 0.5, 0.5).step(float)', async () => {
+    const result: THREE.Node<'vec4'> = vec4(0.5, 0.5, 0.5, 0.5).step(0.3);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec4');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// step — standalone function with vector args
+
+test('step(float, vec3)', async () => {
+    const result: THREE.Node<'vec3'> = step(0.3, vec3(0.5, 0.5, 0.5));
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
+
+    await renderer.init();
+    renderer.render(scene, camera);
+});
+
+// stepElement — standalone function with vector args
+
+test('stepElement(vec3, float)', async () => {
+    const result: THREE.Node<'vec3'> = stepElement(vec3(0.5, 0.5, 0.5), 0.3);
+
+    expect(result.getNodeType(nodeBuilder)).toBe('vec3');
+
+    scene.backgroundNode = result.debug();
 
     await renderer.init();
     renderer.render(scene, camera);
