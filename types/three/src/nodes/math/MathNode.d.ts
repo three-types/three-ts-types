@@ -503,7 +503,13 @@ declare module "../core/Node.js" {
     }
 }
 
-export const step: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
+interface Step {
+    (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
+    (x: Vec2OrLessOrFloat, y: Vec2OrLessOrFloat): Node<"vec2">;
+    (x: Vec3OrLessOrFloat, y: Vec3OrLessOrFloat): Node<"vec3">;
+    (x: Vec4OrLessOrFloat, y: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const step: Step;
 
 interface Reflect {
     (I: Vec2OrLessOrFloat, N: Vec2OrLessOrFloat): Node<"vec2">;
@@ -754,6 +760,9 @@ declare module "../core/Node.js" {
 
 interface Smoothstep {
     (low: FloatOrNumber, high: FloatOrNumber, x: FloatOrNumber): Node<"float">;
+    (low: Vec2OrLessOrFloat, high: Vec2OrLessOrFloat, x: Vec2OrLessOrFloat): Node<"vec2">;
+    (low: Vec3OrLessOrFloat, high: Vec3OrLessOrFloat, x: Vec3OrLessOrFloat): Node<"vec3">;
+    (low: Vec4OrLessOrFloat, high: Vec4OrLessOrFloat, x: Vec4OrLessOrFloat): Node<"vec4">;
 }
 export const smoothstep: Smoothstep;
 
@@ -815,21 +824,57 @@ declare module "../core/Node.js" {
 
 interface SmoothstepElement {
     (x: FloatOrNumber, low: FloatOrNumber, high: FloatOrNumber): Node<"float">;
+    (x: Vec2OrLessOrFloat, low: Vec2OrLessOrFloat, high: Vec2OrLessOrFloat): Node<"vec2">;
+    (x: Vec3OrLessOrFloat, low: Vec3OrLessOrFloat, high: Vec3OrLessOrFloat): Node<"vec3">;
+    (x: Vec4OrLessOrFloat, low: Vec4OrLessOrFloat, high: Vec4OrLessOrFloat): Node<"vec4">;
 }
 export const smoothstepElement: SmoothstepElement;
-interface SmoothstepExtension {
+interface SmoothstepFloatExtension {
     (low: FloatOrNumber, high: FloatOrNumber): Node<"float">;
+}
+interface SmoothstepVec2Extension {
+    (low: Vec2OrLessOrFloat, high: Vec2OrLessOrFloat): Node<"vec2">;
+}
+interface SmoothstepVec3Extension {
+    (low: Vec3OrLessOrFloat, high: Vec3OrLessOrFloat): Node<"vec3">;
+}
+interface SmoothstepVec4Extension {
+    (low: Vec4OrLessOrFloat, high: Vec4OrLessOrFloat): Node<"vec4">;
 }
 declare module "../core/Node.js" {
     interface FloatExtensions {
-        smoothstep: SmoothstepExtension;
+        smoothstep: SmoothstepFloatExtension;
+    }
+    interface Vec2Extensions {
+        smoothstep: SmoothstepVec2Extension;
+    }
+    interface Vec3Extensions {
+        smoothstep: SmoothstepVec3Extension;
+    }
+    interface Vec4Extensions {
+        smoothstep: SmoothstepVec4Extension;
     }
 }
 
-export const stepElement: (x: FloatOrNumber, edge: FloatOrNumber) => Node<"float">;
+interface StepElement {
+    (x: FloatOrNumber, edge: FloatOrNumber): Node<"float">;
+    (x: Vec2OrLessOrFloat, edge: Vec2OrLessOrFloat): Node<"vec2">;
+    (x: Vec3OrLessOrFloat, edge: Vec3OrLessOrFloat): Node<"vec3">;
+    (x: Vec4OrLessOrFloat, edge: Vec4OrLessOrFloat): Node<"vec4">;
+}
+export const stepElement: StepElement;
 declare module "../core/Node.js" {
     interface FloatExtensions {
         step: (edge: FloatOrNumber) => Node<"float">;
+    }
+    interface Vec2Extensions {
+        step: (edge: Vec2OrLessOrFloat) => Node<"vec2">;
+    }
+    interface Vec3Extensions {
+        step: (edge: Vec3OrLessOrFloat) => Node<"vec3">;
+    }
+    interface Vec4Extensions {
+        step: (edge: Vec4OrLessOrFloat) => Node<"vec4">;
     }
 }
 
