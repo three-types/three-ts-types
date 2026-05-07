@@ -50,7 +50,7 @@ export class Vector3 {
     /**
      * Sets value of this vector.
      */
-    set(x: number, y: number, z: number): this;
+    set(x: number, y: number, z?: number): this;
 
     /**
      * Sets all values of this vector.
