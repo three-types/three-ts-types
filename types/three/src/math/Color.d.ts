@@ -239,7 +239,7 @@ export class Color {
      * @param g Green channel value between 0 and 1.
      * @param b Blue channel value between 0 and 1.
      */
-    setRGB(r: number, g: number, b: number, colorSpace?: string): Color;
+    setRGB(r: number, g: number, b: number, colorSpace?: string): this;
 
     /**
      * Sets this color from HSL values.
