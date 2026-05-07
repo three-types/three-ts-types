@@ -10,6 +10,7 @@ import Node, { MatType, NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
+import ArrayElementNode from "../utils/ArrayElementNode.js";
 import ConvertNode from "../utils/ConvertNode.js";
 import JoinNode from "../utils/JoinNode.js";
 
@@ -2398,13 +2399,13 @@ declare module "../core/Node.js" {
     }
 }
 
-export const element: (node: Node, indexNode: Node) => Node;
+export const element: <TNodeType>(node: Node<TNodeType>, indexNode: Node | number) => ArrayElementNode<TNodeType>;
 export const convert: (node: Node, types: string) => Node;
 export const split: (node: Node, channels?: string) => Node;
 
 declare module "../core/Node.js" {
     interface NodeElements {
-        element: (indexNode: Node) => Node;
+        element: <TNodeType>(this: Node<TNodeType>, indexNode: Node | number) => ArrayElementNode<TNodeType>;
 
         convert: (types: string) => Node;
     }
