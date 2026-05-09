@@ -14204,7 +14204,7 @@ index 384311dd4..8d39e8acc 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index a8538cf94..53b975193 100644
+index a8538cf94..ac7a9b71f 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14226,16 +14226,19 @@ index a8538cf94..53b975193 100644
  
  init();
  
-@@ -157,7 +159,7 @@ function init() {
+@@ -157,7 +159,10 @@ function init() {
      let transition = waterPosY.add(0.1).saturate().oneMinus();
      transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
  
 -    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(material.colorNode!, material.colorNode!.add(waterLayer0));
++    const colorNode = transition.mix(
++        material.colorNode as THREE.Node<'vec4'>,
++        (material.colorNode as THREE.Node<'vec4'>).add(waterLayer0),
++    );
  
      //material.colorNode = colorNode;
      floor.material.colorNode = colorNode;
-@@ -182,7 +184,7 @@ function init() {
+@@ -182,7 +187,7 @@ function init() {
  
      // gui
  
