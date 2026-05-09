@@ -645,7 +645,7 @@ interface Mix {
     (a: FloatOrNumber, b: FloatOrNumber, t: FloatOrNumber): Node<"float">;
     (a: Vec2OrFloat, b: Vec2OrFloat, t: FloatOrNumber): Node<"vec2">;
     (a: Vec3OrFloat, b: Vec3OrFloat, t: FloatOrNumber): Node<"vec3">;
-    (a: Vec4OrFloat, b: Vec4OrFloat, t: FloatOrNumber): Node<"vec4">;
+    (a: Vec4OrFloat | Vec3, b: Vec4OrFloat | Vec3, t: FloatOrNumber): Node<"vec4">;
 }
 export const mix: Mix;
 
@@ -784,14 +784,14 @@ interface MixElement {
     (t: FloatOrNumber, e1: FloatOrNumber, e2: FloatOrNumber): Node<"float">;
     (t: FloatOrNumber, e1: Vec2OrFloat, e2: Vec2OrFloat): Node<"vec2">;
     (t: FloatOrNumber, e1: Vec3OrFloat, e2: Vec3OrFloat): Node<"vec3">;
-    (t: FloatOrNumber, e1: Vec4OrFloat, e2: Vec4OrFloat): Node<"vec4">;
+    (t: FloatOrNumber, e1: Vec4OrFloat | Vec3, e2: Vec4OrFloat | Vec3): Node<"vec4">;
 }
 export const mixElement: MixElement;
 interface MixExtension {
     (e1: FloatOrNumber, e2: FloatOrNumber): Node<"float">;
     (e1: Vec2OrFloat, e2: Vec2OrFloat): Node<"vec2">;
     (e1: Vec3OrFloat, e2: Vec3OrFloat): Node<"vec3">;
-    (e1: Vec4OrFloat, e2: Vec4OrFloat): Node<"vec4">;
+    (e1: Vec4OrFloat | Vec3, e2: Vec4OrFloat | Vec3): Node<"vec4">;
 }
 declare module "../core/Node.js" {
     interface FloatExtensions {
