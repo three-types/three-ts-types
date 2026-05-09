@@ -147,6 +147,7 @@ type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 
 type Vec2 = Node<"vec2"> | Vector2;
+// TODO Add Node<"color"> to union and remove ad-hoc usage from the rest of the file
 type Vec3 = Node<"vec3"> | Vector3;
 type Vec4 = Node<"vec4"> | Vector4;
 
