@@ -10296,7 +10296,7 @@ index 60775a2a1..2ed041bfc 100644
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
 diff --git a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
-index 8299d6c54..1764023d1 100644
+index 8299d6c54..74b76b2cb 100644
 --- a/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -10636,7 +10636,7 @@ index 8299d6c54..1764023d1 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -410,28 +463,161 @@ declare class Node extends EventDispatcher {
+@@ -410,28 +463,176 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -10664,7 +10664,9 @@ index 8299d6c54..1764023d1 100644
       */
 -    toJSON(meta: Object | null): Object;
 +    toJSON(meta?: NodeJSONMeta | string): NodeJSONOutputData;
-+}
+ }
+-declare namespace Node {
+-    let captureStackTrace: boolean;
 +
 +declare const Node: {
 +    new<TNodeType>(nodeType?: TNodeType | null): Node<TNodeType>;
@@ -10680,12 +10682,10 @@ index 8299d6c54..1764023d1 100644
 +
 +export interface NodeElements {
  }
--declare namespace Node {
--    let captureStackTrace: boolean;
+-import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export interface NodeExtensions<TNodeType> {
- }
--import { EventDispatcher } from '../../core/EventDispatcher.js';
++}
 +
 +export type NumType = "float" | "int" | "uint";
 +export type IntegerType = "int" | "uint";
@@ -10747,6 +10747,18 @@ index 8299d6c54..1764023d1 100644
 +export interface FloatVecExtensions<TVec extends FloatVecType> {
 +}
 +
++export interface FloatOrVecExtensions<TNodeType> {
++}
++
++export interface IntOrVecExtensions<TNodeType> {
++}
++
++export interface UintOrVecExtensions<TNodeType> {
++}
++
++export interface BoolOrVecExtensions {
++}
++
 +export interface Mat2Extensions {
 +}
 +
@@ -10763,36 +10775,39 @@ index 8299d6c54..1764023d1 100644
 +    & NodeClass
 +    & NodeElements
 +    & (unknown extends TNodeType ? {} : NodeExtensions<TNodeType>)
-+    & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions & NumExtensions<"float">
++    & (TNodeType extends "float" ? NumOrBoolExtensions<"float"> & FloatExtensions & NumExtensions<"float"> & FloatOrVecExtensions<"float">
 +    : TNodeType extends "int"
-+        ? NumOrBoolExtensions<"int"> & IntExtensions & NumExtensions<"int"> & IntegerExtensions<"int">
++        ? NumOrBoolExtensions<"int"> & IntExtensions & NumExtensions<"int"> & IntegerExtensions<"int"> & IntOrVecExtensions<"int">
 +        : TNodeType extends "uint"
-+            ? NumOrBoolExtensions<"uint"> & UintExtensions & NumExtensions<"uint"> & IntegerExtensions<"uint">
-+            : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions
++            ? NumOrBoolExtensions<"uint"> & UintExtensions & NumExtensions<"uint"> & IntegerExtensions<"uint"> & IntOrVecExtensions<"uint">
++            : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions & BoolOrVecExtensions
 +                : TNodeType extends "vec2" ?
 +                    & NumOrBoolVec2Extensions<"float">
 +                    & Vec2Extensions
 +                    & NumVec2Extensions<"float">
 +                    & FloatVecExtensions<"vec2">
-+                    : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int">
-+                        : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint">
-+                            : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool">
++                    & FloatOrVecExtensions<"vec2">
++                    : TNodeType extends "ivec2" ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int"> & IntOrVecExtensions<"ivec2">
++                        : TNodeType extends "uvec2" ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint"> & IntOrVecExtensions<"uvec2">
++                            : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool"> & BoolOrVecExtensions
 +                                : TNodeType extends "vec3" ?
 +                                    & NumOrBoolVec3Extensions<"float">
 +                                    & Vec3Extensions
 +                                    & NumVec3Extensions<"float">
 +                                    & FloatVecExtensions<"vec3">
-+                                    : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int">
-+                                        : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint">
-+                                            : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool">
++                                    & FloatOrVecExtensions<"vec3">
++                                    : TNodeType extends "ivec3" ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int"> & IntOrVecExtensions<"ivec3">
++                                        : TNodeType extends "uvec3" ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint"> & IntOrVecExtensions<"uvec3">
++                                            : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool"> & BoolOrVecExtensions
 +                                                : TNodeType extends "vec4" ?
 +                                                    & NumOrBoolVec4Extensions<"float">
 +                                                    & Vec4Extensions
 +                                                    & NumVec4Extensions<"float">
 +                                                    & FloatVecExtensions<"vec4">
-+                                                    : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int">
-+                                                        : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint">
-+                                                            : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool">
++                                                    & FloatOrVecExtensions<"vec4">
++                                                    : TNodeType extends "ivec4" ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int"> & IntOrVecExtensions<"ivec4">
++                                                        : TNodeType extends "uvec4" ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint"> & IntOrVecExtensions<"uvec4">
++                                                            : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool"> & BoolOrVecExtensions
 +                                                                : TNodeType extends "color" ? ColorExtensions
 +                                                                    : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
 +                                                                        : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
