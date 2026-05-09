@@ -1,13 +1,10 @@
 import Node from "./Node.js";
 import TempNode from "./TempNode.js";
-import ArrayElementNode from "../utils/ArrayElementNode.js";
 
-interface ArrayNodeInterface<TNodeType> {
+export interface ArrayNodeInterface<TNodeType> {
     count: number;
     values: Node<TNodeType>[] | null;
     readonly isArrayNode: true;
-
-    element: (indexNode: Node | number) => ArrayElementNode<TNodeType>;
 }
 
 declare const ArrayNode: {
@@ -30,7 +27,7 @@ interface ArrayFunction {
 export const array: ArrayFunction;
 
 declare module "./Node.js" {
-    interface NodeElements {
-        toArray: <TNodeType>(this: Node<TNodeType>, count: number) => ArrayNode<TNodeType>;
+    interface NodeExtensions<TNodeType> {
+        toArray: (count: number) => ArrayNode<TNodeType>;
     }
 }

@@ -5,6 +5,7 @@ import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
+import ArrayNode from "../core/ArrayNode.js";
 import ConstNode from "../core/ConstNode.js";
 import Node, { MatType, NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
@@ -2399,14 +2400,18 @@ declare module "../core/Node.js" {
     }
 }
 
-export const element: <TNodeType>(node: Node<TNodeType>, indexNode: Node | number) => ArrayElementNode<TNodeType>;
+export const element: <TNodeType>(node: ArrayNode<TNodeType>, indexNode: Node | number) => ArrayElementNode<TNodeType>;
 export const convert: (node: Node, types: string) => Node;
 export const split: (node: Node, channels?: string) => Node;
 
+declare module "../core/ArrayNode.js" {
+    interface ArrayNodeInterface<TNodeType> {
+        element: (indexNode: Node | number) => ArrayElementNode<TNodeType>;
+    }
+}
+
 declare module "../core/Node.js" {
     interface NodeElements {
-        element: <TNodeType>(this: Node<TNodeType>, indexNode: Node | number) => ArrayElementNode<TNodeType>;
-
         convert: (types: string) => Node;
     }
 }
