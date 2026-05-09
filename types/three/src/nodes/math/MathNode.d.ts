@@ -143,14 +143,20 @@ export default class MathNode extends TempNode {
 }
 
 type FloatOrNumber = Node<"float"> | number;
-type IntOrNumber = Node<"int"> | number;
 type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 
-type BoolVector = Node<"bvec2"> | Node<"bvec3"> | Node<"bvec4">;
+type Vec2 = Node<"vec2"> | Vector2;
+type Vec3 = Node<"vec3"> | Vector3;
+type Vec4 = Node<"vec4"> | Vector4;
+
+type Vec2OrFloat = Vec2 | FloatOrNumber;
+type Vec3OrFloat = Vec3 | FloatOrNumber;
+type Vec4OrFloat = Vec4 | FloatOrNumber;
 
 type Matrix = Node<"mat2"> | Node<"mat3"> | Node<"mat4">;
 
+// TODO Remove these in favor of Vec*OrFloat?
 type Vec2OrLessOrFloat = FloatOrNumber | Node<"vec2">;
 type Vec3OrLessOrFloat = Vec2OrLessOrFloat | Node<"vec3">;
 type Vec4OrLessOrFloat = Vec3OrLessOrFloat | Node<"vec4">;
@@ -168,62 +174,52 @@ export const TWO_PI: Node<"float">;
 
 export const HALF_PI: Node<"float">;
 
-export const all: (x: BoolVector) => Node<"bool">;
-export const any: (x: BoolVector) => Node<"bool">;
+type BoolOrVector = Node<"bool"> | boolean | Node<"bvec2"> | Node<"bvec3"> | Node<"bvec4">;
+
+export const all: (x: BoolOrVector) => Node<"bool">;
+export const any: (x: BoolOrVector) => Node<"bool">;
 declare module "../core/Node.js" {
-    interface BvecExtensions {
+    interface BoolOrVecExtensions {
         all: () => Node<"bool">;
         any: () => Node<"bool">;
     }
 }
 
-interface UnaryFunction {
+interface UnaryFloatVecFunction {
     (x: FloatOrNumber): Node<"float">;
+    (x: Vec2): Node<"vec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Vec4): Node<"vec4">;
 }
-export const radians: UnaryFunction;
-export const degrees: UnaryFunction;
-export const exp: UnaryFunction;
-export const exp2: UnaryFunction;
-export const log: UnaryFunction;
-export const log2: UnaryFunction;
-export const sqrt: UnaryFunction;
-export const inverseSqrt: UnaryFunction;
+export const radians: UnaryFloatVecFunction;
+export const degrees: UnaryFloatVecFunction;
+export const exp: UnaryFloatVecFunction;
+export const exp2: UnaryFloatVecFunction;
+export const log: UnaryFloatVecFunction;
+export const log2: UnaryFloatVecFunction;
+export const sqrt: UnaryFloatVecFunction;
+export const inverseSqrt: UnaryFloatVecFunction;
+export const floor: UnaryFloatVecFunction;
+export const ceil: UnaryFloatVecFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        radians: () => Node<"float">;
-        degrees: () => Node<"float">;
-        exp: () => Node<"float">;
-        exp2: () => Node<"float">;
-        log: () => Node<"float">;
-        log2: () => Node<"float">;
-        sqrt: () => Node<"float">;
-        inverseSqrt: () => Node<"float">;
-    }
-}
-
-interface FloorCeil {
-    (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
-export const floor: FloorCeil;
-export const ceil: FloorCeil;
-declare module "../core/Node.js" {
-    interface FloatExtensions {
-        floor: () => Node<"float">;
-        ceil: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        floor: () => Node<TVec>;
-        ceil: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        radians: () => Node<TNodeType>;
+        degrees: () => Node<TNodeType>;
+        exp: () => Node<TNodeType>;
+        exp2: () => Node<TNodeType>;
+        log: () => Node<TNodeType>;
+        log2: () => Node<TNodeType>;
+        sqrt: () => Node<TNodeType>;
+        inverseSqrt: () => Node<TNodeType>;
+        floor: () => Node<TNodeType>;
+        ceil: () => Node<TNodeType>;
     }
 }
 
 interface Normalize {
-    (x: Node<"vec2"> | Vector2): Node<"vec2">;
-    (x: Node<"vec3"> | Vector3): Node<"vec3">;
-    (x: Node<"vec4"> | Vector4): Node<"vec4">;
+    (x: Vec2): Node<"vec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Vec4): Node<"vec4">;
 }
 export const normalize: Normalize;
 declare module "../core/Node.js" {
@@ -232,118 +228,103 @@ declare module "../core/Node.js" {
     }
 }
 
-interface Fract {
-    (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
-export const fract: Fract;
-declare module "../core/Node.js" {
-    interface FloatExtensions {
-        fract: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        fract: () => Node<TVec>;
-    }
-}
-
-interface TrigonometricFunction {
-    (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
 interface ArcTanFunction {
     (y: FloatOrNumber, x?: FloatOrNumber): Node<"float">;
-    (y: Node<"vec2">, x?: Vec2OrLessOrFloat): Node<"vec2">;
-    (y: Node<"vec3">, x?: Vec3OrLessOrFloat): Node<"vec3">;
-    (y: Node<"vec4">, x?: Vec4OrLessOrFloat): Node<"vec4">;
+    (y: Vec2OrFloat, x?: Vec2OrFloat): Node<"vec2">;
+    (y: Vec3OrFloat, x?: Vec3OrFloat): Node<"vec3">;
+    (y: Vec4OrFloat, x?: Vec4OrFloat): Node<"vec4">;
 }
-export const sin: TrigonometricFunction;
-export const sinh: TrigonometricFunction;
-export const cos: TrigonometricFunction;
-export const cosh: TrigonometricFunction;
-export const tan: TrigonometricFunction;
-export const tanh: TrigonometricFunction;
-export const asin: TrigonometricFunction;
-export const asinh: TrigonometricFunction;
-export const acos: TrigonometricFunction;
-export const acosh: TrigonometricFunction;
+
+export const fract: UnaryFloatVecFunction;
+export const sin: UnaryFloatVecFunction;
+export const sinh: UnaryFloatVecFunction;
+export const cos: UnaryFloatVecFunction;
+export const cosh: UnaryFloatVecFunction;
+export const tan: UnaryFloatVecFunction;
+export const tanh: UnaryFloatVecFunction;
+export const asin: UnaryFloatVecFunction;
+export const asinh: UnaryFloatVecFunction;
+export const acos: UnaryFloatVecFunction;
+export const acosh: UnaryFloatVecFunction;
 export const atan: ArcTanFunction;
-export const atanh: TrigonometricFunction;
+export const atanh: UnaryFloatVecFunction;
+
+declare module "../core/Node.js" {
+    interface FloatOrVecExtensions<TNodeType> {
+        fract: () => Node<TNodeType>;
+        sin: () => Node<TNodeType>;
+        sinh: () => Node<TNodeType>;
+        cos: () => Node<TNodeType>;
+        cosh: () => Node<TNodeType>;
+        tan: () => Node<TNodeType>;
+        tanh: () => Node<TNodeType>;
+        asin: () => Node<TNodeType>;
+        asinh: () => Node<TNodeType>;
+        acos: () => Node<TNodeType>;
+        acosh: () => Node<TNodeType>;
+        atanh: () => Node<TNodeType>;
+    }
+}
+
 declare module "../core/Node.js" {
     interface FloatExtensions {
-        sin: () => Node<"float">;
-        sinh: () => Node<"float">;
-        cos: () => Node<"float">;
-        cosh: () => Node<"float">;
-        tan: () => Node<"float">;
-        tanh: () => Node<"float">;
-        asin: () => Node<"float">;
-        asinh: () => Node<"float">;
-        acos: () => Node<"float">;
-        acosh: () => Node<"float">;
         atan: (x?: FloatOrNumber) => Node<"float">;
-        atanh: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        sin: () => Node<TVec>;
-        sinh: () => Node<TVec>;
-        cos: () => Node<TVec>;
-        cosh: () => Node<TVec>;
-        tan: () => Node<TVec>;
-        tanh: () => Node<TVec>;
-        asin: () => Node<TVec>;
-        asinh: () => Node<TVec>;
-        acos: () => Node<TVec>;
-        acosh: () => Node<TVec>;
-        atanh: () => Node<TVec>;
     }
     interface Vec2Extensions {
-        atan: (x?: Vec2OrLessOrFloat) => Node<"vec2">;
+        atan: (x?: Vec2OrFloat) => Node<"vec2">;
     }
     interface Vec3Extensions {
-        atan: (x?: Vec3OrLessOrFloat) => Node<"vec3">;
+        atan: (x?: Vec3OrFloat) => Node<"vec3">;
     }
     interface Vec4Extensions {
-        atan: (x?: Vec4OrLessOrFloat) => Node<"vec4">;
+        atan: (x?: Vec4OrFloat) => Node<"vec4">;
     }
 }
 
-interface Abs {
+interface AbsFunction {
     (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-    (x: IntOrNumber): Node<"int">;
+    (x: Node<"int">): Node<"int">;
+    (x: Node<"uint">): Node<"uint">;
+    (x: Vec2): Node<"vec2">;
+    (x: Node<"ivec2">): Node<"ivec2">;
+    (x: Node<"uvec2">): Node<"uvec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Node<"ivec3">): Node<"ivec3">;
+    (x: Node<"uvec3">): Node<"uvec3">;
+    (x: Vec4): Node<"vec4">;
+    (x: Node<"ivec4">): Node<"ivec4">;
+    (x: Node<"uvec4">): Node<"uvec4">;
 }
-export const abs: Abs;
+export const abs: AbsFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        abs: () => Node<"float">;
+    interface FloatOrVecExtensions<TNodeType> {
+        abs: () => Node<TNodeType>;
     }
-    interface IntExtensions {
-        abs: () => Node<"int">;
+    interface IntOrVecExtensions<TNodeType> {
+        abs: () => Node<TNodeType>;
     }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        abs: () => Node<TVec>;
+    interface UintOrVecExtensions<TNodeType> {
+        abs: () => Node<TNodeType>;
     }
 }
 
-interface Sign {
+interface SignFunction {
     (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
+    (x: Node<"int">): Node<"int">;
+    (x: Vec2): Node<"vec2">;
+    (x: Node<"ivec2">): Node<"ivec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Node<"ivec3">): Node<"ivec3">;
+    (x: Vec4): Node<"vec4">;
+    (x: Node<"ivec4">): Node<"ivec4">;
 }
-export const sign: Sign;
+export const sign: SignFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        sign: () => Node<"float">;
+    interface FloatOrVecExtensions<TNodeType> {
+        sign: () => Node<TNodeType>;
     }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        sign: () => Node<TVec>;
+    interface IntOrVecExtensions<TNodeType> {
+        sign: () => Node<TNodeType>;
     }
 }
 
