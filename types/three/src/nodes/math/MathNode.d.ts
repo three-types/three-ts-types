@@ -1,4 +1,7 @@
 import { Color } from "../../math/Color.js";
+import { Matrix2 } from "../../math/Matrix2.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
@@ -147,6 +150,17 @@ type FloatOrNumber = Node<"float"> | number;
 type FloatVector = Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 type FloatVectorOrNumber = FloatOrNumber | Node<"vec2"> | Node<"vec3"> | Node<"vec4">;
 
+type NumberVectorOrNumber =
+    | FloatVectorOrNumber
+    | Node<"int">
+    | Node<"uint">
+    | Node<"ivec2">
+    | Node<"ivec3">
+    | Node<"ivec4">
+    | Node<"uvec2">
+    | Node<"uvec3">
+    | Node<"uvec4">;
+
 type Vec2 = Node<"vec2"> | Vector2;
 type Vec3 = Node<"vec3"> | Vector3 | Node<"color"> | Color;
 type Vec4 = Node<"vec4"> | Vector4;
@@ -155,7 +169,11 @@ type Vec2OrFloat = Vec2 | FloatOrNumber;
 type Vec3OrFloat = Vec3 | FloatOrNumber;
 type Vec4OrFloat = Vec4 | FloatOrNumber;
 
-type Matrix = Node<"mat2"> | Node<"mat3"> | Node<"mat4">;
+type Mat2 = Node<"mat2"> | Matrix2;
+type Mat3 = Node<"mat3"> | Matrix3;
+type Mat4 = Node<"mat4"> | Matrix4;
+
+type Matrix = Mat2 | Mat3 | Mat4;
 
 export const EPSILON: Node<"float">;
 export const INFINITY: Node<"float">;
@@ -277,7 +295,7 @@ declare module "../core/Node.js" {
     }
 }
 
-interface AbsFunction {
+interface UnaryNumVecFunction {
     (x: FloatOrNumber): Node<"float">;
     (x: Node<"int">): Node<"int">;
     (x: Node<"uint">): Node<"uint">;
@@ -291,7 +309,8 @@ interface AbsFunction {
     (x: Node<"ivec4">): Node<"ivec4">;
     (x: Node<"uvec4">): Node<"uvec4">;
 }
-export const abs: AbsFunction;
+
+export const abs: UnaryNumVecFunction;
 declare module "../core/Node.js" {
     interface FloatOrVecExtensions<TNodeType> {
         abs: () => Node<TNodeType>;
@@ -324,90 +343,80 @@ declare module "../core/Node.js" {
     }
 }
 
-export const length: (x: FloatVector | Node) => Node<"float">;
+export const length: (x: NumberVectorOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
-    interface FloatVecExtensions<TVec extends FloatVecType> {
+    interface FloatOrVecExtensions<TNodeType> {
+        length: () => Node<"float">;
+    }
+    interface IntOrVecExtensions<TNodeType> {
         length: () => Node<"float">;
     }
 }
 
-interface Negate {
+interface NegateFunction {
     (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
+    (x: Node<"int">): Node<"int">;
+    (x: Vec2): Node<"vec2">;
+    (x: Node<"ivec2">): Node<"ivec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Node<"ivec3">): Node<"ivec3">;
+    (x: Vec4): Node<"vec4">;
+    (x: Node<"ivec4">): Node<"ivec4">;
 }
-export const negate: Negate;
+export const negate: NegateFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        negate: () => Node<"float">;
+    interface FloatOrVecExtensions<TNodeType> {
+        negate: () => Node<TNodeType>;
     }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        negate: () => Node<TVec>;
+    interface IntOrVecExtensions<TNodeType> {
+        negate: () => Node<TNodeType>;
     }
 }
 
-interface OneMinus {
-    (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
-export const oneMinus: OneMinus;
+export const oneMinus: UnaryFloatVecFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        oneMinus: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        oneMinus: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        oneMinus: () => Node<TNodeType>;
     }
 }
 
-interface Derivative {
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
-export const dFdx: Derivative;
-export const dFdy: Derivative;
+export const dFdx: UnaryFloatVecFunction;
+export const dFdy: UnaryFloatVecFunction;
 declare module "../core/Node.js" {
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        dFdx: () => Node<TVec>;
-        dFdy: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        dFdx: () => Node<TNodeType>;
+        dFdy: () => Node<TNodeType>;
     }
 }
 
-export const round: (x: FloatOrNumber) => Node<"float">;
-export const reciprocal: (x: FloatOrNumber) => Node<"float">;
-export const trunc: (x: FloatOrNumber) => Node<"float">;
+export const round: UnaryNumVecFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        round: () => Node<"float">;
-        reciprocal: () => Node<"float">;
-        trunc: () => Node<"float">;
+    interface FloatOrVecExtensions<TNodeType> {
+        round: () => Node<TNodeType>;
+    }
+    interface IntOrVecExtensions<TNodeType> {
+        round: () => Node<TNodeType>;
+    }
+    interface UintOrVecExtensions<TNodeType> {
+        round: () => Node<TNodeType>;
     }
 }
 
-interface Fwidth {
-    (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
-}
-export const fwidth: Fwidth;
+export const reciprocal: UnaryFloatVecFunction;
+export const trunc: UnaryFloatVecFunction;
+export const fwidth: UnaryFloatVecFunction;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        fwidth: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        fwidth: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        reciprocal: () => Node<TNodeType>;
+        trunc: () => Node<TNodeType>;
+        fwidth: () => Node<TNodeType>;
     }
 }
 
 interface Transpose {
-    (x: Node<"mat2">): Node<"mat2">;
-    (x: Node<"mat3">): Node<"mat3">;
-    (x: Node<"mat4">): Node<"mat4">;
+    (x: Mat2): Node<"mat2">;
+    (x: Mat3): Node<"mat3">;
+    (x: Mat4): Node<"mat4">;
 }
 export const transpose: Transpose;
 declare module "../core/Node.js" {

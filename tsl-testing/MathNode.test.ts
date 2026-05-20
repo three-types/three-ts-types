@@ -1,5 +1,21 @@
 import { beforeAll, expect, test } from 'vitest';
-import { all, any, atan, bvec2, bvec3, int, normalize, radians, sign, uvec3, vec2, vec3 } from 'three/tsl';
+import {
+    all,
+    any,
+    atan,
+    bvec2,
+    bvec3,
+    int,
+    ivec3,
+    negate,
+    normalize,
+    radians,
+    sign,
+    uvec3,
+    vec2,
+    vec3,
+    vec4,
+} from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
@@ -123,5 +139,17 @@ test('abs(uvec3)', () => {
 test('sign(Vector4)', () => {
     const vector = new THREE.Vector4(1, 2, 3, 4);
     const result: THREE.Node<'vec4'> = sign(vector);
+    assertNode(result, 'vec4');
+});
+
+test('negate(ivec3)', () => {
+    const vec = ivec3(1, 3, 5);
+    const result: THREE.Node<'ivec3'> = negate(vec);
+    assertNode(result, 'ivec3');
+});
+
+test('vec4.oneMinus()', () => {
+    const vec = vec4(1, 3, 5, 2);
+    const result: THREE.Node<'vec4'> = vec.oneMinus();
     assertNode(result, 'vec4');
 });
