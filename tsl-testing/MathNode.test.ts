@@ -5,12 +5,15 @@ import {
     atan,
     bvec2,
     bvec3,
+    float,
     int,
     ivec3,
+    min,
     negate,
     normalize,
     radians,
     sign,
+    uint,
     uvec3,
     vec2,
     vec3,
@@ -152,4 +155,11 @@ test('vec4.oneMinus()', () => {
     const vec = vec4(1, 3, 5, 2);
     const result: THREE.Node<'vec4'> = vec.oneMinus();
     assertNode(result, 'vec4');
+});
+
+test('min(float, vec2)', () => {
+    const floatNode = float(5.3);
+    const vec = vec2(3, 1);
+    const minValue: THREE.Node<'vec2'> = min(floatNode, vec);
+    assertNode(minValue, 'vec2');
 });

@@ -433,9 +433,9 @@ declare module "../core/Node.js" {
 }
 
 interface Inverse {
-    (x: Node<"mat2">): Node<"mat2">;
-    (x: Node<"mat3">): Node<"mat3">;
-    (x: Node<"mat4">): Node<"mat4">;
+    (x: Mat2): Node<"mat2">;
+    (x: Mat3): Node<"mat3">;
+    (x: Mat4): Node<"mat4">;
 }
 export const inverse: Inverse;
 declare module "../core/Node.js" {
@@ -444,6 +444,7 @@ declare module "../core/Node.js" {
     }
 }
 
+// TODO Allow int/uint
 interface MinMax {
     (x: FloatOrNumber, y: FloatOrNumber, ...params: FloatOrNumber[]): Node<"float">;
     (x: Vec2OrFloat, y: Vec2OrFloat, ...params: Vec2OrFloat[]): Node<"vec2">;
@@ -490,10 +491,10 @@ declare module "../core/Node.js" {
 }
 
 interface Step {
-    (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
-    (x: Vec2OrFloat, y: Vec2OrFloat): Node<"vec2">;
-    (x: Vec3OrFloat, y: Vec3OrFloat): Node<"vec3">;
-    (x: Vec4OrFloat, y: Vec4OrFloat): Node<"vec4">;
+    (edge: FloatOrNumber, x: FloatOrNumber): Node<"float">;
+    (edge: Vec2OrFloat, x: Vec2OrFloat): Node<"vec2">;
+    (edge: Vec3OrFloat, x: Vec3OrFloat): Node<"vec3">;
+    (edge: Vec4OrFloat, x: Vec4OrFloat): Node<"vec4">;
 }
 export const step: Step;
 
@@ -505,12 +506,9 @@ interface Reflect {
 export const reflect: Reflect;
 interface ReflectVec2Extension {
     (N: Vec2OrFloat): Node<"vec2">;
-    (N: Vec3OrFloat): Node<"vec3">;
-    (N: Vec4OrFloat): Node<"vec4">;
 }
 interface ReflectVec3Extension {
     (N: Vec3OrFloat): Node<"vec3">;
-    (N: Vec4OrFloat): Node<"vec4">;
 }
 interface ReflectVec4Extension {
     (N: Vec4OrFloat): Node<"vec4">;
@@ -529,14 +527,12 @@ declare module "../core/Node.js" {
 
 export const distance: (x: FloatVectorOrNumber, y: FloatVectorOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        distance: (y: FloatVectorOrNumber) => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
+    interface FloatOrVecExtensions<TNodeType> {
         distance: (y: FloatVectorOrNumber) => Node<"float">;
     }
 }
 
+// TODO Allow int/uint
 interface Difference {
     (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
     (x: Vec2OrFloat, y: Vec2OrFloat): Node<"vec2">;
@@ -552,12 +548,9 @@ interface DifferenceFloatExtension {
 }
 interface DifferenceVec2Extension {
     (y: Vec2OrFloat): Node<"vec2">;
-    (y: Vec3OrFloat): Node<"vec3">;
-    (y: Vec4OrFloat): Node<"vec4">;
 }
 interface DifferenceVec3Extension {
     (y: Vec3OrFloat): Node<"vec3">;
-    (y: Vec4OrFloat): Node<"vec4">;
 }
 interface DifferenceVec4Extension {
     (y: Vec4OrFloat): Node<"vec4">;
@@ -577,6 +570,7 @@ declare module "../core/Node.js" {
     }
 }
 
+// TODO Allow int/uint
 export const dot: (x: FloatVector, y: FloatVector) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatVecExtensions<TVec extends FloatVecType> {
@@ -584,55 +578,71 @@ declare module "../core/Node.js" {
     }
 }
 
-export const cross: (x: Node<"vec3">, y: Node<"vec3">) => Node<"vec3">;
+export const cross: (x: Vec3, y: Vec3) => Node<"vec3">;
 declare module "../core/Node.js" {
     interface Vec3Extensions {
-        cross: (y: Node<"vec3">) => Node<"vec3">;
+        cross: (y: Vec3) => Node<"vec3">;
     }
 }
 
 interface Pow {
     (x: FloatOrNumber, y: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">, y: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">, y: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">, y: Node<"vec4">): Node<"vec4">;
+    (x: Vec2OrFloat, y: Vec2OrFloat): Node<"vec2">;
+    (x: Vec3OrFloat, y: Vec3OrFloat): Node<"vec3">;
+    (x: Vec4OrFloat, y: Vec4OrFloat): Node<"vec4">;
 }
-export const pow: (x: FloatOrNumber, y: FloatOrNumber) => Node<"float">;
+export const pow: Pow;
+interface PowFloatExtension {
+    (y: FloatOrNumber): Node<"float">;
+    (y: Vec2OrFloat): Node<"vec2">;
+    (y: Vec3OrFloat): Node<"vec3">;
+    (y: Vec4OrFloat): Node<"vec4">;
+}
+interface PowVec2Extension {
+    (y: Vec2OrFloat): Node<"vec2">;
+}
+interface PowVec3Extension {
+    (y: Vec3OrFloat): Node<"vec3">;
+}
+interface PowVec4Extension {
+    (y: Vec4OrFloat): Node<"vec4">;
+}
 declare module "../core/Node.js" {
     interface FloatExtensions {
-        pow: (y: FloatOrNumber) => Node<"float">;
+        pow: PowFloatExtension;
     }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        pow: (y: Node<TVec>) => Node<TVec>;
+    interface Vec2Extensions {
+        pow: PowVec2Extension;
+    }
+    interface Vec3Extensions {
+        pow: PowVec3Extension;
+    }
+    interface Vec4Extensions {
+        pow: PowVec4Extension;
     }
 }
 
 interface PowConstant {
     (x: FloatOrNumber): Node<"float">;
-    (x: Node<"vec2">): Node<"vec2">;
-    (x: Node<"vec3">): Node<"vec3">;
-    (x: Node<"vec4">): Node<"vec4">;
+    (x: Vec2): Node<"vec2">;
+    (x: Vec3): Node<"vec3">;
+    (x: Vec4): Node<"vec4">;
 }
 export const pow2: PowConstant;
 export const pow3: PowConstant;
 export const pow4: PowConstant;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        pow2: () => Node<"float">;
-        pow3: () => Node<"float">;
-        pow4: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        pow2: () => Node<TVec>;
-        pow3: () => Node<TVec>;
-        pow4: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        pow2: () => Node<TNodeType>;
+        pow3: () => Node<TNodeType>;
+        pow4: () => Node<TNodeType>;
     }
 }
 
-export const transformDirection: (direction: Node<"vec3">, matrix: Node<"mat3"> | Node<"mat4">) => Node<"vec3">;
+export const transformDirection: (direction: Vec3, matrix: Mat3 | Mat4) => Node<"vec3">;
 declare module "../core/Node.js" {
     interface Vec3Extensions {
-        transformDirection: (matrix: Node<"mat3"> | Node<"mat4">) => Node<"vec3">;
+        transformDirection: (matrix: Mat3 | Mat4) => Node<"vec3">;
     }
 }
 
@@ -658,6 +668,7 @@ interface Mix {
 }
 export const mix: Mix;
 
+// TODO Allow int/uint
 interface Clamp {
     (value: FloatOrNumber, low?: FloatOrNumber, high?: FloatOrNumber): Node<"float">;
     (value: Vec2OrFloat, low?: Vec2OrFloat, high?: Vec2OrFloat): Node<"vec2">;
@@ -673,12 +684,9 @@ interface ClampFloatExtension {
 }
 interface ClampVec2Extension {
     (low?: Vec2OrFloat, high?: Vec2OrFloat): Node<"vec2">;
-    (low?: Vec3OrFloat, high?: Vec3OrFloat): Node<"vec3">;
-    (low?: Vec4OrFloat, high?: Vec4OrFloat): Node<"vec4">;
 }
 interface ClampVec3Extension {
     (low?: Vec3OrFloat, high?: Vec3OrFloat): Node<"vec3">;
-    (low?: Vec4OrFloat, high?: Vec4OrFloat): Node<"vec4">;
 }
 interface ClampVec4Extension {
     (low?: Vec4OrFloat, high?: Vec4OrFloat): Node<"vec4">;
@@ -700,17 +708,14 @@ declare module "../core/Node.js" {
 
 interface Saturate {
     (value: FloatOrNumber): Node<"float">;
-    (value: Node<"vec2">): Node<"vec2">;
-    (value: Node<"vec3">): Node<"vec3">;
-    (value: Node<"vec4">): Node<"vec4">;
+    (value: Vec2): Node<"vec2">;
+    (value: Vec3): Node<"vec3">;
+    (value: Vec4): Node<"vec4">;
 }
 export const saturate: Saturate;
 declare module "../core/Node.js" {
-    interface FloatExtensions {
-        saturate: () => Node<"float">;
-    }
-    interface FloatVecExtensions<TVec extends FloatVecType> {
-        saturate: () => Node<TVec>;
+    interface FloatOrVecExtensions<TNodeType> {
+        saturate: () => Node<TNodeType>;
     }
 }
 
@@ -722,12 +727,9 @@ interface Refract {
 export const refract: Refract;
 interface RefractVec2Extension {
     (N: Vec2OrFloat, ratio: FloatOrNumber): Node<"vec2">;
-    (N: Vec3OrFloat, ratio: FloatOrNumber): Node<"vec3">;
-    (N: Vec4OrFloat, ratio: FloatOrNumber): Node<"vec4">;
 }
 interface RefractVec3Extension {
     (N: Vec3OrFloat, ratio: FloatOrNumber): Node<"vec3">;
-    (N: Vec4OrFloat, ratio: FloatOrNumber): Node<"vec4">;
 }
 interface RefractVec4Extension {
     (N: Vec4OrFloat, ratio: FloatOrNumber): Node<"vec4">;
@@ -760,12 +762,9 @@ interface FaceForward {
 export const faceForward: FaceForward;
 interface FaceForwardVec2Extension {
     (I: Vec2OrFloat, Nref: Vec2OrFloat): Node<"vec2">;
-    (I: Vec3OrFloat, Nref: Vec3OrFloat): Node<"vec3">;
-    (I: Vec4OrFloat, Nref: Vec4OrFloat): Node<"vec4">;
 }
 interface FaceForwardVec3Extension {
     (N: Vec3OrFloat, ratio: Vec3OrFloat): Node<"vec3">;
-    (N: Vec4OrFloat, ratio: Vec4OrFloat): Node<"vec4">;
 }
 interface FaceForwardVec4Extension {
     (N: Vec4OrFloat, ratio: Vec4OrFloat): Node<"vec4">;
@@ -782,7 +781,7 @@ declare module "../core/Node.js" {
     }
 }
 
-export const rand: (uv: Node<"vec2">) => Node<"float">;
+export const rand: (uv: Vec2) => Node<"float">;
 declare module "../core/Node.js" {
     interface Vec2Extensions {
         rand: () => Node<"float">;
