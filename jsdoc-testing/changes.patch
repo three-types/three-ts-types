@@ -11514,7 +11514,7 @@ index 46356fdc4..d876c3b7e 100644
 +
 +export default Binding;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
-index 7d3ebcc96..c9f09e28d 100644
+index 7d3ebcc96..0151af3b3 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 @@ -1,4 +1,14 @@
@@ -11533,7 +11533,7 @@ index 7d3ebcc96..c9f09e28d 100644
  /**
   * This renderer module manages the bindings of the renderer.
   *
-@@ -59,21 +69,21 @@ declare class Bindings extends DataMap {
+@@ -59,21 +69,20 @@ declare class Bindings extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Array<BindGroup>} The bind groups.
       */
@@ -11546,8 +11546,8 @@ index 7d3ebcc96..c9f09e28d 100644
       * @return {Array<BindGroup>} The bind groups.
       */
 -    getForCompute(computeNode: Node): Array<BindGroup>;
+-    _getBindings(object: any, bindings: any): any;
 +    getForCompute(computeNode: ComputeNode): BindGroup[];
-     _getBindings(object: any, bindings: any): any;
      /**
       * Updates the bindings for the given compute node.
       *
@@ -11558,7 +11558,7 @@ index 7d3ebcc96..c9f09e28d 100644
      /**
       * Updates the bindings for the given render object.
       *
-@@ -85,7 +95,7 @@ declare class Bindings extends DataMap {
+@@ -85,21 +94,19 @@ declare class Bindings extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -11567,7 +11567,13 @@ index 7d3ebcc96..c9f09e28d 100644
      /**
       * Deletes the bindings for the given renderObject node.
       *
-@@ -99,7 +109,7 @@ declare class Bindings extends DataMap {
+      * @param {RenderObject} renderObject - The renderObject.
+      */
+     deleteForRender(renderObject: RenderObject): void;
+-    _deleteBindings(object: any): void;
+-    _updateBindingsUsage(bindings: any, delta: any): void;
+     /**
+      * Updates the given array of bindings.
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -11576,7 +11582,7 @@ index 7d3ebcc96..c9f09e28d 100644
      /**
       * Initializes the given bind group.
       *
-@@ -112,6 +122,7 @@ declare class Bindings extends DataMap {
+@@ -112,6 +119,7 @@ declare class Bindings extends DataMap {
       * @param {BindGroup} bindGroup - The bind group to update.
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
