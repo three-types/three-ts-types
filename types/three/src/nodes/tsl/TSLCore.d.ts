@@ -7,7 +7,7 @@ import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
 import ArrayNode from "../core/ArrayNode.js";
 import ConstNode from "../core/ConstNode.js";
-import Node, { MatType, NumOrBoolType } from "../core/Node.js";
+import Node, { NumOrBoolType } from "../core/Node.js";
 import NodeBuilder from "../core/NodeBuilder.js";
 import StackNode from "../core/StackNode.js";
 import VarNode from "../core/VarNode.js";
@@ -2355,9 +2355,6 @@ interface Mat4Function {
 }
 
 export const mat4: Mat4Function;
-
-export const string: unknown;
-export const arrayBuffer: unknown;
 
 declare module "../core/Node.js" {
     interface ColorExtensions {
