@@ -1,12 +1,10 @@
 import { Light } from "../../lights/Light.js";
 import Node from "./Node.js";
-import { NodeBuilderContext } from "./NodeBuilder.js";
 
 declare class ContextNodeInterface<TNodeType> extends Node {
     readonly isContextNode: true;
 
     node: Node<TNodeType> | null;
-    value: NodeBuilderContext;
 }
 
 declare const ContextNode: {
