@@ -1,4 +1,4 @@
-import { Camera, ColorRepresentation, Controls, Mesh, Object3D, Quaternion, Raycaster, Vector3, Vector4 } from 'three';
+import { Camera, ColorRepresentation, Controls, Mesh, Object3D, Quaternion, Raycaster, Vector3, Vector4 } from "three";
 
 export type TransformControlsMode = "translate" | "rotate" | "scale";
 
