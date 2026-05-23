@@ -85,6 +85,10 @@ declare class Buffer extends Binding {
      * uploaded to the GPU.
      */
     update(): boolean;
+    /**
+     * Releases the buffer.
+     */
+    release(): void;
 }
 
 export default Buffer;

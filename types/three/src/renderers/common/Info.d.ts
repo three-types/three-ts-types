@@ -79,23 +79,25 @@ declare class Info {
      *
      * @type {Object}
      * @readonly
-     * @property {number} geometries - The number of active geometries.
-     * @property {number} textures - The number of active textures.
      * @property {number} attributes - The number of active attributes.
-     * @property {number} indexAttributes - The number of active index attributes.
-     * @property {number} storageAttributes - The number of active storage attributes.
-     * @property {number} indirectStorageAttributes - The number of active indirect storage attributes.
-     * @property {number} readbackBuffers - The number of active readback buffers.
-     * @property {number} programs - The number of active programs.
-     * @property {number} renderTargets - The number of active renderTargets.
-     * @property {number} total - The total memory size in bytes.
-     * @property {number} texturesSize - The memory size of active textures in bytes.
      * @property {number} attributesSize - The memory size of active attributes in bytes.
+     * @property {number} geometries - The number of active geometries.
+     * @property {number} indexAttributes - The number of active index attributes.
      * @property {number} indexAttributesSize - The memory size of active index attributes in bytes.
-     * @property {number} storageAttributesSize - The memory size of active storage attributes in bytes.
+     * @property {number} indirectStorageAttributes - The number of active indirect storage attributes.
      * @property {number} indirectStorageAttributesSize - The memory size of active indirect storage attributes in bytes.
-     * @property {number} readbackBuffersSize - The memory size of active readback buffers in bytes.
+     * @property {number} programs - The number of active programs.
      * @property {number} programsSize - The memory size of active programs in bytes.
+     * @property {number} readbackBuffers - The number of active readback buffers.
+     * @property {number} readbackBuffersSize - The memory size of active readback buffers in bytes.
+     * @property {number} renderTargets - The number of active renderTargets.
+     * @property {number} storageAttributes - The number of active storage attributes.
+     * @property {number} storageAttributesSize - The memory size of active storage attributes in bytes.
+     * @property {number} textures - The number of active textures.
+     * @property {number} texturesSize - The memory size of active textures in bytes.
+     * @property {number} uniformBuffers - The number of active uniform buffers.
+     * @property {number} uniformBuffersSize - The memory size of active uniform buffers in bytes.
+     * @property {number} total - The total memory size in bytes.
      */
     readonly memory: {
         geometries: number;
@@ -201,6 +203,18 @@ declare class Info {
      * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
      */
     destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
+    /**
+     * Tracks a uniform buffer memory explicitly.
+     *
+     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
+     */
+    createUniformBuffer(uniformBuffer: UniformBuffer): void;
+    /**
+     * Tracks a uniform buffer memory explicitly.
+     *
+     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
+     */
+    destroyUniformBuffer(uniformBuffer: UniformBuffer): void;
     /**
      * Tracks program memory explicitly, updating counts and byte tracking.
      *
