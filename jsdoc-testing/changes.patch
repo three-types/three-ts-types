@@ -11514,7 +11514,7 @@ index 46356fdc4..d876c3b7e 100644
 +
 +export default Binding;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
-index b7e63fd9b..4dd4c0f36 100644
+index b7e63fd9b..ee91f1829 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 @@ -1,4 +1,14 @@
@@ -11566,7 +11566,21 @@ index b7e63fd9b..4dd4c0f36 100644
      /**
       * Deletes the bindings for the given renderObject node.
       *
-@@ -108,13 +118,14 @@ declare class Bindings extends DataMap {
+@@ -96,25 +106,26 @@ declare class Bindings extends DataMap {
+      *
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
+-    _createBindings(bindings: Array<BindGroup>): void;
++    _createBindings(bindings: BindGroup[]): void;
+     /**
+      * Deletes the given array of bindings.
+      *
+      * @param {Array<BindGroup>} bindings - The bind groups.
+      */
+-    _destroyBindings(bindings: Array<BindGroup>): void;
++    _destroyBindings(bindings: BindGroup[]): void;
+     /**
+      * Updates the given array of bindings.
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -12049,21 +12063,22 @@ index a1cd970c9..704cfb9f6 100644
 +
 +export default Geometries;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-index 6f3fa816f..4727263e1 100644
+index 6f3fa816f..c8923596e 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Info.d.ts
-@@ -1,4 +1,9 @@
+@@ -1,4 +1,10 @@
 -export default Info;
 +import { Object3D } from '../../core/Object3D.js';
 +import { Texture } from '../../textures/Texture.js';
 +import { BufferAttribute } from '../../core/BufferAttribute.js';
 +import ProgrammableStage from './ProgrammableStage.js';
 +import ReadbackBuffer from './ReadbackBuffer.js';
++import UniformBuffer from './UniformBuffer.js';
 +
  /**
   * This renderer module provides a series of statistical information
   * about the GPU memory and the rendering process. Useful for debugging
-@@ -46,7 +51,15 @@ declare class Info {
+@@ -46,7 +52,15 @@ declare class Info {
       * @property {number} lines - The number of rendered line primitives of the current frame.
       * @property {number} timestamp - The timestamp of the frame.
       */
@@ -12080,7 +12095,7 @@ index 6f3fa816f..4727263e1 100644
      /**
       * Compute related metrics.
       *
-@@ -56,7 +69,11 @@ declare class Info {
+@@ -56,7 +70,11 @@ declare class Info {
       * @property {number} frameCalls - The number of compute calls of the current frame.
       * @property {number} timestamp - The timestamp of the frame when using `renderer.computeAsync()`.
       */
@@ -12093,34 +12108,36 @@ index 6f3fa816f..4727263e1 100644
      /**
       * Memory related metrics.
       *
-@@ -82,7 +99,25 @@ declare class Info {
+@@ -82,7 +100,27 @@ declare class Info {
       * @property {number} uniformBuffersSize - The memory size of active uniform buffers in bytes.
       * @property {number} total - The total memory size in bytes.
       */
 -    readonly memory: Object;
 +    readonly memory: {
-+        geometries: number;
-+        textures: number;
 +        attributes: number;
-+        indexAttributes: number;
-+        storageAttributes: number;
-+        indirectStorageAttributes: number;
-+        readbackBuffers: number;
-+        programs: number;
-+        renderTargets: number;
-+        total: number;
-+        texturesSize: number;
 +        attributesSize: number;
++        geometries: number;
++        indexAttributes: number;
 +        indexAttributesSize: number;
-+        storageAttributesSize: number;
++        indirectStorageAttributes: number;
 +        indirectStorageAttributesSize: number;
-+        readbackBuffersSize: number;
++        programs: number;
 +        programsSize: number;
++        readbackBuffers: number;
++        readbackBuffersSize: number;
++        renderTargets: number;
++        storageAttributes: number;
++        storageAttributesSize: number;
++        textures: number;
++        texturesSize: number;
++        uniformBuffers: number;
++        uniformBuffersSize: number;
++        total: number;
 +    };
      /**
       * Map for storing calculated byte sizes of tracked objects.
       *
-@@ -191,7 +226,7 @@ declare class Info {
+@@ -191,7 +229,7 @@ declare class Info {
       *
       * @param {Object} program - The program to track.
       */
@@ -12129,7 +12146,7 @@ index 6f3fa816f..4727263e1 100644
      /**
       * Calculates the memory size of a texture in bytes.
       *
-@@ -209,3 +244,5 @@ declare class Info {
+@@ -209,3 +247,5 @@ declare class Info {
       */
      private _getAttributeMemorySize;
  }
