@@ -16061,6 +16061,112 @@ index 60fe6ccc9..c29cde36b 100644
          return [
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
+diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
+index 1548a8ec5..e8fe7d970 100644
+--- a/examples-testing/examples/webgpu_lights_clustered.ts
++++ b/examples-testing/examples/webgpu_lights_clustered.ts
+@@ -2,6 +2,7 @@ import * as THREE from 'three/webgpu';
+ import { pass, uniform, vec3, float, mix, step } from 'three/tsl';
+ 
+ import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
++import type ClusteredLightsNode from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+@@ -14,19 +15,19 @@ const MODEL_INDEX_URL =
+     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
+ const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
+ 
+-let camera,
+-    scene,
+-    renderer,
+-    lights,
+-    lightDummy,
+-    controls,
+-    scenePass,
+-    clusterInfluence,
+-    debugZSliceNode,
+-    lighting,
+-    maxCount,
+-    count,
+-    renderPipeline;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    lights: THREE.Group,
++    lightDummy: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
++    controls: OrbitControls,
++    scenePass: THREE.PassNode,
++    clusterInfluence: THREE.UniformNode<'float', number>,
++    debugZSliceNode: THREE.UniformNode<'int', number>,
++    lighting: ClusteredLighting,
++    maxCount: number,
++    count: number,
++    renderPipeline: THREE.RenderPipeline;
+ 
+ init();
+ 
+@@ -55,7 +56,8 @@ async function init() {
+     const model = gltf.scene;
+ 
+     model.traverse(child => {
+-        if (child.isLight && child.parent) child.parent.remove(child);
++        if ((child as THREE.Light).isLight && (child as THREE.Light).parent)
++            (child as THREE.Light).parent!.remove(child);
+     });
+ 
+     scene.add(model);
+@@ -77,7 +79,7 @@ async function init() {
+     lights = new THREE.Group();
+     scene.add(lights);
+ 
+-    const addLight = (hexColor, power = 30, distance = 1) => {
++    const addLight = (hexColor: number, power = 30, distance = 1) => {
+         const light = new THREE.PointLight(hexColor, 1, distance);
+         light.position.set(
+             modelCenter.x + (Math.random() - 0.5) * modelSize.x * 0.7,
+@@ -151,7 +153,7 @@ async function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     const params = {
+         count,
+@@ -174,9 +176,10 @@ async function init() {
+ function updatePostProcessing() {
+     // cluster light count debug overlay; needs to be updated every time the renderer size changes
+ 
+-    const lightingNode = lighting
+-        .getNode(scene)
+-        .setSize(window.innerWidth * window.devicePixelRatio, window.innerHeight * window.devicePixelRatio);
++    const lightingNode = (lighting.getNode(scene) as ClusteredLightsNode).setSize(
++        window.innerWidth * window.devicePixelRatio,
++        window.innerHeight * window.devicePixelRatio,
++    );
+ 
+     // Calculate a color mapping based on the actual number of lights directly affecting the cluster.
+     // We map between 0 and maxLightsPerCluster to a gradient
+@@ -194,9 +197,17 @@ function updatePostProcessing() {
+     renderPipeline.needsUpdate = true;
+ }
+ 
++interface Model {
++    label: string;
++    name: string;
++    screenshot: string;
++    tags: string[];
++    variants: Record<string, string>;
++}
++
+ async function getSponzaModelURL() {
+     const response = await fetch(MODEL_INDEX_URL);
+-    const models = await response.json();
++    const models = (await response.json()) as Model[];
+     const sponzaInfo = models.find(model => model.name === 'Sponza');
+ 
+     if (!sponzaInfo) {
 diff --git a/examples-testing/examples/webgpu_lights_dynamic.ts b/examples-testing/examples/webgpu_lights_dynamic.ts
 index b08c5902f..123a9c1a9 100644
 --- a/examples-testing/examples/webgpu_lights_dynamic.ts
