@@ -13,11 +13,15 @@ import {
     normalize,
     radians,
     sign,
-    uint,
     uvec3,
     vec2,
     vec3,
     vec4,
+    pow,
+    sqrt,
+    fwidth,
+    greaterThan,
+    ivec2,
 } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
@@ -162,4 +166,13 @@ test('min(float, vec2)', () => {
     const vec = vec2(3, 1);
     const minValue: THREE.Node<'vec2'> = min(floatNode, vec);
     assertNode(minValue, 'vec2');
+});
+
+test('issue #2116 - 2. Function types on vectors', () => {
+    assertNode<'vec3'>(pow(vec3(), 1.5), 'vec3');
+    assertNode<'vec3'>(sqrt(vec3()), 'vec3');
+    assertNode<'vec3'>(fwidth(vec3()), 'vec3');
+    assertNode<'bvec3'>(greaterThan(vec3(), 0), 'bvec3');
+    assertNode<'int'>(int(0).negate(), 'int');
+    assertNode<'ivec2'>(ivec2().sign(), 'ivec2');
 });

@@ -1,3 +1,7 @@
+import { Color } from "../../math/Color.js";
+import { Vector2 } from "../../math/Vector2.js";
+import { Vector3 } from "../../math/Vector3.js";
+import { Vector4 } from "../../math/Vector4.js";
 import Node, { IntegerType, NumType } from "../core/Node.js";
 import TempNode from "../core/TempNode.js";
 
@@ -32,9 +36,19 @@ export default class OperatorNode extends TempNode {
     constructor(op: OperatorNodeOp, ...params: [Node, Node, ...Node[]]);
 }
 
-type Vec2OrLess = Node<"vec2">;
-type Vec3OrLess = Vec2OrLess | Node<"vec3">;
-type Vec4OrLess = Vec3OrLess | Node<"vec4">;
+type FloatOrNumber = Node<"float"> | number;
+
+type Vec2 = Node<"vec2"> | Vector2;
+type Vec3 = Node<"vec3"> | Vector3 | Node<"color"> | Color;
+type Vec4 = Node<"vec4"> | Vector4;
+
+type Vec2OrFloat = Vec2 | FloatOrNumber;
+type Vec3OrFloat = Vec3 | FloatOrNumber;
+type Vec4OrFloat = Vec4 | FloatOrNumber;
+
+type Vec2OrLess = Vec2;
+type Vec3OrLess = Vec2OrLess | Vec3;
+type Vec4OrLess = Vec3OrLess | Vec4;
 
 interface NumberToVec {
     float: "vec";
@@ -440,6 +454,10 @@ declare module "../core/Node.js" {
 interface ComparisonOperator {
     (a: Number<"float">, b: Number<"float">): Node<"bool">;
     (a: Number<"int"> | Number<"uint">, b: Number<"int"> | Number<"uint">): Node<"bool">;
+    // TODO Accept non-float vectors
+    (a: Vec2OrFloat, b: Vec2OrFloat): Node<"bvec2">;
+    (a: Vec3OrFloat, b: Vec3OrFloat): Node<"bvec3">;
+    (a: Vec4OrFloat, b: Vec4OrFloat): Node<"bvec4">;
 }
 export const equal: ComparisonOperator;
 export const notEqual: ComparisonOperator;
@@ -450,6 +468,15 @@ export const greaterThanEqual: ComparisonOperator;
 
 interface ComparisonOperatorNumExtensions<TNum extends NumType> {
     (b: Number<TNum>): Node<"bool">;
+}
+interface ComparisonOperatorVec2Extensions {
+    (b: Vec2OrFloat): Node<"bvec2">;
+}
+interface ComparisonOperatorVec3Extensions {
+    (b: Vec3OrFloat): Node<"bvec3">;
+}
+interface ComparisonOperatorVec4Extensions {
+    (b: Vec4OrFloat): Node<"bvec4">;
 }
 
 declare module "../core/Node.js" {
@@ -478,6 +505,33 @@ declare module "../core/Node.js" {
         greaterThan: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
         lessThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
         greaterThanEqual: (b: Number<"int"> | Number<"uint">) => Node<"bool">;
+    }
+
+    interface Vec2Extensions {
+        equal: ComparisonOperatorVec2Extensions;
+        notEqual: ComparisonOperatorVec2Extensions;
+        lessThan: ComparisonOperatorVec2Extensions;
+        greaterThan: ComparisonOperatorVec2Extensions;
+        lessThanEqual: ComparisonOperatorVec2Extensions;
+        greaterThanEqual: ComparisonOperatorVec2Extensions;
+    }
+
+    interface Vec3Extensions {
+        equal: ComparisonOperatorVec3Extensions;
+        notEqual: ComparisonOperatorVec3Extensions;
+        lessThan: ComparisonOperatorVec3Extensions;
+        greaterThan: ComparisonOperatorVec3Extensions;
+        lessThanEqual: ComparisonOperatorVec3Extensions;
+        greaterThanEqual: ComparisonOperatorVec3Extensions;
+    }
+
+    interface Vec4Extensions {
+        equal: ComparisonOperatorVec4Extensions;
+        notEqual: ComparisonOperatorVec4Extensions;
+        lessThan: ComparisonOperatorVec4Extensions;
+        greaterThan: ComparisonOperatorVec4Extensions;
+        lessThanEqual: ComparisonOperatorVec4Extensions;
+        greaterThanEqual: ComparisonOperatorVec4Extensions;
     }
 }
 
