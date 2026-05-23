@@ -1,8 +1,10 @@
 import { Camera } from "../../cameras/Camera.js";
 import { CoordinateSystem, ShadowMapType, TextureDataType, TimestampQuery, ToneMapping } from "../../constants.js";
 import { BufferAttribute, TypedArray } from "../../core/BufferAttribute.js";
+import { BufferGeometry, GeometryGroup } from "../../core/BufferGeometry.js";
 import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget } from "../../core/RenderTarget.js";
+import { Material } from "../../materials/Material.js";
 import { Box2 } from "../../math/Box2.js";
 import { Box3 } from "../../math/Box3.js";
 import { Color, ColorRepresentation } from "../../math/Color.js";
@@ -13,11 +15,13 @@ import ContextNode from "../../nodes/core/ContextNode.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
+import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { Scene } from "../../scenes/Scene.js";
 import { FramebufferTexture } from "../../textures/FramebufferTexture.js";
 import { Texture } from "../../textures/Texture.js";
 import Backend from "./Backend.js";
 import CanvasTarget from "./CanvasTarget.js";
+import ClippingContext from "./ClippingContext.js";
 import IndirectStorageBufferAttribute from "./IndirectStorageBufferAttribute.js";
 import Info from "./Info.js";
 import InspectorBase from "./InspectorBase.js";
@@ -455,7 +459,6 @@ declare class Renderer {
      * @return {boolean} Whether the renderer has been initialized or not.
      */
     get initialized(): boolean;
-    _setXRLayerSize(width: number, height: number): void;
     /**
      * Returns the maximum available anisotropy for texture filtering.
      *
@@ -824,6 +827,64 @@ declare class Renderer {
      */
     getCanvasTarget(): CanvasTarget;
     /**
+     * Callback for {@link Renderer#setRenderObjectFunction}.
+     *
+     * @callback renderObjectFunction
+     * @param {Object3D} object - The 3D object.
+     * @param {Scene} scene - The scene the 3D object belongs to.
+     * @param {Camera} camera - The camera the object should be rendered with.
+     * @param {BufferGeometry} geometry - The object's geometry.
+     * @param {Material} material - The object's material.
+     * @param {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {LightsNode} lightsNode - The current lights node.
+     * @param {ClippingContext} clippingContext - The clipping context.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
+     */
+    /**
+     * Sets the given render object function. Calling this method overwrites the default implementation
+     * which is {@link Renderer#renderObject}. Defining a custom function can be useful
+     * if you want to modify the way objects are rendered. For example you can define things like "every
+     * object that has material of a certain type should perform a pre-pass with a special overwrite material".
+     * The custom function must always call `renderObject()` in its implementation.
+     *
+     * Use `null` as the first argument to reset the state.
+     *
+     * @param {?renderObjectFunction} renderObjectFunction - The render object function.
+     */
+    setRenderObjectFunction(
+        renderObjectFunction:
+            | ((
+                object: Object3D,
+                scene: Scene,
+                camera: Camera,
+                geometry: BufferGeometry,
+                material: Material,
+                group: GeometryGroup | null,
+                lightsNode: LightsNode,
+                clippingContext: ClippingContext,
+                passId?: string | null | undefined,
+            ) => void)
+            | null,
+    ): void;
+    /**
+     * Returns the current render object function.
+     *
+     * @return {?Function} The current render object function. Returns `null` if no function is set.
+     */
+    getRenderObjectFunction():
+        | ((
+            object: Object3D,
+            scene: Scene,
+            camera: Camera,
+            geometry: BufferGeometry,
+            material: Material,
+            group: GeometryGroup | null,
+            lightsNode: LightsNode,
+            clippingContext: ClippingContext,
+            passId?: string | null | undefined,
+        ) => void)
+        | null;
+    /**
      * Execute a single or an array of compute nodes. This method can only be called
      * if the renderer has been initialized.
      *
@@ -949,6 +1010,31 @@ declare class Renderer {
         textureIndex?: number,
         faceIndex?: number,
     ): Promise<TypedArray>;
+    /**
+     * This method represents the default render object function that manages the render lifecycle
+     * of the object.
+     *
+     * @param {Object3D} object - The 3D object.
+     * @param {Scene} scene - The scene the 3D object belongs to.
+     * @param {Camera} camera - The camera the object should be rendered with.
+     * @param {BufferGeometry} geometry - The object's geometry.
+     * @param {Material} material - The object's material.
+     * @param {?Object} group - Only relevant for objects using multiple materials. This represents a group entry from the respective `BufferGeometry`.
+     * @param {LightsNode} lightsNode - The current lights node.
+     * @param {?ClippingContext} clippingContext - The clipping context.
+     * @param {?string} [passId=null] - An optional ID for identifying the pass.
+     */
+    renderObject(
+        object: Object3D,
+        scene: Scene,
+        camera: Camera,
+        geometry: BufferGeometry,
+        material: Material,
+        group: GeometryGroup | null,
+        lightsNode: LightsNode,
+        clippingContext?: ClippingContext | null,
+        passId?: string | null,
+    ): void;
     /**
      * Checks if the given compatibility is supported by the selected backend.
      *
