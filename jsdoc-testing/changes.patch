@@ -147,7 +147,7 @@ index 7489bf508..7849540e6 100644
 +    _scheduleFading(duration: number, weightNow: number, weightThen: number): this;
  }
 diff --git a/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts b/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
-index aa45b91f8..0ecc6e0f8 100644
+index 23194681c..5d33622ec 100644
 --- a/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
 +++ b/jsdoc-testing/jsdoc/animation/AnimationClip.d.ts
 @@ -1,3 +1,22 @@
@@ -207,18 +207,9 @@ index aa45b91f8..0ecc6e0f8 100644
 -    static CreateClipsFromMorphTargetSequences(morphTargets: Array<Object>, fps: number, noLoop: boolean): Array<AnimationClip>;
 +    static CreateClipsFromMorphTargetSequences(morphTargets: Array<MorphTarget>, fps: number, noLoop: boolean): Array<AnimationClip>;
      /**
-      * Parses the `animation.hierarchy` format and returns a new animation clip.
-      *
-@@ -67,7 +86,7 @@ export class AnimationClip {
-      * @param {Array<Bone>} bones - An array of bones.
-      * @return {?AnimationClip} The new animation clip.
-      */
--    static parseAnimation(animation: Object, bones: Array<Bone>): AnimationClip | null;
-+    static parseAnimation(animation: AnimationClipJSON, bones: Array<Bone>): AnimationClip | null;
-     /**
       * Constructs a new animation clip.
       *
-@@ -82,46 +101,33 @@ export class AnimationClip {
+@@ -72,46 +91,33 @@ export class AnimationClip {
       * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode=NormalAnimationBlendMode] - Defines how the animation
       * is blended/combined when two or more animations are simultaneously played.
       */
@@ -268,7 +259,7 @@ index aa45b91f8..0ecc6e0f8 100644
      /**
       * Sets the duration of this clip to the duration of its longest keyframe track.
       *
-@@ -153,12 +159,11 @@ export class AnimationClip {
+@@ -143,12 +149,11 @@ export class AnimationClip {
       *
       * @return {AnimationClip} A clone of this instance.
       */
@@ -11523,7 +11514,7 @@ index 46356fdc4..d876c3b7e 100644
 +
 +export default Binding;
 diff --git a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
-index ed9d0eca7..0151af3b3 100644
+index 7d3ebcc96..c9f09e28d 100644
 --- a/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 +++ b/jsdoc-testing/jsdoc/renderers/common/Bindings.d.ts
 @@ -1,4 +1,14 @@
@@ -11542,7 +11533,7 @@ index ed9d0eca7..0151af3b3 100644
  /**
   * This renderer module manages the bindings of the renderer.
   *
-@@ -59,20 +69,20 @@ declare class Bindings extends DataMap {
+@@ -59,21 +69,21 @@ declare class Bindings extends DataMap {
       * @param {RenderObject} renderObject - The render object.
       * @return {Array<BindGroup>} The bind groups.
       */
@@ -11556,6 +11547,7 @@ index ed9d0eca7..0151af3b3 100644
       */
 -    getForCompute(computeNode: Node): Array<BindGroup>;
 +    getForCompute(computeNode: ComputeNode): BindGroup[];
+     _getBindings(object: any, bindings: any): any;
      /**
       * Updates the bindings for the given compute node.
       *
@@ -11566,7 +11558,7 @@ index ed9d0eca7..0151af3b3 100644
      /**
       * Updates the bindings for the given render object.
       *
-@@ -84,7 +94,7 @@ declare class Bindings extends DataMap {
+@@ -85,7 +95,7 @@ declare class Bindings extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -11575,7 +11567,7 @@ index ed9d0eca7..0151af3b3 100644
      /**
       * Deletes the bindings for the given renderObject node.
       *
-@@ -96,7 +106,7 @@ declare class Bindings extends DataMap {
+@@ -99,7 +109,7 @@ declare class Bindings extends DataMap {
       *
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
@@ -11584,7 +11576,7 @@ index ed9d0eca7..0151af3b3 100644
      /**
       * Initializes the given bind group.
       *
-@@ -109,6 +119,7 @@ declare class Bindings extends DataMap {
+@@ -112,6 +122,7 @@ declare class Bindings extends DataMap {
       * @param {BindGroup} bindGroup - The bind group to update.
       * @param {Array<BindGroup>} bindings - The bind groups.
       */
