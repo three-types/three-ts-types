@@ -320,7 +320,6 @@ export const min: typeof TSL.min;
 export const mix: typeof TSL.mix;
 export const mixElement: typeof TSL.mixElement;
 export const mod: typeof TSL.mod;
-export const modInt: typeof TSL.modInt;
 export const modelDirection: typeof TSL.modelDirection;
 export const modelNormalMatrix: typeof TSL.modelNormalMatrix;
 export const modelPosition: typeof TSL.modelPosition;
