@@ -80,6 +80,7 @@ export * from "./accessors/RendererReferenceNode.js";
 export * from "./accessors/SceneProperties.js";
 export * from "./accessors/SkinningNode.js";
 export * from "./accessors/StorageBufferNode.js";
+export * from "./accessors/StorageTexture3DNode.js";
 export * from "./accessors/StorageTextureNode.js";
 export * from "./accessors/Tangent.js";
 export * from "./accessors/Texture3DNode.js";
