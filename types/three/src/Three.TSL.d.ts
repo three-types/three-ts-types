@@ -516,6 +516,7 @@ export const stepElement: typeof TSL.stepElement;
 export const storage: typeof TSL.storage;
 export const storageBarrier: typeof TSL.storageBarrier;
 export const storageTexture: typeof TSL.storageTexture;
+export const storageTexture3D: typeof TSL.storageTexture3D;
 export const struct: typeof TSL.struct;
 export const sub: typeof TSL.sub;
 export const subgroupAdd: typeof TSL.subgroupAdd;
