@@ -193,7 +193,7 @@ type BoolOrVector = Node<"bool"> | boolean | Node<"bvec2"> | Node<"bvec3"> | Nod
 export const all: (x: BoolOrVector) => Node<"bool">;
 export const any: (x: BoolOrVector) => Node<"bool">;
 declare module "../core/Node.js" {
-    interface BoolOrVecExtensions {
+    interface BoolOrVecExtensions<TNodeType> {
         all: () => Node<"bool">;
         any: () => Node<"bool">;
     }

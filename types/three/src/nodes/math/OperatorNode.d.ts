@@ -50,6 +50,8 @@ type Vec2OrLess = Vec2;
 type Vec3OrLess = Vec2OrLess | Vec3;
 type Vec4OrLess = Vec3OrLess | Vec4;
 
+type Bool = Node<"bool"> | boolean;
+
 interface NumberToVec {
     float: "vec";
     int: "ivec";
@@ -538,24 +540,34 @@ declare module "../core/Node.js" {
 // and/or/not/xor
 
 interface AndOr {
-    (a: Node<"bool">, b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+    (a: Bool, b: Bool, ...params: Bool[]): Node<"bool">;
 }
 export const and: AndOr;
 export const or: AndOr;
 
 interface AndOrBoolExtensions {
-    (b: Node<"bool">, ...params: Node<"bool">[]): Node<"bool">;
+    (b: Bool, ...params: Bool[]): Node<"bool">;
 }
 
-export const not: (a: Node<"bool">) => Node<"bool">;
-export const xor: (a: Node<"bool">, b: Node<"bool">) => Node<"bool">;
+interface NotFunction {
+    (a: Bool): Node<"bool">;
+    (a: Node<"bvec2">): Node<"bvec2">;
+    (a: Node<"bvec3">): Node<"bvec3">;
+    (a: Node<"bvec4">): Node<"bvec4">;
+}
+export const not: NotFunction;
+
+export const xor: (a: Bool, b: Bool) => Node<"bool">;
 
 declare module "../core/Node.js" {
     interface BoolExtensions {
         and: AndOrBoolExtensions;
         or: AndOrBoolExtensions;
-        not: () => Node<"bool">;
-        xor: (b: Node<"bool">) => Node<"bool">;
+        xor: (b: Bool) => Node<"bool">;
+    }
+
+    interface BoolOrVecExtensions<TNodeType> {
+        not: () => Node<TNodeType>;
     }
 }
 

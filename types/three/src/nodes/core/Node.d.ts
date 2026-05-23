@@ -540,7 +540,7 @@ export interface IntOrVecExtensions<TNodeType> {
 export interface UintOrVecExtensions<TNodeType> {
 }
 
-export interface BoolOrVecExtensions {
+export interface BoolOrVecExtensions<TNodeType> {
 }
 
 export interface Mat2Extensions {
@@ -573,7 +573,7 @@ type Node<TNodeType = unknown> =
                 & NumExtensions<"uint">
                 & IntegerExtensions<"uint">
                 & IntOrVecExtensions<"uint">
-        : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions & BoolOrVecExtensions
+        : TNodeType extends "bool" ? NumOrBoolExtensions<"bool"> & BoolExtensions & BoolOrVecExtensions<"bool">
         : TNodeType extends "vec2" ?
                 & NumOrBoolVec2Extensions<"float">
                 & Vec2Extensions
@@ -584,7 +584,7 @@ type Node<TNodeType = unknown> =
             ? NumOrBoolVec2Extensions<"int"> & NumVec2Extensions<"int"> & IntOrVecExtensions<"ivec2">
         : TNodeType extends "uvec2"
             ? NumOrBoolVec2Extensions<"uint"> & NumVec2Extensions<"uint"> & IntOrVecExtensions<"uvec2">
-        : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool"> & BoolOrVecExtensions
+        : TNodeType extends "bvec2" ? NumOrBoolVec2Extensions<"bool"> & BoolOrVecExtensions<"bvec2">
         : TNodeType extends "vec3" ?
                 & NumOrBoolVec3Extensions<"float">
                 & Vec3Extensions
@@ -595,7 +595,7 @@ type Node<TNodeType = unknown> =
             ? NumOrBoolVec3Extensions<"int"> & NumVec3Extensions<"int"> & IntOrVecExtensions<"ivec3">
         : TNodeType extends "uvec3"
             ? NumOrBoolVec3Extensions<"uint"> & NumVec3Extensions<"uint"> & IntOrVecExtensions<"uvec3">
-        : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool"> & BoolOrVecExtensions
+        : TNodeType extends "bvec3" ? NumOrBoolVec3Extensions<"bool"> & BoolOrVecExtensions<"bvec3">
         : TNodeType extends "vec4" ?
                 & NumOrBoolVec4Extensions<"float">
                 & Vec4Extensions
@@ -606,7 +606,7 @@ type Node<TNodeType = unknown> =
             ? NumOrBoolVec4Extensions<"int"> & NumVec4Extensions<"int"> & IntOrVecExtensions<"ivec4">
         : TNodeType extends "uvec4"
             ? NumOrBoolVec4Extensions<"uint"> & NumVec4Extensions<"uint"> & IntOrVecExtensions<"uvec4">
-        : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool"> & BoolOrVecExtensions
+        : TNodeType extends "bvec4" ? NumOrBoolVec4Extensions<"bool"> & BoolOrVecExtensions<"bvec4">
         : TNodeType extends "color" ? ColorExtensions
         : TNodeType extends "mat2" ? Mat2Extensions & MatExtensions<"mat2">
         : TNodeType extends "mat3" ? Mat3Extensions & MatExtensions<"mat3">
