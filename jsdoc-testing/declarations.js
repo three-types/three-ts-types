@@ -4,7 +4,7 @@ import { argv } from 'node:process';
 
 const files = [
     'examples/jsm/lighting/ClusteredLighting',
-    'examples/jsm/tsl/lighting/ClusteredLighting',
+    'examples/jsm/tsl/lighting/ClusteredLightsNode',
     'src/animation/tracks/BooleanKeyframeTrack',
     'src/animation/tracks/ColorKeyframeTrack',
     'src/animation/tracks/NumberKeyframeTrack',
