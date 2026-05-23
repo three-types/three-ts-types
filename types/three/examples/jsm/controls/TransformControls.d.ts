@@ -1,4 +1,4 @@
-import { Camera, ColorRepresentation, Controls, Mesh, Object3D, Quaternion, Raycaster, Vector3 } from "three";
+import { Camera, ColorRepresentation, Controls, Mesh, Object3D, Quaternion, Raycaster, Vector3, Vector4 } from 'three';
 
 export type TransformControlsMode = "translate" | "rotate" | "scale";
 
@@ -110,6 +110,17 @@ declare class TransformControls extends Controls<TransformControlsEventMap> {
      * The size of the helper UI (axes/planes). Default is *1*.
      */
     size: number;
+
+    /**
+     * The viewport rectangle, in logical (CSS) pixels with the origin at the lower-left
+     * of the canvas. Set this when the renderer uses a sub-canvas viewport so pointer
+     * coordinates map to the correct region. If `null`, the full canvas is used.
+     *
+     * @name TransformControls#viewport
+     * @type {?Vector4}
+     * @default null
+     */
+    viewport: Vector4 | null;
 
     /**
      * Whether or not dragging is currently performed. Read-only property.
