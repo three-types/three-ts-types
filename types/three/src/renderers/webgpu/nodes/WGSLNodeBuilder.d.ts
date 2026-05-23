@@ -6,7 +6,6 @@ import NodeVar from "../../../nodes/core/NodeVar.js";
 import StructTypeNode from "../../../nodes/core/StructTypeNode.js";
 import { ShaderNode } from "../../../nodes/tsl/TSLCore.js";
 import { Texture } from "../../../textures/Texture.js";
-import NodeUniformsGroup from "../../common/nodes/NodeUniformsGroup.js";
 
 type BuiltinStage = NodeShaderStage | "attribute" | "output";
 interface BuiltinType {
@@ -17,7 +16,6 @@ interface BuiltinType {
 
 export default class WGSLNodeBuilder extends NodeBuilder {
     builtins: { [key in BuiltinStage]: Map<string, BuiltinType> };
-    uniformGroups: { [key in NodeShaderStage]: NodeUniformsGroup };
 
     _generateTextureSample(
         texture: Texture,

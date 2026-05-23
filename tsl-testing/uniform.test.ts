@@ -3,7 +3,7 @@ import { uniform } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
-const nodeBuilder: THREE.NodeBuilder = renderer.backend.createNodeBuilder(null!, renderer);
+const nodeBuilder: THREE.NodeBuilder = (renderer.backend as any).createNodeBuilder(null!, renderer);
 
 function assertUniformNode(node: THREE.UniformNode<string, unknown>, nodeType: string) {
     expect(node).toBeInstanceOf(THREE.UniformNode);
