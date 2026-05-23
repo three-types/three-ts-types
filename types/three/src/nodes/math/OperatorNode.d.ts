@@ -629,22 +629,4 @@ declare module "../core/Node.js" {
     }
 }
 
-/**
- * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
- */
-export const modInt: Mod;
-
-declare module "../core/Node.js" {
-    interface NumExtensions<TNum extends NumType> {
-        /**
-         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
-         */
-        modInt: (b: Number<TNum>) => Node<TNum>;
-        /**
-         * @deprecated "modInt()" is deprecated. Use "mod( int( ... ) )" instead.
-         */
-        modIntAssign: (b: Number<TNum>) => this;
-    }
-}
-
 export {};
