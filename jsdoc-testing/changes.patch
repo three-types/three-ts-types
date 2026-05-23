@@ -1,3 +1,126 @@
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
+index 66ac1de37..ca81dfbb1 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
+@@ -1,3 +1,6 @@
++import { Light, Lighting } from 'three/webgpu';
++import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
++
+ /**
+  * A custom lighting implementation based on Forward+ Clustered Shading that
+  * overwrites the default lighting system in {@link WebGPURenderer}. Suitable
+@@ -36,7 +39,5 @@ export class ClusteredLighting extends Lighting {
+      * @param {Array<Light>} lights - The lights.
+      * @return {ClusteredLightsNode} The clustered lights node.
+      */
+-    createNode(lights?: Array<Light>): ClusteredLightsNode;
++    createNode(lights?: Light[]): ClusteredLightsNode;
+ }
+-import { Lighting } from 'three/webgpu';
+-import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
+index 3fc0b16d1..0092ca375 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
+@@ -1,16 +1,5 @@
+-export default ClusteredLightsNode;
+-/**
+- * TSL function that creates a clustered lights node.
+- *
+- * @tsl
+- * @function
+- * @param {number} [maxLights=1024] - Maximum number of point lights.
+- * @param {number} [tileSize=32] - Screen tile size in pixels.
+- * @param {number} [zSlices=24] - Depth slice count.
+- * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
+- * @return {ClusteredLightsNode} The clustered lights node.
+- */
+-export const clusteredLights: any;
++import { Light, LightsNode } from 'three/webgpu';
++
+ /**
+  * A custom version of `LightsNode` implementing Forward+ clustered shading:
+  * the view frustum is subdivided into a 3D grid of clusters (X × Y screen tiles
+@@ -21,9 +10,15 @@ export const clusteredLights: any;
+  * different depths — suitable for 3D scenes with real depth complexity.
+  *
+  * @augments LightsNode
+- * @three_import import { clusteredLights } from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
+  */
+ declare class ClusteredLightsNode extends LightsNode {
++    materialLights: Light[];
++    clusteredLights: Light[];
++    maxLights: number;
++    tileSize: number;
++    zSlices: number;
++    maxLightsPerCluster: number;
++
+     /**
+      * Constructs a new clustered lights node.
+      *
+@@ -33,48 +28,18 @@ declare class ClusteredLightsNode extends LightsNode {
+      * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
+      */
+     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
+-    materialLights: any[];
+-    clusteredLights: any[];
+-    maxLights: number;
+-    tileSize: number;
+-    zSlices: number;
+-    maxLightsPerCluster: number;
+-    _chunksPerCluster: number;
+-    _bufferSize: Vector2 | null;
+-    _lightIndexes: import("three/webgpu").UniformNode | null;
+-    _screenClusterIndex: any;
+-    _compute: any;
+-    _lightsTexture: DataTexture | null;
+-    _zSliceRangesTexture: DataTexture | null;
+-    _zSliceRangesData: Float32Array<ArrayBuffer> | null;
+-    _lightViewZ: Float32Array<ArrayBuffer>;
+-    _lightSortOrder: any[];
+-    _lightsCount: import("three/webgpu").UniformNode;
+-    _cameraNear: import("three/webgpu").UniformNode;
+-    _cameraFar: import("three/webgpu").UniformNode;
+-    _cameraViewMatrix: import("three/webgpu").UniformNode;
+-    _cameraProjectionMatrix: import("three/webgpu").UniformNode;
+-    _gridDimensions: import("three/webgpu").UniformNode;
+-    customCacheKey(): any;
+-    updateLightsTexture(camera: any): void;
+-    updateBefore(frame: any): void;
+-    setLights(lights: any): LightsNode;
+-    getBlock(): any;
+-    getTile(element: any): any;
+-    getClusterLightCount(zSliceNode: any): void;
+-    getLightData(index: any): {
+-        position: any;
+-        viewPosition: any;
+-        distance: any;
+-        color: any;
+-        decay: any;
+-    };
+-    setupLights(builder: any, lightNodes: any): void;
+-    getBufferFitSize(value: any): number;
+-    setSize(width: any, height: any): this;
+-    updateProgram(renderer: any): void;
+-    create(width: any, height: any): void;
+ }
+-import { LightsNode } from 'three/webgpu';
+-import { Vector2 } from 'three/webgpu';
+-import { DataTexture } from 'three/webgpu';
++
++/**
++ * TSL function that creates a clustered lights node.
++ *
++ * @function
++ * @param {number} [maxLights=1024] - Maximum number of point lights.
++ * @param {number} [tileSize=32] - Screen tile size in pixels.
++ * @param {number} [zSlices=24] - Depth slice count.
++ * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
++ * @return {ClusteredLightsNode} The clustered lights node.
++ */
++export const clusteredLights: (maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number) => ClusteredLightsNode;
++
++export default ClusteredLightsNode;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 index 7489bf508..7849540e6 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
