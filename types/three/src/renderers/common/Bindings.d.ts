@@ -84,7 +84,6 @@ declare class Bindings extends DataMap {
      * @return {Array<BindGroup>} The bind groups.
      */
     getForCompute(computeNode: ComputeNode): BindGroup[];
-    _getBindings(object: any, bindings: any): any;
     /**
      * Updates the bindings for the given compute node.
      *
@@ -109,8 +108,6 @@ declare class Bindings extends DataMap {
      * @param {RenderObject} renderObject - The renderObject.
      */
     deleteForRender(renderObject: RenderObject): void;
-    _deleteBindings(object: any): void;
-    _updateBindingsUsage(bindings: any, delta: any): void;
     /**
      * Updates the given array of bindings.
      *
