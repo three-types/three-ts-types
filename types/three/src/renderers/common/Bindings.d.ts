@@ -109,17 +109,23 @@ declare class Bindings extends DataMap {
      */
     deleteForRender(renderObject: RenderObject): void;
     /**
+     * Creates the bindings for the given array of bindings.
+     *
+     * @param {Array<BindGroup>} bindings - The bind groups.
+     */
+    _createBindings(bindings: BindGroup[]): void;
+    /**
+     * Deletes the given array of bindings.
+     *
+     * @param {Array<BindGroup>} bindings - The bind groups.
+     */
+    _destroyBindings(bindings: BindGroup[]): void;
+    /**
      * Updates the given array of bindings.
      *
      * @param {Array<BindGroup>} bindings - The bind groups.
      */
     _updateBindings(bindings: BindGroup[]): void;
-    /**
-     * Initializes the given bind group.
-     *
-     * @param {BindGroup} bindGroup - The bind group to initialize.
-     */
-    _init(bindGroup: BindGroup): void;
     /**
      * Updates the given bind group.
      *
