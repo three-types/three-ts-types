@@ -3,6 +3,7 @@ import { Object3D } from "../../core/Object3D.js";
 import { Texture } from "../../textures/Texture.js";
 import ProgrammableStage from "./ProgrammableStage.js";
 import ReadbackBuffer from "./ReadbackBuffer.js";
+import UniformBuffer from "./UniformBuffer.js";
 
 /**
  * This renderer module provides a series of statistical information
@@ -100,23 +101,25 @@ declare class Info {
      * @property {number} total - The total memory size in bytes.
      */
     readonly memory: {
-        geometries: number;
-        textures: number;
         attributes: number;
-        indexAttributes: number;
-        storageAttributes: number;
-        indirectStorageAttributes: number;
-        readbackBuffers: number;
-        programs: number;
-        renderTargets: number;
-        total: number;
-        texturesSize: number;
         attributesSize: number;
+        geometries: number;
+        indexAttributes: number;
         indexAttributesSize: number;
-        storageAttributesSize: number;
+        indirectStorageAttributes: number;
         indirectStorageAttributesSize: number;
-        readbackBuffersSize: number;
+        programs: number;
         programsSize: number;
+        readbackBuffers: number;
+        readbackBuffersSize: number;
+        renderTargets: number;
+        storageAttributes: number;
+        storageAttributesSize: number;
+        textures: number;
+        texturesSize: number;
+        uniformBuffers: number;
+        uniformBuffersSize: number;
+        total: number;
     };
     /**
      * Map for storing calculated byte sizes of tracked objects.

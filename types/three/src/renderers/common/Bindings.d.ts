@@ -113,13 +113,13 @@ declare class Bindings extends DataMap {
      *
      * @param {Array<BindGroup>} bindings - The bind groups.
      */
-    _createBindings(bindings: Array<BindGroup>): void;
+    _createBindings(bindings: BindGroup[]): void;
     /**
      * Deletes the given array of bindings.
      *
      * @param {Array<BindGroup>} bindings - The bind groups.
      */
-    _destroyBindings(bindings: Array<BindGroup>): void;
+    _destroyBindings(bindings: BindGroup[]): void;
     /**
      * Updates the given array of bindings.
      *
