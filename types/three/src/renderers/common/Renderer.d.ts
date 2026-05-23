@@ -58,6 +58,18 @@ export interface RendererParameters {
     multiview?: boolean | undefined;
 }
 
+export interface RenderItem {
+    id: number | null;
+    object: Object3D | null;
+    geometry: BufferGeometry | null;
+    material: Material | null;
+    groupOrder: number | null;
+    renderOrder: number | null;
+    z: number | null;
+    group: GeometryGroup | null;
+    clippingContext: ClippingContext | null;
+}
+
 /**
  * Base class for renderers.
  */
@@ -570,6 +582,20 @@ declare class Renderer {
      * @param {boolean} [updateStyle=true] - Whether to update the `style` attribute of the canvas or not.
      */
     setSize(width: number, height: number, updateStyle?: boolean): void;
+    /**
+     * Defines a manual sort function for the opaque render list.
+     * Pass `null` to use the default sort.
+     *
+     * @param {Function} method - The sort function.
+     */
+    setOpaqueSort(method: ((a: RenderItem, b: RenderItem) => number) | null): void;
+    /**
+     * Defines a manual sort function for the transparent render list.
+     * Pass `null` to use the default sort.
+     *
+     * @param {Function} method - The sort function.
+     */
+    setTransparentSort(method: ((a: RenderItem, b: RenderItem) => number) | null): void;
     /**
      * Returns the scissor rectangle.
      *
