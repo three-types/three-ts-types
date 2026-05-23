@@ -3,7 +3,7 @@ import { vec2, remap } from 'three/tsl';
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
-const nodeBuilder: THREE.NodeBuilder = renderer.backend.createNodeBuilder(null!, renderer);
+const nodeBuilder: THREE.NodeBuilder = (renderer.backend as any).createNodeBuilder(null!, renderer);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera();

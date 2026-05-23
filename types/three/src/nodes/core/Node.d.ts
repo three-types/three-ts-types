@@ -155,30 +155,6 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      */
     readonly isNode: boolean;
     /**
-     * The cache key of this node.
-     *
-     * @private
-     * @type {?number}
-     * @default null
-     */
-    private _cacheKey;
-    /**
-     * The UUID of the node.
-     *
-     * @type {string}
-     * @default null
-     * @private
-     */
-    private _uuid;
-    /**
-     * The cache key's version.
-     *
-     * @private
-     * @type {number}
-     * @default 0
-     */
-    private _cacheKeyVersion;
-    /**
      * The unique ID of the node.
      *
      * @type {number}
@@ -297,14 +273,6 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * @param {traverseCallback} callback - A callback that is executed per node.
      */
     traverse(callback: (node: Node) => void): void;
-    /**
-     * Returns the child nodes of this node.
-     *
-     * @private
-     * @param {Set<Node>} [ignores=new Set()] - A set of nodes to ignore during the search to avoid circular references.
-     * @returns {Array<Object>} An array of objects describing the child nodes.
-     */
-    private _getChildren;
     /**
      * Returns the cache key for this node.
      *

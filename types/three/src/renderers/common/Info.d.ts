@@ -1,9 +1,7 @@
 import { BufferAttribute } from "../../core/BufferAttribute.js";
 import { Object3D } from "../../core/Object3D.js";
 import { Texture } from "../../textures/Texture.js";
-import ProgrammableStage from "./ProgrammableStage.js";
 import ReadbackBuffer from "./ReadbackBuffer.js";
-import UniformBuffer from "./UniformBuffer.js";
 
 /**
  * This renderer module provides a series of statistical information
@@ -122,13 +120,6 @@ declare class Info {
         total: number;
     };
     /**
-     * Map for storing calculated byte sizes of tracked objects.
-     *
-     * @type {Map<Object, number>}
-     * @private
-     */
-    private memoryMap;
-    /**
      * This method should be executed per draw call and updates the corresponding metrics.
      *
      * @param {Object3D} object - The 3D object that is going to be rendered.
@@ -156,14 +147,6 @@ declare class Info {
      * @param {Texture} texture
      */
     destroyTexture(texture: Texture): void;
-    /**
-     * Tracks attribute memory explicitly, updating counts and byte tracking.
-     *
-     * @param {BufferAttribute} attribute
-     * @param {string} type - type of attribute
-     * @private
-     */
-    private _createAttribute;
     /**
      * Tracks a regular attribute memory explicitly.
      *
@@ -206,46 +189,6 @@ declare class Info {
      * @param {ReadbackBuffer} readbackBuffer - The readback buffer to track.
      */
     destroyReadbackBuffer(readbackBuffer: ReadbackBuffer): void;
-    /**
-     * Tracks a uniform buffer memory explicitly.
-     *
-     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
-     */
-    createUniformBuffer(uniformBuffer: UniformBuffer): void;
-    /**
-     * Tracks a uniform buffer memory explicitly.
-     *
-     * @param {UniformBuffer} uniformBuffer - The uniform buffer to track.
-     */
-    destroyUniformBuffer(uniformBuffer: UniformBuffer): void;
-    /**
-     * Tracks program memory explicitly, updating counts and byte tracking.
-     *
-     * @param {ProgrammableStage} program - The program to track.
-     */
-    createProgram(program: ProgrammableStage): void;
-    /**
-     * Tracks program memory explicitly, updating counts and byte tracking.
-     *
-     * @param {Object} program - The program to track.
-     */
-    destroyProgram(program: ProgrammableStage): void;
-    /**
-     * Calculates the memory size of a texture in bytes.
-     *
-     * @param {Texture} texture - The texture to calculate the size for.
-     * @return {number} The calculated size in bytes.
-     * @private
-     */
-    private _getTextureMemorySize;
-    /**
-     * Calculates the memory size of an attribute in bytes.
-     *
-     * @param {BufferAttribute} attribute - The attribute to calculate the size for.
-     * @return {number} The calculated size in bytes.
-     * @private
-     */
-    private _getAttributeMemorySize;
 }
 
 export default Info;

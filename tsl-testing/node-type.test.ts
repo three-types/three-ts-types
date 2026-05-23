@@ -3,7 +3,7 @@ import { Fn, smoothstep, smoothstepElement, step, stepElement, vec2, vec3, vec4 
 import * as THREE from 'three/webgpu';
 
 const renderer = new THREE.WebGPURenderer();
-const nodeBuilder: THREE.NodeBuilder = renderer.backend.createNodeBuilder(null!, renderer);
+const nodeBuilder: THREE.NodeBuilder = (renderer.backend as any).createNodeBuilder(null!, renderer);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera();
