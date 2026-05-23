@@ -1,4 +1,4 @@
-import { Light, LightsNode } from "three/webgpu";
+import { Light, LightsNode, Node } from "three/webgpu";
 
 /**
  * A custom version of `LightsNode` implementing Forward+ clustered shading:
@@ -28,6 +28,10 @@ declare class ClusteredLightsNode extends LightsNode {
      * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
      */
     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
+
+    getClusterLightCount(zSliceNode: Node<'int'>): Node<'int'>;
+
+    setSize(width: number, height: number): this;
 }
 
 /**
