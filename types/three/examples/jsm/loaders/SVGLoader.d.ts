@@ -1,4 +1,4 @@
-import { BufferGeometry, Loader, LoadingManager, Shape, ShapePath, Vector2, Vector3 } from "three";
+import { BufferGeometry, Loader, LoadingManager, MeshBasicMaterial, Shape, ShapePath, Vector2, Vector3 } from "three";
 
 export interface SVGResultPaths extends ShapePath {
     userData?: Record<string, any> | undefined;
@@ -59,6 +59,10 @@ export class SVGLoader extends Loader<SVGResult> {
         uvs?: number[],
         vertexOffset?: number,
     ): number;
+
+    static createFillMaterial(shapePath: ShapePath): MeshBasicMaterial | null;
+
+    static createStrokeMaterial(shapePath: ShapePath): MeshBasicMaterial | null;
 
     static createShapes(shapePath: ShapePath): Shape[];
 }
