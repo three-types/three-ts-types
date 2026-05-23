@@ -17,6 +17,11 @@ import ClusteredLightsNode from "../tsl/lighting/ClusteredLightsNode.js";
  * @three_import import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
  */
 export class ClusteredLighting extends Lighting {
+    maxLights: number;
+    tileSize: number;
+    zSlices: number;
+    maxLightsPerCluster: number;
+
     /**
      * Constructs a new clustered lighting system.
      *
@@ -26,10 +31,7 @@ export class ClusteredLighting extends Lighting {
      * @param {number} [maxLightsPerCluster=64] - Per-cluster light-list capacity.
      */
     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
-    maxLights: number;
-    tileSize: number;
-    zSlices: number;
-    maxLightsPerCluster: number;
+
     /**
      * Creates a new clustered lights node for the given array of lights.
      *
