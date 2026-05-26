@@ -12171,17 +12171,17 @@ index 0c974f5b9..14a618b44 100644
  
      mesh = new THREE.Mesh(new THREE.TorusGeometry(size, 0.3, 30, 30), material);
 diff --git a/examples-testing/examples/webgl_shaders_ocean.ts b/examples-testing/examples/webgl_shaders_ocean.ts
-index e0e26ed33..6832f4e68 100644
+index ab123d972..f00ff41dc 100644
 --- a/examples-testing/examples/webgl_shaders_ocean.ts
 +++ b/examples-testing/examples/webgl_shaders_ocean.ts
 @@ -8,14 +8,14 @@ import { Water } from 'three/addons/objects/Water.js';
  import { Sky } from 'three/addons/objects/Sky.js';
  import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
  
--let container, stats;
+-let container, stats, timer;
 -let camera, scene, renderer;
 -let controls, water, sun, sky, mesh, bloomPass;
-+let container: HTMLElement, stats: Stats;
++let container, stats: Stats, timer: THREE.Timer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
 +let controls: OrbitControls, water: Water, sun: THREE.Vector3, sky: Sky, mesh: THREE.Mesh, bloomPass: UnrealBloomPass;
  
@@ -12193,7 +12193,7 @@ index e0e26ed33..6832f4e68 100644
  
      //
  
-@@ -90,7 +90,7 @@ function init() {
+@@ -92,7 +92,7 @@ function init() {
      const pmremGenerator = new THREE.PMREMGenerator(renderer);
      const sceneEnv = new THREE.Scene();
  
@@ -13295,7 +13295,7 @@ index 0cc136cb7..262372590 100644
      renderer.render(scene, camera);
  }
 diff --git a/examples-testing/examples/webgl_texture3d.ts b/examples-testing/examples/webgl_texture3d.ts
-index 977dbadb7..fb1460cae 100644
+index 5979d5945..4dd01b8ee 100644
 --- a/examples-testing/examples/webgl_texture3d.ts
 +++ b/examples-testing/examples/webgl_texture3d.ts
 @@ -5,7 +5,15 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -16604,7 +16604,7 @@ index e575ee344..d9cc9fb54 100644
  
      renderPipeline.outputNode = compose.add(debugBlockIndexes.mul(tileInfluence));
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
-index bc516cf90..455deffca 100644
+index c5811bdc2..ae21fb89d 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
 +++ b/examples-testing/examples/webgpu_lines_fat.ts
 @@ -9,15 +9,23 @@ import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
@@ -16748,7 +16748,7 @@ index baca80965..115beebce 100644
  
      gui.add(params, 'translation', 0, 10).onChange(function (val) {
 diff --git a/examples-testing/examples/webgpu_lines_fat_wireframe.ts b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
-index e7489c938..af5120f9a 100644
+index 1bd916fee..f54b38fba 100644
 --- a/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 +++ b/examples-testing/examples/webgpu_lines_fat_wireframe.ts
 @@ -2,19 +2,26 @@ import * as THREE from 'three/webgpu';
@@ -16793,7 +16793,7 @@ index e7489c938..af5120f9a 100644
  
      const geometry = new WireframeGeometry2(geo);
  
-@@ -135,7 +142,7 @@ function animate() {
+@@ -133,7 +140,7 @@ function animate() {
  //
  
  function initGui() {

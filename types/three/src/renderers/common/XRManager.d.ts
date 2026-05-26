@@ -1,6 +1,7 @@
 import { ArrayCamera } from "../../cameras/ArrayCamera.js";
 import { PerspectiveCamera } from "../../cameras/PerspectiveCamera.js";
 import { EventDispatcher } from "../../core/EventDispatcher.js";
+import { RenderTarget } from "../../core/RenderTarget.js";
 import { CylinderGeometry } from "../../geometries/CylinderGeometry.js";
 import { PlaneGeometry } from "../../geometries/PlaneGeometry.js";
 import { MeshBasicMaterial } from "../../materials/MeshBasicMaterial.js";
@@ -153,6 +154,15 @@ declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap>
      */
     getEnvironmentBlendMode(): XREnvironmentBlendMode | undefined;
     /**
+     * Returns the current base layer.
+     *
+     * This is an `XRProjectionLayer` when the targeted XR device supports the
+     * WebXR Layers API, or an `XRWebGLLayer` otherwise.
+     *
+     * @return {?(XRWebGLLayer|XRProjectionLayer)} The XR base layer.
+     */
+    getBaseLayer(): (XRWebGLLayer | XRProjectionLayer) | null;
+    /**
      * Returns the current XR binding.
      *
      * Creates a new binding if needed and the browser is
@@ -161,6 +171,16 @@ declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap>
      * @return {?XRWebGLBinding} The XR binding. Returns `null` if one cannot be created.
      */
     getBinding(): XRWebGLBinding | null;
+    /**
+     * Applies WebXR fixed foveation to the internal post-processing render target
+     * used by the first XR render pass before compositing into a projection layer.
+     *
+     * Browser-side `XRWebGLBinding.foveateBoundTexture()` failures are treated as
+     * non-fatal so they do not interrupt rendering.
+     *
+     * @param {RenderTarget} renderTarget - The internal render target.
+     */
+    foveateBoundTexture(renderTarget: RenderTarget): void;
     /**
      * Returns the current XR frame.
      *
