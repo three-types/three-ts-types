@@ -1,3 +1,61 @@
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts b/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
+index d3c23f934..214d0cf95 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
+@@ -1,7 +1,11 @@
+-/**
+- * ~Data
+- */
+-export type CSMFrustum = {
++import { Matrix4, Vector3 } from 'three';
++
++export interface CSMFrustumVertices {
++    near: Vector3[];
++    far: Vector3[];
++}
++
++export interface CSMFrustumParameters {
+     /**
+      * - Whether this CSM frustum is used with WebGL or WebGPU.
+      */
+@@ -18,8 +22,8 @@ export type CSMFrustum = {
+      * - The maximum far value.
+      */
+     maxFar?: number | undefined;
+-};
+-import { Matrix4 } from 'three';
++}
++
+ /**
+  * Represents the frustum of a CSM instance.
+  *
+@@ -31,7 +35,7 @@ export class CSMFrustum {
+      *
+      * @param {CSMFrustum~Data} [data] - The CSM data.
+      */
+-    constructor(data: any);
++    constructor(data?: CSMFrustumParameters);
+     /**
+      * The zNear value. This value depends on whether the CSM
+      * is used with WebGL or WebGPU. Both API use different
+@@ -52,7 +56,7 @@ export class CSMFrustum {
+      *
+      * @type {Object}
+      */
+-    vertices: Object;
++    vertices: CSMFrustumVertices;
+     /**
+      * Setups this CSM frustum from the given projection matrix and max far value.
+      *
+@@ -60,7 +64,7 @@ export class CSMFrustum {
+      * @param {number} maxFar - The maximum far value.
+      * @returns {Object} An object representing the vertices of the near and far plane in view space.
+      */
+-    setFromProjectionMatrix(projectionMatrix: Matrix4, maxFar: number): Object;
++    setFromProjectionMatrix(projectionMatrix: Matrix4, maxFar: number): CSMFrustumVertices;
+     /**
+      * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
+      * target array.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 index 66ac1de37..196e0702d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
