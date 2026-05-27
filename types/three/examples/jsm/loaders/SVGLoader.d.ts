@@ -1,11 +1,7 @@
 import { BufferGeometry, Loader, LoadingManager, MeshBasicMaterial, Shape, ShapePath, Vector2 } from "three";
 
-export interface SVGResultPaths extends ShapePath {
-    userData?: Record<string, any> | undefined;
-}
-
 export interface SVGResult {
-    paths: SVGResultPaths[];
+    paths: ShapePath[];
     xml: XMLDocument;
 }
 
