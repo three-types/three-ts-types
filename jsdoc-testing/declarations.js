@@ -109,6 +109,8 @@ const files = [
     'src/nodes/core/StructType',
     'src/nodes/core/StructTypeNode',
     'src/nodes/core/UniformNode',
+    'src/nodes/display/BlendModes',
+    'src/nodes/display/PremultiplyAlphaFunctions',
     'src/renderers/common/BufferUtils',
     'src/renderers/common/BundleGroup',
     'src/renderers/common/CanvasTarget',
