@@ -3,8 +3,7 @@ import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
 import Node from "../core/Node.js";
 
-type Vec3 = Node<"vec3"> | Vector3 | Node<"color"> | Color;
-type Vec4 = Vec3 | Node<"vec4"> | Vector4;
+type ColorParameter = Node<"float"> | number | Node<"vec3"> | Vector3 | Node<"color"> | Color | Node<"vec4"> | Vector4;
 
 /**
  * Premultiplies the RGB channels of a color by its alpha channel.
@@ -19,7 +18,7 @@ type Vec4 = Vec3 | Node<"vec4"> | Vector4;
  * @param {Node<vec4>} color - The input color with non-premultiplied alpha.
  * @return {Node<vec4>} The color with premultiplied alpha.
  */
-export const premultiplyAlpha: (color: Vec4) => Node<"vec4">;
+export const premultiplyAlpha: (color: ColorParameter) => Node<"vec4">;
 /**
  * Unpremultiplies the RGB channels of a color by its alpha channel.
  *
@@ -33,6 +32,6 @@ export const premultiplyAlpha: (color: Vec4) => Node<"vec4">;
  * @param {Node<vec4>} color - The input color with premultiplied alpha.
  * @return {Node<vec4>} The color with non-premultiplied alpha.
  */
-export const unpremultiplyAlpha: (color: Vec4) => Node<"vec4">;
+export const unpremultiplyAlpha: (color: ColorParameter) => Node<"vec4">;
 
 export {};
