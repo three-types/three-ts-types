@@ -7857,14 +7857,18 @@ index 0f4042b7d..dff17d169 100644
      directionalLight.position.set(x, y, z);
      scene.add(directionalLight);
 diff --git a/examples-testing/examples/webgl_loader_svg.ts b/examples-testing/examples/webgl_loader_svg.ts
-index f5a644b59..56c7a079f 100644
+index deb6e33a6..dc8c767a0 100644
 --- a/examples-testing/examples/webgl_loader_svg.ts
 +++ b/examples-testing/examples/webgl_loader_svg.ts
-@@ -3,14 +3,24 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+@@ -1,16 +1,26 @@
+ import * as THREE from 'three';
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
- 
+-import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+-
 -let renderer, scene, camera, gui, guiData;
++import { SVGLoader, StrokeStyle } from 'three/addons/loaders/SVGLoader.js';
++
 +let renderer: THREE.WebGLRenderer,
 +    scene: THREE.Scene,
 +    camera: THREE.PerspectiveCamera,
@@ -7896,16 +7900,19 @@ index f5a644b59..56c7a079f 100644
      //
  
      if (scene) disposeScene(scene);
-@@ -159,7 +169,7 @@ function loadSVG(url) {
+@@ -159,7 +169,10 @@ function loadSVG(url) {
                      material.wireframe = guiData.strokesWireframe;
  
                      for (const subPath of path.subPaths) {
 -                        const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData.style);
-+                        const geometry = SVGLoader.pointsToStroke(subPath.getPoints(), path.userData!.style);
++                        const geometry = SVGLoader.pointsToStroke(
++                            subPath.getPoints(),
++                            path.userData.style as StrokeStyle,
++                        );
  
                          if (geometry) {
                              const mesh = new THREE.Mesh(geometry, material);
-@@ -190,12 +200,27 @@ function render() {
+@@ -190,12 +203,27 @@ function render() {
      renderer.render(scene, camera);
  }
  
