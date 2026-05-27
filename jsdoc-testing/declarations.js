@@ -30,6 +30,7 @@ const files = [
     'src/cameras/OrthographicCamera',
     'src/cameras/PerspectiveCamera',
     'src/cameras/StereoCamera',
+    'src/extras/core/ShapePath',
     'src/helpers/ArrowHelper',
     'src/helpers/AxesHelper',
     'src/helpers/Box3Helper',
