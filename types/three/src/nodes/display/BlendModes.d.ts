@@ -73,3 +73,5 @@ export const blendOverlay: (base: Vec3, blend: Vec3) => Node<"vec3">;
  * @return {Node<vec4>} The result.
  */
 export const blendColor: (base: Vec4, blend: Vec4) => Node<"vec4">;
+
+export {};

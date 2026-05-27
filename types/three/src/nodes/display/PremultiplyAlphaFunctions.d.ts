@@ -34,3 +34,5 @@ export const premultiplyAlpha: (color: Vec4) => Node<"vec4">;
  * @return {Node<vec4>} The color with non-premultiplied alpha.
  */
 export const unpremultiplyAlpha: (color: Vec4) => Node<"vec4">;
+
+export {};
