@@ -253,6 +253,16 @@ declare class Renderer {
      */
     onDeviceLost: (info: DeviceLostInfo) => void;
     /**
+     * A callback function that defines what should happen when an uncaptured
+     * backend error is reported (e.g. a WebGPU validation/out-of-memory/internal
+     * error raised outside an error scope). Applications can override this to
+     * surface errors in their own UI without letting them escalate to a device
+     * loss. The default implementation logs to the console.
+     *
+     * @type {Function}
+     */
+    onError: (errorMessage: string) => void;
+    /**
      * Whether the renderer should render transparent render objects or not.
      *
      * @type {boolean}
