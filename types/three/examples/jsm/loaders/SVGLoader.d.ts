@@ -1,11 +1,7 @@
-import { BufferGeometry, Loader, LoadingManager, MeshBasicMaterial, Shape, ShapePath, Vector2, Vector3 } from "three";
-
-export interface SVGResultPaths extends ShapePath {
-    userData?: Record<string, any> | undefined;
-}
+import { BufferGeometry, Loader, LoadingManager, MeshBasicMaterial, Shape, ShapePath, Vector2 } from "three";
 
 export interface SVGResult {
-    paths: SVGResultPaths[];
+    paths: ShapePath[];
     xml: XMLDocument;
 }
 
@@ -64,5 +60,8 @@ export class SVGLoader extends Loader<SVGResult> {
 
     static createStrokeMaterial(shapePath: ShapePath): MeshBasicMaterial | null;
 
+    /**
+     * @deprecated Use shapePath.toShapes() instead.
+     */
     static createShapes(shapePath: ShapePath): Shape[];
 }
