@@ -3,6 +3,7 @@ import * as path from 'node:path';
 import { argv } from 'node:process';
 
 const files = [
+    'examples/jsm/csm/CSMFrustum',
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
     'src/animation/tracks/BooleanKeyframeTrack',
