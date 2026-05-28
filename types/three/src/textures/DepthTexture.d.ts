@@ -31,8 +31,8 @@ export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage
      * @param {number} [depth=1] - The depth of the texture.
      */
     constructor(
-        width: number,
-        height: number,
+        width?: number,
+        height?: number,
         type?: TextureDataType,
         mapping?: Mapping,
         wrapS?: Wrapping,
@@ -99,7 +99,7 @@ export class DepthTexture<TImage = DepthTextureImageData> extends Texture<TImage
 }
 
 export interface DepthTextureImageData {
-    width: number;
-    height: number;
+    width: number | undefined;
+    height: number | undefined;
     depth: number;
 }
