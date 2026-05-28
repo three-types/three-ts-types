@@ -10419,6 +10419,192 @@ index 4d9e0160a..962926ab4 100644
  }
 +
 +export default NodeMaterialObserver;
+diff --git a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts b/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
+index 561415c0e..093bab0de 100644
+--- a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
+@@ -1,3 +1,5 @@
++import { TypedArray } from '../core/BufferAttribute.js';
++
+ /**
+  * Abstract base class of interpolants over parametric samples.
+  *
+@@ -17,7 +19,7 @@
+  *
+  * @abstract
+  */
+-export class Interpolant {
++export abstract class Interpolant<TSettings = {}> {
+     /**
+      * Constructs a new interpolant.
+      *
+@@ -33,14 +35,6 @@ export class Interpolant {
+      * @type {TypedArray}
+      */
+     parameterPositions: TypedArray;
+-    /**
+-     * A cache index.
+-     *
+-     * @private
+-     * @type {number}
+-     * @default 0
+-     */
+-    private _cachedIndex;
+     /**
+      * The result buffer.
+      *
+@@ -65,13 +59,13 @@ export class Interpolant {
+      * @type {?Object}
+      * @default null
+      */
+-    settings: Object | null;
++    settings: TSettings | null;
+     /**
+      * The default settings object.
+      *
+      * @type {Object}
+      */
+-    DefaultSettings_: Object;
++    DefaultSettings_: TSettings;
+     /**
+      * Evaluate the interpolant at position `t`.
+      *
+@@ -84,7 +78,7 @@ export class Interpolant {
+      *
+      * @return {Object} The interpolation settings.
+      */
+-    getSettings_(): Object;
++    getSettings_(): unknown;
+     /**
+      * Copies a sample value to the result buffer.
+      *
+@@ -102,7 +96,7 @@ export class Interpolant {
+      * @param {number} t1 - The next interpolation factor.
+      * @return {TypedArray} The result buffer.
+      */
+-    interpolate_(): TypedArray;
++    abstract interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+     /**
+      * Optional method that is executed when the interval has changed.
+      *
+@@ -110,5 +104,5 @@ export class Interpolant {
+      * @param {number} t0 - The previous interpolation factor.
+      * @param {number} t - The current interpolation factor.
+      */
+-    intervalChanged_(): void;
++    intervalChanged_(i1: number, t0: number, t: number): void;
+ }
+diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
+index a3d1715dc..1c9bb203e 100644
+--- a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
+@@ -1,3 +1,6 @@
++import { Interpolant } from '../Interpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++
+ /**
+  * A Bezier interpolant using cubic Bezier curves with 2D control points.
+  *
+@@ -16,6 +19,5 @@
+  * @augments Interpolant
+  */
+ export class BezierInterpolant extends Interpolant {
+-    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
++    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+ }
+-import { Interpolant } from '../Interpolant.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
+index ca53c5e9a..8d128ad19 100644
+--- a/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
+@@ -1,3 +1,12 @@
++import { Interpolant } from '../Interpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++import { InterpolationEndingModes } from '../constants.js';
++
++export interface CubicInterpolantSettings {
++    endingStart: InterpolationEndingModes;
++    endingEnd: InterpolationEndingModes;
++}
++
+ /**
+  * Fast and simple cubic spline interpolant.
+  *
+@@ -7,16 +16,7 @@
+  *
+  * @augments Interpolant
+  */
+-export class CubicInterpolant extends Interpolant {
+-    _weightPrev: number;
+-    _offsetPrev: number;
+-    _weightNext: number;
+-    _offsetNext: number;
+-    DefaultSettings_: {
+-        endingStart: number;
+-        endingEnd: number;
+-    };
+-    intervalChanged_(i1: any, t0: any, t1: any): void;
+-    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
++export class CubicInterpolant extends Interpolant<CubicInterpolantSettings> {
++    intervalChanged_(i1: number, t0: number, t1: number): void;
++    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+ }
+-import { Interpolant } from '../Interpolant.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
+index 04ce01eb6..7384e6d83 100644
+--- a/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
+@@ -1,3 +1,6 @@
++import { Interpolant } from '../Interpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++
+ /**
+  * Interpolant that evaluates to the sample value at the position preceding
+  * the parameter.
+@@ -5,6 +8,5 @@
+  * @augments Interpolant
+  */
+ export class DiscreteInterpolant extends Interpolant {
+-    interpolate_(i1: any): TypedArray;
++    interpolate_(i1: number): TypedArray;
+ }
+-import { Interpolant } from '../Interpolant.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
+index d36003868..d3d6336b3 100644
+--- a/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
+@@ -1,9 +1,11 @@
++import { Interpolant } from '../Interpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++
+ /**
+  * A basic linear interpolant.
+  *
+  * @augments Interpolant
+  */
+ export class LinearInterpolant extends Interpolant {
+-    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
++    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+ }
+-import { Interpolant } from '../Interpolant.js';
+diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
+index e8ddddc6e..268e636df 100644
+--- a/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
++++ b/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
+@@ -1,9 +1,11 @@
++import { Interpolant } from '../Interpolant.js';
++import { TypedArray } from '../core/BufferAttribute.js';
++
+ /**
+  * Spherical linear unit quaternion interpolant.
+  *
+  * @augments Interpolant
+  */
+ export class QuaternionLinearInterpolant extends Interpolant {
+-    interpolate_(i1: any, t0: any, t: any, t1: any): TypedArray;
++    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
+ }
+-import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
 index 60775a2a1..2ed041bfc 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
