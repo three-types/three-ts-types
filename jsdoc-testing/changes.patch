@@ -12596,7 +12596,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index 7838bc5cd..1300a09d9 100644
+index 9ac08a6de..1300a09d9 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,75 @@
@@ -13186,11 +13186,12 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Renders the scene or 3D object with the given camera. This method can only be called
       * if the renderer has been initialized. When using `render()` inside an animation loop,
-@@ -758,34 +479,7 @@ declare class Renderer {
+@@ -758,35 +479,7 @@ declare class Renderer {
       * @readonly
       * @return {boolean} Whether the renderer has been initialized or not.
       */
 -    readonly get initialized(): boolean;
+-    _renderOutputLayers(quad: any, renderTarget: any): void;
 -    /**
 -     * Returns an internal render target which is used when computing the output tone mapping
 -     * and color space conversion. Unlike in `WebGLRenderer`, this is done in a separate render
@@ -13222,7 +13223,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the maximum available anisotropy for texture filtering.
       *
-@@ -813,13 +507,13 @@ declare class Renderer {
+@@ -814,13 +507,13 @@ declare class Renderer {
       * @param {?onAnimationCallback} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -13238,7 +13239,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Can be used to transfer buffer data from a storage buffer attribute
       * from the GPU to the CPU in context of compute shaders.
-@@ -831,13 +525,14 @@ declare class Renderer {
+@@ -832,13 +525,14 @@ declare class Renderer {
       * @param {number} count - The offset from which to start reading the
       * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -13255,7 +13256,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the pixel ratio.
       *
-@@ -892,14 +587,14 @@ declare class Renderer {
+@@ -893,14 +587,14 @@ declare class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -13272,7 +13273,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the scissor rectangle.
       *
-@@ -907,16 +602,19 @@ declare class Renderer {
+@@ -908,16 +602,19 @@ declare class Renderer {
       * @return {Vector4} The scissor rectangle.
       */
      getScissor(target: Vector4): Vector4;
@@ -13295,7 +13296,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the scissor test value.
       *
-@@ -936,17 +634,21 @@ declare class Renderer {
+@@ -937,17 +634,21 @@ declare class Renderer {
       * @return {Vector4} The viewport definition.
       */
      getViewport(target: Vector4): Vector4;
@@ -13319,7 +13320,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the clear color.
       *
-@@ -960,7 +662,7 @@ declare class Renderer {
+@@ -961,7 +662,7 @@ declare class Renderer {
       * @param {Color} color - The clear color.
       * @param {number} [alpha=1] - The clear alpha.
       */
@@ -13328,7 +13329,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns the clear alpha.
       *
-@@ -1036,7 +738,7 @@ declare class Renderer {
+@@ -1037,7 +738,7 @@ declare class Renderer {
       * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13337,7 +13338,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearColor}.
       *
-@@ -1044,7 +746,7 @@ declare class Renderer {
+@@ -1045,7 +746,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13346,7 +13347,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearDepth}.
       *
-@@ -1052,7 +754,7 @@ declare class Renderer {
+@@ -1053,7 +754,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13355,7 +13356,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearStencil}.
       *
-@@ -1060,7 +762,7 @@ declare class Renderer {
+@@ -1061,7 +762,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13364,7 +13365,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
       * If this is the case, the renderer allocates an internal render target for that purpose.
-@@ -1090,7 +792,7 @@ declare class Renderer {
+@@ -1091,7 +792,7 @@ declare class Renderer {
       *
       * @type {number}
       */
@@ -13373,7 +13374,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * The current color space of the renderer. When not producing screen output,
       * the color space is always the working color space.
-@@ -1124,7 +826,7 @@ declare class Renderer {
+@@ -1125,7 +826,7 @@ declare class Renderer {
       *
       * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
       */
@@ -13382,7 +13383,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Sets the output render target for the renderer.
       *
-@@ -1136,7 +838,7 @@ declare class Renderer {
+@@ -1137,7 +838,7 @@ declare class Renderer {
       *
       * @return {?RenderTarget} The current output render target. Returns `null` if no output target is set.
       */
@@ -13391,7 +13392,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Sets the canvas target. The canvas target manages the HTML canvas
       * or the offscreen canvas the renderer draws into.
-@@ -1150,12 +852,6 @@ declare class Renderer {
+@@ -1151,12 +852,6 @@ declare class Renderer {
       * @return {CanvasTarget} The current canvas target.
       */
      getCanvasTarget(): CanvasTarget;
@@ -13404,7 +13405,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Callback for {@link Renderer#setRenderObjectFunction}.
       *
-@@ -1181,13 +877,13 @@ declare class Renderer {
+@@ -1182,13 +877,13 @@ declare class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -13420,7 +13421,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Execute a single or an array of compute nodes. This method can only be called
       * if the renderer has been initialized.
-@@ -1199,7 +895,7 @@ declare class Renderer {
+@@ -1200,7 +895,7 @@ declare class Renderer {
       * - A IndirectStorageBufferAttribute for indirect dispatch size.
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -13429,7 +13430,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Execute a single or an array of compute nodes.
       *
-@@ -1211,7 +907,7 @@ declare class Renderer {
+@@ -1212,7 +907,7 @@ declare class Renderer {
       * - A IndirectStorageBufferAttribute for indirect dispatch size.
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -13438,7 +13439,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Checks if the given feature is supported by the selected backend.
       *
-@@ -1221,7 +917,7 @@ declare class Renderer {
+@@ -1222,7 +917,7 @@ declare class Renderer {
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
      hasFeatureAsync(name: string): Promise<boolean>;
@@ -13447,7 +13448,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Checks if the given feature is supported by the selected backend. If the
       * renderer has not been initialized, this method always returns `false`.
-@@ -1245,7 +941,7 @@ declare class Renderer {
+@@ -1246,7 +941,7 @@ declare class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -13456,7 +13457,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Initializes the given texture. Useful for preloading a texture rather than waiting until first render
       * (which can cause noticeable lags due to decode and GPU upload overhead).
-@@ -1278,7 +974,7 @@ declare class Renderer {
+@@ -1279,7 +974,7 @@ declare class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -13465,7 +13466,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Reads pixel data from the given render target.
       *
-@@ -1293,58 +989,6 @@ declare class Renderer {
+@@ -1294,58 +989,6 @@ declare class Renderer {
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
      readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number, textureIndex?: number, faceIndex?: number): Promise<TypedArray>;
@@ -13524,7 +13525,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * This method represents the default render object function that manages the render lifecycle
       * of the object.
-@@ -1359,7 +1003,7 @@ declare class Renderer {
+@@ -1360,7 +1003,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -13533,7 +13534,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Checks if the given compatibility is supported by the selected backend.
       *
-@@ -1367,36 +1011,6 @@ declare class Renderer {
+@@ -1368,36 +1011,6 @@ declare class Renderer {
       * @return {boolean} Whether the compatibility is supported or not.
       */
      hasCompatibility(name: string): boolean;
@@ -13570,7 +13571,7 @@ index 7838bc5cd..1300a09d9 100644
      /**
       * Alias for `compileAsync()`.
       *
-@@ -1406,16 +1020,7 @@ declare class Renderer {
+@@ -1407,16 +1020,7 @@ declare class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {function(Object3D, Camera, ?Scene): Promise|undefined} A Promise that resolves when the compile has been finished.
       */
@@ -14271,7 +14272,7 @@ index 0121dd34b..f5741f970 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index a7840ba9f..32c2c8cb3 100644
+index 68ca1edfe..9eb092610 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -14359,7 +14360,7 @@ index a7840ba9f..32c2c8cb3 100644
      /**
       * Returns the current output cache key.
       *
-@@ -259,7 +283,7 @@ declare class NodeManager extends DataMap {
+@@ -266,7 +290,7 @@ declare class NodeManager extends DataMap {
       *
       * @param {Node} computeNode - The compute node.
       */
@@ -14368,7 +14369,7 @@ index a7840ba9f..32c2c8cb3 100644
      /**
       * Triggers the call of `update()` methods
       * for all nodes of the given render object.
-@@ -275,6 +299,5 @@ declare class NodeManager extends DataMap {
+@@ -282,6 +306,5 @@ declare class NodeManager extends DataMap {
       */
      needsRefresh(renderObject: RenderObject): boolean;
  }
