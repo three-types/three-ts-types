@@ -4094,37 +4094,28 @@ index df4acc9d6..636f9db9c 100644
  
      for (let i = 0; i < l; i++) {
 diff --git a/examples-testing/examples/webgl_furnace_test.ts b/examples-testing/examples/webgl_furnace_test.ts
-index a81954176..46230b4a9 100644
+index f89857366..12ed92c2e 100644
 --- a/examples-testing/examples/webgl_furnace_test.ts
 +++ b/examples-testing/examples/webgl_furnace_test.ts
-@@ -1,6 +1,6 @@
- import * as THREE from 'three';
+@@ -2,7 +2,7 @@ import * as THREE from 'three';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
 -let scene, camera, renderer, radianceMap;
 +let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGLRenderer, radianceMap: THREE.Texture;
  
- const COLOR = 0xcccccc;
+ let gui;
  
-@@ -20,7 +20,8 @@ function init() {
+@@ -98,7 +98,8 @@ function initGui() {
+             scene.traverse(function (child) {
+                 const tint = val ? 0xccccff : 0xffffff;
  
-     document.body.addEventListener('mouseover', function () {
-         scene.traverse(function (child) {
--            if (child.isMesh) child.material.color.setHex(0xffffff);
-+            if ((child as THREE.Mesh).isMesh)
-+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xffffff);
-         });
+-                if (child.isMesh) child.material.color.setHex(tint);
++                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).isMesh)
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.color.setHex(tint);
+             });
  
-         render();
-@@ -28,7 +29,8 @@ function init() {
- 
-     document.body.addEventListener('mouseout', function () {
-         scene.traverse(function (child) {
--            if (child.isMesh) child.material.color.setHex(0xccccff); // tinted for visibility
-+            if ((child as THREE.Mesh).isMesh)
-+                ((child as THREE.Mesh).material as THREE.MeshStandardMaterial).color.setHex(0xccccff); // tinted for visibility
-         });
- 
-         render();
+             render();
 diff --git a/examples-testing/examples/webgl_geometries.ts b/examples-testing/examples/webgl_geometries.ts
 index 0eb50120c..a81813486 100644
 --- a/examples-testing/examples/webgl_geometries.ts
@@ -15730,6 +15721,31 @@ index 65bda9cd8..5d3957e54 100644
  
      gui.add(density, 'value', 0.001, 0.1).step(0.0001).name('Density');
      gui.add(height, 'value', -5, 5).name('Height');
+diff --git a/examples-testing/examples/webgpu_furnace_test.ts b/examples-testing/examples/webgpu_furnace_test.ts
+index 4afa5d2d0..715c323a2 100644
+--- a/examples-testing/examples/webgpu_furnace_test.ts
++++ b/examples-testing/examples/webgpu_furnace_test.ts
+@@ -1,8 +1,8 @@
+-import * as THREE from 'three';
++import * as THREE from 'three/webgpu';
+ 
+ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ 
+-let scene, camera, renderer, radianceMap;
++let scene: THREE.Scene, camera: THREE.PerspectiveCamera, renderer: THREE.WebGPURenderer, radianceMap: THREE.Texture;
+ 
+ let gui;
+ 
+@@ -101,7 +101,8 @@ function initGui() {
+             scene.traverse(function (child) {
+                 const tint = val ? 0xccccff : 0xffffff;
+ 
+-                if (child.isMesh) child.material.color.setHex(tint);
++                if ((child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).isMesh)
++                    (child as THREE.Mesh<THREE.BufferGeometry, THREE.MeshPhysicalMaterial>).material.color.setHex(tint);
+             });
+ 
+             render();
 diff --git a/examples-testing/examples/webgpu_hdr.ts b/examples-testing/examples/webgpu_hdr.ts
 index b96ba5f42..676326fed 100644
 --- a/examples-testing/examples/webgpu_hdr.ts
@@ -21182,6 +21198,19 @@ index aadde4dc6..c4babf4ae 100644
 +            mesh.material.map!.dispose();
              mesh.material.dispose();
          }
+ 
+diff --git a/examples-testing/examples/webgpu_texturegather.ts b/examples-testing/examples/webgpu_texturegather.ts
+index 0487eda9e..9e806afa5 100644
+--- a/examples-testing/examples/webgpu_texturegather.ts
++++ b/examples-testing/examples/webgpu_texturegather.ts
+@@ -93,7 +93,7 @@ async function init(forceWebGL = false) {
+     renderer.setRenderTarget(null);
+ 
+     colorNode.value = rt.texture;
+-    depthNode.value = rt.depthTexture;
++    depthNode.value = rt.depthTexture!;
+ 
+     //
  
 diff --git a/examples-testing/examples/webgpu_textures_2d-array.ts b/examples-testing/examples/webgpu_textures_2d-array.ts
 index a1a354ff7..940a35c89 100644
