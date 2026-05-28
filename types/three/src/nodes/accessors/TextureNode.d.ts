@@ -2,7 +2,7 @@ import { Texture } from "../../textures/Texture.js";
 import Node from "../core/Node.js";
 import UniformNode from "../core/UniformNode.js";
 
-interface TextureNodeInterface<TNodeType> {
+interface TextureNodeInterface {
     readonly isTextureNode: true;
 
     uvNode: Node<"vec2"> | Node<"vec3"> | null;
@@ -38,13 +38,15 @@ interface TextureNodeInterface<TNodeType> {
 
     getBase(): TextureNode;
 
-    compare(compareNode: Node): this;
+    compare(compareNode: Node<"float"> | number): this;
 
     grad(gradeNodeX: Node, gradeNodeY: Node): this;
 
     gather(gatherNode?: Node<"int"> | number): this;
 
     depth(depthNode: Node): this;
+
+    offset(offsetNode: Node<"ivec2">): this;
 
     clone(): this;
 }
@@ -58,7 +60,7 @@ declare const TextureNode: {
     ): TextureNode;
 };
 
-type TextureNode<TNodeType = "vec4"> = TextureNodeInterface<TNodeType> & UniformNode<TNodeType, Texture>;
+type TextureNode<TNodeType = "vec4"> = TextureNodeInterface & UniformNode<TNodeType, Texture>;
 
 export default TextureNode;
 
