@@ -101,7 +101,7 @@ const files = [
     'src/math/interpolants/CubicInterpolant',
     'src/math/interpolants/DiscreteInterpolant',
     'src/math/interpolants/LinearInterpolant',
-    'src/math/interpolants/QuaternionInterpolant',
+    'src/math/interpolants/QuaternionLinearInterpolant',
     'src/math/Interpolant',
     'src/nodes/accessors/BufferAttributeNode',
     'src/nodes/core/constants',
