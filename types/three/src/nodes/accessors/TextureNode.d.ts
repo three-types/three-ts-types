@@ -24,27 +24,27 @@ interface TextureNodeInterface<TNodeType> {
 
     getSampler(): boolean;
 
-    sample(uvNode: Node): Node<TNodeType>;
+    sample(uvNode: Node): this;
 
-    load(uvNode: Node): Node<TNodeType>;
+    load(uvNode: Node): this;
 
-    blur(amountNode: Node): Node;
+    blur(amountNode: Node): this;
 
-    level(levelNode: Node): Node;
+    level(levelNode: Node): this;
 
     size(levelNode: Node): Node;
 
-    bias(biasNode: Node): Node;
+    bias(biasNode: Node): this;
 
     getBase(): TextureNode;
 
-    compare(compareNode: Node): Node;
+    compare(compareNode: Node): this;
 
-    grad(gradeNodeX: Node, gradeNodeY: Node): TextureNode;
+    grad(gradeNodeX: Node, gradeNodeY: Node): this;
 
-    gather(gatherNode?: Node<"int"> | number): TextureNode;
+    gather(gatherNode?: Node<"int"> | number): this;
 
-    depth(depthNode: Node): TextureNode;
+    depth(depthNode: Node): this;
 
     clone(): this;
 }
