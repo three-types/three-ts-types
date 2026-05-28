@@ -11,6 +11,7 @@ interface TextureNodeInterface<TNodeType> {
     compareNode: Node | null;
     depthNode: Node | null;
     gradNode: Node | null;
+    gatherNode: Node<"int"> | null;
 
     sampler: boolean;
     updateMatrix: boolean;
@@ -40,6 +41,8 @@ interface TextureNodeInterface<TNodeType> {
     compare(compareNode: Node): Node;
 
     grad(gradeNodeX: Node, gradeNodeY: Node): TextureNode;
+
+    gather(gatherNode?: Node<"int"> | number): TextureNode;
 
     depth(depthNode: Node): TextureNode;
 
