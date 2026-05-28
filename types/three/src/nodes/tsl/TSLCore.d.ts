@@ -1745,6 +1745,8 @@ export function nodeProxyIntent<T, S extends GetPossibleScopes<T>>(
     factor: unknown,
 ): (...params: ProxiedTuple<RemoveHeadAndTail<GetConstructorsByScope<T, S>>>) => ConstructedNode<T>;
 
+export const nodeProxyConstructor: unknown;
+
 interface FullLayout {
     name: string;
     type: string;
