@@ -1,4 +1,4 @@
-import { TypedArray } from "../core/BufferAttribute.js";
+import { TypedArray } from "../../core/BufferAttribute.js";
 import { Interpolant } from "../Interpolant.js";
 
 /**

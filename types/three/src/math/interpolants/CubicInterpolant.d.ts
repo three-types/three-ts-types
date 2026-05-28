@@ -1,5 +1,5 @@
-import { InterpolationEndingModes } from "../constants.js";
-import { TypedArray } from "../core/BufferAttribute.js";
+import { InterpolationEndingModes } from "../../constants.js";
+import { TypedArray } from "../../core/BufferAttribute.js";
 import { Interpolant } from "../Interpolant.js";
 
 export interface CubicInterpolantSettings {
