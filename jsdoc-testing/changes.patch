@@ -208,7 +208,7 @@ index 3fc0b16d1..1257d8f69 100644
 +
 +export default ClusteredLightsNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
-index 113ff7df3..b99932c68 100644
+index 113ff7df3..2b610bc4c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 @@ -1,3 +1,5 @@
@@ -222,7 +222,7 @@ index 113ff7df3..b99932c68 100644
   * @param {Function} onFallback - A function that installs the new renderer in the app.
   */
 -export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: Function, onFallback?: Function): void;
-+export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void>): void;
++export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void): void;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 index 7489bf508..7849540e6 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
@@ -15019,14 +15019,3 @@ index 91ed09ab6..83c0f4b25 100644
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Euler } from '../math/Euler.js';
-diff --git a/types/three/examples/jsm/webxr/WebGLXRFallback.d.ts b/types/three/examples/jsm/webxr/WebGLXRFallback.d.ts
-index 80a1b094b..1c7c067d9 100644
---- a/types/three/examples/jsm/webxr/WebGLXRFallback.d.ts
-+++ b/types/three/examples/jsm/webxr/WebGLXRFallback.d.ts
-@@ -10,5 +10,5 @@ import { WebGPURenderer } from "three/webgpu";
- export function setupWebGLXRFallback(
-     renderer: WebGPURenderer,
-     createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer,
--    onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void>,
-+    onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void,
- ): void;
