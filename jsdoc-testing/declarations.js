@@ -6,6 +6,7 @@ const files = [
     'examples/jsm/csm/CSMFrustum',
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
+    'examples/jsm/webxr/WebGLXRFallback',
     'src/animation/tracks/BooleanKeyframeTrack',
     'src/animation/tracks/ColorKeyframeTrack',
     'src/animation/tracks/NumberKeyframeTrack',
