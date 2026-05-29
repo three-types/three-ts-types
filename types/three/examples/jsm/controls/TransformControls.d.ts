@@ -41,6 +41,8 @@ export interface TransformControlsEventMap {
     "showXY-changed": { value: unknown };
     "showYZ-changed": { value: unknown };
     "showXZ-changed": { value: unknown };
+    "showXYZE-changed": { value: unknown };
+    "showE-changed": { value: unknown };
     "minX-changed": { value: unknown };
     "maxX-changed": { value: unknown };
     "minY-changed": { value: unknown };
@@ -162,6 +164,24 @@ declare class TransformControls extends Controls<TransformControlsEventMap> {
      * @default true
      */
     showXZ: boolean;
+
+    /**
+     * Whether the xyze rotation helper should be visible or not.
+     *
+     * @name TransformControls#showXYZE
+     * @type {boolean}
+     * @default true
+     */
+    showXYZE: boolean;
+
+    /**
+     * Whether the e rotation helper should be visible or not.
+     *
+     * @name TransformControls#showE
+     * @type {boolean}
+     * @default true
+     */
+    showE: boolean;
 
     /**
      * The minimum allowed X position during translation. Default is `-Infinity`.
