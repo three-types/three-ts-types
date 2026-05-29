@@ -22789,10 +22789,10 @@ index 88a9e5f60..7d8c8b731 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index 274f0a2cd..203eefd1e 100644
+index 274f0a2cd..57bf41a4e 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
-@@ -5,19 +5,23 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
+@@ -5,19 +5,27 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
  import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
  import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
  
@@ -22803,7 +22803,12 @@ index 274f0a2cd..203eefd1e 100644
  const timer = new THREE.Timer();
  timer.connect(document);
  
- const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
+-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
++const rendererParameters: THREE.WebGPURendererParameters = {
++    antialias: true,
++    outputBufferType: THREE.UnsignedByteType,
++    multiview: true,
++};
  const controllerModelFactory = new XRControllerModelFactory();
  
 -let container;
@@ -22821,7 +22826,16 @@ index 274f0a2cd..203eefd1e 100644
  
  init();
  
-@@ -98,7 +102,7 @@ function createRenderer(forceWebGL = false) {
+@@ -85,7 +93,7 @@ function init() {
+ }
+ 
+ function createRenderer(forceWebGL = false) {
+-    const parameters = { ...rendererParameters };
++    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
+ 
+     if (forceWebGL === true) parameters.forceWebGL = true;
+ 
+@@ -98,7 +106,7 @@ function createRenderer(forceWebGL = false) {
      return renderer;
  }
  
@@ -22830,7 +22844,7 @@ index 274f0a2cd..203eefd1e 100644
      if (controller !== undefined) scene.remove(controller);
      if (controllerGrip !== undefined) scene.remove(controllerGrip);
  
-@@ -117,14 +121,14 @@ function setupControllers() {
+@@ -117,14 +125,14 @@ function setupControllers() {
      controller = renderer.xr.getController(0);
      controller.addEventListener('selectstart', onSelectStart);
      controller.addEventListener('selectend', onSelectEnd);
@@ -22848,7 +22862,7 @@ index 274f0a2cd..203eefd1e 100644
          this.remove(this.children[0]);
      });
      scene.add(controller);
-@@ -134,15 +138,15 @@ function setupControllers() {
+@@ -134,15 +142,15 @@ function setupControllers() {
      scene.add(controllerGrip);
  }
  
@@ -22867,7 +22881,7 @@ index 274f0a2cd..203eefd1e 100644
      let geometry, material;
  
      switch (data.targetRayMode) {
-@@ -198,7 +202,7 @@ function animate() {
+@@ -198,7 +206,7 @@ function animate() {
          if (INTERSECTED != intersects[0].object) {
              if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
  
@@ -23159,10 +23173,10 @@ index 9209ea5b6..80dcdc357 100644
      //
      const delta = timer.getDelta() * 0.8;
 diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-index 0661524df..ff26a52ed 100644
+index 0661524df..808695fc5 100644
 --- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
 +++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-@@ -10,8 +10,8 @@ import {
+@@ -10,10 +10,14 @@ import {
  import { VRButton } from 'three/addons/webxr/VRButton.js';
  import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
  
@@ -23171,9 +23185,25 @@ index 0661524df..ff26a52ed 100644
 +let mesh: THREE.Mesh, material: THREE.Material, geometry: THREE.BufferGeometry;
 +let renderer: THREE.WebGPURenderer;
  
- const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
+-const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
++const rendererParameters: THREE.WebGPURendererParameters = {
++    antialias: true,
++    outputBufferType: THREE.UnsignedByteType,
++    multiview: false,
++};
  
-@@ -38,7 +38,7 @@ function createRenderer(forceWebGL = false) {
+ renderer = createRenderer();
+ setRenderer(renderer);
+@@ -24,7 +28,7 @@ document.body.appendChild(VRButton.createButton(renderer));
+ //
+ 
+ function createRenderer(forceWebGL = false) {
+-    const parameters = { ...rendererParameters };
++    const parameters: THREE.WebGPURendererParameters = { ...rendererParameters };
+ 
+     if (forceWebGL === true) parameters.forceWebGL = true;
+ 
+@@ -38,7 +42,7 @@ function createRenderer(forceWebGL = false) {
      return renderer;
  }
  
@@ -23182,7 +23212,7 @@ index 0661524df..ff26a52ed 100644
      if (oldRenderer === null) {
          document.body.appendChild(newRenderer.domElement);
      } else {
-@@ -113,7 +113,7 @@ const curve = (function () {
+@@ -113,7 +117,7 @@ const curve = (function () {
      const vector2 = new THREE.Vector3();
  
      return {
@@ -23191,7 +23221,7 @@ index 0661524df..ff26a52ed 100644
              t = t * PI2;
  
              const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
-@@ -123,7 +123,7 @@ const curve = (function () {
+@@ -123,7 +127,7 @@ const curve = (function () {
              return vector.set(x, y, z).multiplyScalar(2);
          },
  
@@ -23200,7 +23230,7 @@ index 0661524df..ff26a52ed 100644
              const delta = 0.0001;
              const t1 = Math.max(0, t - delta);
              const t2 = Math.min(1, t + delta);
-@@ -156,7 +156,7 @@ mesh = new THREE.Mesh(geometry, material);
+@@ -156,7 +160,7 @@ mesh = new THREE.Mesh(geometry, material);
  mesh.position.y = 0.1;
  scene.add(mesh);
  
