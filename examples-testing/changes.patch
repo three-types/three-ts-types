@@ -6868,7 +6868,7 @@ index 3e3ee3041..0c098cd5b 100644
              object.rotation.y = 0.25 * time;
          }
 diff --git a/examples-testing/examples/webgl_lines_fat.ts b/examples-testing/examples/webgl_lines_fat.ts
-index b5b66bbb1..b4bfb555c 100644
+index 73b29ad70..28fb75f04 100644
 --- a/examples-testing/examples/webgl_lines_fat.ts
 +++ b/examples-testing/examples/webgl_lines_fat.ts
 @@ -7,14 +7,19 @@ import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
@@ -16643,7 +16643,7 @@ index e575ee344..d9cc9fb54 100644
  
      renderPipeline.outputNode = compose.add(debugBlockIndexes.mul(tileInfluence));
 diff --git a/examples-testing/examples/webgpu_lines_fat.ts b/examples-testing/examples/webgpu_lines_fat.ts
-index c5811bdc2..ae21fb89d 100644
+index 96b8d414a..f817bdae4 100644
 --- a/examples-testing/examples/webgpu_lines_fat.ts
 +++ b/examples-testing/examples/webgpu_lines_fat.ts
 @@ -9,15 +9,23 @@ import { Line2 } from 'three/addons/lines/webgpu/Line2.js';
@@ -22789,12 +22789,12 @@ index 88a9e5f60..7d8c8b731 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index d164eb843..71b4dcc37 100644
+index 274f0a2cd..203eefd1e 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
-@@ -4,16 +4,20 @@ import { BoxLineGeometry } from 'three/addons/geometries/BoxLineGeometry.js';
- import { XRButton } from 'three/addons/webxr/XRButton.js';
+@@ -5,19 +5,23 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
  import { XRControllerModelFactory } from 'three/addons/webxr/XRControllerModelFactory.js';
+ import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
  
 +type CubeMesh = THREE.Mesh<THREE.BufferGeometry, THREE.MeshLambertMaterial> & {
 +    currentHex: number;
@@ -22802,6 +22802,9 @@ index d164eb843..71b4dcc37 100644
 +
  const timer = new THREE.Timer();
  timer.connect(document);
+ 
+ const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: true };
+ const controllerModelFactory = new XRControllerModelFactory();
  
 -let container;
 -let camera, scene, raycaster, renderer;
@@ -22818,20 +22821,16 @@ index d164eb843..71b4dcc37 100644
  
  init();
  
-@@ -81,25 +85,25 @@ function init() {
+@@ -98,7 +102,7 @@ function createRenderer(forceWebGL = false) {
+     return renderer;
+ }
  
-     //
+-function setRenderer(newRenderer, oldRenderer = null) {
++function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
+     if (controller !== undefined) scene.remove(controller);
+     if (controllerGrip !== undefined) scene.remove(controllerGrip);
  
--    function onSelectStart() {
-+    function onSelectStart(this: THREE.XRTargetRaySpace) {
-         this.userData.isSelecting = true;
-     }
- 
--    function onSelectEnd() {
-+    function onSelectEnd(this: THREE.XRTargetRaySpace) {
-         this.userData.isSelecting = false;
-     }
- 
+@@ -117,14 +121,14 @@ function setupControllers() {
      controller = renderer.xr.getController(0);
      controller.addEventListener('selectstart', onSelectStart);
      controller.addEventListener('selectend', onSelectEnd);
@@ -22849,8 +22848,18 @@ index d164eb843..71b4dcc37 100644
          this.remove(this.children[0]);
      });
      scene.add(controller);
-@@ -117,7 +121,7 @@ function init() {
-     document.body.appendChild(XRButton.createButton(renderer));
+@@ -134,15 +138,15 @@ function setupControllers() {
+     scene.add(controllerGrip);
+ }
+ 
+-function onSelectStart() {
++function onSelectStart(this: THREE.XRTargetRaySpace) {
+     this.userData.isSelecting = true;
+ }
+ 
+-function onSelectEnd() {
++function onSelectEnd(this: THREE.XRTargetRaySpace) {
+     this.userData.isSelecting = false;
  }
  
 -function buildController(data) {
@@ -22858,7 +22867,7 @@ index d164eb843..71b4dcc37 100644
      let geometry, material;
  
      switch (data.targetRayMode) {
-@@ -173,7 +177,7 @@ function animate() {
+@@ -198,7 +202,7 @@ function animate() {
          if (INTERSECTED != intersects[0].object) {
              if (INTERSECTED) INTERSECTED.material.emissive.setHex(INTERSECTED.currentHex);
  
@@ -22868,7 +22877,7 @@ index d164eb843..71b4dcc37 100644
              INTERSECTED.material.emissive.setHex(0xff0000);
          }
 diff --git a/examples-testing/examples/webgpu_xr_native_layers.ts b/examples-testing/examples/webgpu_xr_native_layers.ts
-index cd7f3fb2d..70371da60 100644
+index 9209ea5b6..80dcdc357 100644
 --- a/examples-testing/examples/webgpu_xr_native_layers.ts
 +++ b/examples-testing/examples/webgpu_xr_native_layers.ts
 @@ -15,11 +15,11 @@ import {
@@ -23150,19 +23159,30 @@ index cd7f3fb2d..70371da60 100644
      //
      const delta = timer.getDelta() * 0.8;
 diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-index ac04ac431..6551f9dea 100644
+index 0661524df..ff26a52ed 100644
 --- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
 +++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-@@ -9,7 +9,7 @@ import {
- } from 'three/addons/misc/RollerCoaster.js';
+@@ -10,8 +10,8 @@ import {
  import { VRButton } from 'three/addons/webxr/VRButton.js';
+ import { setupWebGLXRFallback } from 'three/addons/webxr/WebGLXRFallback.js';
  
 -let mesh, material, geometry;
+-let renderer;
 +let mesh: THREE.Mesh, material: THREE.Material, geometry: THREE.BufferGeometry;
++let renderer: THREE.WebGPURenderer;
  
- const renderer = new THREE.WebGPURenderer({
-     antialias: true,
-@@ -92,7 +92,7 @@ const curve = (function () {
+ const rendererParameters = { antialias: true, outputBufferType: THREE.UnsignedByteType, multiview: false };
+ 
+@@ -38,7 +38,7 @@ function createRenderer(forceWebGL = false) {
+     return renderer;
+ }
+ 
+-function setRenderer(newRenderer, oldRenderer = null) {
++function setRenderer(newRenderer: THREE.WebGPURenderer, oldRenderer: THREE.WebGPURenderer | null = null) {
+     if (oldRenderer === null) {
+         document.body.appendChild(newRenderer.domElement);
+     } else {
+@@ -113,7 +113,7 @@ const curve = (function () {
      const vector2 = new THREE.Vector3();
  
      return {
@@ -23171,7 +23191,7 @@ index ac04ac431..6551f9dea 100644
              t = t * PI2;
  
              const x = Math.sin(t * 3) * Math.cos(t * 4) * 50;
-@@ -102,7 +102,7 @@ const curve = (function () {
+@@ -123,7 +123,7 @@ const curve = (function () {
              return vector.set(x, y, z).multiplyScalar(2);
          },
  
@@ -23180,7 +23200,7 @@ index ac04ac431..6551f9dea 100644
              const delta = 0.0001;
              const t1 = Math.max(0, t - delta);
              const t2 = Math.min(1, t + delta);
-@@ -135,7 +135,7 @@ mesh = new THREE.Mesh(geometry, material);
+@@ -156,7 +156,7 @@ mesh = new THREE.Mesh(geometry, material);
  mesh.position.y = 0.1;
  scene.add(mesh);
  
