@@ -10,5 +10,5 @@ import { WebGPURenderer } from "three/webgpu";
 export function setupWebGLXRFallback(
     renderer: WebGPURenderer,
     createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer,
-    onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void,
+    onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void>,
 ): void;
