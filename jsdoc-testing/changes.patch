@@ -207,6 +207,22 @@ index 3fc0b16d1..1257d8f69 100644
 +export const clusteredLights: (maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number) => ClusteredLightsNode;
 +
 +export default ClusteredLightsNode;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
+index 113ff7df3..b99932c68 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
+@@ -1,3 +1,5 @@
++import { WebGPURenderer } from 'three/webgpu';
++
+ /**
+  * Sets up a construction-time WebGL fallback for WebGPU XR examples.
+  *
+@@ -5,4 +7,4 @@
+  * @param {Function} createFallbackRenderer - A function that returns a new renderer with a WebGL backend.
+  * @param {Function} onFallback - A function that installs the new renderer in the app.
+  */
+-export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: Function, onFallback?: Function): void;
++export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void>): void;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 index 7489bf508..7849540e6 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
