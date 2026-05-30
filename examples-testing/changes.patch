@@ -6463,7 +6463,7 @@ index 2b6cecff7..7d792e16b 100644
  
          if (probesLeft) {
 diff --git a/examples-testing/examples/webgl_lightprobes_sponza.ts b/examples-testing/examples/webgl_lightprobes_sponza.ts
-index c1f21a7a8..a2201f118 100644
+index d89e303ee..a5b61e065 100644
 --- a/examples-testing/examples/webgl_lightprobes_sponza.ts
 +++ b/examples-testing/examples/webgl_lightprobes_sponza.ts
 @@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
@@ -6475,7 +6475,7 @@ index c1f21a7a8..a2201f118 100644
 -    probesHelper = null;
 -let modelSize = null;
 -let dirLight = null,
--    sky = null,
+-    sky = null;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
@@ -6485,11 +6485,11 @@ index c1f21a7a8..a2201f118 100644
 +    probesHelper: LightProbeGridHelper | null = null;
 +let modelSize: THREE.Vector3 | null = null;
 +let dirLight: THREE.DirectionalLight | null = null,
-+    sky: Sky | null = null,
-     sun = new THREE.Vector3();
++    sky: Sky | null = null;
  
- const _box = new THREE.Box3();
-@@ -57,7 +61,7 @@ async function init() {
+ const sun = new THREE.Vector3();
+ 
+@@ -58,7 +62,7 @@ async function init() {
      controls.movementSpeed = 2.0;
      controls.lookSpeed = 0.16;
  
@@ -6498,7 +6498,7 @@ index c1f21a7a8..a2201f118 100644
  
      const manager = new THREE.LoadingManager();
      manager.onProgress = function (url, loaded, total) {
-@@ -71,14 +75,14 @@ async function init() {
+@@ -73,14 +77,14 @@ async function init() {
      const modelURL = await getSponzaModelURL();
      const gltf = await loader.loadAsync(modelURL);
      const model = gltf.scene;
@@ -6519,7 +6519,7 @@ index c1f21a7a8..a2201f118 100644
          }
      });
  
-@@ -94,7 +98,7 @@ async function init() {
+@@ -96,7 +100,7 @@ async function init() {
      const targetY = modelCenter.y + modelSize.y * 0.2;
      const lightBaseDistance = Math.max(modelSize.x, modelSize.z);
      const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
@@ -6528,7 +6528,7 @@ index c1f21a7a8..a2201f118 100644
      let isBaking = false;
      let bakeQueued = false;
  
-@@ -138,18 +142,18 @@ async function init() {
+@@ -141,18 +145,18 @@ async function init() {
          const horizontal = Math.cos(elevation) * radius;
          const vertical = Math.sin(elevation) * radius;
  
@@ -6551,8 +6551,8 @@ index c1f21a7a8..a2201f118 100644
      }
  
      function scheduleRebake() {
-@@ -231,7 +235,7 @@ async function init() {
-     gui.add(params, 'lightIntensity', 0, 50, 0.1)
+@@ -238,7 +242,7 @@ async function init() {
+     gui.add(params, 'lightIntensity', 0, 100, 0.1)
          .name('Light Intensity')
          .onChange(value => {
 -            dirLight.intensity = value;
@@ -6560,7 +6560,7 @@ index c1f21a7a8..a2201f118 100644
              scheduleRebake();
          });
      gui.add(params, 'shadows')
-@@ -252,7 +256,7 @@ async function init() {
+@@ -264,7 +268,7 @@ async function init() {
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
@@ -6569,7 +6569,7 @@ index c1f21a7a8..a2201f118 100644
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
-@@ -284,9 +288,17 @@ async function init() {
+@@ -296,9 +300,17 @@ async function init() {
      window.addEventListener('resize', onWindowResize);
  }
  
@@ -6588,7 +6588,7 @@ index c1f21a7a8..a2201f118 100644
      const sponzaInfo = models.find(model => model.name === 'Sponza');
  
      if (!sponzaInfo) {
-@@ -305,7 +317,7 @@ async function getSponzaModelURL() {
+@@ -317,7 +329,7 @@ async function getSponzaModelURL() {
      return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
  }
  
@@ -6597,7 +6597,7 @@ index c1f21a7a8..a2201f118 100644
      if (!renderer || !dirLight) return;
  
      renderer.shadowMap.enabled = enabled;
-@@ -319,7 +331,7 @@ function onWindowResize() {
+@@ -331,7 +343,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
