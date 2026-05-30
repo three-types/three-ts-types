@@ -207,6 +207,22 @@ index 3fc0b16d1..1257d8f69 100644
 +export const clusteredLights: (maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number) => ClusteredLightsNode;
 +
 +export default ClusteredLightsNode;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
+index e49e7c2b6..0135575bb 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
+@@ -1,3 +1,5 @@
++import { Node } from 'three/webgpu';
++
+ /**
+  * @module GroundedSkybox
+  * @three_import import { getGroundProjectedNormal } from 'three/addons/tsl/utils/GroundedSkybox.js';
+@@ -12,4 +14,4 @@
+  * @param {Node<float>} heightNode - The height is how far the camera that took the photo was above the ground. A larger value will magnify the downward part of the image.
+  * @return {Node<vec3>} A direction vector for sampling the environment cube map.
+  */
+-export const getGroundProjectedNormal: () => void;
++export const getGroundProjectedNormal: (radiusNode: Node<'float'>, heightNode: Node<'float'>) => Node<'vec3'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 index 113ff7df3..2b610bc4c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
@@ -12202,19 +12218,27 @@ index cf3261af0..0ded1192b 100644
  export const BlendColorFactor: 211;
  export const OneMinusBlendColorFactor: 212;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
-index e6cad71cf..795ef5ac6 100644
+index e6cad71cf..a475ea915 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
-@@ -1,4 +1,7 @@
+@@ -1,18 +1,22 @@
 -export default CubeRenderTarget;
 +import { RenderTarget, RenderTargetOptions } from '../../core/RenderTarget.js';
 +import Renderer from './Renderer.js';
 +import { Texture } from '../../textures/Texture.js';
++import { CubeTexture } from '../../textures/CubeTexture.js';
 +
  /**
   * This class represents a cube render target. It is a special version
   * of `WebGLCubeRenderTarget` which is compatible with `WebGPURenderer`.
-@@ -12,7 +15,7 @@ declare class CubeRenderTarget extends RenderTarget {
+  *
+  * @augments RenderTarget
+  */
+-declare class CubeRenderTarget extends RenderTarget {
++declare class CubeRenderTarget extends RenderTarget<CubeTexture> {
+     /**
+      * Constructs a new cube render target.
+      *
       * @param {number} [size=1] - The size of the render target.
       * @param {RenderTarget~Options} [options] - The configuration object.
       */
@@ -12223,7 +12247,7 @@ index e6cad71cf..795ef5ac6 100644
      /**
       * This flag can be used for type testing.
       *
-@@ -28,7 +31,7 @@ declare class CubeRenderTarget extends RenderTarget {
+@@ -28,7 +32,7 @@ declare class CubeRenderTarget extends RenderTarget {
       * @param {Texture} texture - The equirectangular texture.
       * @return {CubeRenderTarget} A reference to this cube render target.
       */
@@ -12232,7 +12256,7 @@ index e6cad71cf..795ef5ac6 100644
      /**
       * Clears this cube render target.
       *
-@@ -39,4 +42,5 @@ declare class CubeRenderTarget extends RenderTarget {
+@@ -39,4 +43,5 @@ declare class CubeRenderTarget extends RenderTarget {
       */
      clear(renderer: Renderer, color?: boolean, depth?: boolean, stencil?: boolean): void;
  }
