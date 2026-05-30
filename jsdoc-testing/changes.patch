@@ -13659,10 +13659,10 @@ index 82eedbdd9..f34d38405 100644
 +
 +export default TimestampQueryPool;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-index e7d43a132..cf8741d5d 100644
+index 8581c09f6..fd0d845ee 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-@@ -1,4 +1,28 @@
+@@ -1,11 +1,37 @@
 -export default XRManager;
 +import { EventDispatcher } from '../../core/EventDispatcher.js';
 +import { ArrayCamera } from '../../cameras/ArrayCamera.js';
@@ -13689,10 +13689,11 @@ index e7d43a132..cf8741d5d 100644
 +    stencil?: boolean | undefined;
 +}
 +
++interface XRGPUBinding {}
++
  /**
   * The XR manager is built on top of the WebXR Device API to
-  * manage XR sessions with `WebGPURenderer`.
-@@ -7,7 +31,7 @@ export default XRManager;
+  * manage XR sessions with renderer backends.
   *
   * @augments EventDispatcher
   */
@@ -13701,7 +13702,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Constructs a new XR manager.
       *
-@@ -37,291 +61,6 @@ declare class XRManager extends EventDispatcher {
+@@ -35,308 +61,6 @@ declare class XRManager extends EventDispatcher {
       * @default true
       */
      cameraAutoUpdate: boolean;
@@ -13804,6 +13805,7 @@ index e7d43a132..cf8741d5d 100644
 -     * @readonly
 -     */
 -    private readonly _supportsGlBinding;
+-    _supportsWebGPUBinding: boolean;
 -    /**
 -     * Helper function to create native WebXR Layer.
 -     *
@@ -13843,6 +13845,14 @@ index e7d43a132..cf8741d5d 100644
 -     * @default null
 -     */
 -    private _currentPixelRatio;
+-    /**
+-     * The renderer's sample count before XR temporarily overrides it.
+-     *
+-     * @private
+-     * @type {?number}
+-     * @default null
+-     */
+-    private _currentSamples;
 -    /**
 -     * The current size of the renderer's canvas
 -     * in logical pixel unit.
@@ -13946,6 +13956,14 @@ index e7d43a132..cf8741d5d 100644
 -     */
 -    private _glBinding;
 -    /**
+-     * A reference to the current XR WebGPU binding.
+-     *
+-     * @private
+-     * @type {?XRGPUBinding}
+-     * @default null
+-     */
+-    private _webgpuBinding;
+-    /**
 -     * A reference to the current XR projection layer.
 -     *
 -     * @private
@@ -13993,7 +14011,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in target ray space. The requested controller is defined
-@@ -330,7 +69,7 @@ declare class XRManager extends EventDispatcher {
+@@ -345,7 +69,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -14002,7 +14020,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in grip space. The requested controller is defined
-@@ -339,7 +78,7 @@ declare class XRManager extends EventDispatcher {
+@@ -354,7 +78,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -14011,7 +14029,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Returns an instance of `THREE.Group` that represents the transformation
       * of a XR controller in hand space. The requested controller is defined
-@@ -348,7 +87,7 @@ declare class XRManager extends EventDispatcher {
+@@ -363,7 +87,7 @@ declare class XRManager extends EventDispatcher {
       * @param {number} index - The index of the XR controller.
       * @return {Group} A group that represents the controller's transformation.
       */
@@ -14020,7 +14038,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Returns the foveation value.
       *
-@@ -413,7 +152,7 @@ declare class XRManager extends EventDispatcher {
+@@ -428,7 +152,7 @@ declare class XRManager extends EventDispatcher {
       *
       * @return {'opaque'|'additive'|'alpha-blend'|undefined} The environment blend mode. Returns `undefined` when used outside of a XR session.
       */
@@ -14029,7 +14047,50 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Returns the current base layer.
       *
-@@ -469,7 +208,7 @@ declare class XRManager extends EventDispatcher {
+@@ -466,42 +190,6 @@ declare class XRManager extends EventDispatcher {
+      * @return {?XRGPUBinding} The XR WebGPU binding. Returns `null` if one cannot be created.
+      */
+     getWebGPUBinding(): XRGPUBinding | null;
+-    /**
+-     * Returns whether the current XR session is using WebGPU.
+-     *
+-     * @private
+-     * @return {boolean} Whether the current session uses the WebGPU backend and the `webgpu` session feature.
+-     */
+-    private _isWebGPUSession;
+-    /**
+-     * Validates the current WebGPU XR session requirements.
+-     *
+-     * @private
+-     */
+-    private _validateWebGPUSession;
+-    /**
+-     * Initializes the WebGPU XR projection layer and render target.
+-     *
+-     * @private
+-     * @async
+-     * @param {XRSession} session - The XR session.
+-     * @return {Promise<void>}
+-     */
+-    private _initWebGPUSession;
+-    /**
+-     * Releases WebGPU XR resources associated with the current session.
+-     *
+-     * @private
+-     */
+-    private _disposeWebGPUSession;
+-    /**
+-     * Collects WebGPU XR sub-image data for the current frame.
+-     *
+-     * @private
+-     * @param {Array<XRView>} views - The XR views for the current pose.
+-     * @return {{colorTexture:?GPUTexture, viewDescriptors:Array<Object>, viewports:Array<XRViewport>}} The WebGPU XR view data.
+-     */
+-    private _getWebGPUViewData;
+     /**
+      * Returns the current XR frame.
+      *
+@@ -529,7 +217,7 @@ declare class XRManager extends EventDispatcher {
       * @param {Object} [attributes={}] - Allows to configure the layer's render target.
       * @return {Mesh} A mesh representing the quadratic XR layer. This mesh should be added to the XR scene.
       */
@@ -14038,7 +14099,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * This method can be used in XR applications to create a cylindrical layer that presents a separate
       * rendered scene.
-@@ -486,7 +225,7 @@ declare class XRManager extends EventDispatcher {
+@@ -546,7 +234,7 @@ declare class XRManager extends EventDispatcher {
       * @param {Object} [attributes={}] - Allows to configure the layer's render target.
       * @return {Mesh} A mesh representing the cylindrical XR layer. This mesh should be added to the XR scene.
       */
@@ -14047,7 +14108,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * Renders the XR layers that have been previously added to the scene.
       *
-@@ -509,7 +248,7 @@ declare class XRManager extends EventDispatcher {
+@@ -569,7 +257,7 @@ declare class XRManager extends EventDispatcher {
       * @param {XRSession} session - The XR session to set.
       * @return {Promise} A Promise that resolves when the session has been set.
       */
@@ -14056,7 +14117,7 @@ index e7d43a132..cf8741d5d 100644
      /**
       * This method is called by the renderer per frame and updates the XR camera
       * and it sub cameras based on the given camera. The given camera is the "user"
-@@ -518,18 +257,6 @@ declare class XRManager extends EventDispatcher {
+@@ -578,19 +266,6 @@ declare class XRManager extends EventDispatcher {
       * @param {PerspectiveCamera} camera - The camera.
       */
      updateCamera(camera: PerspectiveCamera): void;
@@ -14071,6 +14132,7 @@ index e7d43a132..cf8741d5d 100644
  }
 -import { EventDispatcher } from '../../core/EventDispatcher.js';
 -import { ArrayCamera } from '../../cameras/ArrayCamera.js';
+-import { RenderTarget } from '../../core/RenderTarget.js';
 -import { Vector3 } from '../../math/Vector3.js';
 -import { Quaternion } from '../../math/Quaternion.js';
 -import { Mesh } from '../../objects/Mesh.js';
