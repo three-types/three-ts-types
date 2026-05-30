@@ -12124,7 +12124,7 @@ index 9932067a0..5eb392d78 100644
 +
 +export default CanvasTarget;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
-index ab6124b41..afe768370 100644
+index db3046a90..9a5928cef 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
 @@ -1,4 +1,11 @@
@@ -12140,7 +12140,7 @@ index ab6124b41..afe768370 100644
  /**
   * Represents the state that is used to perform clipping via clipping planes.
   * There is a default clipping context for each render context. When the
-@@ -58,13 +65,13 @@ declare class ClippingContext {
+@@ -64,13 +71,13 @@ declare class ClippingContext {
       *
       * @type {Array<Vector4>}
       */
@@ -12156,16 +12156,7 @@ index ab6124b41..afe768370 100644
      /**
       * The version of the clipping context's parent context.
       *
-@@ -72,7 +79,7 @@ declare class ClippingContext {
-      * @readonly
-      */
-     readonly parentVersion: number | null;
--    viewMatrix: any;
-+    viewMatrix?: Matrix4;
-     /**
-      * Projects the given source clipping planes and writes the result into the
-      * destination array.
-@@ -81,7 +88,7 @@ declare class ClippingContext {
+@@ -86,7 +93,7 @@ declare class ClippingContext {
       * @param {Array<Vector4>} destination - The destination.
       * @param {number} offset - The offset.
       */
@@ -12174,13 +12165,14 @@ index ab6124b41..afe768370 100644
      /**
       * Updates the root clipping context of a scene.
       *
-@@ -109,8 +116,7 @@ declare class ClippingContext {
+@@ -114,9 +121,7 @@ declare class ClippingContext {
       * @type {number}
       * @readonly
       */
 -    readonly get unionClippingCount(): number;
 +    get unionClippingCount(): number;
  }
+-import { Matrix4 } from '../../math/Matrix4.js';
 -import { Matrix3 } from '../../math/Matrix3.js';
 -import { Vector4 } from '../../math/Vector4.js';
 -import { Plane } from '../../math/Plane.js';
