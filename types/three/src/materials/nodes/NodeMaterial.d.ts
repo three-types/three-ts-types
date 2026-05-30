@@ -22,14 +22,6 @@ export interface NodeMaterialNodeProperties {
      */
     lights: boolean;
     /**
-     * Whether this material uses hardware clipping or not.
-     * This property is managed by the engine and should not be
-     * modified by apps.
-     *
-     * @default false
-     */
-    hardwareClipping: boolean;
-    /**
      * Node materials which set their `lights` property to `true`
      * are affected by all lights of the scene. Sometimes selective
      * lighting is wanted which means only _some_ lights in the scene

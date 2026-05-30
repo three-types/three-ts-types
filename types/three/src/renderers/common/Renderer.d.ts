@@ -263,6 +263,15 @@ declare class Renderer {
      */
     onError: (errorMessage: string) => void;
     /**
+     * When an override material is in use, this property points to the current
+     * source material during the rendering of a render object.
+     *
+     * @private
+     * @type {?Material}
+     * @default null
+     */
+    private _currentSourceMaterial;
+    /**
      * Whether the renderer should render transparent render objects or not.
      *
      * @type {boolean}
