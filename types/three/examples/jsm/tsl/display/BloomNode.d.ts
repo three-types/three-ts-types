@@ -8,9 +8,17 @@ declare class BloomNode extends TempNode<"vec4"> {
 
     smoothWidth: UniformNode<"float", number>;
 
+    highPassFn: (
+        params: { input: Node; threshold: UniformNode<"float", number>; smoothWidth: UniformNode<"float", number> },
+    ) => void;
+
     constructor(inputNode: Node, strength?: number, radius?: number, threshold?: number);
 
     getTexture(): TextureNode;
+
+    setResolutionScale(resolutionScale: number): this;
+
+    getResolutionScale(): number;
 
     setSize(width: number, height: number): void;
 }
