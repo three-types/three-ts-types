@@ -9028,7 +9028,7 @@ index 1ffe1bd1b..85436d1fe 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 3c8a1d19f..9e98a4c70 100644
+index e5f84870d..137b25557 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,23 @@
@@ -9080,15 +9080,7 @@ index 3c8a1d19f..9e98a4c70 100644
       * @default false
       */
      lights: boolean;
-@@ -40,7 +26,6 @@ declare class NodeMaterial extends Material {
-      * This property is managed by the engine and should not be
-      * modified by apps.
-      *
--     * @type {boolean}
-      * @default false
-      */
-     hardwareClipping: boolean;
-@@ -57,7 +42,6 @@ declare class NodeMaterial extends Material {
+@@ -48,7 +34,6 @@ declare class NodeMaterial extends Material {
       * material.lightsNode = customLightsNode;
       * ```
       *
@@ -9096,7 +9088,7 @@ index 3c8a1d19f..9e98a4c70 100644
       * @default null
       */
      lightsNode: LightsNode | null;
-@@ -71,10 +55,9 @@ declare class NodeMaterial extends Material {
+@@ -62,10 +47,9 @@ declare class NodeMaterial extends Material {
       * material.envNode = pmremTexture( renderTarget.texture );
       * ```
       *
@@ -9108,7 +9100,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The lighting of node materials might be influenced by ambient occlusion.
       * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
-@@ -84,10 +67,9 @@ declare class NodeMaterial extends Material {
+@@ -75,10 +59,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the diffuse color but modify the existing
       * values instead, use {@link materialAO}.
       *
@@ -9120,7 +9112,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The diffuse color of node materials is by default inferred from the
       * `color` and `map` properties. This node property allows to overwrite the default
-@@ -104,10 +86,9 @@ declare class NodeMaterial extends Material {
+@@ -95,10 +78,9 @@ declare class NodeMaterial extends Material {
       * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
       * ```
       *
@@ -9132,7 +9124,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
       * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
-@@ -116,10 +97,9 @@ declare class NodeMaterial extends Material {
+@@ -107,10 +89,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the normals but modify the existing values instead,
       * use {@link materialNormal}.
       *
@@ -9144,7 +9136,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The opacity of node materials is by default inferred from the `opacity`
       * and `alphaMap` properties. This node property allows to overwrite the default
-@@ -128,10 +108,9 @@ declare class NodeMaterial extends Material {
+@@ -119,10 +100,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the opacity but modify the existing
       * value instead, use {@link materialOpacity}.
       *
@@ -9156,7 +9148,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * This node can be used to implement a variety of filter-like effects. The idea is
       * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
-@@ -148,17 +127,15 @@ declare class NodeMaterial extends Material {
+@@ -139,17 +119,15 @@ declare class NodeMaterial extends Material {
       *
       * Backdrop computations are part of the lighting so only lit materials can use this property.
       *
@@ -9176,7 +9168,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The alpha test of node materials is by default inferred from the `alphaTest`
       * property. This node property allows to overwrite the default and define the
-@@ -167,24 +144,21 @@ declare class NodeMaterial extends Material {
+@@ -158,24 +136,21 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the alpha test but modify the existing
       * value instead, use {@link materialAlphaTest}.
       *
@@ -9204,7 +9196,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * The local vertex positions are computed based on multiple factors like the
       * attribute data, morphing or skinning. This node property allows to overwrite
-@@ -197,10 +171,9 @@ declare class NodeMaterial extends Material {
+@@ -188,10 +163,9 @@ declare class NodeMaterial extends Material {
       * material.positionNode = positionLocal.add( displace );
       * ```
       *
@@ -9216,7 +9208,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * This node property is intended for logic which modifies geometry data once or per animation step.
       * Apps usually place such logic randomly in initialization routines or in the animation loop.
-@@ -212,34 +185,30 @@ declare class NodeMaterial extends Material {
+@@ -203,34 +177,30 @@ declare class NodeMaterial extends Material {
       * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
       * eventually assigned to `geometryNode`.
       *
@@ -9255,7 +9247,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * This node can be used to influence how an object using this node material
       * receive shadows.
-@@ -252,10 +221,9 @@ declare class NodeMaterial extends Material {
+@@ -243,10 +213,9 @@ declare class NodeMaterial extends Material {
       * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
       * } );
       *
@@ -9267,7 +9259,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * This node can be used to influence how an object using this node material
       * casts shadows. To apply a color to shadows, you can simply do:
-@@ -275,26 +243,23 @@ declare class NodeMaterial extends Material {
+@@ -266,26 +235,23 @@ declare class NodeMaterial extends Material {
       * } )();
       *  ```
       *
@@ -9296,7 +9288,7 @@ index 3c8a1d19f..9e98a4c70 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -303,33 +268,40 @@ declare class NodeMaterial extends Material {
+@@ -294,33 +260,40 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -9347,7 +9339,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -375,28 +347,28 @@ declare class NodeMaterial extends Material {
+@@ -366,28 +339,28 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -9380,7 +9372,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Setups the computation of the material's diffuse color.
       *
-@@ -411,33 +383,33 @@ declare class NodeMaterial extends Material {
+@@ -402,33 +375,33 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -9419,7 +9411,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Setups the lights node based on the scene, environment and material.
       *
-@@ -460,7 +432,7 @@ declare class NodeMaterial extends Material {
+@@ -451,7 +424,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -9428,7 +9420,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Setup the fog.
       *
-@@ -468,7 +440,7 @@ declare class NodeMaterial extends Material {
+@@ -459,7 +432,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9437,7 +9429,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -476,7 +448,7 @@ declare class NodeMaterial extends Material {
+@@ -467,7 +440,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9446,7 +9438,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Setups the output node.
       *
-@@ -484,7 +456,7 @@ declare class NodeMaterial extends Material {
+@@ -475,7 +448,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9455,7 +9447,7 @@ index 3c8a1d19f..9e98a4c70 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -499,7 +471,10 @@ declare class NodeMaterial extends Material {
+@@ -490,7 +463,10 @@ declare class NodeMaterial extends Material {
       * @param {NodeMaterial} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
@@ -12323,7 +12315,7 @@ index 70218d55a..21a89871b 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index 9ac08a6de..1300a09d9 100644
+index f99684121..71aa64a4e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,75 @@
@@ -12786,9 +12778,9 @@ index 9ac08a6de..1300a09d9 100644
 -    private _compilationPromises;
 +    onError: (errorMessage: string) => void;
      /**
-      * Whether the renderer should render transparent render objects or not.
-      *
-@@ -565,7 +301,7 @@ declare class Renderer {
+      * When an override material is in use, this property points to the current
+      * source material during the rendering of a render object.
+@@ -574,7 +310,7 @@ declare class Renderer {
          /**
           * - The shadow map type.
           */
@@ -12797,7 +12789,7 @@ index 9ac08a6de..1300a09d9 100644
      };
      /**
       * XR configuration.
-@@ -598,11 +334,19 @@ declare class Renderer {
+@@ -607,11 +343,19 @@ declare class Renderer {
          /**
           * - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
           */
@@ -12819,7 +12811,7 @@ index 9ac08a6de..1300a09d9 100644
      };
      /**
       * Initializes the renderer so it is ready for usage.
-@@ -618,7 +362,7 @@ declare class Renderer {
+@@ -627,7 +371,7 @@ declare class Renderer {
       *
       * @type {HTMLCanvasElement|OffscreenCanvas}
       */
@@ -12828,7 +12820,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * The coordinate system of the renderer. The value of this property
       * depends on the selected backend. Either `THREE.WebGLCoordinateSystem` or
-@@ -627,7 +371,7 @@ declare class Renderer {
+@@ -636,7 +380,7 @@ declare class Renderer {
       * @readonly
       * @type {number}
       */
@@ -12837,7 +12829,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Compiles all materials in the given scene. This can be useful to avoid a
       * phenomenon which is called "shader compilation stutter", which occurs when
-@@ -643,7 +387,7 @@ declare class Renderer {
+@@ -652,7 +396,7 @@ declare class Renderer {
       * @param {?Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {Promise} A Promise that resolves when the compile has been finished.
       */
@@ -12846,7 +12838,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Renders the scene in an async fashion.
       *
-@@ -653,7 +397,7 @@ declare class Renderer {
+@@ -662,7 +406,7 @@ declare class Renderer {
       * @param {Camera} camera - The camera.
       * @return {Promise} A Promise that resolves when the render has been finished.
       */
@@ -12855,7 +12847,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Can be used to synchronize CPU operations with GPU tasks. So when this method is called,
       * the CPU waits for the GPU to complete its operation (e.g. a compute task).
-@@ -662,7 +406,7 @@ declare class Renderer {
+@@ -671,7 +415,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when synchronization has been finished.
       */
@@ -12864,7 +12856,7 @@ index 9ac08a6de..1300a09d9 100644
      set inspector(value: InspectorBase);
      /**
       * The inspector instance. The inspector can be any class that extends from `InspectorBase`.
-@@ -693,7 +437,7 @@ declare class Renderer {
+@@ -702,7 +446,7 @@ declare class Renderer {
       * @param {MRTNode} mrt - The MRT node to set.
       * @return {Renderer} A reference to this renderer.
       */
@@ -12873,7 +12865,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the MRT configuration.
       *
-@@ -705,37 +449,14 @@ declare class Renderer {
+@@ -714,37 +458,14 @@ declare class Renderer {
       *
       * @return {number} The output buffer type.
       */
@@ -12913,7 +12905,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Renders the scene or 3D object with the given camera. This method can only be called
       * if the renderer has been initialized. When using `render()` inside an animation loop,
-@@ -758,35 +479,7 @@ declare class Renderer {
+@@ -767,35 +488,7 @@ declare class Renderer {
       * @readonly
       * @return {boolean} Whether the renderer has been initialized or not.
       */
@@ -12950,7 +12942,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the maximum available anisotropy for texture filtering.
       *
-@@ -814,13 +507,13 @@ declare class Renderer {
+@@ -823,13 +516,13 @@ declare class Renderer {
       * @param {?onAnimationCallback} callback - The application's animation loop.
       * @return {Promise} A Promise that resolves when the set has been executed.
       */
@@ -12966,7 +12958,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Can be used to transfer buffer data from a storage buffer attribute
       * from the GPU to the CPU in context of compute shaders.
-@@ -832,13 +525,14 @@ declare class Renderer {
+@@ -841,13 +534,14 @@ declare class Renderer {
       * @param {number} count - The offset from which to start reading the
       * @return {Promise<ArrayBuffer|ReadbackBuffer>} A promise that resolves with the buffer data when the data are ready.
       */
@@ -12983,7 +12975,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the pixel ratio.
       *
-@@ -893,14 +587,14 @@ declare class Renderer {
+@@ -902,14 +596,14 @@ declare class Renderer {
       *
       * @param {Function} method - The sort function.
       */
@@ -13000,7 +12992,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the scissor rectangle.
       *
-@@ -908,16 +602,19 @@ declare class Renderer {
+@@ -917,16 +611,19 @@ declare class Renderer {
       * @return {Vector4} The scissor rectangle.
       */
      getScissor(target: Vector4): Vector4;
@@ -13023,7 +13015,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the scissor test value.
       *
-@@ -937,17 +634,21 @@ declare class Renderer {
+@@ -946,17 +643,21 @@ declare class Renderer {
       * @return {Vector4} The viewport definition.
       */
      getViewport(target: Vector4): Vector4;
@@ -13047,7 +13039,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the clear color.
       *
-@@ -961,7 +662,7 @@ declare class Renderer {
+@@ -970,7 +671,7 @@ declare class Renderer {
       * @param {Color} color - The clear color.
       * @param {number} [alpha=1] - The clear alpha.
       */
@@ -13056,7 +13048,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns the clear alpha.
       *
-@@ -1037,7 +738,7 @@ declare class Renderer {
+@@ -1046,7 +747,7 @@ declare class Renderer {
       * @param {boolean} [stencil=true] - Whether the stencil buffer should be cleared or not.
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13065,7 +13057,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearColor}.
       *
-@@ -1045,7 +746,7 @@ declare class Renderer {
+@@ -1054,7 +755,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13074,7 +13066,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearDepth}.
       *
-@@ -1053,7 +754,7 @@ declare class Renderer {
+@@ -1062,7 +763,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13083,7 +13075,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Async version of {@link Renderer#clearStencil}.
       *
-@@ -1061,7 +762,7 @@ declare class Renderer {
+@@ -1070,7 +771,7 @@ declare class Renderer {
       * @deprecated
       * @return {Promise} A Promise that resolves when the clear operation has been executed.
       */
@@ -13092,7 +13084,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Returns `true` if a framebuffer target is needed to perform tone mapping or color space conversion.
       * If this is the case, the renderer allocates an internal render target for that purpose.
-@@ -1091,7 +792,7 @@ declare class Renderer {
+@@ -1100,7 +801,7 @@ declare class Renderer {
       *
       * @type {number}
       */
@@ -13101,7 +13093,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * The current color space of the renderer. When not producing screen output,
       * the color space is always the working color space.
-@@ -1125,7 +826,7 @@ declare class Renderer {
+@@ -1134,7 +835,7 @@ declare class Renderer {
       *
       * @return {?RenderTarget} The render target. Returns `null` if no render target is set.
       */
@@ -13110,7 +13102,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Sets the output render target for the renderer.
       *
-@@ -1137,7 +838,7 @@ declare class Renderer {
+@@ -1146,7 +847,7 @@ declare class Renderer {
       *
       * @return {?RenderTarget} The current output render target. Returns `null` if no output target is set.
       */
@@ -13119,7 +13111,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Sets the canvas target. The canvas target manages the HTML canvas
       * or the offscreen canvas the renderer draws into.
-@@ -1151,12 +852,6 @@ declare class Renderer {
+@@ -1160,12 +861,6 @@ declare class Renderer {
       * @return {CanvasTarget} The current canvas target.
       */
      getCanvasTarget(): CanvasTarget;
@@ -13132,7 +13124,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Callback for {@link Renderer#setRenderObjectFunction}.
       *
-@@ -1182,13 +877,13 @@ declare class Renderer {
+@@ -1191,13 +886,13 @@ declare class Renderer {
       *
       * @param {?renderObjectFunction} renderObjectFunction - The render object function.
       */
@@ -13148,7 +13140,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Execute a single or an array of compute nodes. This method can only be called
       * if the renderer has been initialized.
-@@ -1200,7 +895,7 @@ declare class Renderer {
+@@ -1209,7 +904,7 @@ declare class Renderer {
       * - A IndirectStorageBufferAttribute for indirect dispatch size.
       * @return {Promise|undefined} A Promise that resolve when the compute has finished. Only returned when the renderer has not been initialized.
       */
@@ -13157,7 +13149,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Execute a single or an array of compute nodes.
       *
-@@ -1212,7 +907,7 @@ declare class Renderer {
+@@ -1221,7 +916,7 @@ declare class Renderer {
       * - A IndirectStorageBufferAttribute for indirect dispatch size.
       * @return {Promise} A Promise that resolve when the compute has finished.
       */
@@ -13166,7 +13158,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Checks if the given feature is supported by the selected backend.
       *
-@@ -1222,7 +917,7 @@ declare class Renderer {
+@@ -1231,7 +926,7 @@ declare class Renderer {
       * @return {Promise<boolean>} A Promise that resolves with a bool that indicates whether the feature is supported or not.
       */
      hasFeatureAsync(name: string): Promise<boolean>;
@@ -13175,7 +13167,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Checks if the given feature is supported by the selected backend. If the
       * renderer has not been initialized, this method always returns `false`.
-@@ -1246,7 +941,7 @@ declare class Renderer {
+@@ -1255,7 +950,7 @@ declare class Renderer {
       * @param {Texture} texture - The texture.
       * @return {Promise} A Promise that resolves when the texture has been initialized.
       */
@@ -13184,7 +13176,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Initializes the given texture. Useful for preloading a texture rather than waiting until first render
       * (which can cause noticeable lags due to decode and GPU upload overhead).
-@@ -1279,7 +974,7 @@ declare class Renderer {
+@@ -1288,7 +983,7 @@ declare class Renderer {
       * @param {number} [srcLevel=0] - The source mip level to copy from.
       * @param {number} [dstLevel=0] - The destination mip level to copy to.
       */
@@ -13193,7 +13185,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Reads pixel data from the given render target.
       *
-@@ -1294,58 +989,6 @@ declare class Renderer {
+@@ -1303,66 +998,6 @@ declare class Renderer {
       * @return {Promise<TypedArray>} A Promise that resolves when the read has been finished. The resolve provides the read data as a typed array.
       */
      readRenderTargetPixelsAsync(renderTarget: RenderTarget, x: number, y: number, width: number, height: number, textureIndex?: number, faceIndex?: number): Promise<TypedArray>;
@@ -13249,10 +13241,18 @@ index 9ac08a6de..1300a09d9 100644
 -     * @returns {Object} - The shadow nodes for the material.
 -     */
 -    private _getShadowNodes;
+-    /**
+-     * Updates the camera so it's prepared for rendering operations.
+-     *
+-     * @private
+-     * @param {Camera} camera - The camera to update.
+-     * @return {Camera} The returned camera might be different depending on whether XR is used or not.
+-     */
+-    private _updateCamera;
      /**
       * This method represents the default render object function that manages the render lifecycle
       * of the object.
-@@ -1360,7 +1003,7 @@ declare class Renderer {
+@@ -1377,7 +1012,7 @@ declare class Renderer {
       * @param {?ClippingContext} clippingContext - The clipping context.
       * @param {?string} [passId=null] - An optional ID for identifying the pass.
       */
@@ -13261,7 +13261,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Checks if the given compatibility is supported by the selected backend.
       *
-@@ -1368,36 +1011,6 @@ declare class Renderer {
+@@ -1385,36 +1020,6 @@ declare class Renderer {
       * @return {boolean} Whether the compatibility is supported or not.
       */
      hasCompatibility(name: string): boolean;
@@ -13298,7 +13298,7 @@ index 9ac08a6de..1300a09d9 100644
      /**
       * Alias for `compileAsync()`.
       *
-@@ -1407,16 +1020,7 @@ declare class Renderer {
+@@ -1424,16 +1029,7 @@ declare class Renderer {
       * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
       * @return {function(Object3D, Camera, ?Scene): Promise|undefined} A Promise that resolves when the compile has been finished.
       */
@@ -13859,7 +13859,7 @@ index 8581c09f6..fd0d845ee 100644
 +
 +export default XRManager;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
-index 876698dc2..723da14c9 100644
+index af3e23934..2b66ae129 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
 @@ -1,4 +1,8 @@
@@ -13872,16 +13872,16 @@ index 876698dc2..723da14c9 100644
  /**
   * This module represents the state of a node builder after it was
   * used to build the nodes for a render object. The state holds the
-@@ -23,7 +27,7 @@ declare class NodeBuilderState {
-      * @param {NodeMaterialObserver} observer - A node material observer.
+@@ -24,7 +28,7 @@ declare class NodeBuilderState {
+      * @param {boolean} hardwareClipping - Whether the built material uses hardware clipping or not.
       * @param {Array<Object>} transforms - An array with transform attribute objects. Only relevant when using compute shaders with WebGL 2.
       */
--    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: Array<NodeAttribute>, bindings: Array<BindGroup>, updateNodes: Array<Node>, updateBeforeNodes: Array<Node>, updateAfterNodes: Array<Node>, observer: NodeMaterialObserver, transforms?: Array<Object>);
-+    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: NodeAttribute[], bindings: BindGroup[], updateNodes: Node[], updateBeforeNodes: Node[], updateAfterNodes: Node[], observer: NodeMaterialObserver, transforms?: unknown[]);
+-    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: Array<NodeAttribute>, bindings: Array<BindGroup>, updateNodes: Array<Node>, updateBeforeNodes: Array<Node>, updateAfterNodes: Array<Node>, observer: NodeMaterialObserver, hardwareClipping: boolean, transforms?: Array<Object>);
++    constructor(vertexShader: string, fragmentShader: string, computeShader: string, nodeAttributes: NodeAttribute[], bindings: BindGroup[], updateNodes: Node[], updateBeforeNodes: Node[], updateAfterNodes: Node[], observer: NodeMaterialObserver, hardwareClipping: boolean, transforms?: unknown[]);
      /**
       * The native vertex shader code.
       *
-@@ -48,39 +52,39 @@ declare class NodeBuilderState {
+@@ -49,39 +53,39 @@ declare class NodeBuilderState {
       *
       * @type {Array<Object>}
       */
@@ -13927,7 +13927,7 @@ index 876698dc2..723da14c9 100644
      /**
       * A node material observer.
       *
-@@ -100,6 +104,7 @@ declare class NodeBuilderState {
+@@ -107,6 +111,7 @@ declare class NodeBuilderState {
       *
       * @return {Array<BindGroup>} A array of bind groups.
       */
