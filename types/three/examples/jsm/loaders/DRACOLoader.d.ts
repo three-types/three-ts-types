@@ -4,7 +4,12 @@ export class DRACOLoader extends Loader<BufferGeometry> {
     constructor(manager?: LoadingManager);
 
     setDecoderPath(path: string): DRACOLoader;
+
+    /**
+     * @deprecated setDecoderConfig to has been deprecated and will be removed in r194.
+     */
     setDecoderConfig(config: object): DRACOLoader;
+
     setWorkerLimit(workerLimit: number): DRACOLoader;
 
     load(
