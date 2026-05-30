@@ -19217,7 +19217,7 @@ index 20118247a..877b921bd 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 5b50fe485..77f0f2818 100644
+index 6e7261a46..b14adae3d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
@@ -19231,7 +19231,7 @@ index 5b50fe485..77f0f2818 100644
  
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-@@ -23,9 +23,15 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -24,9 +24,15 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -19249,9 +19249,45 @@ index 5b50fe485..77f0f2818 100644
  
  const params = {
      samples: 16,
-@@ -159,7 +165,7 @@ async function init() {
+@@ -139,7 +145,7 @@ async function init() {
  
-     //
+     // wall-mounted spotlights
+ 
+-    function addSpotLight(position, targetPosition) {
++    function addSpotLight(position: THREE.Vector3, targetPosition: THREE.Vector3) {
+         const light = new THREE.SpotLight(0xffe09e, 40);
+         light.position.copy(position);
+         light.angle = 0.6;
+@@ -162,7 +168,7 @@ async function init() {
+     const floorCanvas = document.createElement('canvas');
+     floorCanvas.width = tilesX * 32;
+     floorCanvas.height = tilesZ * 32;
+-    const floorCtx = floorCanvas.getContext('2d');
++    const floorCtx = floorCanvas.getContext('2d')!;
+ 
+     for (let x = 0; x < tilesX; x++) {
+         for (let z = 0; z < tilesZ; z++) {
+@@ -222,7 +228,7 @@ async function init() {
+ 
+     const columnMat = new THREE.MeshStandardMaterial({ color: '#e8e4de', roughness: 0.5, metalness: 0 });
+ 
+-    function addColumn(x, z) {
++    function addColumn(x: number, z: number) {
+         const columnGroup = new THREE.Group();
+ 
+         const base = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.6), columnMat);
+@@ -363,7 +369,7 @@ async function init() {
+ 
+     // picture frames
+ 
+-    function addFrame(x, y, z, width, height, paintColor, rotY = 0) {
++    function addFrame(x: number, y: number, z: number, width: number, height: number, paintColor: string, rotY = 0) {
+         const frameGroup = new THREE.Group();
+         const t = 0.1;
+ 
+@@ -464,7 +470,7 @@ async function init() {
+ 
+     // GUI
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
