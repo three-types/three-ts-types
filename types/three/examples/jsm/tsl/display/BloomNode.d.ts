@@ -1,7 +1,7 @@
 import { Node, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
 declare class BloomNode extends TempNode<"vec4"> {
-    inputNode: Node;
+    inputNode: Node<"vec4">;
     strength: UniformNode<"float", number>;
     radius: UniformNode<"float", number>;
     threshold: UniformNode<"float", number>;
@@ -9,10 +9,19 @@ declare class BloomNode extends TempNode<"vec4"> {
     smoothWidth: UniformNode<"float", number>;
 
     highPassFn: (
-        params: { input: Node; threshold: UniformNode<"float", number>; smoothWidth: UniformNode<"float", number> },
+        params: {
+            input: Node<"vec4">;
+            threshold: UniformNode<"float", number>;
+            smoothWidth: UniformNode<"float", number>;
+        },
     ) => void;
 
-    constructor(inputNode: Node, strength?: number, radius?: number, threshold?: number);
+    constructor(
+        inputNode: Node,
+        strength?: UniformNode<"float", number> | number,
+        radius?: UniformNode<"float", number> | number,
+        threshold?: UniformNode<"float", number> | number,
+    );
 
     getTexture(): TextureNode;
 
@@ -24,10 +33,10 @@ declare class BloomNode extends TempNode<"vec4"> {
 }
 
 export const bloom: (
-    node: Node,
-    strength?: number,
-    radius?: number,
-    threshold?: number,
+    node: Node<"vec4">,
+    strength?: UniformNode<"float", number> | number,
+    radius?: UniformNode<"float", number> | number,
+    threshold?: UniformNode<"float", number> | number,
 ) => BloomNode;
 
 export default BloomNode;
