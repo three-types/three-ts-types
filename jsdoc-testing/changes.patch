@@ -207,6 +207,22 @@ index 3fc0b16d1..1257d8f69 100644
 +export const clusteredLights: (maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number) => ClusteredLightsNode;
 +
 +export default ClusteredLightsNode;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
+index e49e7c2b6..0135575bb 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
+@@ -1,3 +1,5 @@
++import { Node } from 'three/webgpu';
++
+ /**
+  * @module GroundedSkybox
+  * @three_import import { getGroundProjectedNormal } from 'three/addons/tsl/utils/GroundedSkybox.js';
+@@ -12,4 +14,4 @@
+  * @param {Node<float>} heightNode - The height is how far the camera that took the photo was above the ground. A larger value will magnify the downward part of the image.
+  * @return {Node<vec3>} A direction vector for sampling the environment cube map.
+  */
+-export const getGroundProjectedNormal: () => void;
++export const getGroundProjectedNormal: (radiusNode: Node<'float'>, heightNode: Node<'float'>) => Node<'vec3'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 index 113ff7df3..2b610bc4c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
