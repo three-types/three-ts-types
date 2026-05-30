@@ -100,6 +100,76 @@ index 66ac1de37..196e0702d 100644
  }
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
+index 1dc623470..4db11431b 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
+@@ -1,3 +1,24 @@
++import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from 'three';
++
++export interface LightProbeGridBakeOptions {
++    /**
++     * Resolution of each cubemap face.
++     */
++    cubemapSize?: number | undefined;
++    /**
++     * Near plane for the cube camera.
++     */
++    near?: number | undefined;
++    /**
++     * Far plane for the cube camera.
++     */
++    far?: number | undefined;
++    /**
++     * Additional bounce passes after the initial direct pass.
++     */
++    bounces?: number | undefined;
++}
++
+ /**
+  * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
+  * position-dependent diffuse global illumination.
+@@ -87,14 +108,6 @@ export class LightProbeGrid extends Object3D {
+      * @default null
+      */
+     texture: Data3DTexture | null;
+-    /**
+-     * Internal render target for GPU-resident baking.
+-     *
+-     * @private
+-     * @type {?WebGL3DRenderTarget}
+-     * @default null
+-     */
+-    private _renderTarget;
+     /**
+      * Returns the world-space position of the probe at grid indices (ix, iy, iz).
+      *
+@@ -124,24 +137,9 @@ export class LightProbeGrid extends Object3D {
+      * @param {number} [options.far=100] - Far plane for the cube camera.
+      * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
+      */
+-    bake(renderer: WebGLRenderer, scene: Scene, options?: {
+-        cubemapSize?: number | undefined;
+-        near?: number | undefined;
+-        far?: number | undefined;
+-        bounces?: number | undefined;
+-    }): void;
+-    /**
+-     * Ensures the atlas 3D render target exists with the correct dimensions.
+-     *
+-     * @private
+-     */
+-    private _ensureTextures;
++    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridBakeOptions): void;
+     /**
+      * Frees GPU resources.
+      */
+     dispose(): void;
+ }
+-import { Object3D } from 'three';
+-import { Vector3 } from 'three';
+-import { Box3 } from 'three';
+-import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 index 3fc0b16d1..1257d8f69 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
@@ -14375,7 +14445,7 @@ index f6f699f14..42d915421 100644
 +
 +export default BasicNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
-index 1d2893798..c0ac71455 100644
+index ee01cd7e7..49f344bda 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
 @@ -1,4 +1,18 @@
@@ -14398,7 +14468,7 @@ index 1d2893798..c0ac71455 100644
  /**
   * This version of a node library represents the standard version
   * used in {@link WebGPURenderer}. It maps lights, tone mapping
-@@ -9,4 +23,70 @@ export default StandardNodeLibrary;
+@@ -8,4 +22,70 @@ export default StandardNodeLibrary;
   */
  declare class StandardNodeLibrary extends NodeLibrary {
  }
