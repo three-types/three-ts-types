@@ -1,11 +1,6 @@
-import { TextureDataType } from "../../constants.js";
-import { RenderTarget } from "../../core/RenderTarget.js";
+import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import TextureNode from "../accessors/TextureNode.js";
 import Node from "../core/Node.js";
-
-export interface RTTNodeOptions {
-    type: TextureDataType;
-}
 
 declare class RTTNode extends TextureNode {
     readonly isRTTNode: true;
@@ -21,7 +16,7 @@ declare class RTTNode extends TextureNode {
 
     pixelRatio?: number;
 
-    constructor(node: Node, width?: number | null, height?: number | null, options?: RTTNodeOptions);
+    constructor(node: Node, width?: number | null, height?: number | null, options?: RenderTargetOptions);
 
     get autoResize(): boolean;
 
@@ -36,11 +31,11 @@ export const rtt: (
     node: Node,
     width?: number | null,
     height?: number | null,
-    options?: RTTNodeOptions,
+    options?: RenderTargetOptions,
 ) => RTTNode;
 export const convertToTexture: (
     node: Node,
     width?: number | null,
     height?: number | null,
-    options?: RTTNodeOptions,
+    options?: RenderTargetOptions,
 ) => RTTNode;
