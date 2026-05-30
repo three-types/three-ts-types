@@ -240,7 +240,7 @@ index 113ff7df3..2b610bc4c 100644
 -export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: Function, onFallback?: Function): void;
 +export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void): void;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
-index 7489bf508..7849540e6 100644
+index 543005806..7849540e6 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 @@ -1,3 +1,8 @@
@@ -252,7 +252,7 @@ index 7489bf508..7849540e6 100644
  /**
   * An instance of `AnimationAction` schedules the playback of an animation which is
   * stored in {@link AnimationClip}.
-@@ -11,43 +16,24 @@ export class AnimationAction {
+@@ -11,44 +16,24 @@ export class AnimationAction {
       * @param {?Object3D} [localRoot=null] - The root object on which this action is performed.
       * @param {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)} [blendMode] - The blend mode.
       */
@@ -266,7 +266,7 @@ index 7489bf508..7849540e6 100644
       * are simultaneously played.
 -     *
 -     * @type {(NormalAnimationBlendMode|AdditiveAnimationBlendMode)}
-      */
+-     */
 -    blendMode: (number | number);
 -    _interpolantSettings: {
 -        endingStart: number;
@@ -277,7 +277,9 @@ index 7489bf508..7849540e6 100644
 -    _cacheIndex: any;
 -    _byClipCacheIndex: any;
 -    _timeScaleInterpolant: any;
+-    _restoreTimeScale: number | null;
 -    _weightInterpolant: any;
++     */
 +    blendMode: AnimationBlendMode;
      /**
       * The loop mode, set via {@link AnimationAction#setLoop}.
@@ -299,7 +301,7 @@ index 7489bf508..7849540e6 100644
       * @default Infinity
       */
      time: number;
-@@ -55,21 +41,17 @@ export class AnimationAction {
+@@ -56,21 +41,17 @@ export class AnimationAction {
       * Scaling factor for the {@link AnimationAction#time}. A value of `0` causes the
       * animation to pause. Negative values cause the animation to play backwards.
       *
@@ -321,7 +323,7 @@ index 7489bf508..7849540e6 100644
      /**
       * The number of repetitions of the performed clip over the course of this action.
       * Can be set via {@link AnimationAction#setLoop}.
-@@ -77,14 +59,12 @@ export class AnimationAction {
+@@ -78,14 +59,12 @@ export class AnimationAction {
       * Setting this number has no effect if {@link AnimationAction#loop} is set to
       * `THREE:LoopOnce`.
       *
@@ -336,7 +338,7 @@ index 7489bf508..7849540e6 100644
       * @default false
       */
      paused: boolean;
-@@ -94,7 +74,6 @@ export class AnimationAction {
+@@ -95,7 +74,6 @@ export class AnimationAction {
       * When the action is re-enabled, the animation continues from its current
       * time (setting `enabled` to `false` doesn't reset the action).
       *
@@ -344,7 +346,7 @@ index 7489bf508..7849540e6 100644
       * @default true
       */
      enabled: boolean;
-@@ -108,21 +87,18 @@ export class AnimationAction {
+@@ -109,21 +87,18 @@ export class AnimationAction {
       * Note: This member has no impact if the action is interrupted (it
       * has only an effect if its last loop has really finished).
       *
@@ -366,7 +368,7 @@ index 7489bf508..7849540e6 100644
       * @default true
       */
      zeroSlopeAtEnd: boolean;
-@@ -170,7 +146,7 @@ export class AnimationAction {
+@@ -171,7 +146,7 @@ export class AnimationAction {
       * @param {number} repetitions - The number of repetitions.
       * @return {AnimationAction} A reference to this animation action.
       */
@@ -375,7 +377,7 @@ index 7489bf508..7849540e6 100644
      /**
       * Sets the effective weight of this action.
       *
-@@ -301,10 +277,5 @@ export class AnimationAction {
+@@ -302,10 +277,5 @@ export class AnimationAction {
       * @return {Object3D} The root object.
       */
      getRoot(): Object3D;
