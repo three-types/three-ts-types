@@ -10,6 +10,10 @@ export interface MeshNormalMaterialProperties extends MaterialProperties {
      * the geometry of the object, only the lighting. If a normal map is defined
      * this will be ignored.
      *
+     * `bumpMap` represents non-color data. Any texture assigned must have
+     * `texture.colorSpace = NoColorSpace` (default).
+     *
+     * @type {?Texture}
      * @default null
      */
     bumpMap: Texture | null;
@@ -27,6 +31,10 @@ export interface MeshNormalMaterialProperties extends MaterialProperties {
      * convention, the `y` component of `normalScale` should be negated to compensate
      * for the different handedness.
      *
+     * `normalMap` represents non-color data. Any texture assigned must have
+     * `texture.colorSpace = NoColorSpace` (default).
+     *
+     * @type {?Texture}
      * @default null
      */
     normalMap: Texture | null;
