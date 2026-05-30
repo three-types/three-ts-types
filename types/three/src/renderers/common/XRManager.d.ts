@@ -23,11 +23,11 @@ export interface LayerAttributes {
     stencil?: boolean | undefined;
 }
 
+interface XRGPUBinding {}
+
 /**
  * The XR manager is built on top of the WebXR Device API to
- * manage XR sessions with `WebGPURenderer`.
- *
- * XR is currently only supported with a WebGL 2 backend.
+ * manage XR sessions with renderer backends.
  *
  * @augments EventDispatcher
  */
@@ -91,7 +91,7 @@ declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap>
     /**
      * Returns the foveation value.
      *
-     * @return {number|undefined} The foveation value. Returns `undefined` if no base or projection layer is defined.
+     * @return {number|undefined} The foveation value.
      */
     getFoveation(): number | undefined;
     /**
@@ -181,6 +181,15 @@ declare class XRManager<TEventMap extends XRManagerEventMap = XRManagerEventMap>
      * @param {RenderTarget} renderTarget - The internal render target.
      */
     foveateBoundTexture(renderTarget: RenderTarget): void;
+    /**
+     * Returns the current XR WebGPU binding.
+     *
+     * Creates a new binding if needed and the browser is
+     * capable of doing so.
+     *
+     * @return {?XRGPUBinding} The XR WebGPU binding. Returns `null` if one cannot be created.
+     */
+    getWebGPUBinding(): XRGPUBinding | null;
     /**
      * Returns the current XR frame.
      *
