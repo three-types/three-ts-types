@@ -1394,20 +1394,25 @@ index ff6d6e2b5..105aeb07d 100644
      save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
  }
 diff --git a/examples-testing/examples/misc_exporter_usdz.ts b/examples-testing/examples/misc_exporter_usdz.ts
-index f1ce65485..5ec818dd0 100644
+index 3e7178a11..c49bcc338 100644
 --- a/examples-testing/examples/misc_exporter_usdz.ts
 +++ b/examples-testing/examples/misc_exporter_usdz.ts
-@@ -7,7 +7,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
- import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+@@ -10,7 +10,12 @@ import { USDZExporter } from 'three/addons/exporters/USDZExporter.js';
+ import * as WebGLTextureUtils from 'three/addons/utils/WebGLTextureUtils.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
+-let camera, scene, renderer, mixer, timer, controls;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGLRenderer,
++    mixer: THREE.AnimationMixer,
++    timer: THREE.Timer,
++    controls: OrbitControls;
  
  const params = {
      exportUSDZ: exportUSDZ,
-@@ -50,7 +50,7 @@ function init() {
-         const arraybuffer = await exporter.parseAsync(gltf.scene);
+@@ -61,7 +66,7 @@ function init() {
+         const arraybuffer = await exporter.parseAsync(gltf.scene, { animations: gltf.animations });
          const blob = new Blob([arraybuffer], { type: 'application/octet-stream' });
  
 -        const link = document.getElementById('link');
@@ -1415,16 +1420,7 @@ index f1ce65485..5ec818dd0 100644
          link.href = URL.createObjectURL(blob);
      });
  
-@@ -78,7 +78,7 @@ function createSpotShadowMesh() {
-     canvas.width = 128;
-     canvas.height = 128;
- 
--    const context = canvas.getContext('2d');
-+    const context = canvas.getContext('2d')!;
-     const gradient = context.createRadialGradient(
-         canvas.width / 2,
-         canvas.height / 2,
-@@ -119,7 +119,7 @@ function onWindowResize() {
+@@ -92,7 +97,7 @@ function onWindowResize() {
  }
  
  function exportUSDZ() {
@@ -22789,7 +22785,7 @@ index 88a9e5f60..7d8c8b731 100644
      gui.addColor(params, 'color').onChange(function (value) {
          waterNode.color.value.set(value);
 diff --git a/examples-testing/examples/webgpu_xr_cubes.ts b/examples-testing/examples/webgpu_xr_cubes.ts
-index 274f0a2cd..57bf41a4e 100644
+index 34261aaaf..e4497293a 100644
 --- a/examples-testing/examples/webgpu_xr_cubes.ts
 +++ b/examples-testing/examples/webgpu_xr_cubes.ts
 @@ -5,19 +5,27 @@ import { XRButton } from 'three/addons/webxr/XRButton.js';
@@ -23173,7 +23169,7 @@ index 9209ea5b6..80dcdc357 100644
      //
      const delta = timer.getDelta() * 0.8;
 diff --git a/examples-testing/examples/webgpu_xr_rollercoaster.ts b/examples-testing/examples/webgpu_xr_rollercoaster.ts
-index 0661524df..808695fc5 100644
+index ae129e57e..900131094 100644
 --- a/examples-testing/examples/webgpu_xr_rollercoaster.ts
 +++ b/examples-testing/examples/webgpu_xr_rollercoaster.ts
 @@ -10,10 +10,14 @@ import {
@@ -23194,7 +23190,7 @@ index 0661524df..808695fc5 100644
  
  renderer = createRenderer();
  setRenderer(renderer);
-@@ -24,7 +28,7 @@ document.body.appendChild(VRButton.createButton(renderer));
+@@ -24,7 +28,7 @@ document.body.appendChild(VRButton.createButton(renderer, { optionalFeatures: ['
  //
  
  function createRenderer(forceWebGL = false) {
