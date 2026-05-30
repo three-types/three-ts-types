@@ -17,6 +17,8 @@ export class USDZExporter {
 
     constructor();
 
+    setTextureUtils(textureUtils: typeof WebGLTextureUtils | typeof WebGPUTextureUtils | null): void;
+
     parse(
         scene: Object3D,
         onDone: (result: Uint8Array<ArrayBuffer>) => void,
