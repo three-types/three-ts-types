@@ -14603,7 +14603,7 @@ index 02fbacb9d..d3ee1763c 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_clipping.ts b/examples-testing/examples/webgpu_clipping.ts
-index b7e94da98..b7c85c2ee 100644
+index b2b567c9a..6c1ad5f2c 100644
 --- a/examples-testing/examples/webgpu_clipping.ts
 +++ b/examples-testing/examples/webgpu_clipping.ts
 @@ -4,7 +4,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -14619,7 +14619,7 @@ index b7e94da98..b7c85c2ee 100644
  
  init();
  
-@@ -109,7 +113,7 @@ function init() {
+@@ -107,7 +111,7 @@ function init() {
  
      // GUI
  
@@ -14628,7 +14628,7 @@ index b7e94da98..b7c85c2ee 100644
      const props = {
          alphaToCoverage: true,
      };
-@@ -191,7 +195,7 @@ function onWindowResize() {
+@@ -189,7 +193,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -16106,18 +16106,18 @@ index 60fe6ccc9..c29cde36b 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
-index 1548a8ec5..e8fe7d970 100644
+index d96be2475..1ee4c7bd1 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
 +++ b/examples-testing/examples/webgpu_lights_clustered.ts
 @@ -2,6 +2,7 @@ import * as THREE from 'three/webgpu';
- import { pass, uniform, vec3, float, mix, step } from 'three/tsl';
+ import { pass, uniform, vec3, float, mix, step, uv, instancedBufferAttribute } from 'three/tsl';
  
  import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
 +import type ClusteredLightsNode from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
-@@ -14,19 +15,19 @@ const MODEL_INDEX_URL =
+@@ -14,20 +15,20 @@ const MODEL_INDEX_URL =
      'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
  const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
  
@@ -16126,6 +16126,7 @@ index 1548a8ec5..e8fe7d970 100644
 -    renderer,
 -    lights,
 -    lightDummy,
+-    lightPositionAttribute,
 -    controls,
 -    scenePass,
 -    clusterInfluence,
@@ -16138,7 +16139,8 @@ index 1548a8ec5..e8fe7d970 100644
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
 +    lights: THREE.Group,
-+    lightDummy: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>,
++    lightDummy: THREE.Sprite,
++    lightPositionAttribute: THREE.InstancedBufferAttribute,
 +    controls: OrbitControls,
 +    scenePass: THREE.PassNode,
 +    clusterInfluence: THREE.UniformNode<'float', number>,
@@ -16150,7 +16152,7 @@ index 1548a8ec5..e8fe7d970 100644
  
  init();
  
-@@ -55,7 +56,8 @@ async function init() {
+@@ -56,7 +57,8 @@ async function init() {
      const model = gltf.scene;
  
      model.traverse(child => {
@@ -16160,16 +16162,16 @@ index 1548a8ec5..e8fe7d970 100644
      });
  
      scene.add(model);
-@@ -77,7 +79,7 @@ async function init() {
+@@ -103,7 +105,7 @@ async function init() {
      lights = new THREE.Group();
      scene.add(lights);
  
--    const addLight = (hexColor, power = 30, distance = 1) => {
-+    const addLight = (hexColor: number, power = 30, distance = 1) => {
+-    const addLight = (hexColor, power = 10, distance = 1) => {
++    const addLight = (hexColor: number, power = 10, distance = 1) => {
          const light = new THREE.PointLight(hexColor, 1, distance);
          light.position.set(
              modelCenter.x + (Math.random() - 0.5) * modelSize.x * 0.7,
-@@ -151,7 +153,7 @@ async function init() {
+@@ -181,7 +183,7 @@ async function init() {
  
      // gui
  
@@ -16178,7 +16180,7 @@ index 1548a8ec5..e8fe7d970 100644
  
      const params = {
          count,
-@@ -174,9 +176,10 @@ async function init() {
+@@ -204,9 +206,10 @@ async function init() {
  function updatePostProcessing() {
      // cluster light count debug overlay; needs to be updated every time the renderer size changes
  
@@ -16192,7 +16194,7 @@ index 1548a8ec5..e8fe7d970 100644
  
      // Calculate a color mapping based on the actual number of lights directly affecting the cluster.
      // We map between 0 and maxLightsPerCluster to a gradient
-@@ -194,9 +197,17 @@ function updatePostProcessing() {
+@@ -224,9 +227,17 @@ function updatePostProcessing() {
      renderPipeline.needsUpdate = true;
  }
  
@@ -19217,7 +19219,7 @@ index 20118247a..877b921bd 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 6e7261a46..b14adae3d 100644
+index a5f85e5a1..dc82f40ea 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
