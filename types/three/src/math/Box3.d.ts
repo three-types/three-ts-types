@@ -4,7 +4,7 @@ import { Matrix4 } from "./Matrix4.js";
 import { Plane } from "./Plane.js";
 import { Sphere } from "./Sphere.js";
 import { Triangle } from "./Triangle.js";
-import { Vector3 } from "./Vector3.js";
+import { Vector3, type Vector3Like } from "./Vector3.js";
 
 /**
  * Represents an axis-aligned bounding box (AABB) in 3D space.
@@ -69,7 +69,7 @@ export class Box3 {
      * @param {Array<Vector3>} points - An array holding 3D position data as instances of {@link Vector3}.
      * @return {Box3} A reference to this bounding box.
      */
-    setFromPoints(points: Array<Vector3>): this;
+    setFromPoints(points: Array<Vector3Like>): this;
     /**
      * Centers this box on the given center vector and sets this box's width, height and
      * depth to the given size values.
@@ -142,7 +142,7 @@ export class Box3 {
      * @param {Vector3} point - The point that should be included by the bounding box.
      * @return {Box3} A reference to this bounding box.
      */
-    expandByPoint(point: Vector3): this;
+    expandByPoint(point: Vector3Like): this;
     /**
      * Expands this box equilaterally by the given vector. The width of this
      * box will be expanded by the x component of the vector in both
