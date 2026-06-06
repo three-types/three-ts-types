@@ -408,9 +408,9 @@ declare class NodeMaterial extends Material {
      * Setups the lights node based on the scene, environment and material.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {LightsNode} The lights node.
+     * @return {LightingNode<Array>} The lights node.
      */
-    setupLights(builder: NodeBuilder): LightsNode;
+    setupMaterialLightings(builder: NodeBuilder): LightingNode[];
     /**
      * This method should be implemented by most derived materials
      * since it defines the material's lighting model.
