@@ -75,6 +75,21 @@ interface Storage {
     ): StorageBufferNode<"vec4">;
     (
         value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "mat2",
+        count: number,
+    ): StorageBufferNode<"mat2">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "mat3",
+        count: number,
+    ): StorageBufferNode<"mat3">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
+        type: "mat4",
+        count: number,
+    ): StorageBufferNode<"mat4">;
+    (
+        value: StorageBufferAttribute | StorageInstancedBufferAttribute | BufferAttribute,
         type: Struct,
         count: number,
     ): StorageBufferNode<"struct">;
