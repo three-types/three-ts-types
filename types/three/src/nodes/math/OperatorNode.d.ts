@@ -206,9 +206,9 @@ interface AddSubMulDivNumberVecVec4AssignExtensions<TNum extends NumType> {
 // add/sub/mul mats
 
 interface AddSubMulMat {
-    (a: Mat2, b: Mat2): Node<"mat2">;
-    (a: Mat3, b: Mat3): Node<"mat3">;
-    (a: Mat4, b: Mat4): Node<"mat4">;
+    (a: Mat2, b: Mat2, ...params: Mat2[]): Node<"mat2">;
+    (a: Mat3, b: Mat3, ...params: Mat3[]): Node<"mat3">;
+    (a: Mat4, b: Mat4, ...params: Mat4[]): Node<"mat4">;
 }
 
 interface AddSubMulMat2Extensions {
