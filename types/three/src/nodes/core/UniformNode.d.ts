@@ -123,14 +123,20 @@ interface Uniform {
     (value: number, type?: "float"): UniformNode<"float", number>;
     (value: number, type: "int"): UniformNode<"int", number>;
     (value: number, type: "uint"): UniformNode<"uint", number>;
-    (value: boolean): UniformNode<"bool", boolean>;
-    (value: Vector2): UniformNode<"vec2", Vector2>;
-    (value: Vector3): UniformNode<"vec3", Vector3>;
-    (value: Vector4): UniformNode<"vec4", Vector4>;
-    (value: Matrix2): UniformNode<"mat2", Matrix2>;
-    (value: Matrix3): UniformNode<"mat3", Matrix3>;
-    (value: Matrix4): UniformNode<"mat4", Matrix4>;
-    (value: Color): UniformNode<"color", Color>;
+    (value: boolean, type?: "bool"): UniformNode<"bool", boolean>;
+    (value: Vector2, type?: "vec2"): UniformNode<"vec2", Vector2>;
+    (value: Vector2, type: "ivec2"): UniformNode<"ivec2", Vector2>;
+    (value: Vector2, type: "uvec2"): UniformNode<"uvec2", Vector2>;
+    (value: Vector3, type?: "vec3"): UniformNode<"vec3", Vector3>;
+    (value: Vector3, type: "ivec3"): UniformNode<"ivec3", Vector3>;
+    (value: Vector3, type: "uvec3"): UniformNode<"uvec3", Vector3>;
+    (value: Vector4, type?: "vec4"): UniformNode<"vec4", Vector4>;
+    (value: Vector4, type: "ivec4"): UniformNode<"ivec4", Vector4>;
+    (value: Vector4, type: "uvec4"): UniformNode<"uvec4", Vector4>;
+    (value: Matrix2, type?: "mat2"): UniformNode<"mat2", Matrix2>;
+    (value: Matrix3, type?: "mat3"): UniformNode<"mat3", Matrix3>;
+    (value: Matrix4, type?: "mat4"): UniformNode<"mat4", Matrix4>;
+    (value: Color, type?: "color"): UniformNode<"color", Color>;
     <TNodeType, TValue>(value: InputNode<TNodeType, TValue>): UniformNode<TNodeType, TValue>;
     <TNodeType, TValue>(value: VarNode<TNodeType, ConstNode<TNodeType, TValue>>): UniformNode<TNodeType, TValue>;
 }
