@@ -326,7 +326,7 @@ interface Mul
 {
 }
 
-interface MulFloatExtension<TNum extends NumType>
+interface MulNumExtension<TNum extends NumType>
     extends AddSubMulDivNumberVecNumExtensions<TNum>, MulMatNumNumExtensions
 {
 }
@@ -378,7 +378,7 @@ declare module "../core/Node.js" {
     interface NumExtensions<TNum extends NumType> {
         add: AddSubMulDivNumberVecNumExtensions<TNum>;
         sub: AddSubMulDivNumberVecNumExtensions<TNum>;
-        mul: MulFloatExtension<TNum>;
+        mul: MulNumExtension<TNum>;
         div: AddSubMulDivNumberVecNumExtensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecNumberAssignExtensions<TNum>;
