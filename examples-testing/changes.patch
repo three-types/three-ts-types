@@ -17513,7 +17513,7 @@ index 081de95a..78b575f1 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
-index 0a841ae2..847b3df3 100644
+index b72e65a0..85479f4e 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
 +++ b/examples-testing/examples/webgpu_materials_matcap.ts
 @@ -6,7 +6,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17570,7 +17570,7 @@ index 0a841ae2..847b3df3 100644
  
          texture.colorSpace = THREE.SRGBColorSpace;
  
-@@ -126,11 +129,11 @@ function handleJPG(event) {
+@@ -126,19 +129,19 @@ function handleJPG(event) {
  
      img.onload = imgCallback;
  
@@ -17579,13 +17579,10 @@ index 0a841ae2..847b3df3 100644
  }
  
 -function handleEXR(event) {
--    const contents = event.target.result;
 +function handleEXR(event: ProgressEvent<FileReader>) {
-+    const contents = event.target!.result as ArrayBuffer;
- 
      const loader = new EXRLoader();
+     const texture = loader.createDataTexture(event.target.result);
  
-@@ -155,9 +158,9 @@ function handleEXR(event) {
      updateMatcap(texture);
  }
  
@@ -17597,7 +17594,7 @@ index 0a841ae2..847b3df3 100644
  
      if (extension === 'exr') {
          const reader = new FileReader();
-@@ -183,12 +186,12 @@ function loadFile(file) {
+@@ -164,12 +167,12 @@ function loadFile(file) {
  function initDragAndDrop() {
      document.addEventListener('dragover', function (event) {
          event.preventDefault();
