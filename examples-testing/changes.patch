@@ -17513,7 +17513,7 @@ index 081de95a..78b575f1 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_materials_matcap.ts b/examples-testing/examples/webgpu_materials_matcap.ts
-index b72e65a0..85479f4e 100644
+index b72e65a0..898c39fa 100644
 --- a/examples-testing/examples/webgpu_materials_matcap.ts
 +++ b/examples-testing/examples/webgpu_materials_matcap.ts
 @@ -6,7 +6,10 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -17581,7 +17581,8 @@ index b72e65a0..85479f4e 100644
 -function handleEXR(event) {
 +function handleEXR(event: ProgressEvent<FileReader>) {
      const loader = new EXRLoader();
-     const texture = loader.createDataTexture(event.target.result);
+-    const texture = loader.createDataTexture(event.target.result);
++    const texture = loader.createDataTexture(event.target!.result as ArrayBuffer);
  
      updateMatcap(texture);
  }
