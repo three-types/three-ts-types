@@ -9022,10 +9022,10 @@ index 1ffe1bd1..85436d1f 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index e5f84870..137b2555 100644
+index 61cd9324..1891d8f1 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-@@ -1,37 +1,23 @@
+@@ -1,37 +1,24 @@
 -export default NodeMaterial;
 -/**
 - * Base class for all node materials.
@@ -9058,6 +9058,7 @@ index e5f84870..137b2555 100644
 +import ClippingNode from "../../nodes/accessors/ClippingNode.js";
 +import LightingModel from "../../nodes/core/LightingModel.js";
 +import ContextNode from '../../nodes/core/ContextNode.js';
++import LightingNode from '../../nodes/lighting/LightingNode.js';
 +
 +export interface NodeMaterialNodeProperties {
      /**
@@ -9074,7 +9075,7 @@ index e5f84870..137b2555 100644
       * @default false
       */
      lights: boolean;
-@@ -48,7 +34,6 @@ declare class NodeMaterial extends Material {
+@@ -48,7 +35,6 @@ declare class NodeMaterial extends Material {
       * material.lightsNode = customLightsNode;
       * ```
       *
@@ -9082,7 +9083,7 @@ index e5f84870..137b2555 100644
       * @default null
       */
      lightsNode: LightsNode | null;
-@@ -62,10 +47,9 @@ declare class NodeMaterial extends Material {
+@@ -62,10 +48,9 @@ declare class NodeMaterial extends Material {
       * material.envNode = pmremTexture( renderTarget.texture );
       * ```
       *
@@ -9094,7 +9095,7 @@ index e5f84870..137b2555 100644
      /**
       * The lighting of node materials might be influenced by ambient occlusion.
       * The default AO is inferred from an ambient occlusion map assigned to `aoMap`
-@@ -75,10 +59,9 @@ declare class NodeMaterial extends Material {
+@@ -75,10 +60,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the diffuse color but modify the existing
       * values instead, use {@link materialAO}.
       *
@@ -9106,7 +9107,7 @@ index e5f84870..137b2555 100644
      /**
       * The diffuse color of node materials is by default inferred from the
       * `color` and `map` properties. This node property allows to overwrite the default
-@@ -95,10 +78,9 @@ declare class NodeMaterial extends Material {
+@@ -95,10 +79,9 @@ declare class NodeMaterial extends Material {
       * material.colorNode = materialColor.mul( color( 0xff0000 ) ); // give diffuse colors a red tint
       * ```
       *
@@ -9118,7 +9119,7 @@ index e5f84870..137b2555 100644
      /**
       * The normals of node materials are by default inferred from the `normalMap`/`normalScale`
       * or `bumpMap`/`bumpScale` properties. This node property allows to overwrite the default
-@@ -107,10 +89,9 @@ declare class NodeMaterial extends Material {
+@@ -107,10 +90,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the normals but modify the existing values instead,
       * use {@link materialNormal}.
       *
@@ -9130,7 +9131,7 @@ index e5f84870..137b2555 100644
      /**
       * The opacity of node materials is by default inferred from the `opacity`
       * and `alphaMap` properties. This node property allows to overwrite the default
-@@ -119,10 +100,9 @@ declare class NodeMaterial extends Material {
+@@ -119,10 +101,9 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the opacity but modify the existing
       * value instead, use {@link materialOpacity}.
       *
@@ -9142,7 +9143,7 @@ index e5f84870..137b2555 100644
      /**
       * This node can be used to implement a variety of filter-like effects. The idea is
       * to store the current rendering into a texture e.g. via `viewportSharedTexture()`, use it
-@@ -139,17 +119,15 @@ declare class NodeMaterial extends Material {
+@@ -139,17 +120,15 @@ declare class NodeMaterial extends Material {
       *
       * Backdrop computations are part of the lighting so only lit materials can use this property.
       *
@@ -9162,7 +9163,7 @@ index e5f84870..137b2555 100644
      /**
       * The alpha test of node materials is by default inferred from the `alphaTest`
       * property. This node property allows to overwrite the default and define the
-@@ -158,24 +136,21 @@ declare class NodeMaterial extends Material {
+@@ -158,24 +137,21 @@ declare class NodeMaterial extends Material {
       * If you don't want to overwrite the alpha test but modify the existing
       * value instead, use {@link materialAlphaTest}.
       *
@@ -9190,7 +9191,7 @@ index e5f84870..137b2555 100644
      /**
       * The local vertex positions are computed based on multiple factors like the
       * attribute data, morphing or skinning. This node property allows to overwrite
-@@ -188,10 +163,9 @@ declare class NodeMaterial extends Material {
+@@ -188,10 +164,9 @@ declare class NodeMaterial extends Material {
       * material.positionNode = positionLocal.add( displace );
       * ```
       *
@@ -9202,7 +9203,7 @@ index e5f84870..137b2555 100644
      /**
       * This node property is intended for logic which modifies geometry data once or per animation step.
       * Apps usually place such logic randomly in initialization routines or in the animation loop.
-@@ -203,34 +177,30 @@ declare class NodeMaterial extends Material {
+@@ -203,34 +178,30 @@ declare class NodeMaterial extends Material {
       * simulation would be implemented as compute shaders and managed inside a `Fn` function. This function is
       * eventually assigned to `geometryNode`.
       *
@@ -9241,7 +9242,7 @@ index e5f84870..137b2555 100644
      /**
       * This node can be used to influence how an object using this node material
       * receive shadows.
-@@ -243,10 +213,9 @@ declare class NodeMaterial extends Material {
+@@ -243,10 +214,9 @@ declare class NodeMaterial extends Material {
       * 	return shadow.mix( color( 0xff0000 ), 1 ); // modify shadow color
       * } );
       *
@@ -9253,7 +9254,7 @@ index e5f84870..137b2555 100644
      /**
       * This node can be used to influence how an object using this node material
       * casts shadows. To apply a color to shadows, you can simply do:
-@@ -266,26 +235,23 @@ declare class NodeMaterial extends Material {
+@@ -266,26 +236,23 @@ declare class NodeMaterial extends Material {
       * } )();
       *  ```
       *
@@ -9282,7 +9283,7 @@ index e5f84870..137b2555 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -294,33 +260,40 @@ declare class NodeMaterial extends Material {
+@@ -294,33 +261,40 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -9333,7 +9334,7 @@ index e5f84870..137b2555 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -366,28 +339,28 @@ declare class NodeMaterial extends Material {
+@@ -366,28 +340,28 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -9366,7 +9367,7 @@ index e5f84870..137b2555 100644
      /**
       * Setups the computation of the material's diffuse color.
       *
-@@ -402,33 +375,33 @@ declare class NodeMaterial extends Material {
+@@ -402,40 +376,40 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -9405,7 +9406,15 @@ index e5f84870..137b2555 100644
      /**
       * Setups the lights node based on the scene, environment and material.
       *
-@@ -451,7 +424,7 @@ declare class NodeMaterial extends Material {
+      * @param {NodeBuilder} builder - The current node builder.
+      * @return {LightingNode<Array>} The lights node.
+      */
+-    setupMaterialLightings(builder: NodeBuilder): LightingNode<any[]>;
++    setupMaterialLightings(builder: NodeBuilder): LightingNode[];
+     /**
+      * This method should be implemented by most derived materials
+      * since it defines the material's lighting model.
+@@ -451,7 +425,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -9414,7 +9423,7 @@ index e5f84870..137b2555 100644
      /**
       * Setup the fog.
       *
-@@ -459,7 +432,7 @@ declare class NodeMaterial extends Material {
+@@ -459,7 +433,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9423,7 +9432,7 @@ index e5f84870..137b2555 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -467,7 +440,7 @@ declare class NodeMaterial extends Material {
+@@ -467,7 +441,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9432,7 +9441,7 @@ index e5f84870..137b2555 100644
      /**
       * Setups the output node.
       *
-@@ -475,7 +448,7 @@ declare class NodeMaterial extends Material {
+@@ -475,7 +449,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9441,7 +9450,7 @@ index e5f84870..137b2555 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -490,7 +463,10 @@ declare class NodeMaterial extends Material {
+@@ -490,7 +464,10 @@ declare class NodeMaterial extends Material {
       * @param {NodeMaterial} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */

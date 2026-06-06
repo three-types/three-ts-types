@@ -4,6 +4,7 @@ import LightingModel from "../../nodes/core/LightingModel.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
 import NodeBuilder from "../../nodes/core/NodeBuilder.js";
+import LightingNode from "../../nodes/lighting/LightingNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { MapColorPropertiesToColorRepresentations, Material, MaterialParameters } from "../Material.js";
 import NodeMaterialObserver from "./manager/NodeMaterialObserver.js";
@@ -408,9 +409,9 @@ declare class NodeMaterial extends Material {
      * Setups the lights node based on the scene, environment and material.
      *
      * @param {NodeBuilder} builder - The current node builder.
-     * @return {LightsNode} The lights node.
+     * @return {LightingNode<Array>} The lights node.
      */
-    setupLights(builder: NodeBuilder): LightsNode;
+    setupMaterialLightings(builder: NodeBuilder): LightingNode[];
     /**
      * This method should be implemented by most derived materials
      * since it defines the material's lighting model.
