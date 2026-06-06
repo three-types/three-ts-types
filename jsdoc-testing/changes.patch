@@ -10318,6 +10318,30 @@ index e8ddddc6..9a57cd2c 100644
 +    interpolate_(i1: number, t0: number, t: number, t1: number): TypedArray;
  }
 -import { Interpolant } from '../Interpolant.js';
+diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
+index 26843319..59c1bf68 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
+@@ -1,9 +1,12 @@
++import VaryingNode from '../core/VaryingNode.js';
++import { BatchedMesh } from '../../objects/BatchedMesh.js';
++
+ /**
+  * TSL object representing a varying property for the batching color vector.
+  *
+  * @type {VaryingNode<vec3>}
+  */
+-export const batchColor: VaryingNode<any>;
++export const batchColor: VaryingNode<'vec3'>;
+ /**
+  * TSL function representing the vertex shader batching setup.
+  * Applies the batch transformation matrix to positionLocal, normalLocal, and tangentLocal.
+@@ -13,4 +16,4 @@ export const batchColor: VaryingNode<any>;
+  * @function
+  * @param {BatchedMesh} batchMesh - The batched mesh.
+  */
+-export const batch: () => void;
++export const batch: (batchMesh: BatchedMesh) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
 index 60775a2a..2ed041bf 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
@@ -10490,6 +10514,92 @@ index 60775a2a..2ed041bf 100644
  }
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
+diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
+index 61c21bff..36e24ac6 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
+@@ -1,9 +1,14 @@
++import VaryingNode from '../core/VaryingNode.js';
++import { InstancedBufferAttribute } from '../../core/InstancedBufferAttribute.js';
++import StorageInstancedBufferAttribute from '../../renderers/common/StorageInstancedBufferAttribute.js';
++import { InstancedMesh } from '../../objects/InstancedMesh.js';
++
+ /**
+  * TSL object representing a varying property for the instanced color vector.
+  *
+  * @type {VaryingNode<vec3>}
+  */
+-export const instanceColor: VaryingNode<any>;
++export const instanceColor: VaryingNode<'vec3'>;
+ /**
+  * TSL function representing the standard instancing vertex shader setup.
+  * Transforms positionLocal and normalLocal, and assigns varying color in-place.
+@@ -14,7 +19,7 @@ export const instanceColor: VaryingNode<any>;
+  * @param {InstancedBufferAttribute|StorageInstancedBufferAttribute} matrices - The instanced transformation matrices.
+  * @param {?InstancedBufferAttribute|StorageInstancedBufferAttribute} [colors=null] - The optional instanced colors.
+  */
+-export const instance: () => void;
++export const instance: (count: number, matrices: InstancedBufferAttribute | StorageInstancedBufferAttribute, colors?: InstancedBufferAttribute | StorageInstancedBufferAttribute | null) => void;
+ /**
+  * TSL wrapper for applying instanced mesh rendering setup.
+  *
+@@ -22,4 +27,4 @@ export const instance: () => void;
+  * @function
+  * @param {InstancedMesh} instancedMesh - The instanced mesh.
+  */
+-export const instancedMesh: () => void;
++export const instancedMesh: (instancedMesh: InstancedMesh) => void;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
+index cd48226b..c3fec264 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
+@@ -1,9 +1,12 @@
++import ReferenceNode from './ReferenceNode.js';
++import { Mesh } from '../../objects/Mesh.js';
++
+ /**
+  * TSL object representing a reference to the mesh's morphTargetInfluences array.
+  *
+  * @type {ReferenceNode<float>}
+  */
+-export const morphTargetInfluences: ReferenceNode<any>;
++export const morphTargetInfluences: ReferenceNode<'float', unknown>;
+ /**
+  * TSL function representing the vertex shader morph targets blend setup.
+  * Dynamically computes morph targets weights and updates positionLocal and normalLocal in-place.
+@@ -12,4 +15,4 @@ export const morphTargetInfluences: ReferenceNode<any>;
+  * @function
+  * @param {Mesh} mesh - The mesh.
+  */
+-export const morphReference: () => void;
++export const morphReference: (mesh: Mesh) => void;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
+index ca4dd3df..a65e1ccc 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
+@@ -1,3 +1,7 @@
++import { SkinnedMesh } from '../../objects/SkinnedMesh.js';
++import Node from '../core/Node.js';
++import { Vector3 } from '../../math/Vector3.js';
++
+ /**
+  * TSL function representing the standard skeletal animation vertex shader setup.
+  * Transforms positionLocal, normalLocal, and tangentLocal in-place.
+@@ -6,7 +10,7 @@
+  * @function
+  * @param {SkinnedMesh} skinnedMesh - The skinned mesh.
+  */
+-export const skinning: () => void;
++export const skinning: (skinnedMesh: SkinnedMesh) => void;
+ /**
+  * TSL function that computes skeletal animation for custom compute passes.
+  *
+@@ -16,4 +20,4 @@ export const skinning: () => void;
+  * @param {Node<vec3>} [toPosition=null] - The target position node to assign.
+  * @returns {Node<vec3>} The computed skinned position node.
+  */
+-export const computeSkinning: () => void;
++export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 index 8299d6c5..7d60dfe0 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
