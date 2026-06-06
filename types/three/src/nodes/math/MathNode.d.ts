@@ -639,10 +639,21 @@ declare module "../core/Node.js" {
     }
 }
 
-export const transformDirection: (direction: Vec3, matrix: Mat3 | Mat4) => Node<"vec3">;
+interface TransformDirection {
+    (direction: Vec3, matrix: Mat3 | Mat4): Node<"vec3">;
+    (matrix: Mat3 | Mat4, direction: Vec3): Node<"vec3">;
+}
+
+export const transformDirection: TransformDirection;
 declare module "../core/Node.js" {
     interface Vec3Extensions {
         transformDirection: (matrix: Mat3 | Mat4) => Node<"vec3">;
+    }
+    interface Mat3Extensions {
+        transformDirection: (direction: Vec3) => Node<"vec3">;
+    }
+    interface Mat4Extensions {
+        transformDirection: (direction: Vec3) => Node<"vec3">;
     }
 }
 

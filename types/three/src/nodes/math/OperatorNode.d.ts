@@ -1,4 +1,7 @@
 import { Color } from "../../math/Color.js";
+import { Matrix2 } from "../../math/Matrix2.js";
+import { Matrix3 } from "../../math/Matrix3.js";
+import { Matrix4 } from "../../math/Matrix4.js";
 import { Vector2 } from "../../math/Vector2.js";
 import { Vector3 } from "../../math/Vector3.js";
 import { Vector4 } from "../../math/Vector4.js";
@@ -38,6 +41,8 @@ export default class OperatorNode extends TempNode {
 
 type FloatOrNumber = Node<"float"> | number;
 
+type AnyNumber = Node<"float"> | Node<"int"> | Node<"uint"> | number;
+
 type Vec2 = Node<"vec2"> | Vector2;
 type Vec3 = Node<"vec3"> | Vector3 | Node<"color"> | Color;
 type Vec4 = Node<"vec4"> | Vector4;
@@ -49,6 +54,10 @@ type Vec4OrFloat = Vec4 | FloatOrNumber;
 type Vec2OrLess = Vec2;
 type Vec3OrLess = Vec2OrLess | Vec3;
 type Vec4OrLess = Vec3OrLess | Vec4;
+
+type Mat2 = Node<"mat2"> | Matrix2;
+type Mat3 = Node<"mat3"> | Matrix3;
+type Mat4 = Node<"mat4"> | Matrix4;
 
 type Bool = Node<"bool"> | boolean;
 
@@ -197,45 +206,86 @@ interface AddSubMulDivNumberVecVec4AssignExtensions<TNum extends NumType> {
 // add/sub/mul mats
 
 interface AddSubMulMat {
-    (a: Node<"mat2">, b: Node<"mat2">): Node<"mat2">;
-    (a: Node<"mat3">, b: Node<"mat3">): Node<"mat3">;
-    (a: Node<"mat4">, b: Node<"mat4">): Node<"mat4">;
+    (a: Mat2, b: Mat2, ...params: Mat2[]): Node<"mat2">;
+    (a: Mat3, b: Mat3, ...params: Mat3[]): Node<"mat3">;
+    (a: Mat4, b: Mat4, ...params: Mat4[]): Node<"mat4">;
 }
 
 interface AddSubMulMat2Extensions {
-    (b: Node<"mat2">): Node<"mat2">;
+    (b: Mat2): Node<"mat2">;
 }
 
 interface AddSubMulMat2AssignExtensions {
-    (b: Node<"mat2">): this;
+    (b: Mat2): this;
 }
 
 interface AddSubMulMat3Extensions {
-    (b: Node<"mat3">): Node<"mat3">;
+    (b: Mat3): Node<"mat3">;
 }
 
 interface AddSubMulMat3AssignExtensions {
-    (b: Node<"mat3">): this;
+    (b: Mat3): this;
 }
 
 interface AddSubMulMat4Extensions {
-    (b: Node<"mat4">): Node<"mat4">;
+    (b: Mat4): Node<"mat4">;
 }
 
 interface AddSubMulMat4AssignExtensions {
-    (b: Node<"mat3">): this;
+    (b: Mat3): this;
+}
+
+// mut mats and nums
+
+interface MulMatNum {
+    (a: Mat2, b: AnyNumber): Node<"mat2">;
+    (a: Mat3, b: AnyNumber): Node<"mat3">;
+    (a: Mat4, b: AnyNumber): Node<"mat4">;
+    (a: AnyNumber, b: Mat2): Node<"mat2">;
+    (a: AnyNumber, b: Mat3): Node<"mat3">;
+    (a: AnyNumber, b: Mat4): Node<"mat4">;
+}
+
+interface MulMatNumNumExtensions {
+    (b: Mat2): Node<"mat2">;
+    (b: Mat3): Node<"mat3">;
+    (b: Mat4): Node<"mat4">;
+}
+
+interface MulMatNumMat2Extensions {
+    (b: AnyNumber): Node<"mat2">;
+}
+
+interface MulMatNumMat3Extensions {
+    (b: AnyNumber): Node<"mat3">;
+}
+
+interface MulMatNumMat4Extensions {
+    (b: AnyNumber): Node<"mat4">;
+}
+
+interface MulMatNumMat2AssignExtensions {
+    (b: AnyNumber): this;
+}
+
+interface MulMatNumMat3AssignExtensions {
+    (b: AnyNumber): this;
+}
+
+interface MulMatNumMat4AssignExtensions {
+    (b: AnyNumber): this;
 }
 
 // mut mats and vecs
 // The vec parameter gets converted to matrix length
 
 interface MulMatVec {
-    (a: Node<"mat2">, b: Vec4OrLess): Node<"vec2">;
-    (a: Node<"mat3">, b: Vec4OrLess): Node<"vec3">;
-    (a: Node<"mat4">, b: Vec4OrLess): Node<"vec4">;
-    (a: Vec4OrLess, b: Node<"mat2">): Node<"vec2">;
-    (a: Vec4OrLess, b: Node<"mat3">): Node<"vec3">;
-    (a: Vec4OrLess, b: Node<"mat4">): Node<"vec4">;
+    (a: Mat2, b: Vec4OrLess): Node<"vec2">;
+    (a: Mat3, b: Vec4OrLess): Node<"vec3">;
+    (a: Mat4, b: Vec4OrLess): Node<"vec4">;
+    (a: Vec4OrLess, b: Mat2): Node<"vec2">;
+    (a: Vec4OrLess, b: Mat3): Node<"vec3">;
+    (a: Vec4OrLess, b: Mat4): Node<"vec4">;
 }
 
 interface MulVecMatMat2Extensions {
@@ -251,9 +301,9 @@ interface MulVecMatMat4Extensions {
 }
 
 interface MulVecMatVecExtensions {
-    (b: Node<"mat2">): Node<"vec2">;
-    (b: Node<"mat3">): Node<"vec3">;
-    (b: Node<"mat4">): Node<"vec4">;
+    (b: Mat2): Node<"vec2">;
+    (b: Mat3): Node<"vec3">;
+    (b: Mat4): Node<"vec4">;
 }
 
 // Exports
@@ -271,7 +321,13 @@ interface Mul
         AddSubMulDivNumberVec<"int">,
         AddSubMulDivNumberVec<"uint">,
         AddSubMulMat,
+        MulMatNum,
         MulMatVec
+{
+}
+
+interface MulNumExtension<TNum extends NumType>
+    extends AddSubMulDivNumberVecNumExtensions<TNum>, MulMatNumNumExtensions
 {
 }
 
@@ -290,13 +346,22 @@ interface MulVec4Extensions<TNum extends NumType>
 {
 }
 
-interface MulMat2Extensions extends AddSubMulMat2Extensions, MulVecMatMat2Extensions {
+interface MulMat2Extensions extends AddSubMulMat2Extensions, MulMatNumMat2Extensions, MulVecMatMat2Extensions {
 }
 
-interface MulMat3Extensions extends AddSubMulMat3Extensions, MulVecMatMat3Extensions {
+interface MulMat3Extensions extends AddSubMulMat3Extensions, MulMatNumMat3Extensions, MulVecMatMat3Extensions {
 }
 
-interface MulMat4Extensions extends AddSubMulMat4Extensions, MulVecMatMat4Extensions {
+interface MulMat4Extensions extends AddSubMulMat4Extensions, MulMatNumMat4Extensions, MulVecMatMat4Extensions {
+}
+
+interface MulMat2AssignExtensions extends AddSubMulMat2AssignExtensions, MulMatNumMat2AssignExtensions {
+}
+
+interface MulMat3AssignExtensions extends AddSubMulMat3AssignExtensions, MulMatNumMat3AssignExtensions {
+}
+
+interface MulMat4AssignExtensions extends AddSubMulMat4AssignExtensions, MulMatNumMat4AssignExtensions {
 }
 
 export const mul: Mul;
@@ -313,7 +378,7 @@ declare module "../core/Node.js" {
     interface NumExtensions<TNum extends NumType> {
         add: AddSubMulDivNumberVecNumExtensions<TNum>;
         sub: AddSubMulDivNumberVecNumExtensions<TNum>;
-        mul: AddSubMulDivNumberVecNumExtensions<TNum>;
+        mul: MulNumExtension<TNum>;
         div: AddSubMulDivNumberVecNumExtensions<TNum>;
 
         addAssign: AddSubMulDivNumberVecNumberAssignExtensions<TNum>;
@@ -387,7 +452,7 @@ declare module "../core/Node.js" {
 
         addAssign: AddSubMulMat2AssignExtensions;
         subAssign: AddSubMulMat2AssignExtensions;
-        mulAssign: AddSubMulMat2AssignExtensions;
+        mulAssign: MulMat2AssignExtensions;
     }
 
     interface Mat3Extensions {
@@ -397,7 +462,7 @@ declare module "../core/Node.js" {
 
         addAssign: AddSubMulMat3AssignExtensions;
         subAssign: AddSubMulMat3AssignExtensions;
-        mulAssign: AddSubMulMat3AssignExtensions;
+        mulAssign: MulMat3AssignExtensions;
     }
 
     interface Mat4Extensions {
@@ -407,7 +472,7 @@ declare module "../core/Node.js" {
 
         addAssign: AddSubMulMat4AssignExtensions;
         subAssign: AddSubMulMat4AssignExtensions;
-        mulAssign: AddSubMulMat4AssignExtensions;
+        mulAssign: MulMat4AssignExtensions;
     }
 }
 
