@@ -4934,28 +4934,22 @@ index d9633cd15..c2b07d41f 100644
              if (shape.holes && shape.holes.length > 0) {
                  for (let j = 0; j < shape.holes.length; j++) {
 diff --git a/examples-testing/examples/webgl_geometry_text_stroke.ts b/examples-testing/examples/webgl_geometry_text_stroke.ts
-index 373892c74..9bf589244 100644
+index 49ca9aa8c..ae00889de 100644
 --- a/examples-testing/examples/webgl_geometry_text_stroke.ts
 +++ b/examples-testing/examples/webgl_geometry_text_stroke.ts
-@@ -5,7 +5,7 @@ import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
- import { Font } from 'three/addons/loaders/FontLoader.js';
- import { unzipSync, strFromU8 } from 'three/addons/libs/fflate.module.js';
+@@ -2,9 +2,9 @@ import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { SVGLoader } from 'three/addons/loaders/SVGLoader.js';
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { FontLoader, Font } from 'three/addons/loaders/FontLoader.js';
  
 -let camera, scene, renderer;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
  
  init();
  
-@@ -19,7 +19,7 @@ function init() {
-     new THREE.FileLoader()
-         .setResponseType('arraybuffer')
-         .load('fonts/MPLUSRounded1c/MPLUSRounded1c-Regular.typeface.json.zip', function (data) {
--            const zip = unzipSync(new Uint8Array(data));
-+            const zip = unzipSync(new Uint8Array(data as ArrayBuffer));
-             const strArray = strFromU8(new Uint8Array(zip['MPLUSRounded1c-Regular.typeface.json'].buffer));
- 
-             const font = new Font(JSON.parse(strArray));
-@@ -82,16 +82,22 @@ function init() {
+@@ -76,16 +76,22 @@ function init() {
      window.addEventListener('resize', onWindowResize);
  } // end init
  
@@ -4982,7 +4976,7 @@ index 373892c74..9bf589244 100644
  
      geometry.translate(xMid, 0, 0);
  
-@@ -105,10 +111,10 @@ function generateStrokeText(font, material, message, size, direction = 'ltr') {
+@@ -99,10 +105,10 @@ function generateStrokeText(font, material, message, size, direction = 'ltr') {
  
      // make line shape ( N.B. edge view remains visible )
  
