@@ -20,7 +20,7 @@ export const packNormalToRGB: (node: Node<"vec3"> | Vector3) => Node<"vec3">;
  * @param {Node<vec3>} node - The color to unpack.
  * @return {Node<vec3>} The direction.
  */
-export const unpackRGBToNormal: (node: Node<"vec3"> | Vector3) => Node<"vec3">;
+export const unpackRGBToNormal: (node: Node<"vec3"> | Node<"vec4"> | Vector3) => Node<"vec3">;
 
 /**
  * Unpacks a tangent space normal, reconstructing the Z component by projecting the X,Y coordinates onto the hemisphere.
@@ -49,4 +49,4 @@ export const directionToColor: (node: Node<"vec3"> | Vector3) => Node<"vec3">;
  * @param {Node<vec3>} node - The color to unpack.
  * @returns {Node<vec3>}
  */
-export const colorToDirection: (node: Node<"vec3"> | Vector3) => Node<"vec3">;
+export const colorToDirection: (node: Node<"vec3"> | Node<"vec4"> | Vector3) => Node<"vec3">;
