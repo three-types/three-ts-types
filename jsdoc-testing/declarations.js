@@ -134,6 +134,7 @@ const files = [
     'src/renderers/common/CubeRenderTarget',
     'src/renderers/common/Info',
     'src/renderers/common/InspectorBase',
+    'src/renderers/common/Lighting',
     'src/renderers/common/ReadbackBuffer',
     'src/renderers/common/Renderer',
     'src/renderers/common/TimestampQueryPool',
