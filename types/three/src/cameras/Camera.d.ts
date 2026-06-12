@@ -37,5 +37,6 @@ export class Camera extends Object3D {
      * @default false
      */
     get reversedDepth(): boolean;
+    clone(): this;
     copy(source: Camera, recursive?: boolean): this;
 }
