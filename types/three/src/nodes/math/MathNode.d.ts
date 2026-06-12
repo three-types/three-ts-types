@@ -657,6 +657,19 @@ declare module "../core/Node.js" {
     }
 }
 
+interface TransformNormalByViewMatrix {
+    (normal: Vec3, viewMatrix: Mat3 | Mat4): Node<"vec3">;
+}
+
+export const transformNormalByViewMatrix: TransformNormalByViewMatrix;
+export const transformNormalByInverseViewMatrix: TransformNormalByViewMatrix;
+declare module "../core/Node.js" {
+    interface Vec3Extensions {
+        transformNormalByViewMatrix: (matrix: Mat3 | Mat4) => Node<"vec3">;
+        transformNormalByInverseViewMatrix: (matrix: Mat3 | Mat4) => Node<"vec3">;
+    }
+}
+
 export const cbrt: (a: FloatOrNumber) => Node<"float">;
 declare module "../core/Node.js" {
     interface FloatExtensions {
