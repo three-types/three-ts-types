@@ -11762,6 +11762,97 @@ index 243a98ae5..319c00215 100644
 +export const blendColor: (base: ColorParameter, blend: ColorParameter) => Node<"vec4">;
 +
 +export {};
+diff --git a/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
+index b1d3e7e1c..6a4406d74 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
+@@ -1,11 +1,35 @@
++import Node from '../core/Node.js';
++import { Vector3 } from '../../math/Vector3.js';
++
++/**
++ * This node can be used to evaluate whether a primitive is front or back facing.
++ *
++ * @augments Node
++ */
++declare class FrontFacingNode extends Node<"bool"> {
++    /**
++     * Constructs a new front facing node.
++     */
++    constructor();
++    /**
++     * This flag can be used for type testing.
++     *
++     * @type {boolean}
++     * @readonly
++     * @default true
++     */
++    readonly isFrontFacingNode: boolean;
++}
++
+ export default FrontFacingNode;
++
+ /**
+  * TSL object that represents whether a primitive is front or back facing
+  *
+  * @tsl
+  * @type {FrontFacingNode<bool>}
+  */
+-export const frontFacing: FrontFacingNode<bool>;
++export const frontFacing: FrontFacingNode;
+ /**
+  * TSL object that represents the front facing status as a number instead of a bool.
+  * `1` means front facing, `-1` means back facing.
+@@ -13,7 +37,7 @@ export const frontFacing: FrontFacingNode<bool>;
+  * @tsl
+  * @type {Node<float>}
+  */
+-export const faceDirection: Node<any>;
++export const faceDirection: Node<"float">;
+ /**
+  * Negates a vector if the rendering occurs on the back side of a face,
+  * based on the material's side configuration.
+@@ -28,26 +52,20 @@ export const faceDirection: Node<any>;
+  * @param {Node<vec3>} vector - The vector to process.
+  * @returns {Node<vec3>} The processed vector.
+  */
+-export const negateOnBackSide: () => void;
+-export function directionToFaceDirection(vector: Node<vec3>): Node<vec3>;
++export const negateOnBackSide: (vector: Node<"vec3"> | Vector3) => Node<"vec3">;
+ /**
+- * This node can be used to evaluate whether a primitive is front or back facing.
++ * Negates a vector if the rendering occurs on the back side of a face,
++ * based on the material's side configuration.
+  *
+- * @augments Node
++ * - If the material's side is `BackSide`, the vector is inverted (negated).
++ * - If the material's side is `DoubleSide`, the vector is multiplied by `faceDirection`
++ *   (negated only for back-facing fragments).
++ * - If the material's side is `FrontSide` (default), the vector remains unchanged.
++ *
++ * @tsl
++ * @function
++ * @deprecated since r185. Use {@link negateOnBackSide} instead.
++ * @param {Node<vec3>} vector - The vector to convert.
++ * @returns {Node<vec3>} The converted vector.
+  */
+-declare class FrontFacingNode extends Node {
+-    /**
+-     * Constructs a new front facing node.
+-     */
+-    constructor();
+-    /**
+-     * This flag can be used for type testing.
+-     *
+-     * @type {boolean}
+-     * @readonly
+-     * @default true
+-     */
+-    readonly isFrontFacingNode: boolean;
+-    generate(builder: any): any;
+-}
+-import Node from '../core/Node.js';
++export const directionToFaceDirection: (vector: Node<"vec3"> | Vector3) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts
 index bcf1b8bef..9ee905a68 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts

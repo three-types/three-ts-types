@@ -124,6 +124,7 @@ const files = [
     'src/nodes/core/StructTypeNode',
     'src/nodes/core/UniformNode',
     'src/nodes/display/BlendModes',
+    'src/nodes/display/FrontFacingNode',
     'src/nodes/display/PremultiplyAlphaFunctions',
     'src/nodes/utils/Packing',
     'src/renderers/common/BufferUtils',
