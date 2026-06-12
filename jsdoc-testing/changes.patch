@@ -12418,6 +12418,40 @@ index 7deedcbb7..94e3a364b 100644
 -import { EventDispatcher } from '../../core/EventDispatcher.js';
 +
 +export default InspectorBase;
+diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
+index d924a77cd..23fea231a 100644
+--- a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
++++ b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
+@@ -1,4 +1,7 @@
+-export default Lighting;
++import { LightsNode } from '../../nodes/Nodes.js';
++import { Light } from '../../lights/Light.js';
++import { Scene } from '../../scenes/Scene.js';
++
+ /**
+  * This renderer module manages the lights nodes which are unique
+  * per scene and camera combination.
+@@ -16,13 +19,6 @@ declare class Lighting {
+      * @default true
+      */
+     enabled: boolean;
+-    /**
+-     * A stack of light arrays saved per render via {@link Lighting#beginRender}.
+-     *
+-     * @private
+-     * @type {Array<Array<Light>>}
+-     */
+-    private _cache;
+     /**
+      * Creates a new lights node for the given array of lights.
+      *
+@@ -55,4 +51,5 @@ declare class Lighting {
+      */
+     finishRender(scene: Scene): void;
+ }
+-import { LightsNode } from '../../nodes/Nodes.js';
++
++export default Lighting;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
 index 5fdbd4d68..ed7bc5700 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
