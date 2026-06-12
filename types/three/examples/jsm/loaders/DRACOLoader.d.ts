@@ -1,16 +1,23 @@
 import { BufferGeometry, Loader, LoadingManager } from "three";
 
-export class DRACOLoader extends Loader<BufferGeometry> {
+interface DecoderPaths {
+    js: string;
+    wasm: string;
+}
+
+declare const DRACO_GLTF_CONFIG: DecoderPaths;
+
+declare class DRACOLoader extends Loader<BufferGeometry> {
     constructor(manager?: LoadingManager);
 
-    setDecoderPath(path: string): DRACOLoader;
+    setDecoderPath(path: string | DecoderPaths): this;
 
     /**
      * @deprecated setDecoderConfig to has been deprecated and will be removed in r194.
      */
-    setDecoderConfig(config: object): DRACOLoader;
+    setDecoderConfig(config: object): this;
 
-    setWorkerLimit(workerLimit: number): DRACOLoader;
+    setWorkerLimit(workerLimit: number): this;
 
     load(
         url: string,
@@ -25,6 +32,8 @@ export class DRACOLoader extends Loader<BufferGeometry> {
         onError?: (err: unknown) => void,
     ): void;
 
-    preload(): DRACOLoader;
-    dispose(): DRACOLoader;
+    preload(): this;
+    dispose(): this;
 }
+
+export { DRACO_GLTF_CONFIG, DRACOLoader };
