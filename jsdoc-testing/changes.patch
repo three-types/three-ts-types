@@ -1957,7 +1957,7 @@ index d1dd98d30..cd3a97d10 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
-index b24b6e34a..d4b662b45 100644
+index 67a368630..11c3f98e1 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 @@ -1,56 +1,42 @@
@@ -2019,10 +2019,10 @@ index b24b6e34a..d4b662b45 100644
      get reversedDepth(): boolean;
 -    copy(source: any, recursive: any): this;
 -    updateMatrixWorld(force: any): void;
--    updateWorldMatrix(updateParents: any, updateChildren: any): void;
+-    updateWorldMatrix(updateParents: any, updateChildren: any, force?: boolean): void;
 -    clone(): any;
-+    copy(source: Camera, recursive?: boolean): this;
 +    clone(): this;
++    copy(source: Camera, recursive?: boolean): this;
  }
 -import { Object3D } from '../core/Object3D.js';
 -import { Matrix4 } from '../math/Matrix4.js';
@@ -13547,7 +13547,7 @@ index f99684121..71aa64a4e 100644
 +
 +export default Renderer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
-index 82eedbdd9..f34d38405 100644
+index f18cad9f8..22d8868ac 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
 @@ -1,10 +1,9 @@
