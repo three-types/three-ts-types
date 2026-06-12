@@ -25,5 +25,5 @@ export class MaterialLoader extends Loader<Material> {
      * @param type The material type.
      * @param materialClass The material class.
      */
-    static registerMaterial(type: string, materialClass: new () => Material): void;
+    static registerMaterial(type: string, materialClass: new() => Material): void;
 }
