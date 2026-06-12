@@ -413,6 +413,13 @@ declare class NodeMaterial extends Material {
      */
     setupMaterialLightings(builder: NodeBuilder): LightingNode[];
     /**
+     * Setups the ambient occlusion node from the material.
+     *
+     * @param {NodeBuilder} builder - The current node builder.
+     * @return {Node} The ambient occlusion node.
+     */
+    setupAmbientOcclusion(builder: NodeBuilder): Node;
+    /**
      * This method should be implemented by most derived materials
      * since it defines the material's lighting model.
      *
