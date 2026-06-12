@@ -1,0 +1,30 @@
+export class Viewer extends Tab {
+    constructor(options?: {});
+    maximizedByFullscreenButton: boolean;
+    itemLibrary: Map<any, any>;
+    folderLibrary: Map<any, any>;
+    canvasNodes: Map<any, any>;
+    currentDataList: any[];
+    nodeList: List;
+    nodes: Item;
+    scrollWrapper: HTMLDivElement;
+    fullViewerContainer: HTMLDivElement;
+    select: HTMLSelectElement;
+    backBtn: HTMLButtonElement;
+    activeFullNodeId: any;
+    isDraggingThumbnail: boolean;
+    activeSourceCanvas: any;
+    activePointerIds: Set<any>;
+    getFolder(name: any): any;
+    addNodeItem(canvasData: any): any;
+    _maximizeListenerAdded: boolean | undefined;
+    setupEventForwarding(sourceCanvas: any): void;
+    forwardEvent(event: any, sourceCanvas: any, targetCanvas: any): void;
+    showListView(): void;
+    showNodeView(nodeId: any): void;
+    getCanvasDataByNode(renderer: any, node: any): any;
+    update(inspector: any): void;
+}
+import { Tab } from '../ui/Tab.js';
+import { List } from '../ui/List.js';
+import { Item } from '../ui/Item.js';
