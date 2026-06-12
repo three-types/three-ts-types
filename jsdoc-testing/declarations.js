@@ -126,6 +126,7 @@ const files = [
     'src/nodes/display/BlendModes',
     'src/nodes/display/FrontFacingNode',
     'src/nodes/display/PremultiplyAlphaFunctions',
+    'src/nodes/utils/EquirectUV',
     'src/nodes/utils/Packing',
     'src/renderers/common/BufferUtils',
     'src/renderers/common/BundleGroup',
