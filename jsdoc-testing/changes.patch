@@ -170,6 +170,50 @@ index 1dc62347..4db11431 100644
 -import { Vector3 } from 'three';
 -import { Box3 } from 'three';
 -import { Scene } from 'three';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts b/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
+index 3a794d7d..40bd7865 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
+@@ -1,3 +1,9 @@
++import { Object3D } from '../../../src/core/Object3D.js';
++
++export interface TileCreasedNormalsPluginOptions {
++    creaseAngle?: number | undefined;
++}
++
+ /**
+  * A plugin for `3d-tiles-renderer` that computes creased vertex normals for the
+  * geometry of each loaded tile: smooth normals everywhere except where faces meet
+@@ -20,18 +26,13 @@ export class TileCreasedNormalsPlugin {
+      * @param {Object} [options] - The configuration options.
+      * @param {number} [options.creaseAngle=Math.PI/3] - The crease angle in radians.
+      */
+-    constructor({ creaseAngle }?: {
+-        creaseAngle?: number | undefined;
+-    });
++    constructor({ creaseAngle }?: TileCreasedNormalsPluginOptions);
+     /**
+      * The crease angle in radians.
+      *
+      * @type {number}
+      */
+     creaseAngle: number;
+-    _requestId: number;
+-    _pending: Map<any, any>;
+-    _worker: Worker;
+     /**
+      * Called by the tiles renderer for each loaded tile model. The tile is
+      * displayed once the returned promise resolves.
+@@ -39,8 +40,7 @@ export class TileCreasedNormalsPlugin {
+      * @param {Object3D} scene - The tile model.
+      * @return {Promise} A promise that resolves when all geometries have creased normals.
+      */
+-    processTileModel(scene: Object3D): Promise<any>;
+-    _processMesh(mesh: any): Promise<any>;
++    processTileModel(scene: Object3D): Promise<void>;
+     /**
+      * Called by the tiles renderer when the plugin is unregistered or the
+      * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 index 3fc0b16d..1257d8f6 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
@@ -9855,7 +9899,7 @@ index 8b5885c3..6175b46a 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 4d9e0160..962926ab 100644
+index 32650a6d..962926ab 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -9951,7 +9995,7 @@ index 4d9e0160..962926ab 100644
 -     * @param {RenderObject} renderObject - The render object.
 -     * @param {Array<Light>} lightsData - The current material lights.
 -     * @param {number} renderId - The current render ID.
--     * @return {boolean} Whether the given render object has changed its state or not.
+-     * @return {boolean} Whether the given render object is equal to its cached state or not.
 -     */
 -    equals(renderObject: RenderObject, lightsData: Array<Light>, renderId: number): boolean;
 -    /**

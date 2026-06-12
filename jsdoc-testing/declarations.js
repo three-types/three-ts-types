@@ -6,6 +6,7 @@ const files = [
     'examples/jsm/csm/CSMFrustum',
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/lighting/LightProbeGrid',
+    'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
     'examples/jsm/tsl/utils/GroundedSkybox',
     'examples/jsm/webxr/WebGLXRFallback',
