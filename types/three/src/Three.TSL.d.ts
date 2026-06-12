@@ -568,6 +568,8 @@ export const toneMappingExposure: typeof TSL.toneMappingExposure;
 export const toonOutlinePass: typeof TSL.toonOutlinePass;
 export const transformDirection: typeof TSL.transformDirection;
 export const transformNormal: typeof TSL.transformNormal;
+export const transformNormalByInverseViewMatrix: typeof TSL.transformNormalByInverseViewMatrix;
+export const transformNormalByViewMatrix: typeof TSL.transformNormalByViewMatrix;
 export const transformNormalToView: typeof TSL.transformNormalToView;
 export const transformedClearcoatNormalView: typeof TSL.transformedClearcoatNormalView;
 export const transformedNormalView: typeof TSL.transformedNormalView;
