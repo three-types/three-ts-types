@@ -177,6 +177,7 @@ export const dynamicBufferAttribute: typeof TSL.dynamicBufferAttribute;
 export const element: typeof TSL.element;
 export const emissive: typeof TSL.emissive;
 export const equal: typeof TSL.equal;
+export const equirectDirection: typeof TSL.equirectDirection;
 export const equirectUV: typeof TSL.equirectUV;
 export const exp: typeof TSL.exp;
 export const exp2: typeof TSL.exp2;
