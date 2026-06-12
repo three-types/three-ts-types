@@ -47,6 +47,7 @@ export const addNodeElement: typeof TSL.addNodeElement;
 export const agxToneMapping: typeof TSL.agxToneMapping;
 export const all: typeof TSL.all;
 export const alphaT: typeof TSL.alphaT;
+export const ambientOcclusion: typeof TSL.ambientOcclusion;
 export const and: typeof TSL.and;
 export const anisotropy: typeof TSL.anisotropy;
 export const anisotropyB: typeof TSL.anisotropyB;
