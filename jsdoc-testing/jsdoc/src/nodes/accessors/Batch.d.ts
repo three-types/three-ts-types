@@ -1,0 +1,16 @@
+/**
+ * TSL object representing a varying property for the batching color vector.
+ *
+ * @type {VaryingNode<vec3>}
+ */
+export const batchColor: VaryingNode<any>;
+/**
+ * TSL function representing the vertex shader batching setup.
+ * Applies the batch transformation matrix to positionLocal, normalLocal, and tangentLocal.
+ * Also assigns the batch color if a color texture is present.
+ *
+ * @tsl
+ * @function
+ * @param {BatchedMesh} batchMesh - The batched mesh.
+ */
+export const batch: () => void;
