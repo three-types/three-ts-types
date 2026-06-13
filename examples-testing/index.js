@@ -8,6 +8,11 @@ import examplesFiles from '../three.js/examples/files.json' with { type: 'json' 
 const exceptionList = [
     'misc_exporter_gcode',
     'misc_raycaster_helper',
+    'physics_ammo_break',
+    'physics_ammo_cloth',
+    'physics_ammo_rope',
+    'physics_ammo_terrain',
+    'physics_ammo_volume',
     'webgl_animation_skinning_blending',
     'webgl_animation_skinning_additive_blending',
     'webgl_animation_skinning_ik',
