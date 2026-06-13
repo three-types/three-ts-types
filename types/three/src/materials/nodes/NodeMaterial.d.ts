@@ -468,12 +468,12 @@ declare class NodeMaterial extends Material {
      */
     setDefaultValues(material: Material): void;
     /**
-     * Copies the properties of the given node material to this instance.
+     * Copies the common properties of the given material to this instance.
      *
-     * @param {NodeMaterial} source - The material to copy.
+     * @param {Material} source - The material to copy.
      * @return {NodeMaterial} A reference to this node material.
      */
-    copy(source: NodeMaterial): this;
+    copy(source: Material): this;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface

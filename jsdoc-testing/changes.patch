@@ -7862,7 +7862,7 @@ index dfe9816f7..aa354534b 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface SpriteMaterial extends SpriteMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
-index bcb397652..2447ed6e0 100644
+index 861ba6447..f5ef59294 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
 @@ -1,25 +1,9 @@
@@ -7943,7 +7943,7 @@ index bcb397652..2447ed6e0 100644
      set worldUnits(value: boolean);
      /**
       * Whether the lines should sized in world units or not.
-@@ -79,16 +60,46 @@ declare class Line2NodeMaterial extends NodeMaterial {
+@@ -79,9 +60,39 @@ declare class Line2NodeMaterial extends NodeMaterial {
      /**
       * Whether the lines should be dashed or not.
       *
@@ -7951,7 +7951,8 @@ index bcb397652..2447ed6e0 100644
       * @default false
       */
      get dashed(): boolean;
-+}
+ }
+-import NodeMaterial from './NodeMaterial.js';
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Line2NodeMaterialParameters extends Partial<MapColorPropertiesToColorRepresentations<Line2NodeMaterialNodeProperties>>, LineDashedMaterialParameters {}
@@ -7978,16 +7979,7 @@ index bcb397652..2447ed6e0 100644
 +     */
 +    readonly isLine2NodeMaterial: boolean;
 +    setValues(values?: Line2NodeMaterialParameters): void;
-     /**
-      * Copies the properties of the given material to this instance.
-      *
-      * @param {Line2NodeMaterial} source - The material to copy.
-      * @return {Line2NodeMaterial} A reference to this material.
-      */
--    copy(source: Line2NodeMaterial): Line2NodeMaterial;
-+    copy(source: Line2NodeMaterial): this;
- }
--import NodeMaterial from './NodeMaterial.js';
++}
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +interface Line2NodeMaterial extends Line2NodeMaterialNodeProperties, LineDashedMaterialProperties {}
@@ -8389,7 +8381,7 @@ index effc5951b..5ba479deb 100644
 +
 +export default MeshNormalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
-index b55a9c942..d2d224b90 100644
+index 374eb470a..d2d224b90 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -8472,7 +8464,7 @@ index b55a9c942..d2d224b90 100644
      /**
       * Overwritten since this type of material uses {@link BasicEnvironmentNode}
       * to implement the default environment mapping.
-@@ -50,15 +58,16 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
+@@ -50,7 +58,7 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?BasicEnvironmentNode<vec3>} The environment node.
       */
@@ -8481,10 +8473,9 @@ index b55a9c942..d2d224b90 100644
      /**
       * Setups the lighting model.
       *
-      * @return {PhongLightingModel} The lighting model.
+@@ -58,6 +66,8 @@ declare class MeshPhongNodeMaterial extends NodeMaterial {
       */
      setupLightingModel(): PhongLightingModel;
--    copy(source: any): NodeMaterial;
  }
 -import NodeMaterial from './NodeMaterial.js';
 -import BasicEnvironmentNode from '../../nodes/lighting/BasicEnvironmentNode.js';
@@ -8962,7 +8953,7 @@ index ca33d8128..e23399cca 100644
 +
 +export default MeshSSSNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
-index 2128d9631..dd0366810 100644
+index f81035d5a..dd0366810 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -9066,11 +9057,9 @@ index 2128d9631..dd0366810 100644
      /**
       * Setups the lighting model.
       *
-@@ -74,8 +81,9 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
-      * Setups the specular related node variables.
+@@ -75,6 +82,8 @@ declare class MeshStandardNodeMaterial extends NodeMaterial {
       */
      setupSpecular(): void;
--    copy(source: any): NodeMaterial;
  }
 -import NodeMaterial from './NodeMaterial.js';
 -import EnvironmentNode from '../../nodes/lighting/EnvironmentNode.js';
@@ -9135,7 +9124,7 @@ index 1ffe1bd1b..85436d1fe 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 42249a0e6..d3d767f17 100644
+index 9e2aa5a5f..782b5f114 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -9564,11 +9553,11 @@ index 42249a0e6..d3d767f17 100644
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
 @@ -497,7 +471,10 @@ declare class NodeMaterial extends Material {
-      * @param {NodeMaterial} source - The material to copy.
+      * @param {Material} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
--    copy(source: NodeMaterial): NodeMaterial;
-+    copy(source: NodeMaterial): this;
+-    copy(source: Material): NodeMaterial;
++    copy(source: Material): this;
  }
 -import { Material } from '../Material.js';
 -import NodeMaterialObserver from './manager/NodeMaterialObserver.js';
@@ -9746,7 +9735,7 @@ index edf904684..947f9df05 100644
 +
 +export default ShadowNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
-index 7f8da84d3..b25508365 100644
+index 491e32e08..b25508365 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 @@ -1,25 +1,10 @@
@@ -9782,7 +9771,7 @@ index 7f8da84d3..b25508365 100644
      /**
       * The rotation of sprite materials is by default inferred from the `rotation`,
       * property. This node property allows to overwrite the default and define
-@@ -28,35 +13,58 @@ declare class SpriteNodeMaterial extends NodeMaterial {
+@@ -28,34 +13,58 @@ declare class SpriteNodeMaterial extends NodeMaterial {
       * If you don't want to overwrite the rotation but modify the existing
       * value instead, use {@link materialRotation}.
       *
@@ -9808,7 +9797,6 @@ index 7f8da84d3..b25508365 100644
 -     * @return {Node<vec3>} The position in view space.
 -     */
 -    setupPositionView(builder: NodeBuilder): Node<any>;
--    copy(source: any): NodeMaterial;
 +    scaleNode: Node | null;
      set sizeAttenuation(value: boolean);
      /**
