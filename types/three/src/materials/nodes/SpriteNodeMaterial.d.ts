@@ -24,14 +24,6 @@ export interface SpriteNodeMaterialNodeProperties extends NodeMaterialNodeProper
      * @default null
      */
     scaleNode: Node | null;
-    /**
-     * Setups the position node in view space. This method implements
-     * the sprite specific vertex shader.
-     *
-     * @param {NodeBuilder} builder - The current node builder.
-     * @return {Node<vec3>} The position in view space.
-     */
-    setupPositionView(builder: NodeBuilder): Node<"vec3">;
     set sizeAttenuation(value: boolean);
     /**
      * Whether to use size attenuation or not.
