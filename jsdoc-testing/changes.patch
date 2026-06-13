@@ -9735,7 +9735,7 @@ index edf904684..947f9df05 100644
 +
 +export default ShadowNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
-index 491e32e08..f17d8db60 100644
+index 491e32e08..b25508365 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 @@ -1,25 +1,10 @@
@@ -9771,7 +9771,7 @@ index 491e32e08..f17d8db60 100644
      /**
       * The rotation of sprite materials is by default inferred from the `rotation`,
       * property. This node property allows to overwrite the default and define
-@@ -28,19 +13,17 @@ declare class SpriteNodeMaterial extends NodeMaterial {
+@@ -28,34 +13,58 @@ declare class SpriteNodeMaterial extends NodeMaterial {
       * If you don't want to overwrite the rotation but modify the existing
       * value instead, use {@link materialRotation}.
       *
@@ -9789,16 +9789,15 @@ index 491e32e08..f17d8db60 100644
       * @default null
       */
 -    scaleNode: Node<any> | null;
-+    scaleNode: Node | null;
-     /**
-      * Setups the position node in view space. This method implements
-      * the sprite specific vertex shader.
-@@ -48,14 +31,48 @@ declare class SpriteNodeMaterial extends NodeMaterial {
-      * @param {NodeBuilder} builder - The current node builder.
-      * @return {Node<vec3>} The position in view space.
-      */
+-    /**
+-     * Setups the position node in view space. This method implements
+-     * the sprite specific vertex shader.
+-     *
+-     * @param {NodeBuilder} builder - The current node builder.
+-     * @return {Node<vec3>} The position in view space.
+-     */
 -    setupPositionView(builder: NodeBuilder): Node<any>;
-+    setupPositionView(builder: NodeBuilder): Node<"vec3">;
++    scaleNode: Node | null;
      set sizeAttenuation(value: boolean);
      /**
       * Whether to use size attenuation or not.
