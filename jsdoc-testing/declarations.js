@@ -4,6 +4,7 @@ import { argv } from 'node:process';
 
 const files = [
     'examples/jsm/csm/CSMFrustum',
+    'examples/jsm/geometries/LoftGeometry',
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
