@@ -1,5 +1,5 @@
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts b/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
-index d3c23f93..214d0cf9 100644
+index d3c23f934..214d0cf95 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/csm/CSMFrustum.d.ts
 @@ -1,7 +1,11 @@
@@ -56,8 +56,54 @@ index d3c23f93..214d0cf9 100644
      /**
       * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
       * target array.
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts b/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
+index 1e007e460..a2de0b896 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
+@@ -1,3 +1,18 @@
++import { BufferGeometry, Vector3 } from 'three';
++
++export interface LoftGeometryOptions {
++    closed?: boolean | undefined;
++    capStart?: boolean | undefined;
++    capEnd?: boolean | undefined;
++}
++
++export interface LoftGeometryParameters {
++    sections: Vector3[][];
++    closed: boolean;
++    capStart: boolean;
++    capEnd: boolean;
++}
++
+ /**
+  * This class can be used to generate a geometry by lofting (skinning) a surface
+  * through a series of cross sections. Each section is an array of points in 3D
+@@ -56,11 +71,7 @@ export class LoftGeometry extends BufferGeometry {
+      * @param {boolean} [options.capEnd=false] - Whether the last section is closed
+      * with a cap or not.
+      */
+-    constructor(sections?: Array<Array<Vector3>>, options?: {
+-        closed?: boolean | undefined;
+-        capStart?: boolean | undefined;
+-        capEnd?: boolean | undefined;
+-    });
++    constructor(sections?: Vector3[][], options?: LoftGeometryOptions);
+     /**
+      * Holds the constructor parameters that have been
+      * used to generate the geometry. Any modification
+@@ -68,8 +79,5 @@ export class LoftGeometry extends BufferGeometry {
+      *
+      * @type {Object}
+      */
+-    parameters: Object;
+-    copy(source: any): this;
++    parameters: LoftGeometryParameters;
+ }
+-import { BufferGeometry } from 'three';
+-import { Vector3 } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
-index 66ac1de3..196e0702 100644
+index 66ac1de37..196e0702d 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/ClusteredLighting.d.ts
 @@ -1,3 +1,6 @@
@@ -101,7 +147,7 @@ index 66ac1de3..196e0702 100644
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-index 1dc62347..4db11431 100644
+index 1dc623470..4db11431b 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
 @@ -1,3 +1,24 @@
@@ -171,7 +217,7 @@ index 1dc62347..4db11431 100644
 -import { Box3 } from 'three';
 -import { Scene } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts b/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
-index 3a794d7d..40bd7865 100644
+index 3a794d7df..40bd78652 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/misc/TileCreasedNormalsPlugin.d.ts
 @@ -1,3 +1,9 @@
@@ -215,7 +261,7 @@ index 3a794d7d..40bd7865 100644
       * Called by the tiles renderer when the plugin is unregistered or the
       * tiles renderer is disposed.
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
-index 3fc0b16d..1257d8f6 100644
+index 3fc0b16d1..1257d8f69 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 @@ -1,16 +1,5 @@
@@ -322,7 +368,7 @@ index 3fc0b16d..1257d8f6 100644
 +
 +export default ClusteredLightsNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
-index e49e7c2b..0135575b 100644
+index e49e7c2b6..0135575bb 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/GroundedSkybox.d.ts
 @@ -1,3 +1,5 @@
@@ -338,7 +384,7 @@ index e49e7c2b..0135575b 100644
 -export const getGroundProjectedNormal: () => void;
 +export const getGroundProjectedNormal: (radiusNode: Node<'float'>, heightNode: Node<'float'>) => Node<'vec3'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
-index 113ff7df..2b610bc4 100644
+index 113ff7df3..2b610bc4c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/webxr/WebGLXRFallback.d.ts
 @@ -1,3 +1,5 @@
@@ -354,7 +400,7 @@ index 113ff7df..2b610bc4 100644
 -export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: Function, onFallback?: Function): void;
 +export function setupWebGLXRFallback(renderer: WebGPURenderer, createFallbackRenderer: (renderer: WebGPURenderer) => WebGPURenderer, onFallback?: (fallbackRenderer: WebGPURenderer, renderer: WebGPURenderer) => Promise<void> | void): void;
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
-index 54300580..7849540e 100644
+index 543005806..7849540e6 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationAction.d.ts
 @@ -1,3 +1,8 @@
@@ -504,7 +550,7 @@ index 54300580..7849540e 100644
 +    _scheduleFading(duration: number, weightNow: number, weightThen: number): this;
  }
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationClip.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationClip.d.ts
-index 23194681..5d33622e 100644
+index 23194681c..5d33622ec 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationClip.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationClip.d.ts
 @@ -1,3 +1,22 @@
@@ -632,7 +678,7 @@ index 23194681..5d33622e 100644
  }
 -import { KeyframeTrack } from './KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationMixer.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationMixer.d.ts
-index b474470e..b0e635de 100644
+index b474470e7..b0e635de9 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationMixer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationMixer.d.ts
 @@ -1,24 +1,71 @@
@@ -813,7 +859,7 @@ index b474470e..b0e635de 100644
 -import { AnimationClip } from './AnimationClip.js';
 -import { AnimationAction } from './AnimationAction.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationObjectGroup.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationObjectGroup.d.ts
-index 040c4af5..21a787d5 100644
+index 040c4af5c..21a787d59 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationObjectGroup.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationObjectGroup.d.ts
 @@ -1,3 +1,5 @@
@@ -864,7 +910,7 @@ index 040c4af5..21a787d5 100644
 -    unsubscribe_(path: any): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts b/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
-index 7355fe03..9745bd9f 100644
+index 7355fe037..9745bd9f4 100644
 --- a/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/AnimationUtils.d.ts
 @@ -1,3 +1,7 @@
@@ -904,7 +950,7 @@ index 7355fe03..9745bd9f 100644
       * Returns an array by which times and values can be sorted.
       *
 diff --git a/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
-index 72239e7a..29c3d30c 100644
+index 72239e7a2..29c3d30ca 100644
 --- a/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/KeyframeTrack.d.ts
 @@ -1,3 +1,18 @@
@@ -1029,7 +1075,7 @@ index 72239e7a..29c3d30c 100644
 -import { CubicInterpolant } from '../math/interpolants/CubicInterpolant.js';
 -import { BezierInterpolant } from '../math/interpolants/BezierInterpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/PropertyBinding.d.ts b/jsdoc-testing/jsdoc/src/animation/PropertyBinding.d.ts
-index af4e99d9..bb6c8ec8 100644
+index af4e99d9d..bb6c8ec88 100644
 --- a/jsdoc-testing/jsdoc/src/animation/PropertyBinding.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/PropertyBinding.d.ts
 @@ -1,3 +1,14 @@
@@ -1168,7 +1214,7 @@ index af4e99d9..bb6c8ec8 100644
  }
  export {};
 diff --git a/jsdoc-testing/jsdoc/src/animation/PropertyMixer.d.ts b/jsdoc-testing/jsdoc/src/animation/PropertyMixer.d.ts
-index 0f715aa7..18cea3dc 100644
+index 0f715aa7b..18cea3dcb 100644
 --- a/jsdoc-testing/jsdoc/src/animation/PropertyMixer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/PropertyMixer.d.ts
 @@ -1,3 +1,5 @@
@@ -1241,7 +1287,7 @@ index 0f715aa7..18cea3dc 100644
 -    _lerpAdditive(buffer: any, dstOffset: any, srcOffset: any, t: any, stride: any): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/BooleanKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/BooleanKeyframeTrack.d.ts
-index d8e3cfd7..3198fbf6 100644
+index d8e3cfd7f..3198fbf68 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/BooleanKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/BooleanKeyframeTrack.d.ts
 @@ -1,7 +1,7 @@
@@ -1272,7 +1318,7 @@ index d8e3cfd7..3198fbf6 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/ColorKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/ColorKeyframeTrack.d.ts
-index aa0f64d7..a97bcb3a 100644
+index aa0f64d74..a97bcb3a5 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/ColorKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/ColorKeyframeTrack.d.ts
 @@ -1,7 +1,8 @@
@@ -1295,7 +1341,7 @@ index aa0f64d7..a97bcb3a 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/NumberKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/NumberKeyframeTrack.d.ts
-index f83c955c..e3a837b0 100644
+index f83c955ca..e3a837b07 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/NumberKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/NumberKeyframeTrack.d.ts
 @@ -1,7 +1,8 @@
@@ -1318,7 +1364,7 @@ index f83c955c..e3a837b0 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/QuaternionKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/QuaternionKeyframeTrack.d.ts
-index 98e4a75e..24a349a7 100644
+index 98e4a75e2..24a349a76 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/QuaternionKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/QuaternionKeyframeTrack.d.ts
 @@ -1,7 +1,8 @@
@@ -1342,7 +1388,7 @@ index 98e4a75e..24a349a7 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/StringKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/StringKeyframeTrack.d.ts
-index 95c5bd15..02e2f995 100644
+index 95c5bd155..02e2f995f 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/StringKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/StringKeyframeTrack.d.ts
 @@ -1,7 +1,7 @@
@@ -1373,7 +1419,7 @@ index 95c5bd15..02e2f995 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/animation/tracks/VectorKeyframeTrack.d.ts b/jsdoc-testing/jsdoc/src/animation/tracks/VectorKeyframeTrack.d.ts
-index 856db2d5..a7c734c2 100644
+index 856db2d58..a7c734c26 100644
 --- a/jsdoc-testing/jsdoc/src/animation/tracks/VectorKeyframeTrack.d.ts
 +++ b/jsdoc-testing/jsdoc/src/animation/tracks/VectorKeyframeTrack.d.ts
 @@ -1,7 +1,8 @@
@@ -1396,7 +1442,7 @@ index 856db2d5..a7c734c2 100644
  }
 -import { KeyframeTrack } from '../KeyframeTrack.js';
 diff --git a/jsdoc-testing/jsdoc/src/audio/Audio.d.ts b/jsdoc-testing/jsdoc/src/audio/Audio.d.ts
-index 75562276..9e6a4148 100644
+index 755622769..9e6a41485 100644
 --- a/jsdoc-testing/jsdoc/src/audio/Audio.d.ts
 +++ b/jsdoc-testing/jsdoc/src/audio/Audio.d.ts
 @@ -1,3 +1,6 @@
@@ -1742,7 +1788,7 @@ index 75562276..9e6a4148 100644
  }
 -import { Object3D } from '../core/Object3D.js';
 diff --git a/jsdoc-testing/jsdoc/src/audio/AudioAnalyser.d.ts b/jsdoc-testing/jsdoc/src/audio/AudioAnalyser.d.ts
-index 24149839..ca40a937 100644
+index 241498397..ca40a9378 100644
 --- a/jsdoc-testing/jsdoc/src/audio/AudioAnalyser.d.ts
 +++ b/jsdoc-testing/jsdoc/src/audio/AudioAnalyser.d.ts
 @@ -1,3 +1,5 @@
@@ -1771,7 +1817,7 @@ index 24149839..ca40a937 100644
      data: Uint8Array;
      /**
 diff --git a/jsdoc-testing/jsdoc/src/audio/AudioContext.d.ts b/jsdoc-testing/jsdoc/src/audio/AudioContext.d.ts
-index 3a463251..cc937757 100644
+index 3a4632519..cc9377570 100644
 --- a/jsdoc-testing/jsdoc/src/audio/AudioContext.d.ts
 +++ b/jsdoc-testing/jsdoc/src/audio/AudioContext.d.ts
 @@ -9,11 +9,11 @@ export class AudioContext {
@@ -1789,7 +1835,7 @@ index 3a463251..cc937757 100644
 +    static setContext(value: AudioContext): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/audio/AudioListener.d.ts b/jsdoc-testing/jsdoc/src/audio/AudioListener.d.ts
-index c668dd51..f009724a 100644
+index c668dd516..f009724aa 100644
 --- a/jsdoc-testing/jsdoc/src/audio/AudioListener.d.ts
 +++ b/jsdoc-testing/jsdoc/src/audio/AudioListener.d.ts
 @@ -1,3 +1,5 @@
@@ -1873,7 +1919,7 @@ index c668dd51..f009724a 100644
 -import { AudioContext } from './AudioContext.js';
 -import { Timer } from '../core/Timer.js';
 diff --git a/jsdoc-testing/jsdoc/src/audio/PositionalAudio.d.ts b/jsdoc-testing/jsdoc/src/audio/PositionalAudio.d.ts
-index 03307384..16d00404 100644
+index 03307384c..16d00404d 100644
 --- a/jsdoc-testing/jsdoc/src/audio/PositionalAudio.d.ts
 +++ b/jsdoc-testing/jsdoc/src/audio/PositionalAudio.d.ts
 @@ -1,3 +1,5 @@
@@ -1951,7 +1997,7 @@ index 03307384..16d00404 100644
  }
 -import { Audio } from './Audio.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
-index d1dd98d3..cd3a97d1 100644
+index d1dd98d30..cd3a97d10 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/ArrayCamera.d.ts
 @@ -1,3 +1,5 @@
@@ -2001,7 +2047,7 @@ index d1dd98d3..cd3a97d1 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
-index 67a36863..11c3f98e 100644
+index 67a368630..11c3f98e1 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/Camera.d.ts
 @@ -1,56 +1,42 @@
@@ -2071,7 +2117,7 @@ index 67a36863..11c3f98e 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Matrix4 } from '../math/Matrix4.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/CubeCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/CubeCamera.d.ts
-index 28a2ba9c..80273443 100644
+index 28a2ba9c1..802734433 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/CubeCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/CubeCamera.d.ts
 @@ -1,3 +1,26 @@
@@ -2147,7 +2193,7 @@ index 28a2ba9c..80273443 100644
  }
 -import { Object3D } from '../core/Object3D.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/OrthographicCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/OrthographicCamera.d.ts
-index b6269a9b..6bf63c66 100644
+index b6269a9b1..6bf63c669 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/OrthographicCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/OrthographicCamera.d.ts
 @@ -1,3 +1,30 @@
@@ -2281,7 +2327,7 @@ index b6269a9b..6bf63c66 100644
  }
 -import { Camera } from './Camera.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/PerspectiveCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/PerspectiveCamera.d.ts
-index 0bf27469..11e90453 100644
+index 0bf274692..11e90453e 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/PerspectiveCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/PerspectiveCamera.d.ts
 @@ -1,3 +1,35 @@
@@ -2432,7 +2478,7 @@ index 0bf27469..11e90453 100644
 -import { Camera } from './Camera.js';
 -import { Vector2 } from '../math/Vector2.js';
 diff --git a/jsdoc-testing/jsdoc/src/cameras/StereoCamera.d.ts b/jsdoc-testing/jsdoc/src/cameras/StereoCamera.d.ts
-index 929bf525..c4d22b7d 100644
+index 929bf5258..c4d22b7da 100644
 --- a/jsdoc-testing/jsdoc/src/cameras/StereoCamera.d.ts
 +++ b/jsdoc-testing/jsdoc/src/cameras/StereoCamera.d.ts
 @@ -1,3 +1,5 @@
@@ -2497,7 +2543,7 @@ index 929bf525..c4d22b7d 100644
  }
 -import { PerspectiveCamera } from './PerspectiveCamera.js';
 diff --git a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
-index 04032cbd..56d13c92 100644
+index 04032cbd6..56d13c92a 100644
 --- a/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 +++ b/jsdoc-testing/jsdoc/src/extras/core/ShapePath.d.ts
 @@ -1,3 +1,8 @@
@@ -2572,7 +2618,7 @@ index 04032cbd..56d13c92 100644
 -import { Vector2 } from '../../math/Vector2.js';
 -import { Shape } from './Shape.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
-index 302ccad5..16f49b39 100644
+index 302ccad5a..16f49b398 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/ArrowHelper.d.ts
 @@ -1,3 +1,9 @@
@@ -2649,7 +2695,7 @@ index 302ccad5..16f49b39 100644
 -import { Mesh } from '../objects/Mesh.js';
 -import { Vector3 } from '../math/Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
-index cc7858bf..887dc91a 100644
+index cc7858bfe..887dc91a9 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/AxesHelper.d.ts
 @@ -1,3 +1,6 @@
@@ -2683,7 +2729,7 @@ index cc7858bf..887dc91a 100644
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts b/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
-index 982072db..a2d25387 100644
+index 982072dbb..a2d253878 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/Box3Helper.d.ts
 @@ -1,3 +1,7 @@
@@ -2724,7 +2770,7 @@ index 982072db..a2d25387 100644
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
-index 0b864050..bb8a012e 100644
+index 0b864050e..bb8a012e2 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/BoxHelper.d.ts
 @@ -1,3 +1,10 @@
@@ -2775,7 +2821,7 @@ index 0b864050..bb8a012e 100644
  }
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
-index 69f51758..8e2884a4 100644
+index 69f517585..8e2884a49 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/CameraHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -2818,7 +2864,7 @@ index 69f51758..8e2884a4 100644
 -import { Camera } from '../cameras/Camera.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
-index edd4fa7f..61a7acf0 100644
+index edd4fa7ff..61a7acf0f 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/DirectionalLightHelper.d.ts
 @@ -1,3 +1,9 @@
@@ -2882,7 +2928,7 @@ index edd4fa7f..61a7acf0 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Line } from '../objects/Line.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
-index c0df154a..4e8a76a8 100644
+index c0df154aa..4e8a76a88 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/GridHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -2921,7 +2967,7 @@ index c0df154a..4e8a76a8 100644
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
-index 5920f301..8595d398 100644
+index 5920f3014..8595d3987 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/HemisphereLightHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -2975,7 +3021,7 @@ index 5920f301..8595d398 100644
 -import { Color } from '../math/Color.js';
 -import { MeshBasicMaterial } from '../materials/MeshBasicMaterial.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
-index be616322..99b526a4 100644
+index be6163223..99b526a42 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PlaneHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -3023,7 +3069,7 @@ index be616322..99b526a4 100644
  }
 -import { Line } from '../objects/Line.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
-index f2f51e31..abe0a2b1 100644
+index f2f51e312..abe0a2b16 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PointLightHelper.d.ts
 @@ -1,3 +1,7 @@
@@ -3073,7 +3119,7 @@ index f2f51e31..abe0a2b1 100644
  }
 -import { Mesh } from '../objects/Mesh.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
-index 9d4caa9c..7701b0f0 100644
+index 9d4caa9c7..7701b0f04 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/PolarGridHelper.d.ts
 @@ -1,3 +1,6 @@
@@ -3107,7 +3153,7 @@ index 9d4caa9c..7701b0f0 100644
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
-index a129e99a..b682bef5 100644
+index a129e99ab..b682bef58 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/SkeletonHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -3162,7 +3208,7 @@ index a129e99a..b682bef5 100644
 -import { LineSegments } from '../objects/LineSegments.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts b/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
-index 7e73edce..d74e5058 100644
+index 7e73edcef..d74e50583 100644
 --- a/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
 +++ b/jsdoc-testing/jsdoc/src/helpers/SpotLightHelper.d.ts
 @@ -1,3 +1,8 @@
@@ -3214,7 +3260,7 @@ index 7e73edce..d74e5058 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { LineSegments } from '../objects/LineSegments.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/AmbientLight.d.ts b/jsdoc-testing/jsdoc/src/lights/AmbientLight.d.ts
-index 78c3196f..bc1d01a9 100644
+index 78c3196fd..bc1d01a9b 100644
 --- a/jsdoc-testing/jsdoc/src/lights/AmbientLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/AmbientLight.d.ts
 @@ -1,3 +1,6 @@
@@ -3250,7 +3296,7 @@ index 78c3196f..bc1d01a9 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts b/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
-index 75331742..1062b06a 100644
+index 753317423..1062b06af 100644
 --- a/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/DirectionalLight.d.ts
 @@ -1,3 +1,14 @@
@@ -3313,7 +3359,7 @@ index 75331742..1062b06a 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { DirectionalLightShadow } from './DirectionalLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/DirectionalLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/DirectionalLightShadow.d.ts
-index 69d809ea..7ebe47de 100644
+index 69d809ea1..7ebe47de2 100644
 --- a/jsdoc-testing/jsdoc/src/lights/DirectionalLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/DirectionalLightShadow.d.ts
 @@ -1,9 +1,10 @@
@@ -3342,7 +3388,7 @@ index 69d809ea..7ebe47de 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/HemisphereLight.d.ts b/jsdoc-testing/jsdoc/src/lights/HemisphereLight.d.ts
-index 9bffa0d0..29ee9a37 100644
+index 9bffa0d03..29ee9a37e 100644
 --- a/jsdoc-testing/jsdoc/src/lights/HemisphereLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/HemisphereLight.d.ts
 @@ -1,3 +1,11 @@
@@ -3393,7 +3439,7 @@ index 9bffa0d0..29ee9a37 100644
 -import { Light } from './Light.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/Light.d.ts b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
-index 15a77b36..05027d9a 100644
+index 15a77b361..05027d9af 100644
 --- a/jsdoc-testing/jsdoc/src/lights/Light.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/Light.d.ts
 @@ -1,37 +1,40 @@
@@ -3460,7 +3506,7 @@ index 15a77b36..05027d9a 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
-index 8a03aa8c..23439094 100644
+index 8a03aa8cf..234390948 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightProbe.d.ts
 @@ -1,3 +1,11 @@
@@ -3506,7 +3552,7 @@ index 8a03aa8c..23439094 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 24ffaf5b..3c663eca 100644
+index 24ffaf5b3..3c663eca6 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 @@ -1,27 +1,43 @@
@@ -3692,7 +3738,7 @@ index 24ffaf5b..3c663eca 100644
 -import { Frustum } from '../math/Frustum.js';
 -import { Vector4 } from '../math/Vector4.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts b/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
-index f42ec0f7..e6d11c1e 100644
+index f42ec0f7c..e6d11c1e0 100644
 --- a/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/PointLight.d.ts
 @@ -1,3 +1,16 @@
@@ -3772,7 +3818,7 @@ index f42ec0f7..e6d11c1e 100644
 -import { Light } from './Light.js';
 -import { PointLightShadow } from './PointLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/PointLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/PointLightShadow.d.ts
-index 9157a63b..8d29ffab 100644
+index 9157a63b8..8d29ffab2 100644
 --- a/jsdoc-testing/jsdoc/src/lights/PointLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/PointLightShadow.d.ts
 @@ -1,9 +1,10 @@
@@ -3801,7 +3847,7 @@ index 9157a63b..8d29ffab 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
-index 6d4b7b65..edd5db77 100644
+index 6d4b7b657..edd5db77c 100644
 --- a/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/RectAreaLight.d.ts
 @@ -1,3 +1,6 @@
@@ -3861,7 +3907,7 @@ index 6d4b7b65..edd5db77 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
-index 1197fdf2..6df1d134 100644
+index 1197fdf27..6df1d134a 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
 @@ -1,3 +1,22 @@
@@ -3978,7 +4024,7 @@ index 1197fdf2..6df1d134 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { SpotLightShadow } from './SpotLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
-index 0de4c95b..6147e2c3 100644
+index 0de4c95b0..6147e2c34 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
 @@ -1,9 +1,10 @@
@@ -4025,7 +4071,7 @@ index 0de4c95b..6147e2c3 100644
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts
-index 0e372ff2..d217fb6c 100644
+index 0e372ff20..d217fb6c3 100644
 --- a/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts
 @@ -1,18 +1,18 @@
@@ -4054,7 +4100,7 @@ index 0e372ff2..d217fb6c 100644
 +
 +export default IESSpotLight;
 diff --git a/jsdoc-testing/jsdoc/src/lights/webgpu/ProjectorLight.d.ts b/jsdoc-testing/jsdoc/src/lights/webgpu/ProjectorLight.d.ts
-index f561855f..0d5ada0a 100644
+index f561855ff..0d5ada0ac 100644
 --- a/jsdoc-testing/jsdoc/src/lights/webgpu/ProjectorLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/webgpu/ProjectorLight.d.ts
 @@ -1,17 +1,16 @@
@@ -4081,7 +4127,7 @@ index f561855f..0d5ada0a 100644
 +
 +export default ProjectorLight;
 diff --git a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
-index b7fb9b69..04111f28 100644
+index b7fb9b69a..04111f284 100644
 --- a/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/LineBasicMaterial.d.ts
 @@ -1,38 +1,11 @@
@@ -4199,7 +4245,7 @@ index b7fb9b69..04111f28 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineBasicMaterial extends LineBasicMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
-index 3cb1a34d..63489ffa 100644
+index 3cb1a34d8..63489ffa1 100644
 --- a/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/LineDashedMaterial.d.ts
 @@ -1,3 +1,30 @@
@@ -4279,7 +4325,7 @@ index 3cb1a34d..63489ffa 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index bdb3a216..64592794 100644
+index bdb3a2160..645927946 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 @@ -1,41 +1,35 @@
@@ -4995,7 +5041,7 @@ index bdb3a216..64592794 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Material extends MaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Materials.d.ts b/jsdoc-testing/jsdoc/src/materials/Materials.d.ts
-index 3f555b85..9e8afdfb 100644
+index 3f555b856..9e8afdfb9 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Materials.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Materials.d.ts
 @@ -1,19 +1,18 @@
@@ -5037,7 +5083,7 @@ index 3f555b85..9e8afdfb 100644
 +export * from './LineBasicMaterial.js';
 +export * from './Material.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
-index e124b740..c4885274 100644
+index e124b7403..c4885274d 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshBasicMaterial.d.ts
 @@ -1,35 +1,13 @@
@@ -5207,7 +5253,7 @@ index e124b740..c4885274 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshBasicMaterial extends MeshBasicMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
-index 0b95d460..df76c01b 100644
+index 0b95d4608..df76c01bb 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshDepthMaterial.d.ts
 @@ -1,37 +1,14 @@
@@ -5319,7 +5365,7 @@ index 0b95d460..df76c01b 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDepthMaterial extends MeshDepthMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
-index 459c2a60..c45bf3e6 100644
+index 459c2a606..c45bf3e61 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshDistanceMaterial.d.ts
 @@ -1,34 +1,7 @@
@@ -5416,7 +5462,7 @@ index 459c2a60..c45bf3e6 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshDistanceMaterial extends MeshDistanceMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
-index 375147a5..72461c38 100644
+index 375147a59..72461c386 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshLambertMaterial.d.ts
 @@ -1,44 +1,14 @@
@@ -5675,7 +5721,7 @@ index 375147a5..72461c38 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshLambertMaterial extends MeshLambertMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
-index f345fb9f..ec290b54 100644
+index f345fb9f5..ec290b546 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshMatcapMaterial.d.ts
 @@ -1,42 +1,13 @@
@@ -5839,7 +5885,7 @@ index f345fb9f..ec290b54 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshMatcapMaterial extends MeshMatcapMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
-index 794b28e7..3c841829 100644
+index 794b28e73..3c8418294 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshNormalMaterial.d.ts
 @@ -1,29 +1,9 @@
@@ -5982,7 +6028,7 @@ index 794b28e7..3c841829 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshNormalMaterial extends MeshNormalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
-index 6fb55c99..aa891d3c 100644
+index 6fb55c994..aa891d3c3 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhongMaterial.d.ts
 @@ -1,42 +1,14 @@
@@ -6252,7 +6298,7 @@ index 6fb55c99..aa891d3c 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index 00b55a7b..2c9100cf 100644
+index 00b55a7b4..2c9100cf2 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 @@ -1,48 +1,18 @@
@@ -6535,7 +6581,7 @@ index 00b55a7b..2c9100cf 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhysicalMaterial extends MeshPhysicalMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
-index d95b258b..0d09ec17 100644
+index d95b258b5..0d09ec170 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshStandardMaterial.d.ts
 @@ -1,64 +1,18 @@
@@ -6826,7 +6872,7 @@ index d95b258b..0d09ec17 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshStandardMaterial extends MeshStandardMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
-index 8777c4e0..65097898 100644
+index 8777c4e00..65097898f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshToonMaterial.d.ts
 @@ -1,36 +1,13 @@
@@ -7018,7 +7064,7 @@ index 8777c4e0..65097898 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshToonMaterial extends MeshToonMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
-index 69665f81..f6da027a 100644
+index 69665f811..f6da027aa 100644
 --- a/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/PointsMaterial.d.ts
 @@ -1,52 +1,11 @@
@@ -7155,7 +7201,7 @@ index 69665f81..f6da027a 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface PointsMaterial extends PointsMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
-index 727fcbb7..9a703d74 100644
+index 727fcbb76..9a703d74d 100644
 --- a/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
 @@ -1,111 +1,17 @@
@@ -7274,7 +7320,7 @@ index 727fcbb7..9a703d74 100644
  }
 -export {};
 diff --git a/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
-index 24157d56..7372d61b 100644
+index 24157d560..7372d61bf 100644
 --- a/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/ShaderMaterial.d.ts
 @@ -1,84 +1,16 @@
@@ -7626,7 +7672,7 @@ index 24157d56..7372d61b 100644
  }
 -import { Material } from './Material.js';
 diff --git a/jsdoc-testing/jsdoc/src/materials/ShadowMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/ShadowMaterial.d.ts
-index 2e66a566..6f44ea4e 100644
+index 2e66a5668..6f44ea4ef 100644
 --- a/jsdoc-testing/jsdoc/src/materials/ShadowMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/ShadowMaterial.d.ts
 @@ -1,3 +1,24 @@
@@ -7701,7 +7747,7 @@ index 2e66a566..6f44ea4e 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface ShadowMaterial extends ShadowMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/SpriteMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/SpriteMaterial.d.ts
-index dfe9816f..aa354534 100644
+index dfe9816f7..aa354534b 100644
 --- a/jsdoc-testing/jsdoc/src/materials/SpriteMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/SpriteMaterial.d.ts
 @@ -1,41 +1,11 @@
@@ -7816,7 +7862,7 @@ index dfe9816f..aa354534 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface SpriteMaterial extends SpriteMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
-index bcb39765..2447ed6e 100644
+index bcb397652..2447ed6e0 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/Line2NodeMaterial.d.ts
 @@ -1,25 +1,9 @@
@@ -7948,7 +7994,7 @@ index bcb39765..2447ed6e 100644
 +
 +export default Line2NodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/LineBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/LineBasicNodeMaterial.d.ts
-index da65dc88..a70396af 100644
+index da65dc888..a70396afe 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/LineBasicNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/LineBasicNodeMaterial.d.ts
 @@ -1,8 +1,16 @@
@@ -7994,7 +8040,7 @@ index da65dc88..a70396af 100644
 +
 +export default LineBasicNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/LineDashedNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/LineDashedNodeMaterial.d.ts
-index 89820e46..a96ee0a2 100644
+index 89820e463..a96ee0a23 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/LineDashedNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/LineDashedNodeMaterial.d.ts
 @@ -1,28 +1,12 @@
@@ -8107,7 +8153,7 @@ index 89820e46..a96ee0a2 100644
 +
 +export default LineDashedNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
-index 97d6b1cb..3cf3c9ee 100644
+index 97d6b1cb4..3cf3c9eed 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshBasicNodeMaterial.d.ts
 @@ -1,8 +1,19 @@
@@ -8173,7 +8219,7 @@ index 97d6b1cb..3cf3c9ee 100644
 +
 +export default MeshBasicNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
-index a5e11090..73429133 100644
+index a5e110905..73429133e 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshLambertNodeMaterial.d.ts
 @@ -1,8 +1,19 @@
@@ -8239,7 +8285,7 @@ index a5e11090..73429133 100644
 +
 +export default MeshLambertNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
-index 1a2d32c8..2b8920f4 100644
+index 1a2d32c8c..2b8920f40 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshMatcapNodeMaterial.d.ts
 @@ -1,8 +1,17 @@
@@ -8292,7 +8338,7 @@ index 1a2d32c8..2b8920f4 100644
 +
 +export default MeshMatcapNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshNormalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshNormalNodeMaterial.d.ts
-index effc5951..5ba479de 100644
+index effc5951b..5ba479deb 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshNormalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshNormalNodeMaterial.d.ts
 @@ -1,8 +1,16 @@
@@ -8343,7 +8389,7 @@ index effc5951..5ba479de 100644
 +
 +export default MeshNormalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
-index b55a9c94..d2d224b9 100644
+index b55a9c942..d2d224b90 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhongNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -8449,7 +8495,7 @@ index b55a9c94..d2d224b9 100644
 +
 +export default MeshPhongNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-index 0545af43..e2d866f5 100644
+index 0545af43c..e2d866f57 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 @@ -1,18 +1,12 @@
@@ -8755,7 +8801,7 @@ index 0545af43..e2d866f5 100644
 +
 +export default MeshPhysicalNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
-index ca33d812..e23399cc 100644
+index ca33d8128..e23399cca 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshSSSNodeMaterial.d.ts
 @@ -1,52 +1,86 @@
@@ -8916,7 +8962,7 @@ index ca33d812..e23399cc 100644
 +
 +export default MeshSSSNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
-index 2128d963..dd036681 100644
+index 2128d9631..dd0366810 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshStandardNodeMaterial.d.ts
 @@ -1,24 +1,12 @@
@@ -9035,7 +9081,7 @@ index 2128d963..dd036681 100644
 +
 +export default MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
-index 1ffe1bd1..85436d1f 100644
+index 1ffe1bd1b..85436d1fe 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshToonNodeMaterial.d.ts
 @@ -1,8 +1,17 @@
@@ -9089,7 +9135,7 @@ index 1ffe1bd1..85436d1f 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 42249a0e..d3d767f1 100644
+index 42249a0e6..d3d767f17 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -9532,7 +9578,7 @@ index 42249a0e..d3d767f1 100644
 +
 +export default NodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
-index 3ab3141d..df1dde1d 100644
+index 3ab3141d1..df1dde1dc 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterials.d.ts
 @@ -1,18 +1,18 @@
@@ -9572,7 +9618,7 @@ index 3ab3141d..df1dde1d 100644
 +export { default as ShadowNodeMaterial, ShadowNodeMaterialParameters } from "./ShadowNodeMaterial.js";
 +export { default as VolumeNodeMaterial, VolumeNodeMaterialParameters } from "./VolumeNodeMaterial.js";
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
-index 1a6e48ee..5bdf6b56 100644
+index 1a6e48eef..5bdf6b56f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/PointsNodeMaterial.d.ts
 @@ -1,4 +1,27 @@
@@ -9646,7 +9692,7 @@ index 1a6e48ee..5bdf6b56 100644
 +
 +export default PointsNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts
-index edf90468..947f9df0 100644
+index edf904684..947f9df05 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/ShadowNodeMaterial.d.ts
 @@ -1,8 +1,17 @@
@@ -9700,7 +9746,7 @@ index edf90468..947f9df0 100644
 +
 +export default ShadowNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
-index 7f8da84d..b2550836 100644
+index 7f8da84d3..b25508365 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/SpriteNodeMaterial.d.ts
 @@ -1,25 +1,10 @@
@@ -9811,7 +9857,7 @@ index 7f8da84d..b2550836 100644
 +
 +export default SpriteNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
-index 8b5885c3..6175b46a 100644
+index 8b5885c3c..6175b46ab 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/VolumeNodeMaterial.d.ts
 @@ -1,28 +1,12 @@
@@ -9899,7 +9945,7 @@ index 8b5885c3..6175b46a 100644
 +
 +export default VolumeNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
-index 32650a6d..962926ab 100644
+index 32650a6de..962926ab4 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/manager/NodeMaterialObserver.d.ts
 @@ -1,4 +1,6 @@
@@ -10025,7 +10071,7 @@ index 32650a6d..962926ab 100644
 +
 +export default NodeMaterialObserver;
 diff --git a/jsdoc-testing/jsdoc/src/math/Box3.d.ts b/jsdoc-testing/jsdoc/src/math/Box3.d.ts
-index b1c15210..f8b31076 100644
+index b1c152106..f8b310764 100644
 --- a/jsdoc-testing/jsdoc/src/math/Box3.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/Box3.d.ts
 @@ -1,3 +1,11 @@
@@ -10209,7 +10255,7 @@ index b1c15210..f8b31076 100644
  }
 -import { Vector3 } from './Vector3.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts b/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
-index 561415c0..093bab0d 100644
+index 561415c0e..093bab0de 100644
 --- a/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/Interpolant.d.ts
 @@ -1,3 +1,5 @@
@@ -10284,7 +10330,7 @@ index 561415c0..093bab0d 100644
 +    intervalChanged_(i1: number, t0: number, t: number): void;
  }
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
-index a3d1715d..e7de49da 100644
+index a3d1715dc..e7de49dad 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/interpolants/BezierInterpolant.d.ts
 @@ -1,3 +1,6 @@
@@ -10303,7 +10349,7 @@ index a3d1715d..e7de49da 100644
  }
 -import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
-index ca53c5e9..2471e927 100644
+index ca53c5e9a..2471e9274 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/interpolants/CubicInterpolant.d.ts
 @@ -1,3 +1,12 @@
@@ -10340,7 +10386,7 @@ index ca53c5e9..2471e927 100644
  }
 -import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
-index 04ce01eb..8f3b34ba 100644
+index 04ce01eb6..8f3b34bad 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/interpolants/DiscreteInterpolant.d.ts
 @@ -1,3 +1,6 @@
@@ -10359,7 +10405,7 @@ index 04ce01eb..8f3b34ba 100644
  }
 -import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
-index d3600386..ce9db533 100644
+index d36003868..ce9db5333 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/interpolants/LinearInterpolant.d.ts
 @@ -1,9 +1,11 @@
@@ -10377,7 +10423,7 @@ index d3600386..ce9db533 100644
  }
 -import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts b/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
-index e8ddddc6..9a57cd2c 100644
+index e8ddddc6e..9a57cd2c3 100644
 --- a/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
 +++ b/jsdoc-testing/jsdoc/src/math/interpolants/QuaternionLinearInterpolant.d.ts
 @@ -1,9 +1,11 @@
@@ -10395,7 +10441,7 @@ index e8ddddc6..9a57cd2c 100644
  }
 -import { Interpolant } from '../Interpolant.js';
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
-index 26843319..59c1bf68 100644
+index 268433191..59c1bf68a 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Batch.d.ts
 @@ -1,9 +1,12 @@
@@ -10419,7 +10465,7 @@ index 26843319..59c1bf68 100644
 -export const batch: () => void;
 +export const batch: (batchMesh: BatchedMesh) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
-index 60775a2a..2ed041bf 100644
+index 60775a2a1..2ed041bfc 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/BufferAttributeNode.d.ts
 @@ -1,8 +1,11 @@
@@ -10591,7 +10637,7 @@ index 60775a2a..2ed041bf 100644
 -import { InterleavedBuffer } from '../../core/InterleavedBuffer.js';
 -import InputNode from '../core/InputNode.js';
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
-index 61c21bff..36e24ac6 100644
+index 61c21bff8..36e24ac6e 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Instance.d.ts
 @@ -1,9 +1,14 @@
@@ -10626,7 +10672,7 @@ index 61c21bff..36e24ac6 100644
 -export const instancedMesh: () => void;
 +export const instancedMesh: (instancedMesh: InstancedMesh) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
-index 1713b3af..362b62eb 100644
+index 1713b3af4..362b62ebd 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Morph.d.ts
 @@ -1,3 +1,5 @@
@@ -10642,7 +10688,7 @@ index 1713b3af..362b62eb 100644
 -export const morphReference: () => void;
 +export const morphReference: (mesh: Mesh) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts b/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
-index ca4dd3df..a65e1ccc 100644
+index ca4dd3dff..a65e1ccc8 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/accessors/Skinning.d.ts
 @@ -1,3 +1,7 @@
@@ -10669,7 +10715,7 @@ index ca4dd3df..a65e1ccc 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index 8299d6c5..7d60dfe0 100644
+index 8299d6c54..7d60dfe03 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -11226,7 +11272,7 @@ index 8299d6c5..7d60dfe0 100644
 +
 +export {};
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeAttribute.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeAttribute.d.ts
-index d6414185..71ad2eab 100644
+index d6414185f..71ad2eab7 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeAttribute.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeAttribute.d.ts
 @@ -1,4 +1,5 @@
@@ -11243,7 +11289,7 @@ index d6414185..71ad2eab 100644
 +
 +export default NodeAttribute;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeCache.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeCache.d.ts
-index 0c192004..645e3a8c 100644
+index 0c192004d..645e3a8c3 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeCache.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeCache.d.ts
 @@ -1,4 +1,5 @@
@@ -11280,7 +11326,7 @@ index 0c192004..645e3a8c 100644
 +
 +export default NodeCache;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeParser.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeParser.d.ts
-index f1587589..7a476515 100644
+index f15875899..7a476515e 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeParser.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeParser.d.ts
 @@ -1,9 +1,10 @@
@@ -11306,7 +11352,7 @@ index f1587589..7a476515 100644
 +
 +export default NodeParser;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeUniform.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeUniform.d.ts
-index 3f872f03..bee69464 100644
+index 3f872f033..bee694640 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeUniform.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeUniform.d.ts
 @@ -1,11 +1,13 @@
@@ -11359,7 +11405,7 @@ index 3f872f03..bee69464 100644
 +
 +export default NodeUniform;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeVar.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeVar.d.ts
-index 43e82262..6d1d8886 100644
+index 43e82262f..6d1d88861 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeVar.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeVar.d.ts
 @@ -1,4 +1,3 @@
@@ -11374,7 +11420,7 @@ index 43e82262..6d1d8886 100644
 +
 +export default NodeVar;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/NodeVarying.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/NodeVarying.d.ts
-index 587fb089..2333f055 100644
+index 587fb0896..2333f0550 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/NodeVarying.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/NodeVarying.d.ts
 @@ -1,4 +1,6 @@
@@ -11413,7 +11459,7 @@ index 587fb089..2333f055 100644
 +
 +export default NodeVarying;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
-index af08042f..0190410e 100644
+index af08042f6..0190410e1 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
 @@ -1,7 +1,10 @@
@@ -11432,7 +11478,7 @@ index af08042f..0190410e 100644
 +
 +export default StructType;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/StructTypeNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/StructTypeNode.d.ts
-index 7fb5881d..3d7dcd09 100644
+index 7fb5881df..3d7dcd09c 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/StructTypeNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/StructTypeNode.d.ts
 @@ -1,4 +1,19 @@
@@ -11489,7 +11535,7 @@ index 7fb5881d..3d7dcd09 100644
 +
 +export default StructTypeNode;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
-index f4cb493f..1dc9b5ac 100644
+index f4cb493fb..1dc9b5ac8 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/UniformNode.d.ts
 @@ -1,11 +1,24 @@
@@ -11633,7 +11679,7 @@ index f4cb493f..1dc9b5ac 100644
 +
 +export {};
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/constants.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/constants.d.ts
-index 5d342ff3..7ac71b49 100644
+index 5d342ff3a..7ac71b49b 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/constants.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/constants.d.ts
 @@ -1,30 +1,72 @@
@@ -11740,7 +11786,7 @@ index 5d342ff3..7ac71b49 100644
 +export declare const shaderStages: NodeShaderStage[];
 +export declare const vectorComponents: string[];
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
-index 243a98ae..319c0021 100644
+index 243a98ae5..319c00215 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/display/BlendModes.d.ts
 @@ -1,3 +1,10 @@
@@ -11799,7 +11845,7 @@ index 243a98ae..319c0021 100644
 +
 +export {};
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
-index b1d3e7e1..6a4406d7 100644
+index b1d3e7e1c..6a4406d74 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/display/FrontFacingNode.d.ts
 @@ -1,11 +1,35 @@
@@ -11890,7 +11936,7 @@ index b1d3e7e1..6a4406d7 100644
 -import Node from '../core/Node.js';
 +export const directionToFaceDirection: (vector: Node<"vec3"> | Vector3) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts
-index bcf1b8be..9ee905a6 100644
+index bcf1b8bef..9ee905a68 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/display/PremultiplyAlphaFunctions.d.ts
 @@ -1,3 +1,10 @@
@@ -11922,7 +11968,7 @@ index bcf1b8be..9ee905a6 100644
 +
 +export {};
 diff --git a/jsdoc-testing/jsdoc/src/nodes/display/ViewportTextureNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/display/ViewportTextureNode.d.ts
-index e679f9d6..328a03fb 100644
+index e679f9d6a..328a03fb0 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/display/ViewportTextureNode.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/display/ViewportTextureNode.d.ts
 @@ -81,7 +81,7 @@ declare class ViewportTextureNode extends TextureNode {
@@ -11935,7 +11981,7 @@ index e679f9d6..328a03fb 100644
      clone(): any;
  }
 diff --git a/jsdoc-testing/jsdoc/src/nodes/utils/EquirectUV.d.ts b/jsdoc-testing/jsdoc/src/nodes/utils/EquirectUV.d.ts
-index 32dc240f..de53d52b 100644
+index 32dc240ff..de53d52b4 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/utils/EquirectUV.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/utils/EquirectUV.d.ts
 @@ -1,3 +1,7 @@
@@ -11962,7 +12008,7 @@ index 32dc240f..de53d52b 100644
 -export const equirectDirection: () => void;
 +export const equirectDirection: (uv?: Node<"vec2"> | Vector2) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/utils/Packing.d.ts b/jsdoc-testing/jsdoc/src/nodes/utils/Packing.d.ts
-index 35dbe54c..0542afc3 100644
+index 35dbe54c6..0542afc32 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/utils/Packing.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/utils/Packing.d.ts
 @@ -1,5 +1,52 @@
@@ -12024,7 +12070,7 @@ index 35dbe54c..0542afc3 100644
 + */
 +export const colorToDirection: (node: Node<"vec3"> | Node<"vec4"> | Vector3) => Node<"vec3">;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/BundleGroup.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/BundleGroup.d.ts
-index 90e98b1a..0d4649a4 100644
+index 90e98b1aa..0d4649a46 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/BundleGroup.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/BundleGroup.d.ts
 @@ -1,4 +1,5 @@
@@ -12042,7 +12088,7 @@ index 90e98b1a..0d4649a4 100644
 +
 +export default BundleGroup;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/CanvasTarget.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/CanvasTarget.d.ts
-index 9932067a..5eb392d7 100644
+index 9932067a0..5eb392d78 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/CanvasTarget.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/CanvasTarget.d.ts
 @@ -1,10 +1,20 @@
@@ -12175,7 +12221,7 @@ index 9932067a..5eb392d7 100644
 +
 +export default CanvasTarget;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
-index db3046a9..9a5928ce 100644
+index db3046a90..9a5928cef 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ClippingContext.d.ts
 @@ -1,4 +1,11 @@
@@ -12230,7 +12276,7 @@ index db3046a9..9a5928ce 100644
 +
 +export default ClippingContext;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
-index cf3261af..0ded1192 100644
+index cf3261af0..0ded1192b 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Constants.d.ts
 @@ -1,9 +1,12 @@
@@ -12253,7 +12299,7 @@ index cf3261af..0ded1192 100644
  export const BlendColorFactor: 211;
  export const OneMinusBlendColorFactor: 212;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
-index e6cad71c..a475ea91 100644
+index e6cad71cf..a475ea915 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/CubeRenderTarget.d.ts
 @@ -1,18 +1,22 @@
@@ -12299,7 +12345,7 @@ index e6cad71c..a475ea91 100644
 +
 +export default CubeRenderTarget;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
-index 6f3fa816..bc7ea965 100644
+index 6f3fa816f..bc7ea9656 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Info.d.ts
 @@ -1,4 +1,8 @@
@@ -12441,7 +12487,7 @@ index 6f3fa816..bc7ea965 100644
 +
 +export default Info;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
-index 7deedcbb..94e3a364 100644
+index 7deedcbb7..94e3a364b 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/InspectorBase.d.ts
 @@ -1,43 +1,48 @@
@@ -12573,7 +12619,7 @@ index 7deedcbb..94e3a364 100644
 +
 +export default InspectorBase;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
-index d924a77c..23fea231 100644
+index d924a77cd..23fea231a 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Lighting.d.ts
 @@ -1,4 +1,7 @@
@@ -12607,7 +12653,7 @@ index d924a77c..23fea231 100644
 +
 +export default Lighting;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
-index 5fdbd4d6..ed7bc570 100644
+index 5fdbd4d68..ed7bc5700 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ProgrammableStage.d.ts
 @@ -1,4 +1,5 @@
@@ -12658,7 +12704,7 @@ index 5fdbd4d6..ed7bc570 100644
 +
 +export default ProgrammableStage;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/ReadbackBuffer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/ReadbackBuffer.d.ts
-index 70218d55..21a89871 100644
+index 70218d55a..21a89871b 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/ReadbackBuffer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/ReadbackBuffer.d.ts
 @@ -1,11 +1,17 @@
@@ -12697,7 +12743,7 @@ index 70218d55..21a89871 100644
 +
 +export default ReadbackBuffer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
-index f9968412..71aa64a4 100644
+index f99684121..71aa64a4e 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/Renderer.d.ts
 @@ -1,8 +1,75 @@
@@ -13701,7 +13747,7 @@ index f9968412..71aa64a4 100644
 +
 +export default Renderer;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
-index f18cad9f..22d8868a 100644
+index f18cad9f8..22d8868ac 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/TimestampQueryPool.d.ts
 @@ -1,10 +1,9 @@
@@ -13760,7 +13806,7 @@ index f18cad9f..22d8868a 100644
 +
 +export default TimestampQueryPool;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
-index 8581c09f..fd0d845e 100644
+index 8581c09f6..fd0d845ee 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/XRManager.d.ts
 @@ -1,11 +1,37 @@
@@ -14241,7 +14287,7 @@ index 8581c09f..fd0d845e 100644
 +
 +export default XRManager;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
-index af3e2393..2b66ae12 100644
+index af3e23934..2b66ae129 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeBuilderState.d.ts
 @@ -1,4 +1,8 @@
@@ -14320,7 +14366,7 @@ index af3e2393..2b66ae12 100644
 +
 +export default NodeBuilderState;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
-index 0121dd34..f5741f97 100644
+index 0121dd34b..f5741f970 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeLibrary.d.ts
 @@ -1,4 +1,10 @@
@@ -14443,7 +14489,7 @@ index 0121dd34..f5741f97 100644
 +
 +export default NodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
-index 68ca1edf..9eb09261 100644
+index 68ca1edfe..9eb092610 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeManager.d.ts
 @@ -1,4 +1,28 @@
@@ -14550,7 +14596,7 @@ index 68ca1edf..9eb09261 100644
 +
 +export default NodeManager;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts
-index 47673f68..f6e2d096 100644
+index 47673f68d..f6e2d0965 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniform.d.ts
 @@ -1,3 +1,13 @@
@@ -14773,7 +14819,7 @@ index 47673f68..f6e2d096 100644
 +    | Matrix3NodeUniform<unknown>
 +    | Matrix4NodeUniform<unknown>;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniformsGroup.d.ts b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniformsGroup.d.ts
-index c196bbe5..8baf9658 100644
+index c196bbe56..8baf96582 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniformsGroup.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/common/nodes/NodeUniformsGroup.d.ts
 @@ -1,4 +1,6 @@
@@ -14792,7 +14838,7 @@ index c196bbe5..8baf9658 100644
 +
 +export default NodeUniformsGroup;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/webgl-fallback/utils/WebGLCapabilities.d.ts b/jsdoc-testing/jsdoc/src/renderers/webgl-fallback/utils/WebGLCapabilities.d.ts
-index 095e4ee8..8bc1b1d0 100644
+index 095e4ee8c..8bc1b1d02 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/webgl-fallback/utils/WebGLCapabilities.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/webgl-fallback/utils/WebGLCapabilities.d.ts
 @@ -1,4 +1,5 @@
@@ -14809,7 +14855,7 @@ index 095e4ee8..8bc1b1d0 100644
 +
 +export default WebGLCapabilities;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/BasicNodeLibrary.d.ts b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
-index f6f699f1..42d91542 100644
+index f6f699f14..42d915421 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/BasicNodeLibrary.d.ts
 @@ -1,4 +1,5 @@
@@ -14827,7 +14873,7 @@ index f6f699f1..42d91542 100644
 +
 +export default BasicNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
-index ee01cd7e..49f344bd 100644
+index ee01cd7e7..49f344bda 100644
 --- a/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
 +++ b/jsdoc-testing/jsdoc/src/renderers/webgpu/nodes/StandardNodeLibrary.d.ts
 @@ -1,4 +1,18 @@
@@ -14923,7 +14969,7 @@ index ee01cd7e..49f344bd 100644
 +
 +export default StandardNodeLibrary;
 diff --git a/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts b/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
-index 3c17089b..f043a61b 100644
+index 3c17089bd..f043a61b4 100644
 --- a/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
 +++ b/jsdoc-testing/jsdoc/src/scenes/Fog.d.ts
 @@ -1,3 +1,13 @@
@@ -14991,7 +15037,7 @@ index 3c17089b..f043a61b 100644
  }
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/scenes/FogExp2.d.ts b/jsdoc-testing/jsdoc/src/scenes/FogExp2.d.ts
-index e1146239..90d41e90 100644
+index e11462391..90d41e90c 100644
 --- a/jsdoc-testing/jsdoc/src/scenes/FogExp2.d.ts
 +++ b/jsdoc-testing/jsdoc/src/scenes/FogExp2.d.ts
 @@ -1,3 +1,12 @@
@@ -15049,7 +15095,7 @@ index e1146239..90d41e90 100644
  }
 -import { Color } from '../math/Color.js';
 diff --git a/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts b/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
-index 91ed09ab..83c0f4b2 100644
+index 91ed09ab6..83c0f4b25 100644
 --- a/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
 +++ b/jsdoc-testing/jsdoc/src/scenes/Scene.d.ts
 @@ -1,19 +1,37 @@
