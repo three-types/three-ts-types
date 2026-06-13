@@ -79,11 +79,6 @@ const exceptionList = [
     'webxr_xr_haptics',
     'webxr_xr_marchingcubes',
     'webxr_xr_paint',
-    'physics_ammo_break',
-    'physics_ammo_cloth',
-    'physics_ammo_rope',
-    'physics_ammo_terrain',
-    'physics_ammo_volume',
 ];
 
 const re = /<script type="module">((.|\r|\n)+)<\/script>/;
