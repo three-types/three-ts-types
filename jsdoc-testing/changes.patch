@@ -9124,7 +9124,7 @@ index 1ffe1bd1b..85436d1fe 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 9e2aa5a5f..782b5f114 100644
+index 9ef1667ba..87ea29a44 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -9543,7 +9543,7 @@ index 9e2aa5a5f..782b5f114 100644
      /**
       * Setups the output node.
       *
-@@ -482,7 +456,7 @@ declare class NodeMaterial extends Material {
+@@ -502,7 +476,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -9552,7 +9552,7 @@ index 9e2aa5a5f..782b5f114 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -497,7 +471,10 @@ declare class NodeMaterial extends Material {
+@@ -517,7 +491,10 @@ declare class NodeMaterial extends Material {
       * @param {Material} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
@@ -10703,7 +10703,7 @@ index ca4dd3dff..a65e1ccc8 100644
 -export const computeSkinning: () => void;
 +export const computeSkinning: (skinnedMesh: SkinnedMesh, toPosition?: Node<'vec3'> | Vector3 | null) => void;
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
-index 8299d6c54..7d60dfe03 100644
+index ffffd5676..209d6f971 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 +++ b/jsdoc-testing/jsdoc/src/nodes/core/Node.d.ts
 @@ -1,10 +1,85 @@
@@ -11028,7 +11028,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * Returns the node's type.
       *
-@@ -348,7 +369,7 @@ declare class Node extends EventDispatcher {
+@@ -349,7 +370,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?number} The number of elements in the node array.
       */
@@ -11037,7 +11037,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * Represents the setup stage which is the first step of the build process, see {@link Node#build} method.
       * This method is often overwritten in derived modules to prepare the node which is used as a node's output/result.
-@@ -357,7 +378,7 @@ declare class Node extends EventDispatcher {
+@@ -358,7 +379,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {?Node} The output node.
       */
@@ -11046,7 +11046,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * Represents the analyze stage which is the second step of the build process, see {@link Node#build} method.
       * This stage analyzes the node hierarchy and ensures descendent nodes are built.
-@@ -374,7 +395,7 @@ declare class Node extends EventDispatcher {
+@@ -375,7 +396,7 @@ declare class Node extends EventDispatcher {
       * @param {?string} [output] - Can be used to define the output type.
       * @return {?string} The generated shader string.
       */
@@ -11055,7 +11055,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * The method can be implemented to update the node's internal state before it is used to render an object.
       * The {@link Node#updateBeforeType} property defines how often the update is executed.
-@@ -383,7 +404,7 @@ declare class Node extends EventDispatcher {
+@@ -384,7 +405,7 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -11064,7 +11064,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * The method can be implemented to update the node's internal state after it was used to render an object.
       * The {@link Node#updateAfterType} property defines how often the update is executed.
-@@ -392,8 +413,8 @@ declare class Node extends EventDispatcher {
+@@ -393,8 +414,8 @@ declare class Node extends EventDispatcher {
       * @param {NodeFrame} frame - A reference to the current node frame.
       * @return {?boolean} An optional bool that indicates whether the implementation actually performed an update or not (e.g. due to caching).
       */
@@ -11075,7 +11075,7 @@ index 8299d6c54..7d60dfe03 100644
      /**
       * This method performs the build of a node. The behavior and return value depend on the current build stage:
       * - **setup**: Prepares the node and its children for the build process. This process can also create new nodes. Returns the node itself or a variant.
-@@ -410,28 +431,176 @@ declare class Node extends EventDispatcher {
+@@ -411,28 +432,176 @@ declare class Node extends EventDispatcher {
       *
       * @return {Generator<Object>} An iterable list of serialized child objects as JSON.
       */
@@ -11446,6 +11446,107 @@ index 587fb0896..2333f0550 100644
 -import NodeVar from './NodeVar.js';
 +
 +export default NodeVarying;
+diff --git a/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
+index dadc1807e..7762146ff 100644
+--- a/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
++++ b/jsdoc-testing/jsdoc/src/nodes/core/OverrideContextNode.d.ts
+@@ -1,36 +1,7 @@
+-/**
+- * TSL function for creating an `OverrideContextNode` to override a single target node.
+- *
+- * ```js
+- * material.contextNode = overrideNode( positionLocal, ( builder ) => positionLocal.add( vec3( 1, 0, 0 ) ) );
+- * ```
+- *
+- * @tsl
+- * @function
+- * @param {Node} targetNode - The target node that should be overridden.
+- * @param {Function|Node|null} [callback=null] - A callback function returning the overriding node (which receives the builder as its argument), or the overriding node itself.
+- * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+- * @return {OverrideContextNode} The created override context node.
+- */
+-export function overrideNode(targetNode: Node, callback?: Function | Node | null, flowNode?: Node | null): OverrideContextNode;
+-/**
+- * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
+- *
+- * ```js
+- * material.contextNode = overrideNodes( [
+- * 	[ positionView, customPositionView ],
+- * 	[ positionViewDirection, ( builder ) => customPositionViewDirection ]
+- * ] );
+- * ```
+- *
+- * @tsl
+- * @function
+- * @param {Map<Node, (Function|Node)>|Array<Array<Node|Function|Node>>} overrides - The overrides mapping target nodes to callback functions or overriding nodes.
+- * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+- * @return {OverrideContextNode} The created override context node.
+- */
+-export function overrideNodes(overrides: Map<Node, (Function | Node)> | Array<Array<Node | Function | Node>>, flowNode?: Node | null): OverrideContextNode;
+-export default OverrideContextNode;
++import ContextNode from './ContextNode.js';
++import Node from './Node.js';
++import NodeBuilder from './NodeBuilder.js';
++
+ /**
+  * A specialized context node designed to override specific target nodes within a
+  * node sub-graph or flow. This allows replacing specific inputs (e.g., normal
+@@ -54,7 +25,7 @@ declare class OverrideContextNode extends ContextNode {
+      * @param {Map<Node, Function>} overrideNodes - A map mapping target nodes to their respective override callback functions.
+      * @param {Node|null} [flowNode=null] - The node whose context should be modified.
+      */
+-    constructor(overrideNodes: Map<Node, Function>, flowNode?: Node | null);
++    constructor(overrideNodes: Map<Node, (nodeBuilder: NodeBuilder) => Node>, flowNode?: Node | null);
+     /**
+      * This flag can be used for type testing.
+      *
+@@ -64,4 +35,45 @@ declare class OverrideContextNode extends ContextNode {
+      */
+     readonly isOverrideContextNode: boolean;
+ }
+-import ContextNode from './ContextNode.js';
++
++export default OverrideContextNode;
++
++/**
++ * TSL function for creating an `OverrideContextNode` to override a single target node.
++ *
++ * ```js
++ * material.contextNode = overrideNode( positionLocal, ( builder ) => positionLocal.add( vec3( 1, 0, 0 ) ) );
++ * ```
++ *
++ * @tsl
++ * @function
++ * @param {Node} targetNode - The target node that should be overridden.
++ * @param {Function|Node|null} [callback=null] - A callback function returning the overriding node (which receives the builder as its argument), or the overriding node itself.
++ * @param {Node|null} [flowNode=null] - The node whose context should be modified.
++ * @return {OverrideContextNode} The created override context node.
++ */
++export function overrideNode(targetNode: Node, callback?: ((nodeBuilder: NodeBuilder) => Node) | Node | null, flowNode?: Node | null): OverrideContextNode;
++
++/**
++ * TSL function for creating an `OverrideContextNode` to override multiple target nodes.
++ *
++ * ```js
++ * material.contextNode = overrideNodes( [
++ * 	[ positionView, customPositionView ],
++ * 	[ positionViewDirection, ( builder ) => customPositionViewDirection ]
++ * ] );
++ * ```
++ *
++ * @tsl
++ * @function
++ * @param {Map<Node, (Function|Node)>|Array<Array<Node|Function|Node>>} overrides - The overrides mapping target nodes to callback functions or overriding nodes.
++ * @param {Node|null} [flowNode=null] - The node whose context should be modified.
++ * @return {OverrideContextNode} The created override context node.
++ */
++export function overrideNodes(overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>, flowNode?: Node | null): OverrideContextNode;
++
++declare module "./Node.js" {
++    interface NodeElements {
++        overrideNodes: (overrides: Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null> | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>) => Node;
++    }
++}
 diff --git a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts b/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
 index af08042f6..0190410e1 100644
 --- a/jsdoc-testing/jsdoc/src/nodes/core/StructType.d.ts
