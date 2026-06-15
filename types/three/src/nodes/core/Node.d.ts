@@ -357,7 +357,8 @@ declare class NodeClass<TEventMap extends NodeClassEventMap = NodeClassEventMap>
      * This method is used during the build process of a node and ensures
      * equal nodes are not built multiple times but just once. For example if
      * `attribute( 'uv' )` is used multiple times by the user, the build
-     * process makes sure to process just the first node.
+     * process makes sure to process just the first node. It also handles
+     * node overrides if an override context is set.
      *
      * @param {NodeBuilder} builder - The current node builder.
      * @return {Node} The shared node if possible. Otherwise `this` is returned.
