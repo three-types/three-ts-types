@@ -16193,83 +16193,67 @@ index 60fe6ccc9..c29cde36b 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
-index d96be2475..1ee4c7bd1 100644
+index 1e9eb47aa..fedddf5c0 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
 +++ b/examples-testing/examples/webgpu_lights_clustered.ts
 @@ -2,6 +2,7 @@ import * as THREE from 'three/webgpu';
- import { pass, uniform, vec3, float, mix, step, uv, instancedBufferAttribute } from 'three/tsl';
+ import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step } from 'three/tsl';
  
  import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
 +import type ClusteredLightsNode from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
-@@ -14,20 +15,20 @@ const MODEL_INDEX_URL =
-     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
- const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
+@@ -17,10 +18,25 @@ const WAVE_HEIGHT = 4;
+ const BIG_RADIUS = 6;
+ const BASE_POWER = 45;
  
--let camera,
--    scene,
--    renderer,
--    lights,
--    lightDummy,
--    lightPositionAttribute,
--    controls,
--    scenePass,
--    clusterInfluence,
--    debugZSliceNode,
--    lighting,
--    maxCount,
--    count,
--    renderPipeline;
+-let camera, scene, renderer, controls, spheresMesh, lighting;
+-let renderPipeline, scenePass, clusterInfluence, debugZSliceNode;
 +let camera: THREE.PerspectiveCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGPURenderer,
-+    lights: THREE.Group,
-+    lightDummy: THREE.Sprite,
-+    lightPositionAttribute: THREE.InstancedBufferAttribute,
 +    controls: OrbitControls,
++    spheresMesh: THREE.InstancedMesh<THREE.SphereGeometry, THREE.MeshBasicNodeMaterial>,
++    lighting: ClusteredLighting;
++let renderPipeline: THREE.RenderPipeline,
 +    scenePass: THREE.PassNode,
 +    clusterInfluence: THREE.UniformNode<'float', number>,
-+    debugZSliceNode: THREE.UniformNode<'int', number>,
-+    lighting: ClusteredLighting,
-+    maxCount: number,
-+    count: number,
-+    renderPipeline: THREE.RenderPipeline;
++    debugZSliceNode: THREE.UniformNode<'int', number>;
++
++interface Ball {
++    x: number;
++    z: number;
++    phase: number;
++    light: THREE.PointLight;
++}
  
- init();
+-const balls = [];
++const balls: Ball[] = [];
+ const dummy = new THREE.Object3D();
  
-@@ -56,7 +57,8 @@ async function init() {
-     const model = gltf.scene;
+ const params = {
+@@ -116,7 +132,7 @@ async function init() {
+     const colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(maxCount * 3), 3);
  
-     model.traverse(child => {
--        if (child.isLight && child.parent) child.parent.remove(child);
-+        if ((child as THREE.Light).isLight && (child as THREE.Light).parent)
-+            (child as THREE.Light).parent!.remove(child);
-     });
+     const material = new THREE.MeshBasicNodeMaterial();
+-    material.colorNode = instancedBufferAttribute(colorAttribute);
++    material.colorNode = instancedBufferAttribute<'vec3'>(colorAttribute);
  
-     scene.add(model);
-@@ -103,7 +105,7 @@ async function init() {
-     lights = new THREE.Group();
-     scene.add(lights);
- 
--    const addLight = (hexColor, power = 10, distance = 1) => {
-+    const addLight = (hexColor: number, power = 10, distance = 1) => {
-         const light = new THREE.PointLight(hexColor, 1, distance);
-         light.position.set(
-             modelCenter.x + (Math.random() - 0.5) * modelSize.x * 0.7,
-@@ -181,7 +183,7 @@ async function init() {
+     spheresMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(RADIUS, 32, 16), material, maxCount);
+     spheresMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+@@ -183,7 +199,7 @@ async function init() {
  
      // gui
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
- 
-     const params = {
-         count,
-@@ -204,9 +206,10 @@ async function init() {
- function updatePostProcessing() {
-     // cluster light count debug overlay; needs to be updated every time the renderer size changes
+     gui.add(params, 'intensity', 0, 3)
+         .name('light intensity')
+         .onChange(value => {
+@@ -211,9 +227,10 @@ function updatePostProcessing() {
+     // the overlay samples the cluster grid at the current resolution, so it
+     // is rebuilt whenever the renderer size changes
  
 -    const lightingNode = lighting
 -        .getNode(scene)
@@ -16279,27 +16263,8 @@ index d96be2475..1ee4c7bd1 100644
 +        window.innerHeight * window.devicePixelRatio,
 +    );
  
-     // Calculate a color mapping based on the actual number of lights directly affecting the cluster.
-     // We map between 0 and maxLightsPerCluster to a gradient
-@@ -224,9 +227,17 @@ function updatePostProcessing() {
-     renderPipeline.needsUpdate = true;
- }
- 
-+interface Model {
-+    label: string;
-+    name: string;
-+    screenshot: string;
-+    tags: string[];
-+    variants: Record<string, string>;
-+}
-+
- async function getSponzaModelURL() {
-     const response = await fetch(MODEL_INDEX_URL);
--    const models = await response.json();
-+    const models = (await response.json()) as Model[];
-     const sponzaInfo = models.find(model => model.name === 'Sponza');
- 
-     if (!sponzaInfo) {
+     // map the light count of each cluster ( 0 … maxLightsPerCluster ) to a
+     // blue → green → red gradient
 diff --git a/examples-testing/examples/webgpu_lights_dynamic.ts b/examples-testing/examples/webgpu_lights_dynamic.ts
 index b08c5902f..123a9c1a9 100644
 --- a/examples-testing/examples/webgpu_lights_dynamic.ts

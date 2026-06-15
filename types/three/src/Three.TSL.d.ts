@@ -420,6 +420,8 @@ export const oscTriangle: typeof TSL.oscTriangle;
 export const output: typeof TSL.output;
 export const outputStruct: typeof TSL.outputStruct;
 export const overloadingFn: typeof TSL.overloadingFn;
+export const overrideNode: typeof TSL.overrideNode;
+export const overrideNodes: typeof TSL.overrideNodes;
 export const packHalf2x16: typeof TSL.packHalf2x16;
 export const packSnorm2x16: typeof TSL.packSnorm2x16;
 export const packUnorm2x16: typeof TSL.packUnorm2x16;

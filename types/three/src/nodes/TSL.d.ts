@@ -10,6 +10,7 @@ export * from "./core/IndexNode.js";
 export * from "./core/IsolateNode.js";
 export * from "./core/MRTNode.js";
 export * from "./core/OutputStructNode.js";
+export * from "./core/OverrideContextNode.js";
 export * from "./core/ParameterNode.js";
 export * from "./core/PropertyNode.js";
 export * from "./core/StackNode.js";
