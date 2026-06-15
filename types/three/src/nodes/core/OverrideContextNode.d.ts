@@ -18,7 +18,7 @@ import NodeBuilder from "./NodeBuilder.js";
  *
  * @augments ContextNode
  */
-declare class OverrideContextNode extends ContextNode {
+declare class OverrideContextNode extends ContextNode<unknown> {
     /**
      * Constructs a new override context node.
      *
