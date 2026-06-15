@@ -122,6 +122,7 @@ const files = [
     'src/nodes/core/NodeUniform',
     'src/nodes/core/NodeVar',
     'src/nodes/core/NodeVarying',
+    'src/nodes/core/OverrideContextNode',
     'src/nodes/core/StructType',
     'src/nodes/core/StructTypeNode',
     'src/nodes/core/UniformNode',
