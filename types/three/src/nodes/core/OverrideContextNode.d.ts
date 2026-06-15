@@ -87,6 +87,6 @@ declare module "./Node.js" {
             overrides:
                 | Map<Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null>
                 | Array<[Node, ((nodeBuilder: NodeBuilder) => Node) | Node | null]>,
-        ) => Node;
+        ) => OverrideContextNode;
     }
 }
