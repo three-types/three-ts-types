@@ -29,8 +29,6 @@ declare class ClusteredLightsNode extends LightsNode {
      */
     constructor(maxLights?: number, tileSize?: number, zSlices?: number, maxLightsPerCluster?: number);
 
-    getLights(): Light[];
-
     getClusterLightCount(zSliceNode: Node<"int">): Node<"int">;
 
     setSize(width: number, height: number): this;
