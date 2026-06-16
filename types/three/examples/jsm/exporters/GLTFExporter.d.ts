@@ -34,7 +34,7 @@ export interface GLTFExporterOptions {
     /**
      * List of animations to be included in the export.
      */
-    animations?: AnimationClip[];
+    animations?: AnimationClip[] | AnimationClip[][];
 
     /**
      * Generate indices for non-index geometry and export with them. Default is false.
