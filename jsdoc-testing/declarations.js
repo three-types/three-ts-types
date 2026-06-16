@@ -103,6 +103,7 @@ const files = [
     'src/materials/ShadowMaterial',
     'src/materials/SpriteMaterial',
     'src/math/Box3',
+    'src/math/FrustumArray',
     'src/math/interpolants/BezierInterpolant',
     'src/math/interpolants/CubicInterpolant',
     'src/math/interpolants/DiscreteInterpolant',
