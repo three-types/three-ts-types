@@ -77,7 +77,7 @@ declare class WebGLState {
     bindTexture(webglType: number, webglTexture: WebGLTexture, webglSlot?: number): void;
     unbindTexture(): void;
     pixelStorei(name: GLenum, value: GLint | GLboolean): void;
-    getParameter(name: GLenum): any;
+    getParameter(name: GLenum): unknown;
 
     // Same interface as https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/compressedTexImage2D
     compressedTexImage2D(
