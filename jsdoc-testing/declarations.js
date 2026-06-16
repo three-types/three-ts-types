@@ -110,6 +110,7 @@ const files = [
     'src/math/interpolants/LinearInterpolant',
     'src/math/interpolants/QuaternionLinearInterpolant',
     'src/math/Interpolant',
+    'src/math/Matrix4',
     'src/nodes/accessors/Batch',
     'src/nodes/accessors/BufferAttributeNode',
     'src/nodes/accessors/Instance',
