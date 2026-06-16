@@ -157,6 +157,16 @@ export class Matrix4 {
     determinant(): number;
 
     /**
+     * Computes and returns the determinant of the upper-left 3x3 submatrix.
+     *
+     * For affine matrices (like an object's world matrix), this value equals the
+     * full 4x4 {@link Matrix4#determinant} but is cheaper to compute.
+     *
+     * @return {number} The determinant of the upper-left 3x3 submatrix.
+     */
+    determinant3x3(): number;
+
+    /**
      * Transposes this matrix.
      */
     transpose(): this;
