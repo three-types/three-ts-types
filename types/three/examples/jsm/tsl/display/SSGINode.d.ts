@@ -1,4 +1,4 @@
-import { Node, PassTextureNode, PerspectiveCamera, TempNode, UniformNode } from "three/webgpu";
+import { Node, PerspectiveCamera, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
 declare class SSGINode extends TempNode<"vec4"> {
     beautyNode: Node;
@@ -19,8 +19,8 @@ declare class SSGINode extends TempNode<"vec4"> {
 
     constructor(beautyNode: Node, depthNode: Node, normalNode: Node, camera: PerspectiveCamera);
 
-    getAONode(): PassTextureNode;
-    getGINode(): PassTextureNode;
+    getAONode(): TextureNode;
+    getGINode(): TextureNode;
 }
 
 export default SSGINode;
