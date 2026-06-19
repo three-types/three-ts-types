@@ -1981,7 +1981,9 @@ interface Vec3Function {
     (value: Vector3): VarNode<"vec3", ConstNode<"vec3", Vector3>>;
     // ConvertNode
     (node: ScalarNode): VarNode<"vec3", ConvertNode<"vec3">>;
-    (node: Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Node<"bvec3">): VarNode<"vec3", ConvertNode<"vec3">>;
+    (
+        node: Node<"vec3"> | Node<"ivec3"> | Node<"uvec3"> | Node<"bvec3"> | Node<"vec4">,
+    ): VarNode<"vec3", ConvertNode<"vec3">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
@@ -2086,7 +2088,7 @@ interface Vec4Function {
     (x: Scalar, y: Scalar, zw: Node<"vec2"> | Vector2): VarNode<"vec4", JoinNode<"vec4">>;
     (xy: Node<"vec2"> | Vector2, zw: Node<"vec2"> | Vector2): VarNode<"vec4", JoinNode<"vec4">>;
     (xy: Node<"vec2"> | Vector2, z: Scalar, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
-    (xyz: Node<"vec3"> | Node<"color"> | Vector3 | Color, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
+    (xyz: Node<"vec3"> | Node<"color"> | Vector3 | Color | Node<"vec4">, w: Scalar): VarNode<"vec4", JoinNode<"vec4">>;
     (x: Scalar, yzw: Node<"vec3"> | Node<"color"> | Vector3 | Color): VarNode<"vec4", JoinNode<"vec4">>;
 }
 
