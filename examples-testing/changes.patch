@@ -15097,7 +15097,7 @@ index 6b3ecc9f7..8423ac5e9 100644
      // use lerp to smooth the movement
      collisionBoxPosUI = new THREE.Vector3().copy(collisionBox.position);
 diff --git a/examples-testing/examples/webgpu_compute_particles_snow.ts b/examples-testing/examples/webgpu_compute_particles_snow.ts
-index 2ed9b0523..219dd9aea 100644
+index 32ec0d6b8..3f488a732 100644
 --- a/examples-testing/examples/webgpu_compute_particles_snow.ts
 +++ b/examples-testing/examples/webgpu_compute_particles_snow.ts
 @@ -26,12 +26,14 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -15120,7 +15120,7 @@ index 2ed9b0523..219dd9aea 100644
  
  init();
  
-@@ -113,7 +115,7 @@ async function init() {
+@@ -115,7 +117,7 @@ async function init() {
      const speed = 0.4;
  
      const computeUpdate = Fn(() => {
@@ -15129,7 +15129,7 @@ index 2ed9b0523..219dd9aea 100644
  
          const position = positionBuffer.element(instanceIndex);
          const scale = scaleBuffer.element(instanceIndex);
-@@ -148,7 +150,7 @@ async function init() {
+@@ -150,7 +152,7 @@ async function init() {
  
      const geometry = new THREE.SphereGeometry(surfaceOffset, 5, 5);
  
@@ -15138,7 +15138,7 @@ index 2ed9b0523..219dd9aea 100644
          const posBuffer = staticParticles ? staticPositionBuffer : positionBuffer;
          const layer = staticParticles ? 1 : 2;
  
-@@ -279,7 +281,7 @@ async function init() {
+@@ -281,7 +283,7 @@ async function init() {
  
      // compose
  
@@ -18679,7 +18679,7 @@ index 595965a6c..645d0036b 100644
          setStatic(model, options.static);
      });
 diff --git a/examples-testing/examples/webgpu_performance_renderbundle.ts b/examples-testing/examples/webgpu_performance_renderbundle.ts
-index 3b20847b8..bda539989 100644
+index 303b02e3f..9123e88a7 100644
 --- a/examples-testing/examples/webgpu_performance_renderbundle.ts
 +++ b/examples-testing/examples/webgpu_performance_renderbundle.ts
 @@ -1,13 +1,14 @@
@@ -18693,15 +18693,15 @@ index 3b20847b8..bda539989 100644
 -let camera, scene, renderer;
 -let controls;
 -let gui;
--let geometries, group;
+-let geometries, group, instancedMesh;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let controls: OrbitControls;
 +let gui: ParametersGroup;
-+let geometries: THREE.BufferGeometry[], group: THREE.Group;
++let geometries: THREE.BufferGeometry[], group: THREE.Group, instancedMesh: THREE.InstancedMesh;
  
  //
  
-@@ -30,7 +31,7 @@ init();
+@@ -33,7 +34,7 @@ init();
  
  //
  
@@ -18710,7 +18710,7 @@ index 3b20847b8..bda539989 100644
      position.x = Math.random() * 80 - 40;
      position.y = Math.random() * 80 - 40;
      position.z = Math.random() * 80 - 40;
-@@ -46,7 +47,7 @@ function randomizeMatrix(matrix) {
+@@ -49,7 +50,7 @@ function randomizeMatrix(matrix) {
      return matrix.compose(position, quaternion, scale);
  }
  
@@ -18719,21 +18719,16 @@ index 3b20847b8..bda539989 100644
      rotation.x = Math.random() * 0.05;
      rotation.y = Math.random() * 0.05;
      rotation.z = Math.random() * 0.05;
-@@ -73,11 +74,11 @@ function initGeometries() {
+@@ -76,7 +77,7 @@ function initGeometries() {
      ];
  }
  
 -function initMesh(count) {
 +function initMesh(count: number) {
-     initRegularMesh(count);
- }
- 
--function initRegularMesh(count) {
-+function initRegularMesh(count: number) {
      group = api.renderBundle ? new THREE.BundleGroup() : new THREE.Group();
  
      for (let i = 0; i < count; i++) {
-@@ -101,7 +102,7 @@ function init() {
+@@ -118,7 +119,7 @@ function init() {
      const searchParams = new URLSearchParams(window.location.search);
      api.webgpu = searchParams.get('backend') !== 'webgl';
      api.renderBundle = searchParams.get('renderBundle') !== 'false';
@@ -18742,7 +18737,7 @@ index 3b20847b8..bda539989 100644
  
      const count = api.count;
  
-@@ -139,7 +140,7 @@ function init() {
+@@ -156,7 +157,7 @@ function init() {
  
      // gui
  
@@ -18751,7 +18746,7 @@ index 3b20847b8..bda539989 100644
      gui.add(api, 'renderBundle').name('render bundle').onChange(reload);
  
      gui.add(api, 'webgpu').onChange(reload);
-@@ -160,7 +161,7 @@ function init() {
+@@ -177,7 +178,7 @@ function init() {
          camera.updateProjectionMatrix();
  
          renderer.setSize(width, height);
@@ -20021,7 +20016,7 @@ index 2c60c4842..7d4d2ad69 100644
      renderPipeline.render();
  }
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi.ts b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
-index 143dd1d32..de43cb945 100644
+index c27491648..af45108b7 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi.ts
 @@ -20,7 +20,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20056,7 +20051,7 @@ index 143dd1d32..de43cb945 100644
              renderPipeline.outputNode = vec4(vec3(ao), 1);
          } else if (value === 2) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
-index 096bc4601..3483da470 100644
+index 74cee4712..4e38f9a5d 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssgi_ballpool.ts
 @@ -14,7 +14,8 @@ import {
