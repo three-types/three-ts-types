@@ -1245,6 +1245,70 @@ index c19eb94a6..7900c0e18 100644
      ctx.fillStyle = '#005BBB';
      ctx.fillRect(0, 0, 64, 64);
      ctx.fillStyle = '#FFD500';
+diff --git a/examples-testing/examples/misc_exporter_gltf_normals.ts b/examples-testing/examples/misc_exporter_gltf_normals.ts
+index 6ca397191..4cbc0c74b 100644
+--- a/examples-testing/examples/misc_exporter_gltf_normals.ts
++++ b/examples-testing/examples/misc_exporter_gltf_normals.ts
+@@ -1,14 +1,15 @@
+-import * as THREE from '../build/three.module.js';
++import * as THREE from 'three';
+ 
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { GLTFExporter } from 'three/addons/exporters/GLTFExporter.js';
+ 
+ //
+ 
+-let container;
++let container: HTMLDivElement;
+ 
+-let camera, scene, renderer;
+-let mesh1, mesh2;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer;
++let mesh1: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>,
++    mesh2: THREE.Mesh<THREE.PlaneGeometry, THREE.MeshStandardMaterial>;
+ 
+ init();
+ render();
+@@ -115,7 +116,7 @@ function render() {
+ 
+ //
+ 
+-function exportGLTF(input) {
++function exportGLTF(input: THREE.Object3D[]) {
+     const gltfExporter = new GLTFExporter();
+ 
+     const options = {
+@@ -138,7 +139,7 @@ function exportGLTF(input) {
+     );
+ }
+ 
+-document.getElementById('export_objects').addEventListener('click', function () {
++document.getElementById('export_objects')!.addEventListener('click', function () {
+     exportGLTF([mesh1, mesh2]);
+ });
+ 
+@@ -146,7 +147,7 @@ const link = document.createElement('a');
+ link.style.display = 'none';
+ document.body.appendChild(link); // Firefox workaround, see #6594
+ 
+-function save(blob, filename) {
++function save(blob: Blob, filename: string) {
+     link.href = URL.createObjectURL(blob);
+     link.download = filename;
+     link.click();
+@@ -154,10 +155,10 @@ function save(blob, filename) {
+     // URL.revokeObjectURL( url ); breaks Firefox...
+ }
+ 
+-function saveString(text, filename) {
++function saveString(text: string, filename: string) {
+     save(new Blob([text], { type: 'text/plain' }), filename);
+ }
+ 
+-function saveArrayBuffer(buffer, filename) {
++function saveArrayBuffer(buffer: ArrayBuffer, filename: string) {
+     save(new Blob([buffer], { type: 'application/octet-stream' }), filename);
+ }
 diff --git a/examples-testing/examples/misc_exporter_ktx2.ts b/examples-testing/examples/misc_exporter_ktx2.ts
 index c96889a24..1c8535e0e 100644
 --- a/examples-testing/examples/misc_exporter_ktx2.ts
