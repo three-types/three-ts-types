@@ -88,7 +88,7 @@ declare class GLTFExporter {
     parse(
         input: Object3D | Object3D[],
         onDone: (gltf: ArrayBuffer | { [key: string]: unknown }) => void,
-        onError: (error: ErrorEvent) => void,
+        onError: ((error: ErrorEvent) => void) | null,
         options?: GLTFExporterOptions,
     ): void;
 
