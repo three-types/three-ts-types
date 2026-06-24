@@ -9,6 +9,7 @@ const files = [
     'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
+    'examples/jsm/tsl/math/curlNoise',
     'examples/jsm/tsl/utils/GroundedSkybox',
     'examples/jsm/webxr/WebGLXRFallback',
     'src/animation/tracks/BooleanKeyframeTrack',
