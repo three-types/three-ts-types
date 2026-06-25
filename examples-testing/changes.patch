@@ -15563,20 +15563,39 @@ index 6fbdb55ae..fd5ec5705 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_custom_fog.ts b/examples-testing/examples/webgpu_custom_fog.ts
-index bcfcb0fd3..be07fc038 100644
+index 8b1036a14..b3ec9805b 100644
 --- a/examples-testing/examples/webgpu_custom_fog.ts
 +++ b/examples-testing/examples/webgpu_custom_fog.ts
-@@ -4,8 +4,8 @@ import { color, fog, float, positionWorld, triNoise3D, positionView, normalWorld
- import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
- import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -7,9 +7,17 @@ import { SkyMesh } from 'three/addons/objects/SkyMesh.js';
+ import { TerrainGenerator } from 'three/addons/generators/TerrainGenerator.js';
+ import { ForestGenerator } from 'three/addons/generators/ForestGenerator.js';
  
--let camera, scene, renderer;
--let controls;
-+let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
-+let controls: OrbitControls;
+-let camera, scene, renderer, controls, timer;
+-let terrain, forest, terrainGroup, forestGroup;
+-let sky, sun, sunLight, pmremGenerator, envScene;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: FirstPersonControls,
++    timer: THREE.Timer;
++let terrain: TerrainGenerator, forest: ForestGenerator, terrainGroup: THREE.Group, forestGroup: THREE.Group;
++let sky: SkyMesh,
++    sun: THREE.Vector3,
++    sunLight: THREE.DirectionalLight,
++    pmremGenerator: THREE.PMREMGenerator,
++    envScene: THREE.Scene;
  
- init();
+ const parameters = {
+     elevation: 11, // sun height above the horizon, in degrees ( low = golden hour )
+@@ -126,7 +134,7 @@ async function init() {
  
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+ 
+     const skyFolder = gui.addFolder('Sun');
+     skyFolder.add(parameters, 'elevation', 1, 40).step(0.5).name('elevation').onChange(updateSun);
 diff --git a/examples-testing/examples/webgpu_custom_fog_background.ts b/examples-testing/examples/webgpu_custom_fog_background.ts
 index a9b619345..e482a1e2e 100644
 --- a/examples-testing/examples/webgpu_custom_fog_background.ts

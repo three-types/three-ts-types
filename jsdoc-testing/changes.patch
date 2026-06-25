@@ -171,6 +171,215 @@ index baf210642..ddf63e336 100644
 -import { Group } from 'three';
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 +export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
+index 4b2772243..d481a3379 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/ForestGenerator.d.ts
+@@ -1,3 +1,25 @@
++import { Group, InstancedMesh, MeshStandardNodeMaterial, Node, UniformNode, Vector3 } from 'three/webgpu';
++import { TerrainGenerator } from './TerrainGenerator.js';
++
++export interface ForestGeneratorParameters {
++    seed: number;
++    count: number;
++    detail: number;
++    radius: number;
++    height: number;
++    distortion: number;
++    sink: number;
++    altitudeMin: number;
++    altitudeMax: number;
++    minSlope: number;
++    densityFrequency: number;
++    minScale: number;
++    maxScale: number;
++    from: number;
++    to: number;
++    castShadow: boolean;
++}
++
+ /**
+  * Carpets a {@link TerrainGenerator} ( or anything exposing `sampleHeight`,
+  * `sampleSlope`, `minY`, `maxY` and `parameters.size` ) with a forest of hundreds
+@@ -18,55 +40,24 @@
+  * ```
+  */
+ export class ForestGenerator {
+-    constructor(parameters?: {});
+-    parameters: {
+-        seed: number;
+-        count: number;
+-        detail: number;
+-        radius: number;
+-        height: number;
+-        distortion: number;
+-        sink: number;
+-        altitudeMin: number;
+-        altitudeMax: number;
+-        minSlope: number;
+-        densityFrequency: number;
+-        minScale: number;
+-        maxScale: number;
+-        from: number;
+-        to: number;
+-        castShadow: boolean;
+-    };
+-    from: import("three/webgpu").UniformNode;
+-    to: import("three/webgpu").UniformNode;
+-    _cameraPosition: import("three/webgpu").UniformNode;
++    constructor(parameters?: Partial<ForestGeneratorParameters>);
++
++    parameters: ForestGeneratorParameters;
++
++    from: UniformNode<'float', number>;
++    to: UniformNode<'float', number>;
++
+     material: MeshStandardNodeMaterial;
+     mesh: InstancedMesh | null;
+     group: Group | null;
+-    build(terrain: any): Group;
+-    setCameraPosition(position: any): void;
++
++    build(terrain: TerrainGenerator): Group;
++    setCameraPosition(position: Vector3): void;
+     dispose(): void;
++
++    static defaults: ForestGeneratorParameters
+ }
+-export namespace ForestGenerator {
+-    namespace defaults {
+-        let seed: number;
+-        let count: number;
+-        let detail: number;
+-        let radius: number;
+-        let height: number;
+-        let distortion: number;
+-        let sink: number;
+-        let altitudeMin: number;
+-        let altitudeMax: number;
+-        let minSlope: number;
+-        let densityFrequency: number;
+-        let minScale: number;
+-        let maxScale: number;
+-        let from: number;
+-        let to: number;
+-        let castShadow: boolean;
+-    }
+-}
++
+ /**
+  * The single material shared by every tree in a {@link ForestGenerator}. A plain
+  * MeshStandardNodeMaterial lit by the scene — only the surface is authored: deep
+@@ -81,7 +72,4 @@ export namespace ForestGenerator {
+  * @param {Node} to - distance past which no tree is drawn.
+  * @return {MeshStandardNodeMaterial}
+  */
+-export function createForestMaterial(from: Node, to: Node, camPos: any): MeshStandardNodeMaterial;
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
+-import { InstancedMesh } from 'three';
+-import { Group } from 'three';
++export function createForestMaterial(from: Node<'float'>, to: Node<'float'>, camPos: Node<'vec3'>): MeshStandardNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
+index a5b279bf6..7ca0512e6 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TerrainGenerator.d.ts
+@@ -1,3 +1,22 @@
++import { BufferGeometry, Group, MeshStandardNodeMaterial, UniformNode } from 'three/webgpu';
++
++export interface TerrainGeneratorParameters {
++    seed: number;
++    size: number;
++    segments: number;
++    heightScale: number;
++    frequency: number;
++    octaves: number;
++    lacunarity: number;
++    gain: number;
++    erosion: number;
++    warp: number;
++    valleyBias: number;
++    seaLevel: number;
++    talus: number;
++    talusPasses: number;
++}
++
+ /**
+  * Bakes a procedural mountain range into a single {@link THREE.BufferGeometry} and
+  * returns a `THREE.Group` ready to add to a scene.
+@@ -22,55 +41,27 @@
+  * ```
+  */
+ export class TerrainGenerator {
+-    constructor(parameters?: {});
+-    parameters: {
+-        seed: number;
+-        size: number;
+-        segments: number;
+-        heightScale: number;
+-        frequency: number;
+-        octaves: number;
+-        lacunarity: number;
+-        gain: number;
+-        erosion: number;
+-        warp: number;
+-        valleyBias: number;
+-        seaLevel: number;
+-        talus: number;
+-        talusPasses: number;
+-    };
+-    minHeight: import("three/webgpu").UniformNode;
+-    maxHeight: import("three/webgpu").UniformNode;
++    constructor(parameters?: Partial<TerrainGeneratorParameters>);
++
++    parameters: TerrainGeneratorParameters;
++
++    minHeight: UniformNode<'float', number>;
++    maxHeight: UniformNode<'float', number>;
++
+     material: MeshStandardNodeMaterial;
+     geometry: BufferGeometry | null;
+     group: Group | null;
++
++    heights?: Float32Array;
++    gridSize?: number;
++    minY?: number;
++    maxY?: number;
++
+     build(): Group;
+-    heights: Float32Array<ArrayBuffer> | undefined;
+-    gridSize: number | undefined;
+-    minY: number | undefined;
+-    maxY: number | undefined;
+-    sampleHeight(x: any, z: any): number;
+-    sampleSlope(x: any, z: any): number;
++
++    sampleHeight(x: number, z: number): number;
++    sampleSlope(x: number, z: number): number;
+     dispose(): void;
++
++    static defaults: TerrainGeneratorParameters;
+ }
+-export namespace TerrainGenerator {
+-    namespace defaults {
+-        let seed: number;
+-        let size: number;
+-        let segments: number;
+-        let heightScale: number;
+-        let frequency: number;
+-        let octaves: number;
+-        let lacunarity: number;
+-        let gain: number;
+-        let erosion: number;
+-        let warp: number;
+-        let valleyBias: number;
+-        let seaLevel: number;
+-        let talus: number;
+-        let talusPasses: number;
+-    }
+-}
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
+-import { BufferGeometry } from 'three';
+-import { Group } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
 index 81c1a0ec9..d560e432c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
