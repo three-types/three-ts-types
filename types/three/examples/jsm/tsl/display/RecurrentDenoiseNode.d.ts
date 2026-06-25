@@ -7,7 +7,7 @@ export type DenoiseAlphaSource = "raylength" | "ao" | "none";
 export interface RecurrentDenoiseNodeOptions {
     depth?: Node<"float"> | Node<"vec4"> | null | undefined;
     normal?: Node<"vec3"> | Node<"vec4"> | null | undefined;
-    metalRoughness?: Node<"vec4"> | null | undefined;
+    metalRoughness?: Node<"vec2"> | null | undefined;
     diffuse?: Node<"vec4"> | null | undefined;
     raw?: Node<"vec4"> | null | undefined;
     mode?: DenoiseMode | undefined;
@@ -47,7 +47,7 @@ declare class RecurrentDenoiseNode extends TempNode<"vec4"> {
     depthNode: Node<"float"> | Node<"vec4"> | null;
     normalNode: Node<"vec3"> | Node<"vec4"> | null;
     rawNode: TextureNode | null;
-    roughnessMetalnessNode: Node<"vec4"> | null;
+    roughnessMetalnessNode: Node<"vec2"> | null;
     diffuseNode: Node<"vec4"> | null;
 
     lumaPhi: UniformNode<"float", number>;
