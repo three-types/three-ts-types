@@ -20378,7 +20378,7 @@ index a5db67638..4d689dc1d 100644
          });
      });
 diff --git a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
-index 978c8ed67..59557a87a 100644
+index 978c8ed67..231cb147e 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ssr_denoise.ts
 @@ -23,10 +23,10 @@ import {
@@ -20506,15 +20506,17 @@ index 978c8ed67..59557a87a 100644
      temporalReprojectGui.add(params.temporalReproject, 'maxFrames', 1, 128, 1).name('max frames').onChange(applyParams);
      temporalReprojectGui
          .add(params.temporalReproject, 'clampIntensity', 0, 1)
-@@ -351,7 +364,7 @@ async function init() {
+@@ -351,8 +364,8 @@ async function init() {
      temporalReprojectGui.close();
  
      // Concise UI for Directional Light controls
 -    const lightGui = renderer.inspector.createParameters('Light').close();
+-    ['x', 'y', 'z'].forEach(axis => {
 +    const lightGui = (renderer.inspector as Inspector).createParameters('Light').close();
-     ['x', 'y', 'z'].forEach(axis => {
++    (['x', 'y', 'z'] as const).forEach(axis => {
          lightGui
              .add(directionalLight.position, axis, -30, 30)
+             .name(axis.toUpperCase())
 @@ -404,7 +417,7 @@ function applyParams() {
      }
  }
@@ -20531,6 +20533,24 @@ index 978c8ed67..59557a87a 100644
 -function applyPostProcessing(source) {
 +function applyPostProcessing(source: THREE.Node<'vec4'>) {
      return sharpen(traa(applyGrading(source), scenePassDepth, scenePassVelocity, camera), 0);
+ }
+ 
+@@ -432,7 +445,7 @@ function applyPost() {
+ function updateOutputNode() {
+     if (!postProcessing) return;
+ 
+-    let node;
++    let node: THREE.Node;
+ 
+     switch (params.output) {
+         case 0:
+@@ -472,7 +485,7 @@ function updateOutputNode() {
+     updateCompareHint(params.output);
+ 
+     postProcessing.outputColorTransform = !GRADED_OUTPUTS.has(params.output);
+-    postProcessing.outputNode = node;
++    postProcessing.outputNode = node!;
+     postProcessing.needsUpdate = true;
  }
  
 @@ -484,7 +497,7 @@ function onWindowResize() {
