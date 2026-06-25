@@ -4,9 +4,9 @@ import VaryingNode from "../core/VaryingNode.js";
 /**
  * TSL object representing a varying property for the batching color vector.
  *
- * @type {VaryingNode<vec3>}
+ * @type {VaryingNode<vec4>}
  */
-export const batchColor: VaryingNode<"vec3">;
+export const batchColor: VaryingNode<"vec4">;
 /**
  * TSL function representing the vertex shader batching setup.
  * Applies the batch transformation matrix to positionLocal, normalLocal, and tangentLocal.
