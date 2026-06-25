@@ -300,8 +300,8 @@ declare class SSRNode extends TempNode<"vec4"> {
 export default SSRNode;
 
 export function ssr(
-    colorNode: Node<any>,
-    depthNode: Node<any>,
-    normalNode: Node<any>,
+    colorNode: Node<"vec4">,
+    depthNode: Node<"float">,
+    normalNode: Node<"vec3">,
     options?: SSRNodeOptions,
 ): SSRNode;
