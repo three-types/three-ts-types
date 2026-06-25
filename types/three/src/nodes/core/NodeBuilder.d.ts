@@ -8,4 +8,5 @@ export default abstract class NodeBuilder {
     material: Material;
     geometry: BufferGeometry;
     renderer: Renderer;
+    context: unknown;
 }

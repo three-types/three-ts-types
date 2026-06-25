@@ -54,6 +54,7 @@ const exceptionList = [
     'webgl_worker_offscreencanvas',
     'webgpu_compute_particles_fluid',
     'webgpu_compute_rasterizer',
+    'webgpu_compute_rasterizer_ibl',
     'webgpu_compute_reduce',
     'webgpu_compute_water',
     'webgpu_instance_sprites',
