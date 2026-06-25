@@ -56,7 +56,12 @@ declare class SSRNode extends TempNode<"vec4"> {
      * @param {Node<vec3>} normalNode - A node that represents the beauty pass's normals.
      * @param {SSRNodeOptions} [options] - Optional inputs for material and environment data.
      */
-    constructor(colorNode: Node<"vec4">, depthNode: Node<"float">, normalNode: Node<"vec3">, options?: SSRNodeOptions);
+    constructor(
+        colorNode: Node<"vec4">,
+        depthNode: Node<"float"> | Node<"vec4">,
+        normalNode: Node<"vec3">,
+        options?: SSRNodeOptions,
+    );
     /**
      * When `true`, the reflection direction is varied per pixel with stochastic GGX rays
      * (second-generation SSR). When `false`, a single mirror reflection is traced and
@@ -275,7 +280,7 @@ declare class SSRNode extends TempNode<"vec4"> {
      * @param {Texture} history
      * @param {Node<vec2>} velocity
      */
-    setHistory(history: Texture, velocity: Node<"vec2">): void;
+    setHistory(history: Texture | { getRenderTarget(): { texture: Texture } }, velocity: Node<"vec2">): void;
     /**
      * Sets the environment map for importance-sampled env lighting when
      * screen-space rays miss. Call this whenever the scene's env map changes.
@@ -301,7 +306,7 @@ export default SSRNode;
 
 export function ssr(
     colorNode: Node<"vec4">,
-    depthNode: Node<"float">,
+    depthNode: Node<"float"> | Node<"vec4">,
     normalNode: Node<"vec3">,
     options?: SSRNodeOptions,
 ): SSRNode;
