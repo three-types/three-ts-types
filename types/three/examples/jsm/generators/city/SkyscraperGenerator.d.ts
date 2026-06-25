@@ -1,6 +1,6 @@
 import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from "three/webgpu";
 
-export interface SkyscraperGeneratorParameters {
+export interface SkyscraperGeneratorDefaultParameters {
     seed: number;
     totalHeight: number;
     floorHeight: number;
@@ -11,6 +11,17 @@ export interface SkyscraperGeneratorParameters {
     chamferCornerZ: number;
     setbackDepth: number;
     acChance: number;
+}
+
+export interface SkyscraperGeneratorParameters extends SkyscraperGeneratorDefaultParameters {
+    footprint: { width: number; height: number };
+    tierFractions: { base: number; crown: number };
+    pierWidth: number;
+    pierDepth: number;
+    windowReveal: number;
+    stringCourseHeight: number;
+    archBayWidthRatio: number;
+    archRise: number;
 }
 
 /**
@@ -46,7 +57,7 @@ export class SkyscraperGenerator {
     rebuild(): Mesh;
     dispose(): void;
 
-    static defaults: SkyscraperGeneratorParameters;
+    static defaults: SkyscraperGeneratorDefaultParameters;
 }
 
 /**
