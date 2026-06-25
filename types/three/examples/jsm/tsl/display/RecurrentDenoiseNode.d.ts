@@ -1,6 +1,9 @@
-import { Camera, Node, TempNode, TextureNode } from "three/webgpu";
+import { Camera, Node, TempNode, UniformNode } from "three/webgpu";
+import { TextureNode } from "../../../../src/nodes/Nodes";
 
 export type DenoiseMode = "diffuse" | "specular";
+
+export type DenoiseAlphaSource = "raylength" | "ao" | "none";
 
 export interface RecurrentDenoiseNodeOptions {
     depth?: Node<"float"> | null | undefined;
@@ -12,14 +15,74 @@ export interface RecurrentDenoiseNodeOptions {
     accumulate?: boolean | undefined;
 }
 
+/**
+ * Post processing node for denoising temporally-accumulated screen-space effects
+ * such as SSGI (ambient occlusion / indirect diffuse) and SSR (specular reflections).
+ *
+ * The denoising kernel is selected at construction time via `mode`:
+ * `'diffuse'` (SSGI) or `'specular'` (SSR). The kernel uses a fixed 8-sample Vogel disk.
+ *
+ * @augments TempNode
+ * @three_import import { recurrentDenoise } from 'three/addons/tsl/display/RecurrentDenoiseNode.js';
+ */
 declare class RecurrentDenoiseNode extends TempNode<"vec4"> {
-    constructor(inputTexture: TextureNode, camera: Camera, options?: RecurrentDenoiseNodeOptions);
+    readonly isRecurrentDenoiseNode: boolean;
+    camera: Camera;
+
+    /**
+     * Denoising kernel type.
+     *
+     * @type {DenoiseMode}
+     */
+    mode: DenoiseMode;
+
+    /**
+     * When `true`, apply temporal blending after spatial denoising. When `false`, output spatially
+     * filtered colour only (alpha is passed through from the input temporal pass).
+     *
+     * @type {boolean}
+     */
+    accumulate: boolean;
+
+    textureNode: Node<"vec4">;
+    depthNode: Node<"float"> | null;
+    normalNode: Node<"vec3"> | null;
+    rawNode: TextureNode | null;
+    roughnessMetalnessNode: Node<"vec4"> | null;
+    diffuseNode: Node<"vec4"> | null;
+
+    lumaPhi: UniformNode<"float", number>;
+    depthPhi: UniformNode<"float", number>;
+    normalPhi: UniformNode<"float", number>;
+    radius: UniformNode<"float", number>;
+    alphaPhi: UniformNode<"float", number>;
+    roughnessPhi: UniformNode<"float", number>;
+    diffusePhi: UniformNode<"float", number>;
+    adapt: UniformNode<"float", number>;
+    smoothDisocclusions: UniformNode<"bool", boolean>;
+    strength: UniformNode<"float", number>;
+    maxFrames: UniformNode<"float", number>;
+
+    /**
+     * Which channel of the raw texture drives alpha-based edge stopping.
+     * `'raylength'` — alpha encodes SSR ray length; `'ao'` — alpha encodes AO factor;
+     * `'none'` — skip alpha-based edge stopping.
+     *
+     * @type {DenoiseAlphaSource}
+     * @default 'raylength'
+     */
+    alphaSource: DenoiseAlphaSource;
+
+    flickerSuppression: UniformNode<"float", number>;
+    adaptiveTrust: UniformNode<"float", number>;
+
+    constructor(inputTexture: Node<"vec4">, camera: Camera, options?: RecurrentDenoiseNodeOptions);
 }
 
 export default RecurrentDenoiseNode;
 
 export const recurrentDenoise: (
-    inputTexture: TextureNode,
+    inputTexture: Node<"vec4">,
     camera: Camera,
     options?: RecurrentDenoiseNodeOptions,
 ) => RecurrentDenoiseNode;
