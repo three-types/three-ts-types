@@ -9,6 +9,7 @@ const files = [
     'examples/jsm/generators/CityGenerator',
     'examples/jsm/generators/ForestGenerator',
     'examples/jsm/generators/TerrainGenerator',
+    'examples/jsm/generators/TreeGenerator',
     'examples/jsm/geometries/LoftGeometry',
     'examples/jsm/lighting/ClusteredLighting',
     'examples/jsm/lighting/LightProbeGrid',
