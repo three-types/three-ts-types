@@ -95,7 +95,7 @@ declare class SSRNode extends TempNode<"vec4"> {
      *
      * @type {Node<float>}
      */
-    depthNode: Node<"float">;
+    depthNode: Node<"float"> | Node<"vec4">;
     /**
      * A node that represents the beauty pass's normals.
      *
@@ -202,7 +202,7 @@ declare class SSRNode extends TempNode<"vec4"> {
      *
      * @type {?Node<vec2>}
      */
-    velocityTexture: Node<"vec2"> | null;
+    velocityTexture: Node<"vec2"> | Node<"vec4"> | null;
     /**
      * The camera the scene is rendered with.
      *
@@ -280,7 +280,10 @@ declare class SSRNode extends TempNode<"vec4"> {
      * @param {Texture} history
      * @param {Node<vec2>} velocity
      */
-    setHistory(history: Texture | { getRenderTarget(): { texture: Texture } }, velocity: Node<"vec2">): void;
+    setHistory(
+        history: Texture | { getRenderTarget(): { texture: Texture } },
+        velocity: Node<"vec2"> | Node<"vec4">,
+    ): void;
     /**
      * Sets the environment map for importance-sampled env lighting when
      * screen-space rays miss. Call this whenever the scene's env map changes.
