@@ -380,6 +380,94 @@ index a5b279bf6..7ca0512e6 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 -import { BufferGeometry } from 'three';
 -import { Group } from 'three';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
+index 48708c301..e667fd9c6 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
+@@ -1,3 +1,30 @@
++import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from 'three/webgpu';
++
++export interface TreeGeneratorParameters {
++    seed: number;
++    levels: number;
++    children: number[];
++    branchAngle: number[];
++    angleVariance: number;
++    lengthRatio: number;
++    trunkLength: number;
++    trunkRadius: number;
++    taper: number;
++    taperCurve: number;
++    rootFlare: number;
++    flareFrac: number;
++    radiusExponent: number;
++    minRadius: number;
++    minLength: number;
++    droop: number;
++    upPull: number;
++    gnarl: number[];
++    radialSegments: number;
++    sectionLength: number;
++    childStart: number;
++    trunkClear: number;
++}
++
+ /**
+  * Grows a procedural tree skeleton — trunk, branches and twigs, each swept as a tapered
+  * tube — and bakes it into one non-indexed {@link BufferGeometry} (position and normal
+@@ -24,36 +51,17 @@
+  */
+ export class TreeGenerator {
+     constructor(material?: null);
+-    material: any;
+-    parameters: {};
++    material: Material;
++    parameters: Partial<TreeGeneratorParameters>;
+     build(): Mesh;
++
++    static defaults: TreeGeneratorParameters;
+ }
+-export namespace TreeGenerator {
+-    namespace defaults {
+-        let seed: number;
+-        let levels: number;
+-        let children: number[];
+-        let branchAngle: number[];
+-        let angleVariance: number;
+-        let lengthRatio: number;
+-        let trunkLength: number;
+-        let trunkRadius: number;
+-        let taper: number;
+-        let taperCurve: number;
+-        let rootFlare: number;
+-        let flareFrac: number;
+-        let radiusExponent: number;
+-        let minRadius: number;
+-        let minLength: number;
+-        let droop: number;
+-        let upPull: number;
+-        let gnarl: number[];
+-        let radialSegments: number;
+-        let sectionLength: number;
+-        let childStart: number;
+-        let trunkClear: number;
+-    }
++
++export interface TreeMaterialParameters {
++    barkColor?: Color | number | Node<'color'> | undefined;
+ }
++
+ /**
+  * A simple bark material for a {@link TreeGenerator} mesh: a low-saturation brown with a
+  * faint, vertically-stretched grain, so trunks read near-black against bright fog.
+@@ -61,6 +69,4 @@ export namespace TreeGenerator {
+  * @param {Object} [parameters] - `barkColor` ( a hex, THREE.Color or TSL node ).
+  * @return {MeshStandardNodeMaterial}
+  */
+-export function createTreeMaterial(parameters?: Object): MeshStandardNodeMaterial;
+-import { Mesh } from 'three';
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
++export function createTreeMaterial(parameters?: TreeMaterialParameters): MeshStandardNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
 index 81c1a0ec9..d560e432c 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
