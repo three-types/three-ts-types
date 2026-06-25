@@ -14,7 +14,7 @@ export interface SkyscraperGeneratorDefaultParameters {
 }
 
 export interface SkyscraperGeneratorParameters extends SkyscraperGeneratorDefaultParameters {
-    footprint: { width: number; height: number };
+    footprint: { width: number; depth: number };
     tierFractions: { base: number; crown: number };
     pierWidth: number;
     pierDepth: number;
