@@ -87,7 +87,9 @@ declare const MaterialNode: {
     REFRACTION_RATIO: "refractionRatio";
 };
 
-export type MaterialNode<TNodeType> = MaterialNodeInterface & Node<TNodeType>;
+type MaterialNode<TNodeType> = MaterialNodeInterface & Node<TNodeType>;
+
+export default MaterialNode;
 
 export const materialAlphaTest: MaterialNode<"float">;
 export const materialColor: MaterialNode<"vec3">;
