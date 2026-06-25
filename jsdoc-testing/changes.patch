@@ -56,6 +56,261 @@ index d3c23f934..214d0cf95 100644
      /**
       * Splits the CSM frustum by the given array. The new CSM frustum are pushed into the given
       * target array.
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
+index baf210642..ddf63e336 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/CityGenerator.d.ts
+@@ -1,3 +1,36 @@
++import { Group, Material, MeshStandardNodeMaterial } from 'three/webgpu';
++import { SidewalkGenerator } from './city/SidewalkGenerator.js';
++import { SkyscraperGenerator } from './city/SkyscraperGenerator.js';
++
++export interface CityGeneratorParameters {
++    seed: number;
++    street: number;
++    lot: number;
++    lotsX: number;
++    lotsZ: number;
++    blocksX: number;
++    blocksZ: number;
++    curbHeight: number;
++    curbRadius: number;
++}
++
++export interface CityGeneratorLayout {
++    street: number;
++    lot: number;
++    lotsX: number;
++    lotsZ: number;
++    blocksX: number;
++    blocksZ: number;
++    blockW: number;
++    blockD: number;
++    cityW: number;
++    cityD: number;
++}
++
++export interface CityGeneratorMaterials {
++    building?: Material | undefined;
++}
++
+ /**
+  * Lays out a grid of city blocks and fills each lot with a {@link SkyscraperGenerator}
+  * tower of its own seed, height and footprint, optionally on raised sidewalk
+@@ -14,59 +47,29 @@
+  * ```
+  */
+ export class CityGenerator {
+-    constructor(parameters?: {});
+-    parameters: {
+-        seed: number;
+-        street: number;
+-        lot: number;
+-        lotsX: number;
+-        lotsZ: number;
+-        blocksX: number;
+-        blocksZ: number;
+-        curbHeight: number;
+-        curbRadius: number;
+-    };
+-    layout: {
+-        street: any;
+-        lot: any;
+-        lotsX: any;
+-        lotsZ: any;
+-        blocksX: any;
+-        blocksZ: any;
+-        blockW: number;
+-        blockD: number;
+-        cityW: number;
+-        cityD: number;
+-    };
+-    generators: any[];
++    constructor(parameters?: Partial<CityGeneratorParameters>);
++
++    parameters: CityGeneratorParameters;
++    layout: CityGeneratorLayout;
++
++    generators: SkyscraperGenerator[];
+     sidewalk: SidewalkGenerator;
+     group: Group | null;
+-    build(materials?: {}): Group;
++
++    build(materials?: CityGeneratorMaterials): Group;
+     dispose(): void;
++
++    static defaults: CityGeneratorParameters;
+ }
+-export namespace CityGenerator {
+-    namespace defaults {
+-        let seed: number;
+-        let street: number;
+-        let lot: number;
+-        let lotsX: number;
+-        let lotsZ: number;
+-        let blocksX: number;
+-        let blocksZ: number;
+-        let curbHeight: number;
+-        let curbRadius: number;
+-    }
+-}
++
+ /**
+  * The shared material every tower in a {@link CityGenerator} is dressed with: one flat
+  * masonry colour per lot, picked from a palette by hashing the lot's grid cell.
+  */
+-export function createBuildingMaterial(layout: any, seed?: number): MeshStandardNodeMaterial;
++export function createBuildingMaterial(layout: CityGeneratorLayout, seed?: number): MeshStandardNodeMaterial;
++
+ /**
+  * The road surface: wet asphalt with lane lines and crosswalks aligned to a
+  * {@link CityGenerator} layout. Apply it to a ground plane sized to the city.
+  */
+-export function createRoadMaterial(layout: any): MeshStandardNodeMaterial;
+-import { SidewalkGenerator } from './city/SidewalkGenerator.js';
+-import { Group } from 'three';
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
++export function createRoadMaterial(layout: CityGeneratorLayout): MeshStandardNodeMaterial;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
+index 81c1a0ec9..d560e432c 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SidewalkGenerator.d.ts
+@@ -1,3 +1,14 @@
++import { Group, Matrix4, MeshStandardNodeMaterial } from 'three/webgpu';
++
++export interface SidewalkGeneratorParameters {
++    width: number;
++    depth: number;
++    height: number;
++    radius: number;
++    curbWidth: number;
++    curbLip: number;
++}
++
+ /**
+  * Generates the raised sidewalk for a city's blocks: per block, a rounded-corner concrete
+  * slab rimmed by a distinct granite kerbstone that stands proud of the walking surface and
+@@ -14,30 +25,16 @@
+  * ```
+  */
+ export class SidewalkGenerator {
+-    constructor(parameters?: {});
+-    parameters: {
+-        width: number;
+-        depth: number;
+-        height: number;
+-        radius: number;
+-        curbWidth: number;
+-        curbLip: number;
+-    };
++    constructor(parameters?: Partial<SidewalkGeneratorParameters>);
++
++    parameters: SidewalkGeneratorParameters;
++
+     material: MeshStandardNodeMaterial | null;
+     curbMaterial: MeshStandardNodeMaterial | null;
+     mesh: Group | null;
+-    build(placements: any): Group;
++
++    build(placements: Matrix4[]): Group;
+     dispose(): void;
++
++    static defaults: SidewalkGeneratorParameters;
+ }
+-export namespace SidewalkGenerator {
+-    namespace defaults {
+-        let width: number;
+-        let depth: number;
+-        let height: number;
+-        let radius: number;
+-        let curbWidth: number;
+-        let curbLip: number;
+-    }
+-}
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
+-import { Group } from 'three/webgpu';
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
+index cfca639f0..b9b7e7fe5 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
+@@ -1,3 +1,18 @@
++import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from 'three/webgpu';
++
++export interface SkyscraperGeneratorParameters {
++    seed: number;
++    totalHeight: number;
++    floorHeight: number;
++    bayWidth: number;
++    stringCourseEvery: number;
++    chamferWidth: number;
++    chamferCornerX: number;
++    chamferCornerZ: number;
++    setbackDepth: number;
++    acChance: number;
++}
++
+ /**
+  * Generates intricate, tripartite "Beaux-Arts / Neo-Gothic" terracotta
+  * skyscrapers from a small set of parameters.
+@@ -19,29 +34,21 @@
+  * ```
+  */
+ export class SkyscraperGenerator {
+-    constructor(parameters?: {}, material?: null);
+-    parameters: {};
+-    material: any;
++    constructor(parameters?: Partial<SkyscraperGeneratorParameters>, material?: Material);
++
++    parameters: Partial<SkyscraperGeneratorParameters>;
++    material: Material;
++
+     mesh: Mesh | null;
+-    setParameters(parameters: any): this;
++
++    setParameters(parameters: Partial<SkyscraperGeneratorParameters>): this;
+     build(): Mesh;
+     rebuild(): Mesh;
+     dispose(): void;
++
++    static defaults: SkyscraperGeneratorParameters;
+ }
+-export namespace SkyscraperGenerator {
+-    namespace defaults {
+-        let seed: number;
+-        let totalHeight: number;
+-        let floorHeight: number;
+-        let bayWidth: number;
+-        let stringCourseEvery: number;
+-        let chamferWidth: number;
+-        let chamferCornerX: number;
+-        let chamferCornerZ: number;
+-        let setbackDepth: number;
+-        let acChance: number;
+-    }
+-}
++
+ /**
+  * The facade material: a single MeshStandardNodeMaterial that reads the baked
+  * per-vertex `partId` and reproduces every zone — procedural terracotta brickwork
+@@ -52,14 +59,14 @@ export namespace SkyscraperGenerator {
+  * masonry colour as a TSL node: pass a `uniform( Color )` for a single tower, or a
+  * per-fragment palette pick for a city, so the same material dresses both.
+  */
+-export function createSkyscraperMaterial(buildingBase?: any): MeshStandardNodeMaterial;
++export function createSkyscraperMaterial(buildingBase?: Node<'color'> | Color): MeshStandardNodeMaterial;
++
+ /**
+  * The NYC masonry palette every tower is dressed from ( hex colours ): limestone-dominant
+  * with terracotta accents. Shared by the single-tower example and {@link CityGenerator}'s
+  * building material so both stay in sync.
+  */
+ export const buildingPalette: number[];
++
+ /** Picks one {@link buildingPalette} colour ( a hex number ) for a tower from its seed. */
+-export function pickBuildingColor(seed: any): number;
+-import { Mesh } from 'three';
+-import { MeshStandardNodeMaterial } from 'three/webgpu';
++export function pickBuildingColor(seed: number): number;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts b/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
 index 1e007e460..a2de0b896 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/geometries/LoftGeometry.d.ts
