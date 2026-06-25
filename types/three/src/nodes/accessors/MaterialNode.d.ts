@@ -85,7 +85,7 @@ declare const MaterialNode: {
     LIGHT_MAP: "light";
     AO: "ao";
     REFRACTION_RATIO: "refractionRatio";
-}
+};
 
 export type MaterialNode<TNodeType> = MaterialNodeInterface & Node<TNodeType>;
 
