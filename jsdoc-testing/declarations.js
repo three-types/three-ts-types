@@ -5,7 +5,7 @@ import { argv } from 'node:process';
 const files = [
     'examples/jsm/csm/CSMFrustum',
     'examples/jsm/generators/city/SidewalkGenerator',
-    'examples/jsm/generators/city/SkyscaperGenerator',
+    'examples/jsm/generators/city/SkyscraperGenerator',
     'examples/jsm/generators/CityGenerator',
     'examples/jsm/geometries/LoftGeometry',
     'examples/jsm/lighting/ClusteredLighting',
