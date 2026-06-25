@@ -230,13 +230,13 @@ index 81c1a0ec9..d560e432c 100644
 -import { MeshStandardNodeMaterial } from 'three/webgpu';
 -import { Group } from 'three/webgpu';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
-index cfca639f0..b9b7e7fe5 100644
+index cfca639f0..60909bcaa 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/city/SkyscraperGenerator.d.ts
-@@ -1,3 +1,18 @@
+@@ -1,3 +1,29 @@
 +import { Color, Material, Mesh, MeshStandardNodeMaterial, Node } from 'three/webgpu';
 +
-+export interface SkyscraperGeneratorParameters {
++export interface SkyscraperGeneratorDefaultParameters {
 +    seed: number;
 +    totalHeight: number;
 +    floorHeight: number;
@@ -249,10 +249,21 @@ index cfca639f0..b9b7e7fe5 100644
 +    acChance: number;
 +}
 +
++export interface SkyscraperGeneratorParameters extends SkyscraperGeneratorDefaultParameters {
++    footprint: { width: number; height: number };
++    tierFractions: { base: number; crown: number };
++    pierWidth: number;
++    pierDepth: number;
++    windowReveal: number;
++    stringCourseHeight: number;
++    archBayWidthRatio: number;
++    archRise: number;
++}
++
  /**
   * Generates intricate, tripartite "Beaux-Arts / Neo-Gothic" terracotta
   * skyscrapers from a small set of parameters.
-@@ -19,29 +34,21 @@
+@@ -19,29 +45,21 @@
   * ```
   */
  export class SkyscraperGenerator {
@@ -272,7 +283,7 @@ index cfca639f0..b9b7e7fe5 100644
      rebuild(): Mesh;
      dispose(): void;
 +
-+    static defaults: SkyscraperGeneratorParameters;
++    static defaults: SkyscraperGeneratorDefaultParameters;
  }
 -export namespace SkyscraperGenerator {
 -    namespace defaults {
@@ -292,7 +303,7 @@ index cfca639f0..b9b7e7fe5 100644
  /**
   * The facade material: a single MeshStandardNodeMaterial that reads the baked
   * per-vertex `partId` and reproduces every zone — procedural terracotta brickwork
-@@ -52,14 +59,14 @@ export namespace SkyscraperGenerator {
+@@ -52,14 +70,14 @@ export namespace SkyscraperGenerator {
   * masonry colour as a TSL node: pass a `uniform( Color )` for a single tower, or a
   * per-fragment palette pick for a city, so the same material dresses both.
   */
