@@ -28,7 +28,7 @@ export interface SSRNodeOptions {
     /**
      * - Scene diffuse / base color. Defaults to `vec3(1)` in the shader when omitted.
      */
-    diffuseNode?: Node<"vec3"> | undefined;
+    diffuseNode?: Node<"vec4"> | undefined;
     /**
      * - Sub-step binary-search refinement of detected hits. Compile-time constant (baked into the shader at construction).
      */
