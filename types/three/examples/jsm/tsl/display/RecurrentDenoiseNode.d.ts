@@ -1,13 +1,12 @@
-import { Camera, Node, TempNode, UniformNode } from "three/webgpu";
-import { TextureNode } from "../../../../src/nodes/Nodes";
+import { Camera, Node, RenderTarget, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
 export type DenoiseMode = "diffuse" | "specular";
 
 export type DenoiseAlphaSource = "raylength" | "ao" | "none";
 
 export interface RecurrentDenoiseNodeOptions {
-    depth?: Node<"float"> | null | undefined;
-    normal?: Node<"vec3"> | null | undefined;
+    depth?: Node<"float"> | Node<"vec4"> | null | undefined;
+    normal?: Node<"vec3"> | Node<"vec4"> | null | undefined;
     metalRoughness?: Node<"vec4"> | null | undefined;
     diffuse?: Node<"vec4"> | null | undefined;
     raw?: Node<"vec4"> | null | undefined;
@@ -45,8 +44,8 @@ declare class RecurrentDenoiseNode extends TempNode<"vec4"> {
     accumulate: boolean;
 
     textureNode: Node<"vec4">;
-    depthNode: Node<"float"> | null;
-    normalNode: Node<"vec3"> | null;
+    depthNode: Node<"float"> | Node<"vec4"> | null;
+    normalNode: Node<"vec3"> | Node<"vec4"> | null;
     rawNode: TextureNode | null;
     roughnessMetalnessNode: Node<"vec4"> | null;
     diffuseNode: Node<"vec4"> | null;
@@ -77,6 +76,8 @@ declare class RecurrentDenoiseNode extends TempNode<"vec4"> {
     adaptiveTrust: UniformNode<"float", number>;
 
     constructor(inputTexture: Node<"vec4">, camera: Camera, options?: RecurrentDenoiseNodeOptions);
+
+    getRenderTarget(): RenderTarget;
 }
 
 export default RecurrentDenoiseNode;
