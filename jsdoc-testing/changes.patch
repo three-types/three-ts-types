@@ -958,7 +958,7 @@ index 6e6e3a603..b48e7a25f 100644
 +
 +export default ImportanceSampledEnvironment;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
-index f607c677e..885f37a0d 100644
+index f607c677e..e402f1867 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/display/SSRNode.d.ts
 @@ -1,6 +1,6 @@
@@ -1041,7 +1041,7 @@ index f607c677e..885f37a0d 100644
       * @param {SSRNodeOptions} [options] - Optional inputs for material and environment data.
       */
 -    constructor(colorNode: Node<any>, depthNode: Node<any>, normalNode: Node<any>, options?: SSRNodeOptions);
-+    constructor(colorNode: Node<'vec4'>, depthNode: Node<'float'>, normalNode: Node<'vec3'>, options?: SSRNodeOptions);
++    constructor(colorNode: Node<'vec4'>, depthNode: Node<'float'> | Node<'vec4'>, normalNode: Node<'vec3'>, options?: SSRNodeOptions);
      /**
       * When `true`, the reflection direction is varied per pixel with stochastic GGX rays
       * (second-generation SSR). When `false`, a single mirror reflection is traced and
@@ -1416,7 +1416,7 @@ index f607c677e..885f37a0d 100644
       * @param {Node<vec2>} velocity
       */
 -    setHistory(history: Texture, velocity: Node<any>): void;
-+    setHistory(history: Texture, velocity: Node<'vec2'>): void;
++    setHistory(history: Texture | { getRenderTarget(): { texture: Texture } }, velocity: Node<'vec2'>): void;
      /**
       * Sets the environment map for importance-sampled env lighting when
       * screen-space rays miss. Call this whenever the scene's env map changes.
@@ -1446,7 +1446,7 @@ index f607c677e..885f37a0d 100644
 +
 +export default SSRNode;
 +
-+export function ssr(colorNode: Node<'vec4'>, depthNode: Node<'float'>, normalNode: Node<'vec3'>, options?: SSRNodeOptions): SSRNode;
++export function ssr(colorNode: Node<'vec4'>, depthNode: Node<'float'> | Node<'vec4'>, normalNode: Node<'vec3'>, options?: SSRNodeOptions): SSRNode;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
 index fb546510b..1257d8f69 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/lighting/ClusteredLightsNode.d.ts
