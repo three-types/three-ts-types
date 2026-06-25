@@ -50,12 +50,37 @@ export interface TreeGeneratorParameters {
  * ```
  */
 export class TreeGenerator {
-    constructor(material?: null);
-    material: Material;
+    constructor(material?: Material | null);
+
+    material: Material | null;
     parameters: Partial<TreeGeneratorParameters>;
+
     build(): Mesh;
 
     static defaults: TreeGeneratorParameters;
+
+    setSeed: (seed: number) => this;
+    setLevels: (levels: number) => this;
+    setChildren: (children: number[]) => this;
+    setBranchAngle: (branchAngle: number[]) => this;
+    setAngleVariance: (angleVariance: number) => this;
+    setLengthRatio: (lengthRatio: number) => this;
+    setTrunkLength: (trunkLength: number) => this;
+    setTrunkRadius: (trunkRadius: number) => this;
+    setTaper: (taper: number) => this;
+    setTaperCurve: (taperCurve: number) => this;
+    setRootFlare: (rootFlare: number) => this;
+    setFlareFrac: (flareFrac: number) => this;
+    setRadiusExponent: (radiusExponent: number) => this;
+    setMinRadius: (minRadius: number) => this;
+    setMinLength: (minLength: number) => this;
+    setDroop: (droop: number) => this;
+    setUpPull: (upPull: number) => this;
+    setGnarl: (gnarl: number[]) => this;
+    setRadialSegments: (radialSegments: number) => this;
+    setSectionLength: (sectionLength: number) => this;
+    setChildStart: (childStart: number) => this;
+    setTrunkClear: (trunkClear: number) => this;
 }
 
 export interface TreeMaterialParameters {
