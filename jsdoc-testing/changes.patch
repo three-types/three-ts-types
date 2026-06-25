@@ -381,7 +381,7 @@ index a5b279bf6..7ca0512e6 100644
 -import { BufferGeometry } from 'three';
 -import { Group } from 'three';
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
-index 48708c301..e667fd9c6 100644
+index 48708c301..ef710a6eb 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
 +++ b/jsdoc-testing/jsdoc/examples/jsm/generators/TreeGenerator.d.ts
 @@ -1,3 +1,30 @@
@@ -415,17 +415,44 @@ index 48708c301..e667fd9c6 100644
  /**
   * Grows a procedural tree skeleton — trunk, branches and twigs, each swept as a tapered
   * tube — and bakes it into one non-indexed {@link BufferGeometry} (position and normal
-@@ -24,36 +51,17 @@
+@@ -23,37 +50,43 @@
+  * ```
   */
  export class TreeGenerator {
-     constructor(material?: null);
+-    constructor(material?: null);
 -    material: any;
 -    parameters: {};
-+    material: Material;
++    constructor(material?: Material | null);
++
++    material: Material | null;
 +    parameters: Partial<TreeGeneratorParameters>;
++
      build(): Mesh;
 +
 +    static defaults: TreeGeneratorParameters;
++
++    setSeed: (seed: number) => this;
++    setLevels: (levels: number) => this;
++    setChildren: (children: number[]) => this;
++    setBranchAngle: (branchAngle: number[]) => this;
++    setAngleVariance: (angleVariance: number) => this;
++    setLengthRatio: (lengthRatio: number) => this;
++    setTrunkLength: (trunkLength: number) => this;
++    setTrunkRadius: (trunkRadius: number) => this;
++    setTaper: (taper: number) => this;
++    setTaperCurve: (taperCurve: number) => this;
++    setRootFlare: (rootFlare: number) => this;
++    setFlareFrac: (flareFrac: number) => this;
++    setRadiusExponent: (radiusExponent: number) => this;
++    setMinRadius: (minRadius: number) => this;
++    setMinLength: (minLength: number) => this;
++    setDroop: (droop: number) => this;
++    setUpPull: (upPull: number) => this;
++    setGnarl: (gnarl: number[]) => this;
++    setRadialSegments: (radialSegments: number) => this;
++    setSectionLength: (sectionLength: number) => this;
++    setChildStart: (childStart: number) => this;
++    setTrunkClear: (trunkClear: number) => this;
  }
 -export namespace TreeGenerator {
 -    namespace defaults {
@@ -460,7 +487,7 @@ index 48708c301..e667fd9c6 100644
  /**
   * A simple bark material for a {@link TreeGenerator} mesh: a low-saturation brown with a
   * faint, vertically-stretched grain, so trunks read near-black against bright fog.
-@@ -61,6 +69,4 @@ export namespace TreeGenerator {
+@@ -61,6 +94,4 @@ export namespace TreeGenerator {
   * @param {Object} [parameters] - `barkColor` ( a hex, THREE.Color or TSL node ).
   * @return {MeshStandardNodeMaterial}
   */
