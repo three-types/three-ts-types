@@ -7884,7 +7884,7 @@ index 0f4042b7d..dff17d169 100644
      directionalLight.position.set(x, y, z);
      scene.add(directionalLight);
 diff --git a/examples-testing/examples/webgl_loader_svg.ts b/examples-testing/examples/webgl_loader_svg.ts
-index deb6e33a6..dc8c767a0 100644
+index deb6e33a6..c776ce618 100644
 --- a/examples-testing/examples/webgl_loader_svg.ts
 +++ b/examples-testing/examples/webgl_loader_svg.ts
 @@ -1,16 +1,26 @@
@@ -7939,7 +7939,7 @@ index deb6e33a6..dc8c767a0 100644
  
                          if (geometry) {
                              const mesh = new THREE.Mesh(geometry, material);
-@@ -190,12 +203,27 @@ function render() {
+@@ -190,12 +203,26 @@ function render() {
      renderer.render(scene, camera);
  }
  
@@ -7966,8 +7966,7 @@ index deb6e33a6..dc8c767a0 100644
 +                ).material.map!.dispose();
 +            (
 +                object as
-+                    | THREE.Mesh<THREE.BufferGeometry, THREE.Material>
-+                    | THREE.Line<THREE.BufferGeometry, THREE.Material>
++                    THREE.Mesh<THREE.BufferGeometry, THREE.Material> | THREE.Line<THREE.BufferGeometry, THREE.Material>
 +            ).material.dispose();
          }
      });
@@ -8347,7 +8346,7 @@ index d957efbbd..fd75a6cd0 100644
          [new THREE.IcosahedronGeometry(100, 8), 300],
          [new THREE.IcosahedronGeometry(100, 4), 1000],
 diff --git a/examples-testing/examples/webgl_marchingcubes.ts b/examples-testing/examples/webgl_marchingcubes.ts
-index ea96c0f9f..b87765f39 100644
+index 4a4c6da0b..b7005a5ce 100644
 --- a/examples-testing/examples/webgl_marchingcubes.ts
 +++ b/examples-testing/examples/webgl_marchingcubes.ts
 @@ -7,17 +7,42 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -8413,7 +8412,7 @@ index ea96c0f9f..b87765f39 100644
  
      // CAMERA
  
-@@ -165,7 +190,11 @@ function generateMaterials() {
+@@ -163,7 +188,11 @@ function generateMaterials() {
      return materials;
  }
  
@@ -8426,7 +8425,7 @@ index ea96c0f9f..b87765f39 100644
      const u = THREE.UniformsUtils.clone(shader.uniforms);
  
      const vs = shader.vertexShader;
-@@ -184,7 +213,7 @@ function createShaderMaterial(shader, light, ambientLight) {
+@@ -182,7 +211,7 @@ function createShaderMaterial(shader, light, ambientLight) {
  //
  
  function setupGui() {
@@ -8435,7 +8434,7 @@ index ea96c0f9f..b87765f39 100644
          return function () {
              current_material = id;
  
-@@ -218,8 +247,8 @@ function setupGui() {
+@@ -216,8 +245,8 @@ function setupGui() {
      h = gui.addFolder('Materials');
  
      for (const m in materials) {
@@ -8446,7 +8445,7 @@ index ea96c0f9f..b87765f39 100644
      }
  
      // simulation
-@@ -238,7 +267,14 @@ function setupGui() {
+@@ -236,7 +265,14 @@ function setupGui() {
  
  // this controls content of marching cubes voxel field
  

@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import * as path from 'node:path';
 import * as url from 'node:url';
 
-import ts from 'typescript';
+import ts from 'typescript6';
 
 // Methods whose `this.x = ...` assignments must not be inferred as class members
 // by declaration emit (e.g. Material#fromJSON assigns derived-class-only
@@ -98,7 +98,7 @@ try {
     }
 
     const require = createRequire(import.meta.url);
-    const tscPath = require.resolve('typescript/lib/tsc.js');
+    const tscPath = require.resolve('typescript6/lib/tsc.js');
     const result = spawnSync(process.execPath, [tscPath, '--project', path.join(dirname, 'tsconfig.jsdoc.json')], {
         stdio: 'inherit',
         cwd: dirname,
