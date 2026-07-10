@@ -4,7 +4,7 @@ import { createRequire } from 'node:module';
 import * as path from 'node:path';
 import * as url from 'node:url';
 
-import ts from 'typescript';
+import ts from 'typescript6';
 
 // Methods whose `this.x = ...` assignments must not be inferred as class members
 // by declaration emit (e.g. Material#fromJSON assigns derived-class-only
