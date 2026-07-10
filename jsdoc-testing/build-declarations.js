@@ -98,7 +98,7 @@ try {
     }
 
     const require = createRequire(import.meta.url);
-    const tscPath = require.resolve('typescript/lib/tsc.js');
+    const tscPath = require.resolve('typescript6/lib/tsc.js');
     const result = spawnSync(process.execPath, [tscPath, '--project', path.join(dirname, 'tsconfig.jsdoc.json')], {
         stdio: 'inherit',
         cwd: dirname,
