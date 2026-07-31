@@ -2417,18 +2417,4 @@ declare module "../core/Node.js" {
     }
 }
 
-/**
- * @deprecated append() has been renamed to Stack().
- */
-export const append: (node: Node) => Node;
-
-declare module "../core/Node.js" {
-    interface NodeElements {
-        /**
-         * @deprecated append() has been renamed to Stack().
-         */
-        append: () => Node;
-    }
-}
-
 export {};
