@@ -11103,27 +11103,38 @@ index 31ef6b9b2..4b1fa11a3 100644
          selectedObjects.push(object);
      }
 diff --git a/examples-testing/examples/webgl_postprocessing_pixel.ts b/examples-testing/examples/webgl_postprocessing_pixel.ts
-index 04aec4816..3dc6f997d 100644
+index ca13ac6a2..5c13ffa34 100644
 --- a/examples-testing/examples/webgl_postprocessing_pixel.ts
 +++ b/examples-testing/examples/webgl_postprocessing_pixel.ts
-@@ -6,8 +6,14 @@ import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelated
+@@ -6,8 +6,25 @@ import { RenderPixelatedPass } from 'three/addons/postprocessing/RenderPixelated
  import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
  import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  
--let camera, scene, renderer, composer, crystalMesh, timer;
+-let camera, scene, renderer, composer, controls, crystalMesh, timer;
 -let gui, params;
 +let camera: THREE.OrthographicCamera,
 +    scene: THREE.Scene,
 +    renderer: THREE.WebGLRenderer,
 +    composer: EffectComposer,
++    controls: OrbitControls,
 +    crystalMesh: THREE.Mesh<THREE.IcosahedronGeometry, THREE.MeshPhongMaterial>,
 +    timer: THREE.Timer;
 +let gui: GUI,
-+    params: { pixelSize: number; normalEdgeStrength: number; depthEdgeStrength: number; pixelAlignedPanning: boolean };
++    params: {
++        pixelSize: number;
++        normalEdgeStrength: number;
++        depthEdgeStrength: number;
++        snapping: boolean;
++        pixelAlignedPanning: boolean;
++        pixelAlignedObjects: boolean;
++        rotationSnap: number;
++        cameraRotationSnap: number;
++        cameraZoomSnap: number;
++    };
  
  init();
  
-@@ -54,8 +60,14 @@ function init() {
+@@ -64,8 +81,14 @@ function init() {
          .onChange(() => {
              renderPixelatedPass.setPixelSize(params.pixelSize);
          });
@@ -11137,10 +11148,10 @@ index 04aec4816..3dc6f997d 100644
 +        .min(0)
 +        .max(1)
 +        .step(0.05);
-     gui.add(params, 'pixelAlignedPanning');
  
-     // textures
-@@ -70,7 +82,7 @@ function init() {
+     const snappingControl = gui.add(params, 'snapping').name('Enable Pixel Snapping');
+     const snappingFolder = gui.addFolder('Snapping').close();
+@@ -88,7 +111,7 @@ function init() {
  
      const boxMaterial = new THREE.MeshPhongMaterial({ map: texChecker2 });
  
@@ -11149,7 +11160,7 @@ index 04aec4816..3dc6f997d 100644
          const mesh = new THREE.Mesh(new THREE.BoxGeometry(boxSideLength, boxSideLength, boxSideLength), boxMaterial);
          mesh.castShadow = true;
          mesh.receiveShadow = true;
-@@ -169,7 +181,7 @@ function animate() {
+@@ -233,7 +256,7 @@ function animate() {
  
  // Helper functions
  
@@ -11158,7 +11169,7 @@ index 04aec4816..3dc6f997d 100644
      texture.minFilter = THREE.NearestFilter;
      texture.magFilter = THREE.NearestFilter;
      texture.generateMipmaps = false;
-@@ -179,25 +191,30 @@ function pixelTexture(texture) {
+@@ -243,25 +266,30 @@ function pixelTexture(texture) {
      return texture;
  }
  
@@ -11183,6 +11194,20 @@ index 04aec4816..3dc6f997d 100644
      return cycle + linStep;
  }
  
+-function pixelAlignCamera(camera, target, rotationIncrementDegrees, zoomIncrement) {
++function pixelAlignCamera(
++    camera: THREE.OrthographicCamera,
++    target: THREE.Vector3,
++    rotationIncrementDegrees: number,
++    zoomIncrement: number,
++) {
+     // Snap the camera's orbit to the nearest increment of azimuth/polar angle around the target. Working
+     // in spherical coordinates (rather than snapping the euler angles) keeps the orbit translation locked
+     // onto the target and guarantees a roll-free orientation, since we re-aim with lookAt and world up.
+@@ -285,7 +313,12 @@ function pixelAlignCamera(camera, target, rotationIncrementDegrees, zoomIncremen
+     }
+ }
+ 
 -function pixelAlignFrustum(camera, aspectRatio, pixelsPerScreenWidth, pixelsPerScreenHeight) {
 +function pixelAlignFrustum(
 +    camera: THREE.OrthographicCamera,
@@ -11193,6 +11218,24 @@ index 04aec4816..3dc6f997d 100644
      // 0. Get Pixel Grid Units
      const worldScreenWidth = (camera.right - camera.left) / camera.zoom;
      const worldScreenHeight = (camera.top - camera.bottom) / camera.zoom;
+@@ -318,7 +351,7 @@ function pixelAlignFrustum(camera, aspectRatio, pixelsPerScreenWidth, pixelsPerS
+     camera.updateProjectionMatrix();
+ }
+ 
+-function pixelAlignObject(object, camera, pixelWidth, pixelHeight) {
++function pixelAlignObject(object: THREE.Object3D, camera: THREE.Camera, pixelWidth: number, pixelHeight: number) {
+     // 1. Build the camera's orthonormal screen-space basis
+     const camRot = new THREE.Quaternion();
+     camera.getWorldQuaternion(camRot);
+@@ -343,7 +376,7 @@ function pixelAlignObject(object, camera, pixelWidth, pixelHeight) {
+     pos.addScaledVector(camForward, posForward);
+ }
+ 
+-function snapObjectRotation(object, camera, incrementDegrees) {
++function snapObjectRotation(object: THREE.Object3D, camera: THREE.Camera, incrementDegrees: number) {
+     const increment = THREE.MathUtils.degToRad(incrementDegrees);
+ 
+     // 1. Express the object's rotation relative to the camera
 diff --git a/examples-testing/examples/webgl_postprocessing_procedural.ts b/examples-testing/examples/webgl_postprocessing_procedural.ts
 index 869824270..4533b72bd 100644
 --- a/examples-testing/examples/webgl_postprocessing_procedural.ts
