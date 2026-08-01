@@ -326,6 +326,8 @@ declare class Renderer {
      * Debug configuration.
      * @typedef {Object} DebugConfig
      * @property {boolean} checkShaderErrors - Whether shader errors should be checked or not.
+     * @property {Object} diagnostics - Diagnostics configuration for the shader generation.
+     * @property {boolean} diagnostics.keywords - Whether declaration names that collide with reserved keywords should be renamed or not.
      * @property {?Function} onShaderError - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
      * @property {Function} getShaderAsync - Allows the get the raw shader code for the given scene, camera and 3D object.
      */
@@ -339,6 +341,12 @@ declare class Renderer {
          * - Whether shader errors should be checked or not.
          */
         checkShaderErrors: boolean;
+        /**
+         * - Diagnostics configuration for the shader generation.
+         */
+        diagnostics: {
+            keywords: boolean;
+        };
         /**
          * - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
          */
