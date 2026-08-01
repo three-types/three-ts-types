@@ -16,6 +16,7 @@ const files = [
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/display/DualKawaseBloomNode',
     'examples/jsm/tsl/display/ImportanceSampledEnvironment',
+    'examples/jsm/tsl/display/SSAONode',
     'examples/jsm/tsl/display/SSRNode',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
     'examples/jsm/tsl/math/curlNoise',
