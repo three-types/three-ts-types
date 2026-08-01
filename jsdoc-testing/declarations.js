@@ -12,6 +12,7 @@ const files = [
     'examples/jsm/generators/TreeGenerator',
     'examples/jsm/geometries/LoftGeometry',
     'examples/jsm/lighting/ClusteredLighting',
+    'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/lighting/LightProbeGridWebGL',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
     'examples/jsm/tsl/display/DualKawaseBloomNode',
