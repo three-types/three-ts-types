@@ -736,14 +736,14 @@ index 66ac1de37..196e0702d 100644
  }
 -import { Lighting } from 'three/webgpu';
 -import ClusteredLightsNode from '../tsl/lighting/ClusteredLightsNode.js';
-diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-index 1dc623470..4db11431b 100644
---- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
-+++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGrid.d.ts
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
+index d48ffde97..ad662779d 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/lighting/LightProbeGridWebGL.d.ts
 @@ -1,3 +1,24 @@
 +import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from 'three';
 +
-+export interface LightProbeGridBakeOptions {
++export interface LightProbeGridWebGLBakeOptions {
 +    /**
 +     * Resolution of each cubemap face.
 +     */
@@ -765,7 +765,7 @@ index 1dc623470..4db11431b 100644
  /**
   * A 3D grid of L2 Spherical Harmonic irradiance probes that provides
   * position-dependent diffuse global illumination.
-@@ -87,14 +108,6 @@ export class LightProbeGrid extends Object3D {
+@@ -87,14 +108,6 @@ export class LightProbeGridWebGL extends Object3D {
       * @default null
       */
      texture: Data3DTexture | null;
@@ -780,7 +780,7 @@ index 1dc623470..4db11431b 100644
      /**
       * Returns the world-space position of the probe at grid indices (ix, iy, iz).
       *
-@@ -124,24 +137,9 @@ export class LightProbeGrid extends Object3D {
+@@ -124,24 +137,9 @@ export class LightProbeGridWebGL extends Object3D {
       * @param {number} [options.far=100] - Far plane for the cube camera.
       * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
       */
@@ -796,7 +796,7 @@ index 1dc623470..4db11431b 100644
 -     * @private
 -     */
 -    private _ensureTextures;
-+    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridBakeOptions): void;
++    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridWebGLBakeOptions): void;
      /**
       * Frees GPU resources.
       */

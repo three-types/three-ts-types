@@ -1,6 +1,6 @@
 import { Box3, Data3DTexture, Object3D, Scene, Vector3, WebGLRenderer } from "three";
 
-export interface LightProbeGridBakeOptions {
+export interface LightProbeGridWebGLBakeOptions {
     /**
      * Resolution of each cubemap face.
      */
@@ -46,9 +46,9 @@ export interface LightProbeGridBakeOptions {
  * Baking is fully GPU-resident: cubemap rendering, SH projection, and
  * texture packing all happen on the GPU with zero CPU readback.
  *
- * @three_import import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ * @three_import import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
  */
-export class LightProbeGrid extends Object3D {
+export class LightProbeGridWebGL extends Object3D {
     /**
      * Constructs a new irradiance probe grid.
      *
@@ -103,7 +103,7 @@ export class LightProbeGrid extends Object3D {
     resolution: Vector3;
     /**
      * The world-space bounding box for the grid. Updated automatically
-     * by {@link LightProbeGrid#bake}.
+     * by {@link LightProbeGridWebGL#bake}.
      *
      * @type {Box3}
      */
@@ -144,7 +144,7 @@ export class LightProbeGrid extends Object3D {
      * @param {number} [options.far=100] - Far plane for the cube camera.
      * @param {number} [options.bounces=0] - Additional bounce passes after the initial direct pass.
      */
-    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridBakeOptions): void;
+    bake(renderer: WebGLRenderer, scene: Scene, options?: LightProbeGridWebGLBakeOptions): void;
     /**
      * Frees GPU resources.
      */
