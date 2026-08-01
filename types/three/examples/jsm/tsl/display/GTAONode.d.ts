@@ -9,7 +9,15 @@ declare class GTAONode extends TempNode<"float"> {
     radius: UniformNode<"float", number>;
     resolution: UniformNode<"vec2", Vector2>;
     thickness: UniformNode<"float", number>;
+    /**
+     * @deprecated Since the switch to quadratic ray stepping with sphere falloff, step distribution is fixed at `t²`
+     * and this uniform has no effect. Kept for backward compatibility and will be removed in a future release.
+     */
     distanceExponent: UniformNode<"float", number>;
+    /**
+     * @deprecated Replaced by the sphere falloff `mix( max( h, sH ), h, (dist/radius)² )`, which has no tunable
+     * parameter. Kept for backward compatibility and will be removed in a future release.
+     */
     distanceFallOff: UniformNode<"float", number>;
     scale: UniformNode<"float", number>;
     samples: UniformNode<"float", number>;
