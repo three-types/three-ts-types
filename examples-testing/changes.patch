@@ -19382,7 +19382,7 @@ index 20118247a..877b921bd 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 837a7f266..ea83480ca 100644
+index eed216112..5e63ae949 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,8 +13,8 @@ import {
@@ -19414,7 +19414,7 @@ index 837a7f266..ea83480ca 100644
  
  const params = {
      samples: 16,
-@@ -139,7 +145,7 @@ async function init() {
+@@ -137,7 +143,7 @@ async function init() {
  
      // wall-mounted spotlights
  
@@ -19423,7 +19423,7 @@ index 837a7f266..ea83480ca 100644
          const light = new THREE.SpotLight(0xffe09e, 40);
          light.position.copy(position);
          light.angle = 0.6;
-@@ -162,7 +168,7 @@ async function init() {
+@@ -160,7 +166,7 @@ async function init() {
      const floorCanvas = document.createElement('canvas');
      floorCanvas.width = tilesX * 32;
      floorCanvas.height = tilesZ * 32;
@@ -19432,7 +19432,7 @@ index 837a7f266..ea83480ca 100644
  
      for (let x = 0; x < tilesX; x++) {
          for (let z = 0; z < tilesZ; z++) {
-@@ -222,7 +228,7 @@ async function init() {
+@@ -220,7 +226,7 @@ async function init() {
  
      const columnMat = new THREE.MeshStandardMaterial({ color: '#e8e4de', roughness: 0.5, metalness: 0 });
  
@@ -19441,7 +19441,7 @@ index 837a7f266..ea83480ca 100644
          const columnGroup = new THREE.Group();
  
          const base = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.6), columnMat);
-@@ -363,7 +369,7 @@ async function init() {
+@@ -361,7 +367,7 @@ async function init() {
  
      // picture frames
  
@@ -19450,15 +19450,15 @@ index 837a7f266..ea83480ca 100644
          const frameGroup = new THREE.Group();
          const t = 0.1;
  
-@@ -464,7 +470,7 @@ async function init() {
+@@ -462,7 +468,7 @@ async function init() {
  
      // GUI
  
 -    const gui = renderer.inspector.createParameters('Settings');
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
      gui.add(params, 'samples', 4, 32, 1).onChange(updateParameters);
-     gui.add(params, 'distanceExponent', 1, 2).onChange(updateParameters);
-     gui.add(params, 'distanceFallOff', 0.01, 1).onChange(updateParameters);
+     gui.add(params, 'radius', 0.1, 1).onChange(updateParameters);
+     gui.add(params, 'scale', 0.01, 1).onChange(updateParameters);
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
 index dbafc52be..9e389bd01 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
