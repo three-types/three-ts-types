@@ -16401,7 +16401,7 @@ index 60fe6ccc9..c29cde36b 100644
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
 diff --git a/examples-testing/examples/webgpu_lightprobes.ts b/examples-testing/examples/webgpu_lightprobes.ts
-index a36b91069..ca7f13266 100644
+index 1afef5fde..ad104d91c 100644
 --- a/examples-testing/examples/webgpu_lightprobes.ts
 +++ b/examples-testing/examples/webgpu_lightprobes.ts
 @@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16424,7 +16424,7 @@ index a36b91069..ca7f13266 100644
          if (probes) {
              scene.remove(probes);
              probes.dispose();
-@@ -159,14 +159,14 @@ async function init() {
+@@ -159,7 +159,7 @@ async function init() {
  
      // GUI
  
@@ -16433,16 +16433,8 @@ index a36b91069..ca7f13266 100644
      gui.add(params, 'enabled')
          .name('GI')
          .onChange(value => {
-             probes.visible = value;
-         });
- 
--    let rebakeTimer = null;
-+    let rebakeTimer: number | null = null;
-     gui.add(params, 'resolution', 2, 12, 1)
-         .name('Resolution')
-         .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_complex.ts b/examples-testing/examples/webgpu_lightprobes_complex.ts
-index 1bc0a8ab4..f741cafcd 100644
+index 944b5fc7c..2759ac0fa 100644
 --- a/examples-testing/examples/webgpu_lightprobes_complex.ts
 +++ b/examples-testing/examples/webgpu_lightprobes_complex.ts
 @@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
@@ -16475,15 +16467,6 @@ index 1bc0a8ab4..f741cafcd 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
      gui.add(params, 'enabled')
          .name('GI')
-         .onChange(value => {
-@@ -283,7 +283,7 @@ async function init() {
-             probesRight.visible = value;
-         });
- 
--    let rebakeTimer = null;
-+    let rebakeTimer: number | null = null;
-     gui.add(params, 'resolution', 2, 12, 1)
-         .name('Resolution')
          .onChange(value => {
 diff --git a/examples-testing/examples/webgpu_lightprobes_sponza.ts b/examples-testing/examples/webgpu_lightprobes_sponza.ts
 index a73fd1e5b..17625cc2e 100644
@@ -19672,7 +19655,7 @@ index 20118247a..877b921bd 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 5332f29b7..2cf18d16c 100644
+index 05683f396..bf8d6a5f8 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,9 +13,9 @@ import {
