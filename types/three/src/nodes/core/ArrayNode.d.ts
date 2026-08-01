@@ -1,3 +1,4 @@
+import { NodeObject } from "../tsl/TSLCore.js";
 import Node from "./Node.js";
 import TempNode from "./TempNode.js";
 
@@ -19,8 +20,11 @@ type ArrayNode<TNodeType> = TempNode<TNodeType> & ArrayNodeInterface<TNodeType>;
 
 export default ArrayNode;
 
+type ArrayValueNodeType<TValue> = NodeObject<TValue> extends { __TypeScript_NODE_TYPE__: infer TNodeType } ? TNodeType
+    : never;
+
 interface ArrayFunction {
-    <TNodeType>(values: Node<TNodeType>[]): ArrayNode<TNodeType>;
+    <TValue>(values: TValue[]): ArrayNode<ArrayValueNodeType<TValue>>;
     <TNodeType extends string>(nodeType: TNodeType, count: number): ArrayNode<TNodeType>;
 }
 
