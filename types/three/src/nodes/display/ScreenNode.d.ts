@@ -44,10 +44,3 @@ export const viewport: ScreenNode<"vec4">;
 export const viewportSize: Node<"vec2">;
 export const viewportCoordinate: Node<"vec2">;
 export const viewportUV: Node<"vec2">;
-
-// Deprecated
-
-/**
- * @deprecated "viewportResolution" is deprecated. Use "screenSize" instead.
- */
-export const viewportResolution: Node<"vec2">;
