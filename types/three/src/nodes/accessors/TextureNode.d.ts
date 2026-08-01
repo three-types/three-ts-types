@@ -64,20 +64,12 @@ type TextureNode<TNodeType = "vec4"> = TextureNodeInterface & UniformNode<TNodeT
 
 export default TextureNode;
 
-export const texture: {
-    (
-        value?: Texture | TextureNode,
-        uvNode?: Node | null,
-        levelNode?: Node | number | null,
-        biasNode?: Node | null,
-    ): TextureNode;
-    <TNodeType>(
-        value?: Texture | TextureNode,
-        uvNode?: Node | null,
-        levelNode?: Node | number | null,
-        biasNode?: Node | null,
-    ): TextureNode<TNodeType>;
-};
+export const texture: <TNodeType = "vec4">(
+    value?: Texture | TextureNode<TNodeType>,
+    uvNode?: Node | null,
+    levelNode?: Node | number | null,
+    biasNode?: Node | null,
+) => TextureNode<TNodeType>;
 
 export const uniformTexture: (
     value?: Texture,
