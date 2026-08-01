@@ -19434,7 +19434,7 @@ index 20118247a..877b921bd 100644
      gui.add(threshold, 'value', 0, 0.9).name('threshold');
      gui.add(samples, 'value', 2, 128, 1).name('samples');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ao.ts b/examples-testing/examples/webgpu_postprocessing_ao.ts
-index 2a604e278..5ec42dce1 100644
+index d0f8b6723..dd90149a6 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ao.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_ao.ts
 @@ -13,9 +13,9 @@ import {
@@ -19468,7 +19468,7 @@ index 2a604e278..5ec42dce1 100644
  
  const params = {
      aoType: 'GTAO',
-@@ -161,7 +167,7 @@ async function init() {
+@@ -162,7 +168,7 @@ async function init() {
  
      // wall-mounted spotlights
  
@@ -19477,7 +19477,7 @@ index 2a604e278..5ec42dce1 100644
          const light = new THREE.SpotLight(0xffe09e, 40);
          light.position.copy(position);
          light.angle = 0.6;
-@@ -184,7 +190,7 @@ async function init() {
+@@ -185,7 +191,7 @@ async function init() {
      const floorCanvas = document.createElement('canvas');
      floorCanvas.width = tilesX * 32;
      floorCanvas.height = tilesZ * 32;
@@ -19486,7 +19486,7 @@ index 2a604e278..5ec42dce1 100644
  
      for (let x = 0; x < tilesX; x++) {
          for (let z = 0; z < tilesZ; z++) {
-@@ -244,7 +250,7 @@ async function init() {
+@@ -245,7 +251,7 @@ async function init() {
  
      const columnMat = new THREE.MeshStandardMaterial({ color: '#e8e4de', roughness: 0.5, metalness: 0 });
  
@@ -19495,7 +19495,7 @@ index 2a604e278..5ec42dce1 100644
          const columnGroup = new THREE.Group();
  
          const base = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.2, 0.6), columnMat);
-@@ -385,7 +391,7 @@ async function init() {
+@@ -386,7 +392,7 @@ async function init() {
  
      // picture frames
  
@@ -19504,7 +19504,7 @@ index 2a604e278..5ec42dce1 100644
          const frameGroup = new THREE.Group();
          const t = 0.1;
  
-@@ -486,7 +492,7 @@ async function init() {
+@@ -487,7 +493,7 @@ async function init() {
  
      // GUI
  
@@ -19513,15 +19513,17 @@ index 2a604e278..5ec42dce1 100644
      gui.add(params, 'aoType', ['GTAO', 'SSAO'])
          .name('AO type')
          .onChange(() => {
-@@ -537,13 +543,13 @@ function updateParameters() {
+@@ -539,14 +545,14 @@ function updateParameters() {
      aoPass.radius.value = params.radius;
  
      if (params.aoType === 'SSAO') {
 -        aoPass.intensity.value = params.intensity;
 -        aoPass.bias.value = params.bias;
+-        aoPass.blurEnabled = params.blurEnabled;
 -        aoPass.blurSharpness.value = params.blurSharpness;
 +        (aoPass as SSAONode).intensity.value = params.intensity;
 +        (aoPass as SSAONode).bias.value = params.bias;
++        (aoPass as SSAONode).blurEnabled = params.blurEnabled;
 +        (aoPass as SSAONode).blurSharpness.value = params.blurSharpness;
      } else {
 -        aoPass.scale.value = params.scale;
