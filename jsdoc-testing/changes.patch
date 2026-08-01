@@ -1630,6 +1630,30 @@ index bf4cfffe4..6db70ce24 100644
   */
 -export function bindAnalyticNoise(resolution: UniformNode<Vector2>, seed?: number): () => void;
 +export function bindAnalyticNoise(resolution: UniformNode<'vec2', Vector2>, seed?: number): () => void;
+diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
+index 8df6f566e..c8c1ce55b 100644
+--- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
++++ b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SoftParticles.d.ts
+@@ -1,3 +1,5 @@
++import { Node } from 'three/webgpu';
++
+ /**
+  * Computes an opacity node for soft particles, based on the "Soft Particles" white
+  * paper (NVIDIA, Tristan Lorach).
+@@ -12,8 +14,8 @@
+  * @return {Node<float>} The opacity node to assign to `material.opacityNode`.
+  */
+ export function softParticles({ opacity, distance, contrast, viewportDepth }?: {
+-    opacity?: Node<any>;
+-    distance?: Node<any> | number;
+-    contrast?: Node<any> | number;
+-    viewportDepth?: Node<any>;
+-}): Node<any>;
++    opacity?: Node<'float'>;
++    distance?: Node<'float'> | number;
++    contrast?: Node<'float'> | number;
++    viewportDepth?: Node<'float'>;
++}): Node<'float'>;
 diff --git a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts b/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts
 index 8dfe8a871..5369ca99b 100644
 --- a/jsdoc-testing/jsdoc/examples/jsm/tsl/utils/SpecularHelpers.d.ts

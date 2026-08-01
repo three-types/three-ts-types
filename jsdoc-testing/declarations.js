@@ -20,6 +20,7 @@ const files = [
     'examples/jsm/tsl/math/curlNoise',
     'examples/jsm/tsl/utils/GroundedSkybox',
     'examples/jsm/tsl/utils/RNoise',
+    'examples/jsm/tsl/utils/SoftParticles',
     'examples/jsm/tsl/utils/SpecularHelpers',
     'examples/jsm/webxr/WebGLXRFallback',
     'src/animation/tracks/BooleanKeyframeTrack',
