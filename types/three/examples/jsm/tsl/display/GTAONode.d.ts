@@ -1,4 +1,4 @@
-import { Camera, Node, TempNode, TextureNode, UniformNode, Vector2 } from "three/webgpu";
+import { Camera, Node, TempNode, TextureNode, UniformNode } from "three/webgpu";
 
 declare class GTAONode extends TempNode<"float"> {
     depthNode: Node;
@@ -7,7 +7,6 @@ declare class GTAONode extends TempNode<"float"> {
     resolutionScale: number;
 
     radius: UniformNode<"float", number>;
-    resolution: UniformNode<"vec2", Vector2>;
     thickness: UniformNode<"float", number>;
     /**
      * @deprecated since r186. The new distance model "Quadratic Ray Stepping" does not need it anymore.
