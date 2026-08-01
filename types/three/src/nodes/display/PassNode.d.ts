@@ -35,6 +35,7 @@ declare class PassNode extends TempNode<"vec4"> {
     scope: PassNodeScope;
     scene: Object3D;
     camera: Camera;
+    options: RenderTargetOptions;
 
     renderTarget: RenderTarget;
 
