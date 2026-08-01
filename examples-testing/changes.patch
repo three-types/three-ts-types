@@ -16400,6 +16400,244 @@ index 60fe6ccc9..c29cde36b 100644
          return [
              prefix + 'px' + postfix,
              prefix + 'nx' + postfix,
+diff --git a/examples-testing/examples/webgpu_lightprobes.ts b/examples-testing/examples/webgpu_lightprobes.ts
+index a36b91069..ca7f13266 100644
+--- a/examples-testing/examples/webgpu_lightprobes.ts
++++ b/examples-testing/examples/webgpu_lightprobes.ts
+@@ -5,8 +5,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ 
+-let camera, scene, renderer, controls;
+-let probes, probesHelper;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
+ 
+ init();
+ 
+@@ -125,7 +125,7 @@ async function init() {
+ 
+     // Bake light probe volume
+ 
+-    async function bake(resolution) {
++    async function bake(resolution: number) {
+         if (probes) {
+             scene.remove(probes);
+             probes.dispose();
+@@ -159,14 +159,14 @@ async function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Light Probes');
++    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
+     gui.add(params, 'enabled')
+         .name('GI')
+         .onChange(value => {
+             probes.visible = value;
+         });
+ 
+-    let rebakeTimer = null;
++    let rebakeTimer: number | null = null;
+     gui.add(params, 'resolution', 2, 12, 1)
+         .name('Resolution')
+         .onChange(value => {
+diff --git a/examples-testing/examples/webgpu_lightprobes_complex.ts b/examples-testing/examples/webgpu_lightprobes_complex.ts
+index 1bc0a8ab4..f741cafcd 100644
+--- a/examples-testing/examples/webgpu_lightprobes_complex.ts
++++ b/examples-testing/examples/webgpu_lightprobes_complex.ts
+@@ -5,9 +5,9 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
+ import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ 
+-let camera, scene, renderer, controls;
+-let probesLeft, probesRight;
+-let probesHelperLeft, probesHelperRight;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer, controls: OrbitControls;
++let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
++let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
+ 
+ init();
+ 
+@@ -218,7 +218,7 @@ async function init() {
+         resolution: 6,
+     };
+ 
+-    async function bake(resolution) {
++    async function bake(resolution: number) {
+         // Remove both volumes before baking to prevent feedback
+ 
+         if (probesLeft) {
+@@ -275,7 +275,7 @@ async function init() {
+ 
+     // GUI
+ 
+-    const gui = renderer.inspector.createParameters('Light Probes');
++    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
+     gui.add(params, 'enabled')
+         .name('GI')
+         .onChange(value => {
+@@ -283,7 +283,7 @@ async function init() {
+             probesRight.visible = value;
+         });
+ 
+-    let rebakeTimer = null;
++    let rebakeTimer: number | null = null;
+     gui.add(params, 'resolution', 2, 12, 1)
+         .name('Resolution')
+         .onChange(value => {
+diff --git a/examples-testing/examples/webgpu_lightprobes_sponza.ts b/examples-testing/examples/webgpu_lightprobes_sponza.ts
+index a73fd1e5b..17625cc2e 100644
+--- a/examples-testing/examples/webgpu_lightprobes_sponza.ts
++++ b/examples-testing/examples/webgpu_lightprobes_sponza.ts
+@@ -11,12 +11,16 @@ const MODEL_INDEX_URL =
+     'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/model-index.json';
+ const SAMPLE_ASSETS_BASE_URL = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Assets/main/Models/';
+ 
+-let camera, scene, renderer, controls, timer;
+-let probes = null,
+-    probesHelper = null;
+-let modelSize = null;
+-let dirLight = null,
+-    sky = null;
++let camera: THREE.PerspectiveCamera,
++    scene: THREE.Scene,
++    renderer: THREE.WebGPURenderer,
++    controls: FirstPersonControls,
++    timer: THREE.Timer;
++let probes: LightProbeGrid | null = null,
++    probesHelper: LightProbeGridHelper | null = null;
++let modelSize: THREE.Vector3 | null = null;
++let dirLight: THREE.DirectionalLight | null = null,
++    sky: SkyMesh | null = null;
+ 
+ const sun = new THREE.Vector3();
+ 
+@@ -59,7 +63,7 @@ async function init() {
+     controls.movementSpeed = 2.0;
+     controls.lookSpeed = 0.16;
+ 
+-    const progressBar = document.getElementById('progressBar');
++    const progressBar = document.getElementById('progressBar') as HTMLProgressElement;
+ 
+     const manager = new THREE.LoadingManager();
+     manager.onProgress = function (url, loaded, total) {
+@@ -74,14 +78,14 @@ async function init() {
+     const modelURL = await getSponzaModelURL();
+     const gltf = await loader.loadAsync(modelURL);
+     const model = gltf.scene;
+-    const embeddedLights = [];
++    const embeddedLights: THREE.Light[] = [];
+ 
+     model.traverse(child => {
+-        if (child.isMesh) {
+-            child.castShadow = true;
+-            child.receiveShadow = true;
+-        } else if (child.isLight) {
+-            embeddedLights.push(child);
++        if ((child as THREE.Mesh).isMesh) {
++            (child as THREE.Mesh).castShadow = true;
++            (child as THREE.Mesh).receiveShadow = true;
++        } else if ((child as THREE.Light).isLight) {
++            embeddedLights.push(child as THREE.Light);
+         }
+     });
+ 
+@@ -97,7 +101,7 @@ async function init() {
+     const targetY = modelCenter.y + modelSize.y * 0.2;
+     const lightBaseDistance = Math.max(modelSize.x, modelSize.z);
+     const probeFar = Math.max(modelSize.x, modelSize.y, modelSize.z) * 2.0;
+-    let rebakeTimer = null;
++    let rebakeTimer: number | null = null;
+     let isBaking = false;
+     let bakeQueued = false;
+ 
+@@ -142,18 +146,18 @@ async function init() {
+         const horizontal = Math.cos(elevation) * radius;
+         const vertical = Math.sin(elevation) * radius;
+ 
+-        dirLight.position.set(
++        dirLight!.position.set(
+             modelCenter.x + Math.cos(azimuth) * horizontal,
+             targetY + vertical,
+             modelCenter.z + Math.sin(azimuth) * horizontal,
+         );
+-        dirLight.target.position.set(modelCenter.x, targetY, modelCenter.z);
+-        dirLight.target.updateMatrixWorld();
++        dirLight!.target.position.set(modelCenter.x, targetY, modelCenter.z);
++        dirLight!.target.updateMatrixWorld();
+ 
+         const phi = THREE.MathUtils.degToRad(90 - params.lightElevation);
+         const theta = THREE.MathUtils.degToRad(params.lightAzimuth);
+         sun.setFromSphericalCoords(1, phi, theta);
+-        sky.sunPosition.value.copy(sun);
++        sky!.sunPosition.value.copy(sun);
+     }
+ 
+     function scheduleRebake() {
+@@ -217,7 +221,7 @@ async function init() {
+ 
+     updateLightPosition();
+ 
+-    const gui = renderer.inspector.createParameters('Light Probes');
++    const gui = (renderer.inspector as Inspector).createParameters('Light Probes');
+     gui.add(params, 'enabled')
+         .name('GI')
+         .onChange(value => {
+@@ -239,7 +243,7 @@ async function init() {
+     gui.add(params, 'lightIntensity', 0, 100, 0.1)
+         .name('Light Intensity')
+         .onChange(value => {
+-            dirLight.intensity = value;
++            dirLight!.intensity = value;
+             scheduleRebake();
+         });
+     gui.add(params, 'shadows')
+@@ -265,7 +269,7 @@ async function init() {
+             if (probesHelper) {
+                 scene.remove(probesHelper);
+                 probesHelper.dispose();
+-                probesHelper = new LightProbeGridHelper(probes, value);
++                probesHelper = new LightProbeGridHelper(probes!, value);
+                 probesHelper.visible = params.showProbes;
+                 scene.add(probesHelper);
+             }
+@@ -297,9 +301,17 @@ async function init() {
+     window.addEventListener('resize', onWindowResize);
+ }
+ 
++interface Model {
++    label: string;
++    name: string;
++    screenshot: string;
++    tags: string[];
++    variants: Record<string, string>;
++}
++
+ async function getSponzaModelURL() {
+     const response = await fetch(MODEL_INDEX_URL);
+-    const models = await response.json();
++    const models = (await response.json()) as Model[];
+     const sponzaInfo = models.find(model => model.name === 'Sponza');
+ 
+     if (!sponzaInfo) {
+@@ -318,7 +330,7 @@ async function getSponzaModelURL() {
+     return `${SAMPLE_ASSETS_BASE_URL}${sponzaInfo.name}/${variantFolder}/${variantName}`;
+ }
+ 
+-function setShadowsEnabled(enabled) {
++function setShadowsEnabled(enabled: boolean) {
+     if (!renderer || !dirLight) return;
+ 
+     renderer.shadowMap.enabled = enabled;
+@@ -332,7 +344,7 @@ function onWindowResize() {
+     renderer.setSize(window.innerWidth, window.innerHeight);
+ }
+ 
+-function animate(timestamp) {
++function animate(timestamp: number) {
+     timer.update(timestamp);
+     controls.update(timer.getDelta());
+     renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
 index f06ec2c26..77621df22 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
