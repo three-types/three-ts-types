@@ -6470,13 +6470,13 @@ index a4a82637c..68a169fcc 100644
 --- a/examples-testing/examples/webgl_lightprobes.ts
 +++ b/examples-testing/examples/webgl_lightprobes.ts
 @@ -5,8 +5,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
- import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
+ import { LightProbeGridHelperWebGL } from 'three/addons/helpers/LightProbeGridHelperWebGL.js';
  
 -let camera, scene, renderer, controls;
 -let probes, probesHelper;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-+let probes: LightProbeGrid, probesHelper: LightProbeGridHelper;
++let probes: LightProbeGridWebGL, probesHelper: LightProbeGridHelperWebGL;
  
  init();
  
@@ -6484,8 +6484,8 @@ index a4a82637c..68a169fcc 100644
  
      // Bake light probe volume
  
--    async function bakeWithResolution(resolution) {
-+    async function bakeWithResolution(resolution: number) {
+-    async function bake(resolution) {
++    async function bake(resolution: number) {
          if (probes) {
              scene.remove(probes);
              probes.dispose();
@@ -6494,15 +6494,15 @@ index 2b6cecff7..7d792e16b 100644
 --- a/examples-testing/examples/webgl_lightprobes_complex.ts
 +++ b/examples-testing/examples/webgl_lightprobes_complex.ts
 @@ -5,9 +5,9 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
- import { LightProbeGrid } from 'three/addons/lighting/LightProbeGrid.js';
- import { LightProbeGridHelper } from 'three/addons/helpers/LightProbeGridHelper.js';
+ import { LightProbeGridWebGL } from 'three/addons/lighting/LightProbeGridWebGL.js';
+ import { LightProbeGridHelperWebGL } from 'three/addons/helpers/LightProbeGridHelperWebGL.js';
  
 -let camera, scene, renderer, controls;
 -let probesLeft, probesRight;
 -let probesHelperLeft, probesHelperRight;
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGLRenderer, controls: OrbitControls;
-+let probesLeft: LightProbeGrid, probesRight: LightProbeGrid;
-+let probesHelperLeft: LightProbeGridHelper, probesHelperRight: LightProbeGridHelper;
++let probesLeft: LightProbeGridWebGL, probesRight: LightProbeGridWebGL;
++let probesHelperLeft: LightProbeGridHelperWebGL, probesHelperRight: LightProbeGridHelperWebGL;
  
  init();
  
@@ -6510,8 +6510,8 @@ index 2b6cecff7..7d792e16b 100644
          resolution: 6,
      };
  
--    async function bakeWithResolution(resolution) {
-+    async function bakeWithResolution(resolution: number) {
+-    async function bake(resolution) {
++    async function bake(resolution: number) {
          // Remove both volumes before baking to prevent feedback
  
          if (probesLeft) {
@@ -6534,8 +6534,8 @@ index d89e303ee..a5b61e065 100644
 +    renderer: THREE.WebGLRenderer,
 +    controls: FirstPersonControls,
 +    timer: THREE.Timer;
-+let probes: LightProbeGrid | null = null,
-+    probesHelper: LightProbeGridHelper | null = null;
++let probes: LightProbeGridWebGL | null = null,
++    probesHelper: LightProbeGridHelperWebGL | null = null;
 +let modelSize: THREE.Vector3 | null = null;
 +let dirLight: THREE.DirectionalLight | null = null,
 +    sky: Sky | null = null;
@@ -6617,8 +6617,8 @@ index d89e303ee..a5b61e065 100644
              if (probesHelper) {
                  scene.remove(probesHelper);
                  probesHelper.dispose();
--                probesHelper = new LightProbeGridHelper(probes, value);
-+                probesHelper = new LightProbeGridHelper(probes!, value);
+-                probesHelper = new LightProbeGridHelperWebGL(probes, value);
++                probesHelper = new LightProbeGridHelperWebGL(probes!, value);
                  probesHelper.visible = params.showProbes;
                  scene.add(probesHelper);
              }
