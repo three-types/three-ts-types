@@ -7884,7 +7884,7 @@ index 0f4042b7d..dff17d169 100644
      directionalLight.position.set(x, y, z);
      scene.add(directionalLight);
 diff --git a/examples-testing/examples/webgl_loader_svg.ts b/examples-testing/examples/webgl_loader_svg.ts
-index deb6e33a6..c776ce618 100644
+index 2226a96b1..f4ef02747 100644
 --- a/examples-testing/examples/webgl_loader_svg.ts
 +++ b/examples-testing/examples/webgl_loader_svg.ts
 @@ -1,16 +1,26 @@
@@ -7918,7 +7918,7 @@ index deb6e33a6..c776ce618 100644
  
      //
  
-@@ -104,7 +114,7 @@ function createGUI() {
+@@ -105,7 +115,7 @@ function createGUI() {
      }
  }
  
@@ -7927,7 +7927,7 @@ index deb6e33a6..c776ce618 100644
      //
  
      if (scene) disposeScene(scene);
-@@ -159,7 +169,10 @@ function loadSVG(url) {
+@@ -160,7 +170,10 @@ function loadSVG(url) {
                      material.wireframe = guiData.strokesWireframe;
  
                      for (const subPath of path.subPaths) {
@@ -7939,7 +7939,7 @@ index deb6e33a6..c776ce618 100644
  
                          if (geometry) {
                              const mesh = new THREE.Mesh(geometry, material);
-@@ -190,12 +203,26 @@ function render() {
+@@ -191,12 +204,26 @@ function render() {
      renderer.render(scene, camera);
  }
  
@@ -18798,6 +18798,30 @@ index 9e81f0761..da9ee8757 100644
  
      gui.add(speed, 'value', 0, 1, 0.01).name('speed');
  }
+diff --git a/examples-testing/examples/webgpu_particles_soft.ts b/examples-testing/examples/webgpu_particles_soft.ts
+index 5aada557b..42b06f003 100644
+--- a/examples-testing/examples/webgpu_particles_soft.ts
++++ b/examples-testing/examples/webgpu_particles_soft.ts
+@@ -6,8 +6,8 @@ import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
+-let camera, scene, renderer;
+-let controls;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let controls: OrbitControls;
+ 
+ init();
+ 
+@@ -133,7 +133,7 @@ function init() {
+ 
+     // gui
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
+     gui.add(softEnabled, 'value', { hard: 0, soft: 1 }).name('mode');
+     gui.add(softDistance, 'value', 0.1, 2, 0.01).name('soft distance');
+     gui.add(softContrast, 'value', 1, 6, 0.01).name('soft contrast');
 diff --git a/examples-testing/examples/webgpu_performance.ts b/examples-testing/examples/webgpu_performance.ts
 index 595965a6c..645d0036b 100644
 --- a/examples-testing/examples/webgpu_performance.ts
