@@ -4331,7 +4331,7 @@ index 572601acb..136a31413 100644
  init();
  
 diff --git a/examples-testing/examples/webgl_geometry_extrude_shapes.ts b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
-index a905c8ea3..00283d47e 100644
+index dea62d0e6..d91cc6466 100644
 --- a/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 +++ b/examples-testing/examples/webgl_geometry_extrude_shapes.ts
 @@ -2,7 +2,7 @@ import * as THREE from 'three';
@@ -6113,7 +6113,7 @@ index 520674b5f..4b083ffe9 100644
          INTERSECTED = null;
      }
 diff --git a/examples-testing/examples/webgl_interactive_lines.ts b/examples-testing/examples/webgl_interactive_lines.ts
-index b137c5501..891e5541c 100644
+index f81ad5b5f..e3edc70db 100644
 --- a/examples-testing/examples/webgl_interactive_lines.ts
 +++ b/examples-testing/examples/webgl_interactive_lines.ts
 @@ -2,8 +2,13 @@ import * as THREE from 'three';
@@ -6132,7 +6132,7 @@ index b137c5501..891e5541c 100644
  
  const pointer = new THREE.Vector2();
  const radius = 100;
-@@ -121,7 +126,7 @@ function onWindowResize() {
+@@ -112,7 +117,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -9965,7 +9965,7 @@ index 4f1f17f7d..6c780eabe 100644
      // renderer
      renderer = new THREE.WebGLRenderer({ antialias: true });
 diff --git a/examples-testing/examples/webgl_modifier_edgesplit.ts b/examples-testing/examples/webgl_modifier_edgesplit.ts
-index 4725eff62..96620f504 100644
+index f02478ed9..479d012a7 100644
 --- a/examples-testing/examples/webgl_modifier_edgesplit.ts
 +++ b/examples-testing/examples/webgl_modifier_edgesplit.ts
 @@ -7,9 +7,11 @@ import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js'
@@ -9983,7 +9983,7 @@ index 4725eff62..96620f504 100644
  
  const params = {
      smoothShading: true,
-@@ -50,7 +52,7 @@ function init() {
+@@ -42,7 +44,7 @@ function init() {
      scene.add(new THREE.HemisphereLight(0xffffff, 0x444444, 3));
  
      new OBJLoader().load('./models/obj/cerberus/Cerberus.obj', function (group) {
@@ -13778,7 +13778,7 @@ index 1d8f5f763..214deef55 100644
      // Parameters for circular movement
      const radius = 5; // Smaller radius for individual circular movements
 diff --git a/examples-testing/examples/webgl_video_kinect.ts b/examples-testing/examples/webgl_video_kinect.ts
-index 8abc93917..dd637649d 100644
+index 4ba1b2b49..1bf9a733a 100644
 --- a/examples-testing/examples/webgl_video_kinect.ts
 +++ b/examples-testing/examples/webgl_video_kinect.ts
 @@ -2,9 +2,9 @@ import * as THREE from 'three';
@@ -13794,7 +13794,7 @@ index 8abc93917..dd637649d 100644
  
  init();
  
-@@ -24,7 +24,7 @@ function init() {
+@@ -19,7 +19,7 @@ function init() {
      center = new THREE.Vector3();
      center.z = -1000;
  
@@ -13803,7 +13803,7 @@ index 8abc93917..dd637649d 100644
  
      const texture = new THREE.VideoTexture(video);
      texture.minFilter = THREE.NearestFilter;
-@@ -57,8 +57,8 @@ function init() {
+@@ -52,8 +52,8 @@ function init() {
              pointSize: { value: 2 },
              zOffset: { value: 1000 },
          },
@@ -13814,7 +13814,7 @@ index 8abc93917..dd637649d 100644
          blending: THREE.AdditiveBlending,
          depthTest: false,
          depthWrite: false,
-@@ -100,7 +100,7 @@ function onWindowResize() {
+@@ -95,7 +95,7 @@ function onWindowResize() {
      renderer.setSize(window.innerWidth, window.innerHeight);
  }
  
@@ -15709,6 +15709,45 @@ index e0da158f9..b1d30014d 100644
      gui.add(scene.fog, 'density', 0.025, 0.16).step(0.0005).name('fog density');
      gui.add(scattering, 'value', 0, 5).name('scattering factor');
      gui.add(params, 'scatteringEnabled')
+diff --git a/examples-testing/examples/webgpu_deferred.ts b/examples-testing/examples/webgpu_deferred.ts
+index 71538bc7c..c9f55eaf2 100644
+--- a/examples-testing/examples/webgpu_deferred.ts
++++ b/examples-testing/examples/webgpu_deferred.ts
+@@ -23,10 +23,10 @@ import { TeapotGeometry } from 'three/addons/geometries/TeapotGeometry.js';
+ 
+ const RESOLVE_LAYER = 2;
+ 
+-let camera, scene, renderer;
+-let renderPipeline;
+-let lightGroup, planesGroup;
+-let params;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let renderPipeline: THREE.RenderPipeline;
++let lightGroup: THREE.Group, planesGroup: THREE.Group;
++let params: { mode: string; animated: boolean };
+ 
+ const timer = new THREE.Timer();
+ 
+@@ -185,7 +185,7 @@ function init() {
+ 
+     // transparent pass
+ 
+-    const opaqueDepthTexture = opaquePass.getTexture('depth');
++    const opaqueDepthTexture = opaquePass.getTexture('depth') as THREE.DepthTexture;
+ 
+     const transparentPass = pass(scene, camera, { depthTexture: opaqueDepthTexture, autoClearDepth: false });
+     transparentPass.name = 'transparent pass';
+@@ -213,8 +213,8 @@ function init() {
+         animated: true,
+     };
+ 
+-    const gui = renderer.inspector.createParameters('Settings');
+-    gui.add(params, 'mode', ['forward', 'deferred']).onChange(value => {
++    const gui = (renderer.inspector as Inspector).createParameters('Settings');
++    gui.add(params, 'mode', ['forward', 'deferred']).onChange((value: string) => {
+         renderPipeline.outputNode = value === 'forward' ? forwardPass : deferredNode;
+         renderPipeline.needsUpdate = true;
+     });
 diff --git a/examples-testing/examples/webgpu_depth_texture.ts b/examples-testing/examples/webgpu_depth_texture.ts
 index 0bc38eeba..fb09e9567 100644
 --- a/examples-testing/examples/webgpu_depth_texture.ts
@@ -21833,10 +21872,10 @@ index 877ee46cb..1b8d0b2dc 100644
              }
          });
 diff --git a/examples-testing/examples/webgpu_skinning_instancing_individual.ts b/examples-testing/examples/webgpu_skinning_instancing_individual.ts
-index 2b01f29d0..e069995a5 100644
+index 2abb7022e..25ddeb2b6 100644
 --- a/examples-testing/examples/webgpu_skinning_instancing_individual.ts
 +++ b/examples-testing/examples/webgpu_skinning_instancing_individual.ts
-@@ -22,20 +22,63 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -23,20 +23,63 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
  import WebGPU from 'three/addons/capabilities/WebGPU.js';
  
@@ -21909,7 +21948,7 @@ index 2b01f29d0..e069995a5 100644
      const position = geometry.getAttribute('position');
      const normal = geometry.getAttribute('normal');
      const bellyPosition = position.clone();
-@@ -62,7 +105,7 @@ function createSourceVertexAttribute(geometry) {
+@@ -63,7 +106,7 @@ function createSourceVertexAttribute(geometry) {
      return new THREE.StorageBufferAttribute(data, 4);
  }
  
@@ -21918,7 +21957,7 @@ index 2b01f29d0..e069995a5 100644
      let state = skeletonStates.get(skeleton);
  
      if (state === undefined) {
-@@ -82,7 +125,10 @@ function getSkeletonState(skeleton, instanceCount) {
+@@ -83,7 +126,10 @@ function getSkeletonState(skeleton, instanceCount) {
      return state;
  }
  
