@@ -9,6 +9,7 @@ import {
     mx_floor,
     mx_floorfrac,
     mx_fractal_noise_float,
+    mx_fractal_noise_float_2d,
     mx_fractal_noise_vec2,
     mx_fractal_noise_vec3,
     mx_fractal_noise_vec4,
@@ -26,10 +27,13 @@ import {
     mx_trilerp,
     mx_worley_distance,
     mx_worley_noise_float,
+    mx_worley_noise_float_2d,
+    mx_worley_noise_float_3d,
     mx_worley_noise_vec2,
     mx_worley_noise_vec3,
-} from "three/src/nodes/materialx/lib/mx_noise.js";
-import { float, vec2 } from "three/tsl";
+    mx_worley_noise_vec3_style,
+} from "three/src/nodes/materialx/MaterialXNoise.js";
+import { float, vec2, vec3 } from "three/tsl";
 
 mx_select(true, 1, 0);
 mx_negate_if(true, 1);
@@ -59,11 +63,15 @@ mx_perlin_noise_float(vec2(0));
 mx_perlin_noise_vec3(vec2(0));
 mx_cell_noise_float(vec2(0));
 mx_cell_noise_vec3(vec2(0));
+mx_fractal_noise_float_2d(vec2(0), 3, 2, 0.5);
 mx_fractal_noise_float(vec2(0), 3, 2, 0.5);
 mx_fractal_noise_vec3(vec2(0), 3, 2, 0.5);
 mx_fractal_noise_vec2(vec2(0), 3, 2, 0.5);
 mx_fractal_noise_vec4(vec2(0), 3, 2, 0.5);
 mx_worley_distance(vec2(0), 1, 2, 3, 0, 0, 0, 1, 1);
 mx_worley_noise_float(vec2(0), 1, 1);
+mx_worley_noise_float_2d(vec2(0), 1, 0);
+mx_worley_noise_float_3d(vec3(0), 1, 0);
 mx_worley_noise_vec2(vec2(0), 1, 1);
 mx_worley_noise_vec3(vec2(0), 1, 1);
+mx_worley_noise_vec3_style(vec3(0), 1, 0, 0);
