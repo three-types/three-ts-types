@@ -4,6 +4,7 @@ import { Object3D } from "../../core/Object3D.js";
 import { RenderTarget, RenderTargetOptions } from "../../core/RenderTarget.js";
 import { Material } from "../../materials/Material.js";
 import { Vector4 } from "../../math/Vector4.js";
+import Lighting from "../../renderers/common/Lighting.js";
 import Renderer from "../../renderers/common/Renderer.js";
 import { Texture } from "../../textures/Texture.js";
 import TextureNode from "../accessors/TextureNode.js";
@@ -49,6 +50,7 @@ declare class PassNode extends TempNode<"vec4"> {
     overrideMaterial: Material | null;
     transparent: boolean;
     opaque: boolean;
+    lighting: Lighting | null;
 
     autoClear: boolean;
     autoClearColor: boolean;
