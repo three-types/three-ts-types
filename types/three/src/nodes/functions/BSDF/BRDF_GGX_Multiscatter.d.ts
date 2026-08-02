@@ -7,6 +7,7 @@ declare const BRDF_GGX_Multiscatter: (args: {
     f90: Node;
     roughness: Node;
     f?: Node | undefined;
+    viewDirection?: Node | undefined;
     USE_IRIDESCENCE?: Node | undefined;
     USE_ANISOTROPY?: Node | undefined;
 }) => OperatorNode;

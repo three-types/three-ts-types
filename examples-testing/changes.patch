@@ -18045,6 +18045,30 @@ index b72e65a07..898c39fa0 100644
 +        loadFile(event.dataTransfer!.files[0]);
      });
  }
+diff --git a/examples-testing/examples/webgpu_materials_retroreflective.ts b/examples-testing/examples/webgpu_materials_retroreflective.ts
+index 01569cf7a..b58788958 100644
+--- a/examples-testing/examples/webgpu_materials_retroreflective.ts
++++ b/examples-testing/examples/webgpu_materials_retroreflective.ts
+@@ -4,8 +4,8 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
+ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+ import WebGPU from 'three/addons/capabilities/WebGPU.js';
+ 
+-let camera, scene, renderer;
+-let frontLight, bandMaterial;
++let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
++let frontLight: THREE.PointLight, bandMaterial: THREE.MeshPhysicalNodeMaterial;
+ 
+ const params = {
+     retroreflectivity: true,
+@@ -110,7 +110,7 @@ function createCone() {
+     cone.add(band);
+ }
+ 
+-function radiusAtHeight(y, bodyBottom, bodyHeight, radiusBottom, radiusTop) {
++function radiusAtHeight(y: number, bodyBottom: number, bodyHeight: number, radiusBottom: number, radiusTop: number) {
+     const t = THREE.MathUtils.clamp((y - bodyBottom) / bodyHeight, 0, 1);
+     return THREE.MathUtils.lerp(radiusBottom, radiusTop, t);
+ }
 diff --git a/examples-testing/examples/webgpu_materials_sss.ts b/examples-testing/examples/webgpu_materials_sss.ts
 index c76df99dc..b94767b77 100644
 --- a/examples-testing/examples/webgpu_materials_sss.ts
