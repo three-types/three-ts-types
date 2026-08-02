@@ -13,12 +13,6 @@ export const PCFShadowFilter: (
     shadow: Node,
 ) => Node;
 
-export const PCFSoftShadowFilter: (
-    depthTexture: Node,
-    shadowCoord: Node,
-    shadow: Node,
-) => Node;
-
 export const VSMShadowFilter: (
     depthTexture: Node,
     shadowCoord: Node,

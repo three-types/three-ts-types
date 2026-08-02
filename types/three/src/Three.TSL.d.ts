@@ -21,7 +21,6 @@ export const NodeShaderStage: typeof TSL.NodeShaderStage;
 export const NodeType: typeof TSL.NodeType;
 export const NodeUpdateType: typeof TSL.NodeUpdateType;
 export const PCFShadowFilter: typeof TSL.PCFShadowFilter;
-export const PCFSoftShadowFilter: typeof TSL.PCFSoftShadowFilter;
 export const PI: typeof TSL.PI;
 export const PI2: typeof TSL.PI2;
 export const TWO_PI: typeof TSL.TWO_PI;
