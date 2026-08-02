@@ -19784,10 +19784,10 @@ index 05683f396..bf8d6a5f8 100644
  }
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom.ts b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-index 121323f25..221339a25 100644
+index f8194ac62..6cff90d56 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom.ts
-@@ -8,10 +8,13 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -7,8 +7,11 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
@@ -19799,12 +19799,9 @@ index 121323f25..221339a25 100644
 +    mixer: THREE.AnimationMixer,
 +    timer: THREE.Timer;
  
--const params = {
-+const params: { type: 'Gaussian' | 'Dual Kawase'; exposure: number } = {
-     type: 'Gaussian',
-     exposure: 1,
- };
-@@ -97,7 +100,7 @@ async function init() {
+ const params = {
+     threshold: 0,
+@@ -86,7 +89,7 @@ async function init() {
  
      //
  
@@ -19814,10 +19811,10 @@ index 121323f25..221339a25 100644
      const bloomFolder = gui.addFolder('bloom');
  
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-index 733720507..ff2935b3e 100644
+index faa5b67fb..efe984318 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_emissive.ts
-@@ -10,8 +10,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+@@ -9,8 +9,8 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
@@ -19828,16 +19825,7 @@ index 733720507..ff2935b3e 100644
  
  init();
  
-@@ -75,7 +75,7 @@ function init() {
-     const outputPass = scenePass.getTextureNode().toInspector('Color');
-     const emissivePass = scenePass.getTextureNode('emissive').toInspector('Emissive');
- 
--    const params = { type: 'Gaussian' };
-+    const params: { type: keyof typeof bloomPasses } = { type: 'Gaussian' };
- 
-     const strength = uniform(2.5);
-     const radius = uniform(0.5);
-@@ -106,7 +106,7 @@ function init() {
+@@ -91,7 +91,7 @@ function init() {
  
      //
  
@@ -19845,21 +19833,12 @@ index 733720507..ff2935b3e 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Settings');
  
      const bloomFolder = gui.addFolder('Bloom');
-     bloomFolder.add(params, 'type', ['Gaussian', 'Dual Kawase']).onChange(updateBloom);
+     bloomFolder.add(bloomPass.strength, 'value', 0.0, 5.0).name('strength');
 diff --git a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-index 5e8dcad21..87a969ea6 100644
+index b8f2427d4..00b649aed 100644
 --- a/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_bloom_selective.ts
-@@ -60,7 +60,7 @@ scenePass.setMRT(
- const outputPass = scenePass.getTextureNode().toInspector('Color');
- const bloomIntensityPass = scenePass.getTextureNode('bloomIntensity').toInspector('Bloom Intensity');
- 
--const params = { type: 'Gaussian' };
-+const params: { type: keyof typeof bloomPasses } = { type: 'Gaussian' };
- const bloomInput = outputPass.mul(bloomIntensityPass);
- 
- const strength = uniform(1);
-@@ -103,16 +103,17 @@ window.addEventListener('pointerdown', event => {
+@@ -86,16 +86,17 @@ window.addEventListener('pointerdown', event => {
      const intersects = raycaster.intersectObjects(scene.children, false);
  
      if (intersects.length > 0) {
@@ -19879,7 +19858,7 @@ index 5e8dcad21..87a969ea6 100644
 +const gui = (renderer.inspector as Inspector).createParameters('Settings');
  
  const bloomFolder = gui.addFolder('Bloom');
- bloomFolder.add(params, 'type', ['Gaussian', 'Dual Kawase']).onChange(updateBloom);
+ bloomFolder.add(bloomPass.threshold, 'value', 0.0, 1.0).name('threshold');
 diff --git a/examples-testing/examples/webgpu_postprocessing_ca.ts b/examples-testing/examples/webgpu_postprocessing_ca.ts
 index 48b549050..4af52250f 100644
 --- a/examples-testing/examples/webgpu_postprocessing_ca.ts
