@@ -27,6 +27,9 @@ export type CullFace = typeof CullFaceNone | typeof CullFaceBack | typeof CullFa
 // Shadowing Type
 export const BasicShadowMap: 0;
 export const PCFShadowMap: 1;
+/**
+ * @deprecated since r186. Use {@link PCFShadowMap} instead.
+ */
 export const PCFSoftShadowMap: 2;
 export const VSMShadowMap: 3;
 export type ShadowMapType = typeof BasicShadowMap | typeof PCFShadowMap | typeof PCFSoftShadowMap | typeof VSMShadowMap;
