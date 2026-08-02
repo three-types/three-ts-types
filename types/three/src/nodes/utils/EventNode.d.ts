@@ -15,6 +15,8 @@ declare class EventNode extends Node {
     static BEFORE_OBJECT: "beforeObject";
     static BEFORE_MATERIAL: "beforeMaterial";
     static BEFORE_FRAME: "beforeFrame";
+    static BEFORE_RENDER_PIPELINE: "beforeRenderPipeline";
+    static AFTER_RENDER_PIPELINE: "afterRenderPipeline";
 }
 
 export default EventNode;
@@ -30,3 +32,7 @@ export const OnBeforeObjectUpdate: (callback: (frame: NodeFrame) => void) => Nod
 export const OnBeforeMaterialUpdate: (callback: (frame: NodeFrame) => void) => Node;
 
 export const OnBeforeFrameUpdate: (callback: (frame: NodeFrame) => void) => Node;
+
+export const OnBeforeRenderPipeline: (callback: () => void) => Node;
+
+export const OnAfterRenderPipeline: (callback: () => void) => Node;
