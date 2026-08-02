@@ -10744,7 +10744,7 @@ index 1ffe1bd1b..85436d1fe 100644
 +
 +export default MeshToonNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
-index 9ef1667ba..87ea29a44 100644
+index 82be7e4af..d8aad4fee 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/NodeMaterial.d.ts
 @@ -1,37 +1,24 @@
@@ -10976,7 +10976,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * This node can be used to influence how an object using this node material
       * casts shadows. To apply a color to shadows, you can simply do:
-@@ -266,26 +236,23 @@ declare class NodeMaterial extends Material {
+@@ -266,10 +236,9 @@ declare class NodeMaterial extends Material {
       * } )();
       *  ```
       *
@@ -10986,9 +10986,11 @@ index 9ef1667ba..87ea29a44 100644
 -    castShadowNode: Node<any> | null;
 +    castShadowNode: Node | null;
      /**
-      * This node can be used to define the final output of the material.
+      * This node can be used to overwrite the final output of the material.
       *
-      * TODO: Explain the differences to `fragmentNode`.
+@@ -277,17 +246,15 @@ declare class NodeMaterial extends Material {
+      * (diffuse color, lighting, etc.) is still evaluated; assigning a node
+      * only replaces the resulting output color.
       *
 -     * @type {?Node<vec4>}
       * @default null
@@ -11005,7 +11007,7 @@ index 9ef1667ba..87ea29a44 100644
       * @default null
       */
      mrtNode: MRTNode | null;
-@@ -294,33 +261,40 @@ declare class NodeMaterial extends Material {
+@@ -296,33 +263,40 @@ declare class NodeMaterial extends Material {
       * the fragment shader. Assigning a node will replace the built-in material
       * logic used in the fragment stage.
       *
@@ -11056,7 +11058,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Builds this material with the given node builder.
       *
-@@ -366,28 +340,28 @@ declare class NodeMaterial extends Material {
+@@ -368,28 +342,28 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The position in view space.
       */
@@ -11089,7 +11091,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Setups the computation of the material's diffuse color.
       *
-@@ -402,40 +376,40 @@ declare class NodeMaterial extends Material {
+@@ -404,40 +378,40 @@ declare class NodeMaterial extends Material {
       * @abstract
       * @param {NodeBuilder} builder - The current node builder.
       */
@@ -11136,7 +11138,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Setups the ambient occlusion node from the material.
       *
-@@ -458,7 +432,7 @@ declare class NodeMaterial extends Material {
+@@ -460,7 +434,7 @@ declare class NodeMaterial extends Material {
       * @param {NodeBuilder} builder - The current node builder.
       * @return {Node<vec3>} The outgoing light node.
       */
@@ -11145,7 +11147,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Setup the fog.
       *
-@@ -466,7 +440,7 @@ declare class NodeMaterial extends Material {
+@@ -468,7 +442,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -11154,7 +11156,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Setups premultiplied alpha.
       *
-@@ -474,7 +448,7 @@ declare class NodeMaterial extends Material {
+@@ -476,7 +450,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -11163,7 +11165,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Setups the output node.
       *
-@@ -502,7 +476,7 @@ declare class NodeMaterial extends Material {
+@@ -504,7 +478,7 @@ declare class NodeMaterial extends Material {
       * @param {Node<vec4>} outputNode - The existing output node.
       * @return {Node<vec4>} The output node.
       */
@@ -11172,7 +11174,7 @@ index 9ef1667ba..87ea29a44 100644
      /**
       * Most classic material types have a node pendant e.g. for `MeshBasicMaterial`
       * there is `MeshBasicNodeMaterial`. This utility method is intended for
-@@ -517,7 +491,10 @@ declare class NodeMaterial extends Material {
+@@ -519,7 +493,10 @@ declare class NodeMaterial extends Material {
       * @param {Material} source - The material to copy.
       * @return {NodeMaterial} A reference to this node material.
       */
