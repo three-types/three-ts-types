@@ -147,7 +147,6 @@ export * from "./lighting/ShadowNode.js";
 
 // pmrem
 export * from "./pmrem/PMREMNode.js";
-export * from "./pmrem/PMREMUtils.js";
 
 // procedural
 export * from "./procedural/Checker.js";
