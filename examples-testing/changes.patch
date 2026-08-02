@@ -16622,18 +16622,18 @@ index a73fd1e5b..17625cc2e 100644
      controls.update(timer.getDelta());
      renderer.render(scene, camera);
 diff --git a/examples-testing/examples/webgpu_lights_clustered.ts b/examples-testing/examples/webgpu_lights_clustered.ts
-index f06ec2c26..77621df22 100644
+index cf86514ba..58a5e3656 100644
 --- a/examples-testing/examples/webgpu_lights_clustered.ts
 +++ b/examples-testing/examples/webgpu_lights_clustered.ts
-@@ -2,6 +2,7 @@ import * as THREE from 'three/webgpu';
- import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step } from 'three/tsl';
+@@ -3,6 +3,7 @@ import { instancedBufferAttribute, pass, uniform, vec3, float, mix, step, render
+ import { fxaa } from 'three/addons/tsl/display/FXAANode.js';
  
  import { ClusteredLighting } from 'three/addons/lighting/ClusteredLighting.js';
 +import type ClusteredLightsNode from 'three/addons/tsl/lighting/ClusteredLightsNode.js';
  
  import { Inspector } from 'three/addons/inspector/Inspector.js';
  
-@@ -16,10 +17,25 @@ const WAVE_HEIGHT = 4;
+@@ -17,10 +18,25 @@ const WAVE_HEIGHT = 4;
  const BIG_RADIUS = 6;
  const BASE_POWER = 45;
  
@@ -16662,7 +16662,7 @@ index f06ec2c26..77621df22 100644
  const dummy = new THREE.Object3D();
  
  const params = {
-@@ -87,7 +103,7 @@ async function init() {
+@@ -88,7 +104,7 @@ async function init() {
      const colorAttribute = new THREE.InstancedBufferAttribute(new Float32Array(maxCount * 3), 3);
  
      const material = new THREE.MeshBasicNodeMaterial();
@@ -16671,7 +16671,7 @@ index f06ec2c26..77621df22 100644
  
      spheresMesh = new THREE.InstancedMesh(new THREE.SphereGeometry(RADIUS, 32, 16), material, maxCount);
      spheresMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-@@ -152,7 +168,7 @@ async function init() {
+@@ -154,7 +170,7 @@ async function init() {
  
      // gui
  
@@ -16680,7 +16680,7 @@ index f06ec2c26..77621df22 100644
      gui.add(params, 'intensity', 0, 3)
          .name('light intensity')
          .onChange(value => {
-@@ -180,9 +196,10 @@ function updatePostProcessing() {
+@@ -182,9 +198,10 @@ function updatePostProcessing() {
      // the overlay samples the cluster grid at the current resolution, so it
      // is rebuilt whenever the renderer size changes
  
