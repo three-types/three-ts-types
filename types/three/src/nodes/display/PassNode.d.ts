@@ -31,11 +31,18 @@ declare class PassMultipleTextureNode extends PassTextureNode {
     updateTexture(): void;
 }
 
+export interface PassNodeOptions extends RenderTargetOptions {
+    autoClear?: boolean | undefined; // true
+    autoClearColor?: boolean | undefined; // true
+    autoClearDepth?: boolean | undefined; // true
+    autoClearStencil?: boolean | undefined; // true
+}
+
 declare class PassNode extends TempNode<"vec4"> {
     scope: PassNodeScope;
     scene: Object3D;
     camera: Camera;
-    options: RenderTargetOptions;
+    options: PassNodeOptions;
 
     renderTarget: RenderTarget;
 
@@ -43,11 +50,16 @@ declare class PassNode extends TempNode<"vec4"> {
     transparent: boolean;
     opaque: boolean;
 
+    autoClear: boolean;
+    autoClearColor: boolean;
+    autoClearDepth: boolean;
+    autoClearStencil: boolean;
+
     contextNode: ContextNode<unknown> | null;
 
     readonly isPassNode: true;
 
-    constructor(scope: PassNodeScope, scene: Object3D, camera: Camera, options?: RenderTargetOptions);
+    constructor(scope: PassNodeScope, scene: Object3D, camera: Camera, options?: PassNodeOptions);
 
     setResolutionScale(resolution: number): this;
 
@@ -105,6 +117,6 @@ export type PassNodeScope = typeof PassNode.COLOR | typeof PassNode.DEPTH;
 
 export default PassNode;
 
-export const pass: (scene: Object3D, camera: Camera, options?: RenderTargetOptions) => PassNode;
+export const pass: (scene: Object3D, camera: Camera, options?: PassNodeOptions) => PassNode;
 export const passTexture: (pass: PassNode, texture: Texture) => PassTextureNode;
-export const depthPass: (scene: Object3D, camera: Camera, options?: RenderTargetOptions) => PassNode;
+export const depthPass: (scene: Object3D, camera: Camera, options?: PassNodeOptions) => PassNode;
