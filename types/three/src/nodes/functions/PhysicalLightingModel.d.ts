@@ -18,6 +18,7 @@ export default class PhysicalLightingModel extends LightingModel {
     iridescenceFresnel: Node | null;
     iridescenceF0Dielectric: Node | null;
     iridescenceF0Metallic: Node | null;
+    multiScatteringCompensation: Node | null;
 
     constructor(
         clearcoat?: boolean,
