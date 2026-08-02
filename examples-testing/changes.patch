@@ -3062,7 +3062,7 @@ index 5bc113dc3..225e220ac 100644
      object.rotation.y = time * 0.0005;
      object.material.uniforms.time.value = time * 0.005;
 diff --git a/examples-testing/examples/webgl_buffergeometry_selective_draw.ts b/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
-index d07176c51..ce51386ee 100644
+index 1264c7cad..02153210a 100644
 --- a/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
 +++ b/examples-testing/examples/webgl_buffergeometry_selective_draw.ts
 @@ -2,8 +2,8 @@ import * as THREE from 'three';
@@ -3112,7 +3112,7 @@ index d07176c51..ce51386ee 100644
 @@ -98,7 +98,7 @@ function updateCount() {
          ' lines, ' +
          numLinesCulled +
-         ' culled (<a target="_blank" href="http://callum.com">author</a>)';
+         ' culled (<a target="_blank" href="https://callum.com">author</a>)';
 -    document.getElementById('title').innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 +    document.getElementById('title')!.innerHTML = str.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
  }
@@ -9993,10 +9993,10 @@ index 4725eff62..96620f504 100644
  
          modifier = new EdgeSplitModifier();
 diff --git a/examples-testing/examples/webgl_modifier_simplifier.ts b/examples-testing/examples/webgl_modifier_simplifier.ts
-index e6ea453b3..f55a6581b 100644
+index e1ddb45e7..cabc8d2fb 100644
 --- a/examples-testing/examples/webgl_modifier_simplifier.ts
 +++ b/examples-testing/examples/webgl_modifier_simplifier.ts
-@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+@@ -5,7 +5,7 @@ import { GUI } from 'three/addons/libs/lil-gui.module.min.js';
  import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
  import { SimplifyModifier } from 'three/addons/modifiers/SimplifyModifier.js';
  
@@ -10005,15 +10005,15 @@ index e6ea453b3..f55a6581b 100644
  
  init();
  
-@@ -47,7 +47,7 @@ function init() {
+@@ -32,7 +32,7 @@ function init() {
+     scene.add(camera);
  
-         const modifier = new SimplifyModifier();
- 
--        const simplified = mesh.clone();
-+        const simplified = mesh.clone() as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
-         simplified.material = simplified.material.clone();
-         simplified.material.flatShading = true;
-         const count = Math.floor(simplified.geometry.attributes.position.count * 0.875); // number of vertices to remove
+     new GLTFLoader().load('models/gltf/LeePerrySmith/LeePerrySmith.glb', function (gltf) {
+-        const mesh = gltf.scene.children[0];
++        const mesh = gltf.scene.children[0] as THREE.Mesh<THREE.BufferGeometry, THREE.MeshStandardMaterial>;
+         mesh.position.x = -3;
+         mesh.rotation.y = Math.PI / 2;
+         scene.add(mesh);
 diff --git a/examples-testing/examples/webgl_modifier_tessellation.ts b/examples-testing/examples/webgl_modifier_tessellation.ts
 index 4600fc6cb..83af66a7c 100644
 --- a/examples-testing/examples/webgl_modifier_tessellation.ts
@@ -17845,7 +17845,7 @@ index 6862caeed..97cae265b 100644
          if (value === 'Cube') {
              scene.background = textureCube;
 diff --git a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
-index adc28c989..8a0c918d7 100644
+index f7fe4d644..8656837da 100644
 --- a/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 +++ b/examples-testing/examples/webgpu_materials_envmaps_bpcem.ts
 @@ -16,11 +16,11 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -20910,7 +20910,7 @@ index 978c8ed67..231cb147e 100644
  
      if (event.shiftKey) {
 diff --git a/examples-testing/examples/webgpu_postprocessing_sss.ts b/examples-testing/examples/webgpu_postprocessing_sss.ts
-index 6029e7c74..9d2e03767 100644
+index b79e94375..46e6acb01 100644
 --- a/examples-testing/examples/webgpu_postprocessing_sss.ts
 +++ b/examples-testing/examples/webgpu_postprocessing_sss.ts
 @@ -8,7 +8,11 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -20926,7 +20926,7 @@ index 6029e7c74..9d2e03767 100644
  
  init();
  
-@@ -68,10 +72,10 @@ async function init() {
+@@ -69,10 +73,10 @@ async function init() {
          scene.add(model);
  
          model.traverse(function (object) {
@@ -20939,7 +20939,7 @@ index 6029e7c74..9d2e03767 100644
              }
          });
      });
-@@ -144,7 +148,7 @@ async function init() {
+@@ -145,7 +149,7 @@ async function init() {
  
      const types = { 'Scene with Shadow Maps + SSS': 0, 'Scene with Shadow Maps': 1, SSS: 2 };
  
