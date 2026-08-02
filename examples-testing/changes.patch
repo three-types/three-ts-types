@@ -14275,7 +14275,7 @@ index 384311dd4..8d39e8acc 100644
      });
  }
 diff --git a/examples-testing/examples/webgpu_backdrop_water.ts b/examples-testing/examples/webgpu_backdrop_water.ts
-index a8538cf94..ac7a9b71f 100644
+index d9be7f59d..c44ca56cf 100644
 --- a/examples-testing/examples/webgpu_backdrop_water.ts
 +++ b/examples-testing/examples/webgpu_backdrop_water.ts
 @@ -24,11 +24,13 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
@@ -14297,19 +14297,28 @@ index a8538cf94..ac7a9b71f 100644
  
  init();
  
-@@ -157,7 +159,10 @@ function init() {
-     let transition = waterPosY.add(0.1).saturate().oneMinus();
-     transition = waterPosY.lessThan(0).select(transition, normalWorld.y.mix(transition, 0)).toVar();
+@@ -70,7 +72,7 @@ function init() {
+     loader.load('models/gltf/Michelle.glb', function (gltf) {
+         model = gltf.scene;
+         model.traverse(child => {
+-            if (child.isMesh) {
++            if ((child as THREE.Mesh).isMesh) {
+                 child.castShadow = true;
+                 child.receiveShadow = true;
+             }
+@@ -171,7 +173,10 @@ function init() {
+     const causticFade = normalWorld.y.mix(positionWorld.y.distance(0).oneMinus().saturate(), 0);
  
--    const colorNode = transition.mix(material.colorNode, material.colorNode.add(waterLayer0));
-+    const colorNode = transition.mix(
+     //material.colorNode = colorNode;
+-    floor.material.colorNode = causticFade.mix(material.colorNode, material.colorNode.add(waterLayer0));
++    floor.material.colorNode = causticFade.mix(
 +        material.colorNode as THREE.Node<'vec4'>,
 +        (material.colorNode as THREE.Node<'vec4'>).add(waterLayer0),
 +    );
  
-     //material.colorNode = colorNode;
-     floor.material.colorNode = colorNode;
-@@ -182,7 +187,7 @@ function init() {
+     // renderer
+ 
+@@ -194,7 +199,7 @@ function init() {
  
      // gui
  
@@ -17487,11 +17496,19 @@ index de3fa7909..1d7a65696 100644
  init();
  
 diff --git a/examples-testing/examples/webgpu_loader_materialx.ts b/examples-testing/examples/webgpu_loader_materialx.ts
-index bb84eb693..55416bc98 100644
+index 5b53bb90a..ef04aafc3 100644
 --- a/examples-testing/examples/webgpu_loader_materialx.ts
 +++ b/examples-testing/examples/webgpu_loader_materialx.ts
-@@ -61,9 +61,9 @@ const localSamples = [
-     'sheen_test.mtlx',
+@@ -11,6 +11,7 @@ import * as MikkTSpace from 'three/addons/libs/mikktspace.module.js';
+ import { computeMikkTSpaceTangents } from 'three/addons/utils/BufferGeometryUtils.js';
+ 
+ import { MaterialXLoader } from 'three/addons/loaders/MaterialXLoader.js';
++import { MaterialXLogEntry } from 'three/addons/loaders/materialx/MaterialXLog.js';
+ import { createStrictInterfaceValidator } from 'three/addons/loaders/materialx/MaterialXInterfaceValidation.js';
+ 
+ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -69,9 +70,9 @@ const localSamples = [
+     'open_pbr_surface_honey.mtlx',
  ];
  
 -let camera, scene, renderer;
@@ -17500,15 +17517,31 @@ index bb84eb693..55416bc98 100644
 +let camera: THREE.PerspectiveCamera, scene: THREE.Scene, renderer: THREE.WebGPURenderer;
 +let controls: OrbitControls, prefab: THREE.Group;
 +const models: THREE.Group[] = [];
+ const strictInterfaceValidator = createStrictInterfaceValidator();
  
  init();
- 
-@@ -90,26 +90,32 @@ function init() {
+@@ -99,26 +100,32 @@ function init() {
  
      const material = new THREE.MeshBasicNodeMaterial();
  
 -    const grid = Fn(([coord, lineWidth = float(0.01), dotSize = float(0.03)]) => {
 -        // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
+-
+-        const g = fract(coord);
+-        const fw = fwidth(coord);
+-        const gx = abs(g.x.sub(0.5));
+-        const gy = abs(g.y.sub(0.5));
+-
+-        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
+-        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
+-        const lines = max(lineX, lineY);
+-
+-        const squareDist = max(gx, gy);
+-        const aa = max(fw.x, fw.y);
+-        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
+-
+-        return max(dots, lines);
+-    });
 +    const grid = Fn(
 +        ([coord, lineWidth = float(0.01), dotSize = float(0.03)]: [
 +            THREE.Node<'vec2'>,
@@ -17516,32 +17549,20 @@ index bb84eb693..55416bc98 100644
 +            THREE.Node<'float'>,
 +        ]) => {
 +            // https://bgolus.medium.com/the-best-darn-grid-shader-yet-727f9278b9d8
- 
--        const g = fract(coord);
--        const fw = fwidth(coord);
--        const gx = abs(g.x.sub(0.5));
--        const gy = abs(g.y.sub(0.5));
++
 +            const g = fract(coord);
 +            const fw = fwidth(coord);
 +            const gx = abs(g.x.sub(0.5));
 +            const gy = abs(g.y.sub(0.5));
- 
--        const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
--        const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
--        const lines = max(lineX, lineY);
++
 +            const lineX = saturate(lineWidth.sub(gx).div(fw.x).add(0.5));
 +            const lineY = saturate(lineWidth.sub(gy).div(fw.y).add(0.5));
 +            const lines = max(lineX, lineY);
- 
--        const squareDist = max(gx, gy);
--        const aa = max(fw.x, fw.y);
--        const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
++
 +            const squareDist = max(gx, gy);
 +            const aa = max(fw.x, fw.y);
 +            const dots = smoothstep(dotSize.add(aa), dotSize.sub(aa), squareDist);
- 
--        return max(dots, lines);
--    });
++
 +            return max(dots, lines);
 +        },
 +    );
@@ -17551,8 +17572,29 @@ index bb84eb693..55416bc98 100644
          return smoothstep(radius, radius.sub(falloff), length(positionWorld));
      });
  
-@@ -173,7 +179,7 @@ function updateModelsAlign() {
+@@ -169,9 +176,9 @@ async function computePrefabTangents() {
+     await MikkTSpace.ready;
+ 
+     prefab.traverse(function (node) {
+-        if (node.isMesh === false) return;
++        if ((node as THREE.Object3D & { isMesh?: boolean }).isMesh === false) return;
+ 
+-        const geometry = node.geometry;
++        const geometry = (node as THREE.Mesh).geometry;
+ 
+         if (geometry === undefined) return;
+ 
+@@ -201,7 +208,7 @@ function updateModelsAlign() {
      }
+ }
+ 
+-function reportMaterialXLog(sample, materialName, log) {
++function reportMaterialXLog(sample: string, materialName: string | null, log: MaterialXLogEntry[]) {
+     if (log.length === 0) return;
+ 
+     const label = materialName ? `"${materialName}"` : `"${sample}"`;
+@@ -223,7 +230,7 @@ function reportMaterialXLog(sample, materialName, log) {
+     console.groupEnd();
  }
  
 -async function addSample(sample, path) {
@@ -17560,12 +17602,13 @@ index bb84eb693..55416bc98 100644
      const model = prefab.clone();
  
      models.push(model);
-@@ -187,12 +193,12 @@ async function addSample(sample, path) {
-     const material = await new MaterialXLoader()
-         .setPath(path)
-         .loadAsync(sample)
--        .then(({ materials }) => Object.values(materials).pop());
-+        .then(({ materials }) => Object.values(materials).pop()!);
+@@ -239,13 +246,13 @@ async function addSample(sample, path) {
+         interfaceValidator: strictInterfaceValidator,
+         throwOnErrors: false,
+     });
+-    const material = Object.values(materials).pop();
++    const material = Object.values(materials).pop()!;
+     reportMaterialXLog(sample, material ? material.name : null, log);
  
 -    const calibrationMesh = model.getObjectByName('Calibration_Mesh');
 +    const calibrationMesh = model.getObjectByName('Calibration_Mesh') as THREE.Mesh;
@@ -17576,7 +17619,7 @@ index bb84eb693..55416bc98 100644
      previewMesh.material = material;
  
      if (material.transparent) {
-@@ -204,7 +210,7 @@ async function addSample(sample, path) {
+@@ -257,7 +264,7 @@ async function addSample(sample, path) {
  }
  
  function addGUI() {
@@ -17585,7 +17628,7 @@ index bb84eb693..55416bc98 100644
  
      const API = {
          showCalibrationMesh: true,
-@@ -224,9 +230,9 @@ function addGUI() {
+@@ -277,9 +284,9 @@ function addGUI() {
          });
  }
  
@@ -18469,12 +18512,17 @@ index 084030e44..791aa2cba 100644
      }
  
 diff --git a/examples-testing/examples/webgpu_materialx_noise.ts b/examples-testing/examples/webgpu_materialx_noise.ts
-index 229c26a8e..460605135 100644
+index 2edfe8b4d..1d1862f47 100644
 --- a/examples-testing/examples/webgpu_materialx_noise.ts
 +++ b/examples-testing/examples/webgpu_materialx_noise.ts
-@@ -13,12 +13,12 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+@@ -29,17 +29,17 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
+ 
  import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
  import { HDRCubeTextureLoader } from 'three/addons/loaders/HDRCubeTextureLoader.js';
+-import { FontLoader } from 'three/addons/loaders/FontLoader.js';
++import { Font, FontLoader } from 'three/addons/loaders/FontLoader.js';
+ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
+ import { mxHextileComputeBlendWeights, mxHextileCoord } from 'three/addons/loaders/materialx/MaterialXHextile.js';
  
 -let container;
 +let container: HTMLDivElement;
@@ -18484,11 +18532,123 @@ index 229c26a8e..460605135 100644
  
 -let particleLight;
 -let group;
+-const spheres = [];
 +let particleLight: THREE.Mesh;
 +let group: THREE.Group;
++const spheres: THREE.Mesh[] = [];
  
  init();
  
+@@ -74,10 +74,10 @@ async function init() {
+     const unifiedOffset2D = vec2(time.mul(0.35), time.mul(0.19));
+     const unifiedOffset3D = vec3(time.mul(0.35), time.mul(0.19), time.mul(0.27));
+     const unifiedNoise3D = (
+-        noiseType,
+-        position,
+-        freq,
+-        offset,
++        noiseType: THREE.Node<'int'>,
++        position: THREE.Node<'vec3'>,
++        freq: THREE.Node<'vec3'>,
++        offset: THREE.Node<'vec3'>,
+         jitter = 1,
+         outmin = 0,
+         outmax = 1,
+@@ -103,17 +103,23 @@ async function init() {
+                 style,
+             ),
+         )();
+-    const textileTexcoord = (speedX, speedY) =>
++    const textileTexcoord = (speedX: number, speedY: number) =>
+         uv(0)
+             .mul(3)
+             .add(vec2(time.mul(speedX), time.mul(speedY)));
+-    const checkerboard = (color1, color2, uvtiling, uvoffset, texcoord) => {
++    const checkerboard = (
++        color1: THREE.Node<'vec3'>,
++        color2: THREE.Node<'vec3'>,
++        uvtiling: THREE.Node<'vec2'>,
++        uvoffset: THREE.Node<'vec2'>,
++        texcoord: THREE.Node<'vec2'>,
++    ) => {
+         const tiledUv = sub(mul(texcoord, uvtiling), uvoffset);
+-        const checkerMix = mx_modulo(dot(floor(tiledUv), vec2(1, 1)), float(2));
++        const checkerMix = mx_modulo(dot(floor(tiledUv), vec2(1, 1)), float(2)) as THREE.Node<'float'>;
+         return mix(color2, color1, checkerMix);
+     };
+     const hextiledCheckerboard = (
+-        texcoord,
++        texcoord: THREE.Node<'vec2'>,
+         {
+             color1 = vec3(1, 1, 1),
+             color2 = vec3(0, 0, 0),
+@@ -129,6 +135,21 @@ async function init() {
+             falloff = 0.5,
+             falloffcontrast = 0.5,
+             lumacoeffs = vec3(0.2722287, 0.6740818, 0.0536895),
++        }: {
++            color1?: THREE.Node<'vec3'>;
++            color2?: THREE.Node<'vec3'>;
++            uvtiling?: THREE.Node<'vec2'>;
++            uvoffset?: THREE.Node<'vec2'>;
++            tiling?: THREE.Node<'vec2'>;
++            rotation?: number;
++            rotationrange?: THREE.Node<'vec2'>;
++            scale?: number;
++            scalerange?: THREE.Node<'vec2'>;
++            offset?: number;
++            offsetrange?: THREE.Node<'vec2'>;
++            falloff?: number;
++            falloffcontrast?: number;
++            lumacoeffs?: THREE.Node<'vec3'>;
+         } = {},
+     ) => {
+         const tileData = mxHextileCoord(
+@@ -148,7 +169,11 @@ async function init() {
+             vec3(dot(c0, lumacoeffs), dot(c1, lumacoeffs), dot(c2, lumacoeffs)),
+             vec3(falloffcontrast, falloffcontrast, falloffcontrast),
+         );
+-        const blendWeights = mxHextileComputeBlendWeights(luminanceWeights, tileData.weights, falloff);
++        const blendWeights = mxHextileComputeBlendWeights(
++            luminanceWeights,
++            tileData.weights,
++            falloff,
++        ) as unknown as THREE.ArrayNode<'float'>;
+         return add(
+             add(mul(element(blendWeights, 0), c0), mul(element(blendWeights, 1), c1)),
+             mul(element(blendWeights, 2), c2),
+@@ -290,7 +315,12 @@ function render() {
+     renderer.render(scene, camera);
+ }
+ 
+-function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
++function createNoiseGrid(
++    noiseExamples: Array<{ label: string[]; createNode: () => THREE.Node<'float'> | THREE.Node<'vec3'> }>,
++    geometry: THREE.BufferGeometry,
++    font: Font,
++    labelMaterial: THREE.Material,
++) {
+     const columns = 7;
+     const spacingX = 15.5;
+     const spacingY = 18;
+@@ -326,7 +356,7 @@ function createNoiseGrid(noiseExamples, geometry, font, labelMaterial) {
+     }
+ }
+ 
+-function createLabel(lines, font, material) {
++function createLabel(lines: string[], font: Font, material: THREE.Material) {
+     const label = new THREE.Group();
+     const lineHeight = 1.55;
+     const startY = (lines.length - 1) * lineHeight * 0.5;
+@@ -341,7 +371,7 @@ function createLabel(lines, font, material) {
+ 
+         textGeometry.computeBoundingBox();
+ 
+-        const boundingBox = textGeometry.boundingBox;
++        const boundingBox = textGeometry.boundingBox!;
+         const offsetX = -0.5 * (boundingBox.max.x - boundingBox.min.x);
+         const offsetY = -0.5 * (boundingBox.max.y - boundingBox.min.y);
+         textGeometry.translate(offsetX, offsetY, 0);
 diff --git a/examples-testing/examples/webgpu_mesh_batch.ts b/examples-testing/examples/webgpu_mesh_batch.ts
 index 6a6656e21..1ba69daf7 100644
 --- a/examples-testing/examples/webgpu_mesh_batch.ts
