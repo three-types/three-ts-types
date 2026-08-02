@@ -1,4 +1,4 @@
-import Node from "../../core/Node.js";
+import Node from "../core/Node.js";
 
 export const mx_select: (
     b_immutable: Node | boolean,
@@ -233,11 +233,18 @@ export const mx_cell_noise_vec3_0: (p_immutable: Node) => Node;
 
 export const mx_cell_noise_vec3_1: (p_immutable: Node) => Node;
 
-export const mx_cell_noise_vec3_2: (p_immutable: Node) => Node;
+export const mx_cell_noise_vec3_2: (positionInput: Node) => Node;
 
 export const mx_cell_noise_vec3_3: (p_immutable: Node) => Node;
 
 export const mx_cell_noise_vec3: (p_immutable: Node) => Node;
+
+export const mx_fractal_noise_float_2d: (
+    p_immutable: Node,
+    octaves_immutable: Node | number,
+    lacunarity_immutable: Node | number,
+    diminish_immutable: Node | number,
+) => Node;
 
 export const mx_fractal_noise_float: (
     p_immutable: Node,
@@ -302,10 +309,22 @@ export const mx_worley_distance: (
     metric_immutable?: Node | number,
 ) => Node;
 
-export const mx_worley_noise_float_0: (
-    p_immutable: Node,
-    jitter_immutable: Node | number,
-    metric_immutable: Node | number,
+export const mx_worley_noise_float_3d: (
+    positionInput: Node,
+    jitterInput: Node | number,
+    styleInput: Node | number,
+) => Node;
+
+export const mx_worley_noise_float_2d: (
+    texcoordInput: Node,
+    jitterInput: Node | number,
+    styleInput: Node | number,
+) => Node;
+
+export const mx_worley_noise_float: (
+    positionInput: Node,
+    jitterInput: Node | number,
+    styleInput: Node | number,
 ) => Node;
 
 export const mx_worley_noise_vec2_0: (
@@ -315,18 +334,6 @@ export const mx_worley_noise_vec2_0: (
 ) => Node;
 
 export const mx_worley_noise_vec3_0: (
-    p_immutable: Node,
-    jitter_immutable: Node | number,
-    metric_immutable: Node | number,
-) => Node;
-
-export const mx_worley_noise_float_1: (
-    p_immutable: Node,
-    jitter_immutable: Node | number,
-    metric_immutable: Node | number,
-) => Node;
-
-export const mx_worley_noise_float: (
     p_immutable: Node,
     jitter_immutable: Node | number,
     metric_immutable: Node | number,
@@ -356,30 +363,53 @@ export const mx_worley_noise_vec3: (
     metric_immutable: Node | number,
 ) => Node;
 
+export const mx_worley_noise_vec3_style_0: (
+    p_immutable: Node,
+    jitter_immutable: Node | number,
+    style_immutable: Node | number,
+    metric_immutable: Node | number,
+) => Node;
+
+export const mx_worley_noise_vec3_style_1: (
+    p_immutable: Node,
+    jitter_immutable: Node | number,
+    style_immutable: Node | number,
+    metric_immutable: Node | number,
+) => Node;
+
+export const mx_worley_noise_vec3_style: (
+    p_immutable: Node,
+    jitter_immutable: Node | number,
+    style_immutable: Node | number,
+    metric_immutable: Node | number,
+) => Node;
+
 export const mx_unifiednoise2d: (
-    noiseType_immutable: Node,
-    texcoord_immutable: Node,
-    freq_immutable: Node,
-    offset_immutable: Node,
-    jitter_immutable: Node,
-    outmin_immutable: Node,
-    outmax_immutable: Node,
-    clampoutput_immutable: Node,
-    octaves_immutable: Node,
-    lacunarity_immutable: Node,
-    diminish_immutable: Node,
+    noiseTypeInput: Node,
+    texcoordInput: Node,
+    freqInput: Node,
+    offsetInput: Node,
+    jitterInput: Node,
+    outminInput: Node,
+    outmaxInput: Node,
+    clampoutputInput: Node,
+    octavesInput: Node,
+    lacunarityInput: Node,
+    diminishInput: Node,
+    styleInput: Node,
 ) => Node;
 
 export const mx_unifiednoise3d: (
-    noiseType_immutable: Node,
-    position_immutable: Node,
-    freq_immutable: Node,
-    offset_immutable: Node,
-    jitter_immutable: Node,
-    outmin_immutable: Node,
-    outmax_immutable: Node,
-    clampoutput_immutable: Node,
-    octaves_immutable: Node,
-    lacunarity_immutable: Node,
-    diminish_immutable: Node,
+    noiseTypeInput: Node,
+    positionInput: Node,
+    freqInput: Node,
+    offsetInput: Node,
+    jitterInput: Node,
+    outminInput: Node,
+    outmaxInput: Node,
+    clampoutputInput: Node,
+    octavesInput: Node,
+    lacunarityInput: Node,
+    diminishInput: Node,
+    styleInput: Node,
 ) => Node;

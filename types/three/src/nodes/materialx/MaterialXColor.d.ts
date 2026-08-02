@@ -1,4 +1,4 @@
-import Node from "../../core/Node.js";
+import Node from "../core/Node.js";
 
 export const mx_hsvtorgb: (hsv: Node) => Node;
 
