@@ -15,7 +15,6 @@ const files = [
     'examples/jsm/lighting/LightProbeGrid',
     'examples/jsm/lighting/LightProbeGridWebGL',
     'examples/jsm/misc/TileCreasedNormalsPlugin',
-    'examples/jsm/tsl/display/DualKawaseBloomNode',
     'examples/jsm/tsl/display/ImportanceSampledEnvironment',
     'examples/jsm/tsl/display/SSAONode',
     'examples/jsm/tsl/display/SSRNode',
