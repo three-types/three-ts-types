@@ -2275,7 +2275,7 @@ interface Mat3Function {
     // ConstNode
     (value: Matrix3): VarNode<"mat3", ConstNode<"mat3", Matrix3>>;
     // ConvertNode
-    (node: Node<"mat3">): VarNode<"mat3", ConvertNode<"mat3">>;
+    (node: Node<"mat3"> | Node<"mat4">): VarNode<"mat3", ConvertNode<"mat3">>;
 
     // The fall-through branch will be triggered if there is more than one parameter, and one of the parameters is an
     //   object
