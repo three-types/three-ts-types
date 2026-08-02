@@ -100,7 +100,7 @@ export const mx_unifiednoise2d: (
     lacunarity?: Node | number,
     diminish?: Node | number,
     style?: Node | number,
-) => Node;
+) => Node<"float">;
 export const mx_unifiednoise3d: (
     noiseType: Node,
     texcoord?: Node,
@@ -114,7 +114,7 @@ export const mx_unifiednoise3d: (
     lacunarity?: Node | number,
     diminish?: Node | number,
     style?: Node | number,
-) => Node;
+) => Node<"float">;
 
 export function mx_worley_noise_float(
     texcoord?: Node,
