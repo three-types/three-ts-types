@@ -16,7 +16,6 @@ export default class PhysicalLightingModel extends LightingModel {
     sheenSpecularDirect: Node | null;
     sheenSpecularIndirect: Node | null;
     iridescenceFresnel: Node | null;
-    iridescenceF0: Node | null;
     iridescenceF0Dielectric: Node | null;
     iridescenceF0Metallic: Node | null;
 
