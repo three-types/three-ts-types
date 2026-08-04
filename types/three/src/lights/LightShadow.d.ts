@@ -14,6 +14,7 @@ export interface LightShadowJSON {
     bias?: number;
     normalBias?: number;
     radius?: number;
+    blurSamples?: number;
     mapSize?: Vector2Tuple;
 
     camera: Omit<Object3DJSONObject, "matrix">;

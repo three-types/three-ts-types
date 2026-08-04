@@ -6,6 +6,7 @@ import {
     BlendingSrcFactor,
     Combine,
     DepthModes,
+    DepthPackingStrategies,
     NormalMapTypes,
     Side,
     StencilFunc,
@@ -483,11 +484,15 @@ export interface MaterialJSON {
 
     rotation?: number;
 
+    depthPacking?: DepthPackingStrategies;
+
     polygonOffset?: boolean;
     polygonOffsetFactor?: number;
     polygonOffsetUnits?: number;
 
     linewidth?: number;
+    linecap?: string;
+    linejoin?: string;
     dashSize?: number;
     gapSize?: number;
     scale?: number;
