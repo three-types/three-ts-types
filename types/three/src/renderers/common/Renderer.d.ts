@@ -14,6 +14,7 @@ import { Vector4 } from "../../math/Vector4.js";
 import ContextNode from "../../nodes/core/ContextNode.js";
 import MRTNode from "../../nodes/core/MRTNode.js";
 import Node from "../../nodes/core/Node.js";
+import NodeBuilder from "../../nodes/core/NodeBuilder.js";
 import ComputeNode from "../../nodes/gpgpu/ComputeNode.js";
 import LightsNode from "../../nodes/lighting/LightsNode.js";
 import { Scene } from "../../scenes/Scene.js";
@@ -319,6 +320,7 @@ declare class Renderer {
      * @property {boolean} checkShaderErrors - Whether shader errors should be checked or not.
      * @property {Object} diagnostics - Diagnostics configuration for the shader generation.
      * @property {boolean} diagnostics.keywords - Whether declaration names that collide with reserved keywords should be renamed or not.
+     * @property {?Function} onNodeBuilderCreated - A callback function that is executed after a node builder has been created and before it is built.
      * @property {?Function} onShaderError - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
      * @property {Function} getShaderAsync - Allows the get the raw shader code for the given scene, camera and 3D object.
      */
@@ -338,6 +340,10 @@ declare class Renderer {
         diagnostics: {
             keywords: boolean;
         };
+        /**
+         * - A callback function that is executed after a node builder has been created and before it is built.
+         */
+        onNodeBuilderCreated: ((nodeBuilder: NodeBuilder, object: unknown) => void) | null;
         /**
          * - A callback function that is executed when a shader error happens. Only supported with WebGL 2 right now.
          */
