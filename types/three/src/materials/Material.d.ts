@@ -17,7 +17,7 @@ import { EventDispatcher } from "../core/EventDispatcher.js";
 import { JSONMeta, Object3D } from "../core/Object3D.js";
 import { Color, ColorRepresentation } from "../math/Color.js";
 import { EulerTuple } from "../math/Euler.js";
-import { Plane } from "../math/Plane.js";
+import { Plane, PlaneJSON } from "../math/Plane.js";
 import { Vector2Tuple } from "../math/Vector2.js";
 import { Group } from "../objects/Group.js";
 import { WebGLProgramParametersWithUniforms } from "../renderers/webgl/WebGLPrograms.js";
@@ -472,6 +472,10 @@ export interface MaterialJSON {
     depthTest?: boolean;
     depthWrite?: boolean;
     colorWrite?: boolean;
+
+    clippingPlanes?: PlaneJSON[];
+    clipIntersection?: boolean;
+    clipShadows?: boolean;
 
     stencilWriteMask?: number;
     stencilFunc?: StencilFunc;
