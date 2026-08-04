@@ -7898,7 +7898,7 @@ index 6fb55c994..aa891d3c3 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface MeshPhongMaterial extends MeshPhongMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
-index 82b8e192f..e95409244 100644
+index 285e8a2bb..92612613f 100644
 --- a/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/MeshPhysicalMaterial.d.ts
 @@ -1,50 +1,18 @@
@@ -8085,7 +8085,7 @@ index 82b8e192f..e95409244 100644
 -    _clearcoat: number;
 -    _dispersion: number;
 -    _iridescence: number;
--    _retroreflective: number;
+-    _retroreflectivity: number;
 -    _sheen: number;
 -    _transmission: number;
      set anisotropy(value: number);
@@ -8127,7 +8127,7 @@ index 82b8e192f..e95409244 100644
 -     * @type {number}
       * @default 0
       */
-     get retroreflective(): number;
+     get retroreflectivity(): number;
 @@ -337,7 +293,6 @@ export class MeshPhysicalMaterial extends MeshStandardMaterial {
      /**
       * The intensity of the sheen layer, from `0.0` to `1.0`.
@@ -10099,7 +10099,7 @@ index 374eb470a..d2d224b90 100644
 +
 +export default MeshPhongNodeMaterial;
 diff --git a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
-index 3b2344325..b274126d7 100644
+index f5cd2ac32..41e47a1e3 100644
 --- a/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/nodes/MeshPhysicalNodeMaterial.d.ts
 @@ -1,18 +1,12 @@
@@ -10321,16 +10321,16 @@ index 3b2344325..b274126d7 100644
 +    dispersionNode: Node | null;
      /**
       * The retroreflective strength of physical materials is by default inferred from the
-      * `retroreflective` property. This node property allows to overwrite the default
+      * `retroreflectivity` property. This node property allows to overwrite the default
 @@ -213,10 +191,9 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       * If you don't want to overwrite the retroreflective strength but modify the existing
-      * value instead, use {@link materialRetroreflective}.
+      * value instead, use {@link materialRetroreflectivity}.
       *
 -     * @type {?Node<float>}
       * @default null
       */
--    retroreflectiveNode: Node<any> | null;
-+    retroreflectiveNode: Node | null;
+-    retroreflectivityNode: Node<any> | null;
++    retroreflectivityNode: Node | null;
      /**
       * The anisotropy of physical materials is by default inferred from the
       * `anisotropy` property. This node property allows to overwrite the default
@@ -10408,7 +10408,7 @@ index 3b2344325..b274126d7 100644
 -     * @type {boolean}
       * @default true
       */
-     get useRetroreflective(): boolean;
+     get useRetroreflection(): boolean;
 @@ -289,7 +275,10 @@ declare class MeshPhysicalNodeMaterial extends MeshStandardNodeMaterial {
       *
       * @return {Node<vec3>} The clearcoat normal.

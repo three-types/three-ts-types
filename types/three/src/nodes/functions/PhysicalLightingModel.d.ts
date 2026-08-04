@@ -8,7 +8,7 @@ export default class PhysicalLightingModel extends LightingModel {
     anisotropy: boolean;
     transmission: boolean;
     dispersion: boolean;
-    retroreflective: boolean;
+    retroreflection: boolean;
 
     clearcoatRadiance: Node | null;
     clearcoatSpecularDirect: Node | null;
@@ -28,7 +28,7 @@ export default class PhysicalLightingModel extends LightingModel {
         anisotropy?: boolean,
         transmission?: boolean,
         dispersion?: boolean,
-        retroreflective?: boolean,
+        retroreflection?: boolean,
     );
 
     computeMultiscattering(

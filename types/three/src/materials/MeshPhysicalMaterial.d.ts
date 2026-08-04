@@ -276,7 +276,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      * @default 0
      */
     get dispersion(): number;
-    set retroreflective(value: number);
+    set retroreflectivity(value: number);
     /**
      * The strength of retroreflection, from `0.0` to `1.0`. A value of `1.0`
      * evaluates the material's microfacet reflection with the view direction
@@ -285,7 +285,7 @@ export interface MeshPhysicalMaterialProperties extends MeshStandardMaterialProp
      *
      * @default 0
      */
-    get retroreflective(): number;
+    get retroreflectivity(): number;
     set sheen(value: number);
     /**
      * The intensity of the sheen layer, from `0.0` to `1.0`.
