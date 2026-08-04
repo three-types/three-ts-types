@@ -67,7 +67,7 @@ export interface WebGLProgramParameters {
     clearcoatRoughnessMap: boolean;
 
     dispersion: boolean;
-    retroreflective: boolean;
+    retroreflection: boolean;
 
     iridescence: boolean;
     iridescenceMap: boolean;
