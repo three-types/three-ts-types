@@ -5152,10 +5152,10 @@ index 8a03aa8cf..234390948 100644
 -import { Light } from './Light.js';
 -import { SphericalHarmonics3 } from '../math/SphericalHarmonics3.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-index 24ffaf5b3..3c663eca6 100644
+index 24ffaf5b3..dfd06dc69 100644
 --- a/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/LightShadow.d.ts
-@@ -1,27 +1,43 @@
+@@ -1,27 +1,44 @@
 +import { Vector2, Vector2Tuple } from "../math/Vector2.js";
 +import { Matrix4 } from '../math/Matrix4.js';
 +import { Frustum } from '../math/Frustum.js';
@@ -5172,6 +5172,7 @@ index 24ffaf5b3..3c663eca6 100644
 +    bias?: number;
 +    normalBias?: number;
 +    radius?: number;
++    blurSamples?: number;
 +    mapSize?: Vector2Tuple;
 +
 +    camera: Omit<Object3DJSONObject, "matrix">;
@@ -5207,7 +5208,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default 1
       */
      intensity: number;
-@@ -32,7 +48,6 @@ export class LightShadow {
+@@ -32,7 +49,6 @@ export class LightShadow {
       * The default is `0`. Very tiny adjustments here (in the order of `0.0001`)
       * may help reduce artifacts in shadows.
       *
@@ -5215,7 +5216,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default 0
       */
      bias: number;
-@@ -41,17 +56,15 @@ export class LightShadow {
+@@ -41,17 +57,15 @@ export class LightShadow {
       *
       * If a bias node is defined, `bias` has no effect.
       *
@@ -5234,7 +5235,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default 0
       */
      normalBias: number;
-@@ -63,14 +76,12 @@ export class LightShadow {
+@@ -63,14 +77,12 @@ export class LightShadow {
       *
       * The property has no effect when the shadow map type is `BasicShadowMap`.
       *
@@ -5249,7 +5250,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default 8
       */
      blurSamples: number;
-@@ -78,22 +89,19 @@ export class LightShadow {
+@@ -78,22 +90,19 @@ export class LightShadow {
       * Defines the width and height of the shadow map. Higher values give better quality
       * shadows at the cost of computation time. Values must be powers of two.
       *
@@ -5273,7 +5274,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default null
       */
      map: RenderTarget | null;
-@@ -102,22 +110,18 @@ export class LightShadow {
+@@ -102,22 +111,18 @@ export class LightShadow {
       * calculated based on the distribution of depths. Computed internally during
       * rendering.
       *
@@ -5296,7 +5297,7 @@ index 24ffaf5b3..3c663eca6 100644
       * @default true
       */
      autoUpdate: boolean;
-@@ -126,14 +130,9 @@ export class LightShadow {
+@@ -126,14 +131,9 @@ export class LightShadow {
       * If you have set {@link LightShadow#autoUpdate} to `false`, you will need to
       * set this property to `true` and then make a render call to update the light's shadow.
       *
@@ -5311,7 +5312,7 @@ index 24ffaf5b3..3c663eca6 100644
      /**
       * Used internally by the renderer to get the number of viewports that need
       * to be rendered for this shadow.
-@@ -177,22 +176,18 @@ export class LightShadow {
+@@ -177,22 +177,18 @@ export class LightShadow {
       * @param {LightShadow} source - The light shadow to copy.
       * @return {LightShadow} A reference to this light shadow instance.
       */
@@ -5507,14 +5508,13 @@ index 6d4b7b657..edd5db77c 100644
  }
 -import { Light } from './Light.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
-index 1197fdf27..6df1d134a 100644
+index 1197fdf27..163a8d638 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLight.d.ts
-@@ -1,3 +1,22 @@
+@@ -1,3 +1,21 @@
 +import { Light, LightJSON } from "./Light.js";
 +import { JSONMeta, Object3D } from "../core/Object3D.js";
-+import { SpotLightShadow } from './SpotLightShadow.js';
-+import { LightShadowJSON } from "./LightShadow.js";
++import { SpotLightShadow, SpotLightShadowJSON } from './SpotLightShadow.js';
 +import { ColorRepresentation } from "../math/Color.js";
 +import { Texture } from "../textures/Texture.js";
 +
@@ -5527,13 +5527,13 @@ index 1197fdf27..6df1d134a 100644
 +    target: string;
 +    map?: string | undefined;
 +
-+    shadow: LightShadowJSON;
++    shadow: SpotLightShadowJSON;
 +}
 +
  /**
   * This light gets emitted from a single point in one direction, along a cone
   * that increases in size the further from the light it gets.
-@@ -17,8 +36,6 @@
+@@ -17,8 +35,6 @@
   * spotLight.shadow.camera.far = 4000;
   * spotLight.shadow.camera.fov = 30;s
   * ```
@@ -5542,7 +5542,7 @@ index 1197fdf27..6df1d134a 100644
   */
  export class SpotLight extends Light {
      /**
-@@ -31,12 +48,10 @@ export class SpotLight extends Light {
+@@ -31,12 +47,10 @@ export class SpotLight extends Light {
       * @param {number} [penumbra=0] - Percent of the spotlight cone that is attenuated due to penumbra. Value range is `[0,1]`.
       * @param {number} [decay=2] - The amount the light dims along the distance of the light.
       */
@@ -5556,7 +5556,7 @@ index 1197fdf27..6df1d134a 100644
       * @default true
       */
      readonly isSpotLight: boolean;
-@@ -49,21 +64,17 @@ export class SpotLight extends Light {
+@@ -49,21 +63,17 @@ export class SpotLight extends Light {
       *
       * It is also possible to set the target to be another 3D object
       * in the scene. The light will now track the target object.
@@ -5578,7 +5578,7 @@ index 1197fdf27..6df1d134a 100644
       * @default Math.PI/3
       */
      angle: number;
-@@ -71,7 +82,6 @@ export class SpotLight extends Light {
+@@ -71,7 +81,6 @@ export class SpotLight extends Light {
       * Percent of the spotlight cone that is attenuated due to penumbra.
       * Value range is `[0,1]`.
       *
@@ -5586,7 +5586,7 @@ index 1197fdf27..6df1d134a 100644
       * @default 0
       */
      penumbra: number;
-@@ -79,7 +89,6 @@ export class SpotLight extends Light {
+@@ -79,7 +88,6 @@ export class SpotLight extends Light {
       * The amount the light dims along the distance of the light. In context of
       * physically-correct rendering the default value should not be changed.
       *
@@ -5594,7 +5594,7 @@ index 1197fdf27..6df1d134a 100644
       * @default 2
       */
      decay: number;
-@@ -91,26 +100,19 @@ export class SpotLight extends Light {
+@@ -91,26 +99,19 @@ export class SpotLight extends Light {
       *
       * *Warning*: This property is disabled if {@link Object3D#castShadow} is set to `false`.
       *
@@ -5624,12 +5624,17 @@ index 1197fdf27..6df1d134a 100644
 -import { Object3D } from '../core/Object3D.js';
 -import { SpotLightShadow } from './SpotLightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
-index 0de4c95b0..6147e2c34 100644
+index 0de4c95b0..cfa857b6c 100644
 --- a/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
 +++ b/jsdoc-testing/jsdoc/src/lights/SpotLightShadow.d.ts
-@@ -1,9 +1,10 @@
-+import { LightShadow } from './LightShadow.js';
+@@ -1,9 +1,15 @@
++import { LightShadow, LightShadowJSON } from './LightShadow.js';
 +import { PerspectiveCamera } from "../cameras/PerspectiveCamera.js";
++
++export interface SpotLightShadowJSON extends LightShadowJSON {
++    focus?: number;
++    aspect?: number;
++}
 +
  /**
   * Represents the shadow configuration of directional lights.
@@ -5641,7 +5646,7 @@ index 0de4c95b0..6147e2c34 100644
      /**
       * Constructs a new spot light shadow.
       */
-@@ -11,8 +12,6 @@ export class SpotLightShadow extends LightShadow {
+@@ -11,8 +17,6 @@ export class SpotLightShadow extends LightShadow {
      /**
       * This flag can be used for type testing.
       *
@@ -5650,7 +5655,7 @@ index 0de4c95b0..6147e2c34 100644
       * @default true
       */
      readonly isSpotLightShadow: boolean;
-@@ -20,18 +19,14 @@ export class SpotLightShadow extends LightShadow {
+@@ -20,18 +24,21 @@ export class SpotLightShadow extends LightShadow {
       * Used to focus the shadow camera. The camera's field of view is set as a
       * percentage of the spotlight's field-of-view. Range is `[0, 1]`.
       *
@@ -5668,6 +5673,13 @@ index 0de4c95b0..6147e2c34 100644
 -    updateMatrices(light: any): void;
 -    copy(source: any): this;
 +    copy(source: SpotLightShadow): this;
++    /**
++     * Serializes the light shadow into JSON.
++     *
++     * @return {Object} A JSON object representing the serialized light shadow.
++     * @see {@link ObjectLoader#parse}
++     */
++    toJSON(): SpotLightShadowJSON;
  }
 -import { LightShadow } from './LightShadow.js';
 diff --git a/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts b/jsdoc-testing/jsdoc/src/lights/webgpu/IESSpotLight.d.ts
@@ -5925,10 +5937,10 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index bdb3a2160..645927946 100644
+index bdb3a2160..888afa0e4 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-@@ -1,41 +1,35 @@
+@@ -1,41 +1,36 @@
 -/**
 - * Abstract base class for materials.
 - *
@@ -5964,6 +5976,7 @@ index bdb3a2160..645927946 100644
 +    BlendingSrcFactor,
 +    Combine,
 +    DepthModes,
++    DepthPackingStrategies,
 +    NormalMapTypes,
 +    Side,
 +    StencilFunc,
@@ -5998,7 +6011,7 @@ index bdb3a2160..645927946 100644
      /**
       * Defines the blending type of the material.
       *
-@@ -43,24 +37,21 @@ export class Material extends EventDispatcher {
+@@ -43,24 +38,21 @@ export class Material extends EventDispatcher {
       * {@link Material#blendSrc}, {@link Material#blendDst} or {@link Material#blendEquation}
       * should have any effect.
       *
@@ -6025,7 +6038,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      vertexColors: boolean;
-@@ -71,7 +62,6 @@ export class Material extends EventDispatcher {
+@@ -71,7 +63,6 @@ export class Material extends EventDispatcher {
       * If the {@link Material#transparent} is not set to `true`,
       * the material will remain fully opaque and this value will only affect its color.
       *
@@ -6033,7 +6046,7 @@ index bdb3a2160..645927946 100644
       * @default 1
       */
      opacity: number;
-@@ -83,7 +73,6 @@ export class Material extends EventDispatcher {
+@@ -83,7 +74,6 @@ export class Material extends EventDispatcher {
       * When set to true, the extent to which the material is transparent is
       * controlled by {@link Material#opacity}.
       *
@@ -6041,7 +6054,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      transparent: boolean;
-@@ -93,58 +82,50 @@ export class Material extends EventDispatcher {
+@@ -93,58 +83,50 @@ export class Material extends EventDispatcher {
       * a random threshold. Randomization introduces some grain or noise, but approximates alpha
       * blending without the associated problems of sorting. Using TAA can reduce the resulting noise.
       *
@@ -6106,7 +6119,7 @@ index bdb3a2160..645927946 100644
       * @default (0,0,0)
       */
      blendColor: Color;
-@@ -153,22 +134,19 @@ export class Material extends EventDispatcher {
+@@ -153,22 +135,19 @@ export class Material extends EventDispatcher {
       *
       * This property has only an effect when using custom blending with `ConstantAlpha` or `OneMinusConstantAlpha`.
       *
@@ -6130,7 +6143,7 @@ index bdb3a2160..645927946 100644
       * @default true
       */
      depthTest: boolean;
-@@ -178,67 +156,58 @@ export class Material extends EventDispatcher {
+@@ -178,67 +157,58 @@ export class Material extends EventDispatcher {
       * When drawing 2D overlays it can be useful to disable the depth writing in
       * order to layer several things together without creating z-index artifacts.
       *
@@ -6202,7 +6215,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      stencilWrite: boolean;
-@@ -249,7 +218,6 @@ export class Material extends EventDispatcher {
+@@ -249,7 +219,6 @@ export class Material extends EventDispatcher {
       * (not rendered). This requires {@link WebGLRenderer#localClippingEnabled} to
       * be `true`.
       *
@@ -6210,7 +6223,7 @@ index bdb3a2160..645927946 100644
       * @default null
       */
      clippingPlanes: Array<Plane> | null;
-@@ -257,7 +225,6 @@ export class Material extends EventDispatcher {
+@@ -257,7 +226,6 @@ export class Material extends EventDispatcher {
       * Changes the behavior of clipping planes so that only their intersection is
       * clipped, rather than their union.
       *
@@ -6218,7 +6231,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      clipIntersection: boolean;
-@@ -265,7 +232,6 @@ export class Material extends EventDispatcher {
+@@ -265,7 +233,6 @@ export class Material extends EventDispatcher {
       * Defines whether to clip shadows according to the clipping planes specified
       * on this material.
       *
@@ -6226,7 +6239,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      clipShadows: boolean;
-@@ -277,24 +243,21 @@ export class Material extends EventDispatcher {
+@@ -277,24 +244,21 @@ export class Material extends EventDispatcher {
       * - When {@link Material#side} is set to `BackSide`, the front side cast shadows.
       * - When {@link Material#side} is set to `DoubleSide`, both sides cast shadows.
       *
@@ -6252,7 +6265,7 @@ index bdb3a2160..645927946 100644
       * @default null
       */
      precision: ("highp" | "mediump" | "lowp") | null;
-@@ -307,28 +270,24 @@ export class Material extends EventDispatcher {
+@@ -307,28 +271,24 @@ export class Material extends EventDispatcher {
       * Can be useful for rendering hidden-line images, for applying decals to surfaces, and for
       * rendering solids with highlighted edges.
       *
@@ -6281,7 +6294,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      dithering: boolean;
-@@ -337,14 +296,12 @@ export class Material extends EventDispatcher {
+@@ -337,14 +297,12 @@ export class Material extends EventDispatcher {
       * (meaning when the renderer was created with *antialias* parameter set to `true`). Enabling this
       * will smooth aliasing on clip plane edges and alphaTest-clipped edges.
       *
@@ -6296,7 +6309,7 @@ index bdb3a2160..645927946 100644
       * @default false
       */
      premultipliedAlpha: boolean;
-@@ -357,21 +314,18 @@ export class Material extends EventDispatcher {
+@@ -357,21 +315,18 @@ export class Material extends EventDispatcher {
       * vegetation like grass sprites. In these cases, set the `forceSinglePass` flag to `true` to
       * disable the two pass rendering to avoid performance issues.
       *
@@ -6318,7 +6331,7 @@ index bdb3a2160..645927946 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +335,222 @@ export class Material extends EventDispatcher {
+@@ -381,36 +336,226 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -6478,11 +6491,15 @@ index bdb3a2160..645927946 100644
 +
 +    rotation?: number;
 +
++    depthPacking?: DepthPackingStrategies;
++
 +    polygonOffset?: boolean;
 +    polygonOffsetFactor?: number;
 +    polygonOffsetUnits?: number;
 +
 +    linewidth?: number;
++    linecap?: string;
++    linejoin?: string;
 +    dashSize?: number;
 +    gapSize?: number;
 +    scale?: number;
@@ -6556,7 +6573,7 @@ index bdb3a2160..645927946 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +563,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +568,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -6572,7 +6589,7 @@ index bdb3a2160..645927946 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +583,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +588,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -6581,7 +6598,7 @@ index bdb3a2160..645927946 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +601,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +606,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -6590,7 +6607,7 @@ index bdb3a2160..645927946 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +609,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +614,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -6599,7 +6616,7 @@ index bdb3a2160..645927946 100644
      /**
       * Deserializes the material from the given JSON.
       *
-@@ -470,22 +617,20 @@ export class Material extends EventDispatcher {
+@@ -470,22 +622,20 @@ export class Material extends EventDispatcher {
       * @param {Object<string,Texture>} textures - A dictionary holding textures referenced by the material.
       * @return {Material} A reference to this material.
       */
@@ -6625,7 +6642,7 @@ index bdb3a2160..645927946 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -497,11 +642,11 @@ export class Material extends EventDispatcher {
+@@ -497,11 +647,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
