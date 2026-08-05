@@ -5937,7 +5937,7 @@ index 3cb1a34d8..63489ffa1 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface LineDashedMaterial extends LineDashedMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/Material.d.ts b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
-index bdb3a2160..888afa0e4 100644
+index a559b6e84..7741a9a05 100644
 --- a/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/Material.d.ts
 @@ -1,41 +1,36 @@
@@ -5983,7 +5983,7 @@ index bdb3a2160..888afa0e4 100644
 +    StencilOp,
 +} from "../constants.js";
 +import { JSONMeta, Object3D } from "../core/Object3D.js";
-+import { Plane } from "../math/Plane.js";
++import { Plane, PlaneJSON } from "../math/Plane.js";
 +import { SourceJSON } from "../textures/Source.js";
 +import { Texture, TextureJSON } from "../textures/Texture.js";
 +import { Group } from "../objects/Group.js";
@@ -6331,7 +6331,7 @@ index bdb3a2160..888afa0e4 100644
       * @default true
       */
      visible: boolean;
-@@ -381,36 +336,226 @@ export class Material extends EventDispatcher {
+@@ -381,36 +336,230 @@ export class Material extends EventDispatcher {
       * It is ignored when rendering to a render target or using post processing or when using
       * `WebGPURenderer`. In all these cases, all materials are honored by tone mapping.
       *
@@ -6480,6 +6480,10 @@ index bdb3a2160..888afa0e4 100644
 +    depthWrite?: boolean;
 +    colorWrite?: boolean;
 +
++    clippingPlanes?: PlaneJSON[];
++    clipIntersection?: boolean;
++    clipShadows?: boolean;
++
 +    stencilWriteMask?: number;
 +    stencilFunc?: StencilFunc;
 +    stencilRef?: number;
@@ -6573,7 +6577,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * An optional callback that is executed immediately before the material is used to render a 3D object.
       *
-@@ -423,7 +568,14 @@ export class Material extends EventDispatcher {
+@@ -423,7 +572,14 @@ export class Material extends EventDispatcher {
       * @param {Object3D} object - The 3D object.
       * @param {Object} group - The geometry group data.
       */
@@ -6589,7 +6593,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * An optional callback that is executed immediately before the shader
       * program is compiled. This function is called with the shader source code
-@@ -436,7 +588,7 @@ export class Material extends EventDispatcher {
+@@ -436,7 +592,7 @@ export class Material extends EventDispatcher {
       * @param {{vertexShader:string,fragmentShader:string,uniforms:Object}} shaderobject - The object holds the uniforms and the vertex and fragment shader source.
       * @param {WebGLRenderer} renderer - A reference to the renderer.
       */
@@ -6598,7 +6602,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * In case {@link Material#onBeforeCompile} is used, this callback can be used to identify
       * values of settings used in `onBeforeCompile()`, so three.js can reuse a cached
-@@ -454,7 +606,7 @@ export class Material extends EventDispatcher {
+@@ -454,7 +610,7 @@ export class Material extends EventDispatcher {
       *
       * @param {Object} [values] - The material values to set.
       */
@@ -6607,7 +6611,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * Serializes the material into JSON.
       *
-@@ -462,7 +614,7 @@ export class Material extends EventDispatcher {
+@@ -462,7 +618,7 @@ export class Material extends EventDispatcher {
       * @return {Object} A JSON object representing the serialized material.
       * @see {@link ObjectLoader#parse}
       */
@@ -6616,7 +6620,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * Deserializes the material from the given JSON.
       *
-@@ -470,22 +622,20 @@ export class Material extends EventDispatcher {
+@@ -470,22 +626,20 @@ export class Material extends EventDispatcher {
       * @param {Object<string,Texture>} textures - A dictionary holding textures referenced by the material.
       * @return {Material} A reference to this material.
       */
@@ -6642,7 +6646,7 @@ index bdb3a2160..888afa0e4 100644
      /**
       * Frees the GPU-related resources allocated by this instance. Call this
       * method whenever this instance is no longer used in your app.
-@@ -497,11 +647,11 @@ export class Material extends EventDispatcher {
+@@ -497,12 +651,11 @@ export class Material extends EventDispatcher {
       * Setting this property to `true` indicates the engine the material
       * needs to be recompiled.
       *
@@ -6654,6 +6658,7 @@ index bdb3a2160..888afa0e4 100644
  }
 -import { EventDispatcher } from '../core/EventDispatcher.js';
 -import { Color } from '../math/Color.js';
+-import { Plane } from '../math/Plane.js';
 +
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface Material extends MaterialProperties {}
@@ -8831,7 +8836,7 @@ index 69665f811..f6da027aa 100644
 +// eslint-disable-next-line @typescript-eslint/no-empty-interface
 +export interface PointsMaterial extends PointsMaterialProperties {}
 diff --git a/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts b/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
-index 727fcbb76..9a703d74d 100644
+index c9e548d48..9a703d74d 100644
 --- a/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
 +++ b/jsdoc-testing/jsdoc/src/materials/RawShaderMaterial.d.ts
 @@ -1,111 +1,17 @@
@@ -8892,7 +8897,7 @@ index 727fcbb76..9a703d74d 100644
 -        stencilZFail: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
 -        stencilZPass: ZeroStencilOp | number | ReplaceStencilOp | IncrementStencilOp | DecrementStencilOp | IncrementWrapStencilOp | DecrementWrapStencilOp | InvertStencilOp;
 -        stencilWrite: boolean;
--        clippingPlanes: Array<Plane> | null;
+-        clippingPlanes: Array<import("../Three.Core.js").Plane> | null;
 -        clipIntersection: boolean;
 -        clipShadows: boolean;
 -        shadowSide: (number | BackSide | DoubleSide) | null;
