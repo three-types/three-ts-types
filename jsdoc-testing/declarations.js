@@ -20,6 +20,7 @@ const files = [
     'examples/jsm/tsl/display/SSRNode',
     'examples/jsm/tsl/lighting/ClusteredLightsNode',
     'examples/jsm/tsl/math/curlNoise',
+    'examples/jsm/tsl/math/voronoiNoise',
     'examples/jsm/tsl/utils/GroundedSkybox',
     'examples/jsm/tsl/utils/RNoise',
     'examples/jsm/tsl/utils/SoftParticles',
