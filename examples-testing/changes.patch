@@ -23871,12 +23871,12 @@ index c5cc55e71..7ae7f3702 100644
      gui.add(params, 'animated');
      gui.add(params, 'traa').name('TRAA').onChange(updatePostProcessing);
 diff --git a/examples-testing/examples/webgpu_volume_perlin.ts b/examples-testing/examples/webgpu_volume_perlin.ts
-index fb6f2bbd5..50d3e0361 100644
+index 123e7718b..d95832280 100644
 --- a/examples-testing/examples/webgpu_volume_perlin.ts
 +++ b/examples-testing/examples/webgpu_volume_perlin.ts
-@@ -8,8 +8,8 @@ import { ImprovedNoise } from 'three/addons/math/ImprovedNoise.js';
+@@ -10,8 +10,8 @@ import { Inspector } from 'three/addons/inspector/Inspector.js';
  
- import { Inspector } from 'three/addons/inspector/Inspector.js';
+ const REFINEMENT_STEPS = 4;
  
 -let renderer, scene, camera;
 -let mesh;
@@ -23885,47 +23885,104 @@ index fb6f2bbd5..50d3e0361 100644
  
  init();
  
-@@ -58,23 +58,33 @@ function init() {
+@@ -60,53 +60,65 @@ function init() {
  
      // Shader
  
--    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold }) => {
+-    const opaqueRaymarchingTexture = Fn(({ texture, steps, threshold, refine }) => {
 -        const finalColor = vec4(0).toVar();
+-
+-        const positionPrev = vec3(0).toVar();
+-        const hasPrev = bool(false).toVar();
 -
 -        RaymarchingBox(steps, ({ positionRay }) => {
 -            const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
 -
 -            If(mapValue.greaterThan(threshold), () => {
--                const p = vec3(positionRay).add(0.5);
+-                const surfacePos = positionRay.toVar();
 -
--                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
--                finalColor.a.assign(1);
--                Break();
+-                If(refine.and(hasPrev), () => {
+-                    // The surface lies between the previous sample (below the threshold)
+-                    // and the current one (above it). Bisect that interval to localize
+-                    // the crossing precisely.
+-
+-                    const p0 = positionPrev.toVar();
+-                    const p1 = positionRay.toVar();
+-
+-                    Loop(REFINEMENT_STEPS, () => {
+-                        const pm = p0.add(p1).mul(0.5).toConst();
+-                        const dm = texture.sample(pm.add(0.5)).r.toConst();
+-
+-                        If(dm.greaterThan(threshold), () => {
+-                            p1.assign(pm);
+-                        }).Else(() => {
+-                            p0.assign(pm);
 +    const opaqueRaymarchingTexture = Fn(
 +        ({
 +            texture,
 +            steps,
 +            threshold,
++            refine,
 +        }: {
 +            texture: THREE.Texture3DNode;
 +            steps: THREE.Node<'float'>;
 +            threshold: THREE.Node<'float'>;
++            refine: THREE.Node<'bool'>;
 +        }) => {
 +            const finalColor = vec4(0).toVar();
++
++            const positionPrev = vec3(0).toVar();
++            const hasPrev = bool(false).toVar();
 +
 +            RaymarchingBox(steps, ({ positionRay }) => {
 +                const mapValue = texture.sample(positionRay.add(0.5)).r.toVar();
 +
 +                If(mapValue.greaterThan(threshold), () => {
-+                    const p = vec3(positionRay).add(0.5);
++                    const surfacePos = positionRay.toVar();
 +
-+                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(positionRay.mul(1.5).add(0.25)));
++                    If(refine.and(hasPrev), () => {
++                        // The surface lies between the previous sample (below the threshold)
++                        // and the current one (above it). Bisect that interval to localize
++                        // the crossing precisely.
++
++                        const p0 = positionPrev.toVar();
++                        const p1 = positionRay.toVar();
++
++                        Loop(REFINEMENT_STEPS, () => {
++                            const pm = p0.add(p1).mul(0.5).toConst();
++                            const dm = texture.sample(pm.add(0.5)).r.toConst();
++
++                            If(dm.greaterThan(threshold), () => {
++                                p1.assign(pm);
++                            }).Else(() => {
++                                p0.assign(pm);
++                            });
+                         });
++
++                        surfacePos.assign(p1);
+                     });
+ 
+-                    surfacePos.assign(p1);
+-                });
++                    const p = vec3(surfacePos).add(0.5);
+ 
+-                const p = vec3(surfacePos).add(0.5);
++                    finalColor.rgb.assign(texture.normal(p).mul(0.5).add(surfacePos.mul(1.5).add(0.25)));
 +                    finalColor.a.assign(1);
 +                    Break();
 +                });
-             });
--        });
  
+-                finalColor.rgb.assign(texture.normal(p).mul(0.5).add(surfacePos.mul(1.5).add(0.25)));
+-                finalColor.a.assign(1);
+-                Break();
++                positionPrev.assign(positionRay);
++                hasPrev.assign(true);
+             });
+ 
+-            positionPrev.assign(positionRay);
+-            hasPrev.assign(true);
+-        });
+-
 -        return finalColor;
 -    });
 +            return finalColor;
@@ -23934,7 +23991,7 @@ index fb6f2bbd5..50d3e0361 100644
  
      //
  
-@@ -95,7 +105,7 @@ function init() {
+@@ -129,7 +141,7 @@ function init() {
  
      //
  
@@ -23942,7 +23999,7 @@ index fb6f2bbd5..50d3e0361 100644
 +    const gui = (renderer.inspector as Inspector).createParameters('Parameters');
      gui.add(threshold, 'value', 0, 1, 0.01).name('threshold');
      gui.add(steps, 'value', 0, 300, 1).name('steps');
- 
+     gui.add(refine, 'value').name('refine');
 diff --git a/examples-testing/examples/webgpu_water.ts b/examples-testing/examples/webgpu_water.ts
 index 7a6556618..487c71cfe 100644
 --- a/examples-testing/examples/webgpu_water.ts
