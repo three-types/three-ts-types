@@ -1,2 +1,0 @@
-export default V_GGX_SmithCorrelated_Anisotropic;
-declare const V_GGX_SmithCorrelated_Anisotropic: any;
