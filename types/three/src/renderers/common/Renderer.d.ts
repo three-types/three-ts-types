@@ -400,9 +400,29 @@ declare class Renderer {
      * @param {Object3D} scene - The scene or 3D object to precompile.
      * @param {Camera} camera - The camera that is used to render the scene.
      * @param {?Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
+     * @param {onProgressCallback} [onProgress] - Executed while the compilation is in progress.
      * @return {Promise} A Promise that resolves when the compile has been finished.
      */
-    compileAsync(scene: Object3D, camera: Camera, targetScene?: Scene | null): Promise<void>;
+    compileAsync(
+        scene: Object3D,
+        camera: Camera,
+        targetScene?: Scene | null,
+        onProgress?: ((event: ProgressEvent) => void) | null,
+    ): Promise<void>;
+    /**
+     * Compile compute programs. This can be useful to avoid a
+     * phenomenon which is called "shader compilation stutter", which occurs when
+     * rendering an object with a new shader for the first time.
+     *
+     * @async
+     * @param {Node|Array<Node>} computeNodes - The compute node(s).
+     * @param {onProgressCallback} [onProgress] - Executed while the compilation is in progress.
+     * @return {Promise} A Promise that resolves when the compile has been finished.
+     */
+    compileComputeAsync(
+        computeNodes: ComputeNode | ComputeNode[],
+        onProgress?: ((event: ProgressEvent) => void) | null,
+    ): Promise<void>;
     /**
      * Renders the scene in an async fashion.
      *
@@ -1104,9 +1124,15 @@ declare class Renderer {
      * @param {Object3D} scene - The scene or 3D object to precompile.
      * @param {Camera} camera - The camera that is used to render the scene.
      * @param {Scene} targetScene - If the first argument is a 3D object, this parameter must represent the scene the 3D object is going to be added.
-     * @return {function(Object3D, Camera, ?Scene): Promise|undefined} A Promise that resolves when the compile has been finished.
+     * @param {onProgressCallback} [onProgress] - Executed while the compilation is in progress.
+     * @return {function(Object3D, Camera, ?Scene, ?onProgressCallback): Promise|undefined} A Promise that resolves when the compile has been finished.
      */
-    get compile(): (scene: Object3D, camera: Camera, targetScene?: Scene | null) => Promise<void>;
+    get compile(): (
+        scene: Object3D,
+        camera: Camera,
+        targetScene?: Scene | null,
+        onProgress?: ((event: ProgressEvent) => void) | null,
+    ) => Promise<void>;
 }
 
 export default Renderer;
